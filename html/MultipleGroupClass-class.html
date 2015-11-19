@@ -17,81 +17,26 @@
 
 
 <dl>
-<dt><code>iter</code>:</dt><dd><p>Object of class <code>"numeric"</code>, number of iterations  </p>
+<dt><code>Call</code>:</dt><dd><p>function call </p>
 </dd>
-<dt><code>pars</code>:</dt><dd><p>Object of class <code>"list"</code>, estimated parameter objects list </p>
+<dt><code>Data</code>:</dt><dd><p>list of data, sometimes in different forms </p>
 </dd>
-<dt><code>shortpars</code>:</dt><dd><p>Object of class <code>"numeric"</code>, unique estimated parameters</p>
+<dt><code>Options</code>:</dt><dd><p>list of estimation options</p>
 </dd>
-<dt><code>model</code>:</dt><dd><p>Object of class <code>"list"</code>, list containing original model </p>
+<dt><code>Fit</code>:</dt><dd><p>a list of fit information </p>
 </dd>
-<dt><code>K</code>:</dt><dd><p>Object of class <code>"numeric", number of item categories</code>  </p>
+<dt><code>Model</code>:</dt><dd><p>a list of model-based information </p>
 </dd>
-<dt><code>itemloc</code>:</dt><dd><p>Object of class <code>"numeric", index for tabdata</code>  </p>
+<dt><code>ParObjects</code>:</dt><dd><p>a list of the S4 objects used during estimation</p>
 </dd>
-<dt><code>df</code>:</dt><dd><p>Object of class <code>"numeric"</code>, degrees of freedom</p>
+<dt><code>OptimInfo</code>:</dt><dd><p>a list of arguments from the optimization process</p>
 </dd>
-<dt><code>AIC</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Akaike's information criteria </p>
+<dt><code>Internals</code>:</dt><dd><p>a list of internal arguments for secondary computations (inspecting this
+object is generally not required)</p>
 </dd>
-<dt><code>BIC</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Bayesian information criteria </p>
+<dt><code>vcov</code>:</dt><dd><p>a matrix represented the asymtotic covariance matrix of the parameter estimates</p>
 </dd>
-<dt><code>G2</code>:</dt><dd><p>Object of class <code>"numeric"</code>, G squared stat </p>
-</dd>
-<dt><code>p</code>:</dt><dd><p>Object of class <code>"numeric"</code>, p-value for G2  </p>
-</dd>
-<dt><code>df</code>:</dt><dd><p>Object of class <code>"numeric"</code>, degrees of freedom </p>
-</dd>
-<dt><code>RMSEA</code>:</dt><dd><p>Object of class <code>"numeric"</code>, root mean-square error of approximation for G2</p>
-</dd>
-<dt><code>TLI</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Tucker-Lewis index for G2</p>
-</dd>
-<dt><code>CFI</code>:</dt><dd><p>Object of class <code>"numeric"</code>, CFI for G2</p>
-</dd>
-<dt><code>logLik</code>:</dt><dd><p>Object of class <code>"numeric"</code>, observed log-likelihood </p>
-</dd>
-<dt><code>SElogLik</code>:</dt><dd><p>Object of class <code>"numeric"</code>, Monte Carlo standard error for log-likelihood </p>
-</dd>
-<dt><code>Prior</code>:</dt><dd><p>Object of class <code>"numeric"</code>, prior distribution used during estimation. Empty unless
-<code>empiricalhist = TRUE</code></p>
-</dd>
-<dt><code>F</code>:</dt><dd><p>Object of class <code>"matrix"</code>, unrotated factor loadings </p>
-</dd>
-<dt><code>h2</code>:</dt><dd><p>Object of class <code>"numeric"</code>, commonalities </p>
-</dd>
-<dt><code>Theta</code>:</dt><dd><p>Object of class <code>"matrix"</code>, ability grid </p>
-</dd>
-<dt><code>Pl</code>:</dt><dd><p>Object of class <code>"numeric"</code>, normed likelihoods for tabulated response</p>
-</dd>
-<dt><code>prodlist</code>:</dt><dd><p>Object of class <code>"list"</code>, list containing product combination of factors </p>
-</dd>
-<dt><code>converge</code>:</dt><dd><p>Object of class <code>"numeric"</code>, convergence diagnostic </p>
-</dd>
-<dt><code>quadpts</code>:</dt><dd><p>Object of class <code>"numeric"</code>, number of quadrature points </p>
-</dd>
-<dt><code>esttype</code>:</dt><dd><p>Object of class <code>"character"</code>, indicates whether estimation was 'EM' or 'MHRM'</p>
-</dd>
-<dt><code>constrain</code>:</dt><dd><p>Object of class <code>"list"</code>, list of constraints</p>
-</dd>
-<dt><code>invariance</code>:</dt><dd><p>Object of class <code>"character"</code>, invariance input</p>
-</dd>
-<dt><code>null.mod</code>:</dt><dd><p>Object of class <code>"SingleGroupClass"</code>, null model</p>
-</dd>
-<dt><code>condnum</code>:</dt><dd><p>Object of class <code>"numeric"</code>, condition number of information matrix</p>
-</dd>
-<dt><code>bfactor</code>:</dt><dd><p>Object of class <code>"list"</code>, contains information from bfactor() estimation</p>
-</dd>
-<dt><code>secondordertest</code>:</dt><dd><p>Object of class <code>"logical"</code>, indicate whether information matrix passes
-second-order test</p>
-</dd>
-<dt><code>infomethod</code>:</dt><dd><p>Object of class <code>"character"</code>, indiciates which information estimation method was used</p>
-</dd>
-<dt><code>TOL</code>:</dt><dd><p>Object of class <code>"numeric"</code>, tollerence stopping criteria</p>
-</dd>
-<dt><code>CUSTOM.IND</code>:</dt><dd><p>Object of class <code>"integer"</code>, an internal index</p>
-</dd>
-<dt><code>SLOW.IND</code>:</dt><dd><p>Object of class <code>"integer"</code>, an internal index</p>
-</dd>
-<dt><code>Call</code>:</dt><dd><p>Object of class <code>"call"</code>, call </p>
+<dt><code>time</code>:</dt><dd><p>a data.frame indicating the breakdown of computation times in seconds</p>
 </dd>
 </dl>
 
@@ -118,5 +63,5 @@ second-order test</p>
 <p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
 </p>
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract various elements from estimated model objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for extract.mirt {mirt}"><tr><td>extract.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extract various elements from estimated model objects</h2>
+
+<h3>Description</h3>
+
+<p>A generic function to extract the internal objects from any estimated model. If possible, the
+function will returns a vector/scalar containing the desired elements, otherwise it will return a list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+extract.mirt(x, what)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
+'DiscreteGroupClass'</p>
+</td></tr>
+<tr valign="top"><td><code>what</code></td>
+<td>
+<p>a character vector indicating what to extract. Can contain more than one element</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Objects which can be extracted from mirt objects include:
+</p>
+
+<dl>
+<dt>logLik</dt><dd><p>observed log-likelihood</p>
+</dd>
+<dt>logPrior</dt><dd><p>log term contributed by prior parameter distributions</p>
+</dd>
+<dt>G2</dt><dd><p>goodness of fit statistic</p>
+</dd>
+<dt>df</dt><dd><p>degrees of freedom</p>
+</dd>
+<dt>p</dt><dd><p>p-value for G2 statistic</p>
+</dd>
+<dt>RMSEA</dt><dd><p>root mean-square error of approximation based on G2</p>
+</dd>
+<dt>CFI</dt><dd><p>CFI fit statistic</p>
+</dd>
+<dt>TLI</dt><dd><p>TLI fit statistic</p>
+</dd>
+<dt>AIC</dt><dd><p>AIC</p>
+</dd>
+<dt>AICc</dt><dd><p>corrected AIC</p>
+</dd>
+<dt>BIC</dt><dd><p>BIC</p>
+</dd>
+<dt>SABIC</dt><dd><p>sample size adjusted BIC</p>
+</dd>
+<dt>DIC</dt><dd><p>DIC</p>
+</dd>
+<dt>F</dt><dd><p>unrotated standardized loadings matrix</p>
+</dd>
+<dt>h2</dt><dd><p>factor communality estimates</p>
+</dd>
+<dt>LLhistory</dt><dd><p>EM log-likelihood history</p>
+</dd>
+<dt>tabdata</dt><dd><p>a tabular version of the raw response data input. Frequencies are stored
+in <code>freq</code></p>
+</dd>
+<dt>freq</dt><dd><p>frequencies associated with <code>tabdata</code></p>
+</dd>
+<dt>K</dt><dd><p>an integer vector indicating the number of unique elements for each item</p>
+</dd>
+<dt>tabdatalong</dt><dd><p>similar to <code>tabdata</code>, however the responses have been transformed into
+dummy coded variables</p>
+</dd>
+<dt>fulldatalong</dt><dd><p>analogous to <code>tabdatafull</code>, but for the raw input data instead of the
+tabulated frequencies</p>
+</dd>
+<dt>exp_resp</dt><dd><p>expected probability of the unique response patterns</p>
+</dd>
+<dt>converged</dt><dd><p>a logical value indicating whether the model terminated within
+the convergence criteria</p>
+</dd>
+<dt>iterations</dt><dd><p>number of iterations it took to reach the convergence criteria</p>
+</dd>
+<dt>nest</dt><dd><p>number of freely estimated parameters</p>
+</dd>
+<dt>parvec</dt><dd><p>vector containing uniquely estimated parameters</p>
+</dd>
+<dt>vcov</dt><dd><p>parameter covariance matrix (associated with parvec)</p>
+</dd>
+<dt>condnum</dt><dd><p>the condition number of the Hessian (if computed). Otherwise NA</p>
+</dd>
+<dt>Prior</dt><dd><p>prior density distribution for the latent traits</p>
+</dd>
+<dt>nfact</dt><dd><p>number of latent traits/factors</p>
+</dd>
+<dt>secondordertest</dt><dd><p>a logical indicating whether the model passed the second-order test
+based on the Hessian matrix. Indicates whether model is a potential local maximum solution</p>
+</dd>
+<dt>time</dt><dd><p>estimation time, broken into different sections</p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="extract.group.html">extract.group</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+mod &lt;- mirt(Science, 1)
+
+extract.mirt(mod, &#39;logLik&#39;)
+</code></pre>
+
+<pre><code>## [1] -1608.87
+</code></pre>
+
+<pre><code class="r">extract.mirt(mod, c(&#39;G2&#39;, &#39;df&#39;, &#39;p&#39;))
+</code></pre>
+
+<pre><code>##          G2          df           p 
+## 213.5610262 239.0000000   0.8803674
+</code></pre>
+
+<pre><code class="r">extract.mirt(mod, c(&#39;F&#39;, &#39;h2&#39;))
+</code></pre>
+
+<pre><code>## $F
+##                F1
+## Comfort 0.5220496
+## Work    0.5844686
+## Future  0.8030199
+## Benefit 0.5410276
+## 
+## $h2
+##   Comfort      Work    Future   Benefit 
+## 0.2725357 0.3416035 0.6448410 0.2927108
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+</body></html>

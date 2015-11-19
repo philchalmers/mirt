@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate the empirical (marginal) reliability</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for empirical_rxx {mirt}"><tr><td>empirical_rxx {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to calculate the empirical (marginal) reliability</h2>
+
+<h3>Description</h3>
+
+<p>Given secondary latent trait estimates and their associated standard errors
+returned from <code><a href="fscores.html">fscores</a></code>, compute the empirical reliability.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+empirical_rxx(Theta_SE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Theta_SE</code></td>
+<td>
+<p>a matrix of latent trait estimates returned from <code><a href="fscores.html">fscores</a></code> with the options
+<code>full.scores = TRUE</code> and <code>full.scores.SE = TRUE</code></p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fscores.html">fscores</a></code>, <code><a href="marginal_rxx.html">marginal_rxx</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+dat &lt;- expand.table(deAyala)
+mod &lt;- mirt(dat, 1)
+
+theta_se &lt;- fscores(mod, full.scores.SE = TRUE)
+empirical_rxx(theta_se)
+</code></pre>
+
+<pre><code>##        F1 
+## 0.6200703
+</code></pre>
+
+<pre><code class="r">theta_se &lt;- fscores(mod, full.scores.SE = TRUE, method = &#39;ML&#39;)
+empirical_rxx(theta_se)
+</code></pre>
+
+<pre><code>##        F1 
+## 0.5636644
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+</body></html>

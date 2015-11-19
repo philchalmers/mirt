@@ -51,7 +51,7 @@ normal (Gaussian) distribution</p>
 
 <h3>See Also</h3>
 
-<p><code><a href="extract.group.html">extract.group</a></code>, <code><a href="testinfo.html">testinfo</a></code>
+<p><code><a href="empirical_rxx.html">empirical_rxx</a></code>, <code><a href="extract.group.html">extract.group</a></code>, <code><a href="testinfo.html">testinfo</a></code>
 </p>
 
 
@@ -77,9 +77,30 @@ fscores(mod, returnER = TRUE)
 ## 0.6200703
 </code></pre>
 
+<pre><code class="r"># empirical rxx the alternative way, given theta scores and SEs
+fs &lt;- fscores(mod, full.scores.SE=TRUE)
+head(fs)
+</code></pre>
+
+<pre><code>##             F1     SE_F1
+## [1,] -1.580133 0.6699425
+## [2,] -1.580133 0.6699425
+## [3,] -1.580133 0.6699425
+## [4,] -1.580133 0.6699425
+## [5,] -1.580133 0.6699425
+## [6,] -1.580133 0.6699425
+</code></pre>
+
+<pre><code class="r">empirical_rxx(fs)
+</code></pre>
+
+<pre><code>##        F1 
+## 0.6200703
+</code></pre>
+
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -241,9 +241,9 @@ anova(mod0, mod1)
 ##     group + items)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 8826.167 8826.525 8842.059 8876.988 -4402.084    NaN NaN NaN
-## 2 8116.957 8117.451 8135.738 8177.018 -4045.478 713.21   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
+## 2 8117.404 8117.899 8136.185 8177.465 -4045.702 712.763   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -391,8 +391,8 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8116.957 8117.451 8135.738 8177.018 -4045.478     NaN NaN NaN
-## 2 7968.238 7969.630 8000.021 8069.879 -3962.119 166.719   9   0
+## 1 8117.404 8117.899 8136.185 8177.465 -4045.702     NaN NaN NaN
+## 2 7968.994 7970.386 8000.777 8070.635 -3962.497 166.411   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -432,9 +432,9 @@ summary(mod2)
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC    AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8104.068 8104.64 8124.294 8168.749 -4038.034     NaN NaN NaN
-## 2 7968.238 7969.63 8000.021 8069.879 -3962.119 151.831   8   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 8104.485 8105.056 8124.710 8169.166 -4038.242     NaN NaN NaN
+## 2 7968.994 7970.386 8000.777 8070.635 -3962.497 151.491   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -673,11 +673,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] 0.00314 0.05789 0.00823 0.05875 -0.07444 ...
+##  $ Theta: num [1:750, 1] -0.0219 0.0445 -0.0412 0.0415 -0.069 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -2.11 -1.27 -1.43 -1.22 -1.41 ...
+##  $ group: num [1:50, 1:2] -2.04 -1.26 -1.29 -1.21 -1.39 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -962,8 +962,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25465.08 25465.12 25468.75 25478.27 -12729.54      NaN NaN NaN
-## 2 20485.80 20490.02 20527.36 20635.30 -10208.90 5041.281  31   0
+## 1 25467.62 25467.66 25471.28 25480.81 -12730.81      NaN NaN NaN
+## 2 20482.33 20486.55 20523.89 20631.83 -10207.17 5047.284  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1540,9 +1540,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
-## 1 3266.796 3267.910 3277.972 3322.393 -1619.398    NaN NaN    NaN
-## 2 3257.350 3258.986 3270.921 3324.861 -1611.675 15.446   3 0.0015
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
+## 1 3267.792 3268.906 3278.968 3323.389 -1619.896    NaN NaN   NaN
+## 2 3256.199 3257.835 3269.770 3323.710 -1611.099 17.593   3 5e-04
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1634,9 +1634,9 @@ anova(rmod0, rmod1b)
 ##     items + group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9743.156 9743.453 9761.048 9795.982 -4860.578     NaN NaN NaN
-## 2 9495.007 9495.418 9516.152 9557.438 -4734.503 252.149   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 9743.156 9743.453 9761.048 9795.982 -4860.578    NaN NaN NaN
+## 2 9495.336 9495.747 9516.481 9557.767 -4734.668 251.82   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1706,9 +1706,9 @@ anova(mod0, mod1b)
 ##     items, itemtype = &quot;2PL&quot;, lr.fixed = ~group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
-## 2 9499.078 9500.232 9534.862 9604.730 -4727.539 248.696   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 9743.773 9744.729 9776.304 9839.821 -4851.887    NaN NaN NaN
+## 2 9492.843 9493.997 9528.627 9598.496 -4724.421 254.93   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1762,14 +1762,14 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0  1.101      0  0.833
+## par      0      0  1.101      0  0.834
 ## 
 ## $lr.betas
-##                 F1    F2
-## (Intercept)  0.000 0.000
-## groupg2      0.858 0.753
-## groupg3      1.721 1.816
-## contvar     -0.025 0.000
+##                F1    F2
+## (Intercept) 0.000 0.000
+## groupg2     0.860 0.760
+## groupg3     1.720 1.821
+## contvar     0.005 0.000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1788,24 +1788,24 @@ summary(mod2b)
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##     F1  F2
-## F1 1.1 0.0
-## F2 0.0 0.8
+##      F1   F2
+## F1 1.07 0.00
+## F2 0.00 0.82
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
-##                 F1    F2
-## (Intercept)  0.000 0.000
-## groupg2      0.879 0.672
-## groupg3      1.739 1.724
-## contvar     -0.016 0.000
+##                F1    F2
+## (Intercept) 0.000 0.000
+## groupg2     0.850 0.699
+## groupg3     1.701 1.743
+## contvar     0.003 0.000
 ## 
-##             Std.Error_F1 Std.Error_F2   z_F1  z_F2
-## (Intercept)           NA           NA     NA    NA
-## groupg2            0.110        0.186  7.973 3.608
-## groupg3            0.133        0.195 13.070 8.828
-## contvar            0.053           NA -0.311    NA
+##             Std.Error_F1 Std.Error_F2   z_F1 z_F2
+## (Intercept)           NA           NA     NA   NA
+## groupg2            0.080          NaN 10.659  NaN
+## groupg3              NaN          NaN    NaN  NaN
+## contvar            0.027           NA  0.123   NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1891,13 +1891,13 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23682.18 23682.34 23711.27 23749.40 -11829.09     NaN NaN NaN
-## 2 22907.25 22907.44 22938.76 22980.07 -11440.63 776.931   1   0
+## 1 23686.70 23686.86 23715.79 23753.91 -11831.35     NaN NaN NaN
+## 2 22906.32 22906.50 22937.83 22979.13 -11440.16 782.383   1   0
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
 </body></html>

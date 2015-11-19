@@ -66,7 +66,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.11 
+## mirt version: 1.14 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -90,18 +90,18 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 27 EM iterations.
-## mirt version: 1.11 
+## Converged within 1e-04 tolerance after 29 EM iterations.
+## mirt version: 1.14 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2649.798
-## AIC = 5319.596; AICc = 5319.819
-## BIC = 5368.674; SABIC = 5336.913
+## Log-likelihood = -2650.88
+## AIC = 5321.76; AICc = 5321.982
+## BIC = 5370.837; SABIC = 5339.077
 </code></pre>
 
-<pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;, full.scores = TRUE)
+<pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
 
 #re-estimate imputed dataset (good to do this multiple times and average over)
 fulldata &lt;- imputeMissing(mod, scores)
@@ -113,29 +113,29 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 26 EM iterations.
-## mirt version: 1.11 
+## Converged within 1e-04 tolerance after 23 EM iterations.
+## mirt version: 1.14 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2661.737
-## AIC = 5343.474; AICc = 5343.697
-## BIC = 5392.552; SABIC = 5360.791
-## G2 (21) = 31.88, p = 0.0602
-## RMSEA = 0.023, CFI = 0.938, TLI = 0.923
+## Log-likelihood = -2658.97
+## AIC = 5337.939; AICc = 5338.161
+## BIC = 5387.017; SABIC = 5355.256
+## G2 (21) = 34.96, p = 0.0285
+## RMSEA = 0.026, CFI = 0.921, TLI = 0.902
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
 set.seed(1)
 group &lt;- sample(c(&#39;group1&#39;, &#39;group2&#39;), 1000, TRUE)
 mod2 &lt;- multipleGroup(dat, 1, group, TOL=1e-2)
-fs &lt;- fscores(mod2, full.scores=TRUE)
+fs &lt;- fscores(mod2)
 fulldata2 &lt;- imputeMissing(mod2, fs)
 
 ## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -59,8 +59,7 @@ dichotomous format
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-data(SAT12)
+<pre><code class="r">data(SAT12)
 head(SAT12)
 </code></pre>
 
@@ -135,10 +134,28 @@ key2 &lt;- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4
               c(2,3,NA,1,rep(NA, 28)))
 dicho.SAT12 &lt;- key2binary(SAT12, key2)
 
+# keys from raw character responses
+resp &lt;- as.data.frame(matrix(c(
+  &quot;B&quot;,&quot;B&quot;,&quot;D&quot;,&quot;D&quot;,&quot;E&quot;,
+  &quot;B&quot;,&quot;A&quot;,&quot;D&quot;,&quot;D&quot;,&quot;E&quot;,
+  &quot;B&quot;,&quot;A&quot;,&quot;D&quot;,&quot;C&quot;,&quot;E&quot;,
+  &quot;D&quot;,&quot;D&quot;,&quot;D&quot;,&quot;C&quot;,&quot;E&quot;,
+  &quot;B&quot;,&quot;C&quot;,&quot;A&quot;,&quot;D&quot;,&quot;A&quot;), ncol=5, byrow=TRUE))
 
-## End(No test)
+key &lt;- c(&quot;B&quot;, &quot;D&quot;, &quot;D&quot;, &quot;C&quot;, &quot;E&quot;)
+
+d01 &lt;- key2binary(resp, key)
+head(d01)
+</code></pre>
+
+<pre><code>##      V1 V2 V3 V4 V5
+## [1,]  1  0  1  0  1
+## [2,]  1  0  1  0  1
+## [3,]  1  0  1  1  1
+## [4,]  0  1  1  1  1
+## [5,]  1  0  0  0  0
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
 </body></html>

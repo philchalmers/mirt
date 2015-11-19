@@ -22,7 +22,7 @@ compute the item information.
 <h3>Usage</h3>
 
 <pre>
-iteminfo(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE)
+iteminfo(x, Theta, degrees = NULL, total.info = TRUE)
 </pre>
 
 
@@ -39,18 +39,13 @@ iteminfo(x, Theta, degrees = NULL, total.info = TRUE, use_degrees = TRUE)
 </td></tr>
 <tr valign="top"><td><code>degrees</code></td>
 <td>
-<p>a vector of angles in degrees that are between 0 and 90 that jointly sum to 90.
+<p>a vector of angles in degrees that are between 0 and 90.
 Only applicable when the input object is multidimensional</p>
 </td></tr>
 <tr valign="top"><td><code>total.info</code></td>
 <td>
 <p>logical; return the total information curve for the item? If <code>FALSE</code>,
 information curves for each category are returned as a matrix</p>
-</td></tr>
-<tr valign="top"><td><code>use_degrees</code></td>
-<td>
-<p>logical; use <code>degrees</code> argument for multidimensional information?
-If <code>FALSE</code>, information will be calculated without reference to any angle</p>
 </td></tr>
 </table>
 
@@ -104,5 +99,5 @@ lines(Theta, T1/T1, col = &#39;red&#39;)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.11 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
 </body></html>
