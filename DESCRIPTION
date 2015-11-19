@@ -1,6 +1,6 @@
 Package: mirt
-Version: 1.13.7
-Date: 2015-09-09
+Version: 1.14
+Date: 2015-11-19
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =

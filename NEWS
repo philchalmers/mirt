@@ -1,3 +1,42 @@
+Changes in mirt 1.14
+
+MAJOR CHANGES
+
+  - the structure of the output objects now contains considerably fewer S4
+  slots, and instead are organized into more structured list elements such
+  as `Data`, `Model`, `Fit`, and so on. Additionally, the information matrix
+  has slot has been removed in favour of providing the asymptotic covariance
+  matrix (a.k.a., the inverse of the information matrix)
+
+MINOR CHANGES
+
+  - added `extract.mirt()` function to allow more convenient extracting of
+  internal elements
+
+  - `crossprod` SE.type now incorporates latent variable information (replaces
+  NA placeholders)
+
+  - changed the default `full.scores = FALSE` argument to `TRUE` in `fscores()`
+
+  - added `profile` argument to `plot()` for `mdirt()` objects so that
+  profile plots can be generated
+
+  - `converge_info` option added to `fscores()` to return convergence
+  information
+
+  - add `removeEmptyRows` option to `technical` list
+
+BUG FIXES
+
+  - return a vector of `NA`s when WLE estimation has a Fisher information
+  matrix with a determinant of 0 (reported by Christopher Gess)
+
+  - fix df in multiple-group models with crossed between/within constrains
+  (reported by Leah Feuerstahler)
+
+  - compute residuals when responses are sparse, and return `NaN` when
+  residual could not be computed (reported by Aaron Kaat)
+
 Changes in mirt 1.13
 
   - adjust plausible values format for multiple group objects
