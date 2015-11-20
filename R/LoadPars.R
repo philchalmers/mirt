@@ -439,7 +439,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
 
         if(all(itemtype[i] != valid.items)){
-            pars[[i]] <- customItems[[itemtype[i] == names(customItems)]]
+            pars[[i]] <- customItems[[which(itemtype[i] == names(customItems))]]
             pars[[i]]@nfact <- nfact
             pars[[i]]@ncat <- K[i]
             pars[[i]]@nfixedeffects <- nfixedeffects

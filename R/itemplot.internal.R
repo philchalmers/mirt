@@ -14,8 +14,12 @@ setMethod(
     signature = signature(object = 'list'),
     definition = function(object, ...)
     {
-        newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@Model$nfact,
-                         Data=list(groupNames=factor(names(object))))
+        Data <- object[[1L]]@Data
+        Data$groupNames <- factor(names(object))
+        Model <- object[[1L]]@Model
+        ParObjects <- object[[1L]]@ParObjects
+        ParObjects$pars <- object
+        newobject <- new('MultipleGroupClass', Data=Data, Model=Model, ParObjects=ParObjects)
         x <- itemplot.internal(newobject, ...)
         return(invisible(x))
     }
@@ -30,7 +34,7 @@ setMethod(
     {
         Pinfo <- list()
         gnames <- object@Data$groupNames
-        nfact <- object@nfact
+        nfact <- object@Model$nfact
         K <- object@ParObjects$pars[[1L]]@ParObjects$pars[[item]]@ncat
         for(g in 1L:length(gnames)){
             object@ParObjects$pars[[g]]@vcov <- object@vcov
@@ -133,8 +137,6 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     }
     nfact <- min(x@ParObjects$pars[[item]]@nfact, x@Model$nfact)
     if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
-    if(nfact == 2 && is.null(degrees))
-        stop('Please specify a vector of angles that sum to 90', call.=FALSE)
     theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
     if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
@@ -142,6 +144,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         Theta <- thetaComb(theta, x@Model$nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
+    if(length(degrees) == 1) degrees <- rep(degrees, ncol(ThetaFull))
     if(is(x, 'SingleGroupClass') && x@Options$exploratory){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
         x@ParObjects$pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
@@ -151,17 +154,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     info <- numeric(nrow(ThetaFull))
     if(K == 2L) auto.key <- FALSE
     if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
-        if(nfact == 3){
-            if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
-                warning('Information plots require the degrees input to be of length 3', call.=FALSE)
-            } else {
-                info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
-            }
-        }
-        if(nfact == 2){
-            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
-        } else {
+        if(nfact == 1){
             info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
+        } else {
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
         }
     }
     CEinfoupper <- CEinfolower <- info
@@ -171,14 +167,15 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         if(length(tmpitem@SEpar) == 0) stop('Must calculate the information matrix first.', call.=FALSE)
         splt <- strsplit(colnames(x@vcov), '\\.')
         parnums <- as.numeric(do.call(rbind, splt)[,2])
-        tmp <- x@ParObjects$pars[[item]]@parnum[x@ParObjects$pars[[item]]@est]
+        tmp <- tmpitem@parnum[tmpitem@est]
         constrain <- x@Model$constrain
         if(length(constrain) > 0)
             for(i in 1:length(constrain))
                 if(any(tmp %in% constrain[[i]]))
                     tmp[tmp %in% constrain[[i]]] <- constrain[[i]][1L]
         tmp <- parnums %in% tmp
-        mu <- tmpitem@ParObjects$par[x@ParObjects$pars[[item]]@est]
+        mu <- tmpitem@par[tmpitem@est]
+        vcov <- extract.mirt(x, 'vcov')
         smallinfo <- vcov[tmp, tmp]
         smallinfo <-(smallinfo + t(smallinfo))/2 #make symetric
         delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)

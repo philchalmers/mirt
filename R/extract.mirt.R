@@ -39,8 +39,10 @@
 #'   \item{vcov}{parameter covariance matrix (associated with parvec)}
 #'   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
 #'   \item{Prior}{prior density distribution for the latent traits}
+#'   \item{nfact}{number of latent traits/factors}
 #'   \item{secondordertest}{a logical indicating whether the model passed the second-order test
 #'     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
+#'   \item{time}{estimation time, broken into different sections}
 #' }
 #'
 #' @aliases extract.mirt
@@ -90,19 +92,21 @@ extract.mirt <- function(x, what){
                       exp_resp = x@Internals$Pl,
                       converged = x@OptimInfo$converged,
                       condnum = x@OptimInfo$condnum,
+                      nfact = x@Model$nfact,
                       Prior = x@Internals$Prior,
                       secondordertest = x@OptimInfo$secondordertest,
                       tabdata = x@Data$tabdata,
                       freq = x@Data$Freq,
                       tabdatalong = x@Data$tabdatalong,
                       fulldatalong = x@Data$fulldata,
+                      time = x@time,
                       NULL
         )
     }
     names(ret) <- what
     if(length(ret) == 1L) return(ret[[1L]])
     if(!any(what %in% c('F', 'h2', 'vcov', 'parvec', 'exp_resp', 'Prior', 'freq',
-                        'tabdata', 'tabdatalong', 'fulldatalong')))
+                        'tabdata', 'tabdatalong', 'fulldatalong', 'time')))
         ret <- do.call(c, ret)
     ret
 }

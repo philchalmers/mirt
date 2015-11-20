@@ -28,6 +28,9 @@
 
 - fix df in multiple-group models with crossed between/within constrains (reported by Leah Feuerstahler)
 
+- compute residuals when responses are sparse, and return `NaN` when residual could not be computed 
+  (reported by Aaron Kaat)
+
 # Changes in mirt 1.13
 
 - adjust plausible values format for multiple group objects

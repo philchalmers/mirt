@@ -75,7 +75,7 @@
 #' # itemplot(shiny = TRUE)
 #'     }
 #'
-itemplot <- function(object, item, type = 'trace', degrees = c(45, 45), CE = FALSE, CEalpha = .05,
+itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
                      CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
                      rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      par.strip.text = list(cex = 0.7),
@@ -89,6 +89,7 @@ itemplot <- function(object, item, type = 'trace', degrees = c(45, 45), CE = FAL
             stop('shiny package is not available. Please install.', call.=FALSE)
         }
     }
+    dots <- list(...)
     if(missing(object)) missingMsg('object')
     if(missing(item)) missingMsg('item')
     if(is(object, 'DiscreteClass'))
@@ -101,11 +102,12 @@ itemplot <- function(object, item, type = 'trace', degrees = c(45, 45), CE = FAL
     if(is.list(object)){
         if(object[[1]]@Model$nfact == 1L) degrees <- 0
     } else if(object@Model$nfact == 1L) degrees <- 0
+    rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,
-                             par.settings=par.settings, auto.key=auto.key,
-                             ...)
-    if(is.null(ret)) return(invisible(ret))
-    else return(ret)
+                             par.settings=par.settings, auto.key=auto.key, ...)
+    if(!is.list(object) && object@Options$exploratory)
+        ret$main <- paste0(ret$main, ' (rotate = \'', rotate, '\')')
+    return(ret)
 }

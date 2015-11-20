@@ -10,8 +10,6 @@
 #'   Only applicable when the input object is multidimensional
 #' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #'   information curves for each category are returned as a matrix
-#' @param use_degrees logical; use \code{degrees} argument for multidimensional information?
-#'   If \code{FALSE}, information will be calculated without reference to any angle
 #'
 #' @keywords information
 #' @seealso

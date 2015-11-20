@@ -525,12 +525,18 @@ setMethod(
                     if(i < j){
                         P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
                         P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
-                        tab <- table(data[,i],data[,j])
+                        pick <- !is.na(data[,i]) & !is.na(data[,j])
+                        tab <- table(data[pick,i],data[pick,j])
                         Etab <- matrix(0,K[i],K[j])
+                        NN <- sum(tab)
                         for(k in 1L:K[i])
                             for(m in 1:K[j])
-                                Etab[k,m] <- N * sum(P1[,k] * P2[,m] * prior)
-                        s <- gamma.cor(tab) - gamma.cor(Etab)
+                                Etab[k,m] <- NN * sum(P1[,k] * P2[,m] * prior)
+                        s <- try(gamma.cor(tab) - gamma.cor(Etab), TRUE)
+                        if(is.nan(s) || is(s, 'try-error')){
+                            res[i,j] <- res[j,i] <- NaN
+                            next
+                        }
                         if(s == 0) s <- 1
                         if(calcG2){
                             tmp <- tab
@@ -605,8 +611,6 @@ setMethod(
                         EJ <- expected.item(ej, Theta=Theta)
                         dat[,2L] <- object@Data$data[ ,j] - EJ
                         tmpdat <- na.omit(dat)
-                        n <- nrow(tmpdat)
-                        Sz <- sqrt(1 / (n-3))
                         res[i,j] <- res[j,i] <- cor(tmpdat)[1L,2L]
                     }
                 }
@@ -737,12 +741,7 @@ setMethod(
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@Model$nfact
-        if(length(degrees) > nfact) type = 'infoangle'
         if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
-        if(nfact == 2 && length(degrees) == 1L)
-            degrees <- c(degrees, 90 - degrees)
-        if(nfact == 3 && length(degrees) == 1L) degrees <- rep(90/3, 3)
-        if(nfact == 1) degrees <- 0
         J <- x@Data$nitems
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
@@ -751,15 +750,12 @@ setMethod(
         if(all(x@Data$K[which.items] == 2L)) auto.key <- FALSE
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
+        if(length(degrees) > ncol(ThetaFull)) type <- 'infoangle'
+        if(length(degrees) == 1L) degrees <- rep(degrees, ncol(ThetaFull))
         info <- numeric(nrow(ThetaFull))
         if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
-            for(l in 1:length(degrees)){
-                ta <- degrees[l]
-                if(nfact == 2) ta <- c(degrees[l], 90 - degrees[l])
-                if(nfact == 3) ta <- degrees
-                for(i in 1:J)
-                    info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=ta)
-            }
+            for(i in 1:J)
+                info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=degrees)
         }
         adj <- x@Data$mins
         rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
@@ -802,7 +798,7 @@ setMethod(
                                               CUSTOM.IND=x@Internals$CUSTOM.IND)
                 tmpscore <- rowSums(score * itemtrace)
                 CIscore[i, ] <- tmpscore
-                CIinfo[i, ] <- testinfo(tmpx, ThetaFull)[,1L]
+                CIinfo[i, ] <- testinfo(tmpx, ThetaFull)
                 CIrxx[i, ] <- CIinfo[i, ] / (CIinfo[i, ] + 1)
             }
         }
@@ -1169,7 +1165,8 @@ mirt2traditional <- function(x){
         names(ds) <- paste0('c', 1:(ncat-1))
         par <- c(par1, as, ds)
     } else {
-        message('No internal transformation defined for itemtype: ', cls)
+        if(cls != 'GroupPars')
+            message('No internal transformation defined for itemtype: ', cls)
         names(par) <- names(x@est)
     }
     ret <- matrix(par, 1L, dimnames=list('par', names(par)))

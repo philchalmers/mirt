@@ -14,6 +14,8 @@ test_that('discrete', {
     expect_equal(as.numeric(sort(so$Item_1)), c(0.0369615, 0.1551905, 0.8448095, 0.9630385),
                  tolerance = 1e-4)
 
+    M <- M2(mod)
+    expect_equal(M$M2, 4.602346, tolerance = 1e-4)
     fs <- fscores(mod, digits=10, full.scores=FALSE)
     pick <- apply(fs[1:5, c('Class_1', 'Class_2')], 1, max)
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
