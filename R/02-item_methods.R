@@ -2079,7 +2079,7 @@ setMethod(
 
 # ----------------------------------------------------------------
 
-# itemtype='grsm3', 1-dim graded rating scale
+# itemtype='grsmIRT', 1-dim graded rating scale
 # slope, thresholds and 1 location parameters
 # ExtractZetas, GenRandomPar, ProbTrace, initialize MODIFIED
 
@@ -2129,7 +2129,7 @@ setMethod(
   f = "GenRandomPars",
   signature = signature(x = 'grsmIRT'),
   definition = function(x){    
-    par <- c(rlnorm(1,0,1),sort(rnorm(x@ncat-1, 0, 1), decreasing=T), rnorm(1,0,0.5))
+    par <- c(rlnorm(1,0,1),sort(rnorm(x@ncat-1, 0, 1), decreasing=TRUE), rnorm(1,0,0.5))
     x@par[x@est] <- par[x@est]
     x
   }
@@ -2161,9 +2161,9 @@ setMethod(
     c = x@par[ncat+1]
     nr = nrow(Theta); nc=ncat-1
     
-    if (all(d == sort(d, decreasing=T))) {
+    if (all(d == sort(d, decreasing=TRUE))) {
       
-      D.star = matrix(c+d, nrow=nr, ncol=nc, byrow=T)      
+      D.star = matrix(c+d, nrow=nr, ncol=nc, byrow=TRUE)      
       TH1 = matrix(th1, nrow=nr, ncol=nc)
       A = matrix(a1, nrow=nr, ncol=nc)      
       P.star = 1/(1+exp(-A*(D.star+TH1))) 
@@ -2204,7 +2204,7 @@ setMethod(
     nc <- ncat - 1
     
     beta.mean <- mean(d)
-    beta.mat <- matrix(d, nrow=nr, ncol=nc, byrow=T)
+    beta.mat <- matrix(d, nrow=nr, ncol=nc, byrow=TRUE)
         
     Sigma.mat <- (beta.mat - beta.mean)
     th1.mat <- matrix(th1, nr, nc)
@@ -2318,7 +2318,7 @@ setMethod("initialize",
             # -3 ~ 3 seems to be too far away
             names(.Object@par) = c(paste("a",1:nfact, sep=""),
                                    paste("d", 1:(ncat-1), sep=""), "c")
-            .Object@est <- c(rep(T, nfact), rep(T,ncat-1), T)
+            .Object@est <- c(rep(TRUE, nfact), rep(TRUE,ncat-1), TRUE)
             .Object@lbound <- rep(-Inf, nfact+ncat)
             .Object@ubound <- rep(Inf, nfact+ncat)
             .Object
