@@ -380,6 +380,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         ret$X2 <- X2
         ret$df <- df
         ret$p.X2 <- 1 - pchisq(X2, df)
+        ret$p.X2[df <= 0] <- NaN
     }
     if(S_X2){
         dat <- x@Data$data
