@@ -1,69 +1,76 @@
+context('grsmIRT')
+
+test_that('grsmIRT', {
 # Response data : num of response categories = 5
 
-R <-
-  structure(c(4, 3, 3, 2, 2, 3, 2, 3, 4, 4, 3, 3, 2, 3, 2, 5, 4,
-              2, 2, 4, 2, 1, 4, 3, 4, 1, 4, 4, 4, 4, 4, 2, 1, 4, 2, 2, 1, 1,
-              3, 5, 4, 2, 2, 2, 3, 3, 5, 2, 2, 2, 2, 2, 5, 4, 4, 4, 2, 4, 3,
-              4, 4, 2, 3, 4, 4, 3, 4, 4, 4, 2, 4, 5, 4, 4, 1, 4, 3, 5, 4, 3,
-              3, 3, 4, 2, 2, 4, 5, 5, 2, 3, 2, 4, 1, 5, 4, 5, 1, 2, 3, 2, 5,
-              3, 3, 3, 4, 4, 2, 3, 4, 4, 4, 2, 3, 3, 4, 2, 4, 3, 3, 2, 4, 5,
-              1, 3, 1, 4, 4, 4, 4, 2, 1, 3, 4, 2, 1, 3, 5, 5, 2, 4, 1, 4, 2,
-              4, 4, 2, 1, 4, 3, 2, 4, 3, 4, 4, 4, 3, 2, 2, 4, 3, 3, 2, 4, 3,
-              4, 3, 4, 4, 3, 2, 4, 5, 2, 3, 1, 5, 4, 2, 4, 1, 2, 3, 3, 3, 1,
-              4, 5, 5, 2, 4, 2, 5, 2, 4, 4, 2, 1, 4, 3, 1, 5, 4, 1, 3, 5, 2,
-              2, 2, 2, 4, 3, 2, 3, 3, 4, 1, 4, 4, 4, 3, 4, 4, 2, 3, 1, 5, 2,
-              5, 4, 2, 2, 2, 2, 3, 1, 4, 4, 4, 2, NA, 1, 4, 2, 2, 3, 1, 1,
-              4, 3, 2), .Dim = c(50L, 5L),
-            .Dimnames = list(c("3", "4", "5",
-                               "6", "7", "10", "11", "12", "17", "18", "19", "25", "26", "28",
-                               "29", "33", "34", "35", "39", "40", "42", "44", "45", "46", "47",
-                               "48", "50", "53", "56", "61", "63", "66", "67", "68", "71", "72",
-                               "73", "77", "80", "81", "82", "83", "84", "85", "87", "88", "89",
-                               "90", "91", "92"), c("TA1-1", "TA1-2", "TA1-3", "TA1-4", "TA1-5"
-                               )))
+    R <-
+      structure(c(4, 3, 3, 2, 2, 3, 2, 3, 4, 4, 3, 3, 2, 3, 2, 5, 4,
+                  2, 2, 4, 2, 1, 4, 3, 4, 1, 4, 4, 4, 4, 4, 2, 1, 4, 2, 2, 1, 1,
+                  3, 5, 4, 2, 2, 2, 3, 3, 5, 2, 2, 2, 2, 2, 5, 4, 4, 4, 2, 4, 3,
+                  4, 4, 2, 3, 4, 4, 3, 4, 4, 4, 2, 4, 5, 4, 4, 1, 4, 3, 5, 4, 3,
+                  3, 3, 4, 2, 2, 4, 5, 5, 2, 3, 2, 4, 1, 5, 4, 5, 1, 2, 3, 2, 5,
+                  3, 3, 3, 4, 4, 2, 3, 4, 4, 4, 2, 3, 3, 4, 2, 4, 3, 3, 2, 4, 5,
+                  1, 3, 1, 4, 4, 4, 4, 2, 1, 3, 4, 2, 1, 3, 5, 5, 2, 4, 1, 4, 2,
+                  4, 4, 2, 1, 4, 3, 2, 4, 3, 4, 4, 4, 3, 2, 2, 4, 3, 3, 2, 4, 3,
+                  4, 3, 4, 4, 3, 2, 4, 5, 2, 3, 1, 5, 4, 2, 4, 1, 2, 3, 3, 3, 1,
+                  4, 5, 5, 2, 4, 2, 5, 2, 4, 4, 2, 1, 4, 3, 1, 5, 4, 1, 3, 5, 2,
+                  2, 2, 2, 4, 3, 2, 3, 3, 4, 1, 4, 4, 4, 3, 4, 4, 2, 3, 1, 5, 2,
+                  5, 4, 2, 2, 2, 2, 3, 1, 4, 4, 4, 2, NA, 1, 4, 2, 2, 3, 1, 1,
+                  4, 3, 2), .Dim = c(50L, 5L),
+                .Dimnames = list(c("3", "4", "5",
+                                   "6", "7", "10", "11", "12", "17", "18", "19", "25", "26", "28",
+                                   "29", "33", "34", "35", "39", "40", "42", "44", "45", "46", "47",
+                                   "48", "50", "53", "56", "61", "63", "66", "67", "68", "71", "72",
+                                   "73", "77", "80", "81", "82", "83", "84", "85", "87", "88", "89",
+                                   "90", "91", "92"), c("TA1-1", "TA1-2", "TA1-3", "TA1-4", "TA1-5"
+                                   )))
 
-coef2mat = function(cf) {
-  stopifnot(is.list(cf))
-  do.call(rbind, cf[1:(length(cf)-1)])
-}
+    coef2mat = function(cf) {
+      stopifnot(is.list(cf))
+      do.call(rbind, cf[1:(length(cf)-1)])
+    }
 
-Qncat = function(R) {
-  stopifnot(is.matrix(R))
-  max(apply(R, 2, function(x) length(unique(x[!is.na(x)]))))
-}
+    Qncat = function(R) {
+      stopifnot(is.matrix(R))
+      max(apply(R, 2, function(x) length(unique(x[!is.na(x)]))))
+    }
 
-n.item <- ncol(R); ncat <- Qncat(R)
+    n.item <- ncol(R); ncat <- Qncat(R)
 
-model <- paste("F1 = 1-",n.item,
-               "\nCONSTRAIN = (1-",n.item,",d1)",
-               paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
-               "\nSTART = (1, c, 0.0)",
-               "\nFIXED = (1, c)",
-               sep=""); cat(model)
+    model <- paste("F1 = 1-",n.item,
+                   "\nCONSTRAIN = (1-",n.item,",d1)",
+                   paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
+                   "\nSTART = (1, c, 0.0)",
+                   "\nFIXED = (1, c)",
+                   sep="")
 
-fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT")
-coef2mat(coef(fit.grsmIRT))
+    fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT", verbose = FALSE)
+    cfs <- unname(coef(fit.grsmIRT, as.data.frame=TRUE, digits=Inf)[,1])
+    expect_equal(cfs, c(0.9504355,1.400673,0.246286,-0.4280762,-1.777097,0,1.937205,1.400673,0.246286,-0.4280762,-1.777097,0.4881555,4.595605,1.400673,0.246286,-0.4280762,-1.777097,0.1717269,3.491201,1.400673,0.246286,-0.4280762,-1.777097,0.2391751,2.120059,1.400673,0.246286,-0.4280762,-1.777097,-0.01121605,0,1), tolerance = 1e-3)
 
-R[R==5] = 4 # when the num. of response categories is 4
-n.item <- ncol(R); ncat <- Qncat(R)
-model <- paste("F1 = 1-",n.item,
-               "\nCONSTRAIN = (1-",n.item,",d1)",
-               paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
-               "\nSTART = (1, c, 0.0)",
-               "\nFIXED = (1, c)",
-               sep=""); cat(model)
-fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT")
-coef2mat(coef(fit.grsmIRT))
+    R[R==5] = 4 # when the num. of response categories is 4
+    n.item <- ncol(R); ncat <- Qncat(R)
+    model <- paste("F1 = 1-",n.item,
+                   "\nCONSTRAIN = (1-",n.item,",d1)",
+                   paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
+                   "\nSTART = (1, c, 0.0)",
+                   "\nFIXED = (1, c)",
+                   sep="")
+    fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT", verbose=FALSE)
+    cfs <- unname(coef(fit.grsmIRT, as.data.frame=TRUE, digits=Inf)[,1])
+    expect_equal(cfs, c(0.8199136,1.582405,0.3846789,-0.3105926,0,1.829724,1.582405,0.3846789,-0.3105926,0.4238192,4.399354,1.582405,0.3846789,-0.3105926,-0.001894622,3.623942,1.582405,0.3846789,-0.3105926,0.05004533,2.216279,1.582405,0.3846789,-0.3105926,-0.1542053,0,1), tolerance = 1e-3)
 
 
-R[R==1] = 2 # when the num. of response categories is 3
-n.item <- ncol(R); ncat <- Qncat(R)
-model <- paste("F1 = 1-",n.item,
-               "\nCONSTRAIN = (1-",n.item,",d1)",
-               paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
-               "\nSTART = (1, c, 0.0)",
-               "\nFIXED = (1, c)",
-               sep=""); cat(model)
-fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT")
-coef2mat(coef(fit.grsmIRT))
+    R[R==1] = 2 # when the num. of response categories is 3
+    n.item <- ncol(R); ncat <- Qncat(R)
+    model <- paste("F1 = 1-",n.item,
+                   "\nCONSTRAIN = (1-",n.item,",d1)",
+                   paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
+                   "\nSTART = (1, c, 0.0)",
+                   "\nFIXED = (1, c)",
+                   sep="")
+    fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT", verbose = FALSE)
+    cfs <- unname(coef(fit.grsmIRT, as.data.frame=TRUE, digits=Inf)[,1])
+    expect_equal(cfs, c(0.5536239,0.05664485,-0.6902105,0,1.653999,0.05664485,-0.6902105,0.7890457,8.838826,0.05664485,-0.6902105,0.4258847,3.555495,0.05664485,-0.6902105,0.4568785,1.972311,0.05664485,-0.6902105,0.1996144,0,1), tolerance = 1e-3)
+})
 

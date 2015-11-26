@@ -167,7 +167,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals,
+        collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, S_X2=S_X2,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,
@@ -202,7 +202,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, digits=digits, ...)
+                                impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
         }
         names(ret) <- x@Data$groupNames
         return(ret)
@@ -300,7 +300,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         for(i in 1L:20L)
             Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
         n.uniqueGroups <- length(unique(Groups))
-        X2 <- df <- RMSEA <- rep(0, J)
+        X2 <- df <- rep(0, J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
@@ -317,6 +317,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             if(!is.null(empirical.plot) && i != empirical.plot) next
             for(j in unique(Groups)){
                 dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
+                if(nrow(dat) <= 1L) next
                 r <- colSums(dat)
                 N <- nrow(dat)
                 mtheta <- matrix(mean(Theta[Groups == j & pick[,i],]), nrow=1)
@@ -331,7 +332,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                 }
                 X2[i] <- X2[i] + sum((r - N*P)^2 / N*P)
             }
-            df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
+            if(X2[i] > 0)
+                df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
         }
         X2[X2 == 0] <- NA
         if(!is.null(empirical.plot)){
