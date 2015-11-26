@@ -9,13 +9,15 @@ simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   returnList = FALSE, model = NULL, mins = 0)
 }
 \arguments{
-\item{a}{a matrix of slope parameters. If slopes are to be constrained to
+\item{a}{a matrix/vector of slope parameters. If slopes are to be constrained to
 zero then use \code{NA}. \code{a} may also be a similar matrix specifying
-factor loadings if \code{factor.loads = TRUE}}
+factor loadings if \code{factor.loads = TRUE}. When a vector is used the test is assumed to be
+unidimensional}
 
-\item{d}{a matrix of intercepts. The matrix should have as many columns as
+\item{d}{a matrix/vector of intercepts. The matrix should have as many columns as
 the item with the largest number of categories, and filled empty locations
-with \code{NA}}
+with \code{NA}. When a vector is used the test is assumed to consist only of dichotomous items
+(because only one intercept per item is provided)}
 
 \item{N}{sample size}
 

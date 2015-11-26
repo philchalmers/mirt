@@ -7,12 +7,14 @@
 #' Returns a data matrix simulated from the parameters, or a list containing the data,
 #' item objects, and Theta matrix.
 #'
-#' @param a a matrix of slope parameters. If slopes are to be constrained to
+#' @param a a matrix/vector of slope parameters. If slopes are to be constrained to
 #'   zero then use \code{NA}. \code{a} may also be a similar matrix specifying
-#'   factor loadings if \code{factor.loads = TRUE}
-#' @param d a matrix of intercepts. The matrix should have as many columns as
+#'   factor loadings if \code{factor.loads = TRUE}. When a vector is used the test is assumed to be
+#'   unidimensional
+#' @param d a matrix/vector of intercepts. The matrix should have as many columns as
 #'   the item with the largest number of categories, and filled empty locations
-#'   with \code{NA}
+#'   with \code{NA}. When a vector is used the test is assumed to consist only of dichotomous items
+#'   (because only one intercept per item is provided)
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
 #'   the same) specifying the type of items to simulate.
 #'
@@ -256,6 +258,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(missing(a)) missingMsg('a')
     if(missing(d)) missingMsg('d')
     if(missing(itemtype)) missingMsg('itemtype')
+    if(is.vector(a)) a <- matrix(a)
+    if(is.vector(d)) d <- matrix(d)
 	nfact <- ncol(a)
 	nitems <- nrow(a)
 	if(length(mins) == 1L) mins <- rep(mins, nitems)
