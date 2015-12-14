@@ -8,7 +8,8 @@ Authors@R: c( person("Phil", family="Chalmers", email =
     person("Joshua", family="Pritikin", role=c('ctb')),
     person("Alexander", family="Robitzsch", role=c('ctb')),
     person("Mateusz", family="Zoltak", role=c('ctb')),
-    person("KwonHyun", family="Kim", role=c('ctb')))
+    person("KwonHyun", family="Kim", role=c('ctb')),
+    person("Carl F.", family="Falk", role=c('ctb')))
 Description: Analysis of dichotomous and polytomous response data using
     unidimensional and multidimensional latent trait models under the Item
     Response Theory paradigm. Exploratory and confirmatory models can be
