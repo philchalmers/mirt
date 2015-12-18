@@ -770,7 +770,8 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'gpcm'),
     definition = function(x){
-        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), 0:(x@ncat-1), 0,
+        ns <- sum(grepl('ak', names(x@est)))
+        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), rep(NA, ns), 0,
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
         x@par[x@est] <- par[x@est]
         x
