@@ -109,13 +109,21 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
             x
         }, message = opts$message)
-        Data$data <- data
         if(any(rowSums(is.na(data)) == ncol(data))){
             if(!opts$removeEmptyRows)
-                stop('data contains completely empty response patterns. Please
-                     remove manually or pass removeEmptyRows=TRUE to the technical list', call.=FALSE)
-            else data <- subset(data, rowSums(is.na(data)) != ncol(data))
+                stop('data contains completely empty response patterns.',
+                     'Please remove manually or pass removeEmptyRows=TRUE to the technical list',
+                     call.=FALSE)
+            else {
+                pick <- rowSums(is.na(data)) != ncol(data)
+                data <- subset(data, pick)
+                group <- subset(group, pick)
+                if(!is.null(latent.regression) || !is.null(mixed.design))
+                    stop('removeEmptyRows input not supported for latent regression/mixed effect models.',
+                         'Please remove the require rows manually for each object.', call.=FALSE)
+            }
         }
+        Data$data <- data
 
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
         else Data$grsm.block <- opts$grsm.block
