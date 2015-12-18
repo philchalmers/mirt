@@ -37,39 +37,19 @@ test_that('grsmIRT', {
 
     n.item <- ncol(R); ncat <- Qncat(R)
 
-    model <- paste("F1 = 1-",n.item,
-                   "\nCONSTRAIN = (1-",n.item,",d1)",
-                   paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
-                   "\nSTART = (1, c, 0.0)",
-                   "\nFIXED = (1, c)",
-                   sep="")
-
-    fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT", verbose = FALSE)
+    fit.grsmIRT <- mirt(R, 1, itemtype="grsmIRT", verbose = FALSE)
     cfs <- unname(coef(fit.grsmIRT, as.data.frame=TRUE, digits=Inf)[,1])
     expect_equal(cfs, c(0.9504355,1.400673,0.246286,-0.4280762,-1.777097,0,1.937205,1.400673,0.246286,-0.4280762,-1.777097,0.4881555,4.595605,1.400673,0.246286,-0.4280762,-1.777097,0.1717269,3.491201,1.400673,0.246286,-0.4280762,-1.777097,0.2391751,2.120059,1.400673,0.246286,-0.4280762,-1.777097,-0.01121605,0,1), tolerance = 1e-3)
 
     R[R==5] = 4 # when the num. of response categories is 4
-    n.item <- ncol(R); ncat <- Qncat(R)
-    model <- paste("F1 = 1-",n.item,
-                   "\nCONSTRAIN = (1-",n.item,",d1)",
-                   paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
-                   "\nSTART = (1, c, 0.0)",
-                   "\nFIXED = (1, c)",
-                   sep="")
-    fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT", verbose=FALSE)
+    fit.grsmIRT <- mirt(R, 1, itemtype="grsmIRT", verbose=FALSE)
     cfs <- unname(coef(fit.grsmIRT, as.data.frame=TRUE, digits=Inf)[,1])
     expect_equal(cfs, c(0.8199136,1.582405,0.3846789,-0.3105926,0,1.829724,1.582405,0.3846789,-0.3105926,0.4238192,4.399354,1.582405,0.3846789,-0.3105926,-0.001894622,3.623942,1.582405,0.3846789,-0.3105926,0.05004533,2.216279,1.582405,0.3846789,-0.3105926,-0.1542053,0,1), tolerance = 1e-3)
 
 
     R[R==1] = 2 # when the num. of response categories is 3
     n.item <- ncol(R); ncat <- Qncat(R)
-    model <- paste("F1 = 1-",n.item,
-                   "\nCONSTRAIN = (1-",n.item,",d1)",
-                   paste(",(1-",n.item,",d",2:(ncat-1),")",sep="", collapse=""),
-                   "\nSTART = (1, c, 0.0)",
-                   "\nFIXED = (1, c)",
-                   sep="")
-    fit.grsmIRT <- mirt(R, mirt.model(model), itemtype="grsmIRT", verbose = FALSE)
+    fit.grsmIRT <- mirt(R, 1, itemtype="grsmIRT", verbose = FALSE)
     cfs <- unname(coef(fit.grsmIRT, as.data.frame=TRUE, digits=Inf)[,1])
     expect_equal(cfs, c(0.5536239,0.05664485,-0.6902105,0,1.653999,0.05664485,-0.6902105,0.7890457,8.838826,0.05664485,-0.6902105,0.4258847,3.555495,0.05664485,-0.6902105,0.4568785,1.972311,0.05664485,-0.6902105,0.1996144,0,1), tolerance = 1e-3)
 })

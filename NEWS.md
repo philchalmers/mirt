@@ -1,3 +1,17 @@
+# Changes in mirt 1.15
+
+## MINOR CHANGES
+
+- more low-level elements included in `extract.mirt()` function
+
+- added `grsmIRT` itemtype for classical graded rating scale form (contributed by KK Sasa)
+
+- added missing analytic Hessian terms when `gpcm_mats` are used (contributed by Carl Falk)
+
+## BUG FIXES
+
+- fixed row-removal bug when using `technical = list(removeEmptyRows = TRUE)` (reported by Aaron Kaat)
+
 # Changes in mirt 1.14
 
 ## MAJOR CHANGES
