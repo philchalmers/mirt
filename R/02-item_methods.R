@@ -2311,13 +2311,14 @@ setMethod(
 setMethod("initialize",
           'grsmIRT',
           function(.Object, nfact, ncat){
-            stopifnot(nfact == 1L)
-            stopifnot(ncat >= 3L)
+            if(nfact != 1L)
+                stop('gpcmIRT only possible for unidimensional models')
+            stopifnot(ncat >= 2L)
             .Object@par <- c(rep(1, nfact),  seq(1, -1, length.out=ncat-1), 0)
             #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1), 0)
             # -3 ~ 3 seems to be too far away
             names(.Object@par) = c(paste("a",1:nfact, sep=""),
-                                   paste("d", 1:(ncat-1), sep=""), "c")
+                                   paste("b", 1:(ncat-1), sep=""), "c")
             .Object@est <- c(rep(TRUE, nfact), rep(TRUE,ncat-1), TRUE)
             .Object@lbound <- rep(-Inf, nfact+ncat)
             .Object@ubound <- rep(Inf, nfact+ncat)

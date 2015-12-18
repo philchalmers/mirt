@@ -151,6 +151,26 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
             }
         }
     }
+    if(any(itemtype == 'grsmIRT')){
+        unique.grsmgroups <- unique(na.omit(grsm.block))
+        for(group in unique.grsmgroups){
+            Kk <- unique(K[grsm.block == unique.grsmgroups[group]])
+            if(length(Kk) > 1L) stop(c('Rating scale models require items to have the ',
+                                       'same number of categories'), call.=FALSE)
+            for(k in 1L:(Kk-1L)){
+                grsmConstraint <- c()
+                for(i in 1L:J){
+                    if(grsm.block[i] == unique.grsmgroups[group]){
+                        if(length(grsmConstraint) == 0L){
+                            pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
+                            grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
+                        } else grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
+                    }
+                }
+                constrain[[length(constrain) + 1L]] <- grsmConstraint
+            }
+        }
+    }
 #     if(any(itemtype == 'rsm')){
 #         unique.rsmgroups <- unique(na.omit(rsm.block))
 #         for(group in unique.rsmgroups){

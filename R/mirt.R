@@ -166,6 +166,12 @@
 #'     but now
 #'     \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
 #'   }
+#'   \item{grsmIRT}{
+#'     Similar to the \code{grsm} item type, but using the IRT parameterization instead (see
+#'     Muraki, 1990 for this exact form). This is restricted to unidimensional models only, whereas
+#'     \code{grsm} may be used for unidimensional or multidimensional models and is more consistant
+#'     with the form of other IRT models in \code{mirt}
+#'   }
 #'   \item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and orderd values
 #'     from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for
 #'     identification in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(k-1)} = (k - 1)}.
@@ -175,7 +181,9 @@
 #'
 #'     For partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above
 #'     model is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the
-#'     latent variance of \eqn{\theta_1} is freely estimated.
+#'     latent variance of \eqn{\theta_1} is freely estimated. However, more specific scoring
+#'     function may be included by passing a suitable list or matricies to the \code{gpcm_mats}
+#'     input argument.
 #'
 #'     In the nominal model this parametrization helps to identify the empirical ordering of the
 #'     categories by inspecting the \eqn{ak} values. Larger values indicate that the item category
@@ -234,10 +242,11 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #'   which will be repeated globally. The NULL default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
-#'   '4PL', 'graded', 'grsm', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
+#'   '4PL', 'graded', 'grsm', 'grsmIRT', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
 #'   '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
 #'   3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
-#'   model, rating scale graded response model, generalized partial credit model,
+#'   model, rating scale graded response model (in slope-intercept and classical form),
+#'   generalized partial credit model (with optional scoring matricies from \code{gpcm_mats}),
 #'   nominal model, ideal-point model, 2-3PL partially compensatory model, and 2-4 parameter nested
 #'   logistic models, respectively. User defined item classes can also be defined using the
 #'   \code{\link{createItem}} function
