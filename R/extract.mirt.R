@@ -26,6 +26,8 @@
 #'     in \code{freq}}
 #'   \item{freq}{frequencies associated with \code{tabdata}}
 #'   \item{K}{an integer vector indicating the number of unique elements for each item}
+#'   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
+#'   \item{itemnames}{a vector of item names from the input data}
 #'   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
 #'     dummy coded variables}
 #'   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
@@ -38,8 +40,12 @@
 #'   \item{parvec}{vector containing uniquely estimated parameters}
 #'   \item{vcov}{parameter covariance matrix (associated with parvec)}
 #'   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
+#'   \item{constrain}{a list of item parameter constraints to indicate which items were equal
+#'     during estimation}
 #'   \item{Prior}{prior density distribution for the latent traits}
 #'   \item{nfact}{number of latent traits/factors}
+#'   \item{nitems}{number of items}
+#'   \item{ngroups}{number of groups}
 #'   \item{secondordertest}{a logical indicating whether the model passed the second-order test
 #'     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
 #'   \item{time}{estimation time, broken into different sections}
@@ -84,15 +90,20 @@ extract.mirt <- function(x, what){
                       F = x@Fit$F,
                       h2 = x@Fit$h2,
                       K = x@Data$K,
+                      itemtype =  x@Model$itemtype,
+                      itemnames = colnames(x@Data$data),
                       parvec = x@Internals$shortpars,
                       vcov = x@vcov,
                       nest = x@Model$nest,
+                      constrain = x@Model$constrain,
                       iterations = x@OptimInfo$iter,
                       LLhistory = x@Internals$collectLL,
                       exp_resp = x@Internals$Pl,
                       converged = x@OptimInfo$converged,
                       condnum = x@OptimInfo$condnum,
                       nfact = x@Model$nfact,
+                      nitems = ncol(x@Data$data),
+                      ngroups = x@Data$ngroups,
                       Prior = x@Internals$Prior,
                       secondordertest = x@OptimInfo$secondordertest,
                       tabdata = x@Data$tabdata,
@@ -106,7 +117,7 @@ extract.mirt <- function(x, what){
     names(ret) <- what
     if(length(ret) == 1L) return(ret[[1L]])
     if(!any(what %in% c('F', 'h2', 'vcov', 'parvec', 'exp_resp', 'Prior', 'freq',
-                        'tabdata', 'tabdatalong', 'fulldatalong', 'time')))
+                        'tabdata', 'tabdatalong', 'fulldatalong', 'time', 'itemtype')))
         ret <- do.call(c, ret)
     ret
 }
