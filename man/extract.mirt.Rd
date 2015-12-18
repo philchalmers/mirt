@@ -42,6 +42,7 @@ Objects which can be extracted from mirt objects include:
   \item{K}{an integer vector indicating the number of unique elements for each item}
   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
   \item{itemnames}{a vector of item names from the input data}
+  \item{data}{raw input data of item responses}
   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
     dummy coded variables}
   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
