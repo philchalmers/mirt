@@ -52,14 +52,14 @@ iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE){
     if(ncol(Theta) == 1L) degrees <- 0
     use_degrees <- ncol(Theta) > 1L
     if(is.null(degrees) && ncol(Theta) != 1L)
-        stop('Multidimensional information requires prespecified angles in degrees',
+        stop('Multidimensional information requires prespecified angles in degrees.',
              call.=FALSE)
     if(ncol(Theta) != x@nfact)
-        stop('Theta does not have the correct number of dimensions', call.=FALSE)
+        stop('Theta does not have the correct number of dimensions.', call.=FALSE)
     cosangle <- cos(d2r(degrees))
     info <- if(use_degrees){
         if(ncol(Theta) != length(cosangle))
-            stop('length of the degrees vector not equal to the number of factors', call.=FALSE)
+            stop('length of the degrees vector not equal to the number of factors.', call.=FALSE)
         ItemInfo(x=x, Theta=Theta, cosangle=cosangle, total.info=total.info)
     } else ItemInfo2(x=x, Theta=Theta, total.info=total.info)
     info

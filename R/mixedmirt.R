@@ -334,25 +334,25 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     itemdesignold <- if(is.null(itemdesign)) data.frame() else itemdesign
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
-        stop('itemtype contains unsupported classes of items', call.=FALSE)
+        stop('itemtype contains unsupported classes of items.', call.=FALSE)
     if(is(random, 'formula')) {
         random <- list(random)
     } else if(is.null(random)) random <- list()
     RETVALUES <- ifelse(is.character(pars), TRUE, FALSE)
-    if(!is.list(random)) stop('Incorrect input for random argument', call.=FALSE)
+    if(!is.list(random)) stop('Incorrect input for random argument.', call.=FALSE)
     if(is.null(covdata)) covdata <- data.frame(UsElEsSvAR = factor(rep(1L, nrow(data))))
     if(is.null(itemdesign)){
         itemdesign <- data.frame(items = factor(1L:ncol(data)))
     } else {
         if(!is.null(itemdesign$items))
-            stop('itemdesign internally reserves the predictor name \'items\'. Please Change ',
+            stop('itemdesign internally reserves the predictor name \'items\'. Please Change.',
                  call.=FALSE)
         itemdesign$items <- factor(1L:ncol(data))
     }
     if(!is.data.frame(covdata) || ! is.data.frame(itemdesign))
-        stop('Predictor variable inputs must be data.frame objects', call.=FALSE)
+        stop('Predictor variable inputs must be data.frame objects.', call.=FALSE)
     if(nrow(covdata) != nrow(data))
-        stop('number of rows in covdata do not match number of rows in data', call.=FALSE)
+        stop('number of rows in covdata do not match number of rows in data.', call.=FALSE)
     dropcases <- which(rowSums(is.na(covdata)) != 0)
     if(length(dropcases) > 0L){
         data <- data[-dropcases, ]
@@ -362,7 +362,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(any(pick)){
         if(any(covdata[,pick] > 10 || covdata[,pick] < -10))
             warning('Continuous variables in covdata should be rescaled to fall
-                     between -10 and 10 for better numerical stability', call.=FALSE)
+                     between -10 and 10 for better numerical stability.', call.=FALSE)
     }
     longdata <- reshape(data.frame(ID=1L:nrow(data), data, covdata), idvar='ID',
                         varying=list(1L:ncol(data) + 1L), direction='long')
@@ -375,7 +375,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     if(any(K > 2)){
         if(any(colnames(mm) %in% paste0('items', 1:ncol(data))))
             stop('fixed formulas do no support the \'items\' internal variable for
-                 polytomous items. Please remove', call.=FALSE)
+                 polytomous items. Please remove.', call.=FALSE)
         mm <- mm[ , -1L, drop = FALSE]
     }
     if(return.design) return(list(X=mm, Z=NaN))

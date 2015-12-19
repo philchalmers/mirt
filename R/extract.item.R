@@ -23,7 +23,7 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     if(missing(x)) missingMsg('x')
     if(missing(item)) missingMsg('item')
     if(is(x, 'MixedClass'))
-        stop('Lower-level functions do not support extracted items from MixedClass objects',
+        stop('Lower-level functions do not support extracted items from MixedClass objects.',
              call.=FALSE)
     inames <- colnames(x@Data$data)
     ind <- 1L:length(inames)

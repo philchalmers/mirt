@@ -85,7 +85,7 @@ setMethod(
                                        auto.key = auto.key, main = main,
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
             } else {
-                stop('Plot type not supported for unidimensional model', call.=FALSE)
+                stop('Plot type not supported for unidimensional model.', call.=FALSE)
             }
         }
         if(nfact == 2){
@@ -121,7 +121,7 @@ setMethod(
                                           scales = list(arrows = FALSE), screen=rot,
                                           auto.key = auto.key, ...))
             } else {
-                stop('Plot type not supported for 2 dimensional model', call.=FALSE)
+                stop('Plot type not supported for 2 dimensional model.', call.=FALSE)
             }
         }
     }
@@ -132,11 +132,11 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                           theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
                           add.ylab2 = TRUE, drape = TRUE, ...){
     if(drop.zeros){
-        if(x@Options$exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
+        if(x@Options$exploratory) stop('Cannot drop zeros in exploratory models.', call.=FALSE)
         x@ParObjects$pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     }
     nfact <- min(x@ParObjects$pars[[item]]@nfact, x@Model$nfact)
-    if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
+    if(nfact > 3) stop('Can not plot high dimensional models.', call.=FALSE)
     theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
     if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
@@ -327,7 +327,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                 stop('latticeExtra package is not available. Please install.', call.=FALSE)
             }
         } else {
-            stop('Plot type not supported for unidimensional model', call.=FALSE)
+            stop('Plot type not supported for unidimensional model.', call.=FALSE)
         }
     } else if(nfact == 2){
         plt <- data.frame(info = info, SE = 1/sqrt(info), Theta1 = Theta[,1], Theta2 = Theta[,2])
@@ -394,7 +394,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                                       scales = list(arrows = FALSE),
                                       colorkey = colorkey, drape = drape, screen=rot, ...))
         } else {
-            stop('Plot type not supported for 2 dimensional model', call.=FALSE)
+            stop('Plot type not supported for 2 dimensional model.', call.=FALSE)
         }
     } else {
         plt <- data.frame(info = info, SE = 1/sqrt(info), Theta1 = Theta[,1], Theta2 = Theta[,2],
@@ -432,7 +432,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                                       scales = list(arrows = FALSE),
                                       colorkey = colorkey, drape = drape, screen=rot, ...))
         } else {
-            stop('Plot type not supported for 3 dimensional model', call.=FALSE)
+            stop('Plot type not supported for 3 dimensional model.', call.=FALSE)
         }
 
     }

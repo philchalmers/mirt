@@ -14,11 +14,11 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     N <- nrow(data)
     exploratory <- FALSE
     if(!is.null(nominal.highlow)){
-        if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix', call.=FALSE)
+        if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix.', call.=FALSE)
         if(!all(dim(nominal.highlow) == c(2,J)))
-            stop('nominal.highlow does not have the correct dimensions', call.=FALSE)
+            stop('nominal.highlow does not have the correct dimensions.', call.=FALSE)
         if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ]))
-            stop('nominal.highlow low and high categories must differ', call.=FALSE)
+            stop('nominal.highlow low and high categories must differ.', call.=FALSE)
     }
     if(is(model, 'mirt.model') && any(model$x[,1L] == 'NEXPLORE')){
         oldmodel <- model
@@ -77,16 +77,16 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         }
     }
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, J)
-    if(length(itemtype) != J) stop('itemtype specification is not the correct length', call.=FALSE)
+    if(length(itemtype) != J) stop('itemtype specification is not the correct length.', call.=FALSE)
     guess[guess == 0 & itemtype %in% c('3PL', '4PL', 'PC3PL', '3PLNRM', '4PLNRM')] <- .15
     upper[upper == 1 & itemtype %in% c('4PL', '3PLu', '3PLuNRM', '4PLNRM')] <- .85
     if(length(gpcm_mats)){
         if(length(gpcm_mats) != ncol(data))
-            stop('gpcm_mats list does not correspond to columns in data', call.=FALSE)
+            stop('gpcm_mats list does not correspond to columns in data.', call.=FALSE)
         pick <- !sapply(gpcm_mats, is.null) & itemtype %in% c('gpcm', 'Rasch')
         tmp <- gpcm_mats[pick]
         if(!all(sapply(tmp, is.matrix)))
-            stop('Matricies must be used in gpcm_mats', call.=FALSE)
+            stop('Matricies must be used in gpcm_mats.', call.=FALSE)
         if(!all(sapply(tmp, nrow) == K[pick])){
             nrows <- sapply(tmp, nrow)
             out <- !sapply(tmp, nrow) == K[pick]
@@ -136,7 +136,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         for(group in unique.grsmgroups){
             Kk <- unique(K[grsm.block == unique.grsmgroups[group]])
             if(length(Kk) > 1L) stop(c('Rating scale models require items to have the ',
-                                       'same number of categories'), call.=FALSE)
+                                       'same number of categories.'), call.=FALSE)
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){
@@ -156,7 +156,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         for(group in unique.grsmgroups){
             Kk <- unique(K[grsm.block == unique.grsmgroups[group]])
             if(length(Kk) > 1L) stop(c('Rating scale models require items to have the ',
-                                       'same number of categories'), call.=FALSE)
+                                       'same number of categories.'), call.=FALSE)
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){
@@ -176,7 +176,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
 #         for(group in unique.rsmgroups){
 #             Kk <- unique(K[rsm.block[rsm.block == unique.rsmgroups[group]]])
 #             if(length(Kk) > 1L) stop('Rating scale models require that items to have the
-#                                     same number of categories', call.=FALSE)
+#                                     same number of categories.', call.=FALSE)
 #             for(k in 1L:(Kk-1L)){
 #                 rsmConstraint <- c()
 #                 for(i in 1L:J){

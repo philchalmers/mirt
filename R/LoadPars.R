@@ -47,7 +47,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             }
         } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
             if(K[i] != 2L)
-                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories.'), call.=FALSE)
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
             fp <- c(estLambdas[i, ], TRUE, FALSE, FALSE)
             if(any(itemtype[i] == c('3PL', '4PL'))) fp[length(fp)-1L] <- TRUE
@@ -112,14 +112,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                             paste('d', 0L:(K[i]-1L), sep=''))
         } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
             if(K[i] != 2L)
-                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories.'), call.=FALSE)
             val <- c(lambdas[i,], rep(1, nfact), guess[i], 999)
             fp <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
             if(itemtype[i] == 'PC3PL') fp[length(fp) - 1L] <- TRUE
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
         } else if(itemtype[i] == 'ideal'){
             if(K[i] != 2L)
-                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories.'), call.=FALSE)
             val <- c(lambdas[i,]/2, -0.5)
             fp <- c(estLambdas[i, ], TRUE)
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')

@@ -266,9 +266,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	stopifnot(length(mins) == nitems)
 	K <- rep(0L,nitems)
 	if(length(guess) == 1L) guess <- rep(guess,nitems)
-	if(length(guess) != nitems) stop("Guessing parameter is incorrect", call.=FALSE)
+	if(length(guess) != nitems) stop("Guessing parameter is incorrect.", call.=FALSE)
 	if(length(upper) == 1L) upper <- rep(upper,nitems)
-	if(length(upper) != nitems) stop("Upper bound parameter is incorrect", call.=FALSE)
+	if(length(upper) != nitems) stop("Upper bound parameter is incorrect.", call.=FALSE)
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, nitems)
     if(length(gpcm_mats)){
         stopifnot(length(gpcm_mats) == nitems)
@@ -293,7 +293,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	if(is.null(mu)) mu <- rep(0,nfact)
 	if(!is.null(Theta)){
 		if(ncol(Theta) != nfact)
-			stop("The input Theta matrix does not have the correct dimensions", call.=FALSE)
+			stop("The input Theta matrix does not have the correct dimensions.", call.=FALSE)
 	    N <- nrow(Theta)
 	}
 	if(is.null(Theta)) Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
@@ -315,8 +315,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
                     par <- na.omit(c(a[i, ],as.vector(gpcm_mats[[i]]), d[i,]))
                 }
             } else if(itemtype[i] == 'ideal'){
-                if(K[i] > 2) stop('ideal point models for dichotomous items only', call.=FALSE)
-                if(d[i,1] > 0) stop('ideal point intercepts must be negative', call.=FALSE)
+                if(K[i] > 2) stop('ideal point models for dichotomous items only.', call.=FALSE)
+                if(d[i,1] > 0) stop('ideal point intercepts must be negative.', call.=FALSE)
                 par <- na.omit(c(a[i, ],d[i,]))
             } else {
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))

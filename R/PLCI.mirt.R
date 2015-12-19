@@ -175,12 +175,12 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     }
 
     if(.hasSlot(mod@Model$lrPars, 'beta'))
-        stop('Latent regression models not yet supported')
+        stop('Latent regression models not yet supported.')
     dat <- mod@Data$data
     model <- mod@Model$model
     parprior <- mod@Model$parprior
     if(length(parprior))
-        stop('Confidence intervals cannot be computed for models that include priors')
+        stop('Confidence intervals cannot be computed for models that include priors.')
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
     PrepList <- mirt(mod@Data$data, mod@Model$model, Return_PrepList=TRUE)
@@ -207,7 +207,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, plot = FALSE, npts = 24, 
     }
     if(plot){
         if(length(parnum) != 2L)
-            stop('parnum input must contain exactly two parameter numbers', call.=FALSE)
+            stop('parnum input must contain exactly two parameter numbers.', call.=FALSE)
     }
     LL <- mod@Fit$logLik
     get.LL <- LL - qchisq(1-alpha, 1 + plot)/2

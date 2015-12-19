@@ -55,7 +55,7 @@ wald <- function(object, L, C = 0){
     if(missing(object)) missingMsg('object')
     if(all(dim(object@vcov) == c(1,1)))
         if(object@vcov[1,1] == 0L)
-            stop('No information matrix has been calculated for the model', call.=FALSE)
+            stop('No information matrix has been calculated for the model.', call.=FALSE)
     covB <- object@vcov
     Names <- colnames(covB)
     B <- object@Internals$shortpars
@@ -66,16 +66,16 @@ wald <- function(object, L, C = 0){
         return(ret)
     }
     if(!is.matrix(L)){
-        stop('L must be a matrix', call.=FALSE)
+        stop('L must be a matrix.', call.=FALSE)
     } else if(ncol(L) != length(Names)){
-        stop('L does not have an appropriate number of columns', call.=FALSE)
+        stop('L does not have an appropriate number of columns.', call.=FALSE)
     }
     if(!is.vector(C))
-        stop('C must be a vector of constant population parameters', call.=FALSE)
+        stop('C must be a vector of constant population parameters.', call.=FALSE)
     if(length(C) == 1L){
         C <- numeric(ncol(L))
     } else if(length(C) != ncol(L)){
-        stop('length(C) must be the same as ncol(L)', call.=FALSE)
+        stop('length(C) must be the same as ncol(L).', call.=FALSE)
     }
     W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
     W <- ifelse(W < 0, 0, W)

@@ -193,28 +193,28 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                 \tDIF testing, freeing the focal group hyper-parameters is recommended.')
     bfactorlist <- MGmodel@Internals$bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
-        stop('bifactor models are currently not supported in this function', call.=FALSE)
+        stop('bifactor models are currently not supported in this function.', call.=FALSE)
     itemnames <- colnames(MGmodel@Data$data)
     if(!any(scheme %in% c('add', 'drop', 'add_sequential', 'drop_sequential')))
-        stop('scheme input is not valid', call.=FALSE)
+        stop('scheme input is not valid.', call.=FALSE)
     if(return_models){
         if(Wald)
-            stop('return_models argument only valid for likelihood ratio tests', call.=FALSE)
+            stop('return_models argument only valid for likelihood ratio tests.', call.=FALSE)
     }
     if(Wald){
         if(scheme != 'add')
-            stop('Wald tests are only appropriate when add scheme is used', call.=FALSE)
+            stop('Wald tests are only appropriate when add scheme is used.', call.=FALSE)
         if(!MGmodel@Options$SE)
-            stop('Information matrix was not calculated', call.=FALSE)
+            stop('Information matrix was not calculated.', call.=FALSE)
     }
     if(plotdif && any(scheme %in% c('drop', 'drop_sequential')))
-        stop('plotdif not supported for dropping schemes', call.=FALSE)
+        stop('plotdif not supported for dropping schemes.', call.=FALSE)
     pval <- 0
     if(is.numeric(seq_stat)){
         pval <- seq_stat
         seq_stat <- 'p'
     } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC'))){
-        stop('Invalid seq_stat input', call.=FALSE)
+        stop('Invalid seq_stat input.', call.=FALSE)
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
     invariance <- MGmodel@Model$invariance
@@ -232,7 +232,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         updatedModel <- MGmodel
         run_number <- 2L
         if(run_number > max_run)
-            stop('max_run number must be greater than 1 for sequential searches', call.=FALSE)
+            stop('max_run number must be greater than 1 for sequential searches.', call.=FALSE)
         while(TRUE){
             statdiff <- do.call(c, lapply(res, function(x, stat){
                 if(stat == 'p') return(x[2L, 'p'])

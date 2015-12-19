@@ -124,7 +124,7 @@
 itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
                     theta_lim = c(-3,3), return.models = FALSE, ...){
     if(return.models && is.list(Theta))
-        stop('Models will only be returned when Theta is a matrix')
+        stop('Models will only be returned when Theta is a matrix.')
     Theta2 <- seq(theta_lim[1L], theta_lim[2L], length.out=1000)
     z <- qnorm((1 - CI) / 2 + CI)
     keep <- !is.na(item)
@@ -155,7 +155,7 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
         nfact <- ncol(Theta)
         if(nfact > 1L && !return.models){
             return.models <- TRUE
-            message('return.models is always set to TRUE for multidimensional models')
+            message('return.models is always set to TRUE for multidimensional models.')
         }
         fit <- vector('list', ncol(mm))
         names(fit) <- paste0('cat_', 1L:ncol(mm))

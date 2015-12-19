@@ -75,7 +75,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     #if MG loop
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
-        stop('MixedClass objects are not yet supported', call.=FALSE)
+        stop('MixedClass objects are not yet supported.', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 15000L
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
@@ -87,7 +87,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple
-                 data imputations', call.=FALSE)
+                 data imputations.', call.=FALSE)
         Theta <- fscores(obj, plausible.draws = impute)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts)
@@ -150,7 +150,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         if(calcNull){
             null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype, group=obj@Data$group))
             if(is(null.mod, 'try-error'))
-                stop('Null model did not converge or is not supported', call.=FALSE)
+                stop('Null model did not converge or is not supported.', call.=FALSE)
             null.fit <- M2(null.mod, calcNull=FALSE)
             newret$TLI <- tli(X2=newret$Total.M2, X2.null=null.fit$Total.M2, df=newret$df,
                               df.null=null.fit$df)
@@ -199,7 +199,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         estpars <- c(estpars, pars[[i]]@est)
     bfactorlist <- obj@Internals$bfactor
     if(.hasSlot(obj@Model$lrPars, 'beta'))
-        stop('Latent regression models not yet supported')
+        stop('Latent regression models not yet supported.')
     if(!discrete){
 #         if(is.null(bfactorlist$Priorbetween[[1L]])){
         if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
@@ -298,7 +298,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
-        stop('M2 cannot be calulated since df is too low', call.=FALSE)
+        stop('M2 cannot be calulated since df is too low.', call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
     M2 <- N * t(p - e) %*% C2 %*% (p - e)

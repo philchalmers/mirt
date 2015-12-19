@@ -122,16 +122,16 @@ setMethod(
                 jit <- do.call(rbind, jit)
                 if(any(is.nan(jit)))
                     stop('Could not draw unique plausible values. Response pattern ACOVs may
-                         not be positive definite')
+                         not be positive definite.')
                 ret[[i]] <- fs + jit
             }
             if(plausible.draws == 1L) return(ret[[1L]])
             else return(ret)
         }
         if(return.acov && MI != 0)
-            stop('simultaneous impute and return.acov option not supported', call.=FALSE)
+            stop('simultaneous impute and return.acov option not supported.', call.=FALSE)
 	    if(return.acov && returnER)
-	        stop('simultaneous returnER and return.acov option not supported', call.=FALSE)
+	        stop('simultaneous returnER and return.acov option not supported.', call.=FALSE)
         if(!is.null(response.pattern)){
             if(is.data.frame(response.pattern))
                 response.pattern <- as.matrix(response.pattern)
@@ -166,7 +166,7 @@ setMethod(
                 newmod@ParObjects$pars <- newmod@ParObjects$pars[c(pick, length(newmod@ParObjects$pars))]
                 newmod@Model$itemloc <- c(1L, 1L + cumsum(object@Data$K[pick]))
                 if(newmod@Options$exploratory)
-                    stop('exploratory models not supported for single response pattern inputs', call.=FALSE)
+                    stop('exploratory models not supported for single response pattern inputs.', call.=FALSE)
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
@@ -221,7 +221,7 @@ setMethod(
 		USETABDATA <- TRUE
 		if(LR){
             if(!(method %in% c('EAP', 'MAP')))
-                warning('Latent regression information only used in MAP and EAP estimates',
+                warning('Latent regression information only used in MAP and EAP estimates.',
                         call.=FALSE)
             full.scores <- TRUE
             USETABDATA <- FALSE
@@ -243,9 +243,9 @@ setMethod(
         estHess <- !full.scores | return.acov | full.scores.SE
         if(impute){
             if(length(object@vcov) == 1L)
-                stop('Stop an information matrix must be computed for imputations', call.=FALSE)
+                stop('Stop an information matrix must be computed for imputations.', call.=FALSE)
             if(!object@OptimInfo$secondordertest){
-                stop('Information matrix is not positive definite', call.=FALSE)
+                stop('Information matrix is not positive definite.', call.=FALSE)
             } else {
                 names <- colnames(object@vcov)
                 imputenums <- as.numeric(sapply(names, function(x, split){
@@ -274,7 +274,7 @@ setMethod(
                         } else thetaComb(theta,nfact)
                     } else {
                         if(ncol(custom_theta) != object@Model$nfact)
-                            stop('ncol(custom_theta) does not match model', call.=FALSE)
+                            stop('ncol(custom_theta) does not match model.', call.=FALSE)
                         ThetaShort <- Theta <- custom_theta
                     }
                     if(length(prodlist) > 0L)
@@ -322,7 +322,7 @@ setMethod(
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
-                stop('method not defined', call.=FALSE)
+                stop('method not defined.', call.=FALSE)
             }
     		if(return.acov){
     		    scores <- tmp
@@ -346,7 +346,7 @@ setMethod(
             SEscores <- tmp[[2L]]
         }
         if(any(is.na(scores)))
-            warning('NAs returned for response patterns with no data. Consider removing',
+            warning('NAs returned for response patterns with no data. Consider removing.',
                     call.=FALSE)
 		if (full.scores){
             if(USETABDATA){
@@ -427,7 +427,7 @@ setMethod(
     {
         class(object) <- 'MultipleGroupClass'
         if(!any(method %in% c('EAP', 'EAPsum')))
-            stop('Only EAP and EAPsum methods are supported for DiscreteClass objects', call.=FALSE)
+            stop('Only EAP and EAPsum methods are supported for DiscreteClass objects.', call.=FALSE)
         method <- ifelse(method == 'EAP', 'Discrete', 'DiscreteSum')
         ret <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=FALSE, verbose=verbose,
@@ -730,7 +730,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     } else {
         dat <- x@Data$data
         if(any(is.na(dat)))
-            stop('EAPsum scores are not meaningful when data contains missing values')
+            stop('EAPsum scores are not meaningful when data contains missing values.')
         E <- L1 %*% prior * nrow(dat)
         adj <- x@Data$min
         dat <- t(t(dat) - adj)
