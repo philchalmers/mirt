@@ -40,13 +40,13 @@ imputeMissing <- function(x, Theta, ...){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is(x, 'MixedClass'))
-        stop('mixedmirt xs not yet supported', call.=FALSE)
+        stop('MixedClass objects is not yet supported.', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
         pars <- x@ParObjects$pars
         group <- x@Data$group
         data <- x@Data$data
         if(sum(is.na(data))/length(data) > .1)
-            warning('Imputing too much data can lead to very conservative results. Use with caution',
+            warning('Imputing too much data can lead to very conservative results. Use with caution.',
                     call.=FALSE)
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
         for(g in 1L:length(pars)){
@@ -77,7 +77,7 @@ imputeMissing <- function(x, Theta, ...){
     J <- length(K)
     data <- x@Data$data
     if(sum(is.na(data))/length(data) > .1)
-        warning('Imputing too much data can lead to very conservative results. Use with caution',
+        warning('Imputing too much data can lead to very conservative results. Use with caution.',
                 call.=FALSE)
     N <- nrow(data)
     Nind <- 1L:N
