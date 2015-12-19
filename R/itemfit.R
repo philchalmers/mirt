@@ -144,7 +144,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
 
     if(missing(x)) missingMsg('x')
     if(is(x, 'MixedClass'))
-        stop('MixedClass objects are not supported', call.=FALSE)
+        stop('MixedClass objects are not supported.', call.=FALSE)
     discrete <- FALSE
     if(is(x, 'DiscreteClass')){
         class(x) <- 'MultipleGroupClass'
@@ -153,15 +153,15 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
 
     stopifnot(Zh || X2 || S_X2)
     if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
-        stop('Only X2 can be compute without imputed datsets', call.=FALSE)
+        stop('Only X2 can be compute without imputed datsets.', call.=FALSE)
 
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple data
-                 imputations', call.=FALSE)
+                 imputations.', call.=FALSE)
         if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
-            warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
+            warning('Imputations for large amounts of missing data may be overly conservative.', call.=FALSE)
         stopifnot(impute > 1L)
         Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)
         collect <- vector('list', impute)
@@ -302,7 +302,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         n.uniqueGroups <- length(unique(Groups))
         X2 <- df <- rep(0, J)
         if(!is.null(empirical.plot)){
-            if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
+            if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models.', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
             ThetaFull <- thetaComb(theta, nfact)
             if(!is.numeric(empirical.plot)){

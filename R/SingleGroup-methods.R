@@ -273,7 +273,7 @@ setMethod(
         allPars <- list()
         if(IRTpars){
             if(object@Model$nfact > 1L)
-                stop('traditional parameterization is only available for unidimensional models',
+                stop('traditional parameterization is only available for unidimensional models.',
                      call.=FALSE)
             for(i in 1:(J+1))
                 allPars[[i]] <- round(mirt2traditional(object@ParObjects$pars[[i]]), digits)
@@ -474,7 +474,7 @@ setMethod(
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
-            stop('Latent regression models not yet supported')
+            stop('Latent regression models not yet supported.')
         discrete <- FALSE
         if(!is.null(dots$discrete)) discrete <- TRUE
         K <- object@Data$K
@@ -504,7 +504,7 @@ setMethod(
         } else {
             Theta <- object@Model$Theta
             if(!any(type %in% c('exp', 'LD', 'LDG2')))
-                stop('residual type not supported for discrete latent variables', call.=FALSE)
+                stop('residual type not supported for discrete latent variables.', call.=FALSE)
         }
         itemnames <- colnames(data)
         listtabs <- list()
@@ -623,7 +623,7 @@ setMethod(
             res <- round(res,digits)
             return(res)
         } else {
-            stop('specified type does not exist', call.=FALSE)
+            stop('specified type does not exist.', call.=FALSE)
         }
 
     }
@@ -736,7 +736,7 @@ setMethod(
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist')))
-            stop('type supplied is not supported')
+            stop('type supplied is not supported.')
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
@@ -777,7 +777,7 @@ setMethod(
         if(MI > 0L && nfact == 1L){
             tmpx <- x
             if(!x@Options$SE)
-                stop('Must compute an information matrix', call.=FALSE)
+                stop('Must compute an information matrix.', call.=FALSE)
             covB <- x@vcov
             pre.ev <- eigen(covB)
             names <- colnames(covB)
@@ -860,7 +860,7 @@ setMethod(
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {
-                stop('plot type not supported for three dimensional model', call.=FALSE)
+                stop('plot type not supported for three dimensional model.', call.=FALSE)
             }
         } else if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2")
@@ -928,7 +928,7 @@ setMethod(
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {
-                stop('plot type not supported for two dimensional model', call.=FALSE)
+                stop('plot type not supported for two dimensional model.', call.=FALSE)
             }
         } else {
             colnames(plt) <- c("info", "score", "Theta")
@@ -1103,7 +1103,7 @@ setMethod(
                     main <- 'Empirical Histogram'
                 Prior <- x@Internals$Prior[[1L]]
                 if(!x@Options$empiricalhist)
-                    stop('Empirical histogram was not estimated for this object', call.=FALSE)
+                    stop('Empirical histogram was not estimated for this object.', call.=FALSE)
                 Theta <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
                                     length.out = x@Options$quadpts))
                 Prior <- Prior * nrow(x@Data$data)
@@ -1119,7 +1119,7 @@ setMethod(
                               type = 'b', main = main,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {
-                stop('plot not supported for unidimensional models', call.=FALSE)
+                stop('plot not supported for unidimensional models.', call.=FALSE)
             }
         }
     }
@@ -1206,7 +1206,7 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
         par <- c(a1, ak, dk)
         names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
     } else {
-        stop('traditional2mirt item class not supported', call.=FALSE)
+        stop('traditional2mirt item class not supported.', call.=FALSE)
     }
     par
 }

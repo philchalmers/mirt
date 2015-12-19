@@ -207,10 +207,10 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
     Call <- match.call()
     if(missing(model)) missingMsg('model')
     if(!is.numeric(model))
-        stop('model must be a numeric vector', call.=FALSE)
+        stop('model must be a numeric vector.', call.=FALSE)
     if(is.numeric(model))
         if(length(model) != ncol(data))
-            stop('length of model must equal the number of items', call.=FALSE)
+            stop('length of model must equal the number of items.', call.=FALSE)
     nspec <- length(na.omit(unique(model)))
     specific <- model
     if(is.character(model2)){
@@ -218,7 +218,7 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
         model2 <- mirt.model(model2, itemnames = if(tmp) colnames(data) else NULL)
     }
     if(!is(model2, 'mirt.model'))
-        stop('model2 must be an appropriate second-tier model', call.=FALSE)
+        stop('model2 must be an appropriate second-tier model.', call.=FALSE)
     model <- bfactor2mod(model, ncol(data))
     model$x <- rbind(model2$x, model$x)
     attr(model, 'nspec') <- nspec

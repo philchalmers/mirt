@@ -106,7 +106,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             lambdas[!estlam] <- 0
     }
     if(exploratory && any(itemtype %in% c('PC2PL', 'PC3PL')))
-        stop('Partially compensatory models can only be estimated within a confirmatory model',
+        stop('Partially compensatory models can only be estimated within a confirmatory model.',
              call.=FALSE)
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
@@ -123,7 +123,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         esplit <- lapply(esplit, function(x){
             newx <- c()
             if(length(x) < 3L)
-                stop('START = ... has not been supplied enough arguments', call.=FALSE)
+                stop('START = ... has not been supplied enough arguments.', call.=FALSE)
             for(i in 1L:(length(x)-2L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -154,7 +154,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         esplit <- lapply(esplit, function(x){
             newx <- c()
             if(length(x) < 2L)
-                stop('FIXED = ... has not been supplied enough arguments', call.=FALSE)
+                stop('FIXED = ... has not been supplied enough arguments.', call.=FALSE)
             for(i in 1L:(length(x)-1L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -184,7 +184,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         esplit <- lapply(esplit, function(x){
             newx <- c()
             if(length(x) < 2L)
-                stop('FREE = ... has not been supplied enough arguments', call.=FALSE)
+                stop('FREE = ... has not been supplied enough arguments.', call.=FALSE)
             for(i in 1L:(length(x)-1L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -217,7 +217,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         esplit <- lapply(esplit, function(x){
             newx <- c()
             if(length(x) < 3L)
-                stop('LBOUND = ... has not been supplied enough arguments', call.=FALSE)
+                stop('LBOUND = ... has not been supplied enough arguments.', call.=FALSE)
             for(i in 1L:(length(x)-2L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
@@ -248,7 +248,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         esplit <- lapply(esplit, function(x){
             newx <- c()
             if(length(x) < 3L)
-                stop('UBOUND = ... has not been supplied enough arguments', call.=FALSE)
+                stop('UBOUND = ... has not been supplied enough arguments.', call.=FALSE)
             for(i in 1L:(length(x)-2L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])

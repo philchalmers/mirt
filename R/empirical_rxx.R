@@ -29,7 +29,7 @@ empirical_rxx <- function(Theta_SE){
     nms <- colnames(Theta_SE)
     is_SE <- grepl('SE_', nms)
     if(!any(is_SE))
-        stop('Must use full.scores.SE = TRUE in fscores() when computing estimates', call.=FALSE)
+        stop('Must use full.scores.SE = TRUE in fscores() when computing estimates.', call.=FALSE)
     Theta <- Theta_SE[ ,!is_SE, drop=FALSE]
     SE <- Theta_SE[ ,is_SE, drop=FALSE]
     pick <- !(rowSums(Theta) %in% c(NA, Inf, -Inf))

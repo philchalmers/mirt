@@ -158,42 +158,42 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     integration <- 'quad'
     type <- 'score'
     if(!(plot %in% c('none', 'func', 'sDTF')))
-        stop('plot type not supported')
+        stop('plot type not supported.')
     if(!is.null(Theta_nodes)){
         integration <- 'quad'
-        if(plot != 'none') message('plots are not drawn when Theta_nodes is included')
+        if(plot != 'none') message('plots are not drawn when Theta_nodes is included.')
         plot <- 'none'
     }
     if(class(mod) != 'MultipleGroupClass')
-        stop('mod input was not estimated by multipleGroup()', call.=FALSE)
+        stop('mod input was not estimated by multipleGroup() function.', call.=FALSE)
     if(length(mod@ParObjects$pars) != 2L)
-        stop('DTF only supports two group models at a time', call.=FALSE)
+        stop('DTF only supports two group models at a time.', call.=FALSE)
     if(!any(sapply(mod@ParObjects$pars, function(x) x@ParObjects$pars[[length(x@ParObjects$pars)]]@est)))
         message('No hyper-parameters were estimated in the DIF model. For effective
                 \tDTF testing, freeing the focal group hyper-parameters is recommend.')
     if(!is.null(Theta_nodes)){
         if(!is.matrix(Theta_nodes))
-            stop('Theta_nodes must be a matrix', call.=FALSE)
+            stop('Theta_nodes must be a matrix.', call.=FALSE)
         if(ncol(Theta_nodes) != mod@Model$nfact)
-            stop('Theta_nodes input does not have the correct number of factors', call.=FALSE)
+            stop('Theta_nodes input does not have the correct number of factors.', call.=FALSE)
         colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1L)
             paste0('Theta.', 1L:ncol(Theta_nodes)) else 'Theta'
     }
     if(plot != 'none'){
         if(is.null(draws))
-            stop('Must specificy number of draws to generate plot confidence intervals', call.=FALSE)
+            stop('Must specificy number of draws to generate plot confidence intervals.', call.=FALSE)
     }
     if(length(type) > 1L && (plot != 'none' || !is.null(Theta_nodes)))
-        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')
+        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments.')
 
     if(is.null(draws)){
         draws <- 1L
         impute <- FALSE
     } else if(!boot){
         if(length(mod@vcov) == 1L)
-            stop('Stop an information matrix must be computed', call.=FALSE)
+            stop('Stop an information matrix must be computed.', call.=FALSE)
         if(!mod@OptimInfo$secondordertest)
-            stop('ACOV matrix is not positive definite')
+            stop('ACOV matrix is not positive definite.')
         impute <- TRUE
         shortpars <- mod@Internals$shortpars
         covB <- mod@vcov
@@ -272,7 +272,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
         }
         CIs <- apply(scores, 2L, bs_range, CI=CI)
         if(!is.matrix(CIs) || nrow(CIs) != 2L)
-            stop('Too few draws were specified', call.=FALSE)
+            stop('Too few draws were specified.', call.=FALSE)
         rownames(CIs) <-
             c(paste0('CI_', round(CI + (1-CI)/2, 3L)*100),
               paste0('CI_', round((1-CI)/2, 3L)*100))

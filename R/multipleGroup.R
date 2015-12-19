@@ -247,7 +247,7 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
     if(missing(model)) missingMsg('model')
     if(!is.null(dots$empiricalhist))
         if(dots$empiricalhist && any(invariance.check))
-            stop('freeing group parameters not meaningful when estimating empirical histograms',
+            stop('freeing group parameters not meaningful when estimating empirical histograms.',
                  call.=FALSE)
     if(sum(invariance.check == 2L) && length(constrain) == 0){
         warn <- TRUE

@@ -45,7 +45,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     specific <- list$specific
     ngroups <- ESTIMATE$ngroups
     NCYCLES <- ESTIMATE$cycles
-    if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history', call.=FALSE)
+    if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history.', call.=FALSE)
     BFACTOR <- list$BFACTOR
     prior <- rlist <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars
@@ -234,7 +234,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
     if(length(whichitems)){
         warning('Internal information matrix computations currently not supported for at
-        least one of the supplied items. Information matrix/standard errors not computed', call.=FALSE)
+        least one of the supplied items. Information matrix/standard errors not computed.', call.=FALSE)
         return(ESTIMATE)
     }
     Igrad <- updateHess(Igrad, L=Ls$L)

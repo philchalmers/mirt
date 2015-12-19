@@ -123,7 +123,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                               upper=UBOUND[est], control=control),
                        silent=TRUE)
         } else {
-            stop('M-step optimizer not supported', call.=FALSE)
+            stop('M-step optimizer not supported.', call.=FALSE)
         }
         if(is(opt, 'try-error'))
             stop(opt, call.=FALSE)

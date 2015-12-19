@@ -1493,7 +1493,7 @@ setMethod(
     f = "dP",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta){
-        message('partcomp derivatives not optimized') ##TODO
+        message('partcomp derivatives not optimized.') ##TODO
         numDeriv_dP(x, Theta)
     }
 )
@@ -1531,7 +1531,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'nestlogit'),
     definition = function(x){
-    	stop('not written')
+    	stop('not yet written.')
     }
 )
 
@@ -1685,7 +1685,7 @@ setMethod(
     f = "dP",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta){
-        message('nestlogit derivatives not optimized') ##TODO
+        message('nestlogit derivatives not optimized.') ##TODO
         numDeriv_dP(x, Theta)
     }
 )
@@ -1865,7 +1865,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'lca'),
     definition = function(x){
-    	stop('not written')
+    	stop('not yet written.')
     }
 )
 
@@ -1920,7 +1920,7 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('not written')
+        stop('not yet written.')
     }
 )
 
@@ -1984,7 +1984,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'custom'),
     definition = function(x){
-    	stop('not written')
+    	stop('not yet written.')
     }
 )
 
@@ -2312,7 +2312,7 @@ setMethod("initialize",
           'grsmIRT',
           function(.Object, nfact, ncat){
             if(nfact != 1L)
-                stop('grsmIRT only possible for unidimensional models')
+                stop('grsmIRT only possible for unidimensional models.')
             stopifnot(ncat >= 2L)
             .Object@par <- c(rep(1, nfact),  seq(1, -1, length.out=ncat-1), 0)
             #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1), 0)

@@ -4,7 +4,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     lrPars <- list$lrPars
     nfact <- list$nfact
     if(list$EH && nfact != 1L)
-        stop('empirical histogram only available for unidimensional models', call.=FALSE)
+        stop('empirical histogram only available for unidimensional models.', call.=FALSE)
     NCYCLES <- list$NCYCLES
     TOL <- list$TOL
     BFACTOR <- list$BFACTOR
@@ -264,7 +264,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     }
                     tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
                     longpars[!latent_longpars] <- tmp[!latent_longpars]
-                } else stop('acceleration option not defined', call.=FALSE)
+                } else stop('acceleration option not defined.', call.=FALSE)
             }
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
             if(length(lrPars)){
@@ -280,7 +280,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         } else if(cycles == 1L && !(all(!est) && all(!groupest))){
             if(list$warn && !is.nan(TOL))
                 warning('M-step optimimizer converged immediately. Solution is either at the ML or
-                     starting values are causing issues and should be adjusted. ', call.=FALSE)
+                     starting values are causing issues and should be adjusted.', call.=FALSE)
         }
     }
     infological <- estpars & !redun_constr

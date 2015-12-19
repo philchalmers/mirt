@@ -62,7 +62,7 @@ imputeMissing <- function(x, Theta, ...){
     pars <- x@ParObjects$pars
     nfact <- pars[[1L]]@nfact
     if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
-        stop('Theta must be a matrix of size N x nfact', call.=FALSE)
+        stop('Theta must be a matrix of size N x nfact.', call.=FALSE)
     if(!is.list(Theta)){
         if(any(Theta %in% c(Inf, -Inf))){
             for(i in 1L:ncol(Theta)){

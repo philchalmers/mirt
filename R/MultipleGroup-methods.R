@@ -166,7 +166,7 @@ setMethod(
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'empiricalhist'){
-                if(!x@Options$empiricalhist) stop('Empirical histogram was not estimated for this object', call.=FALSE)
+                if(!x@Options$empiricalhist) stop('Empirical histogram was not estimated for this object.', call.=FALSE)
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
                     Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
