@@ -68,17 +68,19 @@
 #' #generate classification plots
 #' plot(mod2)
 #' plot(mod2, facet_items = FALSE)
+#' plot(mod2, profile = TRUE)
 #'
 #' # available for polytomous data
 #' mod <- mdirt(Science, 2)
 #' summary(mod)
 #' plot(mod)
+#' plot(mod, profile=TRUE)
 #'
 #' # classification based on response patterns
-#' fscores(mod2)
+#' fscores(mod2, full.scores = FALSE)
 #'
 #' # classify individuals either with the largest posterior probability.....
-#' fs <- fscores(mod2, full.scores=TRUE)
+#' fs <- fscores(mod2)
 #' head(fs)
 #' classes <- matrix(1:2, nrow(fs), 2, byrow=TRUE)
 #' class_max <- classes[t(apply(fs, 1, max) == fs)]
@@ -127,19 +129,18 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
                      discrete=TRUE, verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)
     if(is(mods[[1L]], 'DiscreteClass')){
-        for(i in 1:length(mods))
-        mods[[i]]@Call <- Call
+        for(i in 1:length(mods)) mods[[i]]@Call <- Call
     }
     if(!return_max){
         return(mods)
     } else {
         if(is(mods[[1L]], 'DiscreteClass')){
-            LL <- sapply(mods, function(x) x@logLik)
+            LL <- sapply(mods, function(x) x@Fit$logLik)
             if(verbose && nruns > 1L){
                 cat('Model log-likelihoods:\n')
                 print(round(LL, 4))
             }
-            mods <- mods[[which(min(LL) == LL)[1L]]]
+            mods <- mods[[which(max(LL) == LL)[1L]]]
         }
     }
     if(!is.null(pars) && pars == 'values') mods <- mods[[1L]]

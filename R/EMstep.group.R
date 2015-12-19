@@ -16,7 +16,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     theta <- list$theta
     full <- list$full
     J <- length(itemloc) - 1L
-    N <- nrow(Data$data)
     nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
@@ -39,7 +38,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(length(lrPars))
             listpars[[g]][[i+1L]] <- lrPars@par
     }
-    lastpars2 <- lastpars1 <- listpars
     index <- 1L:nfullpars
     longpars <- rep(NA,nfullpars)
     latent_longpars <- logical(nfullpars)
@@ -57,8 +55,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             ind1 <- ind2 + 1L
         }
     }
-    converge <- 1L
-    estindex <- index[estpars]
+    converge <- TRUE
     L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
@@ -145,7 +142,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          control=list(fnscale=-1, reltol=TOL)), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par
-        converge <- as.numeric(opt$convergence == 0)
+        converge <- opt$convergence == 0
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
@@ -174,7 +171,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                                list=list, ngroups=ngroups, nfact=nfact, prior=prior,
-                               J=J, N=N, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
+                               J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
@@ -279,7 +276,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(cycles == NCYCLES){
             if(list$message)
                 message('EM cycles terminated after ', cycles, ' iterations.')
-            converge <- 0L
+            converge <- FALSE
         } else if(cycles == 1L && !(all(!est) && all(!groupest))){
             if(list$warn && !is.nan(TOL))
                 warning('M-step optimimizer converged immediately. Solution is either at the ML or
@@ -289,6 +286,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
+    collectLL <- as.numeric(na.omit(collectLL))
     LP <- 0
     if(any(ANY.PRIOR)){
         if(length(lrPars)){
@@ -316,11 +314,22 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             i <- i + 1L
             deriv <- Deriv(x=pars[[group]][[i]], CUSTOM.IND=CUSTOM.IND,
                            Theta=Theta, EM = TRUE,
-                           pars=pars[[group]], tabdata=cbind(Data$tabdatalong, Data$Freq[[group]]),
+                           pars=pars[[group]], tabdata=Data$tabdatalong,
+                           freq=Data$Freq[[group]], prior=Prior[[group]],
                            itemloc=itemloc, estHess=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
             ind1 <- ind2 + 1L
+            if(length(lrPars)){
+                gp <- ExtractGroupPars(pars[[group]][[J+1L]])
+                tmp <- Mstep.LR(Theta=Theta, CUSTOM.IND=CUSTOM.IND, pars=pars[[group]],
+                                itemloc=itemloc, fulldata=Data$fulldata[[1L]], prior=Prior[[group]],
+                                lrPars=lrPars, retscores=TRUE)
+                deriv <- Deriv(lrPars, cov=gp$gcov, theta=tmp)
+                for(i in 0L:(ncol(deriv$grad)-1L))
+                    h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
+                      lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+            }
         }
         hess <- updateHess(h=h, L=L)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
@@ -330,16 +339,16 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     estpars=estpars & !redun_constr, redun_constr=redun_constr, ngroups=ngroups,
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
-                    collectLL=na.omit(collectLL), shortpars=longpars[estpars & !redun_constr],
-                    groupest=groupest, lrPars=lrPars, logPrior=LP)
+                    collectLL=collectLL, shortpars=longpars[estpars & !redun_constr],
+                    groupest=groupest, lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
-                    prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=na.omit(collectLL),
+                    prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=collectLL,
                     shortpars=longpars[estpars & !redun_constr], groupest=groupest, lrPars=lrPars,
-                    logPrior=LP)
+                    logPrior=LP, fail_invert_info=FALSE)
     }
     for(g in 1L:ngroups)
         for(i in 1L:J)

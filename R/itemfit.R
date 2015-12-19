@@ -65,17 +65,27 @@
 #'
 #' \dontrun{
 #'
+#' P <- function(Theta){exp(Theta^2 * 1.2 - 1) / (1 + exp(Theta^2 * 1.2 - 1))}
+#'
 #' #make some data
 #' set.seed(1234)
 #' a <- matrix(rlnorm(20, meanlog=0, sdlog = .1),ncol=1)
 #' d <- matrix(rnorm(20),ncol=1)
+#' Theta <- matrix(rnorm(2000))
 #' items <- rep('dich', 20)
-#' data <- simdata(a,d, 2000, items)
+#' ps <- P(Theta)
+#' baditem <- numeric(2000)
+#' for(i in 1:2000)
+#'    baditem[i] <- sample(c(0,1), 1, prob = c(1-ps[i], ps[i]))
+#' data <- cbind(simdata(a,d, 2000, items, Theta=Theta), baditem=baditem)
 #'
 #' x <- mirt(data, 1)
 #' raschfit <- mirt(data, 1, itemtype='Rasch')
 #' fit <- itemfit(x)
 #' fit
+#'
+#' fit <- itemfit(x, X2=TRUE)
+#' fit$X2
 #'
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99% CI's
@@ -84,7 +94,7 @@
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats
 #'
 #' #same as above, but inputting ML estimates instead
-#' Theta <- fscores(raschfit, method = 'ML', full.scores=TRUE)
+#' Theta <- fscores(raschfit, method = 'ML')
 #' itemfit(raschfit, Theta=Theta)
 #'
 #' #similar example to Kang and Chen 2007
@@ -113,17 +123,23 @@
 #' mirtCluster() # run in parallel
 #' itemfit(raschfit, impute = 10)
 #'
+#' #alternative route: use only valid data, and create a model with the previous parameter estimates
+#' data2 <- na.omit(data)
+#' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
+#' itemfit(raschfit2)
 #'   }
 #'
 itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
-    fn <- function(ind, Theta, Theta2, obj, vals, ...){
+    fn <- function(ind, Theta, obj, vals, ...){
         tmpdat <- imputeMissing(obj, Theta[[ind]])
-        tmpmod <- mirt(tmpdat, obj@nfact, pars = vals, itemtype = obj@itemtype)
-        tmpmod@pars <- obj@pars
-        return(itemfit(tmpmod, Theta=Theta2[[ind]], digits = Inf, ...))
+        tmpmod <- mirt(tmpdat, obj@Model$nfact, pars = vals, itemtype = obj@Model$itemtype,
+                       technical=list(customK=obj@Data$K, message=FALSE, warn=FALSE))
+        tmpmod@ParObjects$pars <- obj@ParObjects$pars
+        whc <- 1L:length(Theta)
+        return(itemfit(tmpmod, Theta=Theta[[sample(whc[-ind], 1L)]], digits = Inf, ...))
     }
 
     if(missing(x)) missingMsg('x')
@@ -135,19 +151,23 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         discrete <- TRUE
     }
 
-    if((impute != 0 || any(is.na(x@Data$data))) && !is(x, 'MultipleGroupClass')){
+    stopifnot(Zh || X2 || S_X2)
+    if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
+        stop('Only X2 can be compute without imputed datsets', call.=FALSE)
+
+    if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple data
                  imputations', call.=FALSE)
+        if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
+            warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
         stopifnot(impute > 1L)
-        Theta2 <- Theta <- fscores(x, plausible.draws = impute)
-        Theta2[[length(Theta)+1L]] <- Theta[[1L]]
-        Theta2[[1L]] <- NULL
+        Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(1L:impute, fn, Theta=Theta, Theta2=Theta2, obj=x, vals=vals,
+        collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, S_X2=S_X2,
                             Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,
@@ -169,16 +189,20 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         return(ret)
     }
     if(is(x, 'MultipleGroupClass')){
-        ret <- vector('list', length(x@pars))
+        ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
-            Theta <- fscores(x, method=method, full.scores=TRUE, ...)
-        for(g in 1L:length(x@pars)){
-            tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
+        for(g in 1L:x@Data$ngroups){
+            if(impute > 0L){
+                tmpTheta <- vector('list', impute)
+                for(i in 1L:length(tmpTheta))
+                    tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
             ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, digits=digits, ...)
+                                impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
         }
         names(ret) <- x@Data$groupNames
         return(ret)
@@ -189,13 +213,13 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data))
     J <- ncol(x@Data$data)
-    itemloc <- x@itemloc
-    pars <- x@pars
-    if(Zh || X2){
+    itemloc <- x@Model$itemloc
+    pars <- x@ParObjects$pars
+    if(Zh){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
-        nfact <- x@nfact + length(prodlist)
+        nfact <- x@Model$nfact + length(prodlist)
         fulldata <- x@Data$fulldata[[1L]]
         if(any(Theta %in% c(Inf, -Inf))){
             for(i in 1L:ncol(Theta)){
@@ -225,10 +249,10 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         }
         ret$Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
         #if all Rasch models, infit and outfit
-        if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
-            oneslopes <- rep(FALSE, length(x@itemtype))
-            for(i in 1L:length(x@itemtype))
-                oneslopes[i] <- closeEnough(x@pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
+        if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+            oneslopes <- rep(FALSE, length(x@Model$itemtype))
+            for(i in 1L:length(x@Model$itemtype))
+                oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
             if(all(oneslopes)){
                 attr(x, 'inoutfitreturn') <- TRUE
                 pf <- personfit(x, method=method, Theta=Theta)
@@ -248,9 +272,24 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             }
         }
     }
-    if((X2 || !is.null(empirical.plot)) && nfact == 1L){
+    if((X2 || !is.null(empirical.plot)) && x@Model$nfact == 1L){
+        if(is.null(Theta))
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
+        nfact <- ncol(Theta)
+        prodlist <- attr(pars, 'prodlist')
+        fulldata <- x@Data$fulldata[[1L]]
+        if(any(Theta %in% c(Inf, -Inf))){
+            for(i in 1L:ncol(Theta)){
+                tmp <- Theta[,i]
+                tmp[tmp %in% c(-Inf, Inf)] <- NA
+                Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
+                Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
+            }
+        }
         ord <- order(Theta[,1L])
         fulldata <- fulldata[ord,]
+        pick <- !is.na(x@Data$data)
+        pick <- pick[ord, ]
         Theta <- Theta[ord, , drop = FALSE]
         den <- dnorm(Theta, 0, .5)
         den <- den / sum(den)
@@ -261,7 +300,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         for(i in 1L:20L)
             Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
         n.uniqueGroups <- length(unique(Groups))
-        X2 <- df <- RMSEA <- rep(0, J)
+        X2 <- df <- rep(0, J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
@@ -272,15 +311,16 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                 empirical.plot <- ind[inames == empirical.plot]
             }
             empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
-            empirical.plot_points <- matrix(NA, length(unique(Groups)), x@K[empirical.plot] + 2L)
+            empirical.plot_points <- matrix(NA, length(unique(Groups)), x@Data$K[empirical.plot] + 2L)
         }
         for (i in 1L:J){
             if(!is.null(empirical.plot) && i != empirical.plot) next
             for(j in unique(Groups)){
-                dat <- fulldata[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
+                dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
+                if(nrow(dat) <= 1L) next
                 r <- colSums(dat)
                 N <- nrow(dat)
-                mtheta <- matrix(mean(Theta[Groups == j,]), nrow=1)
+                mtheta <- matrix(mean(Theta[Groups == j & pick[,i],]), nrow=1)
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
@@ -292,11 +332,12 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                 }
                 X2[i] <- X2[i] + sum((r - N*P)^2 / N*P)
             }
-            df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
+            if(X2[i] > 0)
+                df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
         }
         X2[X2 == 0] <- NA
         if(!is.null(empirical.plot)){
-            K <- x@K[empirical.plot]
+            K <- x@Data$K[empirical.plot]
             EPCI.lower <- EPCI.upper <- NULL
             if(K == 2 && empirical.CI != 0){
                 p.L <- function(x, alpha) if (x[1] == 0) 0 else qbeta(alpha, x[1], x[2] - x[1] + 1)
@@ -318,7 +359,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             plt.2 <- reshape(plt.2, varying = 3:ncol(plt.2), direction = 'long', timevar = 'cat')
             plt <- cbind(plt.1, plt.2)
             if(K == 2) plt <- plt[plt$cat != 1, ]
-            return(xyplot(P ~ Theta, plt, group = cat,
+            return(xyplot(P ~ Theta, plt, groups = cat,
                           main = paste('Empirical plot for item', empirical.plot),
                             ylim = c(-0.1,1.1), xlab = expression(theta), ylab=expression(P(theta)),
                           auto.key=ifelse(K==2, FALSE, TRUE), EPCI.lower=EPCI.lower,
@@ -339,26 +380,27 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         ret$X2 <- X2
         ret$df <- df
         ret$p.X2 <- 1 - pchisq(X2, df)
+        ret$p.X2[df <= 0] <- NaN
     }
     if(S_X2){
         dat <- x@Data$data
         adj <- x@Data$mins
         dat <- t(t(dat) - adj)
         S_X2 <- df.S_X2 <- numeric(J)
-        O <- makeObstables(dat, x@K)
+        O <- makeObstables(dat, x@Data$K)
         Nk <- rowSums(O[[1L]])
         dots <- list(...)
         QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
         quadpts <- dots$quadpts
         if(is.null(quadpts) && QMC) quadpts <- 15000L
-        if(is.null(quadpts)) quadpts <- select_quadpts(x@nfact)
-        if(x@nfact > 3L && !QMC)
+        if(is.null(quadpts)) quadpts <- select_quadpts(x@Model$nfact)
+        if(x@Model$nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum'))
             warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                     call.=FALSE)
         theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- ExtractGroupPars(pars[[length(pars)]])
-        E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@CUSTOM.IND, den_fun=mirt_dmvnorm,
+        E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@Internals$CUSTOM.IND, den_fun=mirt_dmvnorm,
                     quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC)
         for(i in 1L:J)
             E[[i]] <- E[[i]] * Nk

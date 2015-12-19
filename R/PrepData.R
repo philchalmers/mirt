@@ -7,7 +7,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     # if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
     keywords <- c('COV', 'CONSTRAIN', 'CONSTRAINB', 'PRIOR', 'MEAN', 'START', 'LBOUND', 'UBOUND',
-                  'FIXED', 'NEXPLORE')
+                  'FIXED', 'FREE', 'NEXPLORE')
     data <- as.matrix(data)
     colnames(data) <- itemnames
     J <- ncol(data)
@@ -134,9 +134,29 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     if(any(itemtype == 'grsm')){
         unique.grsmgroups <- unique(na.omit(grsm.block))
         for(group in unique.grsmgroups){
-            Kk <- unique(K[grsm.block[grsm.block == unique.grsmgroups[group]]])
-            if(length(Kk) > 1L) stop('Rating scale models require that items to have the
-                                       same number of categories', call.=FALSE)
+            Kk <- unique(K[grsm.block == unique.grsmgroups[group]])
+            if(length(Kk) > 1L) stop(c('Rating scale models require items to have the ',
+                                       'same number of categories'), call.=FALSE)
+            for(k in 1L:(Kk-1L)){
+                grsmConstraint <- c()
+                for(i in 1L:J){
+                    if(grsm.block[i] == unique.grsmgroups[group]){
+                        if(length(grsmConstraint) == 0L){
+                            pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
+                            grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
+                        } else grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
+                    }
+                }
+                constrain[[length(constrain) + 1L]] <- grsmConstraint
+            }
+        }
+    }
+    if(any(itemtype == 'grsmIRT')){
+        unique.grsmgroups <- unique(na.omit(grsm.block))
+        for(group in unique.grsmgroups){
+            Kk <- unique(K[grsm.block == unique.grsmgroups[group]])
+            if(length(Kk) > 1L) stop(c('Rating scale models require items to have the ',
+                                       'same number of categories'), call.=FALSE)
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){

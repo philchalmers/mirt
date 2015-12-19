@@ -1,4 +1,60 @@
-# Changes in mirt 1.11
+# Changes in mirt 1.15
+
+## MINOR CHANGES
+
+- more low-level elements included in `extract.mirt()` function
+
+- added `grsmIRT` itemtype for classical graded rating scale form (contributed by KK Sasa)
+
+- added missing analytic Hessian terms when `gpcm_mats` are used (contributed by Carl Falk)
+
+## BUG FIXES
+
+- fixed row-removal bug when using `technical = list(removeEmptyRows = TRUE)` (reported by Aaron Kaat)
+
+# Changes in mirt 1.14
+
+## MAJOR CHANGES
+
+- the structure of the output objects now contains considerably fewer S4 slots, and instead are 
+  organized into more structured list elements such as `Data`, `Model`, `Fit`, and so on. Additionally,
+  the information matrix has slot has been removed in favour of providing the asymptotic covariance 
+  matrix (a.k.a., the inverse of the information matrix)
+
+## MINOR CHANGES
+
+- added `extract.mirt()` function to allow more convenient extracting of internal elements
+
+- `crossprod` SE.type now incorporates latent variable information (replaces NA placeholders)
+
+- changed the default `full.scores = FALSE` argument to `TRUE` in `fscores()`
+
+- added `profile` argument to `plot()` for `mdirt()` objects so that profile plots can be generated
+
+- `converge_info` option added to `fscores()` to return convergence information
+
+- add `removeEmptyRows` option to `technical` list
+
+## BUG FIXES
+
+- return a vector of `NA`s when WLE estimation has a Fisher information matrix with a determinant of 0 
+  (reported by Christopher Gess)
+
+- fix df in multiple-group models with crossed between/within constrains (reported by Leah Feuerstahler)
+
+- compute residuals when responses are sparse, and return `NaN` when residual could not be computed 
+  (reported by Aaron Kaat)
+
+# Changes in mirt 1.13
+
+- adjust plausible values format for multiple group objects
+
+- `simdata()` gains a `model` input to impute data from pre-organized models (useful in conjunction
+  with mirtCAT or to generate datasets from already converged models). Also gains a `mins` argument
+  to specify what the lowest category should be for each item if `model` is not supplied (default is 0)
+
+- number of `SEMCYCLES` increased from 50 to 100 in the MH-RM algorithm, and RM gain rate changed from
+  `c(.15, .65)` to `c(.1, .75)` 
 
 - further improve item fit statistics when using imputations
 
@@ -6,6 +62,10 @@
 
 - panel theme for lattice plots changed from default to a lighter blue colour, and legend now
   automatically placed on the right hand side rather than the top
+  
+## BUG FIXES
+
+- fix for Q3 computations (noticed by Katherine Castellano)
 
 # Changes in mirt 1.10
 

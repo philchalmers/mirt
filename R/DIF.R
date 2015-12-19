@@ -143,7 +143,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
                           return_models, ...)
     {
-        constrain <- model@constrain
+        constrain <- model@Model$constrain
         parnum <- list()
         for(i in 1L:length(which.par))
             parnum[[i]] <- values$parnum[values$name == which.par[i] &
@@ -176,9 +176,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
             for(i in 1L:length(parnum))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
-        newmodel <- multipleGroup(model@Data$data, model@model[[1L]], group=model@Data$group,
+        newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain,
-                                  itemtype = model@itemtype, verbose = FALSE, ...)
+                                  itemtype = model@Model$itemtype, verbose = FALSE, ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
         if(return_models) aov <- newmodel
@@ -187,10 +187,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
 
     if(missing(MGmodel)) missingMsg('MGmodel')
     if(missing(which.par)) missingMsg('which.par')
-    if(!any(sapply(MGmodel@pars, function(x) x@pars[[length(x@pars)]]@est)))
+    if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
+                   pick = MGmodel@Data$nitems + 1L)))
         message('No hyper-parameters were estimated in the DIF model. For effective
                 \tDIF testing, freeing the focal group hyper-parameters is recommended.')
-    bfactorlist <- MGmodel@bfactor
+    bfactorlist <- MGmodel@Internals$bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
         stop('bifactor models are currently not supported in this function', call.=FALSE)
     itemnames <- colnames(MGmodel@Data$data)
@@ -203,7 +204,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
     if(Wald){
         if(scheme != 'add')
             stop('Wald tests are only appropriate when add scheme is used', call.=FALSE)
-        if(length(MGmodel@information) == 1)
+        if(!MGmodel@Options$SE)
             stop('Information matrix was not calculated', call.=FALSE)
     }
     if(plotdif && any(scheme %in% c('drop', 'drop_sequential')))
@@ -216,11 +217,10 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         stop('Invalid seq_stat input', call.=FALSE)
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
-    data <- MGmodel@Data$data
-    invariance <- MGmodel@invariance
+    invariance <- MGmodel@Model$invariance
     values <- mod2values(MGmodel)
     drop <- scheme == 'drop' || scheme == 'drop_sequential'
-    invariance <- MGmodel@invariance[MGmodel@invariance %in%
+    invariance <- MGmodel@Model$invariance[MGmodel@Model$invariance %in%
                                          c('free_means', 'free_var')]
     if(!length(invariance)) invariance <- ''
     res <- myLapply(X=items2test, FUN=loop_test, model=MGmodel, which.par=which.par, values=values,
@@ -250,7 +250,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                 cat(sprintf('\rChecking for DIF in %d more items',
                             ifelse(drop, sum(keep), sum(!keep))))
             if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
-            constrain <- updatedModel@constrain
+            constrain <- updatedModel@Model$constrain
             for(j in 1L:length(keep)){
                 parnum <- list()
                 for(i in 1L:length(which.par))
@@ -271,8 +271,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                     }
                 }
             }
-            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@model[[1L]],
-                                          group=MGmodel@Data$group, itemtype=MGmodel@itemtype,
+            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model,
+                                          group=MGmodel@Data$group, itemtype=MGmodel@Model$itemtype,
                                           invariance = invariance, constrain=constrain,
                                           verbose = FALSE, ...)
             pick <- !keep

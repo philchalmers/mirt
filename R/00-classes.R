@@ -1,57 +1,14 @@
 setClass("AllModelClass",
-         representation(pars='list',
+         representation(Call='call',
                         Data='list',
-                        shortpars='numeric',
-                        model='list',
-                        G2='numeric',
-                        df='numeric',
-                        p='numeric',
-                        AIC='numeric',
-                        AICc='numeric',
-                        K='numeric',
-                        F='matrix',
-                        h2='numeric',
-                        Theta='matrix',
-                        converge='numeric',
-                        itemloc = 'numeric',
-                        Prior='list',
-                        DIC='numeric',
-                        BIC='numeric',
-                        SABIC='numeric',
-                        RMSEA='numeric',
-                        null.mod = 'S4',
-                        TLI = 'numeric',
-                        logLik='numeric',
-                        logPrior='numeric',
-                        SElogLik='numeric',
-                        Call='call',
-                        esttype='character',
-                        nest='integer',
-                        iter='numeric',
-                        quadpts='numeric',
-                        theta_lim='numeric',
-                        nfact='numeric',
-                        prodlist='list',
-                        constrain='list',
-                        parprior='list',
-                        information='matrix',
-                        infomethod='character',
-                        factorNames='character',
-                        method='character',
-                        accelerate='character',
-                        Moptim='character',
-                        itemtype='character',
+                        Options='list',
+                        Fit='list',
+                        Model='list',
+                        ParObjects='list',
+                        OptimInfo='list',
+                        Internals='list',
+                        vcov='matrix',
                         time='numeric',
-                        condnum='numeric',
-                        secondordertest='logical',
-                        empiricalhist='logical',
-                        CFI='numeric',
-                        CUSTOM.IND='integer',
-                        SLOW.IND='integer',
-                        collectLL='numeric',
-                        TOL='numeric',
-                        lrPars='S4',
-                        exploratory='logical',
                         'VIRTUAL'),
              validity = function(object) return(TRUE)
 )
@@ -64,45 +21,17 @@ setClass("AllModelClass",
 #' @section Slots:
 #'
 #' \describe{
-#'     \item{\code{Data}:}{Object of class \code{"list"}, contains various data matricies and properties }
-#'     \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'     \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
-#'     \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
-#'     \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
-#'     \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'     \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
-#'     \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
-#'     \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-#'     \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
-#'     \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2  }
-#'     \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
-#'     \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation for G2}
-#'     \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index for G2}
-#'     \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
-#'     \item{\code{logPrior}:}{Object of class \code{"numeric"}, log-prior distribution values}
-#'     \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
-#'     \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
-#'     \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
-#'     \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'     \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
-#'     \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
-#'     \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'     \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
-#'     \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-#'     \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
-#'     \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
-#'     \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
-#'     \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
-#'       second-order test}
-#'     \item{\code{bfactor}:}{Object of class \code{"list"}, an empty list}
-#'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
-#'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
-#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
-#'     \item{\code{exploratory}:}{Object of class \code{"logical"}, indicates whether model contains
-#'       slopes that should be rotated}
-#'     \item{\code{Call}:}{Object of class \code{"call"}, call }
+#'     \item{\code{Call}:}{function call }
+#'     \item{\code{Data}:}{list of data, sometimes in different forms }
+#'     \item{\code{Options}:}{list of estimation options}
+#'     \item{\code{Fit}:}{a list of fit information }
+#'     \item{\code{Model}:}{a list of model-based information }
+#'     \item{\code{ParObjects}:}{a list of the S4 objects used during estimation}
+#'     \item{\code{OptimInfo}:}{a list of arguments from the optimization process}
+#'     \item{\code{Internals}:}{a list of internal arguments for secondary computations (inspecting this
+#'       object is generally not required)}
+#'     \item{\code{vcov}:}{a matrix represented the asymtotic covariance matrix of the parameter estimates}
+#'     \item{\code{time}:}{a data.frame indicating the breakdown of computation times in seconds}
 #' }
 #' @section Methods:
 #'
@@ -124,9 +53,7 @@ setClass("AllModelClass",
 # @examples
 setClass(
     Class = 'SingleGroupClass', contains = 'AllModelClass',
-    representation = representation(Pl='numeric',
-                                    bfactor='list',
-                                    random='list'),
+    representation = representation(),
     validity = function(object) return(TRUE)
 )
 
@@ -137,47 +64,19 @@ setClass(
 #'
 #' @section Slots:
 #'
-#'  \describe{
-#'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
-#'    \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
-#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
-#'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}
-#'    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
-#'    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-#'    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
-#'    \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2  }
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
-#'    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation for G2}
-#'    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index for G2}
-#'    \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
-#'    \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
-#'    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
-#'    \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
-#'        \code{empiricalhist = TRUE}}
-#'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
-#'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
-#'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
-#'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
-#'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-#'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
-#'    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
-#'    \item{\code{invariance}:}{Object of class \code{"character"}, invariance input}
-#'    \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
-#'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
-#'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
-#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
-#'       second-order test}
-#'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
-#'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
-#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
-#'    \item{\code{Call}:}{Object of class \code{"call"}, call }
-#'  }
+#' \describe{
+#'     \item{\code{Call}:}{function call }
+#'     \item{\code{Data}:}{list of data, sometimes in different forms }
+#'     \item{\code{Options}:}{list of estimation options}
+#'     \item{\code{Fit}:}{a list of fit information }
+#'     \item{\code{Model}:}{a list of model-based information }
+#'     \item{\code{ParObjects}:}{a list of the S4 objects used during estimation}
+#'     \item{\code{OptimInfo}:}{a list of arguments from the optimization process}
+#'     \item{\code{Internals}:}{a list of internal arguments for secondary computations (inspecting this
+#'       object is generally not required)}
+#'     \item{\code{vcov}:}{a matrix represented the asymtotic covariance matrix of the parameter estimates}
+#'     \item{\code{time}:}{a data.frame indicating the breakdown of computation times in seconds}
+#' }
 #' @section Methods:
 #'
 #' \describe{
@@ -196,9 +95,7 @@ setClass(
 # @keywords classes
 setClass(
     Class = 'MultipleGroupClass', contains = 'AllModelClass',
-    representation = representation(Pl='list',
-                                    invariance='character',
-                                    bfactor='list'),
+    representation = representation(),
     validity = function(object) return(TRUE)
 )
 
@@ -209,48 +106,19 @@ setClass(
 #'
 #' @section Slots:
 #'
-#'  \describe{
-#'    \item{\code{Data}:}{Object of class \code{"list"}, contains various data matricies and properties }
-#'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
-#'    \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
-#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
-#'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}
-#'    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
-#'    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-#'    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
-#'    \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2  }
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
-#'    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation for G2}
-#'    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index for G2}
-#'    \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
-#'    \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
-#'    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
-#'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
-#'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
-#'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
-#'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
-#'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-#'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
-#'    \item{\code{cand.t.var}:}{Object of class \code{"numeric"}, parameter used to control the MH sampler for Theta}
-#'    \item{\code{random}:}{Object of class \code{"list"}, typicall null, except for internal mixed model usage}
-#'    \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
-#'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
-#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
-#'       second-order test}
-#'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
-#'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
-#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{formulas}:}{Object of class \code{"list"}, list of formula}
-#'     \item{\code{covdata}:}{Object of class \code{"data.frame"}, covariate data}
-#'     \item{\code{itemdesign}:}{Object of class \code{"data.frame"}, item design data}
-#'    \item{\code{Call}:}{Object of class \code{"call"}, call }
-#'  }
+#' \describe{
+#'     \item{\code{Call}:}{function call }
+#'     \item{\code{Data}:}{list of data, sometimes in different forms }
+#'     \item{\code{Options}:}{list of estimation options}
+#'     \item{\code{Fit}:}{a list of fit information }
+#'     \item{\code{Model}:}{a list of model-based information }
+#'     \item{\code{ParObjects}:}{a list of the S4 objects used during estimation}
+#'     \item{\code{OptimInfo}:}{a list of arguments from the optimization process}
+#'     \item{\code{Internals}:}{a list of internal arguments for secondary computations (inspecting this
+#'       object is generally not required)}
+#'     \item{\code{vcov}:}{a matrix represented the asymtotic covariance matrix of the parameter estimates}
+#'     \item{\code{time}:}{a data.frame indicating the breakdown of computation times in seconds}
+#' }
 #' @section Methods:
 #'
 #'  \describe{
@@ -272,12 +140,7 @@ setClass(
 # @keywords classes
 setClass(
     Class = 'MixedClass', contains = 'AllModelClass',
-    representation = representation(Pl='numeric',
-                                    random='list',
-                                    cand.t.var='numeric',
-                                    formulas='list',
-                                    covdata='data.frame',
-                                    itemdesign='data.frame'),
+    representation = representation(),
     validity = function(object) return(TRUE)
 )
 
@@ -288,46 +151,19 @@ setClass(
 #'
 #' @section Slots:
 #'
-#'  \describe{
-#'    \item{\code{iter}:}{Object of class \code{"numeric"}, number of iterations  }
-#'    \item{\code{pars}:}{Object of class \code{"list"}, estimated parameter objects list }
-#'    \item{\code{shortpars}:}{Object of class \code{"numeric"}, unique estimated parameters}
-#'    \item{\code{model}:}{Object of class \code{"list"}, list containing original model }
-#'    \item{\code{K}:}{Object of class \code{"numeric", number of item categories}  }
-#'    \item{\code{itemloc}:}{Object of class \code{"numeric", index for tabdata}  }
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom}
-#'    \item{\code{AIC}:}{Object of class \code{"numeric"}, Akaike's information criteria }
-#'    \item{\code{BIC}:}{Object of class \code{"numeric"}, Bayesian information criteria }
-#'    \item{\code{G2}:}{Object of class \code{"numeric"}, G squared stat }
-#'    \item{\code{p}:}{Object of class \code{"numeric"}, p-value for G2  }
-#'    \item{\code{df}:}{Object of class \code{"numeric"}, degrees of freedom }
-#'    \item{\code{RMSEA}:}{Object of class \code{"numeric"}, root mean-square error of approximation for G2}
-#'    \item{\code{TLI}:}{Object of class \code{"numeric"}, Tucker-Lewis index for G2}
-#'    \item{\code{CFI}:}{Object of class \code{"numeric"}, CFI for G2}
-#'    \item{\code{logLik}:}{Object of class \code{"numeric"}, observed log-likelihood }
-#'    \item{\code{SElogLik}:}{Object of class \code{"numeric"}, Monte Carlo standard error for log-likelihood }
-#'    \item{\code{Prior}:}{Object of class \code{"numeric"}, prior distribution used during estimation. Empty unless
-#'        \code{empiricalhist = TRUE}}
-#'    \item{\code{F}:}{Object of class \code{"matrix"}, unrotated factor loadings }
-#'    \item{\code{h2}:}{Object of class \code{"numeric"}, commonalities }
-#'    \item{\code{Theta}:}{Object of class \code{"matrix"}, ability grid }
-#'    \item{\code{Pl}:}{Object of class \code{"numeric"}, normed likelihoods for tabulated response}
-#'    \item{\code{prodlist}:}{Object of class \code{"list"}, list containing product combination of factors }
-#'    \item{\code{converge}:}{Object of class \code{"numeric"}, convergence diagnostic }
-#'    \item{\code{quadpts}:}{Object of class \code{"numeric"}, number of quadrature points }
-#'    \item{\code{esttype}:}{Object of class \code{"character"}, indicates whether estimation was 'EM' or 'MHRM'}
-#'    \item{\code{constrain}:}{Object of class \code{"list"}, list of constraints}
-#'    \item{\code{null.mod}:}{Object of class \code{"SingleGroupClass"}, null model}
-#'    \item{\code{condnum}:}{Object of class \code{"numeric"}, condition number of information matrix}
-#'     \item{\code{bfactor}:}{Object of class \code{"list"}, contains information from bfactor() estimation}
-#'    \item{\code{secondordertest}:}{Object of class \code{"logical"}, indicate whether information matrix passes
-#'       second-order test}
-#'     \item{\code{infomethod}:}{Object of class \code{"character"}, indiciates which information estimation method was used}
-#'     \item{\code{TOL}:}{Object of class \code{"numeric"}, tollerence stopping criteria}
-#'     \item{\code{CUSTOM.IND}:}{Object of class \code{"integer"}, an internal index}
-#'     \item{\code{SLOW.IND}:}{Object of class \code{"integer"}, an internal index}
-#'    \item{\code{Call}:}{Object of class \code{"call"}, call }
-#'  }
+#' \describe{
+#'     \item{\code{Call}:}{function call }
+#'     \item{\code{Data}:}{list of data, sometimes in different forms }
+#'     \item{\code{Options}:}{list of estimation options}
+#'     \item{\code{Fit}:}{a list of fit information }
+#'     \item{\code{Model}:}{a list of model-based information }
+#'     \item{\code{ParObjects}:}{a list of the S4 objects used during estimation}
+#'     \item{\code{OptimInfo}:}{a list of arguments from the optimization process}
+#'     \item{\code{Internals}:}{a list of internal arguments for secondary computations (inspecting this
+#'       object is generally not required)}
+#'     \item{\code{vcov}:}{a matrix represented the asymtotic covariance matrix of the parameter estimates}
+#'     \item{\code{time}:}{a data.frame indicating the breakdown of computation times in seconds}
+#' }
 #' @section Methods:
 #'
 #' \describe{
@@ -348,7 +184,6 @@ setClass(
 # @keywords classes
 setClass(
     Class = 'DiscreteClass', contains = 'AllModelClass',
-    representation = representation(Pl='list',
-                                    bfactor='list'),
+    representation = representation(),
     validity = function(object) return(TRUE)
 )

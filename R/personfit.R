@@ -79,17 +79,17 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(any(is.na(x@Data$data)))
         stop('Fit statistics cannot be computed when there are missing data.', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
-        ret <- vector('list', length(x@pars))
+        ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
             Theta <- fscores(x, method=method, full.scores=TRUE, ...)
-        for(g in 1L:length(x@pars)){
+        for(g in 1L:x@Data$ngroups){
             pick <- x@Data$groupNames[g] == x@Data$group
             tmp_obj <- MGC2SC(x, g)
             ret[[g]] <- personfit(tmp_obj, method=method, stats.only=stats.only,
                                   Theta=Theta[pick, , drop=FALSE], ...)
         }
         ret2 <- matrix(0, nrow(x@Data$data), ncol(ret[[1L]]))
-        for(g in 1L:length(x@pars)){
+        for(g in 1L:x@Data$ngroups){
             pick <- x@Data$groupNames[g] == x@Data$group
             ret2[pick, ] <- as.matrix(ret[[g]])
         }
@@ -100,10 +100,10 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(is.null(Theta))
         Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
     J <- ncol(x@Data$data)
-    itemloc <- x@itemloc
-    pars <- x@pars
+    itemloc <- x@Model$itemloc
+    pars <- x@ParObjects$pars
     prodlist <- attr(pars, 'prodlist')
-    nfact <- x@nfact + length(prodlist)
+    nfact <- x@Model$nfact + length(prodlist)
     fulldata <- x@Data$fulldata[[1L]]
     for(i in 1L:ncol(Theta)){
         tmp <- Theta[,i]
@@ -131,13 +131,13 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
                     sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
     }
     Zh <- (LL - mu) / sqrt(sigma2)
-    if(all(x@itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
-        oneslopes <- rep(FALSE, length(x@itemtype))
-        for(i in 1L:length(x@itemtype))
-            oneslopes[i] <- closeEnough(x@pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
+    if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+        oneslopes <- rep(FALSE, length(x@Model$itemtype))
+        for(i in 1L:length(x@Model$itemtype))
+            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
         if(all(oneslopes)){
             W <- resid <- info <- C <- matrix(0, ncol=J, nrow=N)
-            K <- x@K
+            K <- x@Data$K
             for (i in 1L:J){
                 P <- ProbTrace(x=pars[[i]], Theta=Theta)
                 Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)

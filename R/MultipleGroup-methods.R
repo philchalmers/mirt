@@ -22,11 +22,11 @@ setMethod(
     signature = 'MultipleGroupClass',
     definition = function(object, ...)
     {
-        ngroups <- length(object@pars)
+        ngroups <- object@Data$ngroups
         allPars <- vector('list', ngroups)
         names(allPars) <- object@Data$groupNames
         for(g in 1:ngroups){
-            tmp <- object@pars[[g]]
+            tmp <- object@ParObjects$pars[[g]]
             tmp@Data$data <- object@Data$data[1L, , drop=FALSE]
             allPars[[g]] <- coef(tmp, ...)
         }
@@ -38,14 +38,12 @@ setMethod(
     f = "summary",
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, digits = 3, rotate = 'oblimin', verbose = TRUE, ...) {
-        ngroups <- length(object@pars)
-        groupind <- length(object@pars[[1]]@pars)
-        nfact <- object@nfact
+        ngroups <- object@Data$ngroups
         ret <- list()
-        coeflist <- coef(object)
         for(g in 1:ngroups){
             if(verbose) cat('\n----------\nGROUP:', as.character(object@Data$groupNames[g]), '\n')
-            ret[[g]] <- summary(object@pars[[g]], digits=digits, verbose=verbose, rotate = rotate, ...)
+            ret[[g]] <- summary(object@ParObjects$pars[[g]], digits=digits, verbose=verbose,
+                                rotate = rotate, ...)
         }
         invisible(ret)
     }
@@ -78,17 +76,15 @@ setMethod(
             stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specifed. Must be between 0 and 90.', call.=FALSE)
-        if(length(degrees) > 1) stop('No info-angle plot is available', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
-        ngroups <- length(x@pars)
-        J <- length(x@pars[[1]]@pars) - 1L
-        nfact <- x@nfact
+        ngroups <- x@Data$ngroups
+        J <- x@Data$nitems
+        nfact <- x@Model$nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.", call.=FALSE)
         if(nfact == 1) degrees <- 0
-        pars <- x@pars
         theta <- seq(theta_lim[1],theta_lim[2],length.out=npts)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
-        prodlist <- attr(x@pars, 'prodlist')
+        prodlist <- attr(x@ParObjects$pars, 'prodlist')
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
         infolist <- vector('list', ngroups)
@@ -101,17 +97,17 @@ setMethod(
             infolist[[g]] <- info
         }
         if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
-        info <- do.call(rbind, infolist)
+        info <- do.call(c, infolist)
         Theta <- ThetaFull
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
         adj <- x@Data$mins
         gscore <- c()
         for(g in 1:ngroups){
-            itemtrace <- computeItemtrace(x@pars[[g]]@pars, ThetaFull, x@itemloc,
-                                          CUSTOM.IND=x@CUSTOM.IND)
+            itemtrace <- computeItemtrace(x@ParObjects$pars[[g]]@ParObjects$pars, ThetaFull, x@Model$itemloc,
+                                          CUSTOM.IND=x@Internals$CUSTOM.IND)
             score <- c()
             for(i in 1:J)
-                score <- c(score, 0:(x@K[i]-1) + adj[i])
+                score <- c(score, 0:(x@Data$K[i]-1) + adj[i])
             score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
             gscore <- c(gscore, rowSums(score * itemtrace))
         }
@@ -152,30 +148,30 @@ setMethod(
             colnames(plt) <- c("info", "score", "Theta", "group")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
-                return(xyplot(info~Theta, plt, type='l', group=group, main = 'Test Information',
+                return(xyplot(info~Theta, plt, type='l', groups=plt$group, main = 'Test Information',
                               xlab = expression(theta), ylab=expression(I(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'RE')
-                return(xyplot(info~Theta, plt, type='l', group=group, main = 'Relative Efficiency',
+                return(xyplot(info~Theta, plt, type='l', groups=plt$group, main = 'Relative Efficiency',
                               xlab = expression(theta), ylab=expression(RE(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'infocontour')
                 cat('No \'contour\' plots for 1-dimensional models\n')
             if(type == 'SE')
-                return(xyplot(SE~Theta, plt, type='l', group=group, main = 'Test Standard Errors',
+                return(xyplot(SE~Theta, plt, type='l', groups=plt$group, main = 'Test Standard Errors',
                               xlab = expression(theta), ylab=expression(SE(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'score')
-                return(xyplot(score~Theta, plt, type='l', group=group, main = 'Expected Total Score',
+                return(xyplot(score~Theta, plt, type='l', groups=plt$group, main = 'Expected Total Score',
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'empiricalhist'){
-                if(!x@empiricalhist) stop('Empirical histogram was not estimated for this object', call.=FALSE)
+                if(!x@Options$empiricalhist) stop('Empirical histogram was not estimated for this object', call.=FALSE)
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
-                    Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@quadpts)), .8 * sqrt(x@quadpts),
-                                           length.out = x@quadpts))
-                    Prior[[g]] <- x@Prior[[g]] * nrow(x@Data$data)
+                    Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
+                                           length.out = x@Options$quadpts))
+                    Prior[[g]] <- x@Internals$Prior[[g]] * nrow(x@Data$data)
                     cuts <- cut(Theta[[g]], floor(npts/2))
                     Prior[[g]] <- do.call(c, lapply(split(Prior[[g]], cuts), mean))
                     Theta[[g]] <- do.call(c, lapply(split(Theta[[g]], cuts), mean))
@@ -186,7 +182,7 @@ setMethod(
                     pltfull[[g]] <- plt
                 }
                 plt <- do.call(rbind, pltfull)
-                return(xyplot(Prior ~ Theta, plt, group=group, auto.key = auto.key,
+                return(xyplot(Prior ~ Theta, plt, groups=plt$group, auto.key = auto.key,
                               xlab = expression(theta), ylab = 'Expected Frequency',
                               type = 'b', main = 'Empirical Histogram',
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -217,12 +213,12 @@ setMethod(
                 plt <- do.call(rbind, plt)
                 plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
-                    return(xyplot(P ~ Theta|item, plt, group = cat:group, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta|item, plt, groups = plt$cat:plt$group, ylim = c(-0.1,1.1),
                            xlab = expression(theta), ylab = expression(P(theta)),
                            auto.key = auto.key, type = 'l', main = 'Item trace lines',
                            par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(P ~ Theta|group, plt, group = cat:item, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta|group, plt, groups = plt$cat:plt$item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item trace lines',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -243,12 +239,12 @@ setMethod(
                 plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 plt$group <- rep(x@Data$groupNames, each = nrow(ThetaFull)*length(which.items))
                 if(facet_items){
-                    return(xyplot(I ~ Theta | item, plt, group = group,
+                    return(xyplot(I ~ Theta | item, plt, groups = plt$group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(I ~ Theta | group, plt, group = item,
+                    return(xyplot(I ~ Theta | group, plt, groups = plt$item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item information trace lines',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -266,12 +262,12 @@ setMethod(
         ret <- vector('list', length(object@Data$groupNames))
         names(ret) <- object@Data$groupNames
         for(g in 1L:length(ret)){
-            cmod <- object@pars[[g]]
+            cmod <- object@ParObjects$pars[[g]]
             cmod@Data <- object@Data
             cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupName[g], ]
             cmod@Data$Freq[[1L]] <- cmod@Data$Freq[[g]]
-            cmod@quadpts <- object@quadpts
-            cmod@bfactor <- object@bfactor
+            cmod@Options$quadpts <- object@Options$quadpts
+            cmod@Internals$bfactor <- object@Internals$bfactor
             ret[[g]] <- residuals(cmod, verbose = FALSE, ...)
         }
         ret

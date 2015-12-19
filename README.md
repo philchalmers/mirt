@@ -63,6 +63,10 @@ git clone https://github.com/philchalmers/mirt
 R CMD INSTALL mirt
 ```
 
+# Licence
+
+This package is free and open source software, licensed under [GPL (>= 3)](http://www.gnu.org/licenses/gpl-3.0.en.html).
+
 # Bugs and Questions
 
 Bug reports are always welcome and the preferred way to address these bugs is through

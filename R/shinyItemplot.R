@@ -246,7 +246,7 @@ shinyItemplot <- function(){
                 sv$est <- FALSE
                 mod <- mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA),
                             technical=list(message=FALSE))
-                par <- mod@pars[[1]]@par
+                par <- mod@ParObjects$pars[[1]]@par
                 if(input$classical){
                     if(itemclass[1L] == 'dich'){
                         par <- c(input$a1parc, input$bpar, logit(input$gparc), logit(input$uparc))
@@ -261,7 +261,7 @@ shinyItemplot <- function(){
                         stop('Classical parameterization not available for selected item class',
                              call.=FALSE)
                     }
-                    par <- traditional2mirt(x=par, cls=itemclass[1L], ncat=mod@pars[[1]]@ncat)
+                    par <- traditional2mirt(x=par, cls=itemclass[1L], ncat=mod@ParObjects$pars[[1]]@ncat)
                 } else {
                     par[names(par) == 'a1'] <- input$a1par
                     par[names(par) == 'a2'] <- input$a2par
@@ -279,7 +279,7 @@ shinyItemplot <- function(){
                     par[names(par) == 'ak2'] <- input$ak2par
                     par[names(par) == 'ak3'] <- input$ak3par
                 }
-                mod@pars[[1]]@par <- par
+                mod@ParObjects$pars[[1]]@par <- par
                 mod
                 }
 
@@ -293,7 +293,7 @@ shinyItemplot <- function(){
                 mod <- genmod(input)
                 cat('Item parameters: \n\n')
                 print(coef(mod, rotate = 'none')[[1L]])
-                if(mod@nfact == 1L && !is(mod@pars[[1L]], 'nestlogit')){
+                if(mod@Model$nfact == 1L && !is(mod@ParObjects$pars[[1L]], 'nestlogit')){
                     cat('\n\nItem parameters (traditional IRT metric): \n\n')
                     print(coef(mod, IRTpars = TRUE)[[1L]])
                 }

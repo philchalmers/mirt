@@ -11,7 +11,7 @@
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
 #' @keywords extract
-#' @seealso \code{\link{extract.group}}
+#' @seealso \code{\link{extract.group}}, \code{\link{extract.mirt}}
 #' @export extract.item
 #' @examples
 #'
@@ -30,17 +30,18 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     if(!is.numeric(item)) item <- ind[inames == item]
     if(is(x, 'MultipleGroupClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?', call.=FALSE)
-        ret <- x@pars[[group]]@pars[[item]]
+        ret <- x@ParObjects$pars[[group]]@ParObjects$pars[[item]]
     } else {
-        ret <- x@pars[[item]]
+        ret <- x@ParObjects$pars[[item]]
     }
     if(drop.zeros){
         zeros <- ret@par > -1e-8 & ret@par < 1e-8
-        zeros[-c(1L:ret@nfact)] <- FALSE
+        nfact <- extract.mirt(x, 'nfact')
+        zeros[-c(1L:nfact)] <- FALSE
         ret@par <- ret@par[!zeros]
         ret@est <- ret@est[!zeros]
         ret@parnum <- ret@parnum[!zeros]
-        ret@nfact <- sum(!zeros[c(1L:ret@nfact)])
+        ret@nfact <- sum(!zeros[c(1L:nfact)])
     }
     ret
 }

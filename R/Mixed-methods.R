@@ -25,12 +25,12 @@ setMethod(
         if(verbose)
             cat("\nCall:\n", paste(deparse(object@Call), sep = "\n", collapse = "\n"),
                 "\n\n", sep = "")
-        nbetas <- ncol(object@pars[[1L]]@fixed.design)
+        nbetas <- ncol(object@ParObjects$pars[[1L]]@fixed.design)
         out <- data.frame()
         if(nbetas > 0L){
-            out <- data.frame(Estimate=object@pars[[1L]]@par[1L:nbetas],
-                                    'Std.Error'=object@pars[[1L]]@SEpar[1L:nbetas],
-                                    row.names=names(object@pars[[1L]]@est[1L:nbetas]))
+            out <- data.frame(Estimate=object@ParObjects$pars[[1L]]@par[1L:nbetas],
+                                    'Std.Error'=object@ParObjects$pars[[1L]]@SEpar[1L:nbetas],
+                                    row.names=names(object@ParObjects$pars[[1L]]@est[1L:nbetas]))
             out$'z.value' <- out$Estimate / out$'Std.Error'
         }
         if(verbose){
@@ -41,21 +41,21 @@ setMethod(
             cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')
             cat('Correlations on upper diagonal\n')
         }
-        par <- object@pars[[length(object@pars)]]@par[-c(1L:object@nfact)]
-        sigma <- matrix(0, object@nfact, object@nfact)
+        par <- object@ParObjects$pars[[length(object@ParObjects$pars)]]@par[-c(1L:object@Model$nfact)]
+        sigma <- matrix(0, object@Model$nfact, object@Model$nfact)
         sigma[lower.tri(sigma, TRUE)] <- par
-        if(object@nfact > 1L){
+        if(object@Model$nfact > 1L){
             sigma <- sigma + t(sigma) - diag(diag(sigma))
             csigma <- cov2cor(sigma)
             sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
         }
-        colnames(sigma) <- rownames(sigma) <- object@factorNames
+        colnames(sigma) <- rownames(sigma) <- object@Model$factorNames
         rand <- list(sigma)
         listnames <- 'Theta'
-        if(length(object@random) > 0L){
-            for(i in 1L:length(object@random)){
-                par <- object@random[[i]]@par
-                sigma <- matrix(0, object@random[[i]]@ndim, object@random[[i]]@ndim)
+        if(length(object@ParObjects$random) > 0L){
+            for(i in 1L:length(object@ParObjects$random)){
+                par <- object@ParObjects$random[[i]]@par
+                sigma <- matrix(0, object@ParObjects$random[[i]]@ndim, object@ParObjects$random[[i]]@ndim)
                 sigma[lower.tri(sigma, TRUE)] <- par
                 if(ncol(sigma) > 1L){
                     sigma <- sigma + t(sigma) - diag(diag(sigma))
@@ -63,9 +63,9 @@ setMethod(
                     sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
                 }
                 colnames(sigma) <- rownames(sigma) <-
-                    paste0('COV_', colnames(object@random[[i]]@gdesign))
+                    paste0('COV_', colnames(object@ParObjects$random[[i]]@gdesign))
                 rand[[length(rand) + 1L]] <- sigma
-                listnames <- c(listnames, colnames(object@random[[i]]@gdesign)[1L])
+                listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
             }
         }
         names(rand) <- listnames
@@ -73,9 +73,9 @@ setMethod(
             cat('\n')
             print(rand, digits)
         }
-        if(length(object@lrPars)){
-            betas <- object@lrPars@beta
-            SE.betas <- matrix(object@lrPars@SEpar, nrow(betas), ncol(betas),
+        if(length(object@Model$lrPars)){
+            betas <- object@Model$lrPars@beta
+            SE.betas <- matrix(object@Model$lrPars@SEpar, nrow(betas), ncol(betas),
                                dimnames = list(rownames(betas), paste0('Std.Error_', colnames(betas))))
             z <- betas/SE.betas
             colnames(z) <- paste0('z_', colnames(betas))
@@ -102,33 +102,32 @@ setMethod(
             stop('CI must be between 0 and 1', call.=FALSE)
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
-        K <- object@K
+        K <- object@Data$K
         J <- length(K)
-        nLambdas <- ncol(object@F)
         allPars <- list()
-        if(length(object@pars[[1]]@SEpar) > 0){
+        if(length(object@ParObjects$pars[[1]]@SEpar) > 0){
             if(printSE){
                 for(i in 1:(J+1)){
-                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
-                                                   object@pars[[i]]@SEpar),
+                    allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                                                   object@ParObjects$pars[[i]]@SEpar),
                                                  2, byrow = TRUE), digits)
                     rownames(allPars[[i]]) <- c('par', 'SE')
-                    colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 }
             } else {
                 for(i in 1:(J+1)){
-                    allPars[[i]] <- round(matrix(c(object@pars[[i]]@par,
-                                                   object@pars[[i]]@par - z*object@pars[[i]]@SEpar,
-                                                   object@pars[[i]]@par + z*object@pars[[i]]@SEpar),
+                    allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                                                   object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
+                                                   object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
                                                  3, byrow = TRUE), digits)
                     rownames(allPars[[i]]) <- c('par', SEnames)
-                    colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                    colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 }
             }
         } else {
             for(i in 1:(J+1)){
-                allPars[[i]] <- matrix(round(object@pars[[i]]@par, digits), 1L)
-                colnames(allPars[[i]]) <- names(object@pars[[i]]@est)
+                allPars[[i]] <- matrix(round(object@ParObjects$pars[[i]]@par, digits), 1L)
+                colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 rownames(allPars[[i]]) <- 'par'
             }
         }
@@ -139,45 +138,45 @@ setMethod(
             },  digits=digits)
         }
         listnames <- c(colnames(object@Data$data), 'GroupPars')
-        if(length(object@random) > 0L){
+        if(length(object@ParObjects$random) > 0L){
             if(printSE){
-                for(i in 1L:length(object@random)){
+                for(i in 1L:length(object@ParObjects$random)){
                     allPars[[length(allPars) + 1L]] <-
-                        round(matrix(c(object@random[[i]]@par,
-                                       object@random[[i]]@SEpar),
+                        round(matrix(c(object@ParObjects$random[[i]]@par,
+                                       object@ParObjects$random[[i]]@SEpar),
                                      2, byrow = TRUE), digits)
                     rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
-                    colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
-                    listnames <- c(listnames, colnames(object@random[[i]]@gdesign)[1L])
+                    colnames(allPars[[length(allPars)]]) <- names(object@ParObjects$random[[i]]@est)
+                    listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
                 }
             } else {
-                for(i in 1L:length(object@random)){
+                for(i in 1L:length(object@ParObjects$random)){
                     allPars[[length(allPars) + 1L]] <-
-                        round(matrix(c(object@random[[i]]@par,
-                                       object@random[[i]]@par - z*object@random[[i]]@SEpar,
-                                       object@random[[i]]@par + z*object@random[[i]]@SEpar),
+                        round(matrix(c(object@ParObjects$random[[i]]@par,
+                                       object@ParObjects$random[[i]]@par - z*object@ParObjects$random[[i]]@SEpar,
+                                       object@ParObjects$random[[i]]@par + z*object@ParObjects$random[[i]]@SEpar),
                                      3, byrow = TRUE), digits)
                     rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
-                    colnames(allPars[[length(allPars)]]) <- names(object@random[[i]]@est)
-                    listnames <- c(listnames, colnames(object@random[[i]]@gdesign)[1L])
+                    colnames(allPars[[length(allPars)]]) <- names(object@ParObjects$random[[i]]@est)
+                    listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
                 }
             }
         }
-        if(length(object@lrPars)){
+        if(length(object@Model$lrPars)){
             listnames <- c(listnames, 'lr.betas')
             if(!printSE){
-                allPars[[length(allPars)+1L]] <- round(matrix(c(object@lrPars@par,
-                                                                object@lrPars@par - z*object@lrPars@SEpar,
-                                                                object@lrPars@par + z*object@lrPars@SEpar),
+                allPars[[length(allPars)+1L]] <- round(matrix(c(object@Model$lrPars@par,
+                                                                object@Model$lrPars@par - z*object@Model$lrPars@SEpar,
+                                                                object@Model$lrPars@par + z*object@Model$lrPars@SEpar),
                                                               3, byrow = TRUE), digits)
                 rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
             } else {
-                allPars[[length(allPars)+1L]] <- round(matrix(c(object@lrPars@par,
-                                                                object@lrPars@SEpar),
+                allPars[[length(allPars)+1L]] <- round(matrix(c(object@Model$lrPars@par,
+                                                                object@Model$lrPars@SEpar),
                                                               2, byrow = TRUE), digits)
                 rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
             }
-            colnames(allPars[[length(allPars)]]) <- names(object@lrPars@est)
+            colnames(allPars[[length(allPars)]]) <- names(object@Model$lrPars@est)
         }
         names(allPars) <- listnames
         return(allPars)

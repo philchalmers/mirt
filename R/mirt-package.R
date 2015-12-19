@@ -24,7 +24,8 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @import stats lattice GPArotation Rcpp stats4 methods sfsmisc mgcv
-#' @importFrom utils write.table flush.console
+#' @importFrom utils write.table flush.console packageVersion
+#' @importFrom graphics symbols
 #' @exportMethod anova
 #' @exportMethod residuals
 #' @exportMethod summary
@@ -187,7 +188,7 @@ NULL
 #' mod <- mirt(dat, 1, 'nominal')
 #'
 #' #reproduce table 3 in Bock (1997)
-#' fs <- round(fscores(mod, verbose = FALSE)[,c('F1','SE_F1')],2)
+#' fs <- round(fscores(mod, verbose = FALSE, full.scores = FALSE)[,c('F1','SE_F1')],2)
 #' fttd <- residuals(mod, type = 'exp')
 #' table <- data.frame(fttd[,-ncol(fttd)], fs)
 #' table

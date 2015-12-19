@@ -51,44 +51,50 @@ test_that('confirmatory mods', {
 
     mod1 <- mirt(dataset,model.1, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod1, 'SingleGroupClass')
-    expect_equal(mod1@df, 1512)
+    expect_equal(extract.mirt(mod1, 'df'), 1512)
     cfs <- as.numeric(do.call(c, coef(mod1, digits=4)))
-    expect_equal(cfs, c(1.5534,0,-0.9591,0,1,0.5688,0,-1.4589,0,1,0.7977,0,1.3456,0,1,1.1897,0.5863,0.0463,0,1,0,1.3994,2.8545,1.85,-0.4642,0,0.4358,2.5308,0.9919,-1.0165,0,0.8481,1.8906,0.0775,0,0.9863,1.0179,0,1,0,0,1,0.4256,1),
+    expect_equal(cfs, c(1.5565,0,-0.9627,0,1,0.5455,0,-1.4531,0,1,0.7978,0,1.3458,0,1,1.1692,0.5865,0.0477,0,1,0,1.4023,2.8587,1.8546,-0.4592,0,0.4415,2.5338,0.9943,-1.0163,0,0.8477,1.8935,0.0816,0,0.9704,1.0164,0,1,0,0,1,0.4309,1),
                  tolerance = 1e-2)
+    Theta <- expand.grid(-4:4, -4:4)
+    info <- testinfo(mod1, Theta, degrees = c(30,40))
+    expect_equal(info[1:4], c(0.2563353, 0.3050700, 0.3738668, 0.5134378), tolerance = 1e-4)
 
     mod1b <- mirt(dataset,model.1, verbose = FALSE)
     expect_is(mod1b, 'SingleGroupClass')
-    expect_equal(mod1b@df, 1512)
+    expect_equal(extract.mirt(mod1b, 'df'), 1512)
     cfs <- as.numeric(do.call(c, coef(mod1b, digits=4)))
     expect_equal(cfs, c(1.5493,0,-0.9572,0,1,0.5616,0,-1.4568,0,1,0.7901,0,1.3428,0,1,1.1682,0.5995,0.0475,0,1,0,1.4268,2.88,1.8685,-0.4648,0,0.4276,2.5285,0.9911,-1.0141,0,0.8374,1.8871,0.0792,0,0.9759,1.017,0,1,0,0,1,0.4253,1),
                  tolerance = 1e-2)
 
     mod.quad <- mirt(dataset, model.quad, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod.quad, 'SingleGroupClass')
-    expect_equal(mod.quad@df, 1510)
+    expect_equal(extract.mirt(mod.quad, 'df'), 1510)
     cfs <- as.numeric(do.call(c, coef(mod.quad, digits=4)))
-    expect_equal(cfs, c(0.8923,0.1328,-0.8929,0,1,0.5117,-0.088,-1.3597,0,1,0.7162,0.1825,1.1458,0,1,1.5009,0.3353,-0.1473,0,1,1.0598,0,2.5935,1.6636,-0.4238,0.3515,0,2.5026,0.9769,-1.0026,0.7102,0,1.8271,0.0722,0.9147,0,0.9944,0,1,0,1),
+    expect_equal(cfs, c(0.8852,0.1199,-0.8806,0,1,0.499,-0.0729,-1.3696,0,1,0.7136,0.1747,1.1533,0,1,1.4444,0.2611,-0.1055,0,1,1.055,0,2.5917,1.6627,-0.4225,0.3559,0,2.5045,0.9777,-1.0034,0.7043,0,1.8252,0.0726,0.9228,0,0.9983,0,1,0,1),
                  tolerance = 1e-2)
 
     mod.combo <- mirt(dataset, model.combo, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod.combo, 'SingleGroupClass')
-    expect_equal(mod.combo@df, 1512)
+    expect_equal(extract.mirt(mod.combo, 'df'), 1512)
     cfs <- as.numeric(do.call(c, coef(mod.combo, digits=4)))
-    expect_equal(cfs, c(1.6228,0,0.3441,-1.0014,0,1,0.5473,0,0,-1.4535,0,1,0.7777,0,0,1.3372,0,1,1.339,0,0,0.0431,0,1,0,1.4432,-0.2535,2.9491,1.9152,-0.437,0,0.4848,0,2.5517,1.0041,-1.0227,0,0.8448,0,1.8946,0.0856,0,0.9293,0,1.0089,0,1,0,0,1,0,1),
+    expect_equal(cfs, c(1.5661,0,0.346,-0.9944,0,1,0.5206,0,0,-1.4488,0,1,0.7675,0,0,1.3309,0,1,1.3356,0,0,0.0361,0,1,0,1.454,-0.2666,2.9673,1.9292,-0.431,0,0.481,0,2.5526,1.0059,-1.0202,0,0.8513,0,1.902,0.0896,0,0.9081,0,1.0071,0,1,0,0,1,0,1),
                  tolerance = 1e-2)
 
     mod.combob <- mirt(dataset, model.combo, verbose = FALSE)
     expect_is(mod.combob, 'SingleGroupClass')
-    expect_equal(mod.combob@df, 1512)
+    expect_equal(extract.mirt(mod.combob, 'df'), 1512)
     cfs <- as.numeric(do.call(c, coef(mod.combob, digits=4)))
     expect_equal(cfs, c(1.6765, 0, 0.4179, -1.0214, 0, 1, 0.542, 0, 0, -1.4527, 0, 1, 0.7514, 0, 0, 1.327, 0, 1, 1.3204, 0, 0, 0.0407, 0, 1, 0, 1.4954, -0.2818, 3.0102, 1.9579, -0.4358, 0, 0.4644, 0, 2.5463, 1.0025, -1.0165, 0, 0.837, 0, 1.8952, 0.089, 0, 0.892, 0, 1.0029, 0, 1, 0, 0, 1, 0, 1),
                  tolerance = 1e-2)
 
-    fs1 <- fscores(mod1, verbose = FALSE)
+    fs1 <- fscores(mod1, verbose = FALSE, full.scores=FALSE)
     expect_is(fs1, 'matrix')
+    fs2 <- fscores(mod1, method = 'WLE', response.pattern = dataset[1:2,])
+    expect_equal(as.vector(fs2[,c('F1', 'F2')]), c(-0.4915098, 0.1835822, -1.3767735, 0.5192645),
+                 tolerance=1e-4)
     fs3 <- fscores(mod.quad, full.scores=TRUE, verbose = FALSE)
     expect_is(fs3, 'matrix')
-    fs4 <- fscores(mod.combo, verbose = FALSE)
+    fs4 <- fscores(mod.combo, verbose = FALSE, full.scores=FALSE)
     expect_is(fs4, 'matrix')
 
     TI <- plot(mod1)

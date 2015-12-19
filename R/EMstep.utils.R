@@ -15,16 +15,15 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
                                      prior=Prior[[g]], itemloc=itemloc, full=full)
         }
         LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
+        rlist[[g]]$r1[is.nan(rlist[[g]]$r1)] <- 0
     }
     return(list(rlist=rlist, LL=LL))
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full,
+Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full = FALSE,
                        itemtrace=NULL, deriv = FALSE)
 {
-    nquad <- nrow(Theta)
-    J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata)
@@ -37,7 +36,6 @@ Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, f
 Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween, specific,
                           CUSTOM.IND, sitems, itemloc, itemtrace=NULL)
 {
-    J <- length(itemloc) - 1L
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior)
@@ -227,7 +225,6 @@ Mstep.grad2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, gro
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    LL <- 0
     ind <- 1L
     for(g in 1L:ngroups){
         if(BFACTOR){
@@ -278,7 +275,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         for(i in 1L:length(constrain))
             longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L)$grad
+    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 0L)$grad
     if(length(SLOW.IND)){
         for(group in 1L:ngroups){
             for (i in SLOW.IND){
@@ -306,12 +303,12 @@ Mstep.grad_alt <- function(x0, optim_args){
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,
-                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, NO.CUSTOM, SLOW.IND,
-                     TOL, control)
+                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, TOL, control)
 {
     plast2 <- plast <- p
     ubound <- UBOUND[est]
     lbound <- LBOUND[est]
+    lastchange <- 0
     if(is.null(control$maxit)) control$maxit <- 50L
     for(iter in 1L:control$maxit){
         longpars[est] <- p
@@ -319,7 +316,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L)
+        dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L, 0L)
         if(length(SLOW.IND)){
             for(group in 1L:ngroups){
                 for (i in SLOW.IND){
@@ -362,16 +359,14 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
 
 BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)
 
-Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars){
-    J <- length(pars) - 1L
-    N <- nrow(fulldata)
-    nfact <- ncol(Theta)
+Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars, retscores=FALSE){
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
     mu <- lrPars@mus
     X <- lrPars@X
     ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu)
     scores <- ret[[1L]]; vars <- ret[[2L]]
+    if(retscores) return(scores)
     beta <- lrPars@inv_tXX %*% t(X) %*% scores
     siglong <- colMeans(vars)
     beta[!lrPars@est] <- lrPars@par[!lrPars@est]

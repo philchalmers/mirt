@@ -1,13 +1,15 @@
 Package: mirt
-Version: 1.10.2
-Date: 2015-06-15
+Version: 1.14.2
+Date: 2015-11-20
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
     "rphilip.chalmers@gmail.com", role = c("aut", "cre", "cph")),
     person("Joshua", family="Pritikin", role=c('ctb')),
     person("Alexander", family="Robitzsch", role=c('ctb')),
-    person("Mateusz", family="Zoltak", role=c('ctb')))
+    person("Mateusz", family="Zoltak", role=c('ctb')),
+    person("KwonHyun", family="Kim", role=c('ctb')),
+    person("Carl F.", family="Falk", role=c('ctb')))
 Description: Analysis of dichotomous and polytomous response data using
     unidimensional and multidimensional latent trait models under the Item
     Response Theory paradigm. Exploratory and confirmatory models can be
@@ -48,5 +50,6 @@ License: GPL (>= 3)
 Repository: CRAN
 Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
 URL: https://github.com/philchalmers/mirt,
-     https://github.com/philchalmers/mirt/wiki
+    https://github.com/philchalmers/mirt/wiki
 BugReports: https://github.com/philchalmers/mirt/issues?state=open
+RoxygenNote: 5.0.1

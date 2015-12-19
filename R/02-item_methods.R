@@ -9,7 +9,7 @@ EML <- function(par, obj, Theta){
     return(LL)
 }
 
-EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
+EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND){
     obj <- pars[[length(pars)]]
     obj@par[obj@est] <- x
     gpars <- ExtractGroupPars(obj)
@@ -17,8 +17,7 @@ EML2 <- function(x, Theta, pars, tabdata, itemloc, CUSTOM.IND){
     sigma <- gpars$gcov
     prior <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
     prior <- prior/sum(prior)
-    freq <- tabdata[,ncol(tabdata)]
-    rlist <- Estep.mirt(pars=pars, tabdata=tabdata[,-ncol(tabdata)], freq=freq,
+    rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq,
                         Theta=Theta, prior=prior, itemloc=itemloc,
                         CUSTOM.IND=CUSTOM.IND, full=FALSE)
     tmp <- log(rlist$expected)
@@ -68,7 +67,7 @@ numDeriv_dP <- function(item, Theta){
 # valid itemtype inputs
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
-Experimental_itemtypes <- function() c('experimental')
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
@@ -134,53 +133,37 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
-                          tabdata = NULL, estHess=FALSE, prior = NULL){
+                          tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL){
         if(EM){
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
+#             if(any(x@est)){
+#                 grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
+#                                               pars=pars, tabdata=tabdata, freq=freq,
+#                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+#             }
+#             npars <- length(x@est)
+#             nfact <- ncol(Theta)
+#             dEta <- matrix(0, nrow(Theta), npars)
+#             for(i in 1L:nrow(Theta))
+#                 dEta[i, ] <- Deriv(x, Theta[i, , drop=FALSE])$grad
+#             P <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+#                                   CUSTOM.IND=CUSTOM.IND)
+#             for(i in 1:nrow(tabdata)){
+#                 L <- apply(P[,as.logical(tabdata[i, ]), drop=FALSE], 1, prod)
+#                 PL <- sum(L * prior)
+#                 grad <- grad + 1/PL * colSums(L * dEta * prior)
+#             }
             if(estHess){
                 if(any(x@est)){
                     hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
-                                                           pars=pars, tabdata=tabdata,
+                                                           pars=pars, tabdata=tabdata, freq=freq,
                                                            itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
                 }
-                return(list(grad=grad, hess=hess))
             }
-            J <- length(pars) - 1L
-            nfact <- x@nfact
-            scores <- matrix(0, nrow(tabdata), nfact)
-            r <- tabdata[ ,ncol(tabdata)]
-            N <- sum(r)
-            tabdata <- tabdata[ ,-ncol(tabdata)]
-            itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                          CUSTOM.IND=CUSTOM.IND)
-            mu <- x@par[1L:nfact]
-            siglong <- x@par[-(1L:nfact)]
-            sig <- matrix(0,nfact,nfact)
-            selcov <- lower.tri(sig, diag=TRUE)
-            sig[selcov] <- siglong
-            if(nfact != 1L)
-                sig <- sig + t(sig) - diag(diag(sig))
-            prior <- mirt_dmvnorm(Theta, mu, sig)
-            stop('Function not supported', call.=FALSE)
-            ret <- .Call('EAPgroup', log(itemtrace), tabdata, Theta, prior, mu)
-            tmp <- cbind(ret$scores, ret$scores2) * r
-            newpars <- apply(tmp, 2, sum) / N
-            if(nfact > 1L){
-                x@par[x@est] <- newpars[x@est]
-                cov <- ExtractGroupPars(x)$gcov
-                ev <- eigen(cov)
-                if(any(ev$values <= 0)){
-                    eval <- ev$values
-                    eval[eval < 0] <- 100*.Machine$double.eps
-                    eval <- eval / sum(eval) * sum(ev$values)
-                    cov <- ev$vectors %*% diag(eval) %*% t(ev$vectors)
-                    newpars[(nfact+1L):length(newpars)] <- cov[lower.tri(cov, TRUE)]
-                }
-            }
-            return(newpars[x@est])
+            return(list(grad=grad, hess=hess))
         }
-        return(.Call("dgroup", x, Theta, estHess, FALSE))
+        return(.Call("dgroup", x, Theta, estHess, FALSE, FALSE))
     }
 )
 
@@ -263,7 +246,7 @@ setMethod(
         Theta <- x@drawvals
         estHess <- TRUE
         pick <- -c(1L:ncol(Theta))
-        out <- .Call("dgroup", x, Theta, estHess, TRUE)
+        out <- .Call("dgroup", x, Theta, estHess, TRUE, FALSE)
         out$grad <- out$grad[pick]
         out$hess <- out$hess[pick, pick, drop=FALSE]
         diag(out$hess) <- -abs(diag(out$hess)) #hack for very small clusters
@@ -302,6 +285,17 @@ setMethod(
     signature = signature(x = 'lrPars'),
     definition = function(x){
         x
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'lrPars'),
+    definition = function(x, cov, theta){
+        inv_sigma <- solve(cov)
+        tmp <- t(inv_sigma %*% t(theta - x@mus) %*% x@X)
+        tmp2 <- -det(inv_sigma) * x@tXX
+        list(grad=tmp, hess=tmp2)
     }
 )
 
@@ -776,7 +770,8 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'gpcm'),
     definition = function(x){
-        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), 0:(x@ncat-1), 0,
+        ns <- sum(grepl('ak', names(x@est)))
+        par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), rep(NA, ns), 0,
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
         x@par[x@est] <- par[x@est]
         x
@@ -2082,6 +2077,255 @@ setMethod(
         numDeriv_dP(x, Theta)
     }
 )
+
+# ----------------------------------------------------------------
+
+# itemtype='grsmIRT', 1-dim graded rating scale
+# slope, thresholds and 1 location parameters
+# ExtractZetas, GenRandomPar, ProbTrace, initialize MODIFIED
+
+
+setClass("grsmIRT", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+  f = "print",
+  signature = signature(x = 'grsmIRT'),
+  definition = function(x, ...){
+    cat('Item object of class:', class(x))
+  }
+)
+
+setMethod(
+  f = "show",
+  signature = signature(object = 'grsmIRT'),
+  definition = function(object){
+    print(object)
+  }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+  f = "ExtractLambdas",
+  signature = signature(x = 'grsmIRT'),
+  definition = function(x){
+    x@par[1L:x@nfact] #slopes
+  }
+)
+
+#extract the intercepts
+setMethod(
+  f = "ExtractZetas",
+  signature = signature(x = 'grsmIRT'),
+  definition = function(x){
+    #x@par[(x@nfact+1):(length(x@par))] #intercepts
+    x@par[(x@nfact+1):(x@ncat+1)] #intercepts
+    # if we set :(length(x@par)), when collapsed, may produce error?
+    # MAYBE DOESNT MATTER?
+  }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+  f = "GenRandomPars",
+  signature = signature(x = 'grsmIRT'),
+  definition = function(x){
+    par <- c(rlnorm(1,0,1),sort(rnorm(x@ncat-1, 0, 1), decreasing=TRUE), rnorm(1,0,0.5))
+    x@par[x@est] <- par[x@est]
+    x
+  }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+  f = "set_null_model",
+  signature = signature(x = 'grsmIRT'),
+  definition = function(x){
+    x@par[1L:(x@nfact+x@ncat)] <- 0
+    x@est[1L:(x@nfact+x@ncat)] <- FALSE
+    x
+  }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+  f = "ProbTrace",
+  signature = signature(x = 'grsmIRT', Theta = 'matrix'),
+  definition = function(x, Theta){
+
+
+    th1 = Theta[,1];
+
+    ncat = x@ncat
+    a1 = x@par[1]
+    d = x@par[2:ncat]
+    c = x@par[ncat+1]
+    nr = nrow(Theta); nc=ncat-1
+
+    if (all(d == sort(d, decreasing=TRUE))) {
+
+      D.star = matrix(c+d, nrow=nr, ncol=nc, byrow=TRUE)
+      TH1 = matrix(th1, nrow=nr, ncol=nc)
+      A = matrix(a1, nrow=nr, ncol=nc)
+      P.star = 1/(1+exp(-A*(D.star+TH1)))
+
+      P=cbind(1, P.star)-cbind(P.star, 0)
+
+      P <- ifelse(P < 1e-20, 1e-20, P)
+      P <- ifelse(P > (1 - 1e-20), (1 - 1e-20), P)
+    } else {
+
+      P <- matrix(1e-20, nrow=nr, ncol=ncat)}
+
+    return(P)
+
+  }
+)
+
+# complete-data derivative used in parameter estimation
+# Analytic Derivation is provided...
+# and it fails, numerical derivation is used.
+
+setMethod(
+  f = "Deriv",
+  signature = signature(x = 'grsmIRT', Theta = 'matrix'),
+  definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+    grad <- rep(0, length(x@par))
+    hess <- matrix(0, length(x@par), length(x@par))
+
+    dat <- x@dat;
+    th1 <- Theta[,1];
+
+    ncat <- x@ncat
+    a1 <- x@par[1]
+    d <- x@par[2:ncat]
+
+    c <- x@par[ncat+1]
+    nr <- length(th1);
+    nc <- ncat - 1
+
+    beta.mean <- mean(d)
+    beta.mat <- matrix(d, nrow=nr, ncol=nc, byrow=TRUE)
+
+    Sigma.mat <- (beta.mat - beta.mean)
+    th1.mat <- matrix(th1, nr, nc)
+    B.mat <- th1.mat + c + beta.mat
+
+    lam.star.mat <- exp(-a1*B.mat)
+    lam.mat <- cbind(lam.star.mat, 1)-cbind(0, lam.star.mat)
+
+    P.star <- 1/(1+lam.star.mat)
+    Q.star <- 1- P.star
+    P <- P.star[,-nc] - P.star[,-1]
+    inv.P <- 1/P
+
+    #when a1*B.mat >30, inv.P would be overflow...
+
+    PQ.star <- P.star*Q.star
+
+    P.star.a1 <- PQ.star*B.mat
+    P.star.beta <- list()
+
+    for (i in 1:(ncat-1))
+      P.star.beta[[i]] <- matrix(0, nr, nc)
+
+    for (i in 1:(ncat-1))
+      P.star.beta[[i]][,i] <- (PQ.star*a1)[,i]
+
+    P.star.c <- PQ.star*a1
+
+    P.a1 <- matrix(NA, nr, ncat);
+    P.c <- matrix(NA, nr, ncat);
+    P.beta <- list(); for (i in 1:(ncat-1)) P.beta[[i]] <- matrix(NA, nr, ncat);
+
+    P.a1[, 2:nc] <- inv.P*(P.star.a1[,-nc] - P.star.a1[, -1])
+
+    for (i in 1:(ncat-1))
+      P.beta[[i]][, 2:nc] <- inv.P*(P.star.beta[[i]][, -nc] - P.star.beta[[i]][, -1])
+
+    P.c[, 2:nc] <- inv.P * (P.star.c[, -nc] - P.star.c[, -1])
+
+    # the first response category
+    P.a1[,1] <- -P.star[,1]*B.mat[,1]
+    for (i in 2:(ncat-1))
+      P.beta[[i]][,1] <- 0
+
+    P.beta[[1]][,1] <- -P.star[,1]*a1
+    P.c[,1] <- -P.star[,1]*a1
+
+    # the last response category
+    P.a1[,ncat]=Q.star[,ncat-1]*B.mat[,ncat-1]
+
+    for (i in 1:(ncat-2))
+      P.beta[[i]][,ncat] <- 0
+
+    P.beta[[ncat-1]][,ncat] <- Q.star[,ncat-1]*a1
+    P.c[,ncat] <- Q.star[,ncat-1]*a1
+
+
+    grad[1] <- sum(P.a1 * dat)
+    for (i in 1:(ncat-1))
+      grad[i+1] <- sum(P.beta[[i]] *dat)
+    grad[ncat+1] <- sum(P.c * dat)
+
+    grad[!x@est] <- 0
+
+    Nest <- is.nan(grad) | is.infinite(grad)
+
+    if (sum(Nest)>0) {
+      grad <- rep(0, length(x@par))
+      grad[x@est & Nest] <- numDeriv::grad(EML, x@par[x@est & Nest], obj=x, Theta=Theta)
+    }
+
+    if(estHess)
+      hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                              Theta=Theta)
+    ret <- list(grad=grad, hess=hess)
+    if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+    return(ret)
+  }
+)
+
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+  f = "DerivTheta",
+  signature = signature(x = 'grsmIRT', Theta = 'matrix'),
+  definition = function(x, Theta){
+    numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+  }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+  f = "dP",
+  signature = signature(x = 'grsmIRT', Theta = 'matrix'),
+  definition = function(x, Theta){
+    numDeriv_dP(x, Theta) #replace with analytical derivatives
+  }
+)
+
+# defines how the item should be initiallized with the S4 function new()
+#   before the parameter estimates are updated
+#   (set starting values, lower/upper bounds, logicals indicating estimation, etc)
+setMethod("initialize",
+          'grsmIRT',
+          function(.Object, nfact, ncat){
+            if(nfact != 1L)
+                stop('grsmIRT only possible for unidimensional models')
+            stopifnot(ncat >= 2L)
+            .Object@par <- c(rep(1, nfact),  seq(1, -1, length.out=ncat-1), 0)
+            #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1), 0)
+            # -3 ~ 3 seems to be too far away
+            names(.Object@par) = c(paste("a",1:nfact, sep=""),
+                                   paste("b", 1:(ncat-1), sep=""), "c")
+            .Object@est <- c(rep(TRUE, nfact), rep(TRUE,ncat-1), TRUE)
+            .Object@lbound <- rep(-Inf, nfact+ncat)
+            .Object@ubound <- rep(Inf, nfact+ncat)
+            .Object
+          }
+)
+
 
 # ----------------------------------------------------------------
 

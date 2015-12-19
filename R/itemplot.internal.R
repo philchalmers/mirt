@@ -14,8 +14,12 @@ setMethod(
     signature = signature(object = 'list'),
     definition = function(object, ...)
     {
-        newobject <- new('MultipleGroupClass', pars=object, nfact=object[[1]]@nfact,
-                         Data=list(groupNames=factor(names(object))))
+        Data <- object[[1L]]@Data
+        Data$groupNames <- factor(names(object))
+        Model <- object[[1L]]@Model
+        ParObjects <- object[[1L]]@ParObjects
+        ParObjects$pars <- object
+        newobject <- new('MultipleGroupClass', Data=Data, Model=Model, ParObjects=ParObjects)
         x <- itemplot.internal(newobject, ...)
         return(invisible(x))
     }
@@ -30,11 +34,11 @@ setMethod(
     {
         Pinfo <- list()
         gnames <- object@Data$groupNames
-        nfact <- object@nfact
-        K <- object@pars[[1L]]@pars[[item]]@ncat
+        nfact <- object@Model$nfact
+        K <- object@ParObjects$pars[[1L]]@ParObjects$pars[[item]]@ncat
         for(g in 1L:length(gnames)){
-            object@pars[[g]]@information <- object@information
-            Pinfo[[g]] <- itemplot.main(object@pars[[g]], item=item, type='RETURN',
+            object@ParObjects$pars[[g]]@vcov <- object@vcov
+            Pinfo[[g]] <- itemplot.main(object@ParObjects$pars[[g]], item=item, type='RETURN',
                                         degrees=degrees, CE=FALSE, CEalpha=CEalpha,
                                         CEdraws=CEdraws, rot=rot, ...)
             Pinfo[[g]]$group <- rep(gnames[g], nrow(Pinfo[[g]]))
@@ -65,19 +69,19 @@ setMethod(
             if(type == 'info'){
                 if(is.null(main))
                     main <- paste('Information for item', item)
-                return(xyplot(info ~ Theta, dat, group=group, type = 'l',
+                return(xyplot(info ~ Theta, dat, groups=dat$group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- paste("Item", item, "Trace")
-                return(xyplot(P  ~ Theta | cat, dat2, group=group, type = 'l',
+                return(xyplot(P  ~ Theta | cat, dat2, groups=dat2$group, type = 'l',
                             auto.key = auto.key, main = main, ylim = c(-0.1,1.1),
                             ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste('Relative efficiency for item', item)
-                return(xyplot(info ~ Theta, dat, group=group, type = 'l',
+                return(xyplot(info ~ Theta, dat, groups=dat$group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
             } else {
@@ -94,7 +98,7 @@ setMethod(
             if(type == 'info'){
                 if(is.null(main))
                     main <- paste("Item", item, "Information")
-                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=group, main=main,
+                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
                                           zlab=expression(I(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), screen=rot,
                                           scales = list(arrows = FALSE),
@@ -102,7 +106,7 @@ setMethod(
             } else if(type == 'trace'){
                 if(is.null(main))
                     main <- paste("Item", item, "Trace")
-                return(wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = group, main = main,
+                return(wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = dat2$group, main = main,
                                           zlab=expression(P(theta)),
                                           xlab=expression(theta[1]),
                                           ylab=expression(theta[2]), zlim = c(-0.1,1.1),
@@ -111,7 +115,7 @@ setMethod(
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste("Relative efficiency for item", item)
-                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=group, main=main,
+                return(wireframe(info ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
                                           zlab=expression(RE(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]),
                                           scales = list(arrows = FALSE), screen=rot,
@@ -128,61 +132,52 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                           theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
                           add.ylab2 = TRUE, drape = TRUE, ...){
     if(drop.zeros){
-        if(x@exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
-        x@pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
+        if(x@Options$exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
+        x@ParObjects$pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     }
-    nfact <- min(x@pars[[item]]@nfact, x@nfact)
+    nfact <- min(x@ParObjects$pars[[item]]@nfact, x@Model$nfact)
     if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
-    if(nfact == 2 && is.null(degrees))
-        stop('Please specify a vector of angles that sum to 90', call.=FALSE)
     theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
     if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
-    prodlist <- attr(x@pars, 'prodlist')
+    prodlist <- attr(x@ParObjects$pars, 'prodlist')
     if(length(prodlist) > 0){
-        Theta <- thetaComb(theta, x@nfact)
+        Theta <- thetaComb(theta, x@Model$nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
-    if(is(x, 'SingleGroupClass') && x@exploratory){
+    if(length(degrees) == 1) degrees <- rep(degrees, ncol(ThetaFull))
+    if(is(x, 'SingleGroupClass') && x@Options$exploratory){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
-        x@pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
+        x@ParObjects$pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
     }
-    P <- ProbTrace(x=x@pars[[item]], Theta=ThetaFull)
-    K <- x@pars[[item]]@ncat
+    P <- ProbTrace(x=x@ParObjects$pars[[item]], Theta=ThetaFull)
+    K <- x@ParObjects$pars[[item]]@ncat
     info <- numeric(nrow(ThetaFull))
     if(K == 2L) auto.key <- FALSE
     if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
-        if(nfact == 3){
-            if(length(degrees) != 3 && any(type %in% 'info', 'SE')){
-                warning('Information plots require the degrees input to be of length 3', call.=FALSE)
-            } else {
-                info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
-            }
-        }
-        if(nfact == 2){
-            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=degrees)
+        if(nfact == 1){
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
         } else {
-            info <- iteminfo(x=x@pars[[item]], Theta=ThetaFull, degrees=0)
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
         }
     }
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE && nfact != 3){
-        tmpitem <- x@pars[[item]]
+        tmpitem <- x@ParObjects$pars[[item]]
         if(length(tmpitem@SEpar) == 0) stop('Must calculate the information matrix first.', call.=FALSE)
-        splt <- strsplit(colnames(x@information), '\\.')
+        splt <- strsplit(colnames(x@vcov), '\\.')
         parnums <- as.numeric(do.call(rbind, splt)[,2])
-        tmp <- x@pars[[item]]@parnum[x@pars[[item]]@est]
-        if(length(x@constrain) > 0)
-            for(i in 1:length(x@constrain))
-                if(any(tmp %in% x@constrain[[i]]))
-                    tmp[tmp %in% x@constrain[[i]]] <- x@constrain[[i]][1]
+        tmp <- tmpitem@parnum[tmpitem@est]
+        constrain <- x@Model$constrain
+        if(length(constrain) > 0)
+            for(i in 1:length(constrain))
+                if(any(tmp %in% constrain[[i]]))
+                    tmp[tmp %in% constrain[[i]]] <- constrain[[i]][1L]
         tmp <- parnums %in% tmp
-        mu <- tmpitem@par[x@pars[[item]]@est]
-        smallinfo <- try(solve(x@information[tmp, tmp]), TRUE)
-        if(is(smallinfo, 'try-error'))
-            stop('Information matrix could not be inverted', call.=FALSE)
-        #make symetric
-        smallinfo <-(smallinfo + t(smallinfo))/2
+        mu <- tmpitem@par[tmpitem@est]
+        vcov <- extract.mirt(x, 'vcov')
+        smallinfo <- vcov[tmp, tmp]
+        smallinfo <-(smallinfo + t(smallinfo))/2 #make symetric
         delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
         tmp <- mirt_dmvnorm(delta, mu, smallinfo)
         sorttmp <- sort(tmp)
@@ -209,7 +204,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         }
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
-    score <- expected.item(x@pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
+    score <- expected.item(x@ParObjects$pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
     if(ncol(P) == 2){
         P <- P[ ,-1, drop = FALSE]
         CEprobupper <- CEprobupper[ ,-1, drop = FALSE]
@@ -248,7 +243,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                        main = main, ylim = c(-0.1,1.1), auto.key = auto.key,
                        ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else {
-                return(xyplot(P ~ Theta, plt2, group = time, type = 'l', auto.key = auto.key,
+                return(xyplot(P ~ Theta, plt2, groups = time, type = 'l', auto.key = auto.key,
                                 main = main, ylim = c(-0.1,1.1),
                                 ylab = expression(P(theta)), xlab = expression(theta), ... ))
             }
@@ -322,7 +317,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         } else if(type == 'infotrace'){
             if(is.null(main))
                 main <- paste('Trace lines and information for item', item)
-            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), group=time, main = main,
+            obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), groups=time, main = main,
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
             obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
                            ylim = c(-0.1,max(plt$info) + .5))

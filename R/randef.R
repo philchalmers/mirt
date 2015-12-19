@@ -29,35 +29,34 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(missing(x)) missingMsg('x')
     if(!is(x, 'MixedClass'))
         stop('Only applicable to MixedClass objects', call.=FALSE)
-    div <- ndraws / thin
     if(!closeEnough(floor(ndraws/thin) == (ndraws/thin), -1e4, 1e4))
         stop('ndraws and thin are not the correct dimensions', call.=FALSE)
-    random <- x@random
+    random <- x@ParObjects$random
     if(length(random) > 0L){
         Random <- vector('list', length(random))
         for(i in 1L:length(Random))
-            Random[[i]] <- matrix(0, nrow(x@random[[i]]@drawvals), ncol(x@random[[i]]@drawvals))
+            Random[[i]] <- matrix(0, nrow(x@ParObjects$random[[i]]@drawvals), ncol(x@ParObjects$random[[i]]@drawvals))
     }
     J <- ncol(x@Data$data)
     N <- nrow(x@Data$fulldata[[1L]])
-    Theta <- tmpTheta <- matrix(0, N, x@nfact)
+    Theta <- tmpTheta <- matrix(0, N, x@Model$nfact)
     if(length(random) > 0L){
         OffTerm <- OffTerm(random, J=J, N=N)
     } else OffTerm <- matrix(0, 1, ncol(x@Data$data))
-    gstructgrouppars <- ExtractGroupPars(x@pars[[J+1L]])
-    CUSTOM.IND <- x@CUSTOM.IND
-    if(length(x@lrPars))
+    gstructgrouppars <- ExtractGroupPars(x@ParObjects$pars[[J+1L]])
+    CUSTOM.IND <- x@Internals$CUSTOM.IND
+    if(length(x@Model$lrPars))
         gstructgrouppars$gmeans <- fixef(x)
     for(i in 1L:20L){
-        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@Data$fulldata[[1L]],
-                                itemloc=x@itemloc, cand.t.var=x@cand.t.var,
+        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
+                                itemloc=x@Model$itemloc, cand.t.var=x@OptimInfo$cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
                                 prior.mu=gstructgrouppars$gmeans, prodlist=list(),
                                 CUSTOM.IND=CUSTOM.IND)
         if(length(random) > 0L){
             for(j in 1L:length(random))
-                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
-                                                   pars=x@pars, fulldata=x@Data$fulldata[[1L]],
+                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
+                                                   pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
             OffTerm <- OffTerm(random, J=J, N=N)
         }
@@ -70,8 +69,8 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         names(DRAWS) <- retnames
     }
     for(i in 1L:ndraws){
-        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@pars, fulldata=x@Data$fulldata[[1L]],
-                                itemloc=x@itemloc, cand.t.var=x@cand.t.var,
+        tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
+                                itemloc=x@Model$itemloc, cand.t.var=x@OptimInfo$cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
                                 prior.mu=gstructgrouppars$gmeans, prodlist=list(),
                                 CUSTOM.IND=CUSTOM.IND)
@@ -82,8 +81,8 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         }
         if(length(random) > 0L){
             for(j in 1L:length(random)){
-                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@itemloc,
-                                                   pars=x@pars, fulldata=x@Data$fulldata[[1L]],
+                random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
+                                                   pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                 if(i %% thin == 0){
                     Random[[j]] <- Random[[j]] + random[[j]]@drawvals
@@ -97,16 +96,16 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(return.draws) return(DRAWS)
     Theta <- Theta / (ndraws/thin)
     attr(Theta, 'Proportion Accepted') <- attr(Theta, 'log.lik') <- NULL
-    colnames(Theta) <- x@factorNames
+    colnames(Theta) <- x@Model$factorNames
     ret <- list(Theta)
     retnames <- 'Theta'
     if(length(random) > 0L){
         for(j in 1L:length(random)){
             Random[[j]] <- Random[[j]] / (ndraws/thin)
             attr(Random[[j]], 'Proportion Accepted') <- NULL
-            colnames(Random[[j]]) <- colnames(x@random[[j]]@gdesign)
+            colnames(Random[[j]]) <- colnames(x@ParObjects$random[[j]]@gdesign)
             ret[[length(ret) + 1L]] <- Random[[j]]
-            retnames <- c(retnames, colnames(x@random[[j]]@gdesign)[1L])
+            retnames <- c(retnames, colnames(x@ParObjects$random[[j]]@gdesign)[1L])
         }
     }
     ret <- lapply(ret, function(x){attr(x, 'log.lik_full') <- NULL; x} )

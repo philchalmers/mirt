@@ -439,7 +439,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
 
         if(all(itemtype[i] != valid.items)){
-            pars[[i]] <- customItems[[itemtype[i] == names(customItems)]]
+            pars[[i]] <- customItems[[which(itemtype[i] == names(customItems))]]
             pars[[i]]@nfact <- nfact
             pars[[i]]@ncat <- K[i]
             pars[[i]]@nfixedeffects <- nfixedeffects
@@ -457,7 +457,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     }
     #priors
     for(i in 1L:J){
-        names(pars[[i]]@parnum) <- names(startvalues[[i]])
+        names(pars[[i]]@parnum) <- names(pars[[i]]@par)
         if(!is.null(parprior) && parprior != 'index'){
             for(j in 1L:length(parprior)){
                 tmp <- pars[[i]]@parnum %in% as.numeric(parprior[[j]][1L:(length(parprior[[j]])-3L)])

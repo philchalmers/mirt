@@ -41,9 +41,9 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
         g <- group[ind]
         if(length(unique(g)) != ngroup) return(rep(NA, npars))
         if(class == 'MixedClass'){
-            fm <- obj@formulas
-            itemdesign <- if(length(obj@itemdesign)) obj@itemdesign else NULL
-            covdata <- if(length(obj@covdata)) obj@covdata[ind, , drop=FALSE] else NULL
+            fm <- obj@Model$formulas
+            itemdesign <- if(length(obj@Data$itemdesign)) obj@Data$itemdesign else NULL
+            covdata <- if(length(obj@Data$covdata)) obj@Data$covdata[ind, , drop=FALSE] else NULL
             mod <- try(mixedmirt(data=dat, model=model, covdata=covdata, itemtype=itemtype,
                                  itemdesign=itemdesign, fixed=fm$fixed, random=fm$random,
                                  lr.fixed=fm$lr.fixed, lr.random=fm$lr.random,
@@ -60,7 +60,7 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
                 mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
                                      constrain=constrain, parprior=parprior,
                                      calcNull=FALSE, verbose=FALSE, technical=technical,
-                                     method=x@method, draws=1, SE=FALSE, ...))
+                                     method=x@Options$method, draws=1, SE=FALSE, ...))
             } else {
                 if(.hasSlot(LR, 'beta')){
                     formula <- LR@formula
@@ -73,7 +73,7 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
                 mod <- try(mirt(data=dat, model=model, itemtype=itemtype, constrain=constrain,
                             parprior=parprior, calcNull=FALSE, verbose=FALSE,
                             technical=technical, formula=formula,
-                            covdata=df, method=x@method, draws=1, SE=FALSE, ...))
+                            covdata=df, method=x@Options$method, draws=1, SE=FALSE, ...))
             }
         }
         if(!is.null(DTF)){
@@ -89,23 +89,19 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
     }
 
     if(missing(x)) missingMsg('x')
-    if(x@exploratory)
+    if(x@Options$exploratory)
         message('Note: bootstrapped standard errors for slope parameters in exploratory
                        models are not meaningful.')
-    return.boot <- TRUE
     dat <- x@Data$data
-    method <- x@method
-    itemtype <- x@itemtype
+    itemtype <- x@Model$itemtype
     class <- class(x)
     group <- if(class == 'MultipleGroupClass') x@Data$group else NULL
-    model <- x@model[[1L]]
-    parprior <- x@parprior
-    constrain <- x@constrain
-    LR <- x@lrPars
+    model <- x@Model$model
+    parprior <- x@Model$parprior
+    constrain <- x@Model$constrain
+    LR <- x@Model$lrPars
     if(length(parprior) == 0L) parprior <- NULL
     if(length(constrain) == 0L) constrain <- NULL
-    prodlist <- x@prodlist
-    ret <- x
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- sum(structure$est)

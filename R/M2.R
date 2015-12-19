@@ -66,7 +66,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         tmpobj@Data$data <- dat
         if(is(obj, 'MultipleGroupClass')){
             for(g in 1L:length(obj@Data$groupNames))
-                tmpobj@pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
+                tmpobj@ParObjects$pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
                                                   , drop=FALSE]
         }
         return(M2(tmpobj, ...))
@@ -106,18 +106,18 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     }
     alpha <- (1 - CI)/2
     if(is(obj, 'MultipleGroupClass')){
-        pars <- obj@pars
+        pars <- obj@ParObjects$pars
         ngroups <- length(pars)
         ret <- vector('list', length(pars))
         for(g in 1L:ngroups){
             attr(pars[[g]], 'MG') <- g
-            pars[[g]]@bfactor <- obj@bfactor
+            pars[[g]]@Internals$bfactor <- obj@Internals$bfactor
             if(discrete){
-                pars[[g]]@Prior <- list(obj@Prior[[g]])
-                pars[[g]]@Theta <- obj@Theta
+                pars[[g]]@Internals$Prior <- list(obj@Internals$Prior[[g]])
+                pars[[g]]@Model$Theta <- obj@Model$Theta
             }
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
-                                   mins=obj@Data$mins)
+                                   mins=obj@Data$mins, K=obj@Data$K)
             ret[[g]] <- M2(pars[[g]], calcNull=FALSE, quadpts=quadpts, residmat=residmat,
                            discrete=discrete, QMC=QMC)
         }
@@ -133,7 +133,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         newret$Total.M2 <- sum(newret$M2)
         Tsum <- 0
         for(g in 1L:ngroups) Tsum <- Tsum + ret[[g]]$nrowT
-        newret$df <- Tsum - obj@nest
+        newret$df <- Tsum - obj@Model$nest
         newret$p <- 1 - pchisq(newret$Total.M2, newret$df)
         newret$RMSEA <- rmsea(X2=newret$Total.M2, df=newret$df, N=obj@Data$N)
         RMSEA.90_CI <- RMSEA.CI(newret$Total.M2, newret$df, obj@Data$N,
@@ -148,7 +148,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             SRMSR <- as.list(SRMSR)
         } else SRMSR <- numeric(0)
         if(calcNull){
-            null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@itemtype, group=obj@Data$group))
+            null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype, group=obj@Data$group))
             if(is(null.mod, 'try-error'))
                 stop('Null model did not converge or is not supported', call.=FALSE)
             null.fit <- M2(null.mod, calcNull=FALSE)
@@ -165,6 +165,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             newret <- data.frame(as.list(M2s), newret, SRMSR)
         } else newret <- data.frame(as.list(M2s), newret)
         rownames(newret) <- 'stats'
+        if(ngroups == 1L) newret <- data.frame(M2=unname(newret[1]), newret[-c(1:2)])
         return(newret)
     }
 
@@ -185,30 +186,29 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     p  <- colMeans(dat)
     cross <- crossprod(dat, dat)
     p <- c(p, cross[lower.tri(cross)]/N)
-    prodlist <- attr(obj@pars, 'prodlist')
-    K <- obj@K
-    pars <- obj@pars
+    prodlist <- attr(obj@ParObjects$pars, 'prodlist')
+    K <- obj@Data$K
+    pars <- obj@ParObjects$pars
     if(is.null(quadpts))
-        quadpts <- select_quadpts(obj@nfact)
-    if(obj@nfact > 3L && !QMC)
+        quadpts <- select_quadpts(obj@Model$nfact)
+    if(obj@Model$nfact > 3L && !QMC)
         warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                 call.=FALSE)
     estpars <- c()
     for(i in 1L:(nitems+1L))
         estpars <- c(estpars, pars[[i]]@est)
-    itemloc <- obj@itemloc
-    bfactorlist <- obj@bfactor
-    if(.hasSlot(obj@lrPars, 'beta'))
+    bfactorlist <- obj@Internals$bfactor
+    if(.hasSlot(obj@Model$lrPars, 'beta'))
         stop('Latent regression models not yet supported')
     if(!discrete){
 #         if(is.null(bfactorlist$Priorbetween[[1L]])){
         if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
             prior <- Priorbetween <- sitems <- specific <- NULL
             if(QMC){
-                Theta <- QMC_quad(npts=quadpts, nfact=obj@nfact, lim=theta_lim)
+                Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim)
             } else {
                 theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
-                Theta <- thetaComb(theta, obj@nfact)
+                Theta <- thetaComb(theta, obj@Model$nfact)
             }
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
             Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
@@ -217,14 +217,14 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             if(length(prodlist) > 0L)
                 Theta <- prodterms(Theta, prodlist)
         } else {
-            Theta <- obj@Theta
+            Theta <- obj@Model$Theta
             prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
             sitems <- bfactorlist$sitems; specific <- bfactorlist$specific;
             Prior <- bfactorlist$Prior[[group]]
         }
     } else {
-        Theta <- obj@Theta
-        Prior <- obj@Prior[[1L]]
+        Theta <- obj@Model$Theta
+        Prior <- obj@Internals$Prior[[1L]]
     }
     E1 <- E11 <- numeric(nitems)
     E2 <- matrix(NA, nitems, nitems)
@@ -259,7 +259,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         }
     }
     e <- c(E1, E2[lower.tri(E2)])
-    if(all(sapply(obj@pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+    if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
         E2[is.na(E2)] <- 0
         E2 <- E2 + t(E2)
         diag(E2) <- E11
@@ -304,7 +304,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     M2 <- N * t(p - e) %*% C2 %*% (p - e)
     ret$M2 <- M2
     if(is.null(attr(obj, 'MG'))){
-        df <- length(p) - obj@nest
+        df <- length(p) - obj@Model$nest
         ret$df <- df
         ret$p <- 1 - pchisq(M2, ret$df)
         ret$RMSEA <- rmsea(X2=M2, df=ret$df, N=N)
@@ -312,7 +312,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         ret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
         ret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
         if(calcNull){
-            null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@itemtype))
+            null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype))
             if(is(null.mod, 'try-error')) stop('Null model did not converge', call.=FALSE)
             null.fit <- M2(null.mod, calcNull=FALSE, quadpts=quadpts)
             ret$TLI <- tli(X2=ret$M2, X2.null=null.fit$M2, df=ret$df, df.null=null.fit$df)

@@ -86,12 +86,16 @@
 #'   For more hands on control of the estimated values pass the argument \code{pars = 'values'} through
 #'   whatever estimation function is being used}
 #'
-#'   \item{NEXPLORE}{Number of exploratory factors to extract. Usually this is not required
-#'     because passing a numeric value to the \code{model} argument in the estimation function
-#'     will generate an exploratory factor analysis model, however if different start values,
-#'     priors, lower and upper bounds, etc, are desired then this input can be used}
+#' \item{FREE}{Equivalent to the \code{FIXED} input, except that parameters are freely estimated instead
+#'   of fixed at their starting value}
+#'
+#' \item{NEXPLORE}{Number of exploratory factors to extract. Usually this is not required
+#'   because passing a numeric value to the \code{model} argument in the estimation function
+#'   will generate an exploratory factor analysis model, however if different start values,
+#'   priors, lower and upper bounds, etc, are desired then this input can be used}
 #'
 #' }
+#'
 #' @param input input for writing out the model syntax. Can either be a string declaration of
 #'   class character or the so-called Q-matrix or class \code{matrix} that specifies the model
 #'   either with integer or logical values. If the Q-matrix method

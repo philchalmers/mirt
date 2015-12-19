@@ -29,34 +29,37 @@ prodterms <- function(theta0, prodlist)
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
                         prior.mu, prodlist, OffTerm, CUSTOM.IND)
 {
-    N <- nrow(fulldata)
-    J <- length(pars) - 1L
-    unif <- runif(N)
-    sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
-    total_0 <- attr(theta0, 'log.lik_full')
-    theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
-    if(is.null(total_0)) theta1 <- theta0 #for intial draw
-    log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
-    if(length(prodlist) > 0L)
-        theta1 <- prodterms(theta1,prodlist)
-    itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
-                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
-    total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
-    if(!is.null(prodlist))
+    makedraws <- try({
+        N <- nrow(fulldata)
+        unif <- runif(N)
+        sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
+        total_0 <- attr(theta0, 'log.lik_full')
+        theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
+        if(is.null(total_0)) theta1 <- theta0 #for intial draw
+        log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
+        if(length(prodlist) > 0L)
+            theta1 <- prodterms(theta1,prodlist)
+        itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
+                                       offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
+        total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
         theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
                                    length(prodlist)), drop=FALSE]
-    if(is.null(total_0)){ #for intial draw
+        if(is.null(total_0)){ #for intial draw
+            attr(theta1, 'log.lik_full') <- total_1
+            return(theta1)
+        }
+        diff <- total_1 - total_0
+        accept <- unif < exp(diff)
+        theta1[!accept, ] <- theta0[!accept, ]
+        total_1[!accept] <- total_0[!accept]
+        log.lik <- sum(total_1)
+        attr(theta1, "Proportion Accepted") <- sum(accept)/N
+        attr(theta1, "log.lik") <- log.lik
         attr(theta1, 'log.lik_full') <- total_1
-        return(theta1)
-    }
-    diff <- total_1 - total_0
-    accept <- unif < exp(diff)
-    theta1[!accept, ] <- theta0[!accept, ]
-    total_1[!accept] <- total_0[!accept]
-    log.lik <- sum(total_1)
-    attr(theta1, "Proportion Accepted") <- sum(accept)/N
-    attr(theta1, "log.lik") <- log.lik
-    attr(theta1, 'log.lik_full') <- total_1
+    }, silent = TRUE)
+    if(is(makedraws, 'try-error'))
+        stop('MH sampler failed. Model is likely unstable or may need better starting values',
+             .call=FALSE)
     return(theta1)
 }
 
@@ -95,26 +98,26 @@ imputePars2 <- function(MGmod, shortpars, longpars, imputenums, pre.ev){
     while(TRUE){
         shift <- mirt_rmvnorm(1L, mean=shortpars, pre.ev=pre.ev)
         longpars[imputenums] <- shift[1L,]
-        constrain <- MGmod@constrain
+        constrain <- MGmod@Model$constrain
         if(length(constrain) > 0L)
             for(i in 1L:length(constrain))
                 longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
-        pars <- list(MGmod@pars[[1L]]@pars, MGmod@pars[[2L]]@pars)
+        pars <- list(MGmod@ParObjects$pars[[1L]]@ParObjects$pars, MGmod@ParObjects$pars[[2L]]@ParObjects$pars)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
-        if(any(MGmod@itemtype %in% c('graded', 'grsm'))){
-            pick <- c(MGmod@itemtype %in% c('graded', 'grsm'), FALSE)
+        if(any(MGmod@Model$itemtype %in% c('graded', 'grsm'))){
+            pick <- c(MGmod@Model$itemtype %in% c('graded', 'grsm'), FALSE)
             if(!all(sapply(pars[[1L]][pick], CheckIntercepts) &
                     sapply(pars[[2L]][pick], CheckIntercepts))) next
         }
         break
     }
-    MGmod@pars[[1L]]@pars <- pars[[1L]]
-    MGmod@pars[[2L]]@pars <- pars[[2L]]
+    MGmod@ParObjects$pars[[1L]]@ParObjects$pars <- pars[[1L]]
+    MGmod@ParObjects$pars[[2L]]@ParObjects$pars <- pars[[2L]]
     MGmod
 }
 
 # Rotation function
-Rotate <- function(F, rotate, Target = NULL, ...)
+Rotate <- function(F, rotate, Target = NULL, par.strip.text = NULL, par.settings = NULL, ...)
 {
     if(ncol(F) == 1L) rotF <- list()
     if(rotate == 'none') rotF <- list(loadings=F, Phi=diag(ncol(F)), orthogonal=TRUE)
@@ -172,22 +175,22 @@ Rotate <- function(F, rotate, Target = NULL, ...)
 gamma.cor <- function(x)
 {
 	concordant <- function(x){
-			mat.lr <- function(r, c){
+			mat.lr <- function(r, c, r.x, c.x){
 				lr <- x[(r.x > r) & (c.x > c)]
 				sum(lr)
 			}
 		r.x <- row(x)
 		c.x <- col(x)
-		sum(x * mapply(mat.lr, r = r.x, c = c.x))
+		sum(x * mapply(mat.lr, r = r.x, c = c.x, MoreArgs=list(r.x=r.x, c.x=c.x)))
 	}
 	discordant <- function(x){
-		mat.ll <- function(r, c){
+		mat.ll <- function(r, c, r.x, c.x){
 			ll <- x[(r.x > r) & (c.x < c)]
 			sum(ll)
 		}
 		r.x <- row(x)
 		c.x <- col(x)
-		sum(x * mapply(mat.ll, r = r.x, c = c.x))
+		sum(x * mapply(mat.ll, r = r.x, c = c.x, MoreArgs=list(r.x=r.x, c.x=c.x)))
 	}
 	c <- concordant(x)
 	d <- discordant(x)
@@ -199,7 +202,6 @@ gamma.cor <- function(x)
 cormod <- function(fulldata, K, guess, smooth = TRUE, use = 'pairwise.complete.obs')
 {
 	fulldata <- as.matrix(fulldata)
-	nitems <- ncol(fulldata)
 	cormat <- suppressWarnings(cor(fulldata, use=use))
     diag(cormat) <- 1
     cormat[is.na(cormat)] <- 0
@@ -341,7 +343,7 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J, N,
+updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
                         BFACTOR, sitems, cycles, rlist, prior, lrPars = list(), full=FALSE){
     Prior <- Priorbetween <- vector('list', ngroups)
     if(list$EH){
@@ -518,7 +520,6 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 constrain[[length(constrain) + 1L]] <- PrepList[[g]]$constrain[[i]]
     if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
         tmpmat <- matrix(NA, nfact, nfact)
-        low_tri <- lower.tri(tmpmat)
         tmp <- c()
         tmpmats <- tmpestmats <- matrix(NA, ngroups, nfact*(nfact+1L)/2)
         for(g in 1L:ngroups){
@@ -590,27 +591,28 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         }
     }
     #remove redundent constraints
-    if(TRUE){
-        redun <- rep(FALSE, length(constrain))
-        if(length(constrain) > 0L){
-            for(i in 1L:length(redun)){
+    redun <- rep(FALSE, length(constrain))
+    if(length(constrain) > 0L){
+        for(i in 1L:length(redun)){
+            while(TRUE){
+                lastredun <- redun
                 for(j in 1L:length(redun)){
-                    if(j < i){
-                        if(all(constrain[[i]] %in% constrain[[j]] ||
-                                all(constrain[[j]] %in% constrain[[i]]))){
-                            if(length(constrain[[i]]) < length(constrain[[j]])) redun[i] <- TRUE
-                            else redun[j] <- TRUE
+                    if(i < j && !redun[j] && !redun[i]){
+                        if(any(constrain[[i]] %in% constrain[[j]])){
+                            constrain[[i]] <- unique(c(constrain[[i]], constrain[[j]]))
+                            redun[j] <- TRUE
                         }
                     }
                 }
+                if(all(lastredun == redun)) break
             }
         }
-        constrain[redun] <- NULL
     }
+    constrain[redun] <- NULL
     return(constrain)
 }
 
-UpdatePrior <- function(PrepList, model, groupNames){
+UpdatePrior <- function(PrepList, model, groupNames, warn = TRUE){
     if(!is.numeric(model[[1L]])){
         if(!length(model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L])) return(PrepList)
         groupNames <- as.character(groupNames)
@@ -699,6 +701,15 @@ UpdatePrior <- function(PrepList, model, groupNames){
         }
         for(g in 1L:length(PrepList))
             PrepList[[g]]$pars <- pars[[g]]
+    } else {
+        if(warn){
+            speak <- PrepList[[1L]]$itemtype %in% c('3PL', '3PLu', '4PL', 'PC3PL', '3PLNRM', '3PLuNRM', '4PLNRM')
+            if(any(speak) && nrow(PrepList[[1L]]$fulldata) < 5000L)
+                warning(paste0('The following itemtypes are very unstable in smaller sample sizes:',
+                               unique(PrepList[[1]]$itemtype[speak]),
+                               '\nIncluding prior distributions for unstable parameters is recommended. '),
+                               call.=FALSE)
+        }
     }
     return(PrepList)
 }
@@ -920,7 +931,7 @@ ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
         dx$grad[[i]] <- matrix(rowSums(dx$grad[[i]] * cosanglefull))
     for(i in 1L:x@ncat)
         info[,i] <- (dx$grad[[i]])^2 / P[ ,i]
-    if(total.info) info <- matrix(rowSums(info))
+    if(total.info) info <- rowSums(info)
     return(info)
 }
 
@@ -1028,10 +1039,10 @@ updateGrad <- function(g, L) L %*% g
 updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
-                     SE = FALSE, verbose = TRUE,
+                     SE = FALSE, verbose = TRUE, GenRandomPars,
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
-                     technical = list(), use = 'pairwise.complete.obs',
+                     technical = list(),
                      SE.type = 'crossprod', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
                      optimizer = NULL, solnp_args = list(), alabama_args = list(), ...)
 {
@@ -1039,14 +1050,13 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     tnames <- names(technical)
     gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
-                'parallel', 'NULL.MODEL', 'theta_lim')
+                'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
     if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
         stop('method argument not supported', call.=FALSE)
-    D <- 1
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
     opts$draws = draws
@@ -1058,7 +1068,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$verbose = verbose
     opts$SEtol = ifelse(is.null(technical$SEtol), .001, technical$SEtol)
     opts$grsm.block = grsm.block
-    opts$D = D
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
@@ -1072,18 +1081,20 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
     if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
+    opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
+        else technical$removeEmptyRows
     opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn
     opts$message <- if(is.null(technical$message)) TRUE else technical$message
     opts$technical <- technical
-    opts$use <- use
     opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 20000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
     if(opts$method %in% c('EM', 'QMCEM'))
         opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
-    opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 50, technical$SEMCYCLES)
+    opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 100L, technical$SEMCYCLES)
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
+    opts$MHDRAWS  <- ifelse(is.null(technical$MHDRAWS), 5L, technical$MHDRAWS)
     opts$empiricalhist <- empiricalhist
     if(empiricalhist){
         if(opts$method != 'EM')
@@ -1095,10 +1106,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
-    if(opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM')
+    if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars)
         set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
-    opts$gain <- c(0.15,0.65)
+    opts$gain <- c(0.1, 0.75)
     if(!is.null(technical$gain)){
         if(length(technical$gain) == 2L && is.numeric(technical$gain))
             opts$gain <- technical$gain
@@ -1276,8 +1287,10 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
         X <- model.matrix(formula, df)
     }
     tXX <- t(X) %*% X
-    if(ncol(X) > 1) inv_tXX <- solve(tXX)
+    if(ncol(X) > 1L) inv_tXX <- try(solve(tXX), silent = TRUE)
     else inv_tXX <- matrix(0)
+    if(is(inv_tXX, 'try-error'))
+        stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
@@ -1289,7 +1302,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
             est[colnames(X) %in% estnames[[i]], pick] <- TRUE
         }
     } else est <- matrix(TRUE, nrow(beta), ncol(beta))
-    est[1,] <- FALSE
+    est[1L, ] <- FALSE
     est <- as.logical(est)
     names(est) <- as.character(t(outer(factorNames, colnames(X),
                                      FUN = function(X, Y) paste(X,Y,sep="_"))))
@@ -1386,27 +1399,6 @@ RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
     }
 
     return(c(RMSEA.lower, RMSEA.upper))
-}
-
-assignInformationMG <- function(object){
-    J <- ncol(object@Data$data)
-    names <- colnames(object@information)
-    spl_names <- strsplit(names, split="\\.")
-    spl_names_par <- sapply(spl_names, function(x) x[1L])
-    spl_names <- lapply(spl_names,
-                        function(x) as.numeric(x[-1L]))
-    spl_names <- do.call(rbind, spl_names)
-    for(g in 1L:length(object@pars)){
-        from <- object@pars[[g]]@pars[[1L]]@parnum[1L]
-        to <- object@pars[[g]]@pars[[J+1L]]@parnum[length(
-            object@pars[[g]]@pars[[J+1L]]@parnum)]
-        pick <- spl_names[,g] >= from & spl_names[,g] <= to
-        tmp <- object@information[pick,pick]
-        colnames(tmp) <- rownames(tmp) <-
-            paste(spl_names_par[pick], spl_names[pick,g], sep='.')
-        object@pars[[g]]@information <- tmp
-    }
-    object
 }
 
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
@@ -1655,16 +1647,17 @@ collapseCells <- function(O, E, mincell = 1){
 }
 
 MGC2SC <- function(x, which){
-    tmp <- x@pars[[which]]
+    tmp <- x@ParObjects$pars[[which]]
     ind <- 1L
-    for(i in 1L:length(tmp@pars)){
-        tmp@pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@pars[[i]]@parnum) - 1L)
-        ind <- ind + length(tmp@pars[[i]]@parnum)
+    for(i in 1L:x@Data$nitems){
+        tmp@ParObjects$pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@ParObjects$pars[[i]]@parnum) - 1L)
+        ind <- ind + length(tmp@ParObjects$pars[[i]]@parnum)
     }
     tmp@Data <- x@Data
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
+    ## TODO, add acov information in for subset
     tmp
 }
 

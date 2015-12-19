@@ -7,12 +7,14 @@
 #' Returns a data matrix simulated from the parameters, or a list containing the data,
 #' item objects, and Theta matrix.
 #'
-#' @param a a matrix of slope parameters. If slopes are to be constrained to
+#' @param a a matrix/vector of slope parameters. If slopes are to be constrained to
 #'   zero then use \code{NA}. \code{a} may also be a similar matrix specifying
-#'   factor loadings if \code{factor.loads = TRUE}
-#' @param d a matrix of intercepts. The matrix should have as many columns as
+#'   factor loadings if \code{factor.loads = TRUE}. When a vector is used the test is assumed to be
+#'   unidimensional
+#' @param d a matrix/vector of intercepts. The matrix should have as many columns as
 #'   the item with the largest number of categories, and filled empty locations
-#'   with \code{NA}
+#'   with \code{NA}. When a vector is used the test is assumed to consist only of dichotomous items
+#'   (because only one intercept per item is provided)
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
 #'   the same) specifying the type of items to simulate.
 #'
@@ -42,10 +44,18 @@
 #' @param mu a mean vector of the underlying distribution. Default is a vector
 #'   of zeros
 #' @param Theta a user specified matrix of the underlying ability parameters,
-#'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}
+#'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}. When this is supplied the
+#'   \code{N} input is not required
 #' @param returnList logical; return a list containing the data, item objects defined
 #'   by \code{mirt} containing the population parameters and item structure, and the
 #'   latent trait matrix \code{Theta}? Default is FALSE
+#' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
+#'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
+#'   input) redundent
+#' @param mins an integer vector (or single value to be used for each item) indicating what
+#'   the lowest category should be. If \code{model} is supplied then this will be extracted from
+#'   \code{slot(mod, 'Data')$mins}, otherwise the default is 0
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: Springer.
@@ -163,7 +173,7 @@
 #' d <- matrix(rnorm(6))
 #' itemtype <- rep('dich',6)
 #'
-#' nonlindata <- simdata(a,d,2000,itemtype,Theta=Theta)
+#' nonlindata <- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 #'
 #' #model <- '
 #' #F1 = 1-6
@@ -198,19 +208,62 @@
 #' listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 #' str(listobj)
 #'
+#' # generate dataset from converged model
+#' mod <- mirt(Science, 1, itemtype = c(rep('gpcm', 3), 'nominal'))
+#' sim <- simdata(model=mod, N=1000)
+#' head(sim)
 #'
+#' Theta <- matrix(rnorm(100))
+#' sim <- simdata(model=mod, Theta=Theta)
+#' head(sim)
+#'
+#' # alternatively, define a suitable object with functions from the mirtCAT package
+#' # help(generate.mirt_object)
+#' library(mirtCAT)
+#'
+#' nitems <- 50
+#' a1 <- rlnorm(nitems, .2,.2)
+#' d <- rnorm(nitems)
+#' g <- rbeta(nitems, 20, 80)
+#' pars <- data.frame(a1=a1, d=d, g=g)
+#' head(pars)
+#'
+#' obj <- generate.mirt_object(pars, '3PL')
+#' dat <- simdata(N=200, model=obj)
 #'    }
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE)
+	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
+	model = NULL, mins = 0)
 {
+    fn <- function(p, ns) sample(1L:ns - 1L, 1L, prob = p)
+    if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
+    if(!is.null(model)){
+        nitems <- ncol(model@Data$data)
+        nfact <- model@Model$nfact
+        if(is.null(sigma)) sigma <- diag(nfact)
+        if(is.null(mu)) mu <- rep(0,nfact)
+        if(is.null(Theta)){
+            Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
+        } else N <- nrow(Theta)
+        data <- matrix(0, N, nitems)
+        colnames(data) <- paste("Item_", 1L:nitems, sep="")
+        for(i in 1L:nitems){
+            obj <- extract.item(model, i)
+            P <- ProbTrace(obj, Theta)
+            data[,i] <- apply(P, 1L, fn, ns = ncol(P))
+        }
+        return(t(t(data) + model@Data$mins))
+    }
     if(missing(a)) missingMsg('a')
     if(missing(d)) missingMsg('d')
-    if(missing(N)) missingMsg('N')
     if(missing(itemtype)) missingMsg('itemtype')
-    fn <- function(p, ns) sample(1L:ns, 1L, prob = p)
+    if(is.vector(a)) a <- matrix(a)
+    if(is.vector(d)) d <- matrix(d)
 	nfact <- ncol(a)
 	nitems <- nrow(a)
+	if(length(mins) == 1L) mins <- rep(mins, nitems)
+	stopifnot(length(mins) == nitems)
 	K <- rep(0L,nitems)
 	if(length(guess) == 1L) guess <- rep(guess,nitems)
 	if(length(guess) != nitems) stop("Guessing parameter is incorrect", call.=FALSE)
@@ -238,9 +291,11 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     upper[itemtype == 'nestlogit'] <- oldupper[itemtype == 'nestlogit']
 	if(is.null(sigma)) sigma <- diag(nfact)
 	if(is.null(mu)) mu <- rep(0,nfact)
-	if(!is.null(Theta))
-		if(ncol(Theta) != nfact || nrow(Theta) != N)
+	if(!is.null(Theta)){
+		if(ncol(Theta) != nfact)
 			stop("The input Theta matrix does not have the correct dimensions", call.=FALSE)
+	    N <- nrow(Theta)
+	}
 	if(is.null(Theta)) Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
     if(is.null(nominal)) nominal <- matrix(NA, nitems, max(K))
 	data <- matrix(0, N, nitems)
@@ -274,10 +329,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
         data[,i] <- apply(P, 1L, fn, ns = ncol(P))
-        if(any(itemtype[i] == c('dich', 'gpcm', 'partcomp', 'ideal')))
-            data[ ,i] <- data[ ,i] - 1L
         itemobjects[[i]] <- obj
 	}
+    data <- (t(t(data) + mins))
 	colnames(data) <- paste("Item_", 1L:nitems, sep="")
     if(returnList){
         return(list(itemobjects=itemobjects, data=data, Theta=Theta))
