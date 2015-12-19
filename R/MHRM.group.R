@@ -363,13 +363,13 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             AR <- paste0(sapply(AR, function(x) sprintf('%.2f', x)), collapse='; ')
             CTV <- paste0(sapply(CTV, function(x) sprintf('%.2f', x)), collapse='; ')
             if(cycles <= BURNIN)
-                printmsg <- sprintf("\rStage 1 = %i, LL = %.1f, AR(%s) = [%s]",
+                printmsg <- sprintf("\nStage 1 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles, LL, CTV, AR)
             if(cycles > BURNIN && cycles <= BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 2 = %i, LL = %.1f, AR(%s) = [%s]",
+                printmsg <- sprintf("\nStage 2 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles-BURNIN, LL, CTV, AR)
             if(cycles > BURNIN + SEMCYCLES)
-                printmsg <- sprintf("\rStage 3 = %i, LL = %.1f, AR(%s) = [%s]",
+                printmsg <- sprintf("\nStage 3 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles-BURNIN-SEMCYCLES, LL, CTV, AR)
         }
         if(stagecycle < 3L){
