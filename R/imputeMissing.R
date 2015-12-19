@@ -40,7 +40,7 @@ imputeMissing <- function(x, Theta, ...){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is(x, 'MixedClass'))
-        stop('MixedClass objects is not yet supported.', call.=FALSE)
+        stop('MixedClass objects are not yet supported.', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
         pars <- x@ParObjects$pars
         group <- x@Data$group
