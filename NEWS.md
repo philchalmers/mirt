@@ -4,7 +4,7 @@
 
 - more low-level elements included in `extract.mirt()` function
 
-- added `grsmIRT` itemtype for classical graded rating scale form (contributed by KK Sasa)
+- added `grsmIRT` itemtype for classical graded rating scale form (contributed by KwonHyun Kim)
 
 - added missing analytic Hessian terms when `gpcm_mats` are used (contributed by Carl Falk)
 
