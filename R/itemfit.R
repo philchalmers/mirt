@@ -144,7 +144,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
 
     if(missing(x)) missingMsg('x')
     if(is(x, 'MixedClass'))
-        stop('mixedmirt objects not supported', call.=FALSE)
+        stop('MixedClass objects are not supported', call.=FALSE)
     discrete <- FALSE
     if(is(x, 'DiscreteClass')){
         class(x) <- 'MultipleGroupClass'
