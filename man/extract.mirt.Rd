@@ -13,8 +13,9 @@ extract.mirt(x, what)
 \item{what}{a character vector indicating what to extract. Can contain more than one element}
 }
 \description{
-A generic function to extract the internal objects from any estimated model. If possible, the
-function will returns a vector/scalar containing the desired elements, otherwise it will return a list.
+A generic function to extract the internal objects from any estimated model. If a single object is
+requested then this will be returend in its raws state, otherwise if multiple objects are selected
+then a named list will be returned.
 }
 \details{
 Objects which can be extracted from mirt objects include:
@@ -75,10 +76,18 @@ extract.mirt(mod, 'logLik')
 extract.mirt(mod, c('G2', 'df', 'p'))
 extract.mirt(mod, c('F', 'h2'))
 
+#multiple group model
+grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)
+mod2 <- multipleGroup(Science, 1, grp)
+
+grp1 <- extract.group(mod2, 1) #extract single group model
+extract.mirt(mod2, 'parvec')
+extract.mirt(grp1, 'parvec')
+
 }
 }
 \seealso{
-\code{\link{extract.group}}
+\code{\link{extract.group}}, \code{\link{mod2values}}
 }
 \keyword{extract}
 

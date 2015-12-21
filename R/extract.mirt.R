@@ -1,7 +1,8 @@
 #' Extract various elements from estimated model objects
 #'
-#' A generic function to extract the internal objects from any estimated model. If possible, the
-#' function will returns a vector/scalar containing the desired elements, otherwise it will return a list.
+#' A generic function to extract the internal objects from any estimated model. If a single object is
+#' requested then this will be returend in its raws state, otherwise if multiple objects are selected
+#' then a named list will be returned.
 #'
 #' Objects which can be extracted from mirt objects include:
 #'
@@ -59,7 +60,7 @@
 #' @param what a character vector indicating what to extract. Can contain more than one element
 #'
 #' @keywords extract
-#' @seealso \code{\link{extract.group}}
+#' @seealso \code{\link{extract.group}}, \code{\link{mod2values}}
 #' @export extract.item
 #' @examples
 #'
@@ -70,10 +71,18 @@
 #' extract.mirt(mod, c('G2', 'df', 'p'))
 #' extract.mirt(mod, c('F', 'h2'))
 #'
+#' #multiple group model
+#' grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)
+#' mod2 <- multipleGroup(Science, 1, grp)
+#'
+#' grp1 <- extract.group(mod2, 1) #extract single group model
+#' extract.mirt(mod2, 'parvec')
+#' extract.mirt(grp1, 'parvec')
+#'
 #' }
 extract.mirt <- function(x, what){
     ret <- vector('list', length(what))
-    for(i in 1:length(ret)){
+    for(i in 1L:length(ret)){
         ret[[i]] <- switch(what[i],
                       G2 = x@Fit$G2,
                       logLik = x@Fit$logLik,
@@ -118,8 +127,5 @@ extract.mirt <- function(x, what){
     }
     names(ret) <- what
     if(length(ret) == 1L) return(ret[[1L]])
-    if(!any(what %in% c('F', 'h2', 'vcov', 'parvec', 'exp_resp', 'Prior', 'freq',
-                        'tabdata', 'tabdatalong', 'fulldatalong', 'time', 'itemtype')))
-        ret <- do.call(c, ret)
     ret
 }
