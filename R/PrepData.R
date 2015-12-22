@@ -140,7 +140,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){
-                    if(grsm.block[i] == unique.grsmgroups[group]){
+                    if(grsm.block[i] == unique.grsmgroups[group] && itemtype[i] == 'grsm'){
                         if(length(grsmConstraint) == 0L){
                             pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
                             grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
@@ -160,7 +160,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
             for(k in 1L:(Kk-1L)){
                 grsmConstraint <- c()
                 for(i in 1L:J){
-                    if(grsm.block[i] == unique.grsmgroups[group]){
+                    if(grsm.block[i] == unique.grsmgroups[group] && itemtype[i] == 'grsmIRT'){
                         if(length(grsmConstraint) == 0L){
                             pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
                             grsmConstraint <- c(grsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
@@ -180,7 +180,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
 #             for(k in 1L:(Kk-1L)){
 #                 rsmConstraint <- c()
 #                 for(i in 1L:J){
-#                     if(rsm.block[i] == unique.rsmgroups[group]){
+#                     if(rsm.block[i] == unique.rsmgroups[group] && itemtype[i] == 'rsm'){
 #                         if(length(rsmConstraint) == 0L){
 #                             pars[[i]]@est[length(pars[[i]]@est)] <- FALSE
 #                             rsmConstraint <- c(rsmConstraint, pars[[i]]@parnum[length(pars[[i]]@parnum)-k])
