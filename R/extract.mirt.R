@@ -42,7 +42,7 @@
 #'   \item{parvec}{vector containing uniquely estimated parameters}
 #'   \item{vcov}{parameter covariance matrix (associated with parvec)}
 #'   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
-#'   \item{constrain}{a list of item parameter constraints to indicate which items were equal
+#'   \item{constrain}{a list of item parameter constraints to indicate which item parameters were equal
 #'     during estimation}
 #'   \item{Prior}{prior density distribution for the latent traits}
 #'   \item{nfact}{number of latent traits/factors}
@@ -60,7 +60,7 @@
 #' @param what a character vector indicating what to extract. Can contain more than one element
 #'
 #' @keywords extract
-#' @seealso \code{\link{extract.group}}, \code{\link{mod2values}}
+#' @seealso \code{\link{extract.group}}, \code{\link{extract.item}}, \code{\link{mod2values}}
 #' @export extract.item
 #' @examples
 #'

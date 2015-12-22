@@ -4,13 +4,13 @@
 #' compute the expected value for an item given the ability parameter(s).
 #'
 #' @aliases expected.item
-#' @param x an extracted internal mirt object containing item information
+#' @param x an extracted internal mirt object containing item information (see \code{\link{extract.item}})
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param min a constant value added to the expected values indicating the lowest theoretical
 #'   category. Default is 0
 #' @keywords expected value
 #' @export expected.item
-#' @seealso \code{\link{extract.item}}, , \code{\link{expected.test}}
+#' @seealso \code{\link{extract.item}}, \code{\link{expected.test}}
 #' @examples
 #'
 #' \dontrun{

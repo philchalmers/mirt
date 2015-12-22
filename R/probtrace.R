@@ -4,7 +4,7 @@
 #' compute the probability trace lines for all categories.
 #'
 #' @aliases probtrace
-#' @param x an extracted internal mirt object containing item information
+#' @param x an extracted internal mirt object containing item information (see \code{\link{extract.item}})
 #' @param Theta a vector (unidimensional) or matrix (unidimensional/multidimensional) of
 #'   latent trait values
 #' @keywords tracelines

@@ -7,7 +7,7 @@
 iteminfo(x, Theta, degrees = NULL, total.info = TRUE)
 }
 \arguments{
-\item{x}{an extracted internal mirt object containing item information}
+\item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}
 
 \item{Theta}{a vector (unidimensional) or matrix (multidimensional) of latent trait values}
 

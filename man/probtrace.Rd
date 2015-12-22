@@ -7,7 +7,7 @@
 probtrace(x, Theta)
 }
 \arguments{
-\item{x}{an extracted internal mirt object containing item information}
+\item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}
 
 \item{Theta}{a vector (unidimensional) or matrix (unidimensional/multidimensional) of
 latent trait values}

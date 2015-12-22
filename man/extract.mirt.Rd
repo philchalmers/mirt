@@ -56,7 +56,7 @@ Objects which can be extracted from mirt objects include:
   \item{parvec}{vector containing uniquely estimated parameters}
   \item{vcov}{parameter covariance matrix (associated with parvec)}
   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
-  \item{constrain}{a list of item parameter constraints to indicate which items were equal
+  \item{constrain}{a list of item parameter constraints to indicate which item parameters were equal
     during estimation}
   \item{Prior}{prior density distribution for the latent traits}
   \item{nfact}{number of latent traits/factors}
@@ -87,7 +87,7 @@ extract.mirt(grp1, 'parvec')
 }
 }
 \seealso{
-\code{\link{extract.group}}, \code{\link{mod2values}}
+\code{\link{extract.group}}, \code{\link{extract.item}}, \code{\link{mod2values}}
 }
 \keyword{extract}
 

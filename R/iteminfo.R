@@ -4,7 +4,7 @@
 #' compute the item information.
 #'
 #' @aliases iteminfo
-#' @param x an extracted internal mirt object containing item information
+#' @param x an extracted internal mirt object containing item information (see \code{\link{extract.item}})
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param degrees a vector of angles in degrees that are between 0 and 90.
 #'   Only applicable when the input object is multidimensional

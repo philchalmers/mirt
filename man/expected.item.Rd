@@ -7,7 +7,7 @@
 expected.item(x, Theta, min = 0)
 }
 \arguments{
-\item{x}{an extracted internal mirt object containing item information}
+\item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}
 
 \item{Theta}{a vector (unidimensional) or matrix (multidimensional) of latent trait values}
 
@@ -30,7 +30,7 @@ head(data.frame(expected, Theta=Theta))
 }
 }
 \seealso{
-\code{\link{extract.item}}, , \code{\link{expected.test}}
+\code{\link{extract.item}}, \code{\link{expected.test}}
 }
 \keyword{expected}
 \keyword{value}

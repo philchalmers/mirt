@@ -10,6 +10,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords convert model
 #' @export mod2values
+#' @seealso \code{\link{extract.mirt}}
 #' @examples
 #' \dontrun{
 #' dat <- expand.table(LSAT7)
