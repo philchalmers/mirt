@@ -41,6 +41,7 @@ Objects which can be extracted from mirt objects include:
     in \code{freq}}
   \item{freq}{frequencies associated with \code{tabdata}}
   \item{K}{an integer vector indicating the number of unique elements for each item}
+  \item{mins}{an integer vector indicating the lowest category found in the input \code{data}}
   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
   \item{itemnames}{a vector of item names from the input data}
   \item{data}{raw input data of item responses}
