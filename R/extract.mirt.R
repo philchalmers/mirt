@@ -1,8 +1,6 @@
 #' Extract various elements from estimated model objects
 #'
-#' A generic function to extract the internal objects from any estimated model. If a single object is
-#' requested then this will be returend in its raws state, otherwise if multiple objects are selected
-#' then a named list will be returned.
+#' A generic function to extract the internal objects from estimated models.
 #'
 #' Objects which can be extracted from mirt objects include:
 #'
@@ -62,7 +60,7 @@
 #' @export extract.mirt
 #' @param x mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 #'   'DiscreteGroupClass'
-#' @param what a character vector indicating what to extract. Can contain more than one element
+#' @param what a string indicating what to extract
 #'
 #' @keywords extract
 #' @seealso \code{\link{extract.group}}, \code{\link{extract.item}}, \code{\link{mod2values}}
@@ -73,8 +71,7 @@
 #' mod <- mirt(Science, 1)
 #'
 #' extract.mirt(mod, 'logLik')
-#' extract.mirt(mod, c('G2', 'df', 'p'))
-#' extract.mirt(mod, c('F', 'h2'))
+#' extract.mirt(mod, 'F')
 #'
 #' #multiple group model
 #' grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)
@@ -86,63 +83,57 @@
 #'
 #' }
 extract.mirt <- function(x, what){
-    ret <- vector('list', length(what))
-    for(i in 1L:length(ret)){
-        ret[[i]] <- switch(what[i],
-                      G2 = x@Fit$G2,
-                      logLik = x@Fit$logLik,
-                      p = x@Fit$p,
-                      TLI = x@Fit$TLI,
-                      CFI = x@Fit$CFI,
-                      RMSEA = x@Fit$RMSEA,
-                      df = x@Fit$df,
-                      AIC = x@Fit$AIC,
-                      AICc = x@Fit$AICc,
-                      BIC = x@Fit$BIC,
-                      SABIC = x@Fit$SABIC,
-                      DIC = x@Fit$DIC,
-                      method = x@Options$method,
-                      logPrior = x@Fit$logPrior,
-                      F = x@Fit$F,
-                      h2 = x@Fit$h2,
-                      K = x@Data$K,
-                      mins = x@Data$mins,
-                      itemtype =  x@Model$itemtype,
-                      itemnames = colnames(x@Data$data),
-                      parvec = x@Internals$shortpars,
-                      vcov = x@vcov,
-                      nest = x@Model$nest,
-                      constrain = x@Model$constrain,
-                      iterations = x@OptimInfo$iter,
-                      LLhistory = x@Internals$collectLL,
-                      exp_resp = x@Internals$Pl,
-                      converged = x@OptimInfo$converged,
-                      condnum = x@OptimInfo$condnum,
-                      nfact = x@Model$nfact,
-                      nitems = ncol(x@Data$data),
-                      ngroups = x@Data$ngroups,
-                      model = x@Model$model,
-                      group = x@Data$group,
-                      Prior = x@Internals$Prior,
-                      secondordertest = x@OptimInfo$secondordertest,
-                      data = x@Data$data,
-                      covdata = x@Data$covdata,
-                      tabdata = x@Data$tabdata,
-                      freq = x@Data$Freq,
-                      tabdatalong = x@Data$tabdatalong,
-                      fulldatalong = x@Data$fulldata,
-                      time = x@time,
-                      # undocumented
-                      parprior = x@Model$parprior,
-                      pars = x@ParObjects$pars,
-                      lrPars = x@ParObjects$lrPars,
-                      random = x@ParObjects$random,
-                      formulas = x@Model$formulas,
-                      itemdesign = x@Data$itemdesign,
-                      NULL
-        )
-    }
-    names(ret) <- what
-    if(length(ret) == 1L) return(ret[[1L]])
-    ret
+    ret <- switch(what,
+                  G2 = x@Fit$G2,
+                  logLik = x@Fit$logLik,
+                  p = x@Fit$p,
+                  TLI = x@Fit$TLI,
+                  CFI = x@Fit$CFI,
+                  RMSEA = x@Fit$RMSEA,
+                  df = x@Fit$df,
+                  AIC = x@Fit$AIC,
+                  AICc = x@Fit$AICc,
+                  BIC = x@Fit$BIC,
+                  SABIC = x@Fit$SABIC,
+                  DIC = x@Fit$DIC,
+                  method = x@Options$method,
+                  logPrior = x@Fit$logPrior,
+                  F = x@Fit$F,
+                  h2 = x@Fit$h2,
+                  K = x@Data$K,
+                  mins = x@Data$mins,
+                  itemtype =  x@Model$itemtype,
+                  itemnames = colnames(x@Data$data),
+                  parvec = x@Internals$shortpars,
+                  vcov = x@vcov,
+                  nest = x@Model$nest,
+                  constrain = x@Model$constrain,
+                  iterations = x@OptimInfo$iter,
+                  LLhistory = x@Internals$collectLL,
+                  exp_resp = x@Internals$Pl,
+                  converged = x@OptimInfo$converged,
+                  condnum = x@OptimInfo$condnum,
+                  nfact = x@Model$nfact,
+                  nitems = ncol(x@Data$data),
+                  ngroups = x@Data$ngroups,
+                  model = x@Model$model,
+                  group = x@Data$group,
+                  Prior = x@Internals$Prior,
+                  secondordertest = x@OptimInfo$secondordertest,
+                  data = x@Data$data,
+                  covdata = x@Data$covdata,
+                  tabdata = x@Data$tabdata,
+                  freq = x@Data$Freq,
+                  tabdatalong = x@Data$tabdatalong,
+                  fulldatalong = x@Data$fulldata,
+                  time = x@time,
+                  # undocumented
+                  parprior = x@Model$parprior,
+                  pars = x@ParObjects$pars,
+                  lrPars = x@ParObjects$lrPars,
+                  random = x@ParObjects$random,
+                  formulas = x@Model$formulas,
+                  itemdesign = x@Data$itemdesign,
+                  NULL)
+        ret
 }

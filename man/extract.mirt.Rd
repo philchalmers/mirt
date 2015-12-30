@@ -10,12 +10,10 @@ extract.mirt(x, what)
 \item{x}{mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 'DiscreteGroupClass'}
 
-\item{what}{a character vector indicating what to extract. Can contain more than one element}
+\item{what}{a string indicating what to extract}
 }
 \description{
-A generic function to extract the internal objects from any estimated model. If a single object is
-requested then this will be returend in its raws state, otherwise if multiple objects are selected
-then a named list will be returned.
+A generic function to extract the internal objects from estimated models.
 }
 \details{
 Objects which can be extracted from mirt objects include:
@@ -78,8 +76,7 @@ Objects which can be extracted from mirt objects include:
 mod <- mirt(Science, 1)
 
 extract.mirt(mod, 'logLik')
-extract.mirt(mod, c('G2', 'df', 'p'))
-extract.mirt(mod, c('F', 'h2'))
+extract.mirt(mod, 'F')
 
 #multiple group model
 grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)
