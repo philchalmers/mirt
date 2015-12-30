@@ -64,6 +64,7 @@ Objects which can be extracted from mirt objects include:
   \item{nfact}{number of latent traits/factors}
   \item{nitems}{number of items}
   \item{ngroups}{number of groups}
+  \item{groupNames}{character vector of unique group names}
   \item{group}{a character vector indicating the group membership}
   \item{secondordertest}{a logical indicating whether the model passed the second-order test
     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}

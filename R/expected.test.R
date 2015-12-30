@@ -29,10 +29,16 @@
 expected.test <- function(x, Theta, group = NULL, mins = TRUE){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
-    pars <- if(is(x, 'MultipleGroupClass')) x@ParObjects$pars[[group]]@ParObjects$pars else x@ParObjects$pars
-    trace <- computeItemtrace(pars, Theta, itemloc=x@Model$itemloc, CUSTOM.IND=x@Internals$CUSTOM.IND)
-    score <- do.call(c, lapply(x@Data$K, function(x) 0L:(x-1L)))
+    pars <- extract.mirt(x, 'pars')
+    pars <- if(is(x, 'MultipleGroupClass'))
+        pars <- extract.mirt(pars[[group]], 'pars')
+    itemloc <- extract.mirt(x, 'itemloc')
+    CUSTOM.IND <- extract.mirt(x, 'CUSTOM.IND')
+    K <- extract.mirt(x, 'K')
+    omins <- extract.mirt(x, 'mins')
+    trace <- computeItemtrace(pars, Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+    score <- do.call(c, lapply(K, function(x) 0L:(x-1L)))
     ret <- as.numeric(score %*% t(trace))
-    if(mins) ret <- ret + sum(x@Data$mins)
+    if(mins) ret <- ret + sum(omins)
     return(ret)
 }

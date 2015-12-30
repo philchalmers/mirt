@@ -25,14 +25,14 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     if(is(x, 'MixedClass'))
         stop('Lower-level functions do not support extracted items from MixedClass objects',
              call.=FALSE)
-    inames <- colnames(x@Data$data)
+    inames <- extract.mirt(x, 'itemnames')
     ind <- 1L:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
     if(is(x, 'MultipleGroupClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?', call.=FALSE)
-        ret <- x@ParObjects$pars[[group]]@ParObjects$pars[[item]]
+        ret <- extract.mirt(extract.mirt(x, 'pars')[[group]], 'pars')[[item]]
     } else {
-        ret <- x@ParObjects$pars[[item]]
+        ret <- extract.mirt(x, 'pars')[[item]]
     }
     if(drop.zeros){
         zeros <- ret@par > -1e-8 & ret@par < 1e-8

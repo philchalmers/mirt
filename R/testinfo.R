@@ -40,7 +40,7 @@ testinfo <- function(x, Theta, degrees = NULL, group = NULL){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
-    J <- x@Data$nitems
+    J <- extract.mirt(x, 'nitems')
     info <- 0
     for(i in 1L:J){
         item <- extract.item(x, i, group=group)

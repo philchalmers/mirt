@@ -50,6 +50,7 @@
 #'   \item{nfact}{number of latent traits/factors}
 #'   \item{nitems}{number of items}
 #'   \item{ngroups}{number of groups}
+#'   \item{groupNames}{character vector of unique group names}
 #'   \item{group}{a character vector indicating the group membership}
 #'   \item{secondordertest}{a logical indicating whether the model passed the second-order test
 #'     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
@@ -126,6 +127,7 @@ extract.mirt <- function(x, what){
                   freq = x@Data$Freq,
                   tabdatalong = x@Data$tabdatalong,
                   fulldatalong = x@Data$fulldata,
+                  groupNames = x@Data$groupNames,
                   time = x@time,
                   # undocumented
                   parprior = x@Model$parprior,
@@ -134,6 +136,8 @@ extract.mirt <- function(x, what){
                   random = x@ParObjects$random,
                   formulas = x@Model$formulas,
                   itemdesign = x@Data$itemdesign,
+                  itemloc = x@Model$itemloc,
+                  CUSTOM.IND = x@Internals$CUSTOM.IND,
                   NULL)
         ret
 }

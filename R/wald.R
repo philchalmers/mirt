@@ -53,12 +53,12 @@
 #' }
 wald <- function(object, L, C = 0){
     if(missing(object)) missingMsg('object')
-    if(all(dim(object@vcov) == c(1,1)))
-        if(object@vcov[1,1] == 0L)
+    covB <- extract.mirt(object, 'vcov')
+    if(all(dim(covB) == c(1,1)))
+        if(covB[1,1] == 0L)
             stop('No information matrix has been calculated for the model', call.=FALSE)
-    covB <- object@vcov
     Names <- colnames(covB)
-    B <- object@Internals$shortpars
+    B <- extract.mirt(object, 'parvec')
     if(missing(L)){
         index <- 1L:length(Names)
         ret <- as.data.frame(t(data.frame(infoname=Names, par = round(B, 3))))

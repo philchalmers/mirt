@@ -32,7 +32,7 @@
 #'
 #' }
 marginal_rxx <- function(mod, density = dnorm, theta_lim = c(-6,6), ...){
-    stopifnot(mod@Model$nfact == 1L)
+    stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(is(mod, 'SingleGroupClass'))
     Theta <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out = 1000L))
     TI <- testinfo(mod, Theta)

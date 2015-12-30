@@ -22,7 +22,7 @@
 MDIFF <- function(x){
     if(missing(x)) missingMsg('x')
     stopifnot(class(x) == 'SingleGroupClass')
-    out <- vector('list', x@Data$nitems)
+    out <- vector('list', extract.mirt(x, 'nitems'))
     MD <- MDISC(x)
     for(i in 1L:length(out)){
         item <- extract.item(x, i)
@@ -32,7 +32,7 @@ MDIFF <- function(x){
     ret <- matrix(NA, length(out), max(sapply(out, length)))
     for(i in 1L:length(out))
         ret[i,1L:length(out[[i]])] <- out[[i]]
-    rownames(ret) <- colnames(x@Data$data)
+    rownames(ret) <- extract.mirt(x, 'itemnames')
     colnames(ret) <- paste0('MDIFF_', 1L:ncol(ret))
     ret
 }

@@ -42,26 +42,27 @@ imputeMissing <- function(x, Theta, ...){
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not yet supported.', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
-        pars <- x@ParObjects$pars
-        group <- x@Data$group
-        data <- x@Data$data
+        pars <- extract.mirt(x, 'pars')
+        group <- extract.mirt(x, 'group')
+        data <- extract.mirt(x, 'data')
+        groupNames <- extract.mirt(x, 'groupNames')
         if(sum(is.na(data))/length(data) > .1)
             warning('Imputing too much data can lead to very conservative results. Use with caution.',
                     call.=FALSE)
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
         for(g in 1L:length(pars)){
-            sel <- group == x@Data$groupNames[g]
+            sel <- group == groupNames[g]
             Thetatmp <- Theta[sel, , drop = FALSE]
             pars[[g]]@Data$data <- data[sel, ]
-            pars[[g]]@Data$mins <- x@Data$mins
+            pars[[g]]@Data$mins <- extract.mirt(x, 'mins')
             data[sel, ] <- imputeMissing(pars[[g]], Thetatmp, uniq_rows=uniq_rows)
         }
         return(data)
     }
-    dots <- list(...)
-    pars <- x@ParObjects$pars
+    pars <- extract.mirt(x, 'pars')
+    data <- extract.mirt(x, 'data')
     nfact <- pars[[1L]]@nfact
-    if(!is(Theta, 'matrix') || nrow(Theta) != nrow(x@Data$data) || ncol(Theta) != nfact)
+    if(!is(Theta, 'matrix') || nrow(Theta) != nrow(data) || ncol(Theta) != nfact)
         stop('Theta must be a matrix of size N x nfact', call.=FALSE)
     if(!is.list(Theta)){
         if(any(Theta %in% c(Inf, -Inf))){
@@ -73,20 +74,20 @@ imputeMissing <- function(x, Theta, ...){
             }
         }
     }
-    K <- x@Data$K
+    K <- extract.mirt(x, 'K')
     J <- length(K)
-    data <- x@Data$data
     if(sum(is.na(data))/length(data) > .1)
         warning('Imputing too much data can lead to very conservative results. Use with caution.',
                 call.=FALSE)
     N <- nrow(data)
     Nind <- 1L:N
+    mins <- extract.mirt(x, 'mins')
     for (i in 1L:J){
         if(!any(is.na(data[,i]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
         for(j in 1L:length(NAind)){
-            data[NAind[j], i] <- sample(1L:K[i]-1L+x@Data$mins[i], 1L,
+            data[NAind[j], i] <- sample(1L:K[i]-1L+mins[i], 1L,
                                         prob = P[NAind[j], , drop = FALSE])
         }
     }

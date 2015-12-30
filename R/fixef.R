@@ -42,8 +42,9 @@ fixef <- function(x){
     if(missing(x)) missingMsg('x')
     if(!(is(x, 'MixedClass') || is(x, 'SingleGroupClass')))
         stop('Only applicable to MixedClass and SingleGroupClass objects', call.=FALSE)
-    if(!length(x@Model$lrPars))
+    lrPars <- extract.mirt(x, 'lrPars')
+    if(!length(lrPars))
         stop('No latent regression parameters were defined in the supplied model', call.=FALSE)
-    ret <- x@Model$lrPars@X %*% x@Model$lrPars@beta
+    ret <- lrPars@X %*% lrPars@beta
     ret
 }
