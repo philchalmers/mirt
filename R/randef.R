@@ -47,11 +47,12 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     CUSTOM.IND <- x@Internals$CUSTOM.IND
     if(length(x@Model$lrPars))
         gstructgrouppars$gmeans <- fixef(x)
+    prodlist <- attr(x@ParObjects$pars, 'prodlist')
     for(i in 1L:20L){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@Model$itemloc, cand.t.var=x@OptimInfo$cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
-                                prior.mu=gstructgrouppars$gmeans, prodlist=list(),
+                                prior.mu=gstructgrouppars$gmeans, prodlist=prodlist,
                                 CUSTOM.IND=CUSTOM.IND)
         if(length(random) > 0L){
             for(j in 1L:length(random))
@@ -72,7 +73,7 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@Model$itemloc, cand.t.var=x@OptimInfo$cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
-                                prior.mu=gstructgrouppars$gmeans, prodlist=list(),
+                                prior.mu=gstructgrouppars$gmeans, prodlist=prodlist,
                                 CUSTOM.IND=CUSTOM.IND)
         if(i %% thin == 0){
             Theta <- Theta + tmpTheta
@@ -96,7 +97,8 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(return.draws) return(DRAWS)
     Theta <- Theta / (ndraws/thin)
     attr(Theta, 'Proportion Accepted') <- attr(Theta, 'log.lik') <- NULL
-    colnames(Theta) <- x@Model$factorNames
+    nfact <- extract.mirt(x, 'nfact')
+    colnames(Theta) <- x@Model$factorNames[1L:nfact]
     ret <- list(Theta)
     retnames <- 'Theta'
     if(length(random) > 0L){

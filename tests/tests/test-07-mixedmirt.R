@@ -80,9 +80,8 @@ test_that('mixed dich', {
     expect_equal(extract.mirt(rmod1, 'df'), 1011)
     cfs <- as.numeric(do.call(c, coef(rmod1, digits=4)))
     expect_equal(cfs[124:129], c(0.0536, 0.0397, 0.0676, 1.0902, 0.6417, 1.5387), tolerance = 1e-2)
-})
 
-test_that('polytomous', {
+    #polytomous
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
     model <- mirt.model('F1 = 1-4', quiet = TRUE)
     mod <- mixedmirt(Science, covdat, model=model, SE=FALSE,

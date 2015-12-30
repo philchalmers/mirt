@@ -49,7 +49,8 @@ setMethod(
             csigma <- cov2cor(sigma)
             sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
         }
-        colnames(sigma) <- rownames(sigma) <- object@Model$factorNames
+        nfact <- extract.mirt(object, 'nfact')
+        colnames(sigma) <- rownames(sigma) <- object@Model$factorNames[1L:nfact]
         rand <- list(sigma)
         listnames <- 'Theta'
         if(length(object@ParObjects$random) > 0L){
