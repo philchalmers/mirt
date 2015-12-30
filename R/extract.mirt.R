@@ -28,9 +28,12 @@
 #'   \item{freq}{frequencies associated with \code{tabdata}}
 #'   \item{K}{an integer vector indicating the number of unique elements for each item}
 #'   \item{mins}{an integer vector indicating the lowest category found in the input \code{data}}
+#'   \item{model}{input model syntax}
+#'   \item{method}{estimation method used}
 #'   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
 #'   \item{itemnames}{a vector of item names from the input data}
 #'   \item{data}{raw input data of item responses}
+#'   \item{covdata}{raw input data of data used as covariates}
 #'   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
 #'     dummy coded variables}
 #'   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
@@ -49,6 +52,7 @@
 #'   \item{nfact}{number of latent traits/factors}
 #'   \item{nitems}{number of items}
 #'   \item{ngroups}{number of groups}
+#'   \item{group}{a character vector indicating the group membership}
 #'   \item{secondordertest}{a logical indicating whether the model passed the second-order test
 #'     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
 #'   \item{time}{estimation time, broken into different sections}
@@ -97,6 +101,7 @@ extract.mirt <- function(x, what){
                       BIC = x@Fit$BIC,
                       SABIC = x@Fit$SABIC,
                       DIC = x@Fit$DIC,
+                      method = x@Options$method,
                       logPrior = x@Fit$logPrior,
                       F = x@Fit$F,
                       h2 = x@Fit$h2,
@@ -116,14 +121,24 @@ extract.mirt <- function(x, what){
                       nfact = x@Model$nfact,
                       nitems = ncol(x@Data$data),
                       ngroups = x@Data$ngroups,
+                      model = x@Model$model,
+                      group = x@Data$group,
                       Prior = x@Internals$Prior,
                       secondordertest = x@OptimInfo$secondordertest,
                       data = x@Data$data,
+                      covdata = x@Data$covdata,
                       tabdata = x@Data$tabdata,
                       freq = x@Data$Freq,
                       tabdatalong = x@Data$tabdatalong,
                       fulldatalong = x@Data$fulldata,
                       time = x@time,
+                      # undocumented
+                      parprior = x@Model$parprior,
+                      pars = x@ParObjects$pars,
+                      lrPars = x@ParObjects$lrPars,
+                      random = x@ParObjects$random,
+                      formulas = x@Model$formulas,
+                      itemdesign = x@Data$itemdesign,
                       NULL
         )
     }

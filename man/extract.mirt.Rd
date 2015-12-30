@@ -42,9 +42,12 @@ Objects which can be extracted from mirt objects include:
   \item{freq}{frequencies associated with \code{tabdata}}
   \item{K}{an integer vector indicating the number of unique elements for each item}
   \item{mins}{an integer vector indicating the lowest category found in the input \code{data}}
+  \item{model}{input model syntax}
+  \item{method}{estimation method used}
   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
   \item{itemnames}{a vector of item names from the input data}
   \item{data}{raw input data of item responses}
+  \item{covdata}{raw input data of data used as covariates}
   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
     dummy coded variables}
   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
@@ -63,6 +66,7 @@ Objects which can be extracted from mirt objects include:
   \item{nfact}{number of latent traits/factors}
   \item{nitems}{number of items}
   \item{ngroups}{number of groups}
+  \item{group}{a character vector indicating the group membership}
   \item{secondordertest}{a logical indicating whether the model passed the second-order test
     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
   \item{time}{estimation time, broken into different sections}
