@@ -30,7 +30,7 @@ expected.test <- function(x, Theta, group = NULL, mins = TRUE){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     pars <- extract.mirt(x, 'pars')
-    pars <- if(is(x, 'MultipleGroupClass'))
+    if(is(x, 'MultipleGroupClass'))
         pars <- extract.mirt(pars[[group]], 'pars')
     itemloc <- extract.mirt(x, 'itemloc')
     CUSTOM.IND <- extract.mirt(x, 'CUSTOM.IND')
