@@ -53,7 +53,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         lrPars@mus <- lrPars@X %*% lrPars@beta
         gstructgrouppars[[1L]]$gmeans <- lrPars@mus
     }
-    cand.t.var <- 1
+    cand.t.var <- if(is.null(list$cand.t.var)) 1 else list$cand.t.var[1L]
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
     for(g in 1L:ngroups){
@@ -76,13 +76,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                         tmp <- tmp / 2
                     }
                 }
-            } else {
-                cand.t.var <- list$cand.t.var[1L]
             }
         }
     }
     if(RAND) OffTerm <- OffTerm(random, J=J, N=N)
-    m.thetas <- grouplist <- SEM.stores <- SEM.stores2 <- m.list <- list()
+    SEM.stores <- SEM.stores2 <- list()
     conv <- 0L
     k <- 1L
     gamma <- .25
@@ -100,8 +98,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     names(longpars) <- names(estpars)
     stagecycle <- 1L
     converge <- TRUE
-    noninvcount <- 0L
-    estindex <- index[estpars]
     L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
@@ -186,6 +182,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(RAND && cycles == RANDSTART){
             gtheta0[[1L]] <- matrix(0, nrow(gtheta0[[1L]]), ncol(gtheta0[[1L]]))
             OffTerm <- OffTerm(random, J=J, N=N)
+            if(!is.null(list$cand.t.var))
+                for(j in 1L:length(random)) random[[j]]@cand.t.var <- list$cand.t.var[j + 1L]
             for(j in 1L:length(random)){
                 tmp <- .1
                 for(i in 1L:31L){
@@ -207,8 +205,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                                 tmp <- tmp / 10
                             }
                         }
-                    } else {
-                        random[[j]]@cand.t.var <- list$cand.t.var[j + 1L]
                     }
                 }
                 #better start values
@@ -216,7 +212,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 tmp <- cov(random[[j]]@drawvals) * (tmp / (tmp-1L))
                 random[[j]]@par[random[[j]]@est] <- tmp[lower.tri(tmp, TRUE)][random[[j]]@est]
             }
-            cand.t.var <- .5
+            cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
             tmp <- .1
             for(i in 1L:31L){
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
@@ -237,8 +233,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                             tmp <- tmp / 2
                         }
                     }
-                } else {
-                    cand.t.var <- list$cand.t.var[1L]
                 }
             }
             tmp <- nrow(gtheta0[[1L]])
@@ -276,13 +270,14 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         #adjust cand.t.var
         PA <- sapply(gtheta0, function(x) attr(x, "Proportion Accepted"))
         NS <- sapply(gtheta0, function(x) nrow(x))
-        cand.t.var <- controlCandVar(sum(PA * NS / sum(NS)), cand.t.var)
-        if(RAND && cycles > (RANDSTART + 1L)){
-            for(j in 1L:length(random)){
-                random[[j]]@cand.t.var <- controlCandVar(
-                               attr(random[[j]]@drawvals, "Proportion Accepted"),
-                               random[[j]]@cand.t.var, min = .01, max = .5)
-
+        if(is.null(list$cand.t.var)){
+            cand.t.var <- controlCandVar(sum(PA * NS / sum(NS)), cand.t.var)
+            if(RAND && cycles > (RANDSTART + 1L)){
+                for(j in 1L:length(random)){
+                    random[[j]]@cand.t.var <- controlCandVar(
+                                   attr(random[[j]]@drawvals, "Proportion Accepted"),
+                                   random[[j]]@cand.t.var, min = .01, max = .5)
+                }
             }
         }
         Draws.time <- Draws.time + proc.time()[3L] - start
