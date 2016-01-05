@@ -190,6 +190,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
         if(!is.null(latent.regression)){
+            if(length(PrepListFull$prodlist))
+                stop('Polynominal combinations currently not supported when latent regression effects are used', call.=FALSE)
             lrPars <- make.lrdesign(df=latent.regression$df, formula=latent.regression$formula,
                                     factorNames=PrepListFull$factorNames, EM=latent.regression$EM)
             lrPars@parnum <- parnumber:(parnumber - 1L + length(lrPars@par))
