@@ -33,7 +33,7 @@ test_that('poly', {
                  tolerance = 1e-2)
     modp1 <- mirt(Science, 1, SE=TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
-    expect_equal(extract.mirt(modp1, 'condnum'), 102.5529, tolerance = 1e-2)
+    expect_equal(extract.mirt(modp1, 'condnum'), 108.8042, tolerance = 1e-2)
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 0.656, 1.425, 4.863, 3.849, 5.876, 2.639, 2.196, 3.083, -1.466, -1.782, -1.149, 1.226, 0.887, 1.565, 2.924, 2.45, 3.398, 0.901, 0.614, 1.188, -2.266, -2.639, -1.894, 2.3, 1.325, 3.275, 5.244, 3.804, 6.685, 2.218, 1.488, 2.949, -1.967, -2.605, -1.329, 1.094, 0.727, 1.461, 3.347, 2.801, 3.893, 0.991, 0.717, 1.266, -1.688, -2.018, -1.357, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
@@ -66,7 +66,7 @@ test_that('poly', {
     modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modp5, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
-    expect_equal(cfs, c(1.057, 0.676, 1.438, 4.876, 3.912, 5.84, 2.65, 2.21, 3.09, -1.472, -1.786, -1.159, 1.219, 0.839, 1.599, 2.918, 2.425, 3.41, 0.9, 0.615, 1.185, -2.263, -2.679, -1.848, 2.254, 1.322, 3.187, 5.177, 3.765, 6.588, 2.19, 1.49, 2.89, -1.942, -2.567, -1.318, 0.771, 0.464, 1.077, 0, NA, NA, 1, NA, NA, 2, NA, NA, 3, NA, NA, 0, NA, NA, 2.16, 1.552, 2.767, 2.973, 2.29, 3.657, 1.767, 1.137, 2.397, 0, NA, NA, 1, NA, NA),
+    expect_equal(cfs, c(1.057,0.659,1.454,4.876,3.908,5.844,2.65,2.206,3.093,-1.472,-1.799,-1.146,1.219,0.865,1.573,2.918,2.444,3.391,0.9,0.615,1.185,-2.263,-2.662,-1.864,2.254,1.244,3.265,5.177,3.606,6.747,2.19,1.395,2.985,-1.942,-2.587,-1.298,0.771,0.441,1.1,0,NA,NA,1,NA,NA,2,NA,NA,3,NA,NA,0,NA,NA,2.16,1.537,2.782,2.973,2.276,3.671,1.767,1.128,2.407,0,NA,NA,1,NA,NA),
                  tolerance = 1e-2)
     modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE, TOL=1e-3)
     expect_is(modp6, 'SingleGroupClass')
