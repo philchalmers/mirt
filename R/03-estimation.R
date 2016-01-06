@@ -385,6 +385,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
+    SEMconv <- NA
     opts$times$end.time.Data <- proc.time()[3L]
 
     #EM estimation
@@ -643,11 +644,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
                               solnp_args=opts$solnp_args, control=control)
                 SEMconv <- sapply(DM, function(x) all(attr(x, 'converged')))
-                if(!all(SEMconv))
+                if(!all(SEMconv)){
                     warning(sprintf(c('%i parameters did not converge in numerical SEM derivative.\n',
                                     'Try using different starting values or passing GenRandomPars=TRUE'),
                                     sum(!SEMconv)),
                             call.=FALSE)
+                    SEMconv <- FALSE
+                } else SEMconv <- TRUE
                 DM <- do.call(rbind, DM)
                 if(!opts$technical$parallel)
                     mirtClusterEnv$ncores <- ncores
@@ -826,7 +829,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Data$itemdesign <- attr(mixed.design, 'itemdesign')
     ParObjects <- list(pars=cmods, lrPars=lrPars, random=ESTIMATE$random)
     OptimInfo <- list(iter=ESTIMATE$cycles, converged=ESTIMATE$converge, cand.t.var=ESTIMATE$cand.t.var,
-                      condnum=NA, secondordertest=NA)
+                      condnum=NA, secondordertest=NA, SEMconv=SEMconv)
     vcov <- matrix(NA, 1, 1)
     if(Options$SE){
         information <- ESTIMATE$info
