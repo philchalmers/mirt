@@ -32,8 +32,9 @@ SE.BL <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, cons
     return(ESTIMATE)
 }
 
-SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
+SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
                    collectLL, from, to, is.latent, Data, solnp_args, control){
+    est <- estmat[,index]
     lrPars <- list$lrPars
     full <- list$full
     TOL <- list$TOL
@@ -76,6 +77,7 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
         gTheta[[g]] <- Theta
     }
+    converged <- FALSE
 
     for (cycles in from:to){
 
@@ -123,10 +125,14 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
         converged <- diff | converged
         which <- is.na(rijfull) & converged
         rijfull[which] <- rij[which]
-        if(all(!is.na(rijfull))) break
+        if(all(!is.na(rijfull))){
+            converged <- TRUE
+            break
+        }
     } #END EM
 
     rijfull[is.na(rijfull)] <- rij[is.na(rijfull)]
+    attr(rijfull, 'converged') <- converged
     return(rijfull)
 }
 

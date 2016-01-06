@@ -630,7 +630,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ncores <- mirtClusterEnv$ncores
                     mirtClusterEnv$ncores <- 1L
                 }
-                DM <- myApply(X=estmat, MARGIN=1L, FUN=SE.SEM, pars=ESTIMATE$pars, constrain=constrain, Data=Data,
+                DM <- myLapply(1L:ncol(estmat), FUN=SE.SEM, estmat=estmat, pars=ESTIMATE$pars, constrain=constrain, Data=Data,
                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                           nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
                                           itemloc=PrepList[[1L]]$itemloc, BFACTOR=opts$BFACTOR,
@@ -642,6 +642,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
                               solnp_args=opts$solnp_args, control=control)
+                SEMconv <- sapply(DM, function(x) all(attr(x, 'converged')))
+                if(!all(SEMconv))
+                    warning(sprintf(c('%i parameters did not converge in numerical SEM derivative.\n',
+                                    'Try using different starting values or passing GenRandomPars=TRUE'),
+                                    sum(!SEMconv)),
+                            call.=FALSE)
+                DM <- do.call(rbind, DM)
                 if(!opts$technical$parallel)
                     mirtClusterEnv$ncores <- ncores
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
