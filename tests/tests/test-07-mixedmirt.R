@@ -149,10 +149,15 @@ test_that('mixed dich', {
 
     #uncorrelated random slope
     covdata$theta <- Theta
-    covdata$cut <- cut(Theta, breaks=2)
+    covdata$cut <- factor(cut(Theta, breaks=2))
     mod <- mixedmirt(dat, covdata = covdata, 1, fixed = ~ 0 + items, SE=FALSE,
-                     random = ~ -1 + cut + theta|group, verbose=FALSE, draws=1)
+                     random = ~ -1 + cut|group, verbose=FALSE, draws=1)
     so <- summary(mod, verbose=FALSE)
-    expect_equal(as.numeric(diag(so$random$group)), c(0.04038883, 0.10988249, 0.57688499), tolerance = 1e-4)
+    expect_equal(as.numeric(diag(so$random$group)), c(0.6211201, 0.6262019), tolerance = 1e-4)
+
+    mod <- mixedmirt(dat, covdata = covdata, 1, fixed = ~ 0 + items, SE=FALSE,
+                     random = ~ -1 + theta|group, verbose=FALSE, draws=1)
+    so <- summary(mod, verbose=FALSE)
+    expect_equal(as.numeric(diag(so$random$group)), c(0.05447179, 0.51292915), tolerance = 1e-4)
 
 })
