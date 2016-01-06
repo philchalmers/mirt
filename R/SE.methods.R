@@ -61,7 +61,6 @@ SE.SEM <- function(est, pars, constrain, Ls, PrepList, list, Theta, theta, BFACT
     nfact <- ncol(Theta)
     ANY.PRIOR <- rep(FALSE, ngroups)
     converged <- logical(sum(estpars & !redun_constr))
-    if(!is.latent[est]) converged[is.latent] <- TRUE
     rijfull <- rep(NA, length(converged))
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta, prodlist)

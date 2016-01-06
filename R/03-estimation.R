@@ -605,7 +605,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
             collectLL <- as.numeric(ESTIMATE$collectLL)
             collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
-            from <- min(which(collectLL >= .9))
+            from <- 1L
             to <- min(which(collectLL >= (1 - opts$SEtol/10)))
             dontrun <- FALSE
             if(from == to){
@@ -646,9 +646,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     mirtClusterEnv$ncores <- ncores
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
-                DM[, is.latent] <- 0
+                DM[, is.latent] <- DM[,is.latent]
                 info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
-                info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
+                info[,is.latent] <- info[is.latent, ]
+                info[is.latent, is.latent] <- -ESTIMATE$hess[is.latent, is.latent]
                 if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
                 if(is(info, 'try-error')){
                     if(opts$warn)
