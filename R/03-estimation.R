@@ -656,10 +656,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     mirtClusterEnv$ncores <- ncores
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
-                DM[, is.latent] <- DM[,is.latent]
+                DM[, is.latent] <- DM[is.latent, ]
+                DM[is.latent, is.latent] <- 0
                 info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
-                info[,is.latent] <- info[is.latent, ]
-                info[is.latent, is.latent] <- -ESTIMATE$hess[is.latent, is.latent]
+                info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
                 if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
                 if(is(info, 'try-error')){
                     if(opts$warn)
