@@ -4,12 +4,15 @@
 \alias{expand.table}
 \title{Expand summary table of patterns and frequencies}
 \usage{
-expand.table(tabdata)
+expand.table(tabdata, sample = FALSE)
 }
 \arguments{
-\item{tabdata}{An object of class \code{data.frame}, \code{matrix}, or
-\code{table} with the unique response patterns and the number of frequencies
-in the rightmost column.}
+\item{tabdata}{An object of class \code{data.frame} or \code{matrix}
+with the unique response patterns and the number of frequencies
+in the rightmost column}
+
+\item{sample}{logical; randomly switch the rows in the expanded table? This does not change the
+expanded data, only the row locations}
 }
 \value{
 Returns a numeric matrix with all the response patterns.
@@ -26,7 +29,11 @@ data(LSAT7)
 head(LSAT7)
 LSAT7full <- expand.table(LSAT7)
 head(LSAT7full)
-   }
+
+LSAT7full <- expand.table(LSAT7, sample = TRUE)
+head(LSAT7full)
+
+}
 
 }
 \author{

@@ -68,6 +68,8 @@ Objects which can be extracted from mirt objects include:
   \item{group}{a character vector indicating the group membership}
   \item{secondordertest}{a logical indicating whether the model passed the second-order test
     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
+  \item{SEMconv}{logical; check whether the supplimented EM information matrix converged. Will be \code{NA}
+    if not applicable}
   \item{time}{estimation time, broken into different sections}
 }
 }
