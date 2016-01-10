@@ -2,6 +2,9 @@
 
 ## MINOR CHANGES
 
+- added `empirical_plot` function for building empirical plots (with potential smoothing) 
+  when conditioning on the total score
+
 - more low-level elements included in `extract.mirt()` function
 
 - added `grsmIRT` itemtype for classical graded rating scale form (contributed by KwonHyun Kim)
