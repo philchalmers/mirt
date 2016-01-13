@@ -1051,7 +1051,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
-                'internal_constraints')
+                'internal_constraints', 'SEM_window')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1094,6 +1094,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 100L, technical$SEMCYCLES)
+    opts$SEM_from <- ifelse(is.null(technical$SEM_window), 0, technical$SEM_window[1L])
+    opts$SEM_to <- ifelse(is.null(technical$SEM_window), 1 - opts$SEtol, technical$SEM_window[2L])
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
     opts$MHDRAWS  <- ifelse(is.null(technical$MHDRAWS), 5L, technical$MHDRAWS)
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),

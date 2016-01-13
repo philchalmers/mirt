@@ -409,6 +409,11 @@
 #'     \item{symmetric_SEM}{logical; force S-EM information matrix to be symmetric? Default is TRUE
 #'       so that computation of standard errors are more stable. Setting this to FALSE can help
 #'       to detect solutions that have not reached the ML estimate}
+#'     \item{SEM_window}{ratio of values used to define the S-EM window based on the
+#'       observed likelihood differences across EM iterations. The default is
+#'       \code{c(0, 1 - SEtol)}, which provides nearly the very full S-EM window (i.e.,
+#'       nearly all EM cycles used). To use the a smaller SEM window change the window to
+#'       to something like \code{c(.9, .999)} to start at a point farther into the EM history}
 #'     \item{warn}{logical; include warning messages during estimation? Default is TRUE}
 #'     \item{message}{logical; include general messages during estimation? Default is TRUE}
 #'     \item{customK}{a numeric vector used to explicitly declare the number of response

@@ -606,8 +606,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
             collectLL <- as.numeric(ESTIMATE$collectLL)
             collectLL <- exp(c(NA, collectLL) - c(collectLL, NA))
-            from <- 1L
-            to <- min(which(collectLL >= (1 - opts$SEtol/10)))
+            from <- suppressWarnings(max(which(collectLL <= opts$SEM_from)))
+            if(from < 1L) from <- 1L
+            to <- min(which(collectLL >= opts$SEM_to))
             dontrun <- FALSE
             if(from == to){
                 if(opts$warn)
