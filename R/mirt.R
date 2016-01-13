@@ -430,7 +430,7 @@
 #'     \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?
 #'       Default is FALSE}
 #'     \item{internal_constrains}{logical; include the internal constrains when using certain
-#'       IRT models (e.g., 'grsm' itmetype). Disable this if you want to use special optimizers
+#'       IRT models (e.g., 'grsm' itemtype). Disable this if you want to use special optimizers
 #'       such as the solnp. Default is \code{TRUE}}
 #'     \item{gain}{a vector of two values specifying the numerator and exponent
 #'          values for the RM gain function \eqn{(val1 / cycle)^val2}.
