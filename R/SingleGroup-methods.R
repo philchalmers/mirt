@@ -51,7 +51,7 @@ setMethod(
             if(x@Fit$logPrior != 0){
                 cat("\nLog-posterior = ", x@Fit$logLik + x@Fit$logPrior, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
-                cat("DIC = ", x@DIC, "\n", sep='')
+                cat("DIC = ", x@Fit$DIC, "\n", sep='')
             } else {
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
