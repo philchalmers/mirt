@@ -7,6 +7,7 @@
 #'
 #' @aliases mod2values
 #' @param x an estimated model x from the mirt package
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords convert model
 #' @export mod2values

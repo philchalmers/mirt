@@ -43,6 +43,7 @@
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}},
 #'   \code{\link{itemfit}}, \code{\link{boot.mirt}}, \code{\link{mirtCluster}},
 #'   \code{\link{wald}}, \code{\link{coef-method}}, \code{\link{summary-method}},

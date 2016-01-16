@@ -33,6 +33,7 @@
 #'   this value will be returned, while all values less than this value will be set to NA.
 #'   Must be used in conjunction with the argument \code{residmat = TRUE}
 #' @param ... additional arguments to pass
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of

@@ -21,6 +21,8 @@
 #'   should be inspected directly, but also when fitting multidimensional models (this is set to
 #'   TRUE automatically for multidimensional models)
 #' @param ... additional arguments to be passed to \code{gam} or \code{lattice}
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit, traceline
 #' @seealso \code{\link{itemfit}}
 #' @export itemGAM

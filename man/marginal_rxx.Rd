@@ -40,6 +40,9 @@ empirical_rxx(fs)
 
 }
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \seealso{
 \code{\link{empirical_rxx}}, \code{\link{extract.group}}, \code{\link{testinfo}}
 }

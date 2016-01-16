@@ -9,6 +9,8 @@
 #'   normal (Gaussian) distribution
 #' @param theta_lim a vector containing the range of integration
 #' @param ... additional arguments passed to the density function
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords reliability
 #' @export marginal_rxx
 #' @seealso \code{\link{empirical_rxx}}, \code{\link{extract.group}}, \code{\link{testinfo}}

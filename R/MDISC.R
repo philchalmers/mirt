@@ -4,6 +4,7 @@
 #'
 #' @aliases MDISC
 #' @param x an object of class 'SingleGroupClass'
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Reckase, M. D. (2009). Multidimensional Item Response Theory. Springer.

@@ -10,6 +10,7 @@
 #' @param Theta a matrix containing the estimates of the latent trait scores
 #'   (e.g., via \code{\link{fscores}})
 #' @param ... additional arguments to pass
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords impute data
 #' @export imputeMissing

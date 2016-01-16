@@ -65,6 +65,7 @@
 #'   'DiscreteGroupClass'
 #' @param what a string indicating what to extract
 #'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords extract
 #' @seealso \code{\link{extract.group}}, \code{\link{extract.item}}, \code{\link{mod2values}}
 #' @export extract.item

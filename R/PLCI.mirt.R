@@ -13,6 +13,8 @@
 #' @param plot logical; plot the parameter relationship in the likelihood space for two parameters?
 #' @param npts number of points to evaluate and plot if \code{plot = TRUE}
 #' @param ... additional arguments to pass to the estimation functions
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords profiled likelihood
 #' @export PLCI.mirt
 #' @seealso

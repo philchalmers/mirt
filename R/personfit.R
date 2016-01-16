@@ -16,6 +16,7 @@
 #' @param stats.only logical; return only the person fit statistics without their associated
 #'   response pattern?
 #' @param ... additional arguments to be passed to \code{fscores()}
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords person fit
 #' @export personfit

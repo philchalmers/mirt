@@ -52,6 +52,9 @@ PLCI.mirt(mod2, parnum=c(1,2), plot=TRUE)
 
 }
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \seealso{
 \code{\link{boot.mirt}}
 }

@@ -5,6 +5,7 @@
 #' @aliases fixef
 #' @param x an estimated model object from the \code{\link{mixedmirt}} or \code{\link{mirt}}
 #'   function
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso \code{\link{mirt}}, \code{\link{mixedmirt}}
 #' @keywords fixed effects

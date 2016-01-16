@@ -8,6 +8,8 @@
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param min a constant value added to the expected values indicating the lowest theoretical
 #'   category. Default is 0
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords expected value
 #' @export expected.item
 #' @seealso \code{\link{extract.item}}, \code{\link{expected.test}}

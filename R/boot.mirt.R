@@ -11,6 +11,8 @@
 #' @param technical technical arguments passed to estimation engine. See \code{\link{mirt}}
 #'   for details
 #' @param ... additional arguments to be passed on to \code{boot(...)} and estimation engine
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords bootstrapped standard errors
 #' @export boot.mirt
 #' @seealso

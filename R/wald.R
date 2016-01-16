@@ -14,6 +14,8 @@
 #'   \code{multipleGroup}, \code{mixedmirt}, or \code{mdirt}
 #' @param C a constant vector of population parameters to be compared along side L, where
 #'   \code{length(C) == ncol(L)}. By default a vector of 0's is constructed
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords wald
 #' @export wald
 #' @examples

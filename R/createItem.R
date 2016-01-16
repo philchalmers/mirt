@@ -28,6 +28,7 @@
 #'   then the bounds will be set to -Inf
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified
 #'   then the bounds will be set to Inf
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords createItem
 #' @export createItem

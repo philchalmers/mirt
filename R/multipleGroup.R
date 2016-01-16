@@ -44,9 +44,9 @@
 #'   (default is \code{'EM'}). See \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for details and examples
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @seealso \code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}
-#   \code{\link{DTF}}
+#' @seealso \code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}, \code{\link{DTF}}
 #' @keywords models
 #' @export multipleGroup
 #' @examples

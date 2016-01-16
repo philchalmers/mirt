@@ -91,6 +91,9 @@ extract.mirt(grp1, 'parvec')
 
 }
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \seealso{
 \code{\link{extract.group}}, \code{\link{extract.item}}, \code{\link{mod2values}}
 }

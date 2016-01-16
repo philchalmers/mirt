@@ -131,6 +131,9 @@ summary(mod_discrete)
 
 }
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \seealso{
 \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}},
   \code{\link{itemfit}}, \code{\link{boot.mirt}}, \code{\link{mirtCluster}},

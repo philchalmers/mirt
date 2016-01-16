@@ -65,6 +65,7 @@
 #'   Adjustments are located in the \code{adj_pvals} element in the returned list
 #' @param verbose logical print extra information to the console?
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords DIF
 #' @seealso \code{\link{multipleGroup}}

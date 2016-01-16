@@ -10,6 +10,8 @@
 #' @param SEpar a list containing standard errors associated with \code{par}
 #' @param as.data.frame logical; return a data.frame instead of a list? Default is TRUE
 #' @param digits number of digits to round result. Default is 4
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @return returns a list or data.frame containing the updated averaged parameter estimates,
 #'   standard errors, and t-values with the associated degrees of freedom and two tailed p-values
 #' @keywords multiple imputation

@@ -5,6 +5,8 @@
 #' @aliases extract.group
 #' @param x mirt model of class 'MultipleGroupClass'
 #' @param group a number signifying which group should be extracted
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords extract
 #' @seealso \code{\link{extract.item}}, \code{\link{extract.mirt}}
 #' @export extract.group

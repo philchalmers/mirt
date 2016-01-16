@@ -11,6 +11,7 @@
 #' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #'   information curves for each category are returned as a matrix
 #'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords information
 #' @seealso
 #' \code{\link{extract.item}}

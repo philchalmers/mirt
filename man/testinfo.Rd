@@ -46,5 +46,8 @@ plot(Theta, tinfo2 - tinfo, type = 'l')
 
 }
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{information}
 

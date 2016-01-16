@@ -11,6 +11,7 @@
 #'   in the case of a matrix input, no additional scoring keys)
 #' @return Returns a numeric matrix with all the response patterns in
 #'   dichotomous format
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @export key2binary
 #' @examples

@@ -8,6 +8,7 @@
 #' @param ndraws total number of draws to perform. Default is 1000
 #' @param thin amount of thinning to apply. Default is to use every 10th draw
 #' @param return.draws logical; return a list containing the thinned draws of the posterior?
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords random effects
 #' @export randef

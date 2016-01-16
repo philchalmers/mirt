@@ -12,6 +12,7 @@
 #'   passed to \code{parallel::makeCluster()}. If no input is given the maximum number of available
 #'   cores will be used
 #' @param remove logical; remove previously defined \code{mirtCluster()}?
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords parallel
 #' @export mirtCluster

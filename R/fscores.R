@@ -90,6 +90,7 @@
 #'   such as EAP and EAPsum). Value is a reflection of the \code{code} element from \code{\link{nlm}}
 #'   (e.g., 1 indicates convergence)
 #' @param ... additional arguments to be passed to \code{nlm}
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords factor.scores
 #' @seealso \code{\link{averageMI}}

@@ -10,6 +10,7 @@
 #' @param sample logical; randomly switch the rows in the expanded table? This does not change the
 #'   expanded data, only the row locations
 #' @return Returns a numeric matrix with all the response patterns.
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords data
 #' @export expand.table

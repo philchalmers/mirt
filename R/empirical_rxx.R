@@ -6,6 +6,8 @@
 #' @aliases empirical_rxx
 #' @param Theta_SE a matrix of latent trait estimates returned from \code{\link{fscores}} with the options
 #'   \code{full.scores = TRUE} and \code{full.scores.SE = TRUE}
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords reliability
 #' @export empirical_rxx
 #' @seealso \code{\link{fscores}}, \code{\link{marginal_rxx}}

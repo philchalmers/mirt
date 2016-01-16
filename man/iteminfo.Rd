@@ -53,6 +53,9 @@ lines(Theta, T1/T1, col = 'red')
 
 }
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \seealso{
 \code{\link{extract.item}}
 }

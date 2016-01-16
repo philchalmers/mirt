@@ -9,6 +9,8 @@
 #'   Only applicable when the input object is multidimensional
 #' @param group a number signifying which group the item should be extracted from (applies to
 #'   'MultipleGroupClass' objects only)
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords information
 #' @export testinfo
 #' @examples

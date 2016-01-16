@@ -8,6 +8,8 @@
 #' @param Theta a vector (unidimensional) or matrix (unidimensional/multidimensional) of
 #'   latent trait values
 #' @keywords tracelines
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @export probtrace
 #' @seealso
 #' \code{\link{extract.item}}
