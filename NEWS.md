@@ -2,6 +2,8 @@
 
 ## MINOR CHANGES
 
+- added SIBTEST and crossed-SIBTEST procedures with the new function `SIBTEST()`
+
 - added `empirical_plot` function for building empirical plots (with potential smoothing) 
   when conditioning on the total score
 
