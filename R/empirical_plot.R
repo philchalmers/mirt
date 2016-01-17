@@ -78,6 +78,7 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
             TS <- TS[ord]
             if(smooth){
                 uniq <- sort(unique(item))
+                if(length(uniq) == 2L) uniq <- uniq[2L]
                 splt <- as.list(uniq)
                 for(j in 1:length(uniq)){
                     df <- data.frame(resp = item==uniq[j], TS=TS)
@@ -90,6 +91,7 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
                 tab <- table(TS)
                 tmptab <- tab
                 splt <- split(TS, item)
+                if(length(splt) == 2L) splt[[1L]] <- NULL
                 for(j in 1:length(splt)){
                     tmptab[] <- NA
                     tab2 <- table(splt[[j]])
