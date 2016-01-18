@@ -111,7 +111,7 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
         df$cat <- factor(df$cat)
         plt <- lattice::xyplot(props ~ TS|item, df, groups = cat, type = 'b',
                                main = if(is.null(main)) "Empirical Item Plot" else main,
-                               xlab = 'Reduced Total Score', ylab = 'Cumulative Proportion',
+                               xlab = 'Reduced Total Score', ylab = 'Proportion',
                                par.strip.text=par.strip.text, par.settings=par.settings,
                                auto.key=auto.key, ylim = c(-.1, 1.1), ...)
     }
