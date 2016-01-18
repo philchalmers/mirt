@@ -54,6 +54,8 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
                            auto.key = list(space = 'right'), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
     data <- na.omit(as.matrix(data))
+    K <- apply(data, 2, function(x) length(unique(x)))
+    if(all(K == 2L)) auto.key <- FALSE
     TS <- rowSums(data)
     ord <- order(TS)
     data <- data[ord,]
