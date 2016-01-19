@@ -4,13 +4,17 @@
 \alias{MDIFF}
 \title{Compute multidimensional difficulty index}
 \usage{
-MDIFF(x)
+MDIFF(x, which.items = NULL)
 }
 \arguments{
 \item{x}{an object of class 'SingleGroupClass'}
+
+\item{which.items}{a vector indicating which items to select. If NULL is used
+(the default) then MDISC will be computed for all items}
 }
 \description{
-Returns a matrix containing the MDIFF values (Reckase, 2009).
+Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
+'dich' and 'graded'.
 }
 \examples{
 \dontrun{
