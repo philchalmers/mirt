@@ -1,6 +1,6 @@
 #' Compute multidimensional discrimination index
 #'
-#' Returns a vector containing the MDSIC values (Reckase, 2009).
+#' Returns a vector containing the MDISC values for each item in the model input object (Reckase, 2009).
 #'
 #' @aliases MDISC
 #' @param x an object of class 'SingleGroupClass'

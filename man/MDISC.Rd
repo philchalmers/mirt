@@ -10,7 +10,7 @@ MDISC(x)
 \item{x}{an object of class 'SingleGroupClass'}
 }
 \description{
-Returns a vector containing the MDSIC values (Reckase, 2009).
+Returns a vector containing the MDISC values for each item in the model input object (Reckase, 2009).
 }
 \examples{
 \dontrun{
