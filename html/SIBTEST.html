@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Simultaneous Item Bias Test (SIBTEST)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for SIBTEST {mirt}"><tr><td>SIBTEST {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Simultaneous Item Bias Test (SIBTEST)</h2>
+
+<h3>Description</h3>
+
+<p>Classical test theory approach to detecting DIF for unidimensional tests
+by applying a regression-corrected matched-total score approach.
+SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a regression
+correction based on the KR-20/coefficient alpha reliability index to correct the observed
+differences when the latent trait distributions are not equal.
+Function supports the standard SIBTEST for dichotomous and poltomous data (compensatory) and
+also supports crossed DIF testing (i.e., non-compensatory) for dichotomous data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+SIBTEST(dat, group, focal_set, match_set, focal_name = "focal",
+  guess_correction = 0, Jmin = 2, cross = FALSE, permute = 1000,
+  pk_focal = FALSE, correction = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>dat</code></td>
+<td>
+<p>integer dataset to be tested containing dichotomous or polytomous responses</p>
+</td></tr>
+<tr valign="top"><td><code>group</code></td>
+<td>
+<p>a vector indicating group membership</p>
+</td></tr>
+<tr valign="top"><td><code>focal_set</code></td>
+<td>
+<p>an integer vector indicating which items to inspect with SIBTEST. Including only
+one value will perform a DIF test, while including more than one will perform a simultaneous
+bundle test (DBF); including all non-matched items will perform DTF.
+If missing, a simultaneous test using all the items not listed in match_set
+will be used (i.e., DTF)</p>
+</td></tr>
+<tr valign="top"><td><code>match_set</code></td>
+<td>
+<p>an integer vector indicating which items to use as the items which are matched
+(i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
+DIF. If missing, all items other than the items found in the focal_set will be used</p>
+</td></tr>
+<tr valign="top"><td><code>focal_name</code></td>
+<td>
+<p>name of the focal group. E.g., 'focal'</p>
+</td></tr>
+<tr valign="top"><td><code>guess_correction</code></td>
+<td>
+<p>a vector of numbers from 0 to 1 indicating how much to correct the items
+for guessing. It's length should be the same as ncol(dat)</p>
+</td></tr>
+<tr valign="top"><td><code>Jmin</code></td>
+<td>
+<p>the minimum number of observations required when splitting the data into focal and
+reference groups conditioned on the matched set</p>
+</td></tr>
+<tr valign="top"><td><code>cross</code></td>
+<td>
+<p>logical; perform the crossing test for DIF? Can only be used when the data
+consist of dichotomous responses. Default is <code>FALSE</code></p>
+</td></tr>
+<tr valign="top"><td><code>permute</code></td>
+<td>
+<p>number of permutations to perform when <code>cross = TRUE</code>. Default is 1000</p>
+</td></tr>
+<tr valign="top"><td><code>pk_focal</code></td>
+<td>
+<p>logical; using the group weights from the focal group instead of the total
+sample? Default is FALSE as per Shealy and Stout's recommendation</p>
+</td></tr>
+<tr valign="top"><td><code>correction</code></td>
+<td>
+<p>logical; apply the composite correction for the difference between focal
+composite scores using the true-score regression technique? Default is <code>TRUE</code>,
+reflecting Shealy and Stout's method</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Chang, H. H., Mazzeo, J. &amp; Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
+SIBTEST Procedure. Journal of Educational Measurement, 33, 333-353.
+</p>
+<p>Li, H.-H. &amp; Stout, W. (1996). A new procedure for detetion of crossing DIF. Psychometrika, 61, 647-677.
+</p>
+<p>Shealy, R. &amp; Stout, W. (1993). A model-based standardization approach that separates true
+bias/DIF from group ability differences and ddetect test bias/DTF as well as item bias/DIF.
+Psychometrika, 58, 159-194.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+library(mirt)
+
+set.seed(1234)
+n &lt;- 30
+N &lt;- 500
+a &lt;- matrix(1, n)
+d &lt;- matrix(rnorm(n), n)
+group &lt;- c(rep(&#39;reference&#39;, N), rep(&#39;focal&#39;, N*2))
+
+## -------------
+# groups completely equal
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
+dat2 &lt;- simdata(a, d, N*2, itemtype = &#39;dich&#39;)
+dat &lt;- rbind(dat1, dat2)
+
+#DIF (all other items as anchors)
+SIBTEST(dat, group, focal_set = 6)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B         z         p
+## SIBTEST            29           1 -0.03695718 -1.358991 0.1741496
+</code></pre>
+
+<pre><code class="r">#DIF (specific anchors)
+SIBTEST(dat, group, match_set = 1:5, focal_set = 6)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B         z         p
+## SIBTEST             5           1 -0.03277425 -1.176036 0.2395803
+</code></pre>
+
+<pre><code class="r"># DBF (all and specific anchors, respectively)
+SIBTEST(dat, group, focal_set = 11:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set        B         z         p
+## SIBTEST            10          20 0.101876 0.6088667 0.5426128
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, match_set = 1:5, focal_set = 11:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B          z         p
+## SIBTEST             5          20 0.01004398 0.04987587 0.9602213
+</code></pre>
+
+<pre><code class="r">#DTF
+SIBTEST(dat, group, focal_set = 11:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set        B         z         p
+## SIBTEST            10          20 0.101876 0.6088667 0.5426128
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, match_set = 1:10) #equivalent
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set        B         z         p
+## SIBTEST            10          20 0.101876 0.6088667 0.5426128
+</code></pre>
+
+<pre><code class="r"># different hyper pars
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
+dat2 &lt;- simdata(a, d, N*2, itemtype = &#39;dich&#39;, mu = .5, sigma = matrix(1.5))
+dat &lt;- rbind(dat1, dat2)
+SIBTEST(dat, group, 6:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B        z        p
+## SIBTEST             5          25 -0.3302013 -1.29682 0.194693
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 11:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B          z         p
+## SIBTEST            10          20 -0.1351675 -0.7223809 0.4700604
+</code></pre>
+
+<pre><code class="r">#DIF testing with anchors 1 through 5
+SIBTEST(dat, group, 6, match_set = 1:5)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B         z          p
+## SIBTEST             5           1 -0.04912936 -1.804087 0.07121769
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 7, match_set = 1:5)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B          z         p
+## SIBTEST             5           1 -0.00737568 -0.2617505 0.7935138
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 8, match_set = 1:5)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B         z         p
+## SIBTEST             5           1 0.004200776 0.1501167 0.8806726
+</code></pre>
+
+<pre><code class="r">#DIF testing with all other items as anchors
+SIBTEST(dat, group, 6)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B         z          p
+## SIBTEST            29           1 -0.04631279 -1.661794 0.09655412
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 7)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B         z         p
+## SIBTEST            29           1 0.01081096 0.3667616 0.7137968
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 8)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set           B          z        p
+## SIBTEST            29           1 0.001678146 0.05794552 0.953792
+</code></pre>
+
+<pre><code class="r">#crossed SIBTEST
+SIBTEST(dat, group, 6, match_set = 1:5, cross=TRUE)
+</code></pre>
+
+<pre><code>##                 n_matched_set n_focal_set          B  z    p
+## Crossed_SIBTEST             5           1 0.04912936 NA 0.54
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 7, match_set = 1:5, cross=TRUE)
+</code></pre>
+
+<pre><code>##                 n_matched_set n_focal_set          B  z     p
+## Crossed_SIBTEST             5           1 0.04750447 NA 0.272
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 8, match_set = 1:5, cross=TRUE)
+</code></pre>
+
+<pre><code>##                 n_matched_set n_focal_set            B  z p
+## Crossed_SIBTEST             5           1 -0.003186207 NA 1
+</code></pre>
+
+<pre><code class="r">## -------------
+## systematic differing slopes and intercepts (clear DTF)
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
+dat2 &lt;- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, 1)),
+  N*2, itemtype = &#39;dich&#39;)
+dat &lt;- rbind(dat1, dat2)
+SIBTEST(dat, group, 6:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set         B         z p
+## SIBTEST             5          25 -2.329058 -8.536827 0
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, 11:30)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set         B        z p
+## SIBTEST            10          20 -2.755746 -15.4522 0
+</code></pre>
+
+<pre><code class="r">#DIF testing using valid anchors
+SIBTEST(dat, group, focal_set = 6, match_set = 1:5)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B        z           p
+## SIBTEST             5           1 0.07151388 2.590642 0.009579702
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, focal_set = 7, match_set = 1:5)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B        z         p
+## SIBTEST             5           1 0.04192564 1.473055 0.1407363
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, focal_set = 30, match_set = 1:5)
+</code></pre>
+
+<pre><code>##         n_matched_set n_focal_set          B         z            p
+## SIBTEST             5           1 -0.1061777 -3.981502 6.848102e-05
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, focal_set = 11, match_set = 1:10, cross=TRUE)
+</code></pre>
+
+<pre><code>##                 n_matched_set n_focal_set           B  z p
+## Crossed_SIBTEST            10           1 1.88186e-05 NA 1
+</code></pre>
+
+<pre><code class="r">SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
+</code></pre>
+
+<pre><code>##                 n_matched_set n_focal_set         B  z p
+## Crossed_SIBTEST            15           1 0.1502871 NA 0
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+</body></html>
