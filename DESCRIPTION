@@ -1,6 +1,6 @@
 Package: mirt
-Version: 1.14.7
-Date: 2015-11-20
+Version: 1.15
+Date: 2016-01-21
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -16,8 +16,8 @@ Description: Analysis of dichotomous and polytomous response data using
     estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory
     bi-factor and two-tier analyses are available for modeling item testlets.
     Multiple group analysis and mixed effects designs also are available for
-    detecting differential item functioning and modelling item and person
-    covariates.
+    detecting differential item and test functioning as well as modelling 
+    item and person covariates.
 Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
