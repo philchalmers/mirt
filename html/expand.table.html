@@ -23,7 +23,7 @@ rightmost column of the input data.
 <h3>Usage</h3>
 
 <pre>
-expand.table(tabdata)
+expand.table(tabdata, sample = FALSE)
 </pre>
 
 
@@ -32,9 +32,14 @@ expand.table(tabdata)
 <table summary="R argblock">
 <tr valign="top"><td><code>tabdata</code></td>
 <td>
-<p>An object of class <code>data.frame</code>, <code>matrix</code>, or
-<code>table</code> with the unique response patterns and the number of frequencies
-in the rightmost column.</p>
+<p>An object of class <code>data.frame</code> or <code>matrix</code>
+with the unique response patterns and the number of frequencies
+in the rightmost column</p>
+</td></tr>
+<tr valign="top"><td><code>sample</code></td>
+<td>
+<p>logical; randomly switch the rows in the expanded table? This does not change the
+expanded data, only the row locations</p>
 </td></tr>
 </table>
 
@@ -71,18 +76,31 @@ head(LSAT7)
 head(LSAT7full)
 </code></pre>
 
-<pre><code>##      Item.1 Item.2 Item.3 Item.4 Item.5
-## [1,]      0      0      0      0      0
-## [2,]      0      0      0      0      0
-## [3,]      0      0      0      0      0
-## [4,]      0      0      0      0      0
-## [5,]      0      0      0      0      0
-## [6,]      0      0      0      0      0
+<pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5
+## 1      0      0      0      0      0
+## 2      0      0      0      0      0
+## 3      0      0      0      0      0
+## 4      0      0      0      0      0
+## 5      0      0      0      0      0
+## 6      0      0      0      0      0
+</code></pre>
+
+<pre><code class="r">LSAT7full &lt;- expand.table(LSAT7, sample = TRUE)
+head(LSAT7full)
+</code></pre>
+
+<pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5
+## 1      1      0      0      0      1
+## 2      1      0      0      0      1
+## 3      1      1      1      1      1
+## 4      1      0      1      0      1
+## 5      1      1      0      1      1
+## 6      1      0      0      0      1
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
 </body></html>

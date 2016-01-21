@@ -14,8 +14,7 @@
 
 <h3>Description</h3>
 
-<p>A generic function to extract the internal objects from any estimated model. If possible, the
-function will returns a vector/scalar containing the desired elements, otherwise it will return a list.
+<p>A generic function to extract the internal objects from estimated models.
 </p>
 
 
@@ -36,7 +35,7 @@ extract.mirt(x, what)
 </td></tr>
 <tr valign="top"><td><code>what</code></td>
 <td>
-<p>a character vector indicating what to extract. Can contain more than one element</p>
+<p>a string indicating what to extract</p>
 </td></tr>
 </table>
 
@@ -86,6 +85,20 @@ in <code>freq</code></p>
 </dd>
 <dt>K</dt><dd><p>an integer vector indicating the number of unique elements for each item</p>
 </dd>
+<dt>mins</dt><dd><p>an integer vector indicating the lowest category found in the input <code>data</code></p>
+</dd>
+<dt>model</dt><dd><p>input model syntax</p>
+</dd>
+<dt>method</dt><dd><p>estimation method used</p>
+</dd>
+<dt>itemtype</dt><dd><p>a vector of item types for each respective item (e.g., 'graded', '2PL', etc)</p>
+</dd>
+<dt>itemnames</dt><dd><p>a vector of item names from the input data</p>
+</dd>
+<dt>data</dt><dd><p>raw input data of item responses</p>
+</dd>
+<dt>covdata</dt><dd><p>raw input data of data used as covariates</p>
+</dd>
 <dt>tabdatalong</dt><dd><p>similar to <code>tabdata</code>, however the responses have been transformed into
 dummy coded variables</p>
 </dd>
@@ -107,12 +120,26 @@ the convergence criteria</p>
 </dd>
 <dt>condnum</dt><dd><p>the condition number of the Hessian (if computed). Otherwise NA</p>
 </dd>
+<dt>constrain</dt><dd><p>a list of item parameter constraints to indicate which item parameters were equal
+during estimation</p>
+</dd>
 <dt>Prior</dt><dd><p>prior density distribution for the latent traits</p>
 </dd>
 <dt>nfact</dt><dd><p>number of latent traits/factors</p>
 </dd>
+<dt>nitems</dt><dd><p>number of items</p>
+</dd>
+<dt>ngroups</dt><dd><p>number of groups</p>
+</dd>
+<dt>groupNames</dt><dd><p>character vector of unique group names</p>
+</dd>
+<dt>group</dt><dd><p>a character vector indicating the group membership</p>
+</dd>
 <dt>secondordertest</dt><dd><p>a logical indicating whether the model passed the second-order test
 based on the Hessian matrix. Indicates whether model is a potential local maximum solution</p>
+</dd>
+<dt>SEMconv</dt><dd><p>logical; check whether the supplimented EM information matrix converged. Will be <code>NA</code>
+if not applicable</p>
 </dd>
 <dt>time</dt><dd><p>estimation time, broken into different sections</p>
 </dd>
@@ -120,9 +147,15 @@ based on the Hessian matrix. Indicates whether model is a potential local maximu
 
 
 
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
 <h3>See Also</h3>
 
-<p><code><a href="extract.group.html">extract.group</a></code>
+<p><code><a href="extract.group.html">extract.group</a></code>, <code><a href="extract.item.html">extract.item</a></code>, <code><a href="mod2values.html">mod2values</a></code>
 </p>
 
 
@@ -137,31 +170,43 @@ extract.mirt(mod, &#39;logLik&#39;)
 <pre><code>## [1] -1608.87
 </code></pre>
 
-<pre><code class="r">extract.mirt(mod, c(&#39;G2&#39;, &#39;df&#39;, &#39;p&#39;))
+<pre><code class="r">extract.mirt(mod, &#39;F&#39;)
 </code></pre>
 
-<pre><code>##          G2          df           p 
-## 213.5610262 239.0000000   0.8803674
-</code></pre>
-
-<pre><code class="r">extract.mirt(mod, c(&#39;F&#39;, &#39;h2&#39;))
-</code></pre>
-
-<pre><code>## $F
-##                F1
+<pre><code>##                F1
 ## Comfort 0.5220496
 ## Work    0.5844686
 ## Future  0.8030199
 ## Benefit 0.5410276
-## 
-## $h2
-##   Comfort      Work    Future   Benefit 
-## 0.2725357 0.3416035 0.6448410 0.2927108
+</code></pre>
+
+<pre><code class="r">#multiple group model
+grp &lt;- rep(c(&#39;G1&#39;, &#39;G2&#39;), each = nrow(Science)/2)
+mod2 &lt;- multipleGroup(Science, 1, grp)
+
+grp1 &lt;- extract.group(mod2, 1) #extract single group model
+extract.mirt(mod2, &#39;parvec&#39;)
+</code></pre>
+
+<pre><code>##  [1]  0.8316800  4.8913029  2.5597789 -1.3592138  0.8289135  2.4772334
+##  [7]  0.7025447 -2.1135580  2.8809926  5.4820292  2.2126281 -2.5451325
+## [13]  0.6920437  3.0133748  0.8608953 -1.5516666  1.1955161  4.8900152
+## [19]  2.6929286 -1.5545256  1.7621713  3.6416308  1.1724290 -2.5499919
+## [25]  2.4324588  6.4188352  2.6336468 -1.8297283  1.4875546  3.8081350
+## [31]  1.1473714 -1.8343958
+</code></pre>
+
+<pre><code class="r">extract.mirt(grp1, &#39;parvec&#39;)
+</code></pre>
+
+<pre><code>##  [1]  0.8316800  4.8913029  2.5597789 -1.3592138  0.8289135  2.4772334
+##  [7]  0.7025447 -2.1135580  2.8809926  5.4820292  2.2126281 -2.5451325
+## [13]  0.6920437  3.0133748  0.8608953 -1.5516666
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
 </body></html>

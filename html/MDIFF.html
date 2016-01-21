@@ -14,14 +14,15 @@
 
 <h3>Description</h3>
 
-<p>Returns a matrix containing the MDIFF values (Reckase, 2009).
+<p>Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
+'dich' and 'graded'.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-MDIFF(x)
+MDIFF(x, which.items = NULL)
 </pre>
 
 
@@ -31,6 +32,11 @@ MDIFF(x)
 <tr valign="top"><td><code>x</code></td>
 <td>
 <p>an object of class 'SingleGroupClass'</p>
+</td></tr>
+<tr valign="top"><td><code>which.items</code></td>
+<td>
+<p>a vector indicating which items to select. If NULL is used
+(the default) then MDISC will be computed for all items</p>
 </td></tr>
 </table>
 
@@ -72,5 +78,5 @@ MDIFF(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
 </body></html>

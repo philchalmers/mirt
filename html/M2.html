@@ -117,7 +117,7 @@ multidimensional contingency tables Psychometrika, 71, 713-732.
 <h3>Examples</h3>
 
 <pre><code class="r">## No test: 
-dat &lt;- expand.table(LSAT7)
+dat &lt;- as.matrix(expand.table(LSAT7))
 (mod1 &lt;- mirt(dat, 1))
 </code></pre>
 
@@ -127,7 +127,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.14 
+## mirt version: 1.15 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -171,17 +171,17 @@ mirtCluster()
 <pre><code class="r">M2(mod2, impute = 10)
 </code></pre>
 
-<pre><code>##                M2 df         p      RMSEA     RMSEA_5    RMSEA_95
-## stats    9.475758  5 0.1183842 0.02892757 0.002430049 0.058366398
-## SD_stats 2.091331  0 0.0884356 0.00769698 0.004518597 0.005840446
-##                TLI       CFI       SRMSR
-## stats    0.9566044 0.9783022 0.028976790
-## SD_stats 0.0206324 0.0103162 0.003034188
+<pre><code>##                M2 df          p       RMSEA RMSEA_5    RMSEA_95        TLI
+## stats    8.949932  5 0.11810442 0.027879441       0 0.057247637 0.96046556
+## SD_stats 1.024766  0 0.04217147 0.003676132       0 0.002874766 0.01166235
+##                  CFI       SRMSR
+## stats    0.980232782 0.028784296
+## SD_stats 0.005831177 0.001943433
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
 </body></html>

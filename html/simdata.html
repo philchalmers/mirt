@@ -34,15 +34,17 @@ simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 <table summary="R argblock">
 <tr valign="top"><td><code>a</code></td>
 <td>
-<p>a matrix of slope parameters. If slopes are to be constrained to
+<p>a matrix/vector of slope parameters. If slopes are to be constrained to
 zero then use <code>NA</code>. <code>a</code> may also be a similar matrix specifying
-factor loadings if <code>factor.loads = TRUE</code></p>
+factor loadings if <code>factor.loads = TRUE</code>. When a vector is used the test is assumed to be
+unidimensional</p>
 </td></tr>
 <tr valign="top"><td><code>d</code></td>
 <td>
-<p>a matrix of intercepts. The matrix should have as many columns as
+<p>a matrix/vector of intercepts. The matrix should have as many columns as
 the item with the largest number of categories, and filled empty locations
-with <code>NA</code></p>
+with <code>NA</code>. When a vector is used the test is assumed to consist only of dichotomous items
+(because only one intercept per item is provided)</p>
 </td></tr>
 <tr valign="top"><td><code>N</code></td>
 <td>
@@ -448,5 +450,5 @@ dat &lt;- simdata(N=200, model=obj)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
 </body></html>

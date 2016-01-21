@@ -66,7 +66,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.14 
+## mirt version: 1.15 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -90,15 +90,15 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 29 EM iterations.
-## mirt version: 1.14 
+## Converged within 1e-04 tolerance after 31 EM iterations.
+## mirt version: 1.15 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2650.88
-## AIC = 5321.76; AICc = 5321.982
-## BIC = 5370.837; SABIC = 5339.077
+## Log-likelihood = -2646.876
+## AIC = 5313.752; AICc = 5313.974
+## BIC = 5362.83; SABIC = 5331.069
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -113,17 +113,17 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 23 EM iterations.
-## mirt version: 1.14 
+## Converged within 1e-04 tolerance after 28 EM iterations.
+## mirt version: 1.15 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2658.97
-## AIC = 5337.939; AICc = 5338.161
-## BIC = 5387.017; SABIC = 5355.256
-## G2 (21) = 34.96, p = 0.0285
-## RMSEA = 0.026, CFI = 0.921, TLI = 0.902
+## Log-likelihood = -2656.843
+## AIC = 5333.686; AICc = 5333.908
+## BIC = 5382.763; SABIC = 5351.003
+## G2 (21) = 29.83, p = 0.0956
+## RMSEA = 0.021, CFI = 0.948, TLI = 0.936
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
@@ -137,5 +137,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.14 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
 </body></html>
