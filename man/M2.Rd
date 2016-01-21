@@ -55,7 +55,7 @@ fitting the null model.
 }
 \examples{
 \dontrun{
-dat <- expand.table(LSAT7)
+dat <- as.matrix(expand.table(LSAT7))
 (mod1 <- mirt(dat, 1))
 M2(mod1)
 M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
