@@ -629,8 +629,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
                 if(!opts$technical$parallel){
-                    ncores <- mirtClusterEnv$ncores
-                    mirtClusterEnv$ncores <- 1L
+                    ncores <- .mirtClusterEnv$ncores
+                    .mirtClusterEnv$ncores <- 1L
                 }
                 DM <- myLapply(1L:ncol(estmat), FUN=SE.SEM, estmat=estmat, pars=ESTIMATE$pars, constrain=constrain, Data=Data,
                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
@@ -654,7 +654,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 } else SEMconv <- TRUE
                 DM <- do.call(rbind, DM)
                 if(!opts$technical$parallel)
-                    mirtClusterEnv$ncores <- ncores
+                    .mirtClusterEnv$ncores <- ncores
                 ESTIMATE$pars <- reloadPars(longpars=ESTIMATE$longpars, pars=ESTIMATE$pars,
                                             ngroups=Data$ngroups, J=Data$nitems)
                 DM[, is.latent] <- DM[is.latent, ]
@@ -747,8 +747,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         logLik <- G2 <- SElogLik <- 0
         Pl <- list()
         if(!opts$technical$parallel){
-            ncores <- mirtClusterEnv$ncores
-            mirtClusterEnv$ncores <- 1L
+            ncores <- .mirtClusterEnv$ncores
+            .mirtClusterEnv$ncores <- 1L
         }
         logPrior <- 0
         for(g in 1L:Data$ngroups){
@@ -765,7 +765,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             Pl[[g]] <- cmods[[g]]@Internals$Pl
         }
         if(!opts$technical$parallel)
-            mirtClusterEnv$ncores <- ncores
+            .mirtClusterEnv$ncores <- ncores
     }
 
     ####post estimation stats

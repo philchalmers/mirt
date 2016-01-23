@@ -33,16 +33,16 @@
 mirtCluster <- function(ncores, remove = FALSE){
     if(requireNamespace("parallel", quietly = TRUE)){
         if(remove){
-            if(is.null(mirtClusterEnv$MIRTCLUSTER)){
+            if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
                 message('There is no visible mirtCluster() definition')
                 return(invisible())
             }
-            parallel::stopCluster(mirtClusterEnv$MIRTCLUSTER)
-            mirtClusterEnv$MIRTCLUSTER <- NULL
-            mirtClusterEnv$ncores <- 1L
+            parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
+            .mirtClusterEnv$MIRTCLUSTER <- NULL
+            .mirtClusterEnv$ncores <- 1L
             return(invisible())
         }
-        if(!is.null(mirtClusterEnv$MIRTCLUSTER)){
+        if(!is.null(.mirtClusterEnv$MIRTCLUSTER)){
             message('mirtCluster() has already been defined')
             return(invisible())
         }
@@ -50,8 +50,8 @@ mirtCluster <- function(ncores, remove = FALSE){
             ncores <- parallel::detectCores()
         if(!is.numeric(ncores))
             stop('ncores must be numeric', call.=FALSE)
-        mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(ncores)
-        mirtClusterEnv$ncores <- as.integer(ncores)
+        .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(ncores)
+        .mirtClusterEnv$ncores <- as.integer(ncores)
     }
     return(invisible())
 }
