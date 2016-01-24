@@ -25,7 +25,7 @@ test_that('extras', {
     dat <- rbind(dataset1, dataset2)
     group <- c(rep('D1', N), rep('D2', N))
     model1a <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'Louis')
-    model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'BL',
+    model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'Richardson',
                              pars = mod2values(model1a), technical = list(warn=FALSE))
     expect_equal(as.numeric(model1a@vcov - model1b@vcov), numeric(ncol(model1a@vcov)^2),
                  tolerance = 1e-4)

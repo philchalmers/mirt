@@ -286,8 +286,8 @@
 #'    See \code{SE.type} for the type of estimates available
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix
 #'   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
-#'   approximation, \code{'BL'} for the Bock and Lieberman approach (numerical evaluation of
-#'   observed Hessian), \code{'Fisher'} for the expected information, \code{'complete'} for
+#'   approximation, \code{'Richardson'} for Richardson's numerical evaluation of
+#'   observed Hessian, \code{'Fisher'} for the expected information, \code{'complete'} for
 #'   information based on the complete-data Hessian used in EM algorithm (EM only), \code{'SEM'} for
 #'   the supplemented EM (disables the \code{accelerate} option; EM only), \code{'crossprod'}
 #'   for standard error computations based on the variance of the Fisher scores, \code{'Louis'}
@@ -549,7 +549,7 @@
 #' (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with crossprod method
 #' (mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 #' coef(mod2)
-#' (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')) #standard errors with BL method
+#' (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'Richardson')) #with numerical Richardson method
 #' residuals(mod1)
 #' plot(mod1) #test score function
 #' plot(mod1, type = 'trace') #trace lines

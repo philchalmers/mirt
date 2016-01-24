@@ -1,4 +1,4 @@
-SE.BL <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
+SE.Richardson <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
                   CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL, warn, Data){
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist

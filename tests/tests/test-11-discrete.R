@@ -5,7 +5,7 @@ test_that('discrete', {
     #----------
     # dichotomous LCA
     dat <- expand.table(LSAT6)
-    mod <- mdirt(dat, 2, verbose=FALSE, SE=TRUE, SE.type = 'BL')
+    mod <- mdirt(dat, 2, verbose=FALSE, SE=TRUE, SE.type = 'Richardson')
     so <- summary(mod, digits=10)
     expect_equal(extract.mirt(mod, 'condnum'), 13.20951, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'logLik'), -2467.408, tolerance = 1e-4)
