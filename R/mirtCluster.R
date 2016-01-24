@@ -8,9 +8,9 @@
 #' it is not recommended to define a mirtCluster.
 #'
 #' @aliases mirtCluster
-#' @param ncores number of cores to be used in the returned object which is
-#'   passed to \code{parallel::makeCluster()}. If no input is given the maximum number of available
-#'   cores will be used
+#' @param spec input that is passed to \code{parallel::makeCluster()}. If no input is given the
+#'   maximum number of available local cores will be used
+#' @param ... additional arguments to pass to \code{parallel::makeCluster}
 #' @param remove logical; remove previously defined \code{mirtCluster()}?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -26,12 +26,11 @@
 #' #' #stop and remove cores
 #' mirtCluster(remove = TRUE)
 #'
-#' #use all available cores
-#' mirtCluster()
-#'
 #' }
-mirtCluster <- function(ncores, remove = FALSE){
+mirtCluster <- function(spec, ..., remove = FALSE){
     if(requireNamespace("parallel", quietly = TRUE)){
+        if(missing(spec))
+            spec <- parallel::detectCores()
         if(remove){
             if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
                 message('There is no visible mirtCluster() definition')
@@ -46,12 +45,8 @@ mirtCluster <- function(ncores, remove = FALSE){
             message('mirtCluster() has already been defined')
             return(invisible())
         }
-        if(missing(ncores))
-            ncores <- parallel::detectCores()
-        if(!is.numeric(ncores))
-            stop('ncores must be numeric', call.=FALSE)
-        .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(ncores)
-        .mirtClusterEnv$ncores <- as.integer(ncores)
+        .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
+        .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
     }
     return(invisible())
 }
