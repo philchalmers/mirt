@@ -28,6 +28,9 @@
 #'   then the bounds will be set to -Inf
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified
 #'   then the bounds will be set to Inf
+#' @param derivType if the \code{gr} or \code{hss} terms are not specified this type will be used to
+#'   obtain them numerically. Default is the 'forward' method (fastest), but more exact approaches
+#'   include 'central' and 'Richardson'
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords createItem
@@ -56,6 +59,12 @@
 #' coef(mod)
 #' mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), method = 'MHRM')
 #' coef(mod2)
+#'
+#' #several secondary functions supported
+#' M2(mod, calcNull=FALSE)
+#' itemfit(mod)
+#' fscores(mod, full.scores=FALSE)
+#' plot(mod)
 #'
 #' ###non-linear
 #' name <- 'nonlin'
@@ -96,14 +105,15 @@
 #'    P
 #' }
 #'
-#' nom1 <- createItem(name, par=par, est=est, P=P.nom)
+#' nom1 <- createItem(name, par=par, est=est, P=P.nom, derivType = 'central')
 #' nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 #' coef(nommod)
 #' Tnom.dev(4) %*% coef(nommod)[[1]][1:3] #a
 #' Tnom.dev(4) %*% coef(nommod)[[1]][4:6] #d
 #'
 #' }
-createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ubound = NULL){
+createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ubound = NULL,
+                       derivType = 'forward'){
     if(missing(name)) missingMsg('name')
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')
@@ -111,5 +121,5 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, lbound = NULL, ub
     if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
         stop('Parameter names cannot be \'g\' or \'u\', please change.', call.=FALSE)
     return(new('custom', name=name, par=par, est=est, lbound=lbound,
-               ubound=ubound, P=P, gr=gr, hss=hss, userdata=NULL))
+               ubound=ubound, P=P, gr=gr, hss=hss, userdata=NULL, derivType=derivType))
 }

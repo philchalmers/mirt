@@ -12,7 +12,8 @@ M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
 \item{obj}{an estimated model object from the mirt package}
 
 \item{calcNull}{logical; calculate statistics for the null model as well?
-Allows for statistics such as the limited information TLI and CFI}
+Allows for statistics such as the limited information TLI and CFI. Only valid when items all
+have a suitable null model (e.g., those created via \code{\link{createItem}} will not)}
 
 \item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
 a suitable value will be chosen based
@@ -28,7 +29,7 @@ of the stats and their imputed standard deviations}
 \item{CI}{numeric value from 0 to 1 indicating the range of the confidence interval for
 RMSEA. Default returns the 90\% interval}
 
-\item{residmat}{logical; return the residual matrix used to compute the SRMSR statistic?
+\item{residmat}{logical; return the residual matrix used to compute the SRMSR statistic?c
 Only the lower triangle of the residual correlation matrix will be returned
 (the upper triangle is filled with NA's)}
 

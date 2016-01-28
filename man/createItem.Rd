@@ -5,7 +5,7 @@
 \title{Create a user defined item with correct generic functions}
 \usage{
 createItem(name, par, est, P, gr = NULL, hss = NULL, lbound = NULL,
-  ubound = NULL)
+  ubound = NULL, derivType = "forward")
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -34,6 +34,10 @@ then the bounds will be set to -Inf}
 
 \item{ubound}{optional vector indicating the lower bounds of the parameters. If not specified
 then the bounds will be set to Inf}
+
+\item{derivType}{if the \code{gr} or \code{hss} terms are not specified this type will be used to
+obtain them numerically. Default is the 'forward' method (fastest), but more exact approaches
+include 'central' and 'Richardson'}
 }
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.
@@ -69,6 +73,12 @@ mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x))
 coef(mod)
 mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), method = 'MHRM')
 coef(mod2)
+
+#several secondary functions supported
+M2(mod, calcNull=FALSE)
+itemfit(mod)
+fscores(mod, full.scores=FALSE)
+plot(mod)
 
 ###non-linear
 name <- 'nonlin'
@@ -109,7 +119,7 @@ P.nom <- function(par, Theta, ncat){
    P
 }
 
-nom1 <- createItem(name, par=par, est=est, P=P.nom)
+nom1 <- createItem(name, par=par, est=est, P=P.nom, derivType = 'central')
 nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 coef(nommod)
 Tnom.dev(4) \%*\% coef(nommod)[[1]][1:3] #a

@@ -15,7 +15,8 @@
 #'   a suitable value will be chosen based
 #'   on the rubric found in \code{\link{fscores}}
 #' @param calcNull logical; calculate statistics for the null model as well?
-#'   Allows for statistics such as the limited information TLI and CFI
+#'   Allows for statistics such as the limited information TLI and CFI. Only valid when items all
+#'   have a suitable null model (e.g., those created via \code{\link{createItem}} will not)
 #' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
 #' @param impute a number indicating how many imputations to perform
 #'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
@@ -23,7 +24,7 @@
 #'   of the stats and their imputed standard deviations
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for
 #'   RMSEA. Default returns the 90\% interval
-#' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
+#' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?c
 #'   Only the lower triangle of the residual correlation matrix will be returned
 #'   (the upper triangle is filled with NA's)
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.

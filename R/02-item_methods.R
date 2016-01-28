@@ -1953,7 +1953,8 @@ setClass('custom', contains = 'AllItemsClass',
                                          hss='function',
                                          usehss='logical',
                                          userdata='matrix',
-                                         useuserdata='logical'))
+                                         useuserdata='logical',
+                                         derivType='character'))
 
 setMethod(
     f = "print",
@@ -2015,7 +2016,7 @@ setMethod(
 
 setMethod("initialize",
           'custom',
-          function(.Object, name, par, est, lbound, ubound, P, gr, hss, userdata) {
+          function(.Object, name, par, est, lbound, ubound, P, gr, hss, userdata, derivType) {
               dummyfun <- function(...) return(NULL)
               names(est) <- names(par)
               usegr <- usehss <- useuserdata <- TRUE
@@ -2023,6 +2024,7 @@ setMethod("initialize",
               .Object@par <- par
               .Object@est <- est
               .Object@P <- P
+              .Object@derivType <- derivType
               if(is.null(gr)){
                   .Object@gr <- dummyfun
                   usegr <- FALSE
@@ -2052,11 +2054,11 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(x@usegr) grad <- x@gr(x, Theta)
-        else grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+        else grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta, type=x@derivType)
         if(estHess){
             if(x@usehss) hess <- x@hss(x, Theta)
-            else hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                         Theta=Theta)
+            else hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                                       Theta=Theta, type=x@derivType, gradient=FALSE)
         }
         return(list(grad = grad, hess=hess))
     }
