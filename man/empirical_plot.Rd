@@ -6,8 +6,9 @@
 \usage{
 empirical_plot(data, which.items = NULL, smooth = FALSE, formula = resp ~
   s(TS, k = 5), main = NULL, par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), auto.key = list(space = "right"), ...)
+  boxplot = FALSE, par.settings = list(strip.background = list(col =
+  "#9ECAE1"), strip.border = list(col = "black")), auto.key = list(space =
+  "right"), ...)
 }
 \arguments{
 \item{data}{a \code{data.frame} or \code{matrix} of item responses (see \code{\link{mirt}}
@@ -23,6 +24,9 @@ If NULL then a empirical test  plot will be constructed instead}
 \item{main}{the main title for the plot. If NULL an internal default will be used}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+
+\item{boxplot}{logical; use a boxplot to display the marginal total score differences instead of
+scatter plots of proportions? Default is FALSE}
 
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
 
@@ -56,6 +60,7 @@ empirical_plot(data)
 #items 1, 2 and 5
 empirical_plot(data, c(1, 2, 5))
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
+empirical_plot(data, c(1, 2, 5), boxplot = TRUE)
 
 # replace weird looking items with unscored versions for diagnostics
 empirical_plot(data, 32)

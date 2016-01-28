@@ -16,6 +16,8 @@
 #' @param which.items a numeric vector indicating which items to plot in a faceted image plot.
 #'   If NULL then a empirical test  plot will be constructed instead
 #' @param smooth logical; include a GAM smoother instead of the raw proportions? Default is FALSE
+#' @param boxplot logical; use a boxplot to display the marginal total score differences instead of
+#'   scatter plots of proportions? Default is FALSE
 #' @param formula formula used for the GAM smoother
 #' @param main the main title for the plot. If NULL an internal default will be used
 #' @param auto.key plotting argument passed to \code{\link{lattice}}
@@ -39,6 +41,7 @@
 #' #items 1, 2 and 5
 #' empirical_plot(data, c(1, 2, 5))
 #' empirical_plot(data, c(1, 2, 5), smooth = TRUE)
+#' empirical_plot(data, c(1, 2, 5), boxplot = TRUE)
 #'
 #' # replace weird looking items with unscored versions for diagnostics
 #' empirical_plot(data, 32)
@@ -48,11 +51,12 @@
 #'
 #' }
 empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = resp ~ s(TS, k = 5),
-                           main = NULL, par.strip.text = list(cex = 0.7),
+                           main = NULL, par.strip.text = list(cex = 0.7), boxplot = FALSE,
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right'), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
+    if(boxplot) smooth <- FALSE
     data <- na.omit(as.matrix(data))
     K <- apply(data, 2, function(x) length(unique(x)))
     if(all(K == 2L)) auto.key <- FALSE
@@ -93,7 +97,8 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
                 tab <- table(TS)
                 tmptab <- tab
                 splt <- split(TS, item)
-                if(length(splt) == 2L) splt[[1L]] <- NULL
+                if(!boxplot)
+                    if(length(splt) == 2L) splt[[1L]] <- NULL
                 for(j in 1:length(splt)){
                     tmptab[] <- NA
                     tab2 <- table(splt[[j]])
@@ -109,7 +114,13 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
         }
         df <- na.omit(do.call(rbind, pltdat))
         df$cat <- factor(df$cat)
-        plt <- lattice::xyplot(props ~ TS|item, df, groups = cat, type = 'b',
+        if(boxplot)
+            plt <- lattice::bwplot(TS ~ cat | item, df,
+                                   main = if(is.null(main)) "Empirical Item Differences" else main,
+                                   xlab = 'Item Category', ylab = 'Reduced Total Score',
+                                   par.strip.text=par.strip.text, par.settings=par.settings,
+                                   auto.key=auto.key, ...)
+        else plt <- lattice::xyplot(props ~ TS|item, df, groups = cat, type = 'b',
                                main = if(is.null(main)) "Empirical Item Plot" else main,
                                xlab = 'Reduced Total Score', ylab = 'Proportion',
                                par.strip.text=par.strip.text, par.settings=par.settings,
