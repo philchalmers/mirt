@@ -1671,13 +1671,13 @@ MGC2SC <- function(x, which){
 
 #' Compute numerical derivatives with forward/backward or central methods
 #'
-#' Compute simple numerical derivitives using simple numerical schemes. For the more accurate Richardson
-#' extrolation methods see the \code{numDeriv} package.
+#' Compute numerical derivatives using forward/backword difference,
+#' central difference, or Richardson extropolation.
 #'
 #' @param par a vector of parameters
 #' @param f the objective function being evaluated
-#' @param ... additional arguments to be passed to \code{f}
-#' @param h the delta term used to perturb the \code{f} function
+#' @param ... additional arguments to be passed to \code{f} and the \code{numDeriv} package
+#' @param delta the term used to perturb the \code{f} function
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
 #' @param type type of difference to compute. Can be either 'forward' for the forward difference or
 #'   'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value
@@ -1702,11 +1702,12 @@ MGC2SC <- function(x, which){
 #' numerical_deriv(par, f, type = 'central', gradient = FALSE)
 #'
 #' }
-numerical_deriv <- function(par, f, ...,  h = .001, gradient = TRUE, type = 'forward'){
+numerical_deriv <- function(par, f, ...,  delta = .001, gradient = TRUE, type = 'forward'){
     forward_difference <- function(par, f, h = .001, ...){
+        dots <- list(...)
         np <- length(par)
         g <- numeric(np)
-        fx <- f(par, ...)
+        if(is.null(dots$ObJeCtIvE)) fx <- f(par, ...) else fx <- dots$ObJeCtIvE
         for(i in 1L:np){
             p <- par
             p[i] <- p[i] + h
@@ -1715,9 +1716,10 @@ numerical_deriv <- function(par, f, ...,  h = .001, gradient = TRUE, type = 'for
         g
     }
     forward_difference2 <- function(par, f, h = .001, ...){
+        dots <- list(...)
         np <- length(par)
         hess <- matrix(0, np, np)
-        fx <- f(par, ...)
+        if(is.null(dots$ObJeCtIvE)) fx <- f(par, ...) else fx <- dots$ObJeCtIvE
         fx1 <- numeric(np)
         for(i in 1L:np){
             tmp <- par
@@ -1791,12 +1793,16 @@ numerical_deriv <- function(par, f, ...,  h = .001, gradient = TRUE, type = 'for
         hess
     }
 
+    h <- delta
     if(type == 'central'){
         ret <- if(gradient) central_difference(par=par, f=f, h=h, ...)
         else central_difference2(par=par, f=f, h=h, ...)
     } else if(type == 'forward'){
         ret <- if(gradient) forward_difference(par=par, f=f, h=h, ...)
         else forward_difference2(par=par, f=f, h=h, ...)
+    } else if(type == 'Richardson'){
+        ret <- if(gradient) numDeriv::grad(f, par, ...)
+        else numDeriv::hessian(f, par, ...)
     }
     ret
 }

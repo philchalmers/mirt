@@ -4,16 +4,17 @@
 \alias{numerical_deriv}
 \title{Compute numerical derivatives with forward/backward or central methods}
 \usage{
-numerical_deriv(par, f, ..., h = 0.001, gradient = TRUE, type = "forward")
+numerical_deriv(par, f, ..., delta = 0.001, gradient = TRUE,
+  type = "forward")
 }
 \arguments{
 \item{par}{a vector of parameters}
 
 \item{f}{the objective function being evaluated}
 
-\item{...}{additional arguments to be passed to \code{f}}
+\item{...}{additional arguments to be passed to \code{f} and the \code{numDeriv} package}
 
-\item{h}{the delta term used to perturb the \code{f} function}
+\item{delta}{the term used to perturb the \code{f} function}
 
 \item{gradient}{logical; compute the gradient terms? If FALSE then the Hessian is computed instead}
 
@@ -21,8 +22,8 @@ numerical_deriv(par, f, ..., h = 0.001, gradient = TRUE, type = "forward")
 'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value}
 }
 \description{
-Compute simple numerical derivitives using simple numerical schemes. For the more accurate Richardson
-extrolation methods see the \code{numDeriv} package.
+Compute numerical derivatives using forward/backword difference,
+central difference, or Richardson extropolation.
 }
 \examples{
 

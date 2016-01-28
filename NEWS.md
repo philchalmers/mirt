@@ -1,5 +1,8 @@
 # Changes in mirt 1.16
 
+- added `lagrange` (i.e., score) test function for testing whether parameters should be freed in single
+  and multiple group models estimated with the EM
+
 - `numerical_deriv` function made available for simple numerical derivatives, which may be useful when
   defining fast custom itemtype derivative terms
   
