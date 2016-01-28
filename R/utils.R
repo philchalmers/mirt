@@ -1666,6 +1666,137 @@ MGC2SC <- function(x, which){
     tmp
 }
 
+#' Compute numerical derivatives with forward/backward or central methods
+#'
+#' Compute simple numerical derivitives using simple numerical schemes. For the more accurate Richardson
+#' extrolation methods see the \code{numDeriv} package.
+#'
+#' @param par a vector of parameters
+#' @param f the objective function being evaluated
+#' @param h the delta term used to perturb the \code{f} function
+#' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
+#' @param type type of difference to compute. Can be either 'forward' for the forward difference or
+#'   'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value
+#' @export numerical_deriv
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @keywords numerical derivatives
+#'
+#' @examples
+#'
+#' \dontrun{
+#' f <- function(x) 3*x[1]^3 - 4*x[2]^2
+#' par <- c(3,8)
+#'
+#' # grad = 9 * x^2 , 8 * y
+#' c(81, -64)
+#' numerical_deriv(par, f, type = 'forward')
+#' numerical_deriv(par, f, type = 'central')
+#'
+#' # hessian = h11 -> 18 * x, h22 -> 8, h12 -> 9 * x^2 + 8 * y
+#' matrix(c(54, 0, 0, 8), 2, 2)
+#' numerical_deriv(par, f, type = 'forward', gradient = FALSE)
+#' numerical_deriv(par, f, type = 'central', gradient = FALSE)
+#'
+#' }
+numerical_deriv <- function(par, f, h = .001, gradient = TRUE, type = 'forward'){
+    forward_difference <- function(par, f, h = .001){
+        np <- length(par)
+        g <- numeric(np)
+        fx <- f(par)
+        for(i in 1L:np){
+            p <- par
+            p[i] <- p[i] + h
+            g[i] <- (f(p) - fx) / h
+        }
+        g
+    }
+    forward_difference2 <- function(par, f, h = .001){
+        np <- length(par)
+        hess <- matrix(0, np, np)
+        fx <- f(par)
+        fx1 <- numeric(np)
+        for(i in 1L:np){
+            tmp <- par
+            tmp[i] <- tmp[i] + h
+            fx1[i] <- f(tmp)
+        }
+        for(i in 1L:np){
+            for(j in i:np){
+                fx1x2 <- par
+                fx1x2[i] <- fx1x2[i] + h
+                fx1x2[j] <- fx1x2[j] + h
+                hess[i,j] <- hess[j, i] <- (f(fx1x2) - fx1[i] - fx1[j] + fx) / (h^2)
+            }
+        }
+        hess
+    }
+    central_difference <- function(par, f, h = .001){
+        np <- length(par)
+        g <- numeric(np)
+        for(i in 1L:np){
+            p1 <- p2 <- par
+            p1[i] <- p1[i] + h
+            p2[i] <- p2[i] - h
+            g[i] <- (f(p1) - f(p2)) / (2 * h)
+        }
+        g
+    }
+    forward_difference2 <- function(par, f, h = .001){
+        np <- length(par)
+        hess <- matrix(0, np, np)
+        fx <- f(par)
+        fx1 <- numeric(np)
+        for(i in 1L:np){
+            tmp <- par
+            tmp[i] <- tmp[i] + h
+            fx1[i] <- f(tmp)
+        }
+        for(i in 1L:np){
+            for(j in i:np){
+                fx1x2 <- par
+                fx1x2[i] <- fx1x2[i] + h
+                fx1x2[j] <- fx1x2[j] + h
+                hess[i,j] <- hess[j, i] <- (f(fx1x2) - fx1[i] - fx1[j] + fx) / (h^2)
+            }
+        }
+        hess
+    }
+    central_difference2 <- function(par, f, h = .001){
+        np <- length(par)
+        hess <- matrix(0, np, np)
+        fx <- f(par)
+        for(i in 1L:np){
+            for(j in i:np){
+                if(i == j){
+                    p1 <- p2 <- par
+                    p1[i] <- p1[i] + h; s2 <- f(p1)
+                    p1[i] <- p1[i] + h; s1 <- f(p1)
+                    p2[i] <- p2[i] - h; s3 <- f(p2)
+                    p2[i] <- p2[i] - h; s4 <- f(p2)
+                    hess[i, i] <- (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * h^2)
+                } else {
+                    p <- par
+                    p[i] <- p[i] + h; p[j] <- p[j] + h; s1 <- f(p)
+                    p[j] <- p[j] - 2*h; s2 <- f(p)
+                    p[i] <- p[i] - 2*h; s4 <- f(p)
+                    p[j] <- p[j] + 2*h; s3 <- f(p)
+                    hess[i,j] <- hess[j,i] <- (s1 - s2 - s3 + s4) / (4 * h^2)
+                }
+            }
+        }
+        hess
+    }
+
+    if(type == 'central'){
+        ret <- if(gradient) central_difference(par=par, f=f, h=h)
+        else central_difference2(par=par, f=f, h=h)
+    } else if(type == 'forward'){
+        ret <- if(gradient) forward_difference(par=par, f=f, h=h)
+        else forward_difference2(par=par, f=f, h=h)
+    }
+    ret
+}
+
 computeNullModel <- function(data, itemtype, group=NULL){
     if(!is.null(group)){
         null.mod <- multipleGroup(data, 1L, itemtype=itemtype, group=group, verbose=FALSE,
