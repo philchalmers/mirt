@@ -197,7 +197,7 @@ setMethod(
         J <- length(K)
         CUSTOM.IND <- object@Internals$CUSTOM.IND
         prodlist <- attr(pars, 'prodlist')
-        nLambdas <- nfact <- object@Model$nfact
+        nfact <- object@Model$nfact
         itemloc <- object@Model$itemloc
         gp <- ExtractGroupPars(object@ParObjects$pars[[length(itemloc)]])
         if(object@Options$exploratory){
@@ -216,7 +216,6 @@ setMethod(
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
                                              min_expected=min_expected, ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
-		fulldata <- object@Data$data
 		LR <- .hasSlot(object@Model$lrPars, 'beta')
 		USETABDATA <- TRUE
 		if(LR){

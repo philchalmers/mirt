@@ -1277,7 +1277,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
     ret
 }
 
-make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
+make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
     nfact <- length(factorNames)
     if(is.list(formula)){
         if(!all(names(formula) %in% factorNames))
@@ -1295,8 +1295,10 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE){
     tXX <- t(X) %*% X
     if(ncol(X) > 1L) inv_tXX <- try(solve(tXX), silent = TRUE)
     else inv_tXX <- matrix(0)
-    if(is(inv_tXX, 'try-error'))
-        stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)
+    if(!is.nan(TOL)){
+        if(is(inv_tXX, 'try-error'))
+            stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)
+    } else inv_tXX <- matrix(0, ncol(tXX), ncol(tXX))
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
@@ -1342,7 +1344,7 @@ update.lrPars <- function(df, lrPars){
     pick <- df$class == 'lrPars'
     df2 <- df[pick, , drop=FALSE]
     lrPars@est[] <- df2$est
-    lrPars@par <- df2$value
+    lrPars@par <- lrPars@beta[] <- df2$value
     if(!all(df2$lbound == -Inf))
         warning('latent regression parameters cannot be bounded. Ignoring constraint', call.=FALSE)
     if(!all(df2$ubound == Inf))

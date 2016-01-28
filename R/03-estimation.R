@@ -58,7 +58,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(any(is.na(group))){
             if(opts$message)
                 message('NA values in group removed, along with associated rows in data')
-            data <- data[!is.na(group), ]
+            data <- data[!is.na(group), , drop=FALSE]
             group <- group[!is.na(group)]
         }
         if(!is.null(customItems) || any(itemtype %in% Experimental_itemtypes()))
@@ -98,17 +98,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
-        data <- apply(data, 2L, function(x, message){
-            s <- sort(unique(x))
-            se <- min(s, na.rm = TRUE):max(x, na.rm = TRUE)
-            if(length(s) != length(se)){
-                if(message)
-                    message('Item re-scored so that all values are within a distance of 1')
-                for(i in 2L:length(s))
-                    x <- ifelse(x == s[i], se[i], x)
-            }
-            x
-        }, message = opts$message)
+        if(nrow(data) > 1L){
+            data <- apply(data, 2L, function(x, message){
+                s <- sort(unique(x))
+                se <- min(s, na.rm = TRUE):max(x, na.rm = TRUE)
+                if(length(s) != length(se)){
+                    if(message)
+                        message('Item re-scored so that all values are within a distance of 1')
+                    for(i in 2L:length(s))
+                        x <- ifelse(x == s[i], se[i], x)
+                }
+                x
+            }, message = opts$message)
+        }
         if(any(rowSums(is.na(data)) == ncol(data))){
             if(!opts$removeEmptyRows)
                 stop('data contains completely empty response patterns.',
@@ -193,7 +195,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(length(PrepListFull$prodlist))
                 stop('Polynominal combinations currently not supported when latent regression effects are used', call.=FALSE)
             lrPars <- make.lrdesign(df=latent.regression$df, formula=latent.regression$formula,
-                                    factorNames=PrepListFull$factorNames, EM=latent.regression$EM)
+                                    factorNames=PrepListFull$factorNames, EM=latent.regression$EM,
+                                    TOL=opts$TOL)
             lrPars@parnum <- parnumber:(parnumber - 1L + length(lrPars@par))
             parnumber <- max(lrPars@parnum) + 1L
         } else lrPars <- list()
@@ -222,7 +225,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$tabdata <- large$tabdata2
         for(g in 1L:Data$ngroups){
             select <- Data$group == Data$groupNames[g]
-            Data$fulldata[[g]] <- PrepListFull$fulldata[select, ]
+            Data$fulldata[[g]] <- PrepListFull$fulldata[select, , drop=FALSE]
             Data$Freq[[g]] <- large$Freq[[g]]
         }
     }
