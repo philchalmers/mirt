@@ -1,3 +1,11 @@
+# Changes in mirt 1.16
+
+- `numerical_deriv` function made available for simple numerical derivatives, which may be useful when
+  defining fast custom itemtype derivative terms
+  
+- `SE.type` used to compute the ACOV matrix gained three numerical estimates for the 
+  forward difference ('forward'), central difference ('central'), and Richardson extropolation ('Richardson')
+
 # Changes in mirt 1.15
 
 ## MINOR CHANGES

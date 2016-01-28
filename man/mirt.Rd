@@ -57,7 +57,8 @@ will estimate the regression parameters for all latent traits by default}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
-  approximation, \code{'Richardson'} for Richardson's numerical evaluation of
+  approximation, \code{'Richardson'}, \code{'forward'}, or \code{'central'}
+  for the numerical Richardson, forward difference, and central difference evaluation of
   observed Hessian, \code{'Fisher'} for the expected information, \code{'complete'} for
   information based on the complete-data Hessian used in EM algorithm (EM only), \code{'SEM'} for
   the supplemented EM (disables the \code{accelerate} option; EM only), \code{'crossprod'}
@@ -249,6 +250,8 @@ etc)}
     on the first call, therefore the prior will have to deal with this issue accordingly}
   \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
+  \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
+    with the 'forward' or 'central' numerical approaches. Default is .001}
   \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
     Default is TRUE}
   \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?

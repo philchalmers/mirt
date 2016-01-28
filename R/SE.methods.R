@@ -1,5 +1,6 @@
-SE.Richardson <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
-                  CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL, warn, Data){
+SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
+                  CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL, warn, Data, type,
+                  delta){
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
     infological=ESTIMATE$infological
@@ -19,11 +20,20 @@ SE.Richardson <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMA
             pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
         }
     }
-    hess <- numDeriv::hessian(BL.LL, x=shortpars, est=est, longpars=longpars,
-                              pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                              Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
-                              specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                              EH=EH, EHPrior=EHPrior, Data=Data, theta=theta)
+    if(type == 'Richardson'){
+        hess <- numDeriv::hessian(BL.LL, x=shortpars, est=est, longpars=longpars,
+                                  pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
+                                  Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                                  specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
+                                  EH=EH, EHPrior=EHPrior, Data=Data, theta=theta)
+    } else {
+        hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars,
+                                pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
+                                Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                                specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
+                                EH=EH, EHPrior=EHPrior, Data=Data, theta=theta, type=type,
+                                h = delta, gradient = FALSE)
+    }
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- updateHess(h=Hess, L=Ls$L)

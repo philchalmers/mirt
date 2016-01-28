@@ -4,12 +4,14 @@
 \alias{numerical_deriv}
 \title{Compute numerical derivatives with forward/backward or central methods}
 \usage{
-numerical_deriv(par, f, h = 0.001, gradient = TRUE, type = "forward")
+numerical_deriv(par, f, ..., h = 0.001, gradient = TRUE, type = "forward")
 }
 \arguments{
 \item{par}{a vector of parameters}
 
 \item{f}{the objective function being evaluated}
+
+\item{...}{additional arguments to be passed to \code{f}}
 
 \item{h}{the delta term used to perturb the \code{f} function}
 
