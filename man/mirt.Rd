@@ -251,7 +251,7 @@ etc)}
   \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
   \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
-    with the 'forward' or 'central' numerical approaches. Default is .001}
+    with the 'forward' or 'central' numerical approaches. Default is .0001}
   \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
     Default is TRUE}
   \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?

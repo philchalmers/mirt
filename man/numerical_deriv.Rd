@@ -4,7 +4,7 @@
 \alias{numerical_deriv}
 \title{Compute numerical derivatives with forward/backward or central methods}
 \usage{
-numerical_deriv(par, f, ..., delta = 0.001, gradient = TRUE,
+numerical_deriv(par, f, ..., delta = 1e-04, gradient = TRUE,
   type = "forward")
 }
 \arguments{
@@ -14,7 +14,7 @@ numerical_deriv(par, f, ..., delta = 0.001, gradient = TRUE,
 
 \item{...}{additional arguments to be passed to \code{f} and the \code{numDeriv} package}
 
-\item{delta}{the term used to perturb the \code{f} function}
+\item{delta}{the term used to perturb the \code{f} function. Default is .0001}
 
 \item{gradient}{logical; compute the gradient terms? If FALSE then the Hessian is computed instead}
 

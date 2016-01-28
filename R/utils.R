@@ -1677,7 +1677,7 @@ MGC2SC <- function(x, which){
 #' @param par a vector of parameters
 #' @param f the objective function being evaluated
 #' @param ... additional arguments to be passed to \code{f} and the \code{numDeriv} package
-#' @param delta the term used to perturb the \code{f} function
+#' @param delta the term used to perturb the \code{f} function. Default is .0001
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
 #' @param type type of difference to compute. Can be either 'forward' for the forward difference or
 #'   'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value
@@ -1702,8 +1702,8 @@ MGC2SC <- function(x, which){
 #' numerical_deriv(par, f, type = 'central', gradient = FALSE)
 #'
 #' }
-numerical_deriv <- function(par, f, ...,  delta = .001, gradient = TRUE, type = 'forward'){
-    forward_difference <- function(par, f, h = .001, ...){
+numerical_deriv <- function(par, f, ...,  delta = .0001, gradient = TRUE, type = 'forward'){
+    forward_difference <- function(par, f, h, ...){
         dots <- list(...)
         np <- length(par)
         g <- numeric(np)
@@ -1715,7 +1715,7 @@ numerical_deriv <- function(par, f, ...,  delta = .001, gradient = TRUE, type = 
         }
         g
     }
-    forward_difference2 <- function(par, f, h = .001, ...){
+    forward_difference2 <- function(par, f, h, ...){
         dots <- list(...)
         np <- length(par)
         hess <- matrix(0, np, np)
@@ -1736,7 +1736,7 @@ numerical_deriv <- function(par, f, ...,  delta = .001, gradient = TRUE, type = 
         }
         hess
     }
-    central_difference <- function(par, f, h = .001, ...){
+    central_difference <- function(par, f, h, ...){
         np <- length(par)
         g <- numeric(np)
         for(i in 1L:np){
@@ -1747,7 +1747,7 @@ numerical_deriv <- function(par, f, ...,  delta = .001, gradient = TRUE, type = 
         }
         g
     }
-    forward_difference2 <- function(par, f, h = .001, ...){
+    forward_difference2 <- function(par, f, h, ...){
         np <- length(par)
         hess <- matrix(0, np, np)
         fx <- f(par, ...)
@@ -1767,7 +1767,7 @@ numerical_deriv <- function(par, f, ...,  delta = .001, gradient = TRUE, type = 
         }
         hess
     }
-    central_difference2 <- function(par, f, h = .001, ...){
+    central_difference2 <- function(par, f, h, ...){
         np <- length(par)
         hess <- matrix(0, np, np)
         fx <- f(par, ...)

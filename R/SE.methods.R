@@ -20,20 +20,12 @@ SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMAT
             pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
         }
     }
-    if(type == 'Richardson'){
-        hess <- numDeriv::hessian(BL.LL, x=shortpars, est=est, longpars=longpars,
-                                  pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                                  Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
-                                  specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                                  EH=EH, EHPrior=EHPrior, Data=Data, theta=theta)
-    } else {
-        hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars,
-                                pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                                Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
-                                specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                                EH=EH, EHPrior=EHPrior, Data=Data, theta=theta, type=type,
-                                h = delta, gradient = FALSE)
-    }
+    hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars,
+                            pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
+                            Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                            specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
+                            EH=EH, EHPrior=EHPrior, Data=Data, theta=theta, type=type,
+                            delta = delta, gradient = FALSE)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- updateHess(h=Hess, L=Ls$L)
