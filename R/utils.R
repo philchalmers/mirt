@@ -1695,19 +1695,19 @@ MGC2SC <- function(x, which){
 #'
 #' }
 numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 'forward'){
-    forward_difference <- function(par, f, h, ...){
+    forward_difference <- function(par, f, delta, ...){
         dots <- list(...)
         np <- length(par)
         g <- numeric(np)
         if(is.null(dots$ObJeCtIvE)) fx <- f(par, ...) else fx <- dots$ObJeCtIvE
         for(i in 1L:np){
             p <- par
-            p[i] <- p[i] + h
-            g[i] <- (f(p, ...) - fx) / h
+            p[i] <- p[i] + delta
+            g[i] <- (f(p, ...) - fx) / delta
         }
         g
     }
-    forward_difference2 <- function(par, f, h, ...){
+    forward_difference2 <- function(par, f, delta, ...){
         dots <- list(...)
         np <- length(par)
         hess <- matrix(0, np, np)
@@ -1715,51 +1715,51 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
         fx1 <- numeric(np)
         for(i in 1L:np){
             tmp <- par
-            tmp[i] <- tmp[i] + h
+            tmp[i] <- tmp[i] + delta
             fx1[i] <- f(tmp, ...)
         }
         for(i in 1L:np){
             for(j in i:np){
                 fx1x2 <- par
-                fx1x2[i] <- fx1x2[i] + h
-                fx1x2[j] <- fx1x2[j] + h
-                hess[i,j] <- hess[j, i] <- (f(fx1x2, ...) - fx1[i] - fx1[j] + fx) / (h^2)
+                fx1x2[i] <- fx1x2[i] + delta
+                fx1x2[j] <- fx1x2[j] + delta
+                hess[i,j] <- hess[j, i] <- (f(fx1x2, ...) - fx1[i] - fx1[j] + fx) / (delta^2)
             }
         }
         hess
     }
-    central_difference <- function(par, f, h, ...){
+    central_difference <- function(par, f, delta, ...){
         np <- length(par)
         g <- numeric(np)
         for(i in 1L:np){
             p1 <- p2 <- par
-            p1[i] <- p1[i] + h
-            p2[i] <- p2[i] - h
-            g[i] <- (f(p1, ...) - f(p2, ...)) / (2 * h)
+            p1[i] <- p1[i] + delta
+            p2[i] <- p2[i] - delta
+            g[i] <- (f(p1, ...) - f(p2, ...)) / (2 * delta)
         }
         g
     }
-    forward_difference2 <- function(par, f, h, ...){
+    forward_difference2 <- function(par, f, delta, ...){
         np <- length(par)
         hess <- matrix(0, np, np)
         fx <- f(par, ...)
         fx1 <- numeric(np)
         for(i in 1L:np){
             tmp <- par
-            tmp[i] <- tmp[i] + h
+            tmp[i] <- tmp[i] + delta
             fx1[i] <- f(tmp, ...)
         }
         for(i in 1L:np){
             for(j in i:np){
                 fx1x2 <- par
-                fx1x2[i] <- fx1x2[i] + h
-                fx1x2[j] <- fx1x2[j] + h
-                hess[i,j] <- hess[j, i] <- (f(fx1x2, ...) - fx1[i] - fx1[j] + fx) / (h^2)
+                fx1x2[i] <- fx1x2[i] + delta
+                fx1x2[j] <- fx1x2[j] + delta
+                hess[i,j] <- hess[j, i] <- (f(fx1x2, ...) - fx1[i] - fx1[j] + fx) / (delta^2)
             }
         }
         hess
     }
-    central_difference2 <- function(par, f, h, ...){
+    central_difference2 <- function(par, f, delta, ...){
         np <- length(par)
         hess <- matrix(0, np, np)
         fx <- f(par, ...)
@@ -1767,31 +1767,30 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
             for(j in i:np){
                 if(i == j){
                     p1 <- p2 <- par
-                    p1[i] <- p1[i] + h; s2 <- f(p1, ...)
-                    p1[i] <- p1[i] + h; s1 <- f(p1, ...)
-                    p2[i] <- p2[i] - h; s3 <- f(p2, ...)
-                    p2[i] <- p2[i] - h; s4 <- f(p2, ...)
-                    hess[i, i] <- (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * h^2)
+                    p1[i] <- p1[i] + delta; s2 <- f(p1, ...)
+                    p1[i] <- p1[i] + delta; s1 <- f(p1, ...)
+                    p2[i] <- p2[i] - delta; s3 <- f(p2, ...)
+                    p2[i] <- p2[i] - delta; s4 <- f(p2, ...)
+                    hess[i, i] <- (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * delta^2)
                 } else {
                     p <- par
-                    p[i] <- p[i] + h; p[j] <- p[j] + h; s1 <- f(p, ...)
-                    p[j] <- p[j] - 2*h; s2 <- f(p, ...)
-                    p[i] <- p[i] - 2*h; s4 <- f(p, ...)
-                    p[j] <- p[j] + 2*h; s3 <- f(p, ...)
-                    hess[i,j] <- hess[j,i] <- (s1 - s2 - s3 + s4) / (4 * h^2)
+                    p[i] <- p[i] + delta; p[j] <- p[j] + delta; s1 <- f(p, ...)
+                    p[j] <- p[j] - 2*delta; s2 <- f(p, ...)
+                    p[i] <- p[i] - 2*delta; s4 <- f(p, ...)
+                    p[j] <- p[j] + 2*delta; s3 <- f(p, ...)
+                    hess[i,j] <- hess[j,i] <- (s1 - s2 - s3 + s4) / (4 * delta^2)
                 }
             }
         }
         hess
     }
 
-    h <- delta
     if(type == 'central'){
-        ret <- if(gradient) central_difference(par=par, f=f, h=h, ...)
-        else central_difference2(par=par, f=f, h=h, ...)
+        ret <- if(gradient) central_difference(par=par, f=f, delta=delta, ...)
+        else central_difference2(par=par, f=f, delta=delta, ...)
     } else if(type == 'forward'){
-        ret <- if(gradient) forward_difference(par=par, f=f, h=h, ...)
-        else forward_difference2(par=par, f=f, h=h, ...)
+        ret <- if(gradient) forward_difference(par=par, f=f, delta=delta, ...)
+        else forward_difference2(par=par, f=f, delta=delta, ...)
     } else if(type == 'Richardson'){
         ret <- if(gradient) numDeriv::grad(f, par, ...)
         else numDeriv::hessian(f, par, ...)
