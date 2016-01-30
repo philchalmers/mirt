@@ -1,7 +1,10 @@
 # Changes in mirt 1.16
 
+- new `SE.type = 'FMHRM'` to compute information matrix based on a fixed number of MHRM draws, and an
+  associated `technical = list(MHRM_SE_draws)` argument has been added to control the number of draws
+
 - added `lagrange` (i.e., score) test function for testing whether parameters should be freed in single
-  and multiple group models estimated with the EM
+  and multiple group models estimated with the EM algorithm
 
 - `numerical_deriv` function made available for simple numerical derivatives, which may be useful when
   defining fast custom itemtype derivative terms

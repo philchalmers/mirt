@@ -1051,11 +1051,13 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
-                'internal_constraints', 'SEM_window', 'delta')
+                'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
-    if(method == 'MHRM' || method == 'MIXED') SE.type <- 'MHRM'
+    if((method == 'MHRM' || method == 'MIXED') && SE.type == 'crossprod') SE.type <- 'MHRM'
+    if((method == 'MHRM' || method == 'MIXED') && !(SE.type %in% c('MHRM', 'FMHRM', 'none')))
+        stop('SE.type not supported for MHRM method', call.=FALSE)
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
         stop('method argument not supported', call.=FALSE)
     opts$method = method
@@ -1099,6 +1101,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$SEM_to <- ifelse(is.null(technical$SEM_window), 1 - opts$SEtol, technical$SEM_window[2L])
     opts$KDRAWS  <- ifelse(is.null(technical$KDRAWS), 1L, technical$KDRAWS)
     opts$MHDRAWS  <- ifelse(is.null(technical$MHDRAWS), 5L, technical$MHDRAWS)
+    opts$MHRM_SE_draws  <- ifelse(is.null(technical$MHRM_SE_draws), 2000L, technical$MHRM_SE_draws)
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
     opts$empiricalhist <- empiricalhist
@@ -1661,18 +1664,20 @@ MGC2SC <- function(x, which){
     tmp
 }
 
-#' Compute numerical derivatives with forward/backward or central methods
+#' Compute numerical derivatives
 #'
 #' Compute numerical derivatives using forward/backword difference,
 #' central difference, or Richardson extropolation.
 #'
 #' @param par a vector of parameters
 #' @param f the objective function being evaluated
-#' @param ... additional arguments to be passed to \code{f} and the \code{numDeriv} package
+#' @param ... additional arguments to be passed to \code{f} and the \code{numDeriv} package when the
+#'   Richardson type is used
 #' @param delta the term used to perturb the \code{f} function. Default is 1e-5
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
-#' @param type type of difference to compute. Can be either 'forward' for the forward difference or
-#'   'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value
+#' @param type type of difference to compute. Can be either \code{'forward'} for the forward difference,
+#'   \code{'central'} for the central difference, or \code{'Richardson'} for the Richardson extropolation.
+#'   Backword difference is acheived by supplying a negative \code{delta} value
 #' @export numerical_deriv
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords numerical derivatives
@@ -1687,11 +1692,13 @@ MGC2SC <- function(x, which){
 #' c(81, -64)
 #' numerical_deriv(par, f, type = 'forward')
 #' numerical_deriv(par, f, type = 'central')
+#' numerical_deriv(par, f, type = 'Richardson')
 #'
 #' # hessian = h11 -> 18 * x, h22 -> 8, h12 -> 9 * x^2 + 8 * y
 #' matrix(c(54, 0, 0, 8), 2, 2)
 #' numerical_deriv(par, f, type = 'forward', gradient = FALSE)
 #' numerical_deriv(par, f, type = 'central', gradient = FALSE)
+#' numerical_deriv(par, f, type = 'Richardson', gradient = FALSE)
 #'
 #' }
 numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 'forward'){

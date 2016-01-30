@@ -154,7 +154,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             gamma <- 0
         }
         #Reload pars list
-        if(list$USEEM) longpars <- list$startlongpars
+        if(list$SE) longpars <- list$startlongpars
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         if(has_graded){
             for(g in 1L:length(pars)){
@@ -314,7 +314,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             if(cycles <= RANDSTART){
                 for(i in 1L:length(random)){
                     g[random[[i]]@parnum] <- 0
-                    h[random[[i]]@parnum, random[[i]]@parnum] <- diag(length(random[[i]]@parnum))
+                    h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
                 }
             } else {
                 for(i in 1L:length(random)){
@@ -341,9 +341,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         }
         grad <- grad[estpars & !redun_constr]
         ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
-        if(any(is.na(grad)))
+        if(any(is.na(grad))){
             stop('Model did not converge (unacceptable gradient caused by extreme parameter values)',
                  call.=FALSE)
+        }
         if(is.na(attr(gtheta0[[1L]],"log.lik")))
             stop('Estimation halted. Model did not converge.', call.=FALSE)
         if(verbose){
@@ -412,35 +413,45 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
         else conv <- 0L
         if(!list$SE && conv >= 3L) break
-        if(list$SE && cycles >= (400L + BURNIN + SEMCYCLES) && conv >= 3L) break
+        if(list$SE.type == 'MHRM' && list$SE &&
+           cycles >= (400L + BURNIN + SEMCYCLES) && conv >= 3L) break
         #Extra: Approximate information matrix.	sqrt(diag(solve(info))) == SE
         if(cycles == (BURNIN + SEMCYCLES + 1L)){
-            phi <- grad
-            Phi <- ave.h
+            if(list$SE.type == 'MHRM'){
+                phi <- grad
+                Phi <- ave.h
+            } else Phi <- 0
         }
-        phi <- phi + gamma*(grad - phi)
-        Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
+        if(list$SE.type != 'none' && list$SE){
+            if(list$SE.type == 'MHRM'){
+                phi <- phi + gamma*(grad - phi)
+                Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
+            } else if(list$SE.type == 'FMHRM'){
+                Phi <- Phi + 1/NCYCLES * (ave.h - outer(grad,grad))
+            }
+        }
         Mstep.time <- Mstep.time + proc.time()[3L] - start
     } ###END BIG LOOP
     if(verbose) cat('\r\n')
-    info <- Phi + outer(phi,phi)
     #Reload final pars list
-    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$USEEM){
+    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$SE){
         if(list$message)
             message('MHRM terminated after ', NCYCLES, ' iterations.')
         converge <- FALSE
     }
-    if(list$USEEM) longpars <- list$startlongpars
+    if(list$SE) longpars <- list$startlongpars
     for(g in 1L:ngroups){
         for(i in 1L:(J+1L))
             pars[[g]][[i]]@par <- longpars[pars[[g]][[i]]@parnum]
     }
     fail_invert_info <- TRUE
     if(list$SE){
+        if(list$SE.type == 'MHRM') info <- Phi + outer(phi,phi)
+        else if(list$SE.type == 'FMHRM') info <- Phi
         acov <- try(solve(info), TRUE)
         if(is(acov, 'try-error')){
             if(list$warn)
-                warning('Could not invert information matrix; model likely is not identified.',
+                warning('Could not invert information matrix; may not be identified.',
                         call.=FALSE)
         } else {
             fail_invert_info <- FALSE
@@ -467,8 +478,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         }
     }
     names(correction) <- names(estpars)[estindex_unique]
-    info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
-    if(!list$SE) info <- matrix(0, 1, 1)
+    if(list$SE) info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
+    else info <- matrix(0, 1, 1)
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, lrPars=lrPars, time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),

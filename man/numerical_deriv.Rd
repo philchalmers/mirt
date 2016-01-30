@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{numerical_deriv}
 \alias{numerical_deriv}
-\title{Compute numerical derivatives with forward/backward or central methods}
+\title{Compute numerical derivatives}
 \usage{
 numerical_deriv(par, f, ..., delta = 1e-05, gradient = TRUE,
   type = "forward")
@@ -12,14 +12,16 @@ numerical_deriv(par, f, ..., delta = 1e-05, gradient = TRUE,
 
 \item{f}{the objective function being evaluated}
 
-\item{...}{additional arguments to be passed to \code{f} and the \code{numDeriv} package}
+\item{...}{additional arguments to be passed to \code{f} and the \code{numDeriv} package when the
+Richardson type is used}
 
 \item{delta}{the term used to perturb the \code{f} function. Default is 1e-5}
 
 \item{gradient}{logical; compute the gradient terms? If FALSE then the Hessian is computed instead}
 
-\item{type}{type of difference to compute. Can be either 'forward' for the forward difference or
-'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value}
+\item{type}{type of difference to compute. Can be either \code{'forward'} for the forward difference,
+\code{'central'} for the central difference, or \code{'Richardson'} for the Richardson extropolation.
+Backword difference is acheived by supplying a negative \code{delta} value}
 }
 \description{
 Compute numerical derivatives using forward/backword difference,
@@ -35,11 +37,13 @@ par <- c(3,8)
 c(81, -64)
 numerical_deriv(par, f, type = 'forward')
 numerical_deriv(par, f, type = 'central')
+numerical_deriv(par, f, type = 'Richardson')
 
 # hessian = h11 -> 18 * x, h22 -> 8, h12 -> 9 * x^2 + 8 * y
 matrix(c(54, 0, 0, 8), 2, 2)
 numerical_deriv(par, f, type = 'forward', gradient = FALSE)
 numerical_deriv(par, f, type = 'central', gradient = FALSE)
+numerical_deriv(par, f, type = 'Richardson', gradient = FALSE)
 
 }
 }

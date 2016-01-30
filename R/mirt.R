@@ -285,11 +285,11 @@
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
 #'    See \code{SE.type} for the type of estimates available
 #' @param SE.type type of estimation method to use for calculating the parameter information matrix
-#'   for computing standard errors and \code{\link{wald}} tests. Can be \code{'MHRM'} for stochastic
-#'   approximation, \code{'Richardson'}, \code{'forward'}, or \code{'central'}
-#'   for the numerical Richardson, forward difference, and central difference evaluation of
-#'   observed Hessian, \code{'Fisher'} for the expected information, \code{'complete'} for
-#'   information based on the complete-data Hessian used in EM algorithm (EM only), \code{'SEM'} for
+#'   for computing standard errors and \code{\link{wald}} tests. Can be
+#'   \code{'Richardson'}, \code{'forward'}, or \code{'central'} for the numerical Richardson,
+#'    forward difference, and central difference evaluation of observed Hessian,
+#'    \code{'Fisher'} for the expected information, \code{'complete'} for information based
+#'    on the complete-data Hessian used in EM algorithm, \code{'SEM'} for
 #'   the supplemented EM (disables the \code{accelerate} option; EM only), \code{'crossprod'}
 #'   for standard error computations based on the variance of the Fisher scores, \code{'Louis'}
 #'   for Louis' (1982) computation of the observed information matrix,
@@ -299,9 +299,11 @@
 #'   (\code{NCYCLES} and \code{TOL}, see below) will help to improve the accuracy, and will be
 #'   run in parallel if a \code{\link{mirtCluster}} object has been defined.
 #'   When \code{method = 'BL'} then the option \code{'numerical'} is available to obtain the numerical
-#'   estimate from a call to \code{\link{optim}}. Finally,
-#'   bootstrapped and profiled-likelihood standard errors are also possible, but must be run
-#'   with the \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}} functions, respectively
+#'   estimate from a call to \code{\link{optim}}.
+#'
+#'   Other options include \code{'MHRM'} and \code{'FMHRM'} for stochastic approximations
+#'   based on the Robbins-Monro filter or a fixed number of MHRM draws without
+#'   the RM filter. These are the only options supported when \code{method = 'MHRM'}
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
 #'   vector corresponding to each item
@@ -453,6 +455,8 @@
 #'       unconditional item factor analysis (\code{mixedmirt()} requires additional values
 #'       for random effect). If null, these values are determined internally, attempting to
 #'       tune the acceptance of the draws to be between .1 and .4}
+#'     \item{MHRM_SE_draws}{number of fixed draws to use when \code{SE=TRUE} and \code{SE.type = 'FMHRM'}
+#'       and the maximum number of draws when \code{SE.type = 'MHRM'}. Default is 2000}
 #'   }
 #' @param solnp_args a list of arguments to be passed to the \code{solnp::solnp()} function for
 #'   equality constraints, inequality constraints, etc
