@@ -254,7 +254,7 @@
 #'   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
 #'   quasi-Monte Carlo EM estimation. The option \code{'MHRM'} may
 #'   also be passed to use the MH-RM algorithm, as well as \code{'BL'} for the Bock and Lieberman
-#'   approach (generally not recommended for serious use).
+#'   approach (generally not recommended for longer tests).
 #'
 #'   The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'}
 #'   or \code{'MHRM'} should be used when the dimensions are 3 or more
@@ -298,7 +298,9 @@
 #'   Note that for \code{'SEM'} option increasing the number of iterations
 #'   (\code{NCYCLES} and \code{TOL}, see below) will help to improve the accuracy, and will be
 #'   run in parallel if a \code{\link{mirtCluster}} object has been defined.
-#'   Bootstrapped and profiled-likelihood standard errors are also possible, but must be run
+#'   When \code{method = 'BL'} then the option \code{'numerical'} is available to obtain the numerical
+#'   estimate from a call to \code{\link{optim}}. Finally,
+#'   bootstrapped and profiled-likelihood standard errors are also possible, but must be run
 #'   with the \code{\link{boot.mirt}} and \code{\link{PLCI.mirt}} functions, respectively
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
@@ -432,7 +434,7 @@
 #'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
 #'     \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
-#'       with the 'forward' or 'central' numerical approaches. Default is .0001}
+#'       with the 'forward' or 'central' numerical approaches. Default is 1e-5}
 #'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
 #'       Default is TRUE}
 #'     \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?

@@ -357,7 +357,9 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
     return(list(par=p))
 }
 
-BL.grad <- function(x, ...) numDeriv::grad(BL.LL, x=x, ...)
+BL.grad <- function(x, ...){
+    numerical_deriv(x, BL.LL, ...)
+}
 
 Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars, retscores=FALSE){
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,

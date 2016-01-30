@@ -1432,18 +1432,10 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
     }
     LL <- 0
     for(g in 1L:ngroups){
-        if(BFACTOR){
-            expected <- Estep.bfactor(pars=pars2[[g]],
-                                      tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                      Theta=Theta, prior=prior[[g]],
-                                      specific=specific, sitems=sitems,
-                                      itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)$expected
-        } else {
-            expected <- Estep.mirt(pars=pars2[[g]],
-                                   tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                   Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
-                                   CUSTOM.IND=CUSTOM.IND, full=FALSE)$expected
-        }
+        expected <- Estep.mirt(pars=pars2[[g]],
+                               tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                               Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
+                               CUSTOM.IND=CUSTOM.IND, full=FALSE)$expected
         LL <- LL + sum(Data$Freq[[g]] * log(expected), na.rm = TRUE)
     }
     LL
@@ -1677,7 +1669,7 @@ MGC2SC <- function(x, which){
 #' @param par a vector of parameters
 #' @param f the objective function being evaluated
 #' @param ... additional arguments to be passed to \code{f} and the \code{numDeriv} package
-#' @param delta the term used to perturb the \code{f} function. Default is .0001
+#' @param delta the term used to perturb the \code{f} function. Default is 1e-5
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
 #' @param type type of difference to compute. Can be either 'forward' for the forward difference or
 #'   'central' for the central difference. Backword difference is acheived by supplying a negative \code{h} value
@@ -1702,7 +1694,7 @@ MGC2SC <- function(x, which){
 #' numerical_deriv(par, f, type = 'central', gradient = FALSE)
 #'
 #' }
-numerical_deriv <- function(par, f, ...,  delta = .0001, gradient = TRUE, type = 'forward'){
+numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 'forward'){
     forward_difference <- function(par, f, h, ...){
         dots <- list(...)
         np <- length(par)

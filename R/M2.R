@@ -24,7 +24,7 @@
 #'   of the stats and their imputed standard deviations
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for
 #'   RMSEA. Default returns the 90\% interval
-#' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?c
+#' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
 #'   Only the lower triangle of the residual correlation matrix will be returned
 #'   (the upper triangle is filled with NA's)
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.

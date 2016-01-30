@@ -43,7 +43,7 @@ test_that('old2PL', {
     expect_is(coef(mod), 'list')
 
     fs <- fscores(mod, converge_info = TRUE)
-    expect_equal(unname(fs[1,]), c(-1.828479, 1), tolerance = 1e-4)
+    expect_equal(unname(fs[1,]), c(-1.829033, 1), tolerance = 1e-4)
 })
 
 

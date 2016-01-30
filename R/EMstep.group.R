@@ -132,17 +132,19 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     accel <- 0; Mrate <- ifelse(list$SEM, 1, .4)
     Estep.time <- Mstep.time <- 0
     collectLL <- rep(NA, NCYCLES)
+    hess <- matrix(0)
     if(list$BL){
         start <- proc.time()[3L]
         opt <- try(optim(longpars[est], BL.LL, BL.grad, est=est, longpars=longpars,
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, theta=Thetabetween,
+                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                          EH=list$EH, EHPrior=NULL, Data=Data, method=Moptim,
-                         control=list(fnscale=-1, reltol=TOL)), silent=TRUE)
+                         control=list(fnscale=-1, reltol=TOL), hessian=list$SE), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par
         converge <- opt$convergence == 0
+        if(list$SE) hess <- opt$hessian
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
                            J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
@@ -300,7 +302,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
     }
     LP <- unname(LP)
-    hess <- matrix(0)
     if(list$SEM){
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
