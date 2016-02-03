@@ -66,6 +66,27 @@
 #' fscores(mod, full.scores=FALSE)
 #' plot(mod)
 #'
+#' # fit the same model, but specify gradient function explicitly (use of a brower() may be helpful)
+#' gr <- function(x, Theta){
+#'      # browser()
+#'      a <- x@par[1]
+#'      b <- x@par[2]
+#'      P <- probtrace(x, Theta)
+#'      PQ <- apply(P, 1, prod)
+#'      r_P <- x@dat / P
+#'      grad <- numeric(2)
+#'      grad[2] <- sum(-a * PQ * (r_P[,2] - r_P[,1]))
+#'      grad[1] <- sum((Theta - b) * PQ * (r_P[,2] - r_P[,1]))
+#'
+#'      ## check with internal numerical form to be safe
+#'      # numerical_deriv(x@par[x@est], mirt:::EML, obj=x, Theta=Theta, type='Richardson')
+#'      grad
+#' }
+#'
+#' x <- createItem(name, par=par, est=est, P=P.old2PL, gr=gr)
+#' mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x))
+#' coef(mod, simplify=TRUE)
+#'
 #' ###non-linear
 #' name <- 'nonlin'
 #' par <- c(a1 = .5, a2 = .1, d = 0)

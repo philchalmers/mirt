@@ -1017,9 +1017,7 @@ void d_dich(vector<double> &grad, NumericMatrix &hess, const vector<double> &par
         double Q = 1.0 - P[i];
         double Qstar = 1.0 - Pstar[i];
         double r1_P = dat(i, 1) / P[i];
-        double r1_P2 = dat(i, 1) / (P[i]*P[i]);
         double r2_Q = dat(i, 0) / Q;
-        double r2_Q2 = dat(i, 0) / (Q*Q);
         double r1_Pr2_Q = r1_P - r2_Q;
         grad[nfact] += (u-g)*Pstar[i]*Qstar*r1_Pr2_Q;
         grad[nfact + 1] += difexpg*Qstar*r1_Pr2_Q;
@@ -1027,6 +1025,8 @@ void d_dich(vector<double> &grad, NumericMatrix &hess, const vector<double> &par
         for(int j = 0; j < nfact; ++j)
             grad[j] += Theta(i, j)*Pstar[i]*Qstar*(u-g)*r1_Pr2_Q;
         if(estHess){
+            double r1_P2 = dat(i, 1) / (P[i]*P[i]);
+            double r2_Q2 = dat(i, 0) / (Q*Q);
             double Pstar2 = Pstar[i]*Pstar[i];
             double Pstar3 = Pstar[i]*Pstar[i]*Pstar[i];
             hess(nfact,nfact) = hess(nfact,nfact) + (r1_P * (ugD * (Pstar[i] - 3*Pstar2 + 2*Pstar3)) -
