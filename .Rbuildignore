@@ -7,7 +7,6 @@ mirt.Rproj
 ^.*\.Rproj$
 ^Makefile$
 .travis.yml
-NEWS.md
 data/dataComplete.RData
 data/dataSparse.RData
 data/data2Dim.RData
