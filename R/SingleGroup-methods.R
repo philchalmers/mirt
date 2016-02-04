@@ -544,7 +544,7 @@ setMethod(
                         } else {
                             res[j,i] <- sum(((tab - Etab)^2)/Etab) * sign(s)
                         }
-                        res[i,j] <- sign(res[j,i]) * sqrt( abs(res[j,i]) / (N*min(c(K[i],K[j]) - 1L)))
+                        res[i,j] <- sign(res[j,i]) * sqrt( abs(res[j,i]) / (NN * min(c(K[i],K[j]) - 1L)))
                         df[i,j] <- pchisq(abs(res[j,i]), df=df[j,i], lower.tail=FALSE)
                         if(tables){
                             tmp <- paste0(itemnames[i], '_', itemnames[j])
