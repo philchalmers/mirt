@@ -525,8 +525,7 @@ setMethod(
                     if(i < j){
                         P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
                         P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
-                        pick <- !is.na(data[,i]) & !is.na(data[,j])
-                        tab <- table(data[pick,i],data[pick,j])
+                        tab <- table(data[,i], data[,j], useNA = 'no')
                         Etab <- matrix(0,K[i],K[j])
                         NN <- sum(tab)
                         for(k in 1L:K[i])
