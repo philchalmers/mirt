@@ -62,7 +62,7 @@ group <- c(rep('Group_1', N), rep('Group_2', N))
 dat1 <- simdata(a, d, N, itemtype = 'dich')
 dat2 <- simdata(a, d, N, itemtype = 'dich')
 dat <- rbind(dat1, dat2)
-mod <- multipleGroup(dat, model, group=group,
+mod <- multipleGroup(dat, 1, group=group,
                      invariance=c('free_means', 'free_var', colnames(dat)))
 coef(mod, simplify=TRUE)
 values <- mod2values(mod)
@@ -76,7 +76,7 @@ lagrange(mod, list(c(123, 124), c(239,240)))
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
-\code{\link{Wald}}
+\code{\link{wald}}
 }
 \keyword{Lagrange}
 \keyword{test}

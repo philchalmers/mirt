@@ -13,7 +13,7 @@
 #'  'forward', but can also be 'Richardson' and 'central' (see \code{\link{numerical_deriv}})
 #' @param ... additional arguments to pass to \code{\link{numerical_deriv}}
 #'
-#' @seealso \code{\link{Wald}}
+#' @seealso \code{\link{wald}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords Lagrange test
 #' @export lagrange
@@ -55,7 +55,7 @@
 #' dat1 <- simdata(a, d, N, itemtype = 'dich')
 #' dat2 <- simdata(a, d, N, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
-#' mod <- multipleGroup(dat, model, group=group,
+#' mod <- multipleGroup(dat, 1, group=group,
 #'                      invariance=c('free_means', 'free_var', colnames(dat)))
 #' coef(mod, simplify=TRUE)
 #' values <- mod2values(mod)
