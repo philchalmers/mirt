@@ -8,9 +8,7 @@
 #' item objects, and Theta matrix.
 #'
 #' @param a a matrix/vector of slope parameters. If slopes are to be constrained to
-#'   zero then use \code{NA}. \code{a} may also be a similar matrix specifying
-#'   factor loadings if \code{factor.loads = TRUE}. When a vector is used the test is assumed to be
-#'   unidimensional
+#'   zero then use \code{NA} or simply set them equal to 0
 #' @param d a matrix/vector of intercepts. The matrix should have as many columns as
 #'   the item with the largest number of categories, and filled empty locations
 #'   with \code{NA}. When a vector is used the test is assumed to consist only of dichotomous items
@@ -157,6 +155,23 @@
 #'
 #' #mod <- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep('2PL', 3), 'nominal', 'gpcm','graded'))
 #' #coef(mod)
+#'
+#' #### Convert standardized factor loadings to slopes
+#'
+#' F2a <- function(F, D=1.702){
+#'     h2 <- rowSums(F^2)
+#'     a <- (F / sqrt(1 - h2)) * D
+#'     a
+#' }
+#'
+#' (F <- matrix(c(rep(.7, 5), rep(.5,5))))
+#' (a <- lambda2a(F))
+#' d <- rnorm(10)
+#'
+#' dat <- simdata(a, d, 5000, itemtype = 'dich')
+#' mod <- mirt(dat, 1)
+#' coef(mod, simplify=TRUE)$items
+#' summary(mod)
 #'
 #' #### Unidimensional nonlinear factor pattern
 #'
