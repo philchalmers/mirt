@@ -1051,7 +1051,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
-                'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws')
+                'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1077,6 +1077,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$BFACTOR = BFACTOR
     opts$accelerate = accelerate
     opts$delta <- ifelse(is.null(technical$delta), .001, technical$delta)
+    opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else
         if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
@@ -1438,7 +1439,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
         expected <- Estep.mirt(pars=pars2[[g]],
                                tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
-                               CUSTOM.IND=CUSTOM.IND, full=FALSE)$expected
+                               CUSTOM.IND=CUSTOM.IND, full=FALSE, Etable=FALSE)$expected
         LL <- LL + sum(Data$Freq[[g]] * log(expected), na.rm = TRUE)
     }
     LL

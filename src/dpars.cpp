@@ -1270,6 +1270,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
     const int iscross = as<int>(Riscross);
     const int ngroups = gpars.length();
     const int npat = tabdata.nrow();
+    const bool Etable = true;
     IntegerMatrix dat(1, J);
     NumericMatrix Igrad(npars, npars), IgradP(npars, npars), Ihess(npars, npars),
         offterm(1, nitems);
@@ -1286,9 +1287,9 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             vector<double> expected(1), r1vec(N*J), r2vec(N);
             if(isbifactor){
                _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone,
-                    dat, sitems, Prior);
+                    dat, sitems, Prior, Etable);
             } else {
-                _Estep(expected, r1vec, Prior, vone, dat, itemtrace);
+                _Estep(expected, r1vec, Prior, vone, dat, itemtrace, Etable);
             }
             NumericMatrix r1 = vec2mat(r1vec, N, J);
             List pars = gpars[g];

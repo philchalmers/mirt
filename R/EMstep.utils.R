@@ -1,5 +1,5 @@
 Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitems,
-                  itemloc, CUSTOM.IND, BFACTOR, ngroups, rlist, full){
+                  itemloc, CUSTOM.IND, BFACTOR, ngroups, rlist, full, Etable = TRUE){
     LL <- 0
     tabdata <- if(full) Data$fulldata[[1L]] else Data$tabdatalong
     for(g in 1L:ngroups){
@@ -8,11 +8,12 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
             rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
                                         Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
                                         Priorbetween=Priorbetween[[g]], specific=specific,
-                                        sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                                        sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                        Etable=Etable)
         } else {
             rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
                                      CUSTOM.IND=CUSTOM.IND, Theta=Theta,
-                                     prior=Prior[[g]], itemloc=itemloc, full=full)
+                                     prior=Prior[[g]], itemloc=itemloc, full=full, Etable=Etable)
         }
         LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
         rlist[[g]]$r1[is.nan(rlist[[g]]$r1)] <- 0
@@ -22,23 +23,23 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
 
 # Estep for mirt
 Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full = FALSE,
-                       itemtrace=NULL, deriv = FALSE)
+                       itemtrace=NULL, deriv = FALSE, Etable = TRUE)
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata)
-        else .Call("Estep", itemtrace, prior, tabdata, freq)
+    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata, Etable)
+        else .Call("Estep", itemtrace, prior, tabdata, freq, Etable)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
 
 # Estep for bfactor
 Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween, specific,
-                          CUSTOM.IND, sitems, itemloc, itemtrace=NULL)
+                          CUSTOM.IND, sitems, itemloc, itemtrace=NULL, Etable = TRUE)
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior)
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior, Etable)
     return(retlist)
 }
 

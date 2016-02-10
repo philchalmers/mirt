@@ -31,6 +31,8 @@ test_that('dich', {
     expect_is(modm3, 'SingleGroupClass')
     expect_equal(extract.mirt(modm3, 'df'), 25)
     expect_equal(extract.mirt(modm3, 'condnum'), 4.742197, tolerance = 1e-4)
+    LG <- lagrange(modm3, parnum = list(1, 5))
+    expect_equal(LG$X2, c(0.25618621, 0.02053151), tolerance = 1e-4)
     dat <- expand.table(LSAT6)
     modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modm3, 'SingleGroupClass')

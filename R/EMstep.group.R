@@ -179,7 +179,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                           BFACTOR=BFACTOR, rlist=rlist, full=full)
+                           BFACTOR=BFACTOR, rlist=rlist, full=full, Etable=list$Etable)
             rlist <- Elist$rlist; LL <- Elist$LL
             collectLL[cycles] <- LL
             if(is.nan(LL))
