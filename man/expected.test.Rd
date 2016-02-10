@@ -4,7 +4,8 @@
 \alias{expected.test}
 \title{Function to calculate expected test score}
 \usage{
-expected.test(x, Theta, group = NULL, mins = TRUE)
+expected.test(x, Theta, group = NULL, mins = TRUE, individual = FALSE,
+  which.items = NULL)
 }
 \arguments{
 \item{x}{an estimated mirt object}
@@ -16,6 +17,11 @@ expected.test(x, Theta, group = NULL, mins = TRUE)
 
 \item{mins}{logical; include the minimum value constants in the dataset. If FALSE, the
 expected values for each item are determined from the scoring 0:(ncat-1)}
+
+\item{individual}{logical; return tracelines for individual items?}
+
+\item{which.items}{an integer vector indicating which items to include in the expected test score. Default
+uses all possible items}
 }
 \description{
 Given an estimated model compute the expected test score. Returns the expected values in the
@@ -32,6 +38,10 @@ mod <- mirt(dat, model)
 Theta <- matrix(seq(-6,6,.01))
 tscore <- expected.test(mod, Theta)
 tail(cbind(Theta, tscore))
+
+# use only first two items (i.e., a bundle)
+bscore <- expected.test(mod, Theta, which.items = 1:2)
+tail(cbind(Theta, bscore))
 
 }
 }

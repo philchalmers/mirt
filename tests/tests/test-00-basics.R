@@ -32,5 +32,11 @@ test_that('basics', {
     expect_equal(MD, 0.724201, tolerance=1e-6)
     MDF <- unname(MDIFF(mod)[1L,])
     expect_equal(MDF, c(-6.061399, -3.566437, 2.031588), tolerance=1e-6)
+
+    bscore <- expected.test(mod, Theta, which.items = c(1,2))
+    expect_equal(bscore, c(4.088306,4.734266,5.322015,5.847683,6.34945,6.853612,7.308867), tolerance=1e-6)
+    binfo <- testinfo(mod, Theta, which.items = c(1,2))
+    expect_equal(binfo, c(0.4047076,0.3786888,0.3416494,0.3285121,0.3531459,0.3707894,0.3133789), tolerance=1e-6)
+
 })
 

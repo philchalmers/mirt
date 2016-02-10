@@ -7,8 +7,11 @@
 #' @param Theta a matrix of latent trait values
 #' @param degrees a vector of angles in degrees that are between 0 and 90.
 #'   Only applicable when the input object is multidimensional
+#' @param individual logical; return a data.frame of information traceline for each item?
 #' @param group a number signifying which group the item should be extracted from (applies to
 #'   'MultipleGroupClass' objects only)
+#' @param which.items an integer vector indicating which items to include in the expected information function.
+#'   Default uses all possible items
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords information
@@ -25,28 +28,31 @@
 #' plot(Theta, tinfo, type = 'l')
 #'
 #' #compare information loss between two tests
-#' dat.smaller <- dat[,-c(1,2)]
-#' mod2 <- mirt(dat.smaller, 1, '2PL', constrain = list(c(1,5,9)))
-#' tinfo2 <- testinfo(mod2, Theta)
+#' tinfo_smaller <- testinfo(mod, Theta, which.items = 3:5)
 #'
 #' #removed item informations
 #' plot(Theta, iteminfo(extract.item(mod, 1), Theta), type = 'l')
 #' plot(Theta, iteminfo(extract.item(mod, 2), Theta), type = 'l')
 #'
 #' #most loss of info around -1 when removing items 1 and 2; expected given item info functions
-#' plot(Theta, tinfo2 - tinfo, type = 'l')
+#' plot(Theta, tinfo_smaller - tinfo, type = 'l')
 #'
 #'
 #' }
-testinfo <- function(x, Theta, degrees = NULL, group = NULL){
+testinfo <- function(x, Theta, degrees = NULL, group = NULL, individual = FALSE, which.items = NULL){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
-    J <- extract.mirt(x, 'nitems')
-    info <- 0
-    for(i in 1L:J){
+    J <- length(extract.mirt(x, 'K'))
+    if(is.null(which.items)) which.items <- 1L:J
+    stopifnot(all(which.items <= J & which.items > 0L))
+    info <- matrix(0, nrow(Theta), J)
+    for(i in which.items){
         item <- extract.item(x, i, group=group)
-        info <- info + iteminfo(item, Theta=Theta, degrees=degrees)
+        info[,i] <- iteminfo(item, Theta=Theta, degrees=degrees)
     }
-    return(info)
+    if(!individual){
+        info <- rowSums(info)
+    } else info <- info[,which.items, drop=FALSE]
+    info
 }

@@ -62,9 +62,8 @@ wald <- function(object, L, C = 0){
     Names <- colnames(covB)
     B <- extract.mirt(object, 'parvec')
     if(missing(L)){
-        index <- 1L:length(Names)
-        ret <- as.data.frame(t(data.frame(infoname=Names, par = round(B, 3))))
-        colnames(ret) <- index
+        ret <- round(B, 3)
+        names(ret) <- Names
         return(ret)
     }
     if(!is.matrix(L)){

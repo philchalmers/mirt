@@ -157,7 +157,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                  to which.par', call.=FALSE)
         if(Wald){
             wv <- wald(model)
-            infoname <- wv[1L, ]
+            infoname <- names(wv)
             L <- matrix(0, length(parnum), length(infoname))
             for(i in 1L:length(parnum)){
                 L[i, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
