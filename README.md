@@ -63,6 +63,15 @@ git clone https://github.com/philchalmers/mirt
 R CMD INSTALL mirt
 ```
 
+### Special Mac OS X Installation Instructions
+
+In some reported cases `XCode` does not install the appropriate `gfortran` compilers in the correct location, therefore they have to be installed manually instead. This is accomplished by inputing the following instructions into the terminal:
+
+```
+curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
+```
+
 # Licence
 
 This package is free and open source software, licensed under [GPL (>= 3)](http://www.gnu.org/licenses/gpl-3.0.en.html).
