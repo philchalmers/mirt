@@ -138,15 +138,19 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         start <- proc.time()[3L]
         lower <- LBOUND[est2]; upper <- UBOUND[est2]
         Moptim <- ifelse(any(is.finite(lower) | is.finite(upper)), 'L-BFGS-B', 'BFGS')
-        control <- if(Moptim == 'BFGS') list(fnscale=-1, reltol=TOL)
-            else list(fnscale=-1, pgtol=TOL)
+        if(Moptim == 'BFGS'){
+            control <- list(fnscale=-1, reltol=TOL)
+            lower <- -Inf; upper <- Inf
+        } else {
+            control <- list(fnscale=-1, pgtol=TOL)
+        }
         opt <- try(optim(longpars[est2], BL.LL, BL.grad, est=est2, longpars=longpars,
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                          Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                          EH=list$EH, EHPrior=NULL, Data=Data, method=Moptim,
                          control=control, hessian=list$SE,
-                         lower=LBOUND[est2], upper=UBOUND[est2]), silent=TRUE)
+                         lower=lower, upper=upper), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est2] <- opt$par
         converge <- opt$convergence == 0
