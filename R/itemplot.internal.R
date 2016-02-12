@@ -169,7 +169,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         parnums <- as.numeric(do.call(rbind, splt)[,2])
         tmp <- tmpitem@parnum[tmpitem@est]
         constrain <- x@Model$constrain
-        if(length(constrain) > 0)
+        if(length(constrain))
             for(i in 1:length(constrain))
                 if(any(tmp %in% constrain[[i]]))
                     tmp[tmp %in% constrain[[i]]] <- constrain[[i]][1L]

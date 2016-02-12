@@ -148,18 +148,14 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         longpars[lrPars@parnum] <- res$beta
         longpars[groupest] <- res$siglong[pars[[1L]][[J+1L]]@est]
     }
-    if(length(constrain))
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     return(longpars)
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND,
                      SLOW.IND, constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, ANY.PRIOR){
     longpars[est] <- p
-    if(length(constrain))
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(ngroups)
     for(g in 1L:ngroups)
@@ -183,9 +179,7 @@ Mstep.LL2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, group
     if(any(p > ubound | p < lbound)) return(1e100)
     ngroups <- length(pars); J <- length(pars[[1L]]) - 1L
     longpars[groupest] <- p
-    if(length(constrain))
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LL <- 0
     ind <- 1L
@@ -222,9 +216,7 @@ Mstep.grad2 <- function(p, longpars, pars, Theta, BFACTOR, nfact, constrain, gro
     if(any(p > ubound | p < lbound)) return(rep(NA, length(p)))
     ngroups <- length(pars); J <- length(pars[[1L]]) - 1L
     longpars[groupest] <- p
-    if(length(constrain))
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     ind <- 1L
     for(g in 1L:ngroups){
@@ -272,9 +264,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
                        constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, CUSTOM.IND,
                        SLOW.IND){
     longpars[est] <- p
-    if(length(constrain) > 0L)
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 0L)$grad
     if(length(SLOW.IND)){
@@ -313,9 +303,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  A
     if(is.null(control$maxit)) control$maxit <- 50L
     for(iter in 1L:control$maxit){
         longpars[est] <- p
-        if(length(constrain) > 0L)
-            for(i in 1L:length(constrain))
-                longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L, 0L)
         if(length(SLOW.IND)){

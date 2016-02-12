@@ -1,5 +1,8 @@
 # Changes in mirt 1.16
 
+- `method = 'BL'` supported for multiple-group models. As well, `SE.type = 'numerical'` included to return
+  the observed-data ACOV matrix from the call to `optim()` (can only be used when the `BL` method is selected)
+
 - new `SE.type = 'FMHRM'` to compute information matrix based on a fixed number of MHRM draws, and an
   associated `technical = list(MHRM_SE_draws)` argument has been added to control the number of draws
 

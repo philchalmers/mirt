@@ -99,9 +99,7 @@ imputePars2 <- function(MGmod, shortpars, longpars, imputenums, pre.ev){
         shift <- mirt_rmvnorm(1L, mean=shortpars, pre.ev=pre.ev)
         longpars[imputenums] <- shift[1L,]
         constrain <- MGmod@Model$constrain
-        if(length(constrain) > 0L)
-            for(i in 1L:length(constrain))
-                longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- list(MGmod@ParObjects$pars[[1L]]@ParObjects$pars, MGmod@ParObjects$pars[[2L]]@ParObjects$pars)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
         if(any(MGmod@Model$itemtype %in% c('graded', 'grsm'))){
@@ -1413,9 +1411,17 @@ RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
     return(c(RMSEA.lower, RMSEA.upper))
 }
 
+longpars_constrain <- function(longpars, constrain){
+    if(length(constrain))
+        for(i in 1L:length(constrain))
+            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars
+}
+
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta){
+               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta, constrain){
     longpars[est] <- p
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     gstructgrouppars <- prior <- Prior <- vector('list', ngroups)
     if(EH){

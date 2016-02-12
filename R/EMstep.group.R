@@ -148,11 +148,12 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                          Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                         EH=list$EH, EHPrior=NULL, Data=Data, method=Moptim,
+                         EH=list$EH, constrain=constrain, EHPrior=NULL, Data=Data, method=Moptim,
                          control=control, hessian=list$SE,
                          lower=lower, upper=upper), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est2] <- opt$par
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         converge <- opt$convergence == 0
         if(list$SE) hess <- opt$hessian
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,

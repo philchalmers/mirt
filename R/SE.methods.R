@@ -22,7 +22,7 @@ SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMAT
     }
     hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars,
                             pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                            Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                            Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, constrain=constrain,
                             specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                             EH=EH, EHPrior=EHPrior, Data=Data, theta=theta, type=type,
                             delta = delta, gradient = FALSE)
@@ -85,9 +85,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
 
         longpars <- MLestimates
         longpars[estindex] <- EMhistory[cycles, estindex]
-        if(length(constrain) > 0L)
-            for(i in 1L:length(constrain))
-                longpars[constrain[[i]][-1L]] <- longpars[[constrain[[i]][1L]]]
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior, lrPars=lrPars,
