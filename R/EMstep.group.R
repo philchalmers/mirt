@@ -298,7 +298,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(cycles > 1L && list$warn && !ANY.PRIOR){
             diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
             if(any(diff[length(diff):ceiling(length(diff)*.9)] > 0))
-                warning('Log-likelihood was increasing near the ML solution. Model may be unstable', call.=FALSE)
+                warning('Log-likelihood was decreasing near the ML solution. EM method may be unstable',
+                        call.=FALSE)
         }
     }
     infological <- estpars & !redun_constr

@@ -48,6 +48,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                   SLOW.IND, groupest, BFACTOR, nfact, Thetabetween, Moptim, Mrate, TOL, full,
                   lrPars, control){
     p <- longpars[est]
+    longparsold <- longpars
     if(length(p)){
         if(Moptim == 'BFGS'){
             if(is.null(control$maxit))
@@ -135,7 +136,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             p <- longpars[groupest]
             maxit <- max(ceiling(Mrate * 100), 35)
             res <- try(nlm(Mstep.LL2, p, pars=pars, Theta=gTheta[[1L]], nfact=nfact, BFACTOR=BFACTOR,
-                           constrain=constrain, groupest=groupest, longpars=longpars, rlist=rlist,
+                           constrain=constrain, groupest=groupest, longpars=longparsold, rlist=rlist,
                            Thetabetween=Thetabetween, ubound=UBOUND[groupest], lbound=LBOUND[groupest],
                            iterlim=maxit),
                        silent=TRUE)
