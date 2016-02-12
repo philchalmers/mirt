@@ -295,6 +295,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 warning('M-step optimimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }
+        if(cycles > 1L && list$warn && !ANY.PRIOR){
+            diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
+            if(any(diff[length(diff):ceiling(length(diff)*.9)] > 0))
+                warning('Log-likelihood was increasing near the ML solution. Model may be unstable', call.=FALSE)
+        }
     }
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
