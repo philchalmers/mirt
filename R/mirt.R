@@ -876,9 +876,10 @@
 #'
 #' #constraint: create function for solnp to compute constraint, and declare value in eqB
 #' eqfun <- function(p, optim_args) sum(p[1:5]) #could use browser() here, if it helps
-#' solnp_args <- list(eqfun=eqfun, eqB=0)
+#' LB <- c(rep(-15, 6), 1e-4) # more reasonable lower bound for variance term
 #'
-#' mod <- mirt(dat, model, itemtype = 'Rasch', optimizer = 'solnp', solnp_args=solnp_args)
+#' mod <- mirt(dat, model, sv=sv, itemtype = 'Rasch', optimizer = 'solnp',
+#'    solnp_args=list(eqfun=eqfun, eqB=0, LB=LB))
 #' print(mod)
 #' coef(mod)
 #' (ds <- sapply(coef(mod)[1:5], function(x) x[,'d']))
