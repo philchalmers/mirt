@@ -329,24 +329,31 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
 
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
-    //const int npars = nfact + nfact * (nfact + 1);
+    const int npars = nfact + nfact * (nfact + 1);
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
-    //const int nsig = npars - nfact;
     NumericMatrix tabdata = obj.slot("dat");
     const int N = tabdata.nrow();
     const int nitems = tabdata.ncol();
 
-    vector<double> g(npars2);
     vector<double> deta(npars2);
+    vector<double> hessvec(npars2*npars2);
     NumericMatrix dEta(nquad, npars2);
+    NumericMatrix d2Eta(nquad, npars2*npars2);
     NumericMatrix deta2(npars2, npars2);
     NumericMatrix theta(1, nfact);
     for(int i = 0; i < nquad; ++i){
         for(int j = 0; j < nfact; ++j)
             theta(0,j) = Theta(i,j);
-        _dgroup(deta, deta2, obj, theta, false, false);
+        _dgroup(deta, deta2, obj, theta, estHess, false);
         for(int j = 0; j < npars2; ++j)
             dEta(i,j) = deta[j];
+        int l = 0;
+        for(int j = 0; j < npars2; ++j){
+            for(int k = j; k < npars2; ++k){
+                d2Eta(i,l) = deta2(j,k);
+                ++l;
+            }
+        }
     }
 
     for(int pat = 0; pat < N; ++pat){
@@ -363,19 +370,34 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
         const double maxL = *std::max_element(L.begin(), L.end());
         for(int j = 0; j < nquad; ++j) denom += L[j]/maxL;
         denom *= maxL;
+        for(int j = 0; j < nquad; ++j)
+            L[j] = L[j]/denom;
 
         for(int j = 0; j < npars2; ++j){
             double tmp = 0.0;
             for(int k = 0; k < nquad; ++k)
                 tmp += (L[k] * dEta(k, j));
-            grad[j] += 1/denom * tmp;
+            grad[j] += tmp;
+        }
+        if(estHess){
+            for(int j = 0; j < npars2*npars2; ++j){
+                double tmp = 0.0;
+                for(int k = 0; k < nquad; ++k)
+                    tmp += (L[k] * d2Eta(k, j));
+                hessvec[j] += tmp;
+            }
         }
     }
-
-
+    
     if(estHess){
-        //TODO
-
+        int k = 0;
+        for(int i = 0; i < npars2; ++i){
+            for(int j = i; j < npars2; ++j){
+                hess(i,j) = hessvec[k];
+                hess(j,i) = hess(i,j);
+                ++k;
+            }
+        }
     }
 }
 

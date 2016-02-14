@@ -248,13 +248,6 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
-    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    if(!iscross){
-        is.latent <- lengthsplit > 2L
-        Ihess <- Ihess[!is.latent, !is.latent]; Igrad <- Igrad[!is.latent, !is.latent]
-        IgradP <- IgradP[!is.latent, !is.latent]
-    } else is.latent <- logical(length(lengthsplit))
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){
@@ -263,17 +256,8 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         tmp <- solve(-Ihess - IgradP + Igrad)
         info <- solve(tmp %*% Igrad %*% tmp)
     }
-    colnames(info) <- rownames(info) <- names(ESTIMATE$correction)[!is.latent]
-    tmp <- matrix(NA, length(is.latent), length(is.latent))
-    tmp[!is.latent, !is.latent] <- info
-    ESTIMATE <- loadESTIMATEinfo(info=tmp, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
-    if(!iscross && any(lengthsplit > 2L)){
-        for(g in 1L:ngroups){
-            tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar
-            tmp[!is.na(tmp)] <- NaN
-            ESTIMATE$pars[[g]][[nitems+1L]]@SEpar <- tmp
-        }
-    }
+    colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
+    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     return(ESTIMATE)
 }
 

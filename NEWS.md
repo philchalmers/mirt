@@ -14,6 +14,11 @@
   
 - `SE.type` used to compute the ACOV matrix gained three numerical estimates for the 
   forward difference ('forward'), central difference ('central'), and Richardson extropolation ('Richardson')
+  
+## BUG FIXES
+
+- SE methods based on the Louis (1982) computations no longer contain NA placeholders for the latent trait 
+  hyper-parameters
 
 # Changes in mirt 1.15
 
