@@ -1,44 +1,44 @@
-# Compute profiled-likelihood (or posterior) confidence intervals
-#
-# Computes profiled-likelihood based confidence intervals. Supports the inclusion of
-# equality constraints. Object returns the confidence intervals
-# and whether the respective interval could be found.
-#
-# @aliases PLCI.mirt
-# @param mod a converged mirt model
-# @param alpha two-tailed alpha critical level
-# @param parnum a numeric vector indicating which parameters to estimate.
-#   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
-#   parameters are used
-# @param ... additional arguments to pass to the estimation functions
-#
-# @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-# @keywords profiled likelihood
-# @export PLCI.mirt
-# @seealso
-# \code{\link{boot.mirt}}
-#
-# @examples
-#
-# \dontrun{
-# mirtCluster() #use all available cores to estimate CI's in parallel
-# dat <- expand.table(LSAT7)
-# mod <- mirt(dat, 1)
-#
-# result <- PLCI.mirt(mod)
-# result
-#
-# mod2 <- mirt(Science, 1)
-# result2 <- PLCI.mirt(mod2)
-# result2
-#
-# #only estimate CI's slopes
-# sv <- mod2values(mod2)
-# parnum <- sv$parnum[sv$name == 'a1']
-# result3 <- PLCI.mirt(mod2, parnum=parnum)
-# result3
-#
-# }
+#' Compute profiled-likelihood (or posterior) confidence intervals
+#'
+#' Computes profiled-likelihood based confidence intervals. Supports the inclusion of
+#' equality constraints. Object returns the confidence intervals
+#' and whether the respective interval could be found.
+#'
+#' @aliases PLCI.mirt
+#' @param mod a converged mirt model
+#' @param alpha two-tailed alpha critical level
+#' @param parnum a numeric vector indicating which parameters to estimate.
+#'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
+#'   parameters are used
+#' @param ... additional arguments to pass to the estimation functions
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @keywords profiled likelihood
+#' @export PLCI.mirt
+#' @seealso
+#' \code{\link{boot.mirt}}
+#'
+#' @examples
+#'
+#' \dontrun{
+#' mirtCluster() #use all available cores to estimate CI's in parallel
+#' dat <- expand.table(LSAT7)
+#' mod <- mirt(dat, 1)
+#'
+#' result <- PLCI.mirt(mod)
+#' result
+#'
+#' mod2 <- mirt(Science, 1)
+#' result2 <- PLCI.mirt(mod2)
+#' result2
+#'
+#' #only estimate CI's slopes
+#' sv <- mod2values(mod2)
+#' parnum <- sv$parnum[sv$name == 'a1']
+#' result3 <- PLCI.mirt(mod2, parnum=parnum)
+#' result3
+#'
+#' }
 PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
@@ -87,8 +87,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
     }
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
-                      sv, get.LL, parprior, asigns, single=FALSE,
-                      PrepList, pars, maxLL, ...){
+                      sv, get.LL, parprior, asigns, PrepList, pars, maxLL, ...){
         TOL <- .001
         lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
@@ -98,12 +97,6 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
             upper <- 1
         } else if(parnames[parnum] %in% paste0('COV_', 1:30, 1:30)){
             lower <- 1e-4
-        }
-        if(single){
-            return(uniroot(f.min, c(lower, upper), dat=dat, model=model,
-                    large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
-                    parprior=parprior, parnames=parnames, asigns=asigns,
-                    PrepList=PrepList, ..., tol = TOL/10)$root)
         }
         if(mid > lower){
             opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,

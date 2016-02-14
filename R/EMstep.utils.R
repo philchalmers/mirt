@@ -144,7 +144,6 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND,
                      SLOW.IND, constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, ANY.PRIOR){
     longpars[est] <- p
-    if(any(longpars > UBOUND | longpars < LBOUND)) return(-1e100)
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(ngroups)
@@ -180,7 +179,7 @@ Mstep.LL.group <- function(pars, Theta, rr){
     LL <- sum(tmp)
     if(pars[[pick]]@any.prior)
         LL <- LL.Priors(x=pars[[pick]], LL=LL)
-    return(ifelse(is.nan(LL), -1e100, LL))
+    LL
 }
 
 LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
