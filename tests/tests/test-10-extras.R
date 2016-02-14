@@ -48,9 +48,9 @@ test_that('extras', {
     cfs <- cfs[cfs != 0 & cfs != 1]
     expect_equal(as.numeric(cfs), c(1.03027, -0.03172, 1.18018, 1.36523, 1.1824, 0.10923, 0.94459, 0.36701, 1.09781, -0.53252, 0.38686, 0.48484, 1.4409, -0.6983, 0.80128, -0.22106, 0.80456, 0.83075, 0.7102, 0.24493, 0.67924, 0.10731, 0.47428, 1.27867, 1.42737, 0.41311, 1.29134, 0.51946, 1.36572, -0.39269, 0.64571, 0.60175, 1.44829, -0.4938, 1.2331, -0.20888, 1.08338, 0.95549, 0.98608, 0.1816),
                  tolerance=1e-3)
-    PLCI <- PLCI.mirt(mod1, parnum=c(1,2))
-    expect_equal(c(PLCI$lower_2.5, PLCI$upper_97.5), c(0.7580446, 1.6843469, 1.2564076, 2.0529152),
-                 tolerance=1e-3)
+    # PLCI <- PLCI.mirt(mirt(Science, 1, verbose=FALSE), parnum=c(1,2))
+    # expect_equal(c(PLCI$lower_2.5, PLCI$upper_97.5), c(0.7008617, 4.0112247, 1.4530232, 5.9667792),
+    #              tolerance=1e-3)
     DIFF <- suppressMessages(DIF(model1a, which.par='d', items2test = 1:3))
     expect_is(DIFF, 'list')
     expect_equal(DIFF[[1L]][2,'logLik'], -12508.15, tolerance = 1e-3)

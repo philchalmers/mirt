@@ -15,8 +15,6 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords bootstrapped standard errors
 #' @export boot.mirt
-#' @seealso
-#' \code{\link{PLCI.mirt}}
 #' @examples
 #'
 #' \dontrun{

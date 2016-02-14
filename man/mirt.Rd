@@ -414,9 +414,8 @@ These are:
   \item{\code{\link{itemfit}} and \code{\link{personfit}}}{
     Goodness of fit statistics at the item and person levels, such as the S-X2, infit, outfit,
     and more}
-  \item{\code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}}{
-    Compute estimated parameter confidence intervals via the bootstrap and profiled-likelihood
-    methods}
+  \item{\code{\link{boot.mirt}}}{
+    Compute estimated parameter confidence intervals via the bootstrap methods}
   \item{\code{\link{mirtCluster}}}{
     Define a cluster for the package functions to use for capitalizing on multi-core architecture
     to utilize available CPUs when possible. Will help to decrease estimation times for tasks

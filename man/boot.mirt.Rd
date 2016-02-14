@@ -43,9 +43,6 @@ booted
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
-\seealso{
-\code{\link{PLCI.mirt}}
-}
 \keyword{bootstrapped}
 \keyword{errors}
 \keyword{standard}

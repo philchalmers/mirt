@@ -99,6 +99,7 @@ setClass("GroupPars",
                         prior.type='integer',
                         prior_1='numeric',
                         prior_2='numeric',
+                        rr='numeric',
                         sig='matrix',
                         invsig='matrix',
                         mu='numeric',
@@ -137,23 +138,6 @@ setMethod(
         if(EM){
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
-#             if(any(x@est)){
-#                 grad[x@est] <- numDeriv::grad(EML2, x@par[x@est], Theta=Theta,
-#                                               pars=pars, tabdata=tabdata, freq=freq,
-#                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-#             }
-#             npars <- length(x@est)
-#             nfact <- ncol(Theta)
-#             dEta <- matrix(0, nrow(Theta), npars)
-#             for(i in 1L:nrow(Theta))
-#                 dEta[i, ] <- Deriv(x, Theta[i, , drop=FALSE])$grad
-#             P <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-#                                   CUSTOM.IND=CUSTOM.IND)
-#             for(i in 1:nrow(tabdata)){
-#                 L <- apply(P[,as.logical(tabdata[i, ]), drop=FALSE], 1, prod)
-#                 PL <- sum(L * prior)
-#                 grad <- grad + 1/PL * colSums(L * dEta * prior)
-#             }
             if(estHess){
                 if(any(x@est)){
                     hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
@@ -163,7 +147,7 @@ setMethod(
             }
             return(list(grad=grad, hess=hess))
         }
-        return(.Call("dgroup", x, Theta, estHess, FALSE, FALSE))
+        return(.Call("dgroup", x, Theta, matrix(0), estHess, FALSE, FALSE, FALSE))
     }
 )
 
@@ -246,7 +230,7 @@ setMethod(
         Theta <- x@drawvals
         estHess <- TRUE
         pick <- -c(1L:ncol(Theta))
-        out <- .Call("dgroup", x, Theta, estHess, TRUE, FALSE)
+        out <- .Call("dgroup", x, Theta, matrix(0L), estHess, TRUE, FALSE, FALSE)
         out$grad <- out$grad[pick]
         out$hess <- out$hess[pick, pick, drop=FALSE]
         diag(out$hess) <- -abs(diag(out$hess)) #hack for very small clusters

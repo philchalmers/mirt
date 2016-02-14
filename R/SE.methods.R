@@ -111,10 +111,10 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
                 pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
             }
         }
-        longpars <- Mstep(pars=pars, est=estpars & !ESTIMATE$groupest, longpars=longpars, ngroups=ngroups, J=J,
+        longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact,
-                          rlist=rlist, constrain=constrain, DERIV=DERIV, groupest=ESTIMATE$groupest,
+                          rlist=rlist, constrain=constrain, DERIV=DERIV,
                           CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, BFACTOR=list$BFACTOR,
                           Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full,
                           Thetabetween=Thetabetween, lrPars=lrPars, control=control)

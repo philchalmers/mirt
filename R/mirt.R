@@ -124,9 +124,8 @@
 #'   \item{\code{\link{itemfit}} and \code{\link{personfit}}}{
 #'     Goodness of fit statistics at the item and person levels, such as the S-X2, infit, outfit,
 #'     and more}
-#'   \item{\code{\link{boot.mirt}} and \code{\link{PLCI.mirt}}}{
-#'     Compute estimated parameter confidence intervals via the bootstrap and profiled-likelihood
-#'     methods}
+#'   \item{\code{\link{boot.mirt}}}{
+#'     Compute estimated parameter confidence intervals via the bootstrap methods}
 #   \item{\code{\link{read.mirt}}}{
 #     Translates mirt objects into objects suitable for use with the \code{plink} package}
 #'   \item{\code{\link{mirtCluster}}}{
