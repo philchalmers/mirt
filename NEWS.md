@@ -1,5 +1,8 @@
 # Changes in mirt 1.16
 
+- new `areainfo()` function to compute the area under information curves within specified ranges 
+  (suggested by Conal Monaghan)
+
 - `method = 'BL'` supported for multiple-group models. As well, `SE.type = 'numerical'` included to return
   the observed-data ACOV matrix from the call to `optim()` (can only be used when the `BL` method is selected)
 
