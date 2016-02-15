@@ -1216,6 +1216,8 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
         }
     }
     ESTIMATE$pars <- pars
+    if(length(ESTIMATE$lrPars))
+        ESTIMATE$lrPars@SEpar <- SE[ESTIMATE$lrPars@parnum]
     return(ESTIMATE)
 }
 
@@ -1419,11 +1421,17 @@ longpars_constrain <- function(longpars, constrain){
 }
 
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta, constrain){
+               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta, constrain, lrPars){
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     gstructgrouppars <- prior <- Prior <- vector('list', ngroups)
+    full <- length(lrPars) > 0L
+    if(full){
+        lrPars@par <- longpars[lrPars@parnum]
+        lrPars@beta[] <- lrPars@par
+        lrPars@mus <- lrPars@X %*% lrPars@beta
+    }
     if(EH){
         Prior[[1L]] <- EHPrior[[1L]]
     } else {
@@ -1435,17 +1443,24 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
                 Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
                 next
             }
-            Prior[[g]] <- mirt_dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
-                                       gstructgrouppars[[g]]$gcov)
-            Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+            if(full){
+                Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:ncol(lrPars@mus),drop=FALSE],
+                                           lrPars@mus, gstructgrouppars[[g]]$gcov, quad=TRUE)
+                Prior[[g]] <- Prior[[g]]/rowSums(Prior[[g]])
+            } else {
+                Prior[[g]] <- mirt_dmvnorm(Theta,gstructgrouppars[[g]]$gmeans,
+                                           gstructgrouppars[[g]]$gcov)
+                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+            }
         }
     }
     LL <- 0
     for(g in 1L:ngroups){
         expected <- Estep.mirt(pars=pars2[[g]],
-                               tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
+                               tabdata=Data$tabdatalong,
+                               freq=if(full) rep(1L, nrow(Prior[[1L]])) else Data$Freq[[g]],
                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
-                               CUSTOM.IND=CUSTOM.IND, full=FALSE, Etable=FALSE)$expected
+                               CUSTOM.IND=CUSTOM.IND, full=full, Etable=FALSE)$expected
         LL <- LL + sum(Data$Freq[[g]] * log(expected), na.rm = TRUE)
     }
     LL

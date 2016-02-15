@@ -1,5 +1,8 @@
 # Changes in mirt 1.16
 
+- latent regression EM models now have standard error computation supporte with the 'complete', 
+  'forward', 'central', and 'Richardson' methods
+
 - new `areainfo()` function to compute the area under information curves within specified ranges 
   (suggested by Conal Monaghan)
 

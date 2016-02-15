@@ -336,8 +336,22 @@ setMethod(
             colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[1L:nfact]
             allPars <- list(items=items, means=means, cov=covs)
         }
-        if(.hasSlot(object@Model$lrPars, 'beta'))
+        if(.hasSlot(object@Model$lrPars, 'beta')){
             allPars$lr.betas <- round(object@Model$lrPars@beta, digits)
+            if(!all(is.nan(object@Model$lrPars@SEpar))){
+                tmp <- allPars$lr.betas
+                if(printSE){
+                    tmp[] <- round(object@Model$lrPars@SEpar, digits)
+                    allPars$lr.betas <- list(betas=allPars$lr.betas, SE=tmp)
+                } else {
+                    low <- tmp - z*object@Model$lrPars@SEpar
+                    high <- tmp + z*object@Model$lrPars@SEpar
+                    allPars$lr.betas <- list(betas=allPars$lr.betas, low, high)
+                    names(allPars$lr.betas) <- c('betas', SEnames)
+                }
+            }
+
+        }
         return(allPars)
     }
 )

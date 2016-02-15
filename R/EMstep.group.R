@@ -136,7 +136,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
         opt <- try(optim(longpars[est], BL.LL, BL.grad, est=est, longpars=longpars,
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR,
+                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, lrPars=lrPars,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                          EH=list$EH, constrain=constrain, EHPrior=NULL, Data=Data, method=Moptim,
                          control=control, hessian=list$SE,

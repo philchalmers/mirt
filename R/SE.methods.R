@@ -1,6 +1,6 @@
 SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
                   CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL, warn, Data, type,
-                  delta){
+                  delta, lrPars){
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
     infological=ESTIMATE$infological
@@ -20,7 +20,11 @@ SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMAT
             pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
         }
     }
-    hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars,
+    if(length(lrPars)){
+        est <- c(est, lrPars@est)
+        shortpars <- longpars[est]
+    }
+    hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars, lrPars=lrPars,
                             pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                             Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, constrain=constrain,
                             specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,

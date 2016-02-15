@@ -395,9 +395,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(length(lrPars)){
-            if(opts$SE && !(opts$SE.type %in% c('complete'))) ## TODO
-                stop('Information matrix computation for latent regression estimates
-                    currently disabled for all but SE.type=\'complete\'. Use boot.mirt() instead',
+            if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson'))) ## TODO
+                stop('Information matrix method for latent regression estimates not supported',
                      call.=FALSE)
             opts$full <- TRUE
         } else opts$full <- FALSE
@@ -680,7 +679,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               BFACTOR=opts$BFACTOR, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
                               constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems, EH=opts$empiricalhist,
                               CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior, warn=opts$warn, type=opts$SE.type,
-                              delta=opts$delta)
+                              delta=opts$delta, lrPars=ESTIMATE$lrPars)
         } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
             if(opts$empiricalhist)
                 stop('MHRM standard error not available when using empirical histograms', call.=FALSE)
