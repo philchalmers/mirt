@@ -517,7 +517,6 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             for(i in 1L:length(PrepList[[g]]$constrain))
                 constrain[[length(constrain) + 1L]] <- PrepList[[g]]$constrain[[i]]
     if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
-        tmpmat <- matrix(NA, nfact, nfact)
         tmp <- c()
         tmpmats <- tmpestmats <- matrix(NA, ngroups, nfact*(nfact+1L)/2)
         for(g in 1L:ngroups){
@@ -794,8 +793,6 @@ UpdatePrepList <- function(PrepList, pars, random, lrPars = list(), MG = FALSE){
     if(!all(unique(pars$prior.type) %in% c('none', 'norm', 'beta', 'lnorm')))
         stop('prior.type input in pars contains invalid prior types', call.=FALSE)
     if(!MG) PrepList <- list(PrepList)
-    len <- length(PrepList[[length(PrepList)]]$pars)
-    maxparnum <- max(PrepList[[length(PrepList)]]$pars[[len]]@parnum)
     pars$value[pars$name %in% c('g', 'u')] <- logit(pars$value[pars$name %in% c('g', 'u')])
     pars$lbound[pars$name %in% c('g', 'u')] <- logit(pars$lbound[pars$name %in% c('g', 'u')])
     pars$ubound[pars$name %in% c('g', 'u')] <- logit(pars$ubound[pars$name %in% c('g', 'u')])
@@ -1009,7 +1006,6 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
 }
 
 makeLmats <- function(pars, constrain, random = list(), lrPars = list()){
-    f <- function(k) (k+1) / (k*2)
     ngroups <- length(pars)
     J <- length(pars[[1L]]) - 1L
     L <- c()
@@ -1222,8 +1218,6 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
 }
 
 make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
-    itemcovnames <- colnames(itemdesign)
-    J <- nrow(itemdesign)
     ret <- vector('list', length(random))
     for(i in 1L:length(random)){
         f <- gsub(" ", "", as.character(random[[i]])[2L])
