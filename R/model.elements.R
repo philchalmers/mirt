@@ -43,7 +43,6 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     cs <- sqrt(abs(1-rowSums(lambdas^2)))
     lambdas <- lambdas * 1.702
     zetas <- list()
-    loc <- 1L
     for(i in 1L:J){
         div <- ifelse(cs[i] > .25, cs[i], .25) / 1.702
         if(K[i] == 2L){
