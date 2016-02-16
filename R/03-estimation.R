@@ -1,7 +1,7 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
-                       nominal.highlow = NULL, GenRandomPars = FALSE, large = FALSE,
+                       GenRandomPars = FALSE, large = FALSE,
                        survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
                        gpcm_mats=list(), control = list(), ...)
 {
@@ -45,8 +45,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             stopifnot(is(parprior, 'list'))
         if(!is.null(customItems))
             stopifnot(is(customItems, 'list'))
-        if(!is.null(nominal.highlow))
-            stopifnot(is(nominal.highlow, 'matrix'))
         stopifnot(is(invariance, 'character'))
         stopifnot(is(GenRandomPars, 'logical'))
         stopifnot(is(large, 'logical') || is(large, 'list'))
@@ -164,14 +162,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          technical=opts$technical, parnumber=1L, BFACTOR=opts$BFACTOR,
                          grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                          mixed.design=mixed.design, customItems=customItems,
-                         fulldata=opts$PrepList[[1L]]$fulldata, key=key, nominal.highlow=nominal.highlow,
+                         fulldata=opts$PrepList[[1L]]$fulldata, key=key,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
         }
-        if(any(PrepListFull$itemtype == 'nominal') && is.null(nominal.highlow) && !opts$NULL.MODEL
-           && opts$verbose)
-            if(opts$message)
-                message('\'nominal.highlow\' matrix not specified, highest and lowest categories are used by default')
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
         attr(PrepListFull$pars, 'nclasspars') <- attr(PrepList[[1L]]$pars, 'nclasspars') <-
             sapply(PrepListFull$pars, function(y) length(y@parnum))

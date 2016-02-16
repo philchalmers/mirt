@@ -193,9 +193,7 @@ NULL
 #' table <- data.frame(fttd[,-ncol(fttd)], fs)
 #' table
 #'
-#' #using nominal.highlow matrix to specify lowest and highest categories
-#' (nominal.highlow <- matrix(c(4,4,4,1,1,1), 2, byrow = TRUE))
-#' mod <- mirt(dat, 1, 'nominal', nominal.highlow=nominal.highlow)
+#' mod <- mirt(dat, 1, 'nominal')
 #' coef(mod)
 #'
 #'  }

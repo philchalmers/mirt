@@ -346,12 +346,6 @@
 #'   Only applicable for unidimensional models estimated with the EM algorithm.
 #'   The number of cycles, TOL, and quadpts are adjusted
 #'   accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
-#' @param nominal.highlow optional matrix indicating the highest (row 1) and lowest (row 2)
-#'   categories to be used for the nominal response model. Using this input may result in better
-#'   numerical stability. The matrix input should be a 2 by nitems numeric matrix, where each number
-#'   represents the \emph{reduced} category representation (mirt omits categories that are missing,
-#'   so if the unique values for an item are c(1,2,5,6) they are treated as being the same as
-#'   c(1,2,3,4). Viewing the starting values will help to identify the categories)
 #' @param survey.weights a optional numeric vector of survey weights to apply for each case in the
 #'   data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT
 #'   approach). The sum of the \code{survey.weights} must equal the total sample size for proper
@@ -647,9 +641,7 @@
 #' coef(gpcmod)
 #'
 #' #for the nominal model the lowest and highest categories are assumed to be the
-#' #  theoretically lowest and highest categories that related to the latent trait(s), however
-#' #  a custom nominal.highlow matrix can be passed to declare which item category should be
-#' #  treated as the 'highest' and 'lowest' instead
+#' #  theoretically lowest and highest categories that related to the latent trait(s)
 #' (nomod <- mirt(Science, 1, 'nominal'))
 #' coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 #' anova(gpcmod, nomod)
@@ -963,8 +955,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
                  calcNull = TRUE, draws = 5000, survey.weights = NULL,
                  quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
-                 nominal.highlow = NULL, large = FALSE,
-                 GenRandomPars = FALSE, accelerate = 'Ramsay', empiricalhist = FALSE, verbose = TRUE,
+                 large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay',
+                 empiricalhist = FALSE, verbose = TRUE,
                  solnp_args = list(), alabama_args = list(), control = list(), technical = list(), ...)
 {
     Call <- match.call()
@@ -989,7 +981,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       parprior=parprior, quadpts=quadpts,
                       technical=technical, verbose=verbose, survey.weights=survey.weights,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
-                      nominal.highlow=nominal.highlow, accelerate=accelerate, draws=draws,
+                      accelerate=accelerate, draws=draws,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars,
                       optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args,
                       latent.regression=latent.regression, gpcm_mats=gpcm_mats,

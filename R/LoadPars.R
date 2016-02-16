@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, nominal.highlow, gpcm_mats)
+                     key, gpcm_mats)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -96,17 +96,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
-            if(is.null(nominal.highlow)){
-                val[nfact + 1L] <- 0
-                val[nfact + K[i]] <- K[[i]] - 1
-                fp[nfact + 1L] <- FALSE
-                fp[nfact + K[i]] <- FALSE
-            } else {
-                val[nfact + nominal.highlow[2L, i]] <- 0
-                val[nfact + nominal.highlow[1L, i]] <- K[i] - 1
-                fp[nfact + nominal.highlow[2L, i]] <- FALSE
-                fp[nfact + nominal.highlow[1L, i]] <- FALSE
-            }
+            val[nfact + 1L] <- 0
+            val[nfact + K[i]] <- K[[i]] - 1
+            fp[nfact + 1L] <- FALSE
+            fp[nfact + K[i]] <- FALSE
             fp[c(nfact + K[i] + 1L)] <- FALSE
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))

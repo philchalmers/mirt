@@ -1,7 +1,7 @@
 PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
-                     fulldata = NULL, key, nominal.highlow, internal_constraints)
+                     fulldata = NULL, key, internal_constraints)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     # if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
@@ -13,13 +13,6 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     J <- ncol(data)
     N <- nrow(data)
     exploratory <- FALSE
-    if(!is.null(nominal.highlow)){
-        if(!is.matrix(nominal.highlow)) stop('nominal.highlow must be a matrix', call.=FALSE)
-        if(!all(dim(nominal.highlow) == c(2,J)))
-            stop('nominal.highlow does not have the correct dimensions', call.=FALSE)
-        if(any(nominal.highlow[1L, ] == nominal.highlow[2L, ]))
-            stop('nominal.highlow low and high categories must differ', call.=FALSE)
-    }
     if(is(model, 'mirt.model') && any(model$x[,1L] == 'NEXPLORE')){
         oldmodel <- model
         model <- as.integer(model$x[model$x[,1L] == 'NEXPLORE', 2L])
@@ -120,7 +113,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
                            parnumber=parnumber, BFACTOR=BFACTOR, mixed.design=mixed.design,
-                           customItems=customItems, key=key, nominal.highlow=nominal.highlow,
+                           customItems=customItems, key=key,
                            gpcm_mats=gpcm_mats)
     prodlist <- attr(pars, 'prodlist')
     exploratory <- attr(pars, 'exploratory')

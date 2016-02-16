@@ -10,10 +10,9 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
-  nominal.highlow = NULL, large = FALSE, GenRandomPars = FALSE,
-  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), alabama_args = list(), control = list(),
-  technical = list(), ...)
+  large = FALSE, GenRandomPars = FALSE, accelerate = "Ramsay",
+  empiricalhist = FALSE, verbose = TRUE, solnp_args = list(),
+  alabama_args = list(), control = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -174,13 +173,6 @@ to be within the same group and therefore have the same number of item categorie
 \item{key}{a numeric vector of the response scoring key. Required when using nested logit item
 types, and must be the same length as the number of items used. Items that are not nested logit
 will ignore this vector, so use \code{NA} in item locations that are not applicable}
-
-\item{nominal.highlow}{optional matrix indicating the highest (row 1) and lowest (row 2)
-categories to be used for the nominal response model. Using this input may result in better
-numerical stability. The matrix input should be a 2 by nitems numeric matrix, where each number
-represents the \emph{reduced} category representation (mirt omits categories that are missing,
-so if the unique values for an item are c(1,2,5,6) they are treated as being the same as
-c(1,2,3,4). Viewing the starting values will help to identify the categories)}
 
 \item{large}{either a \code{logical}, indicating whether the internal collapsed data should
   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
@@ -616,9 +608,7 @@ anova(pmod1, pmod2)
 coef(gpcmod)
 
 #for the nominal model the lowest and highest categories are assumed to be the
-#  theoretically lowest and highest categories that related to the latent trait(s), however
-#  a custom nominal.highlow matrix can be passed to declare which item category should be
-#  treated as the 'highest' and 'lowest' instead
+#  theoretically lowest and highest categories that related to the latent trait(s)
 (nomod <- mirt(Science, 1, 'nominal'))
 coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 anova(gpcmod, nomod)
