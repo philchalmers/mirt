@@ -718,10 +718,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             F <- matrix(NA)
             h2 <- numeric(1)
         } else {
-            Flist <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data), explor=TRUE)
-            colnames(Flist$F) <- PrepList[[1L]]$factorNames
-            h2 <- rowSums(Flist$F^2)
-            F <- Flist$F
+            F <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data))
+            colnames(F) <- PrepList[[1L]]$factorNames
+            h2 <- rowSums(F^2)
         }
         cmods[[g]] <- new('SingleGroupClass', ParObjects=list(pars=ESTIMATE$pars[[g]], lrPars=lrPars,
                                                               random=ESTIMATE$random),
