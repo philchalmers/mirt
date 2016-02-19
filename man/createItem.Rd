@@ -4,8 +4,8 @@
 \alias{createItem}
 \title{Create a user defined item with correct generic functions}
 \usage{
-createItem(name, par, est, P, gr = NULL, hss = NULL, lbound = NULL,
-  ubound = NULL, derivType = "forward")
+createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
+  lbound = NULL, ubound = NULL, derivType = "forward")
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -28,6 +28,11 @@ the complete data log-likelihood. If not specified a numeric approximation will 
 \item{hss}{Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used (required for the MH-RM
 algorithm only). The input is idential to the \code{gr} argument}
+
+\item{gen}{a function used when \code{GenRandomPars = TRUE} is passed to the estimation function
+to generate random starting values. Function must be of the form \code{function(object) ...}
+and must return a vector with properties equivalent to the \code{par} object. If NULL,
+parameters will remain at the defined starting values by default}
 
 \item{lbound}{optional vector indicating the lower bounds of the parameters. If not specified
 then the bounds will be set to -Inf}

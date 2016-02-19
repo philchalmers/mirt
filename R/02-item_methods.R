@@ -1935,6 +1935,7 @@ setClass('custom', contains = 'AllItemsClass',
                                          gr='function',
                                          usegr='logical',
                                          hss='function',
+                                         gen='function',
                                          usehss='logical',
                                          userdata='matrix',
                                          useuserdata='logical',
@@ -1977,6 +1978,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'custom'),
     definition = function(x){
+        x@par <- x@gen(x)
         x
     }
 )
@@ -2000,7 +2002,7 @@ setMethod(
 
 setMethod("initialize",
           'custom',
-          function(.Object, name, par, est, lbound, ubound, P, gr, hss, userdata, derivType) {
+          function(.Object, name, par, est, lbound, ubound, P, gr, hss, gen, userdata, derivType) {
               dummyfun <- function(...) return(NULL)
               names(est) <- names(par)
               usegr <- usehss <- useuserdata <- TRUE
@@ -2017,6 +2019,9 @@ setMethod("initialize",
                   .Object@hss <- dummyfun
                   usehss <- FALSE
               } else .Object@hss <- hss
+              if(is.null(gen)){
+                  .Object@gen <- function(object) object@par
+              } else .Object@gen <- gen
               if(is.null(userdata)){
                   .Object@userdata <- matrix(NaN)
                   useuserdata <- FALSE
