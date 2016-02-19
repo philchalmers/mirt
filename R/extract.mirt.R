@@ -47,6 +47,7 @@
 #'   \item{constrain}{a list of item parameter constraints to indicate which item parameters were equal
 #'     during estimation}
 #'   \item{Prior}{prior density distribution for the latent traits}
+#'   \item{key}{if supplied, the data scoring key}
 #'   \item{nfact}{number of latent traits/factors}
 #'   \item{nitems}{number of items}
 #'   \item{ngroups}{number of groups}
@@ -117,6 +118,7 @@ extract.mirt <- function(x, what){
                   exp_resp = x@Internals$Pl,
                   converged = x@OptimInfo$converged,
                   condnum = x@OptimInfo$condnum,
+                  key = x@Internals$key,
                   nfact = x@Model$nfact,
                   nitems = ncol(x@Data$data),
                   ngroups = x@Data$ngroups,
@@ -142,6 +144,6 @@ extract.mirt <- function(x, what){
                   itemdesign = x@Data$itemdesign,
                   itemloc = x@Model$itemloc,
                   CUSTOM.IND = x@Internals$CUSTOM.IND,
-                  NULL)
+                  stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }

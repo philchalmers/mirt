@@ -848,7 +848,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else OptimInfo$secondordertest <- FALSE
     }
     Internals <- list(collectLL=ESTIMATE$collectLL, Prior=ESTIMATE$Prior, Pl=Pl,
-                      shortpars=as.numeric(ESTIMATE$shortpars),
+                      shortpars=as.numeric(ESTIMATE$shortpars), key=key,
                       bfactor=list(), CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND)
     if(discrete){
         Fit$F <- Fit$h2 <- NULL

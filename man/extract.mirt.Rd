@@ -61,6 +61,7 @@ Objects which can be extracted from mirt objects include:
   \item{constrain}{a list of item parameter constraints to indicate which item parameters were equal
     during estimation}
   \item{Prior}{prior density distribution for the latent traits}
+  \item{key}{if supplied, the data scoring key}
   \item{nfact}{number of latent traits/factors}
   \item{nitems}{number of items}
   \item{ngroups}{number of groups}
