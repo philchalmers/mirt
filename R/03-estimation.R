@@ -825,7 +825,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                   Theta=Theta, constrain=constrain, parprior=parprior, nest=as.integer(dfsubtr),
                   invariance=invariance, lrPars=lrPars, formulas=attr(mixed.design, 'formula'),
                   prodlist=PrepList[[1L]]$prodlist)
-    Data$covdata <- attr(mixed.design, 'covdata')
+    Data$covdata <- if(length(lrPars)) lrPars@df else attr(mixed.design, 'covdata')
     Data$itemdesign <- attr(mixed.design, 'itemdesign')
     ParObjects <- list(pars=cmods, lrPars=lrPars, random=ESTIMATE$random)
     OptimInfo <- list(iter=ESTIMATE$cycles, converged=ESTIMATE$converge, cand.t.var=ESTIMATE$cand.t.var,

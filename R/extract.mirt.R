@@ -141,6 +141,7 @@ extract.mirt <- function(x, what){
                   lrPars = x@ParObjects$lrPars,
                   random = x@ParObjects$random,
                   formulas = x@Model$formulas,
+                  lrformulas=x@ParObjects$lrPars@formula,
                   itemdesign = x@Data$itemdesign,
                   itemloc = x@Model$itemloc,
                   CUSTOM.IND = x@Internals$CUSTOM.IND,
