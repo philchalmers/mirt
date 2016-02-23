@@ -50,7 +50,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stopifnot(is(large, 'logical') || is(large, 'list'))
         opts <- makeopts(GenRandomPars=GenRandomPars, ...)
         if(!is.null(survey.weights)){
-            stopifnot(opts$method == 'EM')
+            stopifnot(opts$method %in% c('EM', 'QMCEM'))
             stopifnot(length(survey.weights) == nrow(data))
         }
         if(any(is.na(group))){
