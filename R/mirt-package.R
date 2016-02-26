@@ -26,9 +26,7 @@
 #' @import stats lattice GPArotation Rcpp stats4 methods sfsmisc mgcv
 #' @importFrom utils write.table flush.console packageVersion
 #' @importFrom graphics symbols
-#' @exportMethod anova
-#' @exportMethod residuals
-#' @exportMethod summary
+#' @exportMethod anova residuals summary logLik vcov
 #' @keywords package
 NULL
 

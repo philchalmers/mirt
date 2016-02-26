@@ -13,6 +13,8 @@ areainfo(x, theta_lim, which.items = NULL, ...)
 
 \item{which.items}{an integer vector indicating which items to include in the expected information function.
 Default uses all possible items}
+
+\item{...}{additional arguments passed to \code{\link{integrate}}}
 }
 \value{
 a \code{data.frame} with the lower and upper integration range, the information area

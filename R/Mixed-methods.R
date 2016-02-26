@@ -194,3 +194,21 @@ setMethod(
     }
 )
 
+# Methods
+setMethod(
+    f = "vcov",
+    signature = signature(object = 'MixedClass'),
+    definition = function(object)
+    {
+        class(object) <- 'SingleGroupClass'
+        vcov(object)
+    }
+)
+
+setMethod(
+    f = "logLik",
+    signature = signature(object = 'MixedClass'),
+    definition = function(object){
+        extract.mirt(object, 'logLik')
+    }
+)

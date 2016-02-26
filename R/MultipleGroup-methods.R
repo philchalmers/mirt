@@ -273,3 +273,22 @@ setMethod(
         ret
     }
 )
+
+# Methods
+setMethod(
+    f = "vcov",
+    signature = signature(object = 'MultipleGroupClass'),
+    definition = function(object)
+    {
+        class(object) <- 'SingleGroupClass'
+        vcov(object)
+    }
+)
+
+setMethod(
+    f = "logLik",
+    signature = signature(object = 'MultipleGroupClass'),
+    definition = function(object){
+        extract.mirt(object, 'logLik')
+    }
+)

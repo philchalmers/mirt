@@ -1,5 +1,7 @@
 # Changes in mirt 1.16
 
+- add common `vcov()` and `logLik()` methods
+
 - latent regression EM models now have standard error computation supporte with the 'complete', 
   'forward', 'central', and 'Richardson' methods
 

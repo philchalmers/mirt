@@ -50,6 +50,10 @@ setGeneric("fscores.internal", function(object, ...) standardGeneric("fscores.in
 
 setGeneric("summary", function(object, ...) standardGeneric("summary"))
 
+setGeneric("vcov", function(object, ...) standardGeneric("vcov"))
+
+setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
+
 setGeneric('DrawValues', function(x, Theta, ...) standardGeneric("DrawValues"))
 
 setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))

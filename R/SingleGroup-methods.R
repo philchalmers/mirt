@@ -213,6 +213,7 @@ setMethod(
 #' @param simplify logical; if all items have the same parameter names (indicating they are
 #'   of the same class) then they are collapsed to a matrix, and a list of length 2 is returned
 #'   containing a matrix of item parameters and group-level estimates
+#' @param unique return the vector of uniquely estimated parameters
 #' @param verbose logical; allow information to be printed to the console?
 #' @param rawug logical; return the untransformed internal g and u parameters?
 #'   If \code{FALSE}, g and u's are converted with the original format along with delta standard errors
@@ -250,7 +251,8 @@ setMethod(
     signature = 'SingleGroupClass',
     definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
-                          simplify=FALSE, verbose = TRUE, ...){
+                          simplify=FALSE, unique = FALSE, verbose = TRUE, ...){
+        if(unique) return(extract.mirt(object, 'parvec'))
         if(printSE && length(object@ParObjects$pars[[1L]]@SEpar)) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
             stop('CI must be between 0 and 1', call.=FALSE)
@@ -1223,3 +1225,57 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
     }
     par
 }
+
+#' Extract parameter variance covariance matrix
+#'
+#' Extract parameter variance covariance matrix
+#'
+#' @param object an object of class \code{SingleGroupClass},
+#'   \code{MultipleGroupClass}, or \code{MixedClass}
+#'
+#' @name vcov-method
+#' @aliases vcov,SingleGroupClass-method
+#'   vcov,MultipleGroupClass-method vcov,MixedClass-method vcov,DiscreteClass-method
+#' @docType methods
+#' @rdname vcov-method
+#' @examples
+#'
+#' \dontrun{
+#' x <- mirt(Science, 1, SE=TRUE)
+#' vcov(x)
+#'
+#' }
+setMethod(
+    f = "vcov",
+    signature = signature(object = 'SingleGroupClass'),
+    definition = function(object){
+        extract.mirt(object, 'vcov')
+    }
+)
+
+#' Extract log-likelihood
+#'
+#' Extract the observed-data log-likelihood.
+#'
+#' @param object an object of class \code{SingleGroupClass},
+#'   \code{MultipleGroupClass}, or \code{MixedClass}
+#'
+#' @name logLik-method
+#' @aliases logLik,SingleGroupClass-method
+#'   logLik,MultipleGroupClass-method logLik,MixedClass-method logLik,DiscreteClass-method
+#' @docType methods
+#' @rdname logLik-method
+#' @examples
+#'
+#' \dontrun{
+#' x <- mirt(Science, 1)
+#' logLik(x)
+#'
+#' }
+setMethod(
+    f = "logLik",
+    signature = signature(object = 'SingleGroupClass'),
+    definition = function(object){
+        extract.mirt(object, 'logLik')
+    }
+)
