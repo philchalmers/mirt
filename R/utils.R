@@ -1065,6 +1065,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(TOL)) opts$TOL <- 1e-5
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
+    if(SE && optimizer %in% c('solnp', 'alabama'))
+        stop('SE computations currently not supported for solnp or alabama optimizers', call. = FALSE)
     if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
     opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
         else technical$removeEmptyRows
