@@ -116,8 +116,6 @@ setMethod(
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
-#' @param printCI print a confidence interval for standardized loadings
-#'   (e.g., \code{printCI = .95} gives a 95\% confidence interval)
 #' @param digits number of significant digits to be rounded
 #' @param verbose logical; allow information to be printed to the console?
 #' @param ... additional arguments to be passed
@@ -135,15 +133,12 @@ setMethod(
 #' summary(x)
 #' summary(x, rotate = 'varimax')
 #'
-#' #print confidence interval (requires computed information matrix)
-#' x2 <- mirt(Science, 1, SE=TRUE)
-#' summary(x2, printCI=.95)
 #' }
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
     definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0, digits = 3,
-                          printCI = FALSE, verbose = TRUE, ...){
+                          verbose = TRUE, ...){
         if (!object@Options$exploratory || rotate == 'none') {
             F <- object@Fit$F
             F[abs(F) < suppress] <- NA

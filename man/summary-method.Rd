@@ -10,8 +10,7 @@
 \title{Summary of model object}
 \usage{
 \S4method{summary}{SingleGroupClass}(object, rotate = "oblimin",
-  Target = NULL, suppress = 0, digits = 3, printCI = FALSE,
-  verbose = TRUE, ...)
+  Target = NULL, suppress = 0, digits = 3, verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
@@ -38,9 +37,6 @@ statistical software. Default is 0 for no suppression}
 
 \item{digits}{number of significant digits to be rounded}
 
-\item{printCI}{print a confidence interval for standardized loadings
-(e.g., \code{printCI = .95} gives a 95\% confidence interval)}
-
 \item{verbose}{logical; allow information to be printed to the console?}
 
 \item{...}{additional arguments to be passed}
@@ -56,9 +52,6 @@ x <- mirt(Science, 2)
 summary(x)
 summary(x, rotate = 'varimax')
 
-#print confidence interval (requires computed information matrix)
-x2 <- mirt(Science, 1, SE=TRUE)
-summary(x2, printCI=.95)
 }
 }
 \seealso{

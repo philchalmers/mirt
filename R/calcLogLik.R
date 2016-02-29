@@ -61,7 +61,7 @@ setMethod(
             for(i in 1L:length(object@Model$constrain))
                 nconstr <- nconstr + length(object@Model$constrain[[i]]) - 1L
         nfact <- object@Model$nfact - length(prodlist)
-        Fit <- list()
+        Fit <- object@Fit
 		if(G2){
 			if(any(is.na(data))){
 			    Fit$G2 <- NaN
