@@ -165,13 +165,18 @@
 #' }
 #'
 #' (F <- matrix(c(rep(.7, 5), rep(.5,5))))
-#' (a <- lambda2a(F))
+#' (a <- F2a(F))
 #' d <- rnorm(10)
 #'
 #' dat <- simdata(a, d, 5000, itemtype = 'dich')
 #' mod <- mirt(dat, 1)
 #' coef(mod, simplify=TRUE)$items
 #' summary(mod)
+#'
+#' mod2 <- mirt(dat, 'F1 = 1-10
+#'                    CONSTRAIN = (1-5, a1), (6-10, a1)')
+#' summary(mod2)
+#' anova(mod, mod2)
 #'
 #' #### Unidimensional nonlinear factor pattern
 #'

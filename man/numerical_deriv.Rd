@@ -40,7 +40,7 @@ numerical_deriv(par, f, type = 'central')
 numerical_deriv(par, f, type = 'Richardson')
 
 # hessian = h11 -> 18 * x, h22 -> 8, h12 -> 9 * x^2 + 8 * y
-matrix(c(54, 0, 0, 8), 2, 2)
+matrix(c(54, 0, 0, -8), 2, 2)
 numerical_deriv(par, f, type = 'forward', gradient = FALSE)
 numerical_deriv(par, f, type = 'central', gradient = FALSE)
 numerical_deriv(par, f, type = 'Richardson', gradient = FALSE)

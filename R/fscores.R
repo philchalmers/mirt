@@ -136,7 +136,7 @@
 #'
 #' #WLE estimation, run in parallel using available cores
 #' mirtCluster()
-#' fscores(mod, method='WLE', full.scores = FALSE)
+#' head(fscores(mod, method='WLE', full.scores = FALSE))
 #'
 #' #multiple imputation using 30 draws for EAP scores. Requires information matrix
 #' mod <- mirt(Science, 1, SE=TRUE)

@@ -58,7 +58,7 @@ dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 models <- 'F1 = 1-15'
 mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
-coef(mod_Rasch)
+coef(mod_Rasch, simplify=TRUE)
 pf <- personfit(mod_Rasch, method='MAP')
 head(pf)
 
