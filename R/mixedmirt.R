@@ -60,7 +60,8 @@
 #'   the correlations between the \code{v}'s and \code{G} are estimated, but can be suppressed by
 #'   including the \code{~ -1 + ...} or 0 constant. \code{G} may contain interaction terms, such as
 #'   \code{group:items} to include cross or person-level interactions effects
-#' @param itemtype same as itemtype in \code{\link{mirt}}, except does not support the following
+#' @param itemtype same as itemtype in \code{\link{mirt}}, except when the \code{fixed}
+#'   or \code{random} inputs are used does not support the following
 #'   item types: \code{c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')}
 #' @param itemdesign a \code{data.frame} object used to create a design matrix for the items, where
 #'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of
@@ -350,8 +351,9 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     covdataold <- covdata
     itemdesignold <- if(is.null(itemdesign)) data.frame() else itemdesign
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
-    if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
-        stop('itemtype contains unsupported classes of items', call.=FALSE)
+    if(fixed != ~ 1 || !is.null(random))
+        if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
+            stop('itemtype contains unsupported classes of items when fixed or random are used', call.=FALSE)
     if(is(random, 'formula')) {
         random <- list(random)
     } else if(is.null(random)) random <- list()
