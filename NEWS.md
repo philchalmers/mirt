@@ -1,5 +1,7 @@
 # Changes in mirt 1.16
 
+- enable `lr.random` input to `mixedmirt()` for multilevel-IRT models which are not from the Rasch family
+
 - add common `vcov()` and `logLik()` methods
 
 - latent regression EM models now have standard error computation supporte with the 'complete', 

@@ -184,7 +184,7 @@ setMethod(
 setMethod(
     f = "DrawValues",
     signature = signature(x = 'RandomPars', Theta = 'matrix'),
-    definition = function(x, Theta, pars, fulldata, itemloc, offterm0, CUSTOM.IND){
+    definition = function(x, Theta, pars, fulldata, itemloc, offterm0, CUSTOM.IND, LR = FALSE){
         J <- length(pars) - 1L
         theta0 <- x@drawvals
         total_0 <- attr(theta0, 'log.lik_full')
@@ -200,14 +200,25 @@ setMethod(
         if(is.null(total_0)) theta1 <- theta0 #for intial draw
         log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
         itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(fulldata))
-        tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
-        offterm1 <- matrix(tmp1, nrow(offterm0), ncol(offterm0))
-        itemtrace1 <- computeItemtrace(pars, Theta=Theta, offterm=offterm1,
-                                       itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+        if(LR){
+            Theta2 <- Theta - rowSums(x@gdesign * theta0[x@mtch, , drop=FALSE]) +
+                rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
+            itemtrace1 <- computeItemtrace(pars, Theta=Theta2, offterm=offterm0,
+                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+        } else {
+            tmp1 <- rowSums(x@gdesign * theta1[x@mtch, , drop=FALSE])
+            offterm1 <- matrix(tmp1, nrow(offterm0), ncol(offterm0))
+            itemtrace1 <- computeItemtrace(pars, Theta=Theta, offterm=offterm1,
+                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+        }
         LL <- fulldata * log(itemtrace1)
         LL2 <- matrix(0, nrow(LL), J)
-        for(i in 1L:J)
-            LL2[,i] <- rowSums(LL[,itemloc[i]:(itemloc[i+1L] - 1L)])
+        if(LR){
+            LL2 <- rowSums(LL)
+        } else {
+            for(i in 1L:J)
+                LL2[,i] <- rowSums(LL[,itemloc[i]:(itemloc[i+1L] - 1L)])
+        }
         total_1 <- tapply(LL2, x@mtch, sum) + log_den1
         if(is.null(total_0)){ #for intial draw
             attr(theta1, 'log.lik_full') <- total_1

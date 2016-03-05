@@ -195,7 +195,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             parnumber <- max(lrPars@parnum) + 1L
         } else lrPars <- list()
         if(length(latent.regression$lr.random) > 0L){
-            stop('lr.random input not yet supported', call.=FALSE)
+            for(i in 1L:length(latent.regression$lr.random)){
+                latent.regression$lr.random[[i]]@parnum <- parnumber:(parnumber - 1L +
+                                                                  length(latent.regression$lr.random[[i]]@par))
+                parnumber <- max(latent.regression$lr.random[[i]]@parnum) + 1L
+            }
         }
     }
     if(!is.null(opts$PrepList)){
@@ -255,7 +259,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!is.null(pars)){
         if(is(pars, 'data.frame')){
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
-                                       lrPars=lrPars, MG = TRUE)
+                                       lrPars=lrPars, lr.random=latent.regression$lr.random,
+                                       MG = TRUE)
             mixed.design$random <- attr(PrepList, 'random')
             if(any(pars$class == 'lrPars')) lrPars <- update.lrPars(pars, lrPars)
             attr(PrepList, 'random') <- NULL
@@ -302,7 +307,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(RETURNVALUES){
         for(g in 1L:Data$ngroups)
             PrepList[[g]]$pars <- pars[[g]]
-        return(ReturnPars(PrepList, PrepList[[1L]]$itemnames,
+        return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, lr.random=latent.regression$lr.random,
                           random=mixed.design$random, lrPars=lrPars, MG = TRUE))
 
     }
@@ -357,7 +362,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:Data$nitems)
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }
-    Ls <- makeLmats(pars, constrain, random = mixed.design$random, lrPars=lrPars)
+    Ls <- makeLmats(pars, constrain, random = mixed.design$random,
+                    lr.random=latent.regression$lr.random, lrPars=lrPars)
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% Use_R_ProbTrace())
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% Use_R_Deriv())
     #warnings
@@ -546,7 +552,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Theta <- matrix(0, Data$N, nitems)
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls,
                                     PrepList=PrepList, random=mixed.design$random, Data=Data,
-                                    lrPars=lrPars,
+                                    lrPars=lrPars, lr.random=latent.regression$lr.random,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                            KDRAWS=opts$KDRAWS, MHDRAWS=opts$MHDRAWS,
@@ -565,7 +571,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
                               PrepList=PrepList, random=mixed.design$random, Data=Data,
-                              lrPars=ESTIMATE$lrPars,
+                              lrPars=ESTIMATE$lrPars, lr.random=latent.regression$lr.random,
                               list = list(NCYCLES=opts$MHRM_SE_draws, BURNIN=1L,
                                           SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
                                           KDRAWS=opts$KDRAWS, MHDRAWS=opts$MHDRAWS,
@@ -582,6 +588,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE$pars <- tmp$pars
             ESTIMATE$random <- tmp$random
             ESTIMATE$lrPars <- tmp$lrPars
+            ESTIMATE$lr.random <- tmp$lr.random
             ESTIMATE$info <- tmp$info
             ESTIMATE$fail_invert_info <- tmp$fail_invert_info
             ESTIMATE$time <- c(ESTIMATE$time, SE=sum(tmp$time))
@@ -723,7 +730,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             h2 <- rowSums(F^2)
         }
         cmods[[g]] <- new('SingleGroupClass', ParObjects=list(pars=ESTIMATE$pars[[g]], lrPars=lrPars,
-                                                              random=ESTIMATE$random),
+                                                              random=ESTIMATE$random,
+                                                              lr.random=ESTIMATE$lr.random),
                           Data = list(K=Data$K, nitems=Data$nitems),
                           Model = list(itemloc=PrepList[[1L]]$itemloc, nfact=nfact, constrain=constrain,
                                        factorNames=PrepList[[1L]]$factorNames,
@@ -827,7 +835,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                   prodlist=PrepList[[1L]]$prodlist)
     Data$covdata <- if(length(lrPars)) lrPars@df else attr(mixed.design, 'covdata')
     Data$itemdesign <- attr(mixed.design, 'itemdesign')
-    ParObjects <- list(pars=cmods, lrPars=lrPars, random=ESTIMATE$random)
+    ParObjects <- list(pars=cmods, lrPars=lrPars, random=ESTIMATE$random, lr.random=ESTIMATE$lr.random)
     OptimInfo <- list(iter=ESTIMATE$cycles, converged=ESTIMATE$converge, cand.t.var=ESTIMATE$cand.t.var,
                       condnum=NA, secondordertest=NA, SEMconv=SEMconv)
     vcov <- matrix(NA, 1, 1)

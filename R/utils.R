@@ -697,7 +697,7 @@ UpdatePrior <- function(PrepList, model, groupNames, warn = TRUE){
     return(PrepList)
 }
 
-ReturnPars <- function(PrepList, itemnames, random, lrPars, MG = FALSE){
+ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
@@ -753,6 +753,23 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, MG = FALSE){
         class <- c(class, rep('lrPars', length(lrPars@parnum)))
         item <- c(item, rep('BETA', length(lrPars@parnum)))
     }
+    if(length(lr.random) > 0L){
+        for(i in 1L:length(lr.random)){
+            parname <- c(parname, names(lr.random[[i]]@est))
+            parnum <- c(parnum, lr.random[[i]]@parnum)
+            par <- c(par, lr.random[[i]]@par)
+            est <- c(est, lr.random[[i]]@est)
+            lbound <- c(lbound, lr.random[[i]]@lbound)
+            ubound <- c(ubound, lr.random[[i]]@ubound)
+            tmp <- sapply(as.character(lr.random[[i]]@prior.type),
+                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+            prior.type <- c(prior.type, tmp)
+            prior_1 <- c(prior_1, lr.random[[i]]@prior_1)
+            prior_2 <- c(prior_2, lr.random[[i]]@prior_2)
+            class <- c(class, rep('LRRandomPars', length(lr.random[[i]]@parnum)))
+            item <- c(item, rep('LRRANDOM', length(lr.random[[i]]@parnum)))
+        }
+    }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
     par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
     lbound[parname %in% c('g', 'u')] <- antilogit(lbound[parname %in% c('g', 'u')])
@@ -763,9 +780,9 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, MG = FALSE){
     ret
 }
 
-UpdatePrepList <- function(PrepList, pars, random, lrPars = list(), MG = FALSE){
+UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), MG = FALSE){
     currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random,
-                                lrPars=lrPars, MG = TRUE)
+                                lrPars=lrPars, lr.random=lr.random, MG = TRUE)
     if(nrow(currentDesign) != nrow(pars))
         stop('Rows in supplied and starting value data.frame objects do not match. Were the
              data or itemtype input arguments modified?', call.=FALSE)
@@ -820,6 +837,18 @@ UpdatePrepList <- function(PrepList, pars, random, lrPars = list(), MG = FALSE){
             }
         }
         attr(PrepList, 'random') <- random
+    }
+    if(length(lr.random) > 0L){
+        for(i in 1L:length(lr.random)){
+            for(j in 1L:length(lr.random[[i]]@par)){
+                lr.random[[i]]@par[j] <- pars[ind,'value']
+                lr.random[[i]]@est[j] <- as.logical(pars[ind,'est'])
+                lr.random[[i]]@lbound[j] <- pars[ind,'lbound']
+                lr.random[[i]]@ubound[j] <- pars[ind,'ubound']
+                ind <- ind + 1L
+            }
+        }
+        attr(PrepList, 'lr.random') <- lr.random
     }
     if(!MG) PrepList <- PrepList[[1L]]
     return(PrepList)
@@ -991,7 +1020,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
     ret
 }
 
-makeLmats <- function(pars, constrain, random = list(), lrPars = list()){
+makeLmats <- function(pars, constrain, random = list(), lrPars = list(), lr.random = list()){
     ngroups <- length(pars)
     J <- length(pars[[1L]]) - 1L
     L <- c()
@@ -1003,6 +1032,9 @@ makeLmats <- function(pars, constrain, random = list(), lrPars = list()){
             L <- c(L, random[[i]]@est)
     if(length(lrPars))
         L <- c(L, lrPars@est)
+    if(length(lr.random))
+        for(i in 1L:length(lr.random))
+            L <- c(L, lr.random[[i]]@est)
     L <- diag(as.numeric(L))
     redun_constr <- rep(FALSE, ncol(L))
     if(length(constrain) > 0L){
@@ -1205,7 +1237,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     return(ESTIMATE)
 }
 
-make.randomdesign <- function(random, longdata, covnames, itemdesign, N){
+make.randomdesign <- function(random, longdata, covnames, itemdesign, N, LR=FALSE){
     ret <- vector('list', length(random))
     for(i in 1L:length(random)){
         f <- gsub(" ", "", as.character(random[[i]])[2L])
@@ -1351,12 +1383,10 @@ OffTerm <- function(random, J, N){
     return(matrix(ret, N, J))
 }
 
-reloadRandom <- function(random, longpars, parstart){
-    ind1 <- parstart
+reloadRandom <- function(random, longpars){
     for(i in 1L:length(random)){
-        ind2 <- ind1 + length(random[[i]]@par) - 1L
-        random[[i]]@par <- longpars[ind1:ind2]
-        ind1 <- ind2 + 1L
+        parnum <- random[[i]]@parnum
+        random[[i]]@par <- longpars[min(parnum):max(parnum)]
     }
     random
 }

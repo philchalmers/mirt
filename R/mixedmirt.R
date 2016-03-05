@@ -71,11 +71,12 @@
 #'   'latent regression model' to expalin person-level ability/trait differences. If a named list
 #'   of formulas is supplied (where the names correspond to the latent trait names in \code{model})
 #'   then specific regression effects can be estimated for each factor. Supplying a single formula
-#'   will estimate the regression parameters for all latent traits by default
-#' @param lr.random (CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
+#'   will estimate the regression parameters for all latent traits by default.
+#' @param lr.random a list of random effect terms for modeling variability in the
 #'   latent trait scores, where the syntax uses the same style as in the \code{random} argument.
 #'   Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
-#'   models do not require these, and can be built using the \code{fixed} and \code{random} inputs alone)
+#'   models do not technically require these because they can be built using the
+#'   \code{fixed} and \code{random} inputs alone)
 #' @param constrain a list indicating parameter equality constrains. See \code{\link{mirt}} for
 #'   more detail
 #' @param pars used for parameter starting values. See \code{\link{mirt}} for more detail
@@ -321,6 +322,22 @@
 #' # including group means predicts nearly all variability in 'group'
 #' summary(mod2)
 #' anova(mod1, mod2)
+#'
+#' # can also be fit for Rasch/non-Rasch models with the lr.random input
+#' mod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group)
+#' summary(mod1b)
+#'
+#' mod2b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group_pred, lr.random = ~ 1|group)
+#' summary(mod2b)
+#' anova(mod1b, mod2b)
+#'
+#' mod3 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = '2PL')
+#' summary(mod3)
+#' coef(mod3, simplify=TRUE)
+#' anova(mod1b, mod3)
+#'
+#' head(cbind(randef(mod3)$group, random_intercept))
+#'
 #' }
 mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       lr.fixed = ~ 1, lr.random = NULL, itemdesign = NULL, constrain = NULL,
@@ -387,9 +404,14 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                                 itemdesign=itemdesign, N=nrow(covdata))
     } else mr <- list()
     mixed.design <- list(fixed=mm, random=mr)
-    if(is.null(constrain)) constrain <- list()
     if(class(lr.random) == 'formula') lr.random <- list(lr.random)
-    if((lr.fixed != ~ 1) || !is.null(lr.random)){
+    if(length(lr.random) > 0L){
+        lr.random <- make.randomdesign(random=lr.random, longdata=covdata,
+                                       covnames=colnames(covdata), itemdesign=NULL,
+                                       N=nrow(covdata), LR=TRUE)
+    } else lr.random <-
+    if(is.null(constrain)) constrain <- list()
+    if((lr.fixed != ~ 1) || length(lr.random) > 0L){
         latent.regression <- list(df=covdata, formula=lr.fixed,
                                   EM=FALSE, lr.random=lr.random)
     } else latent.regression <- NULL
@@ -397,7 +419,6 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                      D=1, mixed.design=mixed.design, method='MIXED', constrain=NULL, pars='values',
                      latent.regression=latent.regression, ...)
     mmnames <- colnames(mm)
-    N <- nrow(data)
     if(ncol(mm) > 0L){
         for(i in 1L:ncol(mm)){
             mmparnum <- sv$parnum[sv$name == mmnames[i]]

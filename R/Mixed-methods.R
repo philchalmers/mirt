@@ -74,7 +74,7 @@ setMethod(
             cat('\n')
             print(rand, digits)
         }
-        if(length(object@Model$lrPars)){
+        if(length(object@Model$lrPars) && any(object@Model$lrPars@est)){
             betas <- object@Model$lrPars@beta
             SE.betas <- matrix(object@Model$lrPars@SEpar, nrow(betas), ncol(betas),
                                dimnames = list(rownames(betas), paste0('Std.Error_', colnames(betas))))
@@ -89,7 +89,33 @@ setMethod(
                 print(round(data.frame(SE.betas[, keep, drop=FALSE], z[, keep, drop=FALSE]), digits))
             }
         } else lr.out <- NULL
-        return(invisible(list(random=rand, fixed=out, lr.out=lr.out)))
+        if(length(object@ParObjects$lr.random) > 0L){
+            lr.rand <- list()
+            listnames <- NULL
+            for(i in 1L:length(object@ParObjects$lr.random)){
+                par <- object@ParObjects$lr.random[[i]]@par
+                sigma <- matrix(0, object@ParObjects$lr.random[[i]]@ndim,
+                                object@ParObjects$lr.random[[i]]@ndim)
+                sigma[lower.tri(sigma, TRUE)] <- par
+                if(ncol(sigma) > 1L){
+                    sigma <- sigma + t(sigma) - diag(diag(sigma))
+                    csigma <- cov2cor(sigma)
+                    sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
+                }
+                colnames(sigma) <- rownames(sigma) <-
+                    paste0('COV_', colnames(object@ParObjects$lr.random[[i]]@gdesign))
+                lr.rand[[length(lr.rand) + 1L]] <- sigma
+                listnames <- c(listnames, colnames(object@ParObjects$lr.random[[i]]@gdesign)[1L])
+            }
+            names(lr.rand) <- listnames
+        } else lr.rand <- NULL
+        if(verbose && !is.null(lr.rand)){
+            cat('\n--------------\nRANDOM EFFECT COVARIANCE(S):\n')
+            cat('Correlations on upper diagonal\n')
+            cat('\n')
+            print(lr.rand, digits)
+        }
+        return(invisible(list(random=rand, fixed=out, lr.out=lr.out, lr.rand=lr.rand)))
     }
 )
 
@@ -108,7 +134,7 @@ setMethod(
         allPars <- list()
         if(length(object@ParObjects$pars[[1]]@SEpar) > 0){
             if(printSE){
-                for(i in 1:(J+1)){
+                for(i in 1L:(J+1L)){
                     allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
                                                    object@ParObjects$pars[[i]]@SEpar),
                                                  2, byrow = TRUE), digits)
@@ -116,7 +142,7 @@ setMethod(
                     colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 }
             } else {
-                for(i in 1:(J+1)){
+                for(i in 1L:(J+1L)){
                     allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
                                                    object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
                                                    object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
@@ -126,7 +152,7 @@ setMethod(
                 }
             }
         } else {
-            for(i in 1:(J+1)){
+            for(i in 1L:(J+1L)){
                 allPars[[i]] <- matrix(round(object@ParObjects$pars[[i]]@par, digits), 1L)
                 colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 rownames(allPars[[i]]) <- 'par'
@@ -163,7 +189,7 @@ setMethod(
                 }
             }
         }
-        if(length(object@Model$lrPars)){
+        if(length(object@Model$lrPars) && any(object@Model$lrPars@est)){
             listnames <- c(listnames, 'lr.betas')
             if(!printSE){
                 allPars[[length(allPars)+1L]] <- round(matrix(c(object@Model$lrPars@par,
@@ -178,6 +204,30 @@ setMethod(
                 rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
             }
             colnames(allPars[[length(allPars)]]) <- names(object@Model$lrPars@est)
+        }
+        if(length(object@ParObjects$lr.random) > 0L){
+            if(printSE){
+                for(i in 1L:length(object@ParObjects$lr.random)){
+                    allPars[[length(allPars) + 1L]] <-
+                        round(matrix(c(object@ParObjects$lr.random[[i]]@par,
+                                       object@ParObjects$lr.random[[i]]@SEpar),
+                                     2, byrow = TRUE), digits)
+                    rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
+                    colnames(allPars[[length(allPars)]]) <- names(object@ParObjects$lr.random[[i]]@est)
+                    listnames <- c(listnames, colnames(object@ParObjects$lr.random[[i]]@gdesign)[1L])
+                }
+            } else {
+                for(i in 1L:length(object@ParObjects$lr.random)){
+                    allPars[[length(allPars) + 1L]] <-
+                        round(matrix(c(object@ParObjects$lr.random[[i]]@par,
+                                       object@ParObjects$lr.random[[i]]@par - z*object@ParObjects$lr.random[[i]]@SEpar,
+                                       object@ParObjects$lr.random[[i]]@par + z*object@ParObjects$lr.random[[i]]@SEpar),
+                                     3, byrow = TRUE), digits)
+                    rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
+                    colnames(allPars[[length(allPars)]]) <- names(object@ParObjects$lr.random[[i]]@est)
+                    listnames <- c(listnames, colnames(object@ParObjects$lr.random[[i]]@gdesign)[1L])
+                }
+            }
         }
         names(allPars) <- listnames
         return(allPars)

@@ -33,10 +33,17 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(!closeEnough(floor(ndraws/thin) == (ndraws/thin), -1e4, 1e4))
         stop('ndraws and thin are not the correct dimensions', call.=FALSE)
     random <- x@ParObjects$random
+    lr.random <- x@ParObjects$lr.random
     if(length(random) > 0L){
         Random <- vector('list', length(random))
         for(i in 1L:length(Random))
             Random[[i]] <- matrix(0, nrow(x@ParObjects$random[[i]]@drawvals), ncol(x@ParObjects$random[[i]]@drawvals))
+    }
+    if(length(lr.random) > 0L){
+        lr.Random <- vector('list', length(lr.random))
+        for(i in 1L:length(lr.Random))
+            lr.Random[[i]] <- matrix(0, nrow(x@ParObjects$lr.random[[i]]@drawvals),
+                                     ncol(x@ParObjects$lr.random[[i]]@drawvals))
     }
     J <- ncol(x@Data$data)
     N <- nrow(x@Data$fulldata[[1L]])
@@ -50,6 +57,16 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         gstructgrouppars$gmeans <- fixef(x)
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
     for(i in 1L:20L){
+        if(length(lr.random) > 0L){
+            mus <- matrix(0, N, length(lr.random))
+            for(j in 1L:length(lr.random)){
+                lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
+                                                      pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
+                                                      offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND, LR=TRUE)
+                mus[,j] <- lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
+            }
+            gstructgrouppars$gmeans <- fixef(x) + rowSums(mus)
+        }
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@Model$itemloc, cand.t.var=x@OptimInfo$cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
@@ -71,6 +88,21 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         names(DRAWS) <- retnames
     }
     for(i in 1L:ndraws){
+        if(length(lr.random) > 0L){
+            mus <- matrix(0, N, length(lr.random))
+            for(j in 1L:length(lr.random)){
+                lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
+                                                      pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
+                                                      offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND, LR=TRUE)
+                mus[,j] <- lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
+                if(i %% thin == 0){
+                    lr.Random[[j]] <- lr.Random[[j]] + lr.random[[j]]@drawvals
+                    if(return.draws) DRAWS[[j+1L]][[length(DRAWS[[j+1L]]) + 1L]] <-
+                            lr.random[[j]]@drawvals[,1L:ncol(lr.random[[j]]@drawvals), drop=FALSE]
+                }
+            }
+            gstructgrouppars$gmeans <- fixef(x) + rowSums(mus)
+        }
         tmpTheta <- draw.thetas(theta0=tmpTheta, pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                 itemloc=x@Model$itemloc, cand.t.var=x@OptimInfo$cand.t.var,
                                 prior.t.var=gstructgrouppars$gcov, OffTerm=OffTerm,
@@ -109,6 +141,15 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
             colnames(Random[[j]]) <- colnames(x@ParObjects$random[[j]]@gdesign)
             ret[[length(ret) + 1L]] <- Random[[j]]
             retnames <- c(retnames, colnames(x@ParObjects$random[[j]]@gdesign)[1L])
+        }
+    }
+    if(length(lr.random) > 0L){
+        for(j in 1L:length(lr.random)){
+            lr.Random[[j]] <- lr.Random[[j]] / (ndraws/thin)
+            attr(lr.Random[[j]], 'Proportion Accepted') <- NULL
+            colnames(lr.Random[[j]]) <- colnames(x@ParObjects$lr.random[[j]]@gdesign)
+            ret[[length(ret) + 1L]] <- lr.Random[[j]]
+            retnames <- c(retnames, colnames(x@ParObjects$lr.random[[j]]@gdesign)[1L])
         }
     }
     ret <- lapply(ret, function(x){attr(x, 'log.lik_full') <- NULL; x} )

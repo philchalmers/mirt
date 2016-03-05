@@ -44,12 +44,13 @@ effects in the latent variables from the variables in \code{covdata}. This is us
 'latent regression model' to expalin person-level ability/trait differences. If a named list
 of formulas is supplied (where the names correspond to the latent trait names in \code{model})
 then specific regression effects can be estimated for each factor. Supplying a single formula
-will estimate the regression parameters for all latent traits by default}
+will estimate the regression parameters for all latent traits by default.}
 
-\item{lr.random}{(CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
+\item{lr.random}{a list of random effect terms for modeling variability in the
 latent trait scores, where the syntax uses the same style as in the \code{random} argument.
 Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
-models do not require these, and can be built using the \code{fixed} and \code{random} inputs alone)}
+models do not technically require these because they can be built using the
+\code{fixed} and \code{random} inputs alone)}
 
 \item{itemdesign}{a \code{data.frame} object used to create a design matrix for the items, where
 each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of
@@ -340,6 +341,22 @@ mod2 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group_pred, random = ~ 
 # including group means predicts nearly all variability in 'group'
 summary(mod2)
 anova(mod1, mod2)
+
+# can also be fit for Rasch/non-Rasch models with the lr.random input
+mod1b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group)
+summary(mod1b)
+
+mod2b <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group_pred, lr.random = ~ 1|group)
+summary(mod2b)
+anova(mod1b, mod2b)
+
+mod3 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = '2PL')
+summary(mod3)
+coef(mod3, simplify=TRUE)
+anova(mod1b, mod3)
+
+head(cbind(randef(mod3)$group, random_intercept))
+
 }
 }
 \author{

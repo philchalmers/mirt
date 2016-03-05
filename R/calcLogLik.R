@@ -4,9 +4,22 @@ setMethod(
 	definition = function(object, draws = 5000, G2 = TRUE, lrPars=NULL)
 	{
         LLdraws <- function(LLDUMMY=NULL, nfact, N, grp, prodlist, fulldata, object, J, random, ot,
-                            CUSTOM.IND, lrPars, pars, itemloc){
+                            CUSTOM.IND, lrPars, pars, itemloc, lr.random){
             theta <- mirt_rmvnorm(N,grp$gmeans, grp$gcov)
-            if(length(lrPars)) theta <- theta + lrPars@mus
+            if(length(lr.random)){
+                mus <- matrix(0, N, length(lr.random))
+                for(i in 1L:length(lr.random)){
+                    mat <- matrix(0, lr.random[[i]]@ndim, lr.random[[i]]@ndim)
+                    mat[lower.tri(mat, TRUE)] <- lr.random[[i]]@par
+                    if(ncol(mat) > 1L)
+                        mat <- mat + t(mat) - diag(diag(mat))
+                    mus[,i] <- mirt_rmvnorm(nrow(lr.random[[i]]@drawvals), sigma = mat)[lr.random[[i]]@mtch]
+                }
+                mus <- rowSums(mus) + lrPars@mus
+                theta <- theta + mus
+            } else {
+                if(length(lrPars)) theta <- theta + lrPars@mus
+            }
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
             if(length(random) > 0L){
@@ -37,7 +50,8 @@ setMethod(
         } else ot <- OffTerm(object@ParObjects$random, J=J, N=N)
         LL <- t(myApply(X=LL, MARGIN=2L, FUN=LLdraws, nfact=nfact, lrPars=lrPars, pars=pars, itemloc=itemloc,
                         N=N, grp=grp, prodlist=prodlist, fulldata=fulldata, object=object, J=J,
-                        random=object@ParObjects$random, ot=ot, CUSTOM.IND=object@Internals$CUSTOM.IND))
+                        random=object@ParObjects$random, ot=ot, CUSTOM.IND=object@Internals$CUSTOM.IND,
+                        lr.random=object@ParObjects$lr.random))
         LL <- exp(LL)
         LL[is.nan(LL)] <- 0
         rwmeans <- rowMeans(LL)
