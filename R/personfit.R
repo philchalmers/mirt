@@ -137,7 +137,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         for(i in 1L:length(x@Model$itemtype))
             oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
         if(all(oneslopes)){
-            W <- resid <- info <- C <- matrix(0, ncol=J, nrow=N)
+            W <- resid <- C <- matrix(0, ncol=J, nrow=N)
             K <- x@Data$K
             for (i in 1L:J){
                 P <- ProbTrace(x=pars[[i]], Theta=Theta)
