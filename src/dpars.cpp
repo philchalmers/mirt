@@ -388,7 +388,7 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
             }
         }
     }
-    
+
     if(estHess){
         int k = 0;
         for(int i = 0; i < npars2; ++i){
@@ -460,7 +460,7 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
         }
     }
 }
-RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, SEXP Rrandeff, 
+RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, SEXP Rrandeff,
         SEXP REM, SEXP REMcomplete)
 {
     S4 obj(Robj);
@@ -477,7 +477,7 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
     NumericMatrix hess(npars2, npars2);
     if(EM){
         if(EMcomplete){
-            _dgroupEMCD(grad, hess, obj, Theta, estHess); 
+            _dgroupEMCD(grad, hess, obj, Theta, estHess);
         } else {
         	_dgroupEM(grad, hess, obj, Theta, itemtrace, grad, estHess);
         }
@@ -777,8 +777,6 @@ static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<d
     //hess
     if(estHess){
 
-
-        //Rprintf("Hessian not supported for gpcm_mat yet.\n"); //TODO
 
         //a's
         for(int j = 0; j < nfact; ++j){
@@ -1264,7 +1262,7 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         switch(itemclass){
             case 0 :
                 if(EMcomplete){
-                    _dgroupEMCD(tmpgrad, tmphess, item, theta, estHess); 
+                    _dgroupEMCD(tmpgrad, tmphess, item, theta, estHess);
                 } else {
                     _dgroupEM(tmpgrad, tmphess, item, theta, itemtrace, prior, estHess);
                 }

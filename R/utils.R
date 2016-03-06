@@ -1694,7 +1694,6 @@ MGC2SC <- function(x, which){
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
-    ## TODO, add acov information in for subset
     tmp
 }
 

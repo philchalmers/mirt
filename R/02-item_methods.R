@@ -1010,7 +1010,7 @@ setMethod(
             }
         }
         ####
-        #FIXME - can't seem to get the last value of the gradient quite right for some reason....
+        #TODO - can't seem to get the last value of the gradient quite right for some reason....
         x2 <- x
         x2@est <- c(rep(FALSE, length(x2@est)-1L), TRUE)
         grad[x2@est] <- numDeriv::grad(EML, x@par[x2@est], obj=x2, Theta=Theta)

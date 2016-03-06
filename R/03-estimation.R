@@ -395,7 +395,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.Estimate <- proc.time()[3L]
     if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
         if(length(lrPars)){
-            if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson'))) ## TODO
+            if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson')))
                 stop('Information matrix method for latent regression estimates not supported',
                      call.=FALSE)
             opts$full <- TRUE

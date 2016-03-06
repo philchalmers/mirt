@@ -1,6 +1,5 @@
 .gitignore
 .Rprofile
-ToDo
 COPYING
 ^\.Rproj\.user$
 mirt.Rproj
