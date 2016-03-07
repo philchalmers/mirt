@@ -35,9 +35,7 @@ simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 <tr valign="top"><td><code>a</code></td>
 <td>
 <p>a matrix/vector of slope parameters. If slopes are to be constrained to
-zero then use <code>NA</code>. <code>a</code> may also be a similar matrix specifying
-factor loadings if <code>factor.loads = TRUE</code>. When a vector is used the test is assumed to be
-unidimensional</p>
+zero then use <code>NA</code> or simply set them equal to 0</p>
 </td></tr>
 <tr valign="top"><td><code>d</code></td>
 <td>
@@ -241,7 +239,130 @@ dataset &lt;- simdata(a,d,2000,items,sigma=sigma,nominal=nominal)
 #mod &lt;- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep(&#39;2PL&#39;, 3), &#39;nominal&#39;, &#39;gpcm&#39;,&#39;graded&#39;))
 #coef(mod)
 
-#### Unidimensional nonlinear factor pattern
+#### Convert standardized factor loadings to slopes
+
+F2a &lt;- function(F, D=1.702){
+    h2 &lt;- rowSums(F^2)
+    a &lt;- (F / sqrt(1 - h2)) * D
+    a
+}
+
+(F &lt;- matrix(c(rep(.7, 5), rep(.5,5))))
+</code></pre>
+
+<pre><code>##       [,1]
+##  [1,]  0.7
+##  [2,]  0.7
+##  [3,]  0.7
+##  [4,]  0.7
+##  [5,]  0.7
+##  [6,]  0.5
+##  [7,]  0.5
+##  [8,]  0.5
+##  [9,]  0.5
+## [10,]  0.5
+</code></pre>
+
+<pre><code class="r">(a &lt;- F2a(F))
+</code></pre>
+
+<pre><code>##            [,1]
+##  [1,] 1.6682937
+##  [2,] 1.6682937
+##  [3,] 1.6682937
+##  [4,] 1.6682937
+##  [5,] 1.6682937
+##  [6,] 0.9826502
+##  [7,] 0.9826502
+##  [8,] 0.9826502
+##  [9,] 0.9826502
+## [10,] 0.9826502
+</code></pre>
+
+<pre><code class="r">d &lt;- rnorm(10)
+
+dat &lt;- simdata(a, d, 5000, itemtype = &#39;dich&#39;)
+mod &lt;- mirt(dat, 1)
+coef(mod, simplify=TRUE)$items
+</code></pre>
+
+<pre><code>##            a1      d g u
+## Item_1  1.735 -1.829 0 1
+## Item_2  1.734 -2.222 0 1
+## Item_3  1.577  1.386 0 1
+## Item_4  1.739  1.253 0 1
+## Item_5  1.706  0.485 0 1
+## Item_6  0.985  0.151 0 1
+## Item_7  0.935 -0.038 0 1
+## Item_8  0.957  0.089 0 1
+## Item_9  0.961 -2.276 0 1
+## Item_10 0.915 -0.181 0 1
+</code></pre>
+
+<pre><code class="r">summary(mod)
+</code></pre>
+
+<pre><code>##            F1    h2
+## Item_1  0.714 0.510
+## Item_2  0.714 0.509
+## Item_3  0.680 0.462
+## Item_4  0.715 0.511
+## Item_5  0.708 0.501
+## Item_6  0.501 0.251
+## Item_7  0.481 0.232
+## Item_8  0.490 0.240
+## Item_9  0.492 0.242
+## Item_10 0.473 0.224
+## 
+## SS loadings:  3.682 
+## Proportion Var:  0.368 
+## 
+## Factor correlations: 
+## 
+##    F1
+## F1  1
+</code></pre>
+
+<pre><code class="r">mod2 &lt;- mirt(dat, &#39;F1 = 1-10
+                   CONSTRAIN = (1-5, a1), (6-10, a1)&#39;)
+summary(mod2)
+</code></pre>
+
+<pre><code>##            F1    h2
+## Item_1  0.706 0.498
+## Item_2  0.706 0.498
+## Item_3  0.706 0.498
+## Item_4  0.706 0.498
+## Item_5  0.706 0.498
+## Item_6  0.487 0.237
+## Item_7  0.487 0.237
+## Item_8  0.487 0.237
+## Item_9  0.487 0.237
+## Item_10 0.487 0.237
+## 
+## SS loadings:  3.676 
+## Proportion Var:  0.368 
+## 
+## Factor correlations: 
+## 
+##    F1
+## F1  1
+</code></pre>
+
+<pre><code class="r">anova(mod, mod2)
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = dat, model = &quot;F1 = 1-10\n                   CONSTRAIN = (1-5, a1), (6-10, a1)&quot;)
+## Model 2: mirt(data = dat, model = 1)
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik   X2  df      p
+## 1 55125.23 55125.29 55165.31 55203.44 -27550.62  NaN NaN    NaN
+## 2 55136.66 55136.83 55203.45 55267.01 -27548.33 4.57   8 0.8024
+</code></pre>
+
+<pre><code class="r">#### Unidimensional nonlinear factor pattern
 
 theta &lt;- rnorm(2000)
 Theta &lt;- cbind(theta,theta^2)
@@ -295,7 +416,7 @@ str(listobj)
 <pre><code>## List of 3
 ##  $ itemobjects:List of 4
 ##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 20 slots
-##   .. .. ..@ par          : atomic [1:4] 0.764 -1 -999 999
+##   .. .. ..@ par          : atomic [1:4] 0.781 -1 -999 999
 ##   .. .. .. ..- attr(*, &quot;na.action&quot;)=Class &#39;omit&#39;  int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ est          : logi(0) 
@@ -317,7 +438,7 @@ str(listobj)
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
 ##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 20 slots
-##   .. .. ..@ par          : atomic [1:4] 0.899 1.5 -999 999
+##   .. .. ..@ par          : atomic [1:4] 0.756 1.5 -999 999
 ##   .. .. .. ..- attr(*, &quot;na.action&quot;)=Class &#39;omit&#39;  int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ est          : logi(0) 
@@ -339,7 +460,7 @@ str(listobj)
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
 ##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 20 slots
-##   .. .. ..@ par          : atomic [1:4] 0.725 0 -999 999
+##   .. .. ..@ par          : atomic [1:4] 1.14 0 -999 999
 ##   .. .. .. ..- attr(*, &quot;na.action&quot;)=Class &#39;omit&#39;  int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ est          : logi(0) 
@@ -362,7 +483,7 @@ str(listobj)
 ##   .. .. ..@ prior_2      : num(0) 
 ##   ..$ :Formal class &#39;nestlogit&#39; [package &quot;mirt&quot;] with 21 slots
 ##   .. .. ..@ correctcat   : int 1
-##   .. .. ..@ par          : num [1:10] 0.895 1 -999 999 0 ...
+##   .. .. ..@ par          : num [1:10] 0.915 1 -999 999 0 ...
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ est          : logi(0) 
 ##   .. .. ..@ constr       : logi(0) 
@@ -382,11 +503,11 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##  $ data       : num [1:2000, 1:4] 0 0 1 0 0 0 0 0 0 0 ...
+##  $ data       : num [1:2000, 1:4] 0 0 0 1 1 0 0 0 1 0 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr [1:4] &quot;Item_1&quot; &quot;Item_2&quot; &quot;Item_3&quot; &quot;Item_4&quot;
-##  $ Theta      : num [1:2000, 1] -0.72 0.353 1.948 -0.834 -1.1 ...
+##  $ Theta      : num [1:2000, 1] -0.0408 2.0221 -0.4099 1.5596 0.2904 ...
 </code></pre>
 
 <pre><code class="r"># generate dataset from converged model
@@ -396,12 +517,12 @@ head(sim)
 </code></pre>
 
 <pre><code>##      Item_1 Item_2 Item_3 Item_4
-## [1,]      3      2      2      2
-## [2,]      4      1      3      3
-## [3,]      2      3      3      3
-## [4,]      2      2      2      3
-## [5,]      3      3      3      4
-## [6,]      4      3      4      3
+## [1,]      3      3      3      3
+## [2,]      4      4      4      3
+## [3,]      3      3      3      3
+## [4,]      4      3      3      2
+## [5,]      4      4      4      4
+## [6,]      4      2      4      3
 </code></pre>
 
 <pre><code class="r">Theta &lt;- matrix(rnorm(100))
@@ -410,12 +531,12 @@ head(sim)
 </code></pre>
 
 <pre><code>##      Item_1 Item_2 Item_3 Item_4
-## [1,]      4      1      3      3
-## [2,]      3      4      4      4
-## [3,]      4      3      4      4
-## [4,]      1      3      2      2
-## [5,]      2      1      4      4
-## [6,]      3      2      1      2
+## [1,]      3      3      3      3
+## [2,]      3      1      1      2
+## [3,]      3      3      3      3
+## [4,]      3      4      3      2
+## [5,]      3      2      2      3
+## [6,]      3      3      4      3
 </code></pre>
 
 <pre><code class="r"># alternatively, define a suitable object with functions from the mirtCAT package
@@ -435,12 +556,12 @@ head(pars)
 </code></pre>
 
 <pre><code>##         a1          d         g
-## 1 1.166747 -0.2380901 0.2081573
-## 2 1.562989 -0.4215493 0.1760318
-## 3 1.038447  0.6323366 0.1223941
-## 4 1.692255  0.8415607 0.1653372
-## 5 1.174677 -0.3151553 0.2875171
-## 6 1.123527  1.3183622 0.2125315
+## 1 1.504969  0.8015146 0.1824596
+## 2 1.481658  0.3372904 0.2400303
+## 3 1.684421 -0.7301190 0.2181996
+## 4 1.290391  0.4437703 0.2196977
+## 5 1.174943 -0.8999951 0.2191199
+## 6 1.234179 -1.1329357 0.1578217
 </code></pre>
 
 <pre><code class="r">obj &lt;- generate.mirt_object(pars, &#39;3PL&#39;)
@@ -450,5 +571,5 @@ dat &lt;- simdata(N=200, model=obj)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -22,7 +22,8 @@ same form as the data used to estimate the model.
 <h3>Usage</h3>
 
 <pre>
-expected.test(x, Theta, group = NULL, mins = TRUE)
+expected.test(x, Theta, group = NULL, mins = TRUE, individual = FALSE,
+  which.items = NULL)
 </pre>
 
 
@@ -46,6 +47,15 @@ expected.test(x, Theta, group = NULL, mins = TRUE)
 <td>
 <p>logical; include the minimum value constants in the dataset. If FALSE, the
 expected values for each item are determined from the scoring 0:(ncat-1)</p>
+</td></tr>
+<tr valign="top"><td><code>individual</code></td>
+<td>
+<p>logical; return tracelines for individual items?</p>
+</td></tr>
+<tr valign="top"><td><code>which.items</code></td>
+<td>
+<p>an integer vector indicating which items to include in the expected test score. Default
+uses all possible items</p>
 </td></tr>
 </table>
 
@@ -78,9 +88,23 @@ tail(cbind(Theta, tscore))
 ## [1201,] 6.00 4.999198
 </code></pre>
 
+<pre><code class="r"># use only first two items (i.e., a bundle)
+bscore &lt;- expected.test(mod, Theta, which.items = 1:2)
+tail(cbind(Theta, bscore))
+</code></pre>
+
+<pre><code>##                bscore
+## [1196,] 5.95 1.999905
+## [1197,] 5.96 1.999906
+## [1198,] 5.97 1.999908
+## [1199,] 5.98 1.999909
+## [1200,] 5.99 1.999910
+## [1201,] 6.00 1.999912
+</code></pre>
+
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
 </body></html>

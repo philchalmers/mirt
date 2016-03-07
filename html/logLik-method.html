@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Print the model objects</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract log-likelihood</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
@@ -8,13 +8,13 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body>
 
-<table width="100%" summary="page for print-method {mirt}"><tr><td>print-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table width="100%" summary="page for logLik-method {mirt}"><tr><td>logLik-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Print the model objects</h2>
+<h2>Extract log-likelihood</h2>
 
 <h3>Description</h3>
 
-<p>Print model object summaries to the console.
+<p>Extract the observed-data log-likelihood.
 </p>
 
 
@@ -22,14 +22,14 @@
 
 <pre>
 ## S4 method for signature 'SingleGroupClass'
-print(x)
+logLik(object)
 </pre>
 
 
 <h3>Arguments</h3>
 
 <table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<tr valign="top"><td><code>object</code></td>
 <td>
 <p>an object of class <code>SingleGroupClass</code>,
 <code>MultipleGroupClass</code>, or <code>MixedClass</code></p>
@@ -41,25 +41,10 @@ print(x)
 
 <pre><code class="r">## No test: 
 x &lt;- mirt(Science, 1)
-print(x)
+logLik(x)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## mirt(data = Science, model = 1)
-## 
-## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 36 EM iterations.
-## mirt version: 1.16 
-## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
-## Number of rectangular quadrature: 61
-## 
-## Log-likelihood = -1608.87
-## AIC = 3249.739; AICc = 3251.19
-## BIC = 3313.279; SABIC = 3262.512
-## G2 (239) = 213.56, p = 0.8804
-## RMSEA = 0, CFI = 1, TLI = 1.193
+<pre><code>## [1] -1608.87
 </code></pre>
 
 <pre><code class="r">## End(No test)

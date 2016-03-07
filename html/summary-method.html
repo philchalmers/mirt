@@ -24,8 +24,7 @@ the fixed and random coefficients are printed.
 <pre>
 ## S4 method for signature 'SingleGroupClass'
 summary(object, rotate = "oblimin",
-  Target = NULL, suppress = 0, digits = 3, printCI = FALSE,
-  verbose = TRUE, ...)
+  Target = NULL, suppress = 0, digits = 3, verbose = TRUE, ...)
 </pre>
 
 
@@ -65,11 +64,6 @@ statistical software. Default is 0 for no suppression</p>
 <tr valign="top"><td><code>digits</code></td>
 <td>
 <p>number of significant digits to be rounded</p>
-</td></tr>
-<tr valign="top"><td><code>printCI</code></td>
-<td>
-<p>print a confidence interval for standardized loadings
-(e.g., <code>printCI = .95</code> gives a 95% confidence interval)</p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -138,29 +132,9 @@ summary(x)
 ## F2  0  1
 </code></pre>
 
-<pre><code class="r">#print confidence interval (requires computed information matrix)
-x2 &lt;- mirt(Science, 1, SE=TRUE)
-summary(x2, printCI=.95)
-</code></pre>
-
-<pre><code>##            F1    h2
-## Comfort 0.522 0.273
-## Work    0.584 0.342
-## Future  0.803 0.645
-## Benefit 0.541 0.293
-## 
-## SS loadings:  1.552 
-## Proportion Var:  0.388 
-## 
-## Factor correlations: 
-## 
-##    F1
-## F1  1
-</code></pre>
-
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
 </body></html>

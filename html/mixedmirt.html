@@ -74,7 +74,8 @@ including the <code>~ -1 + ...</code> or 0 constant. <code>G</code> may contain 
 </td></tr>
 <tr valign="top"><td><code>itemtype</code></td>
 <td>
-<p>same as itemtype in <code><a href="mirt.html">mirt</a></code>, except does not support the following
+<p>same as itemtype in <code><a href="mirt.html">mirt</a></code>, except when the <code>fixed</code>
+or <code>random</code> inputs are used does not support the following
 item types: <code>c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')</code></p>
 </td></tr>
 <tr valign="top"><td><code>lr.fixed</code></td>
@@ -84,14 +85,15 @@ effects in the latent variables from the variables in <code>covdata</code>. This
 'latent regression model' to expalin person-level ability/trait differences. If a named list
 of formulas is supplied (where the names correspond to the latent trait names in <code>model</code>)
 then specific regression effects can be estimated for each factor. Supplying a single formula
-will estimate the regression parameters for all latent traits by default</p>
+will estimate the regression parameters for all latent traits by default.</p>
 </td></tr>
 <tr valign="top"><td><code>lr.random</code></td>
 <td>
-<p>(CURRENTLY DISABLED) a list of random effect terms for modeling variability in the
+<p>a list of random effect terms for modeling variability in the
 latent trait scores, where the syntax uses the same style as in the <code>random</code> argument.
 Useful for building so-called 'multilevel IRT' models which are non-Rasch (multilevel Rasch
-models do not require these, and can be built using the <code>fixed</code> and <code>random</code> inputs alone)</p>
+models do not technically require these because they can be built using the
+<code>fixed</code> and <code>random</code> inputs alone)</p>
 </td></tr>
 <tr valign="top"><td><code>itemdesign</code></td>
 <td>
@@ -219,12 +221,8 @@ data &lt;- simdata(a,d,N, itemtype = rep(&#39;dich&#39;,10), Theta=Theta)
 covdata &lt;- data.frame(group, pseudoIQ)
 #use parallel computing
 mirtCluster()
-</code></pre>
 
-<pre><code>## mirtCluster() has already been defined
-</code></pre>
-
-<pre><code class="r">#specify IRT model
+#specify IRT model
 model &lt;- &#39;Theta = 1-10&#39;
 
 #model with no person predictors
@@ -241,9 +239,9 @@ anova(mod0, mod1)
 ##     group + items)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 8826.167 8826.525 8842.059 8876.988 -4402.084    NaN NaN NaN
-## 2 8116.817 8117.312 8135.598 8176.878 -4045.409 713.35   2   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
+## 2 8117.512 8118.007 8136.293 8177.573 -4045.756 712.655   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -362,7 +360,7 @@ library(lme4)
 </code></pre>
 
 <pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control
-## $checkConv, : Model failed to converge with max|grad| = 0.0213578 (tol =
+## $checkConv, : Model failed to converge with max|grad| = 0.0122013 (tol =
 ## 0.001, component 1)
 </code></pre>
 
@@ -393,9 +391,9 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik  X2  df   p
-## 1 8116.817 8117.312 8135.598 8176.878 -4045.409 NaN NaN NaN
-## 2 7970.817 7972.209 8002.600 8072.459 -3963.409 164   9   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 8117.512 8118.007 8136.293 8177.573 -4045.756     NaN NaN NaN
+## 2 7969.356 7970.748 8001.139 8070.997 -3962.678 166.157   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -436,8 +434,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8104.667 8105.238 8124.892 8169.348 -4038.333     NaN NaN NaN
-## 2 7970.817 7972.209 8002.600 8072.459 -3963.409 149.849   8   0
+## 1 8104.287 8104.858 8124.513 8168.968 -4038.143     NaN NaN NaN
+## 2 7969.356 7970.748 8001.139 8070.997 -3962.678 150.931   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -676,11 +674,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] -0.00187 0.06799 -0.02604 0.06576 -0.06012 ...
+##  $ Theta: num [1:750, 1] -0.0562 -0.0269 -0.001 0.013 -0.1109 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -1.94 -1.29 -1.4 -1.27 -1.41 ...
+##  $ group: num [1:50, 1:2] -2.03 -1.25 -1.42 -1.29 -1.42 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -929,15 +927,12 @@ summary(LLTM)
 <pre><code class="r">wald(LLTM)
 </code></pre>
 
-<pre><code>##                                                                                                                                     1
-## infoname itemordereasier.1.7.13.19.25.31.37.43.49.55.61.67.73.79.85.91.97.103.109.115.121.127.133.139.145.151.157.163.169.175.181.187
-## par                                                                                                                             0.154
-##                                                                                                                                     2
-## infoname itemorderharder.2.8.14.20.26.32.38.44.50.56.62.68.74.80.86.92.98.104.110.116.122.128.134.140.146.152.158.164.170.176.182.188
-## par                                                                                                                             0.446
-##                   3
-## infoname COV_11.194
-## par           0.357
+<pre><code>## itemordereasier.1.7.13.19.25.31.37.43.49.55.61.67.73.79.85.91.97.103.109.115.121.127.133.139.145.151.157.163.169.175.181.187 
+##                                                                                                                        0.154 
+## itemorderharder.2.8.14.20.26.32.38.44.50.56.62.68.74.80.86.92.98.104.110.116.122.128.134.140.146.152.158.164.170.176.182.188 
+##                                                                                                                        0.446 
+##                                                                                                                   COV_11.194 
+##                                                                                                                        0.357
 </code></pre>
 
 <pre><code class="r">L &lt;- matrix(c(-1, 1, 0), 1)
@@ -965,8 +960,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25467.57 25467.61 25471.24 25480.77 -12730.79      NaN NaN NaN
-## 2 20485.23 20489.44 20526.78 20634.72 -10208.61 5044.345  31   0
+## 1 25464.59 25464.63 25468.26 25477.78 -12729.30      NaN NaN NaN
+## 2 20481.18 20485.39 20522.73 20630.67 -10206.59 5045.414  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1197,24 +1192,74 @@ anova(twoPL, LLTM) #much better fit
 <pre><code class="r">wald(twoPL)
 </code></pre>
 
-<pre><code>##                                                                                                                                     1
-## infoname itemordereasier.1.7.13.19.25.31.37.43.49.55.61.67.73.79.85.91.97.103.109.115.121.127.133.139.145.151.157.163.169.175.181.187
-## par                                                                                                                            -1.668
-##                                                                                                                                     2
-## infoname itemorderharder.2.8.14.20.26.32.38.44.50.56.62.68.74.80.86.92.98.104.110.116.122.128.134.140.146.152.158.164.170.176.182.188
-## par                                                                                                                            -1.637
-##               3      4      5      6      7      8      9     10     11
-## infoname   a1.3   a1.9  a1.15  a1.21  a1.27  a1.33  a1.39  a1.45  a1.51
-## par       0.936  2.542  1.003  1.293  2.720  0.424  3.936  0.518  5.509
-##              12     13     14     15     16     17     18     19     20
-## infoname  a1.57  a1.63  a1.69  a1.75  a1.81  a1.87  a1.93  a1.99 a1.105
-## par       1.641 13.602  1.254  3.062  3.508  4.793  1.477  9.979  1.414
-##              21     22     23     24     25     26     27     28     29
-## infoname a1.111 a1.117 a1.123 a1.129 a1.135 a1.141 a1.147 a1.153 a1.159
-## par       2.162  5.821  6.382  7.877  0.980  3.638  1.297  1.912  5.694
-##              30     31     32     33     34
-## infoname a1.165 a1.171 a1.177 a1.183 a1.189
-## par       2.127  1.168  1.441  5.268  0.089
+<pre><code>## itemordereasier.1.7.13.19.25.31.37.43.49.55.61.67.73.79.85.91.97.103.109.115.121.127.133.139.145.151.157.163.169.175.181.187 
+##                                                                                                                       -1.668 
+## itemorderharder.2.8.14.20.26.32.38.44.50.56.62.68.74.80.86.92.98.104.110.116.122.128.134.140.146.152.158.164.170.176.182.188 
+##                                                                                                                       -1.637 
+##                                                                                                                         a1.3 
+##                                                                                                                        0.936 
+##                                                                                                                         a1.9 
+##                                                                                                                        2.542 
+##                                                                                                                        a1.15 
+##                                                                                                                        1.003 
+##                                                                                                                        a1.21 
+##                                                                                                                        1.293 
+##                                                                                                                        a1.27 
+##                                                                                                                        2.720 
+##                                                                                                                        a1.33 
+##                                                                                                                        0.424 
+##                                                                                                                        a1.39 
+##                                                                                                                        3.936 
+##                                                                                                                        a1.45 
+##                                                                                                                        0.518 
+##                                                                                                                        a1.51 
+##                                                                                                                        5.509 
+##                                                                                                                        a1.57 
+##                                                                                                                        1.641 
+##                                                                                                                        a1.63 
+##                                                                                                                       13.602 
+##                                                                                                                        a1.69 
+##                                                                                                                        1.254 
+##                                                                                                                        a1.75 
+##                                                                                                                        3.062 
+##                                                                                                                        a1.81 
+##                                                                                                                        3.508 
+##                                                                                                                        a1.87 
+##                                                                                                                        4.793 
+##                                                                                                                        a1.93 
+##                                                                                                                        1.477 
+##                                                                                                                        a1.99 
+##                                                                                                                        9.979 
+##                                                                                                                       a1.105 
+##                                                                                                                        1.414 
+##                                                                                                                       a1.111 
+##                                                                                                                        2.162 
+##                                                                                                                       a1.117 
+##                                                                                                                        5.821 
+##                                                                                                                       a1.123 
+##                                                                                                                        6.382 
+##                                                                                                                       a1.129 
+##                                                                                                                        7.877 
+##                                                                                                                       a1.135 
+##                                                                                                                        0.980 
+##                                                                                                                       a1.141 
+##                                                                                                                        3.638 
+##                                                                                                                       a1.147 
+##                                                                                                                        1.297 
+##                                                                                                                       a1.153 
+##                                                                                                                        1.912 
+##                                                                                                                       a1.159 
+##                                                                                                                        5.694 
+##                                                                                                                       a1.165 
+##                                                                                                                        2.127 
+##                                                                                                                       a1.171 
+##                                                                                                                        1.168 
+##                                                                                                                       a1.177 
+##                                                                                                                        1.441 
+##                                                                                                                       a1.183 
+##                                                                                                                        5.268 
+##                                                                                                                       a1.189 
+##                                                                                                                        0.089
 </code></pre>
 
 <pre><code class="r">L &lt;- matrix(0, 1, 34)
@@ -1543,9 +1588,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
-## 1 3267.393 3268.507 3278.569 3322.990 -1619.696    NaN NaN   NaN
-## 2 3256.385 3258.021 3269.956 3323.897 -1611.193 17.008   3 7e-04
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik   X2  df      p
+## 1 3264.045 3265.159 3275.221 3319.643 -1618.023  NaN NaN    NaN
+## 2 3258.745 3260.381 3272.316 3326.256 -1612.372 11.3   3 0.0102
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1639,7 +1684,7 @@ anova(rmod0, rmod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.156 9743.453 9761.048 9795.982 -4860.578     NaN NaN NaN
-## 2 9497.273 9497.684 9518.418 9559.704 -4735.637 249.883   2   0
+## 2 9494.498 9494.909 9515.643 9556.929 -4734.249 252.658   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1711,7 +1756,7 @@ anova(mod0, mod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
-## 2 9495.152 9496.306 9530.936 9600.804 -4725.576 252.622   2   0
+## 2 9495.515 9496.669 9531.300 9601.168 -4725.758 252.258   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1765,14 +1810,14 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0  1.097      0  0.832
+## par      0      0  1.089      0  0.832
 ## 
 ## $lr.betas
-##                F1    F2
-## (Intercept) 0.000 0.000
-## groupg2     0.856 0.752
-## groupg3     1.718 1.815
-## contvar     0.057 0.000
+##                 F1    F2
+## (Intercept)  0.000 0.000
+## groupg2      0.867 0.751
+## groupg3      1.723 1.815
+## contvar     -0.086 0.000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1792,23 +1837,23 @@ summary(mod2b)
 ## 
 ## $Theta
 ##      F1    F2
-## F1 1.07 0.000
-## F2 0.00 0.779
+## F1 1.04 0.000
+## F2 0.00 0.773
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
-##                F1    F2
-## (Intercept) 0.000 0.000
-## groupg2     0.867 0.654
-## groupg3     1.721 1.691
-## contvar     0.064 0.000
+##                 F1    F2
+## (Intercept)  0.000 0.000
+## groupg2      0.858 0.684
+## groupg3      1.698 1.717
+## contvar     -0.099 0.000
 ## 
 ##             Std.Error_F1 Std.Error_F2   z_F1   z_F2
 ## (Intercept)           NA           NA     NA     NA
-## groupg2            0.074        0.148 11.764  4.407
-## groupg3            0.093        0.121 18.567 13.963
-## contvar            0.041           NA  1.551     NA
+## groupg2            0.070        0.103 12.334  6.614
+## groupg3            0.076        0.103 22.341 16.698
+## contvar            0.040           NA -2.468     NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1894,13 +1939,220 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23687.38 23687.54 23716.47 23754.59 -11831.69     NaN NaN NaN
-## 2 22904.39 22904.57 22935.90 22977.20 -11439.19 784.995   1   0
+## 1 23682.98 23683.14 23712.07 23750.19 -11829.49     NaN NaN NaN
+## 2 22905.60 22905.78 22937.11 22978.41 -11439.80 779.382   1   0
+</code></pre>
+
+<pre><code class="r"># can also be fit for Rasch/non-Rasch models with the lr.random input
+mod1b &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group)
+summary(mod1b)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items, lr.random = ~1 | group)
+## 
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $Theta
+##      F1
+## F1 1.09
+## 
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $group
+##           COV_group
+## COV_group     0.778
+</code></pre>
+
+<pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group_pred, lr.random = ~ 1|group)
+summary(mod2b)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items + group_pred, lr.random = ~1 | group)
+## 
+## --------------
+## FIXED EFFECTS:
+##            Estimate Std.Error z.value
+## group_pred    1.002      0.04  24.934
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $Theta
+##      F1
+## F1 1.09
+## 
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $group
+##           COV_group
+## COV_group     0.068
+</code></pre>
+
+<pre><code class="r">anova(mod1b, mod2b)
+</code></pre>
+
+<pre><code>## 
+## Model 1: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items, lr.random = ~1 | group)
+## Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items + group_pred, lr.random = ~1 | group)
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 23682.20 23682.34 23708.87 23743.81 -11830.10     NaN NaN NaN
+## 2 22913.22 22913.38 22942.31 22980.44 -11444.61 770.979   1   0
+</code></pre>
+
+<pre><code class="r">mod3 &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = &#39;2PL&#39;)
+summary(mod3)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items, itemtype = &quot;2PL&quot;, lr.random = ~1 | group)
+## 
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $Theta
+##    F1
+## F1  1
+## 
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $group
+##           COV_group
+## COV_group     0.805
+</code></pre>
+
+<pre><code class="r">coef(mod3, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $Item_1
+##            a1      d  g  u
+## par     0.938 -0.347  0  1
+## CI_2.5  0.810 -0.477 NA NA
+## CI_97.5 1.065 -0.217 NA NA
+## 
+## $Item_2
+##            a1     d  g  u
+## par     1.001 0.389  0  1
+## CI_2.5  0.860 0.254 NA NA
+## CI_97.5 1.141 0.524 NA NA
+## 
+## $Item_3
+##            a1      d  g  u
+## par     0.918 -0.562  0  1
+## CI_2.5  0.784 -0.691 NA NA
+## CI_97.5 1.052 -0.433 NA NA
+## 
+## $Item_4
+##            a1     d  g  u
+## par     0.986 1.804  0  1
+## CI_2.5  0.829 1.617 NA NA
+## CI_97.5 1.143 1.992 NA NA
+## 
+## $Item_5
+##            a1     d  g  u
+## par     1.064 0.581  0  1
+## CI_2.5  0.924 0.438 NA NA
+## CI_97.5 1.204 0.724 NA NA
+## 
+## $Item_6
+##            a1      d  g  u
+## par     1.015 -0.547  0  1
+## CI_2.5  0.881 -0.687 NA NA
+## CI_97.5 1.149 -0.407 NA NA
+## 
+## $Item_7
+##            a1     d  g  u
+## par     0.960 0.710  0  1
+## CI_2.5  0.819 0.570 NA NA
+## CI_97.5 1.100 0.851 NA NA
+## 
+## $Item_8
+##            a1     d  g  u
+## par     0.908 0.929  0  1
+## CI_2.5  0.774 0.784 NA NA
+## CI_97.5 1.042 1.073 NA NA
+## 
+## $Item_9
+##            a1     d  g  u
+## par     1.093 0.902  0  1
+## CI_2.5  0.942 0.750 NA NA
+## CI_97.5 1.244 1.054 NA NA
+## 
+## $Item_10
+##            a1      d  g  u
+## par     0.994 -0.093  0  1
+## CI_2.5  0.849 -0.225 NA NA
+## CI_97.5 1.138  0.038 NA NA
+## 
+## $GroupPars
+##         MEAN_1 COV_11
+## par          0      1
+## CI_2.5      NA     NA
+## CI_97.5     NA     NA
+## 
+## $group
+##         COV_group_group
+## par               0.805
+## CI_2.5            0.457
+## CI_97.5           1.152
+</code></pre>
+
+<pre><code class="r">anova(mod1b, mod3)
+</code></pre>
+
+<pre><code>## 
+## Model 1: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items, lr.random = ~1 | group)
+## Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
+##     items, itemtype = &quot;2PL&quot;, lr.random = ~1 | group)
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 23682.20 23682.34 23708.87 23743.81 -11830.10    NaN NaN NaN
+## 2 23707.97 23708.39 23756.45 23819.99 -11833.98 -7.765   9   1
+</code></pre>
+
+<pre><code class="r">head(cbind(randef(mod3)$group, random_intercept))
+</code></pre>
+
+<pre><code>##         group random_intercept
+## G1  0.8084083       1.51178117
+## G2 -0.3417819       0.38984324
+## G3 -1.1585716      -0.62124058
+## G4 -1.4736964      -2.21469989
+## G5  1.0304153       1.12493092
+## G6 -0.3170813      -0.04493361
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
 </body></html>

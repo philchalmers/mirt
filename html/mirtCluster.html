@@ -26,18 +26,21 @@ it is not recommended to define a mirtCluster.
 <h3>Usage</h3>
 
 <pre>
-mirtCluster(ncores, remove = FALSE)
+mirtCluster(spec, ..., remove = FALSE)
 </pre>
 
 
 <h3>Arguments</h3>
 
 <table summary="R argblock">
-<tr valign="top"><td><code>ncores</code></td>
+<tr valign="top"><td><code>spec</code></td>
 <td>
-<p>number of cores to be used in the returned object which is
-passed to <code>parallel::makeCluster()</code>. If no input is given the maximum number of available
-cores will be used</p>
+<p>input that is passed to <code>parallel::makeCluster()</code>. If no input is given the
+maximum number of available local cores will be used</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to pass to <code>parallel::makeCluster</code></p>
 </td></tr>
 <tr valign="top"><td><code>remove</code></td>
 <td>
@@ -66,12 +69,9 @@ mirtCluster(4)
 <pre><code class="r">#&#39; #stop and remove cores
 mirtCluster(remove = TRUE)
 
-#use all available cores
-mirtCluster()
-
 ## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
 </body></html>

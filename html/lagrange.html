@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Lagrange test for freeing parameters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for lagrange {mirt}"><tr><td>lagrange {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Lagrange test for freeing parameters</h2>
+
+<h3>Description</h3>
+
+<p>Lagrange (i.e., score) test to test whether parameters should be freed from a
+more constrained baseline model. The required derivative terms are evaluated numerically
+from the <code><a href="numerical_deriv.html">numerical_deriv</a></code> function. Defining a <code><a href="mirtCluster.html">mirtCluster</a></code> will allow the
+independent tests to be run in parallel.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lagrange(mod, parnum, type = "forward", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>mod</code></td>
+<td>
+<p>an estimated model</p>
+</td></tr>
+<tr valign="top"><td><code>parnum</code></td>
+<td>
+<p>a vector, or list of vectors, containing one or more parameter
+locations/sets of locations to be tested.
+See objects returned from <code><a href="mod2values.html">mod2values</a></code> for the locations</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of numerical derivatives to use to find the associated gradient terms. Default is
+'forward', but can also be 'Richardson' and 'central' (see <code><a href="numerical_deriv.html">numerical_deriv</a></code>)</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to pass to <code><a href="numerical_deriv.html">numerical_deriv</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../lavaan/html/lavTestWald.html">wald</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+dat &lt;- expand.table(LSAT7)
+mod &lt;- mirt(dat, 1, &#39;Rasch&#39;)
+(values &lt;- mod2values(mod))
+</code></pre>
+
+<pre><code>##    group   item     class   name parnum     value lbound ubound   est
+## 1    all Item.1      dich     a1      1 1.0000000   -Inf    Inf FALSE
+## 2    all Item.1      dich      d      2 1.8678174   -Inf    Inf  TRUE
+## 3    all Item.1      dich      g      3 0.0000000  0e+00      1 FALSE
+## 4    all Item.1      dich      u      4 1.0000000  0e+00      1 FALSE
+## 5    all Item.2      dich     a1      5 1.0000000   -Inf    Inf FALSE
+## 6    all Item.2      dich      d      6 0.7907818   -Inf    Inf  TRUE
+## 7    all Item.2      dich      g      7 0.0000000  0e+00      1 FALSE
+## 8    all Item.2      dich      u      8 1.0000000  0e+00      1 FALSE
+## 9    all Item.3      dich     a1      9 1.0000000   -Inf    Inf FALSE
+## 10   all Item.3      dich      d     10 1.4606248   -Inf    Inf  TRUE
+## 11   all Item.3      dich      g     11 0.0000000  0e+00      1 FALSE
+## 12   all Item.3      dich      u     12 1.0000000  0e+00      1 FALSE
+## 13   all Item.4      dich     a1     13 1.0000000   -Inf    Inf FALSE
+## 14   all Item.4      dich      d     14 0.5213304   -Inf    Inf  TRUE
+## 15   all Item.4      dich      g     15 0.0000000  0e+00      1 FALSE
+## 16   all Item.4      dich      u     16 1.0000000  0e+00      1 FALSE
+## 17   all Item.5      dich     a1     17 1.0000000   -Inf    Inf FALSE
+## 18   all Item.5      dich      d     18 1.9924961   -Inf    Inf  TRUE
+## 19   all Item.5      dich      g     19 0.0000000  0e+00      1 FALSE
+## 20   all Item.5      dich      u     20 1.0000000  0e+00      1 FALSE
+## 21   all  GROUP GroupPars MEAN_1     21 0.0000000   -Inf    Inf FALSE
+## 22   all  GROUP GroupPars COV_11     22 1.0217669  1e-04    Inf  TRUE
+##    prior.type prior_1 prior_2
+## 1        none     NaN     NaN
+## 2        none     NaN     NaN
+## 3        none     NaN     NaN
+## 4        none     NaN     NaN
+## 5        none     NaN     NaN
+## 6        none     NaN     NaN
+## 7        none     NaN     NaN
+## 8        none     NaN     NaN
+## 9        none     NaN     NaN
+## 10       none     NaN     NaN
+## 11       none     NaN     NaN
+## 12       none     NaN     NaN
+## 13       none     NaN     NaN
+## 14       none     NaN     NaN
+## 15       none     NaN     NaN
+## 16       none     NaN     NaN
+## 17       none     NaN     NaN
+## 18       none     NaN     NaN
+## 19       none     NaN     NaN
+## 20       none     NaN     NaN
+## 21       none     NaN     NaN
+## 22       none     NaN     NaN
+</code></pre>
+
+<pre><code class="r">#test all slopes individually
+parnum &lt;- values$parnum[values$name == &#39;a1&#39;]
+lagrange(mod, parnum)
+</code></pre>
+
+<pre><code>##            X2 df          p
+## 1  0.25555838  1 0.61318816
+## 5  0.02038625  1 0.88646359
+## 9  3.36707583  1 0.06651171
+## 13 1.36300908  1 0.24301666
+## 17 1.14521586  1 0.28455288
+</code></pre>
+
+<pre><code class="r"># compare to LR test for first two slopes
+mod2 &lt;- mirt(dat, &#39;F = 1-5
+                   FREE = (1, a1)&#39;, &#39;Rasch&#39;)
+coef(mod2, simplify=TRUE)$items
+</code></pre>
+
+<pre><code>##           a1     d g u
+## Item.1 1.155 1.938 0 1
+## Item.2 1.000 0.785 0 1
+## Item.3 1.000 1.450 0 1
+## Item.4 1.000 0.518 0 1
+## Item.5 1.000 1.979 0 1
+</code></pre>
+
+<pre><code class="r">anova(mod, mod2)
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = dat, model = 1, itemtype = &quot;Rasch&quot;)
+## Model 2: mirt(data = dat, model = &quot;F = 1-5\n                   FREE = (1, a1)&quot;, 
+##     itemtype = &quot;Rasch&quot;)
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 5341.802 5341.886 5352.192 5371.248 -2664.901   NaN NaN    NaN
+## 2 5343.264 5343.377 5355.386 5377.619 -2664.632 0.537   1 0.4637
+</code></pre>
+
+<pre><code class="r">mod2 &lt;- mirt(dat, &#39;F = 1-5
+                   FREE = (2, a1)&#39;, &#39;Rasch&#39;)
+coef(mod2, simplify=TRUE)$items
+</code></pre>
+
+<pre><code>##           a1     d g u
+## Item.1 1.000 1.874 0 1
+## Item.2 0.948 0.781 0 1
+## Item.3 1.000 1.466 0 1
+## Item.4 1.000 0.523 0 1
+## Item.5 1.000 1.999 0 1
+</code></pre>
+
+<pre><code class="r">anova(mod, mod2)
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = dat, model = 1, itemtype = &quot;Rasch&quot;)
+## Model 2: mirt(data = dat, model = &quot;F = 1-5\n                   FREE = (2, a1)&quot;, 
+##     itemtype = &quot;Rasch&quot;)
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 5341.802 5341.886 5352.192 5371.248 -2664.901   NaN NaN    NaN
+## 2 5343.721 5343.833 5355.842 5378.075 -2664.860 0.081   1 0.7759
+</code></pre>
+
+<pre><code class="r"># test slopes first two slopes and last three slopes jointly
+lagrange(mod, list(parnum[1:2], parnum[3:5]))
+</code></pre>
+
+<pre><code>##                X2 df         p
+## 1.5     0.2832389  2 0.8679515
+## 9.13.17 5.9579996  3 0.1136716
+</code></pre>
+
+<pre><code class="r"># DIF test
+set.seed(1234)
+n &lt;- 30
+N &lt;- 500
+
+a &lt;- matrix(1, n)
+d &lt;- matrix(rnorm(n), n)
+group &lt;- c(rep(&#39;Group_1&#39;, N), rep(&#39;Group_2&#39;, N))
+
+# groups completely equal
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
+dat2 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
+dat &lt;- rbind(dat1, dat2)
+mod &lt;- multipleGroup(dat, 1, group=group,
+                     invariance=c(&#39;free_means&#39;, &#39;free_var&#39;, colnames(dat)))
+coef(mod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $Group_1
+## $Group_1$items
+##            a1      d g u
+## Item_1  1.129 -1.149 0 1
+## Item_2  1.148  0.227 0 1
+## Item_3  0.942  1.003 0 1
+## Item_4  1.163 -2.429 0 1
+## Item_5  1.093  0.507 0 1
+## Item_6  1.210  0.497 0 1
+## Item_7  0.957 -0.518 0 1
+## Item_8  1.066 -0.440 0 1
+## Item_9  1.014 -0.527 0 1
+## Item_10 0.981 -0.845 0 1
+## Item_11 1.053 -0.318 0 1
+## Item_12 1.006 -0.927 0 1
+## Item_13 0.968 -0.721 0 1
+## Item_14 1.078  0.149 0 1
+## Item_15 1.124  1.055 0 1
+## Item_16 0.943 -0.012 0 1
+## Item_17 1.106 -0.400 0 1
+## Item_18 1.090 -0.890 0 1
+## Item_19 1.087 -0.890 0 1
+## Item_20 1.115  2.473 0 1
+## Item_21 0.992  0.165 0 1
+## Item_22 0.868 -0.360 0 1
+## Item_23 0.998 -0.515 0 1
+## Item_24 1.100  0.395 0 1
+## Item_25 1.141 -0.735 0 1
+## Item_26 1.089 -1.273 0 1
+## Item_27 0.909  0.547 0 1
+## Item_28 0.983 -1.246 0 1
+## Item_29 1.016  0.108 0 1
+## Item_30 0.965 -0.932 0 1
+## 
+## $Group_1$means
+## F1 
+##  0 
+## 
+## $Group_1$cov
+##    F1
+## F1  1
+## 
+## 
+## $Group_2
+## $Group_2$items
+##            a1      d g u
+## Item_1  1.129 -1.149 0 1
+## Item_2  1.148  0.227 0 1
+## Item_3  0.942  1.003 0 1
+## Item_4  1.163 -2.429 0 1
+## Item_5  1.093  0.507 0 1
+## Item_6  1.210  0.497 0 1
+## Item_7  0.957 -0.518 0 1
+## Item_8  1.066 -0.440 0 1
+## Item_9  1.014 -0.527 0 1
+## Item_10 0.981 -0.845 0 1
+## Item_11 1.053 -0.318 0 1
+## Item_12 1.006 -0.927 0 1
+## Item_13 0.968 -0.721 0 1
+## Item_14 1.078  0.149 0 1
+## Item_15 1.124  1.055 0 1
+## Item_16 0.943 -0.012 0 1
+## Item_17 1.106 -0.400 0 1
+## Item_18 1.090 -0.890 0 1
+## Item_19 1.087 -0.890 0 1
+## Item_20 1.115  2.473 0 1
+## Item_21 0.992  0.165 0 1
+## Item_22 0.868 -0.360 0 1
+## Item_23 0.998 -0.515 0 1
+## Item_24 1.100  0.395 0 1
+## Item_25 1.141 -0.735 0 1
+## Item_26 1.089 -1.273 0 1
+## Item_27 0.909  0.547 0 1
+## Item_28 0.983 -1.246 0 1
+## Item_29 1.016  0.108 0 1
+## Item_30 0.965 -0.932 0 1
+## 
+## $Group_2$means
+##    F1 
+## 0.032 
+## 
+## $Group_2$cov
+##       F1
+## F1 0.933
+</code></pre>
+
+<pre><code class="r">values &lt;- mod2values(mod)
+
+# mirtCluster()
+lagrange(mod, list(c(123, 124), c(239,240)))
+</code></pre>
+
+<pre><code>##               X2 df        p
+## 123.124 3.548731  2 0.169591
+## 239.240 3.460873  2 0.177207
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+</body></html>

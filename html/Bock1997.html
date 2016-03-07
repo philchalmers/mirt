@@ -123,16 +123,7 @@ table
 ## 64      4      4      4  105 101.207  1.43  0.71
 </code></pre>
 
-<pre><code class="r">#using nominal.highlow matrix to specify lowest and highest categories
-(nominal.highlow &lt;- matrix(c(4,4,4,1,1,1), 2, byrow = TRUE))
-</code></pre>
-
-<pre><code>##      [,1] [,2] [,3]
-## [1,]    4    4    4
-## [2,]    1    1    1
-</code></pre>
-
-<pre><code class="r">mod &lt;- mirt(dat, 1, &#39;nominal&#39;, nominal.highlow=nominal.highlow)
+<pre><code class="r">mod &lt;- mirt(dat, 1, &#39;nominal&#39;)
 coef(mod)
 </code></pre>
 
@@ -157,5 +148,5 @@ coef(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.15 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
 </body></html>
