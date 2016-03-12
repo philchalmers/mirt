@@ -1,3 +1,14 @@
+# Changes in mirt 1.17
+
+- check whether multiple-group models contain enough data to estimate parameters uniquely 
+  when no constraints are applied 
+
+## BUG FIXES
+
+- fix information trace-lines in multiple-group plots (reported by Conal Monaghan)
+
+- suppress standard errors in exploratory models when `rotate != 'none'` (suggested by Hao Wu)
+
 # Changes in mirt 1.16
 
 - enable `lr.random` input to `mixedmirt()` for multilevel-IRT models which are not from the Rasch family

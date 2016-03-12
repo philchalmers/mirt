@@ -88,14 +88,8 @@ setMethod(
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
         infolist <- vector('list', ngroups)
-        for(g in 1:ngroups){
-            info <- 0
-            for(i in 1:J){
-                tmp <- extract.item(x, i, g)
-                info <- info + iteminfo(tmp, Theta=ThetaFull, degrees=degrees)
-            }
-            infolist[[g]] <- info
-        }
+        for(g in 1:ngroups)
+            infolist[[g]] <- testinfo(extract.group(x, g), ThetaFull, degrees = degrees)
         if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
         info <- do.call(c, infolist)
         Theta <- ThetaFull
@@ -229,7 +223,7 @@ setMethod(
                 for(g in 1L:ngroups){
                     I <- matrix(NA, nrow(ThetaFull), J)
                     for(i in which.items)
-                        I[,i] <- iteminfo(extract.item(x, i, group=x@Data$groupNames[g]), ThetaFull)
+                        I[,i] <- iteminfo(extract.item(x, i, group=g), ThetaFull)
                     I <- t(na.omit(t(I)))
                     items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                     plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items)
