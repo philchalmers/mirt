@@ -344,6 +344,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(length(constrain) > 0L)
         for(i in 1L:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
+    if(Data$ngroups > 1L && !length(constrain)){
+        for(j in 1L:Data$ngroups)
+            if(!all(apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
+                     function(x) length(unique(na.omit(x)))) == Data$K))
+                stop('Multiple Group model will not be identified without proper constraints
+                    (groups contain missing data patterns where item responses have been completely ommited)',
+                     call. = FALSE)
+    }
     if(discrete) nestpars <- nestpars + nrow(opts$technical$customTheta) - 1L
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
     dfsubtr <- nestpars - nconstr
