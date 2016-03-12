@@ -188,7 +188,7 @@ setMethod(
                     names(P) <- colnames(x@Data$data)[which.items]
                     count <- 1
                     for(i in which.items){
-                        tmp <- probtrace(extract.item(x, i, group=x@Data$groupNames[g]), ThetaFull)
+                        tmp <- probtrace(extract.item(x, i, group=g), ThetaFull)
                         if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
                         tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(ThetaFull),
                                                                      labels=paste0('cat', 1L:ncol(tmp))))
