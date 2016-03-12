@@ -263,8 +263,10 @@ setMethod(
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
             a <- rotateLambdas(so) * 1.702
-            for(i in 1:J)
+            for(i in 1:J){
                 object@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
+                object@ParObjects$pars[[i]]@SEpar <- numeric(0L)
+            }
             object@ParObjects$pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         allPars <- list()
