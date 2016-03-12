@@ -345,6 +345,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:length(constrain))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
     if(Data$ngroups > 1L && !length(constrain)){
+        if(opts$warn && any(invariance %in% c('free_means', 'free_var')))
+            warning('Multiple-group model may not be identified without providing anchor items',
+                    call.=FALSE)
         for(j in 1L:Data$ngroups)
             if(!all(apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
                      function(x) length(unique(na.omit(x)))) == Data$K))
