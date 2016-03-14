@@ -31,7 +31,7 @@
 #'
 #'  \deqn{\theta = V \Gamma + W \zeta + \epsilon}
 #'
-#'  where V and W are fixed and random effects design matricies for the associated coefficients.
+#'  where V and W are fixed and random effects design matrices for the associated coefficients.
 #'
 #'  To simulate maximum a posteriori estimates for the random effect terms
 #'  use the \code{\link{randef}} function.
@@ -67,9 +67,9 @@
 #'   each \code{nrow(itemdesign) == nitems} and the number of columns is equal to the number of
 #'   fixed effect predictors (i.e., item intercepts). By default an \code{items} variable is
 #'   reserved for modeling the item intercept parameters
-#' @param lr.fixed an R forumala (or list of formulas) to specificy regression
+#' @param lr.fixed an R formula (or list of formulas) to specify regression
 #'   effects in the latent variables from the variables in \code{covdata}. This is used to construct models such as the so-called
-#'   'latent regression model' to expalin person-level ability/trait differences. If a named list
+#'   'latent regression model' to explain person-level ability/trait differences. If a named list
 #'   of formulas is supplied (where the names correspond to the latent trait names in \code{model})
 #'   then specific regression effects can be estimated for each factor. Supplying a single formula
 #'   will estimate the regression parameters for all latent traits by default.
@@ -87,10 +87,10 @@
 #'   using the MHRM algorithm? Default is TRUE
 #' @param internal_constraints logical; use the internally defined constraints for constraining
 #'   effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
-#'   underidentification
+#'   under-identification
 #' @param technical the technical list passed to the MH-RM estimation engine, with the
 #'   SEtol default increased to .0001. Additionally, the argument \code{RANDSTART} is available
-#'   to incidicate at which iteration (during the burn-in stage) the additional random effect
+#'   to indicate at which iteration (during the burn-in stage) the additional random effect
 #'   variables should begin to be approximated (i.e.,
 #'   elements in \code{lr.random} and \code{random}). The default for \code{RANDSTART} is to start
 #'   at iteration 100, and when random effects are included the default number of burn-in iterations is incrased

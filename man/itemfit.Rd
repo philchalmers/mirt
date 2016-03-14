@@ -84,8 +84,7 @@ raschfit <- mirt(data, 1, itemtype='Rasch')
 fit <- itemfit(x)
 fit
 
-fit <- itemfit(x, X2=TRUE)
-fit$X2
+itemfit(x, X2=TRUE)
 
 itemfit(x, empirical.plot = 1) #empirical item plot
 itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99\% CI's
