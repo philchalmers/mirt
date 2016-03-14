@@ -84,8 +84,7 @@
 #' fit <- itemfit(x)
 #' fit
 #'
-#' fit <- itemfit(x, X2=TRUE)
-#' fit$X2
+#' itemfit(x, X2=TRUE)
 #'
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' itemfit(x, empirical.plot = 1, empirical.CI = .99) #empirical item plot with 99% CI's
@@ -331,7 +330,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     df[i] <- df[i] - 1
                     next
                 }
-                X2[i] <- X2[i] + sum((r - N*P)^2 / N*P)
+                X2[i] <- X2[i] + sum((r - N*P)^2 / (N*P))
             }
             if(X2[i] > 0)
                 df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
