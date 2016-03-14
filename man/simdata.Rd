@@ -20,9 +20,13 @@ with \code{NA}. When a vector is used the test is assumed to consist only of dic
 \item{N}{sample size}
 
 \item{itemtype}{a character vector of length \code{nrow(a)} (or 1, if all the item types are
-  the same) specifying the type of items to simulate.
+  the same) specifying the type of items to simulate. Inputs can either be the same as
+  the inputs found in \code{\link{mirt}} or the internal clases defined by the package. If the
+  typical inputs that are passed to \code{\link{mirt}} are used then these will be converted into
+  the respective internal classes automatically.
 
-  Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
+  If the internal class of the object is specified instead, the inputs can
+  be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
   dichotomous, graded, generalized partial credit, nominal, nested logit, and partially
   compensatory models. Note that for the gpcm, nominal, and nested logit models there should
   be as many parameters as desired categories, however to parametrized them for meaningful

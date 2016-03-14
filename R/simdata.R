@@ -14,9 +14,13 @@
 #'   with \code{NA}. When a vector is used the test is assumed to consist only of dichotomous items
 #'   (because only one intercept per item is provided)
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
-#'   the same) specifying the type of items to simulate.
+#'   the same) specifying the type of items to simulate. Inputs can either be the same as
+#'   the inputs found in \code{\link{mirt}} or the internal clases defined by the package. If the
+#'   typical inputs that are passed to \code{\link{mirt}} are used then these will be converted into
+#'   the respective internal classes automatically.
 #'
-#'   Can be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
+#'   If the internal class of the object is specified instead, the inputs can
+#'   be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
 #'   dichotomous, graded, generalized partial credit, nominal, nested logit, and partially
 #'   compensatory models. Note that for the gpcm, nominal, and nested logit models there should
 #'   be as many parameters as desired categories, however to parametrized them for meaningful
@@ -294,12 +298,21 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         stopifnot(length(gpcm_mats) == nitems)
         use_gpcm_mats <- sapply(gpcm_mats, is.matrix)
     } else use_gpcm_mats <- rep(FALSE, nitems)
-    for(i in 1L:length(K)){
-        K[i] <- length(na.omit(d[i, ])) + 1L
-        if(itemtype[i] =='partcomp') K[i] <- 2L
-        if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
+    if(any(itemtype %in% Valid_iteminputs())){
+        if(any(itemtype %in% c('grsm', 'grsmIRT')))
+            stop('Please rewrite rating scale models as gpcm', call.=FALSE)
+        if(any(itemtype %in% c('Rasch')))
+            stop('Rasch itemtype is ambiguous, please specifiy either gpcm or dich/2PL class', call.=FALSE)
+        itemtype <- ifelse(itemtype %in% c('2PL', '3PL', '3PLu', '4PL'), 'dich', itemtype)
+        itemtype <- ifelse(itemtype %in% c('PC2PL', 'PC3PL'), 'partcomp', itemtype)
+        itemtype <- ifelse(itemtype %in% c("2PLNRM", "3PLNRM", "3PLuNRM", "4PLNRM"), 'nestlogit', itemtype)
     }
-    K <- as.integer(K)
+	for(i in 1L:length(K)){
+	    K[i] <- length(na.omit(d[i, ])) + 1L
+	    if(itemtype[i] =='partcomp') K[i] <- 2L
+	    if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
+	}
+	K <- as.integer(K)
     if(any(guess > 1 | guess < 0)) stop('guess input must be between 0 and 1', call.=FALSE)
     if(any(upper > 1 | upper < 0)) stop('upper input must be between 0 and 1', call.=FALSE)
     guess <- logit(guess)
