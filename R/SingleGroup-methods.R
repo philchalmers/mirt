@@ -269,44 +269,43 @@ setMethod(
             }
             object@ParObjects$pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
-        allPars <- list()
         if(IRTpars){
             if(object@Model$nfact > 1L)
                 stop('traditional parameterization is only available for unidimensional models',
                      call.=FALSE)
             for(i in 1:(J+1))
-                allPars[[i]] <- round(mirt2traditional(object@ParObjects$pars[[i]]), digits)
-        } else {
-            if(length(object@ParObjects$pars[[1L]]@SEpar)){
-                if(printSE){
-                    for(i in 1L:(J+1L)){
-                        allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
-                                                       object@ParObjects$pars[[i]]@SEpar),
-                                                     2, byrow = TRUE), digits)
-                        rownames(allPars[[i]]) <- c('par', 'SE')
-                        nms <- names(object@ParObjects$pars[[i]]@est)
-                        if(i <= J && object@Model$itemtype[i] != 'custom'){
-                            nms[nms == 'g'] <- 'logit(g)'
-                            nms[nms == 'u'] <- 'logit(u)'
-                        }
-                        colnames(allPars[[i]]) <- nms
+                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]])
+        }
+        allPars <- list()
+        if(length(object@ParObjects$pars[[1L]]@SEpar)){
+            if(printSE){
+                for(i in 1L:(J+1L)){
+                    allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                                                   object@ParObjects$pars[[i]]@SEpar),
+                                                 2, byrow = TRUE), digits)
+                    rownames(allPars[[i]]) <- c('par', 'SE')
+                    nms <- names(object@ParObjects$pars[[i]]@est)
+                    if(i <= J && object@Model$itemtype[i] != 'custom'){
+                        nms[nms == 'g'] <- 'logit(g)'
+                        nms[nms == 'u'] <- 'logit(u)'
                     }
-                } else {
-                    for(i in 1L:(J+1L)){
-                        allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
-                                                       object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
-                                                       object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
-                                                     3, byrow = TRUE), digits)
-                        rownames(allPars[[i]]) <- c('par', SEnames)
-                        colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
-                    }
+                    colnames(allPars[[i]]) <- nms
                 }
             } else {
                 for(i in 1L:(J+1L)){
-                    allPars[[i]] <- matrix(round(object@ParObjects$pars[[i]]@par, digits), 1L)
+                    allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                                                   object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
+                                                   object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
+                                                 3, byrow = TRUE), digits)
+                    rownames(allPars[[i]]) <- c('par', SEnames)
                     colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
-                    rownames(allPars[[i]]) <- 'par'
                 }
+            }
+        } else {
+            for(i in 1L:(J+1L)){
+                allPars[[i]] <- matrix(round(object@ParObjects$pars[[i]]@par, digits), 1L)
+                colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
+                rownames(allPars[[i]]) <- 'par'
             }
         }
         if(!rawug){
@@ -1140,6 +1139,8 @@ setMethod(
 mirt2traditional <- function(x){
     cls <- class(x)
     par <- x@par
+    SEpar <- x@SEpar
+    est <- x@est
     if(cls != 'GroupPars')
         ncat <- x@ncat
     if(cls == 'dich'){
@@ -1181,8 +1182,9 @@ mirt2traditional <- function(x){
             message('No internal transformation defined for itemtype: ', cls)
         names(par) <- names(x@est)
     }
-    ret <- matrix(par, 1L, dimnames=list('par', names(par)))
-    ret
+    x@par <- par
+    x@SEpar <- numeric() #TODO
+    x
 }
 
 traditional2mirt <- function(x, cls, ncat, digits = 3){
