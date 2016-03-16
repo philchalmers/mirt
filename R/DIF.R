@@ -241,9 +241,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
                 }, stat = seq_stat))
             if(seq_stat == 'p'){
                 statdiff <- p.adjust(statdiff, p.adjust)
-                keep <- statdiff < pval
+                if(scheme == 'drop_sequential')
+                    keep <- statdiff < pval
+                else keep <- statdiff > pval
             } else {
-                keep <- statdiff < 0
+                if(scheme == 'drop_sequential')
+                    keep <- statdiff > 0
+                else keep <- statdiff < 0
             }
             if(all(keep == lastkeep)) break
             lastkeep <- keep
@@ -289,11 +293,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@
         }
         if(verbose)
             cat('\nComputing final DIF estimates...\n')
-        res <- myLapply(X=items2test[!keep], FUN=loop_test, model=updatedModel,
-                        which.par=which.par, values=values, Wald=Wald, drop=FALSE,
+        pick <- !keep
+        if(drop) pick <- !pick
+        res <- myLapply(X=items2test[pick], FUN=loop_test, model=MGmodel,
+                        which.par=which.par, values=values, Wald=Wald, drop=drop,
                         itemnames=itemnames, invariance=invariance, return_models=return_models,
                         ...)
-        names(res) <- itemnames[items2test][!keep]
+        names(res) <- itemnames[items2test][pick]
     }
 
     for(i in 1L:length(res))

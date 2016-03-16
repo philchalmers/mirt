@@ -9,6 +9,8 @@
 
 - suppress standard errors in exploratory models when `rotate != 'none'` (suggested by Hao Wu)
 
+- sequential schemes in `DIF()` generated the wrong results (reported by Adam Meade)
+
 # Changes in mirt 1.16
 
 - enable `lr.random` input to `mixedmirt()` for multilevel-IRT models which are not from the Rasch family
