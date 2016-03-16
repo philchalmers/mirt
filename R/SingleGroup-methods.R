@@ -1139,8 +1139,6 @@ setMethod(
 mirt2traditional <- function(x){
     cls <- class(x)
     par <- x@par
-    SEpar <- x@SEpar
-    est <- x@est
     if(cls != 'GroupPars')
         ncat <- x@ncat
     if(cls == 'dich'){
@@ -1183,7 +1181,7 @@ mirt2traditional <- function(x){
         names(par) <- names(x@est)
     }
     x@par <- par
-    x@SEpar <- numeric() #TODO
+    names(x@est) <- names(par)
     x
 }
 
