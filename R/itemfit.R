@@ -16,9 +16,16 @@
 #' @param S_X2 logical; calculate the S_X2 statistic?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
+#' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
+#'   collapsed if polytomous, however if this condition can not be met then the group block will
+#'   be ommited in the computations
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2}
 #'   statistic
+#' @param group.bins the number of bins to use when \code{X2 = TRUE}. The default \code{NA}
+#'   disables this command and instead uses the \code{group.size} input to try and construct
+#'   bins with that many responses per bin. For example, setting \code{group.bins = 10} will
+#'   override the \code{group.size} argument and will compute Yen's (1981) Q1 statistic
 #' @param empirical.plot a single numeric value or character of the item name  indicating which
 #'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings.
 #'   Only applicable when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots
@@ -128,7 +135,8 @@
 #' itemfit(raschfit2)
 #'   }
 #'
-itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, mincell = 1, S_X2.tables = FALSE,
+itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
+                    group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
@@ -168,7 +176,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         vals <- mod2values(x)
         vals$est <- FALSE
         collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, S_X2=S_X2,
-                            Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
+                            Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
+                            mincell=mincell, mincell.X2=mincell.X2,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, method=method, impute=0,
                             discrete=discrete, ...)
@@ -199,7 +208,8 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
-            ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, mincell=mincell,
+            ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
+                                mincell=mincell, mincell.X2=mincell.X2,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
                                 impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
@@ -294,12 +304,21 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
         den <- dnorm(Theta, 0, .5)
         den <- den / sum(den)
         cumTheta <- cumsum(den)
-        Groups <- rep(20, length(ord))
-        ngroups <- ceiling(nrow(fulldata) / group.size)
-        weight <- 1/ngroups
-        for(i in 1L:20L)
-            Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
-        n.uniqueGroups <- length(unique(Groups))
+        if(is.na(group.bins)){
+            Groups <- rep(20, length(ord))
+            ngroups <- ceiling(nrow(fulldata) / group.size)
+            weight <- 1/ngroups
+            for(i in 1L:length(Groups))
+                Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
+        } else {
+            ngroups <- group.bins
+            Groups <- rep(1:group.bins, each = floor(length(ord) / ngroups))
+            if(length(ord) %% ngroups > 0L){
+                c1 <- length(ord) %% ngroups
+                Groups <- c(rep(1, floor(c1/2)), Groups)
+                Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
+            }
+        }
         X2 <- df <- rep(0, J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
@@ -326,9 +345,9 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
-                if(any(N * P < 2) && length(r) > 2L){
+                if(any(N * P < mincell.X2)){
                     while(TRUE){
-                        wch <- which(N * P < 2)
+                        wch <- which(N * P < mincell.X2)
                         if(!length(wch) || length(r) == 1L) break
                         for(p in wch){
                             if(p == 1L){

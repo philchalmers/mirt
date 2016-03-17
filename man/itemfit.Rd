@@ -5,9 +5,9 @@
 \title{Item fit statistics}
 \usage{
 itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
-  mincell = 1, S_X2.tables = FALSE, empirical.plot = NULL,
-  empirical.CI = 0, method = "EAP", Theta = NULL, impute = 0,
-  digits = 4, ...)
+  group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
+  empirical.plot = NULL, empirical.CI = 0, method = "EAP", Theta = NULL,
+  impute = 0, digits = 4, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -23,8 +23,17 @@ only interested in computing the S-X2 quickly}
 \item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
 statistic}
 
+\item{group.bins}{the number of bins to use when \code{X2 = TRUE}. The default \code{NA}
+disables this command and instead uses the \code{group.size} input to try and construct
+bins with that many responses per bin. For example, setting \code{group.bins = 10} will
+override the \code{group.size} argument and will compute Yen's (1981) Q1 statistic}
+
 \item{mincell}{the minimum expected cell size to be used in the S-X2 computations. Tables will be
 collapsed across items first if polytomous, and then across scores if necessary}
+
+\item{mincell.X2}{the minimum expected cell size to be used in the X2 computations. Tables will be
+collapsed if polytomous, however if this condition can not be met then the group block will
+be ommited in the computations}
 
 \item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
 
