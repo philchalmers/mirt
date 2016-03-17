@@ -326,14 +326,29 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
-                if(any(N * P < 2)){
-                    df[i] <- df[i] - 1
-                    next
+                if(any(N * P < 2) && length(r) > 2L){
+                    while(TRUE){
+                        wch <- which(N * P < 2)
+                        if(!length(wch) || length(r) == 1L) break
+                        for(p in wch){
+                            if(p == 1L){
+                                r[2L] <- r[1L] + r[2L]
+                                P[2L] <- P[1L] + P[2L]
+                            } else {
+                                r[p-1L] <- r[p] + r[p-1L]
+                                P[p-1L] <- P[p] + P[p-1L]
+                            }
+                        }
+                        r <- r[-wch]
+                        P <- P[-wch]
+                    }
+                    if(length(r) == 1L) next
                 }
                 X2[i] <- X2[i] + sum((r - N*P)^2 / (N*P))
+                df[i] <- df[i] + length(r) - 1
             }
             if(X2[i] > 0)
-                df[i] <- df[i] + n.uniqueGroups*(length(r) - 1) - sum(pars[[i]]@est)
+                df[i] <- df[i] - sum(pars[[i]]@est)
         }
         X2[X2 == 0] <- NA
         if(!is.null(empirical.plot)){

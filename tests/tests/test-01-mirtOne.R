@@ -119,10 +119,10 @@ test_that('dich', {
     expect_is(ifit, 'data.frame')
     expect_true(mirt:::closeEnough(as.numeric(ifit$Zh) - c(1.431838, 6.354917, 5.310844, 5.804449,
                                                            0.696139), -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(as.numeric(ifit$X2) - c(129.0193,207.7834,129.7241,319.2017,93.41698), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(as.numeric(ifit$X2) - c(129.70538, 209.61152, 130.15177, 319.20171,  94.24211), -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(as.numeric(ifit$S_X2) - c(4.749440, 14.451071,  1.270381,
                                                              5.237400,  0.941125), -1e-2, 1e-2))
-    expect_true(mirt:::closeEnough(as.numeric(ifit$df) - c(5,5,5,6,5), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(as.numeric(ifit$df) - c(6,6,6,6,6), -1e-4, 1e-4))
     expect_true(mirt:::closeEnough(as.numeric(ifit$df.S_X2) - c(2,2,2,2,2), -1e-4, 1e-4))
 
     fitm1 <- M2(modm1)
