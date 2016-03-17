@@ -377,7 +377,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150, min
             return(xyplot(P ~ Theta, plt, groups = cat,
                           main = paste('Empirical plot for item', empirical.plot),
                             ylim = c(-0.1,1.1), xlab = expression(theta), ylab=expression(P(theta)),
-                          auto.key=ifelse(K==2, FALSE, TRUE), EPCI.lower=EPCI.lower,
+                          auto.key=if(K==2) FALSE else list(space = 'right'), EPCI.lower=EPCI.lower,
                           EPCI.upper=EPCI.upper,
                           panel = function(x, y, groups, subscripts, EPCI.lower, EPCI.upper, ...){
                               panel.xyplot(x=x, y=y, groups=groups, type='l',
