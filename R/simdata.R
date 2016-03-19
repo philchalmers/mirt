@@ -284,6 +284,9 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(missing(itemtype)) missingMsg('itemtype')
     if(is.vector(a)) a <- matrix(a)
     if(is.vector(d)) d <- matrix(d)
+    if(any(itemtype == 'nominal') && is.null(nominal))
+        stop('nominal itemtypes require a \'nominal\' matrix input of scoring coefs (the ak values)',
+             call.=FALSE)
 	nfact <- ncol(a)
 	nitems <- nrow(a)
 	if(length(mins) == 1L) mins <- rep(mins, nitems)
