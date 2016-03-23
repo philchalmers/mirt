@@ -2,6 +2,9 @@
 
 - check whether multiple-group models contain enough data to estimate parameters uniquely 
   when no constraints are applied 
+  
+- set the starting values the same when using `parprior` list or `mirt.model()` syntax
+  (reported by Insu Paek)
 
 ## BUG FIXES
 

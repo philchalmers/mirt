@@ -595,7 +595,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     return(constrain)
 }
 
-UpdatePrior <- function(PrepList, model, groupNames, warn = TRUE){
+UpdatePrior <- function(PrepList, model, groupNames){
     if(!is.numeric(model[[1L]])){
         if(!length(model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L])) return(PrepList)
         groupNames <- as.character(groupNames)
@@ -684,15 +684,6 @@ UpdatePrior <- function(PrepList, model, groupNames, warn = TRUE){
         }
         for(g in 1L:length(PrepList))
             PrepList[[g]]$pars <- pars[[g]]
-    } else {
-        if(warn){
-            speak <- PrepList[[1L]]$itemtype %in% c('3PL', '3PLu', '4PL', 'PC3PL', '3PLNRM', '3PLuNRM', '4PLNRM')
-            if(any(speak) && nrow(PrepList[[1L]]$fulldata) < 5000L)
-                warning(paste0('The following itemtypes are very unstable in smaller sample sizes:',
-                               unique(PrepList[[1]]$itemtype[speak]),
-                               '\nIncluding prior distributions for unstable parameters is recommended. '),
-                               call.=FALSE)
-        }
     }
     return(PrepList)
 }

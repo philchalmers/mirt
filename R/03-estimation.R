@@ -244,7 +244,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
-    PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames, warn=opts$warn)
+    PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames)
     if(GenRandomPars){
         for(g in 1L:Data$ngroups)
             for(i in 1L:length(PrepList[[g]]$pars))

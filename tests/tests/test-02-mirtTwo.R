@@ -43,11 +43,10 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
     expect_equal(abs(cfs), abs(c(-1.3278,0.1081,5.1934,2.8583,-1.5996,-0.8762,1.8783,3.7248,1.1598,-2.9225,-1.4614,1.1639,4.6495,1.951,-1.7322,-1.7397,0,4.0053,1.2008,-2.0548,0,0,1,0,1)),
                  tolerance = 1e-2)
-    modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(2,'norm',0,1)), verbose=FALSE)
+    modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(4,'norm',0,1)), verbose=FALSE)
     expect_is(modp3, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp3, verbose = FALSE)))
-    expect_true(mirt:::closeEnough(cfs - c(1.090,  4.248,  2.550, -1.507,  1.090,  2.817,  0.853, -2.198,  2.269,
-                        5.176,  2.173, -1.978,  1.121,  3.357,  0.987, -1.714,  0.000,  1.000),
+    expect_true(mirt:::closeEnough(cfs - c(1.134,4.964,2.711,-1.473,1.134,2.865,0.882,-2.205,2.211,5.136,2.171,-1.91,1.129,3.383,1.006,-1.7,0,1),
                  -1e-2, 1e-2))
     newmodel <- mirt.model('F = 1-4
                            CONSTRAIN = (1-2,a1)

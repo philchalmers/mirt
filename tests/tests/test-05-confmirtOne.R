@@ -27,13 +27,12 @@ test_that('exploratory mods', {
     expect_equal(cfs, c(-1.4378,0.2262,2.1215,0,1,-1.0463,-1.439,1.0058,0,1,-1.291,-0.7683,1.6927,0,1,-0.8431,-0.0161,0.4919,0,1,-0.7941,0,1.8772,0,1,0,0,1,0,1),
                  tolerance = 1e-2)
     expect_is(twofact, 'SingleGroupClass')
-    expect_message(modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
-                                                                     c(4,8,12,16,20,'norm', 1.7, 1)), method = 'MHRM', draws = 10),
-                            "MHRM terminated after 2000 iterations.")
+    modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
+                                                                     c(4,8,12,16,20,'norm', 1.7, 1)), method = 'MHRM', draws = 10)
     expect_equal(extract.mirt(modm7, 'df'), 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(5.103,7.255,0.148,0.895,8.396,1.902,0.323,0.891,10.745,6.593,0.356,0.926,5.189,5.404,0.148,0.696,2.352,3.802,0.338,0.897,0,1), tolerance = 1e-2)
+    expect_equal(cfs, c(2.17,3.417,0.132,0.914,4.189,1.243,0.306,0.883,4.59,3.29,0.268,0.939,1.167,0.795,0.121,0.864,2.084,3.838,0.146,0.904,0,1), tolerance = 1e-2)
     fulldata[1,1] <- fulldata[2,2] <- NA
     onefactmissing <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(onefactmissing, 'SingleGroupClass')
