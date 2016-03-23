@@ -466,8 +466,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                matrix(Theta[,nfact2], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
                 if(opts$method == 'QMCEM'){
-                    Theta <- QMC_quad(npts=opts$quadpts, nfact=nfact, lim=opts$theta_lim,
-                                      norm=TRUE)
+                    Theta <- QMC_quad(npts=opts$quadpts, nfact=nfact, lim=opts$theta_lim)
                 } else {
                     if(opts$quadpts^nfact <= opts$MAXQUAD){
                         if(is.null(opts$technical$customTheta))

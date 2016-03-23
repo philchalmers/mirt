@@ -1867,13 +1867,7 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
 }
 
 QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
-    if(norm){
-        U <- qnorm(sfsmisc::QUnif(npts, min=0, max=1, p=nfact, leap=leap))
-        ret <- U * (lim[2L] - lim[1L]) / (max(U) - min(U))
-    } else {
-        ret <- sfsmisc::QUnif(npts, min=lim[1L], max=lim[2L], p=nfact, leap=leap)
-    }
-    ret
+    sfsmisc::QUnif(npts, min=lim[1L], max=lim[2L], p=nfact, leap=leap)
 }
 
 MC_quad <- function(npts, nfact, lim)
