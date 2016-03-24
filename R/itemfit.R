@@ -13,6 +13,7 @@
 #' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
 #'   only interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
+#' @param G2 logical; calculate the G2 statistic for unidimensional models?
 #' @param S_X2 logical; calculate the S_X2 statistic?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
@@ -53,12 +54,18 @@
 #'
 #' @references
 #'
+#' Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
+#' in two or more nominal categories. Psychometrika, 37, 29-51.
+#'
 #' Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 #' polychotomous item response models and standardized indices.
 #' \emph{Journal of Mathematical and Statistical Psychology, 38}, 67-86.
 #'
 #' Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the generalized
 #' S-X2 item-fit index for polytomous IRT models. ACT
+#'
+#' McKinley, R., & Mills, C. (1985). A comparison of several goodness-of-fit statistics.
+#' Applied Psychological Measurement, 9, 49–57.
 #'
 #' Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item
 #' response theory models. \emph{Applied Psychological Measurement, 24}, 50-64.
@@ -135,7 +142,7 @@
 #' itemfit(raschfit2)
 #'   }
 #'
-itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
+itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
                     group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
@@ -282,7 +289,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
             }
         }
     }
-    if((X2 || !is.null(empirical.plot)) && x@Model$nfact == 1L){
+    if(( (X2 || G2) || !is.null(empirical.plot)) && x@Model$nfact == 1L){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
         nfact <- ncol(Theta)
@@ -319,7 +326,7 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
                 Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
             }
         }
-        X2 <- df <- rep(0, J)
+        X2.value <- df <- G2.value <- rep(0, J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
@@ -363,13 +370,17 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
                     }
                     if(length(r) == 1L) next
                 }
-                X2[i] <- X2[i] + sum((r - N*P)^2 / (N*P))
+                E <- N*P
+                X2.value[i] <- X2.value[i] + sum((r - E)^2 / E)
                 df[i] <- df[i] + length(r) - 1
+                tmp <- r * log(r/E)
+                G2.value[i] <- G2.value[i] + 2*sum(tmp[is.finite(tmp)])
             }
-            if(X2[i] > 0)
+            if(X2.value[i] > 0)
                 df[i] <- df[i] - sum(pars[[i]]@est)
         }
-        X2[X2 == 0] <- NA
+        X2.value[X2.value == 0] <- NA
+        G2.value[G2.value == 0] <- NA
         if(!is.null(empirical.plot)){
             K <- x@Data$K[empirical.plot]
             EPCI.lower <- EPCI.upper <- NULL
@@ -411,10 +422,17 @@ itemfit <- function(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
                               }
                           }))
         }
-        ret$X2 <- X2
+        if(X2) ret$X2 <- X2.value
+        if(G2) ret$G2 <- G2.value
         ret$df <- df
-        ret$p.X2 <- 1 - pchisq(X2, df)
-        ret$p.X2[df <= 0] <- NaN
+        if(X2){
+            ret$p.X2 <- 1 - pchisq(X2.value, df)
+            ret$p.X2[df <= 0] <- NaN
+        }
+        if(G2){
+            ret$p.G2 <- 1 - pchisq(G2.value, df)
+            ret$p.G2[df <= 0] <- NaN
+        }
     }
     if(S_X2){
         dat <- x@Data$data

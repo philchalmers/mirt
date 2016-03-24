@@ -4,10 +4,10 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
-  group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
-  empirical.plot = NULL, empirical.CI = 0, method = "EAP", Theta = NULL,
-  impute = 0, digits = 4, ...)
+itemfit(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE,
+  group.size = 150, group.bins = NA, mincell = 1, mincell.X2 = 2,
+  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
+  method = "EAP", Theta = NULL, impute = 0, digits = 4, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -16,9 +16,11 @@ itemfit(x, Zh = TRUE, X2 = FALSE, S_X2 = TRUE, group.size = 150,
 \item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
 only interested in computing the S-X2 quickly}
 
+\item{S_X2}{logical; calculate the S_X2 statistic?}
+
 \item{X2}{logical; calculate the X2 statistic for unidimensional models?}
 
-\item{S_X2}{logical; calculate the S_X2 statistic?}
+\item{G2}{logical; calculate the G2 statistic for unidimensional models?}
 
 \item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
 statistic}
@@ -142,12 +144,18 @@ itemfit(raschfit2)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \references{
+Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
+in two or more nominal categories. Psychometrika, 37, 29-51.
+
 Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
 \emph{Journal of Mathematical and Statistical Psychology, 38}, 67-86.
 
 Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the generalized
 S-X2 item-fit index for polytomous IRT models. ACT
+
+McKinley, R., & Mills, C. (1985). A comparison of several goodness-of-fit statistics.
+Applied Psychological Measurement, 9, 49–57.
 
 Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item
 response theory models. \emph{Applied Psychological Measurement, 24}, 50-64.
