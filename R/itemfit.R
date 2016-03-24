@@ -376,8 +376,7 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
                 tmp <- r * log(r/E)
                 G2.value[i] <- G2.value[i] + 2*sum(tmp[is.finite(tmp)])
             }
-            if(X2.value[i] > 0)
-                df[i] <- df[i] - sum(pars[[i]]@est)
+            df[i] <- df[i] - sum(pars[[i]]@est)
         }
         X2.value[X2.value == 0] <- NA
         G2.value[G2.value == 0] <- NA
