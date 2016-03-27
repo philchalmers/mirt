@@ -155,7 +155,7 @@ Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the gen
 S-X2 item-fit index for polytomous IRT models. ACT
 
 McKinley, R., & Mills, C. (1985). A comparison of several goodness-of-fit statistics.
-Applied Psychological Measurement, 9, 49–57.
+Applied Psychological Measurement, 9, 49-57.
 
 Orlando, M. & Thissen, D. (2000). Likelihood-based item fit indices for dichotomous item
 response theory models. \emph{Applied Psychological Measurement, 24}, 50-64.
