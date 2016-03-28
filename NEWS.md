@@ -5,6 +5,9 @@
   
 - set the starting values the same when using `parprior` list or `mirt.model()` syntax
   (reported by Insu Paek)
+  
+- `empirical_ES()` function added for effect size estimates in DIF/DBF/DTF analyses (contributed by
+  Adam Meade)
 
 ## BUG FIXES
 
