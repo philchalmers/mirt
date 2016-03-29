@@ -263,11 +263,13 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
         plt <- data.frame(S=c(df.foc.obs[,1],df.ref.obs[,1]),
                              Theta=c(Theta.focal[,1], Theta.focal[,1]),
                              group=c(rep(c('foc', 'ref'), each = nrow(Theta.focal))))
-        for(i in 2:ncol(df.foc.obs)){
+        if(ncol(df.foc.obs)>1){
+          for(i in 2:ncol(df.foc.obs)){
             plt.df <- data.frame(S=c(df.foc.obs[,i],df.ref.obs[,i]),
                                  Theta=c(Theta.focal[,1], Theta.focal[,1]),
                                  group=rep(c('foc', 'ref'), each = nrow(Theta.focal)))
             plt <- rbind(plt, plt.df)
+          }
         }
         plt$Item <- nms
         return(xyplot(S ~ Theta|Item, plt,
