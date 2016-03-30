@@ -14,7 +14,8 @@ MDIFF(x, which.items = NULL)
 }
 \description{
 Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
-'dich' and 'graded'.
+'dich' and 'graded'. Note that the logistic intercept parameters are divided by 1.702 to match the
+normal ogive metric.
 }
 \examples{
 \dontrun{

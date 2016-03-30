@@ -11,6 +11,9 @@
 
 ## BUG FIXES
 
+- `MDISC` and `MDIFF` values were missing the 1.702 multiplicitive constant (reported by 
+  Yi-Ling Cheng)
+
 - fix information trace-lines in multiple-group plots (reported by Conal Monaghan)
 
 - suppress standard errors in exploratory models when `rotate != 'none'` (suggested by Hao Wu)

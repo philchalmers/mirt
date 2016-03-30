@@ -29,9 +29,9 @@ test_that('basics', {
     rxx <- marginal_rxx(mod)
     expect_equal(rxx, 0.4209159, tolerance=1e-6)
     MD <- unname(MDISC(mod)[1])
-    expect_equal(MD, 0.724201, tolerance=1e-6)
+    expect_equal(MD, 0.5, tolerance=1e-6)
     MDF <- unname(MDIFF(mod)[1L,])
-    expect_equal(MDF, c(-6.061399, -3.566437, 2.031588), tolerance=1e-6)
+    expect_equal(MDF, c(-5.158250, -3.035038, 1.728882), tolerance=1e-6)
 
     bscore <- expected.test(mod, Theta, which.items = c(1,2))
     expect_equal(bscore, c(4.088306,4.734266,5.322015,5.847683,6.34945,6.853612,7.308867), tolerance=1e-6)
