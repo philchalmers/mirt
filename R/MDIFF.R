@@ -35,7 +35,7 @@ MDIFF <- function(x, which.items = NULL){
         if(!(class(item) %in% c('dich', 'graded')))
             stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]))
         ds <- ExtractZetas(item)
-        out[[i]] <- -ds / MD[i]
+        out[[i]] <- -ds / MD[which.items[i]]
     }
     ret <- matrix(NA, length(out), max(sapply(out, length)))
     for(i in 1L:length(out))

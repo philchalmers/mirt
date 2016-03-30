@@ -27,7 +27,7 @@ MDISC <- function(x){
     for(i in 1L:length(ret)){
         item <- extract.item(x, i)
         as <- ExtractLambdas(item)
-        ret[i] <- as %*% as
+        ret[i] <- sqrt(as %*% as)
     }
     names(ret) <- extract.mirt(x, 'itemnames')
     ret
