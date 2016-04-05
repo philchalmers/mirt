@@ -4,26 +4,16 @@
 \alias{fscores}
 \title{Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)}
 \usage{
-fscores(object, rotate = "oblimin", Target = NULL, full.scores = TRUE,
-  method = "EAP", quadpts = NULL, response.pattern = NULL,
-  plausible.draws = 0, returnER = FALSE, return.acov = FALSE,
-  mean = NULL, cov = NULL, verbose = TRUE, full.scores.SE = FALSE,
-  theta_lim = c(-6, 6), MI = 0, QMC = FALSE, custom_den = NULL,
-  custom_theta = NULL, min_expected = 1, converge_info = FALSE, ...)
+fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
+  Target = NULL, response.pattern = NULL, plausible.draws = 0,
+  quadpts = NULL, returnER = FALSE, return.acov = FALSE, mean = NULL,
+  cov = NULL, verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,
+  6), MI = 0, QMC = FALSE, custom_den = NULL, custom_theta = NULL,
+  min_expected = 1, converge_info = FALSE, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
-
-\item{rotate}{prior rotation to be used when estimating the factor scores. See
-\code{\link{summary-method}} for details. If the object is not an exploratory model
-then this argument is ignored}
-
-\item{Target}{target rotation; see \code{\link{summary-method}} for details}
-
-\item{full.scores}{if \code{FALSE} then a summary table with
-factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
-for each response pattern in the data is returned (default)}
 
 \item{method}{type of factor score estimation method. Can be expected
 a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
@@ -31,11 +21,15 @@ a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood est
 (\code{"EAPsum"}). Can also be \code{"plausible"} for a single plausible value imputation for
 each case, and this is equivalent to setting \code{plausible.draws = 1}}
 
-\item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
-one will be created which decreases as the number of dimensions increases
-(and therefore for estimates such as EAP, will be less accurate). This is determined from
-the switch statement
-\code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}}
+\item{full.scores}{if \code{FALSE} then a summary table with
+factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
+for each response pattern in the data is returned (default)}
+
+\item{rotate}{prior rotation to be used when estimating the factor scores. See
+\code{\link{summary-method}} for details. If the object is not an exploratory model
+then this argument is ignored}
+
+\item{Target}{target rotation; see \code{\link{summary-method}} for details}
 
 \item{response.pattern}{an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame}
@@ -45,6 +39,12 @@ to perform secondary analyses of the latent trait scores. Typically used in conj
 with latent regression predictors (see \code{\link{mirt}} for details), but can
 also be generated when no predictor variables were modeled. If \code{plausible.draws}
 is greater than 0 a list of plausible values will be returned}
+
+\item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
+one will be created which decreases as the number of dimensions increases
+(and therefore for estimates such as EAP, will be less accurate). This is determined from
+the switch statement
+\code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}}
 
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}

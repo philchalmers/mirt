@@ -157,8 +157,8 @@
 #' head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 #'
 #'}
-fscores <- function(object, rotate = 'oblimin', Target = NULL, full.scores = TRUE, method = "EAP",
-                    quadpts = NULL, response.pattern = NULL, plausible.draws = 0,
+fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
+                    response.pattern = NULL, plausible.draws = 0, quadpts = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
