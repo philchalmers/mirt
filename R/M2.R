@@ -196,6 +196,10 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     if(obj@Model$nfact > 3L && !QMC)
         warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                 call.=FALSE)
+    gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
+    if(all(gstructgrouppars$gcov != diag(ncol(gstructgrouppars$gcov))))
+        for(i in 1L:nitems)
+            pars[[i]]@est[1L:obj@Model$nfact] <- TRUE
     estpars <- c()
     for(i in 1L:(nitems+1L))
         estpars <- c(estpars, pars[[i]]@est)
@@ -213,19 +217,21 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
                 Theta <- thetaComb(theta, obj@Model$nfact)
             }
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-            Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans,
-                                           gstructgrouppars$gcov)
+            chols <- t(chol(gstructgrouppars$gcov))
+            Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans, diag(ncol(chols)))
             Prior <- Prior/sum(Prior)
             if(length(prodlist) > 0L)
                 Theta <- prodterms(Theta, prodlist)
         } else {
             Theta <- obj@Model$Theta
+            chols <- diag(ncol(Theta))
             prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
             sitems <- bfactorlist$sitems; specific <- bfactorlist$specific;
             Prior <- bfactorlist$Prior[[group]]
         }
     } else {
         Theta <- obj@Model$Theta
+        chols <- diag(ncol(Theta))
         Prior <- obj@Internals$Prior[[1L]]
     }
     E1 <- E11 <- numeric(nitems)
@@ -236,6 +242,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     ind <- 1L
     for(i in 1L:nitems){
         x <- extract.item(obj, i)
+        x@par[1:ncol(Theta)] <- as.vector(x@par[1:ncol(Theta)] %*% chols)
         EIs[,i] <- expected.item(x, Theta, min=0L)
         tmp <- ProbTrace(x, Theta)
         E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))

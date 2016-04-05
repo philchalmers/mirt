@@ -131,7 +131,7 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(fitm1$df.M2 - 5, -1e-4, 1e-4))
     fitm2 <- M2(modm3)
     expect_is(fitm2, 'data.frame')
-    expect_true(mirt:::closeEnough(fitm2$M2 - 5.256348, -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fitm2$M2 - 4.821999, -1e-4, 1e-4))
     expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
 
     data <- expand.table(LSAT7)
