@@ -1156,6 +1156,7 @@ mirt2traditional <- function(x){
             newd[i-1L] <- -(ds[i] - ds[i-1L])
         par <- c(par[1], newd)
         names(par) <- c('a', paste0('b', 1:length(newd)))
+        x@est <- x@est[c(1, (ncat+3L):length(x@est))]
     } else if(cls == 'nominal'){
         as <- par[2:(ncat+1)] * par[1]
         as <- as - mean(as)
@@ -1163,6 +1164,7 @@ mirt2traditional <- function(x){
         ds <- ds - mean(ds)
         par <- c(as, ds)
         names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
+        x@est <- x@est[-2]
     } else if(cls == 'nestlogit'){
         par1 <- par[1:4]
         par1[2] <- -par1[2]/par1[1]
