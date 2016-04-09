@@ -116,14 +116,16 @@ setMethod(
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                           plausible.draws=0, full.scores.SE=FALSE,
                           return.acov = TRUE, QMC=QMC, custom_den = NULL, converge_info=FALSE, ...)
+            suppressWarnings(jit <- myLapply(1:nrow(fs), function(i, mu, sig)
+                mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
+                mu=fs, sig=fs_acov))
+            if(any(sapply(jit, is.nan)))
+                stop('Could not draw unique plausible values. Response pattern ACOVs may
+                     not be positive definite')
             ret <- vector('list', plausible.draws)
             for(i in 1L:plausible.draws){
-                suppressWarnings(jit <- lapply(fs_acov, function(x) mirt_rmvnorm(1L, sigma = x)))
-                jit <- do.call(rbind, jit)
-                if(any(is.nan(jit)))
-                    stop('Could not draw unique plausible values. Response pattern ACOVs may
-                         not be positive definite')
-                ret[[i]] <- fs + jit
+                ret[[i]] <- matrix(NA, nrow(fs), ncol(fs))
+                for(j in 1L:nrow(fs)) ret[[i]][j,] <- jit[[j]][i,]
             }
             if(plausible.draws == 1L) return(ret[[1L]])
             else return(ret)
