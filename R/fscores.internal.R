@@ -107,15 +107,15 @@ setMethod(
 
         if(plausible.draws > 0){
             fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
-                          quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
-                          return.acov = FALSE, QMC=QMC, custom_den = NULL, converge_info=FALSE, ...)
+                          quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE, cov=gcov,
+                          return.acov = FALSE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
             if(any(is.na(fs)))
                 stop('Plausible values cannot be drawn for completely empty response patterns.
                      Please remove these from your analysis.', call.=FALSE)
             fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
                           quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
-                          plausible.draws=0, full.scores.SE=FALSE,
-                          return.acov = TRUE, QMC=QMC, custom_den = NULL, converge_info=FALSE, ...)
+                          plausible.draws=0, full.scores.SE=FALSE, cov=gcov,
+                          return.acov = TRUE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
             suppressWarnings(jit <- myLapply(1:nrow(fs), function(i, mu, sig)
                 mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
                 mu=fs, sig=fs_acov))
