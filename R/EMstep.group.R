@@ -177,6 +177,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+            if(is.na(TOL) && !is.nan(TOL)){
+                for(g in 1L:ngroups) rlist[[g]]$expected <- 1
+                break
+            }
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
@@ -283,8 +287,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 message('EM cycles terminated after ', cycles, ' iterations.')
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
-            if(list$warn && !is.nan(TOL))
-                warning('M-step optimimizer converged immediately. Solution is either at the ML or
+            if(list$warn && !(is.nan(TOL) || is.na(TOL)))
+                warning('M-step optimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }
         if(cycles > 1L && list$warn && !ANY.PRIOR){

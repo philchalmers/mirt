@@ -1081,6 +1081,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$accelerate = accelerate
     opts$delta <- ifelse(is.null(technical$delta), .001, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
+    if(!is.null(TOL))
+        if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- FALSE
     opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else
         if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
