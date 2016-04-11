@@ -1538,10 +1538,11 @@ lca_prior <- function(Theta, Etable){
     return(prior)
 }
 
-makeObstables <- function(dat, K){
+makeObstables <- function(dat, K, which.items){
     ret <- vector('list', ncol(dat))
     sumscore <- rowSums(dat)
     for(i in 1L:length(ret)){
+        if(!(i %in% which.items)) next
         ret[[i]] <- matrix(0, sum(K-1L)+1L, K[i])
         colnames(ret[[i]]) <- paste0(1L:K[i]-1L)
         rownames(ret[[i]]) <- paste0(1L:nrow(ret[[i]])-1L)

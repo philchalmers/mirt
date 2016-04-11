@@ -257,8 +257,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
         log_itemtrace <- log(itemtrace)
         LL <- log_itemtrace * fulldata
-        Lmatrix <- matrix(LL[as.logical(fulldata)], N, length(which.items))
-        mu <- sigma2 <- rep(0, length(which.items))
+        Lmatrix <- matrix(LL[as.logical(fulldata)], N, J)
+        mu <- sigma2 <- rep(0, J)
         for(item in which.items){
             P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
@@ -269,7 +269,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                         sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] *
                                                                log_P[,i] * log(P[,i]/P[,j]))
         }
-        ret$Zh <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
+        tmp <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
+        ret$Zh <- tmp[which.items]
         #if all Rasch models, infit and outfit
         if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
             oneslopes <- rep(FALSE, length(x@Model$itemtype))
@@ -331,7 +332,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
             }
         }
-        X2.value <- df <- G2.value <- rep(0, length(which.items))
+        X2.value <- df <- G2.value <- numeric(J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
@@ -426,16 +427,16 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                               }
                           }))
         }
-        if(X2) ret$X2 <- X2.value
-        if(G2) ret$G2 <- G2.value
-        ret$df <- df
+        if(X2) ret$X2 <- X2.value[which.items]
+        if(G2) ret$G2 <- G2.value[which.items]
+        ret$df <- df[which.items]
         if(X2){
-            ret$p.X2 <- 1 - pchisq(X2.value, df)
-            ret$p.X2[df <= 0] <- NaN
+            ret$p.X2 <- 1 - pchisq(ret$X2, ret$df)
+            ret$p.X2[ret$df <= 0] <- NaN
         }
         if(G2){
-            ret$p.G2 <- 1 - pchisq(G2.value, df)
-            ret$p.G2[df <= 0] <- NaN
+            ret$p.G2 <- 1 - pchisq(ret$G2, ret$df)
+            ret$p.G2[ret$df <= 0] <- NaN
         }
     }
     if(S_X2){
@@ -443,8 +444,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         adj <- x@Data$mins
         dat <- t(t(dat) - adj)
         S_X2 <- df.S_X2 <- rep(NA, J)
-        O <- makeObstables(dat, x@Data$K)
-        Nk <- rowSums(O[[1L]])
+        O <- makeObstables(dat, x@Data$K, which.items=which.items)
+        Nk <- rowSums(O[[which(sapply(O, is.matrix))[1L]]])
         dots <- list(...)
         QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
         quadpts <- dots$quadpts
