@@ -20,7 +20,7 @@ test_that('mixed dich', {
     expect_equal(as.numeric(cfs$lr.betas), c(0.0000000, 0.9548921, 1.9383165, 0.1877870), tolerance=1e-4)
     set.seed(1234)
     plaus <- fscores(mod0, plausible.draws = 2)
-    expect_equal(plaus[[1]][1:4], c(0.2008811, -0.7582527, -0.5762866, -0.2161391),
+    expect_equal(plaus[[1]][1:4], c(-0.6070500, -0.2729041, -0.3763773, -0.4946551),
                  tolerance = 1e-4)
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     set.seed(1)
