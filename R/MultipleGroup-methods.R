@@ -63,7 +63,7 @@ setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
     definition = function(x, y, type = 'score', npts = 50, degrees = 45,
-                          which.items = 1:ncol(x@Data$data),
+                          which.items = 1:extract.mirt(x, 'nitems'),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE,
                           theta_lim = c(-6,6),

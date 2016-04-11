@@ -1559,6 +1559,7 @@ collapseCells <- function(O, E, mincell = 1){
     for(i in 1L:length(O)){
         On <- O[[i]]
         En <- E[[i]]
+        if(is.null(En)) next
         drop <- which(rowSums(is.na(En)) > 0)
         En[is.na(En)] <- 0
 

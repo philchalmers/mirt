@@ -4,14 +4,18 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-itemfit(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE,
-  group.size = 150, group.bins = NA, mincell = 1, mincell.X2 = 2,
-  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
-  method = "EAP", Theta = NULL, impute = 0, digits = 4, ...)
+itemfit(x, which.items = 1:extract.mirt(x, "nitems"), Zh = TRUE,
+  S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
+  group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
+  empirical.plot = NULL, empirical.CI = 0, method = "EAP", Theta = NULL,
+  impute = 0, digits = 4, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
+
+\item{which.items}{an integer vector indicating which items to test for fit.
+Default tests all possible items}
 
 \item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
 only interested in computing the S-X2 quickly}
@@ -66,7 +70,7 @@ of the stats and their imputed standard deviations}
 }
 \description{
 \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985),
-\eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional and
+\eqn{\chi^2} and \eqn{G^2} values for unidimensional models, and S-X2 statistics for unidimensional and
 multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 For Rasch, partial credit, and rating scale models infit and outfit statistics are
 also produced. Poorly fitting items should be inspected with \code{\link{itemGAM}} to diagnose

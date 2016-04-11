@@ -137,7 +137,7 @@
 #' stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 #' stepdown
 #' }
-DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:ncol(MGmodel@Data$data),
+DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
                 max_run = Inf, plotdif = FALSE, type = 'trace', verbose = TRUE, ...){
 

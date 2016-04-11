@@ -735,7 +735,7 @@ setMethod(
     f = "plot",
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
     definition = function(x, y, type = 'score', npts = 50, degrees = 45,
-                          theta_lim = c(-6,6), which.items = 1:ncol(x@Data$data),
+                          theta_lim = c(-6,6), which.items = 1:extract.mirt(x, 'nitems'),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE,

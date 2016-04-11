@@ -4,7 +4,7 @@
 \alias{areainfo}
 \title{Function to calculate the area under a selection of information curves}
 \usage{
-areainfo(x, theta_lim, which.items = NULL, ...)
+areainfo(x, theta_lim, which.items = 1:extract.mirt(x, "nitems"), ...)
 }
 \arguments{
 \item{x}{an estimated mirt object}

@@ -1,7 +1,7 @@
 #' Item fit statistics
 #'
 #' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985),
-#' \eqn{\chi^2} values for unidimensional models, and S-X2 statistics for unidimensional and
+#' \eqn{\chi^2} and \eqn{G^2} values for unidimensional models, and S-X2 statistics for unidimensional and
 #' multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 #' For Rasch, partial credit, and rating scale models infit and outfit statistics are
 #' also produced. Poorly fitting items should be inspected with \code{\link{itemGAM}} to diagnose
@@ -10,6 +10,8 @@
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
+#' @param which.items an integer vector indicating which items to test for fit.
+#'   Default tests all possible items
 #' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
 #'   only interested in computing the S-X2 quickly
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
@@ -142,7 +144,8 @@
 #' itemfit(raschfit2)
 #'   }
 #'
-itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
+itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
+                    Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
                     group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
@@ -150,7 +153,7 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
     fn <- function(ind, Theta, obj, vals, ...){
         tmpobj <- obj
         tmpdat <- imputeMissing(obj, Theta[[ind]])
-        tmpmod <- mirt(tmpdat, model=1, TOL=NaN,
+        tmpmod <- mirt(tmpdat, model=1, TOL=NA,
                        technical=list(customK=obj@Data$K, message=FALSE, warn=FALSE))
         tmpobj@Data <- tmpmod@Data
         whc <- 1L:length(Theta)
@@ -165,6 +168,8 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
         class(x) <- 'MultipleGroupClass'
         discrete <- TRUE
     }
+    if(!is.null(empirical.plot)) which.items <- 1:extract.mirt(x, 'nitems')
+    which.items <- sort(which.items)
 
     stopifnot(Zh || X2 || S_X2)
     if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
@@ -228,7 +233,7 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
     discrete <- dots$discrete
     discrete <- ifelse(is.null(discrete), FALSE, discrete)
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
-    ret <- data.frame(item=colnames(x@Data$data))
+    ret <- data.frame(item=colnames(x@Data$data)[which.items])
     J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
@@ -248,13 +253,13 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
         }
         N <- nrow(Theta)
         itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-        for (i in 1L:J)
+        for (i in which.items)
             itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
         log_itemtrace <- log(itemtrace)
         LL <- log_itemtrace * fulldata
-        Lmatrix <- matrix(LL[as.logical(fulldata)], N, J)
-        mu <- sigma2 <- rep(0, J)
-        for(item in 1L:J){
+        Lmatrix <- matrix(LL[as.logical(fulldata)], N, length(which.items))
+        mu <- sigma2 <- rep(0, length(which.items))
+        for(item in which.items){
             P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             mu[item] <- sum(P * log_P)
@@ -282,10 +287,10 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
                 q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
                 q.infit[q.infit > 1.4142] <- 1.4142
                 z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
-                ret$outfit <- outfit
-                ret$z.outfit <- z.outfit
-                ret$infit <- infit
-                ret$z.infit <- z.infit
+                ret$outfit <- outfit[which.items]
+                ret$z.outfit <- z.outfit[which.items]
+                ret$infit <- infit[which.items]
+                ret$z.infit <- z.infit[which.items]
             }
         }
     }
@@ -326,7 +331,7 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
                 Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
             }
         }
-        X2.value <- df <- G2.value <- rep(0, J)
+        X2.value <- df <- G2.value <- rep(0, length(which.items))
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
@@ -339,7 +344,7 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
             empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
             empirical.plot_points <- matrix(NA, length(unique(Groups)), x@Data$K[empirical.plot] + 2L)
         }
-        for (i in 1L:J){
+        for (i in which.items){
             if(!is.null(empirical.plot) && i != empirical.plot) next
             for(j in unique(Groups)){
                 dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
@@ -437,7 +442,7 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
         dat <- x@Data$data
         adj <- x@Data$mins
         dat <- t(t(dat) - adj)
-        S_X2 <- df.S_X2 <- numeric(J)
+        S_X2 <- df.S_X2 <- rep(NA, J)
         O <- makeObstables(dat, x@Data$K)
         Nk <- rowSums(O[[1L]])
         dots <- list(...)
@@ -452,22 +457,23 @@ itemfit <- function(x, Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.siz
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@Internals$CUSTOM.IND, den_fun=mirt_dmvnorm,
-                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC)
-        for(i in 1L:J)
+                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC,
+                    which.items=which.items)
+        for(i in which.items)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)
         if(S_X2.tables) return(list(O.org=O, E.org=E, O=coll$O, E=coll$E))
         O <- coll$O
         E <- coll$E
         for(i in 1L:J){
-            if (is.null(dim(O[[i]]))) next
+            if (is.null(dim(O[[i]])) || is.null(E[[i]])) next
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
             df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
         }
         S_X2[df.S_X2 <= 0] <- NaN
-        ret$S_X2 <- S_X2
-        ret$df.S_X2 <- df.S_X2
-        ret$p.S_X2 <- 1 - pchisq(S_X2, df.S_X2)
+        ret$S_X2 <- na.omit(S_X2)
+        ret$df.S_X2 <- na.omit(df.S_X2)
+        ret$p.S_X2 <- 1 - pchisq(ret$S_X2, ret$df.S_X2)
     }
     ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
     return(ret)

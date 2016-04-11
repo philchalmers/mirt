@@ -115,7 +115,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'DiscreteClass', y = 'missing'),
-    definition = function(x, which.items = 1:ncol(x@Data$data),
+    definition = function(x, which.items = 1:extract.mirt(x, 'nitems'),
                           facet_items = TRUE, type = 'b', profile = FALSE,
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),

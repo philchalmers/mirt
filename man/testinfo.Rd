@@ -5,7 +5,7 @@
 \title{Function to calculate test information}
 \usage{
 testinfo(x, Theta, degrees = NULL, group = NULL, individual = FALSE,
-  which.items = NULL)
+  which.items = 1:extract.mirt(x, "nitems"))
 }
 \arguments{
 \item{x}{an estimated mirt object}

@@ -611,7 +611,8 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 }
 
 EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim, discrete, QMC, den_fun, min_expected, ...){
+                   theta_lim, discrete, QMC, den_fun, min_expected,
+                   which.items = 2:length(x@ParObjects$pars)-1, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -688,12 +689,11 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
     itemtrace <- t(itemtrace)
     tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1
-    maxLs <- apply(L1, 1L, max)
     Sum.Scores <- tmp$Sum.Scores
     if(S_X2){
         L1total <- L1 %*% prior
         Elist <- vector('list', J)
-        for(i in 1L:J){
+        for(i in which.items){
             KK <- K[-i]
             T <- itemtrace[c(itemloc[i]:(itemloc[i+1L]-1L)), ]
             itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i+1L]-1L)), ]
@@ -739,7 +739,6 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
         O <- matrix(0, nrow(E), 1)
         O[got, 1] <- Otmp
-        keep <- O != 0
         ret$observed <- O
         ret$expected <- E
         tmp <- collapseTotals(ret, min_expected)

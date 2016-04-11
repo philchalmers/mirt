@@ -39,7 +39,7 @@
 #'            paste("(", round(100 * area$Proportion, 2), "%)", sep = "")), cex = 1.2)
 #'
 #' }
-areainfo <- function(x, theta_lim, which.items = NULL, ...){
+areainfo <- function(x, theta_lim, which.items = 1:extract.mirt(x, 'nitems'), ...){
     f <- function(theta, x, which.items)
         testinfo(x=x, Theta=matrix(theta), which.items=which.items)
     if(missing(x)) missingMsg('x')

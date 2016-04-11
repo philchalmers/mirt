@@ -39,7 +39,8 @@
 #'
 #'
 #' }
-testinfo <- function(x, Theta, degrees = NULL, group = NULL, individual = FALSE, which.items = NULL){
+testinfo <- function(x, Theta, degrees = NULL, group = NULL, individual = FALSE,
+                     which.items = 1:extract.mirt(x, 'nitems')){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
