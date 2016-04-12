@@ -6,7 +6,7 @@
 \usage{
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE, model = NULL, mins = 0)
+  returnList = FALSE, model = NULL, which.items = NULL, mins = 0)
 }
 \arguments{
 \item{a}{a matrix/vector of slope parameters. If slopes are to be constrained to
@@ -68,6 +68,9 @@ latent trait matrix \code{Theta}? Default is FALSE}
 \item{model}{a single group object, typically returned by functions such as \code{\link{mirt}} or
 \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
 input) redundent}
+
+\item{which.items}{an integer vector used to indicate which items to simulate when a
+\code{model} input is included. Default simulates all items}
 
 \item{mins}{an integer vector (or single value to be used for each item) indicating what
 the lowest category should be. If \code{model} is supplied then this will be extracted from

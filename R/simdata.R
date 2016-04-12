@@ -54,6 +54,8 @@
 #' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
 #'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
 #'   input) redundent
+#' @param which.items an integer vector used to indicate which items to simulate when a
+#'   \code{model} input is included. Default simulates all items
 #' @param mins an integer vector (or single value to be used for each item) indicating what
 #'   the lowest category should be. If \code{model} is supplied then this will be extracted from
 #'   \code{slot(mod, 'Data')$mins}, otherwise the default is 0
@@ -258,12 +260,13 @@
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
-	model = NULL, mins = 0)
+	model = NULL, which.items = NULL, mins = 0)
 {
     fn <- function(p, ns) sample(1L:ns - 1L, 1L, prob = p)
     if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
     if(!is.null(model)){
-        nitems <- ncol(model@Data$data)
+        nitems <- extract.mirt(model, 'nitems')
+        if(is.null(which.items)) which.items <- 1L:nitems
         nfact <- model@Model$nfact
         if(is.null(sigma)) sigma <- diag(nfact)
         if(is.null(mu)) mu <- rep(0,nfact)
@@ -271,13 +274,14 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
         } else N <- nrow(Theta)
         data <- matrix(0, N, nitems)
-        colnames(data) <- paste("Item_", 1L:nitems, sep="")
-        for(i in 1L:nitems){
+        colnames(data) <- extract.mirt(model, 'itemnames')
+        for(i in which.items){
             obj <- extract.item(model, i)
             P <- ProbTrace(obj, Theta)
             data[,i] <- apply(P, 1L, fn, ns = ncol(P))
         }
-        return(t(t(data) + model@Data$mins))
+        ret <- t(t(data) + model@Data$mins)
+        return(ret[,which.items, drop=FALSE])
     }
     if(missing(a)) missingMsg('a')
     if(missing(d)) missingMsg('d')
