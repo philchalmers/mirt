@@ -1716,14 +1716,14 @@ MGC2SC <- function(x, which){
 #' f <- function(x) 3*x[1]^3 - 4*x[2]^2
 #' par <- c(3,8)
 #'
-#' # grad = 9 * x^2 , 8 * y
-#' c(81, -64)
+#' # grad = 9 * x^2 , -8 * y
+#' (actual <- c(9 * par[1]^2, -8 * par[2]))
 #' numerical_deriv(par, f, type = 'forward')
 #' numerical_deriv(par, f, type = 'central')
 #' numerical_deriv(par, f, type = 'Richardson')
 #'
-#' # hessian = h11 -> 18 * x, h22 -> 8, h12 -> 9 * x^2 + 8 * y
-#' matrix(c(54, 0, 0, -8), 2, 2)
+#' # hessian = h11 -> 18 * x, h22 -> -8, h12 -> h21 -> 0
+#' (actual <- matrix(c(18 * par[1], 0, 0, -8), 2, 2))
 #' numerical_deriv(par, f, type = 'forward', gradient = FALSE)
 #' numerical_deriv(par, f, type = 'central', gradient = FALSE)
 #' numerical_deriv(par, f, type = 'Richardson', gradient = FALSE)
