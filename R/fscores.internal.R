@@ -150,7 +150,8 @@ setMethod(
                 large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@Data$K),
                               large=TRUE))
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
-                                   tabdatalong=large$tabdata, Freq=large$Freq)
+                                   tabdatalong=large$tabdata, Freq=large$Freq,
+                                   K=extract.mirt(object, 'K'))
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
