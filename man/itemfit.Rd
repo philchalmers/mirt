@@ -6,9 +6,9 @@
 \usage{
 itemfit(x, which.items = 1:extract.mirt(x, "nitems"), Zh = TRUE,
   S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
-  group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
-  empirical.plot = NULL, empirical.CI = 0, method = "EAP", Theta = NULL,
-  impute = 0, digits = 4, ...)
+  group.bins = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
+  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
+  method = "EAP", Theta = NULL, impute = 0, digits = 4, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -33,6 +33,11 @@ statistic}
 disables this command and instead uses the \code{group.size} input to try and construct
 bins with that many responses per bin. For example, setting \code{group.bins = 10} will
 override the \code{group.size} argument and will compute Yen's (1981) Q1 statistic}
+
+\item{group.fun}{function used when \code{X2} or \code{G2} are computed. Determines the central
+tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
+obtain the median of each respective ability estimate in each subgroup (this is what was used
+by Bock, 1972)}
 
 \item{mincell}{the minimum expected cell size to be used in the S-X2 computations. Tables will be
 collapsed across items first if polytomous, and then across scores if necessary}

@@ -29,6 +29,10 @@
 #'   disables this command and instead uses the \code{group.size} input to try and construct
 #'   bins with that many responses per bin. For example, setting \code{group.bins = 10} will
 #'   override the \code{group.size} argument and will compute Yen's (1981) Q1 statistic
+#' @param group.fun function used when \code{X2} or \code{G2} are computed. Determines the central
+#'   tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
+#'   obtain the median of each respective ability estimate in each subgroup (this is what was used
+#'   by Bock, 1972)
 #' @param empirical.plot a single numeric value or character of the item name  indicating which
 #'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings.
 #'   Only applicable when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots
@@ -146,7 +150,8 @@
 #'
 itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                     Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
-                    group.bins = NA, mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
+                    group.bins = NA, group.fun = mean,
+                    mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
@@ -352,7 +357,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 if(nrow(dat) <= 1L) next
                 r <- colSums(dat)
                 N <- nrow(dat)
-                mtheta <- matrix(mean(Theta[Groups == j & pick[,i],]), nrow=1)
+                mtheta <- matrix(group.fun(Theta[Groups == j & pick[,i],]), nrow=1)
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
