@@ -42,9 +42,9 @@
 #' @param gpcm_mats a list of matricies specifying the scoring scheme for generalized partial
 #'   credit models (see \code{\link{mirt}} for details)
 #' @param sigma a covariance matrix of the underlying distribution. Default is
-#'   the identity matrix
+#'   the identity matrix. Used when \code{Theta} is not supplied
 #' @param mu a mean vector of the underlying distribution. Default is a vector
-#'   of zeros
+#'   of zeros. Used when \code{Theta} is not supplied
 #' @param Theta a user specified matrix of the underlying ability parameters,
 #'   where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}. When this is supplied the
 #'   \code{N} input is not required
@@ -52,8 +52,8 @@
 #'   by \code{mirt} containing the population parameters and item structure, and the
 #'   latent trait matrix \code{Theta}? Default is FALSE
 #' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
-#'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
-#'   input) redundent
+#'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
+#'   \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent
 #' @param which.items an integer vector used to indicate which items to simulate when a
 #'   \code{model} input is included. Default simulates all items
 #' @param mins an integer vector (or single value to be used for each item) indicating what
@@ -263,7 +263,6 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	model = NULL, which.items = NULL, mins = 0)
 {
     fn <- function(p, ns) sample(1L:ns - 1L, 1L, prob = p)
-    if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
     if(!is.null(model)){
         nitems <- extract.mirt(model, 'nitems')
         if(is.null(which.items)) which.items <- 1L:nitems
@@ -271,6 +270,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(is.null(sigma)) sigma <- diag(nfact)
         if(is.null(mu)) mu <- rep(0,nfact)
         if(is.null(Theta)){
+            if(missing(N)) N <- nrow(extract.mirt(model, 'data'))
             Theta <- mirt_rmvnorm(N,mu,sigma,check=TRUE)
         } else N <- nrow(Theta)
         data <- matrix(0, N, nitems)
@@ -283,6 +283,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         ret <- t(t(data) + model@Data$mins)
         return(ret[,which.items, drop=FALSE])
     }
+    if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
     if(missing(a)) missingMsg('a')
     if(missing(d)) missingMsg('d')
     if(missing(itemtype)) missingMsg('itemtype')

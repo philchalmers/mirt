@@ -37,10 +37,10 @@ with \code{NA}. When a vector is used the test is assumed to consist only of dic
   have already been estimated to understand the itemtypes more intimately}
 
 \item{sigma}{a covariance matrix of the underlying distribution. Default is
-the identity matrix}
+the identity matrix. Used when \code{Theta} is not supplied}
 
 \item{mu}{a mean vector of the underlying distribution. Default is a vector
-of zeros}
+of zeros. Used when \code{Theta} is not supplied}
 
 \item{guess}{a vector of guessing parameters for each item; only applicable
 for dichotomous items. Must be either a scalar value that will affect all of
@@ -66,8 +66,8 @@ by \code{mirt} containing the population parameters and item structure, and the
 latent trait matrix \code{Theta}? Default is FALSE}
 
 \item{model}{a single group object, typically returned by functions such as \code{\link{mirt}} or
-\code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the Theta
-input) redundent}
+\code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
+\code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent}
 
 \item{which.items}{an integer vector used to indicate which items to simulate when a
 \code{model} input is included. Default simulates all items}

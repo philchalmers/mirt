@@ -103,8 +103,6 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
-    prodlist <- attr(pars, 'prodlist')
-    nfact <- x@Model$nfact + length(prodlist)
     fulldata <- x@Data$fulldata[[1L]]
     for(i in 1L:ncol(Theta)){
         tmp <- Theta[,i]
