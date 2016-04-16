@@ -158,7 +158,7 @@ in two or more nominal categories. Psychometrika, 37, 29-51.
 
 Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
-\emph{Journal of Mathematical and Statistical Psychology, 38}, 67-86.
+\emph{British Journal of Mathematical and Statistical Psychology, 38}, 67-86.
 
 Kang, T. & Chen, Troy, T. (2007). An investigation of the performance of the generalized
 S-X2 item-fit index for polytomous IRT models. ACT
