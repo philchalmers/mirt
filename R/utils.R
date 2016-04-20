@@ -651,10 +651,6 @@ UpdatePrior <- function(PrepList, model, groupNames){
                                                                  '1'=val1,
                                                                  '2'=exp(val1),
                                                                  '3'=(val1-1)/(val1 + val2 - 2))
-                        if(type %in% c(2L, 3L))
-                            pars[[g]][[sel[j]]]@lbound[which] <- 0
-                        if(type == 3L)
-                            pars[[g]][[sel[j]]]@lbound[which] <- 1
                     }
                 }
             } else {
@@ -902,12 +898,12 @@ LL.Priors <- function(x, LL){
     if(any(x@prior.type %in% 2L)){
         ind <- x@prior.type %in% 2L
         val <- x@par[ind]
-        val <- ifelse(val > 0, val, 1e-100)
         u <- x@prior_1[ind]
         s <- x@prior_2[ind]
         for(i in 1L:length(val)){
-            tmp <- dlnorm(val[i], u[i], s[i], log=TRUE)
-            LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
+            if(val[i] > 0)
+                LL <- LL + dlnorm(val[i], u[i], s[i], log=TRUE)
+            else LL <- LL + log(1e-100)
         }
     }
     if(any(x@prior.type %in% 3L)){
@@ -916,8 +912,9 @@ LL.Priors <- function(x, LL){
         a <- x@prior_1[ind]
         b <- x@prior_2[ind]
         for(i in 1L:length(val)){
-            tmp <- dbeta(val[i], a[i], b[i], log=TRUE)
-            LL <- LL + ifelse(tmp == -Inf, log(1e-100), tmp)
+            if(val[i] > 0 && val[i] < 1)
+                LL <- LL + dbeta(val[i], a[i], b[i], log=TRUE)
+            else LL <- LL + log(1e-100)
         }
     }
     return(LL)
