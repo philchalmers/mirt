@@ -751,7 +751,7 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
             (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+x@Model$nfact, drop=FALSE], 2L,
                                                             function(x) mean(x^2)))
         names(rxx) <- paste0('rxx_Theta.', 1L:x@Model$nfact)
-        fit <- data.frame(df=df, X2=X2, p.X2 = pchisq(X2, df, lower.tail=FALSE))
+        fit <- data.frame(df=df, X2=X2, p.X2 = suppressWarnings(pchisq(X2, df, lower.tail=FALSE)))
         fit <- cbind(fit, t(as.data.frame(rxx)))
         rownames(fit) <- 'stats'
         attr(ret, 'fit') <- fit

@@ -436,11 +436,11 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         if(G2) ret$G2 <- G2.value[which.items]
         ret$df <- df[which.items]
         if(X2){
-            ret$p.X2 <- 1 - pchisq(ret$X2, ret$df)
+            ret$p.X2 <- 1 - suppressWarnings(pchisq(ret$X2, ret$df))
             ret$p.X2[ret$df <= 0] <- NaN
         }
         if(G2){
-            ret$p.G2 <- 1 - pchisq(ret$G2, ret$df)
+            ret$p.G2 <- 1 - suppressWarnings(pchisq(ret$G2, ret$df))
             ret$p.G2[ret$df <= 0] <- NaN
         }
     }
@@ -479,7 +479,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         S_X2[df.S_X2 <= 0] <- NaN
         ret$S_X2 <- na.omit(S_X2)
         ret$df.S_X2 <- na.omit(df.S_X2)
-        ret$p.S_X2 <- 1 - pchisq(ret$S_X2, ret$df.S_X2)
+        ret$p.S_X2 <- 1 - suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2))
     }
     ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
     return(ret)
