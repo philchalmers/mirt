@@ -82,7 +82,7 @@ mod2values <- function(x){
         lbound <- c(lbound, lrPars@lbound)
         ubound <- c(ubound, lrPars@ubound)
         tmp <- sapply(as.character(lrPars@prior.type),
-                      function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+                      function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', '4'='expbeta', 'none'))
         prior.type <- c(prior.type, tmp)
         prior_1 <- c(prior_1, lrPars@prior_1)
         prior_2 <- c(prior_2, lrPars@prior_2)
@@ -94,7 +94,7 @@ mod2values <- function(x){
     lbound[parname %in% c('g', 'u')] <- antilogit(lbound[parname %in% c('g', 'u')])
     ubound[parname %in% c('g', 'u')] <- antilogit(ubound[parname %in% c('g', 'u')])
     prior.type <- sapply(as.character(prior.type),
-                         function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+                         function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', '4'='expbeta', 'none'))
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
                       prior_1=prior_1, prior_2=prior_2)

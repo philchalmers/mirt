@@ -383,8 +383,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in 1L:length(pars[[1L]])){
             if(class(pars[[g]][[i]]) == 'dich'){
                 pt <- pars[[g]][[i]]@prior.type
-                if(!(pt[length(pt)-1L] %in% c(0L, 1L))) warning(wmsg, call.=FALSE)
-                if(!(pt[length(pt)] %in% c(0L, 1L))) warning(wmsg, call.=FALSE)
+                if(!(pt[length(pt)-1L] %in% c(0L, 1L, 4L))) warning(wmsg, call.=FALSE)
+                if(!(pt[length(pt)] %in% c(0L, 1L, 4L))) warning(wmsg, call.=FALSE)
                 next
             } else if(class(pars[[g]][[i]]) == 'partcomp'){
                 pt <- pars[[g]][[i]]@prior.type

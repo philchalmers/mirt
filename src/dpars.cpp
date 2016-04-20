@@ -1214,8 +1214,9 @@ static void d_priors(vector<double> &grad, NumericMatrix &hess, const int &ind,
         const double v2 = val*val;
         g = -(lval - prior_1)/(val * p2) - 1.0/val;
         h = 1.0/v2 - 1.0/(v2 * p2) - (lval - prior_1)/(v2 * p2);
-    } else if(prior_type == 3){
+    } else if(prior_type == 3 | prior_type == 4){
         double val = par;
+        if(prior_type == 4) val = 1 / (1 + exp(-val));
         if(val < 1e-10) val = 1e-10;
         else if(val > 1.0 - 1e-10) val = 1.0 - 1e-10;
         g = (prior_1 - 1.0)/val - (prior_2 - 1.0)/(1.0 - val);

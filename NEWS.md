@@ -1,5 +1,9 @@
 # Changes in mirt 1.17
 
+- 'expbeta' option added to implement a beta prior specifically for the `g` and `u` parameters which
+  internally have been transformed to logits (performes the back transformation before computing the 
+  values)
+
 - check whether multiple-group models contain enough data to estimate parameters uniquely 
   when no constraints are applied 
   

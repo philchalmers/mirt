@@ -459,13 +459,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                     p2 <- as.numeric(parprior[[j]][length(parprior[[j]])])
                     p1 <- as.numeric(parprior[[j]][length(parprior[[j]])-1L])
                     type <- parprior[[j]][length(parprior[[j]])-2L]
-                    pars[[i]]@prior.type[tmp] <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
+                    pars[[i]]@prior.type[tmp] <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
                     whc <- which(tmp)
                     for(w in 1:length(whc)){
                         pars[[i]]@par[whc[w]] <- switch(type[w],
                                                      'norm'=p1[w],
                                                      'lnorm'=exp(p1[w]),
-                                                     'beta'=(p1[w]-1)/(p1[w] + p2[w] - 2))
+                                                     'beta'=(p1[w]-1)/(p1[w] + p2[w] - 2),
+                                                     'expbeta'=qlogis((p1[w]-1)/(p1[w] + p2[w] - 2)))
 
                     }
                     pars[[i]]@prior_1[tmp] <- p1

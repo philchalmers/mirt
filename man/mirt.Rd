@@ -129,7 +129,11 @@ log-normal (e.g., for univariate slopes), or beta prior probabilities.
 To specify a prior the form is c('priortype', ...), where normal priors
 are \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
 \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
-\code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta. Priors can also be
+\code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta, and
+\code{parprior = list(c(parnumbers, 'expbeta', alpha, beta))} for the beta distribution
+after applying the function \code{\link{plogis}} to the input value
+(note, this is specifically for applying a beta
+prior to the lower/upper-bound parameters in 3/4PL models). Priors can also be
 specified using \code{\link{mirt.model}} syntax (recommended)}
 
 \item{calcNull}{logical; calculate the Null model for additional fit statistics (e.g., TLI)?

@@ -634,9 +634,9 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-5L)])
                     name <- esplit[[i]][length(esplit[[i]])-4L]
                     type <- esplit[[i]][length(esplit[[i]])-3L]
-                    if(!(type %in% c('norm', 'beta', 'lnorm')))
+                    if(!(type %in% c('norm', 'beta', 'lnorm', 'expbeta')))
                         stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
-                    type <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
+                    type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
                     val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                     val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                     for(j in 1L:length(sel)){
@@ -650,7 +650,8 @@ UpdatePrior <- function(PrepList, model, groupNames){
                         pars[[g]][[sel[j]]]@par[which] <- switch(type,
                                                                  '1'=val1,
                                                                  '2'=exp(val1),
-                                                                 '3'=(val1-1)/(val1 + val2 - 2))
+                                                                 '3'=(val1-1)/(val1 + val2 - 2),
+                                                                 '4'=qlogis((val1-1)/(val1 + val2 - 2)))
                     }
                 }
             } else {
@@ -658,9 +659,9 @@ UpdatePrior <- function(PrepList, model, groupNames){
                 gname <- esplit[[i]][length(esplit[[i]])]
                 name <- esplit[[i]][length(esplit[[i]])-4L]
                 type <- esplit[[i]][length(esplit[[i]])-3L]
-                if(!(type %in% c('norm', 'beta', 'lnorm')))
+                if(!(type %in% c('norm', 'beta', 'lnorm', 'expbeta')))
                     stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
-                type <- switch(type, norm=1L, lnorm=2L, beta=3L, 0L)
+                type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
                 val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                 val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
                 for(j in 1L:length(sel)){
@@ -671,10 +672,6 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     pars[[gname]][[sel[j]]]@prior.type[which] <- type
                     pars[[gname]][[sel[j]]]@prior_1[which] <- val1
                     pars[[gname]][[sel[j]]]@prior_2[which] <- val2
-                    if(type %in% c(2L, 3L))
-                        pars[[g]][[sel[j]]]@lbound[which] <- 0
-                    if(type == 3L)
-                        pars[[g]][[sel[j]]]@lbound[which] <- 1
                 }
             }
         }
@@ -701,7 +698,8 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
             lbound <- c(lbound, tmpgroup[[i]]@lbound)
             ubound <- c(ubound, tmpgroup[[i]]@ubound)
             tmp <- sapply(as.character(tmpgroup[[i]]@prior.type),
-                                 function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+                                 function(x) switch(x, '1'='norm', '2'='lnorm',
+                                                    '3'='beta', '4'='expbeta', 'none'))
             prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
             prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
@@ -717,7 +715,8 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
             lbound <- c(lbound, random[[i]]@lbound)
             ubound <- c(ubound, random[[i]]@ubound)
             tmp <- sapply(as.character(random[[i]]@prior.type),
-                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+                          function(x) switch(x, '1'='norm', '2'='lnorm',
+                                             '3'='beta', '4'='expbeta', 'none'))
             prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, random[[i]]@prior_1)
             prior_2 <- c(prior_2, random[[i]]@prior_2)
@@ -733,7 +732,8 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         lbound <- c(lbound, lrPars@lbound)
         ubound <- c(ubound, lrPars@ubound)
         tmp <- sapply(as.character(lrPars@prior.type),
-                      function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+                      function(x) switch(x, '1'='norm', '2'='lnorm',
+                                         '3'='beta', '4'='expbeta', 'none'))
         prior.type <- c(prior.type, tmp)
         prior_1 <- c(prior_1, lrPars@prior_1)
         prior_2 <- c(prior_2, lrPars@prior_2)
@@ -749,7 +749,8 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
             lbound <- c(lbound, lr.random[[i]]@lbound)
             ubound <- c(ubound, lr.random[[i]]@ubound)
             tmp <- sapply(as.character(lr.random[[i]]@prior.type),
-                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', 'none'))
+                          function(x) switch(x, '1'='norm', '2'='lnorm',
+                                             '3'='beta', '4'='expbeta', 'none'))
             prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, lr.random[[i]]@prior_1)
             prior_2 <- c(prior_2, lr.random[[i]]@prior_2)
@@ -780,7 +781,7 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), M
     if(!all(sapply(currentDesign, class) == sapply(pars, class)))
         stop('pars input does not contain the appropriate classes, which should match pars = \'values\'',
              call.=FALSE)
-    if(!all(unique(pars$prior.type) %in% c('none', 'norm', 'beta', 'lnorm')))
+    if(!all(unique(pars$prior.type) %in% c('none', 'norm', 'beta', 'lnorm', 'expbeta')))
         stop('prior.type input in pars contains invalid prior types', call.=FALSE)
     if(!MG) PrepList <- list(PrepList)
     pars$value[pars$name %in% c('g', 'u')] <- logit(pars$value[pars$name %in% c('g', 'u')])
@@ -798,7 +799,7 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), M
                 PrepList[[g]]$pars[[i]]@ubound[j] <- pars[ind,'ubound']
                 tmp <- as.character(pars[ind,'prior.type'])
                 PrepList[[g]]$pars[[i]]@prior.type[j] <-
-                    switch(tmp, norm=1L, lnorm=2L, beta=3L, 0L)
+                    switch(tmp, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
                 PrepList[[g]]$pars[[i]]@prior_1[j] <- pars[ind,'prior_1']
                 PrepList[[g]]$pars[[i]]@prior_2[j] <- pars[ind,'prior_2']
                 ind <- ind + 1L
@@ -867,9 +868,11 @@ DerivativePriors <- function(x, grad, hess){
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
-    if(any(x@prior.type %in% 3L)){ #beta
-        ind <- x@prior.type %in% 3L
+    if(any(x@prior.type %in% c(3L, 4L))){ #beta
+        ind <- x@prior.type %in% c(3L, 4L)
         val <- x@par[ind]
+        ind <- x@prior.type == 4L
+        val[ind] <- plogis(val[ind])
         val <- ifelse(val < 1e-10, 1e-10, val)
         val <- ifelse(val > 1-1e-10, 1-1e-10, val)
         a <- x@prior_1[ind]
