@@ -1,5 +1,8 @@
 # Changes in mirt 1.17
 
+- `group.bins` argument added to `itemfit()` to control the size of the bins for `X2` and
+  `G2` computations
+
 - 'expbeta' option added to implement a beta prior specifically for the `g` and `u` parameters which
   internally have been transformed to logits (performes the back transformation before computing the 
   values)
