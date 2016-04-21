@@ -172,13 +172,19 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
             if(return.models){
                 fit[[j]] <- out
             } else {
-                fit[[j]] <- predict(out, data.frame(Theta=Theta2))
+                fit[[j]] <- predict(out, data.frame(Theta=Theta2), se.fit = TRUE)
             }
         }
         if(return.models) return(fit)
-        cat <- rep(names(fit), each=length(fit[[1L]]))
-        fit <- do.call(c, fit)
-        ret <- data.frame(Theta=Theta2, cat=cat, Prob=plogis(fit), stringsAsFactors = FALSE)
+        cat <- rep(names(fit), each=length(fit[[1L]]$fit))
+        pred <- do.call(c, lapply(fit, function(x) x$fit))
+        se.fit <- do.call(c, lapply(fit, function(x) x$se.fit))
+        alphahalf <- (1 - CI)/2
+        fit_high <- pred + qnorm(CI + alphahalf) * se.fit
+        fit_low <- pred + qnorm(alphahalf) * se.fit
+        ret <- data.frame(Theta=Theta2, cat=cat, Prob=plogis(pred),
+                          Prob_high=plogis(fit_high), Prob_low=plogis(fit_low),
+                          stringsAsFactors = FALSE)
     }
     class(ret) <- 'itemGAM'
     ret
@@ -202,12 +208,18 @@ plot.itemGAM <- function(x, y = NULL,
         x <- subset(x, cat == 'cat_2')
         auto.key <- FALSE
     }
-    if(ncol(x) == 3L){
-        return(xyplot(Prob ~ Theta, data=x, groups = cat,
-                      ylim = c(-0.1,1.1), type = 'l', par.strip.text=par.strip.text,
-                      par.settings=par.settings, auto.key=auto.key,
-                      ylab = expression(P(theta)), xlab = expression(theta),
-                      main = 'GAM item probability curves', ...))
+    if(!is.list(auto.key)){
+        return(xyplot(Prob ~ Theta, data=x, groups = x$cat,
+                  upper=x$Prob_high, lower=x$Prob_low, alpha = .2, fill = 'darkgrey',
+                  panel = function(x, y, lower, upper, fill, alpha, ...){
+                      panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
+                                    col = fill, border = FALSE, alpha=alpha, ...)
+                      panel.xyplot(x, y, type='l', lty=1, col = 'black', ...)
+                  },
+                  ylim = c(-0.1,1.1), par.strip.text=par.strip.text,
+                  par.settings=par.settings, auto.key=auto.key,
+                  ylab = expression(P(theta)), xlab = expression(theta),
+                  main = 'GAM item probability curves', ...))
     } else {
         return(xyplot(Prob ~ Theta | cat, data=x, ylim = c(-0.1,1.1), alpha = .2, fill = 'darkgrey',
                       upper=x$Prob_high, lower=x$Prob_low, par.strip.text=par.strip.text,
