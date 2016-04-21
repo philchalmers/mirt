@@ -177,6 +177,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     which.items <- sort(which.items)
 
     stopifnot(Zh || X2 || S_X2)
+    stopifnot(is.numeric(empirical.CI))
     if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
         stop('Only X2 can be compute without imputed datsets', call.=FALSE)
 
