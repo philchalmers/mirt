@@ -149,8 +149,8 @@
 #'   }
 #'
 itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
-                    Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
-                    group.bins = NA, group.fun = mean,
+                    Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE,
+                    group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
@@ -323,7 +323,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         den <- dnorm(Theta, 0, .5)
         den <- den / sum(den)
         cumTheta <- cumsum(den)
-        if(is.na(group.bins)){
+        if(!is.na(group.size)){
             Groups <- rep(20, length(ord))
             ngroups <- ceiling(nrow(fulldata) / group.size)
             weight <- 1/ngroups

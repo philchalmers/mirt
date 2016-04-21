@@ -5,8 +5,8 @@
 \title{Item fit statistics}
 \usage{
 itemfit(x, which.items = 1:extract.mirt(x, "nitems"), Zh = TRUE,
-  S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.size = 150,
-  group.bins = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
+  S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.bins = 10,
+  group.size = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
   S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
   method = "EAP", Theta = NULL, impute = 0, digits = 4, ...)
 }
@@ -26,13 +26,13 @@ only interested in computing the S-X2 quickly}
 
 \item{G2}{logical; calculate the G2 statistic for unidimensional models?}
 
-\item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
-statistic}
-
 \item{group.bins}{the number of bins to use when \code{X2 = TRUE}. The default \code{NA}
 disables this command and instead uses the \code{group.size} input to try and construct
 bins with that many responses per bin. For example, setting \code{group.bins = 10} will
 override the \code{group.size} argument and will compute Yen's (1981) Q1 statistic}
+
+\item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
+statistic}
 
 \item{group.fun}{function used when \code{X2} or \code{G2} are computed. Determines the central
 tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
