@@ -8,7 +8,8 @@ itemfit(x, which.items = 1:extract.mirt(x, "nitems"), Zh = TRUE,
   S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.bins = 10,
   group.size = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
   S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0,
-  method = "EAP", Theta = NULL, impute = 0, digits = 4, ...)
+  empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
+  digits = 4, ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -48,14 +49,18 @@ be ommited in the computations}
 
 \item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
 
-\item{empirical.plot}{a single numeric value or character of the item name  indicating which
-item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings.
-Only applicable when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots
-are drawn}
+\item{empirical.plot}{a single numeric value or character of the item name indicating which
+item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings (see
+\code{empirical.CI}). Useful for plotting the expected bins after passing \code{X2 = TRUE} or
+\code{G2 = TRUE}}
 
 \item{empirical.CI}{a numeric value indicating the width of the empirical confidence interval
 ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 interval would be plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items}
+
+\item{empirical.table}{a single numeric value or character of the item name indicating which
+item table of expected values should be returned. Useful for plotting the expected bins after
+passing \code{X2 = TRUE} or \code{G2 = TRUE}}
 
 \item{method}{type of factor score estimation method. See \code{\link{fscores}} for more detail}
 
@@ -106,9 +111,15 @@ fit
 
 itemfit(x, X2=TRUE)
 itemfit(x, empirical.plot = 1) #empirical item plot
+itemfit(x, empirical.plot = 21) #empirical item plot
 
 #empirical item plot with 95\% CI's and 20 bins
 itemfit(x, group.bins=20, empirical.plot = 1, empirical.CI = .95)
+itemfit(x, group.bins=20, empirical.plot = 21, empirical.CI = .95)
+
+#empirical tables
+itemfit(x, group.bins=20, empirical.table=1)
+itemfit(x, group.bins=20, empirical.table=21)
 
 #method='ML' agrees better with eRm package
 itemfit(raschfit, method = 'ML') #infit and outfit stats
@@ -147,6 +158,9 @@ itemfit(raschfit, impute = 10)
 data2 <- na.omit(data)
 raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
 itemfit(raschfit2)
+
+# note that X2 and G2 do not require complete datasets
+itemfit(raschfit, X2=TRUE, S_X2=FALSE, Zh=FALSE)
   }
 
 }

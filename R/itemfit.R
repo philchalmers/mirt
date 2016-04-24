@@ -33,10 +33,13 @@
 #'   tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
 #'   obtain the median of each respective ability estimate in each subgroup (this is what was used
 #'   by Bock, 1972)
-#' @param empirical.plot a single numeric value or character of the item name  indicating which
-#'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings.
-#'   Only applicable when \code{type = 'X2'}. The default is \code{NULL}, therefore no plots
-#'   are drawn
+#' @param empirical.plot a single numeric value or character of the item name indicating which
+#'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings (see
+#'   \code{empirical.CI}). Useful for plotting the expected bins after passing \code{X2 = TRUE} or
+#'   \code{G2 = TRUE}
+#' @param empirical.table a single numeric value or character of the item name indicating which
+#'   item table of expected values should be returned. Useful for plotting the expected bins after
+#'   passing \code{X2 = TRUE} or \code{G2 = TRUE}
 #' @param empirical.CI a numeric value indicating the width of the empirical confidence interval
 #'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 #'   interval would be plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items
@@ -106,9 +109,15 @@
 #'
 #' itemfit(x, X2=TRUE)
 #' itemfit(x, empirical.plot = 1) #empirical item plot
+#' itemfit(x, empirical.plot = 21) #empirical item plot
 #'
 #' #empirical item plot with 95% CI's and 20 bins
 #' itemfit(x, group.bins=20, empirical.plot = 1, empirical.CI = .95)
+#' itemfit(x, group.bins=20, empirical.plot = 21, empirical.CI = .95)
+#'
+#' #empirical tables
+#' itemfit(x, group.bins=20, empirical.table=1)
+#' itemfit(x, group.bins=20, empirical.table=21)
 #'
 #' #method='ML' agrees better with eRm package
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats
@@ -147,13 +156,17 @@
 #' data2 <- na.omit(data)
 #' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
 #' itemfit(raschfit2)
+#'
+#' # note that X2 and G2 do not require complete datasets
+#' itemfit(raschfit, X2=TRUE, S_X2=FALSE, Zh=FALSE)
 #'   }
 #'
 itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                     Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE,
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
-                    empirical.plot = NULL, empirical.CI = 0, method = 'EAP', Theta = NULL,
+                    empirical.plot = NULL, empirical.CI = 0, empirical.table = NULL,
+                    method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
     fn <- function(ind, Theta, obj, vals, ...){
@@ -174,13 +187,23 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         class(x) <- 'MultipleGroupClass'
         discrete <- TRUE
     }
-    if(!is.null(empirical.plot)) which.items <- 1:extract.mirt(x, 'nitems')
+    if(!is.null(empirical.plot) && !is.null(empirical.table))
+        stop('Please select empirical.plot or empirical.table, not both', call.=FALSE)
+    if(!is.null(empirical.plot))
+        which.items <- empirical.plot
+    if(!is.null(empirical.table))
+        which.items <- empirical.table
     which.items <- sort(which.items)
+    if(!is.null(empirical.plot) || !is.null(empirical.table)){
+        Zh <- FALSE
+        if(length(which.items) > 1L)
+            stop('Plots and tables only supported for 1 item at a time', call.=FALSE)
+    }
 
     stopifnot(Zh || X2 || S_X2)
     stopifnot(is.numeric(empirical.CI))
     if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
-        stop('Only X2 can be compute without imputed datsets', call.=FALSE)
+        stop('Only X2 and G2 can be compute without imputed datsets', call.=FALSE)
 
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
@@ -198,8 +221,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                             Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
                             mincell=mincell, mincell.X2=mincell.X2,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                            empirical.CI=empirical.CI, method=method, impute=0,
-                            discrete=discrete, ...)
+                            empirical.CI=empirical.CI, empirical.table=empirical.table,
+                            method=method, impute=0, discrete=discrete, ...)
         ave <- SD <- collect[[1L]]
         pick1 <- 1:nrow(ave)
         pick2 <- sapply(ave, is.numeric)
@@ -230,6 +253,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
                                 mincell=mincell, mincell.X2=mincell.X2,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
+                                empirical.table=empirical.table,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
                                 impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
         }
@@ -302,7 +326,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             }
         }
     }
-    if(( (X2 || G2) || !is.null(empirical.plot)) && x@Model$nfact == 1L){
+    if(( (X2 || G2) || !is.null(empirical.plot) || !is.null(empirical.table)) && x@Model$nfact == 1L){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
         nfact <- ncol(Theta)
@@ -352,8 +376,11 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
             empirical.plot_points <- matrix(NA, length(unique(Groups)), x@Data$K[empirical.plot] + 2L)
         }
+        if(!is.null(empirical.table)){
+            Etable <- vector('list', ngroups)
+            mtheta_nms <- numeric(ngroups)
+        }
         for (i in which.items){
-            if(!is.null(empirical.plot) && i != empirical.plot) next
             for(j in unique(Groups)){
                 dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
                 if(nrow(dat) <= 1L) next
@@ -365,6 +392,13 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
+                if(!is.null(empirical.table)){
+                    E <- N*P
+                    Etable[[j]] <- data.frame(Observed=r, Expected=as.vector(E),
+                                              z.Residual=as.vector(sqrt((r - E)^2 / E) * sign(r-E)))
+                    rownames(Etable[[j]]) <- 1:nrow(Etable[[j]]) + extract.mirt(x, 'mins')[which.items] - 1
+                    mtheta_nms[j] <- mtheta
+                }
                 if(any(N * P < mincell.X2)){
                     while(TRUE){
                         wch <- which(N * P < mincell.X2)
@@ -388,6 +422,10 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 df[i] <- df[i] + length(r) - 1
                 tmp <- r * log(r/E)
                 G2.value[i] <- G2.value[i] + 2*sum(tmp[is.finite(tmp)])
+            }
+            if(!is.null(empirical.table)){
+                names(Etable) <- paste0('theta = ', round(mtheta_nms, 3))
+                return(Etable)
             }
             df[i] <- df[i] - sum(pars[[i]]@est)
         }

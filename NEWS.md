@@ -1,5 +1,7 @@
 # Changes in mirt 1.17
 
+- added `empirical.table` argument to return tables of expected/observed values for `X2` and `G2`
+
 - `group.bins` argument added to `itemfit()` to control the size of the bins for `X2` and
   `G2` computations
 
