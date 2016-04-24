@@ -42,7 +42,7 @@
 #'   passing \code{X2 = TRUE} or \code{G2 = TRUE}
 #' @param empirical.CI a numeric value indicating the width of the empirical confidence interval
 #'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
-#'   interval would be plotted if \code{empirical.CI = .95}. Only applicable to dichotomous items
+#'   interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
 #' @param Theta a matrix of factor scores for each person used for statistics that require
 #'   empirical estimates. If supplied, arguments typically passed to \code{fscores()} will be
@@ -111,10 +111,6 @@
 #' itemfit(x, empirical.plot = 1) #empirical item plot
 #' itemfit(x, empirical.plot = 21) #empirical item plot
 #'
-#' #empirical item plot with 95% CI's and 20 bins
-#' itemfit(x, group.bins=20, empirical.plot = 1, empirical.CI = .95)
-#' itemfit(x, group.bins=20, empirical.plot = 21, empirical.CI = .95)
-#'
 #' #empirical tables
 #' itemfit(x, group.bins=20, empirical.table=1)
 #' itemfit(x, group.bins=20, empirical.table=21)
@@ -158,14 +154,21 @@
 #' itemfit(raschfit2)
 #'
 #' # note that X2 and G2 do not require complete datasets
-#' itemfit(raschfit, X2=TRUE, S_X2=FALSE, Zh=FALSE)
-#'   }
+#' itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE, Zh=FALSE)
+#'
+#' ## functional for polytomous data as well
+#' mod <- mirt(Science, 1)
+#' itemfit(mod, X2=TRUE)
+#' itemfit(mod, empirical.plot=1)
+#' itemfit(mod, empirical.table=1)
+#'
+#'}
 #'
 itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                     Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE,
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
-                    empirical.plot = NULL, empirical.CI = 0, empirical.table = NULL,
+                    empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
                     method = 'EAP', Theta = NULL,
                     impute = 0, digits = 4, ...){
 
@@ -203,7 +206,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     stopifnot(Zh || X2 || S_X2)
     stopifnot(is.numeric(empirical.CI))
     if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
-        stop('Only X2 and G2 can be compute without imputed datsets', call.=FALSE)
+        stop('Only X2 and G2 can be computed with missing data. Consider using imputed datasets', call.=FALSE)
 
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
@@ -454,15 +457,17 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             plt.2 <- reshape(plt.2, varying = 3:ncol(plt.2), direction = 'long', timevar = 'cat')
             plt <- cbind(plt.1, plt.2)
             if(K == 2) plt <- plt[plt$cat != 1, ]
-            return(xyplot(P ~ Theta, plt, groups = cat,
+            plt$cat <- factor(paste0('Category ', plt$cat - 1 + extract.mirt(x, 'mins')[which.items]))
+            return(xyplot(if(K == 2) P~Theta else P ~ Theta|cat, plt, groups = cat,
                           main = paste('Empirical plot for item', empirical.plot),
                             ylim = c(-0.1,1.1), xlab = expression(theta), ylab=expression(P(theta)),
-                          auto.key=if(K==2) FALSE else list(space = 'right'), EPCI.lower=EPCI.lower,
+                          auto.key=FALSE, EPCI.lower=EPCI.lower,
                           EPCI.upper=EPCI.upper,
                           panel = function(x, y, groups, subscripts, EPCI.lower, EPCI.upper, ...){
                               panel.xyplot(x=x, y=y, groups=groups, type='l',
                                            subscripts=subscripts, ...)
-                              panel.points(cbind(plt$theta, plt$p), col=groups, pch=groups, ...)
+                              panel.points(cbind(plt$theta[subscripts], plt$p[subscripts]),
+                                           col='black', ...)
                               if(!is.null(EPCI.lower)){
                                   theta <- na.omit(plt$theta)
                                   for(i in 1:length(theta))
