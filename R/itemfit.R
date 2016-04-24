@@ -12,11 +12,10 @@
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param which.items an integer vector indicating which items to test for fit.
 #'   Default tests all possible items
-#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
-#'   only interested in computing the S-X2 quickly
+#' @param S_X2 logical; calculate the S_X2 statistic?
+#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)?
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param G2 logical; calculate the G2 statistic for unidimensional models?
-#' @param S_X2 logical; calculate the S_X2 statistic?
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
@@ -108,12 +107,12 @@
 #' fit
 #'
 #' itemfit(x, X2=TRUE)
-#' itemfit(x, empirical.plot = 1) #empirical item plot
-#' itemfit(x, empirical.plot = 21) #empirical item plot
+#' itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
+#' itemfit(x, group.bins=15, empirical.plot = 21)
 #'
 #' #empirical tables
-#' itemfit(x, group.bins=20, empirical.table=1)
-#' itemfit(x, group.bins=20, empirical.table=21)
+#' itemfit(x, empirical.table=1)
+#' itemfit(x, empirical.table=21)
 #'
 #' #method='ML' agrees better with eRm package
 #' itemfit(raschfit, method = 'ML') #infit and outfit stats
@@ -125,11 +124,13 @@
 #' #similar example to Kang and Chen 2007
 #' a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
 #' d <- matrix(rep(c(2.0,0.0,-1,-1.5),10), ncol=4, byrow=TRUE)
-#' dat <- simdata(a,d,2000, itemtype = rep('graded', 10)) - 1
+#' dat <- simdata(a,d,2000, itemtype = rep('graded', 10))
 #' head(dat)
 #'
 #' mod <- mirt(dat, 1)
 #' itemfit(mod)
+#' itemfit(mod, X2 = TRUE)
+#' itemfit(mod, empirical.plot = 1)
 #'
 #' mod2 <- mirt(dat, 1, 'Rasch')
 #' itemfit(mod2)
@@ -156,16 +157,10 @@
 #' # note that X2 and G2 do not require complete datasets
 #' itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE, Zh=FALSE)
 #'
-#' ## functional for polytomous data as well
-#' mod <- mirt(Science, 1)
-#' itemfit(mod, X2=TRUE)
-#' itemfit(mod, empirical.plot=1)
-#' itemfit(mod, empirical.table=1)
-#'
 #'}
 #'
 itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
-                    Zh = TRUE, S_X2 = TRUE, X2 = FALSE, G2 = FALSE,
+                    S_X2 = TRUE, Zh = FALSE, X2 = FALSE, G2 = FALSE,
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
@@ -271,7 +266,14 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
-    if(Zh){
+    infit <- FALSE
+    if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+        oneslopes <- rep(FALSE, length(x@Model$itemtype))
+        for(i in 1L:length(x@Model$itemtype))
+            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
+        if(all(oneslopes)) infit <- TRUE
+    }
+    if(Zh || infit){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
         prodlist <- attr(pars, 'prodlist')
@@ -304,7 +306,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                                                                log_P[,i] * log(P[,i]/P[,j]))
         }
         tmp <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
-        ret$Zh <- tmp[which.items]
+        if(Zh) ret$Zh <- tmp[which.items]
         #if all Rasch models, infit and outfit
         if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
             oneslopes <- rep(FALSE, length(x@Model$itemtype))
@@ -427,7 +429,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 G2.value[i] <- G2.value[i] + 2*sum(tmp[is.finite(tmp)])
             }
             if(!is.null(empirical.table)){
-                names(Etable) <- paste0('theta = ', round(mtheta_nms, 3))
+                Etable <- lapply(Etable, round, digits=digits)
+                names(Etable) <- paste0('theta = ', round(mtheta_nms, digits))
                 return(Etable)
             }
             df[i] <- df[i] - sum(pars[[i]]@est)

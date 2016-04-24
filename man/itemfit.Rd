@@ -4,8 +4,8 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-itemfit(x, which.items = 1:extract.mirt(x, "nitems"), Zh = TRUE,
-  S_X2 = TRUE, X2 = FALSE, G2 = FALSE, group.bins = 10,
+itemfit(x, which.items = 1:extract.mirt(x, "nitems"), S_X2 = TRUE,
+  Zh = FALSE, X2 = FALSE, G2 = FALSE, group.bins = 10,
   group.size = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
   S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0.95,
   empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
@@ -18,10 +18,9 @@ itemfit(x, which.items = 1:extract.mirt(x, "nitems"), Zh = TRUE,
 \item{which.items}{an integer vector indicating which items to test for fit.
 Default tests all possible items}
 
-\item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)? Disable this is you are
-only interested in computing the S-X2 quickly}
-
 \item{S_X2}{logical; calculate the S_X2 statistic?}
+
+\item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)?}
 
 \item{X2}{logical; calculate the X2 statistic for unidimensional models?}
 
@@ -110,12 +109,12 @@ fit <- itemfit(x)
 fit
 
 itemfit(x, X2=TRUE)
-itemfit(x, empirical.plot = 1) #empirical item plot
-itemfit(x, empirical.plot = 21) #empirical item plot
+itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
+itemfit(x, group.bins=15, empirical.plot = 21)
 
 #empirical tables
-itemfit(x, group.bins=20, empirical.table=1)
-itemfit(x, group.bins=20, empirical.table=21)
+itemfit(x, empirical.table=1)
+itemfit(x, empirical.table=21)
 
 #method='ML' agrees better with eRm package
 itemfit(raschfit, method = 'ML') #infit and outfit stats
@@ -127,11 +126,13 @@ itemfit(raschfit, Theta=Theta)
 #similar example to Kang and Chen 2007
 a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
 d <- matrix(rep(c(2.0,0.0,-1,-1.5),10), ncol=4, byrow=TRUE)
-dat <- simdata(a,d,2000, itemtype = rep('graded', 10)) - 1
+dat <- simdata(a,d,2000, itemtype = rep('graded', 10))
 head(dat)
 
 mod <- mirt(dat, 1)
 itemfit(mod)
+itemfit(mod, X2 = TRUE)
+itemfit(mod, empirical.plot = 1)
 
 mod2 <- mirt(dat, 1, 'Rasch')
 itemfit(mod2)
@@ -157,12 +158,6 @@ itemfit(raschfit2)
 
 # note that X2 and G2 do not require complete datasets
 itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE, Zh=FALSE)
-
-## functional for polytomous data as well
-mod <- mirt(Science, 1)
-itemfit(mod, X2=TRUE)
-itemfit(mod, empirical.plot=1)
-itemfit(mod, empirical.table=1)
 
 }
 

@@ -85,7 +85,7 @@ test_that('one factor', {
     expect_equal(fit1$D1.SRMSR, 0.03606703, tolerance = 1e-4)
     expect_equal(fit1$TLI, 1.005683, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
-    fit2 <- itemfit(mod_metric, digits = 20)
+    fit2 <- itemfit(mod_metric, digits = 20, Zh=TRUE)
     expect_is(fit2, 'list')
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.488648, 8.294027, 11.000000, 0.686700),
                  tolerance = 1e-4)
