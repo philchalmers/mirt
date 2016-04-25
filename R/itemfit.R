@@ -132,6 +132,9 @@
 #' itemfit(mod, X2 = TRUE)
 #' itemfit(mod, empirical.plot = 1)
 #'
+#' # collapsed tables (see mincell.X2) for X2 and G2
+#' itemfit(mod, empirical.table = 1)
+#'
 #' mod2 <- mirt(dat, 1, 'Rasch')
 #' itemfit(mod2)
 #'
@@ -397,13 +400,6 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
-                if(!is.null(empirical.table)){
-                    E <- N*P
-                    Etable[[j]] <- data.frame(Observed=r, Expected=as.vector(E),
-                                              z.Residual=as.vector(sqrt((r - E)^2 / E) * sign(r-E)))
-                    rownames(Etable[[j]]) <- 1:nrow(Etable[[j]]) + extract.mirt(x, 'mins')[which.items] - 1
-                    mtheta_nms[j] <- mtheta
-                }
                 if(any(N * P < mincell.X2)){
                     while(TRUE){
                         wch <- which(N * P < mincell.X2)
@@ -430,6 +426,12 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 if(length(tmp) > 1L){
                     G2.value[i] <- G2.value[i] + 2*sum(tmp)
                     df.G2[i] <- df.G2[i] + length(tmp) - 1L
+                }
+                if(!is.null(empirical.table)){
+                    Etable[[j]] <- data.frame(Observed=r, Expected=as.vector(E),
+                                              z.Residual=as.vector(sqrt((r - E)^2 / E) * sign(r-E)))
+                    rownames(Etable[[j]]) <- 1:nrow(Etable[[j]]) + extract.mirt(x, 'mins')[which.items] - 1
+                    mtheta_nms[j] <- mtheta
                 }
             }
             if(!is.null(empirical.table)){

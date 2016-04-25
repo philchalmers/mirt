@@ -134,6 +134,9 @@ itemfit(mod)
 itemfit(mod, X2 = TRUE)
 itemfit(mod, empirical.plot = 1)
 
+# collapsed tables (see mincell.X2) for X2 and G2
+itemfit(mod, empirical.table = 1)
+
 mod2 <- mirt(dat, 1, 'Rasch')
 itemfit(mod2)
 
