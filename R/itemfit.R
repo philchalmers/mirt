@@ -368,7 +368,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
             }
         }
-        X2.value <- df <- G2.value <- numeric(J)
+        X2.value <- G2.value <- df.G2 <- df.X2 <- numeric(J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
             theta <- seq(-4,4, length.out=40)
@@ -424,16 +424,21 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 }
                 E <- N*P
                 X2.value[i] <- X2.value[i] + sum((r - E)^2 / E)
-                df[i] <- df[i] + length(r) - 1
+                df.X2[i] <- df.X2[i] + length(r) - 1L
                 tmp <- r * log(r/E)
-                G2.value[i] <- G2.value[i] + 2*sum(tmp[is.finite(tmp)])
+                tmp <- tmp[is.finite(tmp)]
+                if(length(tmp) > 1L){
+                    G2.value[i] <- G2.value[i] + 2*sum(tmp)
+                    df.G2[i] <- df.G2[i] + length(tmp) - 1L
+                }
             }
             if(!is.null(empirical.table)){
                 Etable <- lapply(Etable, round, digits=digits)
                 names(Etable) <- paste0('theta = ', round(mtheta_nms, digits))
                 return(Etable)
             }
-            df[i] <- df[i] - sum(pars[[i]]@est)
+            df.X2[i] <- df.X2[i] - sum(pars[[i]]@est)
+            df.G2[i] <- df.G2[i] - sum(pars[[i]]@est)
         }
         X2.value[X2.value == 0] <- NA
         G2.value[G2.value == 0] <- NA
@@ -480,16 +485,17 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                               }
                           }))
         }
-        if(X2) ret$X2 <- X2.value[which.items]
-        if(G2) ret$G2 <- G2.value[which.items]
-        ret$df <- df[which.items]
         if(X2){
-            ret$p.X2 <- 1 - suppressWarnings(pchisq(ret$X2, ret$df))
-            ret$p.X2[ret$df <= 0] <- NaN
+            ret$X2 <- X2.value[which.items]
+            ret$df.X2 <- df.X2[which.items]
+            ret$p.X2 <- 1 - suppressWarnings(pchisq(ret$X2, ret$df.X2))
+            ret$p.X2[ret$df.X2 <= 0] <- NaN
         }
         if(G2){
-            ret$p.G2 <- 1 - suppressWarnings(pchisq(ret$G2, ret$df))
-            ret$p.G2[ret$df <= 0] <- NaN
+            ret$G2 <- G2.value[which.items]
+            ret$df.G2 <- df.G2[which.items]
+            ret$p.G2 <- 1 - suppressWarnings(pchisq(ret$G2, ret$df.G2))
+            ret$p.G2[ret$df.G2 <= 0] <- NaN
         }
     }
     if(S_X2){
