@@ -5,11 +5,13 @@
 \title{Item fit statistics}
 \usage{
 itemfit(x, which.items = 1:extract.mirt(x, "nitems"), S_X2 = TRUE,
-  Zh = FALSE, X2 = FALSE, G2 = FALSE, group.bins = 10,
+  Zh = FALSE, X2 = FALSE, G2 = FALSE, infit = FALSE, group.bins = 10,
   group.size = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
   S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0.95,
   empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
-  digits = 4, ...)
+  digits = 4, par.strip.text = list(cex = 0.7),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
+  list(col = "black")), ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -20,11 +22,14 @@ Default tests all possible items}
 
 \item{S_X2}{logical; calculate the S_X2 statistic?}
 
-\item{Zh}{logical; calculate Zh and associated statistics (infit/outfit)?}
+\item{Zh}{logical; calculate Zh?}
 
 \item{X2}{logical; calculate the X2 statistic for unidimensional models?}
 
 \item{G2}{logical; calculate the G2 statistic for unidimensional models?}
+
+\item{infit}{logical; calculate the infit/outfit values for unidimensional Rasch models? If the models
+are not from the Rasch family then this will be ignored}
 
 \item{group.bins}{the number of bins to use when \code{X2 = TRUE}. For example,
 setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic}
@@ -75,15 +80,20 @@ of the stats and their imputed standard deviations}
 
 \item{digits}{number of digits to round result to. Default is 4}
 
-\item{...}{additional arguments to be passed to \code{fscores()}}
+\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+
+\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+
+\item{...}{additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}}
 }
 \description{
 \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985),
 \eqn{\chi^2} and \eqn{G^2} values for unidimensional models, and S-X2 statistics for unidimensional and
 multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 For Rasch, partial credit, and rating scale models infit and outfit statistics are
-also produced. Poorly fitting items should be inspected with \code{\link{itemGAM}} to diagnose
-whether the functional form of the IRT model was misspecified or could be improved.
+also produced. Poorly fitting items should be inspected with the empirical plots/tables
+for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
+where the functional form of the IRT model was misspecified.
 }
 \examples{
 
@@ -116,12 +126,12 @@ itemfit(x, group.bins=15, empirical.plot = 21)
 itemfit(x, empirical.table=1)
 itemfit(x, empirical.table=21)
 
-#method='ML' agrees better with eRm package
-itemfit(raschfit, method = 'ML') #infit and outfit stats
+#infit/outfit statistics. method='ML' agrees better with eRm package
+itemfit(raschfit, method = 'ML', infit = TRUE) #infit and outfit stats
 
 #same as above, but inputting ML estimates instead
 Theta <- fscores(raschfit, method = 'ML')
-itemfit(raschfit, Theta=Theta)
+itemfit(raschfit, Theta=Theta, infit = TRUE)
 
 #similar example to Kang and Chen 2007
 a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
@@ -138,7 +148,7 @@ itemfit(mod, empirical.plot = 1)
 itemfit(mod, empirical.table = 1)
 
 mod2 <- mirt(dat, 1, 'Rasch')
-itemfit(mod2)
+itemfit(mod2, infit = TRUE)
 
 #massive list of tables
 tables <- itemfit(mod, S_X2.tables = TRUE)
@@ -152,15 +162,17 @@ data[sample(1:prod(dim(data)), 500)] <- NA
 raschfit <- mirt(data, 1, itemtype='Rasch')
 
 mirtCluster() # run in parallel
-itemfit(raschfit, impute = 10)
+itemfit(raschfit, impute = 10, infit = TRUE)
 
 #alternative route: use only valid data, and create a model with the previous parameter estimates
 data2 <- na.omit(data)
 raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-itemfit(raschfit2)
+itemfit(raschfit2, infit = TRUE)
 
 # note that X2 and G2 do not require complete datasets
-itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE, Zh=FALSE)
+itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE)
+itemfit(raschfit, empirical.plot=1)
+itemfit(raschfit, empirical.table=1)
 
 }
 

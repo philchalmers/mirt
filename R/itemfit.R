@@ -4,8 +4,9 @@
 #' \eqn{\chi^2} and \eqn{G^2} values for unidimensional models, and S-X2 statistics for unidimensional and
 #' multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 #' For Rasch, partial credit, and rating scale models infit and outfit statistics are
-#' also produced. Poorly fitting items should be inspected with \code{\link{itemGAM}} to diagnose
-#' whether the functional form of the IRT model was misspecified or could be improved.
+#' also produced. Poorly fitting items should be inspected with the empirical plots/tables
+#' for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
+#' where the functional form of the IRT model was misspecified.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -13,9 +14,11 @@
 #' @param which.items an integer vector indicating which items to test for fit.
 #'   Default tests all possible items
 #' @param S_X2 logical; calculate the S_X2 statistic?
-#' @param Zh logical; calculate Zh and associated statistics (infit/outfit)?
+#' @param Zh logical; calculate Zh?
 #' @param X2 logical; calculate the X2 statistic for unidimensional models?
 #' @param G2 logical; calculate the G2 statistic for unidimensional models?
+#' @param infit logical; calculate the infit/outfit values for unidimensional Rasch models? If the models
+#'   are not from the Rasch family then this will be ignored
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
@@ -52,7 +55,9 @@
 #'   Will return a data.frame object with the mean estimates
 #'   of the stats and their imputed standard deviations
 #' @param digits number of digits to round result to. Default is 4
-#' @param ... additional arguments to be passed to \code{fscores()}
+#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
+#' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param ... additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit
@@ -114,12 +119,12 @@
 #' itemfit(x, empirical.table=1)
 #' itemfit(x, empirical.table=21)
 #'
-#' #method='ML' agrees better with eRm package
-#' itemfit(raschfit, method = 'ML') #infit and outfit stats
+#' #infit/outfit statistics. method='ML' agrees better with eRm package
+#' itemfit(raschfit, method = 'ML', infit = TRUE) #infit and outfit stats
 #'
 #' #same as above, but inputting ML estimates instead
 #' Theta <- fscores(raschfit, method = 'ML')
-#' itemfit(raschfit, Theta=Theta)
+#' itemfit(raschfit, Theta=Theta, infit = TRUE)
 #'
 #' #similar example to Kang and Chen 2007
 #' a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
@@ -136,7 +141,7 @@
 #' itemfit(mod, empirical.table = 1)
 #'
 #' mod2 <- mirt(dat, 1, 'Rasch')
-#' itemfit(mod2)
+#' itemfit(mod2, infit = TRUE)
 #'
 #' #massive list of tables
 #' tables <- itemfit(mod, S_X2.tables = TRUE)
@@ -150,25 +155,29 @@
 #' raschfit <- mirt(data, 1, itemtype='Rasch')
 #'
 #' mirtCluster() # run in parallel
-#' itemfit(raschfit, impute = 10)
+#' itemfit(raschfit, impute = 10, infit = TRUE)
 #'
 #' #alternative route: use only valid data, and create a model with the previous parameter estimates
 #' data2 <- na.omit(data)
 #' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-#' itemfit(raschfit2)
+#' itemfit(raschfit2, infit = TRUE)
 #'
 #' # note that X2 and G2 do not require complete datasets
-#' itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE, Zh=FALSE)
+#' itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE)
+#' itemfit(raschfit, empirical.plot=1)
+#' itemfit(raschfit, empirical.table=1)
 #'
 #'}
 #'
 itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
-                    S_X2 = TRUE, Zh = FALSE, X2 = FALSE, G2 = FALSE,
+                    S_X2 = TRUE, Zh = FALSE, X2 = FALSE, G2 = FALSE, infit = FALSE,
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
-                    method = 'EAP', Theta = NULL,
-                    impute = 0, digits = 4, ...){
+                    method = 'EAP', Theta = NULL, impute = 0, digits = 4,
+                    par.strip.text = list(cex = 0.7),
+                    par.settings = list(strip.background = list(col = '#9ECAE1'),
+                                        strip.border = list(col = "black")), ...){
 
     fn <- function(ind, Theta, obj, vals, ...){
         tmpobj <- obj
@@ -201,9 +210,13 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             stop('Plots and tables only supported for 1 item at a time', call.=FALSE)
     }
 
-    stopifnot(Zh || X2 || S_X2)
+    stopifnot(Zh || X2 || S_X2 || infit || G2)
     stopifnot(is.numeric(empirical.CI))
-    if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
+    if(!is.null(empirical.table) || !is.null(empirical.plot)){
+        X2 <- TRUE
+        S_X2 <- Zh <- infit <- G2 <- FALSE
+    }
+    if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2 and G2 can be computed with missing data. Consider using imputed datasets', call.=FALSE)
 
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
@@ -252,7 +265,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
             ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
-                                mincell=mincell, mincell.X2=mincell.X2,
+                                group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2, infit=infit,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 empirical.table=empirical.table,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
@@ -269,13 +282,14 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
-    infit <- FALSE
-    if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+    if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm')) && infit){
+        infit <- FALSE
         oneslopes <- rep(FALSE, length(x@Model$itemtype))
+        slope <- x@ParObjects$pars[[1L]]@par[1L]
         for(i in 1L:length(x@Model$itemtype))
-            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
+            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], slope-1e-10, slope+1e-10)
         if(all(oneslopes)) infit <- TRUE
-    }
+    } else infit <- FALSE
     if(Zh || infit){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
@@ -471,8 +485,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             return(xyplot(if(K == 2) P~Theta else P ~ Theta|cat, plt, groups = cat,
                           main = paste('Empirical plot for item', empirical.plot),
                             ylim = c(-0.1,1.1), xlab = expression(theta), ylab=expression(P(theta)),
-                          auto.key=FALSE, EPCI.lower=EPCI.lower,
-                          EPCI.upper=EPCI.upper,
+                          EPCI.lower=EPCI.lower, EPCI.upper=EPCI.upper,
                           panel = function(x, y, groups, subscripts, EPCI.lower, EPCI.upper, ...){
                               panel.xyplot(x=x, y=y, groups=groups, type='l',
                                            subscripts=subscripts, ...)
@@ -485,7 +498,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                                                                            EPCI.upper[i]),
                                                   lty = 2, col = 'red')
                               }
-                          }))
+                          },
+                          par.strip.text=par.strip.text, par.settings=par.settings, ...))
         }
         if(X2){
             ret$X2 <- X2.value[which.items]
