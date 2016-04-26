@@ -388,14 +388,11 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         X2.value <- G2.value <- df.G2 <- df.X2 <- numeric(J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
-            theta <- seq(-4,4, length.out=40)
-            ThetaFull <- thetaComb(theta, nfact)
             if(!is.numeric(empirical.plot)){
                 inames <- colnames(x@Data$data)
                 ind <- 1L:length(inames)
                 empirical.plot <- ind[inames == empirical.plot]
             }
-            empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
             empirical.plot_points <- matrix(NA, length(unique(Groups)), x@Data$K[empirical.plot] + 2L)
         }
         if(!is.null(empirical.table)){
@@ -470,6 +467,9 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                 EPCI.lower <- apply(cbind(O, N), 1, p.L, (1-empirical.CI)/2)
                 EPCI.upper <- apply(cbind(O, N), 1, p.U, (1-empirical.CI)/2)
             }
+            theta <- seq(-4,4, length.out=max(c(50, ngroups)))
+            ThetaFull <- thetaComb(theta, nfact)
+            empirical.plot_P <- ProbTrace(pars[[empirical.plot]], ThetaFull)
             empirical.plot_points <- empirical.plot_points[,-2]
             colnames(empirical.plot_points) <- c('theta', paste0('p.', 1:K))
             while(nrow(empirical.plot_points) < nrow(empirical.plot_P))
