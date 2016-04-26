@@ -140,7 +140,8 @@
 #'
 #' #multiple imputation using 30 draws for EAP scores. Requires information matrix
 #' mod <- mirt(Science, 1, SE=TRUE)
-#' fscores(mod, MI = 30)
+#' fs <- fscores(mod, MI = 30)
+#' head(fs)
 #'
 #' # plausible values for future work
 #' pv <- fscores(mod, plausible.draws = 5)

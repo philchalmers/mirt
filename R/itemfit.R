@@ -232,8 +232,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         vals <- mod2values(x)
         vals$est <- FALSE
         collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, S_X2=S_X2,
-                            Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
-                            mincell=mincell, mincell.X2=mincell.X2,
+                            Zh=Zh, X2=X2, G2=G2, group.size=group.size, group.bins=group.bins,
+                            mincell=mincell, mincell.X2=mincell.X2, infit=infit,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, empirical.table=empirical.table,
                             method=method, impute=0, discrete=discrete, ...)
@@ -267,7 +267,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
                                 group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2, infit=infit,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                                empirical.table=empirical.table,
+                                empirical.table=empirical.table, G2=G2,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
                                 impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
         }

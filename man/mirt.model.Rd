@@ -90,14 +90,14 @@ For example, in a two group 10-item dichotomous tests, using the default 2PL mod
   If \code{OptionalGroup} is omitted then the priors are defined for all groups.
   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
-  \code{PRIOR = (1-5, d, norm, 0, 2)}}
+  \code{PRIOR = (1-5, d, norm, 0, 2)}
 
-Currently supported priors are of the form: \code{(parnumbers, norm, mean, sd)}
-  for the normal/Gaussian, \code{(parnumbers, lnorm, log_mean, log_sd)} for log-normal,
-  \code{(parnumbers, beta, alpha, beta)} for beta, and \code{(parnumbers, expbeta, alpha, beta)}
+Currently supported priors are of the form: \code{(items, norm, mean, sd)}
+  for the normal/Gaussian, \code{(items, lnorm, log_mean, log_sd)} for log-normal,
+  \code{(items, beta, alpha, beta)} for beta, and \code{(items, expbeta, alpha, beta)}
   for the beta distribution after applying the
   function \code{\link{plogis}} to the input value (note, this is specifically for applying a beta
-  prior to the lower-bound parameters in 3/4PL models)
+  prior to the lower-bound parameters in 3/4PL models)}
 
 \item{LBOUND}{A bracketed, comma separate list specifying lower bounds for estimated
   parameters (used in optimizers such as \code{L-BFGS-B} and \code{nlminb}).
