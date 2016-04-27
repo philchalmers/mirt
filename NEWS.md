@@ -1,11 +1,15 @@
 # Changes in mirt 1.17
 
+- `itemfit()` function reworked so that all statistics have their own input flag (e.g., `Zh = TRUE`,
+  `infit = TRUE`, etc). Additionally, only S-X2 is computed by default and X2/G2 (and the associated
+  graphics and tables) are computed using 10 fixed bins
+
 - added `empirical.table` argument to return tables of expected/observed values for `X2` and `G2`
 
-- `group.bins` argument added to `itemfit()` to control the size of the bins for `X2` and
-  `G2` computations
+- `group.bins` and `group.fun` argument added to `itemfit()` to control the size of the 
+  bins and the central tendancy function for `X2` and `G2` computations
 
-- 'expbeta' option added to implement a beta prior specifically for the `g` and `u` parameters which
+- `'expbeta'` option added to implement a beta prior specifically for the `g` and `u` parameters which
   internally have been transformed to logits (performes the back transformation before computing the 
   values)
 
