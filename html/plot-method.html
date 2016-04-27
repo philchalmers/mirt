@@ -23,9 +23,9 @@
 <pre>
 ## S4 method for signature 'SingleGroupClass,missing'
 plot(x, y, type = "score", npts = 50,
-  degrees = 45, theta_lim = c(-6, 6), which.items = 1:ncol(x@Data$data),
-  MI = 0, CI = 0.95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-  facet_items = TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
+  degrees = 45, theta_lim = c(-6, 6), which.items = 1:extract.mirt(x,
+  "nitems"), MI = 0, CI = 0.95, rot = list(xaxis = -70, yaxis = 30, zaxis
+  = 10), facet_items = TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
   ehist.cut = 1e-10, add.ylab2 = TRUE, par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
   list(col = "black")), auto.key = list(space = "right"), profile = FALSE,
@@ -262,5 +262,5 @@ plot(x3, type = &#39;info&#39;)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

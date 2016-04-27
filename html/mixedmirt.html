@@ -80,9 +80,9 @@ item types: <code>c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')</
 </td></tr>
 <tr valign="top"><td><code>lr.fixed</code></td>
 <td>
-<p>an R forumala (or list of formulas) to specificy regression
+<p>an R formula (or list of formulas) to specify regression
 effects in the latent variables from the variables in <code>covdata</code>. This is used to construct models such as the so-called
-'latent regression model' to expalin person-level ability/trait differences. If a named list
+'latent regression model' to explain person-level ability/trait differences. If a named list
 of formulas is supplied (where the names correspond to the latent trait names in <code>model</code>)
 then specific regression effects can be estimated for each factor. Supplying a single formula
 will estimate the regression parameters for all latent traits by default.</p>
@@ -125,13 +125,13 @@ using the MHRM algorithm? Default is TRUE</p>
 <td>
 <p>logical; use the internally defined constraints for constraining
 effects across persons and items? Default is TRUE. Setting this to FALSE runs the risk of
-underidentification</p>
+under-identification</p>
 </td></tr>
 <tr valign="top"><td><code>technical</code></td>
 <td>
 <p>the technical list passed to the MH-RM estimation engine, with the
 SEtol default increased to .0001. Additionally, the argument <code>RANDSTART</code> is available
-to incidicate at which iteration (during the burn-in stage) the additional random effect
+to indicate at which iteration (during the burn-in stage) the additional random effect
 variables should begin to be approximated (i.e.,
 elements in <code>lr.random</code> and <code>random</code>). The default for <code>RANDSTART</code> is to start
 at iteration 100, and when random effects are included the default number of burn-in iterations is incrased
@@ -171,7 +171,7 @@ inputs. These effects decompose <i>&theta;</i> such that
 </p>
 <p style="text-align: center;"><i>&theta; = V &Gamma; + W &zeta; + &epsilon;</i></p>
 
-<p>where V and W are fixed and random effects design matricies for the associated coefficients.
+<p>where V and W are fixed and random effects design matrices for the associated coefficients.
 </p>
 <p>To simulate maximum a posteriori estimates for the random effect terms
 use the <code><a href="randef.html">randef</a></code> function.
@@ -241,7 +241,7 @@ anova(mod0, mod1)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
-## 2 8117.512 8118.007 8136.293 8177.573 -4045.756 712.655   2   0
+## 2 8117.763 8118.258 8136.544 8177.824 -4045.882 712.404   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -392,8 +392,8 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8117.512 8118.007 8136.293 8177.573 -4045.756     NaN NaN NaN
-## 2 7969.356 7970.748 8001.139 8070.997 -3962.678 166.157   9   0
+## 1 8117.763 8118.258 8136.544 8177.824 -4045.882     NaN NaN NaN
+## 2 7966.742 7968.134 7998.525 8068.384 -3961.371 169.022   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -434,8 +434,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8104.287 8104.858 8124.513 8168.968 -4038.143     NaN NaN NaN
-## 2 7969.356 7970.748 8001.139 8070.997 -3962.678 150.931   8   0
+## 1 8104.915 8105.487 8125.141 8169.596 -4038.458     NaN NaN NaN
+## 2 7966.742 7968.134 7998.525 8068.384 -3961.371 154.173   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -674,11 +674,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] -0.0562 -0.0269 -0.001 0.013 -0.1109 ...
+##  $ Theta: num [1:750, 1] -0.0425 0.0361 -0.0711 0.0415 -0.0485 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -2.03 -1.25 -1.42 -1.29 -1.42 ...
+##  $ group: num [1:50, 1:2] -2.09 -1.18 -1.35 -1.3 -1.42 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -960,8 +960,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25464.59 25464.63 25468.26 25477.78 -12729.30      NaN NaN NaN
-## 2 20481.18 20485.39 20522.73 20630.67 -10206.59 5045.414  31   0
+## 1 25469.40 25469.44 25473.07 25482.59 -12731.70      NaN NaN NaN
+## 2 20484.82 20489.03 20526.38 20634.32 -10208.41 5046.577  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1588,9 +1588,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik   X2  df      p
-## 1 3264.045 3265.159 3275.221 3319.643 -1618.023  NaN NaN    NaN
-## 2 3258.745 3260.381 3272.316 3326.256 -1612.372 11.3   3 0.0102
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
+## 1 3266.124 3267.239 3277.301 3321.722 -1619.062    NaN NaN    NaN
+## 2 3261.317 3262.953 3274.888 3328.828 -1613.658 10.808   3 0.0128
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1684,7 +1684,7 @@ anova(rmod0, rmod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.156 9743.453 9761.048 9795.982 -4860.578     NaN NaN NaN
-## 2 9494.498 9494.909 9515.643 9556.929 -4734.249 252.658   2   0
+## 2 9498.768 9499.179 9519.913 9561.199 -4736.384 248.388   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1756,7 +1756,7 @@ anova(mod0, mod1b)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
 ## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
-## 2 9495.515 9496.669 9531.300 9601.168 -4725.758 252.258   2   0
+## 2 9497.499 9498.653 9533.283 9603.152 -4726.749 250.274   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1810,13 +1810,13 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0  1.089      0  0.832
+## par      0      0  1.094      0  0.833
 ## 
 ## $lr.betas
 ##                 F1    F2
 ## (Intercept)  0.000 0.000
-## groupg2      0.867 0.751
-## groupg3      1.723 1.815
+## groupg2      0.862 0.754
+## groupg3      1.722 1.817
 ## contvar     -0.086 0.000
 </code></pre>
 
@@ -1837,23 +1837,23 @@ summary(mod2b)
 ## 
 ## $Theta
 ##      F1    F2
-## F1 1.04 0.000
-## F2 0.00 0.773
+## F1 1.07 0.000
+## F2 0.00 0.804
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
 ##                 F1    F2
 ## (Intercept)  0.000 0.000
-## groupg2      0.858 0.684
-## groupg3      1.698 1.717
-## contvar     -0.099 0.000
+## groupg2      0.828 0.683
+## groupg3      1.659 1.734
+## contvar     -0.084 0.000
 ## 
-##             Std.Error_F1 Std.Error_F2   z_F1   z_F2
-## (Intercept)           NA           NA     NA     NA
-## groupg2            0.070        0.103 12.334  6.614
-## groupg3            0.076        0.103 22.341 16.698
-## contvar            0.040           NA -2.468     NA
+##             Std.Error_F1 Std.Error_F2   z_F1  z_F2
+## (Intercept)           NA           NA     NA    NA
+## groupg2            0.101        0.248  8.224 2.754
+## groupg3            0.103        0.222 16.127 7.823
+## contvar            0.041           NA -2.046    NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1939,8 +1939,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23682.98 23683.14 23712.07 23750.19 -11829.49     NaN NaN NaN
-## 2 22905.60 22905.78 22937.11 22978.41 -11439.80 779.382   1   0
+## 1 23685.85 23686.01 23714.94 23753.06 -11830.93     NaN NaN NaN
+## 2 22910.58 22910.76 22942.09 22983.39 -11442.29 777.269   1   0
 </code></pre>
 
 <pre><code class="r"># can also be fit for Rasch/non-Rasch models with the lr.random input
@@ -2015,8 +2015,8 @@ summary(mod2b)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23682.20 23682.34 23708.87 23743.81 -11830.10     NaN NaN NaN
-## 2 22913.22 22913.38 22942.31 22980.44 -11444.61 770.979   1   0
+## 1 23676.69 23676.83 23703.35 23738.30 -11827.35     NaN NaN NaN
+## 2 22911.10 22911.26 22940.19 22978.31 -11443.55 767.594   1   0
 </code></pre>
 
 <pre><code class="r">mod3 &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = &#39;2PL&#39;)
@@ -2133,26 +2133,26 @@ summary(mod3)
 ##     items, itemtype = &quot;2PL&quot;, lr.random = ~1 | group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 23682.20 23682.34 23708.87 23743.81 -11830.10    NaN NaN NaN
-## 2 23707.97 23708.39 23756.45 23819.99 -11833.98 -7.765   9   1
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 23676.69 23676.83 23703.35 23738.30 -11827.35     NaN NaN NaN
+## 2 23706.97 23707.39 23755.45 23818.99 -11833.48 -12.276   9   1
 </code></pre>
 
 <pre><code class="r">head(cbind(randef(mod3)$group, random_intercept))
 </code></pre>
 
 <pre><code>##         group random_intercept
-## G1  0.8084083       1.51178117
-## G2 -0.3417819       0.38984324
-## G3 -1.1585716      -0.62124058
-## G4 -1.4736964      -2.21469989
-## G5  1.0304153       1.12493092
-## G6 -0.3170813      -0.04493361
+## G1  0.5297580       1.51178117
+## G2 -0.2913954       0.38984324
+## G3 -1.0476022      -0.62124058
+## G4 -2.0118917      -2.21469989
+## G5  0.7071472       1.12493092
+## G6 -0.3276158      -0.04493361
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

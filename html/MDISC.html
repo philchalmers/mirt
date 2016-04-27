@@ -15,6 +15,7 @@
 <h3>Description</h3>
 
 <p>Returns a vector containing the MDISC values for each item in the model input object (Reckase, 2009).
+Note that the logistic slope parameters are divided by 1.702 to match the normal ogive metric.
 </p>
 
 
@@ -61,13 +62,13 @@ mod &lt;- mirt(Science, 2)
 MDISC(mod)
 </code></pre>
 
-<pre><code>##  Comfort     Work   Future  Benefit 
-## 1.791663 4.204439 3.516637 2.965433
+<pre><code>##   Comfort      Work    Future   Benefit 
+## 0.7864455 1.2047432 1.1018037 1.0117764
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

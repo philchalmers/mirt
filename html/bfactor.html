@@ -432,64 +432,69 @@ dataset &lt;- simdata(a,d,2000,itemtype=items,sigma=sigma)
 
 specific &lt;- c(rep(1,7),rep(2,7))
 simmod &lt;- bfactor(dataset, specific)
-coef(simmod)
+</code></pre>
+
+<pre><code>## EM cycles terminated after 500 iterations.
+</code></pre>
+
+<pre><code class="r">coef(simmod)
 </code></pre>
 
 <pre><code>## $Item_1
 ##        a1    a2 a3      d g u
-## par 1.064 0.176  0 -1.027 0 1
+## par 0.878 0.558  0 -0.987 0 1
 ## 
 ## $Item_2
 ##        a1    a2 a3      d g u
-## par 1.049 0.164  0 -1.503 0 1
+## par 0.968 0.712  0 -1.633 0 1
 ## 
 ## $Item_3
-##       a1    a2 a3     d g u
-## par 1.14 0.173  0 1.451 0 1
+##        a1   a2 a3     d g u
+## par 0.898 0.78  0 1.412 0 1
 ## 
 ## $Item_4
-##        a1     a2 a3      d g u
-## par 1.169 -0.355  0 -0.071 0 1
+##        a1    a2 a3      d g u
+## par 1.005 0.661  0 -0.032 0 1
 ## 
 ## $Item_5
 ##        a1    a2 a3    d1    d2     d3
-## par 1.158 0.562  0 2.458 0.898 -1.252
+## par 1.035 0.696  0 2.491 1.018 -1.217
 ## 
 ## $Item_6
-##        a1    a2 a3    d1    d2     d3
-## par 1.148 0.225  0 2.917 1.857 -0.487
+##        a1    a2 a3   d1    d2     d3
+## par 0.888 0.653  0 2.77 1.815 -0.527
 ## 
 ## $Item_7
-##        a1     a2 a3    d1    d2     d3
-## par 1.309 -0.661  0 3.261 2.294 -0.586
+##        a1    a2 a3   d1    d2     d3
+## par 0.901 0.628  0 2.98 1.879 -0.656
 ## 
 ## $Item_8
 ##        a1 a2    a3   d1    d2     d3
-## par 0.964  0 0.631 3.03 2.091 -0.525
+## par 0.997  0 0.201 2.79 1.853 -0.515
 ## 
 ## $Item_9
-##        a1 a2   a3    d1    d2     d3
-## par 0.869  0 1.04 2.561 0.989 -1.189
+##        a1 a2    a3    d1   d2     d3
+## par 1.185  0 0.087 2.633 1.09 -0.982
 ## 
 ## $Item_10
-##        a1 a2    a3    d1    d2
-## par 1.021  0 0.664 1.908 0.038
+##        a1 a2     a3    d1     d2
+## par 1.105  0 -0.194 1.978 -0.059
 ## 
 ## $Item_11
 ##        a1 a2    a3      d g u
-## par 0.949  0 0.398 -0.944 0 1
+## par 1.926  0 2.656 -1.903 0 1
 ## 
 ## $Item_12
 ##        a1 a2    a3      d g u
-## par 1.026  0 0.473 -1.598 0 1
+## par 1.096  0 0.193 -1.548 0 1
 ## 
 ## $Item_13
-##        a1 a2    a3     d g u
-## par 0.915  0 0.453 1.373 0 1
+##        a1 a2     a3     d g u
+## par 1.177  0 -0.173 1.503 0 1
 ## 
 ## $Item_14
-##        a1 a2    a3      d g u
-## par 0.994  0 0.516 -0.029 0 1
+##        a1 a2     a3      d g u
+## par 1.202  0 -0.048 -0.085 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -606,37 +611,37 @@ coef(simmod, simplify=TRUE)
 <pre><code class="r">itemfit(simmod, QMC=TRUE)
 </code></pre>
 
-<pre><code>##       item      Zh    S_X2 df.S_X2 p.S_X2
-## 1   Item_1  6.0246 25.2069      10 0.0050
-## 2   Item_2  9.5255 16.4076      11 0.1267
-## 3   Item_3  6.5516 10.6081      10 0.3889
-## 4   Item_4  1.1088 12.5195      11 0.3259
-## 5   Item_5 10.6395 15.4286      11 0.1637
-## 6   Item_6  6.8760 13.0328      11 0.2912
-## 7   Item_7  7.5771 28.0276      10 0.0018
-## 8   Item_8  8.1942 13.0348      10 0.2217
-## 9   Item_9  7.4305  6.4084      11 0.8448
-## 10 Item_10  7.6417  6.4582      11 0.8411
-## 11 Item_11  9.5132 16.8085      11 0.1137
-## 12 Item_12  6.5776 19.3744      12 0.0799
-## 13 Item_13  6.4226 11.8420      11 0.3756
-## 14 Item_14 10.2148 11.8121      11 0.3779
-## 15 Item_15  7.8690 12.2797      11 0.3430
-## 16 Item_16  9.4170  5.4263      11 0.9088
+<pre><code>##       item    S_X2 df.S_X2 p.S_X2
+## 1   Item_1 25.2069      10 0.0050
+## 2   Item_2 16.4076      11 0.1267
+## 3   Item_3 10.6081      10 0.3889
+## 4   Item_4 12.5195      11 0.3259
+## 5   Item_5 15.4286      11 0.1637
+## 6   Item_6 13.0328      11 0.2912
+## 7   Item_7 28.0276      10 0.0018
+## 8   Item_8 13.0348      10 0.2217
+## 9   Item_9  6.4084      11 0.8448
+## 10 Item_10  6.4582      11 0.8411
+## 11 Item_11 16.8085      11 0.1137
+## 12 Item_12 19.3744      12 0.0799
+## 13 Item_13 11.8420      11 0.3756
+## 14 Item_14 11.8121      11 0.3779
+## 15 Item_15 12.2797      11 0.3430
+## 16 Item_16  5.4263      11 0.9088
 </code></pre>
 
 <pre><code class="r">M2(simmod, QMC=TRUE)
 </code></pre>
 
-<pre><code>##             M2 df         p       RMSEA RMSEA_5   RMSEA_95       TLI
-## stats 103.9844 87 0.1034746 0.009882313       0 0.01638946 0.9939411
+<pre><code>##             M2 df         p       RMSEA RMSEA_5   RMSEA_95      TLI
+## stats 96.79448 87 0.2217008 0.007504551       0 0.01478422 0.996506
 ##             CFI      SRMSR
-## stats 0.9956073 0.02850211
+## stats 0.9974668 0.02834752
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

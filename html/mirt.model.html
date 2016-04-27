@@ -118,10 +118,16 @@ The input format is
 <code>PRIOR = (items, ..., parameterName, priorType, val1, val2, OptionalGroup),
   (items, ..., parameterName, priorType, val1, val2, OptionalGroup)</code>.
 If <code>OptionalGroup</code> is omitted then the priors are defined for all groups.
-</p>
-<p>For example, in a single group 10-item dichotomous tests, using the default 2PL model,
+For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
-<code>PRIOR = (1-5, d, norm, 0, 2)</code></p>
+<code>PRIOR = (1-5, d, norm, 0, 2)</code>
+</p>
+<p>Currently supported priors are of the form: <code>(items, norm, mean, sd)</code>
+for the normal/Gaussian, <code>(items, lnorm, log_mean, log_sd)</code> for log-normal,
+<code>(items, beta, alpha, beta)</code> for beta, and <code>(items, expbeta, alpha, beta)</code>
+for the beta distribution after applying the
+function <code><a href="../../stats/html/Logistic.html">plogis</a></code> to the input value (note, this is specifically for applying a beta
+prior to the lower-bound parameters in 3/4PL models)</p>
 </dd>
 <dt>LBOUND</dt><dd><p>A bracketed, comma separate list specifying lower bounds for estimated
 parameters (used in optimizers such as <code>L-BFGS-B</code> and <code>nlminb</code>).
@@ -244,5 +250,5 @@ mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

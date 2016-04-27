@@ -158,7 +158,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    0.409    0.077    0.331    0.086    0.240    0.000    0.001
+##    0.403    0.067    0.334    0.086    0.244    0.000    0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -168,7 +168,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>##    TOTAL     DATA ESTIMATE    Estep    Mstep       SE     POST 
-##    0.213    0.068    0.144    0.088    0.051    0.000    0.001
+##    0.207    0.068    0.137    0.087    0.047    0.000    0.002
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -1126,9 +1126,9 @@ anova(mod_metric, mod_configural)
 ## Model 2: multipleGroup(data = dat, model = model, group = group, method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 37657.42 37659.54 37766.49 37909.46 -18783.71    NaN NaN NaN
-## 2 37639.15 37642.92 37784.58 37975.20 -18759.57 48.271  15   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
+## 1 37655.48 37657.60 37764.55 37907.52 -18782.74   NaN NaN    NaN
+## 2 37651.33 37655.11 37796.76 37987.39 -18765.67 34.15  15 0.0032
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1141,9 +1141,9 @@ anova(mod_metric, mod_configural)
 ##     method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 37814.91 37815.85 37887.62 37982.94 -18877.45     NaN NaN NaN
-## 2 37657.42 37659.54 37766.49 37909.46 -18783.71 187.493  15   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 37818.66 37819.61 37891.38 37986.69 -18879.33    NaN NaN NaN
+## 2 37655.48 37657.60 37764.55 37907.52 -18782.74 193.18  15   0
 </code></pre>
 
 <pre><code class="r">############
@@ -1514,5 +1514,5 @@ anova(EH, EH1)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

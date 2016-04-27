@@ -26,10 +26,10 @@ a set of 'anchor' items and have freely estimated hyper-parameters in the focal 
 <h3>Usage</h3>
 
 <pre>
-DIF(MGmodel, which.par, scheme = "add",
-  items2test = 1:ncol(MGmodel@Data$data), seq_stat = "SABIC",
-  Wald = FALSE, p.adjust = "none", return_models = FALSE, max_run = Inf,
-  plotdif = FALSE, type = "trace", verbose = TRUE, ...)
+DIF(MGmodel, which.par, scheme = "add", items2test = 1:extract.mirt(MGmodel,
+  "nitems"), seq_stat = "SABIC", Wald = FALSE, p.adjust = "none",
+  return_models = FALSE, max_run = Inf, plotdif = FALSE, type = "trace",
+  verbose = TRUE, ...)
 </pre>
 
 
@@ -632,19 +632,19 @@ Checking for DIF in 3 more items
 </code></pre>
 
 <pre><code>## $Item_1
-##        AIC     AICc    SABIC     BIC    logLik     X2  df   p
-## 1 36214.27 36215.48 36296.68 36404.7 -18073.14    NaN NaN NaN
-## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 47.208   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36230.58 36234.10 36371.16 36555.43 -18057.29    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 44.271   2   0
 ## 
 ## $Item_2
 ##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 36197.55 36198.76 36279.96 36387.98 -18064.77    NaN NaN NaN
-## 2 36171.06 36172.42 36258.32 36372.70 -18049.53 30.484   2   0
+## 1 36213.13 36216.66 36353.71 36537.98 -18048.57    NaN NaN NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 26.827   2   0
 ## 
 ## $Item_3
-##        AIC     AICc    SABIC     BIC    logLik    X2  df     p
-## 1 36184.37 36185.58 36266.78 36374.8 -18058.19   NaN NaN   NaN
-## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 17.31   2 2e-04
+##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
+## 1 36200.59 36204.11 36341.17 36525.44 -18042.29    NaN NaN   NaN
+## 2 36190.30 36194.08 36335.74 36526.36 -18035.15 14.281   2 8e-04
 </code></pre>
 
 <pre><code class="r">#step down procedure for highly constrained model
@@ -657,7 +657,7 @@ stepdown &lt;- DIF(model, c(&#39;a1&#39;, &#39;d&#39;), scheme = &#39;drop_seque
 </code></pre>
 
 <pre><code>## 
-Checking for DIF in 12 more items
+Checking for DIF in 3 more items
 ## Computing final DIF estimates...
 </code></pre>
 
@@ -665,24 +665,24 @@ Checking for DIF in 12 more items
 </code></pre>
 
 <pre><code>## $Item_1
-##        AIC     AICc    SABIC     BIC    logLik     X2  df   p
-## 1 36214.27 36215.48 36296.68 36404.7 -18073.14    NaN NaN NaN
-## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 47.208   2   0
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36255.88 36256.82 36328.59 36423.90 -18097.94    NaN NaN NaN
+## 2 36211.35 36212.42 36288.91 36390.58 -18073.68 48.525   2   0
 ## 
 ## $Item_2
 ##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 36197.55 36198.76 36279.96 36387.98 -18064.77    NaN NaN NaN
-## 2 36171.06 36172.42 36258.32 36372.70 -18049.53 30.484   2   0
+## 1 36255.88 36256.82 36328.59 36423.90 -18097.94    NaN NaN NaN
+## 2 36229.89 36230.96 36307.45 36409.12 -18082.94 29.989   2   0
 ## 
 ## $Item_3
-##        AIC     AICc    SABIC     BIC    logLik    X2  df     p
-## 1 36184.37 36185.58 36266.78 36374.8 -18058.19   NaN NaN   NaN
-## 2 36171.06 36172.42 36258.32 36372.7 -18049.53 17.31   2 2e-04
+##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 36255.88 36256.82 36328.59 36423.90 -18097.94    NaN NaN NaN
+## 2 36239.80 36240.87 36317.36 36419.03 -18087.90 20.076   2   0
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>

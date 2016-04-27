@@ -15,7 +15,8 @@
 <h3>Description</h3>
 
 <p>Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
-'dich' and 'graded'.
+'dich' and 'graded'. Note that the logistic intercept parameters are divided by 1.702 to match the
+normal ogive metric.
 </p>
 
 
@@ -67,16 +68,16 @@ mod &lt;- mirt(Science, 2)
 MDIFF(mod)
 </code></pre>
 
-<pre><code>##            MDIFF_1    MDIFF_2   MDIFF_3
-## Comfort -2.9082859 -1.5993792 0.8946023
-## Work    -0.8809265 -0.2742757 0.6907591
-## Future  -1.3261155 -0.5563912 0.4935955
-## Benefit -1.3450947 -0.4030597 0.6892745
+<pre><code>##           MDIFF_1    MDIFF_2   MDIFF_3
+## Comfort -3.892829 -2.1408175 1.1974522
+## Work    -1.806316 -0.5623950 1.4163829
+## Future  -2.486824 -1.0433836 0.9256248
+## Benefit -2.316311 -0.6940864 1.1869606
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.16 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
 </body></html>
