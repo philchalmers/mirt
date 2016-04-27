@@ -1,13 +1,4 @@
-# Changes in mirt 1.18
-
-
-
-## BUG FIXES
-
-- standardized loadings not correct when factor correlations included in confirmatory models 
-  (reported by Seongho Bae)
-
-# Changes in mirt 1.17
+# Changes in mirt 1.17.1
 
 - `itemfit()` function reworked so that all statistics have their own input flag (e.g., `Zh = TRUE`,
   `infit = TRUE`, etc). Additionally, only S-X2 is computed by default and X2/G2 (and the associated
@@ -32,6 +23,9 @@
   Adam Meade)
 
 ## BUG FIXES
+
+- standardized loadings not correct when factor correlations included in confirmatory models 
+  (reported by Seongho Bae)
 
 - `MDISC` and `MDIFF` values were missing the 1.702 multiplicitive constant (reported by 
   Yi-Ling Cheng)
