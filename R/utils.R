@@ -276,7 +276,8 @@ Lambdas <- function(pars, Names){
         lambdas[i,] <- ExtractLambdas(tmp) /1.702
     }
     norm <- sqrt(1 + rowSums(lambdas^2))
-    F <- as.matrix(lambdas/norm) %*% chol(gcov)
+    dcov <- if(ncol(gcov) > 1L) diag(sqrt(diag(gcov))) else matrix(sqrt(diag(gcov)))
+    F <- as.matrix(lambdas/norm) %*% dcov
     F
 }
 

@@ -1,3 +1,12 @@
+# Changes in mirt 1.18
+
+
+
+## BUG FIXES
+
+- standardized loadings not correct when factor correlations included in confirmatory models 
+  (reported by Seongho Bae)
+
 # Changes in mirt 1.17
 
 - `itemfit()` function reworked so that all statistics have their own input flag (e.g., `Zh = TRUE`,
