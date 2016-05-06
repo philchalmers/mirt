@@ -1184,6 +1184,7 @@ mirt2traditional <- function(x){
     }
     x@par <- par
     names(x@est) <- names(par)
+    x@SEpar <- rep(NaN, length(par))
     x
 }
 
