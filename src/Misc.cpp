@@ -250,3 +250,28 @@ SEXP vec2mat(vector<double> &x, const int &nrow, const int &ncol) {
   output.attr("dim") = Dimension(nrow, ncol);
   return(output);
 }
+
+RcppExport SEXP respSample(SEXP Ritemtrace)
+{
+    BEGIN_RCPP
+
+    const NumericMatrix itemtrace(Ritemtrace);
+    const int ncat = itemtrace.ncol();
+    const int N = itemtrace.nrow();
+    const NumericVector unif = runif(N);
+    std::vector<int> resp(N);
+
+    for(int i = 0; i < N; ++i){
+        double csum = itemtrace(i, 0);
+        int cat = 0;
+        while(csum < unif(i)){
+            ++cat;
+            if(cat == ncat) break;
+            csum += itemtrace(i, cat);
+        }
+        resp[i] = cat;
+    }
+
+    return(wrap(resp));
+    END_RCPP
+}

@@ -262,7 +262,6 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
 	model = NULL, which.items = NULL, mins = 0)
 {
-    fn <- function(p, ns) sample(1L:ns - 1L, 1L, prob = p)
     if(!is.null(model)){
         nitems <- extract.mirt(model, 'nitems')
         if(is.null(which.items)) which.items <- 1L:nitems
@@ -278,7 +277,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         for(i in which.items){
             obj <- extract.item(model, i)
             P <- ProbTrace(obj, Theta)
-            data[,i] <- apply(P, 1L, fn, ns = ncol(P))
+            data[,i] <- .Call("respSample", P)
         }
         ret <- t(t(data) + model@Data$mins)
         return(ret[,which.items, drop=FALSE])
@@ -369,7 +368,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit')))
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
-        data[,i] <- apply(P, 1L, fn, ns = ncol(P))
+        data[,i] <- .Call("respSample", P)
         itemobjects[[i]] <- obj
 	}
     data <- (t(t(data) + mins))
