@@ -1878,6 +1878,8 @@ QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
 MC_quad <- function(npts, nfact, lim)
     matrix(runif(n=npts * nfact, min = lim[1L], max = lim[2]), npts, nfact)
 
+respSample <- function(P) .Call("respSample", P)
+
 missingMsg <- function(string)
     stop(paste0('\'', string, '\' argument is missing.'), call.=FALSE)
 

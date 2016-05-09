@@ -277,7 +277,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         for(i in which.items){
             obj <- extract.item(model, i)
             P <- ProbTrace(obj, Theta)
-            data[,i] <- .Call("respSample", P)
+            data[,i] <- respSample(P)
         }
         ret <- t(t(data) + model@Data$mins)
         return(ret[,which.items, drop=FALSE])
@@ -368,7 +368,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit')))
             obj@ncat <- K[i]
         P <- ProbTrace(obj, Theta)
-        data[,i] <- .Call("respSample", P)
+        data[,i] <- respSample(P)
         itemobjects[[i]] <- obj
 	}
     data <- (t(t(data) + mins))
