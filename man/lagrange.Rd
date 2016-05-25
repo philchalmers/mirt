@@ -4,7 +4,7 @@
 \alias{lagrange}
 \title{Lagrange test for freeing parameters}
 \usage{
-lagrange(mod, parnum, type = "forward", ...)
+lagrange(mod, parnum, SE.type = "crossprod", type = "central", ...)
 }
 \arguments{
 \item{mod}{an estimated model}
@@ -13,16 +13,17 @@ lagrange(mod, parnum, type = "forward", ...)
 locations/sets of locations to be tested.
 See objects returned from \code{\link{mod2values}} for the locations}
 
-\item{type}{type of numerical derivatives to use to find the associated gradient terms. Default is
-'forward', but can also be 'Richardson' and 'central' (see \code{\link{numerical_deriv}})}
+\item{SE.type}{type of information matrix estimator to use. See \code{\link{mirt}} for
+further details}
 
-\item{...}{additional arguments to pass to \code{\link{numerical_deriv}}}
+\item{type}{type of numerical algorithm passed to \code{\link{numerical_deriv}} to
+obtain the gradient terms}
+
+\item{...}{additional arguments to pass to \code{\link{mirt}}}
 }
 \description{
 Lagrange (i.e., score) test to test whether parameters should be freed from a
-more constrained baseline model. The required derivative terms are evaluated numerically
-from the \code{\link{numerical_deriv}} function. Defining a \code{\link{mirtCluster}} will allow the
-independent tests to be run in parallel.
+more constrained baseline model.
 }
 \examples{
 
@@ -31,7 +32,7 @@ dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1, 'Rasch')
 (values <- mod2values(mod))
 
-#test all slopes individually
+#test all fixed slopes individually
 parnum <- values$parnum[values$name == 'a1']
 lagrange(mod, parnum)
 
@@ -46,29 +47,13 @@ mod2 <- mirt(dat, 'F = 1-5
 coef(mod2, simplify=TRUE)$items
 anova(mod, mod2)
 
+mod2 <- mirt(dat, 'F = 1-5
+                   FREE = (3, a1)', 'Rasch')
+coef(mod2, simplify=TRUE)$items
+anova(mod, mod2)
+
 # test slopes first two slopes and last three slopes jointly
 lagrange(mod, list(parnum[1:2], parnum[3:5]))
-
-# DIF test
-set.seed(1234)
-n <- 30
-N <- 500
-
-a <- matrix(1, n)
-d <- matrix(rnorm(n), n)
-group <- c(rep('Group_1', N), rep('Group_2', N))
-
-# groups completely equal
-dat1 <- simdata(a, d, N, itemtype = 'dich')
-dat2 <- simdata(a, d, N, itemtype = 'dich')
-dat <- rbind(dat1, dat2)
-mod <- multipleGroup(dat, 1, group=group,
-                     invariance=c('free_means', 'free_var', colnames(dat)))
-coef(mod, simplify=TRUE)
-values <- mod2values(mod)
-
-# mirtCluster()
-lagrange(mod, list(c(123, 124), c(239,240)))
 
 }
 }

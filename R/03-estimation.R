@@ -856,18 +856,24 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     vcov <- matrix(NA, 1, 1)
     if(Options$SE){
         information <- ESTIMATE$info
-        if(!ESTIMATE$fail_invert_info){
-            isna <- is.na(diag(information))
-            info <- information[!isna, !isna]
-            vcov <- matrix(NA, ncol(information), ncol(information))
-            rownames(vcov) <- colnames(vcov) <- colnames(information)
-            vcov2 <- try(solve(info), silent=TRUE)
-            vcov[!isna, !isna] <- vcov2
-            if(!is(vcov2, 'try-error')){
-                OptimInfo$condnum <- kappa(info, exact=TRUE)
-                OptimInfo$secondordertest <- all(eigen(info)$values > 0)
-            } else OptimInfo$secondordertest <- FALSE
-        } else OptimInfo$secondordertest <- FALSE
+        if(!is.null(opts$technical$infoAsVcov)){
+            vcov <- information
+        } else {
+            if(!ESTIMATE$fail_invert_info){
+                isna <- is.na(diag(information))
+                info <- information[!isna, !isna]
+                vcov <- matrix(NA, ncol(information), ncol(information))
+                rownames(vcov) <- colnames(vcov) <- colnames(information)
+                vcov2 <- try(solve(info), silent=TRUE)
+                vcov[!isna, !isna] <- vcov2
+                if(!is(vcov2, 'try-error')){
+                    OptimInfo$condnum <- kappa(info, exact=TRUE)
+                    OptimInfo$secondordertest <- all(eigen(info)$values > 0)
+                    } else OptimInfo$secondordertest <- FALSE
+                } else {
+                    OptimInfo$secondordertest <- FALSE
+                }
+        }
     }
     Internals <- list(collectLL=ESTIMATE$collectLL, Prior=ESTIMATE$Prior, Pl=Pl,
                       shortpars=as.numeric(ESTIMATE$shortpars), key=key,

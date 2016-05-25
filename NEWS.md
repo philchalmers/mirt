@@ -1,5 +1,8 @@
 # Changes in mirt 1.18
 
+- adjust the `lagrange()` function to use the full information matrix (was previously only a 
+  quasi-lagrange approximation)
+
 - greatly improved speed in `simdata()`, consequently changes the default seed
 
 # Changes in mirt 1.17.1

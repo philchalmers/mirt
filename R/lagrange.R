@@ -1,17 +1,17 @@
 #' Lagrange test for freeing parameters
 #'
 #' Lagrange (i.e., score) test to test whether parameters should be freed from a
-#' more constrained baseline model. The required derivative terms are evaluated numerically
-#' from the \code{\link{numerical_deriv}} function. Defining a \code{\link{mirtCluster}} will allow the
-#' independent tests to be run in parallel.
+#' more constrained baseline model.
 #'
 #' @param mod an estimated model
 #' @param parnum a vector, or list of vectors, containing one or more parameter
 #'   locations/sets of locations to be tested.
 #'   See objects returned from \code{\link{mod2values}} for the locations
-#' @param type type of numerical derivatives to use to find the associated gradient terms. Default is
-#'  'forward', but can also be 'Richardson' and 'central' (see \code{\link{numerical_deriv}})
-#' @param ... additional arguments to pass to \code{\link{numerical_deriv}}
+#' @param SE.type type of information matrix estimator to use. See \code{\link{mirt}} for
+#'   further details
+#' @param type type of numerical algorithm passed to \code{\link{numerical_deriv}} to
+#'   obtain the gradient terms
+#' @param ... additional arguments to pass to \code{\link{mirt}}
 #'
 #' @seealso \code{\link{wald}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -24,7 +24,7 @@
 #' mod <- mirt(dat, 1, 'Rasch')
 #' (values <- mod2values(mod))
 #'
-#' #test all slopes individually
+#' #test all fixed slopes individually
 #' parnum <- values$parnum[values$name == 'a1']
 #' lagrange(mod, parnum)
 #'
@@ -39,32 +39,16 @@
 #' coef(mod2, simplify=TRUE)$items
 #' anova(mod, mod2)
 #'
+#' mod2 <- mirt(dat, 'F = 1-5
+#'                    FREE = (3, a1)', 'Rasch')
+#' coef(mod2, simplify=TRUE)$items
+#' anova(mod, mod2)
+#'
 #' # test slopes first two slopes and last three slopes jointly
 #' lagrange(mod, list(parnum[1:2], parnum[3:5]))
 #'
-#' # DIF test
-#' set.seed(1234)
-#' n <- 30
-#' N <- 500
-#'
-#' a <- matrix(1, n)
-#' d <- matrix(rnorm(n), n)
-#' group <- c(rep('Group_1', N), rep('Group_2', N))
-#'
-#' # groups completely equal
-#' dat1 <- simdata(a, d, N, itemtype = 'dich')
-#' dat2 <- simdata(a, d, N, itemtype = 'dich')
-#' dat <- rbind(dat1, dat2)
-#' mod <- multipleGroup(dat, 1, group=group,
-#'                      invariance=c('free_means', 'free_var', colnames(dat)))
-#' coef(mod, simplify=TRUE)
-#' values <- mod2values(mod)
-#'
-#' # mirtCluster()
-#' lagrange(mod, list(c(123, 124), c(239,240)))
-#'
 #' }
-lagrange <- function(mod, parnum, type = 'forward', ...){
+lagrange <- function(mod, parnum, SE.type = 'crossprod', type = 'central', ...){
     fn <- function(par, mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, MG, group, ...){
         sv2 <- sv
         sv2$value[pn] <- par
@@ -83,23 +67,18 @@ lagrange <- function(mod, parnum, type = 'forward', ...){
         ret <- extract.mirt(mod2, 'logLik')
         ret
     }
-    grads <- function(mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, type, MG, group, ...){
+    grads <- function(mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, type = 'central', MG, group, ...){
         par <- sv$value[pn]
         g <- numerical_deriv(par, fn, mod=mod, pn=pn, dat=dat, model=model, parprior=parprior,
                              PrepList=PrepList, large=large, sv=sv, MG=MG, group=group,
                              ObJeCtIvE=ObJeCtIvE, type=type, ...)
         g
     }
-    hess <- function(mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, type, MG, group, ...){
-        par <- sv$value[pn]
-        h <- numerical_deriv(par, fn, mod=mod, pn=pn, dat=dat, model=model, parprior=parprior, group=group,
-                             PrepList=PrepList, large=large, sv=sv, MG=MG, ObJeCtIvE=ObJeCtIvE, type=type,
-                             gradient=FALSE, ...)
-        h
-    }
 
     if(missing(mod)) missingMsg('mod')
     if(missing(parnum)) missingMsg('parnum')
+    if(SE.type %in% c('SEM', 'MHRM', 'FMHRM'))
+        stop('SE.type not supported for Lagrange tests')
     ObJeCtIvE <- extract.mirt(mod, 'logLik')
     group <- extract.mirt(mod, 'group')
     parnum <- as.list(parnum)
@@ -112,16 +91,31 @@ lagrange <- function(mod, parnum, type = 'forward', ...){
     parprior <- extract.mirt(mod, "parprior")
     PrepList <- mirt(mod@Data$data, mod@Model$model, Return_PrepList=TRUE)
     sv <- mod2values(mod)
+    sv2 <- sv
+    sv2$est[do.call(c, parnum)] <- TRUE
+    nms <- vector('list', length(parnum))
+    for(i in 1:length(parnum)){
+        nms[[i]] <- apply(cbind(as.character(sv2$name[parnum[[i]]]), '.', parnum[[i]]),
+                            1, paste0, collapse='')
+    }
+    modInfo <- if(MG) mirt::multipleGroup(dat, extract.mirt(mod, 'model'), TOL = NaN, sv=sv2,
+                                        group=group, SE=TRUE, SE.type = SE.type, large=large,
+                                        technical = list(infoAsVcov=TRUE, warn=FALSE), verbose=FALSE)
+    else mirt::mirt(dat, extract.mirt(mod, 'model'), SE=TRUE, SE.type = SE.type, sv=sv2,
+                    large=large, TOL = NaN, technical = list(infoAsVcov=TRUE, warn=FALSE), verbose=FALSE)
+    info <- vcov(modInfo)
     X2 <- mySapply(1:length(parnum), function(i, mod, dat, model, parprior, MG, group,
-                                              PrepList, large, sv, ObJeCtIvE, type, ...){
+                                              PrepList, large, sv, ObJeCtIvE, info, nms, type, ...){
         pn <- parnum[[i]]
         g <- grads(mod=mod, pn=pn, dat=dat, model=model, parprior=parprior, MG=MG, group=group,
                    PrepList=PrepList, large=large, sv=sv, ObJeCtIvE=ObJeCtIvE, type=type, ...)
-        h <- -solve(hess(mod=mod, pn=pn, dat=dat, model=model, parprior=parprior, MG=MG, group=group,
-                         PrepList=PrepList, large=large, sv=sv, ObJeCtIvE=ObJeCtIvE, type=type, ...))
+        pick <- colnames(info)
+        pick <- pick[!(pick %in% do.call(c, nms[-i]))]
+        vcov <- solve(info[pick, pick])
+        h <- vcov[colnames(vcov) %in% nms[[i]], colnames(vcov) %in% nms[[i]], drop=FALSE]
         as.numeric(g %*% h %*% g)
-    }, mod=mod, dat=dat, model=model, parprior=parprior, MG=MG, group=group,
-    PrepList=PrepList, large=large, sv=sv, ObJeCtIvE=ObJeCtIvE, type=type, ...)
+    }, mod=mod, dat=dat, model=model, parprior=parprior, MG=MG, group=group, type=type,
+    PrepList=PrepList, large=large, sv=sv, ObJeCtIvE=ObJeCtIvE, info=info, nms=nms, ...)
     ret <- data.frame(X2=as.numeric(X2), df=df, p=sapply(1:length(parnum),
                                              function(ind, X2, df) 1 - pchisq(X2[ind], df[ind]),
                                              X2=X2, df=df))
