@@ -67,7 +67,7 @@ latent trait matrix \code{Theta}? Default is FALSE}
 
 \item{model}{a single group object, typically returned by functions such as \code{\link{mirt}} or
 \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
-\code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent}
+\code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent (unless explicitly provided)}
 
 \item{which.items}{an integer vector used to indicate which items to simulate when a
 \code{model} input is included. Default simulates all items}

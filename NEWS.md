@@ -1,5 +1,9 @@
 # Changes in mirt 1.18
 
+- new `boot.LR()` function to perform a parametric bootstrap likelihood-ratio test between 
+  nested models. Useful when testing nested models which contain bounded parameters (e.g.,
+  testing a 3PL versus a 2PL model)
+
 - adjust the `lagrange()` function to use the full information matrix (was previously only a 
   quasi-lagrange approximation)
 
