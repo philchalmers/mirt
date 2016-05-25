@@ -47,6 +47,9 @@
 #' # test slopes first two slopes and last three slopes jointly
 #' lagrange(mod, list(parnum[1:2], parnum[3:5]))
 #'
+#' # test all 5 slopes and first + last jointly
+#' lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
+#'
 #' }
 lagrange <- function(mod, parnum, SE.type = 'crossprod', type = 'central', ...){
     fn <- function(par, mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, MG, group, ...){
@@ -110,7 +113,9 @@ lagrange <- function(mod, parnum, SE.type = 'crossprod', type = 'central', ...){
         g <- grads(mod=mod, pn=pn, dat=dat, model=model, parprior=parprior, MG=MG, group=group,
                    PrepList=PrepList, large=large, sv=sv, ObJeCtIvE=ObJeCtIvE, type=type, ...)
         pick <- colnames(info)
-        pick <- pick[!(pick %in% do.call(c, nms[-i]))]
+        tmp <- do.call(c, nms[-i])
+        tmp <- tmp[!(tmp %in% nms[[i]])]
+        pick <- pick[!(pick %in% tmp)]
         vcov <- solve(info[pick, pick])
         h <- vcov[colnames(vcov) %in% nms[[i]], colnames(vcov) %in% nms[[i]], drop=FALSE]
         as.numeric(g %*% h %*% g)

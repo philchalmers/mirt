@@ -55,6 +55,9 @@ anova(mod, mod2)
 # test slopes first two slopes and last three slopes jointly
 lagrange(mod, list(parnum[1:2], parnum[3:5]))
 
+# test all 5 slopes and first + last jointly
+lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
+
 }
 }
 \author{
