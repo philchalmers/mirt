@@ -269,12 +269,39 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                     for(j in 1L:length(lr.random))
                         gstructgrouppars[[1L]]$gmeans <- gstructgrouppars[[1L]]$gmeans +
                             lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
-                    gstructgrouppars[[1L]]$gcov <- cov(gtheta0[[1L]] - gstructgrouppars[[1L]]$gmeans)
                     tmp <- c(numeric(nfact),
                              as.vector(gstructgrouppars[[1L]]$gcov[lower.tri(gstructgrouppars[[1L]]$gcov, TRUE)]))
                     pars[[1L]][[J+1L]]@par[pars[[1L]][[J+1L]]@est] <- tmp[pars[[1L]][[J+1L]]@est]
                 }
             }
+            cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
+            tmp <- .1
+            for(i in 1L:31L){
+                gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
+                                             itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
+                                             prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
+                                             prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
+                if(is.null(list$cand.t.var)){
+                    if(i > 5L){
+                        if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
+                        else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
+                            cand.t.var <- cand.t.var + tmp
+                        else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
+                            cand.t.var <- cand.t.var - tmp
+                        else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
+                            cand.t.var <- cand.t.var - 2*tmp
+                        if (cand.t.var < 0){
+                            cand.t.var <- tmp
+                            tmp <- tmp / 2
+                        }
+                    }
+                }
+            }
+            tmp <- nrow(gtheta0[[1L]])
+            tmp <- cov(gtheta0[[1L]]) * (tmp / (tmp-1L))
+            tmp2 <- c(rep(0, ncol(tmp)), tmp[lower.tri(tmp, TRUE)])
+            pars[[1L]][[length(pars[[1L]])]]@par[pars[[1L]][[length(pars[[1L]])]]@est] <-
+                tmp2[pars[[1L]][[length(pars[[1L]])]]@est]
             cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
             tmp <- .1
             for(i in 1L:31L){

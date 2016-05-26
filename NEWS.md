@@ -9,6 +9,11 @@
 
 - greatly improved speed in `simdata()`, consequently changes the default seed
 
+## BUG FIXES
+
+- fix crash error in `mirtmirt()` for multidimensional models with lr.random effects (reported 
+  by Diah Wihardini)
+
 # Changes in mirt 1.17.1
 
 - `itemfit()` function reworked so that all statistics have their own input flag (e.g., `Zh = TRUE`,
