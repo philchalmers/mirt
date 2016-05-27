@@ -72,24 +72,24 @@ customTheta=Theta , customPriorFun = lca_prior) ,
 pars = mod.pars , verbose=FALSE )
 
 # estimated parameters from the user customized prior distribution.
-mod14b@nest <- as.integer(sum(mod.pars$est) + 2)
+nest <- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
-coef14b <- mirt.wrapper.coef(mod14b)$coef
+coef14b <- coef(mod14b, simplify=TRUE)$items
 
 #-* comparisons of estimated parameters
 # extract guessing and slipping parameters from din
-dfr <- coef(mod14a)[ , c("guess","slip") ]
+dfr <- data.frame(matrix(coef(mod14a)[1:24], ncol=2, byrow=T))
 colnames(dfr) <- paste0("din.",c("guess","slip") )
 
 # estimated parameters from mirt
-dfr$mirt.guess <- plogis( coef14b$d )
+dfr$mirt.guess <- plogis( coef14b[,'d'] )
 dfr$mirt.slip <- 1 - plogis( rowSums(coef14b[,c("d","a1","a2","a3")]) )
 
 # comparison
 round(dfr[, c(1,3,2,4)],3)
 dfr <- data.frame( "Theta" = Theta , "din"=mod14a$attribute.patt$class.prob ,
-"mirt" = mod14b@Prior[[1]])
+"mirt" = extract.mirt(mod14b, "Prior")[[1]])
 
 # comparison
 round(dfr,3)

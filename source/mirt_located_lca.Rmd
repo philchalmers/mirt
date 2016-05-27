@@ -85,16 +85,17 @@ mod12c <- mirt(dat, mirtmodel , technical = list(
 customTheta=Theta , customPriorFun = lca_prior) ,
 pars = mod.pars , verbose=FALSE )
 
+print(mod12c)
+
 # estimated parameters from the user customized prior distribution.
-mod12c@nest <- as.integer(sum(mod.pars$est) + 2)
+nest <- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
-coef1 <- mirt.wrapper.coef(mod12c)
+coef1 <- coef(mod12c, simplify=TRUE)$items
 
 #* inspect estimated distribution
-mod12c@Theta
-coef1$coef[1,c("a1","a2","a3")]
-mod12c@Prior[[1]]
+coef1
+extract.mirt(mod12c, "Prior")[[1]]
 
 sessionInfo()
 ```

@@ -84,18 +84,19 @@ mod2m <- mirt::mirt(dat, 1, rep( "icc_gom",I) , customItems=list("icc_gom"=icc_g
     technical = list( customTheta=Theta , customPriorFun = lca_prior), verbose=FALSE )
 
 # correct number of estimated parameters
-mod2m@nest <- as.integer(sum(mod2values(mod2m)$est) + nrow(Theta)-1 )
+nest <- as.integer(sum(mod2values(mod2m)$est) + nrow(Theta)-1 )
 
 # extract log-likelihood and compute AIC and BIC
-mod2m@logLik
-( AIC <- -2*mod2m@logLik+2*mod2m@nest )
-( BIC <- -2*mod2m@logLik+log(mod2m@Data$N)*mod2m@nest )
+(LL <- extract.mirt(mod2m, 'logLik'))
+
+( AIC <- -2*LL + 2*nest )
+( BIC <- -2*LL + log(mod2m@Data$N)*nest )
 
 # extract coefficients
-( cmod2m <- mirt.wrapper.coef(mod2m) )
+( cmod2m <- coef(mod2m, simplify=TRUE) )
 
 # compare estimated distributions
-round( cbind( "sirt" = mod2$pi.k , "mirt" = mod2m@Prior[[1]] ) , 5 )
+round( cbind( "sirt" = mod2$pi.k , "mirt" = extract.mirt(mod2m, "Prior")[[1]] ) , 5 )
 
 sessionInfo()
 ```
