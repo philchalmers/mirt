@@ -83,12 +83,14 @@ mixed_prior <- function(Theta,Etable){
 mod8c <- mirt::mirt(dat, mirtmodel , pars=mod.pars , verbose=FALSE ,
 technical = list( customTheta=Theta , customPriorFun = mixed_prior ) )
 
+print(mod8c)
+
 # Like in Model 7e, the number of estimated parameters must be included.
-mod8c@nest <- as.integer(sum(mod.pars$est) + 1)
+nest <- as.integer(sum(mod.pars$est) + 1)
 
 # two class proportions and therefore one probability is freely estimated.
 #* extract item parameters
-sirt::mirt.wrapper.coef(mod8c)
+coef(mod8c, simplify=TRUE)
 
 sessionInfo()
 ```
