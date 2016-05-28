@@ -65,11 +65,10 @@ pars = mod1m.pars , verbose=FALSE ,
 technical = list( customTheta=Theta , NCYCLES=50)
 )
 print(mod1m)
-summary(mod1m)
-cmod1m <- mirt.wrapper.coef( mod1m )$coef
+cmod1m <- coef( mod1m , simplify=TRUE)$items
 
 # compare simulated and estimated values
-dfr <- cbind( b , cmod1m$b , exp(mod1$item$b ) )
+dfr <- cbind( b , cmod1m[,'b'] , exp(mod1$item$b ) )
 colnames(dfr) <- c("simulated" , "mirt" , "sirt_rasch.mml2")
 round( dfr , 2 )
 

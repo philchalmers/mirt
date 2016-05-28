@@ -171,16 +171,15 @@ technical = list( customTheta=Theta , customPriorFun = lca_prior ,
 MAXQUAD = 1E20) )
 
 # correct number of estimated parameters
-mod4@nest <- as.integer(sum(mod.pars$est) + nrow(Theta)-1 )
+nest <- as.integer(sum(mod.pars$est) + nrow(Theta)-1 )
 
 # extract coefficients
 # source.all(pfsirt)
-cmod4 <- mirt.wrapper.coef(mod4)
+cmod4 <- coef(mod4, simplify=TRUE)
 
 # estimated item difficulties
-dfr <- data.frame( "sim"=b , "mirt"=-cmod4$coef$d , "sirt"=mod1$item$thresh )
+dfr <- data.frame( "sim"=b , "mirt"=-cmod4$items[,'d'] , "sirt"=mod1$item$thresh )
 round( dfr , 4 )
-
 
 sessionInfo()
 ```
