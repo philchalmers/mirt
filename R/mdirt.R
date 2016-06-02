@@ -122,7 +122,6 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1, method = 'EM',
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
-    if(any(is.na(data))) stop('mdirt does not currently support datasets with missing values')
     if(!all(itemtype %in% c('lca', 'nlca')))
         stop('Selected itemtype not supported. Please use itemtype \'lca\' or \'nlca\'', call.=FALSE)
     stopifnot(method %in% c('EM', 'BL'))
