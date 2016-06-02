@@ -1,5 +1,5 @@
-SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMATE, constrain, Ls,
-                  CUSTOM.IND, specific=NULL, sitems=NULL, EH = FALSE, EHPrior = NULL, warn, Data, type,
+SE.Numerical <- function(pars, Theta, theta, dentype, itemloc, PrepList, ESTIMATE, constrain, Ls,
+                  CUSTOM.IND, specific=NULL, sitems=NULL, EHPrior = NULL, warn, Data, type,
                   delta, lrPars){
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
@@ -26,9 +26,10 @@ SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMAT
     }
     hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars, lrPars=lrPars,
                             pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                            Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, constrain=constrain,
+                            Theta=Theta, PrepList=PrepList, dentype=dentype,
+                            constrain=constrain,
                             specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                            EH=EH, EHPrior=EHPrior, Data=Data, theta=theta, type=type,
+                            EHPrior=EHPrior, Data=Data, theta=theta, type=type,
                             delta = delta, gradient = FALSE)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
@@ -38,12 +39,13 @@ SE.Numerical <- function(pars, Theta, theta, BFACTOR, itemloc, PrepList, ESTIMAT
     return(ESTIMATE)
 }
 
-SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, theta, BFACTOR, ESTIMATE, DERIV,
+SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, theta, dentype, ESTIMATE, DERIV,
                    collectLL, from, to, is.latent, Data, solnp_args, control){
     est <- estmat[,index]
     lrPars <- list$lrPars
     full <- list$full
     TOL <- list$TOL
+    dentype <- list$dentype
     itemloc <- list$itemloc
     J <- length(itemloc) - 1L
     L <- Ls$L
@@ -53,7 +55,6 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
     ngroups <- ESTIMATE$ngroups
     NCYCLES <- ESTIMATE$cycles
     if(NCYCLES <= 5L) stop('SEM can not be computed due to short EM history', call.=FALSE)
-    BFACTOR <- list$BFACTOR
     prior <- rlist <- vector('list', ngroups)
     estpars <- ESTIMATE$estpars
     redun_constr <- ESTIMATE$redun_constr
@@ -71,7 +72,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
     rijfull <- rep(NA, length(converged))
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta, prodlist)
-    if(BFACTOR){
+    if(dentype == "bfactor"){
         Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
         for(g in 1L:ngroups){
             prior[[g]] <- dnorm(theta, 0, 1)
@@ -93,12 +94,12 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior, lrPars=lrPars,
-                           J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist,
+                           J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist,
                            full=full)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
         for(g in 1L:ngroups){
-            if(BFACTOR){
+            if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
@@ -119,7 +120,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact,
                           rlist=rlist, constrain=constrain, DERIV=DERIV,
-                          CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, BFACTOR=list$BFACTOR,
+                          CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, dentype=dentype,
                           Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full,
                           Thetabetween=Thetabetween, lrPars=lrPars, control=control)
         rijlast <- rij

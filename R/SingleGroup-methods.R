@@ -1113,7 +1113,7 @@ setMethod(
                 if(is.null(main))
                     main <- 'Empirical Histogram'
                 Prior <- x@Internals$Prior[[1L]]
-                if(!x@Options$empiricalhist)
+                if(x@Options$dentype != 'EH')
                     stop('Empirical histogram was not estimated for this object', call.=FALSE)
                 Theta <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
                                     length.out = x@Options$quadpts))

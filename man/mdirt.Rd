@@ -4,9 +4,9 @@
 \alias{mdirt}
 \title{Multidimensional discrete item response theory}
 \usage{
-mdirt(data, model, itemtype = "lca", nruns = 1, return_max = TRUE,
-  group = NULL, GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
-  technical = list(), ...)
+mdirt(data, model, itemtype = "lca", nruns = 1, method = "EM",
+  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
+  verbose = TRUE, pars = NULL, technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -21,6 +21,8 @@ unordered latent class model}
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
 when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
 by default}
+
+\item{method}{estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)}
 
 \item{return_max}{logical; when \code{nruns > 1}, return the model that has the most optimal
 maximum likelihood criteria? If FALSE, returns a list of all the estimated objects}

@@ -479,23 +479,39 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     return(pars)
 }
 
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, Rasch = FALSE){
-    nfact <- length(gmeans)
-    fn <- paste('COV_', 1L:nfact, sep='')
-    FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
-    FNMEANS <- paste('MEAN_', 1L:nfact, sep='')
-    tri <- lower.tri(gcov, diag=TRUE)
-    par <- c(gmeans, gcov[tri])
-    parnum <- parnumber:(parnumber + length(par) - 1L)
-    if(Rasch) diag(estgcov) <- TRUE
-    est <- c(estgmeans,estgcov[tri])
-    names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])
-    tmp <- matrix(-Inf, nfact, nfact)
-    diag(tmp) <- 1e-4
-    lbound <- c(rep(-Inf, nfact), tmp[tri])
-    Nans <- rep(NaN,length(par))
-    ret <- new('GroupPars', par=par, est=est, nfact=nfact, any.prior=FALSE,
-               parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)),
-               prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, itemclass=0L)
-    return(ret)
+LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, Rasch = FALSE,
+                          customGroup = NULL){
+    if(!is.null(customGroup)){
+        par <- customGroup@par
+        parnum <- parnumber:(parnumber + length(par) - 1L)
+        customGroup@parnum <- parnum
+        return(customGroup)
+    } else {
+        nfact <- length(gmeans)
+        den <- function(obj, Theta){
+            gpars <- ExtractGroupPars(obj)
+            mu <- gpars$gmeans
+            sigma <- gpars$gcov
+            d <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
+            d <- ifelse(d < 1e-300, 1e-300, d)
+            d
+        }
+        fn <- paste('COV_', 1L:nfact, sep='')
+        FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
+        FNMEANS <- paste('MEAN_', 1L:nfact, sep='')
+        tri <- lower.tri(gcov, diag=TRUE)
+        par <- c(gmeans, gcov[tri])
+        parnum <- parnumber:(parnumber + length(par) - 1L)
+        if(Rasch) diag(estgcov) <- TRUE
+        est <- c(estgmeans,estgcov[tri])
+        names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])
+        tmp <- matrix(-Inf, nfact, nfact)
+        diag(tmp) <- 1e-4
+        lbound <- c(rep(-Inf, nfact), tmp[tri])
+        Nans <- rep(NaN,length(par))
+        ret <- new('GroupPars', par=par, est=est, nfact=nfact, any.prior=FALSE, den=den,
+                   safe_den=den, parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)),
+                   prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, itemclass=0L)
+        return(ret)
+    }
 }

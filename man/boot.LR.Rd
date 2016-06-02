@@ -7,11 +7,11 @@
 boot.LR(mod, mod2, R = 1000)
 }
 \arguments{
+\item{mod}{an estimated model object}
+
+\item{mod2}{an estimated model object}
+
 \item{R}{number of parametric bootstraps to use.}
-
-\item{object}{an estimated model object}
-
-\item{object2}{an estimated model object}
 }
 \value{
 a p-value evaluating whether the more restrictive model fits significantly worse

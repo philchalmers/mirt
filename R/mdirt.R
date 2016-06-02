@@ -27,6 +27,7 @@
 #' @param itemtype item types to use. Can be the \code{'lca'} model for defining ordinal
 #'   item response models (dichotomous items are a special case), \code{'nlca'} for the
 #'   unordered latent class model
+#' @param method estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param GenRandomPars logical; use random starting values
 #' @param technical technical input list, most interesting for discrete latent models
@@ -116,7 +117,7 @@
 #' summary(mod_discrete)
 #'
 #' }
-mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
+mdirt <- function(data, model, itemtype = 'lca', nruns = 1, method = 'EM',
                   return_max = TRUE, group = NULL, GenRandomPars = FALSE,
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
@@ -124,10 +125,12 @@ mdirt <- function(data, model, itemtype = 'lca', nruns = 1,
     if(any(is.na(data))) stop('mdirt does not currently support datasets with missing values')
     if(!all(itemtype %in% c('lca', 'nlca')))
         stop('Selected itemtype not supported. Please use itemtype \'lca\' or \'nlca\'', call.=FALSE)
+    stopifnot(method %in% c('EM', 'BL'))
     if(nruns > 1) GenRandomPars <- TRUE
     if(is.null(group)) group <- rep('all', nrow(data))
-    mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)),
-                     data=data, model=model, group=group, itemtype=itemtype, method='EM',
+    stopifnot(is.numeric(model))
+    mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), method=method,
+                     data=data, model=model, group=group, itemtype=itemtype,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
                      discrete=TRUE, verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)
     if(is(mods[[1L]], 'DiscreteClass')){

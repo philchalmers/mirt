@@ -79,11 +79,9 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'DiscreteClass',
-    definition = function(object, printSE=FALSE, drop = TRUE, ...){
+    definition = function(object, drop = TRUE, ...){
         class(object) <- 'MultipleGroupClass'
-        ret <- coef(object,  ...)
-        for(g in 1L:object@Data$ngroups)
-            ret[[g]][[length(ret[[g]])]] <- NULL
+        ret <- coef(object, ...)
         if(drop)
             if(length(ret) == 1L) ret <- ret[[1L]]
         ret

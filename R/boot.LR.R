@@ -7,8 +7,8 @@
 #' definition.
 #'
 #' @aliases boot.LR
-#' @param object an estimated model object
-#' @param object2 an estimated model object
+#' @param mod an estimated model object
+#' @param mod2 an estimated model object
 #' @param R number of parametric bootstraps to use.
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}

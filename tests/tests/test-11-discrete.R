@@ -7,7 +7,7 @@ test_that('discrete', {
     dat <- expand.table(LSAT6)
     mod <- mdirt(dat, 2, verbose=FALSE, SE=TRUE, SE.type = 'Richardson')
     so <- summary(mod, digits=10)
-    expect_equal(extract.mirt(mod, 'condnum'), 13.20951, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod, 'condnum'), 153.9439, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'logLik'), -2467.408, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'df'), 20)
     expect_equal(as.numeric(sort(so$Class.Proportions)[1L]), 0.3317701, tolerance = 1e-2)
@@ -15,7 +15,7 @@ test_that('discrete', {
                  tolerance = 1e-4)
 
     M <- M2(mod)
-    expect_equal(M$M2, 4.602346, tolerance = 1e-4)
+    expect_equal(M$M2, 4.160771, tolerance = 1e-4)
     fs <- fscores(mod, digits=10, full.scores=FALSE)
     pick <- apply(fs[1:5, c('Class_1', 'Class_2')], 1, max)
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
@@ -27,12 +27,12 @@ test_that('discrete', {
     resid <- residuals(mod, type = 'exp')
     expect_equal(resid$res[1:3], c(1.050, 0.145, -0.345), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
-    expect_equal(as.numeric(residLD[2:4, 1]), c(0.110, 0.415, -0.131))
+    expect_equal(as.numeric(residLD[2:4, 1]), c(0.111, 0.414, -0.129))
     ifit <- itemfit(mod, digits = 20)[[1L]]
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
-    W <- wald(mod, L = matrix(c(1,numeric(9)), nrow=1))
-    expect_equal(W$W, 88.9718, tolerance=1e-4)
+    W <- wald(mod, L = matrix(c(1,numeric(9), 0), nrow=1))
+    expect_equal(W$W, 59.4741, tolerance=1e-4)
 
     #----------
     # polytomous LCA
@@ -72,7 +72,7 @@ test_that('discrete', {
     expect_equal(extract.mirt(mod_gom, 'logLik'), -5541.09, tolerance = 1e-4)
     expect_equal(extract.mirt(mod_gom, 'df'), 1001)
     expect_equal(as.numeric(sort(so$Class.Proportions)), c(0.1744980, 0.3188351, 0.5066669), tolerance = 1e-2)
-    expect_equal(as.numeric(sort(so[[1]])), c(0.1042220, 0.1185074, 0.4819419, 0.5180581, 0.8814926, 0.8957780),
+    expect_equal(as.numeric(sort(so[[1]])), c(0.1045606,0.1184876,0.4824176,0.5175824,0.8815124,0.8954394),
                  tolerance = 1e-4)
 
     #-----------------
@@ -85,10 +85,9 @@ test_that('discrete', {
     Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1),
                      ncol=3, byrow=TRUE)
     mod_discrete <- mdirt(dat, 3, technical = list(customTheta = Theta), TOL = 1e-2, verbose=FALSE)
-    expect_equal(extract.mirt(mod_discrete, 'logLik'), -9434.359, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod_discrete, 'logLik'), -9432.606, tolerance = 1e-4)
     so <- summary(mod_discrete, digits=5)
-    expect_equal(as.numeric(sort(so$Class.Proportions)), c(0.00000, 0.00013, 0.01200, 0.04210, 0.12464, 0.16118,
-                                                           0.29597, 0.36399), tolerance = 1e-2)
+    expect_equal(as.numeric(sort(so$Class.Proportions)), c(0,0,0.00334,0.05808,0.08506,0.11289,0.33814,0.40248), tolerance = 1e-2)
 
 #
 #     data(data.read, package = 'sirt')

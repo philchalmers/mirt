@@ -283,6 +283,7 @@ Lambdas <- function(pars, Names){
 
 #change long pars for groups into mean in sigma
 ExtractGroupPars <- function(x){
+    if(x@itemclass == -1L) return(list(gmeans=0, gcov=matrix(1)))
     nfact <- x@nfact
     gmeans <- x@par[1L:nfact]
     tmp <- x@par[-(1L:nfact)]
@@ -329,14 +330,20 @@ bfactor2mod <- function(model, J){
 }
 
 updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
-                        BFACTOR, sitems, cycles, rlist, prior, lrPars = list(), full=FALSE){
+                        dentype, sitems, cycles, rlist, prior, lrPars = list(), full=FALSE){
     Prior <- Priorbetween <- vector('list', ngroups)
-    if(list$EH){
+    if(dentype == 'EH'){
         Prior[[1L]] <- list$EHPrior[[1L]]
+    } else if(dentype == 'custom'){
+        for(g in 1L:ngroups){
+            gp <- pars[[g]][[J+1L]]
+            Prior[[g]] <- gp@den(gp, Theta)
+            Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
+        }
     } else {
         for(g in 1L:ngroups){
             gp <- ExtractGroupPars(pars[[g]][[J+1L]])
-            if(BFACTOR){
+            if(dentype == 'bfactor'){
                 sel <- 1L:(nfact-ncol(sitems) + 1L)
                 sel2 <- sel[-length(sel)]
                 Priorbetween[[g]] <- mirt_dmvnorm(Thetabetween,
@@ -356,7 +363,7 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
             }
         }
     }
-    if(list$EH){
+    if(dentype == 'EH'){
         if(cycles > 1L){
             for(g in 1L:ngroups)
                 Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
@@ -1078,7 +1085,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
-    opts$BFACTOR = BFACTOR
+    opts$dentype <- 'Gaussian'
+    if(BFACTOR) opts$dentype <- 'bfactor'
+    if(empiricalhist) opts$dentype <- 'EH'
     opts$accelerate = accelerate
     opts$delta <- ifelse(is.null(technical$delta), .001, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
@@ -1111,7 +1120,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$MHRM_SE_draws  <- ifelse(is.null(technical$MHRM_SE_draws), 2000L, technical$MHRM_SE_draws)
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
-    opts$empiricalhist <- empiricalhist
     if(empiricalhist){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
@@ -1427,7 +1435,7 @@ longpars_constrain <- function(longpars, constrain){
 }
 
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-               CUSTOM.IND, EH, EHPrior, Data, BFACTOR, itemloc, theta, constrain, lrPars){
+               CUSTOM.IND, EHPrior, Data, dentype, itemloc, theta, constrain, lrPars){
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -1438,12 +1446,18 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
         lrPars@beta[] <- lrPars@par
         lrPars@mus <- lrPars@X %*% lrPars@beta
     }
-    if(EH){
+    if(dentype == 'EH'){
         Prior[[1L]] <- EHPrior[[1L]]
+    } else if(dentype == 'custom'){
+        for(g in 1L:ngroups){
+            gp <- pars[[g]][[J+1L]]
+            Prior[[g]] <- gp@den(gp, Theta)
+            Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
+        }
     } else {
         for(g in 1L:ngroups){
             gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1L]])
-            if(BFACTOR){
+            if(dentype == 'bfactor'){
                 prior[[g]] <- dnorm(theta, 0, 1)
                 prior[[g]] <- prior[[g]]/sum(prior[[g]])
                 Prior[[g]] <- apply(expand.grid(prior[[g]], prior[[g]]), 1L, prod)
@@ -1502,7 +1516,7 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
     retval
 }
 
-mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE, ...)
+mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE, stable = TRUE, ...)
 {
     if(quad && is.matrix(mean)){
         isigma <- solve(sigma)
@@ -1522,6 +1536,8 @@ mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE, ...)
     logdet <- sum(log(eigen(sigma, symmetric=TRUE,
                             only.values=TRUE)$values))
     logretval <- -(ncol(x)*log(2*pi) + logdet + distval)/2
+    if(stable)
+        logretval <- ifelse(logretval < -690.7755, -690.7755, logretval)
     if(log) return(logretval)
     exp(logretval)
 

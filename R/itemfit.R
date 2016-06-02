@@ -194,6 +194,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         stop('MixedClass objects are not supported', call.=FALSE)
     discrete <- FALSE
     if(is(x, 'DiscreteClass')){
+        if(is.null(Theta))
+            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
         class(x) <- 'MultipleGroupClass'
         discrete <- TRUE
     }

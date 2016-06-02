@@ -1254,7 +1254,7 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         NumericMatrix tmphess(par_size, par_size);
         int itemclass = as<int>(item.slot("itemclass"));
         int ncat;
-        if(itemclass != 0)
+        if(itemclass > 0)
             ncat = as<int>(item.slot("ncat"));
         vector<int> prior_type = as< vector<int> >(item.slot("prior.type"));
         vector<double> prior_1 = as< vector<double> >(item.slot("prior_1"));

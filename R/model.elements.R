@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
-                           parnumber, BFACTOR = FALSE, mixed.design, customItems, key,
-                           gpcm_mats)
+                           parnumber, BFACTOR = FALSE, mixed.design, customItems,
+                           customGroup, key, gpcm_mats)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -206,7 +206,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     }
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
-                                            parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')))
+                                            parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')),
+                                            customGroup=customGroup)
     if(any(model[,1L] == 'LBOUND')){
         input <- gsub(" ","", model[model[,1L] == 'LBOUND', 2L])
         elements <- strsplit(input, '\\),\\(')[[1L]]

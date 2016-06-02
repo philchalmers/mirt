@@ -103,7 +103,15 @@ setClass("GroupPars",
                         sig='matrix',
                         invsig='matrix',
                         mu='numeric',
-                        meanTheta='numeric')
+                        meanTheta='numeric',
+                        gen='function',
+                        den='function',
+                        safe_den='function',
+                        derivType='character',
+                        gr='function',
+                        usegr='logical',
+                        hss='function',
+                        usehss='logical')
 )
 
 setMethod(
@@ -135,19 +143,42 @@ setMethod(
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
                           tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL){
-        if(EM){
+        if(x@itemclass == -1L){
+            LLfun <- function(par, obj, Theta){
+                obj@par[obj@est] <- par
+                den <- obj@safe_den(obj, Theta)
+                LL <- sum(obj@rr * log(den))
+                LL
+            }
             grad <- rep(0, length(x@par))
             hess <- matrix(0, length(x@par), length(x@par))
-            if(estHess){
-                if(any(x@est)){
-                    hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
-                                                           pars=pars, tabdata=tabdata, freq=freq,
-                                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+            if(any(x@est)){
+                if(x@usegr) grad <- x@gr(x, Theta)
+                else grad[x@est] <- numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
+                                                    type=x@derivType)
+                if(estHess){
+                    if(x@usehss) hess <- x@hss(x, Theta)
+                    else hess[x@est, x@est] <-
+                            numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
+                                            gradient=FALSE, type=x@derivType)
                 }
             }
-            return(list(grad=grad, hess=hess))
+            return(list(grad = grad, hess=hess))
+        } else {
+            if(EM){
+                grad <- rep(0, length(x@par))
+                hess <- matrix(0, length(x@par), length(x@par))
+                if(estHess){
+                    if(any(x@est)){
+                        hess[x@est,x@est] <- numDeriv::hessian(EML2, x@par[x@est], Theta=Theta,
+                                                               pars=pars, tabdata=tabdata, freq=freq,
+                                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                    }
+                }
+                return(list(grad=grad, hess=hess))
+            }
+            return(.Call("dgroup", x, Theta, matrix(0), estHess, FALSE, FALSE, FALSE))
         }
-        return(.Call("dgroup", x, Theta, matrix(0), estHess, FALSE, FALSE, FALSE))
     }
 )
 

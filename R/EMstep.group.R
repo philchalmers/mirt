@@ -3,12 +3,12 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     verbose <- list$verbose
     lrPars <- list$lrPars
     nfact <- list$nfact
-    if(list$EH && nfact != 1L)
+    if(list$dentype == 'EH' && nfact != 1L)
         stop('empirical histogram only available for unidimensional models', call.=FALSE)
     NCYCLES <- list$NCYCLES
     TOL <- list$TOL
-    BFACTOR <- list$BFACTOR
     CUSTOM.IND <- list$CUSTOM.IND
+    dentype <- list$dentype
     itemloc <- list$itemloc
     ngroups <- length(pars)
     specific <- list$specific
@@ -107,7 +107,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     ANY.PRIOR <- rep(FALSE, ngroups)
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta, prodlist)
-    if(BFACTOR){
+    if(dentype == 'bfactor'){
         Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
         for(g in 1L:ngroups){
             prior[[g]] <- dnorm(theta, 0, 1)
@@ -136,9 +136,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
         opt <- try(optim(longpars[est], BL.LL, BL.grad, est=est, longpars=longpars,
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
-                         Theta=Theta, PrepList=PrepList, BFACTOR=BFACTOR, lrPars=lrPars,
+                         Theta=Theta, PrepList=PrepList, dentype=dentype, lrPars=lrPars,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                         EH=list$EH, constrain=constrain, EHPrior=NULL, Data=Data, method=Moptim,
+                         constrain=constrain, EHPrior=NULL, Data=Data, method=Moptim,
                          control=control, hessian=list$SE,
                          lower=lower, upper=upper), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
@@ -148,12 +148,12 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         if(list$SE) hess <- opt$hessian
         tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                            list=list, ngroups=ngroups, nfact=nfact, prior=prior,
-                           J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles, rlist=rlist)
+                           J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist)
         Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         LL <- 0
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups){
-            if(BFACTOR){
+            if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific,
@@ -174,7 +174,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
                                list=list, ngroups=ngroups, nfact=nfact, prior=prior,
-                               J=J, BFACTOR=BFACTOR, sitems=sitems, cycles=cycles,
+                               J=J, dentype=dentype, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars)
             Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(is.na(TOL) && !is.nan(TOL)){
@@ -184,7 +184,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                           BFACTOR=BFACTOR, rlist=rlist, full=full, Etable=list$Etable)
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
             rlist <- Elist$rlist; LL <- Elist$LL
             collectLL[cycles] <- LL
             if(is.nan(LL))
@@ -215,7 +215,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND,
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                              BFACTOR=BFACTOR, nfact=nfact, Thetabetween=Thetabetween,
+                              dentype=dentype, nfact=nfact, Thetabetween=Thetabetween,
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
                               TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars,
                               control=control)
@@ -260,7 +260,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                                           BFACTOR=BFACTOR, rlist=rlist, full=full)
+                                           dentype=dentype, rlist=rlist, full=full)
                             if(Elist$LL <= collectLL[cycles]){
                                 accel <- (accel - 1) / 2
                                 count <- count + 1L

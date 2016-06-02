@@ -1,7 +1,7 @@
 PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
-                     fulldata = NULL, key, internal_constraints)
+                     customGroup, fulldata = NULL, key, internal_constraints)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     # if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
@@ -113,7 +113,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
                            parnumber=parnumber, BFACTOR=BFACTOR, mixed.design=mixed.design,
-                           customItems=customItems, key=key,
+                           customItems=customItems, customGroup=customGroup, key=key,
                            gpcm_mats=gpcm_mats)
     prodlist <- attr(pars, 'prodlist')
     exploratory <- attr(pars, 'exploratory')

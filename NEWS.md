@@ -1,5 +1,12 @@
 # Changes in mirt 1.18
 
+- `mdirt()` function now includes explicit parameters for the latent class intercepts (in log-form).
+  This implies that correct standard errors can be computed using various methods (e.g., SEM, Richardson,
+  etc)
+
+- new `customGroup()` function to define hyper-parameter objects for the latent trait distributions
+  (generally assumed to be Gaussian with a mean and covariance structure)
+
 - new `boot.LR()` function to perform a parametric bootstrap likelihood-ratio test between 
   nested models. Useful when testing nested models which contain bounded parameters (e.g.,
   testing a 3PL versus a 2PL model)
