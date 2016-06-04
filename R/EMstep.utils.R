@@ -170,7 +170,7 @@ Mstep.LL_alt <- function(x0, optim_args){
 Mstep.LL.group <- function(pars, Theta, rr){
     theta <- Theta
     pick <- length(pars)
-    if(pars[[pick]]@itemclass == -1L){
+    if(pars[[pick]]@itemclass < 0L){
         gp <- pars[[pick]]
         d <- gp@safe_den(gp, Theta)
         LL <- sum(rr * log(d))
@@ -206,6 +206,12 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+    if(pars[[1L]][[J + 1L]]@itemclass == -1L){
+        for(g in 1L:length(pars)){
+            gp <- pars[[g]][[J + 1L]]
+            pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
+        }
+    }
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
     if(length(SLOW.IND)){
         for(group in 1L:ngroups){

@@ -74,10 +74,10 @@ Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
                                 'ideal', 'lca', 'nlca', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'ideal', 'lca', Experimental_itemtypes())
+Use_R_ProbTrace <- function() c('custom', 'ideal', Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'rsm', 'partcomp', 'nestlogit',
-                            'ideal', 'lca', Experimental_itemtypes())
+                            'ideal', Experimental_itemtypes())
 
 # ----------------------------------------------------------------
 # Begin class and method definitions
@@ -100,6 +100,7 @@ setClass("GroupPars",
                         prior_1='numeric',
                         prior_2='numeric',
                         rr='numeric',
+                        density='numeric',
                         sig='matrix',
                         invsig='matrix',
                         mu='numeric',
@@ -143,7 +144,7 @@ setMethod(
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
                           tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL){
-        if(x@itemclass == -1L){
+        if(x@itemclass < 0L){
             LLfun <- function(par, obj, Theta){
                 obj@par[obj@est] <- par
                 den <- obj@safe_den(obj, Theta)
@@ -1932,7 +1933,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        ret <- .Call('dparslca', x@par, Theta, x@score, estHess, x@dat, offterm)
+        ret <- .Call('dparslca', x@par, Theta, x@score, FALSE, x@dat, offterm) #TODO change FALSE to estHess
         if(estHess){
             ret$hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
                                                          Theta=Theta)

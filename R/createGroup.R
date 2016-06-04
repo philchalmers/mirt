@@ -80,7 +80,7 @@ createGroup <- function(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
     ubound <- if(!is.null(ubound)) ubound  else rep(Inf, length(par))
     Nans <- rep(NaN,length(par))
     return(new('GroupPars', par=par, est=est, den=den, safe_den=safe_den, nfact=as.integer(nfact),
-               itemclass= -1L, any.prior=FALSE, lbound=lbound, usegr=usegr, usehss=usehss,
+               itemclass= -999L, any.prior=FALSE, lbound=lbound, usegr=usegr, usehss=usehss,
                ubound=ubound, gr=gr, hss=hss, gen=gen, derivType=derivType,
                prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans))
 }

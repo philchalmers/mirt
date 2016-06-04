@@ -460,6 +460,57 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
         }
     }
 }
+
+static void _dgroupLCA(vector<double> &grad, NumericMatrix &hess, S4 &obj,
+    const NumericMatrix &Theta, const bool &estHess)
+{
+    NumericVector est = obj.slot("est");
+    bool ret = true;
+    for(int i = 0; i < est.length(); ++i)
+        if(est(i)) ret = false;
+    if(ret) return;
+
+    const int nquad = Theta.nrow();
+    const int nfact = Theta.ncol();
+    const int npars = nquad - 1;
+    NumericVector CD = obj.slot("rr");
+    NumericVector P = obj.slot("density");
+    NumericVector P2(P.length());
+    NumericVector P3(P.length());
+    for(int i = 0; i < nquad; ++i){
+        P2(i) = P(i) * P(i);
+        P3(i) = P2(i) * P(i);
+    }
+
+    for(int p = 0; p < npars; ++p){
+        double g = 0.0;
+        for(int i = 0; i < nquad; ++i){
+            if(p == i){
+                g += CD(i) * (P(i) - P2(i)) / P(i);
+            } else {
+                g -= CD(i) * P(p);
+            }
+        }
+        grad[p] = g;
+    }
+    if(estHess){
+        for(int p = 0; p < npars; ++p){
+            for(int q = p; q < npars; ++q){
+                double g = 0.0;
+                if(p == q){
+                    for(int i = 0; i < nquad; ++i){}
+                    
+                } else {
+                    for(int i = 0; i < nquad; ++i){}
+                }
+                hess(p,q) = g;
+                hess(q,p) = g;
+            }
+        }
+        Rprintf("Hessian for LCA hyper-parameters not defined.\n");
+    }
+}
+
 RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, SEXP Rrandeff,
         SEXP REM, SEXP REMcomplete)
 {
@@ -1049,6 +1100,14 @@ void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
             }
         }
     }
+    if(estHess){
+        vector<double> P2(N), P3(N);
+        for(int i = 0; i < N; ++i){
+            P2[i] = P[i] * P[i];
+            P3[i] = P2[i] * P[i];
+        }
+        Rprintf("No hessian defined for lca class\n"); //TODO
+    }
 }
 
 RcppExport SEXP dparslca(SEXP Rx, SEXP RTheta, SEXP Rscore, SEXP RestHess, SEXP Rdat, SEXP Rot)
@@ -1260,7 +1319,13 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         vector<double> prior_1 = as< vector<double> >(item.slot("prior_1"));
         vector<double> prior_2 = as< vector<double> >(item.slot("prior_2"));
         NumericMatrix dat = item.slot("dat");
+        vector<double> score;
+        if(itemclass == 10)
+            score = as< vector<double> >(item.slot("score"));
         switch(itemclass){
+            case -1 :
+                _dgroupLCA(tmpgrad, tmphess, item, theta, estHess);
+                break;
             case 0 :
                 if(EMcomplete){
                     _dgroupEMCD(tmpgrad, tmphess, item, theta, estHess);
@@ -1284,6 +1349,9 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
                 break;
             case 4 :
                 d_nominal(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, 0, estHess);
+                break;
+            case 10 :
+                d_lca(tmpgrad, tmphess, par, theta, score, offterm(_,i), dat, N, nfact2, estHess);
                 break;
             default :
                 break;

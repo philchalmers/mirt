@@ -304,6 +304,14 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                         call.=FALSE)
         }
     }
+    if(dentype == 'custom'){
+        if(pars[[1L]][[J + 1L]]@itemclass == -1L){
+            for(g in 1L:length(pars)){
+                gp <- pars[[g]][[J + 1L]]
+                pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
+            }
+        }
+    }
     infological <- estpars & !redun_constr
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])

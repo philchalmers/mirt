@@ -51,6 +51,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stopifnot(is(GenRandomPars, 'logical'))
         stopifnot(is(large, 'logical') || is(large, 'list'))
         opts <- makeopts(GenRandomPars=GenRandomPars, ...)
+        if(discrete) opts$dentype <- 'custom'
         if(discrete && is.null(customGroup)){
             den <- function(obj, Theta){
                 if(length(Theta) == 1) return(1)
@@ -70,6 +71,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
             customGroup <- createGroup(par=par, est=est, den=den, nfact=model,
                                        gen=function(object) rnorm(length(object@par), 0, 1/2))
+            customGroup@itemclass <- -1L
         }
         if(!is.null(survey.weights)){
             stopifnot(opts$method %in% c('EM', 'QMCEM'))
@@ -399,10 +401,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     lr.random=latent.regression$lr.random, lrPars=lrPars)
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% Use_R_ProbTrace())
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% Use_R_Deriv())
-    if(pars[[1]][[length(pars[[1L]])]]@itemclass == -1L){
+    if(pars[[1]][[length(pars[[1L]])]]@itemclass == -999L)
         SLOW.IND <- c(SLOW.IND, length(pars[[1L]]))
-        opts$dentype <- 'custom'
-    }
     if(opts$dentype != 'Gaussian' && opts$method %in% c('MHRM', 'MIXED'))
         stop('Non-Gaussian densities not currently supported with MHRM algorithm')
     #warnings

@@ -283,7 +283,7 @@ Lambdas <- function(pars, Names){
 
 #change long pars for groups into mean in sigma
 ExtractGroupPars <- function(x){
-    if(x@itemclass == -1L) return(list(gmeans=0, gcov=matrix(1)))
+    if(x@itemclass < 0L) return(list(gmeans=0, gcov=matrix(1)))
     nfact <- x@nfact
     gmeans <- x@par[1L:nfact]
     tmp <- x@par[-(1L:nfact)]
