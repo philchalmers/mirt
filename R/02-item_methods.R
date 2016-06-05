@@ -71,7 +71,7 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                'ideal', 'lca', 'nlca', Experimental_itemtypes())
+                                'ideal', 'lca', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'ideal', Experimental_itemtypes())
@@ -1916,15 +1916,15 @@ setMethod(
     }
 )
 
-P.lca <- function(par, Theta, score, returnNum = FALSE){
-    return(.Call('lcaTraceLinePts', par, Theta, score, returnNum))
+P.lca <- function(par, Theta, ncat, returnNum = FALSE){
+    return(.Call('lcaTraceLinePts', par, Theta, ncat, returnNum))
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        P <- P.lca(x@par, Theta=Theta, score=x@score)
+        P <- P.lca(x@par, Theta=Theta, ncat=x@ncat)
         return(P)
     }
 )
@@ -1933,7 +1933,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        ret <- .Call('dparslca', x@par, Theta, x@score, FALSE, x@dat, offterm) #TODO change FALSE to estHess
+        ret <- .Call('dparslca', x@par, Theta, FALSE, x@dat, offterm) #TODO change FALSE to estHess
         if(estHess){
             ret$hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
                                                          Theta=Theta)
@@ -1958,10 +1958,9 @@ setMethod(
         P <- ProbTrace(x, Theta)
         dp <- matrix(0, nrow(Theta), length(x@par))
         ind <- 1L
-        s2 <- x@score^2
         for(j in 2L:x@ncat){
             for(i in 1:ncol(Theta)){
-                dp[,ind] <- Theta[,i] * s2[j] * (P[,j] -
+                dp[,ind] <- Theta[,i] * (P[,j] -
                         rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
                 ind <- ind + 1L
             }

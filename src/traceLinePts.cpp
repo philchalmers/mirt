@@ -302,7 +302,7 @@ void P_comp(vector<double> &P, const vector<double> &par,
     }
 }
 
-void P_lca(vector<double> &P, const vector<double> &par, const vector<double> &score,
+void P_lca(vector<double> &P, const vector<double> &par,
     const NumericMatrix &Theta, const int &N, const int &ncat, const int &nfact,
     const int &returnNum)
 {
@@ -317,7 +317,7 @@ void P_lca(vector<double> &P, const vector<double> &par, const vector<double> &s
             for(int p = 0; p < nfact; ++p)
                 innerprod += par[p + which_par] * Theta(i, p);
             which_par += nfact;
-            z[j] = score[j] * innerprod;
+            z[j] = innerprod;
         }
         double maxz = *std::max_element(z.begin(), z.end());
         for(int j = 0; j < ncat; ++j){
@@ -467,19 +467,18 @@ RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta)
     END_RCPP
 }
 
-RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rscore, SEXP RreturnNum)
+RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat, SEXP RreturnNum)
 {
     BEGIN_RCPP
 
     const vector<double> par = as< vector<double> >(Rpar);
-    const vector<double> score = as< vector<double> >(Rscore);
-    const int ncat = score.size();
+    const int ncat = as<int>(Rncat);
     const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     const int returnNum = as<int>(RreturnNum);
     vector<double> P(N*ncat);
-    P_lca(P, par, score, Theta, N, ncat, nfact, returnNum);
+    P_lca(P, par, Theta, N, ncat, nfact, returnNum);
     NumericMatrix ret = vec2mat(P, N, ncat);
     return(ret);
 
@@ -501,9 +500,6 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     int has_mat = 0;
     if(itemclass == 8)
         correct = as<int>(item.slot("correctcat"));
-    vector<double> score;
-    if(itemclass == 10)
-        score = as<vector <double> >(item.slot("score"));
 
     /*
         1 = dich
@@ -558,7 +554,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         case 9 :
             break;
         case 10 :
-            P_lca(P, par, score, Theta, N, ncat, nfact, 0);
+            P_lca(P, par, Theta, N, ncat, nfact, 0);
             break;
     }
     int where = (itemloc[which]-1) * N;

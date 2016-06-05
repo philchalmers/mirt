@@ -101,7 +101,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         u[u < .001 ] <- .2
         cs <- sqrt(u)
         lambdas <- loads/cs * 1.702
-        if(!all(itemtype %in% c('lca', 'nlca')))
+        if(!all(itemtype == 'lca'))
             lambdas[!estlam] <- 0
     }
     if(exploratory && any(itemtype %in% c('PC2PL', 'PC3PL')))

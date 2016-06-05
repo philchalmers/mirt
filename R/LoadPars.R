@@ -116,7 +116,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,]/2, -0.5)
             fp <- c(estLambdas[i, ], TRUE)
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')
-        } else if (itemtype[i] %in% c('lca', 'nlca')){
+        } else if (itemtype[i] == 'lca'){
             val <- rep(lambdas[i,], K[i]-1L)
             fp <- rep(TRUE, length(val))
             names(val) <- paste('a', 1L:length(val), sep='')
@@ -393,13 +393,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(any(itemtype[i] %in% c('lca', 'nlca'))){
+        if(any(itemtype[i] == 'lca')){
             pars[[i]] <- new('lca', par=startvalues[[i]], est=freepars[[i]],
                              nfact=nfact,
                              ncat=K[i],
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
-                             score=if(itemtype[i] == 'lca') 0:(K[i]-1) else rep(1, K[i]),
                              itemclass=10L,
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
