@@ -43,10 +43,14 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
-    compute.LL <- function(dat, model, sv, large, parprior, PrepList, ...){
+    compute.LL <- function(dat, model, sv, large, parprior, PrepList, technical, ...){
+        if(missing(technical))
+            technical <- list(message=FALSE, warn=FALSE, parallel=FALSE)
+        else {
+            technical$message <- technical$warn <- technical$parallel <- FALSE
+        }
         tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior, PrepList=PrepList,
-                                        large=large, calcNull=FALSE, technical=list(message=FALSE, warn=FALSE,
-                                                                                    parallel=FALSE), ...)
+                                        large=large, calcNull=FALSE, technical=technical, ...)
         coef(tmpmod, simplify=TRUE)
         ret <- list(LL=tmpmod@Fit$logLik + tmpmod@Fit$logPrior, vals=mod2values(tmpmod))
         ret
