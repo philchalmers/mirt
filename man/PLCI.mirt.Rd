@@ -4,7 +4,8 @@
 \alias{PLCI.mirt}
 \title{Compute profiled-likelihood (or posterior) confidence intervals}
 \usage{
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
+PLCI.mirt(mod, alpha = 0.05, parnum = NULL, fun = NULL, inv.fun = NULL,
+  fun.lower = -Inf, fun.upper = Inf, ...)
 }
 \arguments{
 \item{mod}{a converged mirt model}
@@ -14,6 +15,20 @@ PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
 \item{parnum}{a numeric vector indicating which parameters to estimate.
 Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 parameters are used}
+
+\item{fun}{a function used to define a transformation of 1 or more parameters of the
+form \code{fun(par)}, where \code{par} is one or more parameters indicated by
+the \code{parnum} input. This function must return a single numeric value}
+
+\item{inv.fun}{the inverse transformation function of \code{fun} of the form
+\code{inv.fun(newpar, par)}, where \code{par} is defined as before, however
+\code{newpar} is the the transformed parameter(s) (e.g., returned from \code{fun(par)}).
+Note that the length of the returned vector should be the same as the original length
+of \code{par}}
+
+\item{fun.lower}{lower bound used when \code{fun} is supplied. Default is -Inf}
+
+\item{fun.upper}{upper bound used when \code{fun} is supplied. Default is Inf}
 
 \item{...}{additional arguments to pass to the estimation functions}
 }
@@ -41,6 +56,16 @@ sv <- mod2values(mod2)
 parnum <- sv$parnum[sv$name == 'a1']
 result3 <- PLCI.mirt(mod2, parnum=parnum)
 result3
+
+#####
+# transformation example for computing PL CI of difficulty parameter
+dat <- expand.table(LSAT7)
+mod <- mirt(dat, 1)
+
+fun <- function(par) -par[2]/par[1]
+inv.fun <- function(newpar, par) c(par[1], -newpar * par[1])
+
+PLCI.mirt(mod, parnum=c(1,2), fun=fun, inv.fun=inv.fun)
 
 }
 }
