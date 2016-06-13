@@ -93,8 +93,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
                       sv, get.LL, parprior, asigns, PrepList, pars, maxLL, ...){
         TOL <- .001
-        lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
-        upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
+        lower <- ifelse(lbound[parnum] == -Inf, -30, lbound[parnum])
+        upper <- ifelse(ubound[parnum] == Inf, 30, ubound[parnum])
         mid <- pars[parnum]
         if(parnames[parnum] %in% c('g', 'u')){
             lower <- 0
