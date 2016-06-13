@@ -10,6 +10,8 @@
 #' @param parnum a numeric vector indicating which parameters to estimate.
 #'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 #'   parameters are used
+#' @param inf2val a numeric used to change parameter bounds which are infinity to a finite number.
+#'   Decreasing this too much may not allow a suitable bound to be located. Default is 100
 #' @param ... additional arguments to pass to the estimation functions
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -39,7 +41,7 @@
 #' result3
 #'
 #' }
-PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
+PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
@@ -91,10 +93,10 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
     }
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
-                      sv, get.LL, parprior, asigns, PrepList, pars, maxLL, ...){
+                      sv, get.LL, parprior, asigns, PrepList, pars, inf2val, maxLL, ...){
         TOL <- .001
-        lower <- ifelse(lbound[parnum] == -Inf, -30, lbound[parnum])
-        upper <- ifelse(ubound[parnum] == Inf, 30, ubound[parnum])
+        lower <- ifelse(lbound[parnum] == -Inf, -inf2val, lbound[parnum])
+        upper <- ifelse(ubound[parnum] == Inf, inf2val, ubound[parnum])
         mid <- pars[parnum]
         if(parnames[parnum] %in% c('g', 'u')){
             lower <- 0
@@ -163,7 +165,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, ...){
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, pars=pars, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
-                       PrepList=PrepList, maxLL=LL, ...)
+                       PrepList=PrepList, inf2val=inf2val, maxLL=LL, ...)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
                           'lower_conv', 'upper_conv')
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],

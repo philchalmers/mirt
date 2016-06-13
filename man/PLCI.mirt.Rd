@@ -4,7 +4,7 @@
 \alias{PLCI.mirt}
 \title{Compute profiled-likelihood (or posterior) confidence intervals}
 \usage{
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
+PLCI.mirt(mod, alpha = 0.05, parnum = NULL, inf2val = 100, ...)
 }
 \arguments{
 \item{mod}{a converged mirt model}
@@ -14,6 +14,9 @@ PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
 \item{parnum}{a numeric vector indicating which parameters to estimate.
 Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 parameters are used}
+
+\item{inf2val}{a numeric used to change parameter bounds which are infinity to a finite number.
+Decreasing this too much may not allow a suitable bound to be located. Default is 100}
 
 \item{...}{additional arguments to pass to the estimation functions}
 }
