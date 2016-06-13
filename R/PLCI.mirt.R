@@ -78,8 +78,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, fun = NULL, inv.fun = NUL
     }
 
     f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns,
-                      PrepList, fun, inv.fun, print_debug = FALSE, ...){
-        if(!is.null(fun)){
+                      PrepList, tfun, inv.fun, parnums, print_debug = FALSE, ...){
+        if(!is.null(tfun)){
             sv$est[parnums] <- FALSE
             sv$value[parnums] <- inv.fun(value, sv$value[parnums])
         } else {
@@ -118,9 +118,9 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, fun = NULL, inv.fun = NUL
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
                       sv, get.LL, parprior, asigns, PrepList, pars, maxLL,
-                      fun, inv.fun, ...){
+                      tfun, inv.fun, ...){
         TOL <- .001
-        if(is.null(fun)){
+        if(is.null(tfun)){
             lower <- ifelse(lbound[parnum] == -Inf, -15, lbound[parnum])
             upper <- ifelse(ubound[parnum] == Inf, 15, ubound[parnum])
             mid <- pars[parnum]
@@ -133,15 +133,15 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, fun = NULL, inv.fun = NUL
         } else {
             lower <- ifelse(lbound == -Inf, -30, lbound)
             upper <- ifelse(ubound == Inf, 30, ubound)
-            mid <- fun(pars[parnums])
+            mid <- tfun(pars[parnums])
         }
 
         if(mid > lower){
             opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                  parprior=parprior, parnames=parnames, asigns=asigns,
-                                 PrepList=PrepList, fun=fun, inv.fun=inv.fun,
-                                 ..., f.upper=maxLL-get.LL, tol = TOL/10),
+                                 PrepList=PrepList, tfun=tfun, inv.fun=inv.fun,
+                                 parnums=parnums, ..., f.upper=maxLL-get.LL, tol = TOL/10),
                              silent = TRUE)
             if(is(opt.lower, 'try-error')) opt.lower <- list(root = lower, f.root=1e10)
         } else opt.lower <- list(root = lower, f.root=1e10)
@@ -149,8 +149,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, fun = NULL, inv.fun = NUL
             opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                  parprior=parprior, parnames=parnames, asigns=asigns,
-                                 PrepList=PrepList, fun=fun, inv.fun=inv.fun,
-                                 ..., f.lower=maxLL-get.LL, tol = TOL/10),
+                                 PrepList=PrepList, tfun=tfun, inv.fun=inv.fun,
+                                 parnums=parnums, ..., f.lower=maxLL-get.LL, tol = TOL/10),
                              silent = TRUE)
             if(is(opt.upper, 'try-error')) opt.upper <- list(root = upper, f.root=1e10)
         } else opt.upper <- list(root = upper, f.root=1e10)
@@ -183,19 +183,19 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, fun = NULL, inv.fun = NUL
         pars <- sv$value[tmp]
         parnums <- sv$parnum[tmp]
         itemtypes <- sv$class[tmp]
+        parnames <- sv$name[tmp]
         if(!is.null(fun)){
             lbound <- fun.lower
             ubound <- fun.upper
             which_parnums <- 1L
         } else {
-            parnames <- sv$name[tmp]
             lbound <- sv$lbound[tmp]
             ubound <- sv$ubound[tmp]
             which_parnums <- 1L:length(parnums)
         }
     } else {
-        pars <- sv$value
         parnums <- sv$parnum[sv$est]
+        pars <- sv$value[parnums]
         itemtypes <- sv$class[sv$est]
         parnames <- sv$name[sv$est]
         lbound <- sv$lbound[sv$est]
@@ -207,7 +207,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, fun = NULL, inv.fun = NUL
     result <- mySapply(X=which_parnums, FUN=LLpar, pars=pars, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
-                       PrepList=PrepList, maxLL=LL, fun=fun, inv.fun=inv.fun, ...)
+                       PrepList=PrepList, maxLL=LL, tfun=fun, inv.fun=inv.fun, ...)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
                           'lower_conv', 'upper_conv')
     ret <- if(!is.null(fun)){
