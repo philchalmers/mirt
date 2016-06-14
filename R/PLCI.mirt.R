@@ -45,21 +45,23 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
-    compute.LL <- function(dat, model, sv, large, parprior, PrepList, technical, ...){
+    compute.LL <- function(dat, model, sv, large, parprior, PrepList, itemtype,
+                           technical, ...){
         if(missing(technical))
             technical <- list(message=FALSE, warn=FALSE, parallel=FALSE)
         else {
             technical$message <- technical$warn <- technical$parallel <- FALSE
         }
-        tmpmod <- mirt::mirt(dat, model, pars = sv, verbose = FALSE, parprior=parprior, PrepList=PrepList,
-                                        large=large, calcNull=FALSE, technical=technical, ...)
-        coef(tmpmod, simplify=TRUE)
+        tmpmod <- mirt::mirt(dat, model, itemtype=itemtype, pars = sv, verbose = FALSE,
+                             parprior=parprior, PrepList=PrepList, large=large, calcNull=FALSE,
+                             technical=technical, ...)
+        # coef(tmpmod, simplify=TRUE)
         ret <- list(LL=tmpmod@Fit$logLik + tmpmod@Fit$logPrior, vals=mod2values(tmpmod))
         ret
     }
 
     f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns,
-                      PrepList, print_debug = FALSE, ...){
+                      PrepList, itemtype, print_debug = FALSE, ...){
         sv$est[which] <- FALSE
         sv$value[which] <- value
         if(sv$class[which] == 'graded'){
@@ -79,7 +81,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
                 }
             }
         }
-        got.LL <- try(compute.LL(dat=dat, model=model, sv=sv, large=large, parprior=parprior,
+        got.LL <- try(compute.LL(dat=dat, model=model, itemtype=itemtype,
+                                 sv=sv, large=large, parprior=parprior,
                                  PrepList=PrepList, ...), silent=TRUE)
         sv2 <- got.LL$vals
         got.LL <- got.LL$LL
@@ -93,7 +96,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
     }
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
-                      sv, get.LL, parprior, asigns, PrepList, pars, inf2val, maxLL, ...){
+                      sv, get.LL, parprior, asigns, PrepList, pars, itemtype, inf2val,
+                      maxLL, ...){
         TOL <- .001
         lower <- ifelse(lbound[parnum] == -Inf, -inf2val, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, inf2val, ubound[parnum])
@@ -108,7 +112,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
             opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                  parprior=parprior, parnames=parnames, asigns=asigns,
-                                 PrepList=PrepList, ..., f.upper=maxLL-get.LL, tol = TOL/10),
+                                 PrepList=PrepList, itemtype=itemtype,
+                                 ..., f.upper=maxLL-get.LL, tol = TOL/10),
                              silent = TRUE)
             if(is(opt.lower, 'try-error')) opt.lower <- list(root = lower, f.root=1e10)
         } else opt.lower <- list(root = lower, f.root=1e10)
@@ -116,7 +121,8 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
             opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                  parprior=parprior, parnames=parnames, asigns=asigns,
-                                 PrepList=PrepList, ..., f.lower=maxLL-get.LL, tol = TOL/10),
+                                 PrepList=PrepList, itemtype=itemtype,
+                                 ..., f.lower=maxLL-get.LL, tol = TOL/10),
                              silent = TRUE)
             if(is(opt.upper, 'try-error')) opt.upper <- list(root = upper, f.root=1e10)
         } else opt.upper <- list(root = upper, f.root=1e10)
@@ -138,7 +144,9 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
         stop('Confidence intervals cannot be computed for models that include priors')
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
-    PrepList <- mirt(mod@Data$data, mod@Model$model, Return_PrepList=TRUE)
+    itemtype <- extract.mirt(mod, 'itemtype')
+    PrepList <- mirt(mod@Data$data, mod@Model$model, itemtype=itemtype,
+                     Return_PrepList=TRUE, ...)
     large <- mirt(mod@Data$data, mod@Model$model, large = TRUE)
     as <- matrix(sv$value[sv$name %in% paste0('a', 1L:30L)], ncol(dat))
     asigns <- sign(as)
@@ -165,7 +173,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, pars=pars, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
-                       PrepList=PrepList, inf2val=inf2val, maxLL=LL, ...)
+                       PrepList=PrepList, itemtype=itemtype, inf2val=inf2val, maxLL=LL, ...)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
                           'lower_conv', 'upper_conv')
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],
