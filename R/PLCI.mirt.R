@@ -11,7 +11,15 @@
 #'   Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 #'   parameters are used
 #' @param inf2val a numeric used to change parameter bounds which are infinity to a finite number.
-#'   Decreasing this too much may not allow a suitable bound to be located. Default is 100
+#'   Decreasing this too much may not allow a suitable bound to be located. Default is 30
+#' @param search_bound logical; use a fixed grid of values around the ML estimate to
+#'   determine more suitable optimization bounds? Using this has much better behaviour
+#'   than setting fixed upper/lower bound values and searching from more extreme ends
+#' @param step magnitude of steps used when \code{search_bound} is \code{TRUE}.
+#'   Smaller values create more points to search a suitable bound for (up to the
+#'   lower bound value visible with \code{\link{mod2values}})
+#' @param lower logical; search for the lower CI?
+#' @param upper logical; search for the upper CI?
 #' @param ... additional arguments to pass to the estimation functions
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -41,7 +49,9 @@
 #' result3
 #'
 #' }
-PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
+PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
+                      search_bound = TRUE, step = .5,
+                      lower = TRUE, upper = TRUE, inf2val = 30, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
@@ -97,7 +107,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
                       sv, get.LL, parprior, asigns, PrepList, pars, itemtype, inf2val,
-                      maxLL, ...){
+                      maxLL, estlower, estupper, search_bound, step, ...){
         TOL <- .001
         lower <- ifelse(lbound[parnum] == -Inf, -inf2val, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, inf2val, ubound[parnum])
@@ -108,7 +118,20 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
         } else if(parnames[parnum] %in% paste0('COV_', 1:30, 1:30)){
             lower <- 1e-4
         }
-        if(mid > lower){
+        if(estlower && mid > lower){
+            if(search_bound){
+                grid <- mid - cumsum(rep(step, floor(abs(lower/step))))
+                for(g in grid){
+                    Xval <- f.min(g, dat=dat, model=model,
+                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                   parprior=parprior, parnames=parnames, asigns=asigns,
+                                   PrepList=PrepList, itemtype=itemtype, ...)
+                    if(abs(Xval) > abs(get.LL - maxLL)){
+                        lower <- g
+                        break
+                    }
+                }
+            }
             opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                  parprior=parprior, parnames=parnames, asigns=asigns,
@@ -117,7 +140,20 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
                              silent = TRUE)
             if(is(opt.lower, 'try-error')) opt.lower <- list(root = lower, f.root=1e10)
         } else opt.lower <- list(root = lower, f.root=1e10)
-        if(mid < upper){
+        if(estupper && mid < upper){
+            if(search_bound){
+                grid <- mid + cumsum(rep(step, floor(abs(upper/step))))
+                for(g in grid){
+                    Xval <- f.min(g, dat=dat, model=model,
+                                   large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                   parprior=parprior, parnames=parnames, asigns=asigns,
+                                   PrepList=PrepList, itemtype=itemtype, ...)
+                    if(abs(Xval) > abs(get.LL - maxLL)){
+                        upper <- g
+                        break
+                    }
+                }
+            }
             opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
                                  large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                  parprior=parprior, parnames=parnames, asigns=asigns,
@@ -137,6 +173,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
 
     if(.hasSlot(mod@Model$lrPars, 'beta'))
         stop('Latent regression models not yet supported')
+    stopifnot(lower | upper)
     dat <- mod@Data$data
     model <- mod@Model$model
     parprior <- mod@Model$parprior
@@ -173,12 +210,16 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL, inf2val = 100, ...){
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, pars=pars, parnums=parnums, asigns=asigns,
                        parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
-                       PrepList=PrepList, itemtype=itemtype, inf2val=inf2val, maxLL=LL, ...)
+                       PrepList=PrepList, itemtype=itemtype, inf2val=inf2val, maxLL=LL,
+                       estlower=lower, estupper=upper, search_bound=search_bound,
+                       step=step, ...)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
-                          'lower_conv', 'upper_conv')
+                                 'lower_conv', 'upper_conv')
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],
                       parnum=parnums, value=pars, result, row.names=NULL)
     ret$lower_conv <- as.logical(ret$lower_conv)
     ret$upper_conv <- as.logical(ret$upper_conv)
+    if(!lower) ret <- ret[,!grepl('lower', colnames(ret)), drop=FALSE]
+    if(!upper) ret <- ret[,!grepl('upper', colnames(ret)), drop=FALSE]
     ret
 }
