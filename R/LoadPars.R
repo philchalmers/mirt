@@ -86,13 +86,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                                 paste('d', 0L:(K[i]-1L), sep=''))
             }
-#         } else if(itemtype[i] == 'rsm'){
-#             tmpval <- rep(0, nfact)
-#             tmpval[lambdas[i,] != 0] <- 1
-#             val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
-#             fp <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
-#             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
-#                             paste('d', 0L:(K[i]-1L), sep=''), 'c')
+        } else if(itemtype[i] == 'rsm'){
+            tmpval <- rep(0, nfact)
+            tmpval[lambdas[i,] != 0] <- 1
+            val <- c(tmpval, 0:(K[i]-1), 0, seq(2.5, -2.5, length.out = length(zetas[[i]])), 0)
+            fp <- c(rep(FALSE, nfact), rep(FALSE, K[i]), FALSE, rep(TRUE, K[i]))
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
+                            paste('d', 0L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'nominal'){
             val <- c(lambdas[i,], rep(.5, K[i]), rep(0, K[i]))
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]*2))
@@ -309,27 +309,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-#         if(itemtype[i] == 'rsm'){
-#             pars[[i]] <- new('rsm',
-#                              par=startvalues[[i]],
-#                              nfact=nfact,
-#                              ncat=K[i],
-#                              itemclass=6L,
-#                              nfixedeffects=nfixedeffects,
-#                              any.prior=FALSE,
-#                              prior.type=rep(0L, length(startvalues[[i]])),
-#                              fixed.design=fixed.design.list[[i]],
-#                              est=freepars[[i]],
-#                              lbound=rep(-Inf, length(startvalues[[i]])),
-#                              ubound=rep(Inf, length(startvalues[[i]])),
-#                              prior_1=rep(NaN,length(startvalues[[i]])),
-#                              prior_2=rep(NaN,length(startvalues[[i]])))
-#             pars[[i]]@par[nfact+1L] <- 0
-#             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
-#             pars[[i]]@parnum <- tmp2
-#             parnumber <- parnumber + length(freepars[[i]])
-#             next
-#         }
+        if(itemtype[i] == 'rsm'){
+            pars[[i]] <- new('rsm',
+                             par=startvalues[[i]],
+                             nfact=nfact,
+                             ncat=K[i],
+                             itemclass=6L,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             est=freepars[[i]],
+                             mat=FALSE,
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            pars[[i]]@par[nfact+1L] <- 0
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
 
         if(itemtype[i] == 'nominal'){
             pars[[i]] <- new('nominal',
