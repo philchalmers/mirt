@@ -373,12 +373,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(opts$warn && any(invariance %in% c('free_means', 'free_var')))
             warning('Multiple-group model may not be identified without providing anchor items',
                     call.=FALSE)
-        for(j in 1L:Data$ngroups)
-            if(!all(apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
-                     function(x) length(unique(na.omit(x)))) == Data$K))
-                stop('Multiple Group model will not be identified without proper constraints
-                    (groups contain missing data patterns where item responses have been completely ommited)',
-                     call. = FALSE)
+        for(j in 1L:Data$ngroups){
+            tmp <- apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
+                         function(x) length(unique(na.omit(x)))) == Data$K
+            for(i in which(!tmp)){
+                if(any(PrepList[[j]]$pars[[i]]@est))
+                    stop(paste0('Multiple Group model will not be identified without ',
+                                'proper constraints (groups contain missing data patterns ',
+                                'where item responses have been completely ommited or, alternatively, ',
+                                'the number of categories within each group is not equal to the ',
+                                'total number of categories)'),
+                         call. = FALSE)
+            }
+        }
     }
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
     dfsubtr <- nestpars - nconstr
