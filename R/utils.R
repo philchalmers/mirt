@@ -1837,6 +1837,10 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
         hess
     }
 
+    if(!length(par)){
+        if(gradient) return(numeric())
+        else return(matrix(numeric()))
+    }
     if(type == 'central'){
         ret <- if(gradient) central_difference(par=par, f=f, delta=delta, ...)
         else central_difference2(par=par, f=f, delta=delta, ...)
