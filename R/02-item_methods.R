@@ -1047,7 +1047,7 @@ setMethod(
         x2@est <- c(rep(FALSE, length(x2@est)-1L), TRUE)
         grad[x2@est] <- numerical_deriv(x@par[x2@est], EML, obj=x2, Theta=Theta,
                                         type='central')
-        if(estHess){
+        if(estHess && any(x@est)){
             hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                     Theta=Theta, type = 'Richardson',
                                                     gradient = FALSE)
@@ -1339,7 +1339,7 @@ setMethod(
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         #local derivative from previous version with small mod
         #u and g in logit form
-        dpars.comp <- function(lambda,zeta,g,r,f,Thetas,D,estHess)
+        dpars.comp <- function(lambda,zeta,g,r,f,Thetas,estHess)
         {
             nfact <- length(lambda)
             pars <- c(zeta,lambda,g)
@@ -1505,7 +1505,6 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)
-        P <- P.comp(c(a, d, g, 999), Theta)[,2L]
         Pstar <- P.comp(c(a, d, -999, 999), Theta)[,2L]
         g <- antilogit(g)
         u <- antilogit(u)
@@ -1615,8 +1614,9 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         dat <- x@dat
-        if(estHess)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x, Theta=Theta)
+        if(estHess && any(x@est))
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
+                                                  grad = FALSE, type = 'Richardson')
         nfact <- x@nfact
         a <- x@par[1L:x@nfact]
         d <- x@par[x@nfact+1L]
@@ -1819,9 +1819,9 @@ setMethod(
                                x@dat[,2] * int * Theta[,i])
         grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q +
                            2 * x@dat[,2] * int)/2
-        if(estHess)
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                         Theta=Theta)
+        if(estHess && any(x@est))
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                                  Theta=Theta, grad=FALSE, type = 'Richardson')
         return(list(grad = grad, hess=hess))
     }
 )
@@ -1940,7 +1940,7 @@ setMethod(
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         ret <- .Call('dparslca', x@par, Theta, FALSE, x@dat, offterm) #TODO change FALSE to estHess
-        if(estHess){
+        if(estHess && any(x@est)){
             ret$hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
                                                          Theta=Theta)
         }
@@ -2316,7 +2316,7 @@ setMethod(
       grad[x@est & Nest] <- numDeriv::grad(EML, x@par[x@est & Nest], obj=x, Theta=Theta)
     }
 
-    if(estHess)
+    if(estHess && any(x@est))
       hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
                                               Theta=Theta)
     ret <- list(grad=grad, hess=hess)
@@ -2452,10 +2452,12 @@ setMethod(
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
-        grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
-        if(estHess){
-            hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
-                                                        Theta=Theta)
+        if(any(x@est)){
+            grad[x@est] <- numDeriv::grad(EML, x@par[x@est], obj=x, Theta=Theta)
+            if(estHess){
+                hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                            Theta=Theta)
+            }
         }
         return(list(grad=grad, hess=hess)) #replace with analytical derivatives
     }
