@@ -119,6 +119,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
             lower <- 1e-4
         }
         if(estlower && mid > lower){
+            possible_bound <- TRUE
             if(search_bound){
                 grid <- mid - cumsum(rep(step, floor(abs(lower/step))))
                 for(g in grid){
@@ -130,17 +131,26 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                         lower <- g
                         break
                     }
+                    if(Xval == -1e10){
+                        possible_bound <- FALSE
+                        break
+                    }
                 }
+                if(g == grid[length(grid)] && abs(Xval) < abs(get.LL - maxLL))
+                    possible_bound <- FALSE
             }
-            opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
-                                 large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
-                                 parprior=parprior, parnames=parnames, asigns=asigns,
-                                 PrepList=PrepList, itemtype=itemtype,
-                                 ..., f.upper=maxLL-get.LL, tol = TOL/10),
-                             silent = TRUE)
+            if(possible_bound)
+                opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
+                                     large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                     parprior=parprior, parnames=parnames, asigns=asigns,
+                                     PrepList=PrepList, itemtype=itemtype,
+                                     ..., f.upper=maxLL-get.LL, tol = TOL/10),
+                                 silent = TRUE)
+            else opt.lower <- try(uniroot(), TRUE)
             if(is(opt.lower, 'try-error')) opt.lower <- list(root = lower, f.root=1e10)
         } else opt.lower <- list(root = lower, f.root=1e10)
         if(estupper && mid < upper){
+            possible_bound <- TRUE
             if(search_bound){
                 grid <- mid + cumsum(rep(step, floor(abs(upper/step))))
                 for(g in grid){
@@ -152,14 +162,22 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                         upper <- g
                         break
                     }
+                    if(Xval == -1e10){
+                        possible_bound <- FALSE
+                        break
+                    }
                 }
+                if(g == grid[length(grid)] && abs(Xval) < abs(get.LL - maxLL))
+                    possible_bound <- FALSE
             }
-            opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
-                                 large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
-                                 parprior=parprior, parnames=parnames, asigns=asigns,
-                                 PrepList=PrepList, itemtype=itemtype,
-                                 ..., f.lower=maxLL-get.LL, tol = TOL/10),
-                             silent = TRUE)
+            if(possible_bound)
+                opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
+                                     large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                     parprior=parprior, parnames=parnames, asigns=asigns,
+                                     PrepList=PrepList, itemtype=itemtype,
+                                     ..., f.lower=maxLL-get.LL, tol = TOL/10),
+                                 silent = TRUE)
+            else opt.lower <- try(uniroot(), TRUE)
             if(is(opt.upper, 'try-error')) opt.upper <- list(root = upper, f.root=1e10)
         } else opt.upper <- list(root = upper, f.root=1e10)
         conv_upper <- conv_lower <- TRUE
