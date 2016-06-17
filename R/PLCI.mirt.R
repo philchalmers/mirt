@@ -177,7 +177,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                                      PrepList=PrepList, itemtype=itemtype,
                                      ..., f.lower=maxLL-get.LL, tol = TOL/10),
                                  silent = TRUE)
-            else opt.lower <- try(uniroot(), TRUE)
+            else opt.upper <- try(uniroot(), TRUE)
             if(is(opt.upper, 'try-error')) opt.upper <- list(root = upper, f.root=1e10)
         } else opt.upper <- list(root = upper, f.root=1e10)
         conv_upper <- conv_lower <- TRUE
