@@ -73,7 +73,7 @@ test_that('syntax', {
     expect_equal(mod10$est[mod10$name == 'a1'], c(FALSE, FALSE, FALSE, TRUE, TRUE))
     mod11 <- mirt(data, model11, '3PL', verbose=FALSE)
     expect_equal(as.vector(unname(coef(mod11, digits=Inf)[[1]])),
-                 c(1.081994, 1.60668, 0.1871712, 1), tolerance = 1e-4)
+                 c(1.0767651, 1.6027628, 0.1871268, 1.0000000), tolerance = 1e-4)
 
     data(data.read, package = 'sirt')
     dat <- data.read
