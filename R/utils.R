@@ -603,6 +603,12 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     return(constrain)
 }
 
+expbeta_sv <- function(val1, val2){
+    ret <- qlogis((val1-1)/(val1 + val2-2))
+    if(!is.finite(ret)) ret <- qlogis(val1/(val1 + val2))
+    ret
+}
+
 UpdatePrior <- function(PrepList, model, groupNames){
     if(!is.numeric(model[[1L]])){
         if(!length(model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L])) return(PrepList)
@@ -659,7 +665,7 @@ UpdatePrior <- function(PrepList, model, groupNames){
                                                                  '1'=val1,
                                                                  '2'=exp(val1),
                                                                  '3'=(val1-1)/(val1 + val2 - 2),
-                                                                 '4'=qlogis((val1-1)/(val1 + val2 - 2)))
+                                                                 '4'=expbeta_sv(val1, val2))
                     }
                 }
             } else {
@@ -920,6 +926,17 @@ LL.Priors <- function(x, LL){
     if(any(x@prior.type %in% 3L)){
         ind <- x@prior.type %in% 3L
         val <- x@par[ind]
+        a <- x@prior_1[ind]
+        b <- x@prior_2[ind]
+        for(i in 1L:length(val)){
+            if(val[i] > 0 && val[i] < 1)
+                LL <- LL + dbeta(val[i], a[i], b[i], log=TRUE)
+            else LL <- LL + log(1e-100)
+        }
+    }
+    if(any(x@prior.type %in% 4L)){
+        ind <- x@prior.type %in% 4L
+        val <- plogis(x@par[ind])
         a <- x@prior_1[ind]
         b <- x@prior_2[ind]
         for(i in 1L:length(val)){

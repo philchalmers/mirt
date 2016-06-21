@@ -466,7 +466,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                                      'norm'=p1[w],
                                                      'lnorm'=exp(p1[w]),
                                                      'beta'=(p1[w]-1)/(p1[w] + p2[w] - 2),
-                                                     'expbeta'=qlogis((p1[w]-1)/(p1[w] + p2[w] - 2)))
+                                                     'expbeta'=expbeta_sv(p1[w], p2[w]))
 
                     }
                     pars[[i]]@prior_1[tmp] <- p1

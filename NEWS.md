@@ -20,6 +20,9 @@
 
 - fix crash error in `mirtmirt()` for multidimensional models with lr.random effects (reported 
   by Diah Wihardini)
+  
+- `expbeta` prior starting values fix by seting to the mean of the prior rather than the mode 
+  (reported by Insu Paek)
 
 # Changes in mirt 1.17.1
 
