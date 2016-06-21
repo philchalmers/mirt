@@ -32,6 +32,8 @@ test_that('syntax', {
     model10 <- mirt.model('F1 = 1-5
                           START = (1,3-4, a1, 1)
                           FIXED = (1-3, a1)')
+    model11 <- mirt.model('F1 = 1-5
+                          PRIOR = (1-5, g, expbeta, 10, 40)')
 
     set.seed(1234)
     group <- sample(c('male', 'female'), 1000, TRUE)
@@ -69,6 +71,9 @@ test_that('syntax', {
     mod10 <- mirt(data, model10, '3PL', pars = 'values')
     expect_equal(mod10$value[mod10$name == 'a1'], c(1, 0.851, 1, 1, .851), tolerance = 1e-4)
     expect_equal(mod10$est[mod10$name == 'a1'], c(FALSE, FALSE, FALSE, TRUE, TRUE))
+    mod11 <- mirt(data, model11, '3PL', verbose=FALSE)
+    expect_equal(as.vector(unname(coef(mod11, digits=Inf)[[1]])),
+                 c(1.081994, 1.60668, 0.1871712, 1), tolerance = 1e-4)
 
     data(data.read, package = 'sirt')
     dat <- data.read
