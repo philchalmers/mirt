@@ -1616,7 +1616,7 @@ setMethod(
         dat <- x@dat
         if(estHess && any(x@est))
             hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
-                                                  grad = FALSE, type = 'Richardson')
+                                                  gradient = FALSE, type = 'Richardson')
         nfact <- x@nfact
         a <- x@par[1L:x@nfact]
         d <- x@par[x@nfact+1L]
@@ -1821,7 +1821,7 @@ setMethod(
                            2 * x@dat[,2] * int)/2
         if(estHess && any(x@est))
             hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
-                                                  Theta=Theta, grad=FALSE, type = 'Richardson')
+                                                  Theta=Theta, gradient=FALSE, type = 'Richardson')
         return(list(grad = grad, hess=hess))
     }
 )
