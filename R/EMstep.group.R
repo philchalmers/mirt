@@ -59,7 +59,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
-    if(any(diag(L)[!estpars] > 0L)){
+    if(any(diag(L)[!estpars] > 0L) && !list$PLCI){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
              paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to

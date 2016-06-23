@@ -58,9 +58,10 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
     compute.LL <- function(dat, model, sv, large, parprior, PrepList, itemtype,
                            technical, ...){
         if(missing(technical))
-            technical <- list(message=FALSE, warn=FALSE, parallel=FALSE)
+            technical <- list(message=FALSE, warn=FALSE, parallel=FALSE, PLCI=TRUE)
         else {
             technical$message <- technical$warn <- technical$parallel <- FALSE
+            technical$PLCI <- TRUE
         }
         tmpmod <- mirt::mirt(dat, model, itemtype=itemtype, pars = sv, verbose = FALSE,
                              parprior=parprior, PrepList=PrepList, large=large, calcNull=FALSE,
@@ -71,9 +72,17 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
     }
 
     f.min <- function(value, dat, model, which, sv, get.LL, large, parprior, parnames, asigns,
-                      PrepList, itemtype, print_debug = FALSE, ...){
+                      PrepList, itemtype, constrain, print_debug = FALSE, ...){
         sv$est[which] <- FALSE
         sv$value[which] <- value
+        if(length(constrain)){
+            for(i in 1L:length(constrain)){
+                if(which %in% constrain[[i]]){
+                    sv$est[constrain[[i]]] <- FALSE
+                    sv$value[constrain[[i]]] <- value
+                }
+            }
+        }
         if(sv$class[which] == 'graded'){
             if(!(sv$name[which] %in% paste0('a', 1L:30L))){
                 itemname <- sv$item[which]
@@ -105,7 +114,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
         ret
     }
 
-    LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large,
+    LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, constrain,
                       sv, get.LL, parprior, asigns, PrepList, pars, itemtype, inf2val,
                       maxLL, estlower, estupper, search_bound, step, ...){
         TOL <- .001
@@ -123,7 +132,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
             if(search_bound){
                 grid <- mid - cumsum(rep(step, floor(abs(lower/step))))
                 for(g in grid){
-                    Xval <- f.min(g, dat=dat, model=model,
+                    Xval <- f.min(g, dat=dat, model=model, constrain=constrain,
                                    large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                    parprior=parprior, parnames=parnames, asigns=asigns,
                                    PrepList=PrepList, itemtype=itemtype, ...)
@@ -143,7 +152,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                 opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
                                      large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                      parprior=parprior, parnames=parnames, asigns=asigns,
-                                     PrepList=PrepList, itemtype=itemtype,
+                                     PrepList=PrepList, itemtype=itemtype, constrain=constrain,
                                      ..., f.upper=maxLL-get.LL, tol = TOL/10),
                                  silent = TRUE)
             else opt.lower <- try(uniroot(), TRUE)
@@ -154,7 +163,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
             if(search_bound){
                 grid <- mid + cumsum(rep(step, floor(abs(upper/step))))
                 for(g in grid){
-                    Xval <- f.min(g, dat=dat, model=model,
+                    Xval <- f.min(g, dat=dat, model=model, constrain=constrain,
                                    large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                    parprior=parprior, parnames=parnames, asigns=asigns,
                                    PrepList=PrepList, itemtype=itemtype, ...)
@@ -174,7 +183,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                 opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
                                      large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
                                      parprior=parprior, parnames=parnames, asigns=asigns,
-                                     PrepList=PrepList, itemtype=itemtype,
+                                     PrepList=PrepList, itemtype=itemtype, constrain=constrain,
                                      ..., f.lower=maxLL-get.LL, tol = TOL/10),
                                  silent = TRUE)
             else opt.upper <- try(uniroot(), TRUE)
@@ -200,6 +209,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
     itemtype <- extract.mirt(mod, 'itemtype')
+    constrain <- extract.mirt(mod, 'constrain')
     PrepList <- mirt(mod@Data$data, mod@Model$model, itemtype=itemtype,
                      Return_PrepList=TRUE, ...)
     large <- mirt(mod@Data$data, mod@Model$model, large = TRUE)
@@ -226,7 +236,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
     LL <- mod@Fit$logLik
     get.LL <- LL - qchisq(1-alpha, 1)/2
     result <- mySapply(X=1L:length(parnums), FUN=LLpar, pars=pars, parnums=parnums, asigns=asigns,
-                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat,
+                       parnames=parnames, lbound=lbound, ubound=ubound, dat=dat, constrain=constrain,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
                        PrepList=PrepList, itemtype=itemtype, inf2val=inf2val, maxLL=LL,
                        estlower=lower, estupper=upper, search_bound=search_bound,
