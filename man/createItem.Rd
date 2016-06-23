@@ -85,7 +85,7 @@ itemfit(mod)
 fscores(mod, full.scores=FALSE)
 plot(mod)
 
-# fit the same model, but specify gradient function explicitly (use of a brower() may be helpful)
+# fit the same model, but specify gradient function explicitly (use of a browser() may be helpful)
 gr <- function(x, Theta){
      # browser()
      a <- x@par[1]
