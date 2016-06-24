@@ -138,45 +138,45 @@ SIBTEST(dat, group, focal_set = 6)
 </code></pre>
 
 <pre><code>##         n_matched_set n_focal_set           B         z         p
-## SIBTEST            29           1 -0.03695718 -1.358991 0.1741496
+## SIBTEST            29           1 -0.02895891 -1.079226 0.2804868
 </code></pre>
 
 <pre><code class="r">#DIF (specific anchors)
 SIBTEST(dat, group, match_set = 1:5, focal_set = 6)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set           B         z         p
-## SIBTEST             5           1 -0.03277425 -1.176036 0.2395803
+<pre><code>##         n_matched_set n_focal_set            B          z         p
+## SIBTEST             5           1 -0.009530775 -0.3457252 0.7295492
 </code></pre>
 
 <pre><code class="r"># DBF (all and specific anchors, respectively)
 SIBTEST(dat, group, focal_set = 11:30)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set        B         z         p
-## SIBTEST            10          20 0.101876 0.6088667 0.5426128
+<pre><code>##         n_matched_set n_focal_set         B        z          p
+## SIBTEST            10          20 0.3294495 2.037803 0.04156966
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, match_set = 1:5, focal_set = 11:30)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set          B          z         p
-## SIBTEST             5          20 0.01004398 0.04987587 0.9602213
+<pre><code>##         n_matched_set n_focal_set         B        z           p
+## SIBTEST             5          20 0.5238113 2.700537 0.006922767
 </code></pre>
 
 <pre><code class="r">#DTF
 SIBTEST(dat, group, focal_set = 11:30)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set        B         z         p
-## SIBTEST            10          20 0.101876 0.6088667 0.5426128
+<pre><code>##         n_matched_set n_focal_set         B        z          p
+## SIBTEST            10          20 0.3294495 2.037803 0.04156966
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, match_set = 1:10) #equivalent
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set        B         z         p
-## SIBTEST            10          20 0.101876 0.6088667 0.5426128
+<pre><code>##         n_matched_set n_focal_set         B        z          p
+## SIBTEST            10          20 0.3294495 2.037803 0.04156966
 </code></pre>
 
 <pre><code class="r"># different hyper pars
@@ -186,81 +186,81 @@ dat &lt;- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set          B        z        p
-## SIBTEST             5          25 -0.3302013 -1.29682 0.194693
+<pre><code>##         n_matched_set n_focal_set          B        z          p
+## SIBTEST             5          25 -0.4426694 -1.74327 0.08128638
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 11:30)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set          B          z         p
-## SIBTEST            10          20 -0.1351675 -0.7223809 0.4700604
+<pre><code>##         n_matched_set n_focal_set          B          z        p
+## SIBTEST            10          20 -0.1533017 -0.8902793 0.373316
 </code></pre>
 
 <pre><code class="r">#DIF testing with anchors 1 through 5
 SIBTEST(dat, group, 6, match_set = 1:5)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set           B         z          p
-## SIBTEST             5           1 -0.04912936 -1.804087 0.07121769
+<pre><code>##         n_matched_set n_focal_set           B          z         p
+## SIBTEST             5           1 -0.02260609 -0.8105353 0.4176326
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 7, match_set = 1:5)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set           B          z         p
-## SIBTEST             5           1 -0.00737568 -0.2617505 0.7935138
+<pre><code>##         n_matched_set n_focal_set          B        z         p
+## SIBTEST             5           1 0.03675611 1.281086 0.2001635
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 8, match_set = 1:5)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set           B         z         p
-## SIBTEST             5           1 0.004200776 0.1501167 0.8806726
+<pre><code>##         n_matched_set n_focal_set           B         z          p
+## SIBTEST             5           1 -0.05599984 -1.951795 0.05096254
 </code></pre>
 
 <pre><code class="r">#DIF testing with all other items as anchors
 SIBTEST(dat, group, 6)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set           B         z          p
-## SIBTEST            29           1 -0.04631279 -1.661794 0.09655412
+<pre><code>##         n_matched_set n_focal_set          B          z         p
+## SIBTEST            29           1 -0.0166756 -0.6280739 0.5299555
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 7)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set          B         z         p
-## SIBTEST            29           1 0.01081096 0.3667616 0.7137968
+<pre><code>##         n_matched_set n_focal_set          B        z          p
+## SIBTEST            29           1 0.04995383 1.730141 0.08360504
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 8)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set           B          z        p
-## SIBTEST            29           1 0.001678146 0.05794552 0.953792
+<pre><code>##         n_matched_set n_focal_set           B         z         p
+## SIBTEST            29           1 -0.03455412 -1.182194 0.2371289
 </code></pre>
 
 <pre><code class="r">#crossed SIBTEST
 SIBTEST(dat, group, 6, match_set = 1:5, cross=TRUE)
 </code></pre>
 
-<pre><code>##                 n_matched_set n_focal_set          B  z    p
-## Crossed_SIBTEST             5           1 0.04912936 NA 0.54
+<pre><code>##                 n_matched_set n_focal_set          B  z     p
+## Crossed_SIBTEST             5           1 0.05291048 NA 0.506
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 7, match_set = 1:5, cross=TRUE)
 </code></pre>
 
-<pre><code>##                 n_matched_set n_focal_set          B  z     p
-## Crossed_SIBTEST             5           1 0.04750447 NA 0.272
+<pre><code>##                 n_matched_set n_focal_set          B  z p
+## Crossed_SIBTEST             5           1 0.03675611 NA 1
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 8, match_set = 1:5, cross=TRUE)
 </code></pre>
 
-<pre><code>##                 n_matched_set n_focal_set            B  z p
-## Crossed_SIBTEST             5           1 -0.003186207 NA 1
+<pre><code>##                 n_matched_set n_focal_set          B  z    p
+## Crossed_SIBTEST             5           1 0.08334318 NA 0.52
 </code></pre>
 
 <pre><code class="r">## -------------
@@ -273,55 +273,55 @@ SIBTEST(dat, group, 6:30)
 </code></pre>
 
 <pre><code>##         n_matched_set n_focal_set         B         z p
-## SIBTEST             5          25 -2.329058 -8.536827 0
+## SIBTEST             5          25 -2.800422 -10.64853 0
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, 11:30)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set         B        z p
-## SIBTEST            10          20 -2.755746 -15.4522 0
+<pre><code>##         n_matched_set n_focal_set         B         z p
+## SIBTEST            10          20 -2.799902 -15.68929 0
 </code></pre>
 
 <pre><code class="r">#DIF testing using valid anchors
 SIBTEST(dat, group, focal_set = 6, match_set = 1:5)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set          B        z           p
-## SIBTEST             5           1 0.07151388 2.590642 0.009579702
+<pre><code>##         n_matched_set n_focal_set           B         z         p
+## SIBTEST             5           1 -0.04568947 -1.625955 0.1039593
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, focal_set = 7, match_set = 1:5)
 </code></pre>
 
-<pre><code>##         n_matched_set n_focal_set          B        z         p
-## SIBTEST             5           1 0.04192564 1.473055 0.1407363
+<pre><code>##         n_matched_set n_focal_set          B       z         p
+## SIBTEST             5           1 0.04047954 1.43352 0.1517093
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, focal_set = 30, match_set = 1:5)
 </code></pre>
 
 <pre><code>##         n_matched_set n_focal_set          B         z            p
-## SIBTEST             5           1 -0.1061777 -3.981502 6.848102e-05
+## SIBTEST             5           1 -0.1472457 -5.580823 2.393826e-08
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, focal_set = 11, match_set = 1:10, cross=TRUE)
 </code></pre>
 
-<pre><code>##                 n_matched_set n_focal_set           B  z p
-## Crossed_SIBTEST            10           1 1.88186e-05 NA 1
+<pre><code>##                 n_matched_set n_focal_set          B  z     p
+## Crossed_SIBTEST            10           1 0.03425866 NA 0.334
 </code></pre>
 
 <pre><code class="r">SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
 </code></pre>
 
-<pre><code>##                 n_matched_set n_focal_set         B  z p
-## Crossed_SIBTEST            15           1 0.1502871 NA 0
+<pre><code>##                 n_matched_set n_focal_set         B  z     p
+## Crossed_SIBTEST            15           1 0.1692358 NA 0.006
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
 </body></html>

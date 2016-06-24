@@ -79,7 +79,7 @@ in IRT. <em>Applied Psychological Measurement, 14</em>, 127-137.
 
 <h3>See Also</h3>
 
-<p><code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code>
+<p><code><a href="itemfit.html">itemfit</a></code>
 </p>
 
 
@@ -95,17 +95,26 @@ items &lt;- rep(&#39;dich&#39;, 20)
 data &lt;- simdata(a,d, 2000, items)
 
 x &lt;- mirt(data, 1)
-fit &lt;- personfit(x)
+</code></pre>
+
+<pre><code>## EM cycles terminated after 500 iterations.
+</code></pre>
+
+<pre><code>## Warning: Log-likelihood was decreasing near the ML solution. EM method may
+## be unstable
+</code></pre>
+
+<pre><code class="r">fit &lt;- personfit(x)
 head(fit)
 </code></pre>
 
-<pre><code>##            Zh
-## 1  1.51087634
-## 2  0.44216054
-## 3  0.05453194
-## 4 -0.90749083
-## 5  1.51465724
-## 6  0.57819040
+<pre><code>##           Zh
+## 1  0.4357979
+## 2  0.8958227
+## 3  0.7357241
+## 4 -1.1529520
+## 5  1.3490941
+## 6  0.3617115
 </code></pre>
 
 <pre><code class="r">#using precomputed Theta
@@ -114,12 +123,12 @@ head(personfit(x, Theta=Theta))
 </code></pre>
 
 <pre><code>##           Zh
-## 1  1.5855678
-## 2  0.6214417
-## 3  0.1307468
-## 4 -0.8524306
-## 5  1.5582646
-## 6  0.7044259
+## 1  0.4873606
+## 2  1.1414732
+## 3  0.9225494
+## 4 -1.0676924
+## 5  1.3805173
+## 6  0.4714614
 </code></pre>
 
 <pre><code class="r">#muliple group Rasch model example
@@ -140,21 +149,21 @@ coef(mod_Rasch, simplify=TRUE)
 <pre><code>## $D1
 ## $D1$items
 ##         a1      d g u
-## Item_1   1  0.526 0 1
-## Item_2   1  0.521 0 1
-## Item_3   1 -0.016 0 1
-## Item_4   1 -0.285 0 1
-## Item_5   1  0.391 0 1
-## Item_6   1 -1.176 0 1
-## Item_7   1  0.541 0 1
-## Item_8   1 -0.060 0 1
-## Item_9   1 -0.050 0 1
-## Item_10  1 -0.725 0 1
-## Item_11  1 -0.119 0 1
-## Item_12  1  1.295 0 1
-## Item_13  1  0.371 0 1
-## Item_14  1  0.296 0 1
-## Item_15  1 -0.550 0 1
+## Item_1   1  0.390 0 1
+## Item_2   1  0.420 0 1
+## Item_3   1 -0.036 0 1
+## Item_4   1 -0.221 0 1
+## Item_5   1  0.390 0 1
+## Item_6   1 -1.200 0 1
+## Item_7   1  0.470 0 1
+## Item_8   1 -0.114 0 1
+## Item_9   1 -0.162 0 1
+## Item_10  1 -0.652 0 1
+## Item_11  1 -0.046 0 1
+## Item_12  1  1.332 0 1
+## Item_13  1  0.227 0 1
+## Item_14  1  0.390 0 1
+## Item_15  1 -0.509 0 1
 ## 
 ## $D1$means
 ## F1 
@@ -162,53 +171,53 @@ coef(mod_Rasch, simplify=TRUE)
 ## 
 ## $D1$cov
 ##       F1
-## F1 1.035
+## F1 1.029
 ## 
 ## 
 ## $D2
 ## $D2$items
 ##         a1      d g u
-## Item_1   1  0.413 0 1
-## Item_2   1  0.435 0 1
-## Item_3   1 -0.006 0 1
-## Item_4   1 -0.331 0 1
-## Item_5   1  0.515 0 1
-## Item_6   1 -1.153 0 1
-## Item_7   1  0.564 0 1
-## Item_8   1 -0.257 0 1
-## Item_9   1 -0.257 0 1
-## Item_10  1 -0.682 0 1
-## Item_11  1 -0.032 0 1
-## Item_12  1  1.196 0 1
-## Item_13  1  0.323 0 1
-## Item_14  1  0.344 0 1
-## Item_15  1 -0.550 0 1
+## Item_1   1  0.472 0 1
+## Item_2   1  0.414 0 1
+## Item_3   1 -0.121 0 1
+## Item_4   1 -0.398 0 1
+## Item_5   1  0.414 0 1
+## Item_6   1 -1.065 0 1
+## Item_7   1  0.414 0 1
+## Item_8   1 -0.246 0 1
+## Item_9   1 -0.173 0 1
+## Item_10  1 -0.639 0 1
+## Item_11  1 -0.007 0 1
+## Item_12  1  1.124 0 1
+## Item_13  1  0.262 0 1
+## Item_14  1  0.361 0 1
+## Item_15  1 -0.536 0 1
 ## 
 ## $D2$means
 ## F1 
 ##  0 
 ## 
 ## $D2$cov
-##      F1
-## F1 1.54
+##       F1
+## F1 1.464
 </code></pre>
 
 <pre><code class="r">pf &lt;- personfit(mod_Rasch, method=&#39;MAP&#39;)
 head(pf)
 </code></pre>
 
-<pre><code>##      outfit   z.outfit     infit     z.infit         Zh
-## 1 0.8450230 -0.3392015 0.8357786 -0.51245037  0.5248197
-## 2 0.8799178 -0.3514324 0.9021967 -0.38553677  0.4330656
-## 3 0.6691970 -1.5930098 0.7162744 -1.70672483  1.5615301
-## 4 0.9450528 -0.1679687 0.9757726 -0.06504655  0.1613739
-## 5 0.8033619 -1.0880541 0.8394179 -1.08623553  1.0778306
-## 6 1.0291652  0.2184680 1.0277410  0.23355466 -0.1820231
+<pre><code>##      outfit    z.outfit     infit     z.infit         Zh
+## 1 1.1366046  0.88101070 1.0779137  0.62074433 -0.6798392
+## 2 0.9338979 -0.07967832 0.9711840 -0.01269158  0.1244912
+## 3 0.7476623 -0.68449208 0.8478946 -0.48718058  0.6195756
+## 4 1.0973798  0.42823261 1.1107354  0.54308969 -0.4525549
+## 5 0.9951192  0.05179044 1.0384841  0.27257183 -0.1408573
+## 6 0.6611535 -1.27385843 0.7181642 -1.29249979  1.2372818
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
 </body></html>

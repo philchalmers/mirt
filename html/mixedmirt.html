@@ -240,8 +240,8 @@ anova(mod0, mod1)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8826.167 8826.525 8842.059 8876.988 -4402.084     NaN NaN NaN
-## 2 8117.763 8118.258 8136.544 8177.824 -4045.882 712.404   2   0
+## 1 8799.543 8799.901 8815.435 8850.364 -4388.772     NaN NaN NaN
+## 2 8109.660 8110.154 8128.440 8169.720 -4041.830 693.884   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -255,17 +255,17 @@ anova(mod0, mod1)
 ## --------------
 ## FIXED EFFECTS:
 ##         Estimate Std.Error z.value
-## groupG1   -1.832     0.100 -18.411
-## groupG2   -0.658     0.092  -7.153
-## groupG3    0.492     0.092   5.339
+## groupG1   -1.861     0.100 -18.522
+## groupG2   -0.744     0.094  -7.958
+## groupG3    0.509     0.093   5.464
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##        Theta
-## Theta 0.0719
+##       Theta
+## Theta 0.104
 </code></pre>
 
 <pre><code class="r">coef(mod1)
@@ -273,69 +273,69 @@ anova(mod0, mod1)
 
 <pre><code>## $Item_1
 ##         groupG1 groupG2 groupG3 a1  d  g  u
-## par      -1.832  -0.658   0.492  1  0  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA NA NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA NA NA NA
+## par      -1.861  -0.744   0.509  1  0  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA NA NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA NA NA NA
 ## 
 ## $Item_2
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.832  -0.658   0.492  1 -0.170  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA -0.403 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA  0.064 NA NA
+## par      -1.861  -0.744   0.509  1 -0.151  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA -0.387 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA  0.084 NA NA
 ## 
 ## $Item_3
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.832  -0.658   0.492  1 0.346  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA 0.117 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA 0.575 NA NA
+## par      -1.861  -0.744   0.509  1 0.339  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA 0.108 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA 0.570 NA NA
 ## 
 ## $Item_4
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.832  -0.658   0.492  1 0.683  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA 0.454 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA 0.912 NA NA
+## par      -1.861  -0.744   0.509  1 0.761  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA 0.530 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA 0.991 NA NA
 ## 
 ## $Item_5
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.832  -0.658   0.492  1 1.313  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA 1.080 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA 1.546 NA NA
+## par      -1.861  -0.744   0.509  1 1.350  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA 1.115 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA 1.584 NA NA
 ## 
 ## $Item_6
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.832  -0.658   0.492  1 0.578  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA 0.349 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA 0.806 NA NA
+## par      -1.861  -0.744   0.509  1 0.561  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA 0.330 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA 0.791 NA NA
 ## 
 ## $Item_7
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.832  -0.658   0.492  1  0.097  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA -0.134 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA  0.327 NA NA
+## par      -1.861  -0.744   0.509  1  0.120  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA -0.113 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA  0.352 NA NA
 ## 
 ## $Item_8
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.832  -0.658   0.492  1 -0.406  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA -0.643 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA -0.169 NA NA
+## par      -1.861  -0.744   0.509  1 -0.338  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA -0.577 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA -0.100 NA NA
 ## 
 ## $Item_9
 ##         groupG1 groupG2 groupG3 a1      d  g  u
-## par      -1.832  -0.658   0.492  1 -0.228  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA -0.462 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA  0.007 NA NA
+## par      -1.861  -0.744   0.509  1 -0.240  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA -0.477 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA -0.003 NA NA
 ## 
 ## $Item_10
 ##         groupG1 groupG2 groupG3 a1     d  g  u
-## par      -1.832  -0.658   0.492  1 3.584  0  1
-## CI_2.5   -2.027  -0.838   0.311 NA 3.252 NA NA
-## CI_97.5  -1.637  -0.478   0.672 NA 3.915 NA NA
+## par      -1.861  -0.744   0.509  1 3.426  0  1
+## CI_2.5   -2.058  -0.928   0.327 NA 3.111 NA NA
+## CI_97.5  -1.664  -0.561   0.692 NA 3.740 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.072
-## CI_2.5      NA  0.040
-## CI_97.5     NA  0.104
+## par          0  0.104
+## CI_2.5      NA  0.077
+## CI_97.5     NA  0.130
 </code></pre>
 
 <pre><code class="r">#same model as above in lme4
@@ -360,12 +360,19 @@ library(lme4)
 </code></pre>
 
 <pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control
-## $checkConv, : Model failed to converge with max|grad| = 0.0122013 (tol =
+## $checkConv, : Model failed to converge with max|grad| = 0.0338992 (tol =
 ## 0.001, component 1)
 </code></pre>
 
 <pre><code class="r">lmod1 &lt;- glmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
-anova(lmod0, lmod1)
+</code></pre>
+
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control
+## $checkConv, : Model failed to converge with max|grad| = 0.00660062 (tol =
+## 0.001, component 1)
+</code></pre>
+
+<pre><code class="r">anova(lmod0, lmod1)
 </code></pre>
 
 <pre><code>## Data: long
@@ -373,8 +380,8 @@ anova(lmod0, lmod1)
 ## lmod0: value ~ 0 + variable + (1 | id)
 ## lmod1: value ~ 0 + group + variable + (1 | id)
 ##       Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(&gt;Chisq)    
-## lmod0 11 8839.4 8915.5 -4408.7   8817.4                             
-## lmod1 13 8116.0 8206.0 -4045.0   8090.0 727.38      2  &lt; 2.2e-16 ***
+## lmod0 11 8813.5 8889.6 -4395.7   8791.5                             
+## lmod1 13 8109.5 8199.5 -4041.8   8083.5 707.93      2  &lt; 2.2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 </code></pre>
@@ -391,9 +398,9 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8117.763 8118.258 8136.544 8177.824 -4045.882     NaN NaN NaN
-## 2 7966.742 7968.134 7998.525 8068.384 -3961.371 169.022   9   0
+<pre><code>##        AIC     AICc    SABIC      BIC   logLik      X2  df   p
+## 1 8109.660 8110.154 8128.440 8169.720 -4041.83     NaN NaN NaN
+## 2 7974.081 7975.473 8005.864 8075.722 -3965.04 153.579   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -409,10 +416,10 @@ summary(mod2)
 ## --------------
 ## FIXED EFFECTS:
 ##          Estimate Std.Error z.value
-## groupG1    -1.708     0.104 -16.466
-## groupG2    -0.657     0.092  -7.154
-## groupG3     0.374     0.097   3.861
-## pseudoIQ    0.210     0.054   3.867
+## groupG1    -1.709     0.104 -16.368
+## groupG2    -0.747     0.094  -7.978
+## groupG3     0.357     0.098   3.636
+## pseudoIQ    0.272     0.057   4.793
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -420,7 +427,7 @@ summary(mod2)
 ## 
 ## $Theta
 ##        Theta
-## Theta 0.0627
+## Theta 0.0973
 </code></pre>
 
 <pre><code class="r">anova(mod1b, mod2)
@@ -434,8 +441,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8104.915 8105.487 8125.141 8169.596 -4038.458     NaN NaN NaN
-## 2 7966.742 7968.134 7998.525 8068.384 -3961.371 154.173   8   0
+## 1 8088.304 8088.876 8108.530 8152.986 -4030.152     NaN NaN NaN
+## 2 7974.081 7975.473 8005.864 8075.722 -3965.040 130.224   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -527,11 +534,11 @@ summary(rmod1)
 ## 
 ## $Theta
 ##        F1
-## F1 0.0498
+## F1 0.0479
 ## 
 ## $group
 ##           COV_group
-## COV_group      1.08
+## COV_group      1.11
 </code></pre>
 
 <pre><code class="r">coef(rmod1)
@@ -540,79 +547,84 @@ summary(rmod1)
 <pre><code>## $Item_1
 ##         a1      d  g  u
 ## par      1 -0.656  0  1
-## CI_2.5  NA -0.881 NA NA
-## CI_97.5 NA -0.430 NA NA
+## CI_2.5  NA    NaN NA NA
+## CI_97.5 NA    NaN NA NA
 ## 
 ## $Item_2
-##         a1      d  g  u
-## par      1 -0.828  0  1
-## CI_2.5  NA -1.057 NA NA
-## CI_97.5 NA -0.600 NA NA
+##         a1     d  g  u
+## par      1 -0.81  0  1
+## CI_2.5  NA   NaN NA NA
+## CI_97.5 NA   NaN NA NA
 ## 
 ## $Item_3
 ##         a1      d  g  u
-## par      1 -0.304  0  1
-## CI_2.5  NA -0.524 NA NA
-## CI_97.5 NA -0.084 NA NA
+## par      1 -0.314  0  1
+## CI_2.5  NA    NaN NA NA
+## CI_97.5 NA    NaN NA NA
 ## 
 ## $Item_4
-##         a1      d  g  u
-## par      1  0.038  0  1
-## CI_2.5  NA -0.180 NA NA
-## CI_97.5 NA  0.255 NA NA
+##         a1     d  g  u
+## par      1 0.112  0  1
+## CI_2.5  NA   NaN NA NA
+## CI_97.5 NA   NaN NA NA
 ## 
 ## $Item_5
 ##         a1     d  g  u
-## par      1 0.678  0  1
-## CI_2.5  NA 0.459 NA NA
-## CI_97.5 NA 0.898 NA NA
+## par      1 0.706  0  1
+## CI_2.5  NA   NaN NA NA
+## CI_97.5 NA   NaN NA NA
 ## 
 ## $Item_6
-##         a1      d  g  u
-## par      1 -0.069  0  1
-## CI_2.5  NA -0.287 NA NA
-## CI_97.5 NA  0.149 NA NA
+##         a1     d  g  u
+## par      1 -0.09  0  1
+## CI_2.5  NA   NaN NA NA
+## CI_97.5 NA   NaN NA NA
 ## 
 ## $Item_7
 ##         a1      d  g  u
-## par      1 -0.557  0  1
-## CI_2.5  NA -0.781 NA NA
-## CI_97.5 NA -0.334 NA NA
+## par      1 -0.536  0  1
+## CI_2.5  NA    NaN NA NA
+## CI_97.5 NA    NaN NA NA
 ## 
 ## $Item_8
 ##         a1      d  g  u
-## par      1 -1.069  0  1
-## CI_2.5  NA -1.303 NA NA
-## CI_97.5 NA -0.835 NA NA
+## par      1 -0.999  0  1
+## CI_2.5  NA    NaN NA NA
+## CI_97.5 NA    NaN NA NA
 ## 
 ## $Item_9
-##         a1      d  g  u
-## par      1 -0.887  0  1
-## CI_2.5  NA -1.117 NA NA
-## CI_97.5 NA -0.657 NA NA
+##         a1    d  g  u
+## par      1 -0.9  0  1
+## CI_2.5  NA  NaN NA NA
+## CI_97.5 NA  NaN NA NA
 ## 
 ## $Item_10
 ##         a1     d  g  u
-## par      1 3.010  0  1
-## CI_2.5  NA 2.683 NA NA
-## CI_97.5 NA 3.336 NA NA
+## par      1 2.818  0  1
+## CI_2.5  NA   NaN NA NA
+## CI_97.5 NA   NaN NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.050
-## CI_2.5      NA  0.032
-## CI_97.5     NA  0.067
+## par          0  0.048
+## CI_2.5      NA    NaN
+## CI_97.5     NA    NaN
 ## 
 ## $group
 ##         COV_group_group
-## par               1.076
-## CI_2.5            0.626
-## CI_97.5           1.526
+## par               1.110
+## CI_2.5            0.654
+## CI_97.5           1.567
 </code></pre>
 
 <pre><code class="r">#random groups and random items
 rmod2 &lt;- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
-summary(rmod2)
+</code></pre>
+
+<pre><code>## MHRM terminated after 2000 iterations.
+</code></pre>
+
+<pre><code class="r">summary(rmod2)
 </code></pre>
 
 <pre><code>## 
@@ -622,24 +634,24 @@ summary(rmod2)
 ## 
 ## --------------
 ## FIXED EFFECTS:
-##             Estimate Std.Error  z.value
-## (Intercept)   -0.649     0.004 -156.568
+##             Estimate Std.Error z.value
+## (Intercept)  -10.716       NaN     NaN
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##        F1
-## F1 0.0561
+##     F1
+## F1 131
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.961
+## COV_group       155
 ## 
 ## $items
 ##           COV_items
-## COV_items      1.19
+## COV_items      1.47
 </code></pre>
 
 <pre><code class="r">eff &lt;- randef(rmod2) #estimate random effects
@@ -661,12 +673,12 @@ summary(rmod3)
 ## 
 ## $Theta
 ##        F1
-## F1 0.0597
+## F1 0.0626
 ## 
 ## $group
 ##              COV_group COV_pseudoIQ
-## COV_group         1.04       0.0000
-## COV_pseudoIQ      0.00       0.0345
+## COV_group         1.15      0.00000
+## COV_pseudoIQ      0.00      0.00679
 </code></pre>
 
 <pre><code class="r">eff &lt;- randef(rmod3)
@@ -674,11 +686,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] -0.0425 0.0361 -0.0711 0.0415 -0.0485 ...
+##  $ Theta: num [1:750, 1] -0.0646 0.06476 0.04234 0.05036 -0.00894 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -2.09 -1.18 -1.35 -1.3 -1.42 ...
+##  $ group: num [1:50, 1:2] -2.14 -1.44 -1.61 -1.55 -1.43 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -960,8 +972,8 @@ anova(twoPL, LLTM) #much better fit
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25469.40 25469.44 25473.07 25482.59 -12731.70      NaN NaN NaN
-## 2 20484.82 20489.03 20526.38 20634.32 -10208.41 5046.577  31   0
+## 1 25466.45 25466.49 25470.11 25479.64 -12730.22      NaN NaN NaN
+## 2 20483.91 20488.12 20525.46 20633.40 -10207.95 5044.538  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1286,8 +1298,8 @@ summary(LLTMwithError)
 ## --------------
 ## FIXED EFFECTS:
 ##                 Estimate Std.Error z.value
-## itemordereasier    0.221     0.071   3.108
-## itemorderharder    0.354     0.081   4.346
+## itemordereasier    0.235     0.063   3.723
+## itemorderharder    0.505     0.045  11.324
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
@@ -1295,11 +1307,11 @@ summary(LLTMwithError)
 ## 
 ## $Theta
 ##       Theta
-## Theta 0.803
+## Theta 0.812
 ## 
 ## $items
 ##           COV_items
-## COV_items      2.55
+## COV_items      2.45
 </code></pre>
 
 <pre><code class="r">#large item level variance after itemorder is regressed; not a great predictor of item difficulty
@@ -1308,207 +1320,207 @@ coef(LLTMwithError)
 
 <pre><code>## $Item.1
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.2
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.3
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.4
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.5
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.6
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.7
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.8
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.9
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.10
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.11
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.12
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.13
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.14
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.15
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.16
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.17
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.18
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.19
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.20
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.21
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.22
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.23
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.24
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.25
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.26
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.27
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.28
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.29
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.30
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.31
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $Item.32
 ##         itemordereasier itemorderharder a1  d  g  u
-## par               0.221           0.354  1  0  0  1
-## CI_2.5            0.082           0.194 NA NA NA NA
-## CI_97.5           0.360           0.514 NA NA NA NA
+## par               0.235           0.505  1  0  0  1
+## CI_2.5            0.111           0.417 NA NA NA NA
+## CI_97.5           0.358           0.592 NA NA NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
-## par          0  0.803
-## CI_2.5      NA  0.685
-## CI_97.5     NA  0.921
+## par          0  0.812
+## CI_2.5      NA  0.691
+## CI_97.5     NA  0.932
 ## 
 ## $items
 ##         COV_items_items
-## par               2.554
-## CI_2.5            1.267
-## CI_97.5           3.840
+## par               2.448
+## CI_2.5            1.255
+## CI_97.5           3.642
 </code></pre>
 
 <pre><code class="r">###################################################
@@ -1589,8 +1601,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
-## 1 3266.124 3267.239 3277.301 3321.722 -1619.062    NaN NaN    NaN
-## 2 3261.317 3262.953 3274.888 3328.828 -1613.658 10.808   3 0.0128
+## 1 3266.808 3267.922 3277.984 3322.406 -1619.404    NaN NaN    NaN
+## 2 3257.385 3259.021 3270.956 3324.896 -1611.692 15.424   3 0.0015
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1683,8 +1695,8 @@ anova(rmod0, rmod1b)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9743.156 9743.453 9761.048 9795.982 -4860.578     NaN NaN NaN
-## 2 9498.768 9499.179 9519.913 9561.199 -4736.384 248.388   2   0
+## 1 9698.483 9698.781 9716.376 9751.310 -4838.242     NaN NaN NaN
+## 2 9470.365 9470.776 9491.510 9532.796 -4722.183 232.118   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1692,16 +1704,16 @@ anova(rmod0, rmod1b)
 
 <pre><code>## $items
 ##         a1      d g u
-## Item_1   1 -0.438 0 1
-## Item_2   1  0.257 0 1
-## Item_3   1 -0.555 0 1
-## Item_4   1  1.758 0 1
-## Item_5   1  0.416 0 1
-## Item_6   1 -0.736 0 1
-## Item_7   1  0.689 0 1
-## Item_8   1  0.792 0 1
-## Item_9   1  0.674 0 1
-## Item_10  1 -0.252 0 1
+## Item_1   1 -0.466 0 1
+## Item_2   1  0.193 0 1
+## Item_3   1 -0.699 0 1
+## Item_4   1  1.795 0 1
+## Item_5   1  0.561 0 1
+## Item_6   1 -0.607 0 1
+## Item_7   1  0.636 0 1
+## Item_8   1  0.957 0 1
+## Item_9   1  0.759 0 1
+## Item_10  1 -0.167 0 1
 ## 
 ## $means
 ## F1 
@@ -1709,13 +1721,13 @@ anova(rmod0, rmod1b)
 ## 
 ## $cov
 ##       F1
-## F1 0.985
+## F1 1.005
 ## 
 ## $lr.betas
 ##                F1
 ## (Intercept) 0.000
-## groupg2     0.810
-## groupg3     1.778
+## groupg2     0.797
+## groupg3     1.707
 </code></pre>
 
 <pre><code class="r">summary(rmod1b)
@@ -1729,16 +1741,16 @@ anova(rmod0, rmod1b)
 ## --------------
 ## FIXED EFFECTS:
 ##         Estimate Std.Error z.value
-## groupg2    0.789     0.092   8.546
-## groupg3    1.755     0.099  17.752
+## groupg2    0.792     0.100    7.95
+## groupg3    1.709     0.108   15.82
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##       F1
-## F1 0.951
+##      F1
+## F1 1.01
 </code></pre>
 
 <pre><code class="r"># 2PL, requires different input to allow Theta variance to remain fixed
@@ -1755,8 +1767,8 @@ anova(mod0, mod1b)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9743.773 9744.729 9776.304 9839.821 -4851.887     NaN NaN NaN
-## 2 9497.499 9498.653 9533.283 9603.152 -4726.749 250.274   2   0
+## 1 9706.089 9707.044 9738.620 9802.136 -4833.044     NaN NaN NaN
+## 2 9480.277 9481.431 9516.061 9585.929 -4718.138 229.812   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1764,8 +1776,8 @@ anova(mod0, mod1b)
 
 <pre><code>##                F1
 ## (Intercept) 0.000
-## groupg2     0.815
-## groupg3     1.802
+## groupg2     0.791
+## groupg3     1.706
 </code></pre>
 
 <pre><code class="r">summary(mod1b)
@@ -1790,13 +1802,13 @@ anova(mod0, mod1b)
 ## 
 ##                F1
 ## (Intercept) 0.000
-## groupg2     0.850
-## groupg3     1.834
+## groupg2     0.814
+## groupg3     1.735
 ## 
 ##             Std.Error_F1  z_F1
 ## (Intercept)           NA    NA
-## groupg2            0.236 3.597
-## groupg3            0.293 6.250
+## groupg2            0.186 4.371
+## groupg3            0.220 7.879
 </code></pre>
 
 <pre><code class="r"># specifying specific regression effects is accomplished by passing a list of formula
@@ -1805,19 +1817,25 @@ model &lt;- &#39;F1 = 1-5
 covdata$contvar &lt;- rnorm(nrow(covdata))
 mod2 &lt;- mirt(dat, model, itemtype = &#39;Rasch&#39;, covdata=covdata,
         formula = list(F1 = ~ group + contvar, F2 = ~ group))
-coef(mod2)[11:12]
+</code></pre>
+
+<pre><code>## Warning: Log-likelihood was decreasing near the ML solution. EM method may
+## be unstable
+</code></pre>
+
+<pre><code class="r">coef(mod2)[11:12]
 </code></pre>
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0  1.094      0  0.833
+## par      0      0  1.036      0  1.103
 ## 
 ## $lr.betas
 ##                 F1    F2
 ## (Intercept)  0.000 0.000
-## groupg2      0.862 0.754
-## groupg3      1.722 1.817
-## contvar     -0.086 0.000
+## groupg2      0.713 0.899
+## groupg3      1.740 1.693
+## contvar     -0.069 0.000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1836,24 +1854,24 @@ summary(mod2b)
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##      F1    F2
-## F1 1.07 0.000
-## F2 0.00 0.804
+##       F1   F2
+## F1 0.932 0.00
+## F2 0.000 1.09
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
 ##                 F1    F2
 ## (Intercept)  0.000 0.000
-## groupg2      0.828 0.683
-## groupg3      1.659 1.734
-## contvar     -0.084 0.000
+## groupg2      0.688 0.856
+## groupg3      1.705 1.637
+## contvar     -0.071 0.000
 ## 
-##             Std.Error_F1 Std.Error_F2   z_F1  z_F2
-## (Intercept)           NA           NA     NA    NA
-## groupg2            0.101        0.248  8.224 2.754
-## groupg3            0.103        0.222 16.127 7.823
-## contvar            0.041           NA -2.046    NA
+##             Std.Error_F1 Std.Error_F2   z_F1   z_F2
+## (Intercept)           NA           NA     NA     NA
+## groupg2            0.143        0.106  4.825  8.063
+## groupg3            0.143        0.100 11.921 16.417
+## contvar            0.056           NA -1.274     NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1889,12 +1907,12 @@ summary(mod1)
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##       F1
-## F1 0.993
+##      F1
+## F1 1.01
 ## 
 ## $group
 ##           COV_group
-## COV_group      0.66
+## COV_group     0.803
 </code></pre>
 
 <pre><code class="r"># include level 2 predictor for &#39;group&#39; variance
@@ -1913,19 +1931,19 @@ summary(mod2)
 ## --------------
 ## FIXED EFFECTS:
 ##            Estimate Std.Error z.value
-## group_pred     0.96     0.026  36.765
+## group_pred    1.002     0.029  34.169
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##       F1
-## F1 0.986
+##      F1
+## F1 1.02
 ## 
 ## $group
 ##           COV_group
-## COV_group    0.0212
+## COV_group    0.0111
 </code></pre>
 
 <pre><code class="r">anova(mod1, mod2)
@@ -1939,8 +1957,8 @@ summary(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23685.85 23686.01 23714.94 23753.06 -11830.93     NaN NaN NaN
-## 2 22910.58 22910.76 22942.09 22983.39 -11442.29 777.269   1   0
+## 1 23547.83 23547.99 23576.92 23615.05 -11761.92     NaN NaN NaN
+## 2 22749.03 22749.21 22780.54 22821.84 -11361.51 800.808   1   0
 </code></pre>
 
 <pre><code class="r"># can also be fit for Rasch/non-Rasch models with the lr.random input
@@ -1960,7 +1978,7 @@ summary(mod1b)
 ## 
 ## $Theta
 ##      F1
-## F1 1.09
+## F1 1.17
 ## 
 ## 
 ## --------------
@@ -1969,7 +1987,7 @@ summary(mod1b)
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.778
+## COV_group     0.863
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items + group_pred, lr.random = ~ 1|group)
@@ -1984,15 +2002,15 @@ summary(mod2b)
 ## --------------
 ## FIXED EFFECTS:
 ##            Estimate Std.Error z.value
-## group_pred    1.002      0.04  24.934
+## group_pred    1.033     0.042  24.546
 ## 
 ## --------------
 ## RANDOM EFFECT COVARIANCE(S):
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##      F1
-## F1 1.09
+##     F1
+## F1 1.1
 ## 
 ## 
 ## --------------
@@ -2001,7 +2019,7 @@ summary(mod2b)
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.068
+## COV_group    0.0689
 </code></pre>
 
 <pre><code class="r">anova(mod1b, mod2b)
@@ -2015,8 +2033,8 @@ summary(mod2b)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23676.69 23676.83 23703.35 23738.30 -11827.35     NaN NaN NaN
-## 2 22911.10 22911.26 22940.19 22978.31 -11443.55 767.594   1   0
+## 1 23550.08 23550.21 23576.74 23611.69 -11764.04     NaN NaN NaN
+## 2 22747.03 22747.19 22776.12 22814.25 -11361.52 805.044   1   0
 </code></pre>
 
 <pre><code class="r">mod3 &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = &#39;2PL&#39;)
@@ -2044,7 +2062,7 @@ summary(mod3)
 ## 
 ## $group
 ##           COV_group
-## COV_group     0.805
+## COV_group     0.939
 </code></pre>
 
 <pre><code class="r">coef(mod3, simplify=TRUE)
@@ -2052,63 +2070,63 @@ summary(mod3)
 
 <pre><code>## $Item_1
 ##            a1      d  g  u
-## par     0.938 -0.347  0  1
-## CI_2.5  0.810 -0.477 NA NA
-## CI_97.5 1.065 -0.217 NA NA
+## par     0.977 -0.291  0  1
+## CI_2.5  0.857 -0.367 NA NA
+## CI_97.5 1.097 -0.216 NA NA
 ## 
 ## $Item_2
 ##            a1     d  g  u
-## par     1.001 0.389  0  1
-## CI_2.5  0.860 0.254 NA NA
-## CI_97.5 1.141 0.524 NA NA
+## par     1.040 0.469  0  1
+## CI_2.5  0.919 0.382 NA NA
+## CI_97.5 1.162 0.556 NA NA
 ## 
 ## $Item_3
 ##            a1      d  g  u
-## par     0.918 -0.562  0  1
-## CI_2.5  0.784 -0.691 NA NA
-## CI_97.5 1.052 -0.433 NA NA
+## par     0.916 -0.564  0  1
+## CI_2.5  0.796 -0.646 NA NA
+## CI_97.5 1.036 -0.482 NA NA
 ## 
 ## $Item_4
 ##            a1     d  g  u
-## par     0.986 1.804  0  1
-## CI_2.5  0.829 1.617 NA NA
-## CI_97.5 1.143 1.992 NA NA
+## par     1.045 1.870  0  1
+## CI_2.5  0.902 1.718 NA NA
+## CI_97.5 1.188 2.023 NA NA
 ## 
 ## $Item_5
 ##            a1     d  g  u
-## par     1.064 0.581  0  1
-## CI_2.5  0.924 0.438 NA NA
-## CI_97.5 1.204 0.724 NA NA
+## par     0.977 0.542  0  1
+## CI_2.5  0.853 0.460 NA NA
+## CI_97.5 1.102 0.625 NA NA
 ## 
 ## $Item_6
 ##            a1      d  g  u
-## par     1.015 -0.547  0  1
-## CI_2.5  0.881 -0.687 NA NA
-## CI_97.5 1.149 -0.407 NA NA
+## par     1.025 -0.554  0  1
+## CI_2.5  0.895 -0.635 NA NA
+## CI_97.5 1.156 -0.474 NA NA
 ## 
 ## $Item_7
 ##            a1     d  g  u
-## par     0.960 0.710  0  1
-## CI_2.5  0.819 0.570 NA NA
-## CI_97.5 1.100 0.851 NA NA
+## par     0.916 0.637  0  1
+## CI_2.5  0.800 0.547 NA NA
+## CI_97.5 1.032 0.727 NA NA
 ## 
 ## $Item_8
 ##            a1     d  g  u
-## par     0.908 0.929  0  1
-## CI_2.5  0.774 0.784 NA NA
-## CI_97.5 1.042 1.073 NA NA
+## par     0.971 0.967  0  1
+## CI_2.5  0.841 0.872 NA NA
+## CI_97.5 1.100 1.062 NA NA
 ## 
 ## $Item_9
 ##            a1     d  g  u
-## par     1.093 0.902  0  1
-## CI_2.5  0.942 0.750 NA NA
-## CI_97.5 1.244 1.054 NA NA
+## par     0.970 0.780  0  1
+## CI_2.5  0.843 0.682 NA NA
+## CI_97.5 1.097 0.878 NA NA
 ## 
 ## $Item_10
 ##            a1      d  g  u
-## par     0.994 -0.093  0  1
-## CI_2.5  0.849 -0.225 NA NA
-## CI_97.5 1.138  0.038 NA NA
+## par     1.016 -0.129  0  1
+## CI_2.5  0.893 -0.202 NA NA
+## CI_97.5 1.139 -0.056 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
@@ -2118,9 +2136,9 @@ summary(mod3)
 ## 
 ## $group
 ##         COV_group_group
-## par               0.805
-## CI_2.5            0.457
-## CI_97.5           1.152
+## par               0.939
+## CI_2.5            0.629
+## CI_97.5           1.248
 </code></pre>
 
 <pre><code class="r">anova(mod1b, mod3)
@@ -2134,25 +2152,25 @@ summary(mod3)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23676.69 23676.83 23703.35 23738.30 -11827.35     NaN NaN NaN
-## 2 23706.97 23707.39 23755.45 23818.99 -11833.48 -12.276   9   1
+## 1 23550.08 23550.21 23576.74 23611.69 -11764.04     NaN NaN NaN
+## 2 23579.19 23579.62 23627.67 23691.21 -11769.60 -11.113   9   1
 </code></pre>
 
 <pre><code class="r">head(cbind(randef(mod3)$group, random_intercept))
 </code></pre>
 
 <pre><code>##         group random_intercept
-## G1  0.5297580       1.51178117
-## G2 -0.2913954       0.38984324
-## G3 -1.0476022      -0.62124058
-## G4 -2.0118917      -2.21469989
-## G5  0.7071472       1.12493092
-## G6 -0.3276158      -0.04493361
+## G1  0.8164454       1.51178117
+## G2 -0.5090728       0.38984324
+## G3 -0.8679052      -0.62124058
+## G4 -1.6801598      -2.21469989
+## G5  0.9758967       1.12493092
+## G6 -0.6191134      -0.04493361
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
 </body></html>

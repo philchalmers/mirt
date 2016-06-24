@@ -23,7 +23,8 @@ and whether the respective interval could be found.
 <h3>Usage</h3>
 
 <pre>
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
+PLCI.mirt(mod, alpha = 0.05, parnum = NULL, search_bound = TRUE,
+  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30, ...)
 </pre>
 
 
@@ -43,6 +44,31 @@ PLCI.mirt(mod, alpha = 0.05, parnum = NULL, ...)
 <p>a numeric vector indicating which parameters to estimate.
 Use <code><a href="mod2values.html">mod2values</a></code> to determine parameter numbers. If <code>NULL</code>, all possible
 parameters are used</p>
+</td></tr>
+<tr valign="top"><td><code>search_bound</code></td>
+<td>
+<p>logical; use a fixed grid of values around the ML estimate to
+determine more suitable optimization bounds? Using this has much better behaviour
+than setting fixed upper/lower bound values and searching from more extreme ends</p>
+</td></tr>
+<tr valign="top"><td><code>step</code></td>
+<td>
+<p>magnitude of steps used when <code>search_bound</code> is <code>TRUE</code>.
+Smaller values create more points to search a suitable bound for (up to the
+lower bound value visible with <code><a href="mod2values.html">mod2values</a></code>)</p>
+</td></tr>
+<tr valign="top"><td><code>lower</code></td>
+<td>
+<p>logical; search for the lower CI?</p>
+</td></tr>
+<tr valign="top"><td><code>upper</code></td>
+<td>
+<p>logical; search for the upper CI?</p>
+</td></tr>
+<tr valign="top"><td><code>inf2val</code></td>
+<td>
+<p>a numeric used to change parameter bounds which are infinity to a finite number.
+Decreasing this too much may not allow a suitable bound to be located. Default is 30</p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
@@ -80,16 +106,16 @@ result
 </code></pre>
 
 <pre><code>##      Item class parnam parnum     value lower_2.5 upper_97.5 lower_conv
-## 1  Item.1  dich     a1      1 0.9879254 0.6705579  1.3819326       TRUE
-## 2  Item.1  dich      d      2 1.8560605 1.6203409  2.1474207       TRUE
-## 3  Item.2  dich     a1      5 1.0808847 0.7816169  1.4615111       TRUE
-## 4  Item.2  dich      d      6 0.8079786 0.6373152  0.9994361       TRUE
-## 5  Item.3  dich     a1      9 1.7058006 1.1965770  2.6063249       TRUE
-## 6  Item.3  dich      d     10 1.8042187 1.4754294  2.3765574       TRUE
-## 7  Item.4  dich     a1     13 0.7651853 0.5211853  1.0554398       TRUE
-## 8  Item.4  dich      d     14 0.4859966 0.3417057  0.6365942       TRUE
-## 9  Item.5  dich     a1     17 0.7357980 0.4551366  1.0555111       TRUE
-## 10 Item.5  dich      d     18 1.8545127 1.6438288  2.0976292       TRUE
+## 1  Item.1  dich     a1      1 0.9879254 0.6705382  1.3819761       TRUE
+## 2  Item.1  dich      d      2 1.8560605 1.6203324  2.1474212       TRUE
+## 3  Item.2  dich     a1      5 1.0808847 0.7816287  1.4614715       TRUE
+## 4  Item.2  dich      d      6 0.8079786 0.6373153  0.9994391       TRUE
+## 5  Item.3  dich     a1      9 1.7058006 1.1965700  2.6063139       TRUE
+## 6  Item.3  dich      d     10 1.8042187 1.4754051  2.3765518       TRUE
+## 7  Item.4  dich     a1     13 0.7651853 0.5211915  1.0554405       TRUE
+## 8  Item.4  dich      d     14 0.4859966 0.3417040  0.6365806       TRUE
+## 9  Item.5  dich     a1     17 0.7357980 0.4551545  1.0555079       TRUE
+## 10 Item.5  dich      d     18 1.8545127 1.6438380  2.0976038       TRUE
 ##    upper_conv
 ## 1        TRUE
 ## 2        TRUE
@@ -109,22 +135,22 @@ result2
 </code></pre>
 
 <pre><code>##       Item  class parnam parnum      value  lower_2.5 upper_97.5
-## 1  Comfort graded     a1      1  1.0417547  0.7008617   1.453023
-## 2  Comfort graded     d1      2  4.8641542  4.0112247   5.966779
-## 3  Comfort graded     d2      3  2.6399417  2.2332795   3.115823
-## 4  Comfort graded     d3      4 -1.4660135 -1.7996415  -1.171328
-## 5     Work graded     a1      5  1.2259618  0.8942345   1.621008
-## 6     Work graded     d1      6  2.9240027  2.4851396   3.430748
-## 7     Work graded     d2      7  0.9011651  0.6308021   1.195235
-## 8     Work graded     d3      8 -2.2665647 -2.6976074  -1.893559
-## 9   Future graded     a1      9  2.2933717  1.5687130   3.986968
-## 10  Future graded     d1     10  5.2339928  4.1279733   7.822323
-## 11  Future graded     d2     11  2.2137728  1.6589348   3.416527
-## 12  Future graded     d3     12 -1.9637062 -3.0257009  -1.453919
-## 13 Benefit graded     a1     13  1.0949151  0.7659248   1.502042
-## 14 Benefit graded     d1     14  3.3479196  2.8453854   3.940596
-## 15 Benefit graded     d2     15  0.9916289  0.7267405   1.282507
-## 16 Benefit graded     d3     16 -1.6882599 -2.0443900  -1.375842
+## 1  Comfort graded     a1      1  1.0417547  0.7008507   1.453043
+## 2  Comfort graded     d1      2  4.8641542  4.0112192   5.966783
+## 3  Comfort graded     d2      3  2.6399417  2.2332765   3.115799
+## 4  Comfort graded     d3      4 -1.4660135 -1.7996419  -1.171326
+## 5     Work graded     a1      5  1.2259618  0.8942260   1.620994
+## 6     Work graded     d1      6  2.9240027  2.4851417   3.430756
+## 7     Work graded     d2      7  0.9011651  0.6307976   1.195238
+## 8     Work graded     d3      8 -2.2665647 -2.6975968  -1.893557
+## 9   Future graded     a1      9  2.2933717  1.5687253   3.986968
+## 10  Future graded     d1     10  5.2339928  4.1279873   7.822344
+## 11  Future graded     d2     11  2.2137728  1.6589418   3.416497
+## 12  Future graded     d3     12 -1.9637062 -3.0256940  -1.453916
+## 13 Benefit graded     a1     13  1.0949151  0.7659051   1.501997
+## 14 Benefit graded     d1     14  3.3479196  2.8453839   3.940600
+## 15 Benefit graded     d2     15  0.9916289  0.7267310   1.282509
+## 16 Benefit graded     d3     16 -1.6882599 -2.0443919  -1.375841
 ##    lower_conv upper_conv
 ## 1        TRUE       TRUE
 ## 2        TRUE       TRUE
@@ -152,10 +178,10 @@ result3
 </code></pre>
 
 <pre><code>##      Item  class parnam parnum    value lower_2.5 upper_97.5 lower_conv
-## 1 Comfort graded     a1      1 1.041755 0.7008617   1.453023       TRUE
-## 2    Work graded     a1      5 1.225962 0.8942345   1.621008       TRUE
-## 3  Future graded     a1      9 2.293372 1.5687130   3.986968       TRUE
-## 4 Benefit graded     a1     13 1.094915 0.7659248   1.502042       TRUE
+## 1 Comfort graded     a1      1 1.041755 0.7008507   1.453043       TRUE
+## 2    Work graded     a1      5 1.225962 0.8942260   1.620994       TRUE
+## 3  Future graded     a1      9 2.293372 1.5687253   3.986968       TRUE
+## 4 Benefit graded     a1     13 1.094915 0.7659051   1.501997       TRUE
 ##   upper_conv
 ## 1       TRUE
 ## 2       TRUE
@@ -167,5 +193,5 @@ result3
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -66,7 +66,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.17 
+## mirt version: 1.18 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -91,14 +91,14 @@ for(i in 1:20)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.17 
+## mirt version: 1.18 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2652.09
-## AIC = 5324.18; AICc = 5324.403
-## BIC = 5373.258; SABIC = 5341.497
+## Log-likelihood = -2647.985
+## AIC = 5315.971; AICc = 5316.193
+## BIC = 5365.048; SABIC = 5333.288
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -113,17 +113,17 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.17 
+## Converged within 1e-04 tolerance after 25 EM iterations.
+## mirt version: 1.18 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2665.796
-## AIC = 5351.591; AICc = 5351.813
-## BIC = 5400.669; SABIC = 5368.908
-## G2 (21) = 29.81, p = 0.0958
-## RMSEA = 0.02, CFI = 0.951, TLI = 0.94
+## Log-likelihood = -2656.934
+## AIC = 5333.869; AICc = 5334.091
+## BIC = 5382.946; SABIC = 5351.186
+## G2 (21) = 31.34, p = 0.0682
+## RMSEA = 0.022, CFI = 0.942, TLI = 0.928
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
@@ -137,5 +137,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.17 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
 </body></html>

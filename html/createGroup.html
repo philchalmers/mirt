@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a user defined group-level object with correct generic...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for createGroup {mirt}"><tr><td>createGroup {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a user defined group-level object with correct generic functions</h2>
+
+<h3>Description</h3>
+
+<p>Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for definiting
+customized group-level functions. To use the defined objects pass to the
+<code>mirt(..., customGroup = OBJECT)</code> command, and ensure that the class parameters are properly labeled.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+createGroup(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
+  lbound = NULL, ubound = NULL, derivType = "Richardson")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>a named vector of the starting values for the parameters</p>
+</td></tr>
+<tr valign="top"><td><code>est</code></td>
+<td>
+<p>a logical vector indicating which parameters should be freely estimated by default</p>
+</td></tr>
+<tr valign="top"><td><code>den</code></td>
+<td>
+<p>the probability density function given the Theta/ability values.
+First input contains a vector of all the defined parameters and the second input
+must be a matrix called <code>Theta</code>.
+Function also must return a <code>numeric</code> vector object corresponding to the associated densities for
+each row in the <code>Theta</code> input</p>
+</td></tr>
+<tr valign="top"><td><code>nfact</code></td>
+<td>
+<p>number of factors required for the model. E.g., for unidimensional models with only one
+dimension of integration <code>nfact = 1</code></p>
+</td></tr>
+<tr valign="top"><td><code>gr</code></td>
+<td>
+<p>gradient function (vector of first derivatives) of the log-likelihood used in
+estimation. The function must be of the form <code>gr(x, Theta)</code>, where <code>x</code> is the object
+defined by <code>createGroup()</code> and <code>Theta</code> is a matrix of latent trait parameters</p>
+</td></tr>
+<tr valign="top"><td><code>hss</code></td>
+<td>
+<p>Hessian function (matrix of second derivatives) of the log-likelihood used in
+estimation. If not specified a numeric approximation will be used.
+The input is idential to the <code>gr</code> argument</p>
+</td></tr>
+<tr valign="top"><td><code>gen</code></td>
+<td>
+<p>a function used when <code>GenRandomPars = TRUE</code> is passed to the estimation function
+to generate random starting values. Function must be of the form <code>function(object) ...</code>
+and must return a vector with properties equivalent to the <code>par</code> object. If NULL,
+parameters will remain at the defined starting values by default</p>
+</td></tr>
+<tr valign="top"><td><code>lbound</code></td>
+<td>
+<p>optional vector indicating the lower bounds of the parameters. If not specified
+then the bounds will be set to -Inf</p>
+</td></tr>
+<tr valign="top"><td><code>ubound</code></td>
+<td>
+<p>optional vector indicating the lower bounds of the parameters. If not specified
+then the bounds will be set to Inf</p>
+</td></tr>
+<tr valign="top"><td><code>derivType</code></td>
+<td>
+<p>if the <code>gr</code> or <code>hss</code> terms are not specified this type will be used to
+obtain them numerically. Default is 'Richardson'</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+# normal density example
+den &lt;- function(obj, Theta) dnorm(Theta, obj@par[1], obj@par[2])
+par &lt;- c(mu = 0, sigma = 1)
+est &lt;- c(FALSE, TRUE)
+lbound &lt;- c(-Inf, 0)
+grp &lt;- createGroup(par, est, den, nfact = 1, lbound=lbound)
+
+mod &lt;- mirt(Science, 1, &#39;Rasch&#39;)
+modcustom &lt;- mirt(Science, 1, &#39;Rasch&#39;, customGroup=grp)
+
+coef(mod)
+</code></pre>
+
+<pre><code>## $Comfort
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## par  1   0   1   2   3  0 3.096 5.693 4.304
+## 
+## $Work
+##     a1 ak0 ak1 ak2 ak3 d0    d1   d2   d3
+## par  1   0   1   2   3  0 1.898 2.81 0.95
+## 
+## $Future
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## par  1   0   1   2   3  0 2.651 4.073 2.938
+## 
+## $Benefit
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## par  1   0   1   2   3  0 2.452 3.352 1.994
+## 
+## $GroupPars
+##     MEAN_1 COV_11
+## par      0  1.004
+</code></pre>
+
+<pre><code class="r">coef(modcustom)
+</code></pre>
+
+<pre><code>## $Comfort
+##     a1 ak0 ak1 ak2 ak3 d0   d1    d2    d3
+## par  1   0   1   2   3  0 3.08 5.675 4.286
+## 
+## $Work
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2   d3
+## par  1   0   1   2   3  0 1.896 2.807 0.95
+## 
+## $Future
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## par  1   0   1   2   3  0 2.646 4.067 2.933
+## 
+## $Benefit
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## par  1   0   1   2   3  0 2.449 3.349 1.992
+## 
+## $GroupPars
+##     mu sigma
+## par  0     1
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+</body></html>
