@@ -120,7 +120,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
-        if(nrow(data) > 1L){
+        if(nrow(data) > 1L && is.null(opts$technical$customK)){
             data <- apply(data, 2L, function(x, message){
                 s <- sort(unique(x))
                 se <- min(s, na.rm = TRUE):max(x, na.rm = TRUE)
@@ -151,7 +151,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
 
         if(is.null(opts$grsm.block)) Data$grsm.block <- rep(1L, ncol(data))
         else Data$grsm.block <- opts$grsm.block
-        # if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
+        if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
         Data$group <- factor(group)
         Data$groupNames <- unique(Data$group)
         if(any(grepl('-', Data$groupNames)))
@@ -159,7 +159,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$ngroups <- length(Data$groupNames)
         Data$nitems <- ncol(Data$data)
         Data$N <- nrow(Data$data)
-        Data$mins <- apply(data, 2L, min, na.rm=TRUE)
+        Data$mins <- suppressWarnings(apply(data, 2L, min, na.rm=TRUE))
+        Data$mins[!is.finite(Data$mins)] <- 0L
         if(is.character(model)){
             tmp <- any(sapply(colnames(data), grepl, x=model))
             model <- mirt.model(model, itemnames = if(tmp) colnames(data) else NULL)
