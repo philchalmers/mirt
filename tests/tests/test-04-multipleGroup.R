@@ -91,6 +91,19 @@ test_that('one factor', {
     g1 <- extract.group(mod_metric, 1)
     expect_equal(as.numeric(coef(g1)[[1]]), c(1.272, 0.543, 0.000, 1.000), tolerance = 1e-2)
 
+    # missing by design
+    dat[group == 'D1',1:2] <- NA
+    dat[group == 'D2',14:15] <- NA
+    mod <- multipleGroup(dat, 1, group, invariance = c('slopes', 'interecepts', 'free_means',
+                                                       'free_var'), verbose=FALSE)
+    cfs <- coef(mod, simplify=TRUE, digits=Inf)
+    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.2093194,1.1932120,1.0387919,1.7398616,1.0476004,-0.1925803),
+                 tolerance=1e-4)
+    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7471234, 0.9558032, 0.4885550), tolerance=1e-4)
+    expect_is(plot(mod, type = 'trace'), 'trellis')
+    ifit <- itemfit(mod, S_X2 = FALSE, X2=TRUE)
+    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002,0.0081), tolerance=1e-4)
+
     #missing data
     set.seed(1234)
     Theta1 <- rnorm(1000, -1)
