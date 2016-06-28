@@ -124,6 +124,33 @@ newmodel <- '
 equalslopes <- multipleGroup(dat, newmodel, group = group)
 coef(equalslopes, simplify=TRUE)
 
+############
+# vertical scaling (i.e., equating when groups answer items others do not)
+dat2 <- dat
+dat2[group == 'D1', 1:2] <- dat2[group != 'D1', 14:15] <- NA
+head(dat2)
+tail(dat2)
+
+# items with missing reponses need to be constrained across groups for identification
+nms <- colnames(dat2)
+mod <- multipleGroup(dat2, 1, group, invariance = nms[c(1:2, 14:15)])
+
+# this will throw an error without proper constraints (SEs cannot be computed either)
+# mod <- multipleGroup(dat2, 1, group)
+
+# model still does not have anchors, therefore need to add a few (here use items 3-5)
+mod_anchor <- multipleGroup(dat2, 1, group,
+                            invariance = c(nms[c(1:5, 14:15)], 'free_means', 'free_var'))
+coef(mod_anchor, simplify=TRUE)
+
+# check if identified by computing information matrix
+mod_anchor <- multipleGroup(dat2, 1, group, pars = mod2values(mod_anchor), TOL=NaN, SE=TRUE,
+                            invariance = c(nms[c(1:5, 14:15)], 'free_means', 'free_var'))
+mod_anchor
+coef(mod_anchor)
+coef(mod_anchor, printSE=TRUE)
+
+
 #############
 #DIF test for each item (using all other items as anchors)
 itemnames <- colnames(dat)
