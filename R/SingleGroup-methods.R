@@ -384,7 +384,7 @@ setMethod(
             temp <- object
             object <- object2
             object2 <- temp
-        } else if(df == 0){
+        } else if(df == 0 && !any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
             if((2*object2@Fit$logLik - 2*object@Fit$logLik) < 0){
                 temp <- object
                 object <- object2
