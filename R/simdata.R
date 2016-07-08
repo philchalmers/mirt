@@ -12,7 +12,8 @@
 #' @param d a matrix/vector of intercepts. The matrix should have as many columns as
 #'   the item with the largest number of categories, and filled empty locations
 #'   with \code{NA}. When a vector is used the test is assumed to consist only of dichotomous items
-#'   (because only one intercept per item is provided)
+#'   (because only one intercept per item is provided). When \code{itemtype = 'lca'} intercepts will not
+#'   be used
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
 #'   the same) specifying the type of items to simulate. Inputs can either be the same as
 #'   the inputs found in \code{\link{mirt}} or the internal clases defined by the package. If the
@@ -20,9 +21,9 @@
 #'   the respective internal classes automatically.
 #'
 #'   If the internal class of the object is specified instead, the inputs can
-#'   be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit'}, or \code{'partcomp'}, for
-#'   dichotomous, graded, generalized partial credit, nominal, nested logit, and partially
-#'   compensatory models. Note that for the gpcm, nominal, and nested logit models there should
+#'   be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp'}, or \code{'lca'}, for
+#'   dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
+#'   and latent class analysis model. Note that for the gpcm, nominal, and nested logit models there should
 #'   be as many parameters as desired categories, however to parametrized them for meaningful
 #'   interpretation the first category intercept should
 #'   equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
@@ -59,6 +60,8 @@
 #' @param mins an integer vector (or single value to be used for each item) indicating what
 #'   the lowest category should be. If \code{model} is supplied then this will be extracted from
 #'   \code{slot(mod, 'Data')$mins}, otherwise the default is 0
+#' @param lca_ncats a vector indicating how many categories each lca item should have. If not supplied
+#'   then it is assumed that 2 categories should be generated for each item
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -260,7 +263,7 @@
 #'
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
-	model = NULL, which.items = NULL, mins = 0)
+	model = NULL, which.items = NULL, mins = 0, lca_cats = NULL)
 {
     if(!is.null(model)){
         stopifnot(is(model, 'SingleGroupClass'))
@@ -286,9 +289,10 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     }
     if(missing(N) && is.null(Theta)) missingMsg('N or Theta')
     if(missing(a)) missingMsg('a')
-    if(missing(d)) missingMsg('d')
     if(missing(itemtype)) missingMsg('itemtype')
+    if(missing(d) && !all(itemtype == 'lca')) missingMsg('d')
     if(is.vector(a)) a <- matrix(a)
+    if(missing(d)) d <- matrix(1, nrow(a))
     if(is.vector(d)) d <- matrix(d)
     if(any(itemtype == 'nominal') && is.null(nominal))
         stop('nominal itemtypes require a \'nominal\' matrix input of scoring coefs (the ak values)',
@@ -321,6 +325,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	    if(itemtype[i] =='partcomp') K[i] <- 2L
 	    if(any(itemtype[i] == c('gpcm', 'nominal', 'nestlogit'))) K[i] <- K[i] - 1L
 	}
+	if(!is.null(lca_cats)) K[itemtype == 'lca'] <- lca_cats[itemtype == 'lca']
 	K <- as.integer(K)
     if(any(guess > 1 | guess < 0)) stop('guess input must be between 0 and 1', call.=FALSE)
     if(any(upper > 1 | upper < 0)) stop('upper input must be between 0 and 1', call.=FALSE)
@@ -360,10 +365,12 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
                 if(K[i] > 2) stop('ideal point models for dichotomous items only', call.=FALSE)
                 if(d[i,1] > 0) stop('ideal point intercepts must be negative', call.=FALSE)
                 par <- na.omit(c(a[i, ],d[i,]))
+            } else if(itemtype[i] == 'lca'){
+                par <- na.omit(a[i, ])
             } else {
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
             }
-            obj <- new(itemtype[i], par=par, nfact=nfact)
+            obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
             if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
             if(use_gpcm_mats[i]) obj@mat <- TRUE
 	    }
