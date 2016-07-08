@@ -60,8 +60,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 d / sum(d)
             }
             par <- if(is.null(opts$technical$customTheta)){
+                tmpnfact <- model
                 numeric(model-1L)
-            } else numeric(nrow(opts$technical$customTheta) - 1L)
+            } else {
+                tmpnfact <- ncol(opts$technical$customTheta)
+                numeric(nrow(opts$technical$customTheta) - 1L)
+            }
             if(length(par)){
                 names(par) <- paste0('c', 1:length(par))
                 est <- rep(TRUE, length(par))
@@ -69,7 +73,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 par <- c(c = 0)
                 est <- FALSE
             }
-            customGroup <- createGroup(par=par, est=est, den=den, nfact=model,
+            customGroup <- createGroup(par=par, est=est, den=den, nfact=tmpnfact,
                                        gen=function(object) rnorm(length(object@par), 0, 1/2))
             customGroup@itemclass <- -1L
         }

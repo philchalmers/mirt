@@ -113,6 +113,35 @@
 #' (mod_discrete <- mdirt(dat, 3, technical = list(customTheta = Theta)))
 #' summary(mod_discrete)
 #'
+# ### DINA model example
+# # generate some suitable data for a two dimensional DINA application
+# #     (first columns are intercepts)
+# Theta <- expand.table(matrix(c(1,0,0, 200,
+#                                1,1,0, 200,
+#                                1,0,1, 100,
+#                                1,1,1, 500), 4, 4, byrow=TRUE))
+# a <- matrix(c(rnorm(15, -1.5, .5), rlnorm(5, .2, .3), numeric(5), rlnorm(5, .2, .3),
+#               numeric(5), rlnorm(10, .2, .3)), 15, 3)
+#
+# plogis(a[,1]) # population guess
+# 1 - plogis(rowSums(a)) # population slip
+#
+# dat <- simdata(a, Theta=Theta, itemtype = 'lca')
+#
+# # estimate model. Ability matrix is as follows (without interaction terms)
+# # first column is the intercept
+# theta <- matrix(c(1,0,0,
+#                   1,1,0,
+#                   1,0,1,
+#                   1,1,1), 4, 3, byrow=TRUE)
+# model <- mirt.model('Intercept = 1-15
+#                      A1 = 1-5
+#                      A2 = 6-10
+#                      (A1*A2) = 11-15')
+#
+# mod <- mdirt(dat, model, technical = list(customTheta = theta))
+# coef(mod)
+#
 #' }
 mdirt <- function(data, model, nruns = 1, method = 'EM',
                   return_max = TRUE, group = NULL, GenRandomPars = FALSE,
@@ -123,7 +152,8 @@ mdirt <- function(data, model, nruns = 1, method = 'EM',
     stopifnot(method %in% c('EM', 'BL'))
     if(nruns > 1) GenRandomPars <- TRUE
     if(is.null(group)) group <- rep('all', nrow(data))
-    stopifnot(is.numeric(model))
+    if((is(model, 'mirt.model') || is.character(model)) && is.null(technical$customTheta))
+        stop('customTheta input required when using a mirt.model type input')
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), method=method,
                      data=data, model=model, group=group, itemtype=itemtype,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
