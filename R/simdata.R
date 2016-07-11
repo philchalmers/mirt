@@ -62,6 +62,9 @@
 #'   \code{slot(mod, 'Data')$mins}, otherwise the default is 0
 #' @param lca_ncats a vector indicating how many categories each lca item should have. If not supplied
 #'   then it is assumed that 2 categories should be generated for each item
+#' @param prob.list an optional list containing matrix/data.frames of probabilities values for
+#'   each category to be simulated. This is useful when creating customized probability functions
+#'   to be sampled from
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -259,12 +262,49 @@
 #'
 #' obj <- generate.mirt_object(pars, '3PL')
 #' dat <- simdata(N=200, model=obj)
-#'    }
 #'
+#' ######
+#' # prob.list example
+#'
+#' # custom probabilty function that returns a matrix
+#' fun <- function(a, b, theta){
+#'     P <- 1 / (1 + exp(-a * (theta-b)))
+#'     cbind(1-P, P)
+#' }
+#'
+#' set.seed(1)
+#' theta <- matrix(rnorm(100))
+#' prob.list <- list()
+#' nitems <- 5
+#' a <- rlnorm(nitems, .2, .2); b <- rnorm(nitems, 0, 1/2)
+#' for(i in 1:nitems) prob.list[[i]] <- fun(a[i], b[i], theta)
+#' str(prob.list)
+#'
+#' dat <- simdata(prob.list=prob.list)
+#' head(dat)
+#'
+#' }
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
-	model = NULL, which.items = NULL, mins = 0, lca_cats = NULL)
+	model = NULL, which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 {
+    if(!is.null(prob.list)){
+        if(!all(sapply(prob.list, function(x) is.matrix(x) || is.data.frame(x))))
+            stop('Elements of prob.list must be either a matrix or data.frame')
+        prob.list <- lapply(prob.list, as.matrix)
+        if(!all(sapply(prob.list, nrow) == nrow(prob.list[[1L]])))
+            stop('prob.list elements have unequal rows')
+        K <- sapply(prob.list, ncol)
+        nitems <- length(K)
+        if(any(K == 1L)) stop('prob.list elements should have more than 1 column')
+        if(length(mins) == 1L) mins <- rep(mins, nitems)
+        stopifnot(length(mins) == nitems)
+        data <- matrix(NA, nrow(prob.list[[1L]]), nitems)
+        for(i in 1L:nitems) data[,i] <- respSample(prob.list[[i]])
+        data <- (t(t(data) + mins))
+        colnames(data) <- paste("Item_", 1L:nitems, sep="")
+        return(data)
+    }
     if(!is.null(model)){
         stopifnot(is(model, 'SingleGroupClass'))
         nitems <- extract.mirt(model, 'nitems')

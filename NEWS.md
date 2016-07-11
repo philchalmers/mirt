@@ -1,3 +1,12 @@
+# Changes in mirt 1.19
+
+- `simdata()` gains a `prob.list` input to supply a list of matrices with probability values to be sampled
+  from (useful when specialized response functions outside the package are required)
+
+## BUG FIXES
+
+- `multipleGroup()` throws proper error when vertical scaling is not identified correctly due to NAs
+
 # Changes in mirt 1.18
 
 - `mdirt()` function now includes explicit parameters for the latent class intercepts (in log-form).
@@ -21,7 +30,7 @@
 - fix crash error in `mirtmirt()` for multidimensional models with lr.random effects (reported 
   by Diah Wihardini)
   
-- `expbeta` prior starting values fix by seting to the mean of the prior rather than the mode 
+- `expbeta` prior starting values fix by setting to the mean of the prior rather than the mode 
   (reported by Insu Paek)
 
 # Changes in mirt 1.17.1
