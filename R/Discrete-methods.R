@@ -57,9 +57,10 @@ setMethod(
     {
         ngroups <- object@Data$ngroups
         Theta <- object@Model$Theta
+        colnames(Theta) <- extract.mirt(object, 'factorNames')[1:ncol(Theta)]
         ret <- vector('list', ngroups)
         items <- vector('list', object@Data$nitems + 1L)
-        names(items) <- c(colnames(object@Data$data), 'Class.Proportions')
+        names(items) <- c(colnames(object@Data$data), 'Class.Probability')
         for(g in 1L:ngroups){
             ret[[g]] <- items
             pars <- object@ParObjects$pars[[g]]
@@ -70,7 +71,8 @@ setMethod(
                 rownames(P) <- paste0('Class_', 1L:nrow(P))
                 ret[[g]][[i]] <- P
             }
-            ret[[g]][[i+1L]] <- round(object@Internals$Prior[[g]], digits)
+            ret[[g]][[i+1L]] <- data.frame(Theta, prob=round(object@Internals$Prior[[g]], digits))
+            rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
         }
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret

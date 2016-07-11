@@ -136,6 +136,7 @@ extract.mirt <- function(x, what){
                   groupNames = x@Data$groupNames,
                   time = x@time,
                   # undocumented
+                  factorNames = x@Model$factorNames,
                   parprior = x@Model$parprior,
                   pars = x@ParObjects$pars,
                   lrPars = x@ParObjects$lrPars,
