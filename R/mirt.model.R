@@ -307,6 +307,7 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
         }
         mod <- scan(file = file, what = list(type = "", pars = ""),
     		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, quiet=quiet, ...)
+        mod$pars <- gsub(' ', '', mod$pars)
     	mod <- cbind(mod$type, mod$pars)
     	colnames(mod) <- c("Type","Parameters")
     	mod <- list(x = mod)

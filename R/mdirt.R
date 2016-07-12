@@ -170,7 +170,8 @@
 #'                      A1 = 1-5, 11-15
 #'                      A2 = 6-15
 #'                      Yoshi = 11-15
-#'                      CONSTRAIN = (11,a2,a3,a4), (12,a2,a3,a4), (13,a2,a3,a4), (14,a2,a3,a4), (15,a2,a3,a4)')
+#'                      CONSTRAIN = (11,a2,a3,a4), (12,a2,a3,a4), (13,a2,a3,a4),
+#'                                  (14,a2,a3,a4), (15,a2,a3,a4)')
 #'
 #' mod <- mdirt(dat, model, technical = list(customTheta = theta))
 #' coef(mod, simplify=TRUE)
