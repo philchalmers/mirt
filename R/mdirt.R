@@ -113,35 +113,69 @@
 #' (mod_discrete <- mdirt(dat, 3, technical = list(customTheta = Theta)))
 #' summary(mod_discrete)
 #'
-# ### DINA model example
-# # generate some suitable data for a two dimensional DINA application
-# #     (first columns are intercepts)
-# Theta <- expand.table(matrix(c(1,0,0, 200,
-#                                1,1,0, 200,
-#                                1,0,1, 100,
-#                                1,1,1, 500), 4, 4, byrow=TRUE))
-# a <- matrix(c(rnorm(15, -1.5, .5), rlnorm(5, .2, .3), numeric(5), rlnorm(5, .2, .3),
-#               numeric(5), rlnorm(10, .2, .3)), 15, 3)
-#
-# plogis(a[,1]) # population guess
-# 1 - plogis(rowSums(a)) # population slip
-#
-# dat <- simdata(a, Theta=Theta, itemtype = 'lca')
-#
-# # estimate model. Ability matrix is as follows (without interaction terms)
-# # first column is the intercept
-# theta <- matrix(c(1,0,0,
-#                   1,1,0,
-#                   1,0,1,
-#                   1,1,1), 4, 3, byrow=TRUE)
-# model <- mirt.model('Intercept = 1-15
-#                      A1 = 1-5
-#                      A2 = 6-10
-#                      (A1*A2) = 11-15')
-#
-# mod <- mdirt(dat, model, technical = list(customTheta = theta))
-# coef(mod)
-#
+#' # Located latent class model
+#' model <- mirt.model('C1 = 1-32
+#'                      C2 = 1-32
+#'                      C3 = 1-32
+#'                      CONSTRAIN = (1-32, a1), (1-32, a2), (1-32, a3)')
+#' (mod_located <- mdirt(dat, model,
+#'                      technical = list(customTheta = diag(3))))
+#' summary(mod_located)
+#'
+#' #-----------------
+#' ### DINA model example
+#' # generate some suitable data for a two dimensional DINA application
+#' #     (first columns are intercepts)
+#' Theta <- expand.table(matrix(c(1,0,0,0, 200,
+#'                                1,1,0,0, 200,
+#'                                1,0,1,0, 100,
+#'                                1,1,1,1, 500), 4, 5, byrow=TRUE))
+#' a <- matrix(c(rnorm(15, -1.5, .5), rlnorm(5, .2, .3), numeric(15), rlnorm(5, .2, .3),
+#'               numeric(15), rlnorm(5, .2, .3)), 15, 4)
+#'
+#' guess <- plogis(a[11:15,1]) # population guess
+#' slip <- 1 - plogis(rowSums(a[11:15,])) # population slip
+#'
+#' dat <- simdata(a, Theta=Theta, itemtype = 'lca')
+#'
+#' # first column is the intercept, 2nd and 3rd are attributes
+#' theta <- matrix(c(1,0,0,
+#'                   1,1,0,
+#'                   1,0,1,
+#'                   1,1,1), 4, 3, byrow=TRUE)
+#' theta <- cbind(theta, theta[,2] * theta[,3]) #DINA interaction of main attributes
+#' model <- mirt.model('Intercept = 1-15
+#'                      A1 = 1-5
+#'                      A2 = 6-10
+#'                      A1A2 = 11-15')
+#'
+#' mod <- mdirt(dat, model, technical = list(customTheta = theta))
+#' coef(mod)
+#' summary(mod)
+#'
+#' cfs <- coef(mod, simplify=TRUE)$items[11:15,]
+#' cbind(guess, estguess = plogis(cfs[,1]))
+#' cbind(slip, estslip = 1 - plogis(rowSums(cfs)))
+#'
+#'
+#' ### DINO model example
+#' theta <- matrix(c(1,0,0,
+#'                   1,1,0,
+#'                   1,0,1,
+#'                   1,1,1), 4, 3, byrow=TRUE)
+#' # define theta matrix with negative interaction term
+#' theta <- cbind(theta, -theta[,2] * theta[,3])
+#'
+#' model <- mirt.model('Intercept = 1-15
+#'                      A1 = 1-5, 11-15
+#'                      A2 = 6-15
+#'                      Yoshi = 11-15
+#'                      CONSTRAIN = (11,a2,a3,a4), (12,a2,a3,a4), (13,a2,a3,a4), (14,a2,a3,a4), (15,a2,a3,a4)')
+#'
+#' mod <- mdirt(dat, model, technical = list(customTheta = theta))
+#' coef(mod, simplify=TRUE)
+#' summary(mod)
+#'
 #' }
 mdirt <- function(data, model, nruns = 1, method = 'EM',
                   return_max = TRUE, group = NULL, GenRandomPars = FALSE,

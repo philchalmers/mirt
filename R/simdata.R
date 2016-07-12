@@ -60,7 +60,7 @@
 #' @param mins an integer vector (or single value to be used for each item) indicating what
 #'   the lowest category should be. If \code{model} is supplied then this will be extracted from
 #'   \code{slot(mod, 'Data')$mins}, otherwise the default is 0
-#' @param lca_ncats a vector indicating how many categories each lca item should have. If not supplied
+#' @param lca_cats a vector indicating how many categories each lca item should have. If not supplied
 #'   then it is assumed that 2 categories should be generated for each item
 #' @param prob.list an optional list containing matrix/data.frames of probabilities values for
 #'   each category to be simulated. This is useful when creating customized probability functions

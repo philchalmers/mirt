@@ -1,7 +1,12 @@
 # Changes in mirt 1.19
 
+- `mdirt()` has been modified to support DINA, DINO, located latent class, 
+   and other diagnostic classification models
+
 - `simdata()` gains a `prob.list` input to supply a list of matrices with probability values to be sampled
   from (useful when specialized response functions outside the package are required)
+
+- `simdata()` supports 'lca' itemtypes for latent class model generation
 
 ## BUG FIXES
 

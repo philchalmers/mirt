@@ -117,9 +117,18 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             fp <- c(estLambdas[i, ], TRUE)
             names(val) <- c(paste('a', 1L:nfact, sep=''), 'd')
         } else if (itemtype[i] == 'lca'){
-            val <- rep(lambdas[i,], K[i]-1L)
-            fp <- rep(TRUE, length(val))
-            names(val) <- paste('a', 1L:length(val), sep='')
+            if(K[i] == 2L){
+                tmp <- length(estLambdas[i, ])
+                val <- seq(-1 - log(tmp), 1 + log(tmp), length.out = tmp)
+                fp <- estLambdas[i, ]
+                names(val) <- paste('a', 1L:length(val), sep='')
+            } else {
+                tmp <- length(estLambdas[i, ])
+                val <- rep(seq(-1 - log(tmp), 1 + log(tmp), length.out = tmp), K[i]-1L)
+                fp <- rep(TRUE, length(val))
+                names(val) <- paste('a', 1L:length(val), sep='')
+            }
+            val[!fp] <- 0
         }
         if(all(itemtype[i] != valid.items) || itemtype[i] %in% Experimental_itemtypes()) next
         names(fp) <- names(val)

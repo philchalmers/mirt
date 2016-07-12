@@ -246,7 +246,9 @@ setMethod(
     signature = 'SingleGroupClass',
     definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
-                          simplify=FALSE, unique = FALSE, verbose = TRUE, ...){
+                          simplify = FALSE, unique = FALSE, verbose = TRUE, ...){
+        dots <- list(...)
+        discrete <- ifelse(is.null(dots$discrete), FALSE, TRUE)
         if(unique) return(extract.mirt(object, 'parvec'))
         if(printSE && length(object@ParObjects$pars[[1L]]@SEpar)) rawug <- TRUE
         if(CI >= 1 || CI <= 0)
@@ -329,10 +331,14 @@ setMethod(
                 items[i, nms[[i]]] <- items.old[[i]]
             nfact <- object@Model$nfact
             means <- allPars$GroupPars[1L:nfact]
-            covs <- matrix(NA, nfact, nfact)
-            covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(1L:nfact)]
-            colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[1L:nfact]
-            allPars <- list(items=items, means=means, cov=covs)
+            if(discrete){
+                allPars <- list(items=items, group.intercepts=allPars$GroupPars)
+            } else {
+                covs <- matrix(NA, nfact, nfact)
+                covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(1L:nfact)]
+                colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[1L:nfact]
+                allPars <- list(items=items, means=means, cov=covs)
+            }
         }
         if(.hasSlot(object@Model$lrPars, 'beta')){
             allPars$lr.betas <- round(object@Model$lrPars@beta, digits)

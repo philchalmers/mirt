@@ -78,12 +78,12 @@ latent trait matrix \code{Theta}? Default is FALSE}
 the lowest category should be. If \code{model} is supplied then this will be extracted from
 \code{slot(mod, 'Data')$mins}, otherwise the default is 0}
 
+\item{lca_cats}{a vector indicating how many categories each lca item should have. If not supplied
+then it is assumed that 2 categories should be generated for each item}
+
 \item{prob.list}{an optional list containing matrix/data.frames of probabilities values for
 each category to be simulated. This is useful when creating customized probability functions
 to be sampled from}
-
-\item{lca_ncats}{a vector indicating how many categories each lca item should have. If not supplied
-then it is assumed that 2 categories should be generated for each item}
 }
 \description{
 Simulates response patterns for compensatory and noncompensatory MIRT models

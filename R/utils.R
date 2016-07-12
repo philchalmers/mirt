@@ -422,16 +422,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                             as.numeric(esplit[[i]][1L:(length(esplit[[i]])-1L)]))
                         picknames <- c(is.na(sel), FALSE)
                         sel <- na.omit(sel)
-                        if(sum(picknames) > 1L){
-                            if(sum(picknames) != length(sel))
-                                stop('Number of items selected not equal to number of parameter names',
-                                     call.=FALSE)
-                            constr <- numeric(length(sel))
-                            for(j in 1L:length(sel)){
-                                whc <- esplit[[i]][which(picknames)[j]]
-                                constr[j] <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == whc]
-                            }
-                        } else {
+                        if(length(sel) == 1L){
                             for(j in 1L:length(sel)){
                                 pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) %in%
                                                                esplit[[i]][picknames]]
@@ -439,6 +430,26 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                                     stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j],
                                          call.=FALSE)
                                 constr <- c(constr, pick)
+                            }
+                        } else {
+                            if(sum(picknames) > 1L){
+                                if(sum(picknames) != length(sel))
+                                    stop('Number of items selected not equal to number of parameter names',
+                                         call.=FALSE)
+                                constr <- numeric(length(sel))
+                                for(j in 1L:length(sel)){
+                                    whc <- esplit[[i]][which(picknames)[j]]
+                                    constr[j] <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == whc]
+                                }
+                            } else {
+                                for(j in 1L:length(sel)){
+                                    pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) %in%
+                                                                   esplit[[i]][picknames]]
+                                    if(!length(pick))
+                                        stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j],
+                                             call.=FALSE)
+                                    constr <- c(constr, pick)
+                                }
                             }
                         }
                         constrain[[length(constrain) + 1L]] <- constr

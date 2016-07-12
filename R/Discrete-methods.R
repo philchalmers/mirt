@@ -83,7 +83,7 @@ setMethod(
     signature = 'DiscreteClass',
     definition = function(object, drop = TRUE, ...){
         class(object) <- 'MultipleGroupClass'
-        ret <- coef(object, ...)
+        ret <- coef(object, discrete = TRUE, ...)
         if(drop)
             if(length(ret) == 1L) ret <- ret[[1L]]
         ret

@@ -23,12 +23,20 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
         model <- mirt.model(file=tmp, quiet = TRUE)
         model$x <- rbind(model$x, oldmodel$x[oldmodel$x[,1L] != 'NEXPLORE'])
     } else if((is(model, 'numeric') && length(model) == 1L)){
-        if(model != 1L) exploratory <- TRUE
-        tmp <- tempfile('tempfile')
-        for(i in 1L:model)
-            cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
-        model <- mirt.model(file=tmp, quiet = TRUE)
-        unlink(tmp)
+        if(any(itemtype == 'lca')){
+            tmp <- tempfile('tempfile')
+            for(i in 1L:model)
+                cat(paste('F', i,' = 1-', J, "\n", sep=''), file=tmp, append = TRUE)
+            model <- mirt.model(file=tmp, quiet = TRUE)
+            unlink(tmp)
+        } else {
+            if(model != 1L) exploratory <- TRUE
+            tmp <- tempfile('tempfile')
+            for(i in 1L:model)
+                cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
+            model <- mirt.model(file=tmp, quiet = TRUE)
+            unlink(tmp)
+        }
     }
     if(is(model, 'numeric') && length(model) > 1L)
         model <- bfactor2mod(model, J)

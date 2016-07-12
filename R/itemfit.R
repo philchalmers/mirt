@@ -528,7 +528,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         quadpts <- dots$quadpts
         if(is.null(quadpts) && QMC) quadpts <- 15000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@Model$nfact)
-        if(x@Model$nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum'))
+        if(x@Model$nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum') && !discrete)
             warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                     call.=FALSE)
         theta_lim <- dots$theta_lim
