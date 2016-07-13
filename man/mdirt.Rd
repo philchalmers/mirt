@@ -78,7 +78,7 @@ anova(mod2, mod3)
 M2(mod2)
 itemfit(mod2)
 
-#generate classification plots
+# generate classification plots
 plot(mod2)
 plot(mod2, facet_items = FALSE)
 plot(mod2, profile = TRUE)
@@ -116,7 +116,7 @@ mod <- mdirt(dat, 2, nruns=10)
 summary(mod_gom)
 
 #-----------------
-# Multidimensional discrete class model
+# Multidimensional discrete latent class model
 
 dat <- key2binary(SAT12,
      key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -187,6 +187,32 @@ model <- mirt.model('Intercept = 1-15
                      CONSTRAIN = (11,a2,a3,a4), (12,a2,a3,a4), (13,a2,a3,a4),
                                  (14,a2,a3,a4), (15,a2,a3,a4)')
 
+mod <- mdirt(dat, model, technical = list(customTheta = theta))
+coef(mod, simplify=TRUE)
+summary(mod)
+
+
+#------------------
+#multidimensional latent class model
+
+dat <- key2binary(SAT12,
+     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+
+# 5 latent classes within 2 different sets of items
+model <- mirt.model('C1 = 1-16
+                     C2 = 1-16
+                     C3 = 1-16
+                     C4 = 1-16
+                     C5 = 1-16
+                     C6 = 17-32
+                     C7 = 17-32
+                     C8 = 17-32
+                     C9 = 17-32
+                     C10 = 17-32
+                     CONSTRAIN = (1-16, a1), (1-16, a2), (1-16, a3), (1-16, a4), (1-16, a5),
+                       (17-32, a6), (17-32, a7), (17-32, a8), (17-32, a9), (17-32, a10)')
+
+theta <- diag(10)
 mod <- mdirt(dat, model, technical = list(customTheta = theta))
 coef(mod, simplify=TRUE)
 summary(mod)
