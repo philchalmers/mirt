@@ -18,7 +18,9 @@ Description: Analysis of dichotomous and polytomous response data using
     bi-factor and two-tier analyses are available for modeling item testlets.
     Multiple group analysis and mixed effects designs also are available for
     detecting differential item and test functioning as well as modelling
-    item and person covariates.
+    item and person covariates. Finally, latent class models such as the DINA,
+    DINO, multidimensional latent class, and several other discrete variable
+    models are supported.
 Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:

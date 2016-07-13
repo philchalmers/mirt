@@ -1,12 +1,15 @@
 #' Full information maximum likelihood estimation of multidimensional IRT models
 #'
-#' Analysis of dichotomous and polytomous response data using unidimensional and
-#' multidimensional latent trait models under the Item Response Theory paradigm.
-#' Exploratory and confirmatory models can be estimated with quadrature (EM) or
-#' stochastic (MHRM) methods. Confirmatory bi-factor and two-tier analyses are available
-#' for modeling item testlets. Multiple group analysis and mixed effects designs also
-#' are available for detecting differential item functioning and modeling item and
-#' person covariates.
+#' Analysis of dichotomous and polytomous response data using
+#' unidimensional and multidimensional latent trait models under the Item
+#' Response Theory paradigm. Exploratory and confirmatory models can be
+#' estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory
+#' bi-factor and two-tier analyses are available for modeling item testlets.
+#' Multiple group analysis and mixed effects designs also are available for
+#' detecting differential item and test functioning as well as modelling
+#' item and person covariates. Finally, latent class models such as the DINA,
+#' DINO, multidimensional latent class, and several other discrete variable
+#' models are supported.
 #'
 #' Users interested in the most recent version of this package can visit
 #' \url{https://github.com/philchalmers/mirt} and follow the instructions
