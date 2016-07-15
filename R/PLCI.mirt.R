@@ -198,6 +198,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
           conv_lower=conv_lower, conv_upper=conv_upper)
     }
 
+    stopifnot(extract.mirt(mod, 'converged'))
     if(.hasSlot(mod@Model$lrPars, 'beta'))
         stop('Latent regression models not yet supported')
     stopifnot(lower | upper)
