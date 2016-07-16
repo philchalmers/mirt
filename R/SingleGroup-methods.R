@@ -433,7 +433,9 @@ setMethod(
 #' @param type type of residuals to be displayed.
 #'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
 #'   X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
-#'   Yen (1984), or \code{'exp'} for the expected values for the frequencies of every response pattern
+#'   Yen (1984), or \code{'exp'} for the expected values for the frequencies of every response pattern.
+#'   For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
+#'   residuals in the form of signed Cramers V coefficients
 #' @param tables logical; for LD type, return the observed, expected, and standardized residual
 #'   tables for each item combination?
 #' @param digits number of significant digits to be rounded
