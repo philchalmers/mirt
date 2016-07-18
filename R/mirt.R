@@ -967,6 +967,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
 {
     Call <- match.call()
     if(!is.null(covdata) && !is.null(formula)){
+        if(empiricalhist)
+            stop('Empirical histogram method not supported with covariates', call.=FALSE)
         if(!is.data.frame(covdata))
             stop('covdata must be a data.frame object', call.=FALSE)
         if(nrow(covdata) != nrow(data))
