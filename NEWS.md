@@ -12,6 +12,8 @@
 
 - `multipleGroup()` throws proper error when vertical scaling is not identified correctly due to NAs
 
+- S-X2 itemfit statistic fix when very rare expected categories appear (reported by Seongho Bae)
+
 # Changes in mirt 1.18
 
 - `mdirt()` function now includes explicit parameters for the latent class intercepts (in log-form).

@@ -1680,11 +1680,21 @@ collapseCells <- function(O, E, mincell = 1){
                 On[j, ] <- tmp2
             }
         }
-
-        #drop columns if they are very rare
-
         En[is.na(En)] <- 0
+        # collapse right columns if they are too rare
+        if(ncol(En) > 2L){
+            while(TRUE){
+                pick <- colSums(En) < mincell * ceiling(nrow(En) * .1)
+                if(!pick[length(pick)] || ncol(En) == 2L) break
+                if(pick[length(pick)]){
+                    On[ ,length(pick)-1L] <- On[ ,length(pick)-1L] + On[ ,length(pick)]
+                    En[ ,length(pick)-1L] <- En[ ,length(pick)-1L] + En[ ,length(pick)]
+                    On <- On[ ,-length(pick)]; En <- En[ ,-length(pick)]
+                }
+            }
+        }
         dropcol <- logical(ncol(En))
+        #drop all other columns if they are very rare
         for(j in ncol(En):2L){
             tmp <- sum(En[,j] > 0) / nrow(En)
             if(tmp < .05){
