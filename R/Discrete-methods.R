@@ -74,6 +74,7 @@ setMethod(
             ret[[g]][[i+1L]] <- data.frame(Theta, prob=round(object@Internals$Prior[[g]], digits))
             rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
         }
+        names(ret) <- extract.mirt(object, 'groupNames')
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
     }
@@ -122,6 +123,9 @@ setMethod(
                                               strip.border = list(col = "black")),
                           auto.key = list(space = 'right'), ...)
     {
+        if(extract.mirt(x, 'ngroups') > 1L)
+            stop('plot methods do not support multiple group latent class models yet',
+                 call.=FALSE)
         so <- summary(x)
         index <- which.items
         names <- colnames(x@Data$data)

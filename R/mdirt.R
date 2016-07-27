@@ -203,6 +203,23 @@
 #' coef(mod, simplify=TRUE)
 #' summary(mod)
 #'
+#' #------------------
+#' # multiple group with constrained group probabilities
+#'  dat <- key2binary(SAT12,
+#'    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' group <- rep(c('G1', 'G2'), each = nrow(SAT12)/2)
+#' Theta <- diag(2)
+#'
+#' # the latent class parameters are technically located in the (nitems + 1) location
+#' model <- mirt.model('A1 = 1-32
+#'                      A2 = 1-32
+#'                      CONSTRAINB = (33, c1)')
+#' mod <- mdirt(dat, model, group = group,
+#'              technical = list(customTheta = Theta))
+#' coef(mod, simplify=TRUE)
+#' summary(mod)
+#'
+#'
 #' }
 mdirt <- function(data, model, nruns = 1, method = 'EM',
                   return_max = TRUE, group = NULL, GenRandomPars = FALSE,

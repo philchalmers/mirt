@@ -89,6 +89,19 @@ test_that('discrete', {
     so <- summary(mod_discrete, digits=5)
     expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0,0.00629,0.01113,0.01288,0.15417,0.17404,0.2915,0.34999), tolerance = 1e-2)
 
+    #-----------------
+
+    # multiple group test with constrained group probabilities
+    group <- rep(c('G1', 'G2'), each = nrow(SAT12)/2)
+    Theta <- diag(2)
+    model <- mirt.model('A1 = 1-32
+                         A2 = 1-32
+                         CONSTRAINB = (33, c1)')
+    mod <- mdirt(dat, model, group = group, technical = list(customTheta = Theta),
+                 verbose = FALSE)
+    expect_equal(logLik(mod), -9598.103, tolerance = 1e-4)
+    expect_equal(as.numeric(coef(mod)[[1]][[33]]), .421)
+
 #
 #     data(data.read, package = 'sirt')
 #     dat <- data.read
