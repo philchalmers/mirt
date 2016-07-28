@@ -1657,7 +1657,7 @@ collapseCells <- function(O, E, mincell = 1){
                 tmp2 <- On[j, ]
                 while(length(tmp) > 2L){
                     m <- min(tmp)
-                    whc <- which(m == tmp)
+                    whc <- max(which(m == tmp))
                     if(whc == 1L){
                         tmp[2L] <- tmp[2L] + tmp[1L]
                         tmp2[2L] <- tmp2[2L] + tmp2[1L]
