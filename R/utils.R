@@ -1895,6 +1895,8 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
 }
 
 computeNullModel <- function(data, itemtype, group=NULL){
+    if(is.null(itemtype)) itemtype <- rep('graded', ncol(data))
+    itemtype[itemtype == 'Rasch'] <- 'gpcm'
     if(!is.null(group)){
         null.mod <- multipleGroup(data, 1L, itemtype=itemtype, group=group, verbose=FALSE,
                                   technical=list(NULL.MODEL=TRUE))

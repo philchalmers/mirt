@@ -8,6 +8,8 @@
 
 - `simdata()` supports 'lca' itemtypes for latent class model generation
 
+- improved M2 accuracy when latent trait variances are estimated
+
 ## BUG FIXES
 
 - `multipleGroup()` throws proper error when vertical scaling is not identified correctly due to NAs
