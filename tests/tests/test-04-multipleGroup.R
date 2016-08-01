@@ -79,17 +79,28 @@ test_that('one factor', {
 
     fit1 <- M2(mod_metric)
     expect_is(fit1, 'data.frame')
-    expect_true(mirt:::closeEnough(fit1[1:2] - c(90.57067, 84.19031), -1e-2, 1e-2))
-    expect_equal(fit1$D1.SRMSR, 0.04152426, tolerance = 1e-4)
-    expect_equal(fit1$TLI, 1.002695, tolerance = 1e-4)
+    expect_true(mirt:::closeEnough(fit1$M2 - c(213.1749), -1e-2, 1e-2))
+    expect_equal(fit1$SRMSR.D1, 0.04152426, tolerance = 1e-4)
+    expect_equal(fit1$TLI, .99758, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
     fit2 <- itemfit(mod_metric, digits = 20, Zh=TRUE)
     expect_is(fit2, 'list')
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.6646153, 8.1727058, 11.000000, 0.6977546),
                  tolerance = 1e-4)
+    fit3 <- M2(mod_scalar2)
+    expect_true(mirt:::closeEnough(fit3$M2 - c(197.08), -1e-2, 1e-2))
+    expect_equal(fit3$SRMSR.D1, 0.026854, tolerance = 1e-4)
+    expect_equal(fit3$TLI, 1.0013, tolerance = 1e-4)
+    expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
 
     g1 <- extract.group(mod_metric, 1)
     expect_equal(as.numeric(coef(g1)[[1]]), c(1.272, 0.543, 0.000, 1.000), tolerance = 1e-2)
+    fit3 <- M2(mod_metric)
+    expect_is(fit1, 'data.frame')
+    expect_true(mirt:::closeEnough(fit1$M2 - c(213.1749), -1e-2, 1e-2))
+    expect_equal(fit1$SRMSR.D1, 0.04152426, tolerance = 1e-4)
+    expect_equal(fit1$TLI, .99758, tolerance = 1e-4)
+    expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
 
     # missing by design
     dat[group == 'D1',1:2] <- NA

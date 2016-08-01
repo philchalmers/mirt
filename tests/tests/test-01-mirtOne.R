@@ -39,6 +39,11 @@ test_that('dich', {
     cfs <- as.numeric(do.call(c, coef(modm3)))
     expect_equal(cfs, c(1,NA,NA,2.73,2.455,3.005,0,NA,NA,1,NA,NA,1,NA,NA,0.999,0.827,1.17,0,NA,NA,1,NA,NA,1,NA,NA,0.24,0.096,0.384,0,NA,NA,1,NA,NA,1,NA,NA,1.306,1.12,1.493,0,NA,NA,1,NA,NA,1,NA,NA,2.099,1.873,2.326,0,NA,NA,1,NA,NA,0,NA,NA,0.57,0.339,0.802),
                  tolerance = 1e-2)
+    modm3b <- mirt(dat, 'F = 1-5
+                   CONSTRAIN = (1-5, a1)', verbose=FALSE, SE=F)
+    fitm2 <- M2(modm3b)
+    expect_true(mirt:::closeEnough(fitm2$M2 - 5.292566, -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
     model <- mirt.model('F = 1-5
                         CONSTRAIN = (1-5, a1)', quiet=TRUE)
     modm4 <- mirt(data, model, verbose = FALSE, SE=T, SE.type = 'crossprod')
@@ -131,7 +136,7 @@ test_that('dich', {
     expect_true(mirt:::closeEnough(fitm1$df.M2 - 5, -1e-4, 1e-4))
     fitm2 <- M2(modm3)
     expect_is(fitm2, 'data.frame')
-    expect_true(mirt:::closeEnough(fitm2$M2 - 4.821999, -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fitm2$M2 - 5.2563, -1e-4, 1e-4))
     expect_true(mirt:::closeEnough(fitm2$df.M2 - 9, -1e-4, 1e-4))
 
     data <- expand.table(LSAT7)

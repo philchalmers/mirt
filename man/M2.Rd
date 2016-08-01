@@ -45,14 +45,14 @@ Must be used in conjunction with the argument \code{residmat = TRUE}}
 }
 \value{
 Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
-  p-value, RMSEA (with 90\% confidence interval), SRMSR if all items were ordinal,
-  and optionally the TLI and CFI model fit statistics
+  p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
+  and optionally the TLI and CFI model fit statistics of \code{calcNull = TRUE}.
 }
 \description{
 Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
 M2* statistic for polytomous data (collapsing over response categories for better stability;
 see Cai and Hansen, 2013), as well as associated fit indices that are based on
-fitting the null model.
+fitting the null model. Supports single and multiple-group models.
 }
 \examples{
 \dontrun{

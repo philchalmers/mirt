@@ -10,6 +10,9 @@
 
 - improved M2 accuracy when latent trait variances are estimated
 
+- corrected behaviour of `M2()` when linear constraints are applied (M2 test was previously too conservative
+  when constraints were used). This affects single as well as multiple-group models (reported by Rudolf Debelak)
+
 ## BUG FIXES
 
 - `multipleGroup()` throws proper error when vertical scaling is not identified correctly due to NAs
