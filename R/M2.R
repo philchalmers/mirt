@@ -97,8 +97,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         if(!discrete)
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
         estpars <- c()
-        for(i in 1L:(nitems+1L))
-            estpars <- c(estpars, pars[[i]]@est)
+        for(i in 1L:(nitems+1L)){
+            if(i <= nitems)
+                estpars <- c(estpars, pars[[i]]@est)
+            else estpars <- c(estpars, rep(FALSE, length(pars[[i]]@est)))
+        }
         bfactorlist <- obj@Internals$bfactor
         if(.hasSlot(obj@Model$lrPars, 'beta'))
             stop('Latent regression models not yet supported')

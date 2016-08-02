@@ -88,9 +88,9 @@ test_that('one factor', {
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.6646153, 8.1727058, 11.000000, 0.6977546),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
-    expect_true(mirt:::closeEnough(fit3$M2 - c(197.08), -1e-2, 1e-2))
+    expect_true(mirt:::closeEnough(fit3$M2 - c(198.6338), -1e-4, 1e-4))
     expect_equal(fit3$SRMSR.D1, 0.026854, tolerance = 1e-4)
-    expect_equal(fit3$TLI, 1.0013, tolerance = 1e-4)
+    expect_equal(fit3$TLI, 1.001169, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
 
     g1 <- extract.group(mod_metric, 1)
