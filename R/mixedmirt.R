@@ -346,6 +346,9 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                       technical = list(SEtol = 1e-4), ...)
 {
     Call <- match.call()
+    dots <- list(...)
+    if(!is.null(dots$method))
+        stop('method cannot be changed in mixedmirt() function', call.=FALSE)
     svinput <- pars
     iconstrain <- constrain
     covdataold <- covdata

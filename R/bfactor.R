@@ -205,6 +205,9 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
                     group = NULL, quadpts = NULL, invariance = '', ...)
 {
     Call <- match.call()
+    dots <- list(...)
+    if(!is.null(dots$method))
+        stop('method cannot be changed for bifactor models', call.=FALSE)
     if(missing(model)) missingMsg('model')
     if(!is.numeric(model))
         stop('model must be a numeric vector', call.=FALSE)
