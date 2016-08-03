@@ -91,7 +91,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             opts$calcNull <- FALSE
         opts$times <- list(start.time=start.time)
         # on exit, reset the seed to override internal
-        if(opts$method == 'MHRM' || opts$method == 'MIXED')
+        if(opts$method == 'MHRM' || opts$method == 'MIXED' && opts$plausible.draws == 0L)
             on.exit(set.seed((as.numeric(Sys.time()) - floor(as.numeric(Sys.time()))) * 1e8))
         #change itemtypes if NULL.MODEL
         if(opts$NULL.MODEL){
@@ -570,8 +570,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                           message=opts$message, expl=PrepList[[1L]]$exploratory),
+                                           message=opts$message, expl=PrepList[[1L]]$exploratory,
+                                           plausible.draws=opts$plausible.draws),
                                DERIV=DERIV)
+        if(opts$plausible.draws != 0) return(ESTIMATE)
         if(opts$SE){
             if(opts$verbose)
                 cat('\nCalculating information matrix...\n')

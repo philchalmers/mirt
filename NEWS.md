@@ -1,5 +1,8 @@
 # Changes in mirt 1.19
 
+- `fscores()` gains a `plausible.type` argument to select between normal approximation PVs or 
+  Metropolis-Hastings samples (suggested by Yang Liu)
+
 - `mdirt()` has been modified to support DINA, DINO, located latent class, 
    and other diagnostic classification models
 

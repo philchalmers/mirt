@@ -6,10 +6,11 @@
 \usage{
 fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
   Target = NULL, response.pattern = NULL, plausible.draws = 0,
-  quadpts = NULL, returnER = FALSE, return.acov = FALSE, mean = NULL,
-  cov = NULL, verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,
-  6), MI = 0, QMC = FALSE, custom_den = NULL, custom_theta = NULL,
-  min_expected = 1, converge_info = FALSE, ...)
+  plausible.type = "normal", quadpts = NULL, returnER = FALSE,
+  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
+  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
+  custom_den = NULL, custom_theta = NULL, min_expected = 1,
+  converge_info = FALSE, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -39,6 +40,11 @@ to perform secondary analyses of the latent trait scores. Typically used in conj
 with latent regression predictors (see \code{\link{mirt}} for details), but can
 also be generated when no predictor variables were modeled. If \code{plausible.draws}
 is greater than 0 a list of plausible values will be returned}
+
+\item{plausible.type}{type of plausible values to obtain. Can be either \code{'normal'} (default)
+to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain Metropolis-Hastings
+samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguemnts like
+\code{technical} can be supplied to increase the number of burn-in draws and discarded samples)}
 
 \item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases

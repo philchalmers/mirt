@@ -1091,7 +1091,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI')
+                'PLCI', 'plausible.draws')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1120,6 +1120,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$accelerate = accelerate
     opts$delta <- ifelse(is.null(technical$delta), .001, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
+    opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
     if(!is.null(TOL))
         if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- FALSE
     opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else
@@ -1160,7 +1161,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
     opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
-    if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars)
+    if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars &&
+       opts$plausible.draws == 0L)
         set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
     opts$gain <- c(0.1, 0.75)

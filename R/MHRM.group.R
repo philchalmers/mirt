@@ -85,6 +85,23 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         }
     }
     if(RAND) OffTerm <- OffTerm(random, J=J, N=N)
+    if(list$plausible.draws > 0L){
+        ret <- vector('list', list$plausible.draws)
+        for(i in 1L:length(ret)){
+            for(j in 1L:MHDRAWS)
+                gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]],
+                        pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
+                        itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
+                        prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
+                        prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
+            ret[[i]] <- gtheta0[[1L]]
+        }
+        ret <- lapply(ret, function(x){
+            attr(x, "Proportion Accepted") <- attr(x, "log.lik") <- attr(x, "log.lik_full") <- NULL
+            x
+        })
+        return(ret)
+    }
     SEM.stores <- SEM.stores2 <- list()
     conv <- 0L
     k <- 1L

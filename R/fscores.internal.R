@@ -6,7 +6,7 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL, digits=4,
-	                      min_expected, converge_info, ...)
+	                      min_expected, converge_info, plausible.type, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(!is.null(custom_den)) den_fun <- custom_den
@@ -106,29 +106,45 @@ setMethod(
 	    }
 
         if(plausible.draws > 0){
-            fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
-                          quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE, cov=gcov,
-                          return.acov = FALSE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
-            if(any(is.na(fs)))
-                stop('Plausible values cannot be drawn for completely empty response patterns.
-                     Please remove these from your analysis.', call.=FALSE)
-            fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
-                          quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
-                          plausible.draws=0, full.scores.SE=FALSE, cov=gcov,
-                          return.acov = TRUE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
-            suppressWarnings(jit <- myLapply(1:nrow(fs), function(i, mu, sig)
-                mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
-                mu=fs, sig=fs_acov))
-            if(any(sapply(jit, is.nan)))
-                stop('Could not draw unique plausible values. Response pattern ACOVs may
-                     not be positive definite')
-            ret <- vector('list', plausible.draws)
-            for(i in 1L:plausible.draws){
-                ret[[i]] <- matrix(NA, nrow(fs), ncol(fs))
-                for(j in 1L:nrow(fs)) ret[[i]][j,] <- jit[[j]][i,]
-            }
-            if(plausible.draws == 1L) return(ret[[1L]])
-            else return(ret)
+            if(plausible.type == 'MH'){
+                dots <- list(...)
+                technical <- if(!is.null(dots$technical)) dots$technical else list()
+                technical$plausible.draws <- plausible.draws
+                formulas <- try(extract.mirt(object, 'lrformulas'), TRUE)
+                if(!is(formulas, 'try-error'))
+                    stop('MH plausible.type currently not supported for latent regression model', call.=FALSE)
+                ret <- mirt(extract.mirt(object, 'data'),
+                            extract.mirt(object, 'model'),
+                            extract.mirt(object, 'itemtype'),
+                            method='MHRM',
+                            technical=technical)
+                if(plausible.draws == 1L) return(ret[[1L]])
+                else return(ret)
+            } else if(plausible.type == 'normal'){
+                fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
+                              quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE, cov=gcov,
+                              return.acov = FALSE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
+                if(any(is.na(fs)))
+                    stop('Plausible values cannot be drawn for completely empty response patterns.
+                         Please remove these from your analysis.', call.=FALSE)
+                fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
+                              quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
+                              plausible.draws=0, full.scores.SE=FALSE, cov=gcov,
+                              return.acov = TRUE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
+                suppressWarnings(jit <- myLapply(1L:nrow(fs), function(i, mu, sig)
+                    mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
+                    mu=fs, sig=fs_acov))
+                if(any(sapply(jit, is.nan)))
+                    stop('Could not draw unique plausible values. Response pattern ACOVs may
+                         not be positive definite')
+                ret <- vector('list', plausible.draws)
+                for(i in 1L:plausible.draws){
+                    ret[[i]] <- matrix(NA, nrow(fs), ncol(fs))
+                    for(j in 1L:nrow(fs)) ret[[i]][j,] <- jit[[j]][i,]
+                }
+                if(plausible.draws == 1L) return(ret[[1L]])
+                else return(ret)
+            } else stop('plausible.type not supported', call.=FALSE)
         }
         if(return.acov && MI != 0)
             stop('simultaneous impute and return.acov option not supported', call.=FALSE)

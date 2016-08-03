@@ -41,6 +41,10 @@
 #'   with latent regression predictors (see \code{\link{mirt}} for details), but can
 #'   also be generated when no predictor variables were modeled. If \code{plausible.draws}
 #'   is greater than 0 a list of plausible values will be returned
+#' @param plausible.type type of plausible values to obtain. Can be either \code{'normal'} (default)
+#'   to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain Metropolis-Hastings
+#'   samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguemnts like
+#'   \code{technical} can be supplied to increase the number of burn-in draws and discarded samples)
 #' @param method type of factor score estimation method. Can be expected
 #'   a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
 #'   (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
@@ -159,7 +163,7 @@
 #'
 #'}
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
-                    response.pattern = NULL, plausible.draws = 0, quadpts = NULL,
+                    response.pattern = NULL, plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
@@ -182,6 +186,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                             theta_lim=theta_lim, MI=MI, converge_info=converge_info,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
-                            custom_theta=custom_theta, Target=Target, min_expected=min_expected, ...)
+                            custom_theta=custom_theta, Target=Target, min_expected=min_expected,
+                            plausible.type=plausible.type, ...)
     ret
 }
