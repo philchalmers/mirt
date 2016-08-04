@@ -329,7 +329,6 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
 
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
-    const int npars = nfact + nfact * (nfact + 1);
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
     NumericMatrix tabdata = obj.slot("dat");
     const int N = tabdata.nrow();
@@ -412,7 +411,6 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
 
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
-    const int npars = nfact + nfact * (nfact + 1);
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
     NumericVector CD = obj.slot("rr");
 
@@ -471,7 +469,6 @@ static void _dgroupLCA(vector<double> &grad, NumericMatrix &hess, S4 &obj,
     if(ret) return;
 
     const int nquad = Theta.nrow();
-    const int nfact = Theta.ncol();
     const int npars = nquad - 1;
     NumericVector CD = obj.slot("rr");
     NumericVector P = obj.slot("density");
@@ -1272,7 +1269,7 @@ static void d_priors(vector<double> &grad, NumericMatrix &hess, const int &ind,
         const double v2 = val*val;
         g = -(lval - prior_1)/(val * p2) - 1.0/val;
         h = 1.0/v2 - 1.0/(v2 * p2) - (lval - prior_1)/(v2 * p2);
-    } else if(prior_type == 3 | prior_type == 4){
+    } else if((prior_type == 3) | (prior_type == 4)){
         double val = par;
         if(prior_type == 4) val = 1 / (1 + exp(-val));
         if(val < 1e-10) val = 1e-10;
