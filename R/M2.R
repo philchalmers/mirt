@@ -91,7 +91,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         pars <- obj@ParObjects$pars
         if(is.null(quadpts))
             quadpts <- select_quadpts(obj@Model$nfact)
-        if(obj@Model$nfact > 3L && !QMC)
+        if(obj@Model$nfact > 3L && !QMC && !discrete)
             warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                     call.=FALSE)
         if(!discrete)

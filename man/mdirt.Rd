@@ -140,6 +140,7 @@ summary(mod_located)
 ### DINA model example
 # generate some suitable data for a two dimensional DINA application
 #     (first columns are intercepts)
+set.seed(1)
 Theta <- expand.table(matrix(c(1,0,0,0, 200,
                                1,1,0,0, 200,
                                1,0,1,0, 100,
@@ -166,6 +167,7 @@ model <- mirt.model('Intercept = 1-15
 mod <- mdirt(dat, model, technical = list(customTheta = theta))
 coef(mod)
 summary(mod)
+M2(mod) # fits well
 
 cfs <- coef(mod, simplify=TRUE)$items[11:15,]
 cbind(guess, estguess = plogis(cfs[,1]))
@@ -190,6 +192,7 @@ model <- mirt.model('Intercept = 1-15
 mod <- mdirt(dat, model, technical = list(customTheta = theta))
 coef(mod, simplify=TRUE)
 summary(mod)
+M2(mod) #doesn't fit as well, because not the generating model
 
 
 #------------------
