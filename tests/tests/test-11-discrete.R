@@ -15,7 +15,7 @@ test_that('discrete', {
                  tolerance = 1e-4)
 
     M <- M2(mod)
-    expect_equal(M$M2, 4.593169, tolerance = 1e-4)
+    expect_equal(M$M2, 4.60073, tolerance = 1e-4)
     fs <- fscores(mod, digits=10, full.scores=FALSE)
     pick <- apply(fs[1:5, c('Class_1', 'Class_2')], 1, max)
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
@@ -101,7 +101,7 @@ test_that('discrete', {
                  verbose = FALSE)
     expect_equal(logLik(mod), -9598.103, tolerance = 1e-4)
     expect_equal(as.numeric(coef(mod)[[1]][[33]]), .421)
-    expect_equal(M2(mod)$M2, 1238.509, tolerance = 1e-4)
+    expect_equal(M2(mod)$M2, 1239.173, tolerance = 1e-4)
 
 #
 #     data(data.read, package = 'sirt')

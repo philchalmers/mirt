@@ -586,7 +586,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                itemloc=PrepList[[1L]]$itemloc,
                                                nfact=nfact, constrain=constrain, verbose=FALSE,
                                                CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                                               startlongpars=ESTIMATE$longpars,
+                                               startlongpars=ESTIMATE$longpars, plausible.draws=0L,
                                                cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                                message=opts$message, expl=PrepList[[1L]]$exploratory),
                                    DERIV=DERIV)
@@ -615,7 +615,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                            startlongpars=startlongpars, SE=FALSE,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                           message=opts$message, expl=FALSE,
+                                           message=opts$message, expl=FALSE, plausible.draws=0L,
                                            RANDSTART=opts$technical$RANDSTART),
                                DERIV=DERIV)
         if(opts$SE){
@@ -632,7 +632,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           itemloc=PrepList[[1L]]$itemloc,
                                           nfact=nfact, constrain=constrain, verbose=FALSE,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                                          startlongpars=ESTIMATE$longpars,
+                                          startlongpars=ESTIMATE$longpars, plausible.draws=0L,
                                           cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                           message=opts$message, expl=FALSE,
                                           RANDSTART=1L),
@@ -744,7 +744,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                itemloc=PrepList[[1L]]$itemloc,
                                                nfact=nfact, constrain=constrain, verbose=FALSE, expl=FALSE,
                                                CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, message=opts$message,
-                                               startlongpars=startlongpars, SE=opts$SE, warn=opts$warn),
+                                               startlongpars=startlongpars, SE=opts$SE, warn=opts$warn,
+                                               plausible.draws=0L),
                                    DERIV=DERIV)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) && opts$method != 'MIXED'){
             if(logPrior != 0 && opts$warn)
