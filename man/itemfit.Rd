@@ -93,7 +93,8 @@ multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 For Rasch, partial credit, and rating scale models infit and outfit statistics are
 also produced. Poorly fitting items should be inspected with the empirical plots/tables
 for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
-where the functional form of the IRT model was misspecified.
+where the functional form of the IRT model was misspecified. For discrete models,
+only the S-X2 statistic will be calculated.
 }
 \examples{
 

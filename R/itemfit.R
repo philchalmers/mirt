@@ -6,7 +6,8 @@
 #' For Rasch, partial credit, and rating scale models infit and outfit statistics are
 #' also produced. Poorly fitting items should be inspected with the empirical plots/tables
 #' for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
-#' where the functional form of the IRT model was misspecified.
+#' where the functional form of the IRT model was misspecified. For discrete models,
+#' only the S-X2 statistic will be calculated.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -274,6 +275,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                                 impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
         }
         names(ret) <- x@Data$groupNames
+        if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
         return(ret)
     }
     dots <- list(...)

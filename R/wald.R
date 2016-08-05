@@ -57,7 +57,7 @@ wald <- function(object, L, C = 0){
     if(missing(object)) missingMsg('object')
     covB <- extract.mirt(object, 'vcov')
     if(all(dim(covB) == c(1,1)))
-        if(covB[1,1] == 0L)
+        if(covB[1,1] == 0L || is.na(covB[1,1]))
             stop('No information matrix has been calculated for the model', call.=FALSE)
     Names <- colnames(covB)
     B <- extract.mirt(object, 'parvec')
