@@ -208,12 +208,6 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 15000L
-    discrete <- FALSE
-    if(is(obj, 'DiscreteClass')){
-        discrete <- TRUE
-        class(obj) <- 'MultipleGroupClass'
-        calcNull <- FALSE
-    }
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
@@ -234,6 +228,12 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         ret <- rbind(ave, SD)
         rownames(ret) <- c('stats', 'SD_stats')
         return(ret)
+    }
+    discrete <- FALSE
+    if(is(obj, 'DiscreteClass')){
+        discrete <- TRUE
+        class(obj) <- 'MultipleGroupClass'
+        calcNull <- FALSE
     }
     alpha <- (1 - CI)/2
     pars <- obj@ParObjects$pars

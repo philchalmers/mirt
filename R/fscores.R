@@ -180,6 +180,24 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         method <- 'EAP'
     }
     if(returnER) full.scores <- FALSE
+    if(is(object, 'DiscreteClass') && plausible.draws > 0L){
+        fs <- fscores(object)
+        ret <- lapply(1L:plausible.draws, function(ind, fs){
+            mat <- matrix(0L, nrow(fs), ncol(fs))
+            for(i in 1L:ncol(fs)){
+                if(all(fs[,i] > 1-1e-10)){
+                    mat[,i] <- 1L
+                } else if(all(fs[,i] < 1e-10)){
+                    mat[,i] <- 0L
+                } else {
+                    mat[,i] <- sapply(fs[,i], function(prob)
+                        sample(c(0L,1L), 1L, prob = c(1-prob, prob)))
+                }
+            }
+            mat
+        }, fs=fs)
+        return(ret)
+    }
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,

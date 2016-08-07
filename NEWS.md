@@ -15,6 +15,8 @@
 
 - corrected behaviour of `M2()` when linear constraints are applied (M2 test was previously too conservative
   when constraints were used). This affects single as well as multiple-group models (reported by Rudolf Debelak)
+  
+- add plausible values for latent class and related models estimated from `mdirt()`
 
 ## BUG FIXES
 

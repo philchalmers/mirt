@@ -103,6 +103,12 @@ table(class_max)
 class_prob <- apply(fs, 1, function(x) sample(1:2, 1, prob=x))
 table(class_prob)
 
+# plausible value imputations for stocastic classification in both classes
+pvs <- fscores(mod2, plausible.draws=10)
+tabs <- lapply(pvs, function(x) apply(x, 2, table))
+tabs[[1]]
+
+
 # fit with random starting points (run in parallel to save time)
 mirtCluster()
 mod <- mdirt(dat, 2, nruns=10)

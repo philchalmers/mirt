@@ -42,7 +42,7 @@ imputeMissing <- function(x, Theta, ...){
     if(missing(Theta)) missingMsg('Theta')
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not yet supported.', call.=FALSE)
-    if(is(x, 'MultipleGroupClass')){
+    if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         pars <- extract.mirt(x, 'pars')
         group <- extract.mirt(x, 'group')
         data <- extract.mirt(x, 'data')
