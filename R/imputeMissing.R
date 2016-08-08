@@ -9,6 +9,7 @@
 #' @param x an estimated model x from the mirt package
 #' @param Theta a matrix containing the estimates of the latent trait scores
 #'   (e.g., via \code{\link{fscores}})
+#' @param warn logical; print warning messages?
 #' @param ... additional arguments to pass
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -37,26 +38,26 @@
 #' fulldata2 <- imputeMissing(mod2, fs)
 #'
 #' }
-imputeMissing <- function(x, Theta, ...){
+imputeMissing <- function(x, Theta, warn = TRUE, ...){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not yet supported.', call.=FALSE)
+    if(warn && sum(is.na(data))/length(data) > .1)
+        warning('Imputing too much data can lead to very conservative results. Use with caution.',
+                call.=FALSE)
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         pars <- extract.mirt(x, 'pars')
         group <- extract.mirt(x, 'group')
         data <- extract.mirt(x, 'data')
         groupNames <- extract.mirt(x, 'groupNames')
-        if(sum(is.na(data))/length(data) > .1)
-            warning('Imputing too much data can lead to very conservative results. Use with caution.',
-                    call.=FALSE)
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
         for(g in 1L:length(pars)){
             sel <- group == groupNames[g]
             Thetatmp <- Theta[sel, , drop = FALSE]
             pars[[g]]@Data$data <- data[sel, ]
             pars[[g]]@Data$mins <- extract.mirt(x, 'mins')
-            data[sel, ] <- imputeMissing(pars[[g]], Thetatmp, uniq_rows=uniq_rows)
+            data[sel, ] <- imputeMissing(pars[[g]], Thetatmp, warn=FALSE, uniq_rows=uniq_rows)
         }
         return(data)
     }
@@ -77,9 +78,6 @@ imputeMissing <- function(x, Theta, ...){
     }
     K <- extract.mirt(x, 'K')
     J <- length(K)
-    if(sum(is.na(data))/length(data) > .1)
-        warning('Imputing too much data can lead to very conservative results. Use with caution.',
-                call.=FALSE)
     N <- nrow(data)
     Nind <- 1L:N
     mins <- extract.mirt(x, 'mins')

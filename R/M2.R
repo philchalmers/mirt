@@ -63,7 +63,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
                impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
     fn <- function(Theta, obj, ...){
-        dat <- imputeMissing(obj, Theta)
+        dat <- imputeMissing(obj, Theta, warn=FALSE)
         tmpobj <- obj
         tmpobj@Data$data <- dat
         if(is(obj, 'MultipleGroupClass')){
@@ -213,6 +213,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple
                  data imputations', call.=FALSE)
+        if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
+            warning('Imputing too much data can lead to very conservative results. Use with caution.',
+                    call.=FALSE)
         Theta <- fscores(obj, plausible.draws = impute)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts)

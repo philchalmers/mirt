@@ -182,7 +182,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
 
     fn <- function(ind, Theta, obj, vals, ...){
         tmpobj <- obj
-        tmpdat <- imputeMissing(obj, Theta[[ind]])
+        tmpdat <- imputeMissing(obj, Theta[[ind]], warn=FALSE)
         tmpmod <- mirt(tmpdat, model=1, TOL=NA,
                        technical=list(customK=obj@Data$K, message=FALSE, warn=FALSE))
         tmpobj@Data <- tmpmod@Data

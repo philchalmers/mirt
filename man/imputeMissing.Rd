@@ -4,13 +4,15 @@
 \alias{imputeMissing}
 \title{Imputing plausible data for missing values}
 \usage{
-imputeMissing(x, Theta, ...)
+imputeMissing(x, Theta, warn = TRUE, ...)
 }
 \arguments{
 \item{x}{an estimated model x from the mirt package}
 
 \item{Theta}{a matrix containing the estimates of the latent trait scores
 (e.g., via \code{\link{fscores}})}
+
+\item{warn}{logical; print warning messages?}
 
 \item{...}{additional arguments to pass}
 }
