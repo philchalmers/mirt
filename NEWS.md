@@ -4,7 +4,9 @@
   Metropolis-Hastings samples (suggested by Yang Liu)
 
 - `mdirt()` has been modified to support DINA, DINO, located latent class, 
-   and other diagnostic classification models
+   and other diagnostic classification models. Additionally, the `customTheta` input required to build 
+   customized latent class patterns has been changed from the previously cumbsersome  
+   `mdirt(..., technical = list(customTheta = Theta))` to simply `mdirt(..., customTheta = Theta)`
 
 - `simdata()` gains a `prob.list` input to supply a list of matrices with probability values to be sampled
   from (useful when specialized response functions outside the package are required)

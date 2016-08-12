@@ -28,7 +28,7 @@ test_that('discrete', {
     expect_equal(resid$res[1:3], c(1.050, 0.145, -0.345), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
     expect_equal(as.numeric(residLD[2:4, 1]), c(0.111, 0.414, -0.129))
-    ifit <- itemfit(mod, digits = 20)[[1L]]
+    ifit <- itemfit(mod, digits = 20)
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
     W <- wald(mod, L = matrix(c(1,numeric(9), 0), nrow=1))
@@ -67,7 +67,7 @@ test_that('discrete', {
     colnames(dat) <- paste0( "I" , 1:I)
 
     Theta <- matrix(c(1, 0, .5, .5, 0, 1), nrow=3 , ncol=2,byrow=TRUE)
-    mod_gom <- mdirt(dat, 2, technical = list(customTheta = Theta), verbose=FALSE)
+    mod_gom <- mdirt(dat, 2, customTheta = Theta, verbose=FALSE)
     so <- summary(mod_gom, digits=10)
     expect_equal(extract.mirt(mod_gom, 'logLik'), -5541.09, tolerance = 1e-4)
     expect_equal(extract.mirt(mod_gom, 'df'), 1001)
@@ -84,7 +84,7 @@ test_that('discrete', {
     # define Theta grid for three latent classes
     Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1),
                      ncol=3, byrow=TRUE)
-    mod_discrete <- mdirt(dat, 3, technical = list(customTheta = Theta), TOL = 1e-2, verbose=FALSE)
+    mod_discrete <- mdirt(dat, 3, customTheta = Theta, TOL = 1e-2, verbose=FALSE)
     expect_equal(extract.mirt(mod_discrete, 'logLik'), -9431.077, tolerance = 1e-4)
     so <- summary(mod_discrete, digits=5)
     expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0,0.00629,0.01113,0.01288,0.15417,0.17404,0.2915,0.34999), tolerance = 1e-2)
@@ -97,7 +97,7 @@ test_that('discrete', {
     model <- mirt.model('A1 = 1-32
                          A2 = 1-32
                          CONSTRAINB = (33, c1)')
-    mod <- mdirt(dat, model, group = group, technical = list(customTheta = Theta),
+    mod <- mdirt(dat, model, group = group, customTheta = Theta,
                  verbose = FALSE)
     expect_equal(logLik(mod), -9598.103, tolerance = 1e-4)
     expect_equal(as.numeric(coef(mod)[[1]][[33]]), .421)

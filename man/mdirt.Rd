@@ -4,15 +4,22 @@
 \alias{mdirt}
 \title{Multidimensional discrete item response theory}
 \usage{
-mdirt(data, model, nruns = 1, method = "EM", return_max = TRUE,
-  group = NULL, GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
-  technical = list(), ...)
+mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
+  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
+  verbose = TRUE, pars = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
 numerically ordered data, with missing data coded as \code{NA}}
 
 \item{model}{number of classes to fit, or alternatively a \code{\link{mirt.model}} definition}
+
+\item{customTheta}{input passed to \code{techincal = list(customTheta = ...)}, but is included directly
+in this function for convienience. This input is most interesting for discrete latent models
+because it allows for customized patterns of latent class effects.
+The default builds the pattern \code{customTheta = diag(model)},
+which is the typical pattern for the traditional
+latent class analysis (whereby classes are completely distinct)}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
 when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
@@ -31,22 +38,23 @@ maximum likelihood criteria? If FALSE, returns a list of all the estimated objec
 
 \item{pars}{used for modifying starting values; see \code{\link{mirt}} for details}
 
-\item{technical}{technical input list, most interesting for discrete latent models
-by building a \code{customTheta} input. The default builds the integration grid for the
-latent class model with \code{customTheta = diag(nclasses)}; see \code{\link{mirt}} for
-further details}
-
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for more details and examples}
 }
 \description{
 \code{mdirt} fits a variety of item response models with discrete latent variables.
+These include, but are not limited to, latent class analysis, multidimensional latent
+class models, multidimensional discrete latent class models, DINA/DINO models,
+grade of measurement models, and so on.
+}
+\details{
 Posterior classification accuracy for each response pattern may be obtained
 via the \code{\link{fscores}} function. The \code{summary()} function will display
 the category probability values given the class membership, which can also
 be displayed graphically with \code{plot()}, while \code{coef()}
 displays the raw coefficient values (and their standard errors, if estimated). Finally,
-\code{anova()} is used to compare nested models.
+\code{anova()} is used to compare nested models, while
+\code{\link{M2}} and \code{\link{itemfit}} may be used for model fitting purposes.
 }
 \section{'lca' model definition}{
 
@@ -118,7 +126,7 @@ mod <- mdirt(dat, 2, nruns=10)
 
 # define a custom Theta grid for including a 'fuzzy' class membership
 (Theta <- matrix(c(1, 0, .5, .5, 0, 1), nrow=3 , ncol=2, byrow=TRUE))
-(mod_gom <- mdirt(dat, 2, technical = list(customTheta = Theta)))
+(mod_gom <- mdirt(dat, 2, customTheta = Theta))
 summary(mod_gom)
 
 #-----------------
@@ -130,7 +138,7 @@ dat <- key2binary(SAT12,
 # define Theta grid for three latent classes
 (Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1),
    ncol=3, byrow=TRUE))
-(mod_discrete <- mdirt(dat, 3, technical = list(customTheta = Theta)))
+(mod_discrete <- mdirt(dat, 3, customTheta = Theta))
 summary(mod_discrete)
 
 # Located latent class model
@@ -138,8 +146,7 @@ model <- mirt.model('C1 = 1-32
                      C2 = 1-32
                      C3 = 1-32
                      CONSTRAIN = (1-32, a1), (1-32, a2), (1-32, a3)')
-(mod_located <- mdirt(dat, model,
-                     technical = list(customTheta = diag(3))))
+(mod_located <- mdirt(dat, model, customTheta = diag(3)))
 summary(mod_located)
 
 #-----------------
@@ -170,7 +177,7 @@ model <- mirt.model('Intercept = 1-15
                      A2 = 6-10
                      A1A2 = 11-15')
 
-mod <- mdirt(dat, model, technical = list(customTheta = theta))
+mod <- mdirt(dat, model, customTheta = theta)
 coef(mod)
 summary(mod)
 M2(mod) # fits well
@@ -195,7 +202,7 @@ model <- mirt.model('Intercept = 1-15
                      CONSTRAIN = (11,a2,a3,a4), (12,a2,a3,a4), (13,a2,a3,a4),
                                  (14,a2,a3,a4), (15,a2,a3,a4)')
 
-mod <- mdirt(dat, model, technical = list(customTheta = theta))
+mod <- mdirt(dat, model, customTheta = theta)
 coef(mod, simplify=TRUE)
 summary(mod)
 M2(mod) #doesn't fit as well, because not the generating model
@@ -222,7 +229,7 @@ model <- mirt.model('C1 = 1-16
                        (17-32, a6), (17-32, a7), (17-32, a8), (17-32, a9), (17-32, a10)')
 
 theta <- diag(10)
-mod <- mdirt(dat, model, technical = list(customTheta = theta))
+mod <- mdirt(dat, model, customTheta = theta)
 coef(mod, simplify=TRUE)
 summary(mod)
 
@@ -237,8 +244,7 @@ Theta <- diag(2)
 model <- mirt.model('A1 = 1-32
                      A2 = 1-32
                      CONSTRAINB = (33, c1)')
-mod <- mdirt(dat, model, group = group,
-             technical = list(customTheta = Theta))
+mod <- mdirt(dat, model, group = group, customTheta = Theta)
 coef(mod, simplify=TRUE)
 summary(mod)
 
