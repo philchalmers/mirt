@@ -71,7 +71,7 @@ test_that('extras', {
     expected <- expected.test(mod1, Theta=Theta)
     expect_equal(expected[1:3], c(0.1083150, 0.1133415, 0.1185956), tolerance=1e-4)
     data[1,1] <- NA
-    data <- imputeMissing(mod1, Theta=fscores(mod1, full.scores=TRUE))
+    data <- imputeMissing(mod1, Theta=fscores(mod1, full.scores=TRUE), warn=FALSE)
     expect_is(data, 'matrix')
     expect_true(!all(is.na(data)))
     pb <- probtrace(extr.2, Theta)
