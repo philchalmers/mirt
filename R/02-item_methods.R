@@ -71,13 +71,13 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                'ideal', 'lca', 'rsm', Experimental_itemtypes())
+                                'ideal', 'lca', 'rsm', 'spline', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'ideal', Experimental_itemtypes())
+Use_R_ProbTrace <- function() c('custom', 'ideal', 'spline', Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'rsm', 'partcomp', 'nestlogit',
-                            'ideal', Experimental_itemtypes())
+                            'ideal', 'spline', Experimental_itemtypes())
 
 # ----------------------------------------------------------------
 # Begin class and method definitions
@@ -986,8 +986,8 @@ setMethod(
     signature = signature(x = 'rsm', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         dat <- x@dat
-        nfact <- x@nfact
-        nzetas <- ncol(dat)
+        # nfact <- x@nfact
+        # nzetas <- ncol(dat)
         a <- ExtractLambdas(x)
         d <- ExtractZetas(x)
         shift <- d[length(d)]
@@ -996,9 +996,9 @@ setMethod(
         ak <- 0:(length(d)-1L)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
-        P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
+        # P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
         tmp <- .Call("dparsNominal", x, Theta, offterm, TRUE, estHess)
-        num <- P.nominal(c(a, ak, dshift), ncat=length(ak), Theta=Theta, returnNum=TRUE, ot=offterm)
+        # num <- P.nominal(c(a, ak, dshift), ncat=length(ak), Theta=Theta, returnNum=TRUE, ot=offterm)
         grad <- tmp$grad
         hess <- tmp$hess
 
@@ -1968,6 +1968,114 @@ setMethod(
             for(i in 1:ncol(Theta)){
                 dp[,ind] <- Theta[,i] * (P[,j] -
                         rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
+                ind <- ind + 1L
+            }
+        }
+        dp
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("spline", contains = 'AllItemsClass',
+         representation = representation(stype='character',
+                                         Theta_prime='matrix',
+                                         sargs='list'))
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'spline'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'spline'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'spline'),
+    definition = function(x){
+        numeric(x@nfact)
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'spline'),
+    definition = function(x){
+        stop('not written')
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'spline'),
+    definition = function(x){
+        par <- rnorm(length(x@par), sd = 20)
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'spline'),
+    definition = function(x){
+        stop('spline null should not be run')
+    }
+)
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'spline', Theta = 'matrix'),
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
+        if(nrow(Theta) != nrow(x@Theta_prime))
+            x <- loadSplineParsItem(x, Theta)
+        P <- P.lca(x@par, Theta=x@Theta_prime, ncat=x@ncat)
+        return(P)
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'spline', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        ret <- .Call('dparslca', x@par, x@Theta_prime, FALSE, x@dat, offterm)
+        if(estHess && any(x@est)){
+            ret$hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
+                                                        Theta=x@Theta_prime)
+        }
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        return(ret)
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'spline', Theta = 'matrix'),
+    definition = function(x, Theta){
+        stop('not written')
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'spline', Theta = 'matrix'),
+    definition = function(x, Theta){
+        P <- ProbTrace(x, Theta)
+        dp <- matrix(0, nrow(Theta), length(x@par))
+        ind <- 1L
+        for(j in 2L:x@ncat){
+            for(i in 1:ncol(Theta)){
+                dp[,ind] <- Theta[,i] * (P[,j] -
+                                             rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
                 ind <- ind + 1L
             }
         }

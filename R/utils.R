@@ -1909,6 +1909,40 @@ computeNullModel <- function(data, itemtype, group=NULL){
     null.mod
 }
 
+loadSplineParsItem <- function(x, Theta){
+    sargs <- x@sargs
+    Theta_prime <- if(x@stype == 'bs'){
+        splines::bs(Theta, df=sargs$df, knots=sargs$knots,
+                    degree=sargs$degree, intercept=sargs$intercept)
+    } else if(x@stype == 'ns'){
+        splines::ns(Theta, df=sargs$df, knots=sargs$knots,
+                    intercept=sargs$intercept)
+    }
+    class(Theta_prime) <- 'matrix'
+    x@Theta_prime <- Theta_prime
+    x
+}
+
+loadSplinePars <- function(pars, Theta, MG = TRUE){
+    fn <- function(pars, Theta){
+        cls <- sapply(pars, class)
+        pick <- which(cls == 'spline')
+        if(length(pick)){
+            for(i in pick)
+                pars[[i]] <- loadSplineParsItem(pars[[i]], Theta)
+        }
+        return(pars)
+    }
+    if(MG){
+        for(g in 1L:length(pars)){
+            pars[[g]] <- fn(pars[[g]], Theta)
+        }
+    } else {
+        pars <- fn(pars, Theta)
+    }
+    return(pars)
+}
+
 cfi <- function(X2, X2.null, df, df.null){
     ret <- 1 - (X2 - df) / (X2.null - df.null)
     if(ret > 1) ret <- 1

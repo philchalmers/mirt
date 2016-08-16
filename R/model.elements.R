@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
                            parnumber, BFACTOR = FALSE, mixed.design, customItems,
-                           customGroup, key, gpcm_mats)
+                           customGroup, key, gpcm_mats, spline_args)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -112,7 +112,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     nfact=nfact+length(prodlist), parprior=parprior,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR,
                     mixed.design=mixed.design, customItems=customItems, key=key,
-                    gpcm_mats=gpcm_mats)
+                    gpcm_mats=gpcm_mats, spline_args=spline_args, itemnames=itemnames)
     if(any(model[,1L] == 'START')){
         input <- gsub(" ","", model[model[,1L] == 'START', 2L])
         elements <- strsplit(input, '\\),\\(')[[1L]]

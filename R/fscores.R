@@ -179,6 +179,8 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         plausible.draws <- 1
         method <- 'EAP'
     }
+    if(any(extract.mirt(object, 'itemtype') == 'spline') && !(method %in% c('EAP', 'EAPsum')))
+        stop('Only EAP and EAPsum method supported when spline items are modeled', call.=FALSE)
     if(returnER) full.scores <- FALSE
     if(is(object, 'DiscreteClass') && plausible.draws > 0L){
         fs <- fscores(object)

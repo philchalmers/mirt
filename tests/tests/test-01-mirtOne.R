@@ -71,6 +71,10 @@ test_that('dich', {
     modideal <- mirt(data, 1, verbose=FALSE, itemtype='ideal')
     cfs <- as.numeric(do.call(c, coef(modideal)))
     expect_equal(cfs, c(0.288, -0.568, 0.422, -0.891, 0.57, -0.564, 0.292, -1, 0.207, -0.559, 0, 1), tolerance = 1e-2)
+    modspline <- mirt(data, 1, verbose=FALSE, itemtype=c(rep('2PL', 4), 'spline'))
+    cfs <- as.numeric(do.call(c, coef(modspline)))
+    expect_equal(cfs, c(0.963,1.848,0,1,1.08,0.809,0,1,1.719,1.812,0,1,0.758,0.485,0,1,-0.91,0.359,0.8,11.81,0,1), tolerance = 1e-2)
+    expect_equal(logLik(modspline), -2657.558, tolerance = 1e-4)
 
     #QMCEM
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')

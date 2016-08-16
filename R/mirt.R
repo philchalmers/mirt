@@ -224,6 +224,12 @@
 #'     response model. In the nominal model, the slope parameters defined above are constrained
 #'     to be 1's, while the last value of the \eqn{ak} is freely estimated.
 #'   }
+#'   \item{spline}{Spline response models attempt to model the response curves uses non-linear and potentially
+#'     non-monotonic patterns. The form is
+#'     \deqn{P(x = 1|\theta, \eta) = \frac{1}{1 + exp(-(\eta_1 * X_1 + \eta_2 * X_2 + \cdots + \eta_n * X_n))}}
+#'     where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
+#'     values. B-splines with a natural or polynomial basis are supported, and the \code{intercept} input is
+#'     set to \code{TRUE} by default.}
 #' }
 #'
 #' @section HTML help files, exercises, and examples:
@@ -242,12 +248,13 @@
 #'   which will be repeated globally. The NULL default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
 #'   '4PL', 'graded', 'grsm', 'grsmIRT', 'gpcm', 'rsm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
-#'   '3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
+#'   '3PLuNRM', '4PLNRM', and 'spline', for the Rasch/partial credit, 2 parameter logistic,
 #'   3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
 #'   model, rating scale graded response model (in slope-intercept and classical form),
 #'   generalized partial credit model (with optional scoring matricies from \code{gpcm_mats}),
-#'   Rasch rating scale model, nominal model, ideal-point model, 2-3PL partially compensatory model, and 2-4 parameter nested
-#'   logistic models, respectively. User defined item classes can also be defined using the
+#'   Rasch rating scale model, nominal model, ideal-point model, 2-3PL partially compensatory model, 2-4 parameter nested
+#'   logistic models, and spline response models with the \code{\link{bs}} (default) and \code{\link{ns}} functions,
+#'   respectively. User defined item classes can also be defined using the
 #'   \code{\link{createItem}} function
 #' @param method a character object specifying the estimation algorithm to be used. The default is
 #'   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
@@ -400,6 +407,17 @@
 #'   algorithm. Default is 5000
 #' @param verbose logical; print observed- (EM) or complete-data (MHRM) log-likelihood
 #'   after each iteration cycle? Default is TRUE
+#' @param spline_args a named list of lists containing information to be passed to the \code{\link{bs}} (default)
+#'   and \code{\link{ns}} for each spline itemtype. Each element must refer to the name of the itemtype with the
+#'   spline, while the internal list names refer to the arguments which are passed. For example, if item 2 were called
+#'   'read2', and item 5 were called 'read5', both of which were of itemtype 'spline' but item 5 should use the
+#'   \code{\link{ns}} form, then a modified list for each input might be of the form:
+#'
+#'   \code{spline_args = list(read2 = list(degree = 4),
+#'                            read5 = list(fun = 'ns', knots = c(-2, 2)))}
+#'
+#'   This code input changes the \code{bs()} splines function to have a \code{degree = 4} input,
+#'   while the second element changes to the \code{ns()} function with knots set a \code{c(-2, 2)}
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #'   \describe{
 #'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
@@ -963,7 +981,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  rsm.block = NULL, key = NULL,
                  large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay',
                  empiricalhist = FALSE, verbose = TRUE,
-                 solnp_args = list(), alabama_args = list(), control = list(), technical = list(), ...)
+                 solnp_args = list(), alabama_args = list(), spline_args = list(),
+                 control = list(), technical = list(), ...)
 {
     Call <- match.call()
     if(!is.null(covdata) && !is.null(formula)){
@@ -993,7 +1012,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       empiricalhist=empiricalhist, GenRandomPars=GenRandomPars,
                       optimizer=optimizer, solnp_args=solnp_args, alabama_args=alabama_args,
                       latent.regression=latent.regression, gpcm_mats=gpcm_mats,
-                      control=control, ...)
+                      control=control, spline_args=spline_args, ...)
     if(is(mod, 'SingleGroupClass'))
         mod@Call <- Call
     return(mod)

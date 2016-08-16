@@ -1,13 +1,13 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, gpcm_mats)
+                     key, gpcm_mats, spline_args, itemnames)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- Valid_iteminputs()
     invalid.items <- is.na(match(itemtype, valid.items))
     if (any(invalid.items & !(itemtype %in% customItemNames)))
-        stop(paste("Unknown itemtype", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
+        stop(paste("Unknown itemtype:", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
     if(length(gpcm_mats)){
         tmp <- sapply(gpcm_mats, ncol)
         if(!all(tmp == nfact))
@@ -129,7 +129,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 names(val) <- paste('a', 1L:length(val), sep='')
             }
             val[!fp] <- 0
-        }
+        } else if (itemtype[i] == 'spline') next
         if(all(itemtype[i] != valid.items) || itemtype[i] %in% Experimental_itemtypes()) next
         names(fp) <- names(val)
         startvalues[[i]] <- val
@@ -419,6 +419,48 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(itemtype[i] == 'spline'){
+            stype <- 'bs'
+            intercept <- TRUE
+            df <- knots <- NULL
+            degree <- 3
+            if(any(names(spline_args) == itemnames[i])){
+                sargs <- spline_args[[which(names(spline_args) == itemnames[i])]]
+                if(!is.null(sargs$fun)) stype <- sargs$fun
+                if(!is.null(sargs$intercept)) intercept <- sargs$intercept
+                if(!is.null(sargs$df)) df <- sargs$df
+                if(!is.null(sargs$knots)) knots <- sargs$knots
+                if(!is.null(sargs$degree)) degree <- sargs$degree
+            }
+            sargs <- list(stype=stype, intercept=intercept, df=df, knots=knots, degree=degree)
+            Theta_prime <- if(stype == 'bs'){
+                splines::bs(c(-2,2), df=df, knots=knots, degree=degree, intercept=intercept)
+            } else if(stype == 'ns'){
+                splines::ns(c(-2,2), df=df, knots=knots, intercept=intercept)
+            } else stop('splines function not supported', call.=FALSE)
+            p <- seq(-10, 10, length.out=ncol(Theta_prime))
+            pars[[i]] <- new('spline', par=p,
+                             est=rep(TRUE, ncol(Theta_prime)),
+                             nfact=nfact,
+                             ncat=K[i],
+                             stype=stype,
+                             Theta_prime=matrix(0),
+                             sargs=sargs,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             itemclass=11L,
+                             prior.type=rep(0L, length(p)),
+                             fixed.design=fixed.design.list[[i]],
+                             lbound=rep(-Inf, length(p)),
+                             ubound=rep(Inf, length(p)),
+                             prior_1=rep(NaN,length(p)),
+                             prior_2=rep(NaN,length(p)))
+            tmp2 <- parnumber:(parnumber + length(p) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(p)
             next
         }
 

@@ -3,7 +3,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
                        customGroup = NULL, GenRandomPars = FALSE, large = FALSE,
                        survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
-                       gpcm_mats=list(), control = list(), ...)
+                       gpcm_mats=list(), spline_args=list(), control = list(), ...)
 {
     start.time <- proc.time()[3L]
     dots <- list(...)
@@ -101,7 +101,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 itemtype[itemtype == 'rsm'] <- 'gpcm'
                 itemtype[itemtype == '3PL' | itemtype == '3PLu' | itemtype == '4PL'] <- '2PL'
                 itemtype[itemtype == '3PLNRM' | itemtype == '3PLuNRM' | itemtype == '4PLNRM'] <- '2PLNRM'
+                itemtype[itemtype == 'spline'] <- '2PL'
             }
+        }
+        if(!is.null(itemtype)){
+            if(any(itemtype == 'spline') && !(opts$method %in% c('EM', 'QMCEM')))
+                stop('spline itemtype only supported for EM algorithm', call.=FALSE)
         }
         if(length(group) != nrow(data))
             stop('length of group not equal to number of rows in data.', call.=FALSE)
@@ -191,7 +196,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
                          grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                          mixed.design=mixed.design, customItems=customItems,
-                         customGroup=customGroup,
+                         customGroup=customGroup, spline_args=spline_args,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
@@ -521,6 +526,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if(!is.matrix(Theta)) stop('customTheta input must be a matrix', call.=FALSE)
                 opts$quadpts <- nrow(Theta)
             }
+            pars <- loadSplinePars(pars, Theta)
         } #end Theta def
         ESTIMATE <- EM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                              list = list(NCYCLES=opts$NCYCLES, TOL=opts$TOL, MSTEPTOL=opts$MSTEPTOL,

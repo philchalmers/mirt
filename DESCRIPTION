@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.18.7
+Version: 1.18.8
 Date: 2016-06-24
 Type: Package
 Title: Multidimensional Item Response Theory
@@ -34,6 +34,7 @@ Imports:
     Rcpp,
     sfsmisc,
     mgcv,
+    splines,
     numDeriv
 Suggests:
     boot,

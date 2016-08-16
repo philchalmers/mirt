@@ -12,8 +12,8 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
   key = NULL, large = FALSE, GenRandomPars = FALSE,
   accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), alabama_args = list(), control = list(),
-  technical = list(), ...)
+  solnp_args = list(), alabama_args = list(), spline_args = list(),
+  control = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -28,12 +28,13 @@ of factors to extract is also supported}
 which will be repeated globally. The NULL default assumes that the items follow a graded or
 2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
 '4PL', 'graded', 'grsm', 'grsmIRT', 'gpcm', 'rsm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
-'3PLuNRM', and '4PLNRM', for the Rasch/partial credit, 2 parameter logistic,
+'3PLuNRM', '4PLNRM', and 'spline', for the Rasch/partial credit, 2 parameter logistic,
 3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
 model, rating scale graded response model (in slope-intercept and classical form),
 generalized partial credit model (with optional scoring matricies from \code{gpcm_mats}),
-Rasch rating scale model, nominal model, ideal-point model, 2-3PL partially compensatory model, and 2-4 parameter nested
-logistic models, respectively. User defined item classes can also be defined using the
+Rasch rating scale model, nominal model, ideal-point model, 2-3PL partially compensatory model, 2-4 parameter nested
+logistic models, and spline response models with the \code{\link{bs}} (default) and \code{\link{ns}} functions,
+respectively. User defined item classes can also be defined using the
 \code{\link{createItem}} function}
 
 \item{guess}{fixed pseudo-guessing parameters. Can be entered as a single
@@ -217,6 +218,18 @@ equality constraints, inequality constraints, etc}
 
 \item{alabama_args}{a list of arguments to be passed to the \code{alabama::constrOptim.nl()}
 function for equality constraints, inequality constraints, etc}
+
+\item{spline_args}{a named list of lists containing information to be passed to the \code{\link{bs}} (default)
+  and \code{\link{ns}} for each spline itemtype. Each element must refer to the name of the itemtype with the
+  spline, while the internal list names refer to the arguments which are passed. For example, if item 2 were called
+  'read2', and item 5 were called 'read5', both of which were of itemtype 'spline' but item 5 should use the
+  \code{\link{ns}} form, then a modified list for each input might be of the form:
+
+  \code{spline_args = list(read2 = list(degree = 4),
+                           read5 = list(fun = 'ns', knots = c(-2, 2)))}
+
+  This code input changes the \code{bs()} splines function to have a \code{degree = 4} input,
+  while the second element changes to the \code{ns()} function with knots set a \code{c(-2, 2)}}
 
 \item{control}{a list passed to the respective optimizers (i.e., \code{optim()}, \code{nlminb()},
 etc)}
@@ -514,6 +527,11 @@ of categories.
     response model. In the nominal model, the slope parameters defined above are constrained
     to be 1's, while the last value of the \eqn{ak} is freely estimated.
   }
+  \item{bs or ns}{Spline response models attempt to model the response curves uses non-linear and potentially
+    non-monotonic patterns. The form is
+    \deqn{P(x = 1|\theta, \eta) = \frac{1}{1 + exp(-(\eta_1 * X_1 + \eta_2 * X_2 + \cdots + \eta_n * X_n))}}
+    where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
+    values. B-splines with a natural or polynomial basis are supported.}
 }
 }
 

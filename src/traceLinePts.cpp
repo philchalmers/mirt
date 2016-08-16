@@ -554,7 +554,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         case 9 :
             break;
         case 10 :
-            P_lca(P, par, Theta, N, ncat, nfact, 0);
+            P_lca(P, par, theta, N, ncat, nfact, 0);
             break;
     }
     int where = (itemloc[which]-1) * N;
