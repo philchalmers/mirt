@@ -527,11 +527,12 @@ of categories.
     response model. In the nominal model, the slope parameters defined above are constrained
     to be 1's, while the last value of the \eqn{ak} is freely estimated.
   }
-  \item{bs or ns}{Spline response models attempt to model the response curves uses non-linear and potentially
+  \item{spline}{Spline response models attempt to model the response curves uses non-linear and potentially
     non-monotonic patterns. The form is
     \deqn{P(x = 1|\theta, \eta) = \frac{1}{1 + exp(-(\eta_1 * X_1 + \eta_2 * X_2 + \cdots + \eta_n * X_n))}}
     where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
-    values. B-splines with a natural or polynomial basis are supported.}
+    values. B-splines with a natural or polynomial basis are supported, and the \code{intercept} input is
+    set to \code{TRUE} by default.}
 }
 }
 

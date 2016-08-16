@@ -93,8 +93,9 @@ multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
 For Rasch, partial credit, and rating scale models infit and outfit statistics are
 also produced. Poorly fitting items should be inspected with the empirical plots/tables
 for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
-where the functional form of the IRT model was misspecified. For discrete models,
-only the S-X2 statistic will be calculated.
+where the functional form of the IRT model was misspecified, or models can be refit using
+more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
+For discrete models, only the S-X2 statistic will be calculated.
 }
 \examples{
 
@@ -133,6 +134,15 @@ itemfit(raschfit, method = 'ML', infit = TRUE) #infit and outfit stats
 #same as above, but inputting ML estimates instead
 Theta <- fscores(raschfit, method = 'ML')
 itemfit(raschfit, Theta=Theta, infit = TRUE)
+
+# fit a new more flexible model for the mis-fitting item
+itemtype <- c(rep('2PL', 20), 'spline')
+x2 <- mirt(data, 1, itemtype=itemtype)
+itemfit(x2)
+itemplot(x2, 21)
+anova(x2, x)
+
+#------------------------------------------------------------
 
 #similar example to Kang and Chen 2007
 a <- matrix(c(.8,.4,.7, .8, .4, .7, 1, 1, 1, 1))
