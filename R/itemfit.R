@@ -560,7 +560,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
             df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
         }
-        S_X2[df.S_X2 <= 0] <- NaN
+        df.S_X2[df.S_X2 < 0] <- 0
+        S_X2[df.S_X2 == 0] <- NaN
         ret$S_X2 <- S_X2
         ret$df.S_X2 <- df.S_X2
         ret$p.S_X2 <- 1 - suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2))
