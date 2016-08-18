@@ -1,5 +1,8 @@
 # Changes in mirt 1.19
 
+- a penalized version of the BFGS algorithm is now used instead of the L-BFGS-B when upper and lower
+  bounds are included (provides more robust estimates)
+
 - the variances of the orthogonal factors in `bfactor()` can now be freely
   estimated. This allows modeling of designs such as the testlet response model (example included in
   the documentation)

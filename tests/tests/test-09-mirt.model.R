@@ -66,7 +66,7 @@ test_that('syntax', {
     expect_equal(as.numeric(coef(mod8, simplify=TRUE, digits = 7)$items), c(0.5501291,3.146379,0,0,0,0,0,0.5501291,0.4096282,3.146379,1.46666,1.46666,1.46666,0.4535099,3.685736,0,0,0,0,0,1,1,1,1,1),
                  tolerance = 1e-2)
     mod9 <- mirt(data, model9, '3PL', verbose=FALSE, calcNull=FALSE)
-    expect_equal(as.numeric(coef(mod9, simplify=TRUE, digits = 7)$items), c(1.092624,1.819784,2.095627,0.8938861,0.8182912,1.587376,0.1116729,1.542417,0.0396452,1.595973,0.2,0.2901783,0.2,0.2,0.2,1,1,1,1,1),
+    expect_equal(as.numeric(coef(mod9, simplify=TRUE, digits = 7)$items), c(1.006855,1.928242,1.666527,0.7361309,0.7671688,1.86562,0.0940409,1.780518,0.4818902,1.868453,7.03e-05,0.2950545,0.0002577,5.06e-05,0.0001552,1,1,1,1,1),
                  tolerance = 1e-2)
     mod10 <- mirt(data, model10, '3PL', pars = 'values')
     expect_equal(mod10$value[mod10$name == 'a1'], c(1, 0.851, 1, 1, .851), tolerance = 1e-4)

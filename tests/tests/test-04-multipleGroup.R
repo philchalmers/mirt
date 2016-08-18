@@ -16,9 +16,9 @@ test_that('one factor', {
     mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', SE=TRUE, SE.type = 'crossprod',
                                group = group, verbose = FALSE, method = 'EM')
     cfs <- as.numeric(na.omit(do.call(rbind, coef(mod_Rasch, digits=5, printSE=TRUE, as.data.frame=TRUE))))
-    expect_equal(cfs, c(0.51169,-0.65219,-0.19048,0.86519,0.1236,0.76367,0.9197,-0.33672,-1.09037,-1.16612,1.24264,-0.21475,0.40694,0.44667,-0.06472,0.97838,0.66397,-0.49391,-0.13255,0.88905,0.37737,0.97034,1.02937,-0.33314,-0.90749,-1.22848,1.54845,-0.12205,0.37205,0.52749,-0.06961,1.55736,0.07894,0.07929,0.07721,0.08119,0.07786,0.07987,0.08225,0.07738,0.08299,0.08428,0.08508,0.0777,0.07804,0.07845,0.07726,0.06713,0.08612,0.08523,0.08467,0.08723,0.08485,0.08794,0.08911,0.08454,0.08803,0.09063,0.09475,0.08545,0.08438,0.08586,0.08411,0.10284),
+    expect_equal(cfs, c(0.51223,-0.65164,-0.18995,0.86574,0.12412,0.76422,0.92025,-0.33619,-1.08981,-1.16557,1.2432,-0.21422,0.40748,0.4472,-0.06419,0.97839,0.66201,-0.49586,-0.13449,0.88709,0.37542,0.96838,1.02741,-0.33508,-0.90944,-1.23045,1.54653,-0.12399,0.3701,0.52554,-0.07155,1.55731,0.07894,0.07929,0.07721,0.0812,0.07786,0.07988,0.08225,0.07738,0.08299,0.08428,0.08509,0.0777,0.07804,0.07845,0.07726,0.06713,0.08612,0.08523,0.08468,0.08723,0.08485,0.08795,0.08911,0.08455,0.08804,0.09064,0.09474,0.08546,0.08438,0.08586,0.08411,0.10283),
                  tolerance = 1e-3)
-    expect_equal(logLik(mod_Rasch), -17944.17)
+    expect_equal(logLik(mod_Rasch), -17944.17, tolerance = 1e-4)
     EAP <- fscores(mod_Rasch, full.scores=TRUE)
     expect_equal(cor(EAP, rowSums(dat))[1], .99, tolerance = 1e-2)
     pf <- personfit(mod_Rasch, Theta=EAP)
@@ -89,7 +89,7 @@ test_that('one factor', {
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.6646153, 8.1727058, 11.000000, 0.6977546),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
-    expect_true(mirt:::closeEnough(fit3$M2 - c(198.6338), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fit3$M2 - c(198.5891), -1e-4, 1e-4))
     expect_equal(fit3$SRMSR.D1, 0.026854, tolerance = 1e-4)
     expect_equal(fit3$TLI, 1.001169, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
@@ -109,12 +109,12 @@ test_that('one factor', {
     mod <- multipleGroup(dat, 1, group, invariance = c('slopes', 'interecepts', 'free_means',
                                                        'free_var'), verbose=FALSE)
     cfs <- coef(mod, simplify=TRUE, digits=Inf)
-    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.2093194,1.1932120,1.0387919,1.7398616,1.0476004,-0.1925803),
+    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.200948,1.185074,1.034853,1.739862,1.0476,-0.1902497),
                  tolerance=1e-4)
-    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7471234, 0.9558032, 0.4885550), tolerance=1e-4)
+    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7470173, 0.9556158, 0.4883004), tolerance=1e-4)
     expect_is(plot(mod, type = 'trace'), 'trellis')
     ifit <- itemfit(mod, S_X2 = FALSE, X2=TRUE)
-    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002,0.0081), tolerance=1e-4)
+    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002,0.0076), tolerance=1e-4)
 
     #missing data
     set.seed(1234)
