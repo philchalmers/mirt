@@ -110,8 +110,29 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     if(dentype == 'bfactor'){
         Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
         for(g in 1L:ngroups){
-            prior[[g]] <- dnorm(theta, 0, 1)
-            prior[[g]] <- prior[[g]]/sum(prior[[g]])
+            pars[[g]][[J+1L]]@BFACTOR <- TRUE
+            pars[[g]][[J+1L]]@theta <- theta
+            pars[[g]][[J+1L]]@Thetabetween <- Thetabetween
+        }
+        np <- ncol(Thetabetween)
+        ns <- ncol(Theta) - np
+        gp <- ExtractGroupPars(pars[[1L]][[J+1L]])
+        gp$gmeans <- 1L:length(gp$gmeans) - 1L
+        ind <- length(gp$gmeans)
+        for(i in 1L:length(gp$gmeans)){
+            for(j in i:length(gp$gmeans)){
+                gp$gcov[j,i] <- ind
+                ind <- ind + 1L
+            }
+        }
+        tmp <- gp$gcov[1L:np, 1L:np]
+        tmp <- tmp[lower.tri(tmp, TRUE)]
+        tmpmat <- matrix(0, ns, 2L)
+        for(i in 1L:ns)
+            tmpmat[i, ] <- c(gp$gmean[np + i], gp$gcov[np+i, np+i])
+        for(g in 1L:ngroups){
+            pars[[g]][[J+1L]]@bindex <- as.integer(c(gp$gmeans[1L:np], tmp))
+            pars[[g]][[J+1L]]@sindex = tmpmat
         }
     }
     gTheta <- vector('list', ngroups)
@@ -146,16 +167,16 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         converge <- opt$convergence == 0
         if(list$SE) hess <- opt$hessian
-        tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
-                           list=list, ngroups=ngroups, nfact=nfact, prior=prior,
+        tmp <- updatePrior(pars=pars, Theta=Theta,
+                           list=list, ngroups=ngroups, nfact=nfact,
                            J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist)
-        Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+        prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         LL <- 0
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups){
             if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                            Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
+                                            Theta=Theta, prior=prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific,
                                             sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
             } else {
@@ -172,11 +193,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             #priors
             start <- proc.time()[3L]
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
-            tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
-                               list=list, ngroups=ngroups, nfact=nfact, prior=prior,
+            tmp <- updatePrior(pars=pars, Theta=Theta,
+                               list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars)
-            Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+            prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(is.na(TOL) && !is.nan(TOL)){
                 for(g in 1L:ngroups) rlist[[g]]$expected <- 1
                 break
@@ -203,7 +224,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 for(i in 1L:J)
                     pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L)),
                                                         drop=FALSE]
-                pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1)
+                if(dentype == 'bfactor'){
+                    pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
+                    pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
+                } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1)
             }
             Estep.time <- Estep.time + proc.time()[3L] - start
             start <- proc.time()[3L]
@@ -215,7 +239,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND,
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                              dentype=dentype, nfact=nfact, Thetabetween=Thetabetween,
+                              dentype=dentype, nfact=nfact,
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
                               TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars,
                               control=control)

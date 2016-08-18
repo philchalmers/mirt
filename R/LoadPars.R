@@ -562,7 +562,8 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
         Nans <- rep(NaN,length(par))
         ret <- new('GroupPars', par=par, est=est, nfact=nfact, any.prior=FALSE, den=den,
                    safe_den=den, parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)),
-                   prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, itemclass=0L)
+                   prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, rrb=0, rrs=matrix(0),
+                   BFACTOR=FALSE, itemclass=0L)
         return(ret)
     }
 }

@@ -37,10 +37,10 @@ test_that('gpcm_mats', {
      COV = F1*F2
     "
     model<-mirt.model(model)
-    gpcm.sf.em<-mirt(dat,model,itemtype=rep("gpcm",ni),gpcm_mats=sf.list, optimizer="NR", quadpts=49, verbose=FALSE)
+    gpcm.sf.em<-mirt(dat,model,itemtype=rep("gpcm",ni),gpcm_mats=sf.list, optimizer="NR", quadpts=21, verbose=FALSE)
 
-    expect_equal(-1594.08, extract.mirt(gpcm.sf.em, 'logLik'), tolerance=.01)
+    expect_equal(-1595.52, extract.mirt(gpcm.sf.em, 'logLik'), tolerance=.01)
     est<-coef(gpcm.sf.em)
-    expect_equal(est[[1]][1:2], c(.81, .68),tolerance = .01)
+    expect_equal(est[[1]][1:2], c(.721, .663),tolerance = .01)
 
 })

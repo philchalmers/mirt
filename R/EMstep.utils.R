@@ -6,7 +6,7 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
         freq <- if(full) 1 else Data$Freq[[g]]
         if(dentype == 'bfactor'){
             rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                        Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
+                                        Theta=Theta, prior=prior[[g]],
                                         Priorbetween=Priorbetween[[g]], specific=specific,
                                         sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                         Etable=Etable)
@@ -34,18 +34,18 @@ Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, f
 }
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Prior, Priorbetween, specific,
+Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Priorbetween, specific,
                           CUSTOM.IND, sitems, itemloc, itemtrace=NULL, Etable = TRUE)
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
-    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Prior, Etable)
+    retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Etable)
     return(retlist)
 }
 
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, solnp_args,
-                  SLOW.IND, dentype, nfact, Thetabetween, Moptim, Mrate, TOL, full,
+                  SLOW.IND, dentype, nfact, Moptim, Mrate, TOL, full,
                   lrPars, control){
     p <- longpars[est]
     if(length(p)){
@@ -65,8 +65,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
-                             upper=UBOUND[est]),
+                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc,
+                             lower=LBOUND[est], upper=UBOUND[est]),
                        silent=TRUE)
         } else if(Moptim == 'Nelder-Mead'){
             opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=control,
@@ -86,7 +86,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             opt <- try(Mstep.NR(p=p, est=est, longpars=longpars, pars=pars, ngroups=ngroups,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
-                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL, control=control))
+                                itemloc=itemloc, DERIV=DERIV, rlist=rlist,
+                                TOL=TOL, control=control))
         } else if(Moptim %in% c('solnp', 'alabama')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
@@ -120,8 +121,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                               DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                               est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                               PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc, lower=LBOUND[est],
-                              upper=UBOUND[est], control=control),
+                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc,
+                              lower=LBOUND[est], upper=UBOUND[est], control=control),
                        silent=TRUE)
         } else {
             stop('M-step optimizer not supported', call.=FALSE)
@@ -151,8 +152,7 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
         LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
         if(any(pars[[g]][[J+1L]]@est))
-            LLs[g] <- LLs[g] + Mstep.LL.group(pars=pars[[g]], Theta=gTheta[[g]],
-                                              rr=rowSums(rlist[[g]]$r1))
+            LLs[g] <- LLs[g] + Mstep.LL.group(pars=pars[[g]], Theta=gTheta[[g]])
     }
     return(-sum(LLs))
 }
@@ -167,9 +167,9 @@ Mstep.LL_alt <- function(x0, optim_args){
                     DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
-Mstep.LL.group <- function(pars, Theta, rr){
-    theta <- Theta
+Mstep.LL.group <- function(pars, Theta){
     pick <- length(pars)
+    rr <- pars[[pick]]@rr
     if(pars[[pick]]@itemclass < 0L){
         gp <- pars[[pick]]
         d <- gp@safe_den(gp, Theta)
@@ -180,8 +180,22 @@ Mstep.LL.group <- function(pars, Theta, rr){
         if(is(chl, 'try-error')) return(-1e100)
         tmp <- outer(diag(gp$gcov), diag(gp$gcov))
         if(any(gp$gcov[lower.tri(tmp)] >= tmp[lower.tri(tmp)])) return(-1e100)
-        tmp <- rr * mirt_dmvnorm(theta, gp$gmeans, gp$gcov, log=TRUE)
-        LL <- sum(tmp)
+        if(pars[[pick]]@BFACTOR){
+            theta <- pars[[pick]]@theta
+            Thetabetween <- pars[[pick]]@Thetabetween
+            nsfact <- ncol(pars[[pick]]@rrs)
+            npfact <- ncol(Theta) - nsfact
+            pick2 <- 1L:npfact
+            LL <- sum(pars[[pick]]@rrb * mirt_dmvnorm(Thetabetween, gp$gmeans[pick2],
+                                                      gp$gcov[pick2,pick2,drop=FALSE], log=TRUE))
+            for(i in 1L:nsfact){
+                pick2 <- npfact + i
+                LL <- LL + sum(pars[[pick]]@rrs[,i] * dnorm(theta, gp$gmeans[pick2],
+                                                            sqrt(gp$gcov[pick2,pick2]), log=TRUE))
+            }
+        } else {
+            LL <- sum(rr * mirt_dmvnorm(Theta, gp$gmeans, gp$gcov, log=TRUE))
+        }
     }
     if(pars[[pick]]@any.prior)
         LL <- LL.Priors(x=pars[[pick]], LL=LL)
@@ -243,7 +257,7 @@ Mstep.grad_alt <- function(x0, optim_args){
                       DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
-Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L,  ANY.PRIOR,
+Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
                      constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, TOL, control)
 {
     plast2 <- plast <- p

@@ -5,9 +5,9 @@ void _Estep(vector<double> &, vector<double> &, const vector<double> &,
     const vector<double> &, const IntegerMatrix &, const NumericMatrix &,
     const bool &);
 
-void _Estepbfactor(vector<double> &, vector<double> &, vector<double> &,
-    const NumericMatrix &, const vector<double> &, const vector<double> &,
+void _Estepbfactor(vector<double> &, vector<double> &, vector<double> &, vector<double> &,
+    const NumericMatrix &, const NumericMatrix &, const vector<double> &,
     const vector<double> &, const IntegerMatrix &, const IntegerMatrix &,
-    const vector<double> &, const bool &);
+    const bool &);
 
 #endif

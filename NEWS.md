@@ -1,5 +1,9 @@
 # Changes in mirt 1.19
 
+- the variances of the orthogonal factors in `bfactor()` can now be freely
+  estimated. This allows modeling of designs such as the testlet response model (example included in
+  the documentation)
+
 - new `spline` itemtype to model B-spline response functions for dichotomous models. Useful for 
   diagnostic purposes after detecting item-misfit. Additional arguments can be passed to the 
   `spline_args` list input to control the behaviour of the splines for each item. Currently limited

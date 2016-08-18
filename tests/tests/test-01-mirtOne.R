@@ -37,7 +37,7 @@ test_that('dich', {
     modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modm3, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm3)))
-    expect_equal(cfs, c(1,NA,NA,2.73,2.455,3.005,0,NA,NA,1,NA,NA,1,NA,NA,0.999,0.827,1.17,0,NA,NA,1,NA,NA,1,NA,NA,0.24,0.096,0.384,0,NA,NA,1,NA,NA,1,NA,NA,1.306,1.12,1.493,0,NA,NA,1,NA,NA,1,NA,NA,2.099,1.873,2.326,0,NA,NA,1,NA,NA,0,NA,NA,0.57,0.339,0.802),
+    expect_equal(cfs, c(1,NA,NA,2.73,2.478,2.983,0,NA,NA,1,NA,NA,1,NA,NA,0.999,0.845,1.152,0,NA,NA,1,NA,NA,1,NA,NA,0.24,0.1,0.38,0,NA,NA,1,NA,NA,1,NA,NA,1.306,1.143,1.47,0,NA,NA,1,NA,NA,1,NA,NA,2.099,1.896,2.303,0,NA,NA,1,NA,NA,0,NA,NA,0.57,0.371,0.77),
                  tolerance = 1e-2)
     modm3b <- mirt(dat, 'F = 1-5
                    CONSTRAIN = (1-5, a1)', verbose=FALSE, SE=F)

@@ -178,7 +178,7 @@ static void symMat(vector<double> &dsig, const int *nfact)
 
 
 
-static void _dgroup(vector<double> &grad, NumericMatrix &hess, S4 &obj,
+static void _dgroup(vector<double> &grad, NumericMatrix &hess, const NumericVector &par,
 	const NumericMatrix &Theta, const bool &estHess, const bool &randeff)
 {
     const int N = Theta.nrow();
@@ -186,7 +186,6 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, S4 &obj,
     const int npars = nfact + nfact * (nfact + 1);
     const int nsig = npars - nfact;
 
-    NumericVector par = obj.slot("par");
     arma::vec mu(nfact);
     arma::mat Sig(nfact, nfact);
     int ind;
@@ -317,11 +316,38 @@ static void _dgroup(vector<double> &grad, NumericMatrix &hess, S4 &obj,
     }
 }
 
+static void _dEta(NumericMatrix &dEta, NumericMatrix &d2Eta, const NumericVector &par,
+    const NumericMatrix &Theta, const bool &estHess)
+{
+    const int nquad = Theta.nrow();
+    const int nfact = Theta.ncol();
+    const int npars = nfact + nfact * (nfact + 1) / 2;
+    NumericMatrix theta(1, nfact);
+    vector<double> deta(npars);
+    NumericMatrix deta2(npars, npars);
+
+    for(int i = 0; i < nquad; ++i){
+        for(int j = 0; j < nfact; ++j)
+            theta(0,j) = Theta(i,j);
+        _dgroup(deta, deta2, par, theta, estHess, false);
+        for(int j = 0; j < npars; ++j)
+            dEta(i,j) = deta[j];
+        int l = 0;
+        for(int j = 0; j < npars; ++j){
+            for(int k = j; k < npars; ++k){
+                d2Eta(i,l) = deta2(j,k);
+                ++l;
+            }
+        }
+    }
+}
+
 static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
 	const NumericMatrix &Theta, const NumericMatrix &itemtrace, const vector<double> &prior,
 	const bool &estHess)
 {
     NumericVector est = obj.slot("est");
+    NumericVector par = obj.slot("par");
     bool ret = true;
     for(int i = 0; i < est.length(); ++i)
         if(est(i)) ret = false;
@@ -334,27 +360,10 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
     const int N = tabdata.nrow();
     const int nitems = tabdata.ncol();
 
-    vector<double> deta(npars2);
-    vector<double> hessvec(npars2*npars2);
+    vector<double> hessvec(npars2*(npars2-1)/2);
     NumericMatrix dEta(nquad, npars2);
     NumericMatrix d2Eta(nquad, npars2*npars2);
-    NumericMatrix deta2(npars2, npars2);
-    NumericMatrix theta(1, nfact);
-    for(int i = 0; i < nquad; ++i){
-        for(int j = 0; j < nfact; ++j)
-            theta(0,j) = Theta(i,j);
-        _dgroup(deta, deta2, obj, theta, estHess, false);
-        for(int j = 0; j < npars2; ++j)
-            dEta(i,j) = deta[j];
-        int l = 0;
-        for(int j = 0; j < npars2; ++j){
-            for(int k = j; k < npars2; ++k){
-                d2Eta(i,l) = deta2(j,k);
-                ++l;
-            }
-        }
-    }
-
+    _dEta(dEta, d2Eta, par, Theta, estHess);
     for(int pat = 0; pat < N; ++pat){
 
         vector<double> L(nquad);
@@ -379,7 +388,7 @@ static void _dgroupEM(vector<double> &grad, NumericMatrix &hess, S4 &obj,
             grad[j] += tmp;
         }
         if(estHess){
-            for(int j = 0; j < npars2*npars2; ++j){
+            for(int j = 0; j < npars2*(npars2-1)/2; ++j){
                 double tmp = 0.0;
                 for(int k = 0; k < nquad; ++k)
                     tmp += (L[k] * d2Eta(k, j));
@@ -404,6 +413,7 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
 	const NumericMatrix &Theta, const bool &estHess)
 {
     NumericVector est = obj.slot("est");
+    NumericVector par = obj.slot("par");
     bool ret = true;
     for(int i = 0; i < est.length(); ++i)
         if(est(i)) ret = false;
@@ -412,48 +422,109 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
     const int nquad = Theta.nrow();
     const int nfact = Theta.ncol();
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
-    NumericVector CD = obj.slot("rr");
+    const bool BFACTOR = as<bool>(obj.slot("BFACTOR"));
 
-    vector<double> deta(npars2);
-    vector<double> hessvec(npars2*npars2);
-    NumericMatrix dEta(nquad, npars2);
-    NumericMatrix d2Eta(nquad, npars2*npars2);
-    NumericMatrix deta2(npars2, npars2);
-    NumericMatrix theta(1, nfact);
-    for(int i = 0; i < nquad; ++i){
-        for(int j = 0; j < nfact; ++j)
-            theta(0,j) = Theta(i,j);
-        _dgroup(deta, deta2, obj, theta, estHess, false);
-        for(int j = 0; j < npars2; ++j)
-            dEta(i,j) = deta[j];
-        int l = 0;
-        for(int j = 0; j < npars2; ++j){
-            for(int k = j; k < npars2; ++k){
-                d2Eta(i,l) = deta2(j,k);
-                ++l;
+    if(BFACTOR){
+        NumericMatrix rrs = obj.slot("rrs");
+        NumericVector rrb = obj.slot("rrb");
+        NumericMatrix Thetas = obj.slot("theta");
+        NumericMatrix Thetab = obj.slot("Thetabetween");
+        const int nsfact = rrs.ncol();
+        const int npfact = nfact - nsfact;
+        const int nppars = npfact + npfact * (npfact + 1) / 2;
+        const int npquad = Thetab.nrow();
+        const int nsquad = Thetas.nrow();
+
+        NumericVector parp(nppars);
+        IntegerVector bindex = obj.slot("bindex");
+        for (int i = 0; i < nppars; ++i)
+        	parp(i) = par(bindex(i));
+        NumericMatrix dEta(npquad, nppars);
+        NumericMatrix d2Eta(npquad, nppars*nppars);
+        _dEta(dEta, d2Eta, parp, Thetab, estHess);
+        for(int j = 0; j < nppars; ++j){
+            double tmp = 0.0;
+            for(int k = 0; k < npquad; ++k)
+                tmp += (rrb(k) * dEta(k, j));
+            grad[bindex(j)] += tmp;
+        }
+        if(estHess){
+            vector<double> hessvec(nppars*(nppars-1)/2);
+            for(int j = 0; j < nppars*nppars; ++j){
+                double tmp = 0.0;
+                for(int k = 0; k < npquad; ++k)
+                    tmp += (rrb(k) * d2Eta(k, j));
+                hessvec[j] += tmp;
+            }
+            int k = 0;
+            for(int i = 0; i < nppars; ++i){
+                for(int j = i; j < nppars; ++j){
+                    hess(bindex(i),bindex(j)) = hessvec[k];
+                    hess(bindex(j),bindex(i)) = hess(bindex(i),bindex(j));
+                    ++k;
+                }
             }
         }
-    }
 
-    for(int j = 0; j < npars2; ++j){
-        double tmp = 0.0;
-        for(int k = 0; k < nquad; ++k)
-            tmp += (CD(k) * dEta(k, j));
-        grad[j] += tmp;
-    }
-    if(estHess){
-        for(int j = 0; j < npars2*npars2; ++j){
+        NumericMatrix dEtas(nsquad, 2);
+        NumericMatrix d2Etas(nsquad, 3);
+        IntegerMatrix sindex = obj.slot("sindex");
+        for (int s = 0; s < nsfact; ++s){
+        	NumericVector pars(2); 
+        	for (int i = 0; i < 2; ++i)
+        		pars(i) = par(sindex(s, i));
+        	_dEta(dEtas, d2Etas, pars, Thetas, estHess);
+            for(int j = 0; j < 2; ++j){
+                double tmp = 0.0;
+                for(int k = 0; k < nsquad; ++k)
+                    tmp += (rrs(k, s) * dEtas(k, j));
+                grad[sindex(s, j)] += tmp;
+            }
+            if(estHess){
+                vector<double> hessvec(3);
+                for(int j = 0; j < 3; ++j){
+                    double tmp = 0.0;
+                    for(int k = 0; k < nsquad; ++k)
+                        tmp += (rrs(k, s) * d2Etas(k, j));
+                    hessvec[j] += tmp;
+                }
+                int k = 0;
+                for(int i = 0; i < 2; ++i){
+                    for(int j = i; j < 2; ++j){
+                        hess(sindex(s, i),sindex(s, j)) = hessvec[k]; 
+                        hess(sindex(s, j),sindex(s, i)) = hess(sindex(s, i),sindex(s, j));
+                        ++k;
+                    }
+                }
+            }
+        }
+    } else {
+        NumericVector CD = obj.slot("rr");
+        NumericMatrix dEta(nquad, npars2);
+        NumericMatrix d2Eta(nquad, npars2*npars2);
+        NumericMatrix deta2(npars2, npars2);
+        _dEta(dEta, d2Eta, par, Theta, estHess);
+        for(int j = 0; j < npars2; ++j){
             double tmp = 0.0;
             for(int k = 0; k < nquad; ++k)
-                tmp += (CD(k) * d2Eta(k, j));
-            hessvec[j] += tmp;
+                tmp += (CD(k) * dEta(k, j));
+            grad[j] += tmp;
         }
-        int k = 0;
-        for(int i = 0; i < npars2; ++i){
-            for(int j = i; j < npars2; ++j){
-                hess(i,j) = hessvec[k];
-                hess(j,i) = hess(i,j);
-                ++k;
+        if(estHess){
+            vector<double> hessvec(npars2*(npars2-1)/2);
+            for(int j = 0; j < npars2*(npars2-1)/2; ++j){
+                double tmp = 0.0;
+                for(int k = 0; k < nquad; ++k)
+                    tmp += (CD(k) * d2Eta(k, j));
+                hessvec[j] += tmp;
+            }
+            int k = 0;
+            for(int i = 0; i < npars2; ++i){
+                for(int j = i; j < npars2; ++j){
+                    hess(i,j) = hessvec[k];
+                    hess(j,i) = hess(i,j);
+                    ++k;
+                }
             }
         }
     }
@@ -523,14 +594,15 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
 
     vector<double> grad(npars2);
     NumericMatrix hess(npars2, npars2);
-    if(EM){
+    if(EM){ 
         if(EMcomplete){
             _dgroupEMCD(grad, hess, obj, Theta, estHess);
         } else {
-        	_dgroupEM(grad, hess, obj, Theta, itemtrace, grad, estHess);
+            _dgroupEM(grad, hess, obj, Theta, itemtrace, grad, estHess);
         }
     } else {
-    	_dgroup(grad, hess, obj, Theta, estHess, randeff);
+        NumericVector par = obj.slot("par");
+        _dgroup(grad, hess, par, Theta, estHess, randeff);
     }
 
     List ret;
@@ -1379,12 +1451,13 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     const int USEFIXED = as<int>(RUSEFIXED);
     const int EM = as<int>(REM);
     vector<double> grad(npars);
+    vector<double> dummy2(npars);
     NumericMatrix hess(npars, npars);
 
     for(int group = 0; group < gpars.length(); ++group){
         List pars = gpars[group];
         NumericMatrix Theta = gTheta[group];
-        _computeDpars(grad, hess, pars, Theta, offterm, dummy, grad, nitems, npars,
+        _computeDpars(grad, hess, pars, Theta, offterm, dummy, dummy2, nitems, npars,
             estHess, USEFIXED, EM, EMcomplete);
     }
 
@@ -1396,25 +1469,25 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     END_RCPP
 }
 
-RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
-    SEXP RPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc,
+RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
+    SEXP RgPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc,
     SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor, SEXP Riscross)
 {
     BEGIN_RCPP
 
     List gpars(Rpars);
     const List gitemtrace(Rgitemtrace);
+    const List gprior(Rgprior); 
     const NumericMatrix gPrior(RgPrior); //cols are groups
     const NumericMatrix Theta(RTheta);
     const IntegerMatrix tabdata(Rtabdata);
     const IntegerMatrix sitems(Rsitems);
     const vector<int> itemloc = as< vector<int> >(Ritemloc);
     const NumericMatrix rs(Rrs); //group stacked
-    const vector<double> prior = as< vector<double> >(Rprior);
-    const vector<double> Priorbetween = as< vector<double> >(RPriorbetween);
+    const NumericMatrix gPriorbetween(RgPriorbetween);
     const vector<double> vone(1.0, 1);
-    const int N = Theta.nrow();
     const int nfact = Theta.ncol();
+    const int nquad = Theta.nrow();
     const int J = itemloc[itemloc.size()-1] - 1;
     const int nitems = itemloc.size() - 1;
     const int npars = as<int>(Rnpars);
@@ -1423,11 +1496,14 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
     const int ngroups = gpars.length();
     const int npat = tabdata.nrow();
     const bool Etable = true;
+    NumericMatrix prior = gprior[0];
+    const int nsfact = prior.ncol();
+    const int nsquad = prior.nrow();
+    const int npfact = Theta.ncol() - nsfact;
+    const int npquad = gPriorbetween.ncol();
     IntegerMatrix dat(1, J);
     NumericMatrix Igrad(npars, npars), IgradP(npars, npars), Ihess(npars, npars),
         offterm(1, nitems);
-
-    List debug;
 
     for(int pat = 0; pat < npat; ++pat){
         for(int i = 0; i < J; ++i)
@@ -1436,27 +1512,36 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
             NumericMatrix itemtrace = gitemtrace[g];
             NumericVector tmpvec = gPrior(_,g);
             vector<double> Prior = as< vector<double> >(tmpvec);
-            vector<double> expected(1), r1vec(N*J), r2vec(N);
+            vector<double> expected(1), r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
             if(isbifactor){
-               _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, vone,
-                    dat, sitems, Prior, Etable);
+                NumericMatrix prior = gprior[g];
+                NumericVector tmpvec = gPriorbetween(g,_);
+                vector<double> Priorbetween = as< vector<double> >(tmpvec);
+               _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, vone,
+                    dat, sitems, Etable);
             } else {
                 _Estep(expected, r1vec, Prior, vone, dat, itemtrace, Etable);
             }
-            NumericMatrix r1 = vec2mat(r1vec, N, J);
+            NumericMatrix r1 = vec2mat(r1vec, nquad, J);
             List pars = gpars[g];
             if(iscross){
                 for(int i = 0; i < nitems; ++i){
                     S4 item = pars[i];
-                    NumericMatrix tmpmat(N, itemloc[i+1] - itemloc[i]);
+                    NumericMatrix tmpmat(nquad, itemloc[i+1] - itemloc[i]);
                     for(int j = 0; j < tmpmat.ncol(); ++j)
-                        for(int n = 0; n < N; ++n)
+                        for(int n = 0; n < nquad; ++n)
                             tmpmat(n,j) = r1(n, itemloc[i] + j - 1);
                     item.slot("dat") = tmpmat;
                     pars[i] = item;
                 }
                 S4 item = pars[nitems];
                 item.slot("dat") = dat;
+                if(isbifactor){
+                    NumericVector r2 = wrap(r2vec);
+                    NumericMatrix r3 = vec2mat(r3vec, nsquad, nsfact);
+                    item.slot("rrb") = r2;
+                    item.slot("rrs") = r3;
+                }
                 pars[nitems] = item;
                 NumericMatrix hess(npars, npars);
                 vector<double> grad(npars);
@@ -1474,17 +1559,21 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rprior,
                 }
                 S4 item = pars[nitems];
                 item.slot("dat") = dat;
+                // if(isbifactor){
+
+
+                // }
                 pars[nitems] = item;
-                vector<double> w(N), grad(npars);
+                vector<double> w(nquad), grad(npars);
                 for(int i = 0; i < J; ++i){
                     if(dat(0, i)){
-                        for(int n = 0; n < N; ++n)
+                        for(int n = 0; n < nquad; ++n)
                             w[n] = r1(n,i);
                         break;
                     }
                 }
                 NumericMatrix theta(1, nfact);
-                for(int n = 0; n < N; ++n){
+                for(int n = 0; n < nquad; ++n){
                     for(int i = 0; i < nfact; ++i)
                         theta(0,i) = Theta(n,i);
                     NumericMatrix hess(npars, npars);

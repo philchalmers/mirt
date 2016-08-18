@@ -475,25 +475,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 theta <- as.matrix(seq(opts$theta_lim[1L], opts$theta_lim[2L],
                                        length.out = opts$quadpts))
             if(opts$dentype == 'bfactor'){
-                for(g in 1L:length(pars)){
-                    tmp <- pars[[g]][[nitems+1L]]
-                    gp <- ExtractGroupPars(tmp)
-                    tmp@par <- as.numeric(tmp@est)
-                    gp2 <- ExtractGroupPars(tmp)
-                    ind <- (length(gp$gmeans)-ncol(sitems)+1L):length(gp$gmeans)
-                    gmeans <- gp$gmeans[ind]
-                    gcov <- gp$gcov[ind, ind, drop=FALSE]
-                    lgmeans <- gp2$gmeans[ind]
-                    lgcov <- gp2$gcov[ind, ind, drop=FALSE]
-                    if(any(lgmeans != 0) || any(lgcov != 0))
-                        stop('Cannot freely estimate specific factor parameters in
-                             quadrature reduction method', call.=FALSE)
-                    if(!all(gmeans == 0))
-                        stop('Means for specific factors must be 0', call.=FALSE)
-                    if(!all(gcov == diag(ncol(sitems))))
-                        stop('Covariance matrix for specific factors must be an identity matrix',
-                             call.=FALSE)
-                }
                 specific <- attr(oldmodel, 'specific')
                 specific[is.na(specific)] <- 1L
                 for(i in 1L:nitems) temp[i, specific[i]] <- 1L

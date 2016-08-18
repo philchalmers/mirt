@@ -329,9 +329,9 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
-                        dentype, sitems, cycles, rlist, prior, lrPars = list(), full=FALSE){
-    Prior <- Priorbetween <- vector('list', ngroups)
+updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
+                        dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE){
+    prior <- Prior <- Priorbetween <- vector('list', ngroups)
     if(dentype == 'EH'){
         Prior[[1L]] <- list$EHPrior[[1L]]
     } else if(dentype == 'custom'){
@@ -344,13 +344,21 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
         for(g in 1L:ngroups){
             gp <- ExtractGroupPars(pars[[g]][[J+1L]])
             if(dentype == 'bfactor'){
-                sel <- 1L:(nfact-ncol(sitems) + 1L)
-                sel2 <- sel[-length(sel)]
-                Priorbetween[[g]] <- mirt_dmvnorm(Thetabetween,
-                                                      gp$gmeans[sel2], gp$gcov[sel2,sel2,drop=FALSE])
-                Priorbetween[[g]] <- Priorbetween[[g]]/sum(Priorbetween[[g]])
-                Prior[[g]] <- mirt_dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
-                Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
+                theta <- pars[[g]][[J+1L]]@theta
+                Thetabetween <- pars[[g]][[J+1L]]@Thetabetween
+                p <- matrix(0, nrow(Theta), ncol(sitems))
+                pp <- matrix(0, nrow(theta), ncol(sitems))
+                for(i in 1L:ncol(sitems)){
+                    sel <- c(1L:(nfact-ncol(sitems)), i + nfact - ncol(sitems))
+                    p[,i] <- mirt_dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
+                    pp[,i] <- dnorm(theta, gp$gmeans[sel[length(sel)]],
+                                    sqrt(gp$gcov[sel[length(sel)],sel[length(sel)],drop=FALSE]))
+                }
+                pb <- mirt_dmvnorm(Thetabetween, gp$gmeans[1L:ncol(Thetabetween)],
+                                   gp$gcov[1L:ncol(Thetabetween),1L:ncol(Thetabetween), drop=FALSE])
+                Priorbetween[[g]] <- pb / sum(pb)
+                Prior[[g]] <- t(t(p) / colSums(p))
+                prior[[g]] <- t(t(pp) / colSums(pp))
                 next
             }
             if(full){
@@ -379,7 +387,7 @@ updatePrior <- function(pars, Theta, Thetabetween, list, ngroups, nfact, J,
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
     }
-    return(list(Prior=Prior, Priorbetween=Priorbetween))
+    return(list(prior=prior, Prior=Prior, Priorbetween=Priorbetween))
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,

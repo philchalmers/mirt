@@ -124,18 +124,29 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable)
     END_RCPP
 }
 
-void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> &ri,
-    const NumericMatrix &itemtrace, const vector<double> &prior, const vector<double> &Priorbetween,
+void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> &ri, vector<double> &ris,
+    const NumericMatrix &itemtrace, const NumericMatrix &prior, const vector<double> &Priorbetween,
     const vector<double> &r, const IntegerMatrix &data, const IntegerMatrix &sitems,
-    const vector<double> &Prior, const bool &Etable)
+    const bool &Etable)
 {
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
-    const int npquad = prior.size();
+    const int npquad = prior.nrow();
     const int nbquad = Priorbetween.size();
     const int nquad = nbquad * npquad;
     const int npat = r.size();
     vector<double> r1vec(nquad*nitems*sfact, 0.0);
+    NumericMatrix Prior(nquad, sfact);
+    for (int fact = 0; fact < sfact; ++fact){
+        int ind = 0;
+        for (int j = 0; j < npquad; ++j){
+            for (int i = 0; i < nbquad; ++i){
+                Prior(ind,fact) = Priorbetween[i] * prior(j, fact);
+                ++ind;
+            }
+        }
+    }
+
 
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < 1e-10) continue;
@@ -153,7 +164,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
             int k = 0;
             for (int q = 0; q < npquad; ++q){
                 for (int i = 0; i < nbquad; ++i){
-                    L[k] = likelihoods[k + nquad*fact] * prior[q];
+                    L[k] = likelihoods[k + nquad*fact] * prior(q, fact);
                     ++k;
                 }
             }
@@ -163,30 +174,36 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                 for (int q = 0; q < nbquad; ++q)
                     tempsum[q] += L[q + i*nbquad]/maxL;
             for (int i = 0; i < nbquad; ++i)
-                Plk[i + fact*nbquad] = tempsum[i] * maxL;
+                Plk[i + fact*nbquad] = tempsum[i] * maxL; 
         }
         vector<double> Pls(nbquad, 1.0);
         vector<double> PlsPlk(nbquad, 1.0);
         for (int i = 0; i < nbquad; ++i){
             for(int fact = 0; fact < sfact; ++fact)
-                Pls[i] = Pls[i] * Plk[i + fact*nbquad];
+                Pls[i] = Pls[i] * Plk[i + fact*nbquad]; 
             PlsPlk[i] = Pls[i] * Priorbetween[i];
         }
         double sumexp = 0.0;
         const double maxPlsPlk = *std::max_element(PlsPlk.begin(), PlsPlk.end());
         for (int i = 0; i < nbquad; ++i)
             sumexp += PlsPlk[i] / maxPlsPlk;
-        expected[pat] = sumexp * maxPlsPlk;
+        expected[pat] = sumexp * maxPlsPlk; 
         if(Etable){
             for (int fact = 0; fact < sfact; ++fact)
                 for (int i = 0; i < nbquad; ++i)
                     Elk[i + fact*nbquad] = Pls[i] / Plk[i + fact*nbquad];
-            for (int fact = 0; fact < sfact; ++fact)
+            for (int fact = 0; fact < sfact; ++fact){
                 for (int i = 0; i < nquad; ++i)
                     posterior[i + nquad*fact] = likelihoods[i + nquad*fact] * r[pat] * Elk[i % nbquad + fact*nbquad] /
                                                 expected[pat];
+            }
+            for (int fact = 0; fact < sfact; ++fact)
+            	for (int i = 0; i < npquad; ++i)
+            		for (int j = 0; j < nbquad; ++j)
+                		ris[i + npquad*fact] += posterior[j + i*nbquad + nquad*fact] * 
+                		     prior(i, fact) * Priorbetween[j];
             for (int i = 0; i < nbquad; ++i)
-                ri[i] += Pls[i] * r[pat] * Priorbetween[i] / expected[pat];
+            	ri[i] += r[pat] * Priorbetween[i] * Pls[i] / expected[pat]; 
             for (int item = 0; item < nitems; ++item)
                 if (data(pat,item))
                     for (int fact = 0; fact < sfact; ++fact)
@@ -200,40 +217,42 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
             for (int fact = 0; fact < sfact; ++fact)
                 if(sitems(item, fact))
                     for(int q = 0; q < nquad; ++q)
-                        r1[q + nquad*item] = r1vec[q + nquad*item + nquad*nitems*fact] * Prior[q];
+                        r1[q + nquad*item] = r1vec[q + nquad*item + nquad*nitems*fact] * Prior(q, fact);
     }
 }
 
 //Estep for bfactor
 RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, SEXP RX,
-    SEXP Rr, SEXP Rsitems, SEXP RPrior, SEXP REtable)
+    SEXP Rr, SEXP Rsitems, SEXP REtable)
 {
     BEGIN_RCPP
 
     List ret;
     const NumericMatrix itemtrace(Ritemtrace);
-    const vector<double> prior = as< vector<double> >(Rprior);
+    const NumericMatrix prior(Rprior);
     const vector<double> Priorbetween = as< vector<double> >(RPriorbetween);
-    const vector<double> Prior = as< vector<double> >(RPrior);
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
     const IntegerMatrix data(RX);
     const IntegerMatrix sitems(Rsitems);
     const int nitems = data.ncol();
-    const int npquad = prior.size();
+    const int npquad = prior.nrow();
     const int nbquad = Priorbetween.size();
     const int nquad = nbquad * npquad;
     const int npat = r.size();
     vector<double> expected(npat);
     vector<double> r1vec(nquad*nitems, 0.0);
     vector<double> r2vec(nbquad, 0.0);
+    vector<double> r3vec(npquad*prior.ncol(), 0.0);
 
-    _Estepbfactor(expected, r1vec, r2vec, itemtrace, prior, Priorbetween, r,
-        data, sitems, Prior, Etable);
+    _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, r,
+        data, sitems, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
     ret["r2"] = wrap(r2vec);
+    NumericMatrix r3 = vec2mat(r3vec, npquad, prior.ncol());
+    ret["r3"] = r3;
     return(ret);
 
     END_RCPP

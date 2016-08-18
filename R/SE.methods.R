@@ -72,13 +72,6 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
     rijfull <- rep(NA, length(converged))
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta, prodlist)
-    if(dentype == "bfactor"){
-        Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
-        for(g in 1L:ngroups){
-            prior[[g]] <- dnorm(theta, 0, 1)
-            prior[[g]] <- prior[[g]]/sum(prior[[g]])
-        }
-    }
     gTheta <- vector('list', ngroups)
     for(g in 1L:ngroups){
         ANY.PRIOR[g] <- any(sapply(pars[[g]], function(x) x@any.prior))
@@ -92,16 +85,15 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         longpars[estindex] <- EMhistory[cycles, estindex]
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        tmp <- updatePrior(pars=pars, Theta=Theta, Thetabetween=Thetabetween,
-                           list=list, ngroups=ngroups, nfact=nfact, prior=prior, lrPars=lrPars,
-                           J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist,
-                           full=full)
-        Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+        tmp <- updatePrior(pars=pars, Theta=Theta, list=list, ngroups=ngroups,
+                           nfact=nfact, lrPars=lrPars, J=J, dentype=dentype,
+                           sitems=sitems, cycles=cycles, rlist=rlist, full=full)
+        prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
         for(g in 1L:ngroups){
             if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                            Theta=Theta, prior=prior[[g]], Prior=Prior[[g]],
+                                            Theta=Theta, prior=prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
                                             itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND)
             } else {
@@ -111,10 +103,13 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
             }
         }
         for(g in 1L:ngroups){
-            for(i in 1L:J){
-                tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, tmp]
-            }
+            for(i in 1L:J)
+                pars[[g]][[i]]@dat <- rlist[[g]]$r1[, c(itemloc[i]:(itemloc[i+1L] - 1L)),
+                                                    drop=FALSE]
+            if(dentype == 'bfactor'){
+                pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
+                pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
+            } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1)
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
@@ -122,7 +117,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
                           rlist=rlist, constrain=constrain, DERIV=DERIV,
                           CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, dentype=dentype,
                           Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full,
-                          Thetabetween=Thetabetween, lrPars=lrPars, control=control)
+                          lrPars=lrPars, control=control)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
@@ -239,7 +234,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
 #     infolist <- fn(1L:ncol(rs), PrepList, ngroups, pars, Theta, Prior, itemloc, Igrad, Igrad2, Ihess,
 #                     CUSTOM.IND, SLOW.IND, whichitems=1:length(Data$K), iscross, npars, Data)
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
-    infolist <- .Call("computeInfo", pars, Theta, gPrior, prior[[1L]], Priorbetween[[1L]],
+    infolist <- .Call("computeInfo", pars, Theta, gPrior, prior, do.call(rbind, Priorbetween),
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
     if(length(whichitems)){

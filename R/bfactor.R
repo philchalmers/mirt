@@ -1,6 +1,6 @@
 #' Full-Information Item Bi-factor and Two-Tier Analysis
 #'
-#' \code{bfactor} fits a confirmatory maximum likelihood two-tier/bifactor model to
+#' \code{bfactor} fits a confirmatory maximum likelihood two-tier/bifactor/testlet model to
 #' dichotomous and polytomous data under the item response theory paradigm.
 #' The IRT models are fit using a dimensional reduction EM algorithm so that regardless
 #' of the number of specific factors estimated the model only uses the number of
@@ -157,27 +157,56 @@
 #' coef(simmod)
 #'
 #' #########
+#' # testlet response model
+#'
+#' #simulate data
+#' set.seed(1234)
+#' a <- matrix(0, 12, 4)
+#' a[,1] <- rlnorm(12, .2, .3)
+#' ind <- 1
+#' for(i in 1:3){
+#'    a[ind:(ind+3),i+1] <- a[ind:(ind+3),1]
+#'    ind <- ind+4
+#' }
+#' print(a)
+#' d <- rnorm(12, 0, .5)
+#' sigma <- diag(c(1, .5, 1, .5))
+#' dataset <- simdata(a,d,2000,itemtype=rep('dich', 12),sigma=sigma)
+#'
+#' # estimate by applying constraints and freeing the latent variances
+#' specific <- c(rep(1,4),rep(2,4), rep(3,4))
+#' model <- "G = 1-12
+#'           CONSTRAIN = (1, a1, a2), (2, a1, a2), (3, a1, a2), (4, a1, a2),
+#'             (5, a1, a3), (6, a1, a3), (7, a1, a3), (8, a1, a3),
+#'             (9, a1, a4), (10, a1, a4), (11, a1, a4), (12, a1, a4)
+#'           COV = S1*S1, S2*S2, S3*S3"
+#'
+#' simmod <- bfactor(dataset, specific, model)
+#' coef(simmod, simplify=TRUE)
+#'
+#'
+#' #########
 #' # Two-tier model
 #'
 #' #simulate data
 #' set.seed(1234)
 #' a <- matrix(c(
-#' 0,1,0.5,NA,NA,
-#' 0,1,0.5,NA,NA,
-#' 0,1,0.5,NA,NA,
-#' 0,1,0.5,NA,NA,
-#' 0,1,0.5,NA,NA,
-#' 0,1,NA,0.5,NA,
-#' 0,1,NA,0.5,NA,
-#' 0,1,NA,0.5,NA,
-#' 1,0,NA,0.5,NA,
-#' 1,0,NA,0.5,NA,
-#' 1,0,NA,0.5,NA,
-#' 1,0,NA,NA,0.5,
-#' 1,0,NA,NA,0.5,
-#' 1,0,NA,NA,0.5,
-#' 1,0,NA,NA,0.5,
-#' 1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
+#'   0,1,0.5,NA,NA,
+#'   0,1,0.5,NA,NA,
+#'   0,1,0.5,NA,NA,
+#'   0,1,0.5,NA,NA,
+#'   0,1,0.5,NA,NA,
+#'   0,1,NA,0.5,NA,
+#'   0,1,NA,0.5,NA,
+#'   0,1,NA,0.5,NA,
+#'   1,0,NA,0.5,NA,
+#'   1,0,NA,0.5,NA,
+#'   1,0,NA,0.5,NA,
+#'   1,0,NA,NA,0.5,
+#'   1,0,NA,NA,0.5,
+#'   1,0,NA,NA,0.5,
+#'   1,0,NA,NA,0.5,
+#'   1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
 #'
 #' d <- matrix(rnorm(16))
 #' items <- rep('dich', 16)
@@ -198,6 +227,8 @@
 #' summary(simmod)
 #' itemfit(simmod, QMC=TRUE)
 #' M2(simmod, QMC=TRUE)
+#'
+#'
 #'
 #'     }
 #'
