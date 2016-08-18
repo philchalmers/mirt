@@ -203,13 +203,6 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     if(missing(x)) missingMsg('x')
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not supported', call.=FALSE)
-    discrete <- FALSE
-    if(is(x, 'DiscreteClass')){
-        if(is.null(Theta))
-            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
-        class(x) <- 'MultipleGroupClass'
-        discrete <- TRUE
-    }
     if(!is.null(empirical.plot) && !is.null(empirical.table))
         stop('Please select empirical.plot or empirical.table, not both', call.=FALSE)
     if(!is.null(empirical.plot))
@@ -232,6 +225,32 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2 and G2 can be computed with missing data. Consider using imputed datasets', call.=FALSE)
 
+    if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
+        discrete <- is(x, 'DiscreteClass')
+        ret <- vector('list', x@Data$ngroups)
+        if(is.null(Theta))
+            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
+        for(g in 1L:x@Data$ngroups){
+            if(impute > 0L){
+                tmpTheta <- vector('list', impute)
+                for(i in 1L:length(tmpTheta))
+                    tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
+            tmp_obj <- MGC2SC(x, g)
+            ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
+                                group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2, infit=infit,
+                                S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
+                                empirical.table=empirical.table, G2=G2,
+                                Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
+                                impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
+        }
+        names(ret) <- x@Data$groupNames
+        if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
+        return(ret)
+    }
+    dots <- list(...)
+    discrete <- dots$discrete
+    discrete <- ifelse(is.null(discrete), FALSE, discrete)
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
@@ -240,7 +259,8 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
             warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
         stopifnot(impute > 1L)
-        Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)
+        if(is.null(Theta))
+            Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
@@ -266,31 +286,6 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
         return(ret)
     }
-    if(is(x, 'MultipleGroupClass')){
-        ret <- vector('list', x@Data$ngroups)
-        if(is.null(Theta))
-            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
-        for(g in 1L:x@Data$ngroups){
-            if(impute > 0L){
-                tmpTheta <- vector('list', impute)
-                for(i in 1L:length(tmpTheta))
-                    tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
-            } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
-            tmp_obj <- MGC2SC(x, g)
-            ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
-                                group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2, infit=infit,
-                                S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                                empirical.table=empirical.table, G2=G2,
-                                Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
-        }
-        names(ret) <- x@Data$groupNames
-        if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
-        return(ret)
-    }
-    dots <- list(...)
-    discrete <- dots$discrete
-    discrete <- ifelse(is.null(discrete), FALSE, discrete)
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data)[which.items])
     J <- ncol(x@Data$data)
