@@ -50,8 +50,9 @@ for(i in 1:20){
     constraints[[paste0('Time.', i)]] <- wtconstr[pick + i]
 }
 
-#estimate model
-(mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, TOL=1e-3))
+#estimate model (low quadrature just as an example; not as accurate.
+#                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
+(mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=7, TOL=1e-3))
 
 coef(mod, simplify=TRUE)
 
@@ -96,7 +97,9 @@ for(i in 1:20){
     }
 }
 
-mod2 <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=15, pars=sv)
+#estimate model (low quadrature just as an example; not as accurate.
+#                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
+mod2 <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, pars=sv)
 
 coef(mod2, simplify=TRUE)
 
