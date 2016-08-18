@@ -45,6 +45,7 @@
 #'   maximum likelihood criteria? If FALSE, returns a list of all the estimated objects
 #' @param pars used for modifying starting values; see \code{\link{mirt}} for details
 #' @param verbose logical; turn on messages to the R console
+#' @param technical list of lower-level inputs. See \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for more details and examples
 #'
@@ -237,11 +238,9 @@
 #' }
 mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
                   return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-                  verbose = TRUE, pars = NULL, ...)
+                  verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
-    dots <- list(...)
-    technical <- dots$technical
     technical$customTheta <- customTheta
     itemtype <- 'lca'
     stopifnot(method %in% c('EM', 'BL'))

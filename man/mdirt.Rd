@@ -6,7 +6,7 @@
 \usage{
 mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
   return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-  verbose = TRUE, pars = NULL, ...)
+  verbose = TRUE, pars = NULL, technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -37,6 +37,8 @@ maximum likelihood criteria? If FALSE, returns a list of all the estimated objec
 \item{verbose}{logical; turn on messages to the R console}
 
 \item{pars}{used for modifying starting values; see \code{\link{mirt}} for details}
+
+\item{technical}{list of lower-level inputs. See \code{\link{mirt}} for details}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for more details and examples}
