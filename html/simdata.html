@@ -25,7 +25,8 @@ a user input matrix of <i>&theta;</i>'s.
 <pre>
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE, model = NULL, which.items = NULL, mins = 0)
+  returnList = FALSE, model = NULL, which.items = NULL, mins = 0,
+  lca_cats = NULL, prob.list = NULL)
 </pre>
 
 
@@ -42,7 +43,8 @@ zero then use <code>NA</code> or simply set them equal to 0</p>
 <p>a matrix/vector of intercepts. The matrix should have as many columns as
 the item with the largest number of categories, and filled empty locations
 with <code>NA</code>. When a vector is used the test is assumed to consist only of dichotomous items
-(because only one intercept per item is provided)</p>
+(because only one intercept per item is provided). When <code>itemtype = 'lca'</code> intercepts will not
+be used</p>
 </td></tr>
 <tr valign="top"><td><code>N</code></td>
 <td>
@@ -57,9 +59,9 @@ typical inputs that are passed to <code><a href="mirt.html">mirt</a></code> are 
 the respective internal classes automatically.
 </p>
 <p>If the internal class of the object is specified instead, the inputs can
-be <code>'dich', 'graded', 'gpcm','nominal', 'nestlogit'</code>, or <code>'partcomp'</code>, for
-dichotomous, graded, generalized partial credit, nominal, nested logit, and partially
-compensatory models. Note that for the gpcm, nominal, and nested logit models there should
+be <code>'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp'</code>, or <code>'lca'</code>, for
+dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
+and latent class analysis model. Note that for the gpcm, nominal, and nested logit models there should
 be as many parameters as desired categories, however to parametrized them for meaningful
 interpretation the first category intercept should
 equal 0 for these models (second column for <code>'nestlogit'</code>, since first column is for the
@@ -128,6 +130,17 @@ latent trait matrix <code>Theta</code>? Default is FALSE</p>
 <p>an integer vector (or single value to be used for each item) indicating what
 the lowest category should be. If <code>model</code> is supplied then this will be extracted from
 <code>slot(mod, 'Data')$mins</code>, otherwise the default is 0</p>
+</td></tr>
+<tr valign="top"><td><code>lca_cats</code></td>
+<td>
+<p>a vector indicating how many categories each lca item should have. If not supplied
+then it is assumed that 2 categories should be generated for each item</p>
+</td></tr>
+<tr valign="top"><td><code>prob.list</code></td>
+<td>
+<p>an optional list containing matrix/data.frames of probabilities values for
+each category to be simulated. This is useful when creating customized probability functions
+to be sampled from</p>
 </td></tr>
 </table>
 
@@ -436,7 +449,7 @@ str(listobj)
 ##   .. .. ..@ nfixedeffects: num(0) 
 ##   .. .. ..@ fixed.design : num[0 , 0 ] 
 ##   .. .. ..@ dat          : num[0 , 0 ] 
-##   .. .. ..@ ncat         : int(0) 
+##   .. .. ..@ ncat         : int 2
 ##   .. .. ..@ gradient     : num(0) 
 ##   .. .. ..@ hessian      : num[0 , 0 ] 
 ##   .. .. ..@ itemtrace    : num[0 , 0 ] 
@@ -458,7 +471,7 @@ str(listobj)
 ##   .. .. ..@ nfixedeffects: num(0) 
 ##   .. .. ..@ fixed.design : num[0 , 0 ] 
 ##   .. .. ..@ dat          : num[0 , 0 ] 
-##   .. .. ..@ ncat         : int(0) 
+##   .. .. ..@ ncat         : int 2
 ##   .. .. ..@ gradient     : num(0) 
 ##   .. .. ..@ hessian      : num[0 , 0 ] 
 ##   .. .. ..@ itemtrace    : num[0 , 0 ] 
@@ -480,7 +493,7 @@ str(listobj)
 ##   .. .. ..@ nfixedeffects: num(0) 
 ##   .. .. ..@ fixed.design : num[0 , 0 ] 
 ##   .. .. ..@ dat          : num[0 , 0 ] 
-##   .. .. ..@ ncat         : int(0) 
+##   .. .. ..@ ncat         : int 2
 ##   .. .. ..@ gradient     : num(0) 
 ##   .. .. ..@ hessian      : num[0 , 0 ] 
 ##   .. .. ..@ itemtrace    : num[0 , 0 ] 
@@ -576,9 +589,48 @@ head(pars)
 <pre><code class="r">obj &lt;- generate.mirt_object(pars, &#39;3PL&#39;)
 dat &lt;- simdata(N=200, model=obj)
 
-## End(No test)
+######
+# prob.list example
+
+# custom probabilty function that returns a matrix
+fun &lt;- function(a, b, theta){
+    P &lt;- 1 / (1 + exp(-a * (theta-b)))
+    cbind(1-P, P)
+}
+
+set.seed(1)
+theta &lt;- matrix(rnorm(100))
+prob.list &lt;- list()
+nitems &lt;- 5
+a &lt;- rlnorm(nitems, .2, .2); b &lt;- rnorm(nitems, 0, 1/2)
+for(i in 1:nitems) prob.list[[i]] &lt;- fun(a[i], b[i], theta)
+str(prob.list)
+</code></pre>
+
+<pre><code>## List of 5
+##  $ : num [1:100, 1:2] 0.836 0.68 0.865 0.317 0.645 ...
+##  $ : num [1:100, 1:2] 0.771 0.554 0.813 0.179 0.509 ...
+##  $ : num [1:100, 1:2] 0.75 0.569 0.788 0.239 0.532 ...
+##  $ : num [1:100, 1:2] 0.737 0.503 0.785 0.146 0.457 ...
+##  $ : num [1:100, 1:2] 0.828 0.669 0.858 0.308 0.634 ...
+</code></pre>
+
+<pre><code class="r">dat &lt;- simdata(prob.list=prob.list)
+head(dat)
+</code></pre>
+
+<pre><code>##      Item_1 Item_2 Item_3 Item_4 Item_5
+## [1,]      0      0      0      1      1
+## [2,]      0      0      0      1      0
+## [3,]      0      0      0      0      0
+## [4,]      1      1      0      0      0
+## [5,]      1      1      0      0      0
+## [6,]      0      1      0      1      0
+</code></pre>
+
+<pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -100,10 +100,6 @@ x &lt;- mirt(data, 1)
 <pre><code>## EM cycles terminated after 500 iterations.
 </code></pre>
 
-<pre><code>## Warning: Log-likelihood was decreasing near the ML solution. EM method may
-## be unstable
-</code></pre>
-
 <pre><code class="r">fit &lt;- personfit(x)
 head(fit)
 </code></pre>
@@ -159,7 +155,7 @@ coef(mod_Rasch, simplify=TRUE)
 ## Item_8   1 -0.114 0 1
 ## Item_9   1 -0.162 0 1
 ## Item_10  1 -0.652 0 1
-## Item_11  1 -0.046 0 1
+## Item_11  1 -0.045 0 1
 ## Item_12  1  1.332 0 1
 ## Item_13  1  0.227 0 1
 ## Item_14  1  0.390 0 1
@@ -187,7 +183,7 @@ coef(mod_Rasch, simplify=TRUE)
 ## Item_8   1 -0.246 0 1
 ## Item_9   1 -0.173 0 1
 ## Item_10  1 -0.639 0 1
-## Item_11  1 -0.007 0 1
+## Item_11  1 -0.008 0 1
 ## Item_12  1  1.124 0 1
 ## Item_13  1  0.262 0 1
 ## Item_14  1  0.361 0 1
@@ -207,17 +203,17 @@ head(pf)
 </code></pre>
 
 <pre><code>##      outfit    z.outfit     infit     z.infit         Zh
-## 1 1.1366046  0.88101070 1.0779137  0.62074433 -0.6798392
-## 2 0.9338979 -0.07967832 0.9711840 -0.01269158  0.1244912
-## 3 0.7476623 -0.68449208 0.8478946 -0.48718058  0.6195756
-## 4 1.0973798  0.42823261 1.1107354  0.54308969 -0.4525549
-## 5 0.9951192  0.05179044 1.0384841  0.27257183 -0.1408573
-## 6 0.6611535 -1.27385843 0.7181642 -1.29249979  1.2372818
+## 1 1.1366053  0.88100164 1.0779142  0.62073914 -0.6798318
+## 2 0.9338968 -0.07968016 0.9711840 -0.01269275  0.1244921
+## 3 0.7476589 -0.68449953 0.8478923 -0.48719301  0.6195859
+## 4 1.0973922  0.42826947 1.1107464  0.54312670 -0.4525935
+## 5 0.9951170  0.05178077 1.0384829  0.27256587 -0.1408501
+## 6 0.6611520 -1.27383804 0.7181645 -1.29246918  1.2372582
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
 </body></html>

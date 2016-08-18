@@ -24,7 +24,7 @@ list of complete datasets is returned instead.
 <h3>Usage</h3>
 
 <pre>
-imputeMissing(x, Theta, ...)
+imputeMissing(x, Theta, warn = TRUE, ...)
 </pre>
 
 
@@ -39,6 +39,10 @@ imputeMissing(x, Theta, ...)
 <td>
 <p>a matrix containing the estimates of the latent trait scores
 (e.g., via <code><a href="fscores.html">fscores</a></code>)</p>
+</td></tr>
+<tr valign="top"><td><code>warn</code></td>
+<td>
+<p>logical; print warning messages?</p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
@@ -66,7 +70,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.18 
+## mirt version: 1.19 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -91,14 +95,14 @@ for(i in 1:20)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.18 
+## mirt version: 1.19 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2647.985
-## AIC = 5315.971; AICc = 5316.193
-## BIC = 5365.048; SABIC = 5333.288
+## Log-likelihood = -2648.908
+## AIC = 5317.816; AICc = 5318.038
+## BIC = 5366.893; SABIC = 5335.133
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -113,17 +117,17 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 25 EM iterations.
-## mirt version: 1.18 
+## Converged within 1e-04 tolerance after 36 EM iterations.
+## mirt version: 1.19 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2656.934
-## AIC = 5333.869; AICc = 5334.091
-## BIC = 5382.946; SABIC = 5351.186
-## G2 (21) = 31.34, p = 0.0682
-## RMSEA = 0.022, CFI = 0.942, TLI = 0.928
+## Log-likelihood = -2657.362
+## AIC = 5334.723; AICc = 5334.946
+## BIC = 5383.801; SABIC = 5352.04
+## G2 (21) = 31.23, p = 0.0699
+## RMSEA = 0.022, CFI = 0.941, TLI = 0.928
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
@@ -137,5 +141,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
 </body></html>

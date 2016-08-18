@@ -34,10 +34,11 @@ for latent regression predictor effects.
 <pre>
 fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
   Target = NULL, response.pattern = NULL, plausible.draws = 0,
-  quadpts = NULL, returnER = FALSE, return.acov = FALSE, mean = NULL,
-  cov = NULL, verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,
-  6), MI = 0, QMC = FALSE, custom_den = NULL, custom_theta = NULL,
-  min_expected = 1, converge_info = FALSE, ...)
+  plausible.type = "normal", quadpts = NULL, returnER = FALSE,
+  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
+  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
+  custom_den = NULL, custom_theta = NULL, min_expected = 1,
+  converge_info = FALSE, ...)
 </pre>
 
 
@@ -85,6 +86,13 @@ to perform secondary analyses of the latent trait scores. Typically used in conj
 with latent regression predictors (see <code><a href="mirt.html">mirt</a></code> for details), but can
 also be generated when no predictor variables were modeled. If <code>plausible.draws</code>
 is greater than 0 a list of plausible values will be returned</p>
+</td></tr>
+<tr valign="top"><td><code>plausible.type</code></td>
+<td>
+<p>type of plausible values to obtain. Can be either <code>'normal'</code> (default)
+to use a normal approximation based on the ACOV matrix, or <code>'MH'</code> to obtain Metropolis-Hastings
+samples from the posterior (silently passes object to <code><a href="mirt.html">mirt</a></code>, therefore arguemnts like
+<code>technical</code> can be supplied to increase the number of burn-in draws and discarded samples)</p>
 </td></tr>
 <tr valign="top"><td><code>quadpts</code></td>
 <td>
@@ -573,12 +581,12 @@ head(fs)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.41348276
-## [2,]  0.05620759
-## [3,] -0.85817073
-## [4,] -0.85817073
-## [5,]  0.72513398
-## [6,]  0.69063557
+## [1,]  0.36108218
+## [2,]  0.04015763
+## [3,] -0.90042764
+## [4,] -0.90042764
+## [5,]  0.76657872
+## [6,]  0.61869476
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -587,24 +595,24 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 
 <pre><code>## [[1]]
-##          mean           var           min           max 
-##  0.0009075248  1.0455248159 -3.0343253349  4.3630983833 
+##        mean         var         min         max 
+## -0.01980976  1.01122469 -3.03204775  3.11461106 
 ## 
 ## [[2]]
-##        mean         var         min         max 
-##  0.02865258  1.03626780 -3.89936284  2.86319422 
+##         mean          var          min          max 
+##  0.001520216  0.921872517 -3.617061162  3.175318904 
 ## 
 ## [[3]]
 ##        mean         var         min         max 
-##  0.04306382  0.97016809 -2.85614070  2.91048583 
+##  0.02478067  0.97593322 -2.59943311  2.65753491 
 ## 
 ## [[4]]
-##         mean          var          min          max 
-##  0.004808188  1.028175778 -2.734880272  3.655808179 
+##        mean         var         min         max 
+## -0.02276675  0.99232365 -2.87989432  2.67139351 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-##  0.01967537  0.92360785 -2.61266688  2.55420756
+## -0.03635558  1.00762701 -2.61615291  3.33775047
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -650,5 +658,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
 </body></html>

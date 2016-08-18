@@ -108,49 +108,67 @@ grp &lt;- createGroup(par, est, den, nfact = 1, lbound=lbound)
 
 mod &lt;- mirt(Science, 1, &#39;Rasch&#39;)
 modcustom &lt;- mirt(Science, 1, &#39;Rasch&#39;, customGroup=grp)
+</code></pre>
 
-coef(mod)
+<pre><code>## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+
+## Warning in dnorm(Theta, obj@par[1], obj@par[2]): NaNs produced
+</code></pre>
+
+<pre><code class="r">coef(mod)
 </code></pre>
 
 <pre><code>## $Comfort
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 3.096 5.693 4.304
+##     a1 ak0 ak1 ak2 ak3 d0    d1  d2    d3
+## par  1   0   1   2   3  0 3.102 5.7 4.311
 ## 
 ## $Work
-##     a1 ak0 ak1 ak2 ak3 d0    d1   d2   d3
-## par  1   0   1   2   3  0 1.898 2.81 0.95
+##     a1 ak0 ak1 ak2 ak3 d0  d1    d2    d3
+## par  1   0   1   2   3  0 1.9 2.812 0.953
 ## 
 ## $Future
 ##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.651 4.073 2.938
+## par  1   0   1   2   3  0 2.654 4.076 2.941
 ## 
 ## $Benefit
 ##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.452 3.352 1.994
+## par  1   0   1   2   3  0 2.454 3.355 1.996
 ## 
 ## $GroupPars
 ##     MEAN_1 COV_11
-## par      0  1.004
+## par      0  1.006
 </code></pre>
 
 <pre><code class="r">coef(modcustom)
 </code></pre>
 
 <pre><code>## $Comfort
-##     a1 ak0 ak1 ak2 ak3 d0   d1    d2    d3
-## par  1   0   1   2   3  0 3.08 5.675 4.286
+##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## par  1   0   1   2   3  0 3.073 5.666 4.277
 ## 
 ## $Work
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2   d3
-## par  1   0   1   2   3  0 1.896 2.807 0.95
+##     a1 ak0 ak1 ak2 ak3 d0   d1    d2   d3
+## par  1   0   1   2   3  0 1.89 2.799 0.94
 ## 
 ## $Future
 ##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.646 4.067 2.933
+## par  1   0   1   2   3  0 2.639 4.058 2.922
 ## 
 ## $Benefit
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.449 3.349 1.992
+##     a1 ak0 ak1 ak2 ak3 d0    d1   d2    d3
+## par  1   0   1   2   3  0 2.442 3.34 1.982
 ## 
 ## $GroupPars
 ##     mu sigma
@@ -161,5 +179,5 @@ coef(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
 </body></html>

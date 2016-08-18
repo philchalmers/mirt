@@ -185,13 +185,8 @@ extract.mirt(mod, &#39;logLik&#39;)
 <pre><code class="r">#multiple group model
 grp &lt;- rep(c(&#39;G1&#39;, &#39;G2&#39;), each = nrow(Science)/2)
 mod2 &lt;- multipleGroup(Science, 1, grp)
-</code></pre>
 
-<pre><code>## Warning: Log-likelihood was decreasing near the ML solution. EM method may
-## be unstable
-</code></pre>
-
-<pre><code class="r">grp1 &lt;- extract.group(mod2, 1) #extract single group model
+grp1 &lt;- extract.group(mod2, 1) #extract single group model
 extract.mirt(mod2, &#39;parvec&#39;)
 </code></pre>
 
@@ -215,5 +210,5 @@ extract.mirt(mod2, &#39;parvec&#39;)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.18 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
 </body></html>
