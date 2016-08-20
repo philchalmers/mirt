@@ -1,4 +1,4 @@
-PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
+PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
                      customGroup, fulldata = NULL, key, spline_args, internal_constraints)
@@ -62,6 +62,9 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats,
     }
     K <- rep(0L,J)
     for(i in 1L:J) K[i] <- length(uniques[[i]])
+    if(any(K > 30L) && opts$warn)
+        warning(paste0('The following items have a large number of categories which may cause estimation issues: ',
+                       paste0(as.character(which(K > 30L)), collapse = " ")), call. = FALSE)
     if(!is.null(technical$customK)){
         K <- technical$customK
         for(i in 1L:J)
