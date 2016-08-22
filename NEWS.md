@@ -1,3 +1,8 @@
+# Changes in mirt 1.20
+
+- added `poly2dich` function to quickly change polytomous response data to a comparable matrix of 
+  dichotomous response data
+
 # Changes in mirt 1.19
 
 - a penalized version of the BFGS algorithm is now used instead of the L-BFGS-B when upper and lower
