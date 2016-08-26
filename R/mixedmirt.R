@@ -354,10 +354,16 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     covdataold <- covdata
     itemdesignold <- if(is.null(itemdesign)) data.frame() else itemdesign
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
-    if(any(itemtype %in% c('spline', 'ideal')) && fixed != ~ -1){
-        message(paste0('Warning: Unsupported itemtype detected for modeling intercepts.\n',
-                'fixed = ~ -1 used by default to remove intercept'))
-        fixed <- ~ -1
+    if(any(itemtype %in% c('spline', 'ideal'))){
+        if(fixed != ~ -1){
+            message(paste0('Warning: Unsupported itemtype detected for modeling intercepts.\n',
+                    'fixed = ~ -1 used by default to remove intercept'))
+            fixed <- ~ -1
+        }
+        if(!is.null(random)){
+            message('Warning: random set to NULL due to unsupported itemtypes')
+            random <- NULL
+        }
     }
     if(fixed != ~ 1 || !is.null(random))
         if(any(itemtype %in% c('PC2PL', 'PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
