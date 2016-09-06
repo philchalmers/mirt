@@ -1,21 +1,15 @@
 language: r
 warnings_are_errors: true
-
-r_packages:
-  - RUnit
-r_binary_packages:
-  - mirt
-  - knitr
-  - testthat
-  - devtools
+sudo: false
+cache: packages
 
 notifications:
   email:
     on_success: change
     on_failure: change
-env:
-  - global:
-    - _R_CHECK_FORCE_SUGGESTS_=0
+
+r_packages:
+  - testthat
 
 script:
   - make install

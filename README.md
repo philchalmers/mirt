@@ -1,3 +1,6 @@
+[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](http://www.r-pkg.org/pkg/mirt) ![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)
+
+
 # mirt
 
 Multidimensional item response theory in R.
