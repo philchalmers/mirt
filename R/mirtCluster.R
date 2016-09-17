@@ -47,6 +47,7 @@ mirtCluster <- function(spec, ..., remove = FALSE){
         }
         .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
         .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
+        mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible())
     }
     return(invisible())
 }
