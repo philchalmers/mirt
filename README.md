@@ -1,5 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](http://www.r-pkg.org/pkg/mirt) ![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)
-
+[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](http://www.r-pkg.org/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](http://cran.rstudio.com/web/packages/mirt/index.html)
 
 # mirt
 
