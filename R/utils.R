@@ -1099,7 +1099,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI', 'plausible.draws')
+                'PLCI', 'plausible.draws', 'storeEtable')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1129,6 +1129,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$delta <- ifelse(is.null(technical$delta), .001, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
+    opts$storeEtable <- ifelse(is.null(technical$storeEtable), FALSE, technical$storeEtable)
     if(!is.null(TOL))
         if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- FALSE
     opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else

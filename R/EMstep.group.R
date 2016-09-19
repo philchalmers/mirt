@@ -388,7 +388,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=collectLL, shortpars=longpars[estpars & !redun_constr],
-                    lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE)
+                    lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
@@ -396,7 +396,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=collectLL,
                     shortpars=longpars[estpars & !redun_constr], lrPars=lrPars,
-                    logPrior=LP, fail_invert_info=FALSE)
+                    logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist)
     }
     for(g in 1L:ngroups)
         for(i in 1L:J)
