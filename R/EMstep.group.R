@@ -141,6 +141,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     Estep.time <- Mstep.time <- 0
     collectLL <- rep(NA, NCYCLES)
     hess <- matrix(0)
+    Elist <- list()
     if(list$BL){
         start <- proc.time()[3L]
         lower <- LBOUND[est]; upper <- UBOUND[est]
