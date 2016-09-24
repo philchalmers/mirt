@@ -89,7 +89,6 @@ setMethod(
                 return(xyplot(score ~ Theta, dat, groups=dat$group, type = 'l',
                               auto.key = auto.key, main = main,
                               ylab = expression(S(theta)), xlab = expression(theta), ...))
-
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste('Relative efficiency for item', item)
@@ -104,7 +103,7 @@ setMethod(
             Names <- colnames(dat)
             Names[c(length(Names) - 2,length(Names) - 1)] <- c('Theta1', 'Theta2')
             Names2 <- colnames(dat2)
-            Names2[2:3] <- c('Theta2', 'Theta1')
+            Names2[2:3] <- c('Theta1', 'Theta2')
             colnames(dat) <- Names
             colnames(dat2) <- Names2
             if(type == 'info'){
@@ -124,6 +123,15 @@ setMethod(
                                           ylab=expression(theta[2]), zlim = c(-0.1,1.1),
                                           scales = list(arrows = FALSE), screen=rot,
                                           auto.key = auto.key, ...))
+            } else if(type == 'score'){
+                if(is.null(main))
+                    main <- paste("Expected score for item", item)
+                dat$score <- do.call(c, score)
+                return(wireframe(score ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
+                                 zlab=expression(S(theta)), xlab=expression(theta[1]),
+                                 ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen=rot,
+                                 auto.key = auto.key, ...))
             } else if(type == 'RE'){
                 if(is.null(main))
                     main <- paste("Relative efficiency for item", item)
