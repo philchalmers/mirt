@@ -353,7 +353,6 @@ anova(mod1b, mod2b)
 
 mod3 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = '2PL')
 summary(mod3)
-coef(mod3, simplify=TRUE)
 anova(mod1b, mod3)
 
 head(cbind(randef(mod3)$group, random_intercept))
