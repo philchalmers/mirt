@@ -1,5 +1,7 @@
 # Changes in mirt 1.20
 
+- Neale & Miller 1997 approximation added to `PLCI()` (default still computes exact PL CIs)
+
 - `type = 'score'` supported for multiple group models in `itemplot()`
 
 - added `poly2dich` function to quickly change polytomous response data to a comparable matrix of 

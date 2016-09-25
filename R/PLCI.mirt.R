@@ -20,6 +20,7 @@
 #'   lower bound value visible with \code{\link{mod2values}})
 #' @param lower logical; search for the lower CI?
 #' @param upper logical; search for the upper CI?
+#' @param NealeMiller logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}
 #' @param ... additional arguments to pass to the estimation functions
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -27,6 +28,11 @@
 #' @export PLCI.mirt
 #' @seealso
 #' \code{\link{boot.mirt}}
+#'
+#' @references
+#'
+#' Neale, M. C. & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
+#' models. Behavior Genetircs, 27, 113-120
 #'
 #' @examples
 #'
@@ -51,7 +57,8 @@
 #' }
 PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                       search_bound = TRUE, step = .5,
-                      lower = TRUE, upper = TRUE, inf2val = 30, ...){
+                      lower = TRUE, upper = TRUE, inf2val = 30,
+                      NealeMiller = FALSE, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
@@ -114,9 +121,14 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
         ret
     }
 
+    f.min2 <- function(value, upperBound, ...){
+        if(upperBound) value <- -value
+        f.min(value=value, ...)^2 + value
+    }
+
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, constrain,
                       sv, get.LL, parprior, asigns, PrepList, pars, itemtype, inf2val,
-                      maxLL, estlower, estupper, search_bound, step, ...){
+                      maxLL, estlower, estupper, search_bound, step, Miller, ...){
         TOL <- .001
         lower <- ifelse(lbound[parnum] == -Inf, -inf2val, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, inf2val, ubound[parnum])
@@ -148,14 +160,25 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                 if(g == grid[length(grid)] && abs(Xval) < abs(get.LL - maxLL))
                     possible_bound <- FALSE
             }
-            if(possible_bound)
-                opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
-                                     large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
-                                     parprior=parprior, parnames=parnames, asigns=asigns,
-                                     PrepList=PrepList, itemtype=itemtype, constrain=constrain,
-                                     ..., f.upper=maxLL-get.LL, tol = TOL/10),
-                                 silent = TRUE)
-            else opt.lower <- try(uniroot(), TRUE)
+            if(possible_bound){
+                if(NealeMiller){
+                    opt.lower <- try(optimize(f.min2, c(lower, mid), upperBound=FALSE, dat=dat, model=model,
+                                           large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                           parprior=parprior, parnames=parnames, asigns=asigns,
+                                           PrepList=PrepList, itemtype=itemtype, constrain=constrain,
+                                           ..., f.upper=maxLL-get.LL, tol = TOL),
+                                     silent = TRUE)
+                    if(!is(opt.lower, 'try-error'))
+                        opt.lower <- list(root=opt.lower$minimum, f.root=TOL/10)
+                } else {
+                    opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
+                                             large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                             parprior=parprior, parnames=parnames, asigns=asigns,
+                                             PrepList=PrepList, itemtype=itemtype, constrain=constrain,
+                                             ..., f.upper=maxLL-get.LL, tol = TOL/10),
+                                     silent = TRUE)
+                }
+            } else opt.lower <- try(uniroot(), TRUE)
             if(is(opt.lower, 'try-error')) opt.lower <- list(root = lower, f.root=1e10)
         } else opt.lower <- list(root = lower, f.root=1e10)
         if(estupper && mid < upper){
@@ -179,14 +202,25 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                 if(g == grid[length(grid)] && abs(Xval) < abs(get.LL - maxLL))
                     possible_bound <- FALSE
             }
-            if(possible_bound)
-                opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
-                                     large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
-                                     parprior=parprior, parnames=parnames, asigns=asigns,
-                                     PrepList=PrepList, itemtype=itemtype, constrain=constrain,
-                                     ..., f.lower=maxLL-get.LL, tol = TOL/10),
-                                 silent = TRUE)
-            else opt.upper <- try(uniroot(), TRUE)
+            if(possible_bound){
+                if(NealeMiller){
+                    opt.upper <- try(optimize(f.min2, c(mid, upper), upperBound=TRUE, dat=dat, model=model,
+                                              large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                              parprior=parprior, parnames=parnames, asigns=asigns,
+                                              PrepList=PrepList, itemtype=itemtype, constrain=constrain,
+                                              ..., f.upper=maxLL-get.LL, tol = TOL),
+                                     silent = TRUE)
+                    if(!is(opt.upper, 'try-error'))
+                        opt.upper <- list(root=opt.upper$minimum, f.root=TOL/10)
+                } else {
+                    opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
+                                             large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
+                                             parprior=parprior, parnames=parnames, asigns=asigns,
+                                             PrepList=PrepList, itemtype=itemtype, constrain=constrain,
+                                             ..., f.lower=maxLL-get.LL, tol = TOL/10),
+                                     silent = TRUE)
+                }
+            } else opt.upper <- try(uniroot(), TRUE)
             if(is(opt.upper, 'try-error')) opt.upper <- list(root = upper, f.root=1e10)
         } else opt.upper <- list(root = upper, f.root=1e10)
         conv_upper <- conv_lower <- TRUE
@@ -241,7 +275,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
                        PrepList=PrepList, itemtype=itemtype, inf2val=inf2val, maxLL=LL,
                        estlower=lower, estupper=upper, search_bound=search_bound,
-                       step=step, ...)
+                       step=step, NealeMiller=NealeMiller, ...)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
                                  'lower_conv', 'upper_conv')
     ret <- data.frame(Item=sv$item[parnums], class=itemtypes, parnam=sv$name[parnums],

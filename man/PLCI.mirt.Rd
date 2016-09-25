@@ -5,7 +5,8 @@
 \title{Compute profiled-likelihood (or posterior) confidence intervals}
 \usage{
 PLCI.mirt(mod, alpha = 0.05, parnum = NULL, search_bound = TRUE,
-  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30, ...)
+  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30,
+  NealeMiller = FALSE, ...)
 }
 \arguments{
 \item{mod}{a converged mirt model}
@@ -30,6 +31,8 @@ lower bound value visible with \code{\link{mod2values}})}
 
 \item{inf2val}{a numeric used to change parameter bounds which are infinity to a finite number.
 Decreasing this too much may not allow a suitable bound to be located. Default is 30}
+
+\item{NealeMiller}{logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}}
 
 \item{...}{additional arguments to pass to the estimation functions}
 }
@@ -62,6 +65,10 @@ result3
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
+\references{
+Neale, M. C. & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
+models. Behavior Genetircs, 27, 113-120
 }
 \seealso{
 \code{\link{boot.mirt}}
