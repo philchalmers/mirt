@@ -128,7 +128,7 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
 
     LLpar <- function(parnum, parnums, parnames, lbound, ubound, dat, model, large, constrain,
                       sv, get.LL, parprior, asigns, PrepList, pars, itemtype, inf2val,
-                      maxLL, estlower, estupper, search_bound, step, Miller, ...){
+                      maxLL, estlower, estupper, search_bound, step, NealeMiller, ...){
         TOL <- .001
         lower <- ifelse(lbound[parnum] == -Inf, -inf2val, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, inf2val, ubound[parnum])
