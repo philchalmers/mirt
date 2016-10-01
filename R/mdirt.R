@@ -30,6 +30,8 @@
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model number of classes to fit, or alternatively a \code{\link{mirt.model}} definition
 #' @param method estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)
+#' @param optimizer optimizer used for the M-step, set to 'nlminb'. estimation method.
+#'   See \code{\link{mirt}} for more details
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param GenRandomPars logical; use random starting values
 #' @param customTheta input passed to \code{techincal = list(customTheta = ...)}, but is included directly
@@ -237,7 +239,7 @@
 #'
 #' }
 mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
-                  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
+                  optimizer = 'nlminb', return_max = TRUE, group = NULL, GenRandomPars = FALSE,
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
@@ -249,7 +251,7 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
     if((is(model, 'mirt.model') || is.character(model)) && is.null(technical$customTheta))
         stop('customTheta input required when using a mirt.model type input')
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), method=method,
-                     data=data, model=model, group=group, itemtype=itemtype,
+                     data=data, model=model, group=group, itemtype=itemtype, optimizer=optimizer,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
                      discrete=TRUE, verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)
     if(is(mods[[1L]], 'DiscreteClass')){
