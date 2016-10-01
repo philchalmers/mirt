@@ -30,7 +30,7 @@
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model number of classes to fit, or alternatively a \code{\link{mirt.model}} definition
 #' @param method estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)
-#' @param optimizer optimizer used for the M-step, set to 'nlminb'. estimation method.
+#' @param optimizer optimizer used for the M-step, set to \code{'nlminb'} by default.
 #'   See \code{\link{mirt}} for more details
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param GenRandomPars logical; use random starting values

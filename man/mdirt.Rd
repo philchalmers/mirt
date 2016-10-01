@@ -28,7 +28,7 @@ by default}
 
 \item{method}{estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)}
 
-\item{optimizer}{optimizer used for the M-step, set to 'nlminb'. estimation method.
+\item{optimizer}{optimizer used for the M-step, set to \code{'nlminb'} by default.
 See \code{\link{mirt}} for more details}
 
 \item{return_max}{logical; when \code{nruns > 1}, return the model that has the most optimal
