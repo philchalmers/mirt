@@ -7,7 +7,7 @@ test_that('discrete', {
     dat <- expand.table(LSAT6)
     mod <- mdirt(dat, 2, verbose=FALSE, SE=TRUE, SE.type = 'Richardson')
     so <- summary(mod, digits=10)
-    expect_equal(extract.mirt(mod, 'condnum'), 153.8788, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod, 'condnum'), 153.9135, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'logLik'), -2467.408, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'df'), 20)
     expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])[1L]), 0.3317701, tolerance = 1e-2)
@@ -32,7 +32,7 @@ test_that('discrete', {
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
     W <- wald(mod, L = matrix(c(1,numeric(9), 0), nrow=1))
-    expect_equal(W$W, 26.36635, tolerance=1e-4)
+    expect_equal(W$W, 26.35221, tolerance=1e-4)
 
     #----------
     # polytomous LCA

@@ -56,7 +56,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                             itemloc=itemloc),
                        silent=TRUE)
         } else if(Moptim == 'L-BFGS-B'){
             if(is.null(control$maxit))
@@ -65,29 +65,27 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc,
-                             lower=LBOUND[est], upper=UBOUND[est]),
+                             itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est]),
                        silent=TRUE)
         } else if(Moptim == 'Nelder-Mead'){
             opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                             itemloc=itemloc),
                        silent=TRUE)
         } else if(Moptim == 'SANN'){
             opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                             UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc),
+                             itemloc=itemloc),
                        silent=TRUE)
         } else if(Moptim == 'NR'){
             opt <- try(Mstep.NR(p=p, est=est, longpars=longpars, pars=pars, ngroups=ngroups,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
-                                itemloc=itemloc, DERIV=DERIV, rlist=rlist,
-                                TOL=TOL, control=control))
+                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL, control=control), TRUE)
         } else if(Moptim %in% c('solnp', 'alabama')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
@@ -121,8 +119,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                               DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                               est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
                               PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                              UBOUND=UBOUND, LBOUND=LBOUND, itemloc=itemloc,
-                              lower=LBOUND[est], upper=UBOUND[est], control=control),
+                              itemloc=itemloc, lower=LBOUND[est], upper=UBOUND[est], control=control),
                        silent=TRUE)
         } else {
             stop('M-step optimizer not supported', call.=FALSE)
@@ -143,7 +140,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND,
-                     SLOW.IND, constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, ANY.PRIOR){
+                     SLOW.IND, constrain, itemloc, DERIV, rlist, ANY.PRIOR){
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -162,8 +159,7 @@ Mstep.LL_alt <- function(x0, optim_args){
                     ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta,
                     PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND,
                     SLOW.IND=optim_args$SLOW.IND,
-                    constrain=optim_args$constrain, LBOUND=optim_args$LBOUND,
-                    UBOUND=optim_args$UBOUND, itemloc=optim_args$itemloc,
+                    constrain=optim_args$constrain, itemloc=optim_args$itemloc,
                     DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
@@ -215,8 +211,7 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
 }
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
-                       constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, CUSTOM.IND,
-                       SLOW.IND){
+                       constrain, itemloc, DERIV, rlist, CUSTOM.IND, SLOW.IND){
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -252,8 +247,7 @@ Mstep.grad_alt <- function(x0, optim_args){
                       ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta,
                       PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND,
                       SLOW.IND=optim_args$SLOW.IND,
-                      constrain=optim_args$constrain, LBOUND=optim_args$LBOUND,
-                      UBOUND=optim_args$UBOUND, itemloc=optim_args$itemloc,
+                      constrain=optim_args$constrain, itemloc=optim_args$itemloc,
                       DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 

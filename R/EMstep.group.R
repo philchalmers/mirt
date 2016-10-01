@@ -146,6 +146,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     collectLL <- rep(NA, NCYCLES)
     hess <- matrix(0)
     Elist <- list()
+    startMrate <- ifelse(Moptim == 'L-BFGS-B', 5L, 1L)
     if(list$BL){
         start <- proc.time()[3L]
         lower <- LBOUND[est]; upper <- UBOUND[est]
@@ -214,7 +215,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                      estimating with different starting values by passing GenRandomPars = TRUE',
                      call.=FALSE)
             if(!list$SEM){
-                if(cycles > 3L){
+                if(cycles > startMrate){
                     tmp <- collectLL[cycles-1L] - collectLL[cycles]
                     if(tmp < 0)
                         Mrate <- exp(tmp)
