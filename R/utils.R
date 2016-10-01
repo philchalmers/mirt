@@ -685,6 +685,8 @@ UpdatePrior <- function(PrepList, model, groupNames){
                                                                  '2'=exp(val1),
                                                                  '3'=(val1-1)/(val1 + val2 - 2),
                                                                  '4'=expbeta_sv(val1, val2))
+                        if(type == '2')
+                            pars[[g]][[sel[j]]]@lbound[which] <- 0
                     }
                 }
             } else {

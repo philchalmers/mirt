@@ -94,7 +94,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- FALSE
     names(longpars) <- names(est)
-    Moptim <- list$Moptim
+    if(list$Moptim != 'BFGS') {
+        Moptim <- list$Moptim
+    } else {
+        Moptim <- if(all(c(LBOUND[est], UBOUND[est]) %in% c(-Inf, Inf))) 'BFGS' else 'L-BFGS-B'
+    }
     if(Moptim == 'NR' && sum(est) > 300L && list$message)
         message('NR optimizer should not be used for models with a large number of parameters.
                 Use the optimizer = \'BFGS\' or \'nlminb\' instead.')
@@ -210,7 +214,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                      estimating with different starting values by passing GenRandomPars = TRUE',
                      call.=FALSE)
             if(!list$SEM){
-                if(cycles > 1L){
+                if(cycles > 3L){
                     tmp <- collectLL[cycles-1L] - collectLL[cycles]
                     if(tmp < 0)
                         Mrate <- exp(tmp)
@@ -312,10 +316,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 warning('M-step optimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }
-        if(Moptim == 'L-BFGS-B' && cycles <= 5L && !all(!est) && !list$NULL.MODEL){
+        if(Moptim == 'L-BFGS-B' && cycles <= 3L && !all(!est) && !list$NULL.MODEL){
             if(list$warn && !(is.nan(TOL) || is.na(TOL)))
-                warning('L-BFGS-B optimizer converged in less than 5 iterations; may indicate a
-                        problem in the M-step. Check with the more stable nlminb optimizer',
+                warning('L-BFGS-B optimizer converged in less than 3 iterations; may indicate a
+                        problem in the M-step. Check with the more stable optimizer = \'nlminb\'',
                         call.=FALSE)
         }
         if(cycles > 1L && list$warn && !ANY.PRIOR){

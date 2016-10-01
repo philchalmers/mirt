@@ -1,5 +1,13 @@
 # Changes in mirt 1.20
 
+- when using `'lnorm'` prior lower bound automatically set to 0
+
+- `mdirt()` now uses `optimizer = 'nlminb'` by default
+
+- revert default 'penalized version of the BFGS algorithm' instead of L-BFGS-B when box-constraints 
+  are used (introduced in version 1.19). The issues with instant convergence in the first 
+  few iterations of this optimizer have been located and patched
+
 - Neale & Miller 1997 approximation added to `PLCI()` (default still computes exact PL CIs)
 
 - `type = 'score'` supported for multiple group models in `itemplot()`

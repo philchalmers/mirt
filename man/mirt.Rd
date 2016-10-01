@@ -7,7 +7,7 @@ Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   covdata = NULL, formula = NULL, SE.type = "crossprod", method = "EM",
-  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
+  optimizer = "BFGS", pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
   key = NULL, large = FALSE, GenRandomPars = FALSE,
@@ -87,11 +87,11 @@ will estimate the regression parameters for all latent traits by default}
   or \code{'MHRM'} should be used when the dimensions are 3 or more}
 
 \item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM
-  algorithm will use the \code{'BFGS'} when there are no upper and lower bounds, and a
-  penelized version of the BFGS algorithm when there are.
+  algorithm will use the \code{'BFGS'} when there are no upper and lower bounds, and
+  \code{'L-BFGS-B'} when there are. Another good option which supports bound constraints is
+  the \code{'nlminb'}, which is more stable than the BFGS family of optimizers (though slightly slower).
 
-  Another good option which supports bound constraints is
-  the \code{'nlminb'}. Other options include the Newton-Raphson (\code{'NR'}),
+  Other options include the Newton-Raphson (\code{'NR'}),
   which often will be more efficient than the \code{'BFGS'} but not as stable for more complex
   IRT models (such as the nominal or nested logit models) and does not support
   upper and lower bound constraints. As well, the \code{'Nelder-Mead'}, \code{'SANN'}, and \code{'L-BFGS-B'}

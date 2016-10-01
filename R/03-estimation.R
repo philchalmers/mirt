@@ -455,7 +455,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 stop('Information matrix method for latent regression estimates not supported',
                      call.=FALSE)
             opts$full <- TRUE
-            opts$Moptim <- ifelse(opts$Moptim == 'BFGS', 'L-BFGS-B', opts$Moptim)
         } else opts$full <- FALSE
         temp <- matrix(0L,nrow=nitems,ncol=nspec)
         sitems <- matrix(0L, nrow=sum(PrepList[[1L]]$K), ncol=nspec)

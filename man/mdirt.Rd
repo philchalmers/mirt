@@ -5,8 +5,9 @@
 \title{Multidimensional discrete item response theory}
 \usage{
 mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
-  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-  verbose = TRUE, pars = NULL, technical = list(), ...)
+  optimizer = "nlminb", return_max = TRUE, group = NULL,
+  GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
+  technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -26,6 +27,9 @@ when using random starting values. If greater than 1, \code{GenRandomPars} is se
 by default}
 
 \item{method}{estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)}
+
+\item{optimizer}{optimizer used for the M-step, set to 'nlminb'. estimation method.
+See \code{\link{mirt}} for more details}
 
 \item{return_max}{logical; when \code{nruns > 1}, return the model that has the most optimal
 maximum likelihood criteria? If FALSE, returns a list of all the estimated objects}
