@@ -21,12 +21,15 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
 
 \itemize{
   \item \code{'S_X2'} : Orlando and Thissen (2000, 2003) and
-    Kang and Chen's (2007) (default)
-  \item \code{'Zh'} : Drasgow, Levine, & Williams (1985)
-  \item \code{'X2'} and \code{'G2'} : Bock (1972) and McKinley & Mills (1985) X2 and G2 methods.
-    Can also be used to form Yen's Q1 statistic by passing both \code{'X2'} and
-    \code{group.bins = 10}, or Bock's median based method by selecting \code{'X2'} and
-    passing \code{group.fun = median}
+    Kang and Chen's (2007) signed chi-squared test (default)
+  \item \code{'Zh'} : Drasgow, Levine, & Williams (1985) Zh
+  \item \code{'X2'} : Bock's (1972) chi-squared method.
+    The default inputs compute Yen's (1981) Q1 variant of the X2 statistic
+    (i.e., uses a fixed \code{group.bins = 10}). However, Bock's group-size variable
+    median-based method can be computed by passing \code{group.fun = median} and
+    modifying the \code{group.size} input to the desired number of bins
+  \item \code{'G2'} : McKinley & Mills (1985) G2 statistic (similar method to Q1,
+    but with the likelihood-ratio test).
   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
     infit and outfit statistics. Ignored if models are not from the Rasch family
 }}
@@ -218,6 +221,9 @@ Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing m
 in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
 
 Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
+
+Yen, W. M. (1981). Using simulation results to choose a latent trait model.
+\emph{Applied Psychological Measurement, 5}, 245-262.
 }
 \seealso{
 \code{\link{personfit}}, \code{\link{itemGAM}}
