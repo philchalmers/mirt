@@ -52,7 +52,8 @@ for(i in 1:20){
 
 #estimate model (low quadrature just as an example; not as accurate.
 #                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
-(mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=7, TOL=1e-3))
+(mod <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=7, TOL=1e-3,
+                optimizer = 'nlminb'))
 
 coef(mod, simplify=TRUE)
 
@@ -99,7 +100,8 @@ for(i in 1:20){
 
 #estimate model (low quadrature just as an example; not as accurate.
 #                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
-mod2 <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, pars=sv)
+mod2 <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, pars=sv, 
+                optimizer = 'nlminb')
 
 coef(mod2, simplify=TRUE)
 

@@ -212,8 +212,11 @@ library(sirt)
 <pre><code>## Loading required package: CDM
 </code></pre>
 
+<pre><code>## Loading required package: mvtnorm
+</code></pre>
+
 <pre><code>## **********************************
-## ** CDM 5.0-0 (2016-07-11)       **
+## ** CDM 5.1-0 (2016-08-29)       **
 ## ** Cognitive Diagnostic Models  **
 ## **********************************
 </code></pre>
@@ -257,15 +260,15 @@ mod14a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;, progress = FALS
 summary(mod14a)
 </code></pre>
 
-<pre><code>## CDM 5.0-0 (Built 2016-07-11)
+<pre><code>## CDM 5.1-0 (Built 2016-08-29)
 </code></pre>
 
 <pre><code>## Call:
 ##  CDM::din(data = dat, q.matrix = Q, rule = &quot;DINA&quot;, progress = FALSE) 
 ## 
-## Date of Analysis: 2016-08-18 14:00:47 
-## Time difference of 0.02725506 secs
-## Computation Time: 0.02725506 
+## Date of Analysis: 2016-10-04 16:41:31 
+## Time difference of 0.02828979 secs
+## Computation Time: 0.02828979 
 ## 
 ## 
 ## Deviance =  3915.31  |   Log-Likelihood = -1957.655 
@@ -592,25 +595,26 @@ round(dfr,3)
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] sirt_1.12-2     TAM_1.995-0     CDM_5.0-0       ltm_1.0-0      
-##  [5] polycor_0.7-8   sfsmisc_1.1-0   mvtnorm_1.0-5   msm_1.6.1      
-##  [9] MASS_7.3-45     mirt_1.19       lattice_0.20-33 knitr_1.13     
+##  [1] sirt_1.12-2     TAM_1.995-0     CDM_5.1-0       mvtnorm_1.0-5  
+##  [5] ltm_1.0-0       polycor_0.7-9   msm_1.6.1       MASS_7.3-45    
+##  [9] mirt_1.20       lattice_0.20-34 knitr_1.14     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.6           plyr_1.8.4            tools_3.3.1          
-##  [4] boot_1.3-18           evaluate_0.9          nlme_3.1-128         
-##  [7] mgcv_1.8-13           igraph_1.0.1          Matrix_1.2-6         
-## [10] psych_1.6.6           parallel_3.3.1        SparseM_1.7          
-## [13] expm_0.999-0          pbivnorm_0.6.0        WrightMap_1.2.1      
-## [16] coda_0.18-1           kappalab_0.4-7        ic.infer_1.1-5       
-## [19] stringr_1.0.0         MatrixModels_0.4-1    gtools_3.5.0         
-## [22] combinat_0.0-8        grid_3.3.1            lavaan.survey_1.1.3  
-## [25] survival_2.39-4       sm_2.2-5.4            GPArotation_2014.11-1
-## [28] lavaan_0.5-20         kernlab_0.9-24        magrittr_1.5         
-## [31] tensor_1.5            mcmc_0.9-4            splines_3.3.1        
-## [34] mnormt_1.5-4          lpSolve_5.6.13        mime_0.5             
-## [37] quantreg_5.26         quadprog_1.5-5        survey_3.30-3        
-## [40] stringi_1.1.1         MCMCpack_1.3-6        markdown_0.7.7
+##  [1] lavaan_0.5-22         gtools_3.5.0          kappalab_0.4-7       
+##  [4] lpSolve_5.6.13        kernlab_0.9-24        splines_3.3.1        
+##  [7] expm_0.999-0          mgcv_1.8-14           MCMCpack_1.3-7       
+## [10] survival_2.39-4       sm_2.2-5.4            foreign_0.8-66       
+## [13] lavaan.survey_1.1.3   plyr_1.8.4            GPArotation_2014.11-1
+## [16] stringr_1.1.0         ic.infer_1.1-5        MatrixModels_0.4-1   
+## [19] combinat_0.0-8        coda_0.18-1           psych_1.6.9          
+## [22] evaluate_0.9          SparseM_1.72          quantreg_5.29        
+## [25] parallel_3.3.1        markdown_0.7.7        WrightMap_1.2.1      
+## [28] Rcpp_0.12.7           tensor_1.5            mime_0.5             
+## [31] mcmc_0.9-4            mnormt_1.5-4          stringi_1.1.1        
+## [34] survey_3.31-2         grid_3.3.1            quadprog_1.5-5       
+## [37] tools_3.3.1           magrittr_1.5          pbivnorm_0.6.0       
+## [40] Matrix_1.2-7.1        boot_1.3-18           sfsmisc_1.1-0        
+## [43] igraph_1.0.1          nlme_3.1-128
 </code></pre>
 
 </body>
