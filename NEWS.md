@@ -1,5 +1,16 @@
 # Changes in mirt 1.20
 
+- `df` adjustment for the `S_X2` item-fit statistic for models where the latent trait
+  hyper-parameters have been estimated
+
+- `itemfit()` and `personfit()` properly detect dichotomous Rasch models which 
+  have been defined with the constrained slopes approach
+
+- argument `'fit_stats'` now used in `itemfit()` to replace longer list of logicals 
+  (e.g., `itemfit(mod, S_X2 = FALSE, X2 = TRUE, infit = FALSE, ...)`). Now fit stats
+  are explicitly requested through a character vector input. Default still uses the 
+  S_X2 statistic
+
 - when using `'lnorm'` prior lower bound automatically set to 0, and with `'beta'` prior
   the lower and upper bounds are set to [0,1]
 

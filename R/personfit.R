@@ -130,10 +130,12 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
                     sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
     }
     Zh <- (LL - mu) / sqrt(sigma2)
-    if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
+    if(all(x@Model$itemtype %in% c('Rasch', '2PL', 'rsm', 'gpcm'))){
+        infit <- FALSE
         oneslopes <- rep(FALSE, length(x@Model$itemtype))
+        slope <- x@ParObjects$pars[[1L]]@par[1L]
         for(i in 1L:length(x@Model$itemtype))
-            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
+            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], slope-1e-10, slope+1e-10)
         if(all(oneslopes)){
             W <- resid <- C <- matrix(0, ncol=J, nrow=N)
             K <- x@Data$K

@@ -84,7 +84,7 @@ test_that('one factor', {
     expect_equal(fit1$SRMSR.D1, 0.04152426, tolerance = 1e-4)
     expect_equal(fit1$TLI, .99758, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
-    fit2 <- itemfit(mod_metric, digits = 20, Zh=TRUE)
+    fit2 <- itemfit(mod_metric, c('S_X2', 'Zh'), digits = 20)
     expect_is(fit2, 'list')
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.6646153, 8.1727058, 11.000000, 0.6977546),
                  tolerance = 1e-4)
@@ -113,7 +113,7 @@ test_that('one factor', {
                  tolerance=1e-4)
     expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7470682,0.9557447,0.4884872), tolerance=1e-4)
     expect_is(plot(mod, type = 'trace'), 'trellis')
-    ifit <- itemfit(mod, S_X2 = FALSE, X2=TRUE)
+    ifit <- itemfit(mod, 'X2')
     expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002,0.0081), tolerance=1e-4)
 
     #missing data

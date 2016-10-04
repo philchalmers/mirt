@@ -13,14 +13,23 @@
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
+#' @param fit_stats a character vector indicating which fit statistics should be computed.
+#'   Supported inputs are:
+#'
+#' \itemize{
+#'   \item \code{'S_X2'} : Orlando and Thissen (2000, 2003) and
+#'     Kang and Chen's (2007) (default)
+#'   \item \code{'Zh'} : Drasgow, Levine, & Williams (1985)
+#'   \item \code{'X2'} and \code{'G2'} : Bock (1972) and McKinley & Mills (1985) X2 and G2 methods.
+#'     Can also be used to form Yen's Q1 statistic by passing both \code{'X2'} and
+#'     \code{group.bins = 10}, or Bock's median based method by selecting \code{'X2'} and
+#'     passing \code{group.fun = median}
+#'   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
+#'     infit and outfit statistics. Ignored if models are not from the Rasch family
+#' }
+#'
 #' @param which.items an integer vector indicating which items to test for fit.
 #'   Default tests all possible items
-#' @param S_X2 logical; calculate the S_X2 statistic?
-#' @param Zh logical; calculate Zh?
-#' @param X2 logical; calculate the X2 statistic for unidimensional models?
-#' @param G2 logical; calculate the G2 statistic for unidimensional models?
-#' @param infit logical; calculate the infit/outfit values for unidimensional Rasch models? If the models
-#'   are not from the Rasch family then this will be ignored
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
@@ -31,19 +40,20 @@
 #'   statistic. The default \code{NA}
 #'   disables this command and instead uses the \code{group.bins} input to try and construct
 #'   equally sized bins
-#' @param group.bins the number of bins to use when \code{X2 = TRUE}. For example,
-#'   setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic
-#' @param group.fun function used when \code{X2} or \code{G2} are computed. Determines the central
+#' @param group.bins the number of bins to use for X2 and G2. For example,
+#'   setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic when \code{'X2'} is
+#'   requested
+#' @param group.fun function used when \code{'X2'} or \code{'G2'} are computed. Determines the central
 #'   tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
 #'   obtain the median of each respective ability estimate in each subgroup (this is what was used
 #'   by Bock, 1972)
 #' @param empirical.plot a single numeric value or character of the item name indicating which
 #'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings (see
-#'   \code{empirical.CI}). Useful for plotting the expected bins after passing \code{X2 = TRUE} or
-#'   \code{G2 = TRUE}
+#'   \code{empirical.CI}). Useful for plotting the expected bins based on the \code{'X2'} or
+#'   \code{'G2'} method
 #' @param empirical.table a single numeric value or character of the item name indicating which
-#'   item table of expected values should be returned. Useful for plotting the expected bins after
-#'   passing \code{X2 = TRUE} or \code{G2 = TRUE}
+#'   item table of expected values should be returned. Useful for visualizing the
+#'   expected bins based on the \code{'X2'} or \code{'G2'} method
 #' @param empirical.CI a numeric value indicating the width of the empirical confidence interval
 #'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 #'   interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items
@@ -113,7 +123,9 @@
 #' fit <- itemfit(x)
 #' fit
 #'
-#' itemfit(x, X2=TRUE)
+#' itemfit(x)
+#' itemfit(x, 'X2') # just X2
+#' itemfit(x, c('S_X2', 'X2')) #both S_X2 and X2
 #' itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
 #' itemfit(x, group.bins=15, empirical.plot = 21)
 #'
@@ -122,11 +134,11 @@
 #' itemfit(x, empirical.table=21)
 #'
 #' #infit/outfit statistics. method='ML' agrees better with eRm package
-#' itemfit(raschfit, method = 'ML', infit = TRUE) #infit and outfit stats
+#' itemfit(raschfit, 'infit', method = 'ML') #infit and outfit stats
 #'
 #' #same as above, but inputting ML estimates instead
 #' Theta <- fscores(raschfit, method = 'ML')
-#' itemfit(raschfit, Theta=Theta, infit = TRUE)
+#' itemfit(raschfit, 'infit', Theta=Theta)
 #'
 #' # fit a new more flexible model for the mis-fitting item
 #' itemtype <- c(rep('2PL', 20), 'spline')
@@ -145,14 +157,14 @@
 #'
 #' mod <- mirt(dat, 1)
 #' itemfit(mod)
-#' itemfit(mod, X2 = TRUE)
+#' itemfit(mod, 'X2') #pretty much useless given inflated Type I error rates
 #' itemfit(mod, empirical.plot = 1)
 #'
 #' # collapsed tables (see mincell.X2) for X2 and G2
 #' itemfit(mod, empirical.table = 1)
 #'
 #' mod2 <- mirt(dat, 1, 'Rasch')
-#' itemfit(mod2, infit = TRUE)
+#' itemfit(mod2, 'infit')
 #'
 #' #massive list of tables
 #' tables <- itemfit(mod, S_X2.tables = TRUE)
@@ -166,22 +178,21 @@
 #' raschfit <- mirt(data, 1, itemtype='Rasch')
 #'
 #' mirtCluster() # run in parallel
-#' itemfit(raschfit, impute = 10, infit = TRUE)
+#' itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
 #'
 #' #alternative route: use only valid data, and create a model with the previous parameter estimates
 #' data2 <- na.omit(data)
 #' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-#' itemfit(raschfit2, infit = TRUE)
+#' itemfit(raschfit2, 'infit')
 #'
 #' # note that X2 and G2 do not require complete datasets
-#' itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE)
+#' itemfit(raschfit, c('X2', 'G2'))
 #' itemfit(raschfit, empirical.plot=1)
 #' itemfit(raschfit, empirical.table=1)
 #'
 #'}
 #'
-itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
-                    S_X2 = TRUE, Zh = FALSE, X2 = FALSE, G2 = FALSE, infit = FALSE,
+itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nitems'),
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
@@ -205,6 +216,13 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         stop('MixedClass objects are not supported', call.=FALSE)
     if(!is.null(empirical.plot) && !is.null(empirical.table))
         stop('Please select empirical.plot or empirical.table, not both', call.=FALSE)
+    if(!all(fit_stats %in% c('S_X2', 'Zh', 'X2', 'G2', 'infit')))
+        stop('Unsupported fit_stats element requested', call.=FALSE)
+    S_X2 <- 'S_X2' %in% fit_stats
+    Zh <- 'Zh' %in% fit_stats
+    X2 <- 'X2' %in% fit_stats
+    G2 <- 'G2' %in% fit_stats
+    infit <- 'infit' %in% fit_stats
     if(!is.null(empirical.plot))
         which.items <- empirical.plot
     if(!is.null(empirical.table))
@@ -215,8 +233,6 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         if(length(which.items) > 1L)
             stop('Plots and tables only supported for 1 item at a time', call.=FALSE)
     }
-
-    stopifnot(Zh || X2 || S_X2 || infit || G2)
     stopifnot(is.numeric(empirical.CI))
     if(!is.null(empirical.table) || !is.null(empirical.plot)){
         X2 <- TRUE
@@ -237,12 +253,12 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
                     tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
-            ret[[g]] <- itemfit(tmp_obj, Zh=Zh, X2=X2, group.size=group.size, group.bins=group.bins,
-                                group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2, infit=infit,
+            ret[[g]] <- itemfit(tmp_obj, fit_stats=fit_stats, group.size=group.size, group.bins=group.bins,
+                                group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                                empirical.table=empirical.table, G2=G2,
+                                empirical.table=empirical.table,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, digits=digits, S_X2=S_X2, ...)
+                                impute=impute, discrete=discrete, digits=digits, ...)
         }
         names(ret) <- x@Data$groupNames
         if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
@@ -264,9 +280,9 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         collect <- vector('list', impute)
         vals <- mod2values(x)
         vals$est <- FALSE
-        collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, S_X2=S_X2,
-                            Zh=Zh, X2=X2, G2=G2, group.size=group.size, group.bins=group.bins,
-                            mincell=mincell, mincell.X2=mincell.X2, infit=infit,
+        collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, fit_stats=fit_stats,
+                            group.size=group.size, group.bins=group.bins,
+                            mincell=mincell, mincell.X2=mincell.X2,
                             S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                             empirical.CI=empirical.CI, empirical.table=empirical.table,
                             method=method, impute=0, discrete=discrete, ...)
@@ -291,7 +307,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
     J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
-    if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm')) && infit){
+    if(all(x@Model$itemtype %in% c('Rasch', '2PL', 'rsm', 'gpcm')) && infit){
         infit <- FALSE
         oneslopes <- rep(FALSE, length(x@Model$itemtype))
         slope <- x@ParObjects$pars[[1L]]@par[1L]
@@ -334,27 +350,22 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
         tmp <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
         if(Zh) ret$Zh <- tmp[which.items]
         #if all Rasch models, infit and outfit
-        if(all(x@Model$itemtype %in% c('Rasch', 'rsm', 'gpcm'))){
-            oneslopes <- rep(FALSE, length(x@Model$itemtype))
-            for(i in 1L:length(x@Model$itemtype))
-                oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], 1-1e-10, 1+1e-10)
-            if(all(oneslopes)){
-                attr(x, 'inoutfitreturn') <- TRUE
-                pf <- personfit(x, method=method, Theta=Theta)
-                z2 <- pf$resid^2 / pf$W
-                outfit <- colSums(z2) / N
-                q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
-                q.outfit[q.outfit > 1.4142] <- 1.4142
-                z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
-                infit <- colSums(pf$W * z2) / colSums(pf$W)
-                q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
-                q.infit[q.infit > 1.4142] <- 1.4142
-                z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
-                ret$outfit <- outfit[which.items]
-                ret$z.outfit <- z.outfit[which.items]
-                ret$infit <- infit[which.items]
-                ret$z.infit <- z.infit[which.items]
-            }
+        if(infit){
+            attr(x, 'inoutfitreturn') <- TRUE
+            pf <- personfit(x, method=method, Theta=Theta)
+            z2 <- pf$resid^2 / pf$W
+            outfit <- colSums(z2) / N
+            q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
+            q.outfit[q.outfit > 1.4142] <- 1.4142
+            z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
+            infit <- colSums(pf$W * z2) / colSums(pf$W)
+            q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
+            q.infit[q.infit > 1.4142] <- 1.4142
+            z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
+            ret$outfit <- outfit[which.items]
+            ret$z.outfit <- z.outfit[which.items]
+            ret$infit <- infit[which.items]
+            ret$z.infit <- z.infit[which.items]
         }
     }
     if(( (X2 || G2) || !is.null(empirical.plot) || !is.null(empirical.table)) && x@Model$nfact == 1L){
@@ -514,12 +525,14 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             ret$X2 <- X2.value[which.items]
             ret$df.X2 <- df.X2[which.items]
             ret$p.X2 <- 1 - suppressWarnings(pchisq(ret$X2, ret$df.X2))
+            ret$df.X2[ret$df.X2 <= 0] <- 0
             ret$p.X2[ret$df.X2 <= 0] <- NaN
         }
         if(G2){
             ret$G2 <- G2.value[which.items]
             ret$df.G2 <- df.G2[which.items]
             ret$p.G2 <- 1 - suppressWarnings(pchisq(ret$G2, ret$df.G2))
+            ret$df.G2[ret$df.G2 <= 0] <- 0
             ret$p.G2[ret$df.G2 <= 0] <- NaN
         }
     }
@@ -555,6 +568,7 @@ itemfit <- function(x, which.items = 1:extract.mirt(x, 'nitems'),
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
             df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
         }
+        df.S_X2 <- df.S_X2 - sum(pars[[J+1L]]@est)
         df.S_X2[df.S_X2 < 0] <- 0
         S_X2[df.S_X2 == 0] <- NaN
         ret$S_X2 <- S_X2

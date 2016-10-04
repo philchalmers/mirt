@@ -4,42 +4,46 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-itemfit(x, which.items = 1:extract.mirt(x, "nitems"), S_X2 = TRUE,
-  Zh = FALSE, X2 = FALSE, G2 = FALSE, infit = FALSE, group.bins = 10,
-  group.size = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
-  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0.95,
-  empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
-  digits = 4, par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), ...)
+itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
+  group.bins = 10, group.size = NA, group.fun = mean, mincell = 1,
+  mincell.X2 = 2, S_X2.tables = FALSE, empirical.plot = NULL,
+  empirical.CI = 0.95, empirical.table = NULL, method = "EAP",
+  Theta = NULL, impute = 0, digits = 4, par.strip.text = list(cex =
+  0.7), par.settings = list(strip.background = list(col = "#9ECAE1"),
+  strip.border = list(col = "black")), ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
 
+\item{fit_stats}{a character vector indicating which fit statistics should be computed.
+  Supported inputs are:
+
+\itemize{
+  \item \code{'S_X2'} : Orlando and Thissen (2000, 2003) and
+    Kang and Chen's (2007) (default)
+  \item \code{'Zh'} : Drasgow, Levine, & Williams (1985)
+  \item \code{'X2'} and \code{'G2'} : Bock (1972) and McKinley & Mills (1985) X2 and G2 methods.
+    Can also be used to form Yen's Q1 statistic by passing both \code{'X2'} and
+    \code{group.bins = 10}, or Bock's median based method by selecting \code{'X2'} and
+    passing \code{group.fun = median}
+  \item \code{'infit'} : (Unidimensional Rasch model only) compute the
+    infit and outfit statistics. Ignored if models are not from the Rasch family
+}}
+
 \item{which.items}{an integer vector indicating which items to test for fit.
 Default tests all possible items}
 
-\item{S_X2}{logical; calculate the S_X2 statistic?}
-
-\item{Zh}{logical; calculate Zh?}
-
-\item{X2}{logical; calculate the X2 statistic for unidimensional models?}
-
-\item{G2}{logical; calculate the G2 statistic for unidimensional models?}
-
-\item{infit}{logical; calculate the infit/outfit values for unidimensional Rasch models? If the models
-are not from the Rasch family then this will be ignored}
-
-\item{group.bins}{the number of bins to use when \code{X2 = TRUE}. For example,
-setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic}
+\item{group.bins}{the number of bins to use for X2 and G2. For example,
+setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic when \code{'X2'} is
+requested}
 
 \item{group.size}{approximate size of each group to be used in calculating the \eqn{\chi^2}
 statistic. The default \code{NA}
 disables this command and instead uses the \code{group.bins} input to try and construct
 equally sized bins}
 
-\item{group.fun}{function used when \code{X2} or \code{G2} are computed. Determines the central
+\item{group.fun}{function used when \code{'X2'} or \code{'G2'} are computed. Determines the central
 tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
 obtain the median of each respective ability estimate in each subgroup (this is what was used
 by Bock, 1972)}
@@ -55,16 +59,16 @@ be ommited in the computations}
 
 \item{empirical.plot}{a single numeric value or character of the item name indicating which
 item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings (see
-\code{empirical.CI}). Useful for plotting the expected bins after passing \code{X2 = TRUE} or
-\code{G2 = TRUE}}
+\code{empirical.CI}). Useful for plotting the expected bins based on the \code{'X2'} or
+\code{'G2'} method}
 
 \item{empirical.CI}{a numeric value indicating the width of the empirical confidence interval
 ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items}
 
 \item{empirical.table}{a single numeric value or character of the item name indicating which
-item table of expected values should be returned. Useful for plotting the expected bins after
-passing \code{X2 = TRUE} or \code{G2 = TRUE}}
+item table of expected values should be returned. Useful for visualizing the
+expected bins based on the \code{'X2'} or \code{'G2'} method}
 
 \item{method}{type of factor score estimation method. See \code{\link{fscores}} for more detail}
 
@@ -120,7 +124,9 @@ raschfit <- mirt(data, 1, itemtype='Rasch')
 fit <- itemfit(x)
 fit
 
-itemfit(x, X2=TRUE)
+itemfit(x)
+itemfit(x, 'X2') # just X2
+itemfit(x, c('S_X2', 'X2')) #both S_X2 and X2
 itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
 itemfit(x, group.bins=15, empirical.plot = 21)
 
@@ -129,11 +135,11 @@ itemfit(x, empirical.table=1)
 itemfit(x, empirical.table=21)
 
 #infit/outfit statistics. method='ML' agrees better with eRm package
-itemfit(raschfit, method = 'ML', infit = TRUE) #infit and outfit stats
+itemfit(raschfit, 'infit', method = 'ML') #infit and outfit stats
 
 #same as above, but inputting ML estimates instead
 Theta <- fscores(raschfit, method = 'ML')
-itemfit(raschfit, Theta=Theta, infit = TRUE)
+itemfit(raschfit, 'infit', Theta=Theta)
 
 # fit a new more flexible model for the mis-fitting item
 itemtype <- c(rep('2PL', 20), 'spline')
@@ -152,14 +158,14 @@ head(dat)
 
 mod <- mirt(dat, 1)
 itemfit(mod)
-itemfit(mod, X2 = TRUE)
+itemfit(mod, 'X2') #pretty much useless given inflated Type I error rates
 itemfit(mod, empirical.plot = 1)
 
 # collapsed tables (see mincell.X2) for X2 and G2
 itemfit(mod, empirical.table = 1)
 
 mod2 <- mirt(dat, 1, 'Rasch')
-itemfit(mod2, infit = TRUE)
+itemfit(mod2, 'infit')
 
 #massive list of tables
 tables <- itemfit(mod, S_X2.tables = TRUE)
@@ -173,15 +179,15 @@ data[sample(1:prod(dim(data)), 500)] <- NA
 raschfit <- mirt(data, 1, itemtype='Rasch')
 
 mirtCluster() # run in parallel
-itemfit(raschfit, impute = 10, infit = TRUE)
+itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
 
 #alternative route: use only valid data, and create a model with the previous parameter estimates
 data2 <- na.omit(data)
 raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-itemfit(raschfit2, infit = TRUE)
+itemfit(raschfit2, 'infit')
 
 # note that X2 and G2 do not require complete datasets
-itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE)
+itemfit(raschfit, c('X2', 'G2'))
 itemfit(raschfit, empirical.plot=1)
 itemfit(raschfit, empirical.table=1)
 

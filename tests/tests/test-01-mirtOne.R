@@ -124,7 +124,7 @@ test_that('dich', {
     TP2 <- plot(modm2)
     expect_is(TP1, 'trellis')
     expect_is(TP2, 'trellis')
-    ifit <- itemfit(modm1, X2 = TRUE, digits = 20)
+    ifit <- itemfit(modm1, c('S_X2', 'X2', 'Zh'), digits = 20)
     expect_is(ifit, 'data.frame')
     expect_true(mirt:::closeEnough(as.numeric(ifit$Zh) - c(1.431838, 6.354917, 5.310844, 5.804449,
                                                            0.696139), -1e-2, 1e-2))

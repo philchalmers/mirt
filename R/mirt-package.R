@@ -138,12 +138,16 @@ NULL
 #' model <- 'F = 1-5
 #'          CONSTRAIN = (1-5, a1)'
 #' (mod <- mirt(dat, model))
-#' coef(mod)
+#' M2(mod)
+#' itemfit(mod)
+#' coef(mod, simplify=TRUE)
 #'
 #' #equivalentely, but with a different parameterization
 #' mod2 <- mirt(dat, 1, itemtype = 'Rasch')
 #' anova(mod, mod2) #equal
-#' coef(mod2)
+#' M2(mod2)
+#' itemfit(mod2)
+#' coef(mod2, simplify=TRUE)
 #' sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 #'
 #' }
