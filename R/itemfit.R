@@ -244,11 +244,15 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         X2 <- TRUE
         S_X2 <- Zh <- infit <- G2 <- FALSE
     }
+    J <- ncol(x@Data$data)
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2 and G2 can be computed with missing data. Consider using imputed datasets', call.=FALSE)
 
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         discrete <- is(x, 'DiscreteClass')
+        if(discrete)
+            for(g in 1L:x@Data$ngroups)
+                x@ParObjects$pars[[g]]@ParObjects$pars[[J+1L]]@est[] <- FALSE
         ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
             Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
@@ -310,7 +314,6 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data)[which.items])
-    J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
     if(all(x@Model$itemtype %in% c('Rasch', '2PL', 'rsm', 'gpcm')) && infit){
