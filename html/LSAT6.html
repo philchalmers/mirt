@@ -59,7 +59,7 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.19 
+## mirt version: 1.20 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -71,32 +71,44 @@ head(dat)
 ## RMSEA = 0, CFI = 1, TLI = 1.068
 </code></pre>
 
-<pre><code class="r">coef(mod)
+<pre><code class="r">M2(mod)
 </code></pre>
 
-<pre><code>## $Item_1
-##        a1    d g u
-## par 0.755 2.73 0 1
+<pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI
+## stats 5.292566  9 0.8080952     0       0 0.02254275 0.02242068 1.072511
+##       CFI
+## stats   1
+</code></pre>
+
+<pre><code class="r">itemfit(mod)
+</code></pre>
+
+<pre><code>##     item   S_X2 df.S_X2 p.S_X2
+## 1 Item_1 0.4363       2 0.8040
+## 2 Item_2 1.5764       2 0.4547
+## 3 Item_3 0.8715       1 0.3506
+## 4 Item_4 0.1898       2 0.9095
+## 5 Item_5 0.1902       2 0.9093
+</code></pre>
+
+<pre><code class="r">coef(mod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $items
+##           a1     d g u
+## Item_1 0.755 2.730 0 1
+## Item_2 0.755 0.999 0 1
+## Item_3 0.755 0.240 0 1
+## Item_4 0.755 1.307 0 1
+## Item_5 0.755 2.100 0 1
 ## 
-## $Item_2
-##        a1     d g u
-## par 0.755 0.999 0 1
+## $means
+## F 
+## 0 
 ## 
-## $Item_3
-##        a1    d g u
-## par 0.755 0.24 0 1
-## 
-## $Item_4
-##        a1     d g u
-## par 0.755 1.307 0 1
-## 
-## $Item_5
-##        a1   d g u
-## par 0.755 2.1 0 1
-## 
-## $GroupPars
-##     MEAN_1 COV_11
-## par      0      1
+## $cov
+##   F
+## F 1
 </code></pre>
 
 <pre><code class="r">#equivalentely, but with a different parameterization
@@ -109,48 +121,60 @@ anova(mod, mod2) #equal
 ## Model 2: mirt(data = dat, model = model)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df   p
-## 1 4945.876 4945.961 4956.266 4975.323 -2466.938   NaN NaN NaN
-## 2 4945.875 4945.960 4956.265 4975.322 -2466.938 0.001   0   0
+<pre><code>##        AIC    AICc    SABIC      BIC    logLik  X2  df   p
+## 1 4945.876 4945.96 4956.266 4975.322 -2466.938 NaN NaN NaN
+## 2 4945.875 4945.96 4956.265 4975.322 -2466.938   0   0   1
 </code></pre>
 
-<pre><code class="r">coef(mod2)
+<pre><code class="r">M2(mod2)
 </code></pre>
 
-<pre><code>## $Item_1
-##     a1     d g u
-## par  1 2.731 0 1
+<pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI
+## stats 5.295796  9 0.8077983     0       0 0.02255915 0.02242702 1.072448
+##       CFI
+## stats   1
+</code></pre>
+
+<pre><code class="r">itemfit(mod2)
+</code></pre>
+
+<pre><code>##     item   S_X2 df.S_X2 p.S_X2
+## 1 Item_1 0.4364       2 0.8040
+## 2 Item_2 1.5770       2 0.4545
+## 3 Item_3 0.8708       1 0.3507
+## 4 Item_4 0.1906       2 0.9091
+## 5 Item_5 0.1912       2 0.9088
+</code></pre>
+
+<pre><code class="r">coef(mod2, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $items
+##        a1     d g u
+## Item_1  1 2.732 0 1
+## Item_2  1 0.999 0 1
+## Item_3  1 0.240 0 1
+## Item_4  1 1.307 0 1
+## Item_5  1 2.101 0 1
 ## 
-## $Item_2
-##     a1     d g u
-## par  1 0.999 0 1
+## $means
+## F1 
+##  0 
 ## 
-## $Item_3
-##     a1    d g u
-## par  1 0.24 0 1
-## 
-## $Item_4
-##     a1     d g u
-## par  1 1.307 0 1
-## 
-## $Item_5
-##     a1     d g u
-## par  1 2.101 0 1
-## 
-## $GroupPars
-##     MEAN_1 COV_11
-## par      0  0.574
+## $cov
+##       F1
+## F1 0.572
 </code></pre>
 
 <pre><code class="r">sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 </code></pre>
 
-<pre><code>## [1] 0.7576279
+<pre><code>## [1] 0.7563068
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
 </body></html>

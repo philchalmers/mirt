@@ -29,14 +29,13 @@ For discrete models, only the S-X2 statistic will be calculated.
 <h3>Usage</h3>
 
 <pre>
-itemfit(x, which.items = 1:extract.mirt(x, "nitems"), S_X2 = TRUE,
-  Zh = FALSE, X2 = FALSE, G2 = FALSE, infit = FALSE, group.bins = 10,
-  group.size = NA, group.fun = mean, mincell = 1, mincell.X2 = 2,
-  S_X2.tables = FALSE, empirical.plot = NULL, empirical.CI = 0.95,
-  empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
-  digits = 4, par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), ...)
+itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
+  group.bins = 10, group.size = NA, group.fun = mean, mincell = 1,
+  mincell.X2 = 2, S_X2.tables = FALSE, empirical.plot = NULL,
+  empirical.CI = 0.95, empirical.table = NULL, method = "EAP",
+  Theta = NULL, impute = 0, digits = 4, par.strip.text = list(cex =
+  0.7), par.settings = list(strip.background = list(col = "#9ECAE1"),
+  strip.border = list(col = "black")), ...)
 </pre>
 
 
@@ -48,36 +47,46 @@ itemfit(x, which.items = 1:extract.mirt(x, "nitems"), S_X2 = TRUE,
 <p>a computed model object of class <code>SingleGroupClass</code>,
 <code>MultipleGroupClass</code>, or <code>DiscreteClass</code></p>
 </td></tr>
+<tr valign="top"><td><code>fit_stats</code></td>
+<td>
+<p>a character vector indicating which fit statistics should be computed.
+Supported inputs are:
+</p>
+
+<ul>
+<li> <p><code>'S_X2'</code> : Orlando and Thissen (2000, 2003) and
+Kang and Chen's (2007) signed chi-squared test (default)
+</p>
+</li>
+<li> <p><code>'Zh'</code> : Drasgow, Levine, &amp; Williams (1985) Zh
+</p>
+</li>
+<li> <p><code>'X2'</code> : Bock's (1972) chi-squared method.
+The default inputs compute Yen's (1981) Q1 variant of the X2 statistic
+(i.e., uses a fixed <code>group.bins = 10</code>). However, Bock's group-size variable
+median-based method can be computed by passing <code>group.fun = median</code> and
+modifying the <code>group.size</code> input to the desired number of bins
+</p>
+</li>
+<li> <p><code>'G2'</code> : McKinley &amp; Mills (1985) G2 statistic (similar method to Q1,
+but with the likelihood-ratio test).
+</p>
+</li>
+<li> <p><code>'infit'</code> : (Unidimensional Rasch model only) compute the
+infit and outfit statistics. Ignored if models are not from the Rasch family
+</p>
+</li></ul>
+</td></tr>
 <tr valign="top"><td><code>which.items</code></td>
 <td>
 <p>an integer vector indicating which items to test for fit.
 Default tests all possible items</p>
 </td></tr>
-<tr valign="top"><td><code>S_X2</code></td>
-<td>
-<p>logical; calculate the S_X2 statistic?</p>
-</td></tr>
-<tr valign="top"><td><code>Zh</code></td>
-<td>
-<p>logical; calculate Zh?</p>
-</td></tr>
-<tr valign="top"><td><code>X2</code></td>
-<td>
-<p>logical; calculate the X2 statistic for unidimensional models?</p>
-</td></tr>
-<tr valign="top"><td><code>G2</code></td>
-<td>
-<p>logical; calculate the G2 statistic for unidimensional models?</p>
-</td></tr>
-<tr valign="top"><td><code>infit</code></td>
-<td>
-<p>logical; calculate the infit/outfit values for unidimensional Rasch models? If the models
-are not from the Rasch family then this will be ignored</p>
-</td></tr>
 <tr valign="top"><td><code>group.bins</code></td>
 <td>
-<p>the number of bins to use when <code>X2 = TRUE</code>. For example,
-setting <code>group.bins = 10</code> will will compute Yen's (1981) Q1 statistic</p>
+<p>the number of bins to use for X2 and G2. For example,
+setting <code>group.bins = 10</code> will will compute Yen's (1981) Q1 statistic when <code>'X2'</code> is
+requested</p>
 </td></tr>
 <tr valign="top"><td><code>group.size</code></td>
 <td>
@@ -88,7 +97,7 @@ equally sized bins</p>
 </td></tr>
 <tr valign="top"><td><code>group.fun</code></td>
 <td>
-<p>function used when <code>X2</code> or <code>G2</code> are computed. Determines the central
+<p>function used when <code>'X2'</code> or <code>'G2'</code> are computed. Determines the central
 tendancy measure within each partitioned group. E.g., setting <code>group.fun = median</code> will
 obtain the median of each respective ability estimate in each subgroup (this is what was used
 by Bock, 1972)</p>
@@ -112,8 +121,8 @@ be ommited in the computations</p>
 <td>
 <p>a single numeric value or character of the item name indicating which
 item to plot (via <code>itemplot</code>) and overlay with the empirical <i>&theta;</i> groupings (see
-<code>empirical.CI</code>). Useful for plotting the expected bins after passing <code>X2 = TRUE</code> or
-<code>G2 = TRUE</code></p>
+<code>empirical.CI</code>). Useful for plotting the expected bins based on the <code>'X2'</code> or
+<code>'G2'</code> method</p>
 </td></tr>
 <tr valign="top"><td><code>empirical.CI</code></td>
 <td>
@@ -124,8 +133,8 @@ interval would be plotted when <code>empirical.CI = .95</code>. Only applicable 
 <tr valign="top"><td><code>empirical.table</code></td>
 <td>
 <p>a single numeric value or character of the item name indicating which
-item table of expected values should be returned. Useful for plotting the expected bins after
-passing <code>X2 = TRUE</code> or <code>G2 = TRUE</code></p>
+item table of expected values should be returned. Useful for visualizing the
+expected bins based on the <code>'X2'</code> or <code>'G2'</code> method</p>
 </td></tr>
 <tr valign="top"><td><code>method</code></td>
 <td>
@@ -193,6 +202,9 @@ in IRT. <em>Applied Psychological Measurement, 14</em>, 127-137.
 </p>
 <p>Wright B. D. &amp; Masters, G. N. (1982). <em>Rating scale analysis</em>. MESA Press.
 </p>
+<p>Yen, W. M. (1981). Using simulation results to choose a latent trait model.
+<em>Applied Psychological Measurement, 5</em>, 245-262.
+</p>
 
 
 <h3>See Also</h3>
@@ -249,7 +261,61 @@ fit
 ## 21 baditem 233.2237      18 0.0000
 </code></pre>
 
-<pre><code class="r">itemfit(x, X2=TRUE)
+<pre><code class="r">itemfit(x)
+</code></pre>
+
+<pre><code>##       item     S_X2 df.S_X2 p.S_X2
+## 1   Item_1  16.5185      15 0.3485
+## 2   Item_2  11.7179      15 0.7002
+## 3   Item_3  22.8350      15 0.0877
+## 4   Item_4  11.7034      16 0.7641
+## 5   Item_5  15.2412      15 0.4342
+## 6   Item_6  11.9831      16 0.7451
+## 7   Item_7  23.9117      16 0.0915
+## 8   Item_8  12.7437      15 0.6221
+## 9   Item_9  16.9313      15 0.3230
+## 10 Item_10   9.1994      16 0.9050
+## 11 Item_11  17.6301      15 0.2826
+## 12 Item_12  12.1983      15 0.6640
+## 13 Item_13  17.4868      15 0.2906
+## 14 Item_14  19.1169      15 0.2085
+## 15 Item_15  11.5423      16 0.7748
+## 16 Item_16  12.5344      16 0.7064
+## 17 Item_17  29.4527      15 0.0141
+## 18 Item_18  15.0638      16 0.5200
+## 19 Item_19  17.1247      15 0.3115
+## 20 Item_20  10.0642      15 0.8157
+## 21 baditem 233.2237      18 0.0000
+</code></pre>
+
+<pre><code class="r">itemfit(x, &#39;X2&#39;) # just X2
+</code></pre>
+
+<pre><code>##       item       X2 df.X2   p.X2
+## 1   Item_1  30.8416     8 0.0001
+## 2   Item_2  27.9701     8 0.0005
+## 3   Item_3  43.9945     8 0.0000
+## 4   Item_4  33.2721     8 0.0001
+## 5   Item_5  29.4686     8 0.0003
+## 6   Item_6  21.3253     8 0.0063
+## 7   Item_7  23.1272     8 0.0032
+## 8   Item_8  25.3323     8 0.0014
+## 9   Item_9  33.7785     8 0.0000
+## 10 Item_10  22.9722     8 0.0034
+## 11 Item_11  27.3002     8 0.0006
+## 12 Item_12  23.2562     8 0.0031
+## 13 Item_13  31.5228     8 0.0001
+## 14 Item_14  27.9245     8 0.0005
+## 15 Item_15  18.4617     8 0.0180
+## 16 Item_16  25.0568     8 0.0015
+## 17 Item_17  14.8275     8 0.0626
+## 18 Item_18  17.6757     8 0.0238
+## 19 Item_19  32.5851     8 0.0001
+## 20 Item_20  37.2074     8 0.0000
+## 21 baditem 228.3670     8 0.0000
+</code></pre>
+
+<pre><code class="r">itemfit(x, c(&#39;S_X2&#39;, &#39;X2&#39;)) #both S_X2 and X2
 </code></pre>
 
 <pre><code>##       item       X2 df.X2   p.X2     S_X2 df.S_X2 p.S_X2
@@ -396,60 +462,60 @@ itemfit(x, empirical.table=1)
 </code></pre>
 
 <pre><code class="r">#infit/outfit statistics. method=&#39;ML&#39; agrees better with eRm package
-itemfit(raschfit, method = &#39;ML&#39;, infit = TRUE) #infit and outfit stats
+itemfit(raschfit, &#39;infit&#39;, method = &#39;ML&#39;) #infit and outfit stats
 </code></pre>
 
-<pre><code>##       item outfit z.outfit  infit z.infit     S_X2 df.S_X2 p.S_X2
-## 1   Item_1 0.9190  -2.9446 0.9512 -2.6986  21.0509      17 0.2240
-## 2   Item_2 0.9619  -1.2813 0.9602 -2.0095  14.6028      16 0.5539
-## 3   Item_3 0.8757  -4.4549 0.9175 -4.3321  38.2184      16 0.0014
-## 4   Item_4 0.9982  -0.0483 1.0094  0.4964  14.1168      17 0.6588
-## 5   Item_5 0.9824  -0.5223 0.9736 -1.2261  15.3811      16 0.4969
-## 6   Item_6 0.8897  -2.2306 0.9500 -1.6886  12.8899      17 0.7435
-## 7   Item_7 1.0084   0.2602 1.0033  0.1724  28.6270      17 0.0381
-## 8   Item_8 0.9328  -1.7409 0.9606 -1.6293  14.4195      17 0.6372
-## 9   Item_9 0.9584  -1.5189 0.9636 -1.9989  19.4945      17 0.3009
-## 10 Item_10 1.0112   0.3048 1.0126  0.5352  10.6695      17 0.8732
-## 11 Item_11 0.8978  -2.2995 0.9387 -2.5303  20.9369      16 0.1809
-## 12 Item_12 0.9882  -0.3825 1.0122  0.6074  14.3926      16 0.5695
-## 13 Item_13 0.9906  -0.2619 1.0019  0.0937  18.2711      16 0.3083
-## 14 Item_14 0.9734  -0.8408 0.9740 -1.2555  19.2390      16 0.2565
-## 15 Item_15 0.9476  -0.9401 0.9930 -0.2068  11.9081      17 0.8057
-## 16 Item_16 0.9876  -0.2690 0.9854 -0.5430  11.9905      17 0.8007
-## 17 Item_17 0.8777  -1.5312 0.9603 -0.8715  30.2007      17 0.0249
-## 18 Item_18 0.9614  -0.7568 0.9779 -0.7388  14.2774      17 0.6474
-## 19 Item_19 0.9427  -2.0601 0.9743 -1.3521  18.6139      16 0.2892
-## 20 Item_20 0.8676  -4.7359 0.9107 -4.6871  29.1410      16 0.0230
-## 21 baditem 1.5129  16.1219 1.3377 16.5100 789.2828      17 0.0000
+<pre><code>##       item outfit z.outfit  infit z.infit
+## 1   Item_1 0.9190  -2.9444 0.9512 -2.6984
+## 2   Item_2 0.9619  -1.2810 0.9602 -2.0092
+## 3   Item_3 0.8757  -4.4546 0.9175 -4.3318
+## 4   Item_4 0.9982  -0.0477 1.0094  0.4970
+## 5   Item_5 0.9824  -0.5222 0.9736 -1.2261
+## 6   Item_6 0.8897  -2.2298 0.9500 -1.6876
+## 7   Item_7 1.0084   0.2611 1.0033  0.1733
+## 8   Item_8 0.9328  -1.7408 0.9606 -1.6292
+## 9   Item_9 0.9584  -1.5187 0.9636 -1.9987
+## 10 Item_10 1.0112   0.3049 1.0126  0.5353
+## 11 Item_11 0.8978  -2.2978 0.9388 -2.5280
+## 12 Item_12 0.9882  -0.3823 1.0122  0.6077
+## 13 Item_13 0.9906  -0.2618 1.0019  0.0938
+## 14 Item_14 0.9734  -0.8406 0.9740 -1.2554
+## 15 Item_15 0.9477  -0.9389 0.9931 -0.2053
+## 16 Item_16 0.9876  -0.2687 0.9854 -0.5426
+## 17 Item_17 0.8778  -1.5303 0.9604 -0.8702
+## 18 Item_18 0.9615  -0.7560 0.9779 -0.7379
+## 19 Item_19 0.9427  -2.0598 0.9743 -1.3518
+## 20 Item_20 0.8676  -4.7356 0.9107 -4.6868
+## 21 baditem 1.5129  16.1224 1.3377 16.5102
 </code></pre>
 
 <pre><code class="r">#same as above, but inputting ML estimates instead
 Theta &lt;- fscores(raschfit, method = &#39;ML&#39;)
-itemfit(raschfit, Theta=Theta, infit = TRUE)
+itemfit(raschfit, &#39;infit&#39;, Theta=Theta)
 </code></pre>
 
-<pre><code>##       item outfit z.outfit  infit z.infit     S_X2 df.S_X2 p.S_X2
-## 1   Item_1 0.9190  -2.9446 0.9512 -2.6986  21.0509      17 0.2240
-## 2   Item_2 0.9619  -1.2813 0.9602 -2.0095  14.6028      16 0.5539
-## 3   Item_3 0.8757  -4.4549 0.9175 -4.3321  38.2184      16 0.0014
-## 4   Item_4 0.9982  -0.0483 1.0094  0.4964  14.1168      17 0.6588
-## 5   Item_5 0.9824  -0.5223 0.9736 -1.2261  15.3811      16 0.4969
-## 6   Item_6 0.8897  -2.2306 0.9500 -1.6886  12.8899      17 0.7435
-## 7   Item_7 1.0084   0.2602 1.0033  0.1724  28.6270      17 0.0381
-## 8   Item_8 0.9328  -1.7409 0.9606 -1.6293  14.4195      17 0.6372
-## 9   Item_9 0.9584  -1.5189 0.9636 -1.9989  19.4945      17 0.3009
-## 10 Item_10 1.0112   0.3048 1.0126  0.5352  10.6695      17 0.8732
-## 11 Item_11 0.8978  -2.2995 0.9387 -2.5303  20.9369      16 0.1809
-## 12 Item_12 0.9882  -0.3825 1.0122  0.6074  14.3926      16 0.5695
-## 13 Item_13 0.9906  -0.2619 1.0019  0.0937  18.2711      16 0.3083
-## 14 Item_14 0.9734  -0.8408 0.9740 -1.2555  19.2390      16 0.2565
-## 15 Item_15 0.9476  -0.9401 0.9930 -0.2068  11.9081      17 0.8057
-## 16 Item_16 0.9876  -0.2690 0.9854 -0.5430  11.9905      17 0.8007
-## 17 Item_17 0.8777  -1.5312 0.9603 -0.8715  30.2007      17 0.0249
-## 18 Item_18 0.9614  -0.7568 0.9779 -0.7388  14.2774      17 0.6474
-## 19 Item_19 0.9427  -2.0601 0.9743 -1.3521  18.6139      16 0.2892
-## 20 Item_20 0.8676  -4.7359 0.9107 -4.6871  29.1410      16 0.0230
-## 21 baditem 1.5129  16.1219 1.3377 16.5100 789.2828      17 0.0000
+<pre><code>##       item outfit z.outfit  infit z.infit
+## 1   Item_1 0.9190  -2.9444 0.9512 -2.6984
+## 2   Item_2 0.9619  -1.2810 0.9602 -2.0092
+## 3   Item_3 0.8757  -4.4546 0.9175 -4.3318
+## 4   Item_4 0.9982  -0.0477 1.0094  0.4970
+## 5   Item_5 0.9824  -0.5222 0.9736 -1.2261
+## 6   Item_6 0.8897  -2.2298 0.9500 -1.6876
+## 7   Item_7 1.0084   0.2611 1.0033  0.1733
+## 8   Item_8 0.9328  -1.7408 0.9606 -1.6292
+## 9   Item_9 0.9584  -1.5187 0.9636 -1.9987
+## 10 Item_10 1.0112   0.3049 1.0126  0.5353
+## 11 Item_11 0.8978  -2.2978 0.9388 -2.5280
+## 12 Item_12 0.9882  -0.3823 1.0122  0.6077
+## 13 Item_13 0.9906  -0.2618 1.0019  0.0938
+## 14 Item_14 0.9734  -0.8406 0.9740 -1.2554
+## 15 Item_15 0.9477  -0.9389 0.9931 -0.2053
+## 16 Item_16 0.9876  -0.2687 0.9854 -0.5426
+## 17 Item_17 0.8778  -1.5303 0.9604 -0.8702
+## 18 Item_18 0.9615  -0.7560 0.9779 -0.7379
+## 19 Item_19 0.9427  -2.0598 0.9743 -1.3518
+## 20 Item_20 0.8676  -4.7356 0.9107 -4.6868
+## 21 baditem 1.5129  16.1224 1.3377 16.5102
 </code></pre>
 
 <pre><code class="r"># fit a new more flexible model for the mis-fitting item
@@ -547,20 +613,20 @@ itemfit(mod)
 ## 10 Item_10  92.2091      98 0.6459
 </code></pre>
 
-<pre><code class="r">itemfit(mod, X2 = TRUE)
+<pre><code class="r">itemfit(mod, &#39;X2&#39;) #pretty much useless given inflated Type I error rates
 </code></pre>
 
-<pre><code>##       item       X2 df.X2   p.X2     S_X2 df.S_X2 p.S_X2
-## 1   Item_1 102.3644    35 0.0000  74.0534     100 0.9758
-## 2   Item_2  28.7480    35 0.7630  72.1289     111 0.9984
-## 3   Item_3  71.0780    35 0.0003 102.3680     104 0.5269
-## 4   Item_4 106.4343    35 0.0000  96.1273     101 0.6184
-## 5   Item_5  39.6001    35 0.2721  92.8217     110 0.8808
-## 6   Item_6  81.4939    35 0.0000  94.1618     102 0.6972
-## 7   Item_7 135.9474    35 0.0000 103.2130      99 0.3660
-## 8   Item_8 125.1119    35 0.0000  93.7010      99 0.6315
-## 9   Item_9 114.5572    35 0.0000 128.2043      99 0.0258
-## 10 Item_10 129.2508    35 0.0000  92.2091      98 0.6459
+<pre><code>##       item       X2 df.X2   p.X2
+## 1   Item_1 102.3644    35 0.0000
+## 2   Item_2  28.7480    35 0.7630
+## 3   Item_3  71.0780    35 0.0003
+## 4   Item_4 106.4343    35 0.0000
+## 5   Item_5  39.6001    35 0.2721
+## 6   Item_6  81.4939    35 0.0000
+## 7   Item_7 135.9474    35 0.0000
+## 8   Item_8 125.1119    35 0.0000
+## 9   Item_9 114.5572    35 0.0000
+## 10 Item_10 129.2508    35 0.0000
 </code></pre>
 
 <pre><code class="r">itemfit(mod, empirical.plot = 1)
@@ -654,20 +720,20 @@ itemfit(mod, empirical.table = 1)
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(dat, 1, &#39;Rasch&#39;)
-itemfit(mod2, infit = TRUE)
+itemfit(mod2, &#39;infit&#39;)
 </code></pre>
 
-<pre><code>##       item outfit z.outfit  infit z.infit     S_X2 df.S_X2 p.S_X2
-## 1   Item_1 0.8729  -5.1543 0.8822 -5.0816  77.9410     102 0.9634
-## 2   Item_2 0.9976  -0.0812 1.0038  0.1591 129.6205     103 0.0391
-## 3   Item_3 0.9326  -2.4818 0.9430 -2.2536 110.7444     102 0.2605
-## 4   Item_4 0.8797  -4.8169 0.8894 -4.7354 106.6087     102 0.3578
-## 5   Item_5 0.9804  -0.7299 0.9876 -0.4861 128.0255     103 0.0479
-## 6   Item_6 0.9141  -3.3621 0.9203 -3.3185 103.3183     101 0.4173
-## 7   Item_7 0.8534  -6.0256 0.8632 -6.0021 107.4059     101 0.3127
-## 8   Item_8 0.8528  -6.0195 0.8658 -5.8959  98.9623     102 0.5667
-## 9   Item_9 0.8582  -5.7655 0.8708 -5.6006 133.8712     102 0.0188
-## 10 Item_10 0.8432  -6.4598 0.8573 -6.3321 104.3367     101 0.3901
+<pre><code>##       item outfit z.outfit  infit z.infit
+## 1   Item_1 0.8729  -5.1531 0.8823 -5.0805
+## 2   Item_2 0.9977  -0.0786 1.0039  0.1617
+## 3   Item_3 0.9326  -2.4806 0.9430 -2.2526
+## 4   Item_4 0.8797  -4.8158 0.8894 -4.7346
+## 5   Item_5 0.9805  -0.7276 0.9876 -0.4838
+## 6   Item_6 0.9141  -3.3604 0.9204 -3.3170
+## 7   Item_7 0.8534  -6.0244 0.8632 -6.0011
+## 8   Item_8 0.8528  -6.0183 0.8658 -5.8949
+## 9   Item_9 0.8582  -5.7646 0.8708 -5.5999
+## 10 Item_10 0.8432  -6.4583 0.8573 -6.3309
 </code></pre>
 
 <pre><code class="r">#massive list of tables
@@ -762,175 +828,175 @@ mirtCluster() # run in parallel
 <pre><code>## mirtCluster() has already been defined
 </code></pre>
 
-<pre><code class="r">itemfit(raschfit, impute = 10, infit = TRUE)
+<pre><code class="r">itemfit(raschfit, c(&#39;S_X2&#39;, &#39;infit&#39;), impute = 10)
 </code></pre>
 
 <pre><code>##          item outfit z.outfit  infit z.infit     S_X2 df.S_X2 p.S_X2
-## 1      Item_1 0.9654  -1.5591 0.9775 -1.3744  20.4517    17.0 0.2543
-## 2      Item_2 0.9854  -0.5939 0.9796 -1.1306  10.9145    16.0 0.8029
-## 3      Item_3 0.9316  -2.9859 0.9472 -3.0581  39.4641    16.0 0.0015
-## 4      Item_4 1.0131   0.5079 1.0176  0.9925  14.3805    17.0 0.6391
-## 5      Item_5 0.9918  -0.2936 0.9892 -0.5445  16.3049    16.0 0.4487
-## 6      Item_6 0.9512  -1.0801 0.9777 -0.7445  12.4579    17.0 0.7689
-## 7      Item_7 1.0293   1.0539 1.0193  1.0383  26.1759    17.0 0.0772
-## 8      Item_8 0.9630  -1.1057 0.9773 -0.9809  10.4268    16.9 0.8662
-## 9      Item_9 0.9825  -0.8053 0.9850 -0.9203  20.4075    17.0 0.2586
-## 10    Item_10 1.0229   0.7089 1.0184  0.8147  12.9758    16.9 0.7262
-## 11    Item_11 0.9601  -1.0129 0.9889 -0.4435  16.3065    16.0 0.4423
-## 12    Item_12 1.0125   0.5112 1.0143  0.7807  15.9173    16.0 0.4658
-## 13    Item_13 1.0151   0.5263 1.0118  0.5774  21.6001    16.1 0.1756
-## 14    Item_14 0.9831  -0.6484 0.9822 -0.9377  19.0381    16.0 0.2744
-## 15    Item_15 0.9908  -0.1724 1.0040  0.1301  14.4393    17.0 0.6330
-## 16    Item_16 0.9963  -0.0910 0.9902 -0.3783  11.0399    17.0 0.8435
-## 17    Item_17 0.9721  -0.3588 1.0023  0.0588  22.6526    16.9 0.1862
-## 18    Item_18 1.0025   0.0682 0.9975 -0.0784  16.1439    17.0 0.5217
-## 19    Item_19 0.9891  -0.4797 0.9972 -0.1596  22.3173    16.1 0.1445
-## 20    Item_20 0.9195  -3.4967 0.9389 -3.5204  31.2555    16.0 0.0135
-## 21    baditem 1.3050  12.8417 1.2334 13.2293 750.2400    17.0 0.0000
+## 1      Item_1 0.9704  -1.3378 0.9778 -1.3513  20.0653 16.0000 0.2218
+## 2      Item_2 0.9848  -0.6271 0.9795 -1.1358  11.6515 15.0000 0.6980
+## 3      Item_3 0.9348  -2.8639 0.9493 -2.9400  38.9905 15.0000 0.0009
+## 4      Item_4 1.0161   0.6290 1.0197  1.1064  14.5448 16.0000 0.5606
+## 5      Item_5 0.9967  -0.1203 0.9916 -0.4255  15.6327 15.0000 0.4223
+## 6      Item_6 0.9384  -1.3796 0.9719 -0.9512  12.5878 16.0000 0.6993
+## 7      Item_7 1.0327   1.1722 1.0203  1.0839  27.9300 16.0000 0.0360
+## 8      Item_8 0.9794  -0.6133 0.9770 -1.0007  11.0959 15.9000 0.7786
+## 9      Item_9 0.9835  -0.7602 0.9830 -1.0413  20.2476 16.0000 0.2261
+## 10    Item_10 1.0117   0.3701 1.0058  0.2633  12.7982 15.9000 0.6795
+## 11    Item_11 0.9614  -0.9754 0.9912 -0.3499  17.3069 15.0000 0.3110
+## 12    Item_12 1.0085   0.3532 1.0125  0.6862  15.8703 15.0000 0.3947
+## 13    Item_13 0.9946  -0.1752 0.9963 -0.1706  21.3211 15.0000 0.1489
+## 14    Item_14 0.9759  -0.9292 0.9834 -0.8763  19.3587 15.0000 0.2173
+## 15    Item_15 0.9817  -0.3595 0.9997  0.0007  15.3155 16.0000 0.5303
+## 16    Item_16 0.9896  -0.2667 0.9927 -0.2801  10.9144 16.0000 0.8022
+## 17    Item_17 0.9404  -0.7945 0.9915 -0.1659  23.6553 16.0000 0.1043
+## 18    Item_18 0.9940  -0.1235 0.9896 -0.3516  15.9921 16.0000 0.4708
+## 19    Item_19 0.9760  -1.0736 0.9873 -0.7470  24.4446 15.4000 0.0694
+## 20    Item_20 0.9218  -3.4090 0.9386 -3.5408  31.5899 15.0000 0.0084
+## 21    baditem 1.3168  13.3142 1.2391 13.4917 755.8801 16.0000 0.0000
 ## 22       &lt;NA&gt;     NA       NA     NA      NA       NA      NA     NA
-## 23  SD_Item_1 0.0108   0.4802 0.0102  0.6202   0.8887     0.0 0.0441
-## 24  SD_Item_2 0.0090   0.3748 0.0076  0.4318   1.6145     0.0 0.0865
-## 25  SD_Item_3 0.0102   0.4566 0.0076  0.4620   2.8999     0.0 0.0014
-## 26  SD_Item_4 0.0143   0.5478 0.0075  0.4141   1.3087     0.0 0.0918
-## 27  SD_Item_5 0.0152   0.5584 0.0090  0.4680   2.5750     0.0 0.1542
-## 28  SD_Item_6 0.0113   0.2612 0.0061  0.2142   0.9556     0.0 0.0622
-## 29  SD_Item_7 0.0138   0.4895 0.0075  0.3919   1.9040     0.0 0.0267
-## 30  SD_Item_8 0.0133   0.4070 0.0062  0.2778   2.1107     0.3 0.1256
-## 31  SD_Item_9 0.0123   0.5676 0.0082  0.5026   1.2200     0.0 0.0615
-## 32 SD_Item_10 0.0157   0.4782 0.0111  0.4909   1.4662     0.3 0.0977
-## 33 SD_Item_11 0.0187   0.4946 0.0063  0.2568   1.9956     0.0 0.1196
-## 34 SD_Item_12 0.0099   0.3969 0.0088  0.4702   1.8823     0.0 0.1286
-## 35 SD_Item_13 0.0119   0.4042 0.0071  0.3417   2.3865     0.3 0.0822
-## 36 SD_Item_14 0.0138   0.5467 0.0081  0.4448   1.5220     0.0 0.0805
-## 37 SD_Item_15 0.0209   0.4266 0.0114  0.3547   2.1130     0.0 0.1443
-## 38 SD_Item_16 0.0217   0.5690 0.0086  0.3457   1.5478     0.0 0.0796
-## 39 SD_Item_17 0.0415   0.5693 0.0177  0.3707   3.3681     0.3 0.1181
-## 40 SD_Item_18 0.0200   0.4455 0.0066  0.2253   2.3553     0.0 0.1512
-## 41 SD_Item_19 0.0098   0.4432 0.0070  0.4112   1.6881     0.3 0.0516
-## 42 SD_Item_20 0.0059   0.2639 0.0031  0.1745   1.3990     0.0 0.0056
-## 43 SD_baditem 0.0118   0.4625 0.0105  0.5224  11.0190     0.0 0.0000
+## 23  SD_Item_1 0.0112   0.5193 0.0080  0.4957   1.1579  0.0000 0.0559
+## 24  SD_Item_2 0.0095   0.4034 0.0065  0.3693   2.1701  0.0000 0.1547
+## 25  SD_Item_3 0.0181   0.8503 0.0138  0.8281   2.6490  0.0000 0.0007
+## 26  SD_Item_4 0.0099   0.3763 0.0047  0.2593   1.6166  0.0000 0.1149
+## 27  SD_Item_5 0.0211   0.7729 0.0137  0.6989   2.3674  0.0000 0.1541
+## 28  SD_Item_6 0.0241   0.5488 0.0058  0.1995   1.6630  0.0000 0.1180
+## 29  SD_Item_7 0.0110   0.3831 0.0057  0.2936   1.6663  0.0000 0.0224
+## 30  SD_Item_8 0.0128   0.4006 0.0066  0.2926   2.1918  0.3000 0.1432
+## 31  SD_Item_9 0.0063   0.2919 0.0048  0.2985   2.2952  0.0000 0.0943
+## 32 SD_Item_10 0.0143   0.4403 0.0084  0.3738   0.8373  0.3000 0.0619
+## 33 SD_Item_11 0.0170   0.4349 0.0101  0.4050   1.7180  0.0000 0.1004
+## 34 SD_Item_12 0.0096   0.3910 0.0067  0.3640   1.1832  0.0000 0.0805
+## 35 SD_Item_13 0.0167   0.5786 0.0113  0.5513   2.8191  0.0000 0.0872
+## 36 SD_Item_14 0.0136   0.5293 0.0079  0.4213   2.4102  0.0000 0.0989
+## 37 SD_Item_15 0.0154   0.3131 0.0065  0.2024   3.9892  0.0000 0.2290
+## 38 SD_Item_16 0.0183   0.4867 0.0074  0.2923   1.8053  0.0000 0.1129
+## 39 SD_Item_17 0.0342   0.4791 0.0135  0.2851   1.6651  0.0000 0.0474
+## 40 SD_Item_18 0.0149   0.3422 0.0085  0.2955   3.1549  0.0000 0.2031
+## 41 SD_Item_19 0.0061   0.2810 0.0053  0.3169   1.1923  0.4899 0.0228
+## 42 SD_Item_20 0.0089   0.4036 0.0063  0.3589   1.7567  0.0000 0.0044
+## 43 SD_baditem 0.0199   0.6871 0.0100  0.4927   9.1698  0.0000 0.0000
 </code></pre>
 
 <pre><code class="r">#alternative route: use only valid data, and create a model with the previous parameter estimates
 data2 &lt;- na.omit(data)
 raschfit2 &lt;- mirt(data2, 1, itemtype = &#39;Rasch&#39;, pars=mod2values(raschfit), TOL=NaN)
-itemfit(raschfit2, infit = TRUE)
+itemfit(raschfit2, &#39;infit&#39;)
 </code></pre>
 
-<pre><code>##       item outfit z.outfit  infit z.infit     S_X2 df.S_X2 p.S_X2
-## 1   Item_1 0.8893  -5.3738 0.9085 -5.5230  16.6317      17 0.4796
-## 2   Item_2 0.8826  -5.1319 0.9027 -5.1185  12.9713      16 0.6749
-## 3   Item_3 0.8439  -7.2569 0.8724 -7.0343  33.1020      16 0.0072
-## 4   Item_4 0.9363  -2.5510 0.9543 -2.5014  13.3129      17 0.7150
-## 5   Item_5 0.8955  -3.9198 0.9249 -3.5120  15.8134      16 0.4661
-## 6   Item_6 0.8388  -3.5629 0.9110 -2.6742  12.5100      17 0.7683
-## 7   Item_7 0.9517  -1.7549 0.9600 -2.0594  25.9823      16 0.0543
-## 8   Item_8 0.8871  -3.3835 0.9196 -3.1621  10.5536      16 0.8362
-## 9   Item_9 0.8972  -5.1479 0.9075 -5.5823  28.4457      16 0.0280
-## 10 Item_10 0.9484  -1.5672 0.9731 -1.0639  17.2002      16 0.3728
-## 11 Item_11 0.8568  -3.6235 0.9174 -3.0804  17.1307      16 0.3772
-## 12 Item_12 0.9047  -4.0730 0.9278 -3.7227   8.8135      16 0.9209
-## 13 Item_13 0.9276  -2.5365 0.9538 -2.0483  22.3345      16 0.1327
-## 14 Item_14 0.8634  -5.5361 0.8948 -5.2206  16.9938      16 0.3860
-## 15 Item_15 0.9133  -1.6944 0.9742 -0.6895  13.0704      17 0.7315
-## 16 Item_16 0.8906  -2.8567 0.9310 -2.4188   9.6058      16 0.8864
-## 17 Item_17 0.8474  -1.9752 0.9867 -0.2179  23.6992      16 0.0963
-## 18 Item_18 0.8943  -2.3274 0.9448 -1.6622  18.8066      17 0.3397
-## 19 Item_19 0.8913  -5.2229 0.9127 -4.9428  16.9589      16 0.3883
-## 20 Item_20 0.8490  -6.9288 0.8761 -6.7609  23.1599      16 0.1095
-## 21 baditem 1.1873   8.5701 1.1653  9.0790 567.8377      16 0.0000
+<pre><code>##       item outfit z.outfit  infit z.infit
+## 1   Item_1 0.8893  -5.3753 0.9085 -5.5240
+## 2   Item_2 0.8826  -5.1294 0.9027 -5.1159
+## 3   Item_3 0.8439  -7.2549 0.8724 -7.0322
+## 4   Item_4 0.9363  -2.5528 0.9543 -2.5032
+## 5   Item_5 0.8956  -3.9167 0.9249 -3.5085
+## 6   Item_6 0.8389  -3.5601 0.9111 -2.6705
+## 7   Item_7 0.9516  -1.7570 0.9599 -2.0616
+## 8   Item_8 0.8872  -3.3800 0.9197 -3.1581
+## 9   Item_9 0.8972  -5.1488 0.9075 -5.5823
+## 10 Item_10 0.9485  -1.5639 0.9732 -1.0602
+## 11 Item_11 0.8567  -3.6253 0.9173 -3.0826
+## 12 Item_12 0.9047  -4.0708 0.9278 -3.7203
+## 13 Item_13 0.9276  -2.5333 0.9538 -2.0448
+## 14 Item_14 0.8634  -5.5336 0.8948 -5.2176
+## 15 Item_15 0.9134  -1.6920 0.9743 -0.6865
+## 16 Item_16 0.8907  -2.8534 0.9311 -2.4148
+## 17 Item_17 0.8474  -1.9756 0.9867 -0.2183
+## 18 Item_18 0.8944  -2.3246 0.9449 -1.6587
+## 19 Item_19 0.8913  -5.2216 0.9127 -4.9414
+## 20 Item_20 0.8490  -6.9266 0.8762 -6.7586
+## 21 baditem 1.1874   8.5714 1.1653  9.0785
 </code></pre>
 
 <pre><code class="r"># note that X2 and G2 do not require complete datasets
-itemfit(raschfit, X2=TRUE, G2 = TRUE, S_X2=FALSE)
+itemfit(raschfit, c(&#39;X2&#39;, &#39;G2&#39;))
 </code></pre>
 
 <pre><code>##       item       X2 df.X2   p.X2       G2 df.G2   p.G2
-## 1   Item_1  56.1908     9 0.0000  63.4149     9 0.0000
-## 2   Item_2  46.6341     9 0.0000  49.9973     9 0.0000
-## 3   Item_3  75.0459     9 0.0000  88.4103     9 0.0000
-## 4   Item_4  19.0384     9 0.0249  20.7495     9 0.0138
-## 5   Item_5  40.7871     9 0.0000  43.2697     9 0.0000
-## 6   Item_6  35.6805     9 0.0000  38.0857     9 0.0000
-## 7   Item_7  41.4030     9 0.0000  45.6064     9 0.0000
-## 8   Item_8  35.9455     9 0.0000  38.7440     9 0.0000
-## 9   Item_9  48.1644     9 0.0000  53.8361     9 0.0000
-## 10 Item_10  13.1158     9 0.1574  13.6810     9 0.1341
-## 11 Item_11  44.4291     9 0.0000  47.0834     9 0.0000
-## 12 Item_12  28.0371     9 0.0009  31.3551     9 0.0003
-## 13 Item_13  27.8212     9 0.0010  30.4786     9 0.0004
-## 14 Item_14  42.2765     9 0.0000  46.6195     9 0.0000
-## 15 Item_15  19.5518     9 0.0209  21.9089     9 0.0092
-## 16 Item_16  22.5991     9 0.0072  24.1294     9 0.0041
-## 17 Item_17  21.4168     9 0.0109  24.4520     9 0.0036
-## 18 Item_18  30.6510     9 0.0003  33.3352     9 0.0001
-## 19 Item_19  41.0516     9 0.0000  45.0532     9 0.0000
-## 20 Item_20  72.2497     9 0.0000  81.5247     9 0.0000
-## 21 baditem 351.0868     9 0.0000 302.8278     9 0.0000
+## 1   Item_1  56.4465     9 0.0000  63.5916     9 0.0000
+## 2   Item_2  48.0260     9 0.0000  51.5203     9 0.0000
+## 3   Item_3  82.3821     9 0.0000  95.3681     9 0.0000
+## 4   Item_4  22.9850     9 0.0062  25.0091     9 0.0030
+## 5   Item_5  34.7031     9 0.0001  37.0277     9 0.0000
+## 6   Item_6  36.9756     9 0.0000  39.4367     9 0.0000
+## 7   Item_7  36.7669     9 0.0000  40.5048     9 0.0000
+## 8   Item_8  38.8977     9 0.0000  42.0710     9 0.0000
+## 9   Item_9  45.9992     9 0.0000  50.8925     9 0.0000
+## 10 Item_10  12.1877     9 0.2029  12.6849     9 0.1774
+## 11 Item_11  39.5373     9 0.0000  41.9807     9 0.0000
+## 12 Item_12  28.8256     9 0.0007  31.9151     9 0.0002
+## 13 Item_13  27.3220     9 0.0012  29.7508     9 0.0005
+## 14 Item_14  43.4384     9 0.0000  47.6854     9 0.0000
+## 15 Item_15  19.6195     9 0.0204  22.1242     9 0.0085
+## 16 Item_16  22.8413     9 0.0066  24.1997     9 0.0040
+## 17 Item_17  20.7397     9 0.0139  23.9092     9 0.0044
+## 18 Item_18  23.8161     9 0.0046  25.5971     9 0.0024
+## 19 Item_19  43.1771     9 0.0000  47.1559     9 0.0000
+## 20 Item_20  85.1113     9 0.0000  96.2940     9 0.0000
+## 21 baditem 346.4289     9 0.0000 298.4370     9 0.0000
 </code></pre>
 
 <pre><code class="r">itemfit(raschfit, empirical.plot=1)
 </code></pre>
 
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/></p>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/></p>
 
 <pre><code class="r">itemfit(raschfit, empirical.table=1)
 </code></pre>
 
-<pre><code>## $`theta = -1.1785`
+<pre><code>## $`theta = -1.1778`
 ##   Observed Expected z.Residual
-## 0      179 146.3346     2.7003
-## 1       21  53.6654    -4.4590
+## 0      179 146.3415     2.6997
+## 1       21  53.6585    -4.4584
 ## 
-## $`theta = -0.804`
+## $`theta = -0.8033`
 ##   Observed Expected z.Residual
-## 0      149 129.1294     1.7486
-## 1       49  68.8706    -2.3944
+## 0      149 129.1373     1.7479
+## 1       49  68.8627    -2.3936
 ## 
-## $`theta = -0.5817`
+## $`theta = -0.581`
 ##   Observed Expected z.Residual
-## 0      125 118.2399     0.6217
-## 1       72  78.7601    -0.7617
+## 0      127 118.2482     0.8048
+## 1       70  78.7518    -0.9862
 ## 
-## $`theta = -0.3698`
+## $`theta = -0.3691`
 ##   Observed Expected z.Residual
-## 0      115 108.5895     0.6152
-## 1       83  89.4105    -0.6780
+## 0      111  108.598     0.2305
+## 1       87   89.402    -0.2540
 ## 
-## $`theta = -0.1643`
+## $`theta = -0.1636`
 ##   Observed Expected z.Residual
-## 0       90  97.9518    -0.8035
-## 1      107  99.0482     0.7990
+## 0       91  97.9605    -0.7033
+## 1      106  99.0395     0.6994
 ## 
-## $`theta = 0.05`
+## $`theta = 0.0507`
 ##   Observed Expected z.Residual
-## 0       77  87.8866    -1.1613
-## 1      121 110.1134     1.0375
+## 0       75  87.8954    -1.3755
+## 1      123 110.1046     1.2289
 ## 
-## $`theta = 0.2598`
+## $`theta = 0.2604`
 ##   Observed Expected z.Residual
-## 0       70  77.3996    -0.8411
-## 1      127 119.6004     0.6766
+## 0       73  77.4084    -0.5011
+## 1      124 119.5916     0.4031
 ## 
-## $`theta = 0.5249`
+## $`theta = 0.5256`
 ##   Observed Expected z.Residual
-## 0       54  66.0162    -1.4789
-## 1      145 132.9838     1.0420
+## 0       48   66.025    -2.2183
+## 1      151  132.975     1.5631
 ## 
-## $`theta = 0.8408`
+## $`theta = 0.8415`
 ##   Observed Expected z.Residual
-## 0       39  52.3552    -1.8457
-## 1      158 144.6448     1.1104
+## 0       44  52.3635    -1.1558
+## 1      153 144.6365     0.6954
 ## 
-## $`theta = 1.415`
+## $`theta = 1.4156`
 ##   Observed Expected z.Residual
-## 0       21  33.5256    -2.1633
-## 1      177 164.4744     0.9767
+## 0       22  33.5335    -1.9917
+## 1      176 164.4665     0.8993
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
 </body></html>

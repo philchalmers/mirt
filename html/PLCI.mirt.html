@@ -24,7 +24,8 @@ and whether the respective interval could be found.
 
 <pre>
 PLCI.mirt(mod, alpha = 0.05, parnum = NULL, search_bound = TRUE,
-  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30, ...)
+  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30,
+  NealeMiller = FALSE, ...)
 </pre>
 
 
@@ -70,6 +71,10 @@ lower bound value visible with <code><a href="mod2values.html">mod2values</a></c
 <p>a numeric used to change parameter bounds which are infinity to a finite number.
 Decreasing this too much may not allow a suitable bound to be located. Default is 30</p>
 </td></tr>
+<tr valign="top"><td><code>NealeMiller</code></td>
+<td>
+<p>logical; use the Neale and Miller 1997 approximation? Default is <code>FALSE</code></p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
 <p>additional arguments to pass to the estimation functions</p>
@@ -80,6 +85,13 @@ Decreasing this too much may not allow a suitable bound to be located. Default i
 <h3>Author(s)</h3>
 
 <p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Neale, M. C. &amp; Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
+models. Behavior Genetircs, 27, 113-120
 </p>
 
 
@@ -193,5 +205,5 @@ result3
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.19 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
 </body></html>
