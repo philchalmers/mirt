@@ -317,11 +317,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 warning('M-step optimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }
-        if(Moptim == 'L-BFGS-B' && cycles <= 3L && !all(!est) && !list$NULL.MODEL){
-            if(list$warn && !(is.nan(TOL) || is.na(TOL)))
-                warning('L-BFGS-B optimizer converged in less than 3 iterations; may indicate a
-                        problem in the M-step. Check with the more stable optimizer = \'nlminb\'',
-                        call.=FALSE)
+        if(Moptim == 'L-BFGS-B' && cycles <= 10L && !all(!est) && !list$NULL.MODEL){
+            if(list$warn && !(is.nan(TOL) || is.na(TOL)) && all( abs(preMstep.longpars - longpars) < 1e-30 ))
+                warning(paste0("L-BFGS-B optimizer did not change any values across successive EM cycles;",
+                               " likely indicates a problem in the M-step. \nCheck with the more stable ",
+                               "optimizer = \'nlminb\', or supply better starting values"), call.=FALSE)
         }
         if(cycles > 1L && list$warn && !ANY.PRIOR){
             diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
