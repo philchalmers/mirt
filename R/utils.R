@@ -687,6 +687,10 @@ UpdatePrior <- function(PrepList, model, groupNames){
                                                                  '4'=expbeta_sv(val1, val2))
                         if(type == '2')
                             pars[[g]][[sel[j]]]@lbound[which] <- 0
+                        if(type == '3'){
+                            pars[[g]][[sel[j]]]@lbound[which] <- 0
+                            pars[[g]][[sel[j]]]@ubound[which] <- 1
+                        }
                     }
                 }
             } else {

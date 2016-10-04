@@ -1,6 +1,7 @@
 # Changes in mirt 1.20
 
-- when using `'lnorm'` prior lower bound automatically set to 0
+- when using `'lnorm'` prior lower bound automatically set to 0, and with `'beta'` prior
+  the lower and upper bounds are set to [0,1]
 
 - `mdirt()` now uses `optimizer = 'nlminb'` by default
 

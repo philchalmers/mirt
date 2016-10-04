@@ -520,6 +520,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                                      'expbeta'=expbeta_sv(p1[w], p2[w]))
                         if(type[w] == 'lnorm')
                             pars[[i]]@lbound[whc[w]] <- 0
+                        if(type[w] == 'beta'){
+                            pars[[i]]@lbound[whc[w]] <- 0
+                            pars[[i]]@ubound[whc[w]] <- 1
+                        }
                     }
                     pars[[i]]@prior_1[tmp] <- p1
                     pars[[i]]@prior_2[tmp] <- p2
