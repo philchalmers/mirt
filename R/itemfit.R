@@ -1,14 +1,10 @@
 #' Item fit statistics
 #'
-#' \code{itemfit} calculates the Zh values from Drasgow, Levine and Williams (1985),
-#' \eqn{\chi^2} and \eqn{G^2} values for unidimensional models, and S-X2 statistics for unidimensional and
-#' multidimensional models (Kang & Chen, 2007; Orlando & Thissen, 2000).
-#' For Rasch, partial credit, and rating scale models infit and outfit statistics are
-#' also produced. Poorly fitting items should be inspected with the empirical plots/tables
+#' Computes item-fit statistics for a variety of unidimensional and multidimensional models.
+#' Poorly fitting items should be inspected with the empirical plots/tables
 #' for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
 #' where the functional form of the IRT model was misspecified, or models can be refit using
 #' more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
-#' For discrete models, only the S-X2 statistic will be calculated.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
