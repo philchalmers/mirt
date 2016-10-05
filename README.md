@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](http://www.r-pkg.org/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](http://cran.rstudio.com/web/packages/mirt/index.html)
+[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](http://www.r-pkg.org/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
 
 # mirt
 
@@ -26,7 +26,7 @@ It's recommended to use the development version of this package since it is more
 than the version on CRAN. To install this package from source:
 
 1) Obtain recent gcc, g++, and gfortran compilers. Windows users can install the
-   [Rtools](http://cran.r-project.org/bin/windows/Rtools/) suite while Mac users will have to
+   [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) suite while Mac users will have to
    download the necessary tools from the [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12) suite and its
    related command line tools (found within Xcode's Preference Pane under Downloads/Components); most Linux
    distributions should already have up to date compilers (or if not they can be updated easily). 

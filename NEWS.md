@@ -1,4 +1,4 @@
-# Changes in mirt 1.20
+# Changes in mirt 1.20.1
 
 - `df` adjustment for the `S_X2` item-fit statistic for models where the latent trait
   hyper-parameters have been estimated
@@ -45,7 +45,7 @@
 
 - `mdirt()` has been modified to support DINA, DINO, located latent class, 
    and other diagnostic classification models. Additionally, the `customTheta` input required to build 
-   customized latent class patterns has been changed from the previously cumbsersome  
+   customized latent class patterns has been changed from the previously cumbersome  
    `mdirt(..., technical = list(customTheta = Theta))` to simply `mdirt(..., customTheta = Theta)`
 
 - `simdata()` gains a `prob.list` input to supply a list of matrices with probability values to be sampled
