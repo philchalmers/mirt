@@ -232,6 +232,9 @@
 #' plot(mod_configural, type = 'SE')
 #' itemplot(mod_configural, 1)
 #' itemplot(mod_configural, 1, type = 'info')
+#' plot(mod_configural, type = 'trace') # messy, score function typically better
+#' plot(mod_configural, type = 'itemscore')
+#'
 #' fs <- fscores(mod_configural, full.scores = FALSE)
 #' head(fs[["D1"]])
 #' fscores(mod_configural, method = 'EAPsum', full.scores = FALSE)

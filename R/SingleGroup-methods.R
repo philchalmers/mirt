@@ -753,7 +753,7 @@ setMethod(
                           auto.key = list(space = 'right'), profile = FALSE, ...)
     {
         dots <- list(...)
-        if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score',
+        if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist')))
             stop('type supplied is not supported')
         if (any(degrees > 90 | degrees < 0))
@@ -1073,6 +1073,31 @@ setMethod(
                 } else {
                     return(xyplot(P ~ Theta, plotobj, groups=plotobj$item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
+                                  auto.key = auto.key, type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
+                }
+            } else if(type == 'itemscore'){
+                if(is.null(main))
+                    main <- 'Expected scoring functions'
+                S <- vector('list', length(which.items))
+                names(S) <- colnames(x@Data$data)[which.items]
+                ind <- 1L
+                mins <- extract.mirt(x, 'mins')
+                for(i in which.items){
+                    S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
+                    ind <- ind + 1L
+                }
+                Sstack <- do.call(c, S)
+                names <- rep(names(S), each = nrow(ThetaFull))
+                plotobj <- data.frame(S=Sstack, item=names, Theta=Theta)
+                if(facet_items){
+                    return(xyplot(S ~ Theta|item, plotobj,
+                                  xlab = expression(theta), ylab = expression(S(theta)),
+                                  auto.key = auto.key, type = 'l', main = main,
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
+                } else {
+                    return(xyplot(S ~ Theta, plotobj, groups=plotobj$item,
+                                  xlab = expression(theta), ylab = expression(S(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }

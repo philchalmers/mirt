@@ -72,7 +72,8 @@ setMethod(
                                               strip.border = list(col = "black")),
                           auto.key = list(space = 'right'), ...)
     {
-        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace', 'infotrace'))
+        if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace',
+                         'itemscore', 'infotrace'))
             stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specifed. Must be between 0 and 90.', call.=FALSE)
@@ -214,6 +215,36 @@ setMethod(
                     return(xyplot(P ~ Theta|group, plt, groups = plt$cat:plt$item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Item trace lines',
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
+                }
+            }
+            if(type == 'itemscore'){
+                plt <- vector('list', ngroups)
+                S <- vector('list', length(which.items))
+                mins <- extract.mirt(x, 'mins')
+                for(g in 1L:ngroups){
+                    names(S) <- colnames(x@Data$data)[which.items]
+                    count <- 1
+                    for(i in which.items){
+                        S[[count]] <- expected.item(extract.item(x, i, group=g), ThetaFull, min = mins[i])
+                        count <- count + 1
+                    }
+                    Sstack <- do.call(c, S)
+                    names <- rep(names(S), each = nrow(ThetaFull))
+                    plotobj <- data.frame(S=Sstack, item=names, Theta=ThetaFull, group=x@Data$groupNames[g])
+                    plt[[g]] <- plotobj
+                }
+                plt <- do.call(rbind, plt)
+                plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
+                if(facet_items){
+                    return(xyplot(S ~ Theta|item, plt, groups = plt$group,
+                                  xlab = expression(theta), ylab = expression(S(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item score function',
+                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
+                } else {
+                    return(xyplot(S ~ Theta|group, plt, groups = plt$item,
+                                  xlab = expression(theta), ylab = expression(S(theta)),
+                                  auto.key = auto.key, type = 'l', main = 'Item score function',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }

@@ -1,3 +1,8 @@
+# Changes in mirt 1.21
+
+- added `type = 'itemscore'` to `plot()` generic to plot faceted version of the item
+  scoring functions
+
 # Changes in mirt 1.20.1
 
 - `df` adjustment for the `S_X2` item-fit statistic for models where the latent trait

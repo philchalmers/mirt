@@ -617,6 +617,8 @@ anova(cmod, mod2)
 #data from the 'ltm' package in numeric format
 pmod1 <- mirt(Science, 1)
 plot(pmod1)
+plot(pmod1, type = 'trace')
+plot(pmod1, type = 'itemscore')
 summary(pmod1)
 
 #Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
