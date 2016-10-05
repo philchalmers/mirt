@@ -27,8 +27,8 @@
 \item{type}{type of plot to view; can be \code{'info'} to show the test
 information function, \code{'rxx'} for the reliability function,
 \code{'infocontour'} for the test information contours,
-\code{'SE'} for the test standard error function, \code{'trace'} and \code{'infotrace'}
-for all item probability information or trace lines (only available when all items are dichotomous),
+\code{'SE'} for the test standard error function, \code{'trace'}, \code{'infotrace'}, and \code{'itemscore'}
+for all item probability, information, and scoring or trace lines,
 \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and
 \code{'scorecontour'} for the expected total score surface and contour plots.
 If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}

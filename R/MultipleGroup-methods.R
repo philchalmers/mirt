@@ -239,12 +239,12 @@ setMethod(
                 if(facet_items){
                     return(xyplot(S ~ Theta|item, plt, groups = plt$group,
                                   xlab = expression(theta), ylab = expression(S(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item score function',
+                                  auto.key = auto.key, type = 'l', main = 'Expected item scoring function',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(S ~ Theta|group, plt, groups = plt$item,
                                   xlab = expression(theta), ylab = expression(S(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item score function',
+                                  auto.key = auto.key, type = 'l', main = 'Expected item scoring function',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }
