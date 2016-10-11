@@ -476,6 +476,9 @@
 #'       tune the acceptance of the draws to be between .1 and .4}
 #'     \item{MHRM_SE_draws}{number of fixed draws to use when \code{SE=TRUE} and \code{SE.type = 'FMHRM'}
 #'       and the maximum number of draws when \code{SE.type = 'MHRM'}. Default is 2000}
+#'     \item{keep_vcov_PD}{logical; attempt to keep the variance-covariance matrix of the latent traits
+#'       positive definite during estimation in the EM algorithm? This generally improves the convergence
+#'       properties when the traits are highly correlated. Default is \code{TRUE}}
 #'   }
 #' @param solnp_args a list of arguments to be passed to the \code{solnp::solnp()} function for
 #'   equality constraints, inequality constraints, etc

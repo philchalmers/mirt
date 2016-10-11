@@ -1105,7 +1105,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI', 'plausible.draws', 'storeEtable')
+                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1166,6 +1166,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$MHRM_SE_draws  <- ifelse(is.null(technical$MHRM_SE_draws), 2000L, technical$MHRM_SE_draws)
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
+    opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, FALSE)
     if(empiricalhist){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
@@ -1451,6 +1452,16 @@ smooth.cor <- function(x){
         negvalues <- eig$values <= .Machine$double.eps
     }
     x
+}
+
+smooth.cov <- function(cov){
+    ev <- eigen(cov)
+    v <- ev$values
+    off <- sum(v) * .01
+    v[v < 0] <- off
+    v <- sum(ev$values) * v/sum(v)
+    v <- ifelse(v < 1e-4, 1e-4, v)
+    return(ev$vectors %*% diag(v) %*% t(ev$vectors))
 }
 
 RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {

@@ -520,7 +520,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
                                          message=opts$message, BL=opts$method == 'BL', full=opts$full,
                                          lrPars=lrPars, SE=opts$SE && opts$SE.type == 'numerical', Etable=opts$Etable,
-                                         NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI),
+                                         NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI,
+                                         keep_vcov_PD=opts$keep_vcov_PD),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         opts$Moptim <- ESTIMATE$Moptim
         lrPars <- ESTIMATE$lrPars
@@ -677,7 +678,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 DM <- myLapply(1L:ncol(estmat), FUN=SE.SEM, estmat=estmat, pars=ESTIMATE$pars, constrain=constrain, Data=Data,
                               list = list(NCYCLES=opts$NCYCLES, TOL=opts$SEtol, MSTEPTOL=opts$MSTEPTOL,
                                           nfactNames=PrepList[[1L]]$nfactNames, theta=theta,
-                                          itemloc=PrepList[[1L]]$itemloc,
+                                          itemloc=PrepList[[1L]]$itemloc, keep_vcov_PD=opts$keep_vcov_PD,
                                           sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, Moptim=ESTIMATE$Moptim,

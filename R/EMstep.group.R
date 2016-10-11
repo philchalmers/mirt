@@ -158,7 +158,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             control <- list(fnscale=-1, pgtol=TOL)
         }
         opt <- try(optim(longpars[est], BL.LL, BL.grad, est=est, longpars=longpars,
-                         pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
+                         pars=pars, ngroups=ngroups, J=J, itemloc=itemloc, keep_vcov_PD=list$keep_vcov_PD,
                          Theta=Theta, PrepList=PrepList, dentype=dentype, lrPars=lrPars,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                          constrain=constrain, EHPrior=NULL, Data=Data, method=Moptim,
@@ -241,7 +241,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND,
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
-                              dentype=dentype, nfact=nfact,
+                              dentype=dentype, nfact=nfact, keep_vcov_PD=list$keep_vcov_PD,
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
                               TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars,
                               control=control)
@@ -302,6 +302,19 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 } else stop('acceleration option not defined', call.=FALSE)
             }
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+            for(g in 1L:ngroups){
+                if(any(pars[[g]][[J+1L]]@est) && nfact > 1L){
+                    gp <- ExtractGroupPars(pars[[g]][[J+1L]])
+                    chl <- try(chol(gp$gcov), silent=TRUE)
+                    if(is(chl, 'try-error')){
+                        if(list$warn)
+                            warning('Latent trait variance-covariance matrix became non-positive definite.',
+                                    call.=FALSE)
+                        converge <- FALSE
+                    }
+                }
+            }
+            if(!converge) break
             if(length(lrPars)){
                 lrPars@par <- longpars[lrPars@parnum]
                 lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
