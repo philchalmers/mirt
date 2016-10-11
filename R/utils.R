@@ -1166,7 +1166,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$MHRM_SE_draws  <- ifelse(is.null(technical$MHRM_SE_draws), 2000L, technical$MHRM_SE_draws)
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
-    opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, FALSE)
+    opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, technical$keep_vcov_PD)
     if(empiricalhist){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
