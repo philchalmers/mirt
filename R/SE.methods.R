@@ -114,7 +114,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
                           PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, nfact=nfact,
-                          rlist=rlist, constrain=constrain, DERIV=DERIV,
+                          rlist=rlist, constrain=constrain, DERIV=DERIV, keep_vcov_PD=list$keep_vcov_PD,
                           CUSTOM.IND=list$CUSTOM.IND, SLOW.IND=list$SLOW.IND, dentype=dentype,
                           Moptim=Moptim, Mrate=1, TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full,
                           lrPars=lrPars, control=control)
