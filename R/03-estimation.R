@@ -8,6 +8,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     start.time <- proc.time()[3L]
     dots <- list(...)
     if(missing(data)) missingMsg('data')
+    if(length(unique(colnames(data))) != ncol(data))
+        stop('items must have unique names in data input', call.=FALSE)
     if(missing(model)) missingMsg('model')
     if(missing(group)) missingMsg('group')
     if(is.logical(large) && large){
