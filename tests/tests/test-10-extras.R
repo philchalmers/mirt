@@ -84,7 +84,7 @@ test_that('extras', {
     expect_equal(fs[1:3,'F1'], c(-1.853914, -1.509722, -1.514913), tolerance=1e-3)
 
     set.seed(1)
-    dat <- cbind(Science, Science + sample(c(-1,0,1), prod(dim(Science)), TRUE))
+    dat <- data.frame(Science, Science + sample(c(-1,0,1), prod(dim(Science)), TRUE))
     mats <- mats2 <- list()
     mats[1:4] <- mats2[1:4] <- list(matrix(c(0:3, 0:3), 4))
     mats[5:8] <- list(matrix(c(0:5, 1,1,0,0,0,0), 6))

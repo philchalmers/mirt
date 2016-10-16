@@ -41,6 +41,6 @@ test_that('gpcm_mats', {
 
     expect_equal(-1595.52, extract.mirt(gpcm.sf.em, 'logLik'), tolerance=.01)
     est<-coef(gpcm.sf.em)
-    expect_equal(est[[1]][1:2], c(.721, .663),tolerance = .01)
+    expect_equal(sort(est[[1]][1:2]), c(.663, .721),tolerance = .01)
 
 })
