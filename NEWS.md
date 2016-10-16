@@ -1,5 +1,8 @@
 # Changes in mirt 1.21
 
+- `plot(mod, type = 'score')` not supports the `which.items` input to make expected score plots for 
+  bundles of items
+
 - penalized term added to EM algorithm estimation subroutines to help keep the covariance matrix
   of the latent trait parameters positive definite (helps convergence properties of the optimizers, 
   especially 'L-BFGS-B'). To turn this penalized term off use `technical = list(keep_vcov_PD = FALSE)`

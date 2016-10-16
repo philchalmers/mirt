@@ -102,11 +102,12 @@ setMethod(
                                           CUSTOM.IND=x@Internals$CUSTOM.IND)
             score <- c()
             for(i in 1:J)
-                score <- c(score, 0:(x@Data$K[i]-1) + adj[i])
+                score <- c(score, (0:(x@Data$K[i]-1) + adj[i]) * (i %in% which.items))
             score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
             gscore <- c(gscore, rowSums(score * itemtrace))
         }
         plt <- data.frame(info=info, score=gscore, Theta, group=groups)
+        bundle <- length(which.items) != J
         if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2", "group")
             plt$SE <- 1 / sqrt(plt$info)
@@ -134,7 +135,8 @@ setMethod(
                                  auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
                                  ...))
             if(type == 'score')
-                return(wireframe(score ~ Theta1 + Theta2|group, data = plt, main = "Expected Total Score",
+                return(wireframe(score ~ Theta1 + Theta2|group, data = plt,
+                                 main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
                                  auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
@@ -157,7 +159,8 @@ setMethod(
                               xlab = expression(theta), ylab=expression(SE(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'score')
-                return(xyplot(score~Theta, plt, type='l', groups=plt$group, main = 'Expected Total Score',
+                return(xyplot(score~Theta, plt, type='l', groups=plt$group,
+                              main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'empiricalhist'){

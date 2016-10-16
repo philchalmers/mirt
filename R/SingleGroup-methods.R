@@ -790,9 +790,10 @@ setMethod(
                                       CUSTOM.IND=x@Internals$CUSTOM.IND)
         score <- c()
         for(i in 1:J)
-            score <- c(score, 0:(x@Data$K[i]-1) + adj[i])
+            score <- c(score, (0:(x@Data$K[i]-1) + adj[i]) * (i %in% which.items))
         score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
         plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))
+        bundle <- length(which.items) != J
         if(MI > 0L && nfact == 1L){
             tmpx <- x
             if(!x@Options$SE)
@@ -862,7 +863,7 @@ setMethod(
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'score'){
                 if(is.null(main)){
-                    main <- "Expected Total Score"
+                    main <- if(bundle) "Expected Bundle Score" else "Expected Total Score"
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(wireframe(score ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
@@ -922,7 +923,7 @@ setMethod(
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'score'){
                 if(is.null(main)){
-                    main <- "Expected Total Score"
+                    main <- if(bundle) "Expected Bundle Score" else "Expected Total Score"
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
@@ -1124,7 +1125,7 @@ setMethod(
                 }
             } else if(type == 'score'){
                 if(is.null(main))
-                    main <- 'Expected Total Score'
+                    main <- if(bundle) "Expected Bundle Score" else "Expected Total Score"
                 if(MI > 0){
                     return(xyplot(score ~ Theta, data=plt,
                                   upper=plt$CIscoreupper, lower=plt$CIscorelower,
