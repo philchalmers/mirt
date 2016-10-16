@@ -71,7 +71,7 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm',
                                 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                'ideal', 'lca', 'rsm', 'spline', Experimental_itemtypes())
+                                'ideal', 'lca', 'spline', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'ideal', 'spline', Experimental_itemtypes())

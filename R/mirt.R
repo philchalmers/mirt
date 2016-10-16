@@ -199,14 +199,14 @@
 #'     between 0 and the number of categories - 1 either by theoretical means or by re-estimating
 #'     the model with better values following convergence.
 #'   }
-#'    \item{rsm}{
-#'      A more constrained version of the partial credit model where the spacing is equal
-#'      across item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this
-#'      is analogous to the relationship between the graded model and the grsm (with an additional
-#'      constraint regarding the fixed discrimination parameters; the discrimination constraint can,
-#'      however, be relaxed by adjusting the starting values specifications manually and applying
-#'      additional equality constraints).
-#'    }
+#    \item{rsm}{
+#      A more constrained version of the partial credit model where the spacing is equal
+#      across item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this
+#      is analogous to the relationship between the graded model and the grsm (with an additional
+#      constraint regarding the fixed discrimination parameters; the discrimination constraint can,
+#      however, be relaxed by adjusting the starting values specifications manually and applying
+#      additional equality constraints).
+#    }
 #'   \item{ideal}{
 #'     The ideal point model has the form, with the upper bound constraint on \eqn{d} set to 0:
 #'     \deqn{P(x = 1 | \theta, \psi) = exp(-0.5 * (a_1 * \theta_1 + a_2 * \theta_2 + d)^2)}
@@ -248,12 +248,12 @@
 #' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
 #'   which will be repeated globally. The NULL default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
-#'   '4PL', 'graded', 'grsm', 'grsmIRT', 'gpcm', 'rsm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
+#'   '4PL', 'graded', 'grsm', 'grsmIRT', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
 #'   '3PLuNRM', '4PLNRM', and 'spline', for the Rasch/partial credit, 2 parameter logistic,
 #'   3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
 #'   model, rating scale graded response model (in slope-intercept and classical form),
 #'   generalized partial credit model (with optional scoring matricies from \code{gpcm_mats}),
-#'   Rasch rating scale model, nominal model, ideal-point model, 2-3PL partially compensatory model, 2-4 parameter nested
+#'   nominal model, ideal-point model, 2-3PL partially compensatory model, 2-4 parameter nested
 #'   logistic models, and spline response models with the \code{\link{bs}} (default) and \code{\link{ns}} functions,
 #'   respectively. User defined item classes can also be defined using the
 #'   \code{\link{createItem}} function
@@ -380,7 +380,7 @@
 #'   be estimated in the test data). For example, to specify two blocks of 3 with a 2PL item for
 #'   the last item: \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed
 #'   to be within the same group and therefore have the same number of item categories
-#' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
+# @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
 #' @param covdata a data.frame of data used for latent regression models
 #' @param formula an R formula (or list of formulas) indicating how the latent traits
 #'   can be regressed using external covariates in \code{covdata}. If a named list
@@ -985,8 +985,7 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, SE.type = 'crossprod', method = 'EM',
                  optimizer = 'BFGS', pars = NULL, constrain = NULL, parprior = NULL,
                  calcNull = TRUE, draws = 5000, survey.weights = NULL,
-                 quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL,
-                 rsm.block = NULL, key = NULL,
+                 quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
                  large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay',
                  empiricalhist = FALSE, verbose = TRUE,
                  solnp_args = list(), alabama_args = list(), spline_args = list(),
