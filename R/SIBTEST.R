@@ -31,6 +31,7 @@
 #' @param correction logical; apply the composite correction for the difference between focal
 #'   composite scores using the true-score regression technique? Default is \code{TRUE},
 #'   reflecting Shealy and Stout's method
+#' @param details logical; return a data.frame containing the details required to compute SIBTEST?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords SIBTEST, crossed-SIBTEST
@@ -122,7 +123,7 @@
 #' }
 SIBTEST <- function(dat, group, focal_set, match_set, focal_name = 'focal',
                     guess_correction = 0, Jmin = 2, cross = FALSE, permute = 1000,
-                    pk_focal = FALSE, correction = TRUE){
+                    pk_focal = FALSE, correction = TRUE, details = FALSE){
 
     CA <- function(dat, guess_correction = rep(0, ncol(dat))){
         n <- ncol(dat)
@@ -270,5 +271,12 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name = 'focal',
                       B = beta_uni, z, p = p)
     name <- ifelse(cross, 'Crossed_SIBTEST', 'SIBTEST')
     rownames(ret) <- name
+    if(details){
+        ret <- data.frame(pkstar=unname(as.numeric(pkstar)),
+                          sigma_focal=sigma_focal, sigma_ref=sigma_ref,
+                          Y_focal=Ybar_focal, Y_ref=Ybar_ref,
+                          Ystar_focal=ystar_focal_vec, Ystar_ref=ystar_ref_vec,
+                          row.names = names(pkstar))
+    }
     ret
 }

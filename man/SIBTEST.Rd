@@ -6,7 +6,7 @@
 \usage{
 SIBTEST(dat, group, focal_set, match_set, focal_name = "focal",
   guess_correction = 0, Jmin = 2, cross = FALSE, permute = 1000,
-  pk_focal = FALSE, correction = TRUE)
+  pk_focal = FALSE, correction = TRUE, details = FALSE)
 }
 \arguments{
 \item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
@@ -42,6 +42,8 @@ sample? Default is FALSE as per Shealy and Stout's recommendation}
 \item{correction}{logical; apply the composite correction for the difference between focal
 composite scores using the true-score regression technique? Default is \code{TRUE},
 reflecting Shealy and Stout's method}
+
+\item{details}{logical; return a data.frame containing the details required to compute SIBTEST?}
 }
 \description{
 Classical test theory approach to detecting DIF for unidimensional tests
