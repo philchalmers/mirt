@@ -2068,7 +2068,7 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'spline', Theta = 'matrix'),
     definition = function(x, Theta){
-        stop('not written')
+        numDeriv_DerivTheta(x, Theta)
     }
 )
 

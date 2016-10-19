@@ -442,8 +442,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 splines::ns(c(-2,2), df=df, knots=knots, intercept=intercept)
             } else stop('splines function not supported', call.=FALSE)
             p <- seq(-10, 10, length.out=ncol(Theta_prime))
+            est <- rep(TRUE, ncol(Theta_prime))
+            names(est) <- paste0('s', 1L:length(p))
             pars[[i]] <- new('spline', par=p,
-                             est=rep(TRUE, ncol(Theta_prime)),
+                             est=est,
                              nfact=nfact,
                              ncat=K[i],
                              stype=stype,
