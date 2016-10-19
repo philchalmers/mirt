@@ -89,10 +89,13 @@ setMethod(
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
         infolist <- vector('list', ngroups)
-        for(g in 1:ngroups)
-            infolist[[g]] <- testinfo(extract.group(x, g), ThetaFull, degrees = degrees)
-        if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
-        info <- do.call(c, infolist)
+        info <- 0
+        if(type %in% c('info', 'infocontour', 'SE', 'RE', 'infoSE', 'infotrace')){
+            for(g in 1:ngroups)
+                infolist[[g]] <- testinfo(extract.group(x, g), ThetaFull, degrees = degrees)
+            if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
+            info <- do.call(c, infolist)
+        }
         Theta <- ThetaFull
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
         adj <- x@Data$mins
