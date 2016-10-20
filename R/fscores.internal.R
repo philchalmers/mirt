@@ -156,7 +156,7 @@ setMethod(
             if(!is.matrix(response.pattern))
                 response.pattern <- matrix(response.pattern, 1L)
             nfact <- object@Model$nfact
-            mins <- object@Data$mins
+            mins <- extract.mirt(object, 'mins')
             if(!all(mins == 0L))
                 response.pattern <- response.pattern - matrix(mins, nrow(response.pattern),
                                                           ncol(response.pattern), byrow=TRUE)
@@ -167,7 +167,7 @@ setMethod(
                               large=TRUE))
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
                                    tabdatalong=large$tabdata, Freq=large$Freq,
-                                   K=extract.mirt(object, 'K'))
+                                   K=extract.mirt(object, 'K'), mins=rep(0L, ncol(response.pattern)))
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
@@ -181,7 +181,8 @@ setMethod(
                 large <- suppressWarnings(mirt(rp, nfact, large=TRUE,
                                             technical=list(customK=object@Data$K[pick])))
                 newmod@Data <- list(data=rp, tabdata=large$tabdata2, K=object@Data$K[pick],
-                                    tabdatalong=large$tabdata, Freq=large$Freq)
+                                    tabdatalong=large$tabdata, Freq=large$Freq,
+                                    mins=rep(0L, ncol(response.pattern))[pick])
                 newmod@ParObjects$pars <- newmod@ParObjects$pars[c(pick, length(newmod@ParObjects$pars))]
                 newmod@Model$itemloc <- c(1L, 1L + cumsum(object@Data$K[pick]))
                 if(newmod@Options$exploratory)
@@ -229,7 +230,7 @@ setMethod(
         }
         if(!is.null(gmean)) gp$gmeans <- gmean
         if(!is.null(gcov)) gp$gcov <- gcov
-        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores,
+        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
                                              quadpts=quadpts, gp=gp, verbose=verbose,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
@@ -627,7 +628,8 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
     MIN
 }
 
-EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
+EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
+                   quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
                    theta_lim, discrete, QMC, den_fun, min_expected,
                    which.items = 2:length(x@ParObjects$pars)-1, ...){
     calcL1 <- function(itemtrace, K, itemloc){
@@ -739,18 +741,19 @@ EAPsum <- function(x, full.scores = FALSE, quadpts = NULL, S_X2 = FALSE, gp, ver
         if(any(is.na(x@Data$data)))
             stop('Full scores requires a complete dataset (no N\'s)', call.=FALSE)
         dat <- x@Data$data
-        adj <- x@Data$min
+        adj <- extract.mirt(x, 'mins')
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
         EAPscores <- ret[match(scores, Sum.Scores), -1L, drop=FALSE]
-        ret <- EAPscores[,1L:x@Model$nfact, drop=FALSE]
+        pick <- if(full.scores.SE) 1L:(x@Model$nfact*2) else 1L:x@Model$nfact
+        ret <- EAPscores[,pick, drop=FALSE]
         rownames(ret) <- NULL
     } else {
         dat <- x@Data$data
         if(any(is.na(dat)))
             stop('EAPsum scores are not meaningful when data contains missing values')
         E <- L1 %*% prior * nrow(dat)
-        adj <- x@Data$min
+        adj <- extract.mirt(x, 'mins')
         dat <- t(t(dat) - adj)
         Otmp <- matrix(table(sort(rowSums(dat))))
         got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
