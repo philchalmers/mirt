@@ -4,11 +4,19 @@
   bundles of items
 
 - penalized term added to EM algorithm estimation subroutines to help keep the covariance matrix
-  of the latent trait parameters positive definite (helps convergence properties of the optimizers, 
-  especially 'L-BFGS-B'). To turn this penalized term off use `technical = list(keep_vcov_PD = FALSE)`
+  of the latent trait parameters positive definite in the M-step (helps convergence 
+  properties of the optimizers, especially 'L-BFGS-B'). To turn this penalized 
+  term off use `technical = list(keep_vcov_PD = FALSE)`
 
 - added `type = 'itemscore'` to `plot()` generic to plot faceted version of the item
-  scoring functions
+  scoring functions. Particularly useful when investigating DIF with `multipleGroup()`
+  
+- better support for `splines` itemtype in mutliple-group models
+  
+## Bug fixes
+
+- fix problem with 'EAPsum' in `fscores()` when `response.pattern` input 
+  supplied (reported by Eva de Schipper)
 
 # Changes in mirt 1.20.1
 
