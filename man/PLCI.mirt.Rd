@@ -4,18 +4,18 @@
 \alias{PLCI.mirt}
 \title{Compute profiled-likelihood (or posterior) confidence intervals}
 \usage{
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL, search_bound = TRUE,
+PLCI.mirt(mod, parnum = NULL, alpha = 0.05, search_bound = TRUE,
   step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30,
   NealeMiller = FALSE, ...)
 }
 \arguments{
 \item{mod}{a converged mirt model}
 
-\item{alpha}{two-tailed alpha critical level}
-
 \item{parnum}{a numeric vector indicating which parameters to estimate.
 Use \code{\link{mod2values}} to determine parameter numbers. If \code{NULL}, all possible
 parameters are used}
+
+\item{alpha}{two-tailed alpha critical level}
 
 \item{search_bound}{logical; use a fixed grid of values around the ML estimate to
 determine more suitable optimization bounds? Using this has much better behaviour
@@ -23,7 +23,8 @@ than setting fixed upper/lower bound values and searching from more extreme ends
 
 \item{step}{magnitude of steps used when \code{search_bound} is \code{TRUE}.
 Smaller values create more points to search a suitable bound for (up to the
-lower bound value visible with \code{\link{mod2values}})}
+lower bound value visible with \code{\link{mod2values}}). When upper/lower bounds are detected
+this value will be adjusted accordingly}
 
 \item{lower}{logical; search for the lower CI?}
 
@@ -58,7 +59,7 @@ result2
 #only estimate CI's slopes
 sv <- mod2values(mod2)
 parnum <- sv$parnum[sv$name == 'a1']
-result3 <- PLCI.mirt(mod2, parnum=parnum)
+result3 <- PLCI.mirt(mod2, parnum)
 result3
 
 }

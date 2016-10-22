@@ -17,7 +17,8 @@
 #'   than setting fixed upper/lower bound values and searching from more extreme ends
 #' @param step magnitude of steps used when \code{search_bound} is \code{TRUE}.
 #'   Smaller values create more points to search a suitable bound for (up to the
-#'   lower bound value visible with \code{\link{mod2values}})
+#'   lower bound value visible with \code{\link{mod2values}}). When upper/lower bounds are detected
+#'   this value will be adjusted accordingly
 #' @param lower logical; search for the lower CI?
 #' @param upper logical; search for the upper CI?
 #' @param NealeMiller logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}
@@ -51,11 +52,11 @@
 #' #only estimate CI's slopes
 #' sv <- mod2values(mod2)
 #' parnum <- sv$parnum[sv$name == 'a1']
-#' result3 <- PLCI.mirt(mod2, parnum=parnum)
+#' result3 <- PLCI.mirt(mod2, parnum)
 #' result3
 #'
 #' }
-PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
+PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
                       search_bound = TRUE, step = .5,
                       lower = TRUE, upper = TRUE, inf2val = 30,
                       NealeMiller = FALSE, ...){
@@ -133,16 +134,13 @@ PLCI.mirt <- function(mod, alpha = .05, parnum = NULL,
         lower <- ifelse(lbound[parnum] == -Inf, -inf2val, lbound[parnum])
         upper <- ifelse(ubound[parnum] == Inf, inf2val, ubound[parnum])
         mid <- pars[parnum]
-        if(parnames[parnum] %in% c('g', 'u')){
-            lower <- 0
-            upper <- 1
-        } else if(parnames[parnum] %in% paste0('COV_', 1:30, 1:30)){
-            lower <- 1e-4
-        }
+        if(closeEnough(lower, -1e-2, 1e-2) && closeEnough(upper, 1 + -1e-2, 1 + 1e-2))
+            step <- step/10
+        if(closeEnough(lower, -1e-2, 1e-2) && upper > 10L) step <- step/3
         if(estlower && mid > lower){
             possible_bound <- TRUE
             if(search_bound){
-                grid <- mid - cumsum(rep(step, floor(abs(lower/step))))
+                grid <- mid - cumsum(rep(step, floor(abs(upper/step))))
                 for(g in grid){
                     Xval <- f.min(g, dat=dat, model=model, constrain=constrain,
                                    large=large, which=parnums[parnum], sv=sv, get.LL=get.LL,
