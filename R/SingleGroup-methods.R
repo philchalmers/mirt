@@ -766,7 +766,7 @@ setMethod(
         if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@ParObjects$pars, 'prodlist')
-        if(all(x@Data$K[which.items] == 2L)) auto.key <- FALSE
+        if(all(x@Data$K[which.items] == 2L) && facet_items) auto.key <- FALSE
         if(length(prodlist) > 0)
             ThetaFull <- prodterms(Theta,prodlist)
         if(length(degrees) > ncol(ThetaFull)) type <- 'infoangle'
@@ -776,7 +776,8 @@ setMethod(
             for(i in 1:J)
                 info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=degrees)
         }
-        adj <- x@Data$mins
+        mins <- x@Data$mins
+        maxs <- extract.mirt(x, 'K') + mins - 1
         rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
         if (x@Options$exploratory){
             if(!is.null(dots$rotate)){
@@ -790,7 +791,7 @@ setMethod(
                                       CUSTOM.IND=x@Internals$CUSTOM.IND)
         score <- c()
         for(i in 1:J)
-            score <- c(score, (0:(x@Data$K[i]-1) + adj[i]) * (i %in% which.items))
+            score <- c(score, (0:(x@Data$K[i]-1) + mins[i]) * (i %in% which.items))
         score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
         plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))
         bundle <- length(which.items) != J
@@ -822,6 +823,10 @@ setMethod(
                 CIrxx[i, ] <- CIinfo[i, ] / (CIinfo[i, ] + 1)
             }
         }
+        mins <- mins[which.items]
+        maxs <- maxs[which.items]
+        ybump <- (max(maxs) - min(mins))/15
+        ybump_full <- (sum(maxs) - sum(mins))/15
         if(nfact == 3){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2", "Theta3")
             plt$SE <- 1 / sqrt(plt$info)
@@ -840,8 +845,9 @@ setMethod(
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(contourplot(score ~ Theta1 * Theta2 | Theta3, data = plt,
+                                   ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                    main = main, xlab = expression(theta[1]),
-                                   ylab = expression(theta[2]),
+                                   ylab = expression(theta[2]), ylim=c(sum(mins)-.1, sum(maxs)+.1),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'info'){
                 if(is.null(main)){
@@ -867,9 +873,11 @@ setMethod(
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(wireframe(score ~ Theta1 + Theta2 | Theta3, data = plt, main = main,
+                                 ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
-                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
+                                 par.strip.text=par.strip.text, par.settings=par.settings,
+                                 ylim=c(sum(mins)-.1, sum(maxs)+.1), ...))
             } else if(type == 'SE'){
                 if(is.null(main)){
                     main <- "Test Standard Errors"
@@ -900,6 +908,7 @@ setMethod(
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(contourplot(score ~ Theta1 * Theta2, data = plt,
+                                   ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                    main = main, xlab = expression(theta[1]),
                                    ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -927,6 +936,7 @@ setMethod(
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
+                                 ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -1083,7 +1093,6 @@ setMethod(
                 S <- vector('list', length(which.items))
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
-                mins <- extract.mirt(x, 'mins')
                 for(i in which.items){
                     S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
                     ind <- ind + 1L
@@ -1091,13 +1100,14 @@ setMethod(
                 Sstack <- do.call(c, S)
                 names <- rep(names(S), each = nrow(ThetaFull))
                 plotobj <- data.frame(S=Sstack, item=names, Theta=Theta)
+                plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
-                    return(xyplot(S ~ Theta|item, plotobj,
+                    return(xyplot(S ~ Theta|item, plotobj, ylim=c(min(mins)-ybump, max(maxs)+ybump),
                                   xlab = expression(theta), ylab = expression(S(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(S ~ Theta, plotobj, groups=plotobj$item,
+                    return(xyplot(S ~ Theta, plotobj, groups=plotobj$item, ylim=c(min(mins)-.1, max(maxs)+.1),
                                   xlab = expression(theta), ylab = expression(S(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -1128,6 +1138,7 @@ setMethod(
                     main <- if(bundle) "Expected Bundle Score" else "Expected Total Score"
                 if(MI > 0){
                     return(xyplot(score ~ Theta, data=plt,
+                                  ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                   upper=plt$CIscoreupper, lower=plt$CIscorelower,
                                   panel = function(x, y, lower, upper, ...){
                                       panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
@@ -1138,7 +1149,7 @@ setMethod(
                                   ylab = expression(T(theta)), xlab = expression(theta),
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(score ~ Theta, plt,
+                    return(xyplot(score ~ Theta, plt, ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                   xlab = expression(theta), ylab = expression(T(theta)),
                                   type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))

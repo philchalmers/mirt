@@ -98,19 +98,24 @@ setMethod(
         }
         Theta <- ThetaFull
         groups <- gl(ngroups, nrow(ThetaFull), labels=x@Data$groupNames)
-        adj <- x@Data$mins
+        mins <- x@Data$mins
+        maxs <- extract.mirt(x, 'K') + mins - 1
         gscore <- c()
         for(g in 1:ngroups){
             itemtrace <- computeItemtrace(x@ParObjects$pars[[g]]@ParObjects$pars, ThetaFull, x@Model$itemloc,
                                           CUSTOM.IND=x@Internals$CUSTOM.IND)
             score <- c()
             for(i in 1:J)
-                score <- c(score, (0:(x@Data$K[i]-1) + adj[i]) * (i %in% which.items))
+                score <- c(score, (0:(x@Data$K[i]-1) + mins[i]) * (i %in% which.items))
             score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
             gscore <- c(gscore, rowSums(score * itemtrace))
         }
         plt <- data.frame(info=info, score=gscore, Theta, group=groups)
         bundle <- length(which.items) != J
+        mins <- mins[which.items]
+        maxs <- maxs[which.items]
+        ybump <- (max(maxs) - min(mins))/15
+        ybump_full <- (sum(maxs) - sum(mins))/15
         if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2", "group")
             plt$SE <- 1 / sqrt(plt$info)
@@ -139,6 +144,7 @@ setMethod(
                                  ...))
             if(type == 'score')
                 return(wireframe(score ~ Theta1 + Theta2|group, data = plt,
+                                 ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                  main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
@@ -163,6 +169,7 @@ setMethod(
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'score')
                 return(xyplot(score~Theta, plt, type='l', groups=plt$group,
+                              ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                               main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
                               xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
@@ -242,13 +249,14 @@ setMethod(
                 }
                 plt <- do.call(rbind, plt)
                 plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
+                maxs <- extract.mirt(x, 'K') + mins - 1
                 if(facet_items){
-                    return(xyplot(S ~ Theta|item, plt, groups = plt$group,
+                    return(xyplot(S ~ Theta|item, plt, groups = plt$group, ylim=c(min(mins)-ybump, max(maxs)+ybump),
                                   xlab = expression(theta), ylab = expression(S(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Expected item scoring function',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(S ~ Theta|group, plt, groups = plt$item,
+                    return(xyplot(S ~ Theta|group, plt, groups = plt$item, ylim=c(min(mins)-ybump, max(maxs)+ybump),
                                   xlab = expression(theta), ylab = expression(S(theta)),
                                   auto.key = auto.key, type = 'l', main = 'Expected item scoring function',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))

@@ -69,6 +69,9 @@ setMethod(
         dat2$P <- P
         dat2$cat <- rep(as.character(1:(length(Plist))), each = nrow(dat))
         if(all(dat2$cat == '0')) dat2$cat <- rep('1', length(dat2$cat))
+        ymin_score <- extract.mirt(object, 'mins')[item]
+        ymax_score <- extract.mirt(object, 'K')[item] + ymin_score - 1
+        ybump <- (ymax_score - ymin_score)/15
         if(nfact == 1){
             if(type == 'info'){
                 if(is.null(main))
@@ -87,6 +90,7 @@ setMethod(
                     main <- paste("Expected score for item", item)
                 dat$score <- do.call(c, score)
                 return(xyplot(score ~ Theta, dat, groups=dat$group, type = 'l',
+                              ylim=c(ymin_score-ybump, ymax_score+ybump),
                               auto.key = auto.key, main = main,
                               ylab = expression(S(theta)), xlab = expression(theta), ...))
             } else if(type == 'RE'){
@@ -128,6 +132,7 @@ setMethod(
                     main <- paste("Expected score for item", item)
                 dat$score <- do.call(c, score)
                 return(wireframe(score ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
+                                 ylim=c(ymin_score-ybump, ymax_score+ybump),
                                  zlab=expression(S(theta)), xlab=expression(theta[1]),
                                  ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen=rot,
@@ -230,6 +235,9 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         CEprobupper <- CEprobupper[ ,-1, drop = FALSE]
         CEproblower <- CEproblower[ ,-1, drop = FALSE]
     }
+    ymin_score <- extract.mirt(x, 'mins')[item]
+    ymax_score <- extract.mirt(x, 'K')[item] + ymin_score - 1
+    ybump <- (ymax_score - ymin_score)/15
     if(nfact == 1){
         plt <- data.frame(info = info, Theta = Theta)
         plt2 <- data.frame(P = P, Theta = Theta)
@@ -290,6 +298,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                 main <- paste('Expected score for item', item)
             if(CE){
                 return(xyplot(score ~ Theta, data=plt, auto.key = auto.key,
+                              ylim=c(ymin_score-ybump, ymax_score+ybump),
                               upper=plt$CEscoreupper, lower=plt$CEscorelower,
                               panel = function(x, y, lower, upper, ...){
                                   panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
@@ -300,6 +309,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                               ylab = expression(S(theta)), xlab = expression(theta), ...))
             } else {
                 return(xyplot(score ~ Theta, plt, type = 'l',
+                              ylim=c(ymin_score-ybump, ymax_score+ybump),
                                 auto.key = auto.key, main = main,
                                 ylab = expression(E(theta)), xlab = expression(theta), ...))
             }
@@ -403,9 +413,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste("Item", item, "Expected Scores")
             return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
-                                      zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                      zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
-                                      colorkey = colorkey, drape = drape, screen=rot, ...))
+                             ylim=c(ymin_score-ybump, ymax_score+ybump),
+                             zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                             zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
+                             colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'SE'){
             if(is.null(main))
                 main <- paste("Item", item, "Standard Errors")
@@ -435,9 +446,10 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste("Item", item, "Expected Scores")
             return(wireframe(score ~ Theta1 + Theta2|Theta3, data = plt, main = main,
-                                      zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
-                                      zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
-                                      colorkey = colorkey, drape = drape, screen=rot, ...))
+                             ylim=c(ymin_score-ybump, ymax_score+ybump),
+                             zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                             zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
+                             colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'info'){
             if(is.null(main))
                 main <- paste("Item", item, "Information")

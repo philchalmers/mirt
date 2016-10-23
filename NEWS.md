@@ -1,5 +1,11 @@
 # Changes in mirt 1.21
 
+- in `plot()`, `auto.key` is only disabled when `facet_items = FALSE` for dichotomous items. Also, adjusted 
+  ordering of `plot(mod, type = 'itemscore')` to reflect actual item ordering
+
+- Stretched the theoretical bounds of the y-axis for score-based functions in `plot()` and `itemplot()`
+  (e.g., 3PL models will now always stretch to S(theta) = 0)
+
 - `plot(mod, type = 'score')` not supports the `which.items` input to make expected score plots for 
   bundles of items
 
