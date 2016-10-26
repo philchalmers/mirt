@@ -795,6 +795,7 @@ setMethod(
         score <- matrix(score, nrow(itemtrace), ncol(itemtrace), byrow = TRUE)
         plt <- data.frame(cbind(info,score=rowSums(score*itemtrace),Theta=Theta))
         bundle <- length(which.items) != J
+        gp <- ExtractGroupPars(x@ParObjects$pars[[J+1]])
         if(MI > 0L && nfact == 1L){
             tmpx <- x
             if(!x@Options$SE)
@@ -806,7 +807,7 @@ setMethod(
                 as.numeric(strsplit(x, split=split)[[1L]][-1L])
             }, split='\\.')
             imputenums <- do.call(c, tmp)
-            CIscore <- CIinfo <- rxx <- CIrxx <- matrix(0, MI, length(plt$score))
+            CIscore <- CIinfo <- CIrxx <- matrix(0, MI, length(plt$score))
             for(i in 1L:MI){
                 while(TRUE){
                     tmp <- try(imputePars(pars=x@ParObjects$pars, pre.ev=pre.ev,
@@ -815,12 +816,13 @@ setMethod(
                     if(!is(tmp, 'try-error')) break
                 }
                 tmpx@ParObjects$pars <- tmp
+                gp2 <- ExtractGroupPars(tmp[[J+1]])
                 itemtrace <- computeItemtrace(tmpx@ParObjects$pars, ThetaFull, x@Model$itemloc,
                                               CUSTOM.IND=x@Internals$CUSTOM.IND)
                 tmpscore <- rowSums(score * itemtrace)
                 CIscore[i, ] <- tmpscore
                 CIinfo[i, ] <- testinfo(tmpx, ThetaFull)
-                CIrxx[i, ] <- CIinfo[i, ] / (CIinfo[i, ] + 1)
+                CIrxx[i, ] <- CIinfo[i, ] / (CIinfo[i, ] + 1/gp2$gcov[1L,1L])
             }
         }
         mins <- mins[which.items]
@@ -963,7 +965,7 @@ setMethod(
         } else {
             colnames(plt) <- c("info", "score", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
-            plt$rxx <- plt$info / (plt$info + 1)
+            plt$rxx <- plt$info / (plt$info + 1/gp$gcov[1L,1L])
             if(MI > 0){
                 bs_range <- function(x, CI){
                     ss <- sort(x)
