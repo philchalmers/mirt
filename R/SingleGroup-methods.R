@@ -772,10 +772,8 @@ setMethod(
         if(length(degrees) > ncol(ThetaFull)) type <- 'infoangle'
         if(length(degrees) == 1L) degrees <- rep(degrees, ncol(ThetaFull))
         info <- numeric(nrow(ThetaFull))
-        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace')){
-            for(i in 1:J)
-                info <- info + iteminfo(x=x@ParObjects$pars[[i]], Theta=ThetaFull, degrees=degrees)
-        }
+        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace'))
+            info <- testinfo(x, ThetaFull, degrees = degrees, which.items=which.items)
         mins <- x@Data$mins
         maxs <- extract.mirt(x, 'K') + mins - 1
         rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate

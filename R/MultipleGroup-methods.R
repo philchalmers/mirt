@@ -92,7 +92,8 @@ setMethod(
         info <- 0
         if(type %in% c('info', 'infocontour', 'SE', 'RE', 'infoSE', 'infotrace')){
             for(g in 1:ngroups)
-                infolist[[g]] <- testinfo(extract.group(x, g), ThetaFull, degrees = degrees)
+                infolist[[g]] <- testinfo(extract.group(x, g), ThetaFull, degrees = degrees,
+                                          which.items=which.items)
             if(type == 'RE') infolist <- lapply(infolist, function(x) x / infolist[[1]])
             info <- do.call(c, infolist)
         }
