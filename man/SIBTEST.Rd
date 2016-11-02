@@ -4,9 +4,9 @@
 \alias{SIBTEST}
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
-SIBTEST(dat, group, focal_set, match_set, focal_name = "focal",
-  guess_correction = 0, Jmin = 2, cross = FALSE, permute = 1000,
-  pk_focal = FALSE, correction = TRUE, details = FALSE)
+SIBTEST(dat, group, focal_set, match_set, focal_name, guess_correction = 0,
+  Jmin = 2, cross = FALSE, permute = 1000, pk_focal = FALSE,
+  correction = TRUE, details = FALSE)
 }
 \arguments{
 \item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
@@ -23,7 +23,8 @@ will be used (i.e., DTF)}
 (i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
 DIF. If missing, all items other than the items found in the focal_set will be used}
 
-\item{focal_name}{name of the focal group. E.g., 'focal'}
+\item{focal_name}{name of the focal group; e.g., 'focal'. If not specified then one will be
+selected automatically}
 
 \item{guess_correction}{a vector of numbers from 0 to 1 indicating how much to correct the items
 for guessing. It's length should be the same as ncol(dat)}

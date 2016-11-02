@@ -13,7 +13,8 @@
 #' @param match_set an integer vector indicating which items to use as the items which are matched
 #'   (i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
 #'   DIF. If missing, all items other than the items found in the focal_set will be used
-#' @param focal_name name of the focal group. E.g., 'focal'
+#' @param focal_name name of the focal group; e.g., 'focal'. If not specified then one will be
+#'   selected automatically
 #' @param focal_set an integer vector indicating which items to inspect with SIBTEST. Including only
 #'   one value will perform a DIF test, while including more than one will perform a simultaneous
 #'   bundle test (DBF); including all non-matched items will perform DTF.
@@ -121,7 +122,7 @@
 #' SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
 #'
 #' }
-SIBTEST <- function(dat, group, focal_set, match_set, focal_name = 'focal',
+SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
                     guess_correction = 0, Jmin = 2, cross = FALSE, permute = 1000,
                     pk_focal = FALSE, correction = TRUE, details = FALSE){
 
@@ -151,6 +152,8 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name = 'focal',
 
     if(any(is.na(dat)))
         stop('SIBTEST does not support datasets with missing values.')
+    if(missing(focal_name))
+        focal_name <- names(table(group))[1L]
     stopifnot(focal_name %in% group)
     group <- ifelse(group == focal_name, 'focal', 'reference')
     stopifnot(!(missing(focal_set) && missing(match_set)))
@@ -267,7 +270,8 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name = 'focal',
     } else {
         p <- (1 - pnorm(abs(z))) * 2
     }
-    ret <- data.frame(n_matched_set=length(match_set), n_focal_set = length(focal_set),
+    ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
+                      n_focal_set = length(focal_set),
                       B = beta_uni, z, p = p)
     name <- ifelse(cross, 'Crossed_SIBTEST', 'SIBTEST')
     rownames(ret) <- name
