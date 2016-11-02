@@ -153,7 +153,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     if(any(is.na(dat)))
         stop('SIBTEST does not support datasets with missing values.')
     if(missing(focal_name))
-        focal_name <- names(table(group))[1L]
+        focal_name <- unique(group)[2L]
     stopifnot(focal_name %in% group)
     group <- ifelse(group == focal_name, 'focal', 'reference')
     stopifnot(!(missing(focal_set) && missing(match_set)))
