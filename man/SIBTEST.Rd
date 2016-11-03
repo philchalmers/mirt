@@ -32,8 +32,7 @@ for guessing. It's length should be the same as ncol(dat)}
 \item{Jmin}{the minimum number of observations required when splitting the data into focal and
 reference groups conditioned on the matched set}
 
-\item{cross}{logical; perform the crossing test for DIF? Can only be used when the data
-consist of dichotomous responses. Default is \code{FALSE}}
+\item{cross}{logical; perform the crossing test for non-compensatory bias? Default is \code{FALSE}}
 
 \item{permute}{number of permutations to perform when \code{cross = TRUE}. Default is 1000}
 
@@ -53,7 +52,7 @@ SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a 
 correction based on the KR-20/coefficient alpha reliability index to correct the observed
 differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and poltomous data (compensatory) and
-also supports crossed DIF testing (i.e., non-compensatory) for dichotomous data.
+also supports crossed DIF testing (i.e., non-compensatory).
 }
 \examples{
 \dontrun{

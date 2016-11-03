@@ -6,7 +6,7 @@
 #' correction based on the KR-20/coefficient alpha reliability index to correct the observed
 #' differences when the latent trait distributions are not equal.
 #' Function supports the standard SIBTEST for dichotomous and poltomous data (compensatory) and
-#' also supports crossed DIF testing (i.e., non-compensatory) for dichotomous data.
+#' also supports crossed DIF testing (i.e., non-compensatory).
 #'
 #' @param dat integer dataset to be tested containing dichotomous or polytomous responses
 #' @param group a vector indicating group membership
@@ -26,8 +26,7 @@
 #'   reference groups conditioned on the matched set
 #' @param pk_focal logical; using the group weights from the focal group instead of the total
 #'   sample? Default is FALSE as per Shealy and Stout's recommendation
-#' @param cross logical; perform the crossing test for DIF? Can only be used when the data
-#'   consist of dichotomous responses. Default is \code{FALSE}
+#' @param cross logical; perform the crossing test for non-compensatory bias? Default is \code{FALSE}
 #' @param permute number of permutations to perform when \code{cross = TRUE}. Default is 1000
 #' @param correction logical; apply the composite correction for the difference between focal
 #'   composite scores using the true-score regression technique? Default is \code{TRUE},
@@ -160,10 +159,6 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     index <- 1L:ncol(dat)
     if(missing(match_set)) match_set <- index[-focal_set]
     else if(missing(focal_set)) focal_set <- index[-match_set]
-    if(cross && length(focal_set) > 1L)
-        stop('Crossing SIBTEST only supported for DIF testing')
-    if(cross && !all(dat[,c(match_set, focal_set)] %in% c(0,1)))
-        stop('All items must be dichotomous for crossing test')
     if(length(guess_correction) > 1L){
         stopifnot(length(guess_correction) == ncol(dat))
     } else guess_correction <- rep(guess_correction, ncol(dat))
