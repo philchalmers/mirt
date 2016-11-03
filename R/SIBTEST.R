@@ -257,13 +257,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         for(p in 1L:permute){
             diff <- sample(c(-1,1), length(ystar_ref_vec), replace = TRUE) *
                 (ystar_ref_vec - ystar_focal_vec)
-            crossvec <- find_intersection(diff, pmax(tab_ref, tab_focal),
-                                           use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
-            for(kk in 1L:length(tab_scores)){
-                if(!II[kk]) next
-                if(!crossvec[kk]) beta_vec[p] <- beta_vec[p] + pkstar[kk] * (diff[kk])
-                else beta_vec[p] <- beta_vec[p] + pkstar[kk] * (diff[kk])
-            }
+            beta_vec[p] <- sum(pkstar * diff)
         }
         z <- NA
         p <- min(mean(abs(beta_vec) >= abs(beta_uni)) * 2, 1)
