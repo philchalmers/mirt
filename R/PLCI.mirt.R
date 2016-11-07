@@ -136,7 +136,7 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
         f.min(value=value, ...)^2 + value
     }
 
-    LLpar <- function(X, parnums, dat, model, large, constrain,
+    LLpar <- function(X, parnums, dat, model, large, constrain, direction,
                       sv, get.LL, parprior, asigns, PrepList, inf2val, itemtype,
                       maxLL, estlower, estupper, search_bound, step, NealeMiller, ...){
         parnum <- parnums[X]
@@ -147,7 +147,8 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
         if(closeEnough(lower, -1e-2, 1e-2) && closeEnough(upper, 1 + -1e-2, 1 + 1e-2))
             step <- step/10
         if(closeEnough(lower, -1e-2, 1e-2) && upper > 10L) step <- step/3
-        if(estlower && mid > lower){
+        conv <- TRUE
+        if(direction[X] == 'lower'){
             possible_bound <- TRUE
             if(search_bound){
                 grid <- mid - cumsum(rep(step, floor(abs(upper/step))))
@@ -170,26 +171,25 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
             }
             if(possible_bound){
                 if(NealeMiller){
-                    opt.lower <- try(optimize(f.min2, c(lower, mid), upperBound=FALSE, dat=dat, model=model,
+                    opt <- try(optimize(f.min2, c(lower, mid), upperBound=FALSE, dat=dat, model=model,
                                            large=large, which=parnum, sv=sv, get.LL=get.LL,
                                            parprior=parprior, asigns=asigns,
                                            PrepList=PrepList, itemtype=itemtype, constrain=constrain,
                                            ..., f.upper=maxLL-get.LL, tol = TOL),
                                      silent = TRUE)
-                    if(!is(opt.lower, 'try-error'))
-                        opt.lower <- list(root=opt.lower$minimum, f.root=TOL/10)
+                    if(!is(opt, 'try-error'))
+                        opt <- list(root=opt$minimum, f.root=TOL/10)
                 } else {
-                    opt.lower <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
+                    opt <- try(uniroot(f.min, c(lower, mid), dat=dat, model=model,
                                              large=large, which=parnum, sv=sv, get.LL=get.LL,
                                              parprior=parprior, asigns=asigns,
                                              PrepList=PrepList, itemtype=itemtype, constrain=constrain,
                                              ..., f.upper=maxLL-get.LL, tol = TOL/10),
                                      silent = TRUE)
                 }
-            } else opt.lower <- try(uniroot(), TRUE)
-            if(is(opt.lower, 'try-error')) opt.lower <- list(root = lower, f.root=1e10)
-        } else opt.lower <- list(root = lower, f.root=1e10)
-        if(estupper && mid < upper){
+            } else opt <- try(uniroot(), TRUE)
+            if(is(opt, 'try-error')) opt <- list(root = lower, f.root=1e10)
+        } else if(direction[X] == 'upper'){
             possible_bound <- TRUE
             if(search_bound){
                 grid <- mid + cumsum(rep(step, floor(abs(upper/step))))
@@ -212,32 +212,27 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
             }
             if(possible_bound){
                 if(NealeMiller){
-                    opt.upper <- try(optimize(f.min2, c(mid, upper), upperBound=TRUE, dat=dat, model=model,
+                    opt <- try(optimize(f.min2, c(mid, upper), upperBound=TRUE, dat=dat, model=model,
                                               large=large, which=parnum, sv=sv, get.LL=get.LL,
                                               parprior=parprior, asigns=asigns,
                                               PrepList=PrepList, itemtype=itemtype, constrain=constrain,
                                               ..., f.upper=maxLL-get.LL, tol = TOL),
                                      silent = TRUE)
-                    if(!is(opt.upper, 'try-error'))
-                        opt.upper <- list(root=opt.upper$minimum, f.root=TOL/10)
+                    if(!is(opt, 'try-error'))
+                        opt <- list(root=opt$minimum, f.root=TOL/10)
                 } else {
-                    opt.upper <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
+                    opt <- try(uniroot(f.min, c(mid, upper), dat=dat, model=model,
                                              large=large, which=parnum, sv=sv, get.LL=get.LL,
                                              parprior=parprior, asigns=asigns,
                                              PrepList=PrepList, itemtype=itemtype, constrain=constrain,
                                              ..., f.lower=maxLL-get.LL, tol = TOL/10),
                                      silent = TRUE)
                 }
-            } else opt.upper <- try(uniroot(), TRUE)
-            if(is(opt.upper, 'try-error')) opt.upper <- list(root = upper, f.root=1e10)
-        } else opt.upper <- list(root = upper, f.root=1e10)
-        conv_upper <- conv_lower <- TRUE
-        if(abs(opt.lower$f.root) > TOL)
-            conv_lower <- FALSE
-        if(abs(opt.upper$f.root) > TOL)
-            conv_upper <- FALSE
-        c(lower=opt.lower$root, upper=opt.upper$root,
-          conv_lower=conv_lower, conv_upper=conv_upper)
+            } else opt <- try(uniroot(), TRUE)
+            if(is(opt, 'try-error')) opt <- list(root = upper, f.root=1e10)
+        } else opt <- list(root = upper, f.root=1e10)
+        if(abs(opt$f.root) > TOL) conv <- FALSE
+        c(CI=opt$root, conv=conv)
     }
 
     stopifnot(extract.mirt(mod, 'converged'))
@@ -275,18 +270,34 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
             }
         }
     }
-    result <- mySapply(X=1L:length(parnums), FUN=LLpar, parnums=parnums, asigns=asigns,
+    direction <- rep(c('lower', 'upper'), length.out = length(parnums)*2)
+    if(!lower) direction <- direction[-seq(1L, length(direction), by=2)]
+    if(!upper) direction <- direction[-seq(2L, length(direction), by=2)]
+    parnumsold <- parnums
+    if(lower && upper)
+        parnums <- rep(parnums, each = 2)
+    X <- 1L:length(parnums)
+    result <- mySapply(X=X, FUN=LLpar, parnums=parnums, asigns=asigns,
                        dat=dat, constrain=constraints, itemtype=itemtype,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
                        PrepList=PrepList, inf2val=inf2val, maxLL=LL,
-                       estlower=lower, estupper=upper, search_bound=search_bound,
+                       direction=direction, search_bound=search_bound,
                        step=step, NealeMiller=NealeMiller, ...)
+    lowerCIs <- lowerconv <- upperCIs <- upperconv <- NA
+    if(lower){
+        lowerCIs <- result[direction == 'lower', 'CI']
+        lowerconv <- as.logical(result[direction == 'lower', 'conv'])
+    }
+    if(upper){
+        upperCIs <- result[direction == 'upper', 'CI']
+        upperconv <- as.logical(result[direction == 'upper', 'conv'])
+    }
+    result <- data.frame(lower=lowerCIs, upper=upperCIs, lower_conv=lowerconv,
+                         upper_conv=upperconv)
     colnames(result) <- c(paste0('lower_', alpha/2*100), paste0('upper_', (1-alpha/2)*100),
                                  'lower_conv', 'upper_conv')
-    ret <- data.frame(Item=sv$item[parnums], class=sv$class[parnums], parnam=sv$name[parnums],
-                      parnum=parnums, value=sv$value[parnums], result, row.names=NULL)
-    ret$lower_conv <- as.logical(ret$lower_conv)
-    ret$upper_conv <- as.logical(ret$upper_conv)
+    ret <- data.frame(Item=sv$item[parnumsold], class=sv$class[parnumsold], parnam=sv$name[parnumsold],
+                      parnum=parnumsold, value=sv$value[parnumsold], result, row.names=NULL)
     if(!lower) ret <- ret[,!grepl('lower', colnames(ret)), drop=FALSE]
     if(!upper) ret <- ret[,!grepl('upper', colnames(ret)), drop=FALSE]
     ret
