@@ -21,9 +21,14 @@ test_that('old2PL', {
     mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose=FALSE)
     expect_is(mod, 'SingleGroupClass')
     expect_is(coef(mod), 'list')
+    expect_equal(logLik(mod), -2658.805, tolerance = 1e-4)
     mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod2, 'SingleGroupClass')
     expect_is(coef(mod2), 'list')
+    mod3 <- mirt(dat, 'F = 1-5
+                       PRIOR = (5, b, norm, 0, 1)', c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), verbose=FALSE)
+    expect_equal(logLik(mod3), -2659.1, tolerance = 1e-4)
+
 
     #' #nonlinear
     name <- 'nonlin'

@@ -672,24 +672,26 @@ UpdatePrior <- function(PrepList, model, groupNames){
                     type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
                     val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                     val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
-                    for(j in 1L:length(sel)){
-                        which <- names(pars[[g]][[j]]@est) == name
-                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
-                                             call.=FALSE)
-                        pars[[g]][[sel[j]]]@any.prior <- TRUE
-                        pars[[g]][[sel[j]]]@prior.type[which] <- type
-                        pars[[g]][[sel[j]]]@prior_1[which] <- val1
-                        pars[[g]][[sel[j]]]@prior_2[which] <- val2
-                        pars[[g]][[sel[j]]]@par[which] <- switch(type,
-                                                                 '1'=val1,
-                                                                 '2'=exp(val1),
-                                                                 '3'=(val1-1)/(val1 + val2 - 2),
-                                                                 '4'=expbeta_sv(val1, val2))
-                        if(type == '2')
-                            pars[[g]][[sel[j]]]@lbound[which] <- 0
-                        if(type == '3'){
-                            pars[[g]][[sel[j]]]@lbound[which] <- 0
-                            pars[[g]][[sel[j]]]@ubound[which] <- 1
+                    if(length(sel)){
+                        for(j in 1L:length(sel)){
+                            which <- names(pars[[g]][[sel[j]]]@est) == name
+                            if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
+                                                 call.=FALSE)
+                            pars[[g]][[sel[j]]]@any.prior <- TRUE
+                            pars[[g]][[sel[j]]]@prior.type[which] <- type
+                            pars[[g]][[sel[j]]]@prior_1[which] <- val1
+                            pars[[g]][[sel[j]]]@prior_2[which] <- val2
+                            pars[[g]][[sel[j]]]@par[which] <- switch(type,
+                                                                     '1'=val1,
+                                                                     '2'=exp(val1),
+                                                                     '3'=(val1-1)/(val1 + val2 - 2),
+                                                                     '4'=expbeta_sv(val1, val2))
+                            if(type == '2')
+                                pars[[g]][[sel[j]]]@lbound[which] <- 0
+                            if(type == '3'){
+                                pars[[g]][[sel[j]]]@lbound[which] <- 0
+                                pars[[g]][[sel[j]]]@ubound[which] <- 1
+                            }
                         }
                     }
                 }
@@ -703,14 +705,16 @@ UpdatePrior <- function(PrepList, model, groupNames){
                 type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
                 val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
                 val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
-                for(j in 1L:length(sel)){
-                    which <- names(pars[[gname]][[j]]@est) == name
-                    if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
-                                         call.=FALSE)
-                    pars[[gname]][[sel[j]]]@any.prior <- TRUE
-                    pars[[gname]][[sel[j]]]@prior.type[which] <- type
-                    pars[[gname]][[sel[j]]]@prior_1[which] <- val1
-                    pars[[gname]][[sel[j]]]@prior_2[which] <- val2
+                if(length(sel)){
+                    for(j in 1L:length(sel)){
+                        which <- names(pars[[gname]][[sel[j]]]@est) == name
+                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
+                                             call.=FALSE)
+                        pars[[gname]][[sel[j]]]@any.prior <- TRUE
+                        pars[[gname]][[sel[j]]]@prior.type[which] <- type
+                        pars[[gname]][[sel[j]]]@prior_1[which] <- val1
+                        pars[[gname]][[sel[j]]]@prior_2[which] <- val2
+                    }
                 }
             }
         }

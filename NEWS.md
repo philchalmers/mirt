@@ -26,6 +26,8 @@
   
 - `plot(mod, type = 'rxx')` now uses the latent variance in the computations (reported by 
   Amin Mousavi)
+  
+- fix syntax input when customized IRT models are supplied
 
 # Changes in mirt 1.20.1
 
