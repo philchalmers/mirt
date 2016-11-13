@@ -146,7 +146,15 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         mod <- lm(diff ~ k, weights = weight)
         cfs <- coef(mod)
         ks <- -cfs[1L]/cfs[2L]
-        scores > signif(ks, 1L)
+        ret <- scores > signif(ks, 1L)
+        pick <- which(ret)
+        if(length(pick)){
+            ret[min(pick)] <- NA
+        } else {
+            if(ks < 0) ret[1L] <- NA
+            else ret[length(ret)] <- NA
+        }
+        ret
     }
 
     if(any(is.na(dat)))
@@ -242,26 +250,39 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     # compute stats
     beta_uni <- 0
     for(kk in 1L:length(tab_scores)){
-        if(!II[kk]) next
+        if(!II[kk] || is.na(crossvec[kk])) next
         if(!crossvec[kk]) beta_uni <- beta_uni + pkstar[kk] * (ystar_ref_vec[kk] - ystar_focal_vec[kk])
         else beta_uni <- beta_uni + pkstar[kk] * (ystar_focal_vec[kk] - ystar_ref_vec[kk])
     }
-    z <- beta_uni / sigma_uni
     if(cross){
-        beta_vec <- numeric(permute)
+        sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[is.na(crossvec)],
+                              na.rm = TRUE))
+        B <- abs(beta_uni/sigma_uni)
+        B_vec <- numeric(permute)
         for(p in 1L:permute){
             diff <- sample(c(-1,1), length(ystar_ref_vec), replace = TRUE) *
                 (ystar_ref_vec - ystar_focal_vec)
-            beta_vec[p] <- sum(pkstar * diff)
+            crossvec <- find_intersection(diff, pmax(tab_ref, tab_focal),
+                                          use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
+            sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[is.na(crossvec)],
+                                  na.rm = TRUE))
+            beta <- 0
+            for(kk in 1L:length(tab_scores)){
+                if(!II[kk] || is.na(crossvec[kk])) next
+                if(!crossvec[kk]) beta <- beta + pkstar[kk] * (diff[kk])
+                else beta <- beta + pkstar[kk] * (diff[kk])
+            }
+            B_vec[p] <- beta/sigma_uni
         }
-        z <- NA
-        p <- min(mean(abs(beta_vec) >= abs(beta_uni)) * 2, 1)
+        z <- B * sign(beta_uni)
+        p <- mean(abs(B_vec) >= B)
     } else {
+        z <- beta_uni / sigma_uni
         p <- (1 - pnorm(abs(z))) * 2
     }
     ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
                       n_focal_set = length(focal_set),
-                      B = beta_uni, z, p = p)
+                      beta = beta_uni, z, p = p)
     name <- ifelse(cross, 'Crossed_SIBTEST', 'SIBTEST')
     rownames(ret) <- name
     if(details){
