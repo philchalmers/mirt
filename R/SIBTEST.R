@@ -151,8 +151,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         if(length(pick)){
             ret[min(pick)] <- NA
         } else {
-            if(ks < 0) ret[1L] <- NA
-            else ret[length(ret)] <- NA
+            ret[length(ret)] <- NA
         }
         ret
     }
