@@ -255,7 +255,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         else beta_uni <- beta_uni + pkstar[kk] * (ystar_focal_vec[kk] - ystar_ref_vec[kk])
     }
     if(cross){
-        sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[is.na(crossvec)],
+        sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[!is.na(crossvec)],
                               na.rm = TRUE))
         B <- abs(beta_uni/sigma_uni)
         B_vec <- numeric(permute)
@@ -264,7 +264,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
                 (ystar_ref_vec - ystar_focal_vec)
             crossvec <- find_intersection(diff, pmax(tab_ref, tab_focal),
                                           use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
-            sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[is.na(crossvec)],
+            sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[!is.na(crossvec)],
                                   na.rm = TRUE))
             beta <- 0
             for(kk in 1L:length(tab_scores)){
