@@ -1,5 +1,7 @@
 # Changes in mirt 1.21
 
+- add information about the number of freely estimated parameters to `print()` generic
+
 - in `plot()`, `auto.key` is only disabled when `facet_items = FALSE` for dichotomous items. Also, adjusted 
   ordering of `plot(mod, type = 'itemscore')` to reflect actual item ordering in the data
 

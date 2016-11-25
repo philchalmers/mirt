@@ -35,8 +35,9 @@ setMethod(
                 x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
-        if(method == 'EM' || method == 'BL'){
-            cat('EM acceleration:', x@Options$accelerate)
+        if(method == 'EM' || method == 'QMCEM' || method == 'BL'){
+            if(method == 'EM' || method == 'QMCEM')
+                cat('EM acceleration:', x@Options$accelerate)
             cat('\nNumber of rectangular quadrature:', x@Options$quadpts)
             cat('\n')
         }
@@ -51,10 +52,12 @@ setMethod(
             if(x@Fit$logPrior != 0){
                 cat("\nLog-posterior = ", x@Fit$logLik + x@Fit$logPrior, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
+                cat('Estimated parameters:', length(extract.mirt(x, 'parvec')), '\n')
                 cat("DIC = ", x@Fit$DIC, "\n", sep='')
             } else {
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
+                cat('Estimated parameters:', length(extract.mirt(x, 'parvec')), '\n')
                 cat("AIC = ", x@Fit$AIC, "; AICc = ", x@Fit$AICc, "\n", sep='')
                 cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             }

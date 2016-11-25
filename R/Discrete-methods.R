@@ -20,7 +20,7 @@ setMethod(
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
         cat('EM acceleration:', x@Options$accelerate)
-        cat('\nNumber of rectangular quadrature:', x@Options$quadpts)
+        # cat('\nNumber of classes quadrature:', x@Options$quadpts)
         cat('\n')
         if(!is.na(x@OptimInfo$condnum)){
             cat("\nInformation matrix estimated with method:", x@Options$infomethod)
@@ -32,6 +32,7 @@ setMethod(
         if(length(x@Fit$logLik) > 0){
             cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                 paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
+            cat('Estimated parameters:', length(extract.mirt(x, 'parvec')), '\n')
             cat("AIC = ", x@Fit$AIC, "; AICc = ", x@Fit$AICc, "\n", sep='')
             cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             if(!is.nan(x@Fit$p)){
