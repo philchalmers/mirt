@@ -70,12 +70,13 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2658.805
+## Estimated parameters: 10 
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
@@ -94,15 +95,16 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 35 EM iterations.
-## mirt version: 1.20 
+## Converged within 1e-04 tolerance after 25 EM iterations.
+## mirt version: 1.21 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2649.988
-## AIC = 5319.975; AICc = 5320.198
-## BIC = 5369.053; SABIC = 5337.292
+## Log-likelihood = -2649.916
+## Estimated parameters: 10 
+## AIC = 5319.832; AICc = 5320.054
+## BIC = 5368.909; SABIC = 5337.149
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -117,17 +119,18 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 32 EM iterations.
-## mirt version: 1.20 
+## Converged within 1e-04 tolerance after 33 EM iterations.
+## mirt version: 1.21 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2656.353
-## AIC = 5332.705; AICc = 5332.927
-## BIC = 5381.783; SABIC = 5350.022
-## G2 (21) = 32.24, p = 0.0554
-## RMSEA = 0.023, CFI = 0.937, TLI = 0.922
+## Log-likelihood = -2662.435
+## Estimated parameters: 10 
+## AIC = 5344.871; AICc = 5345.093
+## BIC = 5393.948; SABIC = 5362.188
+## G2 (21) = 31.82, p = 0.061
+## RMSEA = 0.023, CFI = 0.935, TLI = 0.92
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
@@ -141,5 +144,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
 </body></html>

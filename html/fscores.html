@@ -581,12 +581,12 @@ head(fs)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.39026977
-## [2,]  0.05546031
-## [3,] -0.87889043
-## [4,] -0.87889043
-## [5,]  0.76123769
-## [6,]  0.66120247
+## [1,]  0.43001467
+## [2,]  0.06735954
+## [3,] -0.85730452
+## [4,] -0.85730452
+## [5,]  0.74908985
+## [6,]  0.70515016
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -595,24 +595,24 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 
 <pre><code>## [[1]]
-##         mean          var          min          max 
-## -0.006402242  0.958070572 -2.591658524  2.597291973 
+##        mean         var         min         max 
+## -0.05994334  0.99856699 -3.88284060  2.73187022 
 ## 
 ## [[2]]
-##         mean          var          min          max 
-## -0.002713244  1.094163799 -3.215265280  2.954089750 
+##        mean         var         min         max 
+## -0.01481246  0.94967686 -3.29249578  2.77256343 
 ## 
 ## [[3]]
 ##        mean         var         min         max 
-## -0.02168334  0.93432762 -3.24213083  2.69541493 
+##  0.02803725  1.01831770 -3.99438456  3.15644163 
 ## 
 ## [[4]]
-##         mean          var          min          max 
-## -0.002581474  0.968951667 -2.622989083  2.371273194 
+##        mean         var         min         max 
+##  0.04154815  0.92158749 -3.85118683  2.64425181 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-## -0.04636845  0.93642413 -3.14456719  2.77592449
+## -0.02259588  0.93144517 -3.28252936  2.91830138
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -658,5 +658,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
 </body></html>

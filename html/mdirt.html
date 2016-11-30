@@ -108,7 +108,7 @@ the category probability values given the class membership, which can also
 be displayed graphically with <code>plot()</code>, while <code>coef()</code>
 displays the raw coefficient values (and their standard errors, if estimated). Finally,
 <code>anova()</code> is used to compare nested models, while
-<code><a href="M2.html">M2</a></code> and <code><a href="itemfit.html">itemfit</a></code> may be used for model fitting purposes.
+<code><a href="M2.html">M2</a></code> and <code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code> may be used for model fitting purposes.
 </p>
 
 
@@ -136,7 +136,7 @@ discrete models, grade of membership, etc.). See the examples below.
 <h3>See Also</h3>
 
 <p><code><a href="fscores.html">fscores</a></code>, <code><a href="mirt.model.html">mirt.model</a></code>, <code><a href="M2.html">M2</a></code>,
-<code><a href="itemfit.html">itemfit</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>, <code><a href="mirtCluster.html">mirtCluster</a></code>,
+<code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>, <code><a href="mirtCluster.html">mirtCluster</a></code>,
 <code><a href="../../lavaan/html/lavTestWald.html">wald</a></code>, <code><a href="coef-method.html">coef-method</a></code>, <code><a href="summary-method.html">summary-method</a></code>,
 <code><a href="anova-method.html">anova-method</a></code>, <code><a href="residuals-method.html">residuals-method</a></code>
 </p>
@@ -158,12 +158,12 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 374 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 2
 ## 
 ## Log-likelihood = -2467.406
+## Estimated parameters: 11 
 ## AIC = 4956.812; AICc = 4957.079
 ## BIC = 5010.797; SABIC = 4975.86
 ## G2 (20) = 22.73, p = 0.302, RMSEA = 0.012
@@ -178,12 +178,12 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 3
 ## 
 ## Log-likelihood = -2465.214
+## Estimated parameters: 17 
 ## AIC = 4964.428; AICc = 4965.051
 ## BIC = 5047.86; SABIC = 4993.867
 ## G2 (14) = 18.35, p = 0.1913, RMSEA = 0.018
@@ -477,12 +477,12 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 3
 ## 
 ## Log-likelihood = -2466.549
+## Estimated parameters: 12 
 ## AIC = 4957.098; AICc = 4957.414
 ## BIC = 5015.991; SABIC = 4977.879
 ## G2 (19) = 21.02, p = 0.3356, RMSEA = 0.01
@@ -559,12 +559,12 @@ dat &lt;- key2binary(SAT12,
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 198 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 8
 ## 
 ## Log-likelihood = -9429.565
+## Estimated parameters: 103 
 ## AIC = 19065.13; AICc = 19108.32
 ## BIC = 19518.01; SABIC = 19191.02
 </code></pre>
@@ -950,12 +950,12 @@ model &lt;- mirt.model(&#39;C1 = 1-32
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 251 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
-## Number of rectangular quadrature: 3
 ## 
 ## Log-likelihood = -12771.07
+## Estimated parameters: 5 
 ## AIC = 25552.15; AICc = 25552.25
 ## BIC = 25574.13; SABIC = 25558.26
 </code></pre>
@@ -2506,5 +2506,5 @@ coef(mod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
 </body></html>

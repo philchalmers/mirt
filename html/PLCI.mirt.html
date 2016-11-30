@@ -23,7 +23,7 @@ and whether the respective interval could be found.
 <h3>Usage</h3>
 
 <pre>
-PLCI.mirt(mod, alpha = 0.05, parnum = NULL, search_bound = TRUE,
+PLCI.mirt(mod, parnum = NULL, alpha = 0.05, search_bound = TRUE,
   step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30,
   NealeMiller = FALSE, ...)
 </pre>
@@ -36,15 +36,15 @@ PLCI.mirt(mod, alpha = 0.05, parnum = NULL, search_bound = TRUE,
 <td>
 <p>a converged mirt model</p>
 </td></tr>
-<tr valign="top"><td><code>alpha</code></td>
-<td>
-<p>two-tailed alpha critical level</p>
-</td></tr>
 <tr valign="top"><td><code>parnum</code></td>
 <td>
 <p>a numeric vector indicating which parameters to estimate.
 Use <code><a href="mod2values.html">mod2values</a></code> to determine parameter numbers. If <code>NULL</code>, all possible
 parameters are used</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>two-tailed alpha critical level</p>
 </td></tr>
 <tr valign="top"><td><code>search_bound</code></td>
 <td>
@@ -56,7 +56,8 @@ than setting fixed upper/lower bound values and searching from more extreme ends
 <td>
 <p>magnitude of steps used when <code>search_bound</code> is <code>TRUE</code>.
 Smaller values create more points to search a suitable bound for (up to the
-lower bound value visible with <code><a href="mod2values.html">mod2values</a></code>)</p>
+lower bound value visible with <code><a href="mod2values.html">mod2values</a></code>). When upper/lower bounds are detected
+this value will be adjusted accordingly</p>
 </td></tr>
 <tr valign="top"><td><code>lower</code></td>
 <td>
@@ -141,6 +142,30 @@ result
 ## 10       TRUE
 </code></pre>
 
+<pre><code class="r"># model with constraints
+mod &lt;- mirt(dat, &#39;F = 1-5
+                  CONSTRAIN = (1-5, a1)&#39;)
+
+result &lt;- PLCI.mirt(mod)
+result
+</code></pre>
+
+<pre><code>##     Item class parnam parnum     value lower_2.5 upper_97.5 lower_conv
+## 1 Item.1  dich     a1      1 1.0111403 0.8863986  1.1416332       TRUE
+## 2 Item.1  dich      d      2 1.8681305 1.6751813  2.0690618       TRUE
+## 3 Item.2  dich      d      6 0.7909392 0.6334651  0.9518291       TRUE
+## 4 Item.3  dich      d     10 1.4608781 1.2848561  1.6429949       TRUE
+## 5 Item.4  dich      d     14 0.5214695 0.3681970  0.6770357       TRUE
+## 6 Item.5  dich      d     18 1.9928267 1.7937790  2.2005130       TRUE
+##   upper_conv
+## 1       TRUE
+## 2       TRUE
+## 3       TRUE
+## 4       TRUE
+## 5       TRUE
+## 6       TRUE
+</code></pre>
+
 <pre><code class="r">mod2 &lt;- mirt(Science, 1)
 result2 &lt;- PLCI.mirt(mod2)
 result2
@@ -185,7 +210,7 @@ result2
 <pre><code class="r">#only estimate CI&#39;s slopes
 sv &lt;- mod2values(mod2)
 parnum &lt;- sv$parnum[sv$name == &#39;a1&#39;]
-result3 &lt;- PLCI.mirt(mod2, parnum=parnum)
+result3 &lt;- PLCI.mirt(mod2, parnum)
 result3
 </code></pre>
 
@@ -205,5 +230,5 @@ result3
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
 </body></html>

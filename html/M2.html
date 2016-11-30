@@ -128,12 +128,13 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.21 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2658.805
+## Estimated parameters: 10 
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
@@ -172,17 +173,17 @@ mirtCluster()
 <pre><code class="r">M2(mod2, impute = 10)
 </code></pre>
 
-<pre><code>##                 M2 df          p       RMSEA      RMSEA_5    RMSEA_95
-## stats    9.4906347  5 0.09654178 0.029803134 0.0004856811 0.058755044
-## SD_stats 0.9819959  0 0.03357334 0.003286214 0.0014570432 0.002645306
-##                SRMSR         TLI         CFI
-## stats    0.028843581 0.955356402 0.977678201
-## SD_stats 0.001759811 0.009774407 0.004887204
+<pre><code>##                M2 df          p       RMSEA     RMSEA_5    RMSEA_95
+## stats    9.816148  5 0.09846889 0.030440002 0.002480738 0.059410740
+## SD_stats 1.850552  0 0.06196783 0.006131892 0.005018038 0.004903313
+##                SRMSR        TLI         CFI
+## stats    0.029367617 0.95223996 0.976119979
+## SD_stats 0.002869079 0.01921612 0.009608058
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.20 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
 </body></html>
