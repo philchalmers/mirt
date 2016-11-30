@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.20.7
+Version: 1.21
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -18,8 +18,8 @@ Description: Analysis of dichotomous and polytomous response data using
     Multiple group analysis and mixed effects designs also are available for
     detecting differential item and test functioning as well as modelling
     item and person covariates. Finally, latent class models such as the DINA,
-    DINO, multidimensional latent class, and several other discrete variable
-    models are supported.
+    DINO, multidimensional latent class, and several other discrete latent
+    variable models are supported.
 Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
