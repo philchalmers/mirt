@@ -151,6 +151,7 @@ setMethod(
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
                                  auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
                                  ...))
+            else stop('type not supported for two-dimensional models', call.=FALSE)
         } else {
             colnames(plt) <- c("info", "score", "Theta", "group")
             plt$SE <- 1 / sqrt(plt$info)
