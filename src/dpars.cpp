@@ -470,7 +470,7 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
         NumericMatrix d2Etas(nsquad, 3);
         IntegerMatrix sindex = obj.slot("sindex");
         for (int s = 0; s < nsfact; ++s){
-        	NumericVector pars(2); 
+        	NumericVector pars(2);
         	for (int i = 0; i < 2; ++i)
         		pars(i) = par(sindex(s, i));
         	_dEta(dEtas, d2Etas, pars, Thetas, estHess);
@@ -491,7 +491,7 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
                 int k = 0;
                 for(int i = 0; i < 2; ++i){
                     for(int j = i; j < 2; ++j){
-                        hess(sindex(s, i),sindex(s, j)) = hessvec[k]; 
+                        hess(sindex(s, i),sindex(s, j)) = hessvec[k];
                         hess(sindex(s, j),sindex(s, i)) = hess(sindex(s, i),sindex(s, j));
                         ++k;
                     }
@@ -594,7 +594,7 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
 
     vector<double> grad(npars2);
     NumericMatrix hess(npars2, npars2);
-    if(EM){ 
+    if(EM){
         if(EMcomplete){
             _dgroupEMCD(grad, hess, obj, Theta, estHess);
         } else {
@@ -1477,7 +1477,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
 
     List gpars(Rpars);
     const List gitemtrace(Rgitemtrace);
-    const List gprior(Rgprior); 
+    const List gprior(Rgprior);
     const NumericMatrix gPrior(RgPrior); //cols are groups
     const NumericMatrix Theta(RTheta);
     const IntegerMatrix tabdata(Rtabdata);
@@ -1499,7 +1499,6 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     NumericMatrix prior = gprior[0];
     const int nsfact = prior.ncol();
     const int nsquad = prior.nrow();
-    const int npfact = Theta.ncol() - nsfact;
     const int npquad = gPriorbetween.ncol();
     IntegerMatrix dat(1, J);
     NumericMatrix Igrad(npars, npars), IgradP(npars, npars), Ihess(npars, npars),
