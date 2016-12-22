@@ -23,6 +23,13 @@
 #'     modifying the \code{group.size} input to the desired number of bins
 #'   \item \code{'G2'} : McKinley & Mills (1985) G2 statistic (similar method to Q1,
 #'     but with the likelihood-ratio test).
+#'   \item \code{'PV_Q1'} : Chalmers and Ng's (forthcoming) plausible-value variant
+#'     of the Q1 statistic.
+#'   \item \code{'PV_Q1*'} : Chalmers and Ng's (forthcoming) plausible-value variant
+#'     of the Q1 statistic that uses parametric boostrapping to obtain a suitable empirical
+#'     distribution.
+#'   \item \code{'X2*'} : Stone's (2000, 2003) fit statistics that require parametric
+#'     boostrapping (use \code{dfapprox} to compute the 2003 approximation)
 #'   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
 #'     infit and outfit statistics. Ignored if models are not from the Rasch family
 #' }
@@ -87,8 +94,8 @@
 #' Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
 #' in two or more nominal categories. Psychometrika, 37, 29-51.
 #'
-#' Chalmers, R. P. & Ng. V. (forthcoming). Plausible-Value Imputation Statistics for Detecting
-#' Item Misfit. Applied Psychological Measurment.
+#' Chalmers, R. P. & Ng, V. (forthcoming). Plausible-Value Imputation Statistics for Detecting
+#' Item Misfit. \emph{Applied Psychological Measurement}.
 #'
 #' Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 #' polychotomous item response models and standardized indices.
@@ -254,25 +261,31 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, p.PV_Q1=p.Q1)
         ret
     }
-    boot_PV <- function(mod, which.items = 1:extract.mirt(mod, 'nitems'),
+    boot_PV <- function(mod, org, which.items = 1:extract.mirt(mod, 'nitems'),
                         boot = 1000, draws = 30, verbose = FALSE, ...){
+        pb_fun <- function(ind, mod, N, sv, which.items, draws, ...){
+            count <- 0L
+            while(TRUE){
+                count <- count + 1L
+                if(count == 20)
+                    stop('20 consecutive parametric bootstraps failed for PV_Q1*', call.=FALSE)
+                dat <- simdata(model=mod, N=N)
+                mod2 <- mirt(dat, model, verbose=FALSE, pars=sv, technical=list(warn=FALSE))
+                if(!extract.mirt(mod2, 'converged')) next
+                tmp <- PV_itemfit(mod2, which.items=which.items, draws=draws, ...)
+                ret <- tmp$p.PV_Q1
+                if(any(is.nan(ret) | is.na(ret))) next
+                break
+            }
+            ret
+        }
         N <- nrow(extract.mirt(mod, 'data'))
         retQ1 <- matrix(NA, boot, length(which.items))
-        org <- PV_itemfit(mod, which.items=which.items, ...)
         stopifnot(nrow(org) == length(which.items))
         model <- extract.mirt(mod, 'model')
         sv <- mod2values(mod)
-        count <- 1L
-        while(TRUE){
-            dat <- simdata(model=mod, N=N)
-            mod2 <- mirt(dat, model, verbose=FALSE, pars=sv, technical=list(warn=FALSE))
-            if(!extract.mirt(mod2, 'converged')) next
-            tmp <- PV_itemfit(mod2, which.items=which.items, draws=draws, ...)
-            retQ1[count, ] <- tmp$p.PV_Q1
-            if(verbose) print(count)
-            if(count == boot) break
-            count <- count + 1L
-        }
+        retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv,
+                          which.items=which.items, draws=draws, ...)
         Q1 <- (1 + rowSums(org$p.PV_Q1 > t(retQ1), na.rm = TRUE)) / (1 + boot)
         ret <- data.frame("p.PV_Q1_star"=Q1)
         ret
@@ -299,6 +312,24 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             }
             X2[which.items]
         }
+        pb_fun <- function(ind, mod, N, model, itemtype, sv, which.items, ETrange,
+                           ETpoints, ...){
+            count <- 0L
+            while(TRUE){
+                count <- count + 1L
+                if(count == 20)
+                    stop('20 consecutive parametric bootstraps failed for X2*', call.=FALSE)
+                dat <- simdata(model=mod, N=N)
+                mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
+                             technical=list(warn=FALSE))
+                if(!extract.mirt(mod2, 'converged')) next
+                ret <- X2star(mod2, which.items=which.items, ETrange=ETrange,
+                              ETpoints=ETpoints, ...)
+                if(any(is.nan(ret) | is.na(ret))) next
+                break
+            }
+            ret
+        }
 
         N <- nrow(extract.mirt(mod, 'data'))
         X2bs <- matrix(NA, boot, length(which.items))
@@ -308,18 +339,9 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         sv <- mod2values(mod)
         model <- extract.mirt(mod, 'model')
         itemtype <- extract.mirt(mod, 'itemtype')
-        count <- 1L
-        while(TRUE){
-            dat <- simdata(model=mod, N=N)
-            mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
-                         technical=list(warn=FALSE))
-            if(!extract.mirt(mod2, 'converged')) next
-            X2bs[count, ] <- X2star(mod2, which.items=which.items,
-                                    ETrange=ETrange, ETpoints=ETpoints, ...)
-            if(verbose) print(count)
-            if(count == boot) break
-            count <- count + 1L
-        }
+        X2bs <- mySapply(1L:boot, pb_fun, mod=mod, N=N, model=model,
+                         itemtype=itemtype, sv=sv, which.items=which.items,
+                         ETrange=ETrange, ETpoints=ETpoints, ...)
         if(dfapprox){
             M <- colMeans(X2bs)
             V <- apply(X2bs, 2, var)
@@ -711,7 +733,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret <- cbind(ret, tmp)
     }
     if('PV_Q1*' %in% fit_stats){
-        tmp <- boot_PV(x, which.items=which.items, boot=boot, draws=pv_draws, ...)
+        tmp <- boot_PV(x, org=tmp, which.items=which.items, boot=boot, draws=pv_draws, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*' %in% fit_stats){

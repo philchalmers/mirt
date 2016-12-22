@@ -31,6 +31,13 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
     modifying the \code{group.size} input to the desired number of bins
   \item \code{'G2'} : McKinley & Mills (1985) G2 statistic (similar method to Q1,
     but with the likelihood-ratio test).
+  \item \code{'PV_Q1'} : Chalmers and Ng's (forthcoming) plausible-value variant
+    of the Q1 statistic.
+  \item \code{'PV_Q1*'} : Chalmers and Ng's (forthcoming) plausible-value variant
+    of the Q1 statistic that uses parametric boostrapping to obtain a suitable empirical
+    distribution.
+  \item \code{'X2*'} : Stone's (2000, 2003) fit statistics that require parametric
+    boostrapping (use \code{dfapprox} to compute the 2003 approximation)
   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
     infit and outfit statistics. Ignored if models are not from the Rasch family
 }}
@@ -220,8 +227,8 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
 in two or more nominal categories. Psychometrika, 37, 29-51.
 
-Chalmers, R. P. & Ng. V. (forthcoming). Plausible-Value Imputation Statistics for Detecting
-Item Misfit. Applied Psychological Measurment.
+Chalmers, R. P. & Ng, V. (forthcoming). Plausible-Value Imputation Statistics for Detecting
+Item Misfit. \emph{Applied Psychological Measurement}.
 
 Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
