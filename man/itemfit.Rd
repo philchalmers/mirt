@@ -6,11 +6,12 @@
 \usage{
 itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
   group.bins = 10, group.size = NA, group.fun = mean, mincell = 1,
-  mincell.X2 = 2, S_X2.tables = FALSE, empirical.plot = NULL,
-  empirical.CI = 0.95, empirical.table = NULL, method = "EAP",
-  Theta = NULL, impute = 0, digits = 4, par.strip.text = list(cex =
-  0.7), par.settings = list(strip.background = list(col = "#9ECAE1"),
-  strip.border = list(col = "black")), ...)
+  mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30, boot = 1000,
+  dfapprox = FALSE, ETrange = c(-2, 2), ETpoints = 11,
+  empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
+  method = "EAP", Theta = NULL, impute = 0, digits = 4,
+  par.strip.text = list(cex = 0.7), par.settings = list(strip.background =
+  list(col = "#9ECAE1"), strip.border = list(col = "black")), ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -59,6 +60,17 @@ collapsed if polytomous, however if this condition can not be met then the group
 be ommited in the computations}
 
 \item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
+
+\item{pv_draws}{number of plausible-value draws to obtain for PV_Q1 and PV_Q1*}
+
+\item{boot}{number of parametric boostrap samples to create for PV_Q1* and X2*}
+
+\item{dfapprox}{logical; approximate df for Stone's X2*? Generally requires a smaller
+\code{boot} input (e.g., 200)}
+
+\item{ETrange}{rangone of integration nodes for Stone's X2* statistic}
+
+\item{ETpoints}{number of integration nodes to use for Stone's X2* statistic}
 
 \item{empirical.plot}{a single numeric value or character of the item name indicating which
 item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings (see
@@ -128,6 +140,14 @@ itemfit(x, 'X2') # just X2
 itemfit(x, c('S_X2', 'X2')) #both S_X2 and X2
 itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
 itemfit(x, group.bins=15, empirical.plot = 21)
+
+# PV and X2* statistics (parametric boostrap stats not run to save time)
+itemfit(x, 'PV_Q1')
+
+# mirtCluster() # improve speed of boostrap samples by running in parallel
+# itemfit(x, 'PV_Q1*')
+# itemfit(x, 'X2*') # Stone's 2000 statistic
+# itemfit(x, 'X2*', dfapprox=TRUE, boot=200) # Stone's 2003 statistic
 
 #empirical tables
 itemfit(x, empirical.table=1)
@@ -200,6 +220,9 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
 in two or more nominal categories. Psychometrika, 37, 29-51.
 
+Chalmers, R. P. & Ng. V. (forthcoming). Plausible-Value Imputation Statistics for Detecting
+Item Misfit. Applied Psychological Measurment.
+
 Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
 \emph{British Journal of Mathematical and Statistical Psychology, 38}, 67-86.
@@ -215,6 +238,12 @@ response theory models. \emph{Applied Psychological Measurement, 24}, 50-64.
 
 Reise, S. P. (1990). A comparison of item- and person-fit methods of assessing model-data fit
 in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
+
+Stone, C. A. (2000). Monte Carlo Based Null Distribution for an Alternative Goodness-of-Fit
+Test Statistics in IRT Models. \emph{Journal of Educational Measurement, 37}, 58-75.
+
+Stone, C. A. (2003). Empirical power and Type I error rates for an IRT fit statistic that
+consider the precision of ability estimates. \emph{Educational and Psychological Measurement, 63}, 566-583.
 
 Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
 
