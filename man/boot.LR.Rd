@@ -36,7 +36,7 @@ mod2 <- mirt(dat, 1, '3PL')
 # standard LR test
 anova(mod1, mod2)
 
-# boostrap LR test (run in parallel to save time)
+# bootstrap LR test (run in parallel to save time)
 mirtCluster()
 boot.LR(mod1, mod2, R=200)
 

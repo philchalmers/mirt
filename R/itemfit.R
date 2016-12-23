@@ -28,8 +28,10 @@
 #'   \item \code{'PV_Q1*'} : Chalmers and Ng's (forthcoming) plausible-value variant
 #'     of the Q1 statistic that uses parametric boostrapping to obtain a suitable empirical
 #'     distribution.
-#'   \item \code{'X2*'} : Stone's (2000, 2003) fit statistics that require parametric
-#'     boostrapping (use \code{dfapprox} to compute the 2003 approximation)
+#'   \item \code{'X2*'} : Stone's (2000) fit statistics that require parametric
+#'     bootstrapping
+#'   \item \code{'X2*_df'} : Stone's (2000) fit statistics that require parametric
+#'     bootstrapping to obtain scaled versions of the X2* and degrees of freedom
 #'   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
 #'     infit and outfit statistics. Ignored if models are not from the Rasch family
 #' }
@@ -69,9 +71,9 @@
 #'   ignored and these values will be used instead. Also required when estimating statistics
 #'   with missing data via imputation
 #' @param pv_draws number of plausible-value draws to obtain for PV_Q1 and PV_Q1*
-#' @param boot number of parametric boostrap samples to create for PV_Q1* and X2*
-#' @param dfapprox logical; approximate df for Stone's X2*? Generally requires a smaller
-#'   \code{boot} input (e.g., 200)
+#' @param boot number of parametric bootstrap samples to create for PV_Q1* and X2*
+#' @param boot_dfapprox number of parametric bootstrap samples to create for the X2*_df statistic
+#'   to approximate the scaling factor for X2* as well as the scaled degrees of freedom estimates
 #' @param ETrange rangone of integration nodes for Stone's X2* statistic
 #' @param ETpoints number of integration nodes to use for Stone's X2* statistic
 #' @param impute a number indicating how many imputations to perform (passed to
@@ -116,9 +118,6 @@
 #' Stone, C. A. (2000). Monte Carlo Based Null Distribution for an Alternative Goodness-of-Fit
 #' Test Statistics in IRT Models. \emph{Journal of Educational Measurement, 37}, 58-75.
 #'
-#' Stone, C. A. (2003). Empirical power and Type I error rates for an IRT fit statistic that
-#' consider the precision of ability estimates. \emph{Educational and Psychological Measurement, 63}, 566-583.
-#'
 #' Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
 #'
 #' Yen, W. M. (1981). Using simulation results to choose a latent trait model.
@@ -153,13 +152,13 @@
 #' itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
 #' itemfit(x, group.bins=15, empirical.plot = 21)
 #'
-#' # PV and X2* statistics (parametric boostrap stats not run to save time)
+#' # PV and X2* statistics (parametric bootstrap stats not run to save time)
 #' itemfit(x, 'PV_Q1')
 #'
-#' # mirtCluster() # improve speed of boostrap samples by running in parallel
+#' # mirtCluster() # improve speed of bootstrap samples by running in parallel
 #' # itemfit(x, 'PV_Q1*')
-#' # itemfit(x, 'X2*') # Stone's 2000 statistic
-#' # itemfit(x, 'X2*', dfapprox=TRUE, boot=200) # Stone's 2003 statistic
+#' # itemfit(x, 'X2*') # Stone's 1993 statistic
+#' # itemfit(x, 'X2*_df') # Stone's 2000 scaled statistic with df estimate
 #'
 #' #empirical tables
 #' itemfit(x, empirical.table=1)
@@ -227,7 +226,7 @@
 itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nitems'),
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
-                    pv_draws = 30, boot = 1000, dfapprox = FALSE,
+                    pv_draws = 30, boot = 1000, boot_dfapprox = 200,
                     ETrange = c(-2,2), ETpoints = 11,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
                     method = 'EAP', Theta = NULL, impute = 0, digits = 4,
@@ -286,6 +285,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         sv <- mod2values(mod)
         retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv,
                           which.items=which.items, draws=draws, ...)
+        if(nrow(retQ1) == 1L) retQ1 <- t(retQ1)
         Q1 <- (1 + rowSums(org$p.PV_Q1 > t(retQ1), na.rm = TRUE)) / (1 + boot)
         ret <- data.frame("p.PV_Q1_star"=Q1)
         ret
@@ -342,18 +342,19 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         X2bs <- mySapply(1L:boot, pb_fun, mod=mod, N=N, model=model,
                          itemtype=itemtype, sv=sv, which.items=which.items,
                          ETrange=ETrange, ETpoints=ETpoints, ...)
+        if(nrow(X2bs) == 1L) X2bs <- t(X2bs)
         if(dfapprox){
             M <- colMeans(X2bs)
             V <- apply(X2bs, 2, var)
             upsilon <- 2 * M^2 / V
             gamma <- M / upsilon
             df <- upsilon
-            for(i in which.items){
-                item <- extract.item(mod, i)
+            for(i in 1L:length(which.items)){
+                item <- extract.item(mod, which.items[i])
                 df[i] <- upsilon[i] - sum(item@est)
             }
-            ret <- data.frame(X2_star=org, df.X2_star=df,
-                              p.X2_star=1 - pchisq(org/gamma, df))
+            ret <- data.frame(X2_star_scaled=org/gamma, df.X2_star_scaled=df,
+                              p.X2_star_scaled=pchisq(org/gamma, df, lower.tail=FALSE))
         } else {
             p <- apply(t(X2bs) > org, 1, mean)
             ret <- data.frame(X2_star=org, p.X2_star=p)
@@ -366,7 +367,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         stop('MixedClass objects are not supported', call.=FALSE)
     if(!is.null(empirical.plot) && !is.null(empirical.table))
         stop('Please select empirical.plot or empirical.table, not both', call.=FALSE)
-    if(!all(fit_stats %in% c('S_X2', 'Zh', 'X2', 'G2', 'infit', 'PV_Q1', 'PV_Q1*', 'X2*')))
+    if(!all(fit_stats %in% c('S_X2', 'Zh', 'X2', 'G2', 'infit', 'PV_Q1', 'PV_Q1*', 'X2*', 'X2*_df')))
         stop('Unsupported fit_stats element requested', call.=FALSE)
     if(any(c('X2', 'G2', 'PV_Q1', 'PV_Q1*') %in% fit_stats) && extract.mirt(x, 'nfact') > 1L)
         stop('X2, G2, PV_Q1, or PV_Q1* are for unidimensional models only', call.=FALSE)
@@ -679,14 +680,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         if(X2){
             ret$X2 <- X2.value[which.items]
             ret$df.X2 <- df.X2[which.items]
-            ret$p.X2 <- 1 - suppressWarnings(pchisq(ret$X2, ret$df.X2))
+            ret$p.X2 <- suppressWarnings(pchisq(ret$X2, ret$df.X2, lower.tail=FALSE))
             ret$df.X2[ret$df.X2 <= 0] <- 0
             ret$p.X2[ret$df.X2 <= 0] <- NaN
         }
         if(G2){
             ret$G2 <- G2.value[which.items]
             ret$df.G2 <- df.G2[which.items]
-            ret$p.G2 <- 1 - suppressWarnings(pchisq(ret$G2, ret$df.G2))
+            ret$p.G2 <- suppressWarnings(pchisq(ret$G2, ret$df.G2, lower.tail=FALSE))
             ret$df.G2[ret$df.G2 <= 0] <- 0
             ret$p.G2[ret$df.G2 <= 0] <- NaN
         }
@@ -726,9 +727,9 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         df.S_X2 <- df.S_X2 - sum(pars[[J+1L]]@est)
         df.S_X2[df.S_X2 < 0] <- 0
         S_X2[df.S_X2 == 0] <- NaN
-        ret$S_X2 <- S_X2
-        ret$df.S_X2 <- df.S_X2
-        ret$p.S_X2 <- 1 - suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2))
+        ret$S_X2 <- S_X2[which.items]
+        ret$df.S_X2 <- df.S_X2[which.items]
+        ret$p.S_X2 <- suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2, lower.tail=FALSE))
     }
     if(any(c('PV_Q1', 'PV_Q1*') %in% fit_stats)){
         tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, ...)
@@ -739,8 +740,13 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret <- cbind(ret, tmp)
     }
     if('X2*' %in% fit_stats){
-        tmp <- StoneFit(x, which.items=which.items, boot=boot, dfapprox=dfapprox,
+        tmp <- StoneFit(x, which.items=which.items, boot=boot, dfapprox=FALSE,
                  ETrange=ETrange, ETpoints=ETpoints, ...)
+        ret <- cbind(ret, tmp)
+    }
+    if('X2*_df' %in% fit_stats){
+        tmp <- StoneFit(x, which.items=which.items, boot=boot_dfapprox, dfapprox=TRUE,
+                        ETrange=ETrange, ETpoints=ETpoints, ...)
         ret <- cbind(ret, tmp)
     }
     ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)

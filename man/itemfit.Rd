@@ -7,7 +7,7 @@
 itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
   group.bins = 10, group.size = NA, group.fun = mean, mincell = 1,
   mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30, boot = 1000,
-  dfapprox = FALSE, ETrange = c(-2, 2), ETpoints = 11,
+  boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
   empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
   method = "EAP", Theta = NULL, impute = 0, digits = 4,
   par.strip.text = list(cex = 0.7), par.settings = list(strip.background =
@@ -36,8 +36,10 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
   \item \code{'PV_Q1*'} : Chalmers and Ng's (forthcoming) plausible-value variant
     of the Q1 statistic that uses parametric boostrapping to obtain a suitable empirical
     distribution.
-  \item \code{'X2*'} : Stone's (2000, 2003) fit statistics that require parametric
-    boostrapping (use \code{dfapprox} to compute the 2003 approximation)
+  \item \code{'X2*'} : Stone's (2000) fit statistics that require parametric
+    bootstrapping
+  \item \code{'X2*_df'} : Stone's (2000) fit statistics that require parametric
+    bootstrapping to obtain scaled versions of the X2* and degrees of freedom
   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
     infit and outfit statistics. Ignored if models are not from the Rasch family
 }}
@@ -70,10 +72,10 @@ be ommited in the computations}
 
 \item{pv_draws}{number of plausible-value draws to obtain for PV_Q1 and PV_Q1*}
 
-\item{boot}{number of parametric boostrap samples to create for PV_Q1* and X2*}
+\item{boot}{number of parametric bootstrap samples to create for PV_Q1* and X2*}
 
-\item{dfapprox}{logical; approximate df for Stone's X2*? Generally requires a smaller
-\code{boot} input (e.g., 200)}
+\item{boot_dfapprox}{number of parametric bootstrap samples to create for the X2*_df statistic
+to approximate the scaling factor for X2* as well as the scaled degrees of freedom estimates}
 
 \item{ETrange}{rangone of integration nodes for Stone's X2* statistic}
 
@@ -148,13 +150,13 @@ itemfit(x, c('S_X2', 'X2')) #both S_X2 and X2
 itemfit(x, group.bins=15, empirical.plot = 1) #empirical item plot with 15 points
 itemfit(x, group.bins=15, empirical.plot = 21)
 
-# PV and X2* statistics (parametric boostrap stats not run to save time)
+# PV and X2* statistics (parametric bootstrap stats not run to save time)
 itemfit(x, 'PV_Q1')
 
-# mirtCluster() # improve speed of boostrap samples by running in parallel
+# mirtCluster() # improve speed of bootstrap samples by running in parallel
 # itemfit(x, 'PV_Q1*')
-# itemfit(x, 'X2*') # Stone's 2000 statistic
-# itemfit(x, 'X2*', dfapprox=TRUE, boot=200) # Stone's 2003 statistic
+# itemfit(x, 'X2*') # Stone's 1993 statistic
+# itemfit(x, 'X2*_df') # Stone's 2000 scaled statistic with df estimate
 
 #empirical tables
 itemfit(x, empirical.table=1)
@@ -248,9 +250,6 @@ in IRT. \emph{Applied Psychological Measurement, 14}, 127-137.
 
 Stone, C. A. (2000). Monte Carlo Based Null Distribution for an Alternative Goodness-of-Fit
 Test Statistics in IRT Models. \emph{Journal of Educational Measurement, 37}, 58-75.
-
-Stone, C. A. (2003). Empirical power and Type I error rates for an IRT fit statistic that
-consider the precision of ability estimates. \emph{Educational and Psychological Measurement, 63}, 566-583.
 
 Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
 

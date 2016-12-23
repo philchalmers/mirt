@@ -1,6 +1,6 @@
 # Changes in mirt 1.22
 
-- added Stone's (2000/2003) fit statistics and forthcoming PV-Q1 fit statistics to `itemfit()`
+- added Stone's (2000) fit statistics and forthcoming PV-Q1 fit statistics to `itemfit()`
 
 # Changes in mirt 1.21
 
