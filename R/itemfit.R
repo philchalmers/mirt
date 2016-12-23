@@ -368,6 +368,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         stop('Please select empirical.plot or empirical.table, not both', call.=FALSE)
     if(!all(fit_stats %in% c('S_X2', 'Zh', 'X2', 'G2', 'infit', 'PV_Q1', 'PV_Q1*', 'X2*')))
         stop('Unsupported fit_stats element requested', call.=FALSE)
+    if(any(c('X2', 'G2', 'PV_Q1', 'PV_Q1*') %in% fit_stats) && extract.mirt(x, 'nfact') > 1L)
+        stop('X2, G2, PV_Q1, or PV_Q1* are for unidimensional models only', call.=FALSE)
     S_X2 <- 'S_X2' %in% fit_stats
     Zh <- 'Zh' %in% fit_stats
     X2 <- 'X2' %in% fit_stats
