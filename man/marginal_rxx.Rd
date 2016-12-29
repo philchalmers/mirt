@@ -4,15 +4,13 @@
 \alias{marginal_rxx}
 \title{Function to calculate the marginal reliability}
 \usage{
-marginal_rxx(mod, density = dnorm, theta_lim = c(-6, 6), ...)
+marginal_rxx(mod, density = dnorm, ...)
 }
 \arguments{
 \item{mod}{an object of class \code{'SingleGroupClass'}}
 
 \item{density}{a density function to use for integration. Default assumes the latent traits are from a
 normal (Gaussian) distribution}
-
-\item{theta_lim}{a vector containing the range of integration}
 
 \item{...}{additional arguments passed to the density function}
 }
