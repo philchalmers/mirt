@@ -39,5 +39,5 @@ marginal_rxx <- function(mod, density = dnorm, ...){
         TI <- testinfo(mod, matrix(theta))
         TI / (TI + 1) * den(theta, ...)
     }
-    integrate(fn, lower = -Inf, upper=Inf, mod=mod, den=density)$value
+    integrate(fn, lower = -Inf, upper=Inf, mod=mod, den=density, ...)$value
 }
