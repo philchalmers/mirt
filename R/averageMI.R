@@ -9,7 +9,6 @@
 #' @param par a list containing parameter estimates which were computed the imputed datasets
 #' @param SEpar a list containing standard errors associated with \code{par}
 #' @param as.data.frame logical; return a data.frame instead of a list? Default is TRUE
-#' @param digits number of digits to round result. Default is 4
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @return returns a list or data.frame containing the updated averaged parameter estimates,
@@ -50,7 +49,7 @@
 #' averageMI(par, SEpar)
 #'
 #' }
-averageMI <- function(par, SEpar, as.data.frame = TRUE, digits = 4){
+averageMI <- function(par, SEpar, as.data.frame = TRUE){
     if(missing(par)) missingMsg('par')
     if(missing(SEpar)) missingMsg('SEpar')
     if(!is.list(par)) stop('par must be a list', call.=FALSE)
@@ -75,13 +74,13 @@ averageMI <- function(par, SEpar, as.data.frame = TRUE, digits = 4){
     df <- (MI - 1) * (1 + MI * Ubar / ((MI + 1) * B))^2
     ret <- list(par=scores, SEpar=SEscores, t = scores/SEscores, df=df)
     ret$p <- (1 - pt(abs(ret$t), ret$df, lower.tail=TRUE))/2
-    ret <- lapply(ret, function(x, digits) round(x, digits), digits=digits)
     if(as.data.frame){
         n <- ncol(scores)
         ret <- as.data.frame(ret)
         if(n == 1)
             colnames(ret) <- c('par', 'SEpar', 't', 'df', 'p')
         else colnames(ret) <- paste(c('par', 'SEpar', 't', 'df', 'p'), 1:n, sep='_')
+        class(ret) <- c('mirt_df', 'data.frame')
     }
     return(ret)
 }

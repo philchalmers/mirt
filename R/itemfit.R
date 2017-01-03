@@ -80,7 +80,6 @@
 #'   \code{\link{imputeMissing}}) when there are missing data present.
 #'   Will return a data.frame object with the mean estimates
 #'   of the stats and their imputed standard deviations
-#' @param digits number of digits to round result to. Default is 4
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
 #' @param ... additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}
@@ -216,7 +215,7 @@
 #' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
 #' itemfit(raschfit2, 'infit')
 #'
-#' # note that X2 and G2 do not require complete datasets
+#' # note that X2, G2, PV-Q1, and X2* do not require complete datasets
 #' itemfit(raschfit, c('X2', 'G2'))
 #' itemfit(raschfit, empirical.plot=1)
 #' itemfit(raschfit, empirical.table=1)
@@ -229,7 +228,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
                     ETrange = c(-2,2), ETpoints = 11,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
-                    method = 'EAP', Theta = NULL, impute = 0, digits = 4,
+                    method = 'EAP', Theta = NULL, impute = 0,
                     par.strip.text = list(cex = 0.7),
                     par.settings = list(strip.background = list(col = '#9ECAE1'),
                                         strip.border = list(col = "black")), ...){
@@ -241,7 +240,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                        technical=list(customK=obj@Data$K, message=FALSE, warn=FALSE))
         tmpobj@Data <- tmpmod@Data
         whc <- 1L:length(Theta)
-        return(itemfit(tmpobj, Theta=Theta[[sample(whc[-ind], 1L)]], digits = Inf, ...))
+        return(itemfit(tmpobj, Theta=Theta[[sample(whc[-ind], 1L)]], ...))
     }
     PV_itemfit <- function(mod, which.items = 1:extract.mirt(mod, 'nitems'),
                            draws = 100, ...){
@@ -415,7 +414,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 empirical.table=empirical.table,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, digits=digits, ...)
+                                impute=impute, discrete=discrete, ...)
         }
         names(ret) <- x@Data$groupNames
         if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
@@ -456,7 +455,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         SD$item <- paste0('SD_', SD$item)
         SD <- rbind(NA, SD)
         ret <- rbind(ave, SD)
-        ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
+        class(ret) <- c('mirt_df', 'data.frame')
         return(ret)
     }
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
@@ -622,8 +621,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 }
             }
             if(!is.null(empirical.table)){
-                Etable <- lapply(Etable, round, digits=digits)
-                names(Etable) <- paste0('theta = ', round(mtheta_nms, digits))
+                names(Etable) <- paste0('theta = ', round(mtheta_nms, 4))
                 return(Etable)
             }
             df.X2[i] <- df.X2[i] - sum(pars[[i]]@est)
@@ -749,6 +747,6 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                         ETrange=ETrange, ETpoints=ETpoints, ...)
         ret <- cbind(ret, tmp)
     }
-    ret[,sapply(ret, class) == 'numeric'] <- round(ret[,sapply(ret, class) == 'numeric'], digits)
+    class(ret) <- c('mirt_df', 'data.frame')
     return(ret)
 }

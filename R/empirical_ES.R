@@ -67,7 +67,6 @@
 #' @param plot logical; plot expected scores of items/test where expected scores are computed
 #'  using focal group thetas and both focal and reference group item parameters
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param digits number of digits to round the output, default is 3
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
 #' @param ... additional arguments to be passed to \code{\link{fscores}} and \code{\link{xyplot}}
 #'
@@ -127,7 +126,7 @@
 #' }
 empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                  DIF = TRUE, npts = 61, theta_lim=c(-6,6), ref.group = 1, plot=FALSE,
-                 par.strip.text = list(cex = 0.7), digits = 3,
+                 par.strip.text = list(cex = 0.7),
                  par.settings = list(strip.background = list(col = '#9ECAE1'),
                                      strip.border = list(col = "black")), ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
@@ -222,8 +221,9 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     df.abs.dif.nrm <- abs(df.dif.nrm)            # abs(DF in ES at each level of theta)
     weighted.dif.abs.nrm <- apply(df.abs.dif.nrm,2, function(x) x*theta.density)
     UIDN <- colSums(weighted.dif.abs.nrm)
-    df.item.output <- round(data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,mat.item.max.d,mean.ES.foc,mean.ES.ref),digits)
+    df.item.output <- data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,mat.item.max.d,mean.ES.foc,mean.ES.ref)
     row.names(df.item.output)<-paste0("item.",1:nrow(df.item.output))
+    class(df.item.output) <- c('mirt_df', 'data.frame')
     if(!plot && DIF) return(df.item.output[focal_items, ])
 
     ##################DTF####################
@@ -250,10 +250,11 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     ETS.dif.nrm <- ETS.foc.nrm - ETS.ref.nrm   ### DF in ETS at each theta
     ETS.abs.dif.nrm <- abs(ETS.dif.nrm)
     UETSDN <- sum(ETS.abs.dif.nrm*theta.density)
-    out.test.stats <- round(c(STDS,UTDS,UETSDS,ETSSD,Starks.DTFR,UDTFR,UETSDN,test.Dmax),digits)
+    out.test.stats <- c(STDS,UTDS,UETSDS,ETSSD,Starks.DTFR,UDTFR,UETSDN,test.Dmax)
     out.test.names <- c("STDS","UTDS","UETSDS","ETSSD","Starks.DTFR","UDTFR","UETSDN","theta.of.max.test.D","Test.Dmax")
     df.test.output <- data.frame(out.test.names,out.test.stats)
     names(df.test.output) <- c("Effect Size","Value")
+    class(df.item.output) <- c('mirt_df', 'data.frame')
     if(!plot && !DIF) return(df.test.output)
 
     # plots

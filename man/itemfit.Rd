@@ -9,9 +9,9 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
   mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30, boot = 1000,
   boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
   empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
-  method = "EAP", Theta = NULL, impute = 0, digits = 4,
-  par.strip.text = list(cex = 0.7), par.settings = list(strip.background =
-  list(col = "#9ECAE1"), strip.border = list(col = "black")), ...)
+  method = "EAP", Theta = NULL, impute = 0, par.strip.text = list(cex =
+  0.7), par.settings = list(strip.background = list(col = "#9ECAE1"),
+  strip.border = list(col = "black")), ...)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass},
@@ -105,8 +105,6 @@ with missing data via imputation}
 \code{\link{imputeMissing}}) when there are missing data present.
 Will return a data.frame object with the mean estimates
 of the stats and their imputed standard deviations}
-
-\item{digits}{number of digits to round result to. Default is 4}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
 
@@ -214,7 +212,7 @@ data2 <- na.omit(data)
 raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
 itemfit(raschfit2, 'infit')
 
-# note that X2 and G2 do not require complete datasets
+# note that X2, G2, PV-Q1, and X2* do not require complete datasets
 itemfit(raschfit, c('X2', 'G2'))
 itemfit(raschfit, empirical.plot=1)
 itemfit(raschfit, empirical.table=1)

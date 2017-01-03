@@ -80,6 +80,29 @@ Use_R_Deriv <- function() c('custom', 'rating', 'rsm', 'partcomp', 'nestlogit',
                             'ideal', 'spline', Experimental_itemtypes())
 
 # ----------------------------------------------------------------
+# global S3 methods
+
+
+#' Print generic for customized data.frame console output
+#'
+#' Privides a nicer output for most printed \code{data.frame} objects defined by functions in \code{mirt}.
+#'
+#' @method print mirt_df
+#' @param x object of class \code{'mirt_df'}
+#' @param digits number of digits to round
+#' @param ... additional arguments passed to \code{print(...)}
+#' @export
+print.mirt_df <- function(x, digits = 3, ...){
+    cls <- class(x)[2L]
+    class(x) <- cls
+    clsss <- sapply(x, class)
+    for(i in 1:length(clsss))
+        if(clsss[i] == 'numeric')
+            x[,i] <- round(x[,i], digits=digits)
+    print(x, ...)
+}
+
+# ----------------------------------------------------------------
 # Begin class and method definitions
 
 setClass("GroupPars",

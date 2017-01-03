@@ -4,7 +4,7 @@
 \alias{averageMI}
 \title{Collapse values from multiple imputation draws}
 \usage{
-averageMI(par, SEpar, as.data.frame = TRUE, digits = 4)
+averageMI(par, SEpar, as.data.frame = TRUE)
 }
 \arguments{
 \item{par}{a list containing parameter estimates which were computed the imputed datasets}
@@ -12,8 +12,6 @@ averageMI(par, SEpar, as.data.frame = TRUE, digits = 4)
 \item{SEpar}{a list containing standard errors associated with \code{par}}
 
 \item{as.data.frame}{logical; return a data.frame instead of a list? Default is TRUE}
-
-\item{digits}{number of digits to round result. Default is 4}
 }
 \value{
 returns a list or data.frame containing the updated averaged parameter estimates,

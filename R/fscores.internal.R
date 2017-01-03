@@ -359,8 +359,7 @@ setMethod(
     		}
         }
         if(impute){
-            tmp <- averageMI(list_scores, list_SEscores, as.data.frame=FALSE,
-                             digits = 200)
+            tmp <- averageMI(list_scores, list_SEscores, as.data.frame=FALSE)
             scores <- tmp[[1L]]
             SEscores <- tmp[[2L]]
         }

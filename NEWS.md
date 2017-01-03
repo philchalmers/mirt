@@ -1,5 +1,8 @@
 # Changes in mirt 1.22
 
+- wrapped various output objects as `mirt_df` class to avoid the need for passing a `digits` 
+  argument for rounding output in the console
+
 - added Stone's (2000) fit statistics and forthcoming PV-Q1 fit statistics to `itemfit()`
 
 # Changes in mirt 1.21
