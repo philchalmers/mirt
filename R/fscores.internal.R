@@ -83,6 +83,11 @@ setMethod(
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
             expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
             maxL <- max(expLW)
+            if(isTRUE(all.equal(maxL, 0))){
+                warnings('Unable to compute normalization constant for EAP estimates. Returning NaNs',
+                         call.=FALSE)
+                return(rep(NaN, nfact*2))
+            }
 	        thetas <- colSums(ThetaShort * expLW / (sum(expLW/maxL)*maxL))
             if(hessian){
     	        thetadif <- t((t(ThetaShort) - thetas))
@@ -363,7 +368,7 @@ setMethod(
             scores <- tmp[[1L]]
             SEscores <- tmp[[2L]]
         }
-        if(any(is.na(scores)))
+        if(any(is.na(scores) & !is.nan(scores)))
             warning('NAs returned for response patterns with no data. Consider removing',
                     call.=FALSE)
 		if (full.scores){
@@ -730,9 +735,17 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     }
     thetas <- SEthetas <- matrix(0, nrow(L1), x@Model$nfact)
     for(i in 1L:nrow(thetas)){
-        thetas[i,] <- colSums(ThetaShort * L1[i, ] * prior / sum(L1[i,] * prior))
-        SEthetas[i,] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * L1[i, ] * prior /
-                                         sum(L1[i,] * prior)))
+        expLW <- L1[i,] * prior
+        maxL <- max(expLW)
+        if(isTRUE(all.equal(maxL, 0))){
+            warnings('Unable to compute normalization constant for EAPsum estimates. Returning NaNs',
+                     call.=FALSE)
+            thetas[i, ] <- SEthetas[i, ] <- NaN
+        } else {
+            thetas[i, ] <- colSums(ThetaShort * expLW / (sum(expLW/maxL)*maxL))
+            SEthetas[i, ] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * expLW /
+                                              (sum(expLW/maxL)*maxL)))
+        }
     }
     ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), Theta=thetas, SE.Theta=SEthetas)
     rownames(ret) <- ret$Sum.Scores
