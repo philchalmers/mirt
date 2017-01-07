@@ -76,7 +76,8 @@ setMethod(
 	        } else SEest <- rep(NA, ncol(scores))
 	        return(c(estimate$estimate, SEest, estimate$code))
 	    }
-	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores, return.acov = FALSE){
+	    EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores, return.acov = FALSE,
+	                    return_zeros = FALSE){
 	        if(any(is.na(scores[ID, ])))
 	            return(c(scores[ID, ], rep(NA, ncol(scores))))
             nfact <- ncol(ThetaShort)
@@ -84,6 +85,10 @@ setMethod(
             expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
             maxL <- max(expLW)
             if(maxL == 0){
+                if(return_zeros){
+                    if(return.acov) return(matrix(NA, nfact, nfact))
+                    return(numeric(nfact*2L + 1L))
+                }
                 warning('Unable to compute normalization constant for EAP estimates. Returning NaNs',
                          call.=FALSE)
                 return(c(rep(NaN, nfact*2), 0))
@@ -316,7 +321,7 @@ setMethod(
                 } else {
             	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
-                                   hessian=estHess && method == 'EAP')
+                                   hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
                 scores <- tmp[ ,1L:nfact, drop = FALSE]
                 SEscores <- tmp[ , 1L:nfact + nfact, drop = FALSE]
