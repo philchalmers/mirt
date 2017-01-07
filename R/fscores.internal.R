@@ -83,10 +83,10 @@ setMethod(
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
             expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
             maxL <- max(expLW)
-            if(isTRUE(all.equal(maxL, 0))){
-                warnings('Unable to compute normalization constant for EAP estimates. Returning NaNs',
+            if(maxL == 0){
+                warning('Unable to compute normalization constant for EAP estimates. Returning NaNs',
                          call.=FALSE)
-                return(rep(NaN, nfact*2))
+                return(c(rep(NaN, nfact*2), 0))
             }
 	        thetas <- colSums(ThetaShort * expLW / (sum(expLW/maxL)*maxL))
             if(hessian){
@@ -598,7 +598,6 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
 
 gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND){
     Theta <- matrix(Theta, nrow=1L)
-    ThetaShort <- Theta
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta,prodlist)
     nfact <- ncol(Theta)
@@ -737,8 +736,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     for(i in 1L:nrow(thetas)){
         expLW <- L1[i,] * prior
         maxL <- max(expLW)
-        if(isTRUE(all.equal(maxL, 0))){
-            warnings('Unable to compute normalization constant for EAPsum estimates. Returning NaNs',
+        if(maxL == 0){
+            warning('Unable to compute normalization constant for EAPsum estimates. Returning NaNs',
                      call.=FALSE)
             thetas[i, ] <- SEthetas[i, ] <- NaN
         } else {

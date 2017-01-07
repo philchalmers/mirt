@@ -154,6 +154,6 @@ test_that('poly', {
 
     ER <- fscores(modp2, returnER = TRUE)
     expect_equal(as.numeric(ER), c(0.4882546, 0.5099054), tolerance=1e-4)
-    ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2))
+    suppressWarnings(ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2)))
     expect_equal(as.numeric(ER2), c(0.3905138, 0.4797115), tolerance=1e-4)
 })
