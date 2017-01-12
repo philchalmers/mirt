@@ -26,17 +26,28 @@ For exploratory IRT models, a single numeric value indicating the number
 of factors to extract is also supported}
 
 \item{itemtype}{type of items to be modeled, declared as a vector for each item or a single value
-which will be repeated globally. The NULL default assumes that the items follow a graded or
-2PL structure, however they may be changed to the following: 'Rasch', '2PL', '3PL', '3PLu',
-'4PL', 'graded', 'grsm', 'grsmIRT', 'gpcm', 'nominal', 'ideal', 'PC2PL', 'PC3PL', '2PLNRM', '3PLNRM',
-'3PLuNRM', '4PLNRM', and 'spline', for the Rasch/partial credit, 2 parameter logistic,
-3 parameter logistic (lower or upper asymptote estimated), 4 parameter logistic, graded response
-model, rating scale graded response model (in slope-intercept and classical form),
-generalized partial credit model (with optional scoring matricies from \code{gpcm_mats}),
-nominal model, ideal-point model, 2-3PL partially compensatory model, 2-4 parameter nested
-logistic models, and spline response models with the \code{\link{bs}} (default) and \code{\link{ns}} functions,
-respectively. User defined item classes can also be defined using the
-\code{\link{createItem}} function}
+  which will be recycled for each item. The \code{NULL} default assumes that the items follow a graded or
+  2PL structure, however they may be changed to the following:
+  \itemize{
+    \item \code{'Rasch'} - Rasch/partial credit model
+    \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 pararamter logistic model,
+      where \code{3PL} estimates the lower asysmtote only while \code{3PLu} estimates the upper asymtote only
+    \item \code{'graded'} - graded response model
+    \item \code{'grsm'} and \code{'grsmIRT'} - graded ratings scale model in slope-intercept and classical
+      IRT parameterizations
+    \item \code{'gpcm'} - generalized partial credit model. Note that
+      optional scoring matricies are available with the \code{gpcm_mats} input
+    \item \code{'nominal'} - nominal response model
+    \item \code{'ideal'} - dichotomous ideal point model
+    \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model
+    \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
+      lostic model, where \code{3PLNRM} estimates the lower asysmtote only while \code{3PLuNRM} estimates
+      the upper asymtote only
+    \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
+      or the \code{\link{ns}} function
+ }
+
+ Additionally, user defined item classes can also be defined using the \code{\link{createItem}} function}
 
 \item{guess}{fixed pseudo-guessing parameters. Can be entered as a single
 value to assign a global guessing parameter or may be entered as a numeric
@@ -485,11 +496,12 @@ of categories.
     \frac{exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}
     {\sum_1^k exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
 
-    For partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above
+    For the partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above
     model is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the
-    latent variance of \eqn{\theta_1} is freely estimated. However, more specific scoring
-    function may be included by passing a suitable list or matricies to the \code{gpcm_mats}
-    input argument.
+    latent variance of \eqn{\theta_1} is freely estimated. Alternatively, the partial credit model
+    can be obtained by contraining all the slope parameters in the gpcms to be equal.
+    More specific scoring function may be included by passing a suitable list or matricies
+    to the \code{gpcm_mats} input argument.
 
     In the nominal model this parametrization helps to identify the empirical ordering of the
     categories by inspecting the \eqn{ak} values. Larger values indicate that the item category
