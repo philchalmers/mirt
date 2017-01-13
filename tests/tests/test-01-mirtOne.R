@@ -27,6 +27,8 @@ test_that('dich', {
     expect_equal(cfs, c(0.988, 0.6406, 1.3354, 1.8561, 1.5984, 2.1138, 0, NA, NA, 1, NA, NA, 1.081, 0.7501, 1.4119, 0.808, 0.6291, 0.9869, 0, NA, NA, 1, NA, NA, 1.706, 1.0779, 2.334, 1.8043, 1.4036, 2.205, 0, NA, NA, 1, NA, NA, 0.7651, 0.5022, 1.028, 0.486, 0.3392, 0.6328, 0, NA, NA, 1, NA, NA, 0.7358, 0.4395, 1.032, 1.8545, 1.6302, 2.0787, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm2, 'SingleGroupClass')
+    modm2b <- mirt(data, 1, SE = TRUE, SE.type = 'Fisher', verbose=FALSE)
+    expect_equal(extract.mirt(modm2b, 'condnum'), 19.69469, tolerance = 1e-3)
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE, SE=TRUE)
     expect_is(modm3, 'SingleGroupClass')
     expect_equal(extract.mirt(modm3, 'df'), 25)

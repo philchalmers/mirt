@@ -270,7 +270,6 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
     L <- Ls$L
     DX <- numeric(ncol(L))
     Prior <- ESTIMATE$Prior
-    Igrad <- Ihess <- matrix(0, length(DX), length(DX))
     tabdata <- Data$tabdatalong
     K <- Data$K
     resp <- vector('list', nitems)
@@ -291,8 +290,11 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
     }
     collectL <- numeric(nrow(tabdata))
     collectgrad <- matrix(0, nrow(tabdata), length(DX))
-    for(g in 1L:ngroups)
+    gTheta <- vector('list', ngroups)
+    for(g in 1L:ngroups){
         PrepList[[g]]$tabdata <- tabdata
+        gTheta[[g]] <- Theta
+    }
     for(pat in 1L:nrow(tabdata)){
         for(g in 1L:ngroups){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
@@ -302,11 +304,10 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                 pars[[g]][[i]]@dat <- rlist$r1[, tmp]
                 pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
-                tmp <- Deriv(pars[[g]][[i]], Theta=Theta, estHess=FALSE)
-                dx <- tmp$grad
-                DX[pars[[g]][[i]]@parnum] <- dx
             }
+            pars[[g]][[nitems + 1L]]@rr <- rowSums(rlist$r1)
         }
+        DX <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, nitems), ncol(L), 0L, 0L, 1L, TRUE)$grad
         collectL[pat] <- rlist$expected
         DX[DX != 0] <-  rlist$expected - exp(log(rlist$expected) - DX[DX != 0])
         collectgrad[pat, ] <- DX
@@ -314,16 +315,6 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
     info <- N * t(collectgrad) %*% diag(1/collectL) %*% collectgrad
     info <- updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
-    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
-    info[lengthsplit > 2L, lengthsplit > 2L] <- NA
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
-    if(any(lengthsplit > 2L)){
-        for(g in 1L:ngroups){
-            tmp <- ESTIMATE$pars[[g]][[nitems+1L]]@SEpar
-            tmp[!is.na(tmp)] <- NaN
-            ESTIMATE$pars[[g]][[nitems+1L]]@SEpar <- tmp
-        }
-    }
     return(ESTIMATE)
 }
