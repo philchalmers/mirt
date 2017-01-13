@@ -89,7 +89,8 @@ setMethod(
                     if(return.acov) return(matrix(NA, nfact, nfact))
                     return(numeric(nfact*2L + 1L))
                 }
-                warning('Unable to compute normalization constant for EAP estimates. Returning NaNs',
+                warning(paste0('Unable to compute normalization constant for EAP estimates; ',
+                               'consider using MAP estimates instead. Returning NaNs'),
                          call.=FALSE)
                 return(c(rep(NaN, nfact*2), 0))
             }

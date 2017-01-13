@@ -1,9 +1,18 @@
 # Changes in mirt 1.22
 
+- `SE.type = 'Fisher'` now supports the inclusion of latent distribution hyper-parameters. 
+  Officially, all SE-types now provide proper hyper-parameter influence in the information matricies
+
 - wrapped various output objects as `mirt_df` class to avoid the need for passing a `digits` 
   argument for rounding output in the console
 
 - added Stone's (2000) fit statistics and forthcoming PV-Q1 fit statistics to `itemfit()`
+
+## Bug fixes
+
+- patched underflow bug in `fscores()` when EAP estimates were used in extremely long (1000+ item) 
+  tests. Error now reported when this happens. Using MAP estimates in these extreme situations
+  is essentially equivalent and now recommended
 
 # Changes in mirt 1.21
 
