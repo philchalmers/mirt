@@ -425,6 +425,25 @@ RcppExport SEXP gradedTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP R
 	END_RCPP
 }
 
+RcppExport SEXP gpcmIRTTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP Rot)
+{
+    BEGIN_RCPP
+
+    const vector<double> par = as< vector<double> >(Rpar);
+    const NumericVector ot(Rot);
+    const NumericMatrix Theta(RTheta);
+    const int nfact = Theta.ncol();
+    const int N = Theta.nrow();
+    const int itemexp = as<int>(Ritemexp);
+    int ncat = par.size() - nfact;
+    vector<double> P(N * ncat);
+    P_gpcmIRT(P, par, Theta, ot, N, 1, ncat-1);
+    NumericMatrix ret = vec2mat(P, N, ncat);
+    return(ret);
+
+    END_RCPP
+}
+
 RcppExport SEXP nominalTraceLinePts(SEXP Rpar, SEXP Rncat, SEXP RTheta, SEXP RreturnNum, SEXP Rot)
 {
     BEGIN_RCPP

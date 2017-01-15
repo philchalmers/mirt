@@ -2571,18 +2571,7 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'gpcmIRT', Theta = 'matrix'),
     definition = function(x, Theta){
-        a <- x@par[1L]
-        b <- c(0, x@par[-c(1L, length(x@par))])
-        c <- x@par[length(x@par)]
-        ncat <- x@ncat
-        P <- zs <- matrix(1, nrow(Theta), ncat)
-        for(i in 2L:ncat)
-            zs[,i] <- a * (Theta - b[i]) + c
-        czs <- t(apply(zs, 1L, cumsum))
-        G <- rowSums(exp(czs))
-        for(i in 1L:ncat)
-            P[,i] <- exp(czs[,i]) / G
-        P
+        .Call('gpcmIRTTraceLinePts', x@par, Theta, FALSE, numeric(0))
     }
 )
 
