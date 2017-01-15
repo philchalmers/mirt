@@ -158,7 +158,7 @@
 #'     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
 #'   }
 #'   \item{grsm and grsmIRT}{
-#'     A more constrained version of the graded model where graded spacing is equal accross item
+#'     A more constrained version of the graded model where graded spacing is equal across item
 #'     blocks and only adjusted by a single 'difficulty' parameter (c) while the latent variance
 #'     of \eqn{\theta} is freely estimated. Again,
 #'     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
@@ -167,7 +167,7 @@
 #'
 #'     The grsmIRT model is similar to the \code{grsm} item type, but uses the IRT parameterization instead (see
 #'     Muraki, 1990 for this exact form). This is restricted to unidimensional models only, whereas
-#'     \code{grsm} may be used for unidimensional or multidimensional models and is more consistant
+#'     \code{grsm} may be used for unidimensional or multidimensional models and is more consistent
 #'     with the form of other IRT models in \code{mirt}
 #'   }
 #'   \item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and ordered values
@@ -180,8 +180,8 @@
 #'     For the partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above
 #'     model is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the
 #'     latent variance of \eqn{\theta_1} is freely estimated. Alternatively, the partial credit model
-#'     can be obtained by contraining all the slope parameters in the gpcms to be equal.
-#'     More specific scoring function may be included by passing a suitable list or matricies
+#'     can be obtained by containing all the slope parameters in the gpcms to be equal.
+#'     More specific scoring function may be included by passing a suitable list or matrices
 #'     to the \code{gpcm_mats} input argument.
 #'
 #'     In the nominal model this parametrization helps to identify the empirical ordering of the
@@ -217,7 +217,7 @@
 #'      values for each adjacent category, and \eqn{c} is the so-called difficulty parameter when
 #'      a rating scale model is fitted (otherwise, \eqn{c = 0} and it drops out of the computations).
 #'
-#'      The gpcmIRT can be constrained to the partial credit IRT model by either contraining all the
+#'      The gpcmIRT can be constrained to the partial credit IRT model by either constraining all the
 #'      slopes to be equal, or setting the slopes to 1 and freeing the latent variance parameter.
 #'
 #'      A more constrained version of the partial credit model where the spacing is equal
@@ -267,26 +267,26 @@
 #'   which will be recycled for each item. The \code{NULL} default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following:
 #'   \itemize{
-#'     \item \code{'Rasch'} - Rasch/partial credit model by contraining slopes to 1 and freely estimating
+#'     \item \code{'Rasch'} - Rasch/partial credit model by constraining slopes to 1 and freely estimating
 #'       the variance parameters (alternatively, can be specified by applying equality constraints to the
 #'       slope parameters in \code{'gpcm'})
-#'     \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 pararamter logistic model,
-#'       where \code{3PL} estimates the lower asysmtote only while \code{3PLu} estimates the upper asymtote only
+#'     \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 parameter logistic model,
+#'       where \code{3PL} estimates the lower asymptote only while \code{3PLu} estimates the upper asymptote only
 #'     \item \code{'graded'} - graded response model
 #'     \item \code{'grsm'} and \code{'grsmIRT'} - graded ratings scale model in the
 #'       slope-intercept and classical IRT parameterization.
 #'       \code{'grsmIRT'} is restricted to unidimensional models
 #'     \item \code{'gpcm'} and \code{'gpcmIRT'} - generalized partial credit model in the slope-intercept
 #'       and classical parameterization. \code{'gpcmIRT'} is restricted to unidimensional models. Note that
-#'       optional scoring matricies for \code{'gpcm'} are available with the \code{gpcm_mats} input
+#'       optional scoring matrices for \code{'gpcm'} are available with the \code{gpcm_mats} input
 #'     \item \code{'rsm'} - Rasch rating scale model using the \code{'gpcmIRT'} structure
 #'       (unidimensional only)
 #'     \item \code{'nominal'} - nominal response model
 #'     \item \code{'ideal'} - dichotomous ideal point model
 #'     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model
 #'     \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
-#'       lostic model, where \code{3PLNRM} estimates the lower asysmtote only while \code{3PLuNRM} estimates
-#'       the upper asymtote only
+#'       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
+#'       the upper asymptote only
 #'     \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
 #'       or the \code{\link{ns}} function
 #'  }
@@ -324,7 +324,7 @@
 #'   when defining constraints (though use of \code{browser()} here may be helpful). Note:
 #'   for the \code{'alabama'} optimizer, the starting values
 #'   should be adjusted such that all constraints are met prior to the first maximization-step.
-#'   The \code{'solnp'} optimizer is less sensative to this initial conditoin restriction, but it may also
+#'   The \code{'solnp'} optimizer is less sensitive to this initial condition restriction, but it may also
 #'   if the model is unstable early in the EM cycles
 #' @param SE logical; estimate the standard errors by computing the parameter information matrix?
 #'    See \code{SE.type} for the type of estimates available
