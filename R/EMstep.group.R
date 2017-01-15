@@ -326,7 +326,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 message('EM cycles terminated after ', cycles, ' iterations.')
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
-            if(list$warn && !(is.nan(TOL) || is.na(TOL)))
+            if(list$warn && !(is.nan(TOL) || is.na(TOL)) && !list$NULL.MODEL)
                 warning('M-step optimizer converged immediately. Solution is either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }

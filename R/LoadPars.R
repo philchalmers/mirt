@@ -67,6 +67,15 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,], zetas[[i]])
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+        } else if(itemtype[i] %in% c('gpcmIRT', 'rsm')){
+            if(itemtype[i] == 'rsm'){
+                val <- c(1, seq(-2, 2, length.out=K[i]-1), 0)
+                fp <- c(FALSE, rep(TRUE, K[i]-1L), TRUE)
+            } else {
+                val <- c(lambdas[i,], -zetas[[i]], 0)
+                fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L), FALSE)
+            }
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('b', 1L:(K[i]-1L), sep=''), 'c')
         } else if(itemtype[i] == 'grsm'){
             tmp <- zetas[[min(which(K[i] == K))]]
             val <- c(lambdas[i,], tmp, ifelse(min(which(K[i] == K)) == i, 0, tmp[1L] + zetas[[i]][1L]))
@@ -318,8 +327,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(itemtype[i] == 'rsm'){
-            pars[[i]] <- new('rsm',
+        if(itemtype[i] %in% c('gpcmIRT', 'rsm')){
+            pars[[i]] <- new('gpcmIRT',
                              par=startvalues[[i]],
                              nfact=nfact,
                              ncat=K[i],
@@ -329,12 +338,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
-                             mat=FALSE,
                              lbound=rep(-Inf, length(startvalues[[i]])),
                              ubound=rep(Inf, length(startvalues[[i]])),
                              prior_1=rep(NaN,length(startvalues[[i]])),
                              prior_2=rep(NaN,length(startvalues[[i]])))
-            pars[[i]]@par[nfact+1L] <- 0
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])

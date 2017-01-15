@@ -1,5 +1,9 @@
 # Changes in mirt 1.22
 
+- added support for `gpcmIRT` and `rsm` itemtypes for traditional generalized partial credit model and 
+  Rasch rating scale model (which may be modified for a generalized rating scale model by freeing the 
+  slope parameters)
+
 - `SE.type = 'Fisher'` now supports the inclusion of latent distribution hyper-parameters. 
   Officially, all SE-types now provide proper hyper-parameter influence in the information matricies
 

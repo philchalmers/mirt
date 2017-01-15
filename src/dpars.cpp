@@ -1146,6 +1146,77 @@ RcppExport SEXP dparsPoly(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP Rnze
 	END_RCPP
 }
 
+void d_gpcmIRT(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
+    const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
+    const int &N, const int &nfact, const int &nzeta, const int &estHess)
+{
+    vector<double> Pprob(N * (nzeta + 1));
+    P_gpcmIRT(Pprob, par, Theta, ot, N, 1, nzeta);
+    const NumericMatrix P = vec2mat(Pprob, N, nzeta + 1);
+    const int parsize = par.size();
+    const int ncat = parsize - 1;
+
+    const double a = par[0];
+    vector<double> b(ncat-1), bsum(ncat, 0.0);
+    for(int i = 1; i < (parsize-1); ++i){
+        b[i-1] = par[i];
+        bsum[i] = b[i-1] + bsum[i-1];
+    }
+
+    for (int i = 0; i < N; ++i){
+        vector<double> r1_P(ncat);
+        double psia = 0.0, psic = 0.0;
+        for (int j = 0; j < ncat; ++j){
+            r1_P[j] = dat(i,j) / P(i,j);
+            psia += (j * Theta(i, 0) - bsum[j]) * P(i,j);
+            psic += j * P(i,j);
+        }
+
+        grad[0] += dat(i,0) * (-psia); 
+        grad[parsize-1] += dat(i,0) * (-psic);
+        for (int j = 1; j < ncat; ++j){
+            grad[0] += r1_P[j] * ( (j * Theta(i, 0) - bsum[j]) * P(i,j) - P(i,j) * psia );
+            grad[parsize-1] += r1_P[j] * ( j * P(i,j) - P(i,j) * psic );
+        }
+        for (int j = 0; j < ncat - 1; ++j){
+            double psib = 0.0;
+            for (int k = j+1; k < ncat; ++k)
+                psib += a*P(i,k);
+            for (int k = 0; k < j+1; ++k)
+                grad[j+1] += dat(i,k) * psib;
+            for (int k = j+1; k < ncat; ++k)
+                grad[j+1] += r1_P[k] * (-a * P(i,k) + P(i,k) * psib );
+        }
+    }
+    if(estHess){
+         Rprintf("No hessian defined for gpcmIRT class\n"); //TODO   
+    }
+
+}
+
+RcppExport SEXP dparsgpcmIRT(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP Rnzeta, SEXP RestHess)
+{
+    BEGIN_RCPP
+
+    const vector<double> par = as< vector<double> >(Rpar);
+    const NumericVector ot(Rot);
+    const NumericMatrix Theta(RTheta);
+    const NumericMatrix dat(Rdat);
+    const int nzeta = as<int>(Rnzeta);
+    const int estHess = as<int>(RestHess);
+    const int nfact = Theta.ncol();
+    const int N = Theta.nrow();
+    NumericMatrix hess(nfact + nzeta, nfact + nzeta);
+    vector<double> grad(nfact + nzeta);
+    d_gpcmIRT(grad, hess, par, Theta, ot, dat, N, nfact, nzeta, estHess);
+    List ret;
+    ret["grad"] = wrap(grad);
+    ret["hess"] = hess;
+    return(ret);
+
+    END_RCPP
+}
+
 void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
     const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
     const int &N, const int &nfact, const int &estHess)
@@ -1414,6 +1485,9 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
                 break;
             case 4 :
                 d_nominal(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, 0, estHess);
+                break;
+            case 6 :
+                d_gpcmIRT(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat - 1, estHess);
                 break;
             case 10 :
                 d_lca(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, estHess);

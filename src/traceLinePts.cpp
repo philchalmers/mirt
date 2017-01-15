@@ -104,6 +104,44 @@ void P_graded(vector<double> &P, const vector<double> &par,
     }
 }
 
+void P_gpcmIRT(vector<double> &P, const vector<double> &par,
+    const NumericMatrix &Theta, const NumericVector &ot, const int &N,
+    const int &nfact, const int &nint)
+{
+    const int parsize = par.size();
+    const int ncat = parsize - 1;
+    const double a = par[0];
+    vector<double> b(ncat-1);
+    for(int i = 1; i < (parsize-1); ++i)
+        b[i-1] = par[i];
+    const double c = par[parsize-1];
+    NumericMatrix Pk(N, ncat);
+    for (int i = 0; i < N; ++i){
+        vector<double> z(ncat, 1.0);
+        for (int j = 1; j < ncat; ++j)
+            z[j] = a * (Theta(i,0) - b[j-1]) + c + z[j-1];
+        double maxz = *std::max_element(z.begin(), z.end());
+        vector<double> num(ncat, 0.0);
+        double den = 0.0;
+        for(int j = 0; j < ncat; ++j){
+            z[j] = z[j] - maxz;
+            if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+            num[j] = exp(z[j]);
+            den += num[j];
+        }
+        for(int j = 0; j < ncat; ++j)
+            Pk(i, j) = num[j] / den;
+    }
+    
+    int which = 0;
+    for(int i = 0; i < Pk.ncol(); ++i){
+        for(int j = 0; j < Pk.nrow(); ++j){
+            P[which] = Pk(j,i);
+            ++which;
+        }
+    }
+}
+
 void P_nominal(vector<double> &P, const vector<double> &par,
     const NumericMatrix &Theta, const NumericVector &ot, const int &N,
     const int &nfact, const int &ncat, const int &returnNum,
@@ -507,7 +545,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         3 = gpcm
         4 = nominal
         5 = grsm
-        6 = rsm
+        6 = gpcmIRT
         7 = partcomp
         8 = nestlogit
         9 = custom....have to do in R for now
@@ -543,7 +581,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 1);
             break;
         case 6 :
-            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 1);
+            P_gpcmIRT(P, par, theta, ot, N, nfact2, ncat);
             break;
         case 7 :
             P_comp(P, par, theta, N, nfact2);
