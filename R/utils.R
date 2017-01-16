@@ -1137,7 +1137,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(BFACTOR) opts$dentype <- 'bfactor'
     if(empiricalhist) opts$dentype <- 'EH'
     opts$accelerate = accelerate
-    opts$delta <- ifelse(is.null(technical$delta), .001, technical$delta)
+    opts$delta <- ifelse(is.null(technical$delta), 1e-5, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
     opts$storeEtable <- ifelse(is.null(technical$storeEtable), FALSE, technical$storeEtable)
