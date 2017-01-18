@@ -337,17 +337,26 @@
 #'   the supplemented EM (disables the \code{accelerate} option; EM only), \code{'crossprod'}
 #'   for standard error computations based on the variance of the Fisher scores, \code{'Louis'}
 #'   for Louis' (1982) computation of the observed information matrix,
-#'   and \code{'sandwich'} for the sandwich covariance estimate.
+#'   \code{'sandwich'} for the sandwich covariance estimate, and \code{'Oakes'} for Oakes' 1999 method
+#'   using a forward difference approximation.
 #'
-#'   Note that for \code{'SEM'} option increasing the number of iterations
-#'   (\code{NCYCLES} and \code{TOL}, see below) will help to improve the accuracy, and will be
-#'   run in parallel if a \code{\link{mirtCluster}} object has been defined.
 #'   When \code{method = 'BL'} then the option \code{'numerical'} is available to obtain the numerical
-#'   estimate from a call to \code{\link{optim}}.
-#'
-#'   Other options include \code{'MHRM'} and \code{'FMHRM'} for stochastic approximations
+#'   estimate from a call to \code{\link{optim}}. Other options include \code{'MHRM'}
+#'   and \code{'FMHRM'} for stochastic approximations
 #'   based on the Robbins-Monro filter or a fixed number of MHRM draws without
 #'   the RM filter. These are the only options supported when \code{method = 'MHRM'}
+#'
+#'   Note that both the \code{'Oakes'} and \code{'SEM'} methods become sensitive if the ML solution is
+#'   has not been reached with sufficient precision, and the \code{'SEM'} algorithm may be further sensitive
+#'   if the history of the EM cycles is not stable/sufficient. For \code{'SEM'},
+#'   increasing the number of iterations (\code{NCYCLES} and \code{TOL}, see below)
+#'   will help to improve the accuracy, and will be
+#'   run in parallel if a \code{\link{mirtCluster}} object has been defined. For \code{'Oakes'},
+#'   the numerical \code{TOL} criteria is automatically dropped to \code{1e-6} in order to provide better
+#'   numerical results at the ML location, however sometimes even lower TOL values may be required. For both
+#'   algorithms, check the symmetry of the matrix for convergence issues by passing
+#'   \code{technical = list(symmetric = FALSE)}.
+#'
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
 #'   value to assign a global guessing parameter or may be entered as a numeric
 #'   vector corresponding to each item
@@ -465,7 +474,7 @@
 #'     \item{set.seed}{seed number used during estimation. Default is 12345}
 #'     \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
 #'       information matrix. Default is 1e-3}
-#'     \item{symmetric_SEM}{logical; force S-EM information matrix to be symmetric? Default is TRUE
+#'     \item{symmetric}{logical; force S-EM/Oakes information matrix to be symmetric? Default is TRUE
 #'       so that computation of standard errors are more stable. Setting this to FALSE can help
 #'       to detect solutions that have not reached the ML estimate}
 #'     \item{SEM_window}{ratio of values used to define the S-EM window based on the
@@ -490,7 +499,8 @@
 #'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
 #'     \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
-#'       with the 'forward' or 'central' numerical approaches. Default is 1e-5}
+#'       with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
+#'       forward difference approximation. Default is 1e-5}
 #'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
 #'       Default is TRUE}
 #'     \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?

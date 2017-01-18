@@ -1105,7 +1105,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
 {
     opts <- list()
     tnames <- names(technical)
-    gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric_SEM',
+    gnames <- c('MAXQUAD', 'NCYCLES', 'BURNIN', 'SEMCYCLES', 'set.seed', 'SEtol', 'symmetric',
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
@@ -1150,7 +1150,11 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(TOL)) opts$TOL <- 1e-5
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
-    if(is.null(technical$symmetric_SEM)) technical$symmetric_SEM <- TRUE
+    if(SE.type == 'Oakes' && SE){
+        if(is.null(TOL)) opts$TOL <- 1e-7
+        if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
+    }
+    if(is.null(technical$symmetric)) technical$symmetric <- TRUE
     opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
         else technical$removeEmptyRows
     opts$PLCI <- ifelse(is.null(technical$PLCI), FALSE, technical$PLCI)

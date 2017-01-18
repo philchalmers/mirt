@@ -261,6 +261,66 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     return(ESTIMATE)
 }
 
+SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
+                     Theta, list, ngroups, nfact, J, dentype, sitems,
+                     rlist, full, Data, specific, itemloc, CUSTOM.IND,
+                     delta, prior, Prior, Priorbetween,
+                     PrepList, ANY.PRIOR, DERIV, SLOW.IND, dxphi=NULL){
+    if(pick != 0){
+        longpars_old <- longpars
+        longpars[which(est)[pick]] <- shortpars[pick] + delta
+        longpars <- longpars_constrain(longpars, constrain)
+        pars <- reloadPars(longpars=longpars, pars=pars,
+                           ngroups=ngroups, J=J)
+        Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+                       Priorbetween=Priorbetween, specific=specific, sitems=sitems,
+                       ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                       dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+        rlist <- Elist$rlist
+        longpars <- longpars_old
+        pars <- reloadPars(longpars=longpars, pars=pars,
+                           ngroups=ngroups, J=J)
+    }
+
+    gTheta <- vector('list', ngroups)
+    for(g in 1L:ngroups) gTheta[[g]] <- Theta
+    if(pars[[1L]][[J + 1L]]@itemclass == -1L){
+        for(g in 1L:length(pars)){
+            gp <- pars[[g]][[J + 1L]]
+            pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
+        }
+    }
+    for(g in 1L:ngroups){
+        for(i in 1L:J)
+            pars[[g]][[i]]@dat <- rlist[[g]]$r1[ , c(itemloc[i]:(itemloc[i+1L] - 1L)),
+                                                 drop=FALSE]
+        if(dentype == 'bfactor'){
+            pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
+            pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
+        } else pars[[g]][[J+1L]]@rr <- sum(rlist[[g]]$r1)
+    }
+    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
+    if(length(SLOW.IND)){
+        for(group in 1L:ngroups){
+            for (i in SLOW.IND){
+                deriv <- if(i == (J + 1L)){
+                    Deriv(pars[[group]][[i]], Theta=gTheta[[group]])
+                } else {
+                    DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]])
+                }
+                g[pars[[group]][[i]]@parnum] <- deriv$grad
+            }
+        }
+    }
+    if(length(constrain)){
+        grad <- g %*% L
+    } else {
+        grad <- g
+    }
+    if(is.null(dxphi)) return(grad[est])
+    return((grad[est] - dxphi) / delta)
+}
+
 SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND,
                       warn, Data, full){
     pars <- ESTIMATE$pars

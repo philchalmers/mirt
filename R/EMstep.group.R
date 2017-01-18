@@ -400,6 +400,39 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
         hess <- updateHess(h=h, L=L)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
+        if(list$Oakes && length(lrPars)){
+            warning('Oakes method not supported for models with latent regression effects', call.=FALSE)
+        } else if(list$Oakes){
+            complete_info <- hess
+            shortpars <- longpars[estpars & !redun_constr]
+            tmp <- updatePrior(pars=pars, Theta=Theta,
+                               list=list, ngroups=ngroups, nfact=nfact,
+                               J=J, dentype=dentype, sitems=sitems, cycles=cycles,
+                               rlist=rlist, full=full, lrPars=lrPars)
+            prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+            dxphi <- SE.Oakes(pick=0, pars=pars, L=L, constrain=constrain, est=est,
+                              shortpars=shortpars, longpars=longpars,
+                              Theta=Theta, list=list, ngroups=ngroups, nfact=nfact, J=J,
+                              dentype=dentype, sitems=sitems, delta=0,
+                              rlist=rlist, full=full, Data=Data,
+                              specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                              prior=prior, Priorbetween=Priorbetween, Prior=Prior,
+                              PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV, SLOW.IND=list$SLOW.IND)
+            missing_info <- sapply(1L:length(shortpars), SE.Oakes, dxphi=dxphi,
+                                   pars=pars, L=L, constrain=constrain, delta=list$delta,
+                                   est=est, shortpars=shortpars, longpars=longpars,
+                                   Theta=Theta, list=list, ngroups=ngroups, nfact=nfact, J=J,
+                                   dentype=dentype, sitems=sitems,
+                                   rlist=rlist, full=full, Data=Data,
+                                   specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                   prior=prior, Priorbetween=Priorbetween, Prior=Prior,
+                                   PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
+                                   SLOW.IND=list$SLOW.IND)
+            if(list$symmetric) missing_info <- (missing_info + t(missing_info))/2
+            pars <- reloadPars(longpars=longpars, pars=pars,
+                               ngroups=ngroups, J=J)
+            hess <- complete_info + missing_info
+        }
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
                     estindex_unique=estindex_unique, correction=correction, hess=hess, Prior=Prior,

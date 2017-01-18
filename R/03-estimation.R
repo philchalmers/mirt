@@ -517,13 +517,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1L]]$itemloc, dentype=opts$dentype,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SEM=any(opts$SE.type %in% c('SEM', 'complete')) && opts$SE,
+                                         SEM=any(opts$SE.type %in% c('Oakes', 'SEM', 'complete')) && opts$SE,
+                                         Oakes=any(opts$SE.type == 'Oakes') && opts$SE, delta=opts$delta,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
                                          message=opts$message, BL=opts$method == 'BL', full=opts$full,
                                          lrPars=lrPars, SE=opts$SE && opts$SE.type == 'numerical', Etable=opts$Etable,
                                          NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI,
-                                         keep_vcov_PD=opts$keep_vcov_PD),
+                                         keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         opts$Moptim <- ESTIMATE$Moptim
         lrPars <- ESTIMATE$lrPars
@@ -645,7 +646,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- ESTIMATE
         if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED'))
             cat('\n\nCalculating information matrix...\n')
-        if(opts$SE.type == 'complete' && opts$method == 'EM'){
+        if(opts$SE.type %in% c('complete', 'Oakes') && opts$method == 'EM'){
             ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain,
                                          warn=opts$warn)
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){
@@ -706,7 +707,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 DM[is.latent, is.latent] <- 0
                 info <- try(solve(-solve(ESTIMATE$hess) %*% solve(diag(ncol(DM)) - DM)), silent=TRUE)
                 info[,is.latent] <- t(info[is.latent, ,drop=FALSE])
-                if(opts$technical$symmetric_SEM) info <- (info + t(info)) / 2
+                if(opts$technical$symmetric) info <- (info + t(info)) / 2
                 if(is(info, 'try-error')){
                     if(opts$warn)
                         warning('Information matrix in SEM could not be computed due to instability',
