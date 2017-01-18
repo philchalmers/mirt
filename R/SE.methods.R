@@ -120,6 +120,10 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
                           lrPars=lrPars, control=control)
         rijlast <- rij
         denom <- (EMhistory[cycles, estindex] - MLestimates[estindex])
+        if(denom == 0){
+            converged <- FALSE
+            break
+        }
         rij <- (longpars[estpars & !redun_constr] - MLestimates[estpars & !redun_constr]) / denom
         diff <- abs(rij - rijlast) < TOL
         converged <- diff | converged
@@ -193,18 +197,12 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
-    lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correction), 'COV_'), length))
-    lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correction), 'MEAN_'), length))
-    is.latent <- lengthsplit > 2L
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
-        info[is.latent, is.latent] <- h[is.latent, is.latent]
     } else if(type == 'crossprod'){
         info <- Igrad
     } else if(type == 'sandwich'){
-        tmp <- -Ihess - IgradP + Igrad
-        tmp[is.latent, is.latent] <- h[is.latent, is.latent]
-        tmp <- solve(tmp)
+        tmp <- solve(-Ihess - IgradP + Igrad)
         info <- solve(tmp %*% Igrad %*% tmp)
     }
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
