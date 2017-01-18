@@ -202,7 +202,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     } else if(type == 'crossprod'){
         info <- Igrad
     } else if(type == 'sandwich'){
-        tmp <- solve(-Ihess - IgradP + Igrad)
+        tmp <- -Ihess - IgradP + Igrad
         tmp[is.latent, is.latent] <- h[is.latent, is.latent]
         tmp <- solve(tmp)
         info <- solve(tmp %*% Igrad %*% tmp)

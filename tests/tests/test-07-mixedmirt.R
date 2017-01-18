@@ -20,14 +20,15 @@ test_that('mixed dich', {
     expect_equal(as.numeric(cfs$lr.betas), c(0.0000000, 0.8916977, 1.9757340, 0.2168971), tolerance=1e-4)
     set.seed(1234)
     plaus <- fscores(mod0, plausible.draws = 2)
-    expect_equal(plaus[[1]][1:4], c(-0.6875763, -0.3252222, -0.3528101, -0.4759003),
+    expect_equal(plaus[[1]][1:4], c(-0.6871879, -0.3253760, -0.3528526, -0.4757831),
                  tolerance = 1e-4)
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     set.seed(1)
     bs <- boot.mirt(mod0, R = 3)
     expect_is(bs, 'boot')
     fs <- fscores(mod0, full.scores.SE=TRUE, full.scores=FALSE)
-    expect_equal(as.numeric(head(fs)), c(-0.3326595,-0.6466125,-0.479462,-0.3070204,-0.4769287,-0.5488554,0.2940327,0.2963648,0.2951399,0.2938372,0.295121,0.2956538), tolerance=1e-4)
+    expect_equal(as.numeric(head(fs)), c(-0.3324417,-0.6466112,-0.4794438,-0.3069835,-0.4768177,-0.5487515,0.2938914,0.2962219,0.2949986,0.2936975,0.294979,0.2955111),
+                 tolerance=1e-4)
 
     #group as a fixed effect predictor (aka, uniform dif)
     mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,

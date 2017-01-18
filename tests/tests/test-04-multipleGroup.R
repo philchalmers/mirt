@@ -89,7 +89,7 @@ test_that('one factor', {
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.6646153, 8.1727058, 11.000000, 0.6977546),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
-    expect_true(mirt:::closeEnough(fit3$M2 - c(198.625), -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fit3$M2 - c(198.6178), -1e-4, 1e-4))
     expect_equal(fit3$SRMSR.D1, 0.026854, tolerance = 1e-4)
     expect_equal(fit3$TLI, 1.001169, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
@@ -109,12 +109,12 @@ test_that('one factor', {
     mod <- multipleGroup(dat, 1, group, invariance = c('slopes', 'interecepts', 'free_means',
                                                        'free_var'), verbose=FALSE)
     cfs <- coef(mod, simplify=TRUE, digits=Inf)
-    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.208538,1.192446,1.038408,1.739862,1.0476,-0.1922799),
+    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.2071515, 1.1911074, 1.0377839, 1.7398616, 1.0476004, -0.1931686),
                  tolerance=1e-4)
-    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7470682,0.9557447,0.4884872), tolerance=1e-4)
+    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7479307, 0.9566082, 0.4892834), tolerance=1e-4)
     expect_is(plot(mod, type = 'trace'), 'trellis')
     ifit <- itemfit(mod, 'X2')
-    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002,0.0081), tolerance=1e-4)
+    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0001705316, 0.0079944214), tolerance=1e-4)
 
     #missing data
     set.seed(1234)

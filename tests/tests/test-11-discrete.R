@@ -32,7 +32,7 @@ test_that('discrete', {
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
     W <- wald(mod, L = matrix(c(1,numeric(9), 0), nrow=1))
-    expect_equal(W$W, 26.35221, tolerance=1e-4)
+    expect_equal(W$W, 26.37915, tolerance=1e-4)
 
     #----------
     # polytomous LCA
