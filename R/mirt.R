@@ -400,7 +400,7 @@
 #'   \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
 #'   If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
 #'   will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}, and
-#'   to evalute the starting values without the log-likelihood pass \code{TOL = NA}
+#'   to evaluate the starting values without the log-likelihood pass \code{TOL = NA}
 #' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
 #'   Only applicable for unidimensional models estimated with the EM algorithm.
 #'   The number of cycles, TOL, and quadpts are adjusted
@@ -424,7 +424,7 @@
 #'   be estimated in the test data). For example, to specify two blocks of 3 with a 2PL item for
 #'   the last item: \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed
 #'   to be within the same group and therefore have the same number of item categories
-# @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
+#' @param rsm.block same as \code{grsm.block}, but for \code{'rsm'} blocks
 #' @param covdata a data.frame of data used for latent regression models
 #' @param formula an R formula (or list of formulas) indicating how the latent traits
 #'   can be regressed using external covariates in \code{covdata}. If a named list

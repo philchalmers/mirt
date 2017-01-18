@@ -188,7 +188,7 @@ the default number of quasi-Monte Carlo integration nodes will be set to 5000 in
 \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
 If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
 will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}, and
-to evalute the starting values without the log-likelihood pass \code{TOL = NA}}
+to evaluate the starting values without the log-likelihood pass \code{TOL = NA}}
 
 \item{gpcm_mats}{a list of matrices specifying how the scoring coefficients in the (generalized)
 partial credit model should be constructed. If omitted, the standard gpcm format will be used
@@ -322,6 +322,8 @@ etc)}
 }}
 
 \item{...}{additional arguments to be passed}
+
+\item{rsm.block}{same as \code{grsm.block}, but for \code{'rsm'} blocks}
 }
 \value{
 function returns an object of class \code{SingleGroupClass}
