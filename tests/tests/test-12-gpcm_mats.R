@@ -9,13 +9,13 @@ test_that('gpcm_mats', {
     ncat<-4
 
     # gpcm using built-in gpcm item model and EM
-    gpcm.em<-mirt(dat,1,itemtype=rep("gpcm",ni),optimizer="NR", verbose=FALSE)
+    gpcm.em<-mirt(dat,1,itemtype=rep("gpcm",ni), verbose=FALSE)
 
     # gpcm_mats with custom scoring functions
     sf.matrix<-matrix(0:(ncat-1),nrow=ncat,ncol=1)
     sf.list<-list()
     for(i in 1:ni){ sf.list[[i]]<-sf.matrix}
-    gpcm.sf.em<-mirt(dat,1,itemtype=rep("gpcm",ni),gpcm_mats=sf.list, optimizer="NR", verbose=FALSE)
+    gpcm.sf.em<-mirt(dat,1,itemtype=rep("gpcm",ni),gpcm_mats=sf.list, verbose=FALSE)
 
     expect_equal(extract.mirt(gpcm.em, 'logLik'), extract.mirt(gpcm.sf.em, 'logLik'), tolerance=1e-4)
 
@@ -37,10 +37,10 @@ test_that('gpcm_mats', {
      COV = F1*F2
     "
     model<-mirt.model(model)
-    gpcm.sf.em<-mirt(dat,model,itemtype=rep("gpcm",ni),gpcm_mats=sf.list, optimizer="NR", quadpts=21, verbose=FALSE)
+    gpcm.sf.em<-mirt(dat,model,itemtype=rep("gpcm",ni),gpcm_mats=sf.list, quadpts=21, verbose=FALSE)
 
     expect_equal(-1595.52, extract.mirt(gpcm.sf.em, 'logLik'), tolerance=.01)
     est<-coef(gpcm.sf.em)
-    # expect_equal(sort(est[[1]][1:2]), c(.663, .721),tolerance = .01)
+    expect_equal(sort(est[[1]][1:2]), c(.679, .807),tolerance = .01)
 
 })
