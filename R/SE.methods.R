@@ -172,20 +172,6 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior, do.call(rbind, Priorbetween),
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
-    h <- matrix(0, ncol(Igrad), ncol(Igrad))
-    for(group in 1L:ngroups){
-        if(any(pars[[group]][[nitems+1L]]@est)){
-            deriv <- Deriv(x=pars[[group]][[nitems+1L]], CUSTOM.IND=CUSTOM.IND,
-                           Theta=Theta, EM = TRUE,
-                           pars=pars[[group]], tabdata=Data$tabdatalong,
-                           freq=Data$Freq[[group]], prior=Prior[[group]],
-                           itemloc=itemloc, estHess=TRUE)
-            ind <- pars[[group]][[nitems+1L]]@parnum
-            h[ind, ind] <- -deriv$hess
-        }
-    }
-    h <- updateHess(h, L=Ls$L)
-    h <- h[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     if(length(whichitems)){
         warning('Internal information matrix computations currently not supported for at
         least one of the supplied items. Information matrix/standard errors not computed', call.=FALSE)
