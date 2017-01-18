@@ -10,9 +10,9 @@
 \title{Extract raw coefs from model object}
 \usage{
 \S4method{coef}{SingleGroupClass}(object, CI = 0.95, printSE = FALSE,
-  rotate = "none", Target = NULL, digits = 3, IRTpars = FALSE,
-  rawug = FALSE, as.data.frame = FALSE, simplify = FALSE,
-  unique = FALSE, verbose = TRUE, ...)
+  rotate = "none", Target = NULL, IRTpars = FALSE, rawug = FALSE,
+  as.data.frame = FALSE, simplify = FALSE, unique = FALSE,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
@@ -26,8 +26,6 @@
 \item{rotate}{see \code{summary} method for details. The default rotation is \code{'none'}}
 
 \item{Target}{a dummy variable matrix indicting a target rotation pattern}
-
-\item{digits}{number of significant digits to be rounded}
 
 \item{IRTpars}{logical; convert slope intercept parameters into traditional IRT parameters?
 Only applicable to unidimensional models}
@@ -48,7 +46,10 @@ containing a matrix of item parameters and group-level estimates}
 \item{...}{additional arguments to be passed}
 }
 \description{
-Return a list (or data.frame) of raw item and group level coefficients.
+Return a list (or data.frame) of raw item and group level coefficients. Note that while
+the output to the console is rounded to three digits, the returned list of objects is not.
+Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the unrounded results (useful
+for simulations).
 }
 \examples{
 

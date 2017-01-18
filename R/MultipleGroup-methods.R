@@ -37,12 +37,12 @@ setMethod(
 setMethod(
     f = "summary",
     signature = signature(object = 'MultipleGroupClass'),
-    definition = function(object, digits = 3, rotate = 'oblimin', verbose = TRUE, ...) {
+    definition = function(object, rotate = 'oblimin', verbose = TRUE, ...) {
         ngroups <- object@Data$ngroups
         ret <- list()
         for(g in 1:ngroups){
             if(verbose) cat('\n----------\nGROUP:', as.character(object@Data$groupNames[g]), '\n')
-            ret[[g]] <- summary(object@ParObjects$pars[[g]], digits=digits, verbose=verbose,
+            ret[[g]] <- summary(object@ParObjects$pars[[g]], verbose=verbose,
                                 rotate = rotate, ...)
         }
         invisible(ret)

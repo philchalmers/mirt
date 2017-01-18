@@ -310,7 +310,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         nitems <- extract.mirt(model, 'nitems')
         if(is.null(which.items)) which.items <- 1L:nitems
         nfact <- extract.mirt(model, 'nfact')
-        cfs <- coef(model, simplify=TRUE, digits=Inf)
+        cfs <- coef(model, simplify=TRUE)
         if(is.null(sigma)) sigma <- cfs$cov
         if(is.null(mu)) mu <- cfs$means
         if(is.null(Theta)){

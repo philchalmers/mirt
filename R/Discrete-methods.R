@@ -54,7 +54,7 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'DiscreteClass',
-    definition = function(object, printSE=FALSE, digits = 3, ...)
+    definition = function(object, printSE=FALSE, ...)
     {
         ngroups <- object@Data$ngroups
         Theta <- object@Model$Theta
@@ -67,15 +67,16 @@ setMethod(
             pars <- object@ParObjects$pars[[g]]
             for(i in 1L:object@Data$nitems){
                 item <- extract.item(pars, i)
-                P <- round(probtrace(item, Theta), digits)
+                P <- probtrace(item, Theta)
                 colnames(P) <- paste0('category_', 1L:ncol(P))
                 rownames(P) <- paste0('Class_', 1L:nrow(P))
                 ret[[g]][[i]] <- P
             }
-            ret[[g]][[i+1L]] <- data.frame(Theta, prob=round(object@Internals$Prior[[g]], digits))
+            ret[[g]][[i+1L]] <- data.frame(Theta, prob=object@Internals$Prior[[g]])
             rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
         }
         names(ret) <- extract.mirt(object, 'groupNames')
+        for(i in 1L:length(ret)) class(ret[[i]]) <- c('mirt_list', 'list')
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
     }

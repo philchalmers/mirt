@@ -60,19 +60,19 @@ test_that('syntax', {
     expect_equal(mod2values(mod6)$value, c(1.074887,0,1.902959,0,1,1.074887,0,0.8065663,0,1,0,1.00348,1.458001,0,1,0,1.00348,0.520351,0,1,0,1.00348,1.989104,0,1,0,0,1,0.939999,1),
                  tolerance = 1e-2)
     mod7 <- mirt(data, model7, verbose=FALSE, calcNull=FALSE)
-    expect_equal(as.numeric(coef(mod7, simplify=TRUE, digits = 7)$items), c(-1.153815,-0.2728293,0,-1,0,0,1.5,1.740508,0.5660805,0.5774055,1.945502,0.9276134,1.818513,0.5439836,1.789067,0,0,0,0,0,1,1,1,1,1),
+    expect_equal(as.numeric(coef(mod7, simplify=TRUE)$items), c(-1.153815,-0.2728293,0,-1,0,0,1.5,1.740508,0.5660805,0.5774055,1.945502,0.9276134,1.818513,0.5439836,1.789067,0,0,0,0,0,1,1,1,1,1),
                  tolerance = 1e-2)
     mod8 <- mirt(data, model8, verbose=FALSE, calcNull=FALSE)
-    expect_equal(as.numeric(coef(mod8, simplify=TRUE, digits = 7)$items), c(0.5501291,3.146379,0,0,0,0,0,0.5501291,0.4096282,3.146379,1.46666,1.46666,1.46666,0.4535099,3.685736,0,0,0,0,0,1,1,1,1,1),
+    expect_equal(as.numeric(coef(mod8, simplify=TRUE)$items), c(0.5501291,3.146379,0,0,0,0,0,0.5501291,0.4096282,3.146379,1.46666,1.46666,1.46666,0.4535099,3.685736,0,0,0,0,0,1,1,1,1,1),
                  tolerance = 1e-2)
     mod9 <- mirt(data, model9, '3PL', verbose=FALSE, calcNull=FALSE)
-    expect_equal(as.numeric(coef(mod9, simplify=TRUE, digits = 7)$items), c(1.09262,1.819549,2.095646,0.8938963,0.8182848,1.587373,0.1118206,1.542427,0.0396478,1.595971,0.2,0.2901414,0.2,0.2,0.2,1,1,1,1,1),
+    expect_equal(as.numeric(coef(mod9, simplify=TRUE)$items), c(1.09262,1.819549,2.095646,0.8938963,0.8182848,1.587373,0.1118206,1.542427,0.0396478,1.595971,0.2,0.2901414,0.2,0.2,0.2,1,1,1,1,1),
                  tolerance = 1e-2)
     mod10 <- mirt(data, model10, '3PL', pars = 'values')
     expect_equal(mod10$value[mod10$name == 'a1'], c(1, 0.851, 1, 1, .851), tolerance = 1e-4)
     expect_equal(mod10$est[mod10$name == 'a1'], c(FALSE, FALSE, FALSE, TRUE, TRUE))
     mod11 <- mirt(data, model11, '3PL', verbose=FALSE)
-    expect_equal(as.vector(unname(coef(mod11, digits=Inf)[[1]])),
+    expect_equal(as.vector(unname(coef(mod11)[[1]])),
                  c(1.0767651, 1.6027628, 0.1871268, 1.0000000), tolerance = 1e-4)
 
     data(data.read, package = 'sirt')

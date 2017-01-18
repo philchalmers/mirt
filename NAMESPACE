@@ -2,6 +2,7 @@
 
 S3method(plot,itemGAM)
 S3method(print,mirt_df)
+S3method(print,mirt_list)
 export(DIF)
 export(DTF)
 export(M2)

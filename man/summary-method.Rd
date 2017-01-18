@@ -10,7 +10,7 @@
 \title{Summary of model object}
 \usage{
 \S4method{summary}{SingleGroupClass}(object, rotate = "oblimin",
-  Target = NULL, suppress = 0, digits = 3, verbose = TRUE, ...)
+  Target = NULL, suppress = 0, verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
@@ -35,15 +35,15 @@ rotations such as \code{'targetT'}, \code{'targetQ'}, \code{'pstT'}, and \code{'
 loadings should be suppressed. Typical values are around .3 in most
 statistical software. Default is 0 for no suppression}
 
-\item{digits}{number of significant digits to be rounded}
-
 \item{verbose}{logical; allow information to be printed to the console?}
 
 \item{...}{additional arguments to be passed}
 }
 \description{
 Transforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
-the fixed and random coefficients are printed.
+the fixed and random coefficients are printed. Note that while the output to the console is rounded
+to three digits, the returned list of objects is not. For simulations, use
+\code{output <- summary(mod, verbose = FALSE)} to suppress the console messages.
 }
 \examples{
 

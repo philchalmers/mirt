@@ -9,13 +9,13 @@ test_that('poly', {
                  tolerance = 1e-2)
     modLouis <- mirt(Science, 1, SE=T, SE.type='Louis', verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
-    cfs <- as.numeric(do.call(c, coef(modLouis, digits = 5, printSE=TRUE)))
+    cfs <- as.numeric(do.call(c, coef(modLouis, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.18838, 4.86544, 0.49088, 2.64044, 0.22267, -1.46621, 0.15868, 1.22569, 0.18189, 2.924, 0.23928, 0.90115, 0.14289, -2.26661, 0.20308, 2.29058, 0.48269, 5.22988, 0.72817, 2.21201, 0.3564, -1.96222, 0.32209, 1.09557, 0.18336, 3.34845, 0.27659, 0.9919, 0.14053, -1.68846, 0.16864, 0, NA, 1, NA),
                  tolerance = 1e-3)
     expect_equal(modLouis@OptimInfo$condnum, 98.26492, tolerance = 1e-2)
     modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
-    cfs <- as.numeric(do.call(c, coef(modsandwich, digits = 5, printSE=TRUE)))
+    cfs <- as.numeric(do.call(c, coef(modsandwich, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
                  tolerance = 1e-3)
     expect_equal(extract.mirt(modsandwich, 'condnum'), 142.2682, tolerance = 1e-2)
@@ -42,7 +42,7 @@ test_that('poly', {
     modp2 <- mirt(Science, 2, verbose=FALSE)
     expect_is(modp2, 'SingleGroupClass')
     expect_equal(modp2@Fit$df, 236)
-    cfs <- as.numeric(do.call(c, coef(modp2, digits=4, verbose=FALSE)))
+    cfs <- as.numeric(do.call(c, coef(modp2, verbose=FALSE)))
     expect_equal(abs(cfs), abs(c(-1.3278,0.1081,5.1934,2.8583,-1.5996,-0.8762,1.8783,3.7248,1.1598,-2.9225,-1.4614,1.1639,4.6495,1.951,-1.7322,-1.7397,0,4.0053,1.2008,-2.0548,0,0,1,0,1)),
                  tolerance = 1e-2)
     modp3 <- mirt(Science, 1, constrain = list(c(1,5)), parprior = list(c(4,'norm',0,1)), verbose=FALSE)
@@ -63,7 +63,7 @@ test_that('poly', {
 
     modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
     expect_is(modp4, 'SingleGroupClass')
-    cfs <- as.numeric(do.call(c, coef(modp4, verbose = FALSE, digits=4)))
+    cfs <- as.numeric(do.call(c, coef(modp4, verbose = FALSE)))
     expect_equal(cfs, c(1.0408, 4.862, 2.6387, -1.4664, 1.2063, 2.9083, 0.8958, -2.254, 2.3376, 5.2972, 2.2404, -1.9886, 0.7986, 0, 1.0782, 1.7756, 3, 0, 2.1964, 2.9637, 1.6742, 0, 1),
                  tolerance = 1e-2)
     modp5 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'gpcm'), SE = TRUE, SE.type = 'SEM', verbose=FALSE)
@@ -112,10 +112,10 @@ test_that('poly', {
     IP2 <- itemplot(modp2, 1)
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
-    fit <- suppressMessages(itemfit(modp2, c('S_X2', 'Zh'), digits = 20))
+    fit <- suppressMessages(itemfit(modp2, c('S_X2', 'Zh')))
     expect_equal(fit$Zh, c(1.413226, 2.455924, 4.125340, 3.887814), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.941804,10.58528,6.913239,10.11068), tolerance=1e-4)
-    fs <- fscores(modp1, method = 'WLE', verbose=FALSE, digits = 10, full.scores=FALSE)
+    fs <- fscores(modp1, method = 'WLE', verbose=FALSE, full.scores=FALSE)
     expect_equal(as.numeric(fs[1:3, 5:6]), c(-5.7024116, -2.1162737, -1.1386969,  1.5797286,
                                              0.6321478,  0.6544024), tolerance = 1e-4)
 
@@ -131,10 +131,10 @@ test_that('poly', {
 #     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE, verbose=FALSE, TOL = 1e-3)
     expect_is(grsm, 'SingleGroupClass')
 #     expect_is(rsm, 'SingleGroupClass')
-    cfs <- as.numeric(do.call(c, coef(grsm, verbose = FALSE, digits=4)))
+    cfs <- as.numeric(do.call(c, coef(grsm, verbose = FALSE)))
     expect_equal(cfs, c(0.9832,1.0105,0.5093,-0.5105,-0.9939,-1,0.988,1.0105,0.5093,-0.5105,-0.9939,-0.78,1.0273,1.0105,0.5093,-0.5105,-0.9939,-0.5669,0.9417,1.0105,0.5093,-0.5105,-0.9939,-0.2953,0.9658,1.0105,0.5093,-0.5105,-0.9939,-0.1275,0.9218,1.0105,0.5093,-0.5105,-0.9939,0.1512,0.936,1.0105,0.5093,-0.5105,-0.9939,0.367,1.1382,1.0105,0.5093,-0.5105,-0.9939,0.5742,1.0108,1.0105,0.5093,-0.5105,-0.9939,0.8366,0.9326,1.0105,0.5093,-0.5105,-0.9939,1.0656,0,1),
                  tolerance = 1e-2)
-#     cfs <- as.numeric(do.call(c, coef(rsm, verbose = FALSE, digits=4)))
+#     cfs <- as.numeric(do.call(c, coef(rsm, verbose = FALSE)))
 #     expect_equal(cfs, c(1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, 0, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -182, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -167.2, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -135.4, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -124.4, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -108.6, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -96.2, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -92.4, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -71.8, 1, 0, 1, 2, 3, 4, 0, -3607.3991, 798.7324, 352.2667, 1218.8, -59.2, 0, 1.6093),
 #                  tolerance = 1e-2)
 #     expect_equal(rsm@df, 9765610)

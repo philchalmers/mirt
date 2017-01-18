@@ -5,7 +5,7 @@ test_that('dich', {
     mod1 <- mirt(data, 1, verbose=FALSE)
     expect_is(mod1, 'SingleGroupClass')
     expect_equal(extract.mirt(mod1, 'df'), 21)
-    cfs <- as.numeric(do.call(c, coef(mod1, digits = 4)))
+    cfs <- as.numeric(do.call(c, coef(mod1)))
     expect_equal(cfs, c(0.988, 1.8561, 0, 1, 1.081, 0.808, 0, 1, 1.706, 1.8043, 0, 1, 0.7651, 0.486, 0, 1, 0.7358, 1.8545, 0, 1, 0, 1),
                  tolerance = 1e-2)
     sv <- mod2values(mod1)
@@ -16,13 +16,13 @@ test_that('dich', {
     expect_equal(sv$value, sv2$value)
     modm1 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_true(extract.mirt(modm1, 'SEMconv'))
-    cfs <- as.numeric(do.call(c, coef(modm1, digits = 4)))
+    cfs <- as.numeric(do.call(c, coef(modm1)))
     expect_equal(extract.mirt(modm1, 'condnum'), 30.134809, tolerance = 1e-4)
     expect_equal(cfs, c(0.9876, 0.6367, 1.3384, 1.8559, 1.5978, 2.1139, 0, NA, NA, 1, NA, NA, 1.0808, 0.7604, 1.4013, 0.808, 0.6335, 0.9825, 0, NA, NA, 1, NA, NA, 1.7075, 1.0868, 2.3281, 1.8052, 1.4028, 2.2076, 0, NA, NA, 1, NA, NA, 0.765, 0.5065, 1.0235, 0.486, 0.3114, 0.6606, 0, NA, NA, 1, NA, NA, 0.7357, 0.4246, 1.0467, 1.8545, 1.6332, 2.0757, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
     expect_is(modm1, 'SingleGroupClass')
     modm2 <- mirt(data, 1, SE = TRUE, SE.type = 'Richardson', verbose=FALSE)
-    cfs <- as.numeric(do.call(c, coef(modm2, digits=4)))
+    cfs <- as.numeric(do.call(c, coef(modm2)))
     expect_equal(extract.mirt(modm2, 'condnum'), 30.24068, tolerance = 1e-3)
     expect_equal(cfs, c(0.988, 0.6406, 1.3354, 1.8561, 1.5984, 2.1138, 0, NA, NA, 1, NA, NA, 1.081, 0.7501, 1.4119, 0.808, 0.6291, 0.9869, 0, NA, NA, 1, NA, NA, 1.706, 1.0779, 2.334, 1.8043, 1.4036, 2.205, 0, NA, NA, 1, NA, NA, 0.7651, 0.5022, 1.028, 0.486, 0.3392, 0.6328, 0, NA, NA, 1, NA, NA, 0.7358, 0.4395, 1.032, 1.8545, 1.6302, 2.0787, 0, NA, NA, 1, NA, NA, 0, NA, NA, 1, NA, NA),
                  tolerance = 1e-2)
@@ -85,7 +85,7 @@ test_that('dich', {
     expect_equal(fs[1:3,'F1'], c(-1.8971, -1.4750, -1.4547), tolerance=1e-4)
     m2 <- M2(mod, QMC=TRUE)
     expect_equal(m2$M2, 4.737918, tolerance=1e-5)
-    ifit <- itemfit(mod, QMC=TRUE, digits = 20)
+    ifit <- itemfit(mod, QMC=TRUE)
     expect_equal(ifit$p.S_X2[1], .7985, tolerance = 1e-2)
 
     fm1 <- fscores(modm1, verbose = FALSE, full.scores=FALSE)
@@ -126,7 +126,7 @@ test_that('dich', {
     TP2 <- plot(modm2)
     expect_is(TP1, 'trellis')
     expect_is(TP2, 'trellis')
-    ifit <- itemfit(modm1, c('S_X2', 'X2', 'Zh'), digits = 20)
+    ifit <- itemfit(modm1, c('S_X2', 'X2', 'Zh'))
     expect_is(ifit, 'data.frame')
     expect_true(mirt:::closeEnough(as.numeric(ifit$Zh) - c(1.431838, 6.354917, 5.310844, 5.804449,
                                                            0.696139), -1e-2, 1e-2))
@@ -151,7 +151,7 @@ test_that('dich', {
     modm1 <- mirt(data, model, verbose=FALSE)
     expect_equal(extract.mirt(modm1, 'df'), 20)
     modm2 <- mirt(data, model, itemtype=c('2PL','2PL', 'PC2PL','2PL', '2PL'), TOL=1e-3, verbose=FALSE)
-    cfs <- as.numeric(do.call(c, coef(modm2, digits = 4)))
+    cfs <- as.numeric(do.call(c, coef(modm2)))
     expect_equal(cfs, c(0.6514, 0, 1.7031, 0, 1, 1.4872, 0, 0.9174, 0, 1, 2.5151, 3.4949, 3.1337, 5.2577, 0, 1, 0, 0.7058, 0.4789, 0, 1, 0, 0.8524, 1.9092, 0, 1, 0, 0, 1, 0, 1),
                  tolerance = 1e-2)
     expect_equal(extract.mirt(modm2, 'df'), 19)

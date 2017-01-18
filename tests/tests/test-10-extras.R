@@ -33,7 +33,7 @@ test_that('extras', {
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))
     modideal <- mirt(dataset1, model = mirt.model('F1 = 1-6
                                                   F2 = 5-10'), 'ideal', verbose = FALSE)
-    cfs <- as.numeric(coef(modideal, digits=5, verbose=FALSE)[[5]])
+    cfs <- as.numeric(coef(modideal, verbose=FALSE)[[5]])
     expect_equal(extract.mirt(modideal, 'logLik'), -6408.54, tolerance = 1e-3)
     expect_equal(cfs, c(0.30446, 0.40742, -1.43222), tolerance = 1e-3)
 
@@ -97,7 +97,7 @@ test_that('extras', {
     expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-10)
     mod3 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats, TOL = 1e-2, verbose=FALSE)
     expect_equal(extract.mirt(mod3, 'logLik'), -3708.216, tolerance = 1e-4)
-    cfs <- as.vector(coef(mod3, simplify=TRUE, digits = 5)$items)
+    cfs <- as.vector(coef(mod3, simplify=TRUE)$items)
     expect_equal(cfs, c(-1.23177,-2.76946,-1.54897,-1.34947,-0.41973,-0.45958,-0.71595,-0.58334,-0.29564,4.58694,0.36752,-0.31281,0.4241,-2.90723,-0.16516,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3.69493,7.87579,3.59178,3.00087,2.60806,2.7068,2.83078,2.07429,6.50601,10.34317,5.36289,4.0315,5.42778,5.57857,4.69492,3.43515,4.9848,4.17678,3.89073,2.40695,5.74,5.87555,5.00542,3.86719,NA,NA,NA,NA,4,4,4,4,NA,NA,NA,NA,5,5,5,5,NA,NA,NA,NA,0,0,0,0,NA,NA,NA,NA,0,0,0,0,NA,NA,NA,NA,5.43095,5.52149,4.54781,3.38757,NA,NA,NA,NA,3.98583,3.27075,2.90466,1.19029), tolerance=1e-4)
 
 })

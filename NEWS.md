@@ -10,8 +10,10 @@
 - `SE.type = 'Fisher'` now supports the inclusion of latent distribution hyper-parameters. 
   Officially, all SE-types now provide proper hyper-parameter influence in the information matricies
 
-- wrapped various output objects as `mirt_df` class to avoid the need for passing a `digits` 
-  argument for rounding output in the console
+- wrapped various output objects as `mirt_df`, `mirt_matrix`, and `mirt_list` class to 
+  avoid the need for passing a `digits` argument for rounding output in the console. 
+  Now, returned objects are never rounded, which makes writing Monte Carlo
+  simulation code safer in that rounded results will not appear in the results
 
 - added Stone's (2000) fit statistics and forthcoming PV-Q1 fit statistics to `itemfit()`
 

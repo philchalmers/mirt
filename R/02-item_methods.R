@@ -102,6 +102,38 @@ print.mirt_df <- function(x, digits = 3, ...){
     print(x, ...)
 }
 
+#' Print generic for customized matrix console output
+#'
+#' Privides a nicer output for most printed \code{matrix} objects defined by functions in \code{mirt}.
+#'
+#' @method print mirt_df
+#' @param x object of class \code{'mirt_matrix'}
+#' @param digits number of digits to round
+#' @param ... additional arguments passed to \code{print(...)}
+#' @export
+print.mirt_matrix <- function(x, digits = 3, ...){
+    cls <- class(x)[2L]
+    class(x) <- cls
+    x <- round(x, digits=digits)
+    print(x, ...)
+}
+
+#' Print generic for customized list console output
+#'
+#' Privides a nicer output for most printed \code{list} objects defined by functions in \code{mirt}.
+#'
+#' @method print mirt_list
+#' @param x object of class \code{'mirt_list'}
+#' @param digits number of digits to round
+#' @param ... additional arguments passed to \code{print(...)}
+#' @export
+print.mirt_list <- function(x, digits = 3, ...){
+    cls <- class(x)[2L]
+    class(x) <- cls
+    x <- lapply(x, function(x, digits) round(x, digits=digits), digits=digits)
+    print(x, ...)
+}
+
 # ----------------------------------------------------------------
 # Begin class and method definitions
 

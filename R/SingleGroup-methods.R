@@ -99,7 +99,9 @@ setMethod(
 #' Summary of model object
 #'
 #' Transforms coefficients into a standardized factor loading's metric. For \code{MixedClass} objects,
-#' the fixed and random coefficients are printed.
+#' the fixed and random coefficients are printed. Note that while the output to the console is rounded
+#' to three digits, the returned list of objects is not. For simulations, use
+#' \code{output <- summary(mod, verbose = FALSE)} to suppress the console messages.
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -119,7 +121,6 @@ setMethod(
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
-#' @param digits number of significant digits to be rounded
 #' @param verbose logical; allow information to be printed to the console?
 #' @param ... additional arguments to be passed
 #'
@@ -140,7 +141,7 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
-    definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0, digits = 3,
+    definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0,
                           verbose = TRUE, ...){
         if (!object@Options$exploratory || rotate == 'none') {
             F <- object@Fit$F
@@ -151,16 +152,16 @@ setMethod(
             Phi <- cov2cor(gp$gcov)
             colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[1L:object@Model$nfact]
-            loads <- round(cbind(F,h2),digits)
+            loads <- cbind(F,h2)
             rownames(loads) <- colnames(object@Data$data)
             if(verbose){
                 if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
-                print(loads)
-                cat("\nSS loadings: ",round(SS,digits), "\n")
-                cat("Proportion Var: ",round(SS/nrow(F),digits), "\n")
+                print(loads, 3)
+                cat("\nSS loadings: ", round(SS, 3), "\n")
+                cat("Proportion Var: ",round(SS/nrow(F), 3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, digits))
+                print(round(Phi, 3))
             }
             invisible(list(rotF=F,h2=h2,fcor=Phi))
         } else {
@@ -171,7 +172,7 @@ setMethod(
             SS <- apply(rotF$loadings^2,2,sum)
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
-            loads <- round(cbind(L,h2),digits)
+            loads <- cbind(L,h2)
             rownames(loads) <- colnames(object@Data$data)
             Phi <- diag(ncol(F))
             if(!rotF$orthogonal){
@@ -181,10 +182,10 @@ setMethod(
             if(verbose){
                 cat("\nRotation: ", rotate, "\n")
                 cat("\nRotated factor loadings: \n\n")
-                print(loads,digits)
-                cat("\nRotated SS loadings: ",round(SS,digits), "\n")
+                print(loads, 3)
+                cat("\nRotated SS loadings: ",round(SS,3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, digits))
+                print(round(Phi, 3))
             }
             if(any(h2 > 1))
                 warning("Solution has Heywood cases. Interpret with caution.", call.=FALSE)
@@ -195,7 +196,10 @@ setMethod(
 
 #' Extract raw coefs from model object
 #'
-#' Return a list (or data.frame) of raw item and group level coefficients.
+#' Return a list (or data.frame) of raw item and group level coefficients. Note that while
+#' the output to the console is rounded to three digits, the returned list of objects is not.
+#' Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the unrounded results (useful
+#' for simulations).
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -206,7 +210,6 @@ setMethod(
 #' @param rotate see \code{summary} method for details. The default rotation is \code{'none'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
 #' @param printSE logical; print the standard errors instead of the confidence intervals?
-#' @param digits number of significant digits to be rounded
 #' @param as.data.frame logical; convert list output to a data.frame instead?
 #' @param simplify logical; if all items have the same parameter names (indicating they are
 #'   of the same class) then they are collapsed to a matrix, and a list of length 2 is returned
@@ -247,7 +250,7 @@ setMethod(
 setMethod(
     f = "coef",
     signature = 'SingleGroupClass',
-    definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL, digits = 3,
+    definition = function(object, CI = .95, printSE = FALSE, rotate = 'none', Target = NULL,
                           IRTpars = FALSE, rawug = FALSE, as.data.frame = FALSE,
                           simplify = FALSE, unique = FALSE, verbose = TRUE, ...){
         dots <- list(...)
@@ -266,7 +269,7 @@ setMethod(
 
         if (object@Options$exploratory && rotate != 'none'){
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
-            so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, digits=digits, ...)
+            so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, ...)
             a <- rotateLambdas(so) * 1.702
             for(i in 1:J){
                 object@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
@@ -285,9 +288,9 @@ setMethod(
         if(length(object@ParObjects$pars[[1L]]@SEpar)){
             if(printSE){
                 for(i in 1L:(J+1L)){
-                    allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                    allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
                                                    object@ParObjects$pars[[i]]@SEpar),
-                                                 2, byrow = TRUE), digits)
+                                                 2, byrow = TRUE)
                     rownames(allPars[[i]]) <- c('par', 'SE')
                     nms <- names(object@ParObjects$pars[[i]]@est)
                     if(i <= J && object@Model$itemtype[i] != 'custom'){
@@ -298,26 +301,26 @@ setMethod(
                 }
             } else {
                 for(i in 1L:(J+1L)){
-                    allPars[[i]] <- round(matrix(c(object@ParObjects$pars[[i]]@par,
+                    allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
                                                    object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
                                                    object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
-                                                 3, byrow = TRUE), digits)
+                                                 3, byrow = TRUE)
                     rownames(allPars[[i]]) <- c('par', SEnames)
                     colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 }
             }
         } else {
             for(i in 1L:(J+1L)){
-                allPars[[i]] <- matrix(round(object@ParObjects$pars[[i]]@par, digits), 1L)
+                allPars[[i]] <- matrix(object@ParObjects$pars[[i]]@par, 1L)
                 colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 rownames(allPars[[i]]) <- 'par'
             }
         }
         if(!rawug){
             allPars <- lapply(allPars, function(x, digits){
-                x[ , colnames(x) %in% c('g', 'u')] <- round(antilogit(x[ , colnames(x) %in% c('g', 'u')]), digits)
+                x[ , colnames(x) %in% c('g', 'u')] <- antilogit(x[ , colnames(x) %in% c('g', 'u')])
                 x
-            },  digits=digits)
+            })
         }
         names(allPars) <- c(colnames(object@Data$data), 'GroupPars')
         if(as.data.frame)
@@ -344,11 +347,11 @@ setMethod(
             }
         }
         if(.hasSlot(object@Model$lrPars, 'beta')){
-            allPars$lr.betas <- round(object@Model$lrPars@beta, digits)
+            allPars$lr.betas <- object@Model$lrPars@beta
             if(!all(is.nan(object@Model$lrPars@SEpar))){
                 tmp <- allPars$lr.betas
                 if(printSE){
-                    tmp[] <- round(object@Model$lrPars@SEpar, digits)
+                    tmp[] <- object@Model$lrPars@SEpar
                     allPars$lr.betas <- list(betas=allPars$lr.betas, SE=tmp)
                 } else {
                     low <- tmp - z*object@Model$lrPars@SEpar
@@ -359,6 +362,8 @@ setMethod(
             }
 
         }
+        if(!as.data.frame)
+            class(allPars) <- c('mirt_list', 'list')
         return(allPars)
     }
 )
@@ -441,7 +446,6 @@ setMethod(
 #'   residuals in the form of signed Cramers V coefficients
 #' @param tables logical; for LD type, return the observed, expected, and standardized residual
 #'   tables for each item combination?
-#' @param digits number of significant digits to be rounded
 #' @param df.p logical; print the degrees of freedom and p-values?
 #' @param full.scores logical; compute relevant statistics
 #'  for each subject in the original data?
@@ -491,7 +495,7 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'SingleGroupClass'),
-    definition = function(object, type = 'LD', digits = 3, df.p = FALSE, full.scores = FALSE,
+    definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
                           suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
     {
@@ -579,7 +583,7 @@ setMethod(
             if(tables) return(listtabs)
             if(df.p){
                 cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-                print(round(df, digits))
+                print(round(df, 3))
                 cat("\n")
             }
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
@@ -587,13 +591,13 @@ setMethod(
                 pick <- abs(res[upper.tri(res)]) < suppress
                 res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
             }
-            res <- round(res,digits)
+            class(res) <- c('mirt_matrix', 'matrix')
             return(res)
         } else if(type == 'exp'){
             r <- object@Data$Freq[[1L]]
-            res <- round((r - object@Internals$Pl * nrow(object@Data$data)) /
-                             sqrt(object@Internals$Pl * nrow(object@Data$data)),digits)
-            expected <- round(N * object@Internals$Pl,digits)
+            res <- (r - object@Internals$Pl * nrow(object@Data$data)) /
+                             sqrt(object@Internals$Pl * nrow(object@Data$data))
+            expected <- N * object@Internals$Pl
             tabdata <- object@Data$tabdata
             rownames(tabdata) <- NULL
             ISNA <- is.na(rowSums(tabdata))
@@ -611,6 +615,7 @@ setMethod(
                 ret <- cbind(object@Data$data, scoremat, res)
                 ret[is.na(rowSums(ret)), c('exp', 'res')] <- NA
                 rownames(ret) <- NULL
+                class(ret) <- c('mirt_df', 'data.frame')
                 return(ret)
             } else {
                 tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]
@@ -618,6 +623,7 @@ setMethod(
                     if(!is.numeric(printvalue)) stop('printvalue is not a number.', call.=FALSE)
                     tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
                 }
+                class(tabdata) <- c('mirt_df', 'data.frame')
                 return(tabdata)
             }
         } else if(type == 'Q3'){
@@ -642,12 +648,11 @@ setMethod(
                 pick <- abs(res[upper.tri(res)]) < suppress
                 res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
             }
-            res <- round(res,digits)
+            class(res) <- c('mirt_matrix', 'matrix')
             return(res)
         } else {
             stop('specified type does not exist', call.=FALSE)
         }
-
     }
 )
 

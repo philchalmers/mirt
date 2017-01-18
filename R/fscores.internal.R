@@ -5,7 +5,7 @@ setMethod(
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
-                          QMC, custom_den = NULL, custom_theta = NULL, digits=4,
+                          QMC, custom_den = NULL, custom_theta = NULL,
 	                      min_expected, converge_info, plausible.type, ...)
 	{
         den_fun <- mirt_dmvnorm
@@ -232,7 +232,7 @@ setMethod(
         itemloc <- object@Model$itemloc
         gp <- ExtractGroupPars(object@ParObjects$pars[[length(itemloc)]])
         if(object@Options$exploratory){
-            so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE, digits = Inf)
+            so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE)
             a <- rotateLambdas(so)
             for(i in 1L:J)
                 pars[[i]]@par[1L:nfact] <- a[i, ]
@@ -434,13 +434,13 @@ setMethod(
                 cat("\nMethod: ", method)
 			    if(object@Options$exploratory) cat("\nRotate: ", rotate)
                 cat("\n\nEmpirical Reliability:\n\n")
-                print(round(reliability, digits))
+                print(round(reliability, 4))
 			}
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
             ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
             if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
             if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
-			return(round(ret, digits))
+			return(ret)
 		}
 	}
 )

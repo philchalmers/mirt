@@ -8,8 +8,8 @@
 \alias{residuals-method}
 \title{Compute model residuals}
 \usage{
-\S4method{residuals}{SingleGroupClass}(object, type = "LD", digits = 3,
-  df.p = FALSE, full.scores = FALSE, printvalue = NULL, tables = FALSE,
+\S4method{residuals}{SingleGroupClass}(object, type = "LD", df.p = FALSE,
+  full.scores = FALSE, printvalue = NULL, tables = FALSE,
   verbose = TRUE, Theta = NULL, suppress = 1, theta_lim = c(-6, 6),
   quadpts = NULL, ...)
 }
@@ -24,8 +24,6 @@ X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic propos
 Yen (1984), or \code{'exp'} for the expected values for the frequencies of every response pattern.
 For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
 residuals in the form of signed Cramers V coefficients}
-
-\item{digits}{number of significant digits to be rounded}
 
 \item{df.p}{logical; print the degrees of freedom and p-values?}
 
