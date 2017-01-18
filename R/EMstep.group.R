@@ -370,14 +370,13 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     }
     LP <- unname(LP)
     if(list$SE.type %in% c('SEM', 'Oakes', 'complete') && list$SE){
-        need_item <- list$SE.type != 'Louis'
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
         for(group in 1L:ngroups){
             for (i in 1L:J){
-                if(need_item) deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, estHess=TRUE)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, estHess=TRUE)
                 ind2 <- ind1 + length(pars[[group]][[i]]@par) - 1L
-                if(need_item) h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
+                h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1L
             }
             deriv <- Deriv(x=pars[[group]][[i+1L]], CUSTOM.IND=CUSTOM.IND,
