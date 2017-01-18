@@ -262,7 +262,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
 }
 
 SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
-                     Theta, list, ngroups, nfact, J, dentype, sitems,
+                     Theta, list, ngroups, J, dentype, sitems,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, dxphi=NULL){
@@ -272,6 +272,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
         longpars <- longpars_constrain(longpars, constrain)
         pars <- reloadPars(longpars=longpars, pars=pars,
                            ngroups=ngroups, J=J)
+
         Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                        Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                        ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
@@ -297,7 +298,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
         if(dentype == 'bfactor'){
             pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
             pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
-        } else pars[[g]][[J+1L]]@rr <- sum(rlist[[g]]$r1)
+        } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1)
     }
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
     if(length(SLOW.IND)){

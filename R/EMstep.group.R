@@ -412,7 +412,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             dxphi <- SE.Oakes(pick=0, pars=pars, L=L, constrain=constrain, est=est,
                               shortpars=shortpars, longpars=longpars,
-                              Theta=Theta, list=list, ngroups=ngroups, nfact=nfact, J=J,
+                              Theta=Theta, list=list, ngroups=ngroups, J=J,
                               dentype=dentype, sitems=sitems, delta=0,
                               rlist=rlist, full=full, Data=Data,
                               specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
@@ -421,7 +421,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             missing_info <- sapply(1L:length(shortpars), SE.Oakes, dxphi=dxphi,
                                    pars=pars, L=L, constrain=constrain, delta=list$delta,
                                    est=est, shortpars=shortpars, longpars=longpars,
-                                   Theta=Theta, list=list, ngroups=ngroups, nfact=nfact, J=J,
+                                   Theta=Theta, list=list, ngroups=ngroups, J=J,
                                    dentype=dentype, sitems=sitems,
                                    rlist=rlist, full=full, Data=Data,
                                    specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
