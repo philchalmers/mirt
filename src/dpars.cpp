@@ -1598,17 +1598,24 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
             NumericMatrix r1 = vec2mat(r1vec, nquad, J);
             List pars = gpars[g];
             if(iscross){
+            	vector<double> rr(nquad);
                 for(int i = 0; i < nitems; ++i){
                     S4 item = pars[i];
                     NumericMatrix tmpmat(nquad, itemloc[i+1] - itemloc[i]);
-                    for(int j = 0; j < tmpmat.ncol(); ++j)
-                        for(int n = 0; n < nquad; ++n)
+                    for(int j = 0; j < tmpmat.ncol(); ++j){
+                        for(int n = 0; n < nquad; ++n){
                             tmpmat(n,j) = r1(n, itemloc[i] + j - 1);
+                            rr[n] += tmpmat(n,j);
+                        }
+                    }
                     item.slot("dat") = tmpmat;
                     pars[i] = item;
                 }
+                for(int n = 0; n < nquad; ++n)
+                	rr[n] /= nitems;
                 S4 item = pars[nitems];
                 item.slot("dat") = dat;
+                item.slot("rr") = wrap(rr);
                 if(isbifactor){
                     NumericVector r2 = wrap(r2vec);
                     NumericMatrix r3 = vec2mat(r3vec, nsquad, nsfact);
@@ -1619,19 +1626,21 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
                 NumericMatrix hess(npars, npars);
                 vector<double> grad(npars);
                 _computeDpars(grad, hess, pars, Theta, offterm, itemtrace, Prior,
-                              nitems, npars, 0, 0, 1, false);
+                              nitems, npars, 0, 0, 1, true);
                 add2outer(Igrad, grad, rs(g, pat));
             } else {
                 for(int i = 0; i < nitems; ++i){
                     S4 item = pars[i];
                     NumericMatrix tmpmat(1, itemloc[i+1] - itemloc[i]);
-                    for(int j = 0; j < tmpmat.ncol(); ++j)
+                    for(int j = 0; j < tmpmat.ncol(); ++j){
                         tmpmat(0,j) = dat(0, itemloc[i] + j - 1);
+                    }
                     item.slot("dat") = tmpmat;
                     pars[i] = item;
                 }
                 S4 item = pars[nitems];
                 item.slot("dat") = dat;
+                item.slot("rr") = wrap(1.0);
                 // if(isbifactor){
 
 
@@ -1652,7 +1661,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
                     NumericMatrix hess(npars, npars);
                     vector<double> tmpgrad(npars);
                     _computeDpars(tmpgrad, hess, pars, theta, offterm, itemtrace, Prior,
-                                  nitems, npars, 1, 0, 1, false);
+                                  nitems, npars, 1, 0, 1, true);
                     add2hess(Ihess, hess, rs(g,pat) * w[n]);
                     add2outer(IgradP, tmpgrad, rs(g,pat) * w[n]);
                     for(int j = 0; j < npars; ++j)

@@ -517,8 +517,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1L]]$itemloc, dentype=opts$dentype,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SEM=any(opts$SE.type %in% c('Oakes', 'SEM', 'complete')) && opts$SE,
-                                         Oakes=any(opts$SE.type == 'Oakes') && opts$SE, delta=opts$delta,
+                                         SE = opts$SE, SE.type=opts$SE.type, delta=opts$delta,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
                                          message=opts$message, BL=opts$method == 'BL', full=opts$full,
@@ -745,7 +744,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
                                   constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
-                                  message=opts$message)
+                                  message=opts$message, complete=ESTIMATE$hess)
         } else if(opts$SE.type == 'Fisher' && opts$method != 'MIXED'){
             if(logPrior != 0 && opts$warn)
                 warning('Information matrix with the Fisher method does not

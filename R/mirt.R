@@ -404,7 +404,7 @@
 #' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
 #'   Only applicable for unidimensional models estimated with the EM algorithm.
 #'   The number of cycles, TOL, and quadpts are adjusted
-#'   accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
+#'   accommodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
 #' @param survey.weights a optional numeric vector of survey weights to apply for each case in the
 #'   data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT
 #'   approach). The sum of the \code{survey.weights} must equal the total sample size for proper
