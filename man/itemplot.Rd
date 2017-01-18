@@ -94,6 +94,14 @@ library(directlabels)
 plt <- itemplot(pmod, 3)
 direct.label(plt, 'top.points')
 
+# change colour theme of plots
+bwtheme <- standard.theme("pdf", color=FALSE)
+plot(pmod, type='trace', par.settings=bwtheme)
+itemplot(pmod, 1, type = 'trace', par.settings=bwtheme)
+
+itemplot(pmod, 1, type = 'infoSE')
+update(trellis.last.object(), par.settings = bwtheme)
+
 # uncomment to run interactive shiny applet
 # itemplot(shiny = TRUE)
     }

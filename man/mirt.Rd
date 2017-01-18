@@ -234,7 +234,7 @@ To disable the acceleration, pass \code{'none'}}
 \item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
 Only applicable for unidimensional models estimated with the EM algorithm.
 The number of cycles, TOL, and quadpts are adjusted
-accomodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)}
+accommodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)}
 
 \item{verbose}{logical; print observed- (EM) or complete-data (MHRM) log-likelihood
 after each iteration cycle? Default is TRUE}
