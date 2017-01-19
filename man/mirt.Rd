@@ -9,11 +9,11 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   covdata = NULL, formula = NULL, SE.type = "crossprod", method = "EM",
   optimizer = "BFGS", pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
-  TOL = NULL, gpcm_mats = list(), grsm.block = NULL, key = NULL,
-  large = FALSE, GenRandomPars = FALSE, accelerate = "Ramsay",
-  empiricalhist = FALSE, verbose = TRUE, solnp_args = list(),
-  alabama_args = list(), spline_args = list(), control = list(),
-  technical = list(), ...)
+  TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
+  key = NULL, large = FALSE, GenRandomPars = FALSE,
+  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
+  solnp_args = list(), alabama_args = list(), spline_args = list(),
+  control = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -205,6 +205,8 @@ be estimated in the test data). For example, to specify two blocks of 3 with a 2
 the last item: \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all items are assumed
 to be within the same group and therefore have the same number of item categories}
 
+\item{rsm.block}{same as \code{grsm.block}, but for \code{'rsm'} blocks}
+
 \item{key}{a numeric vector of the response scoring key. Required when using nested logit item
 types, and must be the same length as the number of items used. Items that are not nested logit
 will ignore this vector, so use \code{NA} in item locations that are not applicable}
@@ -322,8 +324,6 @@ etc)}
 }}
 
 \item{...}{additional arguments to be passed}
-
-\item{rsm.block}{same as \code{grsm.block}, but for \code{'rsm'} blocks}
 }
 \value{
 function returns an object of class \code{SingleGroupClass}

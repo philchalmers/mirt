@@ -106,7 +106,7 @@ print.mirt_df <- function(x, digits = 3, ...){
 #'
 #' Privides a nicer output for most printed \code{matrix} objects defined by functions in \code{mirt}.
 #'
-#' @method print mirt_df
+#' @method print mirt_matrix
 #' @param x object of class \code{'mirt_matrix'}
 #' @param digits number of digits to round
 #' @param ... additional arguments passed to \code{print(...)}

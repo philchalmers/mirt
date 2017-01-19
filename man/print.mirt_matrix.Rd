@@ -4,7 +4,7 @@
 \alias{print.mirt_matrix}
 \title{Print generic for customized matrix console output}
 \usage{
-\method{print}{mirt_df}(x, digits = 3, ...)
+\method{print}{mirt_matrix}(x, digits = 3, ...)
 }
 \arguments{
 \item{x}{object of class \code{'mirt_matrix'}}
