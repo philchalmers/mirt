@@ -116,14 +116,14 @@ will estimate the regression parameters for all latent traits by default}
   or \code{'MHRM'} should be used when the dimensions are 3 or more}
 
 \item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM
-  algorithm will use the \code{'BFGS'} when there are no upper and lower bounds, and
+  algorithm will use the \code{'BFGS'} when there are no upper and lower bounds box-constraints and
   \code{'L-BFGS-B'} when there are. Another good option which supports bound constraints is
-  the \code{'nlminb'}, which is more stable than the BFGS family of optimizers (though slightly slower).
+  the \code{'nlminb'}, which may be more stable than the BFGS family of optimizers (though slightly slower).
 
   Other options include the Newton-Raphson (\code{'NR'}),
   which often will be more efficient than the \code{'BFGS'} but not as stable for more complex
   IRT models (such as the nominal or nested logit models) and does not support
-  upper and lower bound constraints. As well, the \code{'Nelder-Mead'}, \code{'SANN'}, and \code{'L-BFGS-B'}
+  upper and lower bound constraints. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
   estimators are also available, but their routine use generally is not required or recommended.
   The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
 
