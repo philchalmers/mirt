@@ -19,7 +19,7 @@ test_that('poly', {
     expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
                  tolerance = 1e-3)
     expect_equal(extract.mirt(modsandwich, 'condnum'), 142.2682, tolerance = 1e-2)
-    modOakes <- mirt(Science, 1, SE=T, TOL=1e-8, SE.type='Oakes', verbose=FALSE)
+    modOakes <- mirt(Science, 1, SE=T, SE.type='Oakes', verbose=FALSE)
     expect_equal(modOakes@OptimInfo$condnum, 100.3818, tolerance = 1e-4)
     modp1 <- mirt(Science, 1, verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
@@ -59,7 +59,7 @@ test_that('poly', {
     expect_true(mirt:::closeEnough(cfs - c(1.132,4.795,2.677,-1.507,1.132,2.856,0.874,-2.211,2.216,5.127,2.16,-1.927,1.128,3.374,0.999,-1.707,0,1),
                                    -1e-2, 1e-2))
     modOakes <- mirt(Science, newmodel, SE=T, SE.type='Oakes', verbose=FALSE)
-    expect_equal(modOakes@OptimInfo$condnum, 115.052, tolerance = 1e-4)
+    expect_equal(modOakes@OptimInfo$condnum, 107.4538, tolerance = 1e-4)
 
     modp4 <- mirt(Science, 1, itemtype = c(rep('graded',3), 'nominal'), verbose=FALSE)
     expect_is(modp4, 'SingleGroupClass')

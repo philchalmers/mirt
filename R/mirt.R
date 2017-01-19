@@ -352,7 +352,7 @@
 #'   increasing the number of iterations (\code{NCYCLES} and \code{TOL}, see below)
 #'   will help to improve the accuracy, and will be
 #'   run in parallel if a \code{\link{mirtCluster}} object has been defined. For \code{'Oakes'},
-#'   the numerical \code{TOL} criteria is automatically dropped to \code{1e-6} in order to provide better
+#'   the numerical \code{TOL} criteria is automatically dropped to \code{1e-8} in order to provide better
 #'   numerical results at the ML location, however sometimes even lower TOL values may be required. For both
 #'   algorithms, check the symmetry of the matrix for convergence issues by passing
 #'   \code{technical = list(symmetric = FALSE)}.

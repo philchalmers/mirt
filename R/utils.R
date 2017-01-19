@@ -1151,7 +1151,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
     if(SE.type == 'Oakes' && SE){
-        if(is.null(TOL)) opts$TOL <- 1e-7
+        if(is.null(TOL)) opts$TOL <- 1e-8
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
     if(is.null(technical$symmetric)) technical$symmetric <- TRUE
