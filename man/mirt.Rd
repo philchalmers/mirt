@@ -75,27 +75,30 @@ then specific regression effects can be estimated for each factor. Supplying a s
 will estimate the regression parameters for all latent traits by default}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
-  for computing standard errors and \code{\link{wald}} tests. Can be
-  \code{'Richardson'}, \code{'forward'}, or \code{'central'} for the numerical Richardson,
-   forward difference, and central difference evaluation of observed Hessian,
-   \code{'Fisher'} for the expected information, \code{'complete'} for information based
-   on the complete-data Hessian used in EM algorithm, \code{'SEM'} for
-  the supplemented EM (disables the \code{accelerate} option; EM only), \code{'crossprod'}
-  for standard error computations based on the variance of the Fisher scores, \code{'Louis'}
-  for Louis' (1982) computation of the observed information matrix,
-  \code{'sandwich'} for the sandwich covariance estimate, and \code{'Oakes'} for Oakes' 1999 method
-  using a forward difference approximation.
+  for computing standard errors and \code{\link{wald}} tests. Can be:
 
-  When \code{method = 'BL'} then the option \code{'numerical'} is available to obtain the numerical
-  estimate from a call to \code{\link{optim}}. Other options include \code{'MHRM'}
-  and \code{'FMHRM'} for stochastic approximations
-  based on the Robbins-Monro filter or a fixed number of MHRM draws without
-  the RM filter. These are the only options supported when \code{method = 'MHRM'}
+  \itemize{
+    \item \code{'Richardson'}, \code{'forward'}, or \code{'central'} for the numerical Richardson,
+      forward difference, and central difference evaluation of observed Hessian matrix
+    \item \code{'crossprod'} and \code{'Louis'} for standard error computations based on the variance of the
+      Fisher scores as well as Louis' (1982) exact computation of the observed information matrix
+    \item \code{'sandwich'} for the sandwich covariance estimate ba?sed on the
+      \code{'crossprod'} and \code{'Louis'} estimates
+    \item \code{'Oakes'} for Oakes' (1999) method using a forward difference approximation
+    \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option; EM only)
+    \item \code{'Fisher'} for the expected information, \code{'complete'} for information based
+      on the complete-data Hessian used in EM algorithm
+    \item \code{'MHRM'} and \code{'FMHRM'} for stochastic approximations of observed information matrix
+      based on the Robbins-Monro filter or a fixed number of MHRM draws without the RM filter.
+      These are the only options supported when \code{method = 'MHRM'}
+    \item \code{'numerical'} to obtain the numerical estimate from a call to \code{\link{optim}
+      when \code{method = 'BL'}}
+ }
 
   Note that both the \code{'Oakes'} and \code{'SEM'} methods become sensitive if the ML solution is
   has not been reached with sufficient precision, and the \code{'SEM'} algorithm may be further sensitive
   if the history of the EM cycles is not stable/sufficient. For \code{'SEM'},
-  increasing the number of iterations (\code{NCYCLES} and \code{TOL}, see below)
+  increasing the number of iterations (increasing \code{NCYCLES} and decreasing \code{TOL}, see below)
   will help to improve the accuracy, and will be
   run in parallel if a \code{\link{mirtCluster}} object has been defined. For \code{'Oakes'},
   the numerical \code{TOL} criteria is automatically dropped to \code{1e-8} in order to provide better
@@ -555,7 +558,8 @@ of categories.
      The gpcmIRT can be constrained to the partial credit IRT model by either constraining all the
      slopes to be equal, or setting the slopes to 1 and freeing the latent variance parameter.
 
-     A more constrained version of the partial credit model where the spacing is equal
+     Finally, the rsm is a more constrained version of the (generalized) partial
+     credit model where the spacing is equal
      across item blocks and only adjusted by a single 'difficulty' parameter (c). Note that this
      is analogous to the relationship between the graded model and the grsm (with an additional
      constraint regarding the fixed discrimination parameters).
