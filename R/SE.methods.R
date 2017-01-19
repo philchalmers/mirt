@@ -212,7 +212,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             tmp <- updatePrior(pars=pars, Theta=Theta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=100L,
-                               rlist=rlist, full=full, lrPars=lrPars)
+                               rlist=rlist, full=full)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         }
         Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
