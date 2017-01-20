@@ -84,7 +84,7 @@ will estimate the regression parameters for all latent traits by default}
       Fisher scores as well as Louis' (1982) exact computation of the observed information matrix
     \item \code{'sandwich'} for the sandwich covariance estimate ba?sed on the
       \code{'crossprod'} and \code{'Louis'} estimates
-    \item \code{'Oakes'} for Oakes' (1999) method using a forward difference approximation
+    \item \code{'Oakes'} for Oakes' (1999) method using a central difference approximation
     \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option; EM only)
     \item \code{'Fisher'} for the expected information, \code{'complete'} for information based
       on the complete-data Hessian used in EM algorithm
@@ -300,7 +300,7 @@ etc)}
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
   \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
     with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
-    forward difference approximation. Default is 1e-5}
+    central difference approximation. Default is 1e-5}
   \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
     Default is TRUE}
   \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?

@@ -1,7 +1,7 @@
 # Changes in mirt 1.22
 
 - new `SE.type = 'Oakes'` to compute Oakes' 1999 form of the observed information matrix using a 
-  forward-difference approximation. Applicable for all IRT models (including customized IRT types)
+  central-difference approximation. Applicable for all IRT models (including customized IRT types)
 
 - added support for `gpcmIRT` and `rsm` itemtypes for traditional generalized partial credit model and 
   Rasch rating scale model (which may be modified for a generalized rating scale model by freeing the 
