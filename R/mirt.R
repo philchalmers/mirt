@@ -337,24 +337,24 @@
 #'       forward difference, and central difference evaluation of observed Hessian matrix
 #'     \item \code{'crossprod'} and \code{'Louis'} for standard error computations based on the variance of the
 #'       Fisher scores as well as Louis' (1982) exact computation of the observed information matrix
-#'     \item \code{'sandwich'} for the sandwich covariance estimate ba?sed on the
+#'     \item \code{'sandwich'} for the sandwich covariance estimate based on the
 #'       \code{'crossprod'} and \code{'Louis'} estimates
 #'     \item \code{'Oakes'} for Oakes' (1999) method using a central difference approximation
-#'     \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option; EM only)
+#'     \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option automatically; EM only)
 #'     \item \code{'Fisher'} for the expected information, \code{'complete'} for information based
 #'       on the complete-data Hessian used in EM algorithm
 #'     \item \code{'MHRM'} and \code{'FMHRM'} for stochastic approximations of observed information matrix
 #'       based on the Robbins-Monro filter or a fixed number of MHRM draws without the RM filter.
 #'       These are the only options supported when \code{method = 'MHRM'}
-#'     \item \code{'numerical'} to obtain the numerical estimate from a call to \code{\link{optim}
-#'       when \code{method = 'BL'}}
+#'     \item \code{'numerical'} to obtain the numerical estimate from a call to \code{\link{optim}}
+#'       when \code{method = 'BL'}
 #'  }
 #'
-#'   Note that both the \code{'Oakes'} and \code{'SEM'} methods become sensitive if the ML solution is
+#'   Note that both the \code{'Oakes'} and \code{'SEM'} methods become very sensitive if the ML solution has
 #'   has not been reached with sufficient precision, and the \code{'SEM'} algorithm may be further sensitive
-#'   if the history of the EM cycles is not stable/sufficient. For \code{'SEM'},
-#'   increasing the number of iterations (increasing \code{NCYCLES} and decreasing \code{TOL}, see below)
-#'   will help to improve the accuracy, and will be
+#'   if the history of the EM cycles is not stable/sufficient for convergence of the respective estimates. 
+#'   For \code{'SEM'}, increasing the number of iterations (increasing \code{NCYCLES} and decreasing 
+#'   \code{TOL}, see below) will help to improve the accuracy, and can be
 #'   run in parallel if a \code{\link{mirtCluster}} object has been defined. For \code{'Oakes'},
 #'   the numerical \code{TOL} criteria is automatically dropped to \code{1e-8} in order to provide better
 #'   numerical results at the ML location, however sometimes even lower TOL values may be required. For both
@@ -1001,7 +1001,7 @@
 #' averageMI(par, SEpar)
 #'
 #' ############
-#' # Example using Guass-Hermite quadrature with custom input functions
+#' # Example using Gauss-Hermite quadrature with custom input functions
 #'
 #' library(fastGHQuad)
 #' data(SAT12)
