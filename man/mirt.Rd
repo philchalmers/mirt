@@ -45,7 +45,9 @@ of factors to extract is also supported}
       (unidimensional only)
     \item \code{'nominal'} - nominal response model
     \item \code{'ideal'} - dichotomous ideal point model
-    \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model
+    \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
+      Note that constraining the slopes to be equal across items will reduce the model to
+      Embretson's (a.k.a. Whitely's) multicomponent model (1980).
     \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
       the upper asymptote only
@@ -97,8 +99,8 @@ will estimate the regression parameters for all latent traits by default}
 
   Note that both the \code{'Oakes'} and \code{'SEM'} methods become very sensitive if the ML solution has
   has not been reached with sufficient precision, and the \code{'SEM'} algorithm may be further sensitive
-  if the history of the EM cycles is not stable/sufficient for convergence of the respective estimates. 
-  For \code{'SEM'}, increasing the number of iterations (increasing \code{NCYCLES} and decreasing 
+  if the history of the EM cycles is not stable/sufficient for convergence of the respective estimates.
+  For \code{'SEM'}, increasing the number of iterations (increasing \code{NCYCLES} and decreasing
   \code{TOL}, see below) will help to improve the accuracy, and can be
   run in parallel if a \code{\link{mirtCluster}} object has been defined. For \code{'Oakes'},
   the numerical \code{TOL} criteria is automatically dropped to \code{1e-8} in order to provide better
@@ -571,6 +573,9 @@ of categories.
   \item{partcomp}{Partially compensatory models consist of the product of 2PL probability curves.
     \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
     \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
+
+    Note that constraining the slopes to be equal across items will reduce the model to
+    Embretson's (a.k.a. Whitely's) multicomponent model (1980).
   }
   \item{2-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
     The model is broken into two components for the probability of endorsement. For successful
@@ -1078,6 +1083,9 @@ Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter
 
 Varadhan, R. & Roland, C. (2008). Simple and Globally Convergent Methods for Accelerating
 the Convergence of Any EM Algorithm. \emph{Scandinavian Journal of Statistics, 35}, 335-353.
+
+Whitely, S. E. (1980). Multicomponent latent trait models for ability tests.
+\emph{Psychometrika, 45}(4), 470-494.
 
 Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &
 Bock, R. D. (2003). \emph{TESTFACT 4 for Windows: Test Scoring, Item Statistics,
