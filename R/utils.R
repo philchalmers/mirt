@@ -990,17 +990,16 @@ ItemInfo <- function(x, Theta, cosangle, total.info = TRUE){
     return(info)
 }
 
-ItemInfo2 <- function(x, Theta, total.info = TRUE, MD = FALSE){
-    P <- ProbTrace(x, Theta)
-    dx <- DerivTheta(x, Theta)
+ItemInfo2 <- function(x, Theta, total.info = TRUE, MD = FALSE, DERIV = NULL, P = NULL){
+    if(is.null(P)) P <- ProbTrace(x, Theta)
+    dx <- if(is.null(DERIV)) DerivTheta(x, Theta) else DERIV(x, Theta)
     if(MD){
         info <- matrix(0, length(Theta), length(Theta))
         for(i in 1L:x@ncat)
             info <- info + outer(as.numeric(dx$grad[[i]]), as.numeric(dx$grad[[i]])) / P[ ,i]
     } else {
-        info <- matrix(0, nrow(Theta), ncol(P))
-        for(i in 1L:x@ncat)
-            info[,i] <- (dx$grad[[i]])^2 / P[ ,i]
+        grad <- do.call(cbind, dx$grad)
+        info <- grad^2 / P
         if(total.info) info <- rowSums(info)
     }
     return(info)

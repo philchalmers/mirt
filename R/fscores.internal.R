@@ -61,12 +61,12 @@ setMethod(
 	        return(c(est, SEest, estimate$code))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                    hessian, data, return.acov = FALSE, ...){
+	                    hessian, data, DERIV, return.acov = FALSE, ...){
 	        if(any(is.na(scores[ID, ])))
 	            return(c(scores[ID, ], rep(NA, ncol(scores))))
 	        estimate <- try(nlm(WLE.mirt, scores[ID, ], pars=pars, patdata=tabdata[ID, ],
 	                            itemloc=itemloc, gp=gp, prodlist=prodlist, data=data[ID, ],
-	                            hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
+	                            hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, DERIV=DERIV, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2 + 1L))
 	        if(hessian){
@@ -348,8 +348,12 @@ setMethod(
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
     		} else if(method == 'WLE'){
+    		    DERIV <- vector('list', extract.mirt(object, 'nitems'))
+    		    cls <- sapply(object@ParObjects$pars, class)
+    		    for(i in 1L:(length(cls)-1L))
+    		        DERIV[[i]] <- selectMethod(DerivTheta, c(cls[i], 'matrix'))
                 tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
-                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist,
+                               tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, DERIV=DERIV,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
                 stop('method not defined', call.=FALSE)
@@ -573,7 +577,7 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
     L
 }
 
-WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID, data)
+WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID, data, DERIV)
 {
     Theta <- matrix(Theta, nrow=1L)
     ThetaShort <- Theta
@@ -586,14 +590,17 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
         infos <- numeric(length(data))
         for(i in 1L:length(infos)){
             if(!is.na(data[i]))
-                infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE)
+                infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, DERIV=DERIV[[i]],
+                                      P=itemtrace[,itemloc[i]:(itemloc[i+1L]-1L),drop=FALSE])
         }
         infos <- sum(infos)
     } else {
         infos <- matrix(0, ncol(Theta), ncol(Theta))
         for(i in 1L:length(data)){
             if(!is.na(data[i]))
-                infos <- infos + ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, MD=TRUE)
+                infos <- infos + ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE,
+                                           MD=TRUE, DERIV=DERIV[[i]],
+                                           P=itemtrace[,itemloc[i]:(itemloc[i+1L]-1L),drop=FALSE])
         }
         infos <- det(infos)
         if(closeEnough(infos, -1e-20, 1e-20))
