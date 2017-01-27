@@ -646,6 +646,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED'))
             cat('\n\nCalculating information matrix...\n')
         if(opts$SE.type %in% c('complete', 'Oakes') && opts$method == 'EM'){
+            opts$times$start.time.SE <- ESTIMATE$start.time.SE
             ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain,
                                          warn=opts$warn)
         } else if(opts$SE.type == 'SEM' && opts$method == 'EM'){

@@ -369,6 +369,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
     }
     LP <- unname(LP)
+    start.time.SE <- proc.time()[3L]
     if(list$SE.type %in% c('SEM', 'Oakes', 'complete') && list$SE){
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
@@ -434,7 +435,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     LBOUND=LBOUND, UBOUND=UBOUND, EMhistory=na.omit(EMhistory), random=list(),
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=collectLL, shortpars=longpars[estpars & !redun_constr],
-                    lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist)
+                    lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist,
+                    start.time.SE=start.time.SE)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,
