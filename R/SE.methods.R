@@ -202,6 +202,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      delta, prior, Prior, Priorbetween, nfact,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
     row <- 1L
+    delta <- delta / Norder
     if(is.null(zero_g)){
         grad <- matrix(0, Norder, length(shortpars))
         signs <- seq(-Norder/2, Norder/2, by = 1L)

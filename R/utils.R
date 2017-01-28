@@ -1863,6 +1863,7 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
     central_difference <- function(par, f, delta, ...){
         np <- length(par)
         g <- numeric(np)
+        delta <- delta / 2
         for(i in 1L:np){
             p1 <- p2 <- par
             p1[i] <- p1[i] + delta
@@ -1895,6 +1896,7 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
         np <- length(par)
         hess <- matrix(0, np, np)
         fx <- f(par, ...)
+        delta <- delta / 2
         for(i in 1L:np){
             for(j in i:np){
                 if(i == j){
