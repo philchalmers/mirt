@@ -411,7 +411,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-            if(list$Ocentral){
+            if(list$Norder >= 2){
                 missing_info <- sapply(1L:length(shortpars), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
@@ -421,7 +421,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                        PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
-                                       SLOW.IND=list$SLOW.IND)
+                                       SLOW.IND=list$SLOW.IND, Norder=list$Norder)
             } else {
                 zero_g <- SE.Oakes(0L, pars=pars, L=L, constrain=constrain, delta=0,
                                    est=est, shortpars=shortpars, longpars=longpars,
@@ -431,7 +431,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                    specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                    prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                    PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
-                                   SLOW.IND=list$SLOW.IND)
+                                   SLOW.IND=list$SLOW.IND, Norder=1L)
                 missing_info <- sapply(1L:length(shortpars), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
@@ -441,7 +441,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                        PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
-                                       SLOW.IND=list$SLOW.IND, zero_g=zero_g)
+                                       SLOW.IND=list$SLOW.IND, zero_g=zero_g, Norder=1L)
             }
             if(list$symmetric) missing_info <- (missing_info + t(missing_info))/2
             pars <- reloadPars(longpars=longpars, pars=pars,

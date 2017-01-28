@@ -1108,7 +1108,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Ocentral')
+                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1136,7 +1136,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(BFACTOR) opts$dentype <- 'bfactor'
     if(empiricalhist) opts$dentype <- 'EH'
     opts$accelerate = accelerate
-    opts$Ocentral <- ifelse(is.null(technical$Ocentral), TRUE, technical$Ocentral)
+    opts$Norder <- ifelse(is.null(technical$Norder), 2L, technical$Norder)
+    if(opts$Norder > 2L && (opts$Norder %% 2L) != 0L)
+        stop('Norder higher than 2 must be even', call.=FALSE)
+    if(opts$Norder > 8L) stop('Norder greater than 8 not supported', call.=FALSE)
     opts$delta <- ifelse(is.null(technical$delta), 1e-5, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
