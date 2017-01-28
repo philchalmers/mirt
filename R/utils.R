@@ -1981,6 +1981,18 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
     return(pars)
 }
 
+get_deriv_coefs <- function(order, deriv = 1L){
+    if(deriv == 1L){
+        ret <- switch(as.character(order),
+                      "1" = c(-1, 1),
+                      "2" = c(-1/2, 1/2),
+                      "4" = c(1/12,	-2/3, 2/3, -1/12),
+                      "6" = c(-1/60, 3/20, -3/4, 3/4, -3/20, 1/60),
+                      "8" = c(1/280, -4/105, 1/5, -4/5, 4/5, -1/5, 4/105, -1/280))
+    }
+    ret
+}
+
 cfi <- function(X2, X2.null, df, df.null){
     ret <- 1 - (X2 - df) / (X2.null - df.null)
     if(ret > 1) ret <- 1

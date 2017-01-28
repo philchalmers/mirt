@@ -201,15 +201,17 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
+    row <- 1L
     if(is.null(zero_g)){
         grad <- matrix(0, Norder, length(shortpars))
         signs <- seq(-Norder/2, Norder/2, by = 1L)
         signs <- signs[signs != 0L]
     } else {
-        grad <- matrix(0, 1L, length(shortpars))
+        grad <- matrix(0, 2L, length(shortpars))
+        grad[1L, ] <- zero_g
         signs <- 1
+        row <- 2L
     }
-    row <- 1L
     for(sign in signs){
         if(pick != 0){
             longpars_old <- longpars
@@ -271,14 +273,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
         grad[row, ] <- tmp[est]
         row <- row + 1L
     }
-    ret <- if(is.null(zero_g)){
-        cfs <- switch(as.character(Norder),
-                      "2" = c(-1/2, 1/2),
-                      "4" = c(1/12,	-2/3, 2/3, -1/12),
-                      "6" = c(-1/60, 3/20, -3/4, 3/4, -3/20, 1/60),
-                      "8" = c(1/280, -4/105, 1/5, -4/5, 4/5, -1/5, 4/105, -1/280))
-        colSums(cfs * grad) / delta
-    } else (grad[1L, ] - zero_g) / delta
+    cfs <- get_deriv_coefs(order=Norder)
+    ret <- colSums(cfs * grad) / delta
     ret
 }
 
