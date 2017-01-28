@@ -522,7 +522,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
                                          message=opts$message, BL=opts$method == 'BL', full=opts$full,
                                          lrPars=lrPars, SE=opts$SE && opts$SE.type == 'numerical', Etable=opts$Etable,
-                                         NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI,
+                                         NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI, Ocentral=opts$Ocentral,
                                          keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         opts$Moptim <- ESTIMATE$Moptim
@@ -981,11 +981,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        vcov=vcov)
         }
     }
-    mod@time <- c(TOTAL = as.numeric(proc.time()[3L] - time$start.time),
-                  DATA = as.numeric(time$end.time.Data - time$start.time.Data),
-                  ESTIMATE = as.numeric(time$end.time.Estimate - time$start.time.Estimate),
+    mod@time <- c("TOTAL:" = as.numeric(proc.time()[3L] - time$start.time),
+                  Data = as.numeric(time$end.time.Data - time$start.time.Data),
                   ESTIMATE$time,
                   SE = as.numeric(time$end.time.SE - time$start.time.SE),
-                  POST = as.numeric(time$end.time.post - time$start.time.post))
+                  Post = as.numeric(time$end.time.post - time$start.time.post))
     return(mod)
 }

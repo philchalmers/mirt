@@ -200,9 +200,15 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      Theta, list, ngroups, J, dentype, sitems,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact,
-                     PrepList, ANY.PRIOR, DERIV, SLOW.IND){
-    grad <- matrix(0, 2L, length(shortpars))
-    for(sign in 1L:2L){
+                     PrepList, ANY.PRIOR, DERIV, SLOW.IND, zero_g = NULL){
+    if(is.null(zero_g)){
+        grad <- matrix(0, 2L, length(shortpars))
+        iters <- 1L:2L
+    } else {
+        grad <- matrix(0, 1L, length(shortpars))
+        iters <- 1L
+    }
+    for(sign in iters){
         if(pick != 0){
             longpars_old <- longpars
             d <- if(sign == 1L) delta else -delta
@@ -259,9 +265,12 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             }
         }
         tmp <- g %*% L
+        if(pick == 0L) return(tmp[est])
         grad[sign, ] <- tmp[est]
     }
-    return((grad[1L, ] - grad[2L, ]) / (2*delta))
+    ret <- if(is.null(zero_g)) (grad[1L, ] - grad[2L, ]) / (2*delta)
+        else (grad[1L, ] - zero_g) / delta
+    ret
 }
 
 SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND,
