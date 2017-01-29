@@ -1153,10 +1153,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.null(TOL)) opts$TOL <- 1e-5
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
     }
-    if(SE.type == 'Oakes' && SE){
-        if(is.null(TOL)) opts$TOL <- 1e-8
-        if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
-    }
     if(is.null(technical$symmetric)) technical$symmetric <- TRUE
     opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
         else technical$removeEmptyRows

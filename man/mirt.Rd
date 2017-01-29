@@ -97,16 +97,15 @@ will estimate the regression parameters for all latent traits by default}
       when \code{method = 'BL'}
  }
 
-  Note that both the \code{'Oakes'} and \code{'SEM'} methods become very sensitive if the ML solution has
-  has not been reached with sufficient precision, and the \code{'SEM'} algorithm may be further sensitive
+  Note that both the \code{'SEM'} method becomes very sensitive if the ML solution has
+  has not been reached with sufficient precision, and may be further sensitive
   if the history of the EM cycles is not stable/sufficient for convergence of the respective estimates.
-  For \code{'SEM'}, increasing the number of iterations (increasing \code{NCYCLES} and decreasing
+  Increasing the number of iterations (increasing \code{NCYCLES} and decreasing
   \code{TOL}, see below) will help to improve the accuracy, and can be
-  run in parallel if a \code{\link{mirtCluster}} object has been defined. For \code{'Oakes'},
-  the numerical \code{TOL} criteria is automatically dropped to \code{1e-8} in order to provide better
-  numerical results at the ML location, however sometimes even lower TOL values may be required. For both
-  algorithms, check the symmetry of the matrix for convergence issues by passing
-  \code{technical = list(symmetric = FALSE)}.}
+  run in parallel if a \code{\link{mirtCluster}} object has been defined. Additionally,
+  inspecting the symmetry of the ACOV matrix for convergence issues by passing
+  \code{technical = list(symmetric = FALSE)} can be helpful to determine if a sufficent
+  solution has been reached}
 
 \item{method}{a character object specifying the estimation algorithm to be used. The default is
   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
