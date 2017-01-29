@@ -360,7 +360,8 @@
 #'   if the history of the EM cycles is not stable/sufficient for convergence of the respective estimates.
 #'   Increasing the number of iterations (increasing \code{NCYCLES} and decreasing
 #'   \code{TOL}, see below) will help to improve the accuracy, and can be
-#'   run in parallel if a \code{\link{mirtCluster}} object has been defined. Additionally,
+#'   run in parallel if a \code{\link{mirtCluster}} object has been defined (this will be
+#'   used for Oakes' method as well). Additionally,
 #'   inspecting the symmetry of the ACOV matrix for convergence issues by passing
 #'   \code{technical = list(symmetric = FALSE)} can be helpful to determine if a sufficent
 #'   solution has been reached

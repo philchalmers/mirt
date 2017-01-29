@@ -412,7 +412,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                rlist=rlist, full=full, lrPars=lrPars)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(list$Norder >= 2){
-                missing_info <- sapply(1L:length(shortpars), SE.Oakes,
+                missing_info <- mySapply(1L:length(shortpars), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
                                        Theta=Theta, list=list, ngroups=ngroups, J=J,
@@ -432,7 +432,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                    prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                    PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
                                    SLOW.IND=list$SLOW.IND, Norder=1L)
-                missing_info <- sapply(1L:length(shortpars), SE.Oakes,
+                missing_info <- mySapply(1L:length(shortpars), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
                                        Theta=Theta, list=list, ngroups=ngroups, J=J,
