@@ -28,6 +28,9 @@ test_that('dich data', {
     expect_is(pfit1, 'data.frame')
     ifit <- suppressWarnings(itemfit(mod1))
     expect_is(ifit, 'data.frame')
+    mod2 <- bfactor(data, specific, pars=mod2values(mod1), TOL=NaN,
+                    verbose=FALSE, SE = TRUE, SE.type = 'Oakes')
+    expect_equal(extract.mirt(mod2, 'condnum'), 619.3619, tolerance = 1e-4)
 
     #nestlogit
     scoredSAT12 <- data
