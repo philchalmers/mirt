@@ -3,8 +3,8 @@
 - `SE.type = 'Oakes'` set as the new default when computing standard errors via the ACOV matrix when
   using the EM algorithm
 
-- new `SE.type = 'Oakes'` to compute Oakes' 1999 form of the observed information matrix using a 
-  central-difference approximation. Applicable for all IRT models (including customized IRT types)
+- new `SE.type = 'Oakes'` to compute Oakes' 1999 form of the observed information matrix using 
+  Richardson extropolation. Applicable for all IRT models (including customized IRT types)
 
 - added support for `gpcmIRT` and `rsm` itemtypes for traditional generalized partial credit model and 
   Rasch rating scale model (which may be modified for a generalized rating scale model by freeing the 

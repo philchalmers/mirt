@@ -1136,10 +1136,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(BFACTOR) opts$dentype <- 'bfactor'
     if(empiricalhist) opts$dentype <- 'EH'
     opts$accelerate = accelerate
-    opts$Norder <- ifelse(is.null(technical$Norder), 2L, technical$Norder)
-    if(opts$Norder > 2L && (opts$Norder %% 2L) != 0L)
-        stop('Norder higher than 2 must be even', call.=FALSE)
-    if(opts$Norder > 8L) stop('Norder greater than 8 not supported', call.=FALSE)
+    opts$Norder <- ifelse(is.null(technical$Norder), 4L, technical$Norder)
     opts$delta <- ifelse(is.null(technical$delta), 1e-5, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
@@ -1981,10 +1978,7 @@ get_deriv_coefs <- function(order, deriv = 1L){
     if(deriv == 1L){
         ret <- switch(as.character(order),
                       "1" = c(-1, 1),
-                      "2" = c(-1/2, 1/2),
-                      "4" = c(1/12,	-2/3, 2/3, -1/12),
-                      "6" = c(-1/60, 3/20, -3/4, 3/4, -3/20, 1/60),
-                      "8" = c(1/280, -4/105, 1/5, -4/5, 4/5, -1/5, 4/105, -1/280))
+                      "2" = c(-1/2, 1/2))
     }
     ret
 }
