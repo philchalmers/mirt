@@ -60,7 +60,7 @@
 #' dat1 <- simdata(a, d, N, itemtype = 'dich')
 #' dat2 <- simdata(a, d, N, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
-#' mod <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type='crossprod',
+#' mod <- multipleGroup(dat, model, group=group, SE=TRUE,
 #'                      invariance=c('free_means', 'free_var'))
 #' plot(mod)
 #'
@@ -80,7 +80,7 @@
 #' mod1 <- multipleGroup(dat, 1, group=group)
 #' plot(mod1) #does not account for group differences! Need anchors
 #'
-#' mod2 <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type = 'crossprod',
+#' mod2 <- multipleGroup(dat, model, group=group, SE=TRUE,
 #'                       invariance=c('free_means', 'free_var'))
 #' plot(mod2)
 #'
@@ -95,7 +95,7 @@
 #' dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, .5)),
 #'                 N, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
-#' mod3 <- multipleGroup(dat, model, group=group, SE=TRUE, SE.type='crossprod',
+#' mod3 <- multipleGroup(dat, model, group=group, SE=TRUE,
 #'                       invariance=c('free_means', 'free_var'))
 #' plot(mod3) #visable DTF happening
 #'

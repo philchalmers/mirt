@@ -1099,7 +1099,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(),
-                     SE.type = 'crossprod', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
+                     SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
                      optimizer = NULL, solnp_args = list(), alabama_args = list(), ...)
 {
     opts <- list()
@@ -1112,7 +1112,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
-    if((method == 'MHRM' || method == 'MIXED') && SE.type == 'crossprod') SE.type <- 'MHRM'
+    if((method == 'MHRM' || method == 'MIXED') && SE.type == 'Oakes') SE.type <- 'MHRM'
     if((method == 'MHRM' || method == 'MIXED') && !(SE.type %in% c('MHRM', 'FMHRM', 'none')))
         stop('SE.type not supported for MHRM method', call.=FALSE)
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))

@@ -4,7 +4,7 @@
 \alias{lagrange}
 \title{Lagrange test for freeing parameters}
 \usage{
-lagrange(mod, parnum, SE.type = "crossprod", type = "central", ...)
+lagrange(mod, parnum, SE.type = "Oakes", type = "central", ...)
 }
 \arguments{
 \item{mod}{an estimated model}

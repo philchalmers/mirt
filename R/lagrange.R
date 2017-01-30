@@ -51,7 +51,7 @@
 #' lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 #'
 #' }
-lagrange <- function(mod, parnum, SE.type = 'crossprod', type = 'central', ...){
+lagrange <- function(mod, parnum, SE.type = 'Oakes', type = 'central', ...){
     fn <- function(par, mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, MG, group, ...){
         sv2 <- sv
         sv2$value[pn] <- par

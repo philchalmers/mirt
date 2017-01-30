@@ -1,5 +1,8 @@
 # Changes in mirt 1.22
 
+- `SE.type = 'Oakes'` set as the new default when computing standard errors via the ACOV matrix when
+  using the EM algorithm
+
 - new `SE.type = 'Oakes'` to compute Oakes' 1999 form of the observed information matrix using a 
   central-difference approximation. Applicable for all IRT models (including customized IRT types)
 
@@ -8,7 +11,7 @@
   slope parameters)
 
 - `SE.type = 'Fisher'` now supports the inclusion of latent distribution hyper-parameters. 
-  Officially, all SE-types now provide proper hyper-parameter influence in the information matricies
+  Officially, all SE-types now provide proper hyper-parameter influence in the information matrices
 
 - wrapped various output objects as `mirt_df`, `mirt_matrix`, and `mirt_list` class to 
   avoid the need for passing a `digits` argument for rounding output in the console. 
@@ -44,7 +47,7 @@
 - added `type = 'itemscore'` to `plot()` generic to plot faceted version of the item
   scoring functions. Particularly useful when investigating DIF with `multipleGroup()`
   
-- better support for `splines` itemtype in mutliple-group models
+- better support for `splines` itemtype in multiple-group models
   
 ## Bug fixes
 

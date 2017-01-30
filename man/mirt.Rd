@@ -6,7 +6,7 @@
 Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  covdata = NULL, formula = NULL, SE.type = "crossprod", method = "EM",
+  covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
   optimizer = "BFGS", pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
@@ -609,7 +609,7 @@ data <- expand.table(LSAT7)
 
 (mod1 <- mirt(data, 1))
 coef(mod1)
-(mod2 <- mirt(data, 1, SE = TRUE)) #standard errors with crossprod method
+(mod2 <- mirt(data, 1, SE = TRUE)) #standard errors via the Oakes method
 (mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 coef(mod2)
 (mod3 <- mirt(data, 1, SE = TRUE, SE.type = 'Richardson')) #with numerical Richardson method

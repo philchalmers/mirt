@@ -92,7 +92,7 @@
 #' # define a parallel cluster (optional) to help speed up internal functions
 #' mirtCluster()
 #'
-#' #  Information matrix with crossprod (not controlling for latent group differences)
+#' #  Information matrix with Oakes' identity (not controlling for latent group differences)
 #' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
 #' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
