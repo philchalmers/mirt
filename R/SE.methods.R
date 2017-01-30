@@ -201,6 +201,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
+    r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
     if(Richardson){
         r <- Norder
@@ -287,7 +288,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
         } else {
             R[ ,1L, 2L] <- ret
             for (j in 1L:rr)
-                R[ ,j + 1L, 2L] = (4^j*R[ , j, 2L] - R[, j, 1L])/(4^j - 1)
+                R[ ,j + 1L, 2L] <- (4^j*R[ , j, 2L] - R[, j, 1L])/(4^j - 1)
             R[ , , 1L] <- R[ , , 2L]
         }
     }
