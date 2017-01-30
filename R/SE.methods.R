@@ -204,6 +204,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
     r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
     if(Richardson){
+        delta <- delta * 10
         r <- Norder
         Norder <- 2L
         R <- array(0, dim = c(length(shortpars), r, 2L))

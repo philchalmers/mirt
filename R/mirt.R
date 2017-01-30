@@ -344,7 +344,7 @@
 #'       Fisher scores as well as Louis' (1982) exact computation of the observed information matrix
 #'     \item \code{'sandwich'} for the sandwich covariance estimate based on the
 #'       \code{'crossprod'} and \code{'Louis'} estimates
-#'     \item \code{'Oakes'} for Oakes' (1999) method using a Richardson extropolation
+#'     \item \code{'Oakes'} for Oakes' (1999) method using a central difference approximation
 #'     \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option automatically; EM only)
 #'     \item \code{'Fisher'} for the expected information, \code{'complete'} for information based
 #'       on the complete-data Hessian used in EM algorithm
