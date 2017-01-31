@@ -236,11 +236,11 @@ summary(mod1)
 </code></pre>
 
 <pre><code>## ------------------------------------------------------------
-## sirt 1.12-2 (2016-07-19) 
+## sirt 1.14-0 (2017-01-11) 
 ## 
-## Date of Analysis: 2016-10-04 16:41:56 
-## Time difference of 0.1130524 secs
-## Computation time: 0.1130524 
+## Date of Analysis: 2017-01-31 13:09:52 
+## Time difference of 0.1074612 secs
+## Computation time: 0.1074612 
 ## 
 ## Call:
 ## rasch.mml2(dat = dat, mmliter = mmliter, progress = FALSE, fixed.K = fixed.K, 
@@ -329,12 +329,13 @@ print(mod1m)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.20 
+## mirt version: 1.22 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 10
 ## 
 ## Log-likelihood = -5880.067
+## Estimated parameters: 11 
 ## AIC = 11782.13; AICc = 11782.4
 ## BIC = 11836.12; SABIC = 11801.18
 </code></pre>
@@ -357,14 +358,14 @@ round( dfr , 2 )
 ## I07      1.49 1.54            1.55
 ## I08      2.23 2.22            2.21
 ## I09      3.32 3.02            2.98
-## I10      4.95 5.25            5.09
+## I10      4.95 5.24            5.09
 ## I11      7.39 5.65            5.51
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.3.1 (2016-06-21)
+<pre><code>## R version 3.3.2 (2016-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Ubuntu 16.04.1 LTS
 ## 
@@ -381,29 +382,29 @@ round( dfr , 2 )
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] MultiLCIRT_2.10  limSolve_1.5.5.1 sirt_1.12-2      TAM_1.995-0     
-##  [5] CDM_5.1-0        mvtnorm_1.0-5    ltm_1.0-0        polycor_0.7-9   
-##  [9] msm_1.6.1        MASS_7.3-45      mirt_1.20        lattice_0.20-34 
-## [13] knitr_1.14      
+##  [1] MultiLCIRT_2.10  limSolve_1.5.5.2 CDM_5.3-0        mvtnorm_1.0-5   
+##  [5] sirt_1.14-0      ltm_1.0-0        polycor_0.7-9    msm_1.6.4       
+##  [9] MASS_7.3-45      mirt_1.22        lattice_0.20-34  knitr_1.15.1    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] lavaan_0.5-22         gtools_3.5.0          modeltools_0.2-21    
-##  [4] kappalab_0.4-7        lpSolve_5.6.13        kernlab_0.9-24       
-##  [7] splines_3.3.1         expm_0.999-0          mgcv_1.8-14          
-## [10] MCMCpack_1.3-7        survival_2.39-4       sm_2.2-5.4           
-## [13] foreign_0.8-66        lavaan.survey_1.1.3   plyr_1.8.4           
-## [16] GPArotation_2014.11-1 stringr_1.1.0         ic.infer_1.1-5       
-## [19] MatrixModels_0.4-1    combinat_0.0-8        coda_0.18-1          
-## [22] psych_1.6.9           evaluate_0.9          SparseM_1.72         
-## [25] mRm_1.1.5             flexmix_2.3-13        quantreg_5.29        
-## [28] parallel_3.3.1        psychotools_0.4-2     markdown_0.7.7       
-## [31] WrightMap_1.2.1       Rcpp_0.12.7           tensor_1.5           
-## [34] mime_0.5              mcmc_0.9-4            mnormt_1.5-4         
-## [37] stringi_1.1.1         psychomix_1.1-3       survey_3.31-2        
-## [40] grid_3.3.1            quadprog_1.5-5        tools_3.3.1          
-## [43] magrittr_1.5          Formula_1.2-1         pbivnorm_0.6.0       
-## [46] Matrix_1.2-7.1        boot_1.3-18           nnet_7.3-12          
-## [49] sfsmisc_1.1-0         igraph_1.0.1          nlme_3.1-128
+##  [1] Rcpp_0.12.9           gtools_3.5.0          psychomix_1.1-3      
+##  [4] psych_1.6.12          mime_0.5              ic.infer_1.1-5       
+##  [7] plyr_1.8.4            MatrixModels_0.4-1    survey_3.31-5        
+## [10] evaluate_0.10         coda_0.19-1           tensor_1.5           
+## [13] highr_0.6             SparseM_1.74          kernlab_0.9-25       
+## [16] Matrix_1.2-7.1        WrightMap_1.2.1       combinat_0.0-8       
+## [19] pbivnorm_0.6.0        mRm_1.1.6             lavaan.survey_1.1.3.1
+## [22] splines_3.3.2         stringr_1.1.0         foreign_0.8-67       
+## [25] igraph_1.0.1          GPArotation_2014.11-1 mnormt_1.5-5         
+## [28] mgcv_1.8-16           mcmc_0.9-4            nnet_7.3-12          
+## [31] expm_0.999-0          lpSolve_5.6.13        kappalab_0.4-7       
+## [34] quadprog_1.5-5        grid_3.3.2            nlme_3.1-128         
+## [37] magrittr_1.5          TAM_1.995-0           stringi_1.1.2        
+## [40] sm_2.2-5.4            flexmix_2.3-13        boot_1.3-18          
+## [43] Formula_1.2-1         tools_3.3.2           markdown_0.7.7       
+## [46] sfsmisc_1.1-0         parallel_3.3.2        survival_2.39-4      
+## [49] lavaan_0.5-22         psychotools_0.4-2     quantreg_5.29        
+## [52] MCMCpack_1.3-8        modeltools_0.2-21
 </code></pre>
 
 </body>

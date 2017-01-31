@@ -14,7 +14,10 @@
 
 <h3>Description</h3>
 
-<p>Return a list (or data.frame) of raw item and group level coefficients.
+<p>Return a list (or data.frame) of raw item and group level coefficients. Note that while
+the output to the console is rounded to three digits, the returned list of objects is not.
+Hence, elements from <code>cfs &lt;- coef(mod); cfs[[1]]</code> will contain the unrounded results (useful
+for simulations).
 </p>
 
 
@@ -23,9 +26,9 @@
 <pre>
 ## S4 method for signature 'SingleGroupClass'
 coef(object, CI = 0.95, printSE = FALSE,
-  rotate = "none", Target = NULL, digits = 3, IRTpars = FALSE,
-  rawug = FALSE, as.data.frame = FALSE, simplify = FALSE,
-  unique = FALSE, verbose = TRUE, ...)
+  rotate = "none", Target = NULL, IRTpars = FALSE, rawug = FALSE,
+  as.data.frame = FALSE, simplify = FALSE, unique = FALSE,
+  verbose = TRUE, ...)
 </pre>
 
 
@@ -53,10 +56,6 @@ coef(object, CI = 0.95, printSE = FALSE,
 <tr valign="top"><td><code>Target</code></td>
 <td>
 <p>a dummy variable matrix indicting a target rotation pattern</p>
-</td></tr>
-<tr valign="top"><td><code>digits</code></td>
-<td>
-<p>number of significant digits to be rounded</p>
 </td></tr>
 <tr valign="top"><td><code>IRTpars</code></td>
 <td>
@@ -188,32 +187,32 @@ coef(x)
 <pre><code>## $Item.1
 ##            a1     d  g  u
 ## par     0.988 1.856  0  1
-## CI_2.5  0.642 1.600 NA NA
-## CI_97.5 1.334 2.112 NA NA
+## CI_2.5  0.641 1.598 NA NA
+## CI_97.5 1.335 2.114 NA NA
 ## 
 ## $Item.2
 ##            a1     d  g  u
 ## par     1.081 0.808  0  1
-## CI_2.5  0.749 0.629 NA NA
-## CI_97.5 1.413 0.987 NA NA
+## CI_2.5  0.750 0.629 NA NA
+## CI_97.5 1.412 0.987 NA NA
 ## 
 ## $Item.3
 ##            a1     d  g  u
 ## par     1.706 1.804  0  1
-## CI_2.5  1.077 1.404 NA NA
-## CI_97.5 2.335 2.205 NA NA
+## CI_2.5  1.078 1.404 NA NA
+## CI_97.5 2.334 2.205 NA NA
 ## 
 ## $Item.4
 ##            a1     d  g  u
 ## par     0.765 0.486  0  1
-## CI_2.5  0.500 0.339 NA NA
-## CI_97.5 1.030 0.633 NA NA
+## CI_2.5  0.502 0.339 NA NA
+## CI_97.5 1.028 0.633 NA NA
 ## 
 ## $Item.5
 ##            a1     d  g  u
 ## par     0.736 1.855  0  1
-## CI_2.5  0.435 1.630 NA NA
-## CI_97.5 1.036 2.079 NA NA
+## CI_2.5  0.440 1.630 NA NA
+## CI_97.5 1.032 2.079 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
@@ -228,7 +227,7 @@ coef(x)
 <pre><code>## $Item.1
 ##        a1     d logit(g) logit(u)
 ## par 0.988 1.856     -999      999
-## SE  0.176 0.131       NA       NA
+## SE  0.177 0.131       NA       NA
 ## 
 ## $Item.2
 ##        a1     d logit(g) logit(u)
@@ -238,17 +237,17 @@ coef(x)
 ## $Item.3
 ##        a1     d logit(g) logit(u)
 ## par 1.706 1.804     -999      999
-## SE  0.321 0.204       NA       NA
+## SE  0.320 0.204       NA       NA
 ## 
 ## $Item.4
 ##        a1     d logit(g) logit(u)
 ## par 0.765 0.486     -999      999
-## SE  0.135 0.075       NA       NA
+## SE  0.134 0.075       NA       NA
 ## 
 ## $Item.5
 ##        a1     d logit(g) logit(u)
 ## par 0.736 1.855     -999      999
-## SE  0.153 0.115       NA       NA
+## SE  0.151 0.114       NA       NA
 ## 
 ## $GroupPars
 ##     MEAN_1 COV_11
@@ -259,29 +258,29 @@ coef(x)
 <pre><code class="r">coef(x, as.data.frame = TRUE)
 </code></pre>
 
-<pre><code>##                    par CI_2.5 CI_97.5
-## Item.1.a1        0.988  0.642   1.334
-## Item.1.d         1.856  1.600   2.112
-## Item.1.g         0.000     NA      NA
-## Item.1.u         1.000     NA      NA
-## Item.2.a1        1.081  0.749   1.413
-## Item.2.d         0.808  0.629   0.987
-## Item.2.g         0.000     NA      NA
-## Item.2.u         1.000     NA      NA
-## Item.3.a1        1.706  1.077   2.335
-## Item.3.d         1.804  1.404   2.205
-## Item.3.g         0.000     NA      NA
-## Item.3.u         1.000     NA      NA
-## Item.4.a1        0.765  0.500   1.030
-## Item.4.d         0.486  0.339   0.633
-## Item.4.g         0.000     NA      NA
-## Item.4.u         1.000     NA      NA
-## Item.5.a1        0.736  0.435   1.036
-## Item.5.d         1.855  1.630   2.079
-## Item.5.g         0.000     NA      NA
-## Item.5.u         1.000     NA      NA
-## GroupPars.MEAN_1 0.000     NA      NA
-## GroupPars.COV_11 1.000     NA      NA
+<pre><code>##                        par    CI_2.5   CI_97.5
+## Item.1.a1        0.9879254 0.6405319 1.3353189
+## Item.1.d         1.8560605 1.5983450 2.1137759
+## Item.1.g         0.0000000        NA        NA
+## Item.1.u         1.0000000        NA        NA
+## Item.2.a1        1.0808847 0.7500334 1.4117360
+## Item.2.d         0.8079786 0.6291264 0.9868309
+## Item.2.g         0.0000000        NA        NA
+## Item.2.u         1.0000000        NA        NA
+## Item.3.a1        1.7058006 1.0778209 2.3337803
+## Item.3.d         1.8042187 1.4035692 2.2048683
+## Item.3.g         0.0000000        NA        NA
+## Item.3.u         1.0000000        NA        NA
+## Item.4.a1        0.7651853 0.5022681 1.0281025
+## Item.4.d         0.4859966 0.3391601 0.6328331
+## Item.4.g         0.0000000        NA        NA
+## Item.4.u         1.0000000        NA        NA
+## Item.5.a1        0.7357980 0.4395386 1.0320574
+## Item.5.d         1.8545127 1.6302516 2.0787739
+## Item.5.g         0.0000000        NA        NA
+## Item.5.u         1.0000000        NA        NA
+## GroupPars.MEAN_1 0.0000000        NA        NA
+## GroupPars.COV_11 1.0000000        NA        NA
 </code></pre>
 
 <pre><code class="r">#two factors
@@ -342,5 +341,5 @@ coef(x2)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -24,7 +24,7 @@ variability due to the multiple imputations according to Rubin's (1987) methodol
 <h3>Usage</h3>
 
 <pre>
-averageMI(par, SEpar, as.data.frame = TRUE, digits = 4)
+averageMI(par, SEpar, as.data.frame = TRUE)
 </pre>
 
 
@@ -42,10 +42,6 @@ averageMI(par, SEpar, as.data.frame = TRUE, digits = 4)
 <tr valign="top"><td><code>as.data.frame</code></td>
 <td>
 <p>logical; return a data.frame instead of a list? Default is TRUE</p>
-</td></tr>
-<tr valign="top"><td><code>digits</code></td>
-<td>
-<p>number of digits to round result. Default is 4</p>
 </td></tr>
 </table>
 
@@ -140,15 +136,15 @@ SEpar &lt;- lapply(so, function(x) x$coefficients[, &#39;Std. Error&#39;])
 averageMI(par, SEpar)
 </code></pre>
 
-<pre><code>##                 par  SEpar        t       df      p
-## (Intercept)  0.0013 0.0203   0.0625  37.6049 0.2376
-## covdata$X1   0.5311 0.0173  30.6865 107.5932 0.0000
-## covdata$X2  -1.0368 0.0196 -52.8806  49.1555 0.0000
+<pre><code>##                par SEpar       t     df     p
+## (Intercept)  0.001 0.019   0.067 53.032 0.237
+## covdata$X1   0.533 0.019  28.131 58.231 0.000
+## covdata$X2  -1.032 0.019 -55.460 73.184 0.000
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
 </body></html>

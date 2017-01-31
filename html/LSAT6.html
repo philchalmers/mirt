@@ -59,7 +59,7 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.21 
+## mirt version: 1.22 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -84,12 +84,12 @@ head(dat)
 <pre><code class="r">itemfit(mod)
 </code></pre>
 
-<pre><code>##     item   S_X2 df.S_X2 p.S_X2
-## 1 Item_1 0.4363       2 0.8040
-## 2 Item_2 1.5764       2 0.4547
-## 3 Item_3 0.8715       1 0.3506
-## 4 Item_4 0.1898       2 0.9095
-## 5 Item_5 0.1902       2 0.9093
+<pre><code>##     item  S_X2 df.S_X2 p.S_X2
+## 1 Item_1 0.436       2  0.804
+## 2 Item_2 1.576       2  0.455
+## 3 Item_3 0.871       1  0.351
+## 4 Item_4 0.190       2  0.909
+## 5 Item_5 0.190       2  0.909
 </code></pre>
 
 <pre><code class="r">coef(mod, simplify=TRUE)
@@ -123,7 +123,7 @@ anova(mod, mod2) #equal
 </code></pre>
 
 <pre><code>##        AIC    AICc    SABIC      BIC    logLik  X2  df   p
-## 1 4945.876 4945.96 4956.266 4975.322 -2466.938 NaN NaN NaN
+## 1 4945.875 4945.96 4956.266 4975.322 -2466.938 NaN NaN NaN
 ## 2 4945.875 4945.96 4956.265 4975.322 -2466.938   0   0   1
 </code></pre>
 
@@ -131,7 +131,7 @@ anova(mod, mod2) #equal
 </code></pre>
 
 <pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI
-## stats 5.295796  9 0.8077983     0       0 0.02255915 0.02242702 1.072448
+## stats 5.293241  9 0.8080333     0       0 0.02254617 0.02242571 1.072498
 ##       CFI
 ## stats   1
 </code></pre>
@@ -139,12 +139,12 @@ anova(mod, mod2) #equal
 <pre><code class="r">itemfit(mod2)
 </code></pre>
 
-<pre><code>##     item   S_X2 df.S_X2 p.S_X2
-## 1 Item_1 0.4364       2 0.8040
-## 2 Item_2 1.5770       2 0.4545
-## 3 Item_3 0.8708       1 0.3507
-## 4 Item_4 0.1906       2 0.9091
-## 5 Item_5 0.1912       2 0.9088
+<pre><code>##     item  S_X2 df.S_X2 p.S_X2
+## 1 Item_1 0.436       2  0.804
+## 2 Item_2 1.576       2  0.455
+## 3 Item_3 0.871       1  0.351
+## 4 Item_4 0.190       2  0.909
+## 5 Item_5 0.190       2  0.909
 </code></pre>
 
 <pre><code class="r">coef(mod2, simplify=TRUE)
@@ -152,11 +152,11 @@ anova(mod, mod2) #equal
 
 <pre><code>## $items
 ##        a1     d g u
-## Item_1  1 2.732 0 1
+## Item_1  1 2.731 0 1
 ## Item_2  1 0.999 0 1
 ## Item_3  1 0.240 0 1
 ## Item_4  1 1.307 0 1
-## Item_5  1 2.101 0 1
+## Item_5  1 2.100 0 1
 ## 
 ## $means
 ## F1 
@@ -170,12 +170,12 @@ anova(mod, mod2) #equal
 <pre><code class="r">sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 </code></pre>
 
-<pre><code>## [1] 0.7563068
+<pre><code>## [1] 0.7561782
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
 </body></html>

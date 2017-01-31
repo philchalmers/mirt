@@ -69,32 +69,32 @@ coef(mod)
 <pre><code>## $Item.1
 ##            a1     d  g  u
 ## par     0.988 1.856  0  1
-## CI_2.5  0.642 1.600 NA NA
-## CI_97.5 1.334 2.112 NA NA
+## CI_2.5  0.641 1.598 NA NA
+## CI_97.5 1.335 2.114 NA NA
 ## 
 ## $Item.2
 ##            a1     d  g  u
 ## par     1.081 0.808  0  1
-## CI_2.5  0.749 0.629 NA NA
-## CI_97.5 1.413 0.987 NA NA
+## CI_2.5  0.750 0.629 NA NA
+## CI_97.5 1.412 0.987 NA NA
 ## 
 ## $Item.3
 ##            a1     d  g  u
 ## par     1.706 1.804  0  1
-## CI_2.5  1.077 1.404 NA NA
-## CI_97.5 2.335 2.205 NA NA
+## CI_2.5  1.078 1.404 NA NA
+## CI_97.5 2.334 2.205 NA NA
 ## 
 ## $Item.4
 ##            a1     d  g  u
 ## par     0.765 0.486  0  1
-## CI_2.5  0.500 0.339 NA NA
-## CI_97.5 1.030 0.633 NA NA
+## CI_2.5  0.502 0.339 NA NA
+## CI_97.5 1.028 0.633 NA NA
 ## 
 ## $Item.5
 ##            a1     d  g  u
 ## par     0.736 1.855  0  1
-## CI_2.5  0.435 1.630 NA NA
-## CI_97.5 1.036 2.079 NA NA
+## CI_2.5  0.440 1.630 NA NA
+## CI_97.5 1.032 2.079 NA NA
 ## 
 ## $GroupPars
 ##         MEAN_1 COV_11
@@ -146,8 +146,8 @@ L[1,3] &lt;- 1
 wald(mod, L)
 </code></pre>
 
-<pre><code>##          W df            p
-## 1 40.72587  1 1.751531e-10
+<pre><code>##         W df            p
+## 1 41.0005  1 1.521906e-10
 </code></pre>
 
 <pre><code class="r">#simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
@@ -166,7 +166,7 @@ L
 </code></pre>
 
 <pre><code>##           W df         p
-## 1 0.1796746  2 0.9140799
+## 1 0.1528867  2 0.9264054
 </code></pre>
 
 <pre><code class="r">#logLiklihood tests (requires estimating a new model)
@@ -192,5 +192,5 @@ anova(mod2, mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.21 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
 </body></html>
