@@ -220,30 +220,26 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
     for(rr in 0L:(r-1L)){
         row <- ifelse(is.null(zero_g), 1L, 2L)
         for(sign in signs){
-            if(pick != 0){
-                longpars_old <- longpars
-                d <- sign * delta
-                longpars[which(est)[pick]] <- shortpars[pick] + d
-                longpars <- longpars_constrain(longpars, constrain)
-                pars <- reloadPars(longpars=longpars, pars=pars,
-                                   ngroups=ngroups, J=J)
-                nms <- names(shortpars)[pick]
-                if(grepl('MEAN_', nms) || grepl('COV_', nms)){
-                    tmp <- updatePrior(pars=pars, Theta=Theta,
-                                       list=list, ngroups=ngroups, nfact=nfact,
-                                       J=J, dentype=dentype, sitems=sitems, cycles=100L,
-                                       rlist=rlist, full=full)
-                    prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-                }
-                Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
-                               Priorbetween=Priorbetween, specific=specific, sitems=sitems,
-                               ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                               dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
-                rlist <- Elist$rlist
-                longpars <- longpars_old
-                pars <- reloadPars(longpars=longpars, pars=pars,
-                                   ngroups=ngroups, J=J)
-            }
+            longpars_old <- longpars
+            d <- sign * delta
+            longpars[which(est)[pick]] <- shortpars[pick] + d
+            longpars <- longpars_constrain(longpars, constrain)
+            pars <- reloadPars(longpars=longpars, pars=pars,
+                               ngroups=ngroups, J=J)
+            nms <- names(shortpars)[pick]
+            tmp <- updatePrior(pars=pars, Theta=Theta,
+                               list=list, ngroups=ngroups, nfact=nfact,
+                               J=J, dentype=dentype, sitems=sitems, cycles=100L,
+                               rlist=rlist, full=full)
+            prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+                           Priorbetween=Priorbetween, specific=specific, sitems=sitems,
+                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+            rlist <- Elist$rlist
+            longpars <- longpars_old
+            pars <- reloadPars(longpars=longpars, pars=pars,
+                               ngroups=ngroups, J=J)
 
             gTheta <- vector('list', ngroups)
             for(g in 1L:ngroups) gTheta[[g]] <- Theta
