@@ -50,6 +50,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             estpars <- c(estpars, lr.random[[i]]@est)
         }
     }
+    if(all(!estpars) && list$SE)
+        stop('Computing ACOV matrix is meaningless when no parameters are estimated', call.=FALSE)
     index <- 1L:nfullpars
     N <- nrow(gtheta0[[1L]])
     #Burn in
@@ -58,6 +60,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         lrPars@mus <- lrPars@X %*% lrPars@beta
         gstructgrouppars[[1L]]$gmeans <- lrPars@mus
     }
+    correction <- numeric(0L)
     cand.t.var <- if(is.null(list$cand.t.var)) 1 else list$cand.t.var[1L]
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
@@ -508,6 +511,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                                     cycles-BURNIN-SEMCYCLES, LL, CTV, AR)
         }
         if(stagecycle < 3L){
+            if(all(!estpars)) break
             correction <- try(solve(ave.h, grad), TRUE)
             if(is(correction, 'try-error')){
                 ave.h.inv <- MPinv(ave.h)
@@ -620,9 +624,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             }
         }
     }
-    names(correction) <- names(estpars)[estindex_unique]
-    if(list$SE) info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
-    else info <- matrix(0, 1, 1)
+    info <- matrix(0, 1L, 1L)
+    if(any(estpars)){
+        names(correction) <- names(estpars)[estindex_unique]
+        if(list$SE) info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
+    } else cycles <- BURNIN + SEMCYCLES
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, lrPars=lrPars, lr.random=lr.random,

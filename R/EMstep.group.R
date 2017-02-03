@@ -93,6 +93,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     if(length(constrain))
        for(i in 1L:length(constrain))
            est[constrain[[i]][-1L]] <- FALSE
+    if(all(!est) && list$SE)
+        stop('Computing ACOV matrix is meaningless when no parameters are estimated', call.=FALSE)
     names(longpars) <- names(est)
     if(list$Moptim != 'BFGS') {
         Moptim <- list$Moptim
