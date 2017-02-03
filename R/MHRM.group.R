@@ -628,7 +628,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         names(correction) <- names(estpars)[estindex_unique]
         if(list$SE) info <- nameInfoMatrix(info=info, correction=correction, L=L, npars=ncol(L))
         else info <- matrix(0, 1L, 1L)
-    } else cycles <- BURNIN + SEMCYCLES
+    } else {
+        info <- matrix(0, 1L, 1L)
+        cycles <- BURNIN + SEMCYCLES
+    }
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
                 random=random, lrPars=lrPars, lr.random=lr.random,
