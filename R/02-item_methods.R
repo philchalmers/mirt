@@ -2614,7 +2614,7 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         ret <- .Call("dparsgpcmIRT", x@par, Theta, offterm, x@dat,
-                     length(x@par) - ncol(Theta), estHess)
+                     length(x@par) - ncol(Theta), FALSE)
         hess <- matrix(0, length(x@par), length(x@par))
         if(estHess && any(x@est))
             hess[x@est, x@est] <- numDeriv::hessian(EML, x@par[x@est], obj=x,
