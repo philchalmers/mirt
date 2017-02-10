@@ -145,7 +145,7 @@ setMethod(
                                  ...))
             if(type == 'score')
                 return(wireframe(score ~ Theta1 + Theta2|group, data = plt,
-                                 ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
+                                 zlim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                  main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,

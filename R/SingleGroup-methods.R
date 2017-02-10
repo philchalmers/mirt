@@ -944,7 +944,7 @@ setMethod(
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
                 return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
-                                 ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
+                                 zlim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                  zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
