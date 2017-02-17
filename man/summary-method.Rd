@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{summary-method}
-\alias{summary,DiscreteClass-method}
-\alias{summary,MixedClass-method}
-\alias{summary,MultipleGroupClass-method}
-\alias{summary,SingleGroupClass-method}
 \alias{summary-method}
+\alias{summary,SingleGroupClass-method}
+\alias{summary,MultipleGroupClass-method}
+\alias{summary,MixedClass-method}
+\alias{summary,DiscreteClass-method}
 \title{Summary of model object}
 \usage{
 \S4method{summary}{SingleGroupClass}(object, rotate = "oblimin",
@@ -57,4 +57,3 @@ summary(x, rotate = 'varimax')
 \seealso{
 \code{\link{coef-method}}
 }
-

@@ -75,4 +75,3 @@ empirical_plot(data, 32, smooth = TRUE)
 }
 \keyword{empirical}
 \keyword{plots}
-

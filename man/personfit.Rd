@@ -65,9 +65,6 @@ head(pf)
   }
 
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
@@ -81,6 +78,8 @@ Wright B. D. & Masters, G. N. (1982). \emph{Rating scale analysis}. MESA Press.
 \seealso{
 \code{\link{itemfit}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{fit}
 \keyword{person}
-

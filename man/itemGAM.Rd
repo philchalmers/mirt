@@ -149,13 +149,12 @@ plot(IG4[[3L]], main = 'Category 3')
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{itemfit}}
+}
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{fit,}
 \keyword{item}
 \keyword{traceline}
-

@@ -220,9 +220,6 @@ itemfit(raschfit, empirical.table=1)
 }
 
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
 in two or more nominal categories. Psychometrika, 37, 29-51.
@@ -257,6 +254,8 @@ Yen, W. M. (1981). Using simulation results to choose a latent trait model.
 \seealso{
 \code{\link{personfit}}, \code{\link{itemGAM}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{fit}
 \keyword{item}
-

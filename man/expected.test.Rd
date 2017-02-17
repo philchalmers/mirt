@@ -50,4 +50,3 @@ tail(cbind(Theta, bscore))
 }
 \keyword{expected}
 \keyword{score}
-

@@ -308,11 +308,10 @@ head(dat)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Reckase, M. D. (2009). \emph{Multidimensional Item Response Theory}. New York: Springer.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{data}
-

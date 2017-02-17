@@ -280,11 +280,10 @@ anova(EH, EH1)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}, \code{\link{DTF}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{models}
-

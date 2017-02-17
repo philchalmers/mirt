@@ -71,4 +71,3 @@ coef(modcustom)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{createGroup}
-

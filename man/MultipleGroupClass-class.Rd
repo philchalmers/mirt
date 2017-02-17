@@ -35,8 +35,8 @@ Defines the object returned from \code{\link{multipleGroup}}.
    \item{anova}{\code{signature(object = "MultipleGroupClass")} }
 }
 }
+
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
-

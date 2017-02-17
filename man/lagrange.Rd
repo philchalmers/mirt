@@ -60,12 +60,11 @@ lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{wald}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{Lagrange}
 \keyword{test}
-

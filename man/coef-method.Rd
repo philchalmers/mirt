@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{coef-method}
-\alias{coef,DiscreteClass-method}
-\alias{coef,MixedClass-method}
-\alias{coef,MultipleGroupClass-method}
-\alias{coef,SingleGroupClass-method}
 \alias{coef-method}
+\alias{coef,SingleGroupClass-method}
+\alias{coef,MultipleGroupClass-method}
+\alias{coef,MixedClass-method}
+\alias{coef,DiscreteClass-method}
 \title{Extract raw coefs from model object}
 \usage{
 \S4method{coef}{SingleGroupClass}(object, CI = 0.95, printSE = FALSE,
@@ -76,4 +76,3 @@ coef(x2, rotate = 'varimax')
 \seealso{
 \code{\link{summary-method}}
 }
-

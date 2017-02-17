@@ -29,11 +29,10 @@ empirical_rxx(theta_se)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{fscores}}, \code{\link{marginal_rxx}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{reliability}
-

@@ -34,11 +34,10 @@ summary(group.1)
 plot(group.1)
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{extract.item}}, \code{\link{extract.mirt}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{extract}
-

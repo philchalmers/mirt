@@ -38,8 +38,8 @@ Defines the object returned from \code{\link{mirt}} when model is exploratory.
     \item{summary}{\code{signature(object = "SingleGroupClass")}}
 }
 }
+
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
-

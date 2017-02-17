@@ -31,4 +31,3 @@ workshop files, and evaluated help files are also available on the package wiki
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{package}
-

@@ -10,6 +10,9 @@
 #'   Only applicable when the input object is multidimensional
 #' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #'   information curves for each category are returned as a matrix
+#' @param multidim_matrix logical; compute the information matrix for each row in \code{Theta}? If \code{Theta}
+#'   contains more than 1 row then a list of matricies will be returned, otherwise if \code{Theta} has exactly
+#'   one row then a matrix will be returned
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords information
@@ -46,17 +49,36 @@
 #' plot(Theta, T2/T1, type = 'l', ylab = 'Relative Test Information', las = 1)
 #' lines(Theta, T1/T1, col = 'red')
 #'
+#' # multidimensional
+#' mod <- mirt(dat, 2, TOL=1e-2)
+#' ii <- extract.item(mod, 1)
+#' Theta <- as.matrix(expand.grid(-4:4, -4:4))
+#'
+#' iteminfo(ii, Theta, degrees=c(45,45)) # equal angle
+#' iteminfo(ii, Theta, degrees=c(90,0)) # first dimension only
+#'
+#' # information matricies
+#' iteminfo(ii, Theta, multidim_matrix = TRUE)
+#' iteminfo(ii, Theta[1, , drop=FALSE], multidim_matrix = TRUE)
+#'
 #' }
-iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE){
+iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, multidim_matrix = FALSE){
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
     if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
     if(ncol(Theta) == 1L) degrees <- 0
     use_degrees <- ncol(Theta) > 1L
+    if(ncol(Theta) != x@nfact)
+        stop('Theta does not have the correct number of dimensions', call.=FALSE)
+    if(multidim_matrix){
+        ret <- lapply(1L:nrow(Theta), function(ind, x, Theta, total.info){
+            ItemInfo2(x=x, Theta=Theta[ind, , drop=FALSE], total.info=total.info, MD=TRUE)
+        }, x=x, Theta=Theta, total.info=total.info)
+        if(length(ret) == 1L) ret <- ret[[1L]]
+        return(ret)
+    }
     if(is.null(degrees) && ncol(Theta) != 1L)
         stop('Multidimensional information requires prespecified angles in degrees',
              call.=FALSE)
-    if(ncol(Theta) != x@nfact)
-        stop('Theta does not have the correct number of dimensions', call.=FALSE)
     cosangle <- cos(d2r(degrees))
     info <- if(use_degrees){
         if(ncol(Theta) != length(cosangle))

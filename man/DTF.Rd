@@ -120,9 +120,6 @@ head(sDTF)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
   make a big DIF: Improved Differential Test Functioning statistics that account for
@@ -131,5 +128,7 @@ Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
 \seealso{
 \code{\link{multipleGroup}}, \code{\link{DIF}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{DTF}
-

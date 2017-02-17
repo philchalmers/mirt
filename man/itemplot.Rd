@@ -111,4 +111,3 @@ update(trellis.last.object(), par.settings = bwtheme)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{plot}
-

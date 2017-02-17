@@ -16,4 +16,3 @@
 \description{
 Privides a nicer output for most printed \code{data.frame} objects defined by functions in \code{mirt}.
 }
-

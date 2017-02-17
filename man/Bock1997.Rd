@@ -25,12 +25,11 @@ coef(mod)
 
  }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K.
 \emph{Handbook of modern item response theory}. New York: Springer.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{data}
-

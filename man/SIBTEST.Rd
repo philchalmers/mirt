@@ -127,9 +127,6 @@ SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
   SIBTEST Procedure. Journal of Educational Measurement, 33, 333-353.
@@ -140,6 +137,8 @@ Shealy, R. & Stout, W. (1993). A model-based standardization approach that separ
   bias/DIF from group ability differences and ddetect test bias/DTF as well as item bias/DIF.
   Psychometrika, 58, 159-194.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{SIBTEST,}
 \keyword{crossed-SIBTEST}
-

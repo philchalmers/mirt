@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{vcov-method}
-\alias{vcov,DiscreteClass-method}
-\alias{vcov,MixedClass-method}
-\alias{vcov,MultipleGroupClass-method}
-\alias{vcov,SingleGroupClass-method}
 \alias{vcov-method}
+\alias{vcov,SingleGroupClass-method}
+\alias{vcov,MultipleGroupClass-method}
+\alias{vcov,MixedClass-method}
+\alias{vcov,DiscreteClass-method}
 \title{Extract parameter variance covariance matrix}
 \usage{
 \S4method{vcov}{SingleGroupClass}(object)
@@ -26,4 +26,3 @@ vcov(x)
 
 }
 }
-

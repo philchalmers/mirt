@@ -32,4 +32,3 @@ extr.1 <- extract.item(mod, 1)
 \code{\link{extract.group}}, \code{\link{extract.mirt}}
 }
 \keyword{extract}
-

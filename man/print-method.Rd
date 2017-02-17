@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{print-method}
-\alias{print,DiscreteClass-method}
-\alias{print,MixedClass-method}
-\alias{print,MultipleGroupClass-method}
-\alias{print,SingleGroupClass-method}
 \alias{print-method}
+\alias{print,SingleGroupClass-method}
+\alias{print,MultipleGroupClass-method}
+\alias{print,MixedClass-method}
+\alias{print,DiscreteClass-method}
 \title{Print the model objects}
 \usage{
 \S4method{print}{SingleGroupClass}(x)
@@ -25,4 +25,3 @@ x <- mirt(Science, 1)
 print(x)
 }
 }
-

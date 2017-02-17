@@ -38,4 +38,3 @@ mirtCluster(remove = TRUE)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{parallel}
-

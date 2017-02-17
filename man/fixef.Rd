@@ -43,12 +43,11 @@ head(fe2)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{mirt}}, \code{\link{mixedmirt}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{effects}
 \keyword{fixed}
-

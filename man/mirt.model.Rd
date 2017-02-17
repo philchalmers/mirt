@@ -204,4 +204,3 @@ mirtmodel <- mirt.model(mirtsyn2, itemnames=dat)
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com} and Alexander Robitzsch
 }
-

@@ -63,4 +63,3 @@ anova(mod2, mod)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{wald}
-

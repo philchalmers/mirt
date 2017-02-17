@@ -2,10 +2,10 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{residuals-method}
-\alias{residuals,DiscreteClass-method}
-\alias{residuals,MultipleGroupClass-method}
-\alias{residuals,SingleGroupClass-method}
 \alias{residuals-method}
+\alias{residuals,SingleGroupClass-method}
+\alias{residuals,MultipleGroupClass-method}
+\alias{residuals,DiscreteClass-method}
 \title{Compute model residuals}
 \usage{
 \S4method{residuals}{SingleGroupClass}(object, type = "LD", df.p = FALSE,
@@ -81,4 +81,3 @@ response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 26
 Yen, W. (1984). Effects of local item dependence on the fit and equating performance of the three
 parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.
 }
-

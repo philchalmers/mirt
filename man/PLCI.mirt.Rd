@@ -71,9 +71,6 @@ result3
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Neale, M. C. & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
 models. Behavior Genetircs, 27, 113-120
@@ -81,6 +78,8 @@ models. Behavior Genetircs, 27, 113-120
 \seealso{
 \code{\link{boot.mirt}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{likelihood}
 \keyword{profiled}
-

@@ -30,12 +30,11 @@ sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 \emph{Psychometrika, 47}, 175-186.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{data}
-

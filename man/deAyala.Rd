@@ -14,11 +14,10 @@ dat <- expand.table(deAyala)
 head(dat)
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{data}
-

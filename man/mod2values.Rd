@@ -26,12 +26,11 @@ mod2 <- mirt(dat, 1, pars = values, TOL=1e-5)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{extract.mirt}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{convert}
 \keyword{model}
-

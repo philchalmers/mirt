@@ -156,11 +156,10 @@ stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 stepdown
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{multipleGroup}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{DIF}
-

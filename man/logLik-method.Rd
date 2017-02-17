@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{logLik-method}
-\alias{logLik,DiscreteClass-method}
-\alias{logLik,MixedClass-method}
-\alias{logLik,MultipleGroupClass-method}
-\alias{logLik,SingleGroupClass-method}
 \alias{logLik-method}
+\alias{logLik,SingleGroupClass-method}
+\alias{logLik,MultipleGroupClass-method}
+\alias{logLik,MixedClass-method}
+\alias{logLik,DiscreteClass-method}
 \title{Extract log-likelihood}
 \usage{
 \S4method{logLik}{SingleGroupClass}(object)
@@ -26,4 +26,3 @@ logLik(x)
 
 }
 }
-

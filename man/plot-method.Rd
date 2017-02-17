@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{plot-method}
-\alias{plot,DiscreteClass,missing-method}
+\alias{plot-method}
+\alias{plot,SingleGroupClass-method}
 \alias{plot,MultipleGroupClass-method}
 \alias{plot,SingleGroupClass,missing-method}
-\alias{plot,SingleGroupClass-method}
-\alias{plot-method}
+\alias{plot,DiscreteClass,missing-method}
 \title{Plot various test-implied functions from models}
 \usage{
 \S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 50,
@@ -124,4 +124,3 @@ plot(x3, type = 'SE', theta_lim = c(-3,3))
 
 }
 }
-

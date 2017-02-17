@@ -38,8 +38,8 @@ Defines the object returned from \code{\link{mixedmirt}}.
    \item{anova}{\code{signature(object = "MixedClass")} }
   }
 }
+
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
-

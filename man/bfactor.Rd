@@ -229,9 +229,6 @@ M2(simmod, QMC=TRUE)
     }
 
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Cai, L. (2010). A two-tier full-information item factor analysis model with applications.
 \emph{Psychometrika, 75}, 581-612.
@@ -251,5 +248,7 @@ Full-Information item bifactor analysis of graded response data.
 \seealso{
 \code{\link{mirt}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{models}
-

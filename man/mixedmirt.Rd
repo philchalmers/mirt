@@ -359,9 +359,6 @@ head(cbind(randef(mod3)$group, random_intercept))
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
 \emph{Journal of Educational Measurement, 52}, 200-222.
@@ -369,4 +366,6 @@ Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-
 \seealso{
 \code{\link{mirt}}, \code{\link{randef}}, \code{\link{fixef}}, \code{\link{boot.mirt}}
 }
-
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}

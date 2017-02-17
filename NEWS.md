@@ -1,3 +1,7 @@
+# Changes in mirt 1.23
+
+- added `multidim_matrix` option to `iteminfo()` to expose computation of information matricies
+
 # Changes in mirt 1.22
 
 - `SE.type = 'Oakes'` set as the new default when computing standard errors via the ACOV matrix when

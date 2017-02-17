@@ -56,12 +56,11 @@ averageMI(par, SEpar)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Rubin, D.B. (1987) Multiple Imputation for Nonresponse in Surveys. Wiley & Sons, New York.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{imputation}
 \keyword{multiple}
-

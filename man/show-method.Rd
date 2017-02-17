@@ -2,11 +2,11 @@
 % Please edit documentation in R/SingleGroup-methods.R
 \docType{methods}
 \name{show-method}
-\alias{show,DiscreteClass-method}
-\alias{show,MixedClass-method}
-\alias{show,MultipleGroupClass-method}
-\alias{show,SingleGroupClass-method}
 \alias{show-method}
+\alias{show,SingleGroupClass-method}
+\alias{show,MultipleGroupClass-method}
+\alias{show,MixedClass-method}
+\alias{show,DiscreteClass-method}
 \title{Show model object}
 \usage{
 \S4method{show}{SingleGroupClass}(object)
@@ -25,4 +25,3 @@ x <- mirt(Science, 1)
 show(x)
 }
 }
-

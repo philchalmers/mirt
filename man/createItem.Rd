@@ -157,4 +157,3 @@ Tnom.dev(4) \%*\% coef(nommod)[[1]][4:6] #d
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{createItem}
-

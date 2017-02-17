@@ -25,14 +25,13 @@ MDIFF(mod)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Reckase, M. D. (2009). Multidimensional Item Response Theory. Springer.
 }
 \seealso{
 \code{\link{extract.group}}, \code{\link{MDISC}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{discrimination}
-

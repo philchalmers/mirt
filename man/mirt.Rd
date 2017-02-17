@@ -601,6 +601,7 @@ of categories.
 To access examples, vignettes, and exercise files that have been generated with knitr please
 visit \url{https://github.com/philchalmers/mirt/wiki}.
 }
+
 \examples{
 
 \dontrun{
@@ -1014,9 +1015,6 @@ summary(GHmod2, suppress=.2)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Andrich, D. (1978). A rating scale formulation for ordered response categories.
 \emph{Psychometrika, 43}, 561-573.
@@ -1099,5 +1097,7 @@ IL: Scientific Software International.
   \code{\link{probtrace}}, \code{\link{simdata}}, \code{\link{averageMI}},
   \code{\link{fixef}}, \code{\link{extract.mirt}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{models}
-

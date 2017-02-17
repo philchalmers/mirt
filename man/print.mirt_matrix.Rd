@@ -16,4 +16,3 @@
 \description{
 Privides a nicer output for most printed \code{matrix} objects defined by functions in \code{mirt}.
 }
-

@@ -47,4 +47,3 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{bootstrap}
 \keyword{parametric}
-

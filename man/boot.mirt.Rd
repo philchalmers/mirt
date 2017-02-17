@@ -46,4 +46,3 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 \keyword{bootstrapped}
 \keyword{errors}
 \keyword{standard}
-

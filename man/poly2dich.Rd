@@ -38,4 +38,3 @@ head(newScience2)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{data}
-

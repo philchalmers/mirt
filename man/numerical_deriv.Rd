@@ -52,4 +52,3 @@ Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{derivatives}
 \keyword{numerical}
-

@@ -40,4 +40,3 @@ head(LSAT7full)
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{data}
-

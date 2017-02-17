@@ -33,13 +33,12 @@ data <- key2binary(SAT12,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003).
 TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
 [Computer software]. Lincolnwood, IL: Scientific Software International.
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{data}
-

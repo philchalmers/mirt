@@ -37,8 +37,8 @@ Defines the object returned from \code{\link{mdirt}}.
    \item{residuals}{\code{signature(object = "DiscreteClass")} }
 }
 }
+
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{classes}
-

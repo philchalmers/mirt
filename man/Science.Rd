@@ -19,4 +19,3 @@ plot(mod, type = 'trace')
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{data}
-

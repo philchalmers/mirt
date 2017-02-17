@@ -183,9 +183,6 @@ head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Embretson, S. E. & Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
 
@@ -199,5 +196,7 @@ Warm, T. A. (1989). Weighted likelihood estimation of ability in item response t
 \seealso{
 \code{\link{averageMI}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{factor.scores}
-

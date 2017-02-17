@@ -4,7 +4,8 @@
 \alias{iteminfo}
 \title{Function to calculate item information}
 \usage{
-iteminfo(x, Theta, degrees = NULL, total.info = TRUE)
+iteminfo(x, Theta, degrees = NULL, total.info = TRUE,
+  multidim_matrix = FALSE)
 }
 \arguments{
 \item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}
@@ -16,6 +17,10 @@ Only applicable when the input object is multidimensional}
 
 \item{total.info}{logical; return the total information curve for the item? If \code{FALSE},
 information curves for each category are returned as a matrix}
+
+\item{multidim_matrix}{logical; compute the information matrix for each row in \code{Theta}? If \code{Theta}
+contains more than 1 row then a list of matricies will be returned, otherwise if \code{Theta} has exactly
+one row then a matrix will be returned}
 }
 \description{
 Given an internal mirt item object extracted by using \code{\link{extract.item}},
@@ -51,13 +56,24 @@ for(i in 1:5){
 plot(Theta, T2/T1, type = 'l', ylab = 'Relative Test Information', las = 1)
 lines(Theta, T1/T1, col = 'red')
 
+# multidimensional
+mod <- mirt(dat, 2, TOL=1e-2)
+ii <- extract.item(mod, 1)
+Theta <- as.matrix(expand.grid(-4:4, -4:4))
+
+iteminfo(ii, Theta, degrees=c(45,45)) # equal angle
+iteminfo(ii, Theta, degrees=c(90,0)) # first dimension only
+
+# information matricies
+iteminfo(ii, Theta, multidim_matrix = TRUE)
+iteminfo(ii, Theta[1, , drop=FALSE], multidim_matrix = TRUE)
+
 }
-}
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \seealso{
 \code{\link{extract.item}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{information}
-

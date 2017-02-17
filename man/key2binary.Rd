@@ -54,4 +54,3 @@ head(d01)
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
-

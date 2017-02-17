@@ -95,6 +95,7 @@ focal group).}
 test scores.}
 }
 }
+
 \examples{
 \dontrun{
 
@@ -145,11 +146,10 @@ empirical_ES(mod, plot=TRUE, DIF=FALSE)
 
 }
 }
-\author{
-Adam Meade and Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \references{
 Meade, A. W. (2010).  A taxonomy of effect size measures for the differential functioning
   of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 }
-
+\author{
+Adam Meade and Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}

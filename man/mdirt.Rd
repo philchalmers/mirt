@@ -76,6 +76,7 @@ For proper identification, the first category slope parameters
 grid of \eqn{\theta} values will allow the estimation of similar models (multidimensional
 discrete models, grade of membership, etc.). See the examples below.
 }
+
 \examples{
 
 \dontrun{
@@ -257,14 +258,13 @@ summary(mod)
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}},
   \code{\link{itemfit}}, \code{\link{boot.mirt}}, \code{\link{mirtCluster}},
   \code{\link{wald}}, \code{\link{coef-method}}, \code{\link{summary-method}},
   \code{\link{anova-method}}, \code{\link{residuals-method}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{models}
-

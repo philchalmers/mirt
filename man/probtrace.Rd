@@ -28,11 +28,10 @@ head(data.frame(traceline, Theta=Theta))
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{extract.item}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{tracelines}
-

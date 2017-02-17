@@ -29,12 +29,11 @@ head(data.frame(expected, Theta=Theta))
 
 }
 }
-\author{
-Phil Chalmers \email{rphilip.chalmers@gmail.com}
-}
 \seealso{
 \code{\link{extract.item}}, \code{\link{expected.test}}
 }
+\author{
+Phil Chalmers \email{rphilip.chalmers@gmail.com}
+}
 \keyword{expected}
 \keyword{value}
-
