@@ -1928,14 +1928,14 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
     ret
 }
 
-computeNullModel <- function(data, itemtype, group=NULL){
+computeNullModel <- function(data, itemtype, key, group=NULL){
     if(is.null(itemtype)) itemtype <- rep('graded', ncol(data))
     itemtype[itemtype == 'Rasch'] <- 'gpcm'
     if(!is.null(group)){
         null.mod <- multipleGroup(data, 1L, itemtype=itemtype, group=group, verbose=FALSE,
-                                  technical=list(NULL.MODEL=TRUE))
+                                  key=key, technical=list(NULL.MODEL=TRUE))
     } else {
-        null.mod <- mirt(data, 1L, itemtype=itemtype, verbose=FALSE,
+        null.mod <- mirt(data, 1L, itemtype=itemtype, verbose=FALSE, key=key,
                          technical=list(NULL.MODEL=TRUE))
     }
     null.mod
