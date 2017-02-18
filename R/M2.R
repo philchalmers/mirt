@@ -325,7 +325,8 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         newret$SRMSR <- SRMSR
     }
     if(calcNull){
-        null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype, group=obj@Data$group))
+        null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype, group=obj@Data$group,
+                                         key=obj@Internals$key))
         if(is(null.mod, 'try-error'))
             stop('Null model did not converge or is not supported', call.=FALSE)
         null.fit <- M2(null.mod, calcNull=FALSE)
