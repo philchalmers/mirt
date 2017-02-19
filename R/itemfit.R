@@ -268,7 +268,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 if(count == 20)
                     stop('20 consecutive parametric bootstraps failed for PV_Q1*', call.=FALSE)
                 dat <- simdata(model=mod, N=N)
-                mod2 <- mirt(dat, model, verbose=FALSE, pars=sv, technical=list(warn=FALSE))
+                mod2 <- mirt(dat, model, itemtype=extract.mirt(mod, 'itemtype'),
+                             verbose=FALSE, pars=sv, technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
                 tmp <- PV_itemfit(mod2, which.items=which.items, draws=draws, ...)
                 ret <- tmp$p.PV_Q1
