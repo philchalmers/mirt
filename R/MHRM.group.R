@@ -10,6 +10,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     verbose <- list$verbose
     nfact <- list$nfact
     NCYCLES <- list$NCYCLES
+    no_stage_3 <- FALSE
+    if(is.na(NCYCLES)){
+        NCYCLES <- 1L
+        no_stage_3 <- TRUE
+    }
     BURNIN <- list$BURNIN
     MHDRAWS <- list$MHDRAWS
     stopifnot(BURNIN >= RANDSTART)
@@ -202,6 +207,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                     return(x)
                 })
             }
+        }
+        if(cycles == (BURNIN + SEMCYCLES + 1L) && no_stage_3){
+            cycles <- cycles + SEMCYCLES - 1L
+            break
         }
         for(g in 1L:ngroups)
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
@@ -577,7 +586,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     } ###END BIG LOOP
     if(verbose) cat('\r\n')
     #Reload final pars list
-    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$SE){
+    if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$SE && !no_stage_3){
         if(list$message)
             message('MHRM terminated after ', NCYCLES, ' iterations.')
         converge <- FALSE

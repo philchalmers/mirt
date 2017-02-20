@@ -93,7 +93,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             opts$calcNull <- FALSE
         opts$times <- list(start.time=start.time)
         # on exit, reset the seed to override internal
-        if(opts$method == 'MHRM' || opts$method == 'MIXED' && opts$plausible.draws == 0L)
+        if(opts$method == 'MHRM' || opts$method == 'MIXED' || opts$method == 'MCEM' &&
+           opts$plausible.draws == 0L)
             on.exit(set.seed((as.numeric(Sys.time()) - floor(as.numeric(Sys.time()))) * 1e8))
         #change itemtypes if NULL.MODEL
         if(opts$NULL.MODEL){
@@ -422,7 +423,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% Use_R_Deriv())
     if(pars[[1]][[length(pars[[1L]])]]@itemclass == -999L)
         SLOW.IND <- c(SLOW.IND, length(pars[[1L]]))
-    if(opts$dentype != 'Gaussian' && opts$method %in% c('MHRM', 'MIXED'))
+    if(opts$dentype != 'Gaussian' && opts$method %in% c('MHRM', 'MIXED', 'MCEM'))
         stop('Non-Gaussian densities not currently supported with MHRM algorithm')
     #warnings
     wmsg <- 'Lower and upper bound parameters (g and u) should use \'norm\' (i.e., logit) prior'
@@ -547,8 +548,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             logLik <- logLik + sum(rg*log(Pl))
         }
         Pl <- list(Pl)
-    } else if(opts$method == 'MHRM'){ #MHRM estimation
+    } else if(opts$method %in% c('MHRM', 'MCEM')){ #MHRM estimation
         Theta <- matrix(0, Data$N, nitems)
+        if(opts$method == 'MCEM') opts$NCYCLES <- NA
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
                                            SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
@@ -643,7 +645,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
-        if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED'))
+        if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED' || opts$method == 'MCEM'))
             cat('\n\nCalculating information matrix...\n')
         if(opts$SE.type %in% c('complete', 'Oakes') && opts$method == 'EM'){
             opts$times$start.time.SE <- ESTIMATE$start.time.SE
@@ -718,7 +720,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else if(opts$SE.type == 'numerical' && opts$method == 'BL'){
             ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain,
                                          warn=opts$warn)
-        } else if(opts$SE.type %in% c('Richardson', 'forward', 'central') && opts$method != 'MIXED'){
+        } else if(opts$SE.type %in% c('Richardson', 'forward', 'central') &&
+                  !(opts$method %in% c('MHRM', 'MCEM', 'MIXED'))){
             ESTIMATE <- SE.Numerical(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList, Data=Data,
                               dentype=opts$dentype, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
                               constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems,
@@ -738,7 +741,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                startlongpars=startlongpars, SE=opts$SE, warn=opts$warn,
                                                plausible.draws=0L),
                                    DERIV=DERIV)
-        } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) && opts$method != 'MIXED'){
+        } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) &&
+                  !(opts$method %in% c('MHRM', 'MCEM', 'MIXED'))){
             if(logPrior != 0 && opts$warn)
                 warning('Information matrix with the crossprod, Louis, and sandwich method
                         do not account for prior parameter distribution information')
@@ -746,7 +750,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                   constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
                                   message=opts$message, complete=ESTIMATE$hess)
-        } else if(opts$SE.type == 'Fisher' && opts$method != 'MIXED'){
+        } else if(opts$SE.type == 'Fisher' && !(opts$method %in% c('MHRM', 'MCEM', 'MIXED'))){
             if(logPrior != 0 && opts$warn)
                 warning('Information matrix with the Fisher method does not
                         account for prior parameter distribution information')
@@ -792,7 +796,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     #missing stats for MHRM
-    if(opts$method =='MHRM' || opts$method == 'MIXED'){
+    if(opts$method =='MHRM' || opts$method == 'MIXED' || opts$method == 'MCEM'){
         if(opts$verbose) cat("\nCalculating log-likelihood...\n")
         flush.console()
         logLik <- G2 <- SElogLik <- 0
@@ -914,6 +918,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                       survey.weights=survey.weights)
     if(opts$storeEtable)
         Internals$Etable <- ESTIMATE$Etable
+    if(opts$method == 'MCEM') Options$TOL <- NA
     if(discrete){
         Fit$F <- Fit$h2 <- NULL
         mod <- new('DiscreteClass',

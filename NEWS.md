@@ -1,6 +1,11 @@
 # Changes in mirt 1.23
 
+- `method = 'MCEM'` added to perform the Monte Carlo EM algorithm (first two stages of the MH-RM algorithm setup).   Alternatively, setting `technical = list(NCYCLES = NA)` when using the MH-RM algorithm now returns 
+  the stochastic EM results
+
 - added `multidim_matrix` option to `iteminfo()` to expose computation of information matricies
+
+- various bug fixes and performance improvements
 
 # Changes in mirt 1.22
 

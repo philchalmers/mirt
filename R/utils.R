@@ -1115,7 +1115,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if((method == 'MHRM' || method == 'MIXED') && SE.type == 'Oakes') SE.type <- 'MHRM'
     if((method == 'MHRM' || method == 'MIXED') && !(SE.type %in% c('MHRM', 'FMHRM', 'none')))
         stop('SE.type not supported for MHRM method', call.=FALSE)
-    if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM')))
+    if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM', 'MCEM')))
         stop('method argument not supported', call.=FALSE)
     if(!(SE.type %in% c('Richardson', 'forward', 'central', 'crossprod', 'Louis', 'sandwich',
                         'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))

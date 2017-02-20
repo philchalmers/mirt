@@ -5,7 +5,8 @@
 #' to any mixture of dichotomous and polytomous data under the item response theory paradigm
 #' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with
 #' an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
-#' quasi-Monte Carlo integration grids.
+#' quasi-Monte Carlo integration grids, or with stochastic integration (i.e., the first two stages
+#' of the MH-RM algorithm).
 #' Models containing 'explanatory' person or item level predictors
 #' can only be included by using the \code{\link{mixedmirt}} function, though latent
 #' regression models can be fit using the \code{formula} input below. Tests that form a
@@ -301,7 +302,8 @@
 #' @param method a character object specifying the estimation algorithm to be used. The default is
 #'   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
 #'   quasi-Monte Carlo EM estimation. The option \code{'MHRM'} may
-#'   also be passed to use the MH-RM algorithm, as well as \code{'BL'} for the Bock and Lieberman
+#'   also be passed to use the MH-RM algorithm, \code{'MCEM'} for the Monte Carlo EM algorithm (first
+#'   two stages of the MH-RM stages), and \code{'BL'} for the Bock and Lieberman
 #'   approach (generally not recommended for longer tests).
 #'
 #'   The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'}
