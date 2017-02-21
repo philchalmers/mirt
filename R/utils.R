@@ -37,7 +37,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         theta1prod <- theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
         if(is.null(total_0)) theta1prod <- theta1 <- theta0 #for intial draw
         if(length(prodlist) > 0L)
-            theta1prod <- prodterms(theta,prodlist)
+            theta1prod <- prodterms(theta1,prodlist)
         total_1 <- complete.LL(theta=theta1, thetaprod=theta1prod, pars=pars, prior.mu=prior.mu,
                                prior.t.var=prior.t.var, OffTerm=OffTerm,
                                CUSTOM.IND=CUSTOM.IND, itemloc=itemloc, fulldata=fulldata)
