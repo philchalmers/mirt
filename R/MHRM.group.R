@@ -195,38 +195,18 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         }
         #Reload pars list
         if(list$SE) longpars <- list$startlongpars
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        if(has_graded){
-            for(g in 1L:length(pars)){
-                pars[[g]][1L:J] <- lapply(pars[[g]][1L:J], function(x){
-                    if(class(x) == 'graded'){
-                        ds <- x@par[-(1L:x@nfact)]
-                        x@par[-(1L:x@nfact)] <- sort(ds, decreasing = TRUE)
-                        names(x@par) <- names(x@est)
-                    }
-                    return(x)
-                })
-            }
-        }
+        tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, gstructgrouppars=gstructgrouppars,
+                               ngroups=ngroups, J=J, has_graded=has_graded, cycles=cycles,
+                               LRPARS=LRPARS, LR.RAND=LR.RAND, RANDSTART=RANDSTART,
+                               RAND=RAND, lr.random=lr.random, random=random)
+        pars <- with(tmp, pars)
+        gstructgrouppars <- with(tmp, gstructgrouppars)
+        lr.random <- with(tmp, lr.random)
+        random <- with(tmp, random)
         if(cycles == (BURNIN + SEMCYCLES + 1L) && no_stage_3){
             cycles <- cycles + SEMCYCLES - 1L
             break
         }
-        for(g in 1L:ngroups)
-            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
-        if(LRPARS){
-            lrPars@par <- lrPars@beta[] <- longpars[lrPars@parnum]
-            lrPars@mus <- lrPars@X %*% lrPars@beta
-            gstructgrouppars[[1L]]$gmeans <- lrPars@mus
-        }
-        if(LR.RAND && cycles > RANDSTART){
-            for(j in 1L:length(lr.random))
-                gstructgrouppars[[1L]]$gmeans <- gstructgrouppars[[1L]]$gmeans +
-                    lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
-        }
-        if(RAND && cycles > RANDSTART) random <- reloadRandom(random=random, longpars=longpars)
-        if(LR.RAND && cycles > RANDSTART) lr.random <- reloadRandom(random=lr.random, longpars=longpars)
-
         start <- proc.time()[3L]
         if((RAND || LR.RAND) && cycles == RANDSTART){
             gtheta0[[1L]] <- matrix(0, nrow(gtheta0[[1L]]), ncol(gtheta0[[1L]]))
@@ -671,4 +651,36 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
              call.=FALSE)
     }
     list(grad=grad, ave.h=ave.h)
+}
+
+MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_graded,
+                            cycles, LRPARS, LR.RAND, RANDSTART, RAND, lr.random, random){
+    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+    if(has_graded){
+        for(g in 1L:length(pars)){
+            pars[[g]][1L:J] <- lapply(pars[[g]][1L:J], function(x){
+                if(class(x) == 'graded'){
+                    ds <- x@par[-(1L:x@nfact)]
+                    x@par[-(1L:x@nfact)] <- sort(ds, decreasing = TRUE)
+                    names(x@par) <- names(x@est)
+                }
+                return(x)
+            })
+        }
+    }
+    for(g in 1L:ngroups)
+        gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+    if(LRPARS){
+        lrPars@par <- lrPars@beta[] <- longpars[lrPars@parnum]
+        lrPars@mus <- lrPars@X %*% lrPars@beta
+        gstructgrouppars[[1L]]$gmeans <- lrPars@mus
+    }
+    if(LR.RAND && cycles > RANDSTART){
+        for(j in 1L:length(lr.random))
+            gstructgrouppars[[1L]]$gmeans <- gstructgrouppars[[1L]]$gmeans +
+                lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
+    }
+    if(RAND && cycles > RANDSTART) random <- reloadRandom(random=random, longpars=longpars)
+    if(LR.RAND && cycles > RANDSTART) lr.random <- reloadRandom(random=lr.random, longpars=longpars)
+    list(pars=pars, gstructgrouppars=gstructgrouppars, lr.random=lr.random, random=random)
 }
