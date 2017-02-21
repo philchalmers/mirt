@@ -36,14 +36,11 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         total_0 <- attr(theta0, 'log.lik_full')
         theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
         if(is.null(total_0)) theta1 <- theta0 #for intial draw
-        log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
         if(length(prodlist) > 0L)
-            theta1 <- prodterms(theta1,prodlist)
-        itemtrace1 <- computeItemtrace(pars=pars, Theta=theta1, itemloc=itemloc,
-                                       offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
-        total_1 <- rowSums(fulldata * log(itemtrace1)) + log_den1
-        theta1 <- theta1[ ,1L:(pars[[1L]]@nfact - pars[[1L]]@nfixedeffects -
-                                   length(prodlist)), drop=FALSE]
+            theta1prod <- prodterms(theta,prodlist)
+        total_1 <- complete.LL(theta=theta1, thetaprod=theta1prod, pars=pars, prior.mu=prior.mu,
+                               prior.t.var=prior.t.var, OffTerm=OffTerm,
+                               CUSTOM.IND=CUSTOM.IND, itemloc=itemloc, fulldata=fulldata)
         if(is.null(total_0)){ #for intial draw
             attr(theta1, 'log.lik_full') <- total_1
             return(theta1)
@@ -61,6 +58,14 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         stop('MH sampler failed. Model is likely unstable or may need better starting values',
              .call=FALSE)
     return(theta1)
+}
+
+complete.LL <- function(theta, thetaprod, pars, prior.mu, prior.t.var,
+                        OffTerm, CUSTOM.IND, itemloc, fulldata){
+    log_den <- mirt_dmvnorm(theta, prior.mu, prior.t.var, log=TRUE)
+    itemtrace <- computeItemtrace(pars=pars, Theta=thetaprod, itemloc=itemloc,
+                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
+    rowSums(fulldata * log(itemtrace)) + log_den
 }
 
 imputePars <- function(pars, imputenums, constrain, pre.ev){
