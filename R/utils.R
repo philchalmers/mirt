@@ -1120,7 +1120,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(!(SE.type %in% c('Richardson', 'forward', 'central', 'crossprod', 'Louis', 'sandwich',
                         'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))
         stop('SE.type argument not supported', call.=FALSE)
-    if(method == 'MHRM' || method =='MIXED') optimizer <- 'NR'
+    if(method == 'MHRM' || method =='MIXED') optimizer <- 'NR1'
     if(!(method %in% c('EM', 'QMCEM'))) accelerate <- 'none'
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)

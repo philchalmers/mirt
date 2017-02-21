@@ -1,5 +1,5 @@
 MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(),
-                       lrPars = list(), lr.random = list(), DERIV)
+                       lrPars = list(), lr.random = list(), DERIV, solnp_args, control)
 {
     if(is.null(random)) random <- list()
     itemtype <- sapply(pars[[1]], class)
@@ -411,85 +411,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 }
             }
         }
-        Draws.time <- Draws.time + proc.time()[3L] - start
-
-        #Step 2. Find average of simulated data gradients and hessian
-        start <- proc.time()[3L]
-        gthetatmp <- gtheta0
-        if(length(prodlist))
-            gthetatmp <- lapply(gtheta0, function(x, prodlist) prodterms(x, prodlist),
-                              prodlist=prodlist)
-        tmp <- .Call('computeDPars', pars, gthetatmp, OffTerm, length(longpars), TRUE,
-                     USE.FIXED, 0L, FALSE)
-        g <- tmp$grad; h <- tmp$hess
-        if(length(list$SLOW.IND)){
-            for(group in 1L:ngroups){
-                for (i in list$SLOW.IND){
-                    deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gthetatmp[[group]],
-                                                 estHess=TRUE)
-                    g[pars[[group]][[i]]@parnum] <- deriv$grad
-                    h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
-                }
-            }
-        }
-        for(group in 1L:ngroups){
-            tmptheta <- gtheta0[[group]]
-            if(is(gstructgrouppars[[1L]]$gmeans, 'matrix'))
-                tmptheta <- tmptheta - gstructgrouppars[[1L]]$gmeans
-            i <- J + 1L
-            deriv <- Deriv(x=pars[[group]][[i]], Theta=tmptheta, CUSTOM.IND=CUSTOM.IND, estHess=TRUE)
-            g[pars[[group]][[i]]@parnum] <- deriv$grad
-            h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
-        }
-        if(RAND){
-            if(cycles <= RANDSTART){
-                for(i in 1L:length(random)){
-                    g[random[[i]]@parnum] <- 0
-                    h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
-                }
-            } else {
-                for(i in 1L:length(random)){
-                    deriv <- RandomDeriv(x=random[[i]])
-                    g[random[[i]]@parnum] <- deriv$grad
-                    h[random[[i]]@parnum, random[[i]]@parnum] <- deriv$hess
-                }
-            }
-        }
-        if(LRPARS){
-            deriv <- Deriv(lrPars, cov=gstructgrouppars[[1L]]$gcov, theta=gtheta0[[1L]])
-            g[lrPars@parnum] <- deriv$grad
-            for(i in 0L:(ncol(deriv$grad)-1L))
-                h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
-                  lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
-
-        }
-        if(LR.RAND){
-            if(cycles <= RANDSTART){
-                for(i in 1L:length(lr.random)){
-                    g[lr.random[[i]]@parnum] <- 0
-                    h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- -diag(length(lr.random[[i]]@parnum))
-                }
-            } else {
-                for(i in 1L:length(lr.random)){
-                    deriv <- RandomDeriv(x=lr.random[[i]])
-                    g[lr.random[[i]]@parnum] <- deriv$grad
-                    h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- deriv$hess
-                }
-            }
-        }
-        if(length(constrain)){
-            grad <- as.numeric(updateGrad(g, L))
-            ave.h <- updateHess(-h, L)
-        } else {
-            grad <- g
-            ave.h <- -h
-        }
-        grad <- grad[estpars & !redun_constr]
-        ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
-        if(any(is.na(grad))){
-            stop('Model did not converge (unacceptable gradient caused by extreme parameter values)',
-                 call.=FALSE)
-        }
         if(is.na(attr(gtheta0[[1L]],"log.lik")))
             stop('Estimation halted. Model did not converge.', call.=FALSE)
         if(verbose){
@@ -497,7 +418,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             CTV <- cand.t.var
             if(RAND && cycles > RANDSTART){
                 AR <- c(AR, do.call(c, lapply(random,
-                                        function(x) attr(x@drawvals, "Proportion Accepted"))))
+                                              function(x) attr(x@drawvals, "Proportion Accepted"))))
                 CTV <- c(CTV, do.call(c, lapply(random,
                                                 function(x) x@cand.t.var)))
             }
@@ -519,6 +440,22 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 printmsg <- sprintf("\rStage 3 = %i, LL = %.1f, AR(%s) = [%s]",
                                     cycles-BURNIN-SEMCYCLES, LL, CTV, AR)
         }
+        gthetatmp <- gtheta0
+        if(length(prodlist))
+            gthetatmp <- lapply(gtheta0, function(x, prodlist) prodterms(x, prodlist),
+                                prodlist=prodlist)
+
+        #Step 2. Find average of simulated data gradients and hessian
+        Draws.time <- Draws.time + proc.time()[3L] - start
+        start <- proc.time()[3L]
+        tmp <- MHRM.deriv(pars=pars, gtheta=gthetatmp, OffTerm=OffTerm, longpars=longpars,
+                          USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
+                          DERIV=DERIV, gtheta0=gtheta0, gstructgrouppars=gstructgrouppars,
+                          CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
+                          RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
+                          constrain=constrain, estpars=estpars, redun_constr=redun_constr)
+        grad <- tmp$grad
+        ave.h <- tmp$ave.h
         if(stagecycle < 3L){
             if(all(!estpars)) break
             correction <- try(solve(ave.h, grad), TRUE)
@@ -648,4 +585,90 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr],
                 fail_invert_info=fail_invert_info, Prior=vector('list', ngroups), collectLL=NaN)
     ret
+}
+
+MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups,
+                      DERIV, gtheta0, gstructgrouppars, CUSTOM.IND, RAND,
+                      cycles, RANDSTART, random, J, LRPARS, LR.RAND, lr.random,
+                      constrain, estpars, redun_constr, L, estHess = TRUE){
+    tmp <- .Call('computeDPars', pars, gtheta, OffTerm, length(longpars), estHess,
+                 USE.FIXED, 0L, FALSE)
+    g <- tmp$grad
+    h <- tmp$hess
+    if(length(list$SLOW.IND)){
+        for(group in 1L:ngroups){
+            for (i in list$SLOW.IND){
+                deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gtheta[[group]],
+                                             estHess=estHess)
+                g[pars[[group]][[i]]@parnum] <- deriv$grad
+                if(estHess)
+                    h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
+            }
+        }
+    }
+    for(group in 1L:ngroups){
+        tmptheta <- gtheta0[[group]]
+        if(is(gstructgrouppars[[1L]]$gmeans, 'matrix'))
+            tmptheta <- tmptheta - gstructgrouppars[[1L]]$gmeans
+        i <- J + 1L
+        deriv <- Deriv(x=pars[[group]][[i]], Theta=tmptheta,
+                       CUSTOM.IND=CUSTOM.IND, estHess=estHess)
+        g[pars[[group]][[i]]@parnum] <- deriv$grad
+        if(estHess)
+            h[pars[[group]][[i]]@parnum, pars[[group]][[i]]@parnum] <- deriv$hess
+    }
+    if(RAND){
+        if(cycles <= RANDSTART){
+            for(i in 1L:length(random)){
+                g[random[[i]]@parnum] <- 0
+                h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
+            }
+        } else {
+            for(i in 1L:length(random)){
+                deriv <- RandomDeriv(x=random[[i]], estHess=estHess)
+                g[random[[i]]@parnum] <- deriv$grad
+                if(estHess)
+                    h[random[[i]]@parnum, random[[i]]@parnum] <- deriv$hess
+            }
+        }
+    }
+    if(LRPARS){
+        deriv <- Deriv(lrPars, cov=gstructgrouppars[[1L]]$gcov, theta=gtheta0[[1L]],
+                       estHess=estHess)
+        g[lrPars@parnum] <- deriv$grad
+        if(estHess)
+            for(i in 0L:(ncol(deriv$grad)-1L))
+                h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
+                  lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+
+    }
+    if(LR.RAND){
+        if(cycles <= RANDSTART){
+            for(i in 1L:length(lr.random)){
+                g[lr.random[[i]]@parnum] <- 0
+                h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- -diag(length(lr.random[[i]]@parnum))
+            }
+        } else {
+            for(i in 1L:length(lr.random)){
+                deriv <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
+                g[lr.random[[i]]@parnum] <- deriv$grad
+                if(estHess)
+                    h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- deriv$hess
+            }
+        }
+    }
+    if(length(constrain)){
+        grad <- as.numeric(updateGrad(g, L))
+        ave.h <- updateHess(-h, L)
+    } else {
+        grad <- g
+        ave.h <- -h
+    }
+    grad <- grad[estpars & !redun_constr]
+    ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
+    if(any(is.na(grad))){
+        stop('Model did not converge (unacceptable gradient caused by extreme parameter values)',
+             call.=FALSE)
+    }
+    list(grad=grad, ave.h=ave.h)
 }

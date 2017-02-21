@@ -112,11 +112,12 @@ will estimate the regression parameters for all latent traits by default}
   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
   quasi-Monte Carlo EM estimation. The option \code{'MHRM'} may
   also be passed to use the MH-RM algorithm, \code{'MCEM'} for the Monte Carlo EM algorithm (first
-  two stages of the MH-RM stages), and \code{'BL'} for the Bock and Lieberman
+  two stages of the MH-RM stage using an optimizer other than a single Newton-Raphson iteration),
+  and \code{'BL'} for the Bock and Lieberman
   approach (generally not recommended for longer tests).
 
-  The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'}
-  or \code{'MHRM'} should be used when the dimensions are 3 or more}
+  The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'},
+  \code{'MCEM'}, or \code{'MHRM'} should be used when the dimensions are 3 or more}
 
 \item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM
   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds box-constraints and
@@ -126,9 +127,11 @@ will estimate the regression parameters for all latent traits by default}
   Other options include the Newton-Raphson (\code{'NR'}),
   which often will be more efficient than the \code{'BFGS'} but not as stable for more complex
   IRT models (such as the nominal or nested logit models) and does not support
-  upper and lower bound constraints. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
+  upper and lower bound constraints, and the related \code{'NR1'} which is also the Newton-Raphson
+  but consists of only 1 update. The MH-RM algorithm uses the \code{'NR1'} by default,
+  and currently cannot be changed. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
   estimators are also available, but their routine use generally is not required or recommended.
-  The MH-RM algorithm uses the \code{'NR'} by default, and currently cannot be changed.
+
 
   Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama}
   packages are available by passing the arguments \code{'solnp'} and \code{'alabama'},

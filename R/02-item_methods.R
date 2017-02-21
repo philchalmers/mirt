@@ -331,9 +331,8 @@ setMethod(
 setMethod(
     f = "RandomDeriv",
     signature = signature(x = 'RandomPars'),
-    definition = function(x){
+    definition = function(x, estHess = TRUE){
         Theta <- x@drawvals
-        estHess <- TRUE
         pick <- -c(1L:ncol(Theta))
         out <- .Call("dgroup", x, Theta, matrix(0L), estHess, TRUE, FALSE, FALSE)
         out$grad <- out$grad[pick]
@@ -380,7 +379,7 @@ setMethod(
 setMethod(
     f = "Deriv",
     signature = signature(x = 'lrPars'),
-    definition = function(x, cov, theta){
+    definition = function(x, cov, theta, estHess = TRUE){
         inv_sigma <- solve(cov)
         tmp <- t(inv_sigma %*% t(theta - x@mus) %*% x@X)
         tmp2 <- -det(inv_sigma) * x@tXX

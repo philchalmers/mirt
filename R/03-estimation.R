@@ -563,8 +563,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                            message=opts$message, expl=PrepList[[1L]]$exploratory,
-                                           plausible.draws=opts$plausible.draws),
-                               DERIV=DERIV)
+                                           plausible.draws=opts$plausible.draws,
+                                           MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                           keep_vcov_PD=opts$keep_vcov_PD),
+                               DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         if(opts$plausible.draws != 0) return(ESTIMATE)
         if(opts$SE){
             if(opts$verbose)
@@ -580,8 +582,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                                startlongpars=ESTIMATE$longpars, plausible.draws=0L,
                                                cand.t.var=opts$technical$MHcand, warn=opts$warn,
-                                               message=opts$message, expl=PrepList[[1L]]$exploratory),
-                                   DERIV=DERIV)
+                                               message=opts$message, expl=PrepList[[1L]]$exploratory,
+                                               MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                               keep_vcov_PD=opts$keep_vcov_PD),
+                                   DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
             ESTIMATE$pars <- tmp$pars
             ESTIMATE$info <- tmp$info
             ESTIMATE$fail_invert_info <- tmp$fail_invert_info
@@ -608,8 +612,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            startlongpars=startlongpars, SE=FALSE,
                                            cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                            message=opts$message, expl=FALSE, plausible.draws=0L,
-                                           RANDSTART=opts$technical$RANDSTART),
-                               DERIV=DERIV)
+                                           RANDSTART=opts$technical$RANDSTART,
+                                           MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                           keep_vcov_PD=opts$keep_vcov_PD),
+                               DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         if(opts$SE){
             if(opts$verbose)
                 cat('\nCalculating information matrix...\n')
@@ -627,8 +633,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           startlongpars=ESTIMATE$longpars, plausible.draws=0L,
                                           cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                           message=opts$message, expl=FALSE,
-                                          RANDSTART=1L),
-                              DERIV=DERIV)
+                                          RANDSTART=1L,
+                                          MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                          keep_vcov_PD=opts$keep_vcov_PD),
+                              DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
             ESTIMATE$pars <- tmp$pars
             ESTIMATE$random <- tmp$random
             ESTIMATE$lrPars <- tmp$lrPars
@@ -739,8 +747,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                nfact=nfact, constrain=constrain, verbose=FALSE, expl=FALSE,
                                                CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, message=opts$message,
                                                startlongpars=startlongpars, SE=opts$SE, warn=opts$warn,
-                                               plausible.draws=0L),
-                                   DERIV=DERIV)
+                                               plausible.draws=0L, MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                               keep_vcov_PD=opts$keep_vcov_PD),
+                                   DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) &&
                   !(opts$method %in% c('MHRM', 'MCEM', 'MIXED'))){
             if(logPrior != 0 && opts$warn)
