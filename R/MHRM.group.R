@@ -198,11 +198,12 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, gstructgrouppars=gstructgrouppars,
                                ngroups=ngroups, J=J, has_graded=has_graded, cycles=cycles,
                                LRPARS=LRPARS, LR.RAND=LR.RAND, RANDSTART=RANDSTART,
-                               RAND=RAND, lr.random=lr.random, random=random)
+                               RAND=RAND, lrPars=lrPars, lr.random=lr.random, random=random)
         pars <- with(tmp, pars)
         gstructgrouppars <- with(tmp, gstructgrouppars)
         lr.random <- with(tmp, lr.random)
         random <- with(tmp, random)
+        lrPars <- with(tmp, lrPars)
         if(cycles == (BURNIN + SEMCYCLES + 1L) && no_stage_3){
             cycles <- cycles + SEMCYCLES - 1L
             break
@@ -654,7 +655,7 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
 }
 
 MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_graded,
-                            cycles, LRPARS, LR.RAND, RANDSTART, RAND, lr.random, random){
+                            cycles, LRPARS, LR.RAND, RANDSTART, RAND, lrPars, lr.random, random){
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     if(has_graded){
         for(g in 1L:length(pars)){
@@ -682,5 +683,6 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
     }
     if(RAND && cycles > RANDSTART) random <- reloadRandom(random=random, longpars=longpars)
     if(LR.RAND && cycles > RANDSTART) lr.random <- reloadRandom(random=lr.random, longpars=longpars)
-    list(pars=pars, gstructgrouppars=gstructgrouppars, lr.random=lr.random, random=random)
+    list(pars=pars, gstructgrouppars=gstructgrouppars, lr.random=lr.random, random=random,
+         lrPars=lrPars)
 }

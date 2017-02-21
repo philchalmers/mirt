@@ -111,13 +111,13 @@ will estimate the regression parameters for all latent traits by default}
 \item{method}{a character object specifying the estimation algorithm to be used. The default is
   \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
   quasi-Monte Carlo EM estimation. The option \code{'MHRM'} may
-  also be passed to use the MH-RM algorithm, \code{'MCEM'} for the Monte Carlo EM algorithm (first
+  also be passed to use the MH-RM algorithm, \code{'SEM'} for the Stochastic EM algorithm (first
   two stages of the MH-RM stage using an optimizer other than a single Newton-Raphson iteration),
   and \code{'BL'} for the Bock and Lieberman
   approach (generally not recommended for longer tests).
 
   The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'},
-  \code{'MCEM'}, or \code{'MHRM'} should be used when the dimensions are 3 or more}
+  \code{'SEM'}, or \code{'MHRM'} should be used when the dimensions are 3 or more}
 
 \item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM
   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds box-constraints and
