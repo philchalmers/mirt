@@ -318,7 +318,8 @@
 #'   which often will be more efficient than the \code{'BFGS'} but not as stable for more complex
 #'   IRT models (such as the nominal or nested logit models) and does not support
 #'   upper and lower bound constraints, and the related \code{'NR1'} which is also the Newton-Raphson
-#'   but consists of only 1 update. The MH-RM algorithm uses the \code{'NR1'} by default,
+#'   but consists of only 1 update that has been coupled with RM Hessian (only
+#'   applicible when the MH-RM algorithm is used). The MH-RM algorithm uses the \code{'NR1'} by default,
 #'   and currently cannot be changed. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
 #'   estimators are also available, but their routine use generally is not required or recommended.
 #'

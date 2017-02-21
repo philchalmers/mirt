@@ -65,7 +65,6 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         lrPars@mus <- lrPars@X %*% lrPars@beta
         gstructgrouppars[[1L]]$gmeans <- lrPars@mus
     }
-    correction <- numeric(0L)
     cand.t.var <- if(is.null(list$cand.t.var)) 1 else list$cand.t.var[1L]
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
@@ -231,25 +230,25 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         #Step 2. Find average of simulated data gradients and hessian
         Draws.time <- Draws.time + proc.time()[3L] - start
         start <- proc.time()[3L]
-        tmp <- MHRM.deriv(pars=pars, gtheta=gthetatmp, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
+        longpars0 <- longpars
+        tmp <- MHRM.Mstep(pars=pars, gtheta=gthetatmp, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                           USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
                           DERIV=DERIV, gtheta0=gtheta0, gstructgrouppars=gstructgrouppars,
                           CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
                           RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
-                          constrain=constrain, estpars=estpars, redun_constr=redun_constr)
+                          constrain=constrain, estpars=estpars, redun_constr=redun_constr,
+                          control=control)
         grad <- tmp$grad
-        ave.h <- tmp$ave.h
+        ave.h <- tmp$hess
+        correction <- tmp$correction
         if(stagecycle < 3L){
-            correction <- try(solve(ave.h, grad), TRUE)
-            if(is(correction, 'try-error')){
-                ave.h.inv <- MPinv(ave.h)
-                correction <- as.vector(grad %*% ave.h.inv)
-            }
             correction[correction > 1] <- 1
             correction[correction < -1] <- -1
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
-            longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
-            longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
+            if(any(longpars < LBOUND))
+                longpars[longpars < LBOUND] <- (longpars0[longpars < LBOUND] + LBOUND[longpars < LBOUND])/2
+            if(any(longpars > UBOUND))
+                longpars[longpars > UBOUND] <- (longpars0[longpars > UBOUND] + UBOUND[longpars > UBOUND])/2
             if(length(constrain))
                 for(i in 1L:length(constrain))
                     longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
@@ -265,19 +264,21 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         #Step 3. Update R-M step
         Tau <- Tau + gamma*(ave.h - Tau)
-        correction <- try(solve(Tau, grad), TRUE)
-        if(is(correction, 'try-error')){
-            Tau.inv <- MPinv(Tau)
-            correction <- as.vector(grad %*% Tau.inv)
+        if(list$Moptim == 'NR1'){
+            correction <- try(solve(Tau, grad), TRUE)
+            if(is(correction, 'try-error')){
+                Tau.inv <- MPinv(Tau)
+                correction <- as.vector(grad %*% Tau.inv)
+            }
+            longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
+            if(any(longpars < LBOUND))
+                longpars[longpars < LBOUND] <- (longpars0[longpars < LBOUND] + LBOUND[longpars < LBOUND])/2
+            if(any(longpars > UBOUND))
+                longpars[longpars > UBOUND] <- (longpars0[longpars > UBOUND] + UBOUND[longpars > UBOUND])/2
+            if(length(constrain))
+                for(i in 1L:length(constrain))
+                    longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         }
-        correction[gamma*correction > .25] <- .25/gamma
-        correction[gamma*correction < -.25] <- -.25/gamma
-        longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
-        longpars[longpars < LBOUND] <- LBOUND[longpars < LBOUND]
-        longpars[longpars > UBOUND] <- UBOUND[longpars > UBOUND]
-        if(length(constrain))
-            for(i in 1L:length(constrain))
-                longpars[index %in% constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         if(verbose)
             cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f",
                                   gamma, max(abs(gamma*correction))), sep='')
@@ -369,8 +370,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     ret
 }
 
-MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups,
-                      DERIV, gtheta0, gstructgrouppars, CUSTOM.IND, RAND,
+MHRM.deriv <- function(pars, gtheta, gtheta0, OffTerm, longpars, USE.FIXED, list, ngroups,
+                      DERIV, gstructgrouppars, CUSTOM.IND, RAND,
                       cycles, RANDSTART, random, J, LRPARS, lrPars, LR.RAND, lr.random,
                       constrain, estpars, redun_constr, L, estHess = TRUE){
     tmp <- .Call('computeDPars', pars, gtheta, OffTerm, length(longpars), estHess,
@@ -706,4 +707,27 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
     }
     list(pars=pars, gstructgrouppars=gstructgrouppars, lr.random=lr.random, random=random,
          lrPars=lrPars, gtheta0=gtheta0, OffTerm=OffTerm, printmsg=printmsg, cand.t.var=cand.t.var)
+}
+
+MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups,
+                       DERIV, gtheta0, gstructgrouppars, CUSTOM.IND, RAND,
+                       cycles, RANDSTART, random, J, LRPARS, lrPars, LR.RAND, lr.random,
+                       constrain, estpars, redun_constr, L, control){
+    Moptim <- list$Moptim
+    if(Moptim == 'NR1'){
+        tmp <- MHRM.deriv(pars=pars, gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
+                          USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
+                          DERIV=DERIV, gtheta0=gtheta0, gstructgrouppars=gstructgrouppars,
+                          CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
+                          RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
+                          constrain=constrain, estpars=estpars, redun_constr=redun_constr)
+        grad <- tmp$grad
+        hess <- tmp$ave.h
+        correction <- try(solve(hess, grad), TRUE)
+        if(is(correction, 'try-error')){
+            ave.h.inv <- MPinv(hess)
+            correction <- as.vector(grad %*% ave.h.inv)
+        }
+    }
+    list(correction=correction, grad=grad, hess=hess)
 }

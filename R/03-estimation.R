@@ -747,7 +747,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                nfact=nfact, constrain=constrain, verbose=FALSE, expl=FALSE,
                                                CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, message=opts$message,
                                                startlongpars=startlongpars, SE=opts$SE, warn=opts$warn,
-                                               plausible.draws=0L, MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                               plausible.draws=0L, MSTEPTOL=opts$MSTEPTOL, Moptim='NR1',
                                                keep_vcov_PD=opts$keep_vcov_PD),
                                    DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) &&
