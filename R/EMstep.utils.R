@@ -302,8 +302,10 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
             flip <- (sign(lastchange) * sign(change)) == -1L
             p[flip] <- (plast[flip] + p[flip]) / 2
         }
-        p[p > ubound] <- ubound[p > ubound]
-        p[p < lbound] <- lbound[p < lbound]
+        if(any(p < lbound))
+            p[p < lbound] <- (plast[p < lbound] + lbound[p < lbound])/2
+        if(any(p > ubound))
+            p[p > ubound] <- (plast[p > ubound] + ubound[p > ubound])/2
         dif <- plast - p
         if(all(abs(dif) < TOL)) break
         lastchange <- change
