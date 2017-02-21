@@ -292,13 +292,14 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             if(list$SE.type == 'MHRM'){
                 phi <- grad
                 Phi <- ave.h
-            } else Phi <- 0
+            } else phi <- Phi <- 0
         }
         if(list$SE.type != 'none' && list$SE){
             if(list$SE.type == 'MHRM'){
                 phi <- phi + gamma*(grad - phi)
                 Phi <- Phi + gamma*(ave.h - outer(grad,grad) - Phi)
             } else if(list$SE.type == 'FMHRM'){
+                phi <- phi + 1/NCYCLES * grad
                 Phi <- Phi + 1/NCYCLES * (ave.h - outer(grad,grad))
             }
         }
@@ -318,8 +319,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     }
     fail_invert_info <- TRUE
     if(list$SE){
-        if(list$SE.type == 'MHRM') info <- Phi + outer(phi,phi)
-        else if(list$SE.type == 'FMHRM') info <- Phi
+        info <- Phi + outer(phi,phi)
         acov <- try(solve(info), TRUE)
         if(is(acov, 'try-error')){
             if(list$warn)

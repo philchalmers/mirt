@@ -34,8 +34,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         unif <- runif(N)
         sigma <- if(ncol(theta0) == 1L) matrix(cand.t.var) else diag(rep(cand.t.var,ncol(theta0)))
         total_0 <- attr(theta0, 'log.lik_full')
-        theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
-        if(is.null(total_0)) theta1 <- theta0 #for intial draw
+        theta1prod <- theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
+        if(is.null(total_0)) theta1prod <- theta1 <- theta0 #for intial draw
         if(length(prodlist) > 0L)
             theta1prod <- prodterms(theta,prodlist)
         total_1 <- complete.LL(theta=theta1, thetaprod=theta1prod, pars=pars, prior.mu=prior.mu,
