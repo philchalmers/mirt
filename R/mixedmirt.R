@@ -120,7 +120,7 @@
 #' pseudoIQ <- Theta * 5 + 100  + rnorm(N, 0 , 5)
 #' pseudoIQ <- (pseudoIQ - mean(pseudoIQ))/10  #rescale variable for numerical stability
 #' group <- factor(rep(c('G1','G2','G3'), each = N/3))
-#' data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
+#' data <- simdata(a,d,N, itemtype = rep('2PL',10), Theta=Theta)
 #' covdata <- data.frame(group, pseudoIQ)
 #' #use parallel computing
 #' mirtCluster()
@@ -260,7 +260,7 @@
 #' d <- matrix(rnorm(10))
 #' Theta <- matrix(c(rnorm(n, 0), rnorm(n, 1), rnorm(n, 2)))
 #' covdata <- data.frame(group=rep(c('g1','g2','g3'), each=n))
-#' dat <- simdata(a, d, N=n*3, Theta=Theta, itemtype = 'dich')
+#' dat <- simdata(a, d, N=n*3, Theta=Theta, itemtype = '2PL')
 #'
 #' #had we known the latent abilities, we could have computed the regression coefs
 #' summary(lm(Theta ~ covdata$group))
@@ -310,7 +310,7 @@
 #'
 #' group = factor(rep(paste0('G',1:cluster), each = N/cluster))
 #' covdata <- data.frame(group)
-#' dat <- simdata(a,d,N, itemtype = rep('dich',10), Theta=matrix(Theta))
+#' dat <- simdata(a,d,N, itemtype = rep('2PL',10), Theta=matrix(Theta))
 #'
 #' # null model
 #' mod1 <- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)

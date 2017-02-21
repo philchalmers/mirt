@@ -55,7 +55,7 @@
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 #' d <- matrix(rnorm(15,0,.7),ncol=1)
-#' itemtype <- rep('dich', nrow(a))
+#' itemtype <- rep('2PL', nrow(a))
 #' N <- 1000
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
@@ -179,7 +179,7 @@
 #' d <- matrix(rnorm(15,0,.7),ncol=1)
 #' mu <- c(-.4, -.7, .1)
 #' sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
-#' itemtype <- rep('dich', nrow(a))
+#' itemtype <- rep('2PL', nrow(a))
 #' N <- 1000
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
@@ -255,7 +255,7 @@
 #' ThetaNormal <- matrix(rnorm(2000))
 #' ThetaBimodal <- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
 #' Theta <- rbind(ThetaNormal, ThetaBimodal)
-#' dat <- simdata(a, d, 4000, itemtype = 'dich', Theta=Theta)
+#' dat <- simdata(a, d, 4000, itemtype = '2PL', Theta=Theta)
 #' group <- rep(c('G1', 'G2'), each=2000)
 #'
 #' EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))

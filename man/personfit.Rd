@@ -35,7 +35,7 @@ rightmost columns.
 set.seed(1234)
 a <- matrix(rlnorm(20),ncol=1)
 d <- matrix(rnorm(20),ncol=1)
-items <- rep('dich', 20)
+items <- rep('2PL', 20)
 data <- simdata(a,d, 2000, items)
 
 x <- mirt(data, 1)

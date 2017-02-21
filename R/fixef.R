@@ -24,7 +24,7 @@
 #'
 #' #items and response data
 #' a <- matrix(1, 20); d <- matrix(rnorm(20))
-#' dat <- simdata(a, d, 1000, itemtype = 'dich', Theta=Theta)
+#' dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 #'
 #' #conditional model using X1 and X2 as predictors of Theta
 #' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)

@@ -16,8 +16,9 @@
 #'   be used
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
 #'   the same) specifying the type of items to simulate. Inputs can either be the same as
-#'   the inputs found in \code{\link{mirt}} or the internal clases defined by the package. If the
-#'   typical inputs that are passed to \code{\link{mirt}} are used then these will be converted into
+#'   the inputs found in the \code{itemtype} argument in \code{\link{mirt}} or the
+#'   internal clases defined by the package. Typical \code{itemtype} inputs that
+#'   are passed to \code{\link{mirt}} are used then these will be converted into
 #'   the respective internal classes automatically.
 #'
 #'   If the internal class of the object is specified instead, the inputs can
@@ -118,8 +119,8 @@
 #' mu <- c(-.4, -.7, .1)
 #' sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
 #'
-#' dataset1 <- simdata(a, d, 2000, itemtype = 'dich')
-#' dataset2 <- simdata(a, d, 2000, itemtype = 'dich', mu = mu, sigma = sigma)
+#' dataset1 <- simdata(a, d, 2000, itemtype = '2PL')
+#' dataset2 <- simdata(a, d, 2000, itemtype = '2PL', mu = mu, sigma = sigma)
 #'
 #' #mod <- mirt(dataset1, 3, method = 'MHRM')
 #' #coef(mod)
@@ -161,7 +162,7 @@
 #'
 #' sigma <- diag(3)
 #' sigma[2,3] <- sigma[3,2] <- .25
-#' items <- c('dich','dich','dich','nominal','gpcm','graded')
+#' items <- c('2PL','2PL','2PL','nominal','gpcm','graded')
 #'
 #' dataset <- simdata(a,d,2000,items,sigma=sigma,nominal=nominal)
 #'
@@ -180,7 +181,7 @@
 #' (a <- F2a(F))
 #' d <- rnorm(10)
 #'
-#' dat <- simdata(a, d, 5000, itemtype = 'dich')
+#' dat <- simdata(a, d, 5000, itemtype = '2PL')
 #' mod <- mirt(dat, 1)
 #' coef(mod, simplify=TRUE)$items
 #' summary(mod)
@@ -203,7 +204,7 @@
 #' .4,NA,
 #' .7,NA),ncol=2,byrow=TRUE)
 #' d <- matrix(rnorm(6))
-#' itemtype <- rep('dich',6)
+#' itemtype <- rep('2PL',6)
 #'
 #' nonlindata <- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 #'
@@ -228,7 +229,7 @@
 #' nominal <- matrix(NA, nrow(d), ncol(d))
 #' nominal[4, ] <- c(NA,0,.5,.6)
 #'
-#' items <- c(rep('dich',3),'nestlogit')
+#' items <- c(rep('2PL',3),'nestlogit')
 #'
 #' dataset <- simdata(a,d,2000,items,nominal=nominal)
 #'

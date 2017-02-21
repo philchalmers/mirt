@@ -68,8 +68,8 @@ group <- c(rep('reference', N), rep('focal', N*2))
 
 ## -------------
 # groups completely equal
-dat1 <- simdata(a, d, N, itemtype = 'dich')
-dat2 <- simdata(a, d, N*2, itemtype = 'dich')
+dat1 <- simdata(a, d, N, itemtype = '2PL')
+dat2 <- simdata(a, d, N*2, itemtype = '2PL')
 dat <- rbind(dat1, dat2)
 
 #DIF (all other items as anchors)
@@ -87,8 +87,8 @@ SIBTEST(dat, group, focal_set = 11:30)
 SIBTEST(dat, group, match_set = 1:10) #equivalent
 
 # different hyper pars
-dat1 <- simdata(a, d, N, itemtype = 'dich')
-dat2 <- simdata(a, d, N*2, itemtype = 'dich', mu = .5, sigma = matrix(1.5))
+dat1 <- simdata(a, d, N, itemtype = '2PL')
+dat2 <- simdata(a, d, N*2, itemtype = '2PL', mu = .5, sigma = matrix(1.5))
 dat <- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 SIBTEST(dat, group, 11:30)
@@ -110,9 +110,9 @@ SIBTEST(dat, group, 8, match_set = 1:5, cross=TRUE)
 
 ## -------------
 ## systematic differing slopes and intercepts (clear DTF)
-dat1 <- simdata(a, d, N, itemtype = 'dich')
+dat1 <- simdata(a, d, N, itemtype = '2PL')
 dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, 1)),
-  N*2, itemtype = 'dich')
+  N*2, itemtype = '2PL')
 dat <- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 SIBTEST(dat, group, 11:30)

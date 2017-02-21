@@ -838,7 +838,7 @@ d <- matrix(c(
 
 sigma <- diag(2)
 sigma[1,2] <- sigma[2,1] <- .4
-items <- c(rep('dich',4), rep('graded',3), 'dich')
+items <- c(rep('2PL',4), rep('graded',3), '2PL')
 dataset <- simdata(a,d,2000,items,sigma)
 
 #analyses
@@ -905,9 +905,9 @@ d <- matrix(rnorm(50))
 ThetaNormal <- matrix(rnorm(2000))
 ThetaBimodal <- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
 ThetaSkew <- scale(matrix(rchisq(2000, 3))) #positive skew
-datNormal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaNormal)
-datBimodal <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaBimodal)
-datSkew <- simdata(a, d, 2000, itemtype = 'dich', Theta=ThetaSkew)
+datNormal <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaNormal)
+datBimodal <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaBimodal)
+datSkew <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaSkew)
 
 normal <- mirt(datNormal, 1, empiricalhist = TRUE)
 plot(normal, type = 'empiricalhist')
@@ -964,7 +964,7 @@ Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
 #items and response data
 a <- matrix(1, 20); d <- matrix(rnorm(20))
-dat <- simdata(a, d, 1000, itemtype = 'dich', Theta=Theta)
+dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
 #unconditional Rasch model
 mod0 <- mirt(dat, 1, 'Rasch')

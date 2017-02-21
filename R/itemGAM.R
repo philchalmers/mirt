@@ -36,7 +36,7 @@
 #' a <- matrix(1, J)
 #' d <- matrix(rnorm(J))
 #' Theta <- matrix(rnorm(N, 0, 1.5))
-#' dat <- simdata(a, d, N, itemtype = 'dich', Theta=Theta)
+#' dat <- simdata(a, d, N, itemtype = '2PL', Theta=Theta)
 #'
 #' # make a bad item
 #' ps <- exp(Theta^2 + Theta) / (1 + exp(Theta^2 + Theta))

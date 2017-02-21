@@ -142,7 +142,7 @@ d <- matrix(c(
 -1.5,NA,NA,
  1.5,NA,NA,
  0.0,NA,NA),ncol=3,byrow=TRUE)
-items <- rep('dich', 14)
+items <- rep('2PL', 14)
 items[5:10] <- 'graded'
 
 sigma <- diag(3)
@@ -167,7 +167,7 @@ for(i in 1:3){
 print(a)
 d <- rnorm(12, 0, .5)
 sigma <- diag(c(1, .5, 1, .5))
-dataset <- simdata(a,d,2000,itemtype=rep('dich', 12),sigma=sigma)
+dataset <- simdata(a,d,2000,itemtype=rep('2PL', 12),sigma=sigma)
 
 # estimate by applying constraints and freeing the latent variances
 specific <- c(rep(1,4),rep(2,4), rep(3,4))
@@ -205,7 +205,7 @@ a <- matrix(c(
   1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
 
 d <- matrix(rnorm(16))
-items <- rep('dich', 16)
+items <- rep('2PL', 16)
 
 sigma <- diag(5)
 sigma[1,2] <- sigma[2,1] <- .4

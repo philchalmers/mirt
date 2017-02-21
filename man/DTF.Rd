@@ -63,8 +63,8 @@ group <- c(rep('Group_1', N), rep('Group_2', N))
 
 ## -------------
 # groups completely equal
-dat1 <- simdata(a, d, N, itemtype = 'dich')
-dat2 <- simdata(a, d, N, itemtype = 'dich')
+dat1 <- simdata(a, d, N, itemtype = '2PL')
+dat2 <- simdata(a, d, N, itemtype = '2PL')
 dat <- rbind(dat1, dat2)
 mod <- multipleGroup(dat, model, group=group, SE=TRUE,
                      invariance=c('free_means', 'free_var'))
@@ -79,9 +79,9 @@ DTF(mod, draws = 1000, plot='sDTF') #sDTF 95\% C.I.'s across Theta always includ
 ## random slopes and intercepts for 15 items, and latent mean difference
 ##    (no systematic DTF should exist, but DIF will be present)
 set.seed(1234)
-dat1 <- simdata(a, d, N, itemtype = 'dich', mu=.50, sigma=matrix(1.5))
+dat1 <- simdata(a, d, N, itemtype = '2PL', mu=.50, sigma=matrix(1.5))
 dat2 <- simdata(a + c(numeric(15), runif(n-15, -.2, .2)),
-                d + c(numeric(15), runif(n-15, -.5, .5)), N, itemtype = 'dich')
+                d + c(numeric(15), runif(n-15, -.5, .5)), N, itemtype = '2PL')
 dat <- rbind(dat1, dat2)
 mod1 <- multipleGroup(dat, 1, group=group)
 plot(mod1) #does not account for group differences! Need anchors
@@ -97,9 +97,9 @@ DTF(mod2, draws=1000) #non-sig DTF due to item cancellation
 
 ## -------------
 ## systematic differing slopes and intercepts (clear DTF)
-dat1 <- simdata(a, d, N, itemtype = 'dich', mu=.50, sigma=matrix(1.5))
+dat1 <- simdata(a, d, N, itemtype = '2PL', mu=.50, sigma=matrix(1.5))
 dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, .5)),
-                N, itemtype = 'dich')
+                N, itemtype = '2PL')
 dat <- rbind(dat1, dat2)
 mod3 <- multipleGroup(dat, model, group=group, SE=TRUE,
                       invariance=c('free_means', 'free_var'))
