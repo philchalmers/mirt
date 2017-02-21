@@ -448,7 +448,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         #Step 2. Find average of simulated data gradients and hessian
         Draws.time <- Draws.time + proc.time()[3L] - start
         start <- proc.time()[3L]
-        tmp <- MHRM.deriv(pars=pars, gtheta=gthetatmp, OffTerm=OffTerm, longpars=longpars,
+        tmp <- MHRM.deriv(pars=pars, gtheta=gthetatmp, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                           USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
                           DERIV=DERIV, gtheta0=gtheta0, gstructgrouppars=gstructgrouppars,
                           CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
@@ -589,7 +589,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
 MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups,
                       DERIV, gtheta0, gstructgrouppars, CUSTOM.IND, RAND,
-                      cycles, RANDSTART, random, J, LRPARS, LR.RAND, lr.random,
+                      cycles, RANDSTART, random, J, LRPARS, lrPars, LR.RAND, lr.random,
                       constrain, estpars, redun_constr, L, estHess = TRUE){
     tmp <- .Call('computeDPars', pars, gtheta, OffTerm, length(longpars), estHess,
                  USE.FIXED, 0L, FALSE)
