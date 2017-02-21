@@ -114,8 +114,8 @@ test_that('mixed dich', {
     expect_is(rmod1, 'MixedClass')
     expect_equal(extract.mirt(rmod1, 'df'), 238)
     cfs <- as.numeric(na.omit(do.call(c, coef(rmod1))))
-    expect_equal(cfs, c(1.0245,4.8696,2.6429,-1.4625,1.1799,2.9067,0.899,-2.245,2.2729,5.2553,2.2337,-1.9699,1.0433,3.3248,0.986,-1.6679,0,1,0.0025),
-                 tolerance = 1e-2)
+    expect_equal(cfs, c(1.062578,4.895614,2.661662,-1.479457,1.195101,2.907836,0.897937,-2.253751,2.178545,5.083139,2.151222,-1.918151,1.08017,3.345869,0.9912499,-1.68683,0,1,0.006179096),
+                 tolerance = 1e-4)
 
     re <- randef(rmod1, ndraws=100)
     expect_is(re, 'list')

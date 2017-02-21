@@ -1,10 +1,15 @@
 # Changes in mirt 1.23
 
+- a distinction between the `NR` optimizer in the EM and MH-RM applications is included, where the MH-RM now
+  defaults to `NR1` to indicate a single Newton-Raphson update that uses an RM filtered Hessian term
+
 - `method = 'SEM'` added to perform the stochastic EM algorithm (first two stages of the MH-RM algorithm setup).  
   Alternatively, setting `technical = list(NCYCLES = NA)` when using the MH-RM algorithm now returns 
   the stochastic EM results
 
 - added `multidim_matrix` option to `iteminfo()` to expose computation of information matricies
+
+- bounded parameter spaces handled better when using the NR optimizer
 
 - various bug fixes and performance improvements
 
