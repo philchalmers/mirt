@@ -37,8 +37,8 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
         theta1prod <- theta1 <- theta0 + mirt_rmvnorm(N, sigma = sigma)
         if(is.null(total_0)) theta1prod <- theta1 <- theta0 #for intial draw
         if(length(prodlist) > 0L)
-            theta1prod <- prodterms(theta1,prodlist)
-        total_1 <- complete.LL(theta=theta1, thetaprod=theta1prod, pars=pars, prior.mu=prior.mu,
+            theta1prod <- prodterms(theta1, prodlist)
+        total_1 <- complete.LL(theta=theta1prod, pars=pars, nfact=ncol(theta1), prior.mu=prior.mu,
                                prior.t.var=prior.t.var, OffTerm=OffTerm,
                                CUSTOM.IND=CUSTOM.IND, itemloc=itemloc, fulldata=fulldata)
         if(is.null(total_0)){ #for intial draw
@@ -60,10 +60,10 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
     return(theta1)
 }
 
-complete.LL <- function(theta, thetaprod, pars, prior.mu, prior.t.var,
+complete.LL <- function(theta, pars, nfact, prior.mu, prior.t.var,
                         OffTerm, CUSTOM.IND, itemloc, fulldata){
-    log_den <- mirt_dmvnorm(theta, prior.mu, prior.t.var, log=TRUE)
-    itemtrace <- computeItemtrace(pars=pars, Theta=thetaprod, itemloc=itemloc,
+    log_den <- mirt_dmvnorm(theta[,1L:nfact, drop=FALSE], prior.mu, prior.t.var, log=TRUE)
+    itemtrace <- computeItemtrace(pars=pars, Theta=theta, itemloc=itemloc,
                                    offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
     rowSums(fulldata * log(itemtrace)) + log_den
 }
@@ -1125,7 +1125,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(!(SE.type %in% c('Richardson', 'forward', 'central', 'crossprod', 'Louis', 'sandwich',
                         'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))
         stop('SE.type argument not supported', call.=FALSE)
-    if(method == 'MHRM' || method =='MIXED') optimizer <- 'NR1'
     if(!(method %in% c('EM', 'QMCEM'))) accelerate <- 'none'
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
@@ -1205,7 +1204,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
     if(is.null(optimizer)){
-        opts$Moptim <- if(method %in% c('EM','BL','QMCEM')) 'BFGS' else 'NR'
+        opts$Moptim <- if(method %in% c('EM','BL','QMCEM')) 'BFGS' else 'NR1'
     } else {
         opts$Moptim <- optimizer
     }
