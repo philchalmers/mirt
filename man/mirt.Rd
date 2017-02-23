@@ -7,7 +7,7 @@ Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
-  optimizer = "BFGS", pars = NULL, constrain = NULL, parprior = NULL,
+  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
   key = NULL, large = FALSE, GenRandomPars = FALSE,
@@ -130,9 +130,9 @@ will estimate the regression parameters for all latent traits by default}
   upper and lower bound constraints, and the related \code{'NR1'} which is also the Newton-Raphson
   but consists of only 1 update that has been coupled with RM Hessian (only
   applicible when the MH-RM algorithm is used). The MH-RM algorithm uses the \code{'NR1'} by default,
-  and currently cannot be changed. As well, the \code{'Nelder-Mead'} and \code{'SANN'}
+  and though currently the \code{'BFGS'} and \code{'L-BFGS-B'} are also supported with this method (with
+  few iterations by default). As well, the \code{'Nelder-Mead'} and \code{'SANN'}
   estimators are also available, but their routine use generally is not required or recommended.
-
 
   Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama}
   packages are available by passing the arguments \code{'solnp'} and \code{'alabama'},

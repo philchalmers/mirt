@@ -1,5 +1,8 @@
 # Changes in mirt 1.23
 
+- MH-RM estimation `optimizer` argument can now be modified to `BFGS` and `L-BFGS-B` instead of the default
+  `NR1`
+
 - a distinction between the `NR` optimizer in the EM and MH-RM applications is included, where the MH-RM now
   defaults to `NR1` to indicate a single Newton-Raphson update that uses an RM filtered Hessian term
 

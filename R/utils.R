@@ -1208,6 +1208,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     } else {
         opts$Moptim <- optimizer
     }
+    if(method == 'MIXED' && opts$Moptim != 'NR1')
+        stop('optimizer currently cannot be changed for mixedmirt()', call.=FALSE)
     if(opts$Moptim == 'solnp'){
         if(is.null(solnp_args$control)) solnp_args$control <- list()
         if(is.null(solnp_args$control$trace)) solnp_args$control$trace <- 0

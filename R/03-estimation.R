@@ -583,7 +583,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                startlongpars=ESTIMATE$longpars, plausible.draws=0L,
                                                cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                                message=opts$message, expl=PrepList[[1L]]$exploratory,
-                                               MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                               MSTEPTOL=opts$MSTEPTOL, Moptim='NR1',
                                                keep_vcov_PD=opts$keep_vcov_PD),
                                    DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
             ESTIMATE$pars <- tmp$pars
@@ -634,7 +634,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                           message=opts$message, expl=FALSE,
                                           RANDSTART=1L,
-                                          MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
+                                          MSTEPTOL=opts$MSTEPTOL, Moptim='NR1',
                                           keep_vcov_PD=opts$keep_vcov_PD),
                               DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
             ESTIMATE$pars <- tmp$pars
