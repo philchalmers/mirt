@@ -110,7 +110,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         return(ret)
     }
     SEM.stores <- matrix(0, SEMCYCLES, nfullpars)
-    SEM.stores2 <- list()
+    SEM.stores2 <- vector('list', SEMCYCLES)
     conv <- 0L
     k <- 1L
     gamma <- .25
@@ -188,10 +188,12 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(cycles == (BURNIN + SEMCYCLES + 1L)){
             stagecycle <- 3L
             longpars <- colMeans(SEM.stores)
-            Tau <- SEM.stores2[[1L]]
-            for(i in 2L:SEMCYCLES)
-                Tau <- Tau + SEM.stores2[[i]]
-            Tau <- Tau/SEMCYCLES
+            if(!no_stage_3){
+                Tau <- SEM.stores2[[1L]]
+                for(i in 2L:SEMCYCLES)
+                    Tau <- Tau + SEM.stores2[[i]]
+                Tau <- Tau/SEMCYCLES
+            }
             k <- KDRAWS
             gamma <- 0
         }
@@ -259,7 +261,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 cat(printmsg, sprintf(", Max-Change = %.4f", max(abs(gamma*correction))), sep='')
             if(stagecycle == 2L){
                 SEM.stores[cycles - BURNIN, ] <- longpars
-                SEM.stores2[[cycles - BURNIN]] <- ave.h
+                if(!no_stage_3)
+                    SEM.stores2[[cycles - BURNIN]] <- ave.h
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
             next
