@@ -289,11 +289,11 @@ void P_nested(vector<double> &P, const vector<double> &par,
 {
     NumericVector dummy(1);
 	const int par_size = par.size();
-    vector<double> dpar(nfact+3), npar(par_size - nfact - 3, 1.0);
+    vector<double> dpar(nfact+3), npar(par_size - nfact - 2, 1.0);
     for(int i = 0; i < nfact+3; ++i)
         dpar[i] = par[i];
     for(int i = nfact+3; i < par_size; ++i)
-        npar[i - (nfact+3) + nfact] = par[i];
+        npar[i - (nfact+3) + 1] = par[i];
     vector<double> Pd(N*2), Pn(N*(ncat-1));
     P_dich(Pd, dpar, Theta, dummy, N, nfact);
     P_nominal(Pn, npar, Theta, dummy, N, nfact, ncat-1, 0, 0);
