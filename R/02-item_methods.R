@@ -1707,19 +1707,16 @@ setMethod(
                 cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+2L] <- sum( ((cdat * g_1g * (1-Pstar)/Pd) + rowSums(idat * g_1g * (Pstar - 1)/Qd)) )
         grad[nfact+3L] <- sum( (cdat * u_1u * Pstar / Pd - rowSums(idat * u_1u * Pstar / Qd) ))
-        for(j in 1L:nd){ #FIXME when nfact > 1. Currently hacked to work
+        for(j in 1L:nd){
             grad[nfact+3L+j] <- sum((
-                (idat[,j] * Qd * rowSums(Theta) * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) -
+                (idat[,j] * Qd * rowSums(Theta) * (Pn[,j] - Pn[,j]^2)) / (Qd * Pn[,j]) -
                     rowSums(idat[,-j, drop=FALSE]) * rowSums(Theta) * Pn[,j]))
             grad[nfact+3L+nd+j] <- sum((
-                (idat[,j] * Qd * (Pn[,j] - Pn[,j]^2) * den) / (Qd * num[,j]) -
+                (idat[,j] * Qd * (Pn[,j] - Pn[,j]^2)) / (Qd * Pn[,j]) -
                     rowSums(idat[,-j, drop=FALSE]) * Pn[,j]))
         }
         ret <- list(grad=grad, hess=hess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
-        if(nfact > 1L) # TODO
-            ret$grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
-                                           gradient = TRUE, type = 'central')
         return(ret)
     }
 )
