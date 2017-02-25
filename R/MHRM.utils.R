@@ -84,14 +84,13 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     list(grad=grad, ave.h=ave.h)
 }
 
-MHRM.grad_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, USE.FIXED,
-                              list, ngroups, LR.RAND, DERIV, has_graded, nfact,
-                              CUSTOM.IND, RAND, cycles, lr.random, RANDSTART, random, J, LRPARS, L,
-                              constrain, estpars, redun_constr, estindex_unique, gfulldata, itemloc){
+MHRM.deriv_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, USE.FIXED,
+                             list, ngroups, LR.RAND, DERIV, has_graded, nfact,
+                             CUSTOM.IND, RAND, cycles, lr.random, RANDSTART, random, J, LRPARS, L,
+                             constrain, estpars, redun_constr, estindex_unique, gfulldata, itemloc,
+                             estHess = FALSE){
     longpars[estindex_unique] <- shortpars
-    if(length(constrain))
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J,
                            has_graded=has_graded, cycles=cycles, LRPARS=LRPARS,
                            LR.RAND=LR.RAND, RANDSTART=RANDSTART, gstructgrouppars=vector('list', ngroups),
@@ -107,8 +106,9 @@ MHRM.grad_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm,
                       CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
                       RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
                       constrain=constrain, estpars=estpars, redun_constr=redun_constr,
-                      estHess = FALSE)$grad
-    ret
+                      estHess = FALSE)
+    if(estHess) return(ret)
+    else return(ret$grad)
 }
 
 MHRM.LL <- function(pars, gstructgrouppars, gtheta, lr.random, random, lrPars, OffTerm,
@@ -129,9 +129,7 @@ MHRM.LL_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, U
                            CUSTOM.IND, RAND, cycles, lr.random, RANDSTART, random, J, LRPARS, L,
                            constrain, estpars, redun_constr, estindex_unique, gfulldata, itemloc){
     longpars[estindex_unique] <- shortpars
-    if(length(constrain))
-        for(i in 1L:length(constrain))
-            longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J,
                            has_graded=has_graded, cycles=cycles, LRPARS=LRPARS,
                            LR.RAND=LR.RAND, RANDSTART=RANDSTART, gstructgrouppars=vector('list', ngroups),
@@ -146,6 +144,50 @@ MHRM.LL_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, U
                   USE.FIXED=USE.FIXED, LR.RAND=LR.RAND, RAND=RAND, RANDSTART=RANDSTART, LRPARS=LRPARS,
                   CUSTOM.IND=CUSTOM.IND, gfulldata=gfulldata, itemloc=itemloc)
     LL
+}
+
+MHRM.NR <- function(shortpars, pars, gtheta, lrPars, OffTerm, longpars, USE.FIXED, list, ngroups,
+                    LR.RAND, DERIV, has_graded, nfact, CUSTOM.IND, RAND, cycles, lr.random,
+                    RANDSTART, random, J, LRPARS, L, constrain, estpars, redun_constr,
+                    estindex_unique, gfulldata, itemloc, lbound, ubound, control){
+    plast2 <- plast <- p <- shortpars
+    lastchange <- 0
+    gstructgrouppars <- vector('list', ngroups)
+    if(is.null(control$maxit)) control$maxit <- 50L
+    for(iter in 1L:control$maxit){
+        longpars[estindex_unique] <- shortpars
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
+        for(g in 1L:ngroups)
+            gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
+        tmp <- MHRM.deriv(pars=pars, gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
+                         USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
+                         DERIV=DERIV, nfact=nfact, CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles,
+                         lr.random=lr.random, RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
+                         constrain=constrain, estpars=estpars, redun_constr=redun_constr,
+                         gstructgrouppars=gstructgrouppars, estHess=TRUE)
+        h <- tmp$ave.h
+        g <- tmp$grad
+        inv <- MPinv(h) #TODO this could be avoided if no constrains present
+        change <- as.vector(g %*% inv)
+        change <- ifelse(change > .25, .25, change)
+        change <- ifelse(change < -.25, -.25, change)
+        plast2 <- plast
+        plast <- p
+        p <- p + change
+        if(iter > 1L){
+            flip <- (sign(lastchange) * sign(change)) == -1L
+            p[flip] <- (plast[flip] + p[flip]) / 2
+        }
+        if(any(p < lbound))
+            p[p < lbound] <- (plast[p < lbound] + lbound[p < lbound])/2
+        if(any(p > ubound))
+            p[p > ubound] <- (plast[p > ubound] + ubound[p > ubound])/2
+        dif <- plast - p
+        if(all(abs(dif) < control$tol)) break
+        lastchange <- change
+    }
+    p - shortpars
 }
 
 MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_graded,
@@ -426,7 +468,7 @@ MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             correction <- as.vector(grad %*% ave.h.inv)
         }
     } else if(Moptim == 'BFGS'){
-        opt <- optim(shortpars, MHRM.LL_reload, gr=MHRM.grad_reload, pars=pars,
+        opt <- optim(shortpars, MHRM.LL_reload, gr=MHRM.deriv_reload, pars=pars,
                      gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                      USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
                      DERIV=DERIV, has_graded=has_graded, nfact=nfact,
@@ -437,7 +479,7 @@ MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
                      method='BFGS', control=control)
         correction <- opt$par - shortpars
     } else if(Moptim == 'L-BFGS-B'){
-        opt <- optim(shortpars, MHRM.LL_reload, gr=MHRM.grad_reload, pars=pars,
+        opt <- optim(shortpars, MHRM.LL_reload, gr=MHRM.deriv_reload, pars=pars,
                      gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                      USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
                      DERIV=DERIV, has_graded=has_graded, nfact=nfact,
@@ -445,8 +487,18 @@ MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
                      RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
                      constrain=constrain, estpars=estpars, redun_constr=redun_constr,
                      estindex_unique=estindex_unique, gfulldata=gfulldata, itemloc=itemloc,
-                     method='L-BFGS-B', lower = lbound, upper = ubound, control=control)
+                     method='L-BFGS-B', lower=lbound, upper=ubound, control=control)
         correction <- opt$par - shortpars
+    } else if(Moptim == 'NR'){
+        correction <- MHRM.NR(shortpars=shortpars, pars=pars,
+                              gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
+                              USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
+                              DERIV=DERIV, has_graded=has_graded, nfact=nfact,
+                              CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
+                              RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
+                              constrain=constrain, estpars=estpars, redun_constr=redun_constr,
+                              estindex_unique=estindex_unique, gfulldata=gfulldata, itemloc=itemloc,
+                              lbound=lbound, ubound=ubound, control=control)
     } else {
         stop('Optimizer currently not supported for stochastic optimization method', call.=FALSE)
     }

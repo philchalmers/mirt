@@ -3,9 +3,9 @@
 #'
 #' \code{mirt} fits an unconditional maximum likelihood factor analysis model
 #' to any mixture of dichotomous and polytomous data under the item response theory paradigm
-#' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with
+#' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm, with
 #' an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
-#' quasi-Monte Carlo integration grids, or with stochastic integration (i.e., the first two stages
+#' quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
 #' of the MH-RM algorithm).
 #' Models containing 'explanatory' person or item level predictors
 #' can only be included by using the \code{\link{mixedmirt}} function, though latent
@@ -317,13 +317,15 @@
 #'   the \code{'nlminb'}, which may be more stable than the BFGS family of optimizers (though slightly slower).
 #'
 #'   Other options include the Newton-Raphson (\code{'NR'}),
-#'   which often will be more efficient than the \code{'BFGS'} but not as stable for more complex
-#'   IRT models (such as the nominal or nested logit models) and does not support
-#'   upper and lower bound constraints, and the related \code{'NR1'} which is also the Newton-Raphson
+#'   which can be more efficient than the \code{'BFGS'} but not as stable for more complex
+#'   IRT models (such as the nominal or nested logit models)
+#'   and the related \code{'NR1'} which is also the Newton-Raphson
 #'   but consists of only 1 update that has been coupled with RM Hessian (only
-#'   applicible when the MH-RM algorithm is used). The MH-RM algorithm uses the \code{'NR1'} by default,
-#'   and though currently the \code{'BFGS'} and \code{'L-BFGS-B'} are also supported with this method (with
-#'   few iterations by default). As well, the \code{'Nelder-Mead'} and \code{'SANN'}
+#'   applicable when the MH-RM algorithm is used). The MH-RM algorithm uses the \code{'NR1'} by default,
+#'   and though currently the \code{'BFGS'}, \code{'L-BFGS-B'}, and \code{'NR'}
+#'   are also supported with this method (with
+#'   few iterations by default) to emulate stochastic EM updates.
+#'   As well, the \code{'Nelder-Mead'} and \code{'SANN'}
 #'   estimators are also available, but their routine use generally is not required or recommended.
 #'
 #'   Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama}
@@ -371,7 +373,7 @@
 #'   run in parallel if a \code{\link{mirtCluster}} object has been defined (this will be
 #'   used for Oakes' method as well). Additionally,
 #'   inspecting the symmetry of the ACOV matrix for convergence issues by passing
-#'   \code{technical = list(symmetric = FALSE)} can be helpful to determine if a sufficent
+#'   \code{technical = list(symmetric = FALSE)} can be helpful to determine if a sufficient
 #'   solution has been reached
 #'
 #' @param guess fixed pseudo-guessing parameters. Can be entered as a single
@@ -517,7 +519,7 @@
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
 #'     \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
 #'       with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
-#'       Richarson extropolation. Default is 1e-5}
+#'       Richarson extrapolation. Default is 1e-5}
 #'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
 #'       Default is TRUE}
 #'     \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?
@@ -547,7 +549,10 @@
 #' @param alabama_args a list of arguments to be passed to the \code{alabama::constrOptim.nl()}
 #'   function for equality constraints, inequality constraints, etc
 #' @param control a list passed to the respective optimizers (i.e., \code{optim()}, \code{nlminb()},
-#'   etc)
+#'   etc). Additional arguments have been included for the \code{'NR'} optimizer: \code{'tol'}
+#'   for the convergence tolerance in the M-step (default is \code{TOL/1000}), while the default
+#'   number of iterations for the Newton-Raphson optimizer is 50 (modified with the \code{'maxit'}
+#'   control input)
 #' @param ... additional arguments to be passed
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @seealso  \code{\link{bfactor}},  \code{\link{multipleGroup}},  \code{\link{mixedmirt}},

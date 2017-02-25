@@ -1189,7 +1189,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     }
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
-    opts$MSTEPTOL <- ifelse(is.null(technical$MSTEPTOL), opts$TOL/1000, technical$MSTEPTOL)
     if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars &&
        opts$plausible.draws == 0L)
         set.seed(12345L)

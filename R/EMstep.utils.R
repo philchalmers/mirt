@@ -85,7 +85,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             opt <- try(Mstep.NR(p=p, est=est, longpars=longpars, pars=pars, ngroups=ngroups,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
-                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, TOL=TOL, control=control), TRUE)
+                                itemloc=itemloc, DERIV=DERIV, rlist=rlist, control=control), TRUE)
         } else if(Moptim %in% c('solnp', 'alabama')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
@@ -256,13 +256,12 @@ Mstep.grad_alt <- function(x0, optim_args){
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
-                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, TOL, control)
+                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, control)
 {
     plast2 <- plast <- p
     ubound <- UBOUND[est]
     lbound <- LBOUND[est]
     lastchange <- 0
-    if(is.null(control$maxit)) control$maxit <- 50L
     for(iter in 1L:control$maxit){
         longpars[est] <- p
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
@@ -307,7 +306,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
         if(any(p > ubound))
             p[p > ubound] <- (plast[p > ubound] + ubound[p > ubound])/2
         dif <- plast - p
-        if(all(abs(dif) < TOL)) break
+        if(all(abs(dif) < control$tol)) break
         lastchange <- change
     }
     return(list(par=p))

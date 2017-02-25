@@ -53,6 +53,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stopifnot(is(GenRandomPars, 'logical'))
         stopifnot(is(large, 'logical') || is(large, 'list'))
         opts <- makeopts(GenRandomPars=GenRandomPars, ...)
+        if(opts$Moptim == 'NR'){
+            if(is.null(control$tol)) control$tol <- opts$TOL/1000
+            if(is.null(control$maxit)) control$maxit <- 50L
+        }
         if(discrete) opts$dentype <- 'custom'
         if(discrete && is.null(customGroup)){
             den <- function(obj, Theta){
