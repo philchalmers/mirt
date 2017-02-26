@@ -83,18 +83,20 @@ setMethod(
             nfact <- ncol(ThetaShort)
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
             expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
-            maxL <- max(expLW)
-            if(maxL == 0){
+            LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
+            maxLW <- max(LW)
+            nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+            if(nc == 0){
                 if(return_zeros){
                     if(return.acov) return(matrix(NA, nfact, nfact))
                     return(numeric(nfact*2L + 1L))
                 }
                 warning(paste0('Unable to compute normalization constant for EAP estimates; ',
                                'consider using MAP estimates instead. Returning NaNs'),
-                         call.=FALSE)
+                        call.=FALSE)
                 return(c(rep(NaN, nfact*2), 0))
             }
-	        thetas <- colSums(ThetaShort * expLW / (sum(expLW/maxL)*maxL))
+	        thetas <- colSums(ThetaShort * expLW / nc)
             if(hessian){
     	        thetadif <- t((t(ThetaShort) - thetas))
                 Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
@@ -108,7 +110,7 @@ setMethod(
                     }
                 }
                 vcov <- matrix(0, nfact, nfact)
-                vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / (sum(expLW/maxL)*maxL))
+                vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
                 if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
                 if(return.acov) return(vcov)
     	        SE <- sqrt(diag(vcov))
@@ -748,15 +750,16 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     thetas <- SEthetas <- matrix(0, nrow(L1), x@Model$nfact)
     for(i in 1L:nrow(thetas)){
         expLW <- L1[i,] * prior
-        maxL <- max(expLW)
-        if(maxL == 0){
+        LW <- log(L1[i,]) + log(prior)
+        maxLW <- max(LW)
+        nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+        if(nc == 0){
             warning('Unable to compute normalization constant for EAPsum estimates. Returning NaNs',
                      call.=FALSE)
             thetas[i, ] <- SEthetas[i, ] <- NaN
         } else {
-            thetas[i, ] <- colSums(ThetaShort * expLW / (sum(expLW/maxL)*maxL))
-            SEthetas[i, ] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * expLW /
-                                              (sum(expLW/maxL)*maxL)))
+            thetas[i, ] <- colSums(ThetaShort * expLW / nc)
+            SEthetas[i, ] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * expLW / nc))
         }
     }
     ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), Theta=thetas, SE.Theta=SEthetas)
