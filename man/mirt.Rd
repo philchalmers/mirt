@@ -31,28 +31,29 @@ of factors to extract is also supported}
   \itemize{
     \item \code{'Rasch'} - Rasch/partial credit model by constraining slopes to 1 and freely estimating
       the variance parameters (alternatively, can be specified by applying equality constraints to the
-      slope parameters in \code{'gpcm'})
+      slope parameters in \code{'gpcm'}; Rasch, 1960)
     \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 parameter logistic model,
       where \code{3PL} estimates the lower asymptote only while \code{3PLu} estimates the upper asymptote only
-    \item \code{'graded'} - graded response model
+      (Lord and Novick, 1968; Lord, 1980)
+    \item \code{'graded'} - graded response model (Samejima, 1969)
     \item \code{'grsm'} and \code{'grsmIRT'} - graded ratings scale model in the
       slope-intercept and classical IRT parameterization.
-      \code{'grsmIRT'} is restricted to unidimensional models
+      \code{'grsmIRT'} is restricted to unidimensional models (Muraki, 1992)
     \item \code{'gpcm'} and \code{'gpcmIRT'} - generalized partial credit model in the slope-intercept
       and classical parameterization. \code{'gpcmIRT'} is restricted to unidimensional models. Note that
-      optional scoring matrices for \code{'gpcm'} are available with the \code{gpcm_mats} input
+      optional scoring matrices for \code{'gpcm'} are available with the \code{gpcm_mats} input (Muraki, 1992)
     \item \code{'rsm'} - Rasch rating scale model using the \code{'gpcmIRT'} structure
-      (unidimensional only)
-    \item \code{'nominal'} - nominal response model
-    \item \code{'ideal'} - dichotomous ideal point model
+      (unidimensional only; Andrich, 1978)
+    \item \code{'nominal'} - nominal response model (Bock, 1972)
+    \item \code{'ideal'} - dichotomous ideal point model (Maydeu-Olivares, 2006)
     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
       Note that constraining the slopes to be equal across items will reduce the model to
       Embretson's (a.k.a. Whitely's) multicomponent model (1980).
     \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
-      the upper asymptote only
+      the upper asymptote only (Suh and Bolt, 2010)
     \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
-      or the \code{\link{ns}} function
+      or the \code{\link{ns}} function (Winsberg, Thissen, and Wainer, 1984)
  }
 
  Additionally, user defined item classes can also be defined using the \code{\link{createItem}} function}
