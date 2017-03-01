@@ -1,5 +1,8 @@
 # Changes in mirt 1.23
 
+- `anova()` LRT comparison gains a `bounded` logical to indicate whether a bounded parameter is being used, 
+  as well as a `mix` argument to indicate the mixture of chi-squared distributions 
+
 - MH-RM estimation `optimizer` argument can now be modified to `BFGS`, `L-BFGS-B`, and `NR` 
   instead of the default `NR1`
 

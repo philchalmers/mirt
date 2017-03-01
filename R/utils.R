@@ -1983,6 +1983,18 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
     return(pars)
 }
 
+# borrowed and modified from emdbook package, March 1 2017
+mixX2 <- function (p, df = 1, mix = 0.5, lower.tail = TRUE)
+{
+    df <- rep(df, length.out = length(p))
+    mix <- rep(mix, length.out = length(p))
+    c1 <- ifelse(df == 1, if (lower.tail)  1
+                 else 0, pchisq(p, df - 1, lower.tail = lower.tail))
+    c2 <- pchisq(p, df, lower.tail = lower.tail)
+    r <- mix * c1 + (1 - mix) * c2
+    r
+}
+
 get_deriv_coefs <- function(order, deriv = 1L){
     if(deriv == 1L){
         ret <- switch(as.character(order),

@@ -375,6 +375,10 @@ setMethod(
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param object2 a second model estimated from any of the mirt package estimation methods
+#' @param bounded logical; are the two models comparing a bounded parameter (e.g., comparing a single
+#'   2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
+#'   is used to obtain the p-value
+#' @param mix proportion of chi-squared mixtures. Default is 0.5
 #' @param verbose logical; print additional information to console?
 #'
 #' @name anova-method
@@ -388,11 +392,19 @@ setMethod(
 #' x <- mirt(Science, 1)
 #' x2 <- mirt(Science, 2)
 #' anova(x, x2)
+#'
+#' # bounded parameter
+#' dat <- expand.table(LSAT7)
+#' mod <- mirt(dat, 1)
+#' mod2 <- mirt(dat, 1, itemtype = c(rep('2PL', 4), '3PL'))
+#' anova(mod, mod2) #unbounded test
+#' anova(mod, mod2, bounded = TRUE) #bounded
+#'
 #' }
 setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
-    definition = function(object, object2, verbose = TRUE){
+    definition = function(object, object2, bounded = FALSE, mix = 0.5, verbose = TRUE){
         df <- object@Fit$df - object2@Fit$df
         if(df < 0){
             temp <- object
@@ -425,9 +437,12 @@ setMethod(
                               logLik = c(object@Fit$logLik, object2@Fit$logLik),
                               X2 = c(NaN, X2),
                               df = c(NaN, abs(df)),
-                              p = c(NaN, round(1 - pchisq(X2,abs(df)),4)))
+                              p = c(NaN, 1 - pchisq(X2,abs(df))))
+            if(bounded)
+                ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
         }
-        return(ret)
+        class(ret) <- c('mirt_df', 'data.frame')
+        ret
     }
 )
 

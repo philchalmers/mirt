@@ -9,13 +9,20 @@
 \alias{anova,DiscreteClass-method}
 \title{Compare nested models with likelihood-based statistics}
 \usage{
-\S4method{anova}{SingleGroupClass}(object, object2, verbose = TRUE)
+\S4method{anova}{SingleGroupClass}(object, object2, bounded = FALSE,
+  mix = 0.5, verbose = TRUE)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{MixedClass}}
 
 \item{object2}{a second model estimated from any of the mirt package estimation methods}
+
+\item{bounded}{logical; are the two models comparing a bounded parameter (e.g., comparing a single
+2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
+is used to obtain the p-value}
+
+\item{mix}{proportion of chi-squared mixtures. Default is 0.5}
 
 \item{verbose}{logical; print additional information to console?}
 }
@@ -28,5 +35,13 @@ Compare nested models using likelihood ratio, AIC, BIC, etc.
 x <- mirt(Science, 1)
 x2 <- mirt(Science, 2)
 anova(x, x2)
+
+# bounded parameter
+dat <- expand.table(LSAT7)
+mod <- mirt(dat, 1)
+mod2 <- mirt(dat, 1, itemtype = c(rep('2PL', 4), '3PL'))
+anova(mod, mod2) #unbounded test
+anova(mod, mod2, bounded = TRUE) #bounded
+
 }
 }
