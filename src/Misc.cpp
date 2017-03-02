@@ -1,5 +1,11 @@
 #include "Misc.h"
 
+// hack fix
+void R_init_mirt(DllInfo* info) {
+    R_registerRoutines(info, NULL, NULL, NULL, NULL);
+    R_useDynamicSymbols(info, TRUE);
+}
+
 NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,
 	const vector<double> &Pk_1, const vector<double> &PQ_1, const vector<double> &PQ,
 	const vector<double> &dif1sq, const vector<double> &dif1)
