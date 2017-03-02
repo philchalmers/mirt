@@ -310,7 +310,7 @@
 #'
 #'   The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'},
 #'   \code{'SEM'}, or \code{'MHRM'} should be used when the dimensions are 3 or more. Note that
-#'   when the optimizer is stocastic the associated \code{SE.type} is automatically changed to
+#'   when the optimizer is stochastic the associated \code{SE.type} is automatically changed to
 #'   \code{SE.type = 'MHRM'} by default to avoid the use of quadrature
 #' @param optimizer a character indicating which numerical optimizer to use. By default, the EM
 #'   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds box-constraints and
