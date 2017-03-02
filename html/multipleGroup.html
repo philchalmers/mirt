@@ -127,7 +127,7 @@ to by <code>constrain</code> argument, of define equality constraints using the
 set.seed(12345)
 a &lt;- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d &lt;- matrix(rnorm(15,0,.7),ncol=1)
-itemtype &lt;- rep(&#39;dich&#39;, nrow(a))
+itemtype &lt;- rep(&#39;2PL&#39;, nrow(a))
 N &lt;- 1000
 dataset1 &lt;- simdata(a, d, N, itemtype)
 dataset2 &lt;- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
@@ -158,7 +158,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.583  0.069  0.094  0.413  0.000  0.001
+##  0.585  0.063  0.091  0.424  0.000  0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -168,7 +168,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.315  0.061  0.081  0.162  0.000  0.001
+##  0.309  0.063  0.088  0.147  0.000  0.001
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -401,7 +401,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
 ## 1 35827.88 35830.00 35936.95 36079.92 -17868.94    NaN NaN   NaN
-## 2 35819.23 35823.01 35964.66 36155.29 -17849.62 38.649  15 7e-04
+## 2 35819.23 35823.01 35964.66 36155.29 -17849.62 38.649  15 0.001
 </code></pre>
 
 <pre><code class="r">anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
@@ -414,7 +414,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28     NaN NaN NaN
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28     NaN NaN NaN
 ## 2 35827.88 35830.00 35936.95 36079.92 -17868.94 -15.319  13   1
 </code></pre>
 
@@ -428,9 +428,9 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 ##     &quot;intercepts&quot;, &quot;free_var&quot;, &quot;free_means&quot;))
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35787.50 35788.51 35862.64 35961.13 -17862.75   NaN NaN    NaN
-## 2 35786.56 35787.64 35864.13 35965.79 -17861.28 2.937   1 0.0866
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35787.50 35788.51 35862.64 35961.13 -17862.75   NaN NaN   NaN
+## 2 35786.56 35787.64 35864.12 35965.79 -17861.28 2.937   1 0.087
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_scalar1) #fix variance
@@ -717,7 +717,7 @@ anova(equalslopes, mod_configural)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
 ## 1 35830.71 35833.76 35961.59 36133.15 -17861.35    NaN NaN   NaN
-## 2 35819.23 35823.01 35964.66 36155.29 -17849.62 23.474   6 7e-04
+## 2 35819.23 35823.01 35964.66 36155.29 -17849.62 23.474   6 0.001
 </code></pre>
 
 <pre><code class="r">#same as above, but using mirt.model syntax
@@ -909,7 +909,7 @@ mod_anchor
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within NaN tolerance after 1 EM iterations.
-## mirt version: 1.22 
+## mirt version: 1.23 
 ## M-step optimizer: L-BFGS-B 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1307,77 +1307,77 @@ for(i in 1:ncol(dat))
 
 <pre><code>## [[1]]
 ##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN   NaN
-## 2 35789.81 35791.03 35872.22 35980.24 -17860.91 0.748   2 0.688
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35789.81 35791.03 35872.22 35980.25 -17860.91 0.748   2 0.688
 ## 
 ## [[2]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35790.36 35791.57 35872.77 35980.79 -17861.18 0.202   2 0.9039
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35790.36 35791.57 35872.77 35980.79 -17861.18 0.202   2 0.904
 ## 
 ## [[3]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.96 35790.17 35871.37 35979.39 -17860.48 1.601   2 0.4491
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.96 35790.17 35871.37 35979.39 -17860.48 1.601   2 0.449
 ## 
 ## [[4]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35789.26 35790.47 35871.67 35979.69 -17860.63 1.306   2 0.5205
+##        AIC     AICc    SABIC      BIC    logLik    X2  df    p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN  NaN
+## 2 35789.26 35790.47 35871.67 35979.69 -17860.63 1.306   2 0.52
 ## 
 ## [[5]]
-##        AIC     AICc    SABIC      BIC    logLik  X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28 NaN NaN    NaN
-## 2 35787.86 35789.07 35870.27 35978.29 -17859.93 2.7   2 0.2592
+##        AIC     AICc    SABIC      BIC    logLik  X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28 NaN NaN   NaN
+## 2 35787.86 35789.07 35870.27 35978.29 -17859.93 2.7   2 0.259
 ## 
 ## [[6]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35786.72 35787.93 35869.13 35977.15 -17859.36 3.844   2 0.1463
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35786.72 35787.93 35869.13 35977.15 -17859.36 3.844   2 0.146
 ## 
 ## [[7]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.64 35789.85 35871.05 35979.07 -17860.32 1.921   2 0.3827
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.64 35789.85 35871.05 35979.07 -17860.32 1.921   2 0.383
 ## 
 ## [[8]]
 ##        AIC     AICc    SABIC      BIC    logLik    X2  df    p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN  NaN
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN  NaN
 ## 2 35789.73 35790.94 35872.14 35980.16 -17860.87 0.831   2 0.66
 ## 
 ## [[9]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35789.31 35790.52 35871.72 35979.74 -17860.65 1.252   2 0.5347
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35789.31 35790.52 35871.72 35979.74 -17860.65 1.252   2 0.535
 ## 
 ## [[10]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35789.67 35790.88 35872.08 35980.10 -17860.84 0.891   2 0.6405
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35789.67 35790.88 35872.08 35980.10 -17860.83 0.891   2 0.641
 ## 
 ## [[11]]
 ##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN   NaN
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
 ## 2 35786.97 35788.18 35869.38 35977.40 -17859.49 3.592   2 0.166
 ## 
 ## [[12]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35790.26 35791.47 35872.67 35980.69 -17861.13 0.306   2 0.8581
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35790.26 35791.47 35872.67 35980.69 -17861.13 0.306   2 0.858
 ## 
 ## [[13]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35786.08 35787.30 35868.49 35976.51 -17859.04 4.478   2 0.1066
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35786.08 35787.29 35868.50 35976.51 -17859.04 4.478   2 0.107
 ## 
 ## [[14]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35790.44 35791.65 35872.85 35980.87 -17861.22 0.118   2 0.9427
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35790.44 35791.65 35872.86 35980.87 -17861.22 0.118   2 0.943
 ## 
 ## [[15]]
 ##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN   NaN
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
 ## 2 35789.59 35790.80 35872.00 35980.02 -17860.80 0.969   2 0.616
 </code></pre>
 
@@ -1386,8 +1386,9 @@ p &lt;- do.call(rbind, lapply(anovas, function(x) x[2, &#39;p&#39;]))
 p.adjust(p, method = &#39;BH&#39;)
 </code></pre>
 
-<pre><code>##  [1] 0.8600 0.9427 0.8600 0.8600 0.8600 0.8300 0.8600 0.8600 0.8600 0.8600
-## [11] 0.8300 0.9427 0.8300 0.9427 0.8600
+<pre><code>##  [1] 0.8599711 0.9427068 0.8599711 0.8599711 0.8599711 0.8298070 0.8599711
+##  [8] 0.8599711 0.8599711 0.8599711 0.8298070 0.9427068 0.8298070 0.9427068
+## [15] 0.8599711
 </code></pre>
 
 <pre><code class="r">#same as above, except only test if slopes vary (1 df)
@@ -1402,79 +1403,79 @@ for(i in 1:ncol(dat))
 </code></pre>
 
 <pre><code>## [[1]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.33 35789.47 35868.32 35973.16 -17861.16 0.234   1 0.6286
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.33 35789.47 35868.32 35973.16 -17861.16 0.234   1 0.629
 ## 
 ## [[2]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.56 35789.70 35868.55 35973.39 -17861.28 0.003   1 0.9563
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.56 35789.70 35868.55 35973.39 -17861.28 0.003   1 0.956
 ## 
 ## [[3]]
 ##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN   NaN
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
 ## 2 35787.31 35788.45 35867.30 35972.14 -17860.65 1.253   1 0.263
 ## 
 ## [[4]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35787.42 35788.57 35867.41 35972.25 -17860.71 1.137   1 0.2863
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35787.43 35788.57 35867.41 35972.25 -17860.71 1.137   1 0.286
 ## 
 ## [[5]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.55 35789.69 35868.54 35973.38 -17861.27 0.014   1 0.9058
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.55 35789.69 35868.54 35973.38 -17861.27 0.014   1 0.906
 ## 
 ## [[6]]
-##        AIC     AICc    SABIC      BIC    logLik   X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28  NaN NaN    NaN
-## 2 35785.15 35786.29 35865.14 35969.98 -17859.58 3.41   1 0.0648
+##        AIC     AICc    SABIC      BIC    logLik   X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28  NaN NaN   NaN
+## 2 35785.15 35786.29 35865.14 35969.98 -17859.58 3.41   1 0.065
 ## 
 ## [[7]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35786.75 35787.89 35866.73 35971.57 -17860.37 1.817   1 0.1777
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35786.75 35787.89 35866.73 35971.57 -17860.37 1.817   1 0.178
 ## 
 ## [[8]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.56 35789.70 35868.55 35973.39 -17861.28 0.003   1 0.9563
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.56 35789.70 35868.55 35973.39 -17861.28 0.003   1 0.956
 ## 
 ## [[9]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35787.55 35788.69 35867.53 35972.38 -17860.77 1.015   1 0.3137
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35787.55 35788.69 35867.53 35972.38 -17860.77 1.015   1 0.314
 ## 
 ## [[10]]
 ##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN   NaN
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
 ## 2 35788.34 35789.48 35868.32 35973.17 -17861.17 0.224   1 0.636
 ## 
 ## [[11]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.52 35789.67 35868.51 35973.35 -17861.26 0.037   1 0.8475
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.53 35789.67 35868.51 35973.36 -17861.26 0.037   1 0.847
 ## 
 ## [[12]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.46 35789.60 35868.44 35973.29 -17861.23 0.105   1 0.7459
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.46 35789.60 35868.44 35973.29 -17861.23 0.105   1 0.746
 ## 
 ## [[13]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35786.68 35787.82 35866.67 35971.51 -17860.34 1.879   1 0.1704
+##        AIC     AICc    SABIC      BIC    logLik    X2  df    p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN  NaN
+## 2 35786.68 35787.82 35866.67 35971.51 -17860.34 1.879   1 0.17
 ## 
 ## [[14]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.46 35789.60 35868.44 35973.29 -17861.23 0.106   1 0.7447
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.46 35789.60 35868.44 35973.29 -17861.23 0.106   1 0.745
 ## 
 ## [[15]]
-##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 35786.56 35787.64 35864.13 35965.79 -17861.28   NaN NaN    NaN
-## 2 35788.54 35789.69 35868.53 35973.37 -17861.27 0.017   1 0.8963
+##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 35786.56 35787.64 35864.12 35965.79 -17861.28   NaN NaN   NaN
+## 2 35788.54 35789.69 35868.53 35973.38 -17861.27 0.017   1 0.896
 </code></pre>
 
 <pre><code class="r">#quickly test with Wald test using DIF()
@@ -1563,7 +1564,7 @@ a &lt;- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
 d &lt;- matrix(rnorm(15,0,.7),ncol=1)
 mu &lt;- c(-.4, -.7, .1)
 sigma &lt;- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
-itemtype &lt;- rep(&#39;dich&#39;, nrow(a))
+itemtype &lt;- rep(&#39;2PL&#39;, nrow(a))
 N &lt;- 1000
 dataset1 &lt;- simdata(a, d, N, itemtype)
 dataset2 &lt;- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
@@ -1599,7 +1600,7 @@ anova(mod_metric, mod_configural)
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
 ## 1 37436.46 37438.58 37545.53 37688.50 -18673.23   NaN NaN   NaN
-## 2 37428.89 37432.67 37574.32 37764.94 -18654.45 37.57  15 0.001
+## 2 37428.89 37432.67 37574.32 37764.94 -18654.44 37.57  15 0.001
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1631,9 +1632,9 @@ anova(mod_metric, mod_configural)
 ## Model 2: multipleGroup(data = dat, model = model, group = group, method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC    AICc    SABIC      BIC    logLik     X2  df      p
-## 1 37438.88 37441.0 37547.95 37690.92 -18674.44    NaN NaN    NaN
-## 2 37431.42 37435.2 37576.85 37767.48 -18655.71 37.456  15 0.0011
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 37447.79 37449.90 37556.86 37699.82 -18678.89    NaN NaN NaN
+## 2 37425.42 37429.19 37570.85 37761.47 -18652.71 52.369  15   0
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1647,8 +1648,8 @@ anova(mod_metric, mod_configural)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 37578.07 37579.02 37650.79 37746.10 -18759.04     NaN NaN NaN
-## 2 37438.88 37441.00 37547.95 37690.92 -18674.44 169.194  15   0
+## 1 37575.62 37576.57 37648.34 37743.65 -18757.81     NaN NaN NaN
+## 2 37447.79 37449.90 37556.86 37699.82 -18678.89 157.837  15   0
 </code></pre>
 
 <pre><code class="r">############
@@ -1870,7 +1871,7 @@ d &lt;- matrix(rnorm(50))
 ThetaNormal &lt;- matrix(rnorm(2000))
 ThetaBimodal &lt;- scale(matrix(c(rnorm(1000, -2), rnorm(1000,2)))) #bimodal
 Theta &lt;- rbind(ThetaNormal, ThetaBimodal)
-dat &lt;- simdata(a, d, 4000, itemtype = &#39;dich&#39;, Theta=Theta)
+dat &lt;- simdata(a, d, 4000, itemtype = &#39;2PL&#39;, Theta=Theta)
 group &lt;- rep(c(&#39;G1&#39;, &#39;G2&#39;), each=2000)
 
 EH &lt;- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
@@ -2020,14 +2021,14 @@ anova(EH, EH1)
 ##     empiricalhist = TRUE)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 216114.7 216119.9 216426.4 216744.2 -107957.4   NaN NaN    NaN
-## 2 216118.7 216124.1 216436.6 216760.7 -107957.4 0.017   2 0.9915
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 216114.7 216119.9 216426.4 216744.2 -107957.4   NaN NaN   NaN
+## 2 216118.7 216124.1 216436.6 216760.7 -107957.4 0.017   2 0.992
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>

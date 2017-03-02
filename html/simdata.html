@@ -54,8 +54,9 @@ be used</p>
 <td>
 <p>a character vector of length <code>nrow(a)</code> (or 1, if all the item types are
 the same) specifying the type of items to simulate. Inputs can either be the same as
-the inputs found in <code><a href="mirt.html">mirt</a></code> or the internal clases defined by the package. If the
-typical inputs that are passed to <code><a href="mirt.html">mirt</a></code> are used then these will be converted into
+the inputs found in the <code>itemtype</code> argument in <code><a href="mirt.html">mirt</a></code> or the
+internal clases defined by the package. Typical <code>itemtype</code> inputs that
+are passed to <code><a href="mirt.html">mirt</a></code> are used then these will be converted into
 the respective internal classes automatically.
 </p>
 <p>If the internal class of the object is specified instead, the inputs can
@@ -211,8 +212,8 @@ d &lt;- matrix(c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
 mu &lt;- c(-.4, -.7, .1)
 sigma &lt;- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
 
-dataset1 &lt;- simdata(a, d, 2000, itemtype = &#39;dich&#39;)
-dataset2 &lt;- simdata(a, d, 2000, itemtype = &#39;dich&#39;, mu = mu, sigma = sigma)
+dataset1 &lt;- simdata(a, d, 2000, itemtype = &#39;2PL&#39;)
+dataset2 &lt;- simdata(a, d, 2000, itemtype = &#39;2PL&#39;, mu = mu, sigma = sigma)
 
 #mod &lt;- mirt(dataset1, 3, method = &#39;MHRM&#39;)
 #coef(mod)
@@ -254,7 +255,7 @@ nominal[4, ] &lt;- c(0,1.2,2)
 
 sigma &lt;- diag(3)
 sigma[2,3] &lt;- sigma[3,2] &lt;- .25
-items &lt;- c(&#39;dich&#39;,&#39;dich&#39;,&#39;dich&#39;,&#39;nominal&#39;,&#39;gpcm&#39;,&#39;graded&#39;)
+items &lt;- c(&#39;2PL&#39;,&#39;2PL&#39;,&#39;2PL&#39;,&#39;nominal&#39;,&#39;gpcm&#39;,&#39;graded&#39;)
 
 dataset &lt;- simdata(a,d,2000,items,sigma=sigma,nominal=nominal)
 
@@ -303,7 +304,7 @@ F2a &lt;- function(F, D=1.702){
 
 <pre><code class="r">d &lt;- rnorm(10)
 
-dat &lt;- simdata(a, d, 5000, itemtype = &#39;dich&#39;)
+dat &lt;- simdata(a, d, 5000, itemtype = &#39;2PL&#39;)
 mod &lt;- mirt(dat, 1)
 coef(mod, simplify=TRUE)$items
 </code></pre>
@@ -379,9 +380,9 @@ summary(mod2)
 ## Model 2: mirt(data = dat, model = 1)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df      p
-## 1 54857.31 54857.38 54897.39 54935.52 -27416.66   NaN NaN    NaN
-## 2 54870.85 54871.02 54937.64 55001.19 -27415.42 2.465   8 0.9633
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 54857.31 54857.38 54897.39 54935.52 -27416.66   NaN NaN   NaN
+## 2 54870.85 54871.02 54937.64 55001.19 -27415.42 2.465   8 0.963
 </code></pre>
 
 <pre><code class="r">#### Unidimensional nonlinear factor pattern
@@ -397,7 +398,7 @@ a &lt;- matrix(c(
 .4,NA,
 .7,NA),ncol=2,byrow=TRUE)
 d &lt;- matrix(rnorm(6))
-itemtype &lt;- rep(&#39;dich&#39;,6)
+itemtype &lt;- rep(&#39;2PL&#39;,6)
 
 nonlindata &lt;- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 
@@ -422,7 +423,7 @@ d &lt;- matrix(c(
 nominal &lt;- matrix(NA, nrow(d), ncol(d))
 nominal[4, ] &lt;- c(NA,0,.5,.6)
 
-items &lt;- c(rep(&#39;dich&#39;,3),&#39;nestlogit&#39;)
+items &lt;- c(rep(&#39;2PL&#39;,3),&#39;nestlogit&#39;)
 
 dataset &lt;- simdata(a,d,2000,items,nominal=nominal)
 
@@ -632,5 +633,5 @@ head(dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>

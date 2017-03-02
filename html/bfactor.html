@@ -362,8 +362,8 @@ coef(mod2)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 19062.10 19099.13 19179.43 19484.21 -9435.052    NaN NaN NaN
-## 2 19009.55 19046.58 19126.88 19431.66 -9408.775 52.553   0   0
+## 1 19062.10 19099.13 19179.44 19484.21 -9435.052    NaN NaN NaN
+## 2 19009.55 19046.58 19126.88 19431.65 -9408.775 52.553   0   0
 </code></pre>
 
 <pre><code class="r">## don&#39;t estimate specific factor for item 32
@@ -377,9 +377,9 @@ anova(mod1, mod3)
 ## Model 2: bfactor(data = data, model = specific)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik   X2  df      p
-## 1 19060.12 19096.31 19176.23 19477.83 -9435.062  NaN NaN    NaN
-## 2 19062.10 19099.13 19179.43 19484.21 -9435.052 0.02   1 0.8875
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik   X2  df     p
+## 1 19060.12 19096.31 19176.23 19477.83 -9435.062  NaN NaN   NaN
+## 2 19062.10 19099.13 19179.44 19484.21 -9435.052 0.02   1 0.888
 </code></pre>
 
 <pre><code class="r"># same, but decalred manually (not run)
@@ -424,7 +424,7 @@ d &lt;- matrix(c(
 -1.5,NA,NA,
  1.5,NA,NA,
  0.0,NA,NA),ncol=3,byrow=TRUE)
-items &lt;- rep(&#39;dich&#39;, 14)
+items &lt;- rep(&#39;2PL&#39;, 14)
 items[5:10] &lt;- &#39;graded&#39;
 
 sigma &lt;- diag(3)
@@ -528,7 +528,7 @@ print(a)
 
 <pre><code class="r">d &lt;- rnorm(12, 0, .5)
 sigma &lt;- diag(c(1, .5, 1, .5))
-dataset &lt;- simdata(a,d,2000,itemtype=rep(&#39;dich&#39;, 12),sigma=sigma)
+dataset &lt;- simdata(a,d,2000,itemtype=rep(&#39;2PL&#39;, 12),sigma=sigma)
 
 # estimate by applying constraints and freeing the latent variances
 specific &lt;- c(rep(1,4),rep(2,4), rep(3,4))
@@ -593,7 +593,7 @@ a &lt;- matrix(c(
   1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
 
 d &lt;- matrix(rnorm(16))
-items &lt;- rep(&#39;dich&#39;, 16)
+items &lt;- rep(&#39;2PL&#39;, 16)
 
 sigma &lt;- diag(5)
 sigma[1,2] &lt;- sigma[2,1] &lt;- .4
@@ -711,5 +711,5 @@ coef(simmod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -80,7 +80,7 @@ Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
 #items and response data
 a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
-dat &lt;- simdata(a, d, 1000, itemtype = &#39;dich&#39;, Theta=Theta)
+dat &lt;- simdata(a, d, 1000, itemtype = &#39;2PL&#39;, Theta=Theta)
 
 mod1 &lt;- mirt(dat, 1, &#39;Rasch&#39;, covdata=covdata, formula = ~ X1 + X2)
 coef(mod1, simplify=TRUE)
@@ -136,15 +136,15 @@ SEpar &lt;- lapply(so, function(x) x$coefficients[, &#39;Std. Error&#39;])
 averageMI(par, SEpar)
 </code></pre>
 
-<pre><code>##                par SEpar       t     df     p
-## (Intercept)  0.001 0.019   0.067 53.032 0.237
-## covdata$X1   0.533 0.019  28.131 58.231 0.000
-## covdata$X2  -1.032 0.019 -55.460 73.184 0.000
+<pre><code>##                par SEpar       t      df    p
+## (Intercept) -0.004 0.019  -0.203  53.369 0.21
+## covdata$X1   0.534 0.018  29.915  93.575 0.00
+## covdata$X2  -1.044 0.017 -62.798 285.250 0.00
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>

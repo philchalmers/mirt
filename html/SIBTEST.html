@@ -133,8 +133,8 @@ group &lt;- c(rep(&#39;reference&#39;, N), rep(&#39;focal&#39;, N*2))
 
 ## -------------
 # groups completely equal
-dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
-dat2 &lt;- simdata(a, d, N*2, itemtype = &#39;dich&#39;)
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;2PL&#39;)
+dat2 &lt;- simdata(a, d, N*2, itemtype = &#39;2PL&#39;)
 dat &lt;- rbind(dat1, dat2)
 
 #DIF (all other items as anchors)
@@ -196,8 +196,8 @@ SIBTEST(dat, group, focal_set = 11:30)
 </code></pre>
 
 <pre><code class="r"># different hyper pars
-dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
-dat2 &lt;- simdata(a, d, N*2, itemtype = &#39;dich&#39;, mu = .5, sigma = matrix(1.5))
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;2PL&#39;)
+dat2 &lt;- simdata(a, d, N*2, itemtype = &#39;2PL&#39;, mu = .5, sigma = matrix(1.5))
 dat &lt;- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 </code></pre>
@@ -301,9 +301,9 @@ SIBTEST(dat, group, 6, match_set = 1:5, cross=TRUE)
 
 <pre><code class="r">## -------------
 ## systematic differing slopes and intercepts (clear DTF)
-dat1 &lt;- simdata(a, d, N, itemtype = &#39;dich&#39;)
+dat1 &lt;- simdata(a, d, N, itemtype = &#39;2PL&#39;)
 dat2 &lt;- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, 1)),
-  N*2, itemtype = &#39;dich&#39;)
+  N*2, itemtype = &#39;2PL&#39;)
 dat &lt;- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 </code></pre>
@@ -367,5 +367,5 @@ SIBTEST(dat, group, focal_set = 6, match_set = 1:5)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -22,7 +22,8 @@
 
 <pre>
 ## S4 method for signature 'SingleGroupClass'
-anova(object, object2, verbose = TRUE)
+anova(object, object2, bounded = FALSE,
+  mix = 0.5, verbose = TRUE)
 </pre>
 
 
@@ -37,6 +38,16 @@ anova(object, object2, verbose = TRUE)
 <tr valign="top"><td><code>object2</code></td>
 <td>
 <p>a second model estimated from any of the mirt package estimation methods</p>
+</td></tr>
+<tr valign="top"><td><code>bounded</code></td>
+<td>
+<p>logical; are the two models comparing a bounded parameter (e.g., comparing a single
+2PL and 3PL model with 1 df)? If <code>TRUE</code> then a 50:50 mix of chi-squared distributions
+is used to obtain the p-value</p>
+</td></tr>
+<tr valign="top"><td><code>mix</code></td>
+<td>
+<p>proportion of chi-squared mixtures. Default is 0.5</p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -58,14 +69,44 @@ anova(x, x2)
 ## Model 2: mirt(data = Science, model = 2)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df      p
-## 1 3249.739 3251.190 3262.512 3313.279 -1608.870    NaN NaN    NaN
-## 2 3241.938 3243.981 3257.106 3317.392 -1601.969 13.801   3 0.0032
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
+## 1 3249.739 3251.190 3262.512 3313.279 -1608.870    NaN NaN   NaN
+## 2 3241.938 3243.981 3257.106 3317.392 -1601.969 13.801   3 0.003
+</code></pre>
+
+<pre><code class="r"># bounded parameter
+dat &lt;- expand.table(LSAT7)
+mod &lt;- mirt(dat, 1)
+mod2 &lt;- mirt(dat, 1, itemtype = c(rep(&#39;2PL&#39;, 4), &#39;3PL&#39;))
+anova(mod, mod2) #unbounded test
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = dat, model = 1)
+## Model 2: mirt(data = dat, model = 1, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 5337.610 5337.833 5354.927 5386.688 -2658.805   NaN NaN   NaN
+## 2 5339.587 5339.855 5358.636 5393.573 -2658.794 0.023   1 0.879
+</code></pre>
+
+<pre><code class="r">anova(mod, mod2, bounded = TRUE) #bounded
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = dat, model = 1)
+## Model 2: mirt(data = dat, model = 1, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
+</code></pre>
+
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df    p
+## 1 5337.610 5337.833 5354.927 5386.688 -2658.805   NaN NaN  NaN
+## 2 5339.587 5339.855 5358.636 5393.573 -2658.794 0.023   1 0.44
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>

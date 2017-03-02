@@ -63,7 +63,7 @@ Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
 #items and response data
 a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
-dat &lt;- simdata(a, d, 1000, itemtype = &#39;dich&#39;, Theta=Theta)
+dat &lt;- simdata(a, d, 1000, itemtype = &#39;2PL&#39;, Theta=Theta)
 
 #conditional model using X1 and X2 as predictors of Theta
 mod1 &lt;- mirt(dat, 1, &#39;Rasch&#39;, covdata=covdata, formula = ~ X1 + X2)
@@ -101,5 +101,5 @@ head(fe2)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
 </body></html>
