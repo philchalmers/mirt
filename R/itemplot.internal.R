@@ -413,7 +413,6 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste("Item", item, "Expected Scores")
             return(wireframe(score ~ Theta1 + Theta2, data = plt, main = main,
-                             ylim=c(ymin_score-ybump, ymax_score+ybump),
                              zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                              zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
                              colorkey = colorkey, drape = drape, screen=rot, ...))
@@ -446,7 +445,6 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             if(is.null(main))
                 main <- paste("Item", item, "Expected Scores")
             return(wireframe(score ~ Theta1 + Theta2|Theta3, data = plt, main = main,
-                             ylim=c(ymin_score-ybump, ymax_score+ybump),
                              zlab=expression(E(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                              zlim = c(min(floor(plt$score)), max(ceiling(plt$score))),scales = list(arrows = FALSE),
                              colorkey = colorkey, drape = drape, screen=rot, ...))
