@@ -23,7 +23,7 @@ setMethod(
         # cat('\nNumber of classes quadrature:', x@Options$quadpts)
         cat('\n')
         if(!is.na(x@OptimInfo$condnum)){
-            cat("\nInformation matrix estimated with method:", x@Options$infomethod)
+            cat("\nInformation matrix estimated with method:", x@Options$SE.type)
             cat("\nCondition number of information matrix = ", x@OptimInfo$condnum,
                 '\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
                     'is not a maximum, or the information matrix is too inaccurate' else
