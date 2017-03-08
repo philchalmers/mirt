@@ -580,13 +580,13 @@ fs &lt;- fscores(mod, MI = 30)
 head(fs)
 </code></pre>
 
-<pre><code>##              F1
-## [1,]  0.3908221
-## [2,]  0.0464307
-## [3,] -0.8979382
-## [4,] -0.8979382
-## [5,]  0.7838919
-## [6,]  0.6509704
+<pre><code>##               F1
+## [1,]  0.38363897
+## [2,]  0.05409217
+## [3,] -0.86037939
+## [4,] -0.86037939
+## [5,]  0.70913186
+## [6,]  0.66910252
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -596,23 +596,23 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 
 <pre><code>## [[1]]
 ##        mean         var         min         max 
-## -0.01804364  1.02442395 -3.20371131  3.30730737 
+##  0.03699427  1.02460304 -2.79158399  3.62524235 
 ## 
 ## [[2]]
-##       mean        var        min        max 
-## -0.0158872  0.9768409 -2.7699338  2.4030470 
+##        mean         var         min         max 
+##  0.01290987  1.04508965 -3.24651122  2.87398486 
 ## 
 ## [[3]]
 ##        mean         var         min         max 
-##  0.06283921  0.95574897 -3.67655772  3.42838913 
+##  0.02797142  1.06557309 -3.93432453  3.23300279 
 ## 
 ## [[4]]
 ##        mean         var         min         max 
-##  0.02080294  0.94089468 -3.32976437  2.56663664 
+##  0.02918585  0.94851508 -3.32037566  2.96878857 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-## -0.03376504  1.07196105 -3.58699889  2.69167522
+## -0.04283669  0.98364127 -3.42877114  3.04401403
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -658,5 +658,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
 </body></html>

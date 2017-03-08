@@ -22,12 +22,12 @@ an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
 quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
 of the MH-RM algorithm).
 Models containing 'explanatory' person or item level predictors
-can only be included by using the <code><a href="../../mirtbeta/html/mixedmirt.html">mixedmirt</a></code> function, though latent
+can only be included by using the <code><a href="mixedmirt.html">mixedmirt</a></code> function, though latent
 regression models can be fit using the <code>formula</code> input below. Tests that form a
-two-tier or bi-factor structure should be estimated with the <code><a href="../../mirtbeta/html/bfactor.html">bfactor</a></code> function,
+two-tier or bi-factor structure should be estimated with the <code><a href="bfactor.html">bfactor</a></code> function,
 which uses a dimension reduction EM algorithm for modeling item parcels.
 Multiple group analyses (useful for DIF and DTF testing) are
-also available using the <code><a href="../../mirtbeta/html/multipleGroup.html">multipleGroup</a></code> function.
+also available using the <code><a href="multipleGroup.html">multipleGroup</a></code> function.
 </p>
 
 
@@ -57,7 +57,7 @@ numerically ordered data, with missing data coded as <code>NA</code> (to convert
 </td></tr>
 <tr valign="top"><td><code>model</code></td>
 <td>
-<p>a string to be passed (or an object returned from) <code><a href="../../mirtbeta/html/mirt.model.html">mirt.model</a></code>,
+<p>a string to be passed (or an object returned from) <code><a href="mirt.model.html">mirt.model</a></code>,
 declaring how the IRT model is to be estimated (loadings, constraints, priors, etc).
 For exploratory IRT models, a single numeric value indicating the number
 of factors to extract is also supported</p>
@@ -118,7 +118,7 @@ or the <code><a href="../../splines/html/ns.html">ns</a></code> function (Winsbe
 </p>
 </li></ul>
 
-<p>Additionally, user defined item classes can also be defined using the <code><a href="../../mirtbeta/html/createItem.html">createItem</a></code> function</p>
+<p>Additionally, user defined item classes can also be defined using the <code><a href="createItem.html">createItem</a></code> function</p>
 </td></tr>
 <tr valign="top"><td><code>guess</code></td>
 <td>
@@ -193,7 +193,7 @@ has not been reached with sufficient precision, and may be further sensitive
 if the history of the EM cycles is not stable/sufficient for convergence of the respective estimates.
 Increasing the number of iterations (increasing <code>NCYCLES</code> and decreasing
 <code>TOL</code>, see below) will help to improve the accuracy, and can be
-run in parallel if a <code><a href="../../mirtbeta/html/mirtCluster.html">mirtCluster</a></code> object has been defined (this will be
+run in parallel if a <code><a href="mirtCluster.html">mirtCluster</a></code> object has been defined (this will be
 used for Oakes' method as well). Additionally,
 inspecting the symmetry of the ACOV matrix for convergence issues by passing
 <code>technical = list(symmetric = FALSE)</code> can be helpful to determine if a sufficient
@@ -263,7 +263,7 @@ labeled. To constrain parameters to be equal create a list with separate concate
 vectors signifying which parameters to constrain. For example, to set parameters 1 and 5
 equal, and also set parameters 2, 6, and 10 equal use
 <code>constrain = list(c(1,5), c(2,6,10))</code>. Constraints can also be specified using the
-<code><a href="../../mirtbeta/html/mirt.model.html">mirt.model</a></code> syntax (recommended)</p>
+<code><a href="mirt.model.html">mirt.model</a></code> syntax (recommended)</p>
 </td></tr>
 <tr valign="top"><td><code>parprior</code></td>
 <td>
@@ -279,7 +279,7 @@ are <code>parprior = list(c(parnumbers, 'norm', mean, sd))</code>,
 after applying the function <code><a href="../../stats/html/Logistic.html">plogis</a></code> to the input value
 (note, this is specifically for applying a beta
 prior to the lower/upper-bound parameters in 3/4PL models). Priors can also be
-specified using <code><a href="../../mirtbeta/html/mirt.model.html">mirt.model</a></code> syntax (recommended)</p>
+specified using <code><a href="mirt.model.html">mirt.model</a></code> syntax (recommended)</p>
 </td></tr>
 <tr valign="top"><td><code>calcNull</code></td>
 <td>
@@ -473,7 +473,7 @@ If not defined, the grid is determined internally based on the number of <code>q
 with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
 Richarson extrapolation. Default is 1e-5</p>
 </dd>
-<dt>parallel</dt><dd><p>logical; use the parallel cluster defined by <code><a href="../../mirtbeta/html/mirtCluster.html">mirtCluster</a></code>?
+<dt>parallel</dt><dd><p>logical; use the parallel cluster defined by <code><a href="mirtCluster.html">mirtCluster</a></code>?
 Default is TRUE</p>
 </dd>
 <dt>removeEmptyRows</dt><dd><p>logical; remove response vectors that only contain <code>NA</code>'s?
@@ -518,7 +518,7 @@ properties when the traits are highly correlated. Default is <code>TRUE</code></
 <h3>Value</h3>
 
 <p>function returns an object of class <code>SingleGroupClass</code>
-(<a href="../../mirtbeta/html/SingleGroupClass-class.html">SingleGroupClass-class</a>)
+(<a href="SingleGroupClass-class.html">SingleGroupClass-class</a>)
 </p>
 
 
@@ -530,12 +530,12 @@ variances of the latent factors are automatically fixed to 1 to help
 facilitate model identification. All parameters may be fixed to constant
 values or set equal to other parameters using the appropriate declarations.
 Confirmatory models may also contain 'explanatory' person or item level predictors, though
-including predictors is currently limited to the <code><a href="../../mirtbeta/html/mixedmirt.html">mixedmirt</a></code> function.
+including predictors is currently limited to the <code><a href="mixedmirt.html">mixedmirt</a></code> function.
 </p>
 <p>When specifying a single number greater than 1 as the <code>model</code> input to mirt
 an exploratory IRT model will be estimated. Rotation and target matrix options are available
-if they are passed to generic functions such as <code><a href="../../mirtbeta/html/summary-method.html">summary-method</a></code> and
-<code><a href="../../mirtbeta/html/fscores.html">fscores</a></code>. Factor means and variances are fixed to ensure proper identification.
+if they are passed to generic functions such as <code><a href="summary-method.html">summary-method</a></code> and
+<code><a href="fscores.html">fscores</a></code>. Factor means and variances are fixed to ensure proper identification.
 </p>
 <p>If the model is an exploratory item factor analysis estimation will begin
 by computing a matrix of quasi-polychoric correlations. A
@@ -559,7 +559,7 @@ parameters, and is done so automatically if <code>coef(mod, rawug = FALSE)</code
 </p>
 <p>As such, when applying prior distributions to these parameters it is recommended to use a prior
 that ranges from negative infinity to positive infinity, such as the normally distributed
-prior via the <code>'norm'</code> input (see <code><a href="../../mirtbeta/html/mirt.model.html">mirt.model</a></code>).
+prior via the <code>'norm'</code> input (see <code><a href="mirt.model.html">mirt.model</a></code>).
 </p>
 
 
@@ -601,49 +601,49 @@ These are:
 </p>
 
 <dl>
-<dt><code><a href="../../mirtbeta/html/mirt.model.html">mirt.model</a></code></dt><dd>
+<dt><code><a href="mirt.model.html">mirt.model</a></code></dt><dd>
 <p>Define the IRT model specification use special syntax. Useful for defining between and within
 group parameter constraints, prior parameter distributions, and specifying the slope
 coefficients for each factor</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/coef-method.html">coef-method</a></code></dt><dd>
+<dt><code><a href="coef-method.html">coef-method</a></code></dt><dd>
 <p>Extract raw coefficients from the model, along with their standard errors and confidence
 intervals</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/summary-method.html">summary-method</a></code></dt><dd>
+<dt><code><a href="summary-method.html">summary-method</a></code></dt><dd>
 <p>Extract standardized loadings from model. Accepts a <code>rotate</code> argument for exploratory
 item response model</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/anova-method.html">anova-method</a></code></dt><dd>
+<dt><code><a href="anova-method.html">anova-method</a></code></dt><dd>
 <p>Compare nested models using likelihood ratio statistics as well as information criteria
 such as the AIC and BIC</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/residuals-method.html">residuals-method</a></code></dt><dd>
+<dt><code><a href="residuals-method.html">residuals-method</a></code></dt><dd>
 <p>Compute pairwise residuals between each item using methods such as the LD statistic
 (Chen &amp; Thissen, 1997), as well as response pattern residuals</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/plot-method.html">plot-method</a></code></dt><dd>
+<dt><code><a href="plot-method.html">plot-method</a></code></dt><dd>
 <p>Plot various types of test level plots including the test score and information functions
 and more</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/itemplot.html">itemplot</a></code></dt><dd>
+<dt><code><a href="itemplot.html">itemplot</a></code></dt><dd>
 <p>Plot various types of item level plots, including the score, standard error, and information
 functions, and more</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/createItem.html">createItem</a></code></dt><dd>
+<dt><code><a href="createItem.html">createItem</a></code></dt><dd>
 <p>Create a customized <code>itemtype</code> that does not currently exist in the package</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/imputeMissing.html">imputeMissing</a></code></dt><dd>
+<dt><code><a href="imputeMissing.html">imputeMissing</a></code></dt><dd>
 <p>Impute missing data given some computed Theta matrix</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/fscores.html">fscores</a></code></dt><dd>
+<dt><code><a href="fscores.html">fscores</a></code></dt><dd>
 <p>Find predicted scores for the latent traits using estimation methods such as EAP, MAP, ML,
 WLE, and EAPsum</p>
 </dd>
 <dt><code><a href="../../lavaan/html/lavTestWald.html">wald</a></code></dt><dd>
 <p>Compute Wald statistics follow the convergence of a model with a suitable information matrix</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/M2.html">M2</a></code></dt><dd>
+<dt><code><a href="M2.html">M2</a></code></dt><dd>
 <p>Limited information goodness of fit test statistic based to determine how well the model fits
 the data</p>
 </dd>
@@ -651,10 +651,10 @@ the data</p>
 <p>Goodness of fit statistics at the item and person levels, such as the S-X2, infit, outfit,
 and more</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/boot.mirt.html">boot.mirt</a></code></dt><dd>
+<dt><code><a href="boot.mirt.html">boot.mirt</a></code></dt><dd>
 <p>Compute estimated parameter confidence intervals via the bootstrap methods</p>
 </dd>
-<dt><code><a href="../../mirtbeta/html/mirtCluster.html">mirtCluster</a></code></dt><dd>
+<dt><code><a href="mirtCluster.html">mirtCluster</a></code></dt><dd>
 <p>Define a cluster for the package functions to use for capitalizing on multi-core architecture
 to utilize available CPUs when possible. Will help to decrease estimation times for tasks
 that can be run in parallel</p>
@@ -907,11 +907,11 @@ IL: Scientific Software International.
 
 <h3>See Also</h3>
 
-<p><code><a href="../../mirtbeta/html/bfactor.html">bfactor</a></code>,  <code><a href="../../mirtbeta/html/multipleGroup.html">multipleGroup</a></code>,  <code><a href="../../mirtbeta/html/mixedmirt.html">mixedmirt</a></code>,
-<code><a href="../../mirtbeta/html/expand.table.html">expand.table</a></code>, <code><a href="../../mirtbeta/html/key2binary.html">key2binary</a></code>, <code><a href="../../mirtbeta/html/mod2values.html">mod2values</a></code>,
-<code><a href="../../mirtbeta/html/extract.item.html">extract.item</a></code>, <code><a href="../../mirtbeta/html/iteminfo.html">iteminfo</a></code>, <code><a href="../../mirtbeta/html/testinfo.html">testinfo</a></code>,
-<code><a href="../../mirtbeta/html/probtrace.html">probtrace</a></code>, <code><a href="../../mirtbeta/html/simdata.html">simdata</a></code>, <code><a href="../../mirtbeta/html/averageMI.html">averageMI</a></code>,
-<code><a href="../../nlme/html/fixed.effects.html">fixef</a></code>, <code><a href="../../mirtbeta/html/extract.mirt.html">extract.mirt</a></code>
+<p><code><a href="bfactor.html">bfactor</a></code>,  <code><a href="multipleGroup.html">multipleGroup</a></code>,  <code><a href="mixedmirt.html">mixedmirt</a></code>,
+<code><a href="expand.table.html">expand.table</a></code>, <code><a href="key2binary.html">key2binary</a></code>, <code><a href="mod2values.html">mod2values</a></code>,
+<code><a href="extract.item.html">extract.item</a></code>, <code><a href="iteminfo.html">iteminfo</a></code>, <code><a href="testinfo.html">testinfo</a></code>,
+<code><a href="probtrace.html">probtrace</a></code>, <code><a href="simdata.html">simdata</a></code>, <code><a href="averageMI.html">averageMI</a></code>,
+<code><a href="../../nlme/html/fixed.effects.html">fixef</a></code>, <code><a href="extract.mirt.html">extract.mirt</a></code>
 </p>
 
 
@@ -930,7 +930,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -980,7 +980,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1006,7 +1006,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-05 tolerance after 74 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: none
 ## Number of rectangular quadrature: 61
@@ -1072,7 +1072,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1121,7 +1121,7 @@ data &lt;- expand.table(LSAT7)
 <pre><code class="r">plot(mod2, MI=200) #expected total score with 95% confidence intervals
 </code></pre>
 
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAIAAAApSmgoAAAACXBIWXMAAAsSAAALEgHS3X78AAAgAElEQVR4nO3daXxU1cGA8XNnX7KHEENIQCAsgoCAAoISZVNZXgGVqsgram1rlVpcWrdqq9aqYH0rtRURFaioIFZQ3NgsIAEEZZd9CSQEQkL2zHrfD0OHmD2TuXNn7jz/D/2Fmczck2l4PJx754wky7IAAGiXTu0BAACURegBQOMIPQBoHKEHAI0j9ACgcYQe9evSpYtUx4gRI9QeV2N27dolSVL37t1r3T5gwIC6P4skSffcc08rj1hdXS1JksFgqHtXYWHhb3/726ysLKvVmpGRMWHChO+++66VhwMCU88vKOCXkZERFxfn/2PHjh1DdugBAwZs3bp148aNgwYNauVTde7cubq6Wghx8uTJc+fOJSUlpaWlCSHatWun0ABcLtfYsWM3bdpkMBguvfTSvLy8f//7319++eWmTZsuvfTSgH8QIDCEHo15/fXXx44dq/YoWuuDDz7wfXHPPfe89dZb06ZNmzlzpqJH3LZt26ZNmzp06PDDDz8kJCS43e677757/vz5c+bMee211xQ9NFAXSzdosTlz5kiSlJKSUlZWdubMmdjYWEmSPvzwQ9/KSZcuXebOndupU6f27dvPmDHD6XT6HnX48OHx48e3adMmPT196tSpZ86c8d1+5syZO++8MyMjIz4+fuTIkd9//73472xaCDF48OD333+/kYefOnVqwoQJiYmJffr0ycnJaenPUlZW9uCDD2ZlZdnt9r59+86dO9f3FsK6A1i5cuXgwYNjY2MTExOHDx/uu7cheXl5QgibzWaz2YQQBoPh6aeffu2110aNGtXIT93IeE6dOiVJUps2bTZu3DhgwIAlS5Y08poAtclAfTp37iyEWL58ed27PB7P1VdfLYR49tlnZ8yYIYQYN26c1+vduXOnEMJkMlmt1iFDhsTExAghfv3rX8uyXFpampqaqtfrx44dO3ToUCFEr169XC6Xx+Pp16+f749DhgwRQrRp06agoOCzzz7zLRM9/fTTR44caejhLperZ8+eQoiMjIzLLrtMp9MJIbp169bQD3X33XcLIR566CHfH71eb3Z2tu/hY8aMsVqtQoiZM2fKslxrAMePH7darXq9Pjs7+/LLL/c9xOv1VlVVCSH0en2tAx07dsxsNgshkpKS7rzzzrlz5+7atcvr9fpfwHp/6kbGk5+fL4Sw2+0ZGRlCiMWLFzf0mgTj/3xoDaFH/Xyhr2Xx4sW+e3/88Uez2RwXF2c2m2NjY3Nzc2VZ9oVeCPHll1/Ksrx9+3ZJkkwmU2lp6auvviqEuOuuu86cOXPmzJkBAwYIIT7++OMvvvhCCNG9e3dfoSZPniyE8E1j+/fvL4TYuHGjLMsNPfyjjz4SQvTs2bOiosLr9d57770tCv2aNWt8VS0tLZVl+ZtvvhFCxMfHezyeWgNYu3bt6NGj//SnP8my7HA4LBaLEOL06dMNhV6W5S+//LLWcnxWVtb69etlWW7op25kPL7QCyFeeOGFwsLC6urqhl6TYP0CQEtYukFjMjIyetbgPzHbrVu3P/zhD6WlpQ6H4y9/+Uv79u39D0lKSvItUPTu3btXr15Op/PAgQO7du0SQsybNy8lJSUlJcV3/cnu3bv37t0rhLjyyit9F64sXLiwqqpq6tSptYbR0MO3b98uhJg0aZLNZpMk6bbbbmvRT+f7L9O4ceNiY2OFEFdffXV6enpJScmJEydqfeewYcP+9re/6fX6CRMmZGVl+U7tejyeRp581KhRO3bsyM3NXbp06QMPPJCamnrgwIHJkyfLstzQT93keCwWy6OPPpqcnGw2mxt6TVr0CiBKcDIWjWnkZGxlZaXvC9+stl6SJPn+1+FwCCEefvjh0aNH++/NzMxctmyZECIhIcF3i8FgqPdSxYYevmDBAv9RhBB6vb75P1q9fM/gdrtr3b5x48Zhw4YZjcYJEyY89thjjzzySHl5eSPPs3bt2pUrV/br12/ixInt27efMGHCU089lZqaevLkycLCQt/zN/lT1xyPyWQSQtjtdt/ylGj4NQno54bGMaNHIHbs2PHiiy8mJSXZ7fannnrq8OHD/ruKioq+/vprIcT27dt37dplMpm6du3ao0cPIUR1dfWIESNGjBhhsVgKCwv1en23bt2EEF9//bXL5RJCzJgxo3v37r4zjT6+WXNDD+/Vq5cQYunSpb7/2CxatKhFP4Xv4Z9++mlZWZkQYv369cePH4+Li6t5FalvAEuXLnW5XPfff//ChQuvuOKKxisvhDh9+vTzzz//4IMPnjx50nfLwYMHZVmOi4tLTk5u6Kduznj8GnpNWvQKIFqovXaEMOVbo6+1dNO7d29Zll0ul29FeObMmU888YQQYvjw4f6TsTqdzmKxDB061G63i/8uiJ8+fTo+Pl6n0912220/+9nP9Hp9QkJCXl6e/2zqJZdc4jujmJKSUlBQIMuy73zvxIkTd+3a1dDDHQ5Hp06dhBAdOnTwnd4ULTwZ6ztKZmbm2LFjfVfIzJo1y3dvzQG8/PLLQoj4+Phx48a1bdvW92+IEydONLRGX1FR0bdvXyGEyWTq16+ff6L97LPP+l7Aen/qRsbjW6NPTk72H6Kh1ySIvwPQDEKP+tV7MtZXtFmzZgkh0tPTKysri4uLExMThRBvvfWWL/SdO3f+y1/+kpaW1q5du0cffdTpdPqecOfOnSNHjoyPj09MTBw/fvyuXbt8t+fl5d16661paWlxcXGjR4/esWOH7/alS5empqYKIRYtWtTIw48dO3b99dfHxcVdcsklvoE1P/SyLJeUlDzwwAOdOnWy2Wx9+vR56623/NfG1BxAeXn5xIkTbTZbjx493nvvPd+1MW+88UYjJ2MLCwt/97vfde/e3Wq1JicnDx48eP78+b7TvI381A2Np27oG3lNgFokmQ8eQZDs2rXr0ksv7dy588GDB9UeC4ALWKMHAI0j9ACgcSzdAIDGMaMHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNI/QAoHGEHgA0jtADgMYRegDQOEIPABpH6AFA4wg9AGgcoQcAjSP0AKBxhB4ANE7LoT969Oj06dPVHkWAJk2a5HK51B5FIL766qvZs2erPYoAjR8/Xu0hBGj27NlfffWV2qMIhMvlmjRpktqjCND06dOPHj2q9iiapuXQO51Oh8Oh9igCVFFR4fV61R5FIBwOR+S+7GVlZWoPIUCR+7J7vd6Kigq1RxEgh8PhdDrVHkXTtBx6AIAg9ACgeYQeADTOoPYAfiI/P3/58uXBeraCgoK9e/fOmTMnWE8YSidOnHjrrbcMhvD6P6g5duzYUVBQEKEve15eXoSOPCcn58iRI/n5+WoPpMXcbveJEyci9GXfu3fvBx98kJqaGqwnHDduXFpaWrCezU//zDPPBP1JA/bxxx9/8803mZmZQXk2i8WSkpISFxcXlGcLsYsuuigpKUntUQTCbre3bdvWZrOpPZBApKenJyQkqD2KQCQkJKSkpJhMJrUH0mI6ne6iiy6K0Jc9OTk5JSVFpwvO0siGDRtkWe7Tp09Qnq2msJswDhs27K677lJ7FAAQasr9C541egDQOEIPABpH6AFA4wg9AGgcoQcAjSP0AKBxhB4ANI7QA4DGEXoA0DhCDwAaR+gBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjFA+9y+W6+OKL+/bt27dv35dfflnpwwEAalH8w8GPHDkydOjQBQsWKH0gAEC9FA/9vn379u/ff+ONNxoMhldeeSUzM7PmvQsXLqysrPT/MScnp1evXkoPCQDC0Llz53bt2lVdXe2/xWazTZkypfXPrHjok5OTZ8yYMXny5Pfff//+++9ftmyZ/y5Zlj0eT81vliRJlmWlhwQgOlW4hNMjKpzC6Tn/te+PQogSh/DKwuEW+YUlQohKt+TySkKISpfk9Iiat3hlUeY8v+jt8ooPfmaJMwdneF6vt9YtviRKktTKZw5dWKuqqnr27Hn48OFGvmf+/Plut/uuu+4KzZAAhLn8/Hz/19UeqdQhlbl0pQ6p3KUrdUqVLqnSLZW7dGVOqdIlVbmlUqfO4RFVbsnhkUx64fYKryzMernaLVkMsk4ScSZZEnKcWdZLIsboFULYjbJRL/SSHGOUhRAxJlkvyUKIOJOsk4QQItbk9X0RYzx/l0EnYkyyEEIn5K4dLgrWDztv3jyDwTB16tRgPaGf4jP6P/7xj0lJSQ888MDGjRt79uyp9OEAhK2a1fZzeqXCKt3pSl1xta7YoTvn0BVX64qqJd8XDk+yEMI3G7Xo5TizHGfyxpu8sSbZZpRtBjnJ4u0Q57EZZJtRjjV6rQbZbBBxRm+rJ8Gaonjop0+fPnny5Pfee89gMLz99ttKHw6AWurtuBCi2iPllevzK3T5Fda8cv3pSt2ZKv3Zap0QwuMVZr2cYvO2sXqTLN5Es/cim6d7oivR4k20yIlmr1nPWm4QKB76xMTEr776SumjAAiZhoJe4ZKOlxmOleqPleqPlRlOlOkrXJIQwmaUL7J5LrJ72sd6e6e4Um2eNlZvsuX8ekh4SktLU3sIwaR46AFEtHqz7vaK42WGfcWGA8WGA+cM+RV6ryzsRjkz1t0xznNxvGdYe0eHOI/VEHbzcY0VvJkIPYALGpqtnyjX7zhj3Ftk3F9sOF2p0+tExzh3VoK7d4prYlZVut2j+pp4dBa8mQg9ENUaKntumX5noXFHoXFXobHcJbWP8fROcQ1Mc07pUZFqq30VYGiQ8oAReiDq1Bt3jyx2FRo3nTJtzDMVO3QZsZ7ebVzXZDju71vuu+4wNKi5Egg9EC3q9t3tFXuKjJtPmb47Zcyv0HdLcl+e6vzz0NI0u6feZwgumh4yhB7Qsnon7wWVulXHLatzzUXVun5tnYPSnLd0rYwzKT5tp+xqIfSABtXb933FhpXHLetOmCRJDM90PHulsjN3sh4+CD2gHfX2fetp09ID1h1nDL1TXCM7OH5+aYVJp8jknbKHLUIPaEHdxJ8s1//7kPXzI5ZLkl03ZVU9d6VTiSsgiXtEIPRABKvb9xKn7quj5k+PWIUs39S16uPxhcZgf7wQcY84hB6ISHUTv7PQOHeXvaBCN6FL1exrimODenKVuEc0Qg9EmFqJ98piVa5l/h6bzSD/ond5v7auYB2IuGsGoQciRq3El7ukfx+0fnTAOiDV+dJVJUG5hIa4axKhByJArcQXO3R//yHmuwLjrd2rPhhb1PqraOi7thF6IKzVSnylW3pzp331cfOv+1Y8ObC0lU9O36MEoQfCVK3Eu7zig322Rftst3arXDr+rL4V10rS92hD6IFwVLPysiw+PWKZszPmuo7VS8edDfhDl+h71CL0QHipNZHfUmB6YXPsle2ci244G/AukiQ+yhF6IFzUvajmhc2xhVX6fw4vbhvQFvD0HT6EHggLtSq/Jtc8c2vsr3qXj+1UHcCzkXjUROgB9dWsfKlT99ym2FKnbuH1RYnmlk3k6TvqRegBNdWayH993DL7e/tDA8qvTne06HlIPBpB6AHV1Kx8iVP38Dfx6TGe98cUWQ0tOOlK4tEkQg+oo2bld581/n59/GOXl17Zztn8ZyDxaCZCD4RareWapQetC/bY/jG8uH1MczerIfFoEUIPhFTNyru94sUtsSVO3Ydji4zN26+GxCMAhB4InZqVP1Wpf2B1wsSsqlu7lTXnsSQeASP0QIjUrHxOvunZTXHPDynpm9Ks7eOpPFqD0AOhULPyb++2fXPC/N4NRfGmpi+TJ/FoPUIPKK5m5f++PeZYqX7eqGJdU9tPkngEC6EHlOWvvCyL5zfHVbnFi0NLJCqPECL0gIJqVv4PG+Msevn5IU2ceiXxCDpCDyjFX3mPLB7+Jr57kvsXvSsafwiVhxIIPaAIf+VdXun+1QnD2jtu617ZyPeTeChHp/YAAA3yV77KLd31VeKIzGoqDxUxoweCzF/5cpd015eJ9/auGJHZ2FaUVB5KI/RAMNVYsRG/Xp14X9+K7PZUHioj9EDQ1LzG5tH/xN/QsaqRypN4hAxr9EBw1HxX1KxtsZlxnsndqhr6ZiqPUCL0QBDUrPyifbb8ct1v+5U39M1UHiHG0g0QTGtyzV8cMb81qrihb6DyCD1CD7SWfzq/t8jw+vaYd0YXGRr4pzKVhyoIPdAq/srnV+gfWx8/Z0Sx3Vj/R4hQeaiF0AOB81e+1Cn9alXCC0NL2trq2XmYxENdnIwFWssji1+tSnzsirIeSe6691J5qI7QAwHyT+f/ui12RKZj4EXOut9D5REOCD0QCH/lN+abdhca7ryknm0pqTzCBGv0QIv5K3+2Wvf8prgF1xfV/SARKo/wwYweCJAsi9+ti396cGmiufYJWCqPsELogZbxT+f/ucPeu43r8tR6luaBsELogRbwV377GeN/Tpp/3beefQ6YziPcsEYPtFiFS/rDt3FzRhbrWZpHJGBGDzSXfzr/u3Xx9/ctT63z3igqj/BE6IFm8Vf+Xz/a2sV4RnaovdE8lUfYIvRAC+wrNnxyyPrIgLJat1N5hDNCDzTNN533yuLJDfEvXXXO+NO/N1QeYY7QA03wL9os2Gu7ur2jY5yn5r1UHuGP0APNcqZKt3i/7Re969nqAAhzhB5ojH86//S3cY9dUWrS/WSveabziAiEHmjaf06aLQZ5SLufvAmWyiNS8IYpoEG+6bzTK838Lubt0T/5GFgqjwjCjB6on3/R5tVtMVN6VCZbLrw9isojshB6oDGHSwzbCow3Z1WpPRAgcIQeqIdvOi/L4qlv454dUlpzu3mm84g4IQp9SUlJZmZmaI4FBMuH+619UlxZCRc+CZbKIxKFKPRPPfXU2bNnQ3MsoJV80/lzDt3Cvbbpl9WzETEQWUJx1c2WLVvKysoyMjLq3rVgwYKqqgurnzk5Ob169QrBkIAm/Skn9sF+5Rb9hQvnmc5DUcXFxbt3766urvbfYrPZpkyZ0vpnVnxG73a7H3/88RdffLHuXbIsy7Jc90alhwQ0wjed337GWOmShmde2KKSyiP0JEkKShIVn9HPnj37lltuadu2bd27JEmaOnVqzVssFovb7a77nUBo+C+pfPm72OeGlPpvp/IIgcTExOzs7FpVDArFZ/Tbtm1bvHjxddddl5ube8MNNyh9OKD1cvJNGbGejnHMOaARis/o58+f7/uie/fuK1asUPpwQMD80/lZW2P/ds05/+1M5xHpQncd/Y8//hiyYwEB+/yo5bK2zjT7+b2IqTw0gDdMAUL8dzrvkcU/ttvv68NexNAUQg9csGS/dWQHR4L5/LY2TOehDYQeOD+dd3mlBXvt03qen85TeWgGoQfOm7/HdlNWZYyRd3JAawg9op1vOl/hkj4+aL29x/n3aTOdh5YQekAIIebstE/rWWHUMZ2HBhF6RDXfdL7EqfvPCfOELkznoU2EHhB/+z7mvr4VOqnp7wQiEaFH9PJN5wsq9dvPGEdknN8ykOk8tIfQI9q9sjVmRr8yiek8tIvQI0r5pvNnqnS5Zfor2zl9NzKdhyYRekS1uTvtd/ViwwNoHKFHNPJN5yvd0sZ807UZ5z9dhOk8tIrQI3ot3Gu7vUcVF9tA8wg9os5/d7YRyw9ZJnLtPKIAoUeUWnbIev3FDt4Ki2hA6BFd/B8j9a8fbVN6VPq+ZjoPbSP0iEZrT5gva+uKM3nVHggQCoQeUcQ/nX9zp/0u9p1H1CD0iDp7ioxtbd70GI/aAwFChNAjWvin87O/t//8UqbziCKEHtElt0xf6ZYuSXKpPRAgdAg9ossbO+z3Mp1HlCH0iAq+dZtzDt2PxUb/FmZAlCD0iCJv77b97yVsYYaoQ+ihfb7pvNMrrT5uvr4jHzCCqEPoES0+OmCdkFVt4Fce0Yffemic/6rKJfutN2ex5wGiEaFHVPjhjLFzgjvWxBZmiEaEHlFh/h62MEP0IvTQMt+6TalTyi0z9G7Dm6QQpQg9tG/xfttNXfmAEUQvQg/N8p+GXXbIMr5TlbqDAVRE6KFxOfmmPikuq0EWTOcRrQg9tMk/nZ+/x3b7f0/DAtGJ0EPLiqp15xy6bolutQcCqInQQ8sW7bNN7sZpWEQ7Qg8N8q3byLL44oj5+our1R4OoDJCD81ae8I8uJ3TpOPdsIh2hB5a4z8Nu3Cv7bburNsAhB4aVVCpc3tFxzhOwwKEHhq1cK/9th5M5wEhCD00xrdu4/aKtSfMwzM4DQsIQeihSV8ft1zTns8YAc7jrwK0w38adtGPNtZtAD9CD605Ua436uSLbB61BwKEC0IPrflwn/WWbuxVCVxA6KER/nWbNbnmazMcvq9ZtwEEoYfGbDpluqyty8i7YYEaCD20wD+dr7luw3Qe8CH00I5qj3TwnKFXMp8NC/wEoYd2fHbYMqYTb5ICaiP0iHj+dZulB603dmbdBqiN0EMjTlXqzXq5rc2r9kCAsEPoEdn80/kP9llvyuLyeaAehB4aseq4eUQHLp8H6kHooQXfFZh6t3HxYVJAvQg9ItiFy+f3c/k80CBCj4jn8Ej7igy923D5PFA/Qo9I5Z/Of37Ucl1HLp8HGkToEfE+OmCdmMW6DdAgQo/IVlCp10tyKpfPAw0j9IhI/nWbxfutk7h8HmgUoUdk++qYeRSXzwONUjz0FRUVY8aMGTRo0JAhQ44ePar04RBVtp029mrjNuu5fB5ojOKhX7BgQc+ePXNycu6+++6//vWvSh8O0cC/brPkgO2mrErf10zngYYYlD7A4MGDr7/+elmWq6ur7XZ7rXsXLFhQVXVhgTUnJ6dXr15KDwna4PKKnWcMfx7C5fPQiOLi4t27d1dXX7hW2GazTZkypfXPrHjo+/TpI4QYO3bs+vXrv//+e6UPB83zT+fXnrBcm+lQdzBARFA89MXFxTExMZ9++unatWt/+ctffvnllzXvveOOO2r+0WKxuN1upYcEbVh6wPLo5eW+r1m3gQYkJiZmZ2dPnTo16M+s+Br9M888s3DhQiGE2Wx2Op1KHw5RotItna3SXRzHtABomuIz+oceeujWW2+dO3eux+N5/fXXlT4ctM2/bvPZYcv1F3NVJdAsioc+MzNzw4YNSh8F0WbZYesrw86pPQogMvCGKUSewiqdXpJTrGx7ADQLoUfE8K/bfHzQ+j+dz1+CxroN0CRCj8jzxVHLqA7sSww0F6FHZPBP54+UGtJjPHYj2x4AzUXoEWGW7LdO6MLu80ALEHpEmHUnTVel84ZYoAUIPSKAf91ma4GxT4rLwK8t0BL8jUEkWXrQOpF1G6CFCD0ihtsrdhYa+6awXSXQMoQe4c6/bvPNCfOw9k5JUnc4QOQh9IgYSw9ab2TdBmg5Qo+w5p/OV7qlM1X6zvFsVwm0GKFHZPj8iGU074YFAkLoERmWHbaO68S6DRAIQo/w5V+3OVutE0K0tbFdJRAIQo8I8MmhC9N5AC1F6BGm/NN5IcQXRy3Xd2RfYiBAhB7h7mipvo2F7SqBwBF6hLulBy5sVwkgAIQe4ajmus2aXHN2htP3Nes2QACa/nBwt9tdWFhYXV2dmppqtVpDMCbAb/sZY682bqOOdRsgcA3O6GVZXrFixZgxY+Lj49PS0i6++GKbzdavX78XX3yxvLw8lENENFt60Doxi3UboFXqn9FXVVVNnTp1x44dEydOHDt2bEZGhs1my8/Pz8vLW7t27T/+8Y+PPvqof//+IR4rooR/3cYri20FxmcGlfr+yLoNEJj6Q//KK69Mmzbtuuuu0+lqT/kfeeSRkydPPv744y+99FJqaqryI0T02pBnHpLOdpVAa9WzdFNeXn7jjTfecMMNdSvvk56ePmfOnBMnTig8NkSjmqdhlx603tiZdRugteqZ0cfExPTs2dP39YYNG959991Dhw4JIXr06HH77bcPHjxYCGE2m1m6gaIcHul4qb57EttVAq3V2OWVs2bNev7559PT08vKykaMGGEwGH7+85/PmTMnZINDNPvqmHl45oXtKlmgBwLW2OWVubm5K1asEEIcOXLkscceE0LIsvzkk0+GaGiIPjXXbf590PrskFIVBwNoRmMz+sLCwrNnz/r/KMvy7t27jx07pvyoEO1KnLoqt9TO7lF7IIAWNDajnzFjxjXXXCPL8unTp/v375+fn2+32xctWhSywSGq1JzOLz9kGduJdRsgOBoLfb9+/XJycnJycvbt2yfLcpcuXa6++mqLxRKywSFqfXrY8s8R59QeBaAR9YS+vLz85MmT3bp1E0LYbLZrr7322muvrfU9Ho9n7969vXr1CsUYEWVOVepjTXKCmY8ZAYKjnjX6mJiYN954Y9u2bQ09Ji8v77HHHmvbtq2SA0N0+cnl8wes/1Pj8nnWbYBWqn/p5plnnpk8eXJRUdHEiRM7duzYrl07s9l88uTJ3NzcnJyc9evXf/jhh4QeCvnqmPn9MRVqjwLQjvpDHxcX99lnny1evPjvf//7t99+6/F4hBAmk6l79+5jxoz5v//7v5SUlNCOE1pWczq/v9hwcZzbome7SiBoGjwZm5eXd/PNN0+ePLmioiIvL0+W5U6dOhkMTW9rDLTGkgPWSV253gYIpgavo8/IyCgtLRVC2O32rKysrl27UnkoTZbFxjzT4DSH2gMBNIVPmILKaq7bbMw3XZHm0rNdJRBUjU3S169fHxMTU/f27OxspYaD6LbkgPXnl1b6/8i6DRAUjYX+vvvuq3en4qNHjyo1HESZmtP5ao90rNTQI8ml4ngATWos9Dt27EhISAjZUBDlVhyxjOrAaVgg+FijR7j4+KB1Qhc+ZgQIvgZDP2zYMC6zgaJqrtsUVOr1ktzWxrYHQPA1mPK1a9eGcBiIdh8dsEzMYt0GUARLN1BHzem8EOKrYz9ZoAcQRIQe6tt11piVwGVtkF4AABWpSURBVLYHgFIIPdS3ZL/1pq5sVwkohdBDBTXXbdxesfW06YpUp4rjAbSN0ENla3LN2e0dEtseAIoh9Ai1WqdhPzpoq3n5POs2QNAReqip1Cmdq5Y6xbvVHgigZYQeIVVrOr/skHVsJ66qBJRF6KGm5Yct4zvzPilAWYQeqskt0yeavXEmtj0AlEXoETq11m0+3G+blMUuZoDiCD3UIctiba4pO+PCpwaybgMohNAjRGpN5zcXmPqluoz8AgLK4+8Z1LF4v/XmrqzbAKFA6BEKtabzFS7pWKmhV/KFTw1k3QZQDqGHCv59yDq+M9N5IEQIPVSw9ID1fzrzPikgRAg9FFdr3WZvkbFDnLvm5fOs2wCKIvQItYV7bbf3YN0GCB1CD2XVms5Xe6SdhYb+bdl9HggdxUPvdDpvvvnmyy+/fMCAAVu2bFH6cAhzyw/9ZHMbwboNoDzFQ79kyZKYmJjNmze/8cYb06dPV/pwCCu1pvNCiMX7rRO7sG4DhJRB6QN069btsssukyQpOTlZqvMxQgsWLKiquvDXPicnp1evXkoPCWo5VGJoa/MmWdjFDKhHcXHx7t27q6sv/JPXZrNNmTKl9c+seOj79+8vhNiyZcsvf/nL5557TunDIXzUnc4v3Gu7rXtlzVtYtwFCQPHQy7L85JNPrlu3bt68eX369Kl17x133FHzjxaLxe3mw4a0yeWVvisw/WFgqdoDAcJUYmJidnb21KlTg/7Miof+iy++OHTo0OrVqw0GxY+F8FF3Ov/5Ucv1Hav5EHAg9BQ/Gbtq1aqcnJwBAwb07dt33LhxSh8OYeuDfdZJWazbACpQfJY9c+bMmTNnKn0UhLnjZfoYo5xq4zQsoALeMIXgq7tu896Ptlt/ehoWQMgQeijO7RUb8sxXpTtq3si6DRAyhB5BVnc6vyrXcm1GtZ7TsIBKCD0Ut+hH6y0//TAppvNAKBF6BFPd6XxehV4IkR7jUWM4AIQg9FDaO7ttUy/hqkpATYQeQVN3Ol/tkTbmm7PbO+r9fgChQeihoI8OWCd2qdRxGhZQFaFHcNSdzgshFu+33pTFaVhAZYQeQVBv5dfnmS9r64o1yaEfD4CaCD2U8vYu2/9eUlHzFqbzgCoIPVqr3ul8bplekkTHOK6qBNRH6NEq9VZeCDF3l31az4p67wIQYoQewVfukn44bbwyzVnzRtZtALUQegSuoen8h/ttP+texWeMAGGC0CPIZFl8fMByY2euqgTCBaFHgBqazq/KNQ9Jd1oNXFUJhAtCj0A0VHkhxLt77P97CZ8xAoQRQo9gOlxiiDV60+w/uaqSdRtAXYQeLdbIdH7OTvvdlzKdB8ILoUfLNFL5Uqduf7Ghf1uuqgTCC6FH0Czca53Sg+k8EHYIPVqgkem8yys+P2od16m65o1M54FwQOgRHEsP2sZcXGXUcVUlEHYIPZqrkem8RxYL91jvYN0GCEuEHs3SSOWFEMsPW4dnOuzGn0znWbcBwgShR2vJsnhnt+2uXkzngTBF6NG0xqfzXx6zXNnOGWfy1ryR6TwQPgg9mtB45YUQc3fZ7+7F1vNA+CL0aJU1uebebVzJFqbzQPgi9GhMk9P5f+6w/6I303kgrBF6NKjJym/MN3VJ8KTa+GBYIKwRegTu9e0xv+xdXutG1m2AcEPoUb8mp/PfnzamWD0ZsUzngXBH6FGPJisvhHjth5j7+9ZenWc6D4QhQo9A7Cky2gxyp3i32gMB0DRCj9qaM53/2zb7r/uyOg9EBkKPn2hO5Q+eM3hkqUcS03kgMhB6XNCcygsh/rotZvplTOeBiEHo0TK7zxqFEJe2cak9EADNRehxXjOn8y9sjn1kQFmtG5nOA+GM0EOIZld+1XFz5wR3xziunQciCaFHcyvvlcXsH2Ie4GIbINIQejTX4gO24ZmONlZv098KIJwQ+mjXzOm8wyMt3Guru+8803kg/BH6qNbMygsh3txpn9Kj0mqQm/5WAGGG0Eev5le+xKn76ph5UpfanwrLdB6ICIQ+SjW/8kKIV7bG/OaycgO/LEBk4u9uNGpR5XPL9PuLDcMzHbVuZzoPRApCH3VaVHkhxF+2xD7cv/Y7pABEEEIfXVpaed+GB/1T2fAAiGCEPoq0tPLi/IYHtd8hJVi3ASIKoY8WAVT+i6OWTvHujnFsRwxENkIfFQKofJVb+vv2mIeZzgORj9BrXwCVF0K8/F3sz3uVx5lqb3hA5YGIQ+g1LrDK7y0yHDxnGN+5OujjARB6BrUHgLDjlcXTG+Nfuupc3buYzgORiBm9lgU2nV+41zaknYNN5wHNYEavTYElXghxpkr34X7b0vFn697FdB6IUMzoNSjgygsh/rgx7veXl5p07FIJaAeh15rWVH5jvsmoF0PTnXXvYjoPRC6WbjSlNZV3eqUXNsfOG1UcxPEACAfM6LWjNZUXQrz2fcyt3avq/aRApvNARAtR6J977rklS5aE5ljRqZWVP1pq2HzK+LOutT9aBIAGKB56j8czbNiwZ555RukDRbNWVl6WxRMb4v44uFSS6rmX6TwQ6RQPvU6nW7Vq1aOPPqr0gaJWKysvhJi7yz4ozdk9ic3LAG1S/GSsJEkGg0Gnq+e/KLIsL1iwoLr6wvvsc3JyevbsqfSQtKT1ld9XbFh13PyvG4rqvZfpPBAyxcXFu3fvrplEu91+2223SfX+W7sl1LzqRpKkuj9A63+k6NH6yju90mPr4/8v+5yeVx0IP7IsByWJKl9eeccdd9T8o8VicbtZQGha6xPv8+dNsXf0qMyIrX+3A6bzQCglJiZmZ2dPnTo16M/M5ZWRJ1iVX3fSfKpSP6FLVb33UnlAM0I0o3/uuedCcyDNC1blS5y6l7bELLyBt0cB2seMPpIEq/JCiN+vi/v9FWXxdT5XxIfpPKAlhD5iBLHy7++zZcR6hrSrZ08bANpD6CNDECt/rFS/eL/1kfo+DNaH6TygMYQ+AgSx8m6vePg/Cc8PKTGyETEQNQh9uAti5YUQL30XO65TVSNvgmU6D2gP2xSHr+AmXgix4oiloFL/+BVlDX0DlQc0idCHqaBXfk+R8c2d9kVj6t/qAICGEfpwFPTKFzt0v18X98aIcxZ9g0vzTOcBrWKNPuwEvfJur7hvVcITA8vS7PVvdQBA2wh9eAl65YUQT2+MH9upeuBFjV01z3Qe0DCWbsKFEokXQny43yoJ+fbujX10FJUHtI3QhwWFKr/1tGnJfuu/2NAGiG6EXn0KVb6gUvfMt7HvXFfc+HujmM4Dmkfo1aRQ4oUQVW7p16sT/3JVabKl/m3LAEQPTsaqRrnKu7ziV6sSfn5pRc9kV+PfyXQeiAbM6FWgXOKFEF5Z/GZNwuiOjtEdqhv/TioPRAlCH1KKJl4IIcvisfXxfVJct3Zr7DIbAFGFpZvQUbryQog/b469yO75Re+KJr+T6TwQPZjRh0IIEi+EmP1DTKVbemJgg3uW+VF5IKoQemWFJvFCiA/2WQ+cM/x12LnQHA5ABCH0SglZ4oUQK45YVh63/GN4sU5q+puZzgPRhtAHXygTL4RYddy8aJ/trVHFhmaccKHyQBQi9MEU4sQLIVYcsSzca3tzZLGpGR8NSOWB6ETogyP0iRdCLN5v/eKoZd7o4kZ2mfej8kDUIvStokrffebusu84Y/zniGIjl8gCaBShD5CKiZdl8efNsVVu6dXsc805+yqYzgPRjdC3mIqJF0J4ZPH7dfEJZu9zQ0qb+RAqD0Q5Qt9c6vbdx+WVpq+Jv7Kd844ezd3hgMoDIPRNC4fECyHKXdIvVybe0rVyfOcmdivzo/IABKFvRJj03edIqeHBNfEPDSi/Ot3RzIdQeQA+hL62sOq7z6rj5le/j31l2LmsBHczH0LlAfgR+gvCMPGyLF7fEbOtwPje9WdjTU1fLO9D5QHUROjDse8+5S7poW8Seqe45o4slpp3GaWg8gDqiOrQh23ihRCHSgwPfRM/o38LFuUFlQdQnygNfTgnXgjx2RHLW7vsr11zLiPW0/xHUXkA9Yqu0Id534UQ5S7pTzlxHq9474ai5uxg40flATQkWkIf/okXQnxXYHo2J/ZXfSqu69jcK+V9qDyARmg/9BGReIdHmvldTG6Z/u3RxUkWb/MfSOIBNEnjOx9GROW/P2286dPkDnGef444R+UBBJ32Z/ThzOUVc3bGbM43vjmy+CJbC867CioPoNk0PqMPZ+tOmm9anpxs8b57HZUHoCBm9CrIq9C/tCVWFmLuqOIUawvWanyoPIAWIfQhVemW/rE95ts80xMDS/u1dbX04SQeQABYugkRWRbLD1smf5qUGeteMvYslQcQMszoQ2FjvumVrbGD0xyLx7XsbVA+JB5AaxB6Za07af77D/ZOCZ6/XXMuzd6yM66CxAMIBkKvlM2nTK9ui2kf6/lrdkkAiRdUHkCQEPrgW3fS/LfvY7onuf6aXZLawusmfUg8gCAi9EFT5Zb+fcj6wT7rwIuc/xxRnNyS97j6kXgAQUfog+BoqeFfe605+abrLna8M7o4wRxI4gWVB6AMQh84ryw25Jn/tdda6tRN61X5+BVlzf8cqFpIPADlEPpAHC01LD1gWZ1ryc5wPHNlWUs3MKiJxANQGqFvgYJK/bJDli+PWdpYPBOyqh+4rNDYijeckXgAoUHom1bq1H151LziiMXplW7sXPXO6KIYY4vf9ORH3wGEGKFv0LFS/apcy5pcs8sjbri4+pXsksRAz7L6kHgAqiD0P+GRxe6zxq+PWbacMsab5avSHbOuPtfW1qq+CxIPQFWEXggh9hcbcvJN3+abT1XoLk91jujgeLBfmT7QS2j86DuAcBCloZdl8WOxYWO+OSffVFChy0p0D0pz/mFQabuA9iqohb4DCCtRFPqiat0PZ4zbzxh/OG0sceq6J7kHpTmfvbI0sF0K6qLvAMKTlkMvy+LbPNMPZ4zbz5gKKnVJFm+fFFe/tq5pPSsDfvNqLcQdQPjTcugrXGLTKVOvNu5JWSWprT6h6kfcAUQWLYc+xiR+26+89c9D2QFENC2HPmCUHYCWRHvoaToAzVM89F6v98EHH9yzZ4/ZbH733XfbtGmj9BHrRdABRK1WbMrVPKtXry4oKFi5cuWkSZNmzZql9OFqSfuvEB8XAMKH4qFft27dwIEDhRCDBg1at26d0ocDANSi+NJNUVFR7969hRAdOnQoKiqqeZcsy/Pnz3c4HP5bNm3adMkllyg9JAAIQ0VFRXv27KmurvbfYrfbb7vtNingjzT6L8Vn9ElJSbm5uUKI48ePJyUl1bxLkiS9Xl/zFlmWW/8jAUAk0ulqBzlYSVR8Rj906NB3331XCLF169YhQ4bUunfKlCk1/2ixWNxut9JDAoAwlJCQkJ2dPXXq1KA/s+KhHz58+LJly2688UYhxJtvvqn04QAAtSgeep1O99prryl9FABAQxRfowcAqIvQA4DGEXoA0DhCDwAaR+gBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNI/QAoHGEHgA0jtADgMYRegDQOMU/M7alvvnmG7fbHZSncrvdBQUF6enpQXm2EDt27FiHDh3UHkUgysvLHQ5HcnKy2gMJROS+7GfPnjWbzTExMWoPJBCR+7KfPHkyNTXVYAhOSDds2DB8+PCgPFUt4TWjHzly5JAhQ4L1bGfPnl2zZk2wni3EPvnkk2D9By/EDh8+vG3bNrVHEaAlS5aoPYQAbdu27fDhw2qPIhBut/uTTz5RexQBWrNmzdmzZ4P1bEOGDBk5cmSwnq2m8JrRp6Wl3XvvvcF6tv379584cSKITxhKS5cuvfvuu81ms9oDabHly5fv378/Ql/2RYsWRejIy8rKunbtOm7cOLUH0mIOh2PZsmUR+rJv3bp18uTJXbt2VXsgTQivGT0AIOgIPQBoHKEHAI3TcuhNJlMkrnH72O12nS4i/98xm82R+7LHxsaqPYQARe7LrtPp7Ha72qMIkNlsNplMao+iaZIsy2qPAQCgoIicMwIAmo/QA4DGEXoA0DhCDwAap/HQv/zyy9nZ2QMHDszNzVV7LIEoKSnJzMxUexQt43Q6b7755ssvv3zAgAFbtmxRezjN5fV6p0+fPmLEiDFjxhQWFqo9nBaI0Be8pkj8PRcRlRcth3779u2ffPLJ6tWrH3/88dmzZ6s9nEA89dRTQdxJIzSWLFkSExOzefPmN954Y/r06WoPp7lWr15dUFCwcuXKSZMmzZo1S+3htECEvuA1ReLveWTlJbz2ugmuFStWXHPNNTqdbty4cUOHDlV7OC22ZcuWsrKyjIwMtQfSMt26dbvsssskSUpOTpYkSe3hNNe6desGDhwohBg0aNC8efPUHk4LROgL7hehv+eRlRctz+hPnTp16NChUaNGXXfddceOHVN7OC3jdrsff/zxF198Ue2BtFj//v179OixZcuWSZMmPfXUU2oPp7mKiop8O+V26NChqKhI7eG0QIS+4D6R+3seWXnR4Iz+7bff/uyzz/r27Wu326uqqubPn79t27Z77rknIvbO9Q8+Jibmlltuadu2rdojai7/yJ944oknn3xy3bp18+bN69Onj9rjaq6kpCTfSuvx48eTkpLUHk4LyLIciS+4z+zZsyPr99wvsvKiwdBPmzZt2rRpQohPPvlkw4YNBoMhMTFR7UE1l3/wU6dOPXXq1EcffZSbm3vDDTesWLFC7aE1wT/yzz///NChQ6tXrw7WpzGExtChQ999910hxNatW4P4oQgh8MUXX0TiC+6zbdu2yPo99xs4cGAE5UXLWyB4PJ777rtv9+7dDofj1Vdfjay/vX7du3f/8ccf1R5FCzz88MNLlixJSEgQQmRkZCxfvlztETWL1+v9zW9+45vUv/nmmykpKWqPqLki9AWvJeJ+zyMrL1oOPQBAaPtkLABAEHoA0DxCDwAaR+gBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGhd5290BCtm2bdsrr7zSpk2bzMzMGTNmqD0cIGgIPSCEEJWVlXfeeeeaNWuSk5PHjBkzcODAMN+PEGg+lm4AIYTIycmRZTk5OVkIccUVV/j2pge0gRk9IIQQ+/btO3369J133imE2LNnT2xsrNojAoKGGT0ghBCyLLdv3/6dd9555513JkyYoPZwgGAi9IAQQnTp0iU/P9/3OTwFBQU9evRQe0RA0BB6QAghrrrqKpvNtnv3blmWV65cefvtt6s9IiBo+ChB4LwtW7a8+uqrHTp06Nix47333qv2cICgIfQAoHEs3QCAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNI/QAoHGEHgA0jtADgMYRegDQOEIPABr3/x1dOoMii4DiAAAAAElFTkSuQmCC" alt="plot of chunk unnamed-chunk-1"/></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAIAAAApSmgoAAAACXBIWXMAAAsSAAALEgHS3X78AAAgAElEQVR4nO3daXxU5b3A8efMvmQPIQZIQCAQBAEBBQQlCogKeAVUqiJX1NrWKrW4tG7VVq1VwXortRURFaioIFZQ3NgsIAEEZZd9CSQEQgLZZz33xdAhTtZJ5syZOfP7vvBDZiYzT8b4888zZ85IsiwLAIB26dReAABAWYQeADSO0AOAxhF6ANA4Qg8AGkfoUb+uXbtKdYwYMULtdTVmx44dkiTl5OQEXD5gwIC6P4skSffcc08rH7GmpkaSJIPBUPeq4uLi3/72t9nZ2VarNTMzc9y4cd99910rHw5omXp+QQG/zMzMhIQE/5edOnUK20MPGDBg8+bN69evHzRoUCvvqkuXLjU1NUKI48ePnzlzJiUlJSMjQwjRrl07hRbgcrnGjBmzYcMGg8Fw8cUXFxQU/Pvf//7yyy83bNhw8cUXt/gHAVqG0KMxr7/++pgxY9ReRWt98MEHvj/cc889b7311pQpU6ZPn67oI27ZsmXDhg0dO3b84YcfkpKS3G733XffPXfu3FmzZr322muKPjRQF1s3CNqsWbMkSUpLSysvLz916lR8fLwkSR9++KFv56Rr166zZ8/u3Llzhw4dpk2b5nQ6fd918ODBG264oU2bNu3bt588efKpU6d8l586derOO+/MzMxMTEwcOXLk999/L/47TQshBg8e/P777zfy7SdOnBg3blxycnKfPn3y8vKC/VnKy8sffPDB7Oxsu93et2/f2bNn+95CWHcBy5cvHzx4cHx8fHJy8vDhw33XNqSgoEAIYbPZbDabEMJgMDz99NOvvfbaNddc08hP3ch6Tpw4IUlSmzZt1q9fP2DAgEWLFjXynACBZKA+Xbp0EUIsXbq07lUej+fKK68UQjz77LPTpk0TQowdO9br9W7fvl0IYTKZrFbrkCFD4uLihBC//vWvZVkuKytLT0/X6/VjxowZOnSoEKJXr14ul8vj8fTr18/35ZAhQ4QQbdq0KSoq+uyzz3zbRE8//fShQ4ca+naXy9WzZ08hRGZm5iWXXKLT6YQQ3bt3b+iHuvvuu4UQDz30kO9Lr9ebm5vr+/bRo0dbrVYhxPTp02VZDljA0aNHrVarXq/Pzc299NJLfd/i9Xqrq6uFEHq9PuCBjhw5YjabhRApKSl33nnn7Nmzd+zY4fV6/U9gvT91I+spLCwUQtjt9szMTCHEwoULG3pOQvEvH1pD6FE/X+gDLFy40Hftjz/+aDabExISzGZzfHx8fn6+LMu+0AshvvzyS1mWt27dKkmSyWQqKyt79dVXhRB33XXXqVOnTp06NWDAACHExx9//MUXXwghcnJyfIWaOHGiEMI3xvbv318IsX79elmWG/r2jz76SAjRs2fPyspKr9d77733BhX6VatW+apaVlYmy/I333wjhEhMTPR4PAELWL169ahRo/70pz/JsuxwOCwWixDi5MmTDYVeluUvv/wyYDs+Ozt77dq1siw39FM3sh5f6IUQL7zwQnFxcU1NTUPPSah+AaAlbN2gMZmZmT1r8b8w27179z/84Q9lZWUOh+Mvf/lLhw4d/N+SkpLi26Do3bt3r169nE7nvn37duzYIYSYM2dOWlpaWlqa7/iTnTt37t69Wwhx+eWX+w5cmT9/fnV19eTJkwOW0dC3b926VQgxYcIEm80mSdJtt90W1E/n+z/T2LFj4+PjhRBXXnll+/btz549e+zYsYBbDhs27G9/+5terx83blx2drbvpV2Px9PInV9zzTXbtm3Lz89fvHjxAw88kJ6evm/fvokTJ8qy3NBP3eR6LBbLo48+mpqaajabG3pOgnoGECN4MRaNaeTF2KqqKt8ffFNtvSRJ8v3T4XAIIR5++OFRo0b5r83KylqyZIkQIikpyXeJwWCo91DFhr593rx5/kcRQuj1+ub/aPXy3YPb7Q64fP369cOGDTMajePGjXvsscceeeSRioqKRu5n9erVy5cv79ev3/jx4zt06DBu3LinnnoqPT39+PHjxcXFvvtv8qeuvR6TySSEsNvtvu0p0fBz0qKfGxrHRI+W2LZt24svvpiSkmK325966qmDBw/6ryopKfn666+FEFu3bt2xY4fJZOrWrVuPHj2EEDU1NSNGjBgxYoTFYikuLtbr9d27dxdCfP311y6XSwgxbdq0nJwc3yuNPr6puaFv79WrlxBi8eLFvv/ZLFiwIKifwvftn376aXl5uRBi7dq1R48eTUhIqH0UqW8Bixcvdrlc999///z58y+77LLGKy+EOHny5PPPP//ggw8eP37cd8n+/ftlWU5ISEhNTW3op27Oevwaek6CegYQK9TeO0KE8u3RB2zd9O7dW5Zll8vl2xGePn36E088IYQYPny4/8VYnU5nsViGDh1qt9vFfzfET548mZiYqNPpbrvttp/97Gd6vT4pKamgoMD/aupFF13ke0UxLS2tqKhIlmXf673jx4/fsWNHQ9/ucDg6d+4shOjYsaPv5U0R5IuxvkfJysoaM2aM7wiZGTNm+K6tvYCXX35ZCJGYmDh27Ni2bdv6/g5x7NixhvboKysr+/btK4QwmUz9+vXzD9rPPvus7wms96duZD2+PfrU1FT/QzT0nITwdwCaQehRv3pfjPUVbcaMGUKI9u3bV1VVlZaWJicnCyHeeustX+i7dOnyl7/8JSMjo127do8++qjT6fTd4fbt20eOHJmYmJicnHzDDTfs2LHDd3lBQcGtt96akZGRkJAwatSobdu2+S5fvHhxenq6EGLBggWNfPuRI0euu+66hISEiy66yLew5odeluWzZ88+8MADnTt3ttlsffr0eeutt/zHxtReQEVFxfjx4202W48ePd577z3fsTFvvPFGIy/GFhcX/+53v8vJybFarampqYMHD547d67vZd5GfuqG1lM39I08J0AASeaDRxAiO3bsuPjii7t06bJ//3611wLgPPboAUDjCD0AaBxbNwCgcUz0AKBxhB4ANI7QA4DGEXoA0DhCDwAaR+gBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNI/QAoHGEHgA0jtADgMZpOfSHDx+eOnWq2qtooQkTJrhcLrVX0RJfffXVzJkz1V5FC91www1qL6GFZs6c+dVXX6m9ipZwuVwTJkxQexUtNHXq1MOHD6u9iqZpOfROp9PhcKi9ihaqrKz0er1qr6IlHA5H9D7t5eXlai+hhaL3afd6vZWVlWqvooUcDofT6VR7FU3TcugBAILQA4DmEXoA0DiD2gv4icLCwqVLl4bq3oqKinbv3j1r1qxQ3WE4HTt27K233jIYIutfUHNs27atqKgoSp/2goKCKF15Xl7eoUOHCgsL1V5I0Nxu97Fjx6L0ad+9e/cHH3yQnp4eqjscO3ZsRkZGqO7NT//MM8+E/E5b7OOPP/7mm2+ysrJCcm8WiyUtLS0hISEk9xZmF1xwQUpKitqraAm73d62bVubzab2Qlqiffv2SUlJaq+iJZKSktLS0kwmk9oLCZpOp7vgggui9GlPTU1NS0vT6UKzNbJu3TpZlvv06ROSe6st4gbGYcOG3XXXXWqvAgDCTbm/wbNHDwAaR+gBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNI/QAoHGEHgA0jtADgMYRegDQOEIPABpH6AFA4wg9AGic4qF3uVwXXnhh3759+/bt+/LLLyv9cACAAIp/OPihQ4eGDh06b948pR8IAFAvxUO/Z8+evXv33njjjQaD4ZVXXsnKyqp97fz586uqqvxf5uXl9erVS+klAUAEOnPmzI4dO2pqavyX2Gy2SZMmtf6eFQ99amrqtGnTJk6c+P77799///1LlizxXyXLssfjqX1jSZJkWVZ6SQBiU6VLOD2i0imcnnN/9n0phDjrEKdLSp0eqdotCSGq3JLLKwkhqlyS0yNqX+KVRbnz3Ka3yys++JklwRya5Xm93oBLfEmUJKmV9xy+sFZXV/fs2fPgwYON3Gbu3Llut/uuu+4Kz5IARLLCwsLaX9Z4pDKHVO7SlTmkCpeuzClVuaQqt1Th0pU7pSqXVO2Wypw6h0dUuyWHRzLphdsrvLIw6+Uat2QxyDpJJJhkScgJZlkviTijVwhhN8pGvdBLcpxRFkLEmWS9JAshEkyyThJCiHiT1/eHOOO5qww6EWeShRA6IXfreEGoft45c+YYDIbJkyeH6g79FJ/o//jHP6akpDzwwAPr16/v2bOn0g8HIAIFJLs2p1cqrtadrNKV1uhKHbozDl1pja6kRjrj0JXWpDg8khDCN41a9HKCWU4weRNN3niTbDPKNoOcYvF2TPDYDLLNKMcbvVaDbDaIBKO31UOwpige+qlTp06cOPG9994zGAxvv/220g8HIPwa6bgQosYjFVQYCit1hZX6ggr9ySrdqWr96RqdEMLjFWa9nGbztrF6UyzeZLP3ApsnJ9mVbPEmW+Rks9esD/debkZGRpgfMQwUD31ycvJXX32l9KMACIPGg17pko6WG46U6Y+U6Y+UG46V6ytdkhDCZpQvsHkusHs6xHt7p7nSbZ42Vm+q5dx+SBhost1BUTz0AKJUI1l3e8XRcsOeUsO+UsO+M4bCSr1XFnajnBXv7pTguTDRM6yDo2OCx2oIxzxOx5tE6AEI0dS0fqxCv+2UcXeJcW+p4WSVTq8TnRLc2Unu3mmu8dnV7e2eMOyJE/QWI/RAjGq87Pnl+u3Fxm3Fxh3FxgqX1CHO0zvNNTDDOalHZbot8CjA0CLoIUfogdjSUN89sthRbNxwwrS+wFTq0GXGe3q3cV2V6bi/b4XvuEOFkPUwIPSA9jUUd7dX7Coxbjxh+u6EsbBS3z3FfWm6889DyzLsnnpv30o0XS2EHtCshvpeVKVbcdSyMt9cUqPr19Y5KMN5S7eqBFOIx3ayHjkIPaA1DfV9T6lh+VHLmmMmSRLDsxzPXh7KyZ2sRzJCD2hEQ33ffNK0eJ912ylD7zTXyI6On19cadKFYHin7FGE0ANRr97EH6/Q//uA9fNDlotSXTdlVz93ubOVR0BS9uhF6IEoVjfxZ526rw6bPz1kFbJ8U7fqj28oNrb044Uou2YQeiD61DvCby82zt5hL6rUjetaPfOq0vgWvbhK3DWJ0APRpG7ivbJYkW+Zu8tmM8i/6F3Rr60r2Psk7ppH6IHoUDfxFS7p3/utH+2zDkh3vnTF2WAPoaHvsYPQA5GubuJLHbq//xD3XZHx1pzqD8aUBHUUDX2PQYQeiGgBla9yS29ut688av5138onB5Y1/37oeywj9ECECki8yys+2GNbsMd2a/eqxTec1jfvWEn6DkHogQgUkHhZFp8esszaHndtp5rFY08380OXSDz8CD0QQepux28qMr2wMf7yds4F159uzlkk6TvqIvRApAiofIVLemFjfHG1/p/DS9s24xTwJB4NIfSA+uoO8qvyzdM3x/+qd8WYzjVNfjuJR+MIPaCygMqXOXXPbYgvc+rmX1eSbG5ikCfxaA5CD6gpoPJfH7XM/N7+0ICKK9s7Gv9GEo/mI/SAOgISf9ape/ibxPZxnvdHl1gNjb3oSuIRLEIPqCCg8jtPG3+/NvGxS8sub+ds5LtIPFqG0APhFlD5xfut83bZ/jG8tENcgyerIfFoDUIPhFXtyru94sVN8Wedug/HlBgbPl8NlUcrEXogfGpX/kSV/oGVSeOzq2/tXt7Q7Uk8QoLQA2FSu/J5haZnNyQ8P+Rs37QGTx9P5REqhB4Ih9qVf3un7Ztj5veuL0k01X+YPIlHaBF6QHG1K//3rXFHyvRzrinVNXD6SSqPkCP0gIJqJ16WxfMbE6rd4sWhZ6X6Kk/ioZCWfj48gGDIsvjD+gRJyM8PKaPyCDMmekAp/nHeI4uHv0nMSXH/ondlvbek8lAUoQcU4a+8yyvdvzJpWAfHbTlVdW9G4hEGbN0AoeevfLVbuuur5BFZNVQeKmKiB0LMX/kKl3TXl8n39q4ckVXPqSipPMKG0AOhVGvHRvx6ZfJ9fStzOwRWnsQjzNi6AULGX3lZFo/+J/H6TtVUHpGA0AOhUfuQ+Rlb4rMSPBO7VwfchspDFYQeCLEFe2yFFbrf9qsIuJzKQy3s0QMh4B/nV+Wbvzhkfuua0oAbUHmoiNADreWv/O4Sw+tb494ZVWL46V+VqTzUReiBVvFXvrBS/9jaxFkjSu3Gn3yECJWH6tijB0KgzCn9akXSC0PPtrX95MzDVB6RgNADLecb5z2y+NWK5McuK++R4q59LZVHhCD0QAv5N23+uiV+RJZj4AXO2tdSeUQOQg+0yvpC085iw50X/eS0lFQeEYUXY4GW8I3zp2t0z29ImHddSe1TzFN5RBomeiBovsrLsvjdmsSnB5clm+v/6FcgQhB6IDj+rfl/brP3buO6NJ2teUQ6Qg+0xNZTxv8cN/+670/Oc0DlEZnYoweC4BvnK13SH75NmDWyVM/WPKIBEz3QXP5Nm9+tSby/b0V6rfdGUXlEMkIPBOdfP9raxXlGdjx/onkqjwhH6IFm8Y3ze0oNnxywPjKgXO3lAEEg9EDTfJX3yuLJdYkvXXHGWOu/G8Z5RD5CDzTXvN22Kzs4OiV4/JdQeUQFQg80wTfOn6rWLdxr+0Xv86c6oPKIFoQeaIz/SJunv0147LIyk05u/PZABCL0QNP+c9xsMchD2p1/EyzjPKIIb5gCGuQb551eafp3cW+POv8xsFQe0YWJHqiff9Pm1S1xk3pUpVrOvT2KyiPqEHqgMQfPGrYUGW/OrlZ7IUDLEXqgHv4TET/1bcKzQ8r8p5tnnEc0ClPoz549m5WVFZ7HAkLlw73WPmmu7KRznwRL5RGlwhT6p5566vTp0+F5LKCVfOP8GYdu/m7b1Esqmrw9EOHCcdTNpk2bysvLMzMz6141b9686urzu595eXm9evUKw5KAJv0pL/7BfhUW/bkD5xnnobTS0tKdO3fW1NT4L7HZbJMmTWr9PSs+0bvd7scff/zFF1+se5Usy7Ic+PaTupcA4eQb57eeMla5pOFZ505RSeWhCkmSQpJExSf6mTNn3nLLLW3btq17lSRJkydPrn2JxWJxu91KLwloiP+Qype/i39uSJm6i0GsSU5Ozs3NDahiSCg+0W/ZsmXhwoXXXnttfn7+9ddfr/TDAa2XV2jKjPd0SuA1WGiE4hP93LlzfX/IyclZtmyZ0g8HtJh/nJ+xOf5vV51RdzFACIXvOPoff/wxbI8FtNjnhy2XtHVm2M+di5hxHhrAG6YAIf47zntk8Y+t9vv6nDsXMZWHNhB64LxFe60jOzqSzN6mbwpED0IPnBvnXV5p3m77lJ6M89AaQg+cM3eX7absqjgj7+SA1hB6xDrfOF/pkj7eb729x7n3aTPOQ0sIPSCEELO226f0rDTySYHQIkKPmOYb5886df85Zh7XlXEe2kToAfG37+Pu61upk5q+JRCNCD1il2+cL6rSbz1lHJF57pSBjPPQHkKPWPfK5rhp/cp9nyFF5aFJhB4xyjfOn6rW5ZfrL2/nVHs5gIIIPWLa7O32u3rxDiloHKFHLPKN81VuaX2h6epMh9rLAZRF6BG75u+23d6jWsfuPLSO0CPm/PfMNmLpAcv4rtVN3h6IdoQeMWrJAet1Fzp8b4VlnIe2EXrEFv/HSP3rR9ukHlXqLgYID0KPWLT6mPmStq4Ek1cwziMGEHrEEP84/+Z2+13/Pe88oHmEHjFnV4mxrc3bPs4jGOcRGwg9YoV/nJ/5vf3nFzPOI4YQesSW/HJ9lVu6KMUlGOcRMwg9YoJ/nH9jm/1exnnEGEKPGHLGofux1MgpzBBrCD20zz/Ov73T9r8XcQozxBxCj1jh9Eorj5qv61Sj9kKAcCP0iBUf7bOOy64x6IRgnEeMIfTQOP++zaK91puzOecBYhGhR0z44ZSxS5I73sQpzBCLCD20zD/Oz93FKcwQuwg9tK/MKeWXG3q34U1SiFGEHprlH+cX7rXd1I0PGEHsIvTQviUHLDd0rhaM84hVhB4al1do6pPmshpktRcCqIbQQ5tqvwx7Oy/DIrYRemhZSY3ujEPXPdkt2LdBDCP00CD/OL9gj21id16GRawj9NAsWRZfHDJfd2GNYJxHbCP00KzVx8yD2zlNOl6GRawj9NAa/77N/N2223LYtwEIPTSqqErn9opOCbwMCxB6aEutcd5+Ww/GeUAIQg9NcnvF6mPm4Zl8xgggBKGHJn191HJVBz5jBDiH0EM7zh8+/6ONfRvAj9BDa45V6I06+QKbRzDOA0IIQg/N8I/zH+6x3sK7YYFaCD20ZlW++epMh9qrACIIoYcW+Mf5DSdMl7R1GXV8NixwHqGHprBvA9RF6KEdNR5p/xlDr1SX2gsBIguhR9Tz79t8dtAyuvO5N0mxbwP4EXpox+L91hu7sG8DBCL0iG7+cf5Eld6sl9vavIJxHvgpQg+N+GCP9aZsxnmgHoQeGrHiqHlERw6fB+pB6BHF/Ps23xWZerdxmTh8HqgPoYcWfLiXw+eBBhF6RCv/OO/wSHtKDL3bcPg8UD9Cj6j3+WHLtZ04fB5oEKFH1Pton3U8x9sADSP0iEr+fZuiKr1ektNtXnXXA0QyQo/otnCvdcJ/x3n2bYB6EXpEt6+OmK/h8HmgUYqHvrKycvTo0YMGDRoyZMjhw4eVfjjEAv++zZaTxl5t3Ga9rO56gAineOjnzZvXs2fPvLy8u++++69//avSD4eYsmif7absKt+f2bcBGmJQ+gEGDx583XXXybJcU1Njt9sDrp03b1519fnjJfLy8nr16qX0khDV/OO8yyu2nzL8eQiHz0MjSktLd+7cWVNT47/EZrNNmjSp9feseOj79OkjhBgzZszatWu///57pR8OsWP1McvVWezOA01TPPSlpaVxcXGffvrp6tWrf/nLX3755Ze1r73jjjtqf2mxWNxut9JLgjYs3md59NIK35/Zt4EGJCcn5+bmTp48OeT3rPge/TPPPDN//nwhhNlsdjqdSj8ctM2/b1Pllk5X6y5MYCwAmqb4RP/QQw/deuuts2fP9ng8r7/+utIPhxjx2UHLdRee27dhnAcap3jos7Ky1q1bp/SjIBb4x3khxJKD1leGnVFxMUAU4Q1TiD7F1Tq9JKdZOe0B0CyEHtHn4/3W/+nC6SqB5iL0iA61922+OGy5pmNNIzcGUBuhR5Q5VGZoH+exGzntAdBchB5RZtFe67iunK4SCAKhRxSovW+z5rjpiva8IRYIAqFHNNlcZOyT5jLwawsEg/9iEOlqj/OL91vHs28DBInQI2q4vWJ7sbFvGqerBIJD6BE1vjlmHtbBKUlqrwOINoQeES1g3+ZG9m2A4BF6RIcqt3SqWt8lkdNVAkEj9Ihctcf5zw9ZRvFuWKBFCD2iw5KD1rGdq5u+HYA6CD0iVO1x/nSNTgjR1nbudJVs0ANBIfSIAp8cYJwHWo7QIwp8cdhyXSc26IEWIvSIRLX3bQ6X6dtYzp+ukn0bIFiEHpFu8b7zp6sE0AKEHhGn9jgvhFiVb87NdKq1GEADmv5wcLfbXVxcXFNTk56ebrVaw7AmwG/rKWOvNm6jjn0boOUanOhlWV62bNno0aMTExMzMjIuvPBCm83Wr1+/F198saKiIpxLRCxbvN86Ppt9G6BV6p/oq6urJ0+evG3btvHjx48ZMyYzM9NmsxUWFhYUFKxevfof//jHRx991L9//zCvFbGg9r6NVxZbiozPDCpTcT2ABtQf+ldeeWXKlCnXXnutThc48j/yyCPHjx9//PHHX3rppfT0dOVXiNi1rsA8pP3501WybwO0TD1bNxUVFTfeeOP1119ft/I+7du3nzVr1rFjxxReG2JOwMuwi/dbb+zCvg3QWvVM9HFxcT179vT9ed26de++++6BAweEED169Lj99tsHDx4shDCbzWzdQFEOj3S0TJ+TwukqgdZq7PDKGTNmPP/88+3bty8vLx8xYoTBYPj5z38+a9assC0OseyrI+bhWeffDcu+DdBijR1emZ+fv2zZMiHEoUOHHnvsMSGELMtPPvlkmJaGGBOwb/Pv/dZnh/AyLBACjU30xcXFp0+f9n8py/LOnTuPHDmi/KoQ6846ddVuqZ3do/ZCAC1obKKfNm3aVVddJcvyyZMn+/fvX1hYaLfbFyxYELbFIWYtPWAZ05l9GyA0Ggt9v3798vLy8vLy9uzZI8ty165dr7zySovFErbFIXYE7Nt8etDyzxFn1FoMoDH1hL6iouL48ePdu3cXQthstquvvvrqq68OuI3H49m9e3evXr3CsUbEmBNV+niTnGT2qr0QQCPq2aOPi4t74403tmzZ0tD3FBQUPPbYY23btlVyYYghgYfP77P+T63D59m3AVqp/q2bZ555ZuLEiSUlJePHj+/UqVO7du3MZvPx48fz8/Pz8vLWrl374YcfEnoo5Ksj5vdHV6q9CkA76g99QkLCZ599tnDhwr///e/ffvutx+MRQphMppycnNGjR//f//1fWlpaeNeJWLG31HBhgtuil9VeCKAdDb4YW1BQcPPNN0+cOLGysrKgoECW5c6dOxsMTZ/WGAhKwL7Non3WCd043gYIpQaPo8/MzCwrKxNC2O327Ozsbt26UXkoTZbF+gLT4AyH2gsBNIVPmIKaAsb59YWmyzJceqmhmwNoicaG9LVr18bFxdW9PDc3V6nlILYt2mf9+cVV/i/ZtwFCorHQ33ffffWeqfjw4cNKLQcxrMYjHSkz9Ehxqb0QQGsaC/22bduSkpLCthTEmoB9m2WHLNd0rGnoxgBajD16RIqP91vHdeV9UkDoNRj6YcOGcZgNlBMwzhdV6fWS3NbGaQ+A0Gsw5atXrw7jMhDrPtpnGZ/Nvg2gCLZuEBG+On1l3VYAABWoSURBVPKTDXr2bYAQIvRQQcC+zY7TxuwkTnsAKIXQQ32L9lpv6lbd9O0AtAihR7gFjPNur9h80nRZutN/Cfs2QGgReqhsVb45t4ND4rQHgGIIPcIqYJwXQny031b78HkAIUfooaYyp3SmRuqc6PZfwr4NEHKEHuFTd5xfcsA6pjOHzwPKIvRQ09KDlhu6EHpAWYQeqskv1yebvQmm86c9YN8GUAKhR5jU3bf5cK9tQjYvwwKKI/RQhyyL1fmm3Ew+NRBQHKFHONQd5zcWmfqlu4y1fgHZtwEUQuihjoV7rTdz2gMgLAg9FFd3nK90SUfKDL1S+dRAIBwIPVTw7wPWG7r8ZJxn3wZQDqGHChbvs/4Ph88D4ULooay6+za7S4wdE9y1D58HoChCj3Cbv9t2ew/2bYDwIfRQUN1xvsYjbS829G/rrPf2AJSgeOidTufNN9986aWXDhgwYNOmTUo/HCLc0gOBJ7dhnAeUpnjoFy1aFBcXt3HjxjfeeGPq1KlKPxwiR91xXgixcK91PGefB8LLoPQDdO/e/ZJLLpEkKTU1VarzMULz5s2rrj7/n31eXl6vXr2UXhLUcuCsoa3Nm2LhZVigHqWlpTt37qypOf9XXpvNNmnSpNbfs+Kh79+/vxBi06ZNv/zlL5977jmlHw4Rot5xfv5u2205VbUvYd8GCAPFQy/L8pNPPrlmzZo5c+b06dMn4No77rij9pcWi8XtdgtokcsrfVdk+sPAMrUXAkSo5OTk3NzcyZMnh/yeFQ/9F198ceDAgZUrVxoMij8WIkS94/znhy3XdarhQ8CB8FP8xdgVK1bk5eUNGDCgb9++Y8eOVfrhELE+2GOdkM2+DaACxafs6dOnT58+XelHQeSod5w/Wq6PM8rpNl6GBVTAG6YQDu/9aLv1py/DAggbQo9Qqnecd3vFugLzFe1/8mFS7NsAYUPoobgV+ZarM2v0vAwLqITQI2TqHeeFEAt+tN7SjbOYAaoh9FBWQaVeCNE+zqP2QoDYReihrHd22iZfxMuwgJoIPUKj3n2bGo+0vtCc24GXYQE1EXoo6KN91vFdq3S8DAuoitAjBBp6GXbhXutN2ZyUGFAZoYdS1haYL2nrijfJtS9k3wYIP0KP1mponH97h+1/L6oM82IA1EXooYj8cr0kiU4JPzmqknEeUAWhR6s0NM7P3mGf0pNxHogIhB6hV+GSfjhpvDzDqfZCAAhB6NEaDY3zH+61/SynOuAzRti3AdRC6BFisiw+3me5sQtHVQKRgtCjhRoa51fkm4e0d1oNcr3XAgg/Qo8Qe3eX/X/rnNyGfRtARYQeLdHQOH/wrCHe6M2wc65KIIIQeoTSrO32uy9mnAciC6FH0Boa58ucur2lhv5tOaoSiCyEHsFpqPJCiPm7rZN6cOp5IOIQeoSGyys+P2wd27km4HL2bQDVEXoEoZFxfvF+2+gLq406jqoEIg6hRwh4ZDF/l/WOOvs2jPNAJCD0aK5GxvmlB63Dsxx2I+M8EIkIPZqlkcrLsnhnp+2uXozzQIQi9GitL49YLm/nTDB51V4IgPoRejStkXFeCDF7h/3uXoGnnmecByIHoUerrMo3927jSrUwzgORi9CjCY2P8//cZv9Fb8Z5IKIRejSm8cqvLzR1TfKk2ziFGRDRCD1a7vWtcb/sXRFwIeM8EGkIPRrU+Dj//UljmtWTGc84D0Q6Qo/6NV55IcRrP8Td35fdeSAKEHq0xK4So80gd050q70QAE0j9KhHk+P837bYf903cHceQGQi9AjUZOX3nzF4ZKlHSuA4z74NEJkIPYL21y1xUy9hnAeiBqHHTzQ5zu88bRRCXNzGFXA54zwQsQg9zmuy8kKIFzbGPzKgPAyLARAqhB5BWHHU3CXJ3Skh8Nh5xnkgkhF6nNPkOO+Vxcwf4h7gYBsg2hB6CNG8TZuF+2zDsxxtrIEnqmScByIcoUezODzS/N22uuedBxD5CD2aNc6/ud0+qUeV1RD4qbCM80DkI/SxrjmVP+vUfXXEPKFr4KfCAogKhB5Ne2Vz3G8uqTDU+WVhnAeiAqGPac0Z5/PL9XtLDcOzHGFYDwAlEPrY1ZzKCyH+sin+4f71vEOKcR6IFoQ+RjWz8r4THvRPDzzhAYAoQujRmBc2xj8yoJ53SDHOA1GE0MeiZo7zXxy2dE50d0rg00WA6EboY04zK1/tlv6+Ne5hxnkg+hF61O/l7+J/3qsiwRR4wgMAUYfQx5ZmjvO7Swz7zxhu6FJT9yrGeSDqGNReAMKnmZX3yuLp9YkvXXFG6fUACA8m+ljRzMoLIebvtg1p56h70nnBOA9EJ0IfE5pf+VPVug/32n7Vh7NUAtpB6LWv+ZUXQvxxfcLvLy0z6QLPUikY54GoReg1LqjKry80GfViaHtn3auoPBC9eDEW5zi90gsb4+dcU6r2QgCEGBO9lgU1zr/2fdytOdV1PylQMM4DUS5MoX/uuecWLVoUnseCT1CVP1xm2HjC+LNufLQIoEGKh97j8QwbNuyZZ55R+oFQW1CVl2XxxLqEPw4uk6R6rmWcB6Kd4qHX6XQrVqx49NFHlX4g+AVVeSHE7B32QRnOnBROXgZok+IvxkqSZDAYdLp6/o8iy/K8efNqas6/zz4vL69nz55KL0nbgq38nlLDiqPmf11fUu+1jPNA2JSWlu7cubN2Eu12+2233SbV+3ftYKh51I0kSXV/gNb/SLEs2Mo7vdJjaxP/L/eMnmcdiDyyLIckiSofXnnHHXfU/tJisbjdbCC0RLCJ9/nzhvg7elRlxtdztgPBOA+EV3Jycm5u7uTJk0N+zxxeqQUtq/ya4+YTVfpxXavrvZbKA5oRpon+ueeeC88DxaCWVf6sU/fSprj51/P2KED7mOijW8sqL4T4/ZqE319WntjA54owzgNaQuijWIsr//4eW2a8Z0i7es5pA0B7CH20anHlj5TpF+61PlLfh8H6MM4DGkPoo1KLK+/2iof/k/T8kLPG+k5ELKg8oEWEPvq0uPJCiJe+ix/buZo3wQIxhdBHmdZUftkhS1GVfvJFDZ65jHEe0CTORx9NWlP5XSXGN7fbF4yu/1QHADSM0EeN1lS+1KH7/ZqEN0acsejr35oXjPOAdrF1Ex1aU3m3V9y3IumJgeUZ9vpPdSCoPKBphD4KtKbyQoin1yeO6Vwz8AKOmgdiFFs3Ea2ViRdCfLjXKgn59pzGPjqKcR7QNkIfuVpf+c0nTYv2Wv/V6AltqDygeYQ+QrW+8kVVume+jX/n2tKG3hslqDwQG9ijj0Str3y1W/r1yuS/XFGWaqn/tGUAYgcTfWRpfeKFEC6v+NWKpJ9fXNkz1dXIzRjngRjBRB9BQlJ5ryx+syppVCfHqI41jdyMygOxg9BHipBUXpbFY2sT+6S5bu3e2GE2AGIKWzfqC0niff68Mf4Cu+cXvSsbvxnjPBBTmOhVFsLKz/whrsot/bZfgyea96HyQKxholdTCCv/wR7rvjOGvw470/jNqDwQgwi9OkKYeCHEskOW5Uct/xheqpMauxmVB2IToVdBaCu/4qh5wR7bW9eUGhrdh6PyQMwi9GEV2sQLIZYdsszfbXtzZKmp4be/CioPxDZCHz4hr/zCvdYvDlvmjCpt5CzzAEDowyHkiRdCzN5h33bK+M8RpcamjpxinAdiHKFXlhKJl2Xx543x1W7p1dwzjb/6Kqg8AI6jV5QSlffI4tE1iUKI54aUUXkAzcFErwglEi+EcHmlqasSL2/nvKNH02c4oPIAfAh9iCmUeCFEhUv65fLkW7pV3dClsbOV+VB5AH6EPmSUS7wQ4lCZ4cFViQ8NqLiyvaPJG1N5ALUR+hBQNPFCiBVHza9+H//KsDPZSe4mb0zlAQQg9K2idOJlWby+LW5LkfG9607Hm5o+WJ7KA6iL0Lec0pWvcEkPfZPUO801e2SpxAE2AFqK0AdN6b77HDhreOibxGn92ZQH0FqEPgjhSbwQ4rNDlrd22F+76kxmvKfJG1N5AI0j9M0StsRXuKQ/5SV4vOK960uacwYbKg+gSYS+CWFLvBDiuyLTs3nxv+pTeW2npo+UF1QeQPMQ+vqFs+9CCIdHmv5dXH65/u1RpSkWb5O3J/EAmo9z3QQqLCwMc+W/P2m86dPUjgmef444Q+UBhBwT/TlhjruPyytmbY/bWGh8c2TpBbamX3cVVB5A8GI99Kr03WfNcfP07+Juzal+99rSZn4LlQfQArEbehUTX1Cpf2lTvCzE7GtK06xN79UIEg+gFWIu9Cr2XQhR5Zb+sTXu2wLTEwPL+rV1NfO7qDyA1oiJ0Ksbdx9ZFp8esszaZp98UdW0MeVNntLAh8QDaD2Nhz4SEi+EWF9oemVz/OAMx8KxzXoblA+VBxASGg+96tYcN//9B3vnJM/frjqTYW/WcTWCxAMIKUKvlI0nTK9uiesQ7/lr7tnmJ15QeQChRuhDb81x89++j8tJcf0192x6846O9yHxAJRA6EOm2i39+4D1gz3WgRc4/zmiNLUZ73H1I/EAlEPoQ+BwmeFfu615haZrL3S8M6o0yUziAUQQQt9yXlmsKzD/a7e1zKmb0qvq8cuae9CkD4kHEB6EviUOlxkW77OszLfkZjqeuby8maep8SPxAMKJ0AehqEq/5IDlyyOWNhbPuOyaBy4pNgZ59k8SDyD8CH3Typy6Lw+blx2yOL3SjV2q3xlVEmds7puefOg7ABUR+gYdKdOvyLesyje7POL6C2teyT2bHMyrrD4kHoDqCP1PeGSx87Tx6yOWTSeMiWb5ivaOGVeeaWuj7wCiGKEXQoi9pYa8QtO3heYTlbpL050jOjoe7FeuD+YQGh/6DiACxWjoZVn8WGpYX2jOKzQVVeqyk92DMpx/GFTWLphzFfjRdwCRLIZCX1Kj++GUcesp4w8njWedupwU96AM57OXlwV1lgI/4g4gWmg59LIsvi0w/XDKuPWUqahKl2Lx9klz9WvrmtKzKqg3r/oRdwDRSMuhr3SJDSdMvdq4J2SfTQ/+BVUf4g4g2mk59HEm8dt+FcF+F2UHoDFaDn1zkHUAmhdDoafpAGKT4qH3er0PPvjgrl27zGbzu+++26ZNG6UfsTbiDgBBnpQreCtXriwqKlq+fPmECRNmzJih9MMBAAIoHvo1a9YMHDhQCDFo0KA1a9Yo/XAAgACKb92UlJT07t1bCNGxY8eSkpLaV8myPHfuXIfD4b9kw4YNF110kdJLAoAIVFJSsmvXrpqaGv8ldrv9tttuk4L6SKP6KD7Rp6Sk5OfnCyGOHj2akpJS+ypJkvR6fe1LZFlu/Y8EANFIpwsMcqiSqPhEP3To0HfffVcIsXnz5iFDhgRcO2nSpNpfWiwWt9ut9JIAIAIlJSXl5uZOnjw55PeseOiHDx++ZMmSG2+8UQjx5ptvKv1wAIAAiodep9O99tprSj8KAKAhiu/RAwDURegBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNI/QAoHGEHgA0jtADgMYRegDQOEIPABpH6AFA4wg9AGic4p8ZG6xvvvnG7XaH5K7cbndRUVH79u1Dcm9hduTIkY4dO6q9ipaoqKhwOBypqalqL6QlovdpP336tNlsjouLU3shLRG9T/vx48fT09MNhtCEdN26dcOHDw/JXQWIrIl+5MiRQ4YMCdW9nT59etWqVaG6tzD75JNPQvU/vDA7ePDgli1b1F5FCy1atEjtJbTQli1bDh48qPYqWsLtdn/yySdqr6KFVq1adfr06VDd25AhQ0aOHBmqe6stsib6jIyMe++9N1T3tnfv3mPHjoXwDsNp8eLFd999t9lsVnshQVu6dOnevXuj9GlfsGBBlK68vLy8W7duY8eOVXshQXM4HEuWLInSp33z5s0TJ07s1q2b2gtpQmRN9ACAkCP0AKBxhB4ANE7LoTeZTNG4x+1jt9t1uqj8t2M2m6P3aY+Pj1d7CS0UvU+7Tqez2+1qr6KFzGazyWRSexVNk2RZVnsNAAAFReXMCABoPkIPABpH6AFA4wg9AGicxkP/8ssv5+bmDhw4MD8/X+21tMTZs2ezsrLUXkVwnE7nzTfffOmllw4YMGDTpk1qL6e5vF7v1KlTR4wYMXr06OLiYrWXE4QofcJri8bfcxFVedFy6Ldu3frJJ5+sXLny8ccfnzlzptrLaYmnnnoqhGfSCI9FixbFxcVt3LjxjTfemDp1qtrLaa6VK1cWFRUtX758woQJM2bMUHs5QYjSJ7y2aPw9j668RNa5bkJr2bJlV111lU6nGzt27NChQ9VeTtA2bdpUXl6emZmp9kKC071790suuUSSpNTUVEmS1F5Oc61Zs2bgwIFCiEGDBs2ZM0ft5QQhSp9wvyj9PY+uvGh5oj9x4sSBAweuueaaa6+99siRI2ovJzhut/vxxx9/8cUX1V5I0Pr379+jR49NmzZNmDDhqaeeUns5zVVSUuI7U27Hjh1LSkrUXk4QovQJ94ne3/PoyosGJ/q33377s88+69u3r91ur66unjt37pYtW+65556oOHeuf/FxcXG33HJL27Zt1V5Rc/lX/sQTTzz55JNr1qyZM2dOnz591F5Xc6WkpPh2Wo8ePZqSkqL2coIgy3I0PuE+M2fOjK7fc7/oyosGQz9lypQpU6YIIT755JN169YZDIbk5GS1F9Vc/sVPnjz5xIkTH330UX5+/vXXX79s2TK1l9YE/8o///zzAwcOrFy5MlSfxhAeQ4cOfffdd4UQmzdvDuGHIoTBF198EY1PuM+WLVui6/fcb+DAgVGUFy2fAsHj8dx33307d+50OByvvvpqdP3X65eTk/Pjjz+qvYogPPzww4sWLUpKShJCZGZmLl26VO0VNYvX6/3Nb37jG+rffPPNtLQ0tVfUXFH6hAeIut/z6MqLlkMPABDafjEWACAIPQBoHqEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGkfoAUDjCD0AaByhBwCNi77T3QEK2bJlyyuvvNKmTZusrKxp06apvRwgZAg9IIQQVVVVd95556pVq1JTU0ePHj1w4MAIPx8h0Hxs3QBCCJGXlyfLcmpqqhDisssu852bHtAGJnpACCH27Nlz8uTJO++8Uwixa9eu+Ph4tVcEhAwTPSCEELIsd+jQ4Z133nnnnXfGjRun9nKAUCL0gBBCdO3atbCw0Pc5PEVFRT169FB7RUDIEHpACCGuuOIKm822c+dOWZaXL19+++23q70iIGT4KEHgnE2bNr366qsdO3bs1KnTvffeq/ZygJAh9ACgcWzdAIDGEXoA0DhCDwAaR+gBQOMIPQBoHKEHAI0j9ACgcYQeADSO0AOAxhF6ANA4Qg8AGvf/2iQ5q2BAtL8AAAAASUVORK5CYII=" alt="plot of chunk unnamed-chunk-1"/></p>
 
 <pre><code class="r">#estimated 3PL model for item 5 only
 (mod1.3PL &lt;- mirt(data, 1, itemtype = c(&#39;2PL&#39;, &#39;2PL&#39;, &#39;2PL&#39;, &#39;2PL&#39;, &#39;3PL&#39;)))
@@ -1134,7 +1134,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 43 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1434,7 +1434,7 @@ coef(cmod)
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 125 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 31
@@ -1542,7 +1542,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1591,7 +1591,7 @@ model &lt;- &#39;F = 1-4
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1723,7 +1723,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 50 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1771,7 +1771,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 71 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -1845,7 +1845,7 @@ extract.mirt(mod1, &#39;time&#39;) #time elapsed for each estimation component
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.563  0.056  0.074  0.428  0.000  0.000
+##  0.556  0.057  0.079  0.412  0.000  0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -1854,7 +1854,7 @@ extract.mirt(mod1, &#39;time&#39;)
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.196  0.055  0.057  0.079  0.000  0.001
+##  0.187  0.062  0.056  0.063  0.000  0.001
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(data, 2, optimizer = &#39;NR&#39;)
@@ -2253,15 +2253,15 @@ fulldata &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 0.001 tolerance after 70 MHRM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: NR1 
 ## 
-## Log-likelihood = -2659.09, SE = 0.018
+## Log-likelihood = -2658.928, SE = 0.018
 ## Estimated parameters: 10 
-## AIC = 5338.18; AICc = 5338.402
-## BIC = 5387.258; SABIC = 5355.497
-## G2 (21) = 32.13, p = 0.0568
-## RMSEA = 0.023, CFI = 0.936, TLI = 0.921
+## AIC = 5337.856; AICc = 5338.078
+## BIC = 5386.933; SABIC = 5355.173
+## G2 (21) = 31.82, p = 0.0611
+## RMSEA = 0.023, CFI = 0.938, TLI = 0.923
 </code></pre>
 
 <pre><code class="r">#Confirmatory models
@@ -2302,68 +2302,73 @@ model.1 &lt;- &#39;
 
 #compute model, and use parallel computation of the log-likelihood
 mirtCluster()
-mod1 &lt;- mirt(dataset, model.1, method = &#39;MHRM&#39;)
+</code></pre>
+
+<pre><code>## mirtCluster() has already been defined
+</code></pre>
+
+<pre><code class="r">mod1 &lt;- mirt(dataset, model.1, method = &#39;MHRM&#39;)
 coef(mod1)
 </code></pre>
 
 <pre><code>## $Item_1
-##        a1 a2     d g u
-## par 1.158  0 -0.91 0 1
+##        a1 a2      d g u
+## par 1.906  0 -1.238 0 1
 ## 
 ## $Item_2
 ##        a1 a2      d g u
-## par 0.536  0 -1.555 0 1
+## par 0.551  0 -1.594 0 1
 ## 
 ## $Item_3
 ##        a1 a2     d g u
-## par 0.979  0 1.358 0 1
+## par 0.945  0 1.444 0 1
 ## 
 ## $Item_4
-##        a1    a2      d g u
-## par 1.096 0.477 -0.073 0 1
+##        a1    a2 d g u
+## par 0.977 0.512 0 0 1
 ## 
 ## $Item_5
-##     a1    a2    d1    d2    d3
-## par  0 1.759 3.107 2.123 -0.59
+##     a1    a2    d1    d2     d3
+## par  0 1.587 3.247 2.089 -0.517
 ## 
 ## $Item_6
-##     a1    a2   d1    d2     d3
-## par  0 0.457 2.46 0.937 -0.978
+##     a1    a2    d1    d2     d3
+## par  0 0.479 2.504 0.934 -1.051
 ## 
 ## $Item_7
-##     a1    a2    d1    d2
-## par  0 1.046 1.983 0.051
+##     a1    a2    d1   d2
+## par  0 0.827 1.921 0.06
 ## 
 ## $Item_8
 ##     a1    a2     d g u
-## par  0 1.078 1.016 0 1
+## par  0 0.944 1.024 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0      1  0.353      1
+## par      0      0      1  0.358      1
 </code></pre>
 
 <pre><code class="r">summary(mod1)
 </code></pre>
 
 <pre><code>##           F1    F2     h2
-## Item_1 0.563 0.000 0.3164
-## Item_2 0.300 0.000 0.0902
-## Item_3 0.499 0.000 0.2487
-## Item_4 0.527 0.229 0.3302
-## Item_5 0.000 0.719 0.5165
-## Item_6 0.000 0.259 0.0673
-## Item_7 0.000 0.524 0.2742
-## Item_8 0.000 0.535 0.2862
+## Item_1 0.746 0.000 0.5565
+## Item_2 0.308 0.000 0.0947
+## Item_3 0.485 0.000 0.2356
+## Item_4 0.482 0.252 0.2958
+## Item_5 0.000 0.682 0.4650
+## Item_6 0.000 0.271 0.0735
+## Item_7 0.000 0.437 0.1912
+## Item_8 0.000 0.485 0.2352
 ## 
-## SS loadings:  0.933 1.197 
-## Proportion Var:  0.117 0.15 
+## SS loadings:  1.119 1.028 
+## Proportion Var:  0.14 0.129 
 ## 
 ## Factor correlations: 
 ## 
 ##       F1    F2
-## F1 1.000 0.353
-## F2 0.353 1.000
+## F1 1.000 0.358
+## F2 0.358 1.000
 </code></pre>
 
 <pre><code class="r">residuals(mod1)
@@ -2372,15 +2377,15 @@ coef(mod1)
 <pre><code>## LD matrix (lower triangle) and standardized values:
 </code></pre>
 
-<pre><code>##        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-## Item_1     NA  0.007  0.005  0.004 -0.039  0.022 -0.039  0.026
-## Item_2  0.103     NA -0.005  0.004 -0.055  0.009  0.010 -0.009
-## Item_3  0.052 -0.041     NA -0.007  0.016 -0.020 -0.015  0.043
-## Item_4  0.026  0.034 -0.086     NA -0.020  0.035 -0.018  0.002
-## Item_5 -2.967 -6.030  0.483 -0.768     NA -0.036  0.041 -0.055
-## Item_6  0.944  0.176 -0.796  2.469 -7.670     NA  0.042  0.044
-## Item_7 -3.110  0.189 -0.460 -0.633  6.732  7.195     NA -0.013
-## Item_8  1.378 -0.148  3.725  0.009 -6.000  3.834 -0.325     NA
+<pre><code>##        Item_1 Item_2 Item_3 Item_4  Item_5  Item_6 Item_7 Item_8
+## Item_1     NA  0.008 -0.014  0.002  -0.011   0.049 -0.034  0.006
+## Item_2  0.131     NA -0.006 -0.003  -0.039  -0.012  0.011  0.007
+## Item_3 -0.380 -0.082     NA -0.003   0.025  -0.066  0.028  0.054
+## Item_4  0.011 -0.015 -0.016     NA   0.046  -0.054 -0.010 -0.026
+## Item_5 -0.240 -2.997  1.263  4.189      NA  -0.043  0.044  0.048
+## Item_6  4.855 -0.281 -8.643 -5.877 -11.008      NA -0.054  0.018
+## Item_7 -2.252  0.239  1.517 -0.216   7.609 -11.482     NA  0.014
+## Item_8  0.069  0.112  5.785 -1.341   4.638   0.674  0.374     NA
 </code></pre>
 
 <pre><code class="r">#####
@@ -2396,35 +2401,35 @@ coef(mod3)
 
 <pre><code>## $Item_1
 ##        a1    a2 a3      d g u
-## par 0.563 1.266  0 -0.966 0 1
+## par 0.979 1.758  0 -1.268 0 1
 ## 
 ## $Item_2
 ##        a1    a2 a3      d g u
-## par 0.198 0.562  0 -1.569 0 1
+## par 0.305 0.467  0 -1.594 0 1
 ## 
 ## $Item_3
 ##        a1    a2 a3     d g u
-## par 0.555 0.724  0 1.339 0 1
+## par 0.636 0.597  0 1.421 0 1
 ## 
 ## $Item_4
-##        a1    a2 a3      d g u
-## par 1.195 0.793  0 -0.068 0 1
+##        a1    a2 a3     d g u
+## par 1.328 0.624  0 0.005 0 1
 ## 
 ## $Item_5
-##        a1 a2    a3    d1    d2     d3
-## par 1.269  0 1.183 3.075 2.097 -0.586
+##        a1 a2    a3    d1    d2    d3
+## par 1.123  0 1.146 3.255 2.098 -0.52
 ## 
 ## $Item_6
-##        a1 a2    a3    d1    d2     d3
-## par 0.372  0 0.255 2.457 0.935 -0.976
+##        a1 a2    a3    d1    d2    d3
+## par 0.291  0 0.388 2.506 0.936 -1.05
 ## 
 ## $Item_7
-##        a1 a2    a3    d1   d2
-## par 0.775  0 0.797 2.015 0.05
+##        a1 a2    a3    d1    d2
+## par 0.544  0 0.603 1.912 0.059
 ## 
 ## $Item_8
-##       a1 a2    a3     d g u
-## par 0.94  0 0.589 1.023 0 1
+##        a1 a2   a3     d g u
+## par 0.612  0 0.75 1.031 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2435,17 +2440,17 @@ coef(mod3)
 </code></pre>
 
 <pre><code>##            G    F1    F2     h2
-## Item_1 0.257 0.577 0.000 0.3987
-## Item_2 0.110 0.312 0.000 0.1092
-## Item_3 0.288 0.375 0.000 0.2234
-## Item_4 0.537 0.356 0.000 0.4153
-## Item_5 0.522 0.000 0.487 0.5096
-## Item_6 0.212 0.000 0.145 0.0657
-## Item_7 0.381 0.000 0.392 0.2992
-## Item_8 0.463 0.000 0.290 0.2983
+## Item_1 0.372 0.667 0.000 0.5829
+## Item_2 0.170 0.261 0.000 0.0969
+## Item_3 0.333 0.312 0.000 0.2082
+## Item_4 0.591 0.277 0.000 0.4264
+## Item_5 0.480 0.000 0.490 0.4706
+## Item_6 0.165 0.000 0.219 0.0752
+## Item_7 0.288 0.000 0.320 0.1855
+## Item_8 0.313 0.000 0.383 0.2444
 ## 
-## SS loadings:  1.126 0.698 0.496 
-## Proportion Var:  0.141 0.087 0.062 
+## SS loadings:  1.065 0.687 0.537 
+## Proportion Var:  0.133 0.086 0.067 
 ## 
 ## Factor correlations: 
 ## 
@@ -2461,15 +2466,15 @@ coef(mod3)
 <pre><code>## LD matrix (lower triangle) and standardized values:
 </code></pre>
 
-<pre><code>##        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-## Item_1     NA -0.014 -0.002 -0.006 -0.034  0.021 -0.039  0.019
-## Item_2 -0.381     NA -0.004  0.007 -0.049  0.011  0.015 -0.006
-## Item_3 -0.011 -0.026     NA -0.004 -0.022 -0.025 -0.019  0.021
-## Item_4 -0.073  0.090 -0.031     NA  0.020  0.034 -0.017 -0.021
-## Item_5 -2.357 -4.720 -0.943  0.781     NA -0.035 -0.041 -0.055
-## Item_6  0.905  0.237 -1.217  2.339 -7.351     NA  0.042  0.043
-## Item_7 -3.022  0.451 -0.734 -0.570 -6.583  7.073     NA -0.017
-## Item_8  0.755 -0.066  0.874 -0.911 -6.031  3.777 -0.598     NA
+<pre><code>##        Item_1 Item_2 Item_3 Item_4  Item_5  Item_6 Item_7 Item_8
+## Item_1     NA  0.004  0.003  0.006  -0.010   0.051 -0.027  0.014
+## Item_2  0.036     NA -0.001 -0.003  -0.039   0.012  0.011  0.008
+## Item_3  0.020 -0.002     NA -0.009  -0.024  -0.067  0.020  0.043
+## Item_4  0.075 -0.021 -0.168     NA   0.045  -0.052  0.010 -0.017
+## Item_5 -0.203 -3.104 -1.181  4.117      NA  -0.043  0.044 -0.049
+## Item_6  5.159  0.275 -8.913 -5.448 -10.985      NA -0.054  0.017
+## Item_7 -1.509  0.230  0.773  0.218   7.631 -11.461     NA  0.013
+## Item_8  0.366  0.117  3.656 -0.571  -4.742   0.577  0.358     NA
 </code></pre>
 
 <pre><code class="r">anova(mod1,mod3)
@@ -2481,8 +2486,8 @@ coef(mod3)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 24953.95 24954.51 25009.70 25082.78 -12453.98   NaN NaN   NaN
-## 2 24961.64 24962.53 25031.94 25124.07 -12451.82 4.311   6 0.635
+## 1 24753.86 24754.41 24809.60 24882.68 -12353.93   NaN NaN   NaN
+## 2 24762.99 24763.87 24833.28 24925.41 -12352.49 2.868   6 0.825
 </code></pre>
 
 <pre><code class="r">#####
@@ -2513,7 +2518,7 @@ model.combo &lt;- &#39;
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -2579,7 +2584,7 @@ model.combo &lt;- &#39;
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 20 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 31
@@ -2896,7 +2901,7 @@ mod &lt;- mirt(dat, model, sv=sv, itemtype = &#39;Rasch&#39;, optimizer = &#39;s
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.23.1 
 ## M-step optimizer: solnp 
 ## EM acceleration: Ramsay
 ## Number of rectangular quadrature: 61
@@ -3087,19 +3092,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.36818 -0.30317 -0.00122  0.29734  1.45198 
+## -1.56524 -0.32776 -0.01112  0.34024  1.63453 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.01075    0.01439  -0.747    0.455    
-## covdata$X1   0.52033    0.01446  35.996   &lt;2e-16 ***
-## covdata$X2  -1.04925    0.01469 -71.411   &lt;2e-16 ***
+## (Intercept)  0.01817    0.01516   1.199    0.231    
+## covdata$X1   0.51393    0.01522  33.760   &lt;2e-16 ***
+## covdata$X2  -1.03658    0.01547 -66.990   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4549 on 997 degrees of freedom
-## Multiple R-squared:   0.86,  Adjusted R-squared:  0.8597 
-## F-statistic:  3062 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4791 on 997 degrees of freedom
+## Multiple R-squared:  0.8439, Adjusted R-squared:  0.8436 
+## F-statistic:  2694 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[2]]
@@ -3108,20 +3113,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.4322 -0.3188 -0.0205  0.3109  1.4360 
+##      Min       1Q   Median       3Q      Max 
+## -1.44157 -0.30774  0.00499  0.31093  1.53183 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.008875   0.014692  -0.604    0.546    
-## covdata$X1   0.539791   0.014755  36.583   &lt;2e-16 ***
-## covdata$X2  -1.035075   0.014998 -69.014   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.01737    0.01496   1.161    0.246    
+## covdata$X1   0.53502    0.01502  35.622   &lt;2e-16 ***
+## covdata$X2  -1.01175    0.01527 -66.271   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4644 on 997 degrees of freedom
-## Multiple R-squared:  0.854,  Adjusted R-squared:  0.8538 
-## F-statistic:  2917 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4727 on 997 degrees of freedom
+## Multiple R-squared:  0.8444, Adjusted R-squared:  0.8441 
+## F-statistic:  2705 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[3]]
@@ -3131,19 +3136,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.33665 -0.30188 -0.01179  0.31845  1.34554 
+## -1.54647 -0.31542  0.00819  0.34867  1.39557 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.003916   0.014701   0.266     0.79    
-## covdata$X1   0.518072   0.014764  35.091   &lt;2e-16 ***
-## covdata$X2  -1.045823   0.015007 -69.691   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.01003    0.01501  -0.668    0.504    
+## covdata$X1   0.52539    0.01508  34.849   &lt;2e-16 ***
+## covdata$X2  -1.02036    0.01532 -66.586   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4646 on 997 degrees of freedom
-## Multiple R-squared:  0.854,  Adjusted R-squared:  0.8537 
-## F-statistic:  2915 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4745 on 997 degrees of freedom
+## Multiple R-squared:  0.8442, Adjusted R-squared:  0.8439 
+## F-statistic:  2701 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[4]]
@@ -3152,20 +3157,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.55305 -0.30627  0.00561  0.29938  1.52237 
+##     Min      1Q  Median      3Q     Max 
+## -1.5790 -0.2900 -0.0048  0.3102  1.5661 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.002931   0.014593   0.201    0.841    
-## covdata$X1   0.533689   0.014656  36.416   &lt;2e-16 ***
-## covdata$X2  -1.023472   0.014897 -68.705   &lt;2e-16 ***
+## (Intercept) -0.002204   0.014642  -0.151     0.88    
+## covdata$X1   0.550080   0.014705  37.409   &lt;2e-16 ***
+## covdata$X2  -1.031516   0.014947 -69.013   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4612 on 997 degrees of freedom
-## Multiple R-squared:  0.8529, Adjusted R-squared:  0.8526 
-## F-statistic:  2891 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4628 on 997 degrees of freedom
+## Multiple R-squared:  0.8552, Adjusted R-squared:  0.8549 
+## F-statistic:  2944 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[5]]
@@ -3174,20 +3179,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.5659 -0.3244 -0.0085  0.3221  1.2941 
+##      Min       1Q   Median       3Q      Max 
+## -1.64729 -0.32026  0.00106  0.29858  1.49135 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.001931   0.014829    0.13    0.896    
-## covdata$X1   0.543333   0.014893   36.48   &lt;2e-16 ***
-## covdata$X2  -1.035293   0.015138  -68.39   &lt;2e-16 ***
+## (Intercept)  0.002764   0.014538    0.19    0.849    
+## covdata$X1   0.511154   0.014600   35.01   &lt;2e-16 ***
+## covdata$X2  -1.014286   0.014840  -68.35   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4687 on 997 degrees of freedom
-## Multiple R-squared:  0.8521, Adjusted R-squared:  0.8518 
-## F-statistic:  2872 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4595 on 997 degrees of freedom
+## Multiple R-squared:  0.8499, Adjusted R-squared:  0.8496 
+## F-statistic:  2822 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[6]]
@@ -3197,19 +3202,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.41382 -0.31574 -0.00803  0.32458  1.44432 
+## -1.27656 -0.28658 -0.00973  0.27464  1.68599 
 ## 
 ## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.0005943  0.0145383   0.041    0.967    
-## covdata$X1   0.5208541  0.0146007  35.673   &lt;2e-16 ***
-## covdata$X2  -1.0301287  0.0148409 -69.411   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.03225    0.01427    2.26    0.024 *  
+## covdata$X1   0.52478    0.01433   36.62   &lt;2e-16 ***
+## covdata$X2  -1.03683    0.01457  -71.18   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4595 on 997 degrees of freedom
-## Multiple R-squared:  0.8539, Adjusted R-squared:  0.8536 
-## F-statistic:  2914 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.451 on 997 degrees of freedom
+## Multiple R-squared:  0.8601, Adjusted R-squared:  0.8599 
+## F-statistic:  3066 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[7]]
@@ -3218,20 +3223,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.41100 -0.32561 -0.00772  0.31066  1.52334 
+##     Min      1Q  Median      3Q     Max 
+## -1.4940 -0.3176  0.0137  0.3126  1.4029 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.001899   0.014530   0.131    0.896    
-## covdata$X1   0.513999   0.014593  35.223   &lt;2e-16 ***
-## covdata$X2  -1.028694   0.014833 -69.352   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.01832    0.01527   -1.20     0.23    
+## covdata$X1   0.52153    0.01533   34.01   &lt;2e-16 ***
+## covdata$X2  -1.03978    0.01559  -66.71   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4593 on 997 degrees of freedom
-## Multiple R-squared:  0.8532, Adjusted R-squared:  0.8529 
-## F-statistic:  2896 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4826 on 997 degrees of freedom
+## Multiple R-squared:  0.8433, Adjusted R-squared:  0.843 
+## F-statistic:  2684 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[8]]
@@ -3241,19 +3246,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.54145 -0.31859 -0.00513  0.31465  1.39987 
+## -1.51271 -0.29899 -0.00547  0.31040  1.43208 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.001636   0.014262  -0.115    0.909    
-## covdata$X1   0.528277   0.014323  36.883   &lt;2e-16 ***
-## covdata$X2  -1.034501   0.014559 -71.057   &lt;2e-16 ***
+## (Intercept)  0.006335   0.014529   0.436    0.663    
+## covdata$X1   0.536216   0.014592  36.748   &lt;2e-16 ***
+## covdata$X2  -1.039719   0.014832 -70.101   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4508 on 997 degrees of freedom
-## Multiple R-squared:  0.8602, Adjusted R-squared:  0.8599 
-## F-statistic:  3066 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4592 on 997 degrees of freedom
+## Multiple R-squared:  0.8573, Adjusted R-squared:  0.8571 
+## F-statistic:  2996 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[9]]
@@ -3263,19 +3268,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.45304 -0.30821  0.01219  0.30065  1.39286 
+## -1.45344 -0.32148 -0.01728  0.31825  1.61980 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.001901   0.014635   -0.13    0.897    
-## covdata$X1   0.525008   0.014698   35.72   &lt;2e-16 ***
-## covdata$X2  -1.043876   0.014939  -69.87   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.00931    0.01502   -0.62    0.535    
+## covdata$X1   0.52083    0.01508   34.53   &lt;2e-16 ***
+## covdata$X2  -1.03242    0.01533  -67.35   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4626 on 997 degrees of freedom
-## Multiple R-squared:  0.8553, Adjusted R-squared:  0.855 
-## F-statistic:  2947 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4747 on 997 degrees of freedom
+## Multiple R-squared:  0.8461, Adjusted R-squared:  0.8458 
+## F-statistic:  2741 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[10]]
@@ -3285,19 +3290,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.58381 -0.30195 -0.00772  0.32637  1.38028 
+## -1.38779 -0.31638  0.00464  0.31924  1.63836 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.004817   0.014893  -0.323    0.746    
-## covdata$X1   0.528281   0.014957  35.320   &lt;2e-16 ***
-## covdata$X2  -1.042617   0.015203 -68.578   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.01282    0.01445   0.887    0.375    
+## covdata$X1   0.53113    0.01451  36.600   &lt;2e-16 ***
+## covdata$X2  -1.03683    0.01475 -70.291   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4707 on 997 degrees of freedom
-## Multiple R-squared:  0.851,  Adjusted R-squared:  0.8507 
-## F-statistic:  2847 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4567 on 997 degrees of freedom
+## Multiple R-squared:  0.8577, Adjusted R-squared:  0.8574 
+## F-statistic:  3004 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 </code></pre>
 
 <pre><code class="r"># compute Rubin&#39;s multiple imputation average
@@ -3306,10 +3311,10 @@ SEpar &lt;- lapply(so, function(x) x$coefficients[, &#39;Std. Error&#39;])
 averageMI(par, SEpar)
 </code></pre>
 
-<pre><code>##                par SEpar       t      df     p
-## (Intercept) -0.002 0.016  -0.108 676.714 0.229
-## covdata$X1   0.527 0.018  29.721  90.195 0.000
-## covdata$X2  -1.037 0.017 -60.068 139.812 0.000
+<pre><code>##                par SEpar       t     df     p
+## (Intercept)  0.005 0.022   0.227 30.041 0.206
+## covdata$X1   0.527 0.019  27.517 56.616 0.000
+## covdata$X2  -1.030 0.019 -54.972 73.078 0.000
 </code></pre>
 
 <pre><code class="r">############
@@ -3444,5 +3449,5 @@ summary(GHmod2, suppress=.2)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
 </body></html>
