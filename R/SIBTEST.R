@@ -287,6 +287,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
                       beta = beta_uni, SE=sigma_uni, z, p = p)
     name <- ifelse(cross, 'Crossed_SIBTEST', 'SIBTEST')
     rownames(ret) <- name
+    class(ret) <- c('mirt_df', 'data.frame')
     if(details){
         ret <- data.frame(pkstar=unname(as.numeric(pkstar)),
                           sigma_focal=sigma_focal, sigma_ref=sigma_ref,
