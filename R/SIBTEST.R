@@ -196,7 +196,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     II[match] <- II[match] & tab2 > Jmin
     tab_ref[match] <- tab2
     II <- II & scores != min(scores) & scores != max(scores)
-    II[scores < mean(guess_correction)*ncol(dat)] <- FALSE
+    II[scores < sum(guess_correction*ncol(dat))] <- FALSE
 
     n <- length(match_set)
     Xbar_ref <- mean(ref_match_scores)
