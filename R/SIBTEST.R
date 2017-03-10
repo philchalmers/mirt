@@ -180,22 +180,18 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     ref_dat <- dat[group == 'reference',]
     ref_match_scores <- rowSums(ref_dat[,match_set, drop=FALSE])
     ref_suspect_scores <- rowSums(ref_dat[,suspect_set, drop=FALSE])
-    if(pk_focal){
-        tab_scores <- table(rowSums(focal_dat[ ,match_set, drop=FALSE]))
-    } else {
-        tab_scores <- table(rowSums(dat[ ,match_set, drop=FALSE]))
-    }
-    pk <- pkstar <- tab_scores / sum(tab_scores)
-    scores <- as.integer(names(pk))
+    tab_scores <- table(rowSums(dat[ ,match_set, drop=FALSE]))
+    pkstar <- tab_scores / sum(tab_scores)
+    scores <- as.integer(names(pkstar))
 
     # selection
     tab_focal <- tab_ref <- numeric(length(tab_scores))
     II <- tab_scores > Jmin
     tab1 <- table(focal_match_scores)
-    tab2 <- table(ref_match_scores)
     match <- match(names(II), names(tab1), nomatch=0)
     II[match] <- tab1 > Jmin
     tab_focal[match] <- tab1
+    tab2 <- table(ref_match_scores)
     match <- match(names(II), names(tab2), nomatch=0)
     II[match] <- II[match] & tab2 > Jmin
     tab_ref[match] <- tab2
@@ -225,6 +221,13 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     Ybar_ref <- ifelse(is.nan(Ybar_ref), 0, Ybar_ref)
     Ybar_focal <- ifelse(is.nan(Ybar_focal), 0, Ybar_focal)
     II <- II & sigma_ref != 0 & sigma_focal != 0
+    if(pk_focal){
+        tmp <- table(rowSums(focal_dat[ ,match_set, drop=FALSE]))
+        tmp <- tmp / sum(tmp)
+        match <- match(names(II), names(tmp), nomatch=0)
+        pkstar[] <- 0
+        pkstar[match] <- tmp
+    }
     pkstar[!II] <- 0
     pkstar <- pkstar / sum(pkstar)
     sigma_uni <- sqrt(sum(pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref), na.rm = TRUE))
@@ -281,7 +284,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     }
     ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
                       n_focal_set = length(focal_set),
-                      beta = beta_uni, z, p = p)
+                      beta = beta_uni, SE=sigma_uni, z, p = p)
     name <- ifelse(cross, 'Crossed_SIBTEST', 'SIBTEST')
     rownames(ret) <- name
     if(details){
