@@ -71,7 +71,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     tmp[tmp == 0L] <- 1L
     check <- as.numeric(L %*% longpars) / tmp
     longpars[estpars] <- check[estpars]
-    LL <- 0
+    LL <- LP <- 0
     LBOUND <- UBOUND <- c()
     for(g in 1L:ngroups){
         for(i in 1L:(J+1L)){
@@ -176,7 +176,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            list=list, ngroups=ngroups, nfact=nfact,
                            J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist)
         prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-        LL <- 0
+        LL <- LP <- 0
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         for(g in 1L:ngroups){
             if(dentype == 'bfactor'){
@@ -190,6 +190,17 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                          prior=Prior[[g]], itemloc=itemloc)
             }
             LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
+        }
+        if(any(ANY.PRIOR)){
+            if(length(lrPars)){
+                if(lrPars@any.prior)
+                    LP <- LL.Priors(x=lrPars, LL=LP)
+            }
+            for(g in 1L:length(pars)){
+                for(i in 1L:length(pars[[1L]]))
+                    if(pars[[g]][[i]]@any.prior)
+                        LP <- LL.Priors(x=pars[[g]][[i]], LL=LP)
+            }
         }
         Estep.time <- Estep.time + proc.time()[3L] - start
     } else {
@@ -212,6 +223,18 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
             rlist <- Elist$rlist; LL <- Elist$LL
+            if(any(ANY.PRIOR)){
+                LP <- 0
+                if(length(lrPars)){
+                    if(lrPars@any.prior)
+                        LP <- LL.Priors(x=lrPars, LL=LP)
+                }
+                for(g in 1L:length(pars)){
+                    for(i in 1L:length(pars[[1L]]))
+                        if(pars[[g]][[i]]@any.prior)
+                            LP <- LL.Priors(x=pars[[g]][[i]], LL=LP)
+                }
+            }
             collectLL[cycles] <- LL
             if(is.nan(LL))
                 stop('Optimization error: Could not compute observed log-likelihood. Try
@@ -251,7 +274,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
-                            cycles, LL, max(abs(preMstep.longpars - longpars))))
+                            cycles, LL + LP, max(abs(preMstep.longpars - longpars))))
             if(all(abs(preMstep.longpars - longpars) < TOL)){
                 pars <- reloadPars(longpars=longpars, pars=pars,
                                    ngroups=ngroups, J=J)
@@ -358,18 +381,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     correction <- numeric(length(estpars[estpars & !redun_constr]))
     names(correction) <- names(estpars[estpars & !redun_constr])
     collectLL <- as.numeric(na.omit(collectLL))
-    LP <- 0
-    if(any(ANY.PRIOR)){
-        if(length(lrPars)){
-            if(lrPars@any.prior)
-                LP <- LL.Priors(x=lrPars, LL=LP)
-        }
-        for(g in 1L:length(pars)){
-            for(i in 1L:length(pars[[1L]]))
-                if(pars[[g]][[i]]@any.prior)
-                    LP <- LL.Priors(x=pars[[g]][[i]], LL=LP)
-        }
-    }
     LP <- unname(LP)
     start.time.SE <- proc.time()[3L]
     if(list$SE.type %in% c('SEM', 'Oakes', 'complete') && list$SE){
