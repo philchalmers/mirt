@@ -197,7 +197,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     II[match] <- II[match] & tab2 > Jmin
     tab_ref[match] <- tab2
     II <- II & scores != min(scores) & scores != max(scores)
-    II[scores < sum(guess_correction*ncol(dat))] <- FALSE
+    II[scores < mean(guess_correction*ncol(dat))] <- FALSE
 
     n <- length(match_set)
     Xbar_ref <- mean(ref_match_scores)
@@ -232,6 +232,8 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     }
     pkstar[!II] <- 0
     pkstar <- pkstar / sum(pkstar)
+    tab_focal[tab_focal == 0] <- NA
+    tab_ref[tab_ref == 0] <- NA
     sigma_uni <- sqrt(sum(pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref), na.rm = TRUE))
     crossvec <- logical(length(II))
     ystar_ref_vec <- ystar_focal_vec <- numeric(length(II))
