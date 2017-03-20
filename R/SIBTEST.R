@@ -161,6 +161,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     if(missing(focal_name))
         focal_name <- unique(group)[2L]
     stopifnot(focal_name %in% group)
+    stopifnot(nrow(dat) == length(group))
     group <- ifelse(group == focal_name, 'focal', 'reference')
     stopifnot(!(missing(focal_set) && missing(match_set)))
     index <- 1L:ncol(dat)
