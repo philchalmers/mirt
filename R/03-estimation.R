@@ -654,6 +654,19 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 1L:Data$ngroups)
             rlist[[g]]$expected = numeric(1L)
     }
+    for(g in 1L:length(pars)){
+        for(i in 1L:length(pars[[1L]])){
+            if(class(pars[[g]][[i]]) == 'dich'){
+                tmp <- ESTIMATE$pars[[g]][[i]]@par
+                nms <- names(ESTIMATE$pars[[g]][[i]]@est)
+                if(tmp[nms == 'g'] > tmp[nms == 'u']){
+                    if(opts$warn)
+                        warning('g paramater greater than u detected. Model did not converge', call.=FALSE)
+                    ESTIMATE$converge <- FALSE
+                }
+            }
+        }
+    }
     opts$times$end.time.Estimate <- proc.time()[3L]
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){

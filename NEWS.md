@@ -1,3 +1,12 @@
+# Changes in mirt 1.24
+
+- convergence set to FALSE if any `g > u` is found in the 4PL model
+
+- in verbose console output the log-posterior is printed when priors are included in the EM (previously was only the 
+  marginal likelihood)
+  
+- various bug fixes to SIBTEST, particularly for very small sample sizes
+
 # Changes in mirt 1.23
 
 - `anova()` LRT comparison gains a `bounded` logical to indicate whether a bounded parameter is being compared, 
