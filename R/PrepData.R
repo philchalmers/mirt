@@ -65,6 +65,8 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
     if(any(K > 30L) && opts$warn)
         warning(paste0('The following items have a large number of categories which may cause estimation issues: ',
                        paste0(as.character(which(K > 30L)), collapse = " ")), call. = FALSE)
+    if(any(itemtype %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM') & K < 3))
+        stop('Nested-logit models must have 3 or more categories', call.=FALSE)
     if(!is.null(technical$customK)){
         K <- technical$customK
         for(i in 1L:J)
