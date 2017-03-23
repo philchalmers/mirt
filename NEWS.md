@@ -1,5 +1,7 @@
 # Changes in mirt 1.24
 
+- ensure that nest-logit models have at least 3 categories (reported by Seongho Bae)
+
 - convergence set to FALSE if any `g > u` is found in the 4PL model
 
 - in verbose console output the log-posterior is printed when priors are included in the EM (previously was only the 

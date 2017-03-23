@@ -177,7 +177,9 @@ Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
         chl <- try(chol(gp$gcov), silent=TRUE)
         if(is(chl, 'try-error')){
             if(keep_vcov_PD){
-                gp$gcov <- smooth.cov(gp$gcov)
+                sds <- diag(sqrt(diag(gp$gcov)))
+                smoothed <- cov2cor(smooth.cov(gp$gcov))
+                gp$gcov <- sds %*% smoothed %*% sds
             } else return(-1e100)
         }
         if(pars[[pick]]@BFACTOR){
