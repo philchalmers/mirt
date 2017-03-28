@@ -394,7 +394,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
     J <- ncol(x@Data$data)
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
-        stop('Only X2 and G2 can be computed with missing data. Consider using imputed datasets', call.=FALSE)
+        stop('Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.
+             Consider using imputed datasets', call.=FALSE)
 
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         discrete <- is(x, 'DiscreteClass')
