@@ -36,6 +36,9 @@
 #'     infit and outfit statistics. Ignored if models are not from the Rasch family
 #' }
 #'
+#' Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing response data
+#' (i.e., will require multiple-imputation techniques).
+#'
 #' @param which.items an integer vector indicating which items to test for fit.
 #'   Default tests all possible items
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
@@ -260,7 +263,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, p.PV_Q1=p.Q1)
         ret
     }
-    boot_PV <- function(mod, org, which.items = 1:extract.mirt(mod, 'nitems'),
+    boot_PV <- function(mod, org, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
                         boot = 1000, draws = 30, verbose = FALSE, ...){
         pb_fun <- function(ind, mod, N, sv, which.items, draws, ...){
             count <- 0L
@@ -269,6 +272,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 if(count == 20)
                     stop('20 consecutive parametric bootstraps failed for PV_Q1*', call.=FALSE)
                 dat <- simdata(model=mod, N=N)
+                dat[is_NA] <- NA
                 mod2 <- mirt(dat, model, itemtype=extract.mirt(mod, 'itemtype'),
                              verbose=FALSE, pars=sv, technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
@@ -291,7 +295,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret <- data.frame("p.PV_Q1_star"=Q1)
         ret
     }
-    StoneFit <- function(mod, which.items = 1:extract.mirt(mod, 'nitems'),
+    StoneFit <- function(mod, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
                          dfapprox = FALSE, boot = 1000, ETrange = c(-2,2), ETpoints = 11,
                          verbose = FALSE, ...){
         X2star <- function(mod, which.items, ETrange, ETpoints, ...){
@@ -313,7 +317,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             }
             X2[which.items]
         }
-        pb_fun <- function(ind, mod, N, model, itemtype, sv, which.items, ETrange,
+        pb_fun <- function(ind, is_NA, mod, N, model, itemtype, sv, which.items, ETrange,
                            ETpoints, ...){
             count <- 0L
             while(TRUE){
@@ -321,6 +325,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 if(count == 20)
                     stop('20 consecutive parametric bootstraps failed for X2*', call.=FALSE)
                 dat <- simdata(model=mod, N=N)
+                dat[is_NA] <- NA
                 mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
                              technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
@@ -340,7 +345,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         sv <- mod2values(mod)
         model <- extract.mirt(mod, 'model')
         itemtype <- extract.mirt(mod, 'itemtype')
-        X2bs <- mySapply(1L:boot, pb_fun, mod=mod, N=N, model=model,
+        X2bs <- mySapply(1L:boot, pb_fun, mod=mod, N=N, model=model, is_NA=is_NA,
                          itemtype=itemtype, sv=sv, which.items=which.items,
                          ETrange=ETrange, ETpoints=ETpoints, ...)
         if(nrow(X2bs) == 1L) X2bs <- t(X2bs)
@@ -736,17 +741,19 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, ...)
         ret <- cbind(ret, tmp)
     }
+    is_NA <- is.na(x@Data$data)
     if('PV_Q1*' %in% fit_stats){
-        tmp <- boot_PV(x, org=tmp, which.items=which.items, boot=boot, draws=pv_draws, ...)
+        tmp <- boot_PV(x, is_NA=is_NA, org=tmp, which.items=which.items,
+                       boot=boot, draws=pv_draws, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*' %in% fit_stats){
-        tmp <- StoneFit(x, which.items=which.items, boot=boot, dfapprox=FALSE,
+        tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot, dfapprox=FALSE,
                  ETrange=ETrange, ETpoints=ETpoints, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*_df' %in% fit_stats){
-        tmp <- StoneFit(x, which.items=which.items, boot=boot_dfapprox, dfapprox=TRUE,
+        tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot_dfapprox, dfapprox=TRUE,
                         ETrange=ETrange, ETpoints=ETpoints, ...)
         ret <- cbind(ret, tmp)
     }

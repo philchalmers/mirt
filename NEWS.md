@@ -1,5 +1,8 @@
 # Changes in mirt 1.24
 
+- include missing data values in `itemfit()` for parametric bootstrap methods to replicate missing
+  data pattern
+
 - ensure that nest-logit models have at least 3 categories (reported by Seongho Bae)
 
 - convergence set to FALSE if any `g > u` is found in the 4PL model

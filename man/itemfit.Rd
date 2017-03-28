@@ -42,7 +42,10 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
     bootstrapping to obtain scaled versions of the X2* and degrees of freedom
   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
     infit and outfit statistics. Ignored if models are not from the Rasch family
-}}
+}
+
+Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing response data
+(i.e., will require multiple-imputation techniques).}
 
 \item{which.items}{an integer vector indicating which items to test for fit.
 Default tests all possible items}
