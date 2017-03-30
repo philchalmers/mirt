@@ -716,7 +716,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, Moptim=ESTIMATE$Moptim,
                                           EHPrior=ESTIMATE$Prior, warn=opts$warn, dentype=opts$dentype,
-                                          message=opts$message, full=opts$full, lrPars=lrPars),
+                                          message=opts$message, full=opts$full, lrPars=lrPars,
+                                          method=opts$method),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
                               solnp_args=opts$solnp_args, control=control)

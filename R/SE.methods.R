@@ -87,7 +87,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         tmp <- updatePrior(pars=pars, Theta=Theta, list=list, ngroups=ngroups,
                            nfact=nfact, lrPars=lrPars, J=J, dentype=dentype,
-                           sitems=sitems, cycles=cycles, rlist=rlist, full=full)
+                           sitems=sitems, cycles=cycles, rlist=rlist, full=full, MC=list$method == 'QMC')
         prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
         #Estep
         for(g in 1L:ngroups){
@@ -226,11 +226,10 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_constrain(longpars, constrain)
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
-            nms <- names(shortpars)[pick]
             tmp <- updatePrior(pars=pars, Theta=Theta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=100L,
-                               rlist=rlist, full=full)
+                               rlist=rlist, full=full, MC=list$method == 'QMCEM')
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
