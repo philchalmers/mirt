@@ -25,9 +25,9 @@ test_that('one factor', {
     pffit <- c(as.numeric(as.matrix(head(pf))), as.numeric(as.matrix(tail(pf))))
     expect_equal(pffit, c(0.9509209,1.142614,0.598627,0.4390729,0.8847659,0.6006927,-0.1580301,0.4766065,-1.366012,-1.688975,-0.1716656,-1.35694,0.9657947,0.9039366,0.6798214,0.5300523,0.8204743,0.6796139,-0.1220695,-0.2348978,-1.36503,-1.825007,-0.5448904,-1.366104,0.1942602,0.1375231,1.282292,1.543588,0.5053905,1.280045,1.206,0.9890109,0.7871311,0.8204198,1.415266,1.078969,0.6701176,0.1288671,-0.5428167,-0.7281717,1.408353,0.3263531,0.8778794,1.013104,0.9167278,0.8353493,1.222656,0.7957533,-0.4393401,0.1491026,-0.268665,-0.8304078,1.080016,-0.3983634,0.1985518,-0.0408503,0.4460764,0.817872,-1.193991,0.3035265),
                  tolerance = 1e-3)
-    mod_QMCEM <- multipleGroup(dat, models, group=group, method = 'QMCEM', verbose=FALSE,
-                               optimizer='NR')
-    expect_equal(extract.mirt(mod_QMCEM, 'logLik'), -17849.64, tolerance=1e-2)
+    # mod_QMCEM <- multipleGroup(dat, models, group=group, method = 'QMCEM', verbose=FALSE,
+    #                            optimizer='NR')
+    # expect_equal(extract.mirt(mod_QMCEM, 'logLik'), -17849.64, tolerance=1e-2)
     mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', optimizer='NR',
                                     group = group, verbose = FALSE, method = 'EM')
     expect_is(mod_configural, 'MultipleGroupClass')

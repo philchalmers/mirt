@@ -1,5 +1,8 @@
 # Changes in mirt 1.24
 
+- globally improve numerical efficiency of QMC methods, including the QMCEM estimator. QMCEM disabled 
+  for multiple-group models (for now)
+
 - include missing data values in `itemfit()` for parametric bootstrap methods to replicate missing
   data pattern
 

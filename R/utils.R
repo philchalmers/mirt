@@ -335,7 +335,8 @@ bfactor2mod <- function(model, J){
 }
 
 updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
-                        dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE){
+                        dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
+                        MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
     if(dentype == 'EH'){
         Prior[[1L]] <- list$EHPrior[[1L]]
@@ -391,6 +392,10 @@ updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
             Prior[[g]] <- list$customPriorFun(Theta, Etable=rlist[[g]][[1L]])
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
+    }
+    if(MC){
+        for(g in 1L:ngroups)
+            Prior[[g]] <- rep(1 / length(Prior[[g]]), length(Prior[[g]]))
     }
     return(list(prior=prior, Prior=Prior, Priorbetween=Priorbetween))
 }
@@ -2031,7 +2036,7 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
 }
 
 QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
-    sfsmisc::QUnif(npts, min=lim[1L], max=lim[2L], p=nfact, leap=leap)
+    qnorm(sfsmisc::QUnif(npts, min=0, max=1, p=nfact, leap=leap))
 }
 
 MC_quad <- function(npts, nfact, lim)

@@ -109,15 +109,16 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             #         if(is.null(bfactorlist$Priorbetween[[1L]])){
             if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
                 prior <- Priorbetween <- sitems <- specific <- NULL
+                gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
                 if(QMC){
                     Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim)
+                    Prior <- rep(1/nrow(Theta), nrow(Theta))
                 } else {
                     theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
                     Theta <- thetaComb(theta, obj@Model$nfact)
+                    Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans, gstructgrouppars$gcov)
+                    Prior <- Prior/sum(Prior)
                 }
-                gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-                Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans, gstructgrouppars$gcov)
-                Prior <- Prior/sum(Prior)
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta, prodlist)
             } else {

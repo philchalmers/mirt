@@ -150,7 +150,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     hess <- matrix(0)
     Elist <- list()
     startMrate <- ifelse(Moptim == 'L-BFGS-B', 5L, 1L)
-    if(list$BL){
+    if(list$method == 'BL'){
         start <- proc.time()[3L]
         lower <- LBOUND[est]; upper <- UBOUND[est]
         Moptim <- ifelse(any(is.finite(lower) | is.finite(upper)), 'L-BFGS-B', 'BFGS')
@@ -172,7 +172,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         converge <- opt$convergence == 0
         if(list$SE) hess <- opt$hessian
-        tmp <- updatePrior(pars=pars, Theta=Theta,
+        tmp <- updatePrior(pars=pars, Theta=Theta, MC=list$method == 'QMCEM',
                            list=list, ngroups=ngroups, nfact=nfact,
                            J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist)
         prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
@@ -212,7 +212,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             tmp <- updatePrior(pars=pars, Theta=Theta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
-                               rlist=rlist, full=full, lrPars=lrPars)
+                               rlist=rlist, full=full, lrPars=lrPars, MC=list$method == 'QMCEM')
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(is.na(TOL) && !is.nan(TOL)){
                 for(g in 1L:ngroups) rlist[[g]]$expected <- 1
@@ -422,7 +422,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             tmp <- updatePrior(pars=pars, Theta=Theta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
-                               rlist=rlist, full=full, lrPars=lrPars)
+                               rlist=rlist, full=full, lrPars=lrPars, MC=list$method == 'QMCEM')
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(list$Norder >= 2){
                 missing_info <- mySapply(1L:length(shortpars), SE.Oakes,

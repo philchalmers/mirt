@@ -311,7 +311,8 @@ setMethod(
                     }
                     if(length(prodlist) > 0L)
                         Theta <- prodterms(Theta,prodlist)
-                    W <- den_fun(ThetaShort, mean=gp$gmeans, sigma=gp$gcov, quad=LR, ...)
+                    W <- if(QMC) rep(1, nrow(Theta)) else
+                        den_fun(ThetaShort, mean=gp$gmeans, sigma=gp$gcov, quad=LR, ...)
                     W <- W/sum(W)
                 }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
@@ -712,7 +713,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
             thetaComb(theta,nfact)
         }
-        prior <- den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
+        prior <- if(QMC) rep(1, nrow(Theta)) else
+            den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
         prior <- prior/sum(prior)
         if(length(prodlist) > 0L)
             Theta <- prodterms(Theta, prodlist)

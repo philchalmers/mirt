@@ -499,6 +499,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                matrix(Theta[,nfact2], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
                 if(opts$method == 'QMCEM'){
+                    if(length(pars) > 1L) #TODO
+                        stop('QMCEM method not supported for multiple-group objects (yet)', .call=FALSE)
                     Theta <- QMC_quad(npts=opts$quadpts, nfact=nfact, lim=opts$theta_lim)
                 } else {
                     if(opts$quadpts^nfact <= opts$MAXQUAD){
@@ -526,7 +528,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          SE = opts$SE, SE.type=opts$SE.type, delta=opts$delta,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
-                                         message=opts$message, BL=opts$method == 'BL', full=opts$full,
+                                         message=opts$message, method=opts$method, full=opts$full,
                                          lrPars=lrPars, SE=opts$SE && opts$SE.type == 'numerical', Etable=opts$Etable,
                                          NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI, Norder=opts$Norder,
                                          keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric),
