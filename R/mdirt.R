@@ -28,7 +28,10 @@
 #'
 #' @param data a \code{matrix} or \code{data.frame} that consists of
 #'   numerically ordered data, with missing data coded as \code{NA}
-#' @param model number of classes to fit, or alternatively a \code{\link{mirt.model}} definition
+#' @param model number of classes to fit, or alternatively a \code{\link{mirt.model}} definition. Note that
+#'   when using a \code{\link{mirt.model}} input in conjunction with the \code{customTheta} input defined below,
+#'   the order with which the syntax factors are defined will be associated with the columns in the
+#'   \code{customTheta} input
 #' @param method estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)
 #' @param optimizer optimizer used for the M-step, set to \code{'nlminb'} by default.
 #'   See \code{\link{mirt}} for more details

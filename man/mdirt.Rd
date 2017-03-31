@@ -13,7 +13,10 @@ mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
 numerically ordered data, with missing data coded as \code{NA}}
 
-\item{model}{number of classes to fit, or alternatively a \code{\link{mirt.model}} definition}
+\item{model}{number of classes to fit, or alternatively a \code{\link{mirt.model}} definition. Note that
+when using a \code{\link{mirt.model}} input in conjunction with the \code{customTheta} input defined below,
+the order with which the syntax factors are defined will be associated with the columns in the
+\code{customTheta} input}
 
 \item{customTheta}{input passed to \code{techincal = list(customTheta = ...)}, but is included directly
 in this function for convienience. This input is most interesting for discrete latent models
