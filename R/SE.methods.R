@@ -69,8 +69,6 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
     nfact <- ncol(Theta)
     ANY.PRIOR <- rep(FALSE, ngroups)
     converged <- logical(sum(estpars & !redun_constr))
-    MC <- list$method %in% c('QMCEM', 'MCEM')
-    QMC <- list$method == 'QMCEM'
     rijfull <- rep(NA, length(converged))
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta, prodlist)
@@ -87,8 +85,6 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         longpars[estindex] <- EMhistory[cycles, estindex]
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        if(MC)
-            gTheta <- updateTheta(npts=list$quadpts, nfact=nfact, pars=pars, QMC=QMC)
         tmp <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups,
                            nfact=nfact, lrPars=lrPars, J=J, dentype=dentype,
                            sitems=sitems, cycles=cycles, rlist=rlist, full=full, MC=list$method == 'QMC')

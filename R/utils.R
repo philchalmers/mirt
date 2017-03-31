@@ -1178,6 +1178,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$accelerate <- 'none'
         if(is.null(TOL)) opts$TOL <- 1e-5
         if(is.null(technical$NCYCLES)) technical$NCYCLES <- 1000L
+        if(method == 'QMCEM')
+            stop('SEM information matrix not supported with QMCEM estimation', call.=FALSE)
     }
     if(is.null(technical$symmetric)) technical$symmetric <- TRUE
     opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
