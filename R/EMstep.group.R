@@ -19,6 +19,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     nfullpars <- 0L
     estpars <- c()
     prodlist <- PrepList[[1L]]$prodlist
+    MC <- list$method %in% c('QMCEM', 'MCEM')
+    QMC <- list$method == 'QMCEM'
     for(g in 1L:ngroups){
         for(i in 1L:(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
@@ -172,7 +174,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         converge <- opt$convergence == 0
         if(list$SE) hess <- opt$hessian
-        tmp <- updatePrior(pars=pars, Theta=Theta, MC=list$method == 'QMCEM',
+        tmp <- updatePrior(pars=pars, gTheta=gTheta, MC=MC,
                            list=list, ngroups=ngroups, nfact=nfact,
                            J=J, dentype=dentype, sitems=sitems, cycles=cycles, rlist=rlist)
         prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
@@ -209,16 +211,18 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             #priors
             start <- proc.time()[3L]
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
-            tmp <- updatePrior(pars=pars, Theta=Theta,
+            if(MC)
+                gTheta <- updateTheta(npts=list$quadpts, nfact=nfact, pars=pars, QMC=QMC)
+            tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
-                               rlist=rlist, full=full, lrPars=lrPars, MC=list$method == 'QMCEM')
+                               rlist=rlist, full=full, lrPars=lrPars, MC=MC)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(is.na(TOL) && !is.nan(TOL)){
                 for(g in 1L:ngroups) rlist[[g]]$expected <- 1
                 break
             }
-            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+            Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
@@ -309,7 +313,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                             tmp <- preMstep.longpars2 - 2 * accel * r  + accel^2 * v
                             longpars[!latent_longpars] <- tmp[!latent_longpars]
                             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-                            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+                            Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                            dentype=dentype, rlist=rlist, full=full)
@@ -419,16 +423,16 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         } else if(list$SE.type == 'Oakes' && list$SE){
             complete_info <- hess
             shortpars <- longpars[estpars & !redun_constr]
-            tmp <- updatePrior(pars=pars, Theta=Theta,
+            tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
-                               rlist=rlist, full=full, lrPars=lrPars, MC=list$method == 'QMCEM')
+                               rlist=rlist, full=full, lrPars=lrPars, MC=MC)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             if(list$Norder >= 2){
                 missing_info <- mySapply(1L:length(shortpars), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
-                                       Theta=Theta, list=list, ngroups=ngroups, J=J,
+                                       gTheta=gTheta, list=list, ngroups=ngroups, J=J,
                                        dentype=dentype, sitems=sitems, nfact=nfact,
                                        rlist=rlist, full=full, Data=Data,
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
@@ -438,7 +442,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             } else {
                 zero_g <- SE.Oakes(0L, pars=pars, L=L, constrain=constrain, delta=0,
                                    est=est, shortpars=shortpars, longpars=longpars,
-                                   Theta=Theta, list=list, ngroups=ngroups, J=J,
+                                   gTheta=gTheta, list=list, ngroups=ngroups, J=J,
                                    dentype=dentype, sitems=sitems, nfact=nfact,
                                    rlist=rlist, full=full, Data=Data,
                                    specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
@@ -448,7 +452,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 missing_info <- mySapply(1L:length(shortpars), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
-                                       Theta=Theta, list=list, ngroups=ngroups, J=J,
+                                       gTheta=gTheta, list=list, ngroups=ngroups, J=J,
                                        dentype=dentype, sitems=sitems, nfact=nfact,
                                        rlist=rlist, full=full, Data=Data,
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,

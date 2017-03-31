@@ -1,4 +1,4 @@
-Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitems,
+Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, sitems,
                   itemloc, CUSTOM.IND, dentype, ngroups, rlist, full, Etable = TRUE){
     LL <- 0
     tabdata <- if(full) Data$fulldata[[1L]] else Data$tabdatalong
@@ -6,13 +6,13 @@ Estep <- function(pars, Data, Theta, prior, Prior, Priorbetween, specific, sitem
         freq <- if(full) 1 else Data$Freq[[g]]
         if(dentype == 'bfactor'){
             rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                        Theta=Theta, prior=prior[[g]],
+                                        Theta=gTheta[[g]], prior=prior[[g]],
                                         Priorbetween=Priorbetween[[g]], specific=specific,
                                         sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                         Etable=Etable)
         } else {
             rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                     CUSTOM.IND=CUSTOM.IND, Theta=Theta,
+                                     CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[g]],
                                      prior=Prior[[g]], itemloc=itemloc, full=full, Etable=Etable)
         }
         LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)

@@ -334,7 +334,23 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
-updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
+updateTheta <- function(npts, nfact, pars, QMC = FALSE){
+    ngroups <- length(pars)
+    pick <- length(pars[[1L]])
+    Theta <- vector('list', ngroups)
+    for(g in 1L:ngroups){
+        gp <- ExtractGroupPars(pars[[g]][[pick]])
+        theta <- if(QMC){
+            QMC_quad(npts=npts, nfact=nfact, lim = c(0,1))
+        } else {
+            MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
+        }
+        Theta[[g]] <- t(t(theta) + gp$gmeans) %*% t(chol(gp$gcov))
+    }
+    Theta
+}
+
+updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                         dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
                         MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
@@ -343,7 +359,7 @@ updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
     } else if(dentype == 'custom'){
         for(g in 1L:ngroups){
             gp <- pars[[g]][[J+1L]]
-            Prior[[g]] <- gp@den(gp, Theta)
+            Prior[[g]] <- gp@den(gp, gTheta[[g]])
             Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
         }
     } else {
@@ -352,11 +368,11 @@ updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
             if(dentype == 'bfactor'){
                 theta <- pars[[g]][[J+1L]]@theta
                 Thetabetween <- pars[[g]][[J+1L]]@Thetabetween
-                p <- matrix(0, nrow(Theta), ncol(sitems))
+                p <- matrix(0, nrow(gTheta[[g]]), ncol(sitems))
                 pp <- matrix(0, nrow(theta), ncol(sitems))
                 for(i in 1L:ncol(sitems)){
                     sel <- c(1L:(nfact-ncol(sitems)), i + nfact - ncol(sitems))
-                    p[,i] <- mirt_dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
+                    p[,i] <- mirt_dmvnorm(gTheta[[g]][ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
                     pp[,i] <- dnorm(theta, gp$gmeans[sel[length(sel)]],
                                     sqrt(gp$gcov[sel[length(sel)],sel[length(sel)],drop=FALSE]))
                 }
@@ -368,11 +384,11 @@ updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
                 next
             }
             if(full){
-                Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], lrPars@mus, gp$gcov,
+                Prior[[g]] <- mirt_dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE], lrPars@mus, gp$gcov,
                                            quad=TRUE)
                 Prior[[g]] <- Prior[[g]]/rowSums(Prior[[g]])
             } else {
-                Prior[[g]] <- mirt_dmvnorm(Theta[ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
+                Prior[[g]] <- mirt_dmvnorm(gTheta[[g]][ ,1L:nfact,drop=FALSE], gp$gmeans, gp$gcov)
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }
         }
@@ -383,13 +399,13 @@ updatePrior <- function(pars, Theta, list, ngroups, nfact, J,
                 Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
         } else {
             for(g in 1L:ngroups){
-                Prior[[g]] <- mirt_dmvnorm(Theta, 0, matrix(1))
+                Prior[[g]] <- mirt_dmvnorm(gTheta[[g]], 0, matrix(1))
                 Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
             }
         }
     } else if(!is.null(list$customPriorFun)){
         for(g in 1L:ngroups){
-            Prior[[g]] <- list$customPriorFun(Theta, Etable=rlist[[g]][[1L]])
+            Prior[[g]] <- list$customPriorFun(gTheta[[g]], Etable=rlist[[g]][[1L]])
             Prior[[g]] <- Prior[[g]]/sum(Prior[[g]])
         }
     }
@@ -2040,7 +2056,7 @@ QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
 }
 
 MC_quad <- function(npts, nfact, lim)
-    matrix(runif(n=npts * nfact, min = lim[1L], max = lim[2]), npts, nfact)
+    qnorm(matrix(runif(n=npts * nfact, min = lim[1L], max = lim[2]), npts, nfact))
 
 respSample <- function(P) .Call("respSample", P)
 

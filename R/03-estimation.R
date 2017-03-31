@@ -498,10 +498,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 Theta <- cbind(Theta[,1L:(nfact2-1L),drop=FALSE],
                                matrix(Theta[,nfact2], nrow=nrow(Theta), ncol=ncol(sitems)))
             } else {
-                if(opts$method == 'QMCEM'){
-                    if(length(pars) > 1L) #TODO
-                        stop('QMCEM method not supported for multiple-group objects (yet)', .call=FALSE)
-                    Theta <- QMC_quad(npts=opts$quadpts, nfact=nfact, lim=opts$theta_lim)
+                if(opts$method %in% c('QMCEM', 'MCEM')){
+                    Theta <- NULL
                 } else {
                     if(opts$quadpts^nfact <= opts$MAXQUAD){
                         if(is.null(opts$technical$customTheta))
@@ -525,7 +523,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          itemloc=PrepList[[1L]]$itemloc, dentype=opts$dentype,
                                          sitems=sitems, specific=specific, NULL.MODEL=opts$NULL.MODEL,
                                          nfact=nfact, constrain=constrain, verbose=opts$verbose,
-                                         SE = opts$SE, SE.type=opts$SE.type, delta=opts$delta,
+                                         SE = opts$SE, SE.type=opts$SE.type, delta=opts$delta, quadpts=opts$quadpts,
                                          accelerate=opts$accelerate, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                                          customPriorFun=opts$customPriorFun, Moptim=opts$Moptim, warn=opts$warn,
                                          message=opts$message, method=opts$method, full=opts$full,
@@ -716,8 +714,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                           nfact=nfact, constrain=constrain, verbose=opts$verbose,
                                           CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, Moptim=ESTIMATE$Moptim,
                                           EHPrior=ESTIMATE$Prior, warn=opts$warn, dentype=opts$dentype,
-                                          message=opts$message, full=opts$full, lrPars=lrPars,
-                                          method=opts$method),
+                                          message=opts$message, full=opts$full, lrPars=lrPars, method=opts$method),
                               Theta=Theta, theta=theta, ESTIMATE=ESTIMATE, from=from, to=to,
                               DERIV=DERIV, is.latent=is.latent, Ls=Ls, PrepList=PrepList,
                               solnp_args=opts$solnp_args, control=control)

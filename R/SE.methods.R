@@ -69,6 +69,8 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
     nfact <- ncol(Theta)
     ANY.PRIOR <- rep(FALSE, ngroups)
     converged <- logical(sum(estpars & !redun_constr))
+    MC <- list$method %in% c('QMCEM', 'MCEM')
+    QMC <- list$method == 'QMCEM'
     rijfull <- rep(NA, length(converged))
     if(length(prodlist) > 0L)
         Theta <- prodterms(Theta, prodlist)
@@ -85,7 +87,9 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         longpars[estindex] <- EMhistory[cycles, estindex]
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        tmp <- updatePrior(pars=pars, Theta=Theta, list=list, ngroups=ngroups,
+        if(MC)
+            gTheta <- updateTheta(npts=list$quadpts, nfact=nfact, pars=pars, QMC=QMC)
+        tmp <- updatePrior(pars=pars, gTheta=gTheta, list=list, ngroups=ngroups,
                            nfact=nfact, lrPars=lrPars, J=J, dentype=dentype,
                            sitems=sitems, cycles=cycles, rlist=rlist, full=full, MC=list$method == 'QMC')
         prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
@@ -197,7 +201,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
 }
 
 SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
-                     Theta, list, ngroups, J, dentype, sitems,
+                     gTheta, list, ngroups, J, dentype, sitems,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
@@ -226,12 +230,12 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_constrain(longpars, constrain)
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
-            tmp <- updatePrior(pars=pars, Theta=Theta,
+            tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=100L,
                                rlist=rlist, full=full, MC=list$method == 'QMCEM')
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-            Elist <- Estep(pars=pars, Data=Data, Theta=Theta, prior=prior, Prior=Prior,
+            Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
@@ -239,9 +243,6 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_old
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
-
-            gTheta <- vector('list', ngroups)
-            for(g in 1L:ngroups) gTheta[[g]] <- Theta
             if(pars[[1L]][[J + 1L]]@itemclass == -1L){
                 for(g in 1L:length(pars)){
                     gp <- pars[[g]][[J + 1L]]
