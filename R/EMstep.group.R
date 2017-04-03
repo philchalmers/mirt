@@ -212,7 +212,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             start <- proc.time()[3L]
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             if(MC)
-                gTheta <- updateTheta(npts=list$quadpts, nfact=nfact, pars=pars, QMC=QMC)
+                gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
+                                      nfact=nfact, pars=pars, QMC=QMC)
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
@@ -366,7 +367,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                " likely indicates a problem in the M-step. \nCheck with the more stable ",
                                "optimizer = \'nlminb\', or supply better starting values"), call.=FALSE)
         }
-        if(cycles > 1L && list$warn && !ANY.PRIOR){
+        if(cycles > 1L && list$warn && !ANY.PRIOR && list$method != 'MCEM'){
             diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
             if(any(diff[length(diff):ceiling(length(diff)*.9)] > .001))
                 warning('Log-likelihood was decreasing near the ML solution. EM method may be unstable',

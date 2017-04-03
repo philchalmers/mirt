@@ -110,15 +110,16 @@ will estimate the regression parameters for all latent traits by default}
   solution has been reached}
 
 \item{method}{a character object specifying the estimation algorithm to be used. The default is
-  \code{'EM'}, for the standard EM algorithm with fixed quadrature, or \code{'QMCEM'} for
-  quasi-Monte Carlo EM estimation. The option \code{'MHRM'} may
-  also be passed to use the MH-RM algorithm, \code{'SEM'} for the Stochastic EM algorithm (first
+  \code{'EM'}, for the standard EM algorithm with fixed quadrature, \code{'QMCEM'} for
+  quasi-Monte Carlo EM estimation, or \code{'MCEM'} for Monte Carlo EM estimation.
+  The option \code{'MHRM'} may also be passed to use the MH-RM algorithm,
+  \code{'SEM'} for the Stochastic EM algorithm (first
   two stages of the MH-RM stage using an optimizer other than a single Newton-Raphson iteration),
   and \code{'BL'} for the Bock and Lieberman
   approach (generally not recommended for longer tests).
 
   The \code{'EM'} is generally effective with 1-3 factors, but methods such as the \code{'QMCEM'},
-  \code{'SEM'}, or \code{'MHRM'} should be used when the dimensions are 3 or more. Note that
+  \code{'MCEM'}, \code{'SEM'}, or \code{'MHRM'} should be used when the dimensions are 3 or more. Note that
   when the optimizer is stochastic the associated \code{SE.type} is automatically changed to
   \code{SE.type = 'MHRM'} by default to avoid the use of quadrature}
 
@@ -336,6 +337,10 @@ control input)}
     tune the acceptance of the draws to be between .1 and .4}
   \item{MHRM_SE_draws}{number of fixed draws to use when \code{SE=TRUE} and \code{SE.type = 'FMHRM'}
     and the maximum number of draws when \code{SE.type = 'MHRM'}. Default is 2000}
+  \item{MCEM_draws}{a function used to determine the number of quadrature points to draw for the
+    \code{'MCEM'} method. Must include one arguemnt which indicates the iteration number of the
+    EM cycle. Default is \code{function(cycles) 500 + (cycles - 1)*2}, which starts the number of
+    draws at 500 and increases by 2 after each full EM iteration}
   \item{keep_vcov_PD}{logical; attempt to keep the variance-covariance matrix of the latent traits
     positive definite during estimation in the EM algorithm? This generally improves the convergence
     properties when the traits are highly correlated. Default is \code{TRUE}}

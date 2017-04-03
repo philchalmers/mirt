@@ -1,5 +1,8 @@
 # Changes in mirt 1.24
 
+- added `'MCEM'` method for Monte Carlo EM. An associated `MCEM_draws` function added to the `technical` list
+  as well to control the number of draws throughout the EM cycles
+
 - support for information matrix computations for QMCEM method added (e.g., Oakes, crossprod, Louis)
 
 - globally improve numerical efficiency of QMC methods, including the QMCEM estimator

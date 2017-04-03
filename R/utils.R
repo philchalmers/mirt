@@ -1134,19 +1134,19 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder')
+                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
     if((method %in% c('MHRM', 'MIXED', 'SEM')) && SE.type == 'Oakes') SE.type <- 'MHRM'
     if((method %in% c('MHRM', 'MIXED', 'SEM')) && !(SE.type %in% c('MHRM', 'FMHRM', 'none')))
         stop('SE.type not supported for stochastic method', call.=FALSE)
-    if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM', 'SEM')))
+    if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM', 'SEM', 'MCEM')))
         stop('method argument not supported', call.=FALSE)
     if(!(SE.type %in% c('Richardson', 'forward', 'central', 'crossprod', 'Louis', 'sandwich',
                         'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))
         stop('SE.type argument not supported', call.=FALSE)
-    if(!(method %in% c('EM', 'QMCEM'))) accelerate <- 'none'
+    if(!(method %in% c('EM', 'QMCEM', 'MCEM'))) accelerate <- 'none'
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
     opts$draws = draws
@@ -1172,7 +1172,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$storeEtable <- ifelse(is.null(technical$storeEtable), FALSE, technical$storeEtable)
     if(!is.null(TOL))
         if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- FALSE
-    opts$TOL <- ifelse(is.null(TOL), if(method == 'EM' || method == 'QMCEM') 1e-4 else
+    opts$TOL <- ifelse(is.null(TOL), if(method %in% c('EM', 'QMCEM', 'MCEM')) 1e-4 else
         if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- 'none'
@@ -1191,7 +1191,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 20000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
-    if(opts$method %in% c('EM', 'QMCEM'))
+    if(opts$method %in% c('EM', 'QMCEM', 'MCEM'))
         opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 500L, technical$NCYCLES)
     opts$BURNIN <- ifelse(is.null(technical$BURNIN), 150L, technical$BURNIN)
     opts$SEMCYCLES <- ifelse(is.null(technical$SEMCYCLES), 100L, technical$SEMCYCLES)
@@ -1212,7 +1212,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     }
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
-    if((opts$method == 'MHRM' || opts$method =='MIXED' || SE.type == 'MHRM') && !GenRandomPars &&
+    if((opts$method %in% c('MHRM', 'MIXED') || SE.type == 'MHRM') && !GenRandomPars &&
        opts$plausible.draws == 0L)
         set.seed(12345L)
     if(!is.null(technical$set.seed)) set.seed(technical$set.seed)
@@ -1226,7 +1226,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
     if(is.null(optimizer)){
-        opts$Moptim <- if(method %in% c('EM','BL','QMCEM')) 'BFGS' else 'NR1'
+        opts$Moptim <- if(method %in% c('EM','BL','QMCEM', 'MCEM')) 'BFGS' else 'NR1'
     } else {
         opts$Moptim <- optimizer
     }
@@ -1235,18 +1235,20 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(opts$Moptim == 'solnp'){
         if(is.null(solnp_args$control)) solnp_args$control <- list()
         if(is.null(solnp_args$control$trace)) solnp_args$control$trace <- 0
-        if(method != 'EM') stop('solnp only supported for optimization with EM algorithm',
+        if(!method %in% c('EM', 'QMCEM', 'MCEM'))
+            stop('solnp only supported for optimization with EM estimation engine',
                                 call.=FALSE)
         opts$solnp_args <- solnp_args
     } else if(opts$Moptim == 'alabama'){
-        if(method != 'EM') stop('alabama only supported for optimization with EM algorithm',
+        if(!method %in% c('EM', 'QMCEM', 'MCEM'))
+            stop('alabama only supported for optimization with EM estimation engine',
                                 call.=FALSE)
         if(is.null(alabama_args$control.outer)) alabama_args$control.outer <- list()
         if(is.null(alabama_args$control.optim)) alabama_args$control.optim <- list()
         if(is.null(alabama_args$control.outer$trace)) alabama_args$control.outer$trace <- FALSE
         opts$solnp_args <- alabama_args
     }
-    if(SE && opts$Moptim %in% c('solnp', 'alabama'))
+    if(SE && opts$Moptim %in% c('solnp', 'alabama')) #TODO
         stop('SE computations currently not supported for solnp or alabama optimizers', call. = FALSE)
     if(!is.null(large)){
         if(is.logical(large))
@@ -1254,6 +1256,12 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.list(large)) opts$PrepList <- large
     }
     if(!is.null(technical$customK)) opts$calcNull <- FALSE
+    if(method == 'MCEM'){
+        opts$MCEM_draws <- if(is.null(technical$MCEM_draws))
+            function(cycles) 500 + (cycles - 1)*2
+        else technical$MCEM_draws
+
+    }
     return(opts)
 }
 

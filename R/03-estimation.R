@@ -84,7 +84,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             customGroup@itemclass <- -1L
         }
         if(!is.null(survey.weights)){
-            stopifnot(opts$method %in% c('EM', 'QMCEM'))
+            stopifnot(opts$method %in% c('EM', 'QMCEM', 'MCEM'))
             stopifnot(length(survey.weights) == nrow(data))
         }
         if(any(is.na(group))){
@@ -112,7 +112,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
         if(!is.null(itemtype)){
-            if(any(itemtype == 'spline') && !(opts$method %in% c('EM', 'QMCEM')))
+            if(any(itemtype == 'spline') && !(opts$method %in% c('EM', 'QMCEM', 'MCEM')))
                 stop('spline itemtype only supported for EM algorithm', call.=FALSE)
         }
         if(length(group) != nrow(data))
@@ -457,7 +457,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
 
     #EM estimation
     opts$times$start.time.Estimate <- proc.time()[3L]
-    if(opts$method == 'EM' || opts$method == 'BL' || opts$method == 'QMCEM'){
+    if(opts$method %in% c('EM', 'BL', 'QMCEM', 'MCEM')){
         if(length(lrPars)){
             if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson')))
                 stop('Information matrix method for latent regression estimates not supported',
@@ -479,7 +479,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
             if(opts$quadpts < 3 && opts$warn) warning('Should use more than 2 quadpts', call.=FALSE)
             theta <- 1
-            if(opts$method != 'QMCEM')
+            if(!(opts$method %in% c('QMCEM', 'MCEM')))
                 theta <- as.matrix(seq(opts$theta_lim[1L], opts$theta_lim[2L],
                                        length.out = opts$quadpts))
             if(opts$dentype == 'bfactor'){
@@ -507,7 +507,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.', call.=FALSE)
                     if(opts$message && nfact > 3L)
                         message('EM quadrature for high dimensional models are better handled
-                                 \twith the \"QMCEM\" method')
+                                 \twith the \"QMCEM\" or \"MCEM\" method')
                 }
             }
             if(!is.null(opts$technical$customTheta)){
@@ -529,7 +529,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          message=opts$message, method=opts$method, full=opts$full,
                                          lrPars=lrPars, SE=opts$SE && opts$SE.type == 'numerical', Etable=opts$Etable,
                                          NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI, Norder=opts$Norder,
-                                         keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric),
+                                         keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric,
+                                         MCEM_draws=opts$MCEM_draws),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         opts$Moptim <- ESTIMATE$Moptim
         lrPars <- ESTIMATE$lrPars
@@ -671,7 +672,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
-        if(opts$verbose && !(opts$method == 'MHRM' || opts$method == 'MIXED' || opts$method == 'SEM'))
+        if(opts$verbose && !(opts$method %in% c('MHRM', 'MIXED', 'SEM')))
             cat('\n\nCalculating information matrix...\n')
         if(opts$SE.type %in% c('complete', 'Oakes') && opts$method %in% c('EM', 'QMCEM')){
             opts$times$start.time.SE <- ESTIMATE$start.time.SE
