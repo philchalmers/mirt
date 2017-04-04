@@ -76,7 +76,7 @@ omitted, a range will be generated automatically based on the number of dimensio
 indicating that no MI draws will be performed}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
-default number of nodes is 15000}
+default number of nodes is 5000}
 
 \item{custom_den}{a function used to define the integration density (if required). The NULL default
   assumes that the multivariate normal distribution with the 'GroupPars' hyper-parameters are

@@ -34,7 +34,7 @@ Only the lower triangle of the residual correlation matrix will be returned
 (the upper triangle is filled with NA's)}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-If \code{quadpts} not specified, 15000 nodes are used by default}
+If \code{quadpts} not specified, 5000 nodes are used by default}
 
 \item{suppress}{a numeric value indicating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than

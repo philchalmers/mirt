@@ -28,7 +28,7 @@
 #'   Only the lower triangle of the residual correlation matrix will be returned
 #'   (the upper triangle is filled with NA's)
 #' @param QMC logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-#'   If \code{quadpts} not specified, 15000 nodes are used by default
+#'   If \code{quadpts} not specified, 5000 nodes are used by default
 #' @param suppress a numeric value indicating which parameter residual dependency combinations
 #'   to flag as being too high. Absolute values for the standardized residuals greater than
 #'   this value will be returned, while all values less than this value will be set to NA.
@@ -208,7 +208,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)
-    if(QMC && is.null(quadpts)) quadpts <- 15000L
+    if(QMC && is.null(quadpts)) quadpts <- 5000L
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable

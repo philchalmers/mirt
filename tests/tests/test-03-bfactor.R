@@ -105,9 +105,9 @@ test_that('dich data', {
     expect_true(mirt:::closeEnough(fs[1:6,'F1'] - c(-2.6461, -2.0541, -2.3838, -2.4061, -1.7492, -1.8682), -1e-2, 1e-2))
     expect_is(fs, 'matrix')
 
-    res <- residuals(simmod, verbose = FALSE)
+    res <- residuals(simmod, verbose = FALSE, QMC=TRUE)
     expect_is(res, 'matrix')
-    expect_equal(res[2,1], 1.902, tolerance = 1e-2)
+    expect_equal(res[2,1], 0.08305725, tolerance = 1e-2)
     sum <- summary(simmod, verbose = FALSE)
     expect_is(sum, 'list')
 

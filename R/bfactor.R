@@ -227,8 +227,7 @@
 #' summary(simmod)
 #' itemfit(simmod, QMC=TRUE)
 #' M2(simmod, QMC=TRUE)
-#'
-#'
+#' residuals(simmod, QMC=TRUE)
 #'
 #'     }
 #'

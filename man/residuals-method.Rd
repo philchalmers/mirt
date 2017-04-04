@@ -9,7 +9,7 @@
 \title{Compute model residuals}
 \usage{
 \S4method{residuals}{SingleGroupClass}(object, type = "LD", df.p = FALSE,
-  full.scores = FALSE, printvalue = NULL, tables = FALSE,
+  full.scores = FALSE, QMC = FALSE, printvalue = NULL, tables = FALSE,
   verbose = TRUE, Theta = NULL, suppress = 1, theta_lim = c(-6, 6),
   quadpts = NULL, ...)
 }
@@ -29,6 +29,9 @@ residuals in the form of signed Cramers V coefficients}
 
 \item{full.scores}{logical; compute relevant statistics
 for each subject in the original data?}
+
+\item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
+default number of nodes is 5000}
 
 \item{printvalue}{a numeric value to be specified when using the \code{res='exp'}
 option. Only prints patterns that have standardized residuals greater than

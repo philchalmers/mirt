@@ -1,5 +1,8 @@
 # Changes in mirt 1.24
 
+- added `QMC` option to `residuals()` for `LD` and `LDG2` methods. Also globally set the number of QMC points to 
+  5000 throughout the package for consistency
+
 - `info_if_converged` and `logLik_if_converged` added to `technical` list to indicate whether the information matrix
   and stochastic log-likelihood should be computed only when the model converges. Default is now `TRUE` for both
 
