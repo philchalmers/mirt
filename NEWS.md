@@ -1,5 +1,8 @@
 # Changes in mirt 1.24
 
+- `info_if_converged` and `logLik_if_converged` added to `technical` list to indicate whether the information matrix
+  and stochastic log-likelihood should be computed only when the model converges. Default is now `TRUE` for both
+
 - added `'MCEM'` method for Monte Carlo EM. An associated `MCEM_draws` function added to the `technical` list
   as well to control the number of draws throughout the EM cycles
 

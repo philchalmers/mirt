@@ -1256,6 +1256,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         if(is.list(large)) opts$PrepList <- large
     }
     if(!is.null(technical$customK)) opts$calcNull <- FALSE
+    opts$logLik_if_converged <- ifelse(is.null(technical$logLik_if_converged), TRUE,
+                                       technical$logLik_if_converged)
+    opts$info_if_converged <- ifelse(is.null(technical$info_if_converged), TRUE,
+                                       technical$info_if_converged)
     if(method == 'MCEM'){
         opts$MCEM_draws <- if(is.null(technical$MCEM_draws))
             function(cycles) 500 + (cycles - 1)*2

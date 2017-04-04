@@ -574,7 +574,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            keep_vcov_PD=opts$keep_vcov_PD),
                                DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         if(opts$plausible.draws != 0) return(ESTIMATE)
-        if(opts$SE){
+        if(opts$SE && (ESTIMATE$converge || !opts$info_if_converged)){
             if(opts$verbose)
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
@@ -622,7 +622,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
                                            keep_vcov_PD=opts$keep_vcov_PD),
                                DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
-        if(opts$SE){
+        if(opts$SE && (ESTIMATE$converge || !opts$info_if_converged)){
             if(opts$verbose)
                 cat('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
@@ -669,6 +669,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     opts$times$end.time.Estimate <- proc.time()[3L]
+    if(opts$logLik_if_converged && !ESTIMATE$converge) opts$draws <- 0
+    if(!ESTIMATE$converge) opts$calcNull <- FALSE
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
@@ -824,31 +826,32 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     #missing stats for MHRM
-    if(opts$method =='MHRM' || opts$method == 'MIXED' || opts$method == 'SEM'){
-        if(opts$verbose) cat("\nCalculating log-likelihood...\n")
-        flush.console()
-        logLik <- G2 <- SElogLik <- 0
-        Pl <- list()
-        if(!opts$technical$parallel){
-            ncores <- .mirtClusterEnv$ncores
-            .mirtClusterEnv$ncores <- 1L
+    Pl <- vector('list', Data$ngroups)
+    if(opts$method %in% c('MHRM', 'MIXED', 'SEM')){
+        logPrior <- logLik <- SElogLik <- G2 <- 0
+        if(opts$draws > 0L){
+            if(opts$verbose) cat("\nCalculating log-likelihood...\n")
+            flush.console()
+            if(!opts$technical$parallel){
+                ncores <- .mirtClusterEnv$ncores
+                .mirtClusterEnv$ncores <- 1L
+            }
+            for(g in 1L:Data$ngroups){
+                cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupName[g], ],
+                                        fulldata=Data$fulldata[[g]], tabdata=Data$tabdata,
+                                        Freq=list(Data$Freq[[g]]), K=Data$K)
+                cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return',
+                                         lrPars=ESTIMATE$lrPars)
+                cmods[[g]]@Data <- list(K=Data$K, nitems=Data$nitems)
+                logLik <- logLik + cmods[[g]]@Fit$logLik
+                logPrior <- logPrior + cmods[[g]]@Fit$logPrior
+                SElogLik <- SElogLik + cmods[[g]]@Fit$SElogLik
+                G2 <- G2 + cmods[[g]]@Fit$G2
+                Pl[[g]] <- cmods[[g]]@Internals$Pl
+            }
+            if(!opts$technical$parallel)
+                .mirtClusterEnv$ncores <- ncores
         }
-        logPrior <- 0
-        for(g in 1L:Data$ngroups){
-            cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupName[g], ],
-                                   fulldata=Data$fulldata[[g]], tabdata=Data$tabdata,
-                                   Freq=list(Data$Freq[[g]]), K=Data$K)
-            cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return',
-                                     lrPars=ESTIMATE$lrPars)
-            cmods[[g]]@Data <- list(K=Data$K, nitems=Data$nitems)
-            logLik <- logLik + cmods[[g]]@Fit$logLik
-            logPrior <- logPrior + cmods[[g]]@Fit$logPrior
-            SElogLik <- SElogLik + cmods[[g]]@Fit$SElogLik
-            G2 <- G2 + cmods[[g]]@Fit$G2
-            Pl[[g]] <- cmods[[g]]@Internals$Pl
-        }
-        if(!opts$technical$parallel)
-            .mirtClusterEnv$ncores <- ncores
     }
 
     ####post estimation stats
