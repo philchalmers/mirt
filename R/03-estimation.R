@@ -532,6 +532,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric,
                                          MCEM_draws=opts$MCEM_draws),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
+        if(opts$method == 'MCEM')
+            opts$quadpts <- opts$MCEM_draws(ESTIMATE$cycles)
         opts$Moptim <- ESTIMATE$Moptim
         lrPars <- ESTIMATE$lrPars
         startlongpars <- ESTIMATE$longpars
@@ -670,7 +672,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     opts$times$end.time.Estimate <- proc.time()[3L]
     if(opts$logLik_if_converged && !ESTIMATE$converge) opts$draws <- 0
-    if(!ESTIMATE$converge) opts$calcNull <- FALSE
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE

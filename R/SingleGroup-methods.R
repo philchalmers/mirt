@@ -35,10 +35,15 @@ setMethod(
                 x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
-        if(method == 'EM' || method == 'QMCEM' || method == 'BL'){
+        if(method %in% c('EM', 'QMCEM', 'BL', 'MCEM')){
             if(method == 'EM' || method == 'QMCEM')
-                cat('EM acceleration:', x@Options$accelerate)
-            cat('\nNumber of rectangular quadrature:', x@Options$quadpts)
+                cat('EM acceleration:', x@Options$accelerate, '\n')
+            if(method == 'EM' || method == 'BL')
+                cat('Number of rectangular quadrature:', x@Options$quadpts)
+            else if(method == 'QMCEM')
+                cat('Number of quasi-Monte Carlo points:', x@Options$quadpts)
+            else if(method == 'MCEM')
+                cat('Number of Monte Carlo points:', x@Options$quadpts)
             cat('\n')
         }
         if(!is.na(x@OptimInfo$condnum)){
