@@ -23,6 +23,9 @@
 #' mod <- mirt(Science, 2)
 #' MDIFF(mod)
 #'
+#' mod <- mirt(expand.table(LSAT7), 2)
+#' MDIFF(mod)
+#'
 #' }
 MDIFF <- function(x, which.items = NULL){
     if(missing(x)) missingMsg('x')
@@ -31,7 +34,7 @@ MDIFF <- function(x, which.items = NULL){
     if(is.null(which.items)) which.items <- 1L:J
     out <- vector('list', length(which.items))
     MD <- MDISC(x)
-    for(i in 1L:length(out)){
+    for(i in 1L:length(which.items)){
         item <- extract.item(x, which.items[i])
         if(!(class(item) %in% c('dich', 'graded')))
             stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]))

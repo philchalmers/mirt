@@ -420,7 +420,7 @@ setMethod(
     signature = signature(x = 'dich'),
     definition = function(x){
         par <- x@par
-        d <- par[1L:x@nfact]
+        d <- par[x@nfact+1L]
         d
     }
 )
