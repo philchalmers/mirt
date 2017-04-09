@@ -250,7 +250,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         pv <- fscores(mod, plausible.draws = draws, ...)
         draws <- length(pv)
         df.X2 <- Q1 <- matrix(NA, length(which.items), draws)
-        for (i in 1L:draws) {
+        for (i in seq_len(draws)){
             tmp <- itemfit(mod, fit_stats='X2', which.items=which.items,
                            Theta = pv[[i]], ...)
             Q1[,i] <- tmp$X2
@@ -308,7 +308,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
             X2 <- rep(NA, ncol(dat))
-            for(i in 1L:length(which.items)){
+            for(i in seq_len(length(which.items))){
                 pick <- itemloc[which.items[i]]:(itemloc[which.items[i]+1L] - 1L)
                 O <- Etable[ ,pick]
                 item <- extract.item(mod, which.items[i])
@@ -355,7 +355,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             upsilon <- 2 * M^2 / V
             gamma <- M / upsilon
             df <- upsilon
-            for(i in 1L:length(which.items)){
+            for(i in seq_len(length(which.items))){
                 item <- extract.item(mod, which.items[i])
                 df[i] <- upsilon[i] - sum(item@est)
             }
@@ -405,15 +405,15 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         discrete <- is(x, 'DiscreteClass')
         if(discrete)
-            for(g in 1L:x@Data$ngroups)
+            for(g in seq_len(x@Data$ngroups))
                 x@ParObjects$pars[[g]]@ParObjects$pars[[J+1L]]@est[] <- FALSE
         ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
             Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
-        for(g in 1L:x@Data$ngroups){
+        for(g in seq_len(x@Data$ngroups)){
             if(impute > 0L){
                 tmpTheta <- vector('list', impute)
-                for(i in 1L:length(tmpTheta))
+                for(i in seq_len(length(tmpTheta)))
                     tmpTheta[[i]] <- Theta[[i]][x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             } else tmpTheta <- Theta[x@Data$groupNames[g] == x@Data$group, , drop=FALSE]
             tmp_obj <- MGC2SC(x, g)
@@ -454,10 +454,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         pick1 <- 1:nrow(ave)
         pick2 <- sapply(ave, is.numeric)
         ave[pick1, pick2] <- SD[pick1, pick2] <- 0
-        for(i in 1L:impute)
+        for(i in seq_len(impute))
             ave[pick1, pick2] <- ave[pick1, pick2] + collect[[i]][pick1, pick2]
         ave[pick1, pick2] <- ave[pick1, pick2]/impute
-        for(i in 1L:impute)
+        for(i in seq_len(impute))
             SD[pick1, pick2] <- SD[pick1, pick2] + (ave[pick1, pick2] - collect[[i]][pick1, pick2])^2
         SD[pick1, pick2] <- sqrt(SD[pick1, pick2]/impute)
         SD$item <- paste0('SD_', SD$item)
@@ -474,7 +474,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         infit <- FALSE
         oneslopes <- rep(FALSE, length(x@Model$itemtype))
         slope <- x@ParObjects$pars[[1L]]@par[1L]
-        for(i in 1L:length(x@Model$itemtype))
+        for(i in seq_len(length(x@Model$itemtype)))
             oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], slope-1e-10, slope+1e-10)
         if(all(oneslopes)) infit <- TRUE
     } else infit <- FALSE
@@ -504,8 +504,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
             mu[item] <- sum(P * log_P)
-            for(i in 1L:ncol(P))
-                for(j in 1L:ncol(P))
+            for(i in seq_len(ncol(P)))
+                for(j in seq_len(ncol(P)))
                     if(i != j)
                         sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] *
                                                                log_P[,i] * log(P[,i]/P[,j]))
@@ -538,7 +538,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         prodlist <- attr(pars, 'prodlist')
         fulldata <- x@Data$fulldata[[1L]]
         if(any(Theta %in% c(Inf, -Inf))){
-            for(i in 1L:ncol(Theta)){
+            for(i in seq_len(ncol(Theta))){
                 tmp <- Theta[,i]
                 tmp[tmp %in% c(-Inf, Inf)] <- NA
                 Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
@@ -557,7 +557,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             Groups <- rep(20, length(ord))
             ngroups <- ceiling(nrow(fulldata) / group.size)
             weight <- 1/ngroups
-            for(i in 1L:length(Groups))
+            for(i in seq_len(length(Groups)))
                 Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
         } else {
             ngroups <- group.bins
@@ -725,7 +725,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         if(S_X2.tables) return(list(O.org=O, E.org=E, O=coll$O, E=coll$E))
         O <- coll$O
         E <- coll$E
-        for(i in 1L:J){
+        for(i in seq_len(J)){
             if (is.null(dim(O[[i]])) || is.null(E[[i]])) next
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
             df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)

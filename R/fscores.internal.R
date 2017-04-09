@@ -101,8 +101,8 @@ setMethod(
     	        thetadif <- t((t(ThetaShort) - thetas))
                 Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
                 ind <- 1L
-                for(i in 1L:nfact){
-                    for(j in 1L:nfact){
+                for(i in seq_len(nfact)){
+                    for(j in seq_len(nfact)){
                         if(i <= j){
                             Thetaprod[,ind] <- thetadif[,i] * thetadif[,j]
                             ind <- ind + 1L
@@ -144,16 +144,16 @@ setMethod(
                               quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                               plausible.draws=0, full.scores.SE=FALSE, cov=gcov,
                               return.acov = TRUE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
-                suppressWarnings(jit <- myLapply(1L:nrow(fs), function(i, mu, sig)
+                suppressWarnings(jit <- myLapply(seq_len(nrow(fs)), function(i, mu, sig)
                     mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
                     mu=fs, sig=fs_acov))
                 if(any(sapply(jit, is.nan)))
                     stop('Could not draw unique plausible values. Response pattern ACOVs may
                          not be positive definite')
                 ret <- vector('list', plausible.draws)
-                for(i in 1L:plausible.draws){
+                for(i in seq_len(plausible.draws)){
                     ret[[i]] <- matrix(NA, nrow(fs), ncol(fs))
-                    for(j in 1L:nrow(fs)) ret[[i]][j,] <- jit[[j]][i,]
+                    for(j in seq_len(nrow(fs))) ret[[i]][j,] <- jit[[j]][i,]
                 }
                 if(plausible.draws == 1L) return(ret[[1L]])
                 else return(ret)
@@ -210,7 +210,7 @@ setMethod(
             }
             if(return.acov) return(ret)
             if(!all(mins == 0L))
-                ret[,1L:ncol(response.pattern)] <- ret[,1L:ncol(response.pattern)] +
+                ret[,seq_len(ncol(response.pattern))] <- ret[,seq_len(ncol(response.pattern))] +
                     matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
             return(ret)
         }
@@ -236,8 +236,8 @@ setMethod(
         if(object@Options$exploratory){
             so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE)
             a <- rotateLambdas(so)
-            for(i in 1L:J)
-                pars[[i]]@par[1L:nfact] <- a[i, ]
+            for(i in seq_len(J))
+                pars[[i]]@par[seq_len(nfact)] <- a[i, ]
             gp$gmeans <- rep(0, nfact)
             gp$gcov <- so$fcor
         }
@@ -287,7 +287,7 @@ setMethod(
             }
             pre.ev <- eigen(covB)
         }
-        for(mi in 1L:MI){
+        for(mi in seq_len(MI)){
             if(impute){
                 while(TRUE){
                     pars <- try(imputePars(pars=opars, imputenums=imputenums,
@@ -319,21 +319,21 @@ setMethod(
                                               CUSTOM.IND=CUSTOM.IND)
                 log_itemtrace <- log(itemtrace)
                 if(method == 'EAP' && return.acov){
-                    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
+                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
                                    scores=scores, hessian=TRUE)
                 } else {
-            	    tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
+            	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
-                scores <- tmp[ ,1L:nfact, drop = FALSE]
-                SEscores <- tmp[ , 1L:nfact + nfact, drop = FALSE]
+                scores <- tmp[ ,seq_len(nfact), drop = FALSE]
+                SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
             }
     		if(method == "EAP"){
                 #do nothing
     		} else if(method == "MAP"){
-                tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
+                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, den_fun=den_fun,
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
@@ -346,16 +346,16 @@ setMethod(
                 SEscores[allmcat,] <- NA
                 scores[allzero,] <- -Inf
                 SEscores[allzero,] <- NA
-                tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
+                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, den_fun=NULL,
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
     		} else if(method == 'WLE'){
     		    DERIV <- vector('list', extract.mirt(object, 'nitems'))
     		    cls <- sapply(object@ParObjects$pars, class)
-    		    for(i in 1L:(length(cls)-1L))
+    		    for(i in seq_len(length(cls)-1L))
     		        DERIV[[i]] <- selectMethod(DerivTheta, c(cls[i], 'matrix'))
-                tmp <- myApply(X=matrix(1L:nrow(scores)), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
+                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, DERIV=DERIV,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
@@ -366,9 +366,9 @@ setMethod(
     		    converge_info_vec <- rep(1, nrow(scores))
                 if(nrow(scores) < ncol(scores)) scores <- t(scores)
     		} else {
-    		    scores <- tmp[ ,1:nfact, drop = FALSE]
-    		    SEscores <- tmp[ , 1L:nfact + nfact, drop = FALSE]
-    		    colnames(scores) <- paste('F', 1L:ncol(scores), sep='')
+    		    scores <- tmp[ ,seq_len(nfact), drop = FALSE]
+    		    SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
+    		    colnames(scores) <- paste('F', seq_len(ncol(scores)), sep='')
     		    converge_info_vec <- tmp[,ncol(tmp)]
     		    if(impute){
     		        list_SEscores[[mi]] <- SEscores
@@ -392,9 +392,9 @@ setMethod(
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
-                    for(i in 1L:nrow(scoremat))
+                    for(i in seq_len(nrow(scoremat)))
                         ret[[i]] <- matrix(scoremat[i,], nfact, nfact)
-                    names(ret) <- 1:nrow(scoremat)
+                    names(ret) <- seq_len(nrow(scoremat))
                     return(ret)
                 }
                 SEscoremat <- SEscores[match(sfulldata, stabdata2), , drop = FALSE]
@@ -407,9 +407,9 @@ setMethod(
                 converge_info_mat <- converge_info_vec
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
-                    for(i in 1L:nrow(scoremat))
+                    for(i in seq_len(nrow(scoremat)))
                         ret[[i]] <- matrix(scoremat[i,], nfact, nfact)
-                    names(ret) <- 1L:nrow(scoremat)
+                    names(ret) <- seq_len(nrow(scoremat))
                     return(ret)
                 } else colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             }
@@ -420,14 +420,14 @@ setMethod(
 		} else {
             if(return.acov){
                 ret <- vector('list', nrow(scores))
-                for(i in 1L:nrow(scores))
+                for(i in seq_len(nrow(scores)))
                     ret[[i]] <- matrix(scores[i,], nfact, nfact)
                 names(ret) <- paste0('pattern_', 1:nrow(scores))
                 return(ret)
             }
             r <- object@Data$Freq[[1L]]
             T <- E <- matrix(NA, 1L, ncol(scores))
-            for(i in 1L:nrow(scores)){
+            for(i in seq_len(nrow(scores))){
                 if(any(scores[i, ] %in% c(Inf, -Inf))) next
                 T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
                 E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
@@ -446,7 +446,7 @@ setMethod(
 			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
             ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
             if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
-            if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,1L:J])), ]
+            if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,seq_len(J)])), ]
 			return(ret)
 		}
 	}
@@ -473,14 +473,14 @@ setMethod(
             if(method == 'Discrete'){
                 nclass <- ncol(object@Model$Theta)
                 ret <- lapply(ret, function(x, nclass){
-                  nx <- x[,1L:(ncol(x)-nclass)]
+                  nx <- x[,seq_len(ncol(x)-nclass)]
                   names <- colnames(x)
-                  colnames(nx) <- c(names[1:(ncol(nx)-nclass)], paste0('Class_', 1L:nclass))
+                  colnames(nx) <- c(names[seq_len(ncol(nx)-nclass)], paste0('Class_', seq_len(nclass)))
                   nx
                 }, nclass=nclass)
             } else if(method == 'DiscreteSum'){
-                names <- paste0('Class_', 1L:object@Model$nfact)
-                names2 <- paste0('SE.Theta.', 1L:object@Model$nfact)
+                names <- paste0('Class_', seq_len(object@Model$nfact))
+                names2 <- paste0('SE.Theta.', seq_len(object@Model$nfact))
                 ret <- lapply(ret, function(x, names, names2){
                     nx <- x[,!(colnames(x) %in% names2)]
                     colnames(nx) <- c('Sum.Scores', names, 'observed', 'expected')
@@ -504,10 +504,10 @@ setMethod(
     {
         pars <- object@ParObjects$pars
         ngroups <- length(pars)
-        for(g in 1L:ngroups)
+        for(g in seq_len(ngroups))
             class(pars[[g]]) <- 'SingleGroupClass'
         ret <- vector('list', length(pars))
-        for(g in 1L:ngroups){
+        for(g in seq_len(ngroups)){
             tmp_obj <- MGC2SC(object, g)
             ret[[g]] <- fscores(tmp_obj, rotate = rotate, full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
@@ -520,10 +520,10 @@ setMethod(
             out <- matrix(NA, nrow(object@Data$data), ncol(ret[[1L]][[1L]]))
             out2 <- vector('list', pv)
             colnames(out) <- colnames(ret[[1L]][[1L]])
-            for(i in 1L:pv){
-                for(g in 1L:object@Data$ngroups){
+            for(i in seq_len(pv)){
+                for(g in seq_len(object@Data$ngroups)){
                     wch <- which(object@Data$group == object@Data$groupNames[g])
-                    for(j in 1L:ncol(ret[[1L]][[1L]]))
+                    for(j in seq_len(ncol(ret[[1L]][[1L]])))
                         out[wch, j] <- ret[[g]][[i]][,j]
                 }
                 out2[[i]] <- out
@@ -536,19 +536,19 @@ setMethod(
                 groupNames <- object@Data$groupNames
                 count <- numeric(length(groupNames))
                 out <- vector('list', length(group))
-                for(i in 1L:length(group)){
+                for(i in seq_len(length(group))){
                     which <- which(groupNames %in% group[i])
                     count[which] <- count[which] + 1L
                     out[[i]] <- ret[[which]][[count[which]]]
                 }
-                names(out) <- 1L:length(out)
+                names(out) <- seq_len(length(out))
                 return(out)
             }
             out <- matrix(NA, nrow(object@Data$data), ncol(ret[[1L]]))
             colnames(out) <- colnames(ret[[1L]])
-            for(g in 1L:object@Data$ngroups){
+            for(g in seq_len(object@Data$ngroups)){
                 wch <- which(object@Data$group == object@Data$groupNames[g])
-                for(j in 1L:ncol(ret[[1L]]))
+                for(j in seq_len(ncol(ret[[1L]])))
                     out[wch, j] <- ret[[g]][,j]
             }
             ret <- out
@@ -591,7 +591,7 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
     L <- sum(log(itemtrace)[as.logical(patdata)])
     if(ncol(ThetaShort) == 1L){
         infos <- numeric(length(data))
-        for(i in 1L:length(infos)){
+        for(i in seq_len(length(infos))){
             if(!is.na(data[i]))
                 infos[i] <- ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE, DERIV=DERIV[[i]],
                                       P=itemtrace[,itemloc[i]:(itemloc[i+1L]-1L),drop=FALSE])
@@ -599,7 +599,7 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
         infos <- sum(infos)
     } else {
         infos <- matrix(0, ncol(Theta), ncol(Theta))
-        for(i in 1L:length(data)){
+        for(i in seq_len(length(data))){
             if(!is.na(data[i]))
                 infos <- infos + ItemInfo2(x=pars[[i]], Theta=Theta, total.info=TRUE,
                                            MD=TRUE, DERIV=DERIV[[i]],
@@ -619,17 +619,17 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
     nfact <- ncol(Theta)
     itemtrace <- matrix(0, ncol=length(patdata), nrow=nrow(Theta))
     dP <- d2P <- vector('list', nfact)
-    for(i in 1L:nfact)
+    for(i in seq_len(nfact))
         dP[[i]] <- d2P[[i]] <- itemtrace
     I <- numeric(1)
     dW <- dL <- numeric(nfact)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
-    for (i in 1L:(length(itemloc)-1L)){
+    for (i in seq_len(length(itemloc)-1L)){
         deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
-        for(k in 1L:nfact){
+        for(k in seq_len(nfact)){
             dPitem <- d2Pitem <- matrix(0, 1, length(deriv[[1L]]))
-            for(j in 1L:length(deriv[[1L]])){
+            for(j in seq_len(length(deriv[[1L]]))){
                 dPitem[1, j] <- deriv$grad[[j]][ ,k]
                 d2Pitem[1, j] <- deriv$hess[[j]][ ,k]
             }
@@ -640,7 +640,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
         I <- I + iteminfo(x=pars[[i]], Theta=Theta)
     }
     dW <- 1/(2*I^2) * dW
-    for(i in 1L:nfact)
+    for(i in seq_len(nfact))
         dL[i] <- sum(patdata * dP[[i]] / itemtrace)
     grad <- dL + dW*I
     MIN <- sum(grad^2)
@@ -658,7 +658,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         nstar <- K[1L] + K[2L] - 3L
         Sum.Scores <- 1L:nrow(L0)-1L
         MAX.Scores <- cumsum(K-1L)
-        for(i in 1L:(J-1L)){
+        for(i in seq_len(J-1L)){
             T <- itemtrace[itemloc[i+1L]:(itemloc[i+2L] - 1L), ]
             L1[1L, ] <- L0[1L, ] * T[1L, ]
             for(j in 1L:nstar+1L){
@@ -681,7 +681,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         while(TRUE){
             small <- E < min_expected
             if(!any(small)) break
-            for(i in 1L:(length(E)-1L)){
+            for(i in seq_len(length(E)-1L)){
                 if(small[i]){
                     E[i+1L] <- E[i+1L] + E[i]
                     O[i+1L] <- O[i+1L] + O[i]
@@ -750,7 +750,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         return(Elist)
     }
     thetas <- SEthetas <- matrix(0, nrow(L1), x@Model$nfact)
-    for(i in 1L:nrow(thetas)){
+    for(i in seq_len(nrow(thetas))){
         expLW <- L1[i,] * prior
         LW <- log(L1[i,]) + log(prior)
         maxLW <- max(LW)
@@ -774,7 +774,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
         EAPscores <- ret[match(scores, Sum.Scores), -1L, drop=FALSE]
-        pick <- if(full.scores.SE) 1L:(x@Model$nfact*2) else 1L:x@Model$nfact
+        pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
         ret <- EAPscores[,pick, drop=FALSE]
         rownames(ret) <- NULL
     } else {
@@ -794,11 +794,11 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         df <- tmp$df
         X2 <- tmp$X2
         tmp <- suppressWarnings(expand.table(cbind(ret[,2L:(ncol(ret)-1L)], ret$observed)))
-        pick <- 1L:x@Model$nfact
+        pick <- seq_len(x@Model$nfact)
         rxx <- apply(tmp[,pick, drop=FALSE], 2L, var) /
             (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+x@Model$nfact, drop=FALSE], 2L,
                                                             function(x) mean(x^2)))
-        names(rxx) <- paste0('rxx_Theta.', 1L:x@Model$nfact)
+        names(rxx) <- paste0('rxx_Theta.', seq_len(x@Model$nfact))
         fit <- data.frame(df=df, X2=X2, p.X2 = suppressWarnings(pchisq(X2, df, lower.tail=FALSE)))
         fit <- cbind(fit, t(as.data.frame(rxx)))
         rownames(fit) <- 'stats'

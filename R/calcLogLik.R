@@ -8,7 +8,7 @@ setMethod(
             theta <- mirt_rmvnorm(N,grp$gmeans, grp$gcov)
             if(length(lr.random)){
                 mus <- matrix(0, N, length(lr.random))
-                for(i in 1L:length(lr.random)){
+                for(i in seq_len(length(lr.random))){
                     mat <- matrix(0, lr.random[[i]]@ndim, lr.random[[i]]@ndim)
                     mat[lower.tri(mat, TRUE)] <- lr.random[[i]]@par
                     if(ncol(mat) > 1L)
@@ -23,7 +23,7 @@ setMethod(
             if(length(prodlist) > 0L)
                 theta <- prodterms(theta,prodlist)
             if(length(random) > 0L){
-                for(i in 1L:length(random)){
+                for(i in seq_len(length(random))){
                     mat <- matrix(0, random[[i]]@ndim, random[[i]]@ndim)
                     mat[lower.tri(mat, TRUE)] <- random[[i]]@par
                     if(ncol(mat) > 1L)
@@ -69,10 +69,10 @@ setMethod(
 		tabdata <- cbind(tabdata,expected*N)
         object@Internals$Pl <- expected
         nestpars <- nconstr <- 0L
-        for(i in 1L:length(pars))
+        for(i in seq_len(length(pars)))
             nestpars <- nestpars + sum(pars[[i]]@est)
-        if(length(object@Model$constrain) > 0L)
-            for(i in 1L:length(object@Model$constrain))
+        if(length(object@Model$constrain))
+            for(i in seq_len(length(object@Model$constrain)))
                 nconstr <- nconstr + length(object@Model$constrain[[i]]) - 1L
         nfact <- object@Model$nfact - length(prodlist)
         Fit <- object@Fit
@@ -96,10 +96,10 @@ setMethod(
 		    if(lrPars@any.prior)
 		        LP <- LL.Priors(x=lrPars, LL=LP)
 		if(length(object@ParObjects$random))
-		    for(i in 1L:length(object@ParObjects$random))
+		    for(i in seq_len(length(object@ParObjects$random)))
 		        if(object@ParObjects$random[[i]]@any.prior)
 		            LP <- LL.Priors(x=object@ParObjects$random[[i]], LL=LP)
-		for(i in 1L:length(pars))
+		for(i in seq_len(length(pars)))
 		    if(pars[[i]]@any.prior)
 		        LP <- LL.Priors(x=pars[[i]], LL=LP)
 		Fit$logPrior <- unname(LP)

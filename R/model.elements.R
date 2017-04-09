@@ -12,20 +12,20 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         tmp <- gsub("\\)","",tmp)
         tmp <- gsub(" ","",tmp)
         prodlist <- strsplit(tmp,"\\*")
-        for(j in 1L:length(prodlist)){
-            for(i in 1L:nfact)
+        for(j in seq_len(length(prodlist))){
+            for(i in seq_len(nfact))
                 prodlist[[j]][prodlist[[j]] == tmp2[[i]]] <- i
             prodlist[[j]] <- as.numeric(prodlist[[j]])
         }
     }
     #slopes specification
     estlam <- matrix(FALSE, ncol = nfactNames, nrow = J)
-    for(i in 1L:nfactNames){
+    for(i in seq_len(nfactNames)){
         tmp <- model[model[ ,1L] == factorNames[i],2L]
         if(any(regexpr(",",tmp)))
             tmp <- strsplit(tmp,",")[[1L]]
         popout <- c()
-        for(j in 1L:length(tmp)){
+        for(j in seq_len(length(tmp))){
             if(regexpr("-",tmp[j]) > 1L){
                 popout <- c(popout,j)
                 tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1L]])
@@ -43,7 +43,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
     cs <- sqrt(abs(1-rowSums(lambdas^2)))
     lambdas <- lambdas * 1.702
     zetas <- list()
-    for(i in 1L:J){
+    for(i in seq_len(J)){
         div <- ifelse(cs[i] > .25, cs[i], .25) / 1.702
         if(K[i] == 2L){
             zetas[[i]] <- (-1)*qnorm(mean(fulldata[,itemloc[i]]))/div
@@ -60,19 +60,19 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         }
     }
     estzetas <- list()
-    for(i in 1L:J)
+    for(i in seq_len(J))
         estzetas[[i]] <- length(zetas[[i]])
     #COV
-    find <- 1L:nfact
+    find <- seq_len(nfact)
     estgcov <- matrix(FALSE,nfact,nfact)
     if(any(model[,1L] == 'COV')){
         tmp <- model[model[,1L] == 'COV',2L]
         tmp <- strsplit(tmp,",")[[1L]]
         tmp <- gsub(" ","",tmp)
-        for(i in 1L:length(tmp)){
+        for(i in seq_len(length(tmp))){
             tmp2 <- strsplit(tmp[i],"*",fixed=TRUE)[[1L]]
-            for(j in 1L:length(tmp2)){
-                for(k in 1L:length(tmp2)){
+            for(j in seq_len(length(tmp2))){
+                for(k in seq_len(length(tmp2))){
                     if(j > k){
                         ind1 <- find[tmp2[k] == factorNames]
                         ind2 <- find[tmp2[j] == factorNames]
@@ -91,12 +91,12 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         tmp <- model[model[,1L] == 'MEAN',2L]
         tmp <- strsplit(tmp,",")[[1L]]
         tmp <- gsub(" ","",tmp)
-        for(i in 1L:length(tmp))
+        for(i in seq_len(length(tmp)))
             estgmeans[find[tmp[i] == factorNames]] <- TRUE
     }
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
-        loads <- eigen(Rpoly)$vector[,1L:nfact, drop = FALSE]
+        loads <- eigen(Rpoly)$vector[,seq_len(nfact), drop = FALSE]
         u <- 1 - rowSums(loads^2)
         u[u < .001 ] <- .2
         cs <- sqrt(u)
@@ -123,7 +123,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             newx <- c()
             if(length(x) < 3L)
                 stop('START = ... has not been supplied enough arguments', call.=FALSE)
-            for(i in 1L:(length(x)-2L)){
+            for(i in seq_len(length(x)-2L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
                     newx <- c(newx, tmp[1L]:tmp[2L])
@@ -133,7 +133,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x
         })
         picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
-        for(i in 1L:length(picks)){
+        for(i in seq_len(length(picks))){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
             tmp <- lapply(tmp, function(x, which, val){
@@ -154,7 +154,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             newx <- c()
             if(length(x) < 2L)
                 stop('FIXED = ... has not been supplied enough arguments', call.=FALSE)
-            for(i in 1L:(length(x)-1L)){
+            for(i in seq_len(length(x)-1L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
                     newx <- c(newx, tmp[1L]:tmp[2L])
@@ -164,7 +164,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x
         })
         picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-1L)]))
-        for(i in 1L:length(picks)){
+        for(i in seq_len(length(picks))){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
             tmp <- lapply(tmp, function(x, which){
@@ -184,7 +184,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             newx <- c()
             if(length(x) < 2L)
                 stop('FREE = ... has not been supplied enough arguments', call.=FALSE)
-            for(i in 1L:(length(x)-1L)){
+            for(i in seq_len(length(x)-1L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
                     newx <- c(newx, tmp[1L]:tmp[2L])
@@ -193,8 +193,8 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x <- c(newx, x[length(x)])
             x
         })
-        picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-1L)]))
-        for(i in 1L:length(picks)){
+        picks <- lapply(esplit, function(x) as.integer(x[seq_len(length(x)-1L)]))
+        for(i in seq_len(length(picks))){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
             tmp <- lapply(tmp, function(x, which){
@@ -218,7 +218,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             newx <- c()
             if(length(x) < 3L)
                 stop('LBOUND = ... has not been supplied enough arguments', call.=FALSE)
-            for(i in 1L:(length(x)-2L)){
+            for(i in seq_len(length(x)-2L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
                     newx <- c(newx, tmp[1L]:tmp[2L])
@@ -228,7 +228,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x
         })
         picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
-        for(i in 1L:length(picks)){
+        for(i in seq_len(length(picks))){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
             tmp <- lapply(tmp, function(x, which, val){
@@ -249,7 +249,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             newx <- c()
             if(length(x) < 3L)
                 stop('UBOUND = ... has not been supplied enough arguments', call.=FALSE)
-            for(i in 1L:(length(x)-2L)){
+            for(i in seq_len(length(x)-2L)){
                 if(grepl('-', x[i])){
                     tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
                     newx <- c(newx, tmp[1L]:tmp[2L])
@@ -259,7 +259,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             x
         })
         picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
-        for(i in 1L:length(picks)){
+        for(i in seq_len(length(picks))){
             tmp <- ret[picks[[i]]]
             len <- length(esplit[[i]])
             tmp <- lapply(tmp, function(x, which, val){

@@ -185,7 +185,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         oldmodel <- model
         if(length(model) == 1L){
             newmodel <- list()
-            for(g in 1L:Data$ngroups)
+            for(g in seq_len(Data$ngroups))
                 newmodel[[g]] <- model
             names(newmodel) <- Data$groupNames
             model <- newmodel
@@ -212,7 +212,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
         attr(PrepListFull$pars, 'nclasspars') <- attr(PrepList[[1L]]$pars, 'nclasspars') <-
             sapply(PrepListFull$pars, function(y) length(y@parnum))
-        for(g in 1L:Data$ngroups){
+        for(g in seq_len(Data$ngroups)){
             if(g != 1L){
                 PrepList[[g]] <- list(pars=PrepList[[1L]]$pars)
                 for(i in 1L:length(PrepList[[g]]$pars)){
@@ -222,7 +222,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
         if(length(mixed.design$random) > 0L){
-            for(i in 1L:length(mixed.design$random)){
+            for(i in seq_len(length(mixed.design$random))){
                 mixed.design$random[[i]]@parnum <- parnumber:(parnumber - 1L +
                                                                   length(mixed.design$random[[i]]@par))
                 parnumber <- max(mixed.design$random[[i]]@parnum) + 1L
@@ -238,7 +238,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             parnumber <- max(lrPars@parnum) + 1L
         } else lrPars <- list()
         if(length(latent.regression$lr.random) > 0L){
-            for(i in 1L:length(latent.regression$lr.random)){
+            for(i in seq_len(length(latent.regression$lr.random))){
                 latent.regression$lr.random[[i]]@parnum <- parnumber:(parnumber - 1L +
                                                                   length(latent.regression$lr.random[[i]]@par))
                 parnumber <- max(latent.regression$lr.random[[i]]@parnum) + 1L
@@ -264,7 +264,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         Data$tabdatalong <- large$tabdata
         Data$tabdata <- large$tabdata2
-        for(g in 1L:Data$ngroups){
+        for(g in seq_len(Data$ngroups)){
             select <- Data$group == Data$groupNames[g]
             Data$fulldata[[g]] <- PrepListFull$fulldata[select, , drop=FALSE]
             Data$Freq[[g]] <- large$Freq[[g]]
@@ -275,8 +275,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         #better start values
         if((PrepList[[1L]]$nfact - attr(model[[1L]], 'nspec')) == 1L){
             nfact <- PrepListFull$nfact
-            for(g in 1L:Data$ngroups){
-                for(i in 1L:Data$nitems){
+            for(g in seq_len(Data$ngroups)){
+                for(i in seq_len(Data$nitems)){
                     tmp <- PrepList[[g]]$pars[[i]]@par[1L:nfact]
                     tmp2 <- tmp[1L]
                     tmp[PrepList[[g]]$pars[[i]]@est[1L:nfact]] <-
@@ -289,8 +289,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     PrepList <- UpdatePrior(PrepList, model, groupNames=Data$groupNames)
     if(GenRandomPars){
-        for(g in 1L:Data$ngroups)
-            for(i in 1L:length(PrepList[[g]]$pars))
+        for(g in seq_len(Data$ngroups))
+            for(i in seq_len(length(PrepList[[g]]$pars)))
                 PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
     }
     if(discrete){
@@ -312,7 +312,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             RETURNVALUES <- TRUE
     }
     pars <- vector('list', Data$ngroups)
-    for(g in 1L:Data$ngroups)
+    for(g in seq_len(Data$ngroups))
         pars[[g]] <- PrepList[[g]]$pars
     nitems <- Data$nitems
     Data$K <- PrepList[[1L]]$K
@@ -348,7 +348,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     if(RETURNVALUES){
-        for(g in 1L:Data$ngroups)
+        for(g in seq_len(Data$ngroups))
             PrepList[[g]]$pars <- pars[[g]]
         return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, lr.random=latent.regression$lr.random,
                           random=mixed.design$random, lrPars=lrPars, MG = TRUE))
@@ -361,37 +361,37 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()
-        for(g in 1L:length(pars)){
-            for(i in 1L:nitems){
+        for(g in seq_len(length(pars))){
+            for(i in seq_len(nitems)){
                 pars[[g]][[i]] <- set_null_model(pars[[g]][[i]])
             }
         }
     }
     rr <- 0L
-    for(g in 1L:Data$ngroups){
+    for(g in seq_len(Data$ngroups)){
         r <- Data$Freq[[g]]
         rr <- rr + r
     }
     df <- prod(PrepList[[1L]]$K) - 1
     if(df > 1e10) df <- 1e10
     nestpars <- nconstr <- 0L
-    for(g in 1L:Data$ngroups)
-        for(i in 1L:(nitems+1L))
+    for(g in seq_len(Data$ngroups))
+        for(i in seq_len(nitems+1L))
             nestpars <- nestpars + sum(pars[[g]][[i]]@est)
     if(!is.null(mixed.design$random)){
-        for(i in 1L:length(mixed.design$random))
+        for(i in seq_len(length(mixed.design$random)))
             nestpars <- nestpars + sum(mixed.design$random[[i]]@est)
     }
     if(length(lrPars))
         nestpars <- nestpars + sum(lrPars@est)
     if(length(constrain) > 0L)
-        for(i in 1L:length(constrain))
+        for(i in seq_len(length(constrain)))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
     if(Data$ngroups > 1L && !length(constrain)){
         if(opts$warn && any(invariance %in% c('free_means', 'free_var')))
             warning('Multiple-group model may not be identified without providing anchor items',
                     call.=FALSE)
-        for(j in 1L:Data$ngroups){
+        for(j in seq_len(Data$ngroups)){
             tmp <- apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
                          function(x) length(unique(na.omit(x)))) == Data$K
             for(i in which(!tmp)){
@@ -412,14 +412,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
              dfsubtr, ' parameters were freely estimated.', call.=FALSE)
     df <- df - dfsubtr
     if(!is.null(customItems)){
-        for(g in 1L:Data$ngroups)
+        for(g in seq_len(Data$ngroups))
             PrepList[[g]]$exploratory <- FALSE
     }
     G2group <- numeric(Data$ngroups)
     DERIV <- vector('list', Data$ngroups)
-    for(g in 1L:Data$ngroups){
+    for(g in seq_len(Data$ngroups)){
         DERIV[[g]] <- vector('list', Data$nitems)
-        for(i in 1L:Data$nitems)
+        for(i in seq_len(Data$nitems))
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }
     Ls <- makeLmats(pars, constrain, random = mixed.design$random,
@@ -432,8 +432,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stop('Non-Gaussian densities not currently supported with MHRM algorithm')
     #warnings
     wmsg <- 'Lower and upper bound parameters (g and u) should use \'norm\' (i.e., logit) prior'
-    for(g in 1L:length(pars)){
-        for(i in 1L:length(pars[[1L]])){
+    for(g in seq_len(length(pars))){
+        for(i in seq_len(length(pars[[1L]]))){
             if(class(pars[[g]][[i]]) == 'dich'){
                 pt <- pars[[g]][[i]]@prior.type
                 if(!(pt[length(pt)-1L] %in% c(0L, 1L, 4L))) warning(wmsg, call.=FALSE)
@@ -485,10 +485,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(opts$dentype == 'bfactor'){
                 specific <- attr(oldmodel, 'specific')
                 specific[is.na(specific)] <- 1L
-                for(i in 1L:nitems) temp[i, specific[i]] <- 1L
+                for(i in seq_len(nitems)) temp[i, specific[i]] <- 1L
                 ind <- 1L
-                for(i in 1L:nitems){
-                    for(j in 1L:PrepList[[1L]]$K[i]){
+                for(i in seq_len(nitems)){
+                    for(j in seq_len(PrepList[[1L]]$K[i])){
                         sitems[ind, ] <- temp[i, ]
                         ind <- ind + 1L
                     }
@@ -540,7 +540,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0
         logPrior <- ESTIMATE$logPrior
-        for(g in 1L:Data$ngroups){
+        for(g in seq_len(Data$ngroups)){
             Pl <- rlist[[g]]$expected
             if(opts$full){
                 rg <- 1
@@ -600,7 +600,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE$time <- c(ESTIMATE$time, SE=sum(tmp$time))
         }
         rlist <- vector('list', Data$ngroups)
-        for(g in 1L:Data$ngroups)
+        for(g in seq_len(Data$ngroups))
             rlist[[g]]$expected = numeric(1L)
     } else if(opts$method == 'MIXED'){
         if(is.null(opts$technical$RANDSTART)) opts$technical$RANDSTART <- 100L
@@ -654,11 +654,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE$time <- c(ESTIMATE$time, SE=sum(tmp$time))
         }
         rlist <- vector('list', Data$ngroups)
-        for(g in 1L:Data$ngroups)
+        for(g in seq_len(Data$ngroups))
             rlist[[g]]$expected = numeric(1L)
     }
-    for(g in 1L:length(pars)){
-        for(i in 1L:length(pars[[1L]])){
+    for(g in seq_len(length(pars))){
+        for(i in seq_len(length(pars[[1L]]))){
             if(class(pars[[g]][[i]]) == 'dich'){
                 tmp <- ESTIMATE$pars[[g]][[i]]@par
                 nms <- names(ESTIMATE$pars[[g]][[i]]@est)
@@ -799,7 +799,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         opts$theta_lim <- numeric(1)
     lrPars <- ESTIMATE$lrPars
     class(lrPars) <- 'S4'
-    for(g in 1L:Data$ngroups){
+    for(g in seq_len(Data$ngroups)){
         if(opts$method == 'MIXED' || discrete){
             F <- matrix(NA)
             h2 <- numeric(1)
@@ -837,7 +837,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 ncores <- .mirtClusterEnv$ncores
                 .mirtClusterEnv$ncores <- 1L
             }
-            for(g in 1L:Data$ngroups){
+            for(g in seq_len(Data$ngroups)){
                 cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupName[g], ],
                                         fulldata=Data$fulldata[[g]], tabdata=Data$tabdata,
                                         Freq=list(Data$Freq[[g]]), K=Data$K)

@@ -135,8 +135,8 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
         stopifnot(is.matrix(Theta[[1L]]))
         pvfit <- pvfit_se <- vector('list', length(Theta))
         fit <- vector('list', ncol(mm))
-        for(j in 1L:ncol(mm)){
-            for(pv in 1L:length(Theta)){
+        for(j in seq_len(ncol(mm))){
+            for(pv in seq_len(length(Theta))){
                 tmpdat <- data.frame(mm[,j], Theta[[pv]][keep,])
                 colnames(tmpdat) <- c("resp", "Theta")
                 out <- gam(formula, tmpdat, family=binomial, ...)
@@ -160,13 +160,13 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
             message('return.models is always set to TRUE for multidimensional models')
         }
         fit <- vector('list', ncol(mm))
-        names(fit) <- paste0('cat_', 1L:ncol(mm))
-        for(j in 1L:ncol(mm)){
+        names(fit) <- paste0('cat_', seq_len(ncol(mm)))
+        for(j in seq_len(ncol(mm))){
             tmpdat <- data.frame(mm[,j], Theta[keep,])
             if(nfact == 1L){
                 colnames(tmpdat) <- c("resp", "Theta")
             } else {
-                colnames(tmpdat) <- c("resp", paste0("Theta", 1L:nfact))
+                colnames(tmpdat) <- c("resp", paste0("Theta", seq_len(nfact)))
             }
             out <- gam(formula, tmpdat, family=binomial, ...)
             if(return.models){

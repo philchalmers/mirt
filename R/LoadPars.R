@@ -20,7 +20,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
 
     #start values and free parameters
     startvalues <- freepars <- vector('list', J)
-    for(i in 1L:J){
+    for(i in seq_len(J)){
         if(any(itemtype[i] == c('Rasch')) && K[i] == 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
@@ -148,7 +148,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     #augment startvalues and fixedpars for mixed effects
     nfixedeffects <- 0
     fixed.design.list <- vector('list', J)
-    for(i in 1L:J) fixed.design.list[[i]] <- matrix(0)
+    for(i in seq_len(J)) fixed.design.list[[i]] <- matrix(0)
     if(!is.null(mixed.design)){
         fixed.design <- mixed.design$fixed
         betas <- rep(0, ncol(fixed.design))
@@ -156,7 +156,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         names(estbetas) <- names(betas) <- colnames(fixed.design)
         nfixedeffects <- length(betas)
         nfact <- nfact + nfixedeffects
-        for(i in 1L:J){
+        for(i in seq_len(J)){
             freepars[[i]] <- c(estbetas, freepars[[i]])
             startvalues[[i]] <- c(betas, startvalues[[i]])
         }
@@ -168,14 +168,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             x[names(x) %in% valid] <- 0
             return(x)}, valid=valid.ints)
         N <- nrow(mixed.design$fixed) / J
-        for(i in 1L:J)
+        for(i in seq_len(J))
             fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), , drop = FALSE]
     }
 
     #load items
     nfact <- as.integer(nfact)
     K <- as.integer(K)
-    for(i in 1L:J){
+    for(i in seq_len(J)){
         tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L)) #item location
 
         if(any(itemtype[i] == c('Rasch')) && K[i] == 2L){
@@ -509,10 +509,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
     }
     #priors
-    for(i in 1L:J){
+    for(i in seq_len(J)){
         names(pars[[i]]@parnum) <- names(pars[[i]]@par)
         if(!is.null(parprior) && parprior != 'index'){
-            for(j in 1L:length(parprior)){
+            for(j in seq_len(length(parprior))){
                 tmp <- pars[[i]]@parnum %in% as.numeric(parprior[[j]][1L:(length(parprior[[j]])-3L)])
                 if(any(tmp)){
                     pars[[i]]@any.prior <- TRUE

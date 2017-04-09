@@ -31,16 +31,16 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     nfullpars <- 0L
     estpars <- c()
     gtheta0 <- gstructgrouppars <- vector('list', ngroups)
-    for(g in 1L:ngroups){
+    for(g in seq_len(ngroups)){
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
         gtheta0[[g]] <- matrix(0, nrow(Data$fulldata[[g]]), nfact)
-        for(i in 1L:(J+1L)){
+        for(i in seq_len(J+1L)){
             nfullpars <- nfullpars + length(pars[[g]][[i]]@par)
             estpars <- c(estpars, pars[[g]][[i]]@est)
         }
     }
     if(RAND){
-        for(i in 1L:length(random)){
+        for(i in seq_len(length(random))){
             nfullpars <- nfullpars + length(random[[i]]@par)
             estpars <- c(estpars, random[[i]]@est)
         }
@@ -50,7 +50,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         estpars <- c(estpars, lrPars@est)
     }
     if(LR.RAND){
-        for(i in 1L:length(lr.random)){
+        for(i in seq_len(length(lr.random))){
             nfullpars <- nfullpars + length(lr.random[[i]]@par)
             estpars <- c(estpars, lr.random[[i]]@est)
         }
@@ -68,8 +68,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     cand.t.var <- if(is.null(list$cand.t.var)) 1 else list$cand.t.var[1L]
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
-    for(g in 1L:ngroups){
-        for(i in 1L:31L){
+    for(g in seq_len(ngroups)){
+        for(i in seq_len(31L)){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
@@ -94,8 +94,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     if(RAND) OffTerm <- OffTerm(random, J=J, N=N)
     if(list$plausible.draws > 0L){
         ret <- vector('list', list$plausible.draws)
-        for(i in 1L:length(ret)){
-            for(j in 1L:MHDRAWS)
+        for(i in seq_len(length(ret))){
+            for(j in seq_len(MHDRAWS))
                 gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]],
                         pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
@@ -115,17 +115,17 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     k <- 1L
     gamma <- .25
     longpars <- rep(NA,nfullpars)
-    for(g in 1L:ngroups){
-        for(i in 1L:(J+1L))
+    for(g in seq_len(ngroups)){
+        for(i in seq_len(J+1L))
             longpars[pars[[g]][[i]]@parnum] <- pars[[g]][[i]]@par
         if(RAND){
-            for(i in 1L:length(random))
+            for(i in seq_len(length(random)))
                 longpars[random[[i]]@parnum] <- random[[i]]@par
         }
         if(LRPARS)
             longpars[lrPars@parnum] <- lrPars@par
         if(LR.RAND){
-            for(i in 1L:length(lr.random))
+            for(i in seq_len(length(lr.random)))
                 longpars[lr.random[[i]]@parnum] <- lr.random[[i]]@par
         }
     }
@@ -147,14 +147,14 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     check <- as.numeric(L %*% longpars) / tmp
     longpars[estpars] <- check[estpars]
     LBOUND <- UBOUND <- c()
-    for(g in 1L:ngroups){
-        for(i in 1L:(J+1L)){
+    for(g in seq_len(ngroups)){
+        for(i in seq_len(J+1L)){
             LBOUND <- c(LBOUND, pars[[g]][[i]]@lbound)
             UBOUND <- c(UBOUND, pars[[g]][[i]]@ubound)
         }
     }
     if(RAND){
-        for(i in 1L:length(random)){
+        for(i in seq_len(length(random))){
             LBOUND <- c(LBOUND, random[[i]]@lbound)
             UBOUND <- c(UBOUND, random[[i]]@ubound)
         }
@@ -164,7 +164,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         UBOUND <- c(UBOUND, lrPars@ubound)
     }
     if(LR.RAND){
-        for(i in 1L:length(lr.random)){
+        for(i in seq_len(length(lr.random))){
             LBOUND <- c(LBOUND, lr.random[[i]]@lbound)
             UBOUND <- c(UBOUND, lr.random[[i]]@ubound)
         }
@@ -174,13 +174,13 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     if(list$Moptim == 'BFGS')
         if(any(is.finite(LBOUND[estindex_unique]) | is.finite(UBOUND[estindex_unique])))
             list$Moptim <- 'L-BFGS-B'
-    for(g in 1L:ngroups)
-        for(i in 1L:J)
+    for(g in seq_len(ngroups))
+        for(i in seq_len(J))
             pars[[g]][[i]]@dat <- Data$fulldata[[g]][, c(itemloc[i]:(itemloc[i+1L] - 1L))]
     Draws.time <- Mstep.time <- 0
 
     ####Big MHRM loop
-    for(cycles in 1L:(NCYCLES + BURNIN + SEMCYCLES))
+    for(cycles in seq_len(NCYCLES + BURNIN + SEMCYCLES))
     {
         if(cycles == BURNIN + 1L) stagecycle <- 2L
         if(stagecycle == 3L)
@@ -255,7 +255,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             if(any(longpars > UBOUND))
                 longpars[longpars > UBOUND] <- (longpars0[longpars > UBOUND] + UBOUND[longpars > UBOUND])/2
             if(length(constrain))
-                for(i in 1L:length(constrain))
+                for(i in seq_len(length(constrain)))
                     longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
             if(verbose)
                 cat(printmsg, sprintf(", Max-Change = %.4f", max(abs(gamma*correction))), sep='')
@@ -282,7 +282,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             if(any(longpars > UBOUND))
                 longpars[longpars > UBOUND] <- (longpars0[longpars > UBOUND] + UBOUND[longpars > UBOUND])/2
             if(length(constrain))
-                for(i in 1L:length(constrain))
+                for(i in seq_len(length(constrain)))
                     longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
         }
         if(verbose)
@@ -345,21 +345,21 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             SE <- rep(NA, length(longpars))
             SE[estindex_unique] <- SEtmp
             if(length(constrain) > 0L)
-                for(i in 1L:length(constrain))
+                for(i in seq_len(length(constrain)))
                     SE[constrain[[i]][-1L]] <- SE[constrain[[i]][1L]]
-            for(g in 1L:ngroups){
-                for(i in 1L:(J+1L))
+            for(g in seq_len(ngroups)){
+                for(i in seq_len(J+1L))
                     pars[[g]][[i]]@SEpar <- SE[pars[[g]][[i]]@parnum]
             }
             if(RAND){
-                for(i in 1L:length(random))
+                for(i in seq_len(length(random)))
                     random[[i]]@SEpar <- SE[random[[i]]@parnum]
             }
             if(LRPARS){
                 lrPars@SEpar <- SE[lrPars@parnum]
             }
             if(LR.RAND){
-                for(i in 1L:length(lr.random))
+                for(i in seq_len(length(lr.random)))
                     lr.random[[i]]@SEpar <- SE[lr.random[[i]]@parnum]
             }
         }

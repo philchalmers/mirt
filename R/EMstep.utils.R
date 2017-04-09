@@ -2,7 +2,7 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
                   itemloc, CUSTOM.IND, dentype, ngroups, rlist, full, Etable = TRUE){
     LL <- 0
     tabdata <- if(full) Data$fulldata[[1L]] else Data$tabdatalong
-    for(g in 1L:ngroups){
+    for(g in seq_len(ngroups)){
         freq <- if(full) 1 else Data$Freq[[g]]
         if(dentype == 'bfactor'){
             rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
@@ -146,7 +146,7 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(ngroups)
-    for(g in 1L:ngroups){
+    for(g in seq_len(ngroups)){
         LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
         if(any(pars[[g]][[J+1L]]@est))
@@ -209,7 +209,7 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND))
     LL <- sum(rs$r1 * log_itemtrace)
     if(any.prior){
-        for(i in 1L:(length(x)-1L))
+        for(i in seq_len(length(x)-1L))
             if(x[[i]]@any.prior)
                 LL <- LL.Priors(x=x[[i]], LL=LL)
     }
@@ -222,14 +222,14 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     if(pars[[1L]][[J + 1L]]@itemclass == -1L){
-        for(g in 1L:length(pars)){
+        for(g in seq_len(length(pars))){
             gp <- pars[[g]][[J + 1L]]
             pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
         }
     }
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
     if(length(SLOW.IND)){
-        for(group in 1L:ngroups){
+        for(group in seq_len(ngroups)){
             for (i in SLOW.IND){
                 deriv <- if(i == (J + 1L)){
                     Deriv(pars[[group]][[i]], Theta=gTheta[[group]])
@@ -264,13 +264,13 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
     ubound <- UBOUND[est]
     lbound <- LBOUND[est]
     lastchange <- 0
-    for(iter in 1L:control$maxit){
+    for(iter in seq_len(control$maxit)){
         longpars[est] <- p
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L, 1L, TRUE)
         if(length(SLOW.IND)){
-            for(group in 1L:ngroups){
+            for(group in seq_len(ngroups)){
                 for (i in SLOW.IND){
                     deriv <- if(i == (J + 1L)){
                         Deriv(pars[[group]][[i]], Theta=gTheta[[group]], estHess=TRUE)

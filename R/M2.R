@@ -67,7 +67,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         tmpobj <- obj
         tmpobj@Data$data <- dat
         if(is(obj, 'MultipleGroupClass')){
-            for(g in 1L:length(obj@Data$groupNames))
+            for(g in seq_len(length(obj@Data$groupNames)))
                 tmpobj@ParObjects$pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
                                                   , drop=FALSE]
         }
@@ -97,7 +97,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         if(!discrete)
             gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
         estpars <- c()
-        for(i in 1L:(nitems+1L)){
+        for(i in seq_len(nitems+1L)){
             if(i <= nitems)
                 estpars <- c(estpars, pars[[i]]@est)
             else estpars <- c(estpars, rep(FALSE, length(pars[[i]]@est)))
@@ -137,7 +137,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         DP <- matrix(0, nrow(Theta), length(estpars))
         wherepar <- c(1L, numeric(nitems))
         ind <- 1L
-        for(i in 1L:nitems){
+        for(i in seq_len(nitems)){
             x <- extract.item(obj, i)
             EIs[,i] <- expected.item(x, Theta, min=0L)
             tmp <- ProbTrace(x, Theta)
@@ -153,10 +153,10 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             wherepar[i+1L] <- ind
         }
         ind <- 1L
-        for(i in 1L:nitems){
+        for(i in seq_len(nitems)){
             E1[i] <- sum(EIs[,i] * Prior)
             E11[i] <- sum(E11s[,i] * Prior)
-            for(j in 1L:nitems){
+            for(j in seq_len(nitems)){
                 if(i >= j){
                     E2[i,j] <- sum(EIs[,i] * EIs[,j] * Prior)
                     ind <- ind + 1L
@@ -184,10 +184,10 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         delta2 <- matrix(0, length(p) - nitems, length(estpars))
         ind <- 1L
         offset <- pars[[1L]]@parnum[1L] - 1L
-        for(i in 1L:nitems){
+        for(i in seq_len(nitems)){
             dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * Prior)
             delta1[i, pars[[i]]@parnum - offset] <- dp
-            for(j in 1L:nitems){
+            for(j in seq_len(nitems)){
                 if(i < j){
                     dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * EIs[,j] * Prior)
                     delta2[ind, pars[[i]]@parnum - offset] <- dp
@@ -222,11 +222,11 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
                             quadpts=quadpts)
         ave <- SD <- collect[[1L]]
         ave[ave!= 0] <- SD[SD!=0] <- 0
-        for(i in 1L:impute)
+        for(i in seq_len(impute))
             ave <- ave + collect[[i]]
         ave <- ave/impute
         vars <- 0
-        for(i in 1L:impute)
+        for(i in seq_len(impute))
             vars <- vars + (ave - collect[[i]])^2
         SD <- sqrt(vars/impute)
         ret <- rbind(ave, SD)
@@ -243,7 +243,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     pars <- obj@ParObjects$pars
     ngroups <- extract.mirt(obj, 'ngroups')
     ret <- vector('list', ngroups)
-    for(g in 1L:ngroups){
+    for(g in seq_len(ngroups)){
         if(ngroups > 1L || discrete){
             attr(pars[[g]], 'MG') <- g
             pars[[g]]@Internals$bfactor <- obj@Internals$bfactor
@@ -295,7 +295,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     }
     constrain <- extract.mirt(obj, 'constrain')
     if(length(constrain)){
-        for(i in 1L:length(constrain)){
+        for(i in seq_len(length(constrain))){
             delta[ ,constrain[[i]][1L]] <- rowSums(delta[ ,constrain[[i]]])
             estpars[constrain[[i]][-1L]] <- FALSE
         }
@@ -317,7 +317,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     newret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
     if(!is.null(ret[[1L]]$SRMSR)){
         SRMSR <- numeric(ngroups)
-        for(g in 1L:ngroups)
+        for(g in seq_len(ngroups))
             SRMSR[g] <- ret[[g]]$SRMSR
         if(ngroups > 1){
             names(SRMSR) <- obj@Data$groupNames

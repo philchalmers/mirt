@@ -25,7 +25,7 @@ MDISC <- function(x){
     if(missing(x)) missingMsg('x')
     stopifnot(class(x) == 'SingleGroupClass')
     ret <- numeric(extract.mirt(x, 'nitems'))
-    for(i in 1L:length(ret)){
+    for(i in seq_len(length(ret))){
         item <- extract.item(x, i)
         as <- ExtractLambdas(item)/1.702
         ret[i] <- sqrt(as %*% as)

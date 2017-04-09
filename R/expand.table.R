@@ -35,11 +35,11 @@ expand.table <- function(tabdata, sample = FALSE) {
     freq <- tabdata[,ncol(tabdata)]
     tabdata <- tabdata[,-ncol(tabdata), drop=FALSE]
     fulldata <- vector('list', nrow(tabdata))
-    for (i in 1L:nrow(tabdata))
+    for (i in seq_len(nrow(tabdata)))
         fulldata[[i]] <- tabdata[rep(i, freq[i]), ]
     fulldata <- do.call(rbind, fulldata)
-    if(sample) fulldata <- fulldata[sample(1L:nrow(fulldata)), ]
-    rownames(fulldata) <- 1L:nrow(fulldata)
+    if(sample) fulldata <- fulldata[sample(seq_len(nrow(fulldata))), ]
+    rownames(fulldata) <- seq_len(nrow(fulldata))
     fulldata
 }
 

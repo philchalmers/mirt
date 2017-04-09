@@ -83,14 +83,14 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
             Theta <- fscores(x, method=method, full.scores=TRUE, ...)
-        for(g in 1L:x@Data$ngroups){
+        for(g in seq_len(x@Data$ngroups)){
             pick <- x@Data$groupNames[g] == x@Data$group
             tmp_obj <- MGC2SC(x, g)
             ret[[g]] <- personfit(tmp_obj, method=method, stats.only=stats.only,
                                   Theta=Theta[pick, , drop=FALSE], ...)
         }
         ret2 <- matrix(0, nrow(x@Data$data), ncol(ret[[1L]]))
-        for(g in 1L:x@Data$ngroups){
+        for(g in seq_len(x@Data$ngroups)){
             pick <- x@Data$groupNames[g] == x@Data$group
             ret2[pick, ] <- as.matrix(ret[[g]])
         }
@@ -104,7 +104,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
     fulldata <- x@Data$fulldata[[1L]]
-    for(i in 1L:ncol(Theta)){
+    for(i in seq_len(ncol(Theta))){
         tmp <- Theta[,i]
         tmp[tmp %in% c(-Inf, Inf)] <- NA
         Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
@@ -112,7 +112,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     }
     N <- nrow(Theta)
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-    for (i in 1L:J)
+    for (i in seq_len(J))
         itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
     LL <- itemtrace * fulldata
     LL[LL < .Machine$double.eps] <- 1
@@ -120,12 +120,12 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     Zh <- rep(0, length(LL))
     mu <- sigma2 <- numeric(N)
     log_itemtrace <- log(itemtrace)
-    for(item in 1L:J){
+    for(item in seq_len(J)){
         P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
         log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
         mu <- mu + rowSums(P * log_P)
-        for(i in 1L:ncol(P))
-            for(j in 1L:ncol(P))
+        for(i in seq_len(ncol(P)))
+            for(j in seq_len(ncol(P)))
                 if(i != j)
                     sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
     }
@@ -134,12 +134,12 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         infit <- FALSE
         oneslopes <- rep(FALSE, length(x@Model$itemtype))
         slope <- x@ParObjects$pars[[1L]]@par[1L]
-        for(i in 1L:length(x@Model$itemtype))
+        for(i in seq_len(length(x@Model$itemtype)))
             oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], slope-1e-10, slope+1e-10)
         if(all(oneslopes)){
             W <- resid <- C <- matrix(0, ncol=J, nrow=N)
             K <- x@Data$K
-            for (i in 1L:J){
+            for (i in seq_len(J)){
                 P <- ProbTrace(x=pars[[i]], Theta=Theta)
                 Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
                 dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]

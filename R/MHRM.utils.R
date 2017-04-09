@@ -7,7 +7,7 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     g <- tmp$grad
     h <- tmp$hess
     if(length(list$SLOW.IND)){
-        for(group in 1L:ngroups){
+        for(group in seq_len(ngroups)){
             for (i in list$SLOW.IND){
                 deriv <- DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gtheta[[group]],
                                              estHess=estHess)
@@ -17,7 +17,7 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             }
         }
     }
-    for(group in 1L:ngroups){
+    for(group in seq_len(ngroups)){
         tmptheta <- gtheta[[group]][,1L:nfact, drop=FALSE]
         if(is(gstructgrouppars[[1L]]$gmeans, 'matrix'))
             tmptheta <- tmptheta - gstructgrouppars[[1L]]$gmeans
@@ -30,12 +30,12 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     }
     if(RAND){
         if(cycles <= RANDSTART){
-            for(i in 1L:length(random)){
+            for(i in seq_len(length(random))){
                 g[random[[i]]@parnum] <- 0
                 h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
             }
         } else {
-            for(i in 1L:length(random)){
+            for(i in seq_len(length(random))){
                 deriv <- RandomDeriv(x=random[[i]], estHess=estHess)
                 g[random[[i]]@parnum] <- deriv$grad
                 if(estHess)
@@ -55,12 +55,12 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     }
     if(LR.RAND){
         if(cycles <= RANDSTART){
-            for(i in 1L:length(lr.random)){
+            for(i in seq_len(length(lr.random))){
                 g[lr.random[[i]]@parnum] <- 0
                 h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- -diag(length(lr.random[[i]]@parnum))
             }
         } else {
-            for(i in 1L:length(lr.random)){
+            for(i in seq_len(length(lr.random))){
                 deriv <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
                 g[lr.random[[i]]@parnum] <- deriv$grad
                 if(estHess)
@@ -115,7 +115,7 @@ MHRM.LL <- function(pars, gstructgrouppars, gtheta, lr.random, random, lrPars, O
                     ngroups, nfact, J, USE.FIXED, LR.RAND, RAND, RANDSTART, LRPARS, CUSTOM.IND,
                     gfulldata, itemloc){
     LL <- 0
-    for(g in 1L:ngroups)
+    for(g in seq_len(ngroups))
         LL <- LL + sum(complete.LL(theta=gtheta[[g]], pars=pars[[g]], nfact=nfact,
                                prior.mu=gstructgrouppars[[g]]$gmeans,
                                prior.t.var=gstructgrouppars[[g]]$gcov,
@@ -154,11 +154,11 @@ MHRM.NR <- function(shortpars, pars, gtheta, lrPars, OffTerm, longpars, USE.FIXE
     lastchange <- 0
     gstructgrouppars <- vector('list', ngroups)
     if(is.null(control$maxit)) control$maxit <- 50L
-    for(iter in 1L:control$maxit){
+    for(iter in seq_len(control$maxit)){
         longpars[estindex_unique] <- shortpars
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        for(g in 1L:ngroups)
+        for(g in seq_len(ngroups))
             gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
         tmp <- MHRM.deriv(pars=pars, gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                          USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
@@ -194,18 +194,18 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
                             cycles, LRPARS, LR.RAND, RANDSTART, RAND, lrPars, lr.random, random){
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     if(has_graded){
-        for(g in 1L:length(pars)){
-            pars[[g]][1L:J] <- lapply(pars[[g]][1L:J], function(x){
+        for(g in seq_len(length(pars))){
+            pars[[g]][seq_len(J)] <- lapply(pars[[g]][seq_len(J)], function(x){
                 if(class(x) == 'graded'){
-                    ds <- x@par[-(1L:x@nfact)]
-                    x@par[-(1L:x@nfact)] <- sort(ds, decreasing = TRUE)
+                    ds <- x@par[-seq_len(x@nfact)]
+                    x@par[-seq_len(x@nfact)] <- sort(ds, decreasing = TRUE)
                     names(x@par) <- names(x@est)
                 }
                 return(x)
             })
         }
     }
-    for(g in 1L:ngroups)
+    for(g in seq_len(ngroups))
         gstructgrouppars[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])
     if(LRPARS){
         lrPars@par <- lrPars@beta[] <- longpars[lrPars@parnum]
@@ -213,7 +213,7 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
         gstructgrouppars[[1L]]$gmeans <- lrPars@mus
     }
     if(LR.RAND && cycles > RANDSTART){
-        for(j in 1L:length(lr.random))
+        for(j in seq_len(length(lr.random)))
             gstructgrouppars[[1L]]$gmeans <- gstructgrouppars[[1L]]$gmeans +
                 lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
     }
@@ -231,10 +231,10 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         if(RAND){
             OffTerm <- OffTerm(random, J=J, N=N)
             if(!is.null(list$cand.t.var))
-                for(j in 1L:length(random)) random[[j]]@cand.t.var <- list$cand.t.var[j + 1L]
-                for(j in 1L:length(random)){
+                for(j in seq_len(length(random))) random[[j]]@cand.t.var <- list$cand.t.var[j + 1L]
+                for(j in seq_len(length(random))){
                     tmp <- .1
-                    for(i in 1L:31L){
+                    for(i in seq_len(31L)){
                         random[[j]]@drawvals <- DrawValues(random[[j]], itemloc=itemloc,
                                                            Theta=gtheta0[[1L]],
                                                            pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
@@ -263,12 +263,12 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         }
         if(LR.RAND){
             if(!is.null(list$cand.t.var)){
-                for(j in 1L:length(lr.random)) lr.random[[j]]@cand.t.var <-
+                for(j in seq_len(length(lr.random))) lr.random[[j]]@cand.t.var <-
                         list$cand.t.var[j + length(random) + 1L]
             }
-            for(j in 1L:length(lr.random)){
+            for(j in seq_len(length(lr.random))){
                 tmp <- .1
-                for(i in 1L:31L){
+                for(i in seq_len(31L)){
                     lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], itemloc=itemloc,
                                                           Theta=gtheta0[[1L]], LR=TRUE,
                                                           pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
@@ -293,7 +293,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                 tmp <- cov(lr.random[[j]]@drawvals) * (tmp / (tmp-1L))
                 lr.random[[j]]@par[lr.random[[j]]@est] <-
                     tmp[lower.tri(tmp, TRUE)][lr.random[[j]]@est]
-                for(j in 1L:length(lr.random))
+                for(j in seq_len(length(lr.random)))
                     gstructgrouppars[[1L]]$gmeans <- gstructgrouppars[[1L]]$gmeans +
                     lr.random[[j]]@drawvals[lr.random[[j]]@mtch]
                 tmp <- c(numeric(nfact),
@@ -303,7 +303,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         }
         cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
         tmp <- .1
-        for(i in 1L:31L){
+        for(i in seq_len(31L)){
             gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                          itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                          prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
@@ -331,7 +331,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
             tmp2[pars[[1L]][[length(pars[[1L]])]]@est]
         cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
         tmp <- .1
-        for(i in 1L:31L){
+        for(i in seq_len(31L)){
             gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                          itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                          prior.t.var=gstructgrouppars[[1L]]$gcov, OffTerm=OffTerm,
@@ -361,8 +361,8 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
 
     #Step 1. Generate m_k datasets of theta
     LL <- 0
-    for(g in 1L:ngroups){
-        for(i in 1L:MHDRAWS)
+    for(g in seq_len(ngroups)){
+        for(i in seq_len(MHDRAWS))
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
                                         prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
@@ -370,8 +370,8 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         LL <- LL + attr(gtheta0[[g]], "log.lik")
     }
     if(RAND && cycles > RANDSTART){
-        for(j in 1L:length(random)){
-            for(i in 1L:MHDRAWS){
+        for(j in seq_len(length(random))){
+            for(i in seq_len(MHDRAWS)){
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=gtheta0[[1L]], itemloc=itemloc,
                                                    pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
@@ -380,8 +380,8 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         }
     }
     if(LR.RAND && cycles > RANDSTART){
-        for(j in 1L:length(lr.random)){
-            for(i in 1L:MHDRAWS){
+        for(j in seq_len(length(lr.random))){
+            for(i in seq_len(MHDRAWS)){
                 lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], Theta=gtheta0[[1L]],
                                                       itemloc=itemloc, pars=pars[[1L]],
                                                       fulldata=Data$fulldata[[1L]],
@@ -395,14 +395,14 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
     if(is.null(list$cand.t.var)){
         cand.t.var <- controlCandVar(sum(PA * NS / sum(NS)), cand.t.var)
         if(RAND && cycles > (RANDSTART + 1L)){
-            for(j in 1L:length(random)){
+            for(j in seq_len(length(random))){
                 random[[j]]@cand.t.var <- controlCandVar(
                     attr(random[[j]]@drawvals, "Proportion Accepted"),
                     random[[j]]@cand.t.var, min = .01, max = .5)
             }
         }
         if(LR.RAND && cycles > (RANDSTART + 1L)){
-            for(j in 1L:length(lr.random)){
+            for(j in seq_len(length(lr.random))){
                 lr.random[[j]]@cand.t.var <- controlCandVar(
                     attr(lr.random[[j]]@drawvals, "Proportion Accepted"),
                     lr.random[[j]]@cand.t.var, min = .01, max = .5)
@@ -444,7 +444,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
 }
 
 MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups, LBOUND, UBOUND,
-                       DERIV, gtheta0, gstructgrouppars, CUSTOM.IND, RAND, has_graded, nfact,
+                       DERIV, gstructgrouppars, CUSTOM.IND, RAND, has_graded, nfact,
                        cycles, RANDSTART, random, J, LRPARS, lrPars, LR.RAND, lr.random,
                        constrain, estpars, redun_constr, L, estindex_unique, gfulldata, itemloc, control){
     Moptim <- list$Moptim

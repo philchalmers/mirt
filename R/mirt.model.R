@@ -272,7 +272,7 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
             string <- c()
             vals <- 1:nrow(input)
             input <- matrix(as.logical(input), nrow(input), ncol(input))
-            for(i in 1L:ncol(input)){
+            for(i in seq_len(ncol(input))){
                 tmp <- vals[input[,i]]
                 if(length(tmp) > 1L){
                     string <- c(string, paste(c(fnames[i], ' = ', paste0(tmp[-length(tmp)], ','),

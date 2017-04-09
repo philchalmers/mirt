@@ -52,7 +52,7 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
         data <- extract.mirt(x, 'data')
         groupNames <- extract.mirt(x, 'groupNames')
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
-        for(g in 1L:length(pars)){
+        for(g in seq_len(length(pars))){
             sel <- group == groupNames[g]
             Thetatmp <- Theta[sel, , drop = FALSE]
             pars[[g]]@Data$data <- data[sel, ]
@@ -68,7 +68,7 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
         stop('Theta must be a matrix of size N x nfact', call.=FALSE)
     if(!is.list(Theta)){
         if(any(Theta %in% c(Inf, -Inf))){
-            for(i in 1L:ncol(Theta)){
+            for(i in seq_len(ncol(Theta))){
                 tmp <- Theta[,i]
                 tmp[tmp %in% c(-Inf, Inf)] <- NA
                 Theta[Theta[,i] == Inf, i] <- max(tmp, na.rm=TRUE) + .1
@@ -81,11 +81,11 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
     N <- nrow(data)
     Nind <- 1L:N
     mins <- extract.mirt(x, 'mins')
-    for (i in 1L:J){
+    for (i in seq_len(J)){
         if(!any(is.na(data[,i]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
-        for(j in 1L:length(NAind)){
+        for(j in seq_len(length(NAind))){
             data[NAind[j], i] <- sample(1L:K[i]-1L+mins[i], 1L,
                                         prob = P[NAind[j], , drop = FALSE])
         }

@@ -31,14 +31,14 @@ poly2dich <- function(data, which.items = 1:ncol(data)) {
     stopifnot(length(which.items) > 0L)
     ret <- vector('list', ncol(data))
     nms <- colnames(data)
-    for(i in 1L:ncol(data)){
+    for(i in seq_len(ncol(data))){
         if(i %in% which.items){
             old <- data[,i]
             u <- sort(na.omit(unique(old)))
             new <- matrix(0L, nrow(data), length(u))
             colnames(new) <- paste(nms[i], u, sep='.')
             new[is.na(old), ] <- NA
-            for(j in 1L:length(u)) new[u[j] == old, j] <- 1L
+            for(j in seq_len(length(u))) new[u[j] == old, j] <- 1L
             ret[[i]] <- new
         } else {
             ret[[i]] <- data[ ,i, drop=FALSE]

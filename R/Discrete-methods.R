@@ -62,10 +62,10 @@ setMethod(
         ret <- vector('list', ngroups)
         items <- vector('list', object@Data$nitems + 1L)
         names(items) <- c(colnames(object@Data$data), 'Class.Probability')
-        for(g in 1L:ngroups){
+        for(g in seq_len(ngroups)){
             ret[[g]] <- items
             pars <- object@ParObjects$pars[[g]]
-            for(i in 1L:object@Data$nitems){
+            for(i in seq_len(object@Data$nitems)){
                 item <- extract.item(pars, i)
                 P <- probtrace(item, Theta)
                 colnames(P) <- paste0('category_', 1L:ncol(P))
@@ -76,7 +76,7 @@ setMethod(
             rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
         }
         names(ret) <- extract.mirt(object, 'groupNames')
-        for(i in 1L:length(ret)) class(ret[[i]]) <- c('mirt_list', 'list')
+        for(i in seq_len(length(ret))) class(ret[[i]]) <- c('mirt_list', 'list')
         if(length(ret) == 1L) ret <- ret[[1L]]
         ret
     }

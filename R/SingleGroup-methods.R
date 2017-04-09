@@ -156,7 +156,7 @@ setMethod(
             gp <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
             Phi <- cov2cor(gp$gcov)
             colnames(h2) <- "h2"
-            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[1L:object@Model$nfact]
+            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[seq_len(object@Model$nfact)]
             loads <- cbind(F,h2)
             rownames(loads) <- colnames(object@Data$data)
             if(verbose){
@@ -292,7 +292,7 @@ setMethod(
         allPars <- list()
         if(length(object@ParObjects$pars[[1L]]@SEpar)){
             if(printSE){
-                for(i in 1L:(J+1L)){
+                for(i in seq_len(J+1L)){
                     allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
                                                    object@ParObjects$pars[[i]]@SEpar),
                                                  2, byrow = TRUE)
@@ -305,7 +305,7 @@ setMethod(
                     colnames(allPars[[i]]) <- nms
                 }
             } else {
-                for(i in 1L:(J+1L)){
+                for(i in seq_len(J+1L)){
                     allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
                                                    object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
                                                    object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
@@ -315,7 +315,7 @@ setMethod(
                 }
             }
         } else {
-            for(i in 1L:(J+1L)){
+            for(i in seq_len(J+1L)){
                 allPars[[i]] <- matrix(object@ParObjects$pars[[i]]@par, 1L)
                 colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
                 rownames(allPars[[i]]) <- 'par'
@@ -332,22 +332,22 @@ setMethod(
             allPars <- t(as.data.frame(allPars))
         if(simplify && !as.data.frame){
             allPars <- lapply(allPars, function(x) x[1L, , drop=FALSE])
-            items.old <- allPars[1L:(length(allPars)-1L)]
+            items.old <- allPars[seq_len(length(allPars)-1L)]
             nms <- lapply(items.old, colnames)
             unms <- unique(do.call(c, nms))
             items <- matrix(NA, length(items.old), length(unms))
             rownames(items) <- names(items.old)
             colnames(items) <- unms
-            for(i in 1L:nrow(items))
+            for(i in seq_len(nrow(items)))
                 items[i, nms[[i]]] <- items.old[[i]]
             nfact <- object@Model$nfact
-            means <- allPars$GroupPars[1L:nfact]
+            means <- allPars$GroupPars[seq_len(nfact)]
             if(discrete){
                 allPars <- list(items=items, group.intercepts=allPars$GroupPars)
             } else {
                 covs <- matrix(NA, nfact, nfact)
-                covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(1L:nfact)]
-                colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[1L:nfact]
+                covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
+                colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
                 allPars <- list(items=items, means=means, cov=covs)
             }
         }
@@ -576,16 +576,16 @@ setMethod(
             df <- (object@Data$K - 1) %o% (object@Data$K - 1)
             diag(df) <- NA
             colnames(df) <- rownames(df) <- colnames(res)
-            for(i in 1L:J){
-                for(j in 1L:J){
+            for(i in seq_len(J)){
+                for(j in seq_len(J)){
                     if(i < j){
                         P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
                         P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
                         tab <- table(data[,i], data[,j], useNA = 'no')
                         Etab <- matrix(0,K[i],K[j])
                         NN <- sum(tab)
-                        for(k in 1L:K[i])
-                            for(m in 1:K[j])
+                        for(k in seq_len(K[i]))
+                            for(m in seq_len(K[j]))
                                 Etab[k,m] <- NN * sum(P1[,k] * P2[,m] * prior)
                         s <- try(gamma.cor(tab) - gamma.cor(Etab), TRUE)
                         if(is.nan(s) || is(s, 'try-error')){
@@ -658,11 +658,11 @@ setMethod(
         } else if(type == 'Q3'){
             dat <- matrix(NA, N, 2L)
             diag(res) <- 1
-            for(i in 1L:J){
+            for(i in seq_len(J)){
                 ei <- extract.item(object, item=i)
                 EI <- expected.item(ei, Theta=Theta)
                 dat[ ,1L] <- object@Data$data[ ,i] - EI
-                for(j in 1L:J){
+                for(j in seq_len(J)){
                     if(i < j){
                         ej <- extract.item(object, item=j)
                         EJ <- expected.item(ej, Theta=Theta)
@@ -804,7 +804,7 @@ setMethod(
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@ParObjects$pars, 'prodlist')
         if(all(x@Data$K[which.items] == 2L) && facet_items) auto.key <- FALSE
-        if(length(prodlist) > 0)
+        if(length(prodlist))
             ThetaFull <- prodterms(Theta,prodlist)
         if(length(degrees) > ncol(ThetaFull)) type <- 'infoangle'
         if(length(degrees) == 1L) degrees <- rep(degrees, ncol(ThetaFull))
@@ -843,7 +843,7 @@ setMethod(
             }, split='\\.')
             imputenums <- do.call(c, tmp)
             CIscore <- CIinfo <- CIrxx <- matrix(0, MI, length(plt$score))
-            for(i in 1L:MI){
+            for(i in seq_len(MI)){
                 while(TRUE){
                     tmp <- try(imputePars(pars=x@ParObjects$pars, pre.ev=pre.ev,
                                           imputenums=imputenums, constrain=x@Model$constrain),
@@ -1102,14 +1102,14 @@ setMethod(
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
                     if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
-                                                           labels=paste0('P', 1L:ncol(tmp))))
+                                                           labels=paste0('P', seq_len(ncol(tmp)))))
                     P[[ind]] <- tmp2
                     ind <- ind + 1L
                 }
                 nrs <- sapply(P, nrow)
                 Pstack <- do.call(rbind, P)
                 names <- c()
-                for(i in 1L:length(nrs))
+                for(i in seq_len(length(nrs)))
                     names <- c(names, rep(names(P)[i], nrs[i]))
                 plotobj <- data.frame(Pstack, item=names, Theta=Theta)
                 plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
@@ -1232,7 +1232,7 @@ mirt2traditional <- function(x){
         names(par) <- c('a', paste0('b', 1:(length(par)-1)))
     } else if(cls == 'gpcm'){
         ds <- par[-1]/par[1]
-        ds <- ds[-c(1L:ncat)]
+        ds <- ds[-seq_len(ncat)]
         newd <- numeric(length(ds)-1L)
         for(i in 2:length(ds))
             newd[i-1L] <- -(ds[i] - ds[i-1L])
@@ -1292,8 +1292,8 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
         par <- c(par[1:(ncat+1)], newd)
         names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
     } else if(cls == 'nominal'){
-        as <- x[1L:(length(x)/2)]
-        ds <- x[-c(1L:(length(x)/2))]
+        as <- x[seq_len(length(x)/2)]
+        ds <- x[-seq_len(length(x)/2)]
         a1 <- (as[ncat] - as[1L]) / (ncat-1L)
         ak <- 1:ncat - 1
         for(i in 2:(ncat-1))

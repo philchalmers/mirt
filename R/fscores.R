@@ -184,9 +184,9 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     if(returnER) full.scores <- FALSE
     if(is(object, 'DiscreteClass') && plausible.draws > 0L){
         fs <- fscores(object)
-        ret <- lapply(1L:plausible.draws, function(ind, fs){
+        ret <- lapply(seq_len(plausible.draws), function(ind, fs){
             mat <- matrix(0L, nrow(fs), ncol(fs))
-            for(i in 1L:ncol(fs)){
+            for(i in seq_len(ncol(fs))){
                 if(all(fs[,i] > 1-1e-10)){
                     mat[,i] <- 1L
                 } else if(all(fs[,i] < 1e-10)){

@@ -146,7 +146,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     {
         constrain <- model@Model$constrain
         parnum <- list()
-        for(i in 1L:length(which.par))
+        for(i in seq_len(length(which.par)))
             parnum[[i]] <- values$parnum[values$name == which.par[i] &
                                              values$item == itemnames[item]]
         for(i in length(parnum):1L)
@@ -159,7 +159,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             wv <- wald(model)
             infoname <- names(wv)
             L <- matrix(0, length(parnum), length(infoname))
-            for(i in 1L:length(parnum)){
+            for(i in seq_len(length(parnum))){
                 L[i, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
                 L[i, paste0(which.par[i], '.', parnum[[i]][2L]) == infoname] <- -1
             }
@@ -167,14 +167,14 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             return(res)
         }
         if(drop){
-            for(j in 1L:length(parnum)){
+            for(j in seq_len(length(parnum))){
                 for(i in length(constrain):1L){
                     if(all(parnum[[j]] == sort(constrain[[i]])))
                         constrain[[i]] <- NULL
                 }
             }
         } else {
-            for(i in 1L:length(parnum))
+            for(i in seq_len(length(parnum)))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
         newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
@@ -256,9 +256,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                             ifelse(drop, sum(keep), sum(!keep))))
             if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
             constrain <- updatedModel@Model$constrain
-            for(j in 1L:length(keep)){
+            for(j in seq_len(length(keep))){
                 parnum <- list()
-                for(i in 1L:length(which.par))
+                for(i in seq_len(length(which.par)))
                     parnum[[i]] <- values$parnum[values$name == which.par[i] &
                                                      values$item == itemnames[j]]
                 for(i in length(parnum):1L)
@@ -268,7 +268,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                     for(i in 1L:length(parnum))
                         constrain[[length(constrain) + 1L]] <- parnum[[i]]
                 } else if(!keep[j] && drop){
-                    for(j in 1L:length(parnum)){
+                    for(j in seq_len(length(parnum))){
                         for(i in length(constrain):1L){
                             if(all(parnum[[j]] == sort(constrain[[i]])))
                                 constrain[[i]] <- NULL
@@ -302,7 +302,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         names(res) <- itemnames[items2test][pick]
     }
 
-    for(i in 1L:length(res))
+    for(i in seq_len(length(res)))
         attr(res[[i]], 'parnum') <- NULL
     if(return_models) return(res)
     if(p.adjust != 'none'){

@@ -36,12 +36,12 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     lr.random <- x@ParObjects$lr.random
     if(length(random) > 0L){
         Random <- vector('list', length(random))
-        for(i in 1L:length(Random))
+        for(i in seq_len(length(Random)))
             Random[[i]] <- matrix(0, nrow(x@ParObjects$random[[i]]@drawvals), ncol(x@ParObjects$random[[i]]@drawvals))
     }
     if(length(lr.random) > 0L){
         lr.Random <- vector('list', length(lr.random))
-        for(i in 1L:length(lr.Random))
+        for(i in seq_len(length(lr.Random)))
             lr.Random[[i]] <- matrix(0, nrow(x@ParObjects$lr.random[[i]]@drawvals),
                                      ncol(x@ParObjects$lr.random[[i]]@drawvals))
     }
@@ -56,10 +56,10 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(length(x@Model$lrPars))
         gstructgrouppars$gmeans <- fixef(x)
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
-    for(i in 1L:20L){
+    for(i in seq_len(20L)){
         if(length(lr.random) > 0L){
             mus <- matrix(0, N, length(lr.random))
-            for(j in 1L:length(lr.random)){
+            for(j in seq_len(length(lr.random))){
                 lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
                                                       pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                                       offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND, LR=TRUE)
@@ -73,7 +73,7 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
                                 prior.mu=gstructgrouppars$gmeans, prodlist=prodlist,
                                 CUSTOM.IND=CUSTOM.IND)
         if(length(random) > 0L){
-            for(j in 1L:length(random))
+            for(j in seq_len(length(random)))
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
                                                    pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
@@ -87,10 +87,10 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
             retnames <- c('Theta', sapply(random, function(x) colnames(x@gdesign)[1L]))
         names(DRAWS) <- retnames
     }
-    for(i in 1L:ndraws){
+    for(i in seq_len(ndraws)){
         if(length(lr.random) > 0L){
             mus <- matrix(0, N, length(lr.random))
-            for(j in 1L:length(lr.random)){
+            for(j in seq_len(length(lr.random))){
                 lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
                                                       pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                                       offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND, LR=TRUE)
@@ -114,7 +114,7 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
                 tmpTheta[,1L:ncol(Theta), drop=FALSE]
         }
         if(length(random) > 0L){
-            for(j in 1L:length(random)){
+            for(j in seq_len(length(random))){
                 random[[j]]@drawvals <- DrawValues(random[[j]], Theta=tmpTheta, itemloc=x@Model$itemloc,
                                                    pars=x@ParObjects$pars, fulldata=x@Data$fulldata[[1L]],
                                                    offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
@@ -135,7 +135,7 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     ret <- list(Theta)
     retnames <- 'Theta'
     if(length(random) > 0L){
-        for(j in 1L:length(random)){
+        for(j in seq_len(length(random))){
             Random[[j]] <- Random[[j]] / (ndraws/thin)
             attr(Random[[j]], 'Proportion Accepted') <- NULL
             colnames(Random[[j]]) <- colnames(x@ParObjects$random[[j]]@gdesign)
@@ -144,7 +144,7 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         }
     }
     if(length(lr.random) > 0L){
-        for(j in 1L:length(lr.random)){
+        for(j in seq_len(length(lr.random))){
             lr.Random[[j]] <- lr.Random[[j]] / (ndraws/thin)
             attr(lr.Random[[j]], 'Proportion Accepted') <- NULL
             colnames(lr.Random[[j]]) <- colnames(x@ParObjects$lr.random[[j]]@gdesign)

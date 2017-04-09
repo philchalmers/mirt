@@ -51,8 +51,8 @@ numDeriv_DerivTheta <- function(item, Theta){
     P <- function(Theta, item, cat) probtrace(item, Theta)[cat]
     grad <- hess <- vector('list', item@ncat)
     tmp <- tmp2 <- matrix(0, nrow(Theta), ncol(Theta))
-    for(j in 1L:item@ncat){
-        for(i in 1L:nrow(Theta)){
+    for(j in seq_len(item@ncat)){
+        for(i in seq_len(nrow(Theta))){
             tmp[i, ] <- numDeriv::grad(P, x=Theta[i, , drop=FALSE], item=item, cat=j)
             tmp2[i, ] <- diag(numDeriv::hessian(P, x=Theta[i, , drop=FALSE], item=item, cat=j))
         }
@@ -69,9 +69,9 @@ numDeriv_dP <- function(item, Theta){
     }
     par <- item@par[item@est]
     ret <- matrix(0, nrow(Theta), length(item@par))
-    for(i in 1L:nrow(Theta)){
+    for(i in seq_len(nrow(Theta))){
         tmp <- numeric(length(par))
-        for(j in 1L:item@ncat)
+        for(j in seq_len(item@ncat))
             tmp <- tmp + numDeriv::grad(P, x=par, Theta=Theta[i, , drop=FALSE],
                               item=item, cat=j)
         ret[i, item@est] <- tmp
@@ -310,7 +310,7 @@ setMethod(
         if(LR){
             LL2 <- rowSums(LL)
         } else {
-            for(i in 1L:J)
+            for(i in seq_len(J))
                 LL2[,i] <- rowSums(LL[,itemloc[i]:(itemloc[i+1L] - 1L)])
         }
         total_1 <- tapply(LL2, x@mtch, sum) + log_den1
@@ -333,7 +333,7 @@ setMethod(
     signature = signature(x = 'RandomPars'),
     definition = function(x, estHess = TRUE){
         Theta <- x@drawvals
-        pick <- -c(1L:ncol(Theta))
+        pick <- -seq_len(ncol(Theta))
         out <- .Call("dgroup", x, Theta, matrix(0L), estHess, TRUE, FALSE, FALSE)
         out$grad <- out$grad[pick]
         out$hess <- out$hess[pick, pick, drop=FALSE]
@@ -411,7 +411,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'dich'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -442,8 +442,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'dich'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -486,11 +486,11 @@ setMethod(
         u <- antilogit(x@par[parlength])
         g <- antilogit(x@par[parlength - 1L])
         d <- x@par[parlength - 2L]
-        a <- x@par[1L:nfact]
+        a <- x@par[seq_len(nfact)]
         Pstar <- P.mirt(c(a, d, -999, 999), Theta)[,2L]
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
-        for(i in 1L:nfact){
+        for(i in seq_len(nfact)){
             grad[[2L]][ ,i] <- (u-g) * a[i] * (Pstar * (1 - Pstar))
             grad[[1L]][ ,i] <- -1 * grad[[2L]][ ,i]
             hess[[2L]][ ,i] <- 2 * (u - g) * a[i]^2 * ((1 - Pstar)^2 * Pstar) -
@@ -536,7 +536,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'graded'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -545,7 +545,7 @@ setMethod(
     signature = signature(x = 'graded'),
     definition = function(x){
         par <- x@par
-        d <- par[-(1L:x@nfact)]
+        d <- par[-seq_len(x@nfact)]
         d
     }
 )
@@ -574,8 +574,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'graded'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -615,10 +615,10 @@ setMethod(
         a <- ExtractLambdas(x)
         P <- ProbTrace(x, Theta, itemexp = FALSE)
         grad <- hess <- vector('list', x@ncat)
-        for(i in 1L:x@ncat)
+        for(i in seq_len(x@ncat))
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1L:x@nfact){
-            for(i in 1L:(ncol(P)-1L)){
+        for(j in seq_len(x@nfact)){
+            for(i in seq_len(ncol(P)-1L)){
                 w1 <- P[,i] * (1-P[,i]) * a[j]
                 w2 <- P[,i+1L] * (1-P[,i+1L]) * a[j]
                 grad[[i]][ ,j] <- w1 - w2
@@ -668,7 +668,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rating'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -677,7 +677,7 @@ setMethod(
     signature = signature(x = 'rating'),
     definition = function(x){
         par <- x@par
-        d <- par[-c(1L:x@nfact, length(par))]
+        d <- par[-c(seq_len(x@nfact), length(par))]
         d
     }
 )
@@ -698,8 +698,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'rating'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -726,12 +726,11 @@ setMethod(
         hess <- matrix(0, length(x@par), length(x@par))
         dat <- x@dat
         nfact <- x@nfact
-        a <- x@par[1L:nfact]
+        a <- x@par[seq_len(nfact)]
         d <- ExtractZetas(x)
         nzetas <- length(d)
         shiftind <- length(x@par)
         shift <- x@par[shiftind]
-        nd <- length(d)
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         par <- c(a, d + shift)
@@ -747,28 +746,27 @@ setMethod(
         PQfull <- Pfull * (1-Pfull)
         P <- P.poly(c(a, d + shift), Theta, itemexp=TRUE, ot=offterm)
         rs <- dat
-        for(i in 1L:ncol(rs))
+        for(i in seq_len(ncol(rs)))
             dc <- dc + rs[,i]/P[,i] * (PQfull[,i] - PQfull[,i+1L])
         dc <- sum(dc)
         grad <- c(grad, dc)
         if(estHess){
             cind <- ncol(hess)
-            ddc <- ddd <- numeric(nrow(P))
-            dda <- matrix(0, nrow(P), nfact)
-            for(i in 1L:ncol(rs))
+            ddc <- numeric(nrow(P))
+            for(i in seq_len(ncol(rs)))
                 ddc <- ddc + rs[,i]/P[,i]  * (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
                     Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
                     rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L])^2
             hess[cind, cind] <- sum(ddc)
-            for(i in 1L:nzetas)
+            for(i in seq_len(nzetas))
                 hess[cind, nfact + i] <- hess[nfact + i, cind] <-
                     sum((rs[,i]/P[,i] * (-Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
                     rs[,i]/P[,i]^2 * (PQfull[,i] - PQfull[,i+1L]) * (-PQfull[,i+1L]) +
                     rs[,i+1L]/P[,i+1L] * (Pfull[,i+1L] - 3*Pfull[,i+1L]^2 + 2*Pfull[,i+1L]^3) -
                     rs[,i+1L]/P[,i+1L]^2 * (PQfull[,i+1L] - PQfull[,i+2L]) * (PQfull[,i+1L])))
-            for(j in 1L:nfact){
+            for(j in seq_len(nfact)){
                 tmp <- 0
-                for(i in 1L:ncol(rs))
+                for(i in seq_len(ncol(rs)))
                         tmp <- tmp + (rs[,i]/P[,i] * Theta[,j] *
                                           (Pfull[,i] - 3*Pfull[,i]^2 + 2*Pfull[,i]^3 -
                                                Pfull[,i+1L] + 3*Pfull[,i+1L]^2 - 2*Pfull[,i+1L]^3) -
@@ -790,10 +788,10 @@ setMethod(
         a <- ExtractLambdas(x)
         P <- ProbTrace(x, Theta, itemexp = FALSE)
         grad <- hess <- vector('list', x@ncat)
-        for(i in 1L:x@ncat)
+        for(i in seq_len(x@ncat))
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1L:x@nfact){
-            for(i in 1L:(ncol(P)-1L)){
+        for(j in seq_len(x@nfact)){
+            for(i in seq_len(ncol(P)-1L)){
                 w1 <- P[,i] * (1-P[,i]) * a[j]
                 w2 <- P[,i+1L] * (1-P[,i+1L]) * a[j]
                 grad[[i]][ ,j] <- w1 - w2
@@ -840,7 +838,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'gpcm'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -870,8 +868,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'gpcm'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -914,10 +912,10 @@ setMethod(
         Num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         grad <- hess <- vector('list', x@ncat)
-        for(i in 1L:x@ncat)
+        for(i in seq_len(x@ncat))
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1L:x@nfact){
-            for(i in 1L:x@ncat){
+        for(j in seq_len(x@nfact)){
+            for(i in seq_len(x@ncat)){
                 grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (ak * a[j])) / Den
                 hess[[i]][ ,j] <- ak[i]^2 * a[j]^2 * P[ ,i] -
                     2 * ak[i] * a[j] * P[,i] * (Num %*% (ak * a[j])) / Den +
@@ -938,7 +936,7 @@ setMethod(
         num <- P.gpcm(x@par, Theta=Theta, returnNum = TRUE, mat = x@mat)
         den <- rowSums(num)
         P <- num/den
-        a <- x@par[1L:ncol(Theta)]
+        a <- x@par[seq_len(ncol(Theta))]
         if(!x@mat){
             ak <- matrix(x@par[(ncol(Theta)+1L):(ncol(Theta)+x@ncat)], nfact, ncat, byrow=TRUE)
         } else {
@@ -947,17 +945,16 @@ setMethod(
         dp <- matrix(0, nrow(Theta), length(x@par))
         aknum <- eak <- vector('list', nfact)
         e <- 0:(x@ncat-1)
-        for(i in 1L:nfact){
+        for(i in seq_len(nfact)){
             aknum[[i]] <- t(ak[i,] * t(num))
             eak[[i]] <- e*ak[i,]
         }
-        aTheta <- as.numeric(a %*% t(Theta))
-        for(i in 1L:nfact){
+        for(i in seq_len(nfact)){
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[[i]][j]*Theta[,i]*P[,j] -
                     e[j]*P[,j]*rowSums(Theta[,i] * aknum[[i]])
         }
-        for(j in 1L:x@ncat){
+        for(j in seq_len(x@ncat)){
             dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 -
                 as.numeric(e[-j] %*% t(P[,-j]*P[,j]))
         }
@@ -991,7 +988,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rsm'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -1021,8 +1018,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'rsm'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -1134,10 +1131,10 @@ setMethod(
         Num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         grad <- hess <- vector('list', x@ncat)
-        for(i in 1L:x@ncat)
+        for(i in seq_len(x@ncat))
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1L:x@nfact){
-            for(i in 1L:x@ncat){
+        for(j in seq_len(x@nfact)){
+            for(i in seq_len(x@ncat)){
                 grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (ak * a[j])) / Den
                 hess[[i]][ ,j] <- ak[i]^2 * a[j]^2 * P[ ,i] -
                     2 * ak[i] * a[j] * P[,i] * (Num %*% (ak * a[j])) / Den +
@@ -1182,7 +1179,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nominal'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -1211,8 +1208,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'nominal'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x@est[(x@nfact+1L):(x@nfact + x@ncat)] <- FALSE
         x
     }
@@ -1247,7 +1244,7 @@ nominalParDeriv <- function(a, ak, d, Theta, P, num, dat, estHess, gpcm = FALSE)
     numakD <- num %*% ak
     numak2D2 <- num %*% ak2
     numakDTheta_numsum <- matrix(0, nrow(num), nfact)
-    for(i in 1L:nfact)
+    for(i in seq_len(nfact))
         numakDTheta_numsum[,i] <- (num %*% ak * Theta[, i])/ numsum
     ret <- .Call('dparsNominal', a, ak, d, Theta, P, num, dat, nfact, ncat,
                  akind, dind, ak2, P2, P3, aTheta, aTheta2, dat_num, numsum, numakD,
@@ -1278,10 +1275,10 @@ setMethod(
         Num <- P.nominal(c(a, ak, d), ncat=length(d), Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         grad <- hess <- vector('list', x@ncat)
-        for(i in 1L:x@ncat)
+        for(i in seq_len(x@ncat))
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1L:x@nfact){
-            for(i in 1L:x@ncat){
+        for(j in seq_len(x@nfact)){
+            for(i in seq_len(x@ncat)){
                 grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (ak * a[j])) / Den
                 hess[[i]][ ,j] <- ak[i]^2 * a[j]^2 * P[ ,i] -
                     2 * ak[i] * a[j] * P[,i] * (Num %*% (ak * a[j])) / Den +
@@ -1300,7 +1297,7 @@ setMethod(
         num <- P.nominal(x@par, ncat=x@ncat, Theta=Theta, returnNum=TRUE)
         den <- rowSums(num)
         P <- num/den
-        a <- x@par[1L:ncol(Theta)]
+        a <- x@par[seq_len(ncol(Theta))]
         ak <- x@par[(ncol(Theta)+1L):(ncol(Theta)+x@ncat)]
         dp <- matrix(0, nrow(Theta), length(x@par))
         aknum <- t(ak * t(num))
@@ -1309,11 +1306,11 @@ setMethod(
         ncat <- x@ncat
         e <- 0:(x@ncat-1)
         eak <- e*ak
-        for(i in 1L:nfact){
+        for(i in seq_len(nfact)){
             for(j in 2L:ncat)
                 dp[,i] <- dp[,i] + eak[j]*Theta[,i]*P[,j] - e[j]*P[,j]*rowSums(Theta[,i] * aknum)
         }
-        for(j in 1L:x@ncat){
+        for(j in seq_len(x@ncat)){
             dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 - as.numeric(e[-j] %*% t(P[,-j]*P[,j]))
             dp[,nfact + j] <- dp[,nfact + ncat + j] * aTheta
         }
@@ -1345,7 +1342,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'partcomp'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -1375,8 +1372,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'partcomp'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -1406,7 +1403,7 @@ setMethod(
             pars <- c(zeta,lambda,g)
             pgrad <- function(pars, r, thetas){
                 nfact <- ncol(thetas)
-                d <- pars[1L:nfact]
+                d <- pars[seq_len(nfact)]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
                 P <- P.comp(c(a,d,c,999), thetas)[,2L]
@@ -1418,7 +1415,7 @@ setMethod(
                 const1 <- (r/P - (f-r)/Q)
                 dd <- da <- rep(0,nfact)
                 dc <- sum(r/P * (g_1g * (1 - Pstar)) + (f-r)/Q * (g_1g * (Pstar - 1)))
-                for(i in 1L:nfact){
+                for(i in seq_len(nfact)){
                     Pk <- P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))[,2L]
                     Qk <- 1 - Pk
                     dd[i] <- sum((1-c)*Pstar*Qk*const1)
@@ -1428,7 +1425,7 @@ setMethod(
             }
             phess <- function(pars, r, thetas){
                 nfact <- ncol(thetas)
-                d <- pars[1L:nfact]
+                d <- pars[seq_len(nfact)]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
                 P <- P.comp(c(a,d,c,999), thetas)[,2L]
@@ -1440,11 +1437,11 @@ setMethod(
                 const1 <- (r/P - (f-r)/Q)
                 const2 <- (r/P^2 + (f-r)/Q^2)
                 hess <- matrix(0,nfact*2+1,nfact*2+1)
-                dNames <- paste("d",1:nfact,sep='_')
-                aNames <- paste("a",1:nfact,sep='_')
-                Names <- c(paste("d",1:nfact,sep='_'),paste("a",1:nfact,sep='_'),'c_0')
-                for(i in 1L:(nfact*2+1L)){
-                    for(j in 1L:(nfact*2+1L)){
+                dNames <- paste("d",seq_len(nfact),sep='_')
+                aNames <- paste("a",seq_len(nfact),sep='_')
+                Names <- c(paste("d",seq_len(nfact),sep='_'),paste("a",1:nfact,sep='_'),'c_0')
+                for(i in seq_len(nfact*2+1L)){
+                    for(j in seq_len(nfact*2+1L)){
                         if(i <= j){
                             d1 <- strsplit(Names[c(i,j)],"_")[[1L]]
                             d2 <- strsplit(Names[c(i,j)],"_")[[2L]]
@@ -1527,15 +1524,15 @@ setMethod(
             grad <- c(g[(nfact+1L):(nfact*2)], g[1L:nfact], g[length(g)], 0)
             hess <- matrix(0, ncol(h) + 1L, ncol(h) + 1L)
             if(estHess){
-                hess[1L:nfact, 1L:nfact] <- h[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] #a block
-                hess[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] <- h[1L:nfact, 1L:nfact] #d block
+                hess[seq_len(nfact), seq_len(nfact)] <- h[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] #a block
+                hess[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] <- h[seq_len(nfact), seq_len(nfact)] #d block
                 hess[nfact*2 + 1L, nfact*2 + 1L] <- h[nfact*2 + 1L, nfact*2 + 1L] #g
                 hess[nfact*2 + 1L, 1L:nfact] <- hess[1:nfact, nfact*2 + 1L] <-
                     h[nfact*2 + 1L, (nfact+1L):(nfact*2)] #ga
                 hess[nfact*2 + 1L, (nfact+1L):(nfact*2)] <- hess[(nfact+1L):(nfact*2), nfact*2 + 1L] <-
-                    h[nfact*2 + 1L, 1L:nfact] #gd
-                hess[(nfact+1L):(nfact*2), 1L:nfact] <- t(h[(nfact+1L):(nfact*2), 1L:nfact])
-                hess[1L:nfact, (nfact+1L):(nfact*2)] <- t(h[1L:nfact, (nfact+1L):(nfact*2)]) #ads
+                    h[nfact*2 + 1L, seq_len(nfact)] #gd
+                hess[(nfact+1L):(nfact*2), seq_len(nfact)] <- t(h[(nfact+1L):(nfact*2), seq_len(nfact)])
+                hess[seq_len(nfact), (nfact+1L):(nfact*2)] <- t(h[seq_len(nfact), (nfact+1L):(nfact*2)]) #ads
             }
 
             return(list(grad=grad, hess=hess))
@@ -1544,7 +1541,7 @@ setMethod(
         f <- rowSums(x@dat)
         r <- x@dat[ ,2L]
         nfact <- x@nfact
-        a <- x@par[1L:nfact]
+        a <- x@par[seq_len(nfact)]
         d <- x@par[(nfact+1L):(nfact*2L)]
         g <- x@par[length(x@par)-1L]
         tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),g=x@par[nfact*2L + 1L],r=r, f=f,
@@ -1571,7 +1568,7 @@ setMethod(
         u <- antilogit(u)
         grad <- hess <- vector('list', 2L)
         grad[[1L]] <- grad[[2L]] <- hess[[1L]] <- hess[[2L]] <- matrix(0, N, nfact)
-        for(j in 1L:nfact){
+        for(j in seq_len(nfact)){
             Pn <- P.mirt(c(a[j], d[j], -999, 999), Theta)[,2L]
             grad[[2L]][ ,j] <- (u-g)*Pstar*a[j]*(1 - Pn)
             grad[[1L]][ ,j] <- -1*grad[[2L]][ ,j]
@@ -1616,7 +1613,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nestlogit'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -1647,8 +1644,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'nestlogit'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x@est[(x@nfact+5L):(x@nfact + x@ncat + 1L)] <- FALSE
         x
     }
@@ -1679,7 +1676,7 @@ setMethod(
             hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
                                                   gradient = FALSE, type = 'Richardson')
         nfact <- x@nfact
-        a <- x@par[1L:x@nfact]
+        a <- x@par[seq_len(x@nfact)]
         d <- x@par[x@nfact+1L]
         g <- x@par[x@nfact+2L]
         u <- x@par[x@nfact+3L]
@@ -1700,14 +1697,14 @@ setMethod(
         nd <- ncol(idat)
         g_1g <- g * (1 - g)
         u_1u <- u * (1 - u)
-        for(i in 1L:nfact)
+        for(i in seq_len(nfact))
             grad[i] <- sum( (u-g) * Theta[,i] * Qstar * Pstar * (
                 cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+1L] <- sum( (u-g) * Qstar * Pstar * (
                 cdat / Pd - rowSums(idat/Qd)) )
         grad[nfact+2L] <- sum( ((cdat * g_1g * (1-Pstar)/Pd) + rowSums(idat * g_1g * (Pstar - 1)/Qd)) )
         grad[nfact+3L] <- sum( (cdat * u_1u * Pstar / Pd - rowSums(idat * u_1u * Pstar / Qd) ))
-        for(j in 1L:nd){
+        for(j in seq_len(nd)){
             grad[nfact+3L+j] <- sum((
                 (idat[,j] * Qd * rowSums(Theta) * (Pn[,j] - Pn[,j]^2)) / (Qd * Pn[,j]) -
                     rowSums(idat[,-j, drop=FALSE]) * rowSums(Theta) * Pn[,j]))
@@ -1725,7 +1722,7 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta){
-        a <- x@par[1:x@nfact]
+        a <- x@par[seq_len(x@nfact)]
         d <- x@par[x@nfact+1L]
         g <- x@par[x@nfact+2L]
         u <- x@par[x@nfact+3L]
@@ -1748,10 +1745,10 @@ setMethod(
         ak <- ak2
         dk <- dk2
         grad <- hess <- vector('list', x@ncat)
-        for(i in 1L:x@ncat)
+        for(i in seq_len(x@ncat))
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
-        for(j in 1L:x@nfact){
-            for(i in 1L:x@ncat){
+        for(j in seq_len(x@nfact)){
+            for(i in seq_len(x@ncat)){
                 if(i == x@correctcat){
                     grad[[i]][ ,j] <- (u-g) * a[j] * (Pstar * (1 - Pstar))
                     hess[[i]][ ,j] <- 2 * (u - g) * a[j]^2 * ((1 - Pstar)^2 * Pstar) -
@@ -1808,7 +1805,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'ideal'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -1836,8 +1833,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'ideal'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -1875,7 +1872,7 @@ setMethod(
         Q <- (1 - P)
         Q <- ifelse(Q < 1e-7, 1e-7, Q)
         int <- as.numeric(Theta %*% a + d)
-        for(i in 1L:ncol(Theta))
+        for(i in seq_len(ncol(Theta)))
             grad[i] <- -sum( x@dat[,1] * int * Theta[,i] * -P / Q +
                                x@dat[,2] * int * Theta[,i])
         grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q +
@@ -1919,7 +1916,7 @@ setMethod(
         d <- x@par[length(x@par)]
         a <- x@par[-length(x@par)]
         int <- as.numeric(t(a %*% t(Theta)) + d)
-        for(i in 1L:ncol(Theta))
+        for(i in seq_len(ncol(Theta)))
             dp[,i] <- -2 * Theta[,i] * int * P
         dp[,i+1L] <- -2 * int * P
         dp
@@ -1951,7 +1948,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'lca'),
     definition = function(x){
-        x@par[1L:x@nfact]
+        x@par[seq_len(x@nfact)]
     }
 )
 
@@ -1977,8 +1974,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'lca'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )
@@ -2026,7 +2023,7 @@ setMethod(
         dp <- matrix(0, nrow(Theta), length(x@par))
         ind <- 1L
         for(j in 2L:x@ncat){
-            for(i in 1:ncol(Theta)){
+            for(i in seq_len(ncol(Theta))){
                 dp[,ind] <- Theta[,i] * (P[,j] -
                         rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
                 ind <- ind + 1L
@@ -2134,7 +2131,7 @@ setMethod(
         dp <- matrix(0, nrow(Theta), length(x@par))
         ind <- 1L
         for(j in 2L:x@ncat){
-            for(i in 1:ncol(Theta)){
+            for(i in seq_len(ncol(Theta))){
                 dp[,ind] <- Theta[,i] * (P[,j] -
                                              rowSums(P[,j,drop=FALSE] * P[,j,drop=FALSE]))
                 ind <- ind + 1L
@@ -2317,7 +2314,7 @@ setMethod(
   f = "ExtractLambdas",
   signature = signature(x = 'grsmIRT'),
   definition = function(x){
-    x@par[1L:x@nfact] #slopes
+    x@par[seq_len(x@nfact)] #slopes
   }
 )
 
@@ -2349,8 +2346,8 @@ setMethod(
   f = "set_null_model",
   signature = signature(x = 'grsmIRT'),
   definition = function(x){
-    x@par[1L:(x@nfact+x@ncat)] <- 0
-    x@est[1L:(x@nfact+x@ncat)] <- FALSE
+    x@par[seq_len(x@nfact+x@ncat)] <- 0
+    x@est[seq_len(x@nfact+x@ncat)] <- FALSE
     x
   }
 )
@@ -2434,10 +2431,10 @@ setMethod(
     P.star.a1 <- PQ.star*B.mat
     P.star.beta <- list()
 
-    for (i in 1:(ncat-1))
+    for (i in seq_len(ncat-1))
       P.star.beta[[i]] <- matrix(0, nr, nc)
 
-    for (i in 1:(ncat-1))
+    for (i in seq_len(ncat-1))
       P.star.beta[[i]][,i] <- (PQ.star*a1)[,i]
 
     P.star.c <- PQ.star*a1
@@ -2448,7 +2445,7 @@ setMethod(
 
     P.a1[, 2:nc] <- inv.P*(P.star.a1[,-nc] - P.star.a1[, -1])
 
-    for (i in 1:(ncat-1))
+    for (i in seq_len(ncat-1))
       P.beta[[i]][, 2:nc] <- inv.P*(P.star.beta[[i]][, -nc] - P.star.beta[[i]][, -1])
 
     P.c[, 2:nc] <- inv.P * (P.star.c[, -nc] - P.star.c[, -1])
@@ -2464,7 +2461,7 @@ setMethod(
     # the last response category
     P.a1[,ncat]=Q.star[,ncat-1]*B.mat[,ncat-1]
 
-    for (i in 1:(ncat-2))
+    for (i in seq_len(ncat-2))
       P.beta[[i]][,ncat] <- 0
 
     P.beta[[ncat-1]][,ncat] <- Q.star[,ncat-1]*a1
@@ -2472,7 +2469,7 @@ setMethod(
 
 
     grad[1] <- sum(P.a1 * dat)
-    for (i in 1:(ncat-1))
+    for (i in seq_len(ncat-1))
       grad[i+1] <- sum(P.beta[[i]] *dat)
     grad[ncat+1] <- sum(P.c * dat)
 
@@ -2525,9 +2522,9 @@ setMethod("initialize",
             .Object@par <- c(rep(1, nfact),  seq(1, -1, length.out=ncat-1), 0)
             #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1), 0)
             # -3 ~ 3 seems to be too far away
-            names(.Object@par) = c(paste("a",1:nfact, sep=""),
-                                   paste("b", 1:(ncat-1), sep=""), "c")
-            .Object@est <- c(rep(TRUE, nfact), rep(TRUE,ncat-1), TRUE)
+            names(.Object@par) = c(paste("a", seq_len(nfact), sep=""),
+                                   paste("b", seq_len(ncat-1L), sep=""), "c")
+            .Object@est <- c(rep(TRUE, nfact), rep(TRUE,ncat-1L), TRUE)
             .Object@lbound <- rep(-Inf, nfact+ncat)
             .Object@ubound <- rep(Inf, nfact+ncat)
             .Object
@@ -2672,7 +2669,7 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'experimental'),
     definition = function(x){
-        x@par[1L:x@nfact] #slopes
+        x@par[seq_len(x@nfact)] #slopes
     }
 )
 
@@ -2701,8 +2698,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'experimental'),
     definition = function(x){
-        x@par[1L:x@nfact] <- 0
-        x@est[1L:x@nfact] <- FALSE
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
         x
     }
 )

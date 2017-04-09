@@ -36,7 +36,7 @@ setMethod(
         gnames <- object@Data$groupNames
         nfact <- object@Model$nfact
         K <- object@ParObjects$pars[[1L]]@ParObjects$pars[[item]]@ncat
-        for(g in 1L:length(gnames)){
+        for(g in seq_len(length(gnames))){
             object@ParObjects$pars[[g]]@vcov <- object@vcov
             Pinfo[[g]] <- itemplot.main(object@ParObjects$pars[[g]], item=item, type='RETURN',
                                         degrees=degrees, CE=FALSE, CEalpha=CEalpha,
@@ -50,7 +50,7 @@ setMethod(
         dat <- Pinfo[[1]]
         mins <- extract.mirt(object, 'mins')[item]
         score <- vector('list', g)
-        for(g in 1L:length(gnames))
+        for(g in seq_len(length(gnames)))
             score[[g]] <- colSums(t(Pinfo[[g]][,1L:K]) * (0L:(K-1L) + mins))
         for(g in 2L:length(gnames))
             dat <- rbind(dat, Pinfo[[g]])

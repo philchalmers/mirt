@@ -265,7 +265,7 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
     get.LL <- LL - qchisq(1-alpha, 1)/2
     constraints <- extract.mirt(mod, 'constrain')
     if(length(constraints)){
-        for(i in 1L:length(constraints)){
+        for(i in seq_len(length(constraints))){
             match <- which(parnums %in% constraints[[i]])
             if(length(match) > 1L){
                 match <- match[-1L]
