@@ -203,7 +203,7 @@ setMethod(
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
-                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den,
+                               MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
                                custom_theta=custom_theta, converge_info=converge_info, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret)
