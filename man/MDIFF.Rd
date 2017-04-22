@@ -23,6 +23,9 @@ normal ogive metric.
 mod <- mirt(Science, 2)
 MDIFF(mod)
 
+mod <- mirt(expand.table(LSAT7), 2)
+MDIFF(mod)
+
 }
 }
 \references{

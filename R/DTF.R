@@ -247,8 +247,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
             }
         }
         if(plot == 'func'){
-            #for some reason the plot is drawn backwords....use rev() for now
-            group <- rev(factor(rep(mod@Data$groupNames, each=nrow(Theta))))
+            group <- rep(mod@Data$groupNames, each=nrow(Theta))
             CIs <- apply(scores, 2L, bs_range, CI=CI)
             df <- data.frame(Theta=rbind(Theta, Theta), group, TS=oCM, t(CIs))
             lim <- c(min(df$lower), max(df$upper))
