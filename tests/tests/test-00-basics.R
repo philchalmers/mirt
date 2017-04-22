@@ -29,7 +29,7 @@ test_that('basics', {
     rxx <- marginal_rxx(mod)
     expect_equal(rxx, 0.4209159, tolerance=1e-6)
     MD <- unname(MDISC(mod)[1])
-    expect_equal(MD, 0.5, tolerance=1e-6)
+    expect_equal(MD, 0.851, tolerance=1e-6)
     MDF <- unname(MDIFF(mod)[1L,])
     expect_equal(MDF, c(-5.158250, -3.035038, 1.728882), tolerance=1e-6)
 
