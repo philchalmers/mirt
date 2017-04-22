@@ -22,7 +22,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             colnames(data) <- paste0('Item.', 1L:ncol(data))
         Data$data <- data
         Data$group <- factor(group)
-        Data$groupNames <- unique(Data$group)
+        Data$groupNames <- levels(Data$group)
         Data$ngroups <- length(Data$groupNames)
         Data$nitems <- ncol(data)
         K <- apply(Data$data, 2L, function(x) length(unique(na.omit(x))))
@@ -169,7 +169,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         else Data$grsm.block <- opts$grsm.block
         if(is.null(opts$rsm.block)) Data$rsm.block <- rep(1L, ncol(data))
         Data$group <- factor(group)
-        Data$groupNames <- unique(Data$group)
+        Data$groupNames <- levels(Data$group)
         if(any(grepl('-', Data$groupNames)))
             stop('Group names cannot contain a dash (-) character', call.=FALSE)
         Data$ngroups <- length(Data$groupNames)
