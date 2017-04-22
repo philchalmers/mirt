@@ -1,5 +1,7 @@
 # Changes in mirt 1.24
 
+- MDIFF and MDISC no longer in normal ogive metric (1.702 scaling value removed)
+
 - added `QMC` option to `residuals()` for `LD` and `LDG2` methods. Also globally set the number of QMC points to 
   5000 throughout the package for consistency
 

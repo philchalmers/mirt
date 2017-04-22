@@ -11,7 +11,6 @@ MDISC(x)
 }
 \description{
 Returns a vector containing the MDISC values for each item in the model input object (Reckase, 2009).
-Note that the logistic slope parameters are divided by 1.702 to match the normal ogive metric.
 }
 \examples{
 \dontrun{

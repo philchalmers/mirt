@@ -1,8 +1,7 @@
 #' Compute multidimensional difficulty index
 #'
 #' Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
-#' 'dich' and 'graded'. Note that the logistic intercept parameters are divided by 1.702 to match the
-#' normal ogive metric.
+#' 'dich' and 'graded'.
 #'
 #' @aliases MDIFF
 #' @param x an object of class 'SingleGroupClass'
@@ -38,7 +37,7 @@ MDIFF <- function(x, which.items = NULL){
         item <- extract.item(x, which.items[i])
         if(!(class(item) %in% c('dich', 'graded')))
             stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]))
-        ds <- ExtractZetas(item)/1.702
+        ds <- ExtractZetas(item)
         out[[i]] <- -ds / MD[which.items[i]]
     }
     ret <- matrix(NA, length(out), max(sapply(out, length)))
