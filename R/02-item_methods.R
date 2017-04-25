@@ -335,10 +335,10 @@ setMethod(
         Theta <- x@drawvals
         pick <- -seq_len(ncol(Theta))
         out <- .Call("dgroup", x, Theta, matrix(0L), estHess, TRUE, FALSE, FALSE)
-        out$grad <- out$grad[pick]
-        out$hess <- out$hess[pick, pick, drop=FALSE]
-        diag(out$hess) <- -abs(diag(out$hess)) #hack for very small clusters
-        out
+        grad <- out$grad[pick]
+        hess <- out$hess[pick, pick, drop=FALSE]
+        diag(hess) <- -abs(diag(hess)) #hack for very small clusters
+        list(grad=grad, hess=hess)
     }
 )
 

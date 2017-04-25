@@ -294,7 +294,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                         dX2 <- preMstep.longpars - preMstep.longpars2
                         dX <- longpars - preMstep.longpars
                         d2X2 <- dX - dX2
-                        ratio <- sqrt((dX %*% dX) / (d2X2 %*% d2X2))
+                        ratio <- as.vector(sqrt((dX %*% dX) / (d2X2 %*% d2X2)))
                         accel <- 1 - ratio
                         if(accel < -5) accel <- -5
                         tmp <- (1 - accel) * longpars + accel * preMstep.longpars
@@ -303,7 +303,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 } else if(list$accelerate == 'squarem'){
                     r <- preMstep.longpars - preMstep.longpars2
                     v <- (longpars - preMstep.longpars) - r
-                    ratio <- sqrt((r %*% r) / (v %*% v))
+                    ratio <- as.vector(sqrt((r %*% r) / (v %*% v)))
                     accel <- -ratio
                     if(accel > -1){
                         accel <- -1
