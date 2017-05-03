@@ -41,7 +41,7 @@
 #' \dontrun{
 #'
 #' #make some data
-#' set.seed(1234)
+#' set.seed(1)
 #' a <- matrix(rlnorm(20),ncol=1)
 #' d <- matrix(rnorm(20),ncol=1)
 #' items <- rep('2PL', 20)
