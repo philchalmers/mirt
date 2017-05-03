@@ -58,7 +58,7 @@ hljs.initHighlightingOnLoad();
 </script>
 
 <!-- MathJax scripts -->
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -312,9 +312,9 @@ Iteration: 81, Log-Lik: -2466.938, Max-Change: 0.00009
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 81 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: L-BFGS-B 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2466.938
@@ -387,9 +387,9 @@ Iteration: 12, Log-Lik: -2466.938, Max-Change: 0.00009
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2466.938
@@ -467,35 +467,31 @@ solnp_args &lt;- list(eqfun=eqfun, eqB=0)
 mod3 &lt;- mirt(dat, model2, itemtype = &#39;Rasch&#39;, optimizer = &#39;solnp&#39;, solnp_args=solnp_args)
 </code></pre>
 
-<pre><code>## Error: Error in ev$vectors %*% diag(v) : non-conformable arguments
+<pre><code>## Error: Rsolnp package is not available. Please install.
 </code></pre>
 
 <pre><code class="r">print(mod3)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## MultiLCIRT::est_multi_poly(S = S, yv = yv, k = 5, start = 1, 
-##     link = 1, multi = multi1, fort = TRUE, tol = 10^-5, disp = TRUE, 
-##     output = TRUE)
+<pre><code>## Error in print(mod3): object &#39;mod3&#39; not found
 </code></pre>
 
 <pre><code class="r">coef(mod3)
 </code></pre>
 
-<pre><code>## NULL
+<pre><code>## Error in coef(mod3): object &#39;mod3&#39; not found
 </code></pre>
 
 <pre><code class="r">(ds &lt;- sapply(coef(mod3)[1:5], function(x) x[,&#39;d&#39;]))
 </code></pre>
 
-<pre><code>## list()
+<pre><code>## Error in coef(mod3): object &#39;mod3&#39; not found
 </code></pre>
 
 <pre><code class="r">sum(ds)
 </code></pre>
 
-<pre><code>## Error in sum(ds): invalid &#39;type&#39; (list) of argument
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;ds&#39; not found
 </code></pre>
 
 <pre><code class="r">### same as above, but using alabama package optimizers (make use of gradient information, 
@@ -507,7 +503,7 @@ mod3b &lt;- mirt(dat, model2, itemtype = &#39;Rasch&#39;, optimizer = &#39;alaba
               pars = mod2values(mod3), TOL=1e-5)
 </code></pre>
 
-<pre><code>## Error in mod2values(mod3): trying to get slot &quot;ParObjects&quot; from an object (class &quot;est_multi_poly&quot;) that is not an S4 object
+<pre><code>## Error in is(x, &quot;MultipleGroupClass&quot;): object &#39;mod3&#39; not found
 </code></pre>
 
 <pre><code class="r">print(mod3b)
@@ -531,7 +527,7 @@ mod3b &lt;- mirt(dat, model2, itemtype = &#39;Rasch&#39;, optimizer = &#39;alaba
 <pre><code class="r">sum(ds)
 </code></pre>
 
-<pre><code>## Error in sum(ds): invalid &#39;type&#39; (list) of argument
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;ds&#39; not found
 </code></pre>
 
 </body>

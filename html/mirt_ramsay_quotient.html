@@ -236,11 +236,11 @@ summary(mod1)
 </code></pre>
 
 <pre><code>## ------------------------------------------------------------
-## sirt 1.14-0 (2017-01-11) 
+## sirt 1.15-41 (2017-03-02 16:13:55) 
 ## 
-## Date of Analysis: 2017-03-02 15:19:33 
-## Time difference of 0.1119702 secs
-## Computation time: 0.1119702 
+## Date of Analysis: 2017-05-03 17:06:35 
+## Time difference of 0.2202067 secs
+## Computation time: 0.2202067 
 ## 
 ## Call:
 ## rasch.mml2(dat = dat, mmliter = mmliter, progress = FALSE, fixed.K = fixed.K, 
@@ -329,9 +329,9 @@ print(mod1m)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 10
 ## 
 ## Log-likelihood = -5880.067
@@ -365,9 +365,13 @@ round( dfr , 2 )
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.3.2 (2016-10-31)
+<pre><code>## R version 3.4.0 (2017-04-21)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.1 LTS
+## Running under: Ubuntu 16.04.2 LTS
+## 
+## Matrix products: default
+## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C              
@@ -382,29 +386,26 @@ round( dfr , 2 )
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] MultiLCIRT_2.10  limSolve_1.5.5.2 CDM_5.4-0        mvtnorm_1.0-5   
-##  [5] sirt_1.14-0      ltm_1.0-0        polycor_0.7-9    msm_1.6.4       
-##  [9] MASS_7.3-45      mirt_1.23        lattice_0.20-34  knitr_1.15.1    
+## [1] CDM_5.5-21      mvtnorm_1.0-6   sirt_1.15-41    mirt_1.24      
+## [5] lattice_0.20-35 knitr_1.15.1   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.9           gtools_3.5.0          psychomix_1.1-3      
-##  [4] psych_1.6.12          mime_0.5              ic.infer_1.1-5       
-##  [7] plyr_1.8.4            MatrixModels_0.4-1    survey_3.31-5        
-## [10] evaluate_0.10         coda_0.19-1           tensor_1.5           
-## [13] highr_0.6             SparseM_1.74          kernlab_0.9-25       
-## [16] Matrix_1.2-7.1        WrightMap_1.2.1       combinat_0.0-8       
-## [19] pbivnorm_0.6.0        mRm_1.1.6             lavaan.survey_1.1.3.1
-## [22] splines_3.3.2         stringr_1.2.0         foreign_0.8-67       
-## [25] igraph_1.0.1          GPArotation_2014.11-1 mnormt_1.5-5         
-## [28] mgcv_1.8-16           mcmc_0.9-4            nnet_7.3-12          
-## [31] expm_0.999-1          lpSolve_5.6.13        kappalab_0.4-7       
-## [34] quadprog_1.5-5        grid_3.3.2            nlme_3.1-129         
-## [37] magrittr_1.5          TAM_1.99993-0         stringi_1.1.2        
-## [40] sm_2.2-5.4            flexmix_2.3-13        boot_1.3-18          
-## [43] Formula_1.2-1         tools_3.3.2           markdown_0.7.7       
-## [46] sfsmisc_1.1-0         parallel_3.3.2        survival_2.39-4      
-## [49] lavaan_0.5-23.1097    psychotools_0.4-2     quantreg_5.29        
-## [52] MCMCpack_1.3-9        modeltools_0.2-21
+##  [1] Rcpp_0.12.10          polycor_0.7-9         compiler_3.4.0       
+##  [4] plyr_1.8.4            highr_0.6             tools_3.4.0          
+##  [7] boot_1.3-19           evaluate_0.10         nlme_3.1-131         
+## [10] mgcv_1.8-17           igraph_1.0.1          Matrix_1.2-8         
+## [13] psych_1.7.3.21        parallel_3.4.0        SparseM_1.77         
+## [16] TAM_2.0-37            pbivnorm_0.6.0        WrightMap_1.2.1      
+## [19] coda_0.19-1           kappalab_0.4-7        ic.infer_1.1-5       
+## [22] stringr_1.2.0         MatrixModels_0.4-1    gtools_3.5.0         
+## [25] combinat_0.0-8        grid_3.4.0            lavaan.survey_1.1.3.1
+## [28] survival_2.41-3       sm_2.2-5.4            foreign_0.8-67       
+## [31] GPArotation_2014.11-1 lavaan_0.5-23.1097    kernlab_0.9-25       
+## [34] magrittr_1.5          mcmc_0.9-5            MASS_7.3-47          
+## [37] splines_3.4.0         sfsmisc_1.1-0         mnormt_1.5-5         
+## [40] lpSolve_5.6.13        mime_0.5              quantreg_5.33        
+## [43] quadprog_1.5-5        survey_3.31-5         stringi_1.1.5        
+## [46] MCMCpack_1.3-9        markdown_0.8
 </code></pre>
 
 </body>

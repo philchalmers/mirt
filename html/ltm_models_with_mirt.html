@@ -212,22 +212,7 @@ equivalent analyses in <code>ltm</code> can be run performed in <code>mirt</code
 <pre><code class="r">library(ltm)
 </code></pre>
 
-<pre><code>## Loading required package: MASS
-</code></pre>
-
-<pre><code>## Loading required package: msm
-</code></pre>
-
-<pre><code>## Loading required package: polycor
-</code></pre>
-
-<pre><code>## 
-## Attaching package: &#39;ltm&#39;
-</code></pre>
-
-<pre><code>## The following object is masked from &#39;package:mirt&#39;:
-## 
-##     Science
+<pre><code>## Error in library(ltm): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">library(mirt)
@@ -274,80 +259,13 @@ head(dat)
 (lmod1 &lt;- ltm::rasch(dat, IRT.param = FALSE))
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::rasch(data = dat, IRT.param = FALSE)
-## 
-## Coefficients:
-##  Item.1   Item.2   Item.3   Item.4   Item.5   Item.6   Item.7   Item.8  
-##  -1.077    0.332   -1.096   -0.573    0.582   -1.912    1.342   -1.592  
-##  Item.9  Item.10  Item.11  Item.12  Item.13  Item.14  Item.15  Item.16  
-##   2.324   -0.361    4.448   -0.394    0.791    1.125    1.725   -0.401  
-## Item.17  Item.18  Item.19  Item.20  Item.21  Item.22  Item.23  Item.24  
-##   3.620   -0.708    0.237    2.205    2.685    2.992   -0.910    1.153  
-## Item.25  Item.26  Item.27  Item.28  Item.29  Item.30  Item.31  Item.32  
-##  -0.590   -0.178    2.094    0.150   -0.768   -0.273    1.853   -1.898  
-##       z  
-##   0.906  
-## 
-## Log.Lik: -9643.437
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">summary(lmod1)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::rasch(data = dat, IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik      AIC      BIC
-##  -9643.437 19352.87 19497.97
-## 
-## Coefficients:
-##         value std.err   z.vals
-## Itm.1 -1.0767  0.1046 -10.2984
-## Itm.2  0.3322  0.0965   3.4426
-## Itm.3 -1.0958  0.1049 -10.4502
-## Itm.4 -0.5732  0.0984  -5.8237
-## Itm.5  0.5818  0.0980   5.9375
-## Itm.6 -1.9120  0.1243 -15.3823
-## Itm.7  1.3421  0.1085  12.3741
-## Itm.8 -1.5921  0.1151 -13.8262
-## Itm.9  2.3242  0.1388  16.7482
-## It.10 -0.3612  0.0969  -3.7255
-## It.11  4.4481  0.3241  13.7243
-## It.12 -0.3936  0.0971  -4.0518
-## It.13  0.7914  0.0999   7.9184
-## It.14  1.1247  0.1045  10.7642
-## It.15  1.7245  0.1177  14.6570
-## It.16 -0.4014  0.0972  -4.1305
-## It.17  3.6199  0.2246  16.1166
-## It.18 -0.7081  0.0997  -7.1034
-## It.19  0.2370  0.0962   2.4639
-## It.20  2.2051  0.1338  16.4753
-## It.21  2.6847  0.1563  17.1777
-## It.22  2.9919  0.1747  17.1263
-## It.23 -0.9100  0.1021  -8.9133
-## It.24  1.1533  0.1050  10.9881
-## It.25 -0.5899  0.0986  -5.9851
-## It.26 -0.1782  0.0962  -1.8523
-## It.27  2.0942  0.1296  16.1594
-## It.28  0.1505  0.0960   1.5676
-## It.29 -0.7685  0.1003  -7.6586
-## It.30 -0.2733  0.0965  -2.8313
-## It.31  1.8527  0.1214  15.2569
-## It.32 -1.8981  0.1239 -15.3249
-## z      0.9059  0.0351  25.8081
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 21 
-## 
-## Optimization:
-## Convergence: 0 
-## max(|grad|): 0.15 
-## quasi-Newton: BFGS
+<pre><code>## Error in summary(lmod1): object &#39;lmod1&#39; not found
 </code></pre>
 
 <pre><code class="r">#mirt
@@ -362,9 +280,9 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -9643.47
@@ -430,9 +348,9 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: L-BFGS-B 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -9643.469
@@ -500,134 +418,13 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 (lmod2 &lt;- ltm::ltm(dat ~ z1, IRT.param = FALSE))
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::ltm(formula = dat ~ z1, IRT.param = FALSE)
-## 
-## Coefficients:
-##          (Intercept)     z1
-## Item.1        -1.046  0.802
-## Item.2         0.436  1.504
-## Item.3        -1.143  1.075
-## Item.4        -0.531  0.585
-## Item.5         0.604  0.990
-## Item.6        -2.051  1.149
-## Item.7         1.382  1.004
-## Item.8        -1.509  0.693
-## Item.9         2.143  0.533
-## Item.10       -0.362  1.009
-## Item.11        5.244  1.730
-## Item.12       -0.346  0.161
-## Item.13        0.851  1.107
-## Item.14        1.173  1.037
-## Item.15        1.922  1.293
-## Item.16       -0.383  0.726
-## Item.17        4.160  1.548
-## Item.18       -0.853  1.701
-## Item.19        0.236  0.840
-## Item.20        2.603  1.531
-## Item.21        2.517  0.606
-## Item.22        3.474  1.537
-## Item.23       -0.851  0.638
-## Item.24        1.267  1.205
-## Item.25       -0.567  0.771
-## Item.26       -0.173  1.535
-## Item.27        2.758  1.905
-## Item.28        0.172  1.071
-## Item.29       -0.751  0.835
-## Item.30       -0.248  0.386
-## Item.31        2.774  2.329
-## Item.32       -1.652  0.129
-## 
-## Log.Lik: -9489.026
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">summary(lmod2)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::ltm(formula = dat ~ z1, IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik      AIC      BIC
-##  -9489.026 19106.05 19387.45
-## 
-## Coefficients:
-##                       value std.err   z.vals
-## (Intercept).Item.1  -1.0458  0.1062  -9.8506
-## (Intercept).Item.2   0.4362  0.1195   3.6508
-## (Intercept).Item.3  -1.1425  0.1170  -9.7612
-## (Intercept).Item.4  -0.5309  0.0912  -5.8198
-## (Intercept).Item.5   0.6045  0.1040   5.8139
-## (Intercept).Item.6  -2.0510  0.1596 -12.8514
-## (Intercept).Item.7   1.3819  0.1258  10.9883
-## (Intercept).Item.8  -1.5090  0.1177 -12.8233
-## (Intercept).Item.9   2.1427  0.1439  14.8865
-## (Intercept).Item.10 -0.3615  0.1004  -3.6011
-## (Intercept).Item.11  5.2442  0.6790   7.7234
-## (Intercept).Item.12 -0.3456  0.0834  -4.1429
-## (Intercept).Item.13  0.8508  0.1130   7.5296
-## (Intercept).Item.14  1.1728  0.1196   9.8020
-## (Intercept).Item.15  1.9225  0.1645  11.6900
-## (Intercept).Item.16 -0.3825  0.0929  -4.1164
-## (Intercept).Item.17  4.1603  0.4240   9.8121
-## (Intercept).Item.18 -0.8531  0.1320  -6.4631
-## (Intercept).Item.19  0.2363  0.0952   2.4833
-## (Intercept).Item.20  2.6035  0.2260  11.5196
-## (Intercept).Item.21  2.5167  0.1712  14.6993
-## (Intercept).Item.22  3.4737  0.3190  10.8897
-## (Intercept).Item.23 -0.8505  0.0975  -8.7238
-## (Intercept).Item.24  1.2674  0.1294   9.7957
-## (Intercept).Item.25 -0.5675  0.0961  -5.9072
-## (Intercept).Item.26 -0.1728  0.1167  -1.4808
-## (Intercept).Item.27  2.7576  0.2615  10.5461
-## (Intercept).Item.28  0.1722  0.1016   1.6953
-## (Intercept).Item.29 -0.7509  0.1006  -7.4627
-## (Intercept).Item.30 -0.2485  0.0852  -2.9150
-## (Intercept).Item.31  2.7739  0.2928   9.4743
-## (Intercept).Item.32 -1.6517  0.1117 -14.7922
-## z1.Item.1            0.8018  0.1181   6.7872
-## z1.Item.2            1.5041  0.1729   8.6968
-## z1.Item.3            1.0746  0.1345   7.9924
-## z1.Item.4            0.5845  0.1037   5.6384
-## z1.Item.5            0.9900  0.1330   7.4430
-## z1.Item.6            1.1495  0.1550   7.4185
-## z1.Item.7            1.0043  0.1509   6.6565
-## z1.Item.8            0.6927  0.1208   5.7361
-## z1.Item.9            0.5328  0.1601   3.3271
-## z1.Item.10           1.0086  0.1273   7.9217
-## z1.Item.11           1.7296  0.4972   3.4785
-## z1.Item.12           0.1611  0.0913   1.7642
-## z1.Item.13           1.1075  0.1461   7.5808
-## z1.Item.14           1.0370  0.1479   7.0129
-## z1.Item.15           1.2931  0.1887   6.8528
-## z1.Item.16           0.7263  0.1100   6.6016
-## z1.Item.17           1.5480  0.3539   4.3745
-## z1.Item.18           1.7009  0.1864   9.1237
-## z1.Item.19           0.8403  0.1190   7.0588
-## z1.Item.20           1.5311  0.2367   6.4677
-## z1.Item.21           0.6058  0.1859   3.2582
-## z1.Item.22           1.5369  0.2917   5.2692
-## z1.Item.23           0.6379  0.1086   5.8740
-## z1.Item.24           1.2052  0.1622   7.4311
-## z1.Item.25           0.7713  0.1129   6.8347
-## z1.Item.26           1.5352  0.1705   9.0022
-## z1.Item.27           1.9045  0.2761   6.8980
-## z1.Item.28           1.0711  0.1338   8.0067
-## z1.Item.29           0.8350  0.1170   7.1361
-## z1.Item.30           0.3855  0.0958   4.0259
-## z1.Item.31           2.3285  0.3317   7.0192
-## z1.Item.32           0.1291  0.1200   1.0760
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 21 
-## 
-## Optimization:
-## Convergence: 0 
-## max(|grad|): 0.00092 
-## quasi-Newton: BFGS
+<pre><code>## Error in summary(lmod2): object &#39;lmod2&#39; not found
 </code></pre>
 
 <pre><code class="r">#mirt
@@ -640,9 +437,9 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 23 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -9488.955
@@ -702,169 +499,21 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 
 <pre><code class="r">#ltm 
 lmod3 &lt;- ltm::ltm(dat ~ z1 + z2, IRT.param = FALSE)
-lmod3
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::ltm(formula = dat ~ z1 + z2, IRT.param = FALSE)
-## 
-## Coefficients:
-##          (Intercept)     z1      z2
-## Item.1        -1.060  0.797  -0.325
-## Item.2         0.442  1.521  -0.157
-## Item.3        -1.145  1.084   0.015
-## Item.4        -0.553  0.594  -0.471
-## Item.5         0.607  0.994  -0.143
-## Item.6        -2.066  1.135  -0.323
-## Item.7         1.591  1.153   0.920
-## Item.8        -1.508  0.679  -0.138
-## Item.9         2.259  0.545   0.558
-## Item.10       -0.374  1.056   0.275
-## Item.11        5.307  1.655   0.551
-## Item.12       -0.355  0.153  -0.338
-## Item.13        0.870  1.145   0.366
-## Item.14        1.251  1.129  -0.527
-## Item.15        2.087  1.379   0.732
-## Item.16       -0.388  0.731  -0.352
-## Item.17        4.196  1.526   0.360
-## Item.18       -0.860  1.718   0.060
-## Item.19        0.236  0.843  -0.078
-## Item.20        2.622  1.563  -0.112
-## Item.21        2.655  0.617   0.587
-## Item.22        3.472  1.499   0.294
-## Item.23       -0.911  0.658  -0.626
-## Item.24        1.304  1.245   0.398
-## Item.25       -0.603  0.798  -0.622
-## Item.26       -0.169  1.582  -0.455
-## Item.27        2.817  1.917   0.457
-## Item.28        0.174  1.078  -0.087
-## Item.29       -0.768  0.839  -0.402
-## Item.30       -0.251  0.401   0.130
-## Item.31        2.866  2.457  -0.190
-## Item.32       -1.654  0.144   0.066
-## 
-## Log.Lik: -9441.303
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
+</code></pre>
+
+<pre><code class="r">lmod3
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;lmod3&#39; not found
 </code></pre>
 
 <pre><code class="r">summary(lmod3)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::ltm(formula = dat ~ z1 + z2, IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik      AIC      BIC
-##  -9441.303 19074.61 19496.71
-## 
-## Coefficients:
-##                       value std.err   z.vals
-## (Intercept).Item.1  -1.0604  0.1088  -9.7426
-## (Intercept).Item.2   0.4417  0.1198   3.6855
-## (Intercept).Item.3  -1.1447  0.1170  -9.7859
-## (Intercept).Item.4  -0.5530  0.0963  -5.7451
-## (Intercept).Item.5   0.6074  0.1041   5.8349
-## (Intercept).Item.6  -2.0664  0.1630 -12.6734
-## (Intercept).Item.7   1.5911  0.1806   8.8108
-## (Intercept).Item.8  -1.5079  0.1175 -12.8313
-## (Intercept).Item.9   2.2587  0.1771  12.7530
-## (Intercept).Item.10 -0.3739  0.1028  -3.6391
-## (Intercept).Item.11  5.3073  0.7067   7.5098
-## (Intercept).Item.12 -0.3545  0.0859  -4.1261
-## (Intercept).Item.13  0.8704  0.1174   7.4128
-## (Intercept).Item.14  1.2509  0.1371   9.1245
-## (Intercept).Item.15  2.0867  0.2061  10.1264
-## (Intercept).Item.16 -0.3884  0.0950  -4.0894
-## (Intercept).Item.17  4.1961  0.4342   9.6635
-## (Intercept).Item.18 -0.8598  0.1321  -6.5099
-## (Intercept).Item.19  0.2365  0.0949   2.4906
-## (Intercept).Item.20  2.6224  0.2305  11.3749
-## (Intercept).Item.21  2.6551  0.2127  12.4843
-## (Intercept).Item.22  3.4724  0.3176  10.9328
-## (Intercept).Item.23 -0.9115  0.1103  -8.2671
-## (Intercept).Item.24  1.3038  0.1358   9.6037
-## (Intercept).Item.25 -0.6032  0.1048  -5.7564
-## (Intercept).Item.26 -0.1687  0.1196  -1.4109
-## (Intercept).Item.27  2.8167  0.2737  10.2901
-## (Intercept).Item.28  0.1737  0.1013   1.7142
-## (Intercept).Item.29 -0.7677  0.1044  -7.3553
-## (Intercept).Item.30 -0.2510  0.0857  -2.9279
-## (Intercept).Item.31  2.8657  0.3308   8.6621
-## (Intercept).Item.32 -1.6542  0.1123 -14.7369
-## z1.Item.1            0.7973  0.1276   6.2488
-## z1.Item.2            1.5214  0.1761   8.6375
-## z1.Item.3            1.0843  0.1364   7.9517
-## z1.Item.4            0.5940  0.1250   4.7512
-## z1.Item.5            0.9941  0.1347   7.3785
-## z1.Item.6            1.1351  0.1612   7.0394
-## z1.Item.7            1.1533  0.2266   5.0896
-## z1.Item.8            0.6793  0.1233   5.5107
-## z1.Item.9            0.5449  0.1832   2.9736
-## z1.Item.10           1.0557  0.1398   7.5543
-## z1.Item.11           1.6552  0.4994   3.3146
-## z1.Item.12           0.1528  0.1061   1.4405
-## z1.Item.13           1.1448  0.1618   7.0762
-## z1.Item.14           1.1293  0.1814   6.2258
-## z1.Item.15           1.3785  0.2340   5.8923
-## z1.Item.16           0.7314  0.1233   5.9327
-## z1.Item.17           1.5260  0.3619   4.2170
-## z1.Item.18           1.7175  0.1915   8.9684
-## z1.Item.19           0.8430  0.1202   7.0113
-## z1.Item.20           1.5629  0.2455   6.3652
-## z1.Item.21           0.6168  0.2041   3.0217
-## z1.Item.22           1.4993  0.2923   5.1293
-## z1.Item.23           0.6578  0.1436   4.5804
-## z1.Item.24           1.2452  0.1794   6.9395
-## z1.Item.25           0.7980  0.1509   5.2889
-## z1.Item.26           1.5819  0.1936   8.1694
-## z1.Item.27           1.9173  0.2862   6.6985
-## z1.Item.28           1.0785  0.1342   8.0368
-## z1.Item.29           0.8388  0.1324   6.3373
-## z1.Item.30           0.4007  0.0999   4.0104
-## z1.Item.31           2.4569  0.3913   6.2786
-## z1.Item.32           0.1436  0.1219   1.1778
-## z2.Item.1           -0.3254  0.2025  -1.6066
-## z2.Item.2           -0.1574  0.2679  -0.5877
-## z2.Item.3            0.0151  0.2281   0.0662
-## z2.Item.4           -0.4709  0.1916  -2.4574
-## z2.Item.5           -0.1426  0.2141  -0.6660
-## z2.Item.6           -0.3230  0.2758  -1.1710
-## z2.Item.7            0.9197  0.3149   2.9204
-## z2.Item.8           -0.1376  0.2076  -0.6626
-## z2.Item.9            0.5580  0.2568   2.1732
-## z2.Item.10           0.2752  0.2269   1.2127
-## z2.Item.11           0.5508  0.5937   0.9277
-## z2.Item.12          -0.3384  0.1482  -2.2826
-## z2.Item.13           0.3663  0.2364   1.5493
-## z2.Item.14          -0.5265  0.2548  -2.0666
-## z2.Item.15           0.7316  0.3098   2.3616
-## z2.Item.16          -0.3523  0.1912  -1.8424
-## z2.Item.17           0.3604  0.4345   0.8295
-## z2.Item.18           0.0598  0.3003   0.1992
-## z2.Item.19          -0.0777  0.1906  -0.4075
-## z2.Item.20          -0.1123  0.3214  -0.3493
-## z2.Item.21           0.5868  0.2760   2.1257
-## z2.Item.22           0.2941  0.3718   0.7912
-## z2.Item.23          -0.6256  0.2127  -2.9419
-## z2.Item.24           0.3981  0.2427   1.6407
-## z2.Item.25          -0.6223  0.2173  -2.8638
-## z2.Item.26          -0.4550  0.2803  -1.6229
-## z2.Item.27           0.4574  0.3601   1.2703
-## z2.Item.28          -0.0874  0.2109  -0.4147
-## z2.Item.29          -0.4015  0.2174  -1.8467
-## z2.Item.30           0.1299  0.1540   0.8437
-## z2.Item.31          -0.1901  0.3921  -0.4847
-## z2.Item.32           0.0658  0.1892   0.3479
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 15 
-## 
-## Optimization:
-## Convergence: 0 
-## max(|grad|): 0.1 
-## quasi-Newton: BFGS
+<pre><code>## Error in summary(lmod3): object &#39;lmod3&#39; not found
 </code></pre>
 
 <pre><code class="r">#mirt
@@ -878,9 +527,9 @@ mmod3
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 31
 ## 
 ## Log-likelihood = -9441.98
@@ -994,166 +643,13 @@ mmod3
 (lmod4 &lt;- ltm::ltm(dat ~ z1 + I(z1^2), IRT.param = FALSE))
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::ltm(formula = dat ~ z1 + I(z1^2), IRT.param = FALSE)
-## 
-## Coefficients:
-##          (Intercept)     z1  I(z1^2)
-## Item.1        -1.234  0.712    0.226
-## Item.2         0.202  1.579    0.365
-## Item.3        -1.486  0.944    0.434
-## Item.4        -0.814  0.566    0.312
-## Item.5         0.623  0.979   -0.044
-## Item.6        -2.468  0.846    0.516
-## Item.7         1.451  0.940   -0.106
-## Item.8        -1.737  0.635    0.239
-## Item.9         2.222  0.464   -0.089
-## Item.10       -0.463  0.986    0.121
-## Item.11        5.764  3.307    0.747
-## Item.12       -0.471  0.119    0.126
-## Item.13        0.899  1.071   -0.094
-## Item.14        0.910  1.224    0.403
-## Item.15        2.027  1.139   -0.183
-## Item.16       -0.643  0.712    0.305
-## Item.17        4.035  1.678    0.195
-## Item.18       -1.079  1.593    0.352
-## Item.19        0.036  0.820    0.242
-## Item.20        2.466  2.186    0.590
-## Item.21        2.605  0.510   -0.103
-## Item.22        3.420  2.016    0.382
-## Item.23       -1.033  0.586    0.205
-## Item.24        1.251  1.243    0.031
-## Item.25       -0.732  0.771    0.192
-## Item.26       -0.494  1.626    0.504
-## Item.27        2.599  2.009    0.253
-## Item.28        0.149  1.043    0.004
-## Item.29       -1.146  0.780    0.460
-## Item.30       -0.260  0.365    0.013
-## Item.31        2.671  2.543    0.313
-## Item.32       -1.902  0.035    0.223
-## 
-## Log.Lik: -9432.199
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">summary(lmod4)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::ltm(formula = dat ~ z1 + I(z1^2), IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik     AIC     BIC
-##  -9432.199 19056.4 19478.5
-## 
-## Coefficients:
-##                       value std.err   z.vals
-## (Intercept).Item.1  -1.2338  0.1374  -8.9787
-## (Intercept).Item.2   0.2017  0.1444   1.3971
-## (Intercept).Item.3  -1.4861  0.1505  -9.8717
-## (Intercept).Item.4  -0.8139  0.1275  -6.3825
-## (Intercept).Item.5   0.6231  0.1367   4.5567
-## (Intercept).Item.6  -2.4679  0.2019 -12.2249
-## (Intercept).Item.7   1.4511  0.1581   9.1800
-## (Intercept).Item.8  -1.7371  0.1485 -11.6981
-## (Intercept).Item.9   2.2217  0.1758  12.6377
-## (Intercept).Item.10 -0.4629  0.1302  -3.5562
-## (Intercept).Item.11  5.7639  1.4685   3.9251
-## (Intercept).Item.12 -0.4708  0.1114  -4.2257
-## (Intercept).Item.13  0.8985  0.1391   6.4612
-## (Intercept).Item.14  0.9099  0.1469   6.1933
-## (Intercept).Item.15  2.0266  0.2049   9.8922
-## (Intercept).Item.16 -0.6427  0.1241  -5.1795
-## (Intercept).Item.17  4.0350  0.4450   9.0680
-## (Intercept).Item.18 -1.0792  0.1625  -6.6411
-## (Intercept).Item.19  0.0364  0.1274   0.2859
-## (Intercept).Item.20  2.4661  0.2645   9.3244
-## (Intercept).Item.21  2.6045  0.2069  12.5899
-## (Intercept).Item.22  3.4200  0.3754   9.1105
-## (Intercept).Item.23 -1.0334  0.1306  -7.9154
-## (Intercept).Item.24  1.2514  0.1562   8.0114
-## (Intercept).Item.25 -0.7324  0.1263  -5.7984
-## (Intercept).Item.26 -0.4938  0.1422  -3.4731
-## (Intercept).Item.27  2.5987  0.2595  10.0130
-## (Intercept).Item.28  0.1489  0.1342   1.1099
-## (Intercept).Item.29 -1.1456  0.1445  -7.9264
-## (Intercept).Item.30 -0.2598  0.1124  -2.3109
-## (Intercept).Item.31  2.6707  0.3079   8.6728
-## (Intercept).Item.32 -1.9023  0.1517 -12.5412
-## z1.Item.1            0.7117  0.1172   6.0741
-## z1.Item.2            1.5790  0.2005   7.8759
-## z1.Item.3            0.9445  0.1329   7.1068
-## z1.Item.4            0.5657  0.1083   5.2226
-## z1.Item.5            0.9789  0.1285   7.6190
-## z1.Item.6            0.8460  0.1446   5.8515
-## z1.Item.7            0.9397  0.1463   6.4233
-## z1.Item.8            0.6346  0.1241   5.1132
-## z1.Item.9            0.4636  0.1503   3.0853
-## z1.Item.10           0.9858  0.1261   7.8160
-## z1.Item.11           3.3074  2.4813   1.3329
-## z1.Item.12           0.1192  0.0925   1.2893
-## z1.Item.13           1.0705  0.1382   7.7479
-## z1.Item.14           1.2236  0.2166   5.6491
-## z1.Item.15           1.1390  0.1851   6.1522
-## z1.Item.16           0.7124  0.1151   6.1905
-## z1.Item.17           1.6776  0.7281   2.3041
-## z1.Item.18           1.5933  0.1764   9.0346
-## z1.Item.19           0.8198  0.1254   6.5377
-## z1.Item.20           2.1861  0.5648   3.8708
-## z1.Item.21           0.5104  0.1766   2.8894
-## z1.Item.22           2.0164  0.6726   2.9981
-## z1.Item.23           0.5862  0.1084   5.4053
-## z1.Item.24           1.2433  0.1824   6.8153
-## z1.Item.25           0.7715  0.1146   6.7312
-## z1.Item.26           1.6264  0.1909   8.5211
-## z1.Item.27           2.0093  0.5103   3.9379
-## z1.Item.28           1.0430  0.1291   8.0762
-## z1.Item.29           0.7801  0.1262   6.1819
-## z1.Item.30           0.3652  0.0962   3.7972
-## z1.Item.31           2.5428  0.6264   4.0593
-## z1.Item.32           0.0352  0.1102   0.3196
-## I(z1^2).Item.1       0.2265  0.1003   2.2570
-## I(z1^2).Item.2       0.3650  0.1583   2.3053
-## I(z1^2).Item.3       0.4336  0.1080   4.0134
-## I(z1^2).Item.4       0.3116  0.0966   3.2246
-## I(z1^2).Item.5      -0.0441  0.1238  -0.3560
-## I(z1^2).Item.6       0.5159  0.1176   4.3851
-## I(z1^2).Item.7      -0.1062  0.1303  -0.8147
-## I(z1^2).Item.8       0.2395  0.0925   2.5889
-## I(z1^2).Item.9      -0.0891  0.1057  -0.8432
-## I(z1^2).Item.10      0.1209  0.1153   1.0484
-## I(z1^2).Item.11      0.7474  0.9567   0.7812
-## I(z1^2).Item.12      0.1262  0.0741   1.7032
-## I(z1^2).Item.13     -0.0945  0.1208  -0.7820
-## I(z1^2).Item.14      0.4027  0.1681   2.3965
-## I(z1^2).Item.15     -0.1834  0.1772  -1.0351
-## I(z1^2).Item.16      0.3045  0.0975   3.1230
-## I(z1^2).Item.17      0.1946  0.3166   0.6147
-## I(z1^2).Item.18      0.3520  0.1633   2.1557
-## I(z1^2).Item.19      0.2418  0.1135   2.1301
-## I(z1^2).Item.20      0.5901  0.3047   1.9367
-## I(z1^2).Item.21     -0.1028  0.1238  -0.8302
-## I(z1^2).Item.22      0.3816  0.2989   1.2767
-## I(z1^2).Item.23      0.2045  0.0935   2.1865
-## I(z1^2).Item.24      0.0313  0.1561   0.2003
-## I(z1^2).Item.25      0.1916  0.0982   1.9501
-## I(z1^2).Item.26      0.5043  0.1356   3.7191
-## I(z1^2).Item.27      0.2530  0.2913   0.8686
-## I(z1^2).Item.28      0.0039  0.1276   0.0304
-## I(z1^2).Item.29      0.4598  0.1176   3.9107
-## I(z1^2).Item.30      0.0126  0.0786   0.1600
-## I(z1^2).Item.31      0.3130  0.3492   0.8965
-## I(z1^2).Item.32      0.2231  0.0817   2.7306
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 21 
-## 
-## Optimization:
-## Convergence: 0 
-## max(|grad|): 0.0094 
-## quasi-Newton: BFGS
+<pre><code>## Error in summary(lmod4): object &#39;lmod4&#39; not found
 </code></pre>
 
 <pre><code class="r">#mirt (can be more specific about where the loadings should be)
@@ -1171,9 +667,9 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -9464.03
@@ -1234,166 +730,13 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 <pre><code class="r">(lmod5 &lt;- ltm::tpm(dat, IRT.param = FALSE))
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::tpm(data = dat, IRT.param = FALSE)
-## 
-## Coefficients:
-##            c.i  beta.1i  beta.2i
-## Item.1   0.178   -3.293    2.289
-## Item.2   0.193   -0.260    2.174
-## Item.3   0.130   -2.781    2.336
-## Item.4   0.265   -2.768    2.069
-## Item.5   0.116    0.342    1.084
-## Item.6   0.070   -4.453    2.926
-## Item.7   0.000    1.368    0.988
-## Item.8   0.133   -4.550    2.690
-## Item.9   0.000    2.132    0.497
-## Item.10  0.129   -0.930    1.371
-## Item.11  0.000    5.267    1.610
-## Item.12  0.408  -24.233   10.998
-## Item.13  0.000    0.817    1.062
-## Item.14  0.463   -0.113    1.905
-## Item.15  0.000    1.915    1.271
-## Item.16  0.285   -2.701    2.340
-## Item.17  0.000    4.185    1.470
-## Item.18  0.073   -1.522    2.286
-## Item.19  0.237   -0.489    1.168
-## Item.20  0.509    1.732    2.051
-## Item.21  0.000    2.520    0.601
-## Item.22  0.000    3.381    1.359
-## Item.23  0.175   -2.172    1.443
-## Item.24  0.219    0.857    1.433
-## Item.25  0.201   -1.871    1.655
-## Item.26  0.185   -1.460    2.913
-## Item.27  0.245    2.367    1.979
-## Item.28  0.000    0.141    1.056
-## Item.29  0.205   -2.958    2.518
-## Item.30  0.005   -0.262    0.378
-## Item.31  0.163    2.511    2.423
-## Item.32  0.155  -22.455    9.248
-## 
-## Log.Lik: -9434.886
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">summary(lmod5)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::tpm(data = dat, IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik      AIC      BIC
-##  -9434.886 19061.77 19483.88
-## 
-## Coefficients:
-##             value  std.err  z.vals
-## c.1        0.1780   0.0402  4.4311
-## c.2        0.1930   0.0668  2.8883
-## c.3        0.1301   0.0354  3.6701
-## c.4        0.2647   0.0347  7.6182
-## c.5        0.1161   0.1724  0.6734
-## c.6        0.0695   0.0223  3.1140
-## c.7        0.0000   0.0000  0.0000
-## c.8        0.1329   0.0361  3.6812
-## c.9        0.0000   0.0082  0.0015
-## c.10       0.1290   0.0809  1.5944
-## c.11       0.0000   0.0023  0.0006
-## c.12       0.4081   0.0219 18.6108
-## c.13       0.0000   0.0000  0.0000
-## c.14       0.4630   0.0878  5.2720
-## c.15       0.0000   0.0003  0.0000
-## c.16       0.2848   0.0392  7.2592
-## c.17       0.0000   0.0046  0.0009
-## c.18       0.0727   0.0382  1.9051
-## c.19       0.2372   0.4168  0.5691
-## c.20       0.5093   0.1960  2.5984
-## c.21       0.0000   0.0021  0.0005
-## c.22       0.0000   0.0004  0.0002
-## c.23       0.1751   0.0397  4.4155
-## c.24       0.2186   0.1642  1.3311
-## c.25       0.2008   0.0790  2.5426
-## c.26       0.1851   0.0483  3.8345
-## c.27       0.2449   0.2624  0.9331
-## c.28       0.0000   0.0014  0.0007
-## c.29       0.2051   0.0365  5.6223
-## c.30       0.0050   0.0821  0.0605
-## c.31       0.1629   0.2313  0.7043
-## c.32       0.1552   0.0367  4.2261
-## beta.11   -3.2925   1.5622 -2.1076
-## beta.12   -0.2604   0.3612 -0.7210
-## beta.13   -2.7807   1.0034 -2.7713
-## beta.14   -2.7685   0.9073 -3.0514
-## beta.15    0.3420   0.4051  0.8442
-## beta.16   -4.4526   2.4486 -1.8184
-## beta.17    1.3677   0.1322 10.3481
-## beta.18   -4.5497   3.6196 -1.2570
-## beta.19    2.1318   0.1436 14.8433
-## beta.110  -0.9303   0.4535 -2.0514
-## beta.111   5.2667   0.7032  7.4897
-## beta.112 -24.2331  55.0459 -0.4402
-## beta.113   0.8165   0.1212  6.7372
-## beta.114  -0.1134   0.5551 -0.2042
-## beta.115   1.9154   0.1720 11.1389
-## beta.116  -2.7005   1.0146 -2.6616
-## beta.117   4.1854   0.4394  9.5247
-## beta.118  -1.5225   0.4733 -3.2167
-## beta.119  -0.4893   1.9459 -0.2514
-## beta.120   1.7321   0.6106  2.8369
-## beta.121   2.5205   0.1735 14.5283
-## beta.122   3.3814   0.3214 10.5213
-## beta.123  -2.1722   0.5759 -3.7715
-## beta.124   0.8569   0.3825  2.2406
-## beta.125  -1.8707   1.1134 -1.6801
-## beta.126  -1.4600   0.6250 -2.3358
-## beta.127   2.3667   0.4478  5.2848
-## beta.128   0.1415   0.1145  1.2356
-## beta.129  -2.9580   1.2577 -2.3520
-## beta.130  -0.2616   0.2176 -1.2024
-## beta.131   2.5108   0.3866  6.4943
-## beta.132 -22.4551 404.4049 -0.0555
-## beta.21    2.2885   1.3187  1.7354
-## beta.22    2.1743   0.4604  4.7231
-## beta.23    2.3355   0.6821  3.4242
-## beta.24    2.0687   0.9024  2.2926
-## beta.25    1.0836   0.2745  3.9474
-## beta.26    2.9257   2.2270  1.3138
-## beta.27    0.9876   0.1445  6.8356
-## beta.28    2.6905   2.7920  0.9636
-## beta.29    0.4966   0.1475  3.3654
-## beta.210   1.3707   0.4081  3.3586
-## beta.211   1.6099   0.4552  3.5364
-## beta.212  10.9981  25.3850  0.4333
-## beta.213   1.0621   0.1406  7.5560
-## beta.214   1.9046   0.5868  3.2459
-## beta.215   1.2711   0.1802  7.0539
-## beta.216   2.3405   0.7881  2.9699
-## beta.217   1.4701   0.3281  4.4811
-## beta.218   2.2864   0.4673  4.8929
-## beta.219   1.1683   1.1882  0.9833
-## beta.220   2.0507   0.7315  2.8033
-## beta.221   0.6010   0.1717  3.4993
-## beta.222   1.3586   0.2731  4.9741
-## beta.223   1.4433   0.4292  3.3629
-## beta.224   1.4325   0.3254  4.4019
-## beta.225   1.6547   1.0868  1.5224
-## beta.226   2.9132   0.8263  3.5257
-## beta.227   1.9790   0.5245  3.7729
-## beta.228   1.0560   0.1402  7.5344
-## beta.229   2.5178   1.3391  1.8802
-## beta.230   0.3784   0.1045  3.6211
-## beta.231   2.4232   0.6695  3.6194
-## beta.232   9.2484 169.3080  0.0546
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 21 
-## 
-## Optimization:
-## Optimizer: optim (BFGS)
-## Convergence: 0 
-## max(|grad|): 0.32
+<pre><code>## Error in summary(lmod5): object &#39;lmod5&#39; not found
 </code></pre>
 
 <pre><code class="r"># mirt can also include prior distributions to help stabalize the model
@@ -1409,9 +752,9 @@ model &lt;- mirt.model(&#39;Theta = 1-32
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.23 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -9434.967
@@ -1477,105 +820,54 @@ See this (crossvalidated post)[<a href="http://stats.stackexchange.com/questions
 <pre><code class="r">(lmod6 &lt;- ltm::grm(Science, IRT.param = FALSE))
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::grm(data = Science, IRT.param = FALSE)
-## 
-## Coefficients:
-##              beta.1  beta.2  beta.3    beta
-## Comfort      -4.427  -2.321   1.273   0.411
-## Environment  -3.381  -1.240   0.984   1.570
-## Work         -2.388  -0.689   1.815  -0.074
-## Future       -3.301  -1.273   1.128   0.108
-## Technology   -4.063  -1.461   1.060   1.650
-## Industry     -4.711  -2.510   0.469   1.642
-## Benefit      -2.880  -0.812   1.397   0.136
-## 
-## Log.Lik: -2998.129
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">summary(lmod6)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::grm(data = Science, IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik      AIC      BIC
-##  -2998.129 6052.259 6163.454
-## 
-## Coefficients:
-## $Comfort
-##         value
-## beta.1 -4.427
-## beta.2 -2.321
-## beta.3  1.273
-## beta    0.411
-## 
-## $Environment
-##         value
-## beta.1 -3.381
-## beta.2 -1.240
-## beta.3  0.984
-## beta    1.570
-## 
-## $Work
-##         value
-## beta.1 -2.388
-## beta.2 -0.689
-## beta.3  1.815
-## beta   -0.074
-## 
-## $Future
-##         value
-## beta.1 -3.301
-## beta.2 -1.273
-## beta.3  1.128
-## beta    0.108
-## 
-## $Technology
-##         value
-## beta.1 -4.063
-## beta.2 -1.461
-## beta.3  1.060
-## beta    1.650
-## 
-## $Industry
-##         value
-## beta.1 -4.711
-## beta.2 -2.510
-## beta.3  0.469
-## beta    1.642
-## 
-## $Benefit
-##         value
-## beta.1 -2.880
-## beta.2 -0.812
-## beta.3  1.397
-## beta    0.136
-## 
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 21 
-## 
-## Optimization:
-## Convergence: 0 
-## max(|grad|): 0.016 
-## quasi-Newton: BFGS
+<pre><code>## Error in summary(lmod6): object &#39;lmod6&#39; not found
 </code></pre>
 
 <pre><code class="r">(mmod6 &lt;- mirt(Science, 1, verbose=FALSE))
 </code></pre>
 
-<pre><code>## Error: Input data must be integer or numeric values only
+<pre><code>## 
+## Call:
+## mirt(data = Science, model = 1, verbose = FALSE)
+## 
+## Full-information item factor analysis with 1 factor(s).
+## Converged within 1e-04 tolerance after 36 EM iterations.
+## mirt version: 1.24 
+## M-step optimizer: BFGS 
+## EM acceleration: Ramsay 
+## Number of rectangular quadrature: 61
+## 
+## Log-likelihood = -1608.87
+## Estimated parameters: 16 
+## AIC = 3249.739; AICc = 3251.19
+## BIC = 3313.279; SABIC = 3262.512
+## G2 (239) = 213.56, p = 0.8804
+## RMSEA = 0, CFI = 1, TLI = 1.193
 </code></pre>
 
 <pre><code class="r">coef(mmod6, simplify=TRUE)
 </code></pre>
 
-<pre><code>## Error in coef(mmod6, simplify = TRUE): object &#39;mmod6&#39; not found
+<pre><code>## $items
+##            a1    d1    d2     d3
+## Comfort 1.042 4.864 2.640 -1.466
+## Work    1.226 2.924 0.901 -2.267
+## Future  2.293 5.234 2.214 -1.964
+## Benefit 1.095 3.348 0.992 -1.688
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
 </code></pre>
 
 <h3>generalized partial credit</h3>
@@ -1583,105 +875,54 @@ See this (crossvalidated post)[<a href="http://stats.stackexchange.com/questions
 <pre><code class="r">(lmod7 &lt;- ltm::gpcm(Science, IRT.param = FALSE))
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::gpcm(data = Science, IRT.param = FALSE)
-## 
-## Coefficients:
-##              Catgr.1  Catgr.2  Catgr.3  Dscrmn
-## Comfort        2.836    2.498   -1.328   0.871
-## Environment    1.134    0.478   -0.125  -0.035
-## Work           1.705    0.868   -1.727   0.837
-## Future         4.618    2.170   -1.847   2.217
-## Technology     1.622    0.546   -0.221  -0.038
-## Industry       1.576    1.315   -0.070   0.129
-## Benefit        2.106    0.803   -1.181   0.730
-## 
-## Log.Lik: -3002.423
+<pre><code>## Error in loadNamespace(name): there is no package called &#39;ltm&#39;
 </code></pre>
 
 <pre><code class="r">summary(lmod7)
 </code></pre>
 
-<pre><code>## 
-## Call:
-## ltm::gpcm(data = Science, IRT.param = FALSE)
-## 
-## Model Summary:
-##    log.Lik      AIC      BIC
-##  -3002.423 6060.846 6172.041
-## 
-## Coefficients:
-## $Comfort
-##          value std.err z.value
-## Catgr.1  2.836   0.594   4.771
-## Catgr.2  2.498   0.236  10.578
-## Catgr.3 -1.328   0.159  -8.367
-## Dscrmn   0.871   0.179   4.854
-## 
-## $Environment
-##          value std.err z.value
-## Catgr.1  1.134   0.214   5.309
-## Catgr.2  0.478   0.134   3.557
-## Catgr.3 -0.125   0.121  -1.033
-## Dscrmn  -0.035   0.072  -0.489
-## 
-## $Work
-##          value std.err z.value
-## Catgr.1  1.705   0.267   6.388
-## Catgr.2  0.868   0.140   6.195
-## Catgr.3 -1.727   0.198  -8.719
-## Dscrmn   0.837   0.146   5.742
-## 
-## $Future
-##          value std.err z.value
-## Catgr.1  4.618   1.159   3.984
-## Catgr.2  2.170   0.477   4.553
-## Catgr.3 -1.847   0.447  -4.136
-## Dscrmn   2.217   0.666   3.331
-## 
-## $Technology
-##          value std.err z.value
-## Catgr.1  1.622   0.258   6.286
-## Catgr.2  0.546   0.132   4.143
-## Catgr.3 -0.221   0.120  -1.844
-## Dscrmn  -0.038   0.077  -0.497
-## 
-## $Industry
-##          value std.err z.value
-## Catgr.1  1.576   0.350   4.496
-## Catgr.2  1.315   0.166   7.943
-## Catgr.3 -0.070   0.110  -0.635
-## Dscrmn   0.129   0.089   1.451
-## 
-## $Benefit
-##          value std.err z.value
-## Catgr.1  2.106   0.302   6.969
-## Catgr.2  0.803   0.141   5.675
-## Catgr.3 -1.181   0.169  -6.977
-## Dscrmn   0.730   0.146   4.996
-## 
-## 
-## Integration:
-## method: Gauss-Hermite
-## quadrature points: 21 
-## 
-## Optimization:
-## Convergence: 0 
-## max(|grad|): 0.017 
-## optimizer: nlminb
+<pre><code>## Error in summary(lmod7): object &#39;lmod7&#39; not found
 </code></pre>
 
 <pre><code class="r">(mmod7 &lt;- mirt(Science, 1, &#39;gpcm&#39;, verbose=FALSE))
 </code></pre>
 
-<pre><code>## Error: Input data must be integer or numeric values only
+<pre><code>## 
+## Call:
+## mirt(data = Science, model = 1, itemtype = &quot;gpcm&quot;, verbose = FALSE)
+## 
+## Full-information item factor analysis with 1 factor(s).
+## Converged within 1e-04 tolerance after 50 EM iterations.
+## mirt version: 1.24 
+## M-step optimizer: BFGS 
+## EM acceleration: Ramsay 
+## Number of rectangular quadrature: 61
+## 
+## Log-likelihood = -1612.683
+## Estimated parameters: 16 
+## AIC = 3257.366; AICc = 3258.817
+## BIC = 3320.906; SABIC = 3270.139
+## G2 (239) = 221.19, p = 0.7896
+## RMSEA = 0, CFI = 1, TLI = 1.135
 </code></pre>
 
 <pre><code class="r">coef(mmod7, simplify=TRUE)
 </code></pre>
 
-<pre><code>## Error in coef(mmod7, simplify = TRUE): object &#39;mmod7&#39; not found
+<pre><code>## $items
+##            a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
+## Comfort 0.865   0   1   2   3  0 2.831 5.324 3.998
+## Work    0.841   0   1   2   3  0 1.711 2.578 0.848
+## Future  2.204   0   1   2   3  0 4.601 6.759 4.918
+## Benefit 0.724   0   1   2   3  0 2.099 2.899 1.721
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
 </code></pre>
 
 <h2>Extra features (e.g., factor scores, residuals, &hellip;)</h2>
@@ -1689,7 +930,8 @@ See this (crossvalidated post)[<a href="http://stats.stackexchange.com/questions
 <pre><code class="r">plot(lmod2, items = 1:3)
 </code></pre>
 
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-9"/></p>
+<pre><code>## Error in plot(lmod2, items = 1:3): object &#39;lmod2&#39; not found
+</code></pre>
 
 <pre><code class="r">plot(mmod2, type = &#39;trace&#39;, which.items = 1:3)
 </code></pre>
@@ -1703,37 +945,15 @@ See this (crossvalidated post)[<a href="http://stats.stackexchange.com/questions
 
 <pre><code class="r">#scored with EAP estimator
 fs &lt;- factor.scores(lmod2)
-head(fs$score.dat)
 </code></pre>
 
-<pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9 Item.10
-## 1      0      0      0      0      0      0      0      0      0       0
-## 2      0      0      0      0      0      0      0      0      0       0
-## 3      0      0      0      0      0      0      0      0      0       0
-## 4      0      0      0      0      0      0      0      0      0       0
-## 5      0      0      0      0      0      0      0      0      0       0
-## 6      0      0      0      0      0      0      0      0      0       0
-##   Item.11 Item.12 Item.13 Item.14 Item.15 Item.16 Item.17 Item.18 Item.19
-## 1       1       0       0       1       0       1       0       0       1
-## 2       1       0       0       1       1       1       1       0       0
-## 3       1       0       0       1       1       1       1       0       0
-## 4       1       1       0       0       1       0       1       0       1
-## 5       1       1       0       1       0       0       1       0       0
-## 6       1       1       0       1       1       1       1       0       1
-##   Item.20 Item.21 Item.22 Item.23 Item.24 Item.25 Item.26 Item.27 Item.28
-## 1       1       1       1       1       0       1       0       1       0
-## 2       0       0       1       0       1       0       0       1       1
-## 3       0       1       1       0       1       1       0       1       0
-## 4       0       1       1       0       0       0       0       1       0
-## 5       1       1       0       0       0       0       0       0       0
-## 6       1       1       1       0       0       0       0       0       0
-##   Item.29 Item.30 Item.31 Item.32 Obs          Exp        z1     se.z1
-## 1       0       0       1       0   1 7.320352e-07 -1.125597 0.3501032
-## 2       0       0       1       0   1 1.192118e-05 -1.035763 0.3510456
-## 3       0       0       0       1   1 7.614205e-06 -1.268032 0.3503369
-## 4       0       1       0       0   1 2.158900e-04 -1.578284 0.3585213
-## 5       0       0       0       0   1 1.354704e-03 -2.044771 0.3858258
-## 6       1       1       0       0   1 7.785685e-06 -1.299507 0.3506911
+<pre><code>## Error in factor.scores(lmod2): could not find function &quot;factor.scores&quot;
+</code></pre>
+
+<pre><code class="r">head(fs$score.dat)
+</code></pre>
+
+<pre><code>## Error in head(fs$score.dat): object &#39;fs&#39; not found
 </code></pre>
 
 <pre><code class="r">fs2 &lt;- fscores(mmod2)
@@ -1753,48 +973,7 @@ head(fs2)
 item.fit(lmod2)
 </code></pre>
 
-<pre><code>## 
-## Item-Fit Statistics and P-values
-## 
-## Call:
-## ltm::ltm(formula = dat ~ z1, IRT.param = FALSE)
-## 
-## Alternative: Items do not fit the model
-## Ability Categories: 10
-## 
-##             X^2 Pr(&gt;X^2)
-## Item.1  21.3785   0.0062
-## Item.2  15.4309   0.0513
-## Item.3  21.2194   0.0066
-## Item.4  18.6917   0.0166
-## Item.5   9.8397   0.2765
-## Item.6  25.4488   0.0013
-## Item.7   4.3253   0.8266
-## Item.8  11.4643   0.1768
-## Item.9  10.1344   0.2557
-## Item.10  9.8959   0.2724
-## Item.11  6.1205   0.6337
-## Item.12  2.4867   0.9623
-## Item.13 17.1237   0.0288
-## Item.14 14.4470   0.0708
-## Item.15 13.3227   0.1012
-## Item.16  9.7185   0.2853
-## Item.17 10.8889   0.2081
-## Item.18 17.4339   0.0259
-## Item.19 16.1523   0.0403
-## Item.20 10.9223   0.2061
-## Item.21  5.5782   0.6944
-## Item.22  7.9583   0.4376
-## Item.23 13.4828   0.0963
-## Item.24  9.6888   0.2876
-## Item.25 21.5701   0.0058
-## Item.26 14.9709   0.0597
-## Item.27 16.8923   0.0313
-## Item.28  7.7372   0.4596
-## Item.29 18.1369   0.0202
-## Item.30  2.3572   0.9681
-## Item.31 20.9169   0.0074
-## Item.32 10.4562   0.2345
+<pre><code>## Error in item.fit(lmod2): could not find function &quot;item.fit&quot;
 </code></pre>
 
 <pre><code class="r">itemfit(mmod2)
