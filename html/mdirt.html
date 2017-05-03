@@ -41,7 +41,10 @@ numerically ordered data, with missing data coded as <code>NA</code></p>
 </td></tr>
 <tr valign="top"><td><code>model</code></td>
 <td>
-<p>number of classes to fit, or alternatively a <code><a href="mirt.model.html">mirt.model</a></code> definition</p>
+<p>number of classes to fit, or alternatively a <code><a href="mirt.model.html">mirt.model</a></code> definition. Note that
+when using a <code><a href="mirt.model.html">mirt.model</a></code> input in conjunction with the <code>customTheta</code> input defined below,
+the order with which the syntax factors are defined will be associated with the columns in the
+<code>customTheta</code> input</p>
 </td></tr>
 <tr valign="top"><td><code>customTheta</code></td>
 <td>
@@ -108,7 +111,7 @@ the category probability values given the class membership, which can also
 be displayed graphically with <code>plot()</code>, while <code>coef()</code>
 displays the raw coefficient values (and their standard errors, if estimated). Finally,
 <code>anova()</code> is used to compare nested models, while
-<code><a href="M2.html">M2</a></code> and <code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code> may be used for model fitting purposes.
+<code><a href="M2.html">M2</a></code> and <code><a href="itemfit.html">itemfit</a></code> may be used for model fitting purposes.
 </p>
 
 
@@ -136,7 +139,7 @@ discrete models, grade of membership, etc.). See the examples below.
 <h3>See Also</h3>
 
 <p><code><a href="fscores.html">fscores</a></code>, <code><a href="mirt.model.html">mirt.model</a></code>, <code><a href="M2.html">M2</a></code>,
-<code><a href="../../eRm/html/itemfit.ppar.html">itemfit</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>, <code><a href="mirtCluster.html">mirtCluster</a></code>,
+<code><a href="itemfit.html">itemfit</a></code>, <code><a href="boot.mirt.html">boot.mirt</a></code>, <code><a href="mirtCluster.html">mirtCluster</a></code>,
 <code><a href="../../lavaan/html/lavTestWald.html">wald</a></code>, <code><a href="coef-method.html">coef-method</a></code>, <code><a href="summary-method.html">summary-method</a></code>,
 <code><a href="anova-method.html">anova-method</a></code>, <code><a href="residuals-method.html">residuals-method</a></code>
 </p>
@@ -158,7 +161,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 380 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -178,7 +181,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -451,7 +454,7 @@ mirtCluster()
 </code></pre>
 
 <pre><code>## Model log-likelihoods:
-##  [1] -2467.405 -2467.406 -2467.406 -2467.406 -2467.406 -2467.406 -2467.406
+##  [1] -2467.406 -2467.406 -2467.406 -2467.406 -2467.406 -2467.406 -2467.406
 ##  [8] -2467.406 -2467.406 -2467.406
 </code></pre>
 
@@ -477,7 +480,7 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -559,7 +562,7 @@ dat &lt;- key2binary(SAT12,
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 171 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -950,7 +953,7 @@ model &lt;- mirt.model(&#39;C1 = 1-32
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 255 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -2506,5 +2509,5 @@ coef(mod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
 </body></html>

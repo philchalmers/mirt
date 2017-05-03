@@ -15,8 +15,7 @@
 <h3>Description</h3>
 
 <p>Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
-'dich' and 'graded'. Note that the logistic intercept parameters are divided by 1.702 to match the
-normal ogive metric.
+'dich' and 'graded'.
 </p>
 
 
@@ -75,9 +74,21 @@ MDIFF(mod)
 ## Benefit -2.316311 -0.6940864 1.1869606
 </code></pre>
 
+<pre><code class="r">mod &lt;- mirt(expand.table(LSAT7), 2)
+MDIFF(mod)
+</code></pre>
+
+<pre><code>##           MDIFF_1
+## Item.1 -1.2103885
+## Item.2 -0.7903375
+## Item.3 -0.8774460
+## Item.4 -0.6408048
+## Item.5 -2.4615393
+</code></pre>
+
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
 </body></html>

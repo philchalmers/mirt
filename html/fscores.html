@@ -144,7 +144,7 @@ indicating that no MI draws will be performed</p>
 <tr valign="top"><td><code>QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? If <code>quadpts</code> is omitted the
-default number of nodes is 15000</p>
+default number of nodes is 5000</p>
 </td></tr>
 <tr valign="top"><td><code>custom_den</code></td>
 <td>
@@ -580,13 +580,13 @@ fs &lt;- fscores(mod, MI = 30)
 head(fs)
 </code></pre>
 
-<pre><code>##               F1
-## [1,]  0.38363897
-## [2,]  0.05409217
-## [3,] -0.86037939
-## [4,] -0.86037939
-## [5,]  0.70913186
-## [6,]  0.66910252
+<pre><code>##              F1
+## [1,]  0.3810446
+## [2,]  0.0475383
+## [3,] -0.8746877
+## [4,] -0.8746877
+## [5,]  0.7294408
+## [6,]  0.6560910
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -596,23 +596,23 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 
 <pre><code>## [[1]]
 ##        mean         var         min         max 
-##  0.03699427  1.02460304 -2.79158399  3.62524235 
+##  0.05714977  0.99042436 -2.93656806  2.80268386 
 ## 
 ## [[2]]
-##        mean         var         min         max 
-##  0.01290987  1.04508965 -3.24651122  2.87398486 
+##       mean        var        min        max 
+## -0.0293153  1.0463474 -3.7481024  2.5082624 
 ## 
 ## [[3]]
 ##        mean         var         min         max 
-##  0.02797142  1.06557309 -3.93432453  3.23300279 
+## -0.03772259  1.00916807 -4.42746730  2.89422282 
 ## 
 ## [[4]]
-##        mean         var         min         max 
-##  0.02918585  0.94851508 -3.32037566  2.96878857 
+##         mean          var          min          max 
+##  0.009799712  0.988013463 -2.749617070  2.515079769 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-## -0.04283669  0.98364127 -3.42877114  3.04401403
+## -0.01931741  1.07703898 -4.03137395  2.64461573
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -658,5 +658,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
 </body></html>

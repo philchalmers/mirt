@@ -158,7 +158,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.603  0.074  0.094  0.427  0.000  0.001
+##  0.587  0.060  0.095  0.424  0.000  0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -168,7 +168,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.308  0.071  0.078  0.149  0.000  0.001
+##  0.300  0.060  0.079  0.152  0.000  0.001
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -909,9 +909,9 @@ mod_anchor
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within NaN tolerance after 1 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: L-BFGS-B 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Information matrix estimated with method: Oakes
@@ -1632,9 +1632,9 @@ anova(mod_metric, mod_configural)
 ## Model 2: multipleGroup(data = dat, model = model, group = group, method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
-## 1 37432.30 37434.42 37541.38 37684.34 -18671.15    NaN NaN   NaN
-## 2 37444.38 37448.16 37589.82 37780.44 -18662.19 17.919  15 0.267
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 37452.10 37454.22 37561.17 37704.14 -18681.05    NaN NaN NaN
+## 2 37437.44 37441.21 37582.87 37773.49 -18658.72 44.663  15   0
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1647,9 +1647,9 @@ anova(mod_metric, mod_configural)
 ##     method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 37573.56 37574.51 37646.28 37741.59 -18756.78    NaN NaN NaN
-## 2 37432.30 37434.42 37541.38 37684.34 -18671.15 171.26  15   0
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
+## 1 37571.61 37572.56 37644.33 37739.64 -18755.81     NaN NaN NaN
+## 2 37452.10 37454.22 37561.17 37704.14 -18681.05 149.511  15   0
 </code></pre>
 
 <pre><code class="r">############
@@ -2030,5 +2030,5 @@ anova(EH, EH1)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -74,7 +74,7 @@ Only the lower triangle of the residual correlation matrix will be returned
 <tr valign="top"><td><code>QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
-If <code>quadpts</code> not specified, 15000 nodes are used by default</p>
+If <code>quadpts</code> not specified, 5000 nodes are used by default</p>
 </td></tr>
 <tr valign="top"><td><code>suppress</code></td>
 <td>
@@ -128,9 +128,9 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.23.1 
+## mirt version: 1.24 
 ## M-step optimizer: BFGS 
-## EM acceleration: Ramsay
+## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
 ## Log-likelihood = -2658.805
@@ -173,17 +173,17 @@ mirtCluster()
 <pre><code class="r">M2(mod2, impute = 10)
 </code></pre>
 
-<pre><code>##                M2 df          p       RMSEA     RMSEA_5    RMSEA_95
-## stats    9.953297  5 0.10183447 0.030602073 0.003473135 0.059631614
-## SD_stats 2.286204  0 0.07265402 0.007427254 0.006219290 0.005944999
+<pre><code>##               M2 df         p      RMSEA     RMSEA_5    RMSEA_95
+## stats    9.46693  5 0.1518442 0.02720304 0.003556482 0.057728996
+## SD_stats 3.37828  0 0.1314219 0.01242075 0.007724598 0.009006312
 ##                SRMSR        TLI        CFI
-## stats    0.029386918 0.95230394 0.97615197
-## SD_stats 0.003501137 0.02177402 0.01088701
+## stats    0.028359806 0.95545776 0.97772888
+## SD_stats 0.004938996 0.03347134 0.01673567
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.23.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
 </body></html>
