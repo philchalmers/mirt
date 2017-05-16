@@ -254,10 +254,9 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
             main <- switch(type, score='Expected Total Score')
             ylab <- switch(type, score=expression(T(theta)))
             return(xyplot(TS ~ Theta, data=df, groups=group, auto.key=auto.key,
-                   upper=df$upper, lower=df$lower, col=c('red', 'blue'),
-                   fill=c('red', 'blue'), alpha=0.2, ylim = lim,
-                   panel = function(x, y, alpha, ...){
-                       panel.superpose(x, y, panel.groups = panel.bands, type='l', alpha=alpha, ...)
+                   upper=df$upper, lower=df$lower, ylim = lim,
+                   panel = function(x, y, ...){
+                       panel.superpose(x, y, panel.groups = panel.bands, type='l',  ...)
                        panel.xyplot(x, y, type='l', lty=1,...)
                    },
                    xlab = expression(theta), ylab = ylab,
