@@ -151,7 +151,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         if(any(rowSums(is.na(data)) == ncol(data))){
             if(!opts$removeEmptyRows)
-                stop('data contains completely empty response patterns.',
+                stop('data contains completely empty response patterns. ',
                      'Please remove manually or pass removeEmptyRows=TRUE to the technical list',
                      call.=FALSE)
             else {
@@ -159,7 +159,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 data <- subset(data, pick)
                 group <- subset(group, pick)
                 if(!is.null(latent.regression) || !is.null(mixed.design))
-                    stop('removeEmptyRows input not supported for latent regression/mixed effect models.',
+                    stop('removeEmptyRows input not supported for latent regression/mixed effect models. ',
                          'Please remove the require rows manually for each object.', call.=FALSE)
             }
         }
