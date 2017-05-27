@@ -110,7 +110,9 @@ group <- c(rep('D1', N), rep('D2', N))
 # define a parallel cluster (optional) to help speed up internal functions
 mirtCluster()
 
-#  Information matrix with Oakes' identity (not controlling for latent group differences)
+# Information matrix with Oakes' identity (not controlling for latent group differences)
+# NOTE: Without properly equating the groups the following example code is not testing for DIF,
+     # but instead reflects a compbination of DIF + latent-trait distribution effects
 model <- multipleGroup(dat, 1, group, SE = TRUE)
 
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
@@ -130,7 +132,8 @@ resulta1
 (a1s <- DIF(model, 'a1', items2test = 1:3))
 (ds <- DIF(model, 'd', items2test = 1:3))
 
-#### using items 4 to 15 as anchors
+####
+# using items 4 to 15 as anchors to test for DIF after adjusting for latent-trait differences
 itemnames <- colnames(dat)
 model_anchor <- multipleGroup(dat, model = 1, group = group,
   invariance = c(itemnames[4:15], 'free_means', 'free_var'))
