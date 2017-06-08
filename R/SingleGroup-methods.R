@@ -9,6 +9,7 @@
 #' @aliases print,SingleGroupClass-method
 #'   print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
 #' @docType methods
+#' @export
 #' @rdname print-method
 #' @examples
 #'
@@ -87,6 +88,7 @@ setMethod(
 #'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
 #' @docType methods
 #' @rdname show-method
+#' @export
 #' @examples
 #'
 #' \dontrun{
@@ -133,6 +135,7 @@ setMethod(
 #' @aliases summary,SingleGroupClass-method
 #'   summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
 #' @docType methods
+#' @export
 #' @rdname summary-method
 #' @seealso \code{\link{coef-method}}
 #' @examples
@@ -230,6 +233,7 @@ setMethod(
 #'   coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
 #' @docType methods
 #' @rdname coef-method
+#' @export
 #' @seealso \code{\link{summary-method}}
 #' @examples
 #'
@@ -734,6 +738,7 @@ setMethod(
 #' @param ... additional arguments to be passed to lattice
 #'
 #' @name plot-method
+#' @export
 #' @aliases plot,SingleGroupClass-method
 #'   plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
 #'   plot,DiscreteClass,missing-method
@@ -1317,6 +1322,7 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
 #' @name vcov-method
+#' @export
 #' @aliases vcov,SingleGroupClass-method
 #'   vcov,MultipleGroupClass-method vcov,MixedClass-method vcov,DiscreteClass-method
 #' @docType methods
