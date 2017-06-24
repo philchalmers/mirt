@@ -55,3 +55,21 @@ coef(mod3)
 (ds <- sapply(coef(mod3)[1:5], function(x) x[,'d']))
 sum(ds)
 ```
+
+The following is equivalent to the above, however it uses the `nloptr` package instead (requires `mirt > 1.24`). 
+
+```{r}
+heq <- function(p, optim_args) sum(p[1:5])
+heqjac <- function(x, optim_args) nl.jacobian(x, heq)
+nloptr_args <- list(lb = c(rep(-15, 6), 1e-4),
+                    eval_g_eq = heq,
+                    eval_jac_g_eq = heqjac,
+                    opts = list(algorithm = 'NLOPT_LD_SLSQP',
+                                xtol_rel=1e-8)
+)
+
+mod4 <- mirt(dat, model2, itemtype = 'Rasch', optimizer = 'nloptr', nloptr_args=nloptr_args,
+             pars=sv)
+anova(mod, mod4)
+```
+
