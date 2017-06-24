@@ -97,7 +97,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                     opt <- try(Rsolnp::solnp(p, Mstep.LL_alt, eqfun = solnp_args$eqfun, eqB = solnp_args$eqB,
                                      ineqfun = solnp_args$ineqfun, ineqLB = solnp_args$ineqLB,
                                      ineqUB = solnp_args$ineqUB, LB = solnp_args$LB, UB = solnp_args$UB,
-                                     control = control, optim_args=optim_args), silent=TRUE)
+                                     control = solnp_args$control, optim_args=optim_args), silent=TRUE)
                     if(!is(opt, 'try-error')) opt$par <- opt$pars
                 } else {
                     stop('Rsolnp package is not available. Please install.', call.=FALSE)
