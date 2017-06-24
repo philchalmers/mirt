@@ -12,7 +12,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
   key = NULL, large = FALSE, GenRandomPars = FALSE,
   accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), alabama_args = list(), spline_args = list(),
+  solnp_args = list(), nloptr_args = list(), spline_args = list(),
   control = list(), technical = list(), ...)
 }
 \arguments{
@@ -140,20 +140,16 @@ will estimate the regression parameters for all latent traits by default}
   As well, the \code{'Nelder-Mead'} and \code{'SANN'}
   estimators are also available, but their routine use generally is not required or recommended.
 
-  Additionally, estimation subroutines from the \code{Rsolnp} and \code{alabama}
-  packages are available by passing the arguments \code{'solnp'} and \code{'alabama'},
+  Additionally, estimation subroutines from the \code{Rsolnp} and \code{nloptr}
+  packages are available by passing the arguments \code{'solnp'} and \code{'nloptr'},
   respectively. This should be used in conjunction with the \code{solnp_args} and
-  \code{alabama_args} specified below. If equality constraints were specified in the
+  \code{nloptr_args} specified below. If equality constraints were specified in the
   model definition only the parameter with the lowest \code{parnum}
   in the \code{pars = 'values'} data.frame is used in the estimation vector passed
   to the objective function, and group hyper-parameters are omitted.
   Equality an inequality functions should be of the form \code{function(p, optim_args)},
   where \code{optim_args} is a list of internally parameters that largely can be ignored
-  when defining constraints (though use of \code{browser()} here may be helpful). Note:
-  for the \code{'alabama'} optimizer, the starting values
-  should be adjusted such that all constraints are met prior to the first maximization-step.
-  The \code{'solnp'} optimizer is less sensitive to this initial condition restriction, but it may also
-  if the model is unstable early in the EM cycles}
+  when defining constraints (though use of \code{browser()} here may be helpful)}
 
 \item{pars}{a data.frame with the structure of how the starting values, parameter numbers,
 estimation logical values, etc, are defined. The user may observe how the model defines the
@@ -260,7 +256,7 @@ after each iteration cycle? Default is TRUE}
 \item{solnp_args}{a list of arguments to be passed to the \code{solnp::solnp()} function for
 equality constraints, inequality constraints, etc}
 
-\item{alabama_args}{a list of arguments to be passed to the \code{alabama::constrOptim.nl()}
+\item{nloptr_args}{a list of arguments to be passed to the \code{nloptr::nloptr()}
 function for equality constraints, inequality constraints, etc}
 
 \item{spline_args}{a named list of lists containing information to be passed to the \code{\link{bs}} (default)
@@ -939,7 +935,7 @@ plot(skew, type = 'empiricalhist')
 histogram(ThetaSkew, breaks=30)
 
 #####
-# non-linear parameter constraints with Rsolnp package (alabama supported as well):
+# non-linear parameter constraints with Rsolnp package (nloptr supported as well):
 # Find Rasch model subject to the constraint that the intercepts sum to 0
 
 dat <- expand.table(LSAT6)

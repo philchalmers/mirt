@@ -1,3 +1,11 @@
+# Changes in mirt 1.25
+
+- `alabama` package optimizer no longer used. Replaced with generic interface from `nloptr`
+  package to support numerous optimizers with greater control instead. Associated inputs
+  (e.g., `alabama_args`) replaced as well
+  
+- Export missing S4 methods for external R packages to import
+
 # Changes in mirt 1.24
 
 - MDIFF and MDISC no longer in normal ogive metric (1.702 scaling value removed)

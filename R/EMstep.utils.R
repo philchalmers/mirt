@@ -86,7 +86,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
                                 constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
                                 itemloc=itemloc, DERIV=DERIV, rlist=rlist, control=control), TRUE)
-        } else if(Moptim %in% c('solnp', 'alabama')){
+        } else if(Moptim %in% c('solnp', 'nloptr')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
                                ANY.PRIOR=ANY.PRIOR, constrain=constrain, LBOUND=LBOUND,
@@ -103,15 +103,20 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                     stop('Rsolnp package is not available. Please install.', call.=FALSE)
                 }
             } else {
-                if(requireNamespace("alabama", quietly = TRUE)){
-                    opt <- try(alabama::constrOptim.nl(p, Mstep.LL_alt, Mstep.grad_alt,
-                                              hin = solnp_args$hin, hin.jac = solnp_args$hin.jac,
-                                              heq = solnp_args$heq, heq.jac = solnp_args$heq.jac,
-                                              control.outer = solnp_args$control.outer,
-                                              control.optim = solnp_args$control.optim, optim_args=optim_args),
+                if(requireNamespace("nloptr", quietly = TRUE)){
+                    opt <- try(nloptr::nloptr(p, Mstep.LL_alt, Mstep.grad_alt,
+                                              lb=solnp_args$lb,
+                                              ub=solnp_args$ub,
+                                              eval_g_ineq=solnp_args$eval_g_ineq,
+                                              eval_jac_g_ineq=solnp_args$eval_jac_g_ineq,
+                                              eval_g_eq=solnp_args$eval_g_eq,
+                                              eval_jac_g_eq=solnp_args$eval_jac_g_eq,
+                                              opts=solnp_args$opts,
+                                              optim_args=optim_args),
                                silent=TRUE)
+                    if(!is(opt, 'try-error')) opt$par <- opt$solution
                 } else {
-                    stop('alabama package is not available. Please install.', call.=FALSE)
+                    stop('nloptr package is not available. Please install.', call.=FALSE)
                 }
             }
         } else if(Moptim == 'nlminb'){

@@ -42,7 +42,7 @@ Suggests:
     shiny,
     knitr,
     Rsolnp,
-    alabama,
+    nloptr,
     sirt,
     mirtCAT
 ByteCompile: yes

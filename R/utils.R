@@ -1110,7 +1110,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
                      technical = list(),
                      SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
-                     optimizer = NULL, solnp_args = list(), alabama_args = list(), ...)
+                     optimizer = NULL, solnp_args = list(), nloptr_args = list(), ...)
 {
     opts <- list()
     tnames <- names(technical)
@@ -1223,17 +1223,14 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
             stop('solnp only supported for optimization with EM estimation engine',
                                 call.=FALSE)
         opts$solnp_args <- solnp_args
-    } else if(opts$Moptim == 'alabama'){
+    } else if(opts$Moptim == 'nloptr'){
         if(!method %in% c('EM', 'QMCEM', 'MCEM'))
-            stop('alabama only supported for optimization with EM estimation engine',
+            stop('nloptr only supported for optimization with EM estimation engine',
                                 call.=FALSE)
-        if(is.null(alabama_args$control.outer)) alabama_args$control.outer <- list()
-        if(is.null(alabama_args$control.optim)) alabama_args$control.optim <- list()
-        if(is.null(alabama_args$control.outer$trace)) alabama_args$control.outer$trace <- FALSE
-        opts$solnp_args <- alabama_args
+        opts$solnp_args <- nloptr_args
     }
-    if(SE && opts$Moptim %in% c('solnp', 'alabama')) #TODO
-        stop('SE computations currently not supported for solnp or alabama optimizers', call. = FALSE)
+    if(SE && opts$Moptim %in% c('solnp', 'nloptr')) #TODO
+        stop('SE computations currently not supported for solnp or nloptr optimizers', call. = FALSE)
     if(!is.null(large)){
         if(is.logical(large))
             if(large) opts$returnPrepList <- TRUE
