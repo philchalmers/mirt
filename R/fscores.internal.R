@@ -13,16 +13,16 @@ setMethod(
 
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                    hessian, mirtCAT = FALSE, return.acov = FALSE, den_fun, ...){
+	                    hessian, mirtCAT = FALSE, return.acov = FALSE, den_fun, max_theta, ...){
 	        if(any(is.na(scores[ID, ])))
 	            return(c(scores[ID, ], rep(NA, ncol(scores))))
             if(mirtCAT){
                 estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ], den_fun=den_fun,
-                                    itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
+                                    itemloc=itemloc, gp=gp, prodlist=prodlist, max_theta=max_theta, hessian=hessian,
                                     CUSTOM.IND=CUSTOM.IND, ID=ID, iterlim=1, stepmax=1e-20, ...))
             } else {
     	        estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars, patdata=tabdata[ID, ], den_fun=den_fun,
-    	                            itemloc=itemloc, gp=gp, prodlist=prodlist, hessian=hessian,
+    	                            itemloc=itemloc, gp=gp, prodlist=prodlist, max_theta=max_theta, hessian=hessian,
                                     CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
             }
 	        if(is(estimate, 'try-error'))
@@ -35,11 +35,11 @@ setMethod(
 	        return(c(estimate$estimate, SEest, estimate$code))
 	    }
 	    ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                   hessian, return.acov = FALSE, den_fun, ...){
+	                   hessian, return.acov = FALSE, den_fun, max_theta, ...){
             if(any(scores[ID, ] %in% c(-Inf, Inf, NA)))
                 return(c(scores[ID, ], rep(NA, ncol(scores) + 1L)))
             estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ], den_fun=NULL,
-    	                        itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE,
+    	                        itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, max_theta=max_theta,
                                 hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2 + 1L))
@@ -61,11 +61,11 @@ setMethod(
 	        return(c(est, SEest, estimate$code))
 	    }
 	    WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
-	                    hessian, data, DERIV, return.acov = FALSE, ...){
+	                    hessian, data, DERIV, return.acov = FALSE, max_theta, ...){
 	        if(any(is.na(scores[ID, ])))
 	            return(c(scores[ID, ], rep(NA, ncol(scores))))
 	        estimate <- try(nlm(WLE.mirt, scores[ID, ], pars=pars, patdata=tabdata[ID, ],
-	                            itemloc=itemloc, gp=gp, prodlist=prodlist, data=data[ID, ],
+	                            itemloc=itemloc, gp=gp, prodlist=prodlist, data=data[ID, ], max_theta=max_theta,
 	                            hessian=hessian, CUSTOM.IND=CUSTOM.IND, ID=ID, DERIV=DERIV, ...))
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2 + 1L))
@@ -562,8 +562,9 @@ setMethod(
 
 # MAP scoring for mirt
 MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID,
-                     ML=FALSE, den_fun, ...)
+                     ML=FALSE, den_fun, max_theta, ...)
 {
+    if(any(abs(Theta) > max_theta)) return(1e10)
     Theta <- matrix(Theta, nrow=1L)
     ThetaShort <- Theta
     if(length(prodlist) > 0L)
@@ -580,8 +581,10 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
     L
 }
 
-WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID, data, DERIV)
+WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID, data, DERIV,
+                     max_theta)
 {
+    if(any(abs(Theta) > max_theta)) return(1e10)
     Theta <- matrix(Theta, nrow=1L)
     ThetaShort <- Theta
     if(length(prodlist) > 0L)

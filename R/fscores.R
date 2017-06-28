@@ -57,6 +57,8 @@
 #'   \code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}
 #' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension. If
 #'   omitted, a range will be generated automatically based on the number of dimensions
+#' @param max_theta the maximum/minimum value any given factor score estimate will achieve using
+#'   any modal estimator method (e.g., MAP, WLE, ML)
 #' @param mean a vector for custom latent variable means. If NULL, the default for 'group' values
 #'   from the computed mirt object will be used
 #' @param cov a custom matrix of the latent variable covariance matrix. If NULL, the default for
@@ -167,7 +169,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
-                    converge_info = FALSE, ...)
+                    converge_info = FALSE, max_theta = 20, ...)
 {
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 5000
@@ -207,6 +209,6 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,
-                            plausible.type=plausible.type, ...)
+                            plausible.type=plausible.type, max_theta=max_theta, ...)
     ret
 }

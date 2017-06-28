@@ -10,7 +10,7 @@ fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
   return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
   full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
   custom_den = NULL, custom_theta = NULL, min_expected = 1,
-  converge_info = FALSE, ...)
+  converge_info = FALSE, max_theta = 20, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -100,6 +100,9 @@ that this only affect the goodness of fit tests and not the returned EAP for sum
 response pattern indicating whether a maximum value was found (not relavent non-iterative methods,
 such as EAP and EAPsum). Value is a reflection of the \code{code} element from \code{\link{nlm}}
 (e.g., 1 indicates convergence)}
+
+\item{max_theta}{the maximum/minimum value any given factor score estimate will achieve using
+any modal estimator method (e.g., MAP, WLE, ML)}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
 }

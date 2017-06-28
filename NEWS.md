@@ -1,5 +1,8 @@
 # Changes in mirt 1.25
 
+- `fscores()` gains a `max_theta` argument to apply upper/lower bounds to iterative searching 
+  algorithms (issue reported by Sebastian Born)
+
 - `alabama` package optimizer no longer used. Replaced with generic interface from `nloptr`
   package to support numerous optimizers with greater control instead. Associated inputs
   (e.g., `alabama_args`) replaced as well
