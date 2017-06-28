@@ -9,7 +9,6 @@
 #' @aliases print,SingleGroupClass-method
 #'   print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
 #' @docType methods
-#' @export
 #' @rdname print-method
 #' @examples
 #'
@@ -88,7 +87,6 @@ setMethod(
 #'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
 #' @docType methods
 #' @rdname show-method
-#' @export
 #' @examples
 #'
 #' \dontrun{
@@ -738,7 +736,6 @@ setMethod(
 #' @param ... additional arguments to be passed to lattice
 #'
 #' @name plot-method
-#' @export
 #' @aliases plot,SingleGroupClass-method
 #'   plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
 #'   plot,DiscreteClass,missing-method
