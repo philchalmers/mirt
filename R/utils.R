@@ -408,8 +408,16 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
         }
     }
     if(MC){
-        for(g in seq_len(ngroups))
-            Prior[[g]] <- rep(1 / length(Prior[[g]]), length(Prior[[g]]))
+        if(full){
+            stop('method not currently supported for latent regression models', call.=FALSE)
+            for(g in seq_len(ngroups))
+                Prior[[g]] <- matrix(rep(1 / length(gTheta[[g]])),
+                                         nrow(lrPars@mus), length(gTheta[[g]]))
+
+        } else {
+            for(g in seq_len(ngroups))
+                Prior[[g]] <- matrix(rep(1 / length(Prior[[g]]), length(Prior[[g]])))
+        }
     }
     return(list(prior=prior, Prior=Prior, Priorbetween=Priorbetween))
 }
