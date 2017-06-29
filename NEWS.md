@@ -1,5 +1,7 @@
 # Changes in mirt 1.25
 
+- fix latent regression models with QMCEM and MCEM algorithms (reported by Seongho Bae)
+
 - `fscores()` gains a `max_theta` argument to apply upper/lower bounds to iterative searching 
   algorithms (issue reported by Sebastian Born), and a `start` input to set the starting values
   as well (primarily useful in mirtCAT to reduce iterations)
