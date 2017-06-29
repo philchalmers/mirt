@@ -392,13 +392,13 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         ind1 <- 1L
         for(group in seq_len(ngroups)){
             for (i in seq_len(J)){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=Theta, estHess=TRUE)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], estHess=TRUE)
                 ind2 <- ind1 + length(pars[[group]][[i]]@par) - 1L
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1L
             }
             deriv <- Deriv(x=pars[[group]][[i+1L]], CUSTOM.IND=CUSTOM.IND,
-                           Theta=Theta, EM = TRUE,
+                           Theta=gTheta[[group]], EM = TRUE,
                            pars=pars[[group]], tabdata=Data$tabdatalong,
                            freq=Data$Freq[[group]], prior=Prior[[group]],
                            itemloc=itemloc, estHess=TRUE)
@@ -407,7 +407,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             ind1 <- ind2 + 1L
             if(length(lrPars)){
                 gp <- ExtractGroupPars(pars[[group]][[J+1L]])
-                tmp <- Mstep.LR(Theta=Theta, CUSTOM.IND=CUSTOM.IND, pars=pars[[group]],
+                tmp <- Mstep.LR(Theta=gTheta[[group]], CUSTOM.IND=CUSTOM.IND, pars=pars[[group]],
                                 itemloc=itemloc, fulldata=Data$fulldata[[1L]], prior=Prior[[group]],
                                 lrPars=lrPars, retscores=TRUE)
                 deriv <- Deriv(lrPars, cov=gp$gcov, theta=tmp)
