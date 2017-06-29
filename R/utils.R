@@ -1130,6 +1130,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
     if((method %in% c('MHRM', 'MIXED', 'SEM')) && SE.type == 'Oakes') SE.type <- 'MHRM'
+    if(method == 'MCEM' && SE && SE.type != 'complete')
+        stop('SE.type not currently supported for MCEM method', call.=FALSE)
+    if(method == 'QMCEM' && SE && SE.type == 'Fisher')
+        stop('Fisher SE.type not supported for QMCEM method', call.=FALSE)
     if((method %in% c('MHRM', 'MIXED', 'SEM')) && !(SE.type %in% c('MHRM', 'FMHRM', 'none')))
         stop('SE.type not supported for stochastic method', call.=FALSE)
     if(!(method %in% c('MHRM', 'MIXED', 'BL', 'EM', 'QMCEM', 'SEM', 'MCEM')))

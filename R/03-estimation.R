@@ -752,7 +752,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          warn=opts$warn)
         } else if(opts$SE.type %in% c('Richardson', 'forward', 'central') &&
                   !(opts$method %in% c('MHRM', 'SEM', 'MIXED'))){
-            ESTIMATE <- SE.Numerical(pars=ESTIMATE$pars, Theta=Theta, theta=theta, PrepList=PrepList, Data=Data,
+            ESTIMATE <- SE.Numerical(pars=ESTIMATE$pars, Theta=ESTIMATE$Theta, theta=theta, PrepList=PrepList, Data=Data,
                               dentype=opts$dentype, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
                               constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems,
                               CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior, warn=opts$warn, type=opts$SE.type,
