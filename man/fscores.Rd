@@ -10,7 +10,7 @@ fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
   return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
   full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
   custom_den = NULL, custom_theta = NULL, min_expected = 1,
-  converge_info = FALSE, max_theta = 20, ...)
+  converge_info = FALSE, max_theta = 20, start = NULL, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
@@ -103,6 +103,11 @@ such as EAP and EAPsum). Value is a reflection of the \code{code} element from \
 
 \item{max_theta}{the maximum/minimum value any given factor score estimate will achieve using
 any modal estimator method (e.g., MAP, WLE, ML)}
+
+\item{start}{a matrix of starting values to use for iterative estimation methods. Default
+will start at a vector of 0's for each response pattern, or will start at the EAP
+estimates (unidimensional models only). Must be in the form that matches
+\code{full.scores = FALSE} (mostly used in the \code{mirtCAT} package)}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
 }

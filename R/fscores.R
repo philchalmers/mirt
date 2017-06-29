@@ -71,6 +71,10 @@
 #'   estimates as a numeric values?
 #' @param return.acov logical; return a list containing covariance matrices instead of factors
 #'   scores? \code{impute = TRUE} not supported with this option
+#' @param start a matrix of starting values to use for iterative estimation methods. Default
+#'   will start at a vector of 0's for each response pattern, or will start at the EAP
+#'   estimates (unidimensional models only). Must be in the form that matches
+#'   \code{full.scores = FALSE} (mostly used in the \code{mirtCAT} package)
 #' @param full.scores.SE logical; when \code{full.scores == TRUE}, also return the
 #'   standard errors associated with each respondent? Default is \code{FALSE}
 #' @param verbose logical; print verbose output messages?
@@ -169,7 +173,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
-                    converge_info = FALSE, max_theta = 20, ...)
+                    converge_info = FALSE, max_theta = 20, start = NULL, ...)
 {
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 5000
@@ -209,6 +213,6 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,
-                            plausible.type=plausible.type, max_theta=max_theta, ...)
+                            plausible.type=plausible.type, max_theta=max_theta, start=start, ...)
     ret
 }

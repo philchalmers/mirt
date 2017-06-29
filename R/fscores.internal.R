@@ -6,7 +6,7 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
-	                      min_expected, converge_info, plausible.type, ...)
+	                      min_expected, converge_info, plausible.type, start, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(!is.null(custom_den)) den_fun <- custom_den
@@ -185,7 +185,8 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
-                               custom_theta=custom_theta, converge_info=converge_info, ...)
+                               custom_theta=custom_theta, converge_info=converge_info,
+                               start=start, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret)
             } else {
@@ -204,7 +205,8 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
-                               custom_theta=custom_theta, converge_info=converge_info, ...)
+                               custom_theta=custom_theta, converge_info=converge_info,
+                               start=start, ...)
                 if(return.acov) return(ret)
                 ret <- cbind(response.pattern, ret)
             }
@@ -329,6 +331,10 @@ setMethod(
                 }
                 scores <- tmp[ ,seq_len(nfact), drop = FALSE]
                 SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
+            }
+            if(!is.null(start) && method != "EAP"){ #replace scores with start
+                if(all(dim(scores) == dim(start)))
+                    scores <- start
             }
     		if(method == "EAP"){
                 #do nothing
