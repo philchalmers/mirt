@@ -411,7 +411,7 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
         if(full){
             for(g in seq_len(ngroups))
                 Prior[[g]] <- matrix(rep(1 / length(gTheta[[g]])),
-                                         nrow(lrPars@mus), length(gTheta[[g]]))
+                                         nrow(lrPars@mus), nrow(gTheta[[g]]))
 
         } else {
             for(g in seq_len(ngroups))
