@@ -8,12 +8,12 @@ citEntry(entry = "Article",
   volume       = "48",
   number       = "6",
   pages        = "1--29",
-  url          = "http://www.jstatsoft.org/v48/i06/",
+  doi          = "10.18637/jss.v048.i06",
 
   textVersion  =
   paste("R.\ Philip Chalmers (2012).",
         "mirt: A Multidimensional Item Response Theory Package for the R Environment.",
         "Journal of Statistical Software, 48(6), 1-29.",
-        "URL http://www.jstatsoft.org/v48/i06/.")
+        "doi:10.18637/jss.v048.i06")
 )
 
