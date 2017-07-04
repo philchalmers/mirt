@@ -40,6 +40,10 @@
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of
 #' hierarchical item factor models. British Journal of Mathematical and Statistical
 #' Psychology, 66, 245-276.
+#' 
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #'
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
 #' multidimensional contingency tables Psychometrika, 71, 713-732.

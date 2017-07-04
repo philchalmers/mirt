@@ -30,6 +30,10 @@
 #' @importFrom utils write.table flush.console packageVersion
 #' @importFrom graphics symbols
 #' @exportMethod anova residuals summary logLik vcov
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #' @keywords package
 NULL
 
@@ -42,6 +46,10 @@ NULL
 #' @name Science
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #' @keywords data
 #' @examples
 #'
@@ -65,6 +73,10 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#'
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003).
 #' TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
 #' [Computer software]. Lincolnwood, IL: Scientific Software International.
@@ -105,6 +117,10 @@ NULL
 #' Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
 #' dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 #'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#'
 #' @keywords data
 #' @examples
 #'
@@ -126,6 +142,10 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#'
 #' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 #' \emph{Psychometrika, 47}, 175-186.
 #'
@@ -162,6 +182,10 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#'
 #' de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
 #'
 #' @keywords data
@@ -185,6 +209,10 @@ NULL
 #' @references
 #' Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K.
 #' \emph{Handbook of modern item response theory}. New York: Springer.
+#' 
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #' @examples
 #'
 #' \dontrun{

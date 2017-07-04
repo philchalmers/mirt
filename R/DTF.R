@@ -33,10 +33,14 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #'
 #' Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
 #'   make a big DIF: Improved Differential Test Functioning statistics that account for
 #'   sampling variability. \emph{Educational and Psychological Measurement, 76}, 114-140.
+#'   \doi{10.1177/0013164415584576}  
 #'
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 #' @keywords DTF

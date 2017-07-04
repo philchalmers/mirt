@@ -78,6 +78,10 @@ residuals(x, type = 'Q3', method = 'ML')
 }
 }
 \references{
+Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+\doi{10.18637/jss.v048.i06}
+
 Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
 

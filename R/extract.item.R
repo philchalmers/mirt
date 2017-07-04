@@ -11,6 +11,10 @@
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
 #' @keywords extract
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #' @seealso \code{\link{extract.group}}, \code{\link{extract.mirt}}
 #' @export extract.item
 #' @examples

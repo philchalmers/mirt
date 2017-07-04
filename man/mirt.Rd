@@ -1058,9 +1058,14 @@ Statistics, 35}, 307-335.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+\doi{10.18637/jss.v048.i06}
+
+Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
+\emph{Journal of Educational Measurement, 52}, 200-222. \doi{10.1111/jedm.12072}
 
 Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
 Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 339-358.
+\doi{10.1177/0146621614520958}
 
 Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.

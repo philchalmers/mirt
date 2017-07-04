@@ -128,6 +128,10 @@ SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
 }
 }
 \references{
+Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+\doi{10.18637/jss.v048.i06}
+
 Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
   SIBTEST Procedure. Journal of Educational Measurement, 33, 333-353.
 

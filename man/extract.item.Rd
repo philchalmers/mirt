@@ -28,6 +28,11 @@ mod <- mirt(Science, 1)
 extr.1 <- extract.item(mod, 1)
 }
 }
+\references{
+Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+\doi{10.18637/jss.v048.i06}
+}
 \seealso{
 \code{\link{extract.group}}, \code{\link{extract.mirt}}
 }

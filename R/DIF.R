@@ -67,6 +67,10 @@
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #' @keywords DIF
 #' @seealso \code{\link{multipleGroup}}
 #, \code{\link{DTF}}

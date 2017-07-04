@@ -98,8 +98,13 @@
 #' Bock, R. D. (1972). Estimating item parameters and latent ability when responses are scored
 #' in two or more nominal categories. \emph{Psychometrika, 37}, 29-51.
 #'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#'
 #' Chalmers, R. P. & Ng, V. (2017). Plausible-Value Imputation Statistics for Detecting
-#' Item Misfit. \emph{Applied Psychological Measurement, 41}, 372-387.
+#' Item Misfit. \emph{Applied Psychological Measurement, 41}, 372-387. 
+#' \doi{10.1177/014662161769207} 
 #'
 #' Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness measurement with
 #' polychotomous item response models and standardized indices.

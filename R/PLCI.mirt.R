@@ -31,9 +31,13 @@
 #' \code{\link{boot.mirt}}
 #'
 #' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 #'
 #' Chalmers, R. P., Pek, J., & Liu, Y. (in press). Profile-likelihood Confidence
 #' Intervals in Item Response Theory Models. \emph{Multivariate Behavioral Research}.
+#' \doi{10.1080/00273171.2017.1329082}
 #'
 #' Neale, M. C. & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
 #' models. \emph{Behavior Genetics, 27}, 113-120.

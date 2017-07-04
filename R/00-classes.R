@@ -50,6 +50,11 @@ setClass("AllModelClass",
 #' @exportClass SingleGroupClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords classes
+#' @references
+#'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 # @examples
 setClass(
     Class = 'SingleGroupClass', contains = 'AllModelClass',
@@ -91,6 +96,11 @@ setClass(
 #' @exportClass MultipleGroupClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords classes
+#' @references
+#'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 # @examples
 # @keywords classes
 setClass(
@@ -136,6 +146,11 @@ setClass(
 #' @exportClass MixedClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords classes
+#' @references
+#'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 # @examples
 # @keywords classes
 setClass(
@@ -180,6 +195,11 @@ setClass(
 #' @exportClass DiscreteClass
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords classes
+#' @references
+#'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
 # @examples
 # @keywords classes
 setClass(
