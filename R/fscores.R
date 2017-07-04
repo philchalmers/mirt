@@ -23,7 +23,8 @@
 #' then the returned results will be with respect to the posterior classification for each
 #' individual. The method inputs for \code{'DiscreteClass'} objects may only be \code{'EAP'},
 #' for posterior classification of each response pattern, or \code{'EAPsum'} for posterior
-#' classification based on the raw sum-score.
+#' classification based on the raw sum-score. For more information on these algorithms refer to
+#' the \code{mirtCAT} package and the associated JSS paper (Chalmers, 2016).
 #'
 #'
 #' @aliases fscores
@@ -109,6 +110,10 @@
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
+#'
+#' Chalmers, R. P. (2016). Generating Adaptive and Non-Adaptive Test Interfaces for
+#' Multidimensional Item Response Theory Applications. \emph{Journal of Statistical Software, 71}(5),
+#' 1-39. \doi{10.18637/jss.v071.i05}
 #'
 #' Embretson, S. E. & Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
 #'

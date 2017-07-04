@@ -47,6 +47,9 @@ head(fe2)
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
+
+Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
+\emph{Journal of Educational Measurement, 52}, 200-222. \doi{10.1111/jedm.12072}
 }
 \seealso{
 \code{\link{mirt}}, \code{\link{mixedmirt}}
