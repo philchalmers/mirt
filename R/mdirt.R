@@ -250,6 +250,9 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
+    dots <- list(...)
+    if(!is.null(dots$formula))
+        stop('mdirt does not currently support latent regression models', call.=FALSE) #TODO
     technical$customTheta <- customTheta
     itemtype <- 'lca'
     stopifnot(method %in% c('EM', 'BL'))

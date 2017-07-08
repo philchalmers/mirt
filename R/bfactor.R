@@ -238,6 +238,8 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
     dots <- list(...)
     if(!is.null(dots$method))
         stop('method cannot be changed for bifactor models', call.=FALSE)
+    if(!is.null(dots$formula))
+        stop('bfactor does not currently support latent regression models', call.=FALSE) #TODO
     if(missing(model)) missingMsg('model')
     if(!is.numeric(model))
         stop('model must be a numeric vector', call.=FALSE)
