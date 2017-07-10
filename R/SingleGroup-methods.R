@@ -24,6 +24,10 @@ setMethod(
     f = "print",
     signature = signature(x = 'SingleGroupClass'),
     definition = function(x){
+        if(!length(x@time)){
+            cat('An object of class \"SingleGroupClass\"\n')
+            return(invisible(NULL))
+        }
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
         cat("Full-information item factor analysis with ", x@Model$nfact, " factor(s).\n", sep="")
