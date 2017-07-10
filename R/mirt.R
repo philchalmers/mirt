@@ -455,8 +455,7 @@
 #'   types, and must be the same length as the number of items used. Items that are not nested logit
 #'   will ignore this vector, so use \code{NA} in item locations that are not applicable
 #' @param calcNull logical; calculate the Null model for additional fit statistics (e.g., TLI)?
-#'   Only applicable if the data contains no NA's and the data is not overly sparse, otherwise
-#'   it is ignored
+#'   Only applicable if the data contains no NA's and the data is not overly sparse
 #' @param large either a \code{logical}, indicating whether the internal collapsed data should
 #'   be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
 #'   a list containing  the organized tables is returned. This list object can then be passed back
@@ -1068,7 +1067,7 @@
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, SE.type = 'Oakes', method = 'EM',
                  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
-                 calcNull = TRUE, draws = 5000, survey.weights = NULL,
+                 calcNull = FALSE, draws = 5000, survey.weights = NULL,
                  quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL,
                  rsm.block = NULL, key = NULL,
                  large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay',

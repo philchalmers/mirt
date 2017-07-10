@@ -1,5 +1,7 @@
 # Changes in mirt 1.25
 
+- `calcNull` set to `FALSE` by default
+
 - Sandwich ACOV estimate now uses the Oakes estimate in the computations rather than the intensive 
   Louis form (which require low-level coding of the item-level Hessian terms). Added a 
   new `SE.type = 'sandwich.Louis'` for the original sandwich VCOV estimate in the previous version of

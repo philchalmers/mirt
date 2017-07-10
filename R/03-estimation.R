@@ -827,8 +827,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     #missing stats for MHRM
-    Pl <- vector('list', Data$ngroups)
     if(opts$method %in% c('MHRM', 'MIXED', 'SEM')){
+        Pl <- vector('list', Data$ngroups)
         logPrior <- logLik <- SElogLik <- G2 <- 0
         if(opts$draws > 0L){
             if(opts$verbose) cat("\nCalculating log-likelihood...\n")
@@ -879,10 +879,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
     null.mod <- unclass(new('SingleGroupClass'))
     TLI.G2 <- CFI.G2 <- NaN
-    if(length(r) * 3L < prod(Data$K)){
-        G2 <- NaN; p.G2 <- NaN
-        opts$calcNull <- FALSE
-    }
+    if(opts$calcNull && length(r) * 3L < prod(Data$K) && opts$warn)
+        warning(c('Full table of responses is very sparse. ',
+                'Goodness-of-fit statistics may be very innacurate'), call.=FALSE)
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
         null.mod <- try(unclass(computeNullModel(data=data, itemtype=itemtype, key=key,
                                                  group=if(length(pars) > 1L) group else NULL)))

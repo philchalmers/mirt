@@ -1114,7 +1114,7 @@ updateHess <- function(h, L) L %*% h %*% L
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
                      SE = FALSE, verbose = TRUE, GenRandomPars,
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
-                     rsm.block = NULL, calcNull = TRUE, BFACTOR = FALSE,
+                     rsm.block = NULL, calcNull = FALSE, BFACTOR = FALSE,
                      technical = list(),
                      SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
                      optimizer = NULL, solnp_args = list(), nloptr_args = list(), ...)

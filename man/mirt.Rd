@@ -8,7 +8,7 @@ Theory)}
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
   optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
-  calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
+  calcNull = FALSE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
   key = NULL, large = FALSE, GenRandomPars = FALSE,
   accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
@@ -182,8 +182,7 @@ prior to the lower/upper-bound parameters in 3/4PL models). Priors can also be
 specified using \code{\link{mirt.model}} syntax (recommended)}
 
 \item{calcNull}{logical; calculate the Null model for additional fit statistics (e.g., TLI)?
-Only applicable if the data contains no NA's and the data is not overly sparse, otherwise
-it is ignored}
+Only applicable if the data contains no NA's and the data is not overly sparse}
 
 \item{draws}{the number of Monte Carlo draws to estimate the log-likelihood for the MH-RM
 algorithm. Default is 5000}
