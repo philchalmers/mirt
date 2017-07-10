@@ -387,7 +387,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     collectLL <- as.numeric(na.omit(collectLL))
     LP <- unname(LP)
     start.time.SE <- proc.time()[3L]
-    if(list$SE.type %in% c('SEM', 'Oakes', 'complete') && list$SE){
+    if(list$SE.type %in% c('SEM', 'Oakes', 'complete', 'sandwich') && list$SE){
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
         for(group in seq_len(ngroups)){
@@ -418,9 +418,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
         hess <- updateHess(h=h, L=L)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
-        if(list$SE.type == 'Oakes' && length(lrPars) && list$SE){
+        if(list$SE.type %in% c('Oakes', 'sandwich') && length(lrPars) && list$SE){
             warning('Oakes method not supported for models with latent regression effects', call.=FALSE)
-        } else if(list$SE.type == 'Oakes' && list$SE){
+        } else if(list$SE.type %in% c('Oakes', 'sandwich') && list$SE){
             complete_info <- hess
             shortpars <- longpars[estpars & !redun_constr]
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
@@ -475,7 +475,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     collectLL=collectLL, shortpars=longpars[estpars & !redun_constr],
                     lrPars=lrPars, logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist,
-                    start.time.SE=start.time.SE, Theta=gTheta[[1L]])
+                    start.time.SE=start.time.SE, Theta=gTheta[[1L]], sitems=sitems)
     } else {
         ret <- list(pars=pars, cycles = cycles, info=matrix(0), longpars=longpars, converge=converge,
                     logLik=LL, rlist=rlist, SElogLik=0, L=L, infological=infological, Moptim=Moptim,

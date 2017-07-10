@@ -1,5 +1,10 @@
 # Changes in mirt 1.25
 
+- Sandwich ACOV estimate now uses the Oakes estimate in the computations rather than the intensive 
+  Louis form (which require low-level coding of the item-level Hessian terms). Added a 
+  new `SE.type = 'sandwich.Louis'` for the original sandwich VCOV estimate in the previous version of
+  mirt
+
 - fix latent regression models with QMCEM and MCEM algorithms (reported by Seongho Bae)
 
 - `fscores()` gains a `max_theta` argument to apply upper/lower bounds to iterative searching 

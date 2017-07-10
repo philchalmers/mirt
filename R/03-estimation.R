@@ -772,7 +772,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                plausible.draws=0L, MSTEPTOL=opts$MSTEPTOL, Moptim='NR1',
                                                keep_vcov_PD=opts$keep_vcov_PD),
                                    DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
-        } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich')) &&
+        } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich.Louis', 'sandwich')) &&
                   !(opts$method %in% c('MHRM', 'SEM', 'MIXED'))){
             if(logPrior != 0 && opts$warn)
                 warning('Information matrix with the crossprod, Louis, and sandwich method

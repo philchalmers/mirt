@@ -13,12 +13,18 @@ test_that('poly', {
     expect_equal(cfs, c(1.04236, 0.18838, 4.86544, 0.49088, 2.64044, 0.22267, -1.46621, 0.15868, 1.22569, 0.18189, 2.924, 0.23928, 0.90115, 0.14289, -2.26661, 0.20308, 2.29058, 0.48269, 5.22988, 0.72817, 2.21201, 0.3564, -1.96222, 0.32209, 1.09557, 0.18336, 3.34845, 0.27659, 0.9919, 0.14053, -1.68846, 0.16864, 0, NA, 1, NA),
                  tolerance = 1e-3)
     expect_equal(modLouis@OptimInfo$condnum, 98.26492, tolerance = 1e-2)
-    modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
-    expect_is(modp1, 'SingleGroupClass')
+    modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich.Louis', verbose=FALSE)
+    expect_is(modsandwich, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modsandwich, printSE=TRUE)))
     expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
                  tolerance = 1e-3)
-    expect_equal(extract.mirt(modsandwich, 'condnum'), 142.2682, tolerance = 1e-2)
+    expect_equal(extract.mirt(modsandwich, 'condnum'), 141.5391, tolerance = 1e-2)
+    modsandwich <- mirt(Science, 1, SE=T, SE.type='sandwich', verbose=FALSE)
+    expect_is(modsandwich, 'SingleGroupClass')
+    cfs <- as.numeric(do.call(c, coef(modsandwich, printSE=TRUE)))
+    expect_equal(cfs, c(1.04236, 0.23843, 4.86544, 0.46794, 2.64044, 0.24659, -1.46621, 0.17162, 1.22569, 0.1922, 2.924, 0.24655, 0.90115, 0.14592, -2.26661, 0.19899, 2.29058, 0.52026, 5.22988, 0.80736, 2.21201, 0.373, -1.96222, 0.33683, 1.09557, 0.22701, 3.34845, 0.29203, 0.9919, 0.14491, -1.68846, 0.18015, 0, NA, 1, NA),
+                 tolerance = 1e-3)
+    expect_equal(extract.mirt(modsandwich, 'condnum'), 141.5346, tolerance = 1e-2)
     modOakes <- mirt(Science, 1, SE=T, SE.type='Oakes', verbose=FALSE)
     expect_equal(modOakes@OptimInfo$condnum, 97.8644, tolerance = 1e-4)
     modp1 <- mirt(Science, 1, verbose=FALSE)

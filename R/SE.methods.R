@@ -154,7 +154,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     if(!isbifactor)
         prior <- Priorbetween <- list(matrix(0))
     sitems <- ESTIMATE$sitems
-    iscross <- ifelse(type == 'crossprod', TRUE, FALSE)
+    iscross <- ifelse(type %in% c('crossprod', 'sandwich'), TRUE, FALSE)
     gitemtrace <- vector('list', ngroups)
     for(g in seq_len(ngroups)){
         gitemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta,
@@ -187,8 +187,11 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){
         info <- Igrad
-    } else if(type == 'sandwich'){
+    } else if(type == 'sandwich.Louis'){
         tmp <- solve(-Ihess - IgradP + Igrad)
+        info <- solve(tmp %*% Igrad %*% tmp)
+    } else if(type == 'sandwich'){
+        tmp <- -solve(ESTIMATE$hess)
         info <- solve(tmp %*% Igrad %*% tmp)
     }
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
