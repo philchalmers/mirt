@@ -46,6 +46,10 @@
 #' Chalmers, R. P. (accepted). Improving the Crossing-SIBTEST statistic for
 #' detecting non-uniform DIF. \emph{Psychometrika}.
 #'
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#'
 #' Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
 #'   SIBTEST Procedure. \emph{Journal of Educational Measurement, 33}, 333-353.
 #'
