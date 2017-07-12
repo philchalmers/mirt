@@ -4,16 +4,15 @@
 \alias{SIBTEST}
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
-SIBTEST(dat, group, focal_set, match_set, focal_name, guess_correction = 0,
-  Jmin = 2, cross = FALSE, permute = 1000, pk_focal = FALSE,
-  correction = TRUE, details = FALSE)
+SIBTEST(dat, group, suspect_set, match_set, focal_name, guess_correction = 0,
+  Jmin = 2, pk_focal = FALSE, correction = TRUE, details = FALSE)
 }
 \arguments{
 \item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
 
 \item{group}{a vector indicating group membership}
 
-\item{focal_set}{an integer vector indicating which items to inspect with SIBTEST. Including only
+\item{suspect_set}{an integer vector indicating which items to inspect with SIBTEST. Including only
 one value will perform a DIF test, while including more than one will perform a simultaneous
 bundle test (DBF); including all non-matched items will perform DTF.
 If missing, a simultaneous test using all the items not listed in match_set
@@ -21,7 +20,7 @@ will be used (i.e., DTF)}
 
 \item{match_set}{an integer vector indicating which items to use as the items which are matched
 (i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
-DIF. If missing, all items other than the items found in the focal_set will be used}
+DIF. If missing, all items other than the items found in the suspect_set will be used}
 
 \item{focal_name}{name of the focal group; e.g., 'focal'. If not specified then one will be
 selected automatically}
@@ -31,10 +30,6 @@ for guessing. It's length should be the same as ncol(dat)}
 
 \item{Jmin}{the minimum number of observations required when splitting the data into focal and
 reference groups conditioned on the matched set}
-
-\item{cross}{logical; perform the crossing test for non-compensatory bias? Default is \code{FALSE}}
-
-\item{permute}{number of permutations to perform when \code{cross = TRUE}. Default is 1000}
 
 \item{pk_focal}{logical; using the group weights from the focal group instead of the total
 sample? Default is FALSE as per Shealy and Stout's recommendation}
@@ -46,18 +41,22 @@ reflecting Shealy and Stout's method}
 \item{details}{logical; return a data.frame containing the details required to compute SIBTEST?}
 }
 \description{
-Classical test theory approach to detecting DIF for unidimensional tests
-by applying a regression-corrected matched-total score approach.
+Classical test theory approach to detecting unidirectional and bidirectional (with one
+crossing location) DIF. This family of statistics is intended for unidimensional tests,
+and applies a regression-corrected matched-total score approach to quantify the response
+bias between two groups. Can be used for DIF, DBF, and DTF testing.
+}
+\details{
 SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a regression
 correction based on the KR-20/coefficient alpha reliability index to correct the observed
 differences when the latent trait distributions are not equal.
-Function supports the standard SIBTEST for dichotomous and poltomous data (compensatory) and
-also supports crossed DIF testing (i.e., non-compensatory).
+Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
+supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymtotic sampling
+distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
+Chalmers (accepted).
 }
 \examples{
 \dontrun{
-
-library(mirt)
 
 set.seed(1234)
 n <- 30
@@ -68,27 +67,27 @@ group <- c(rep('reference', N), rep('focal', N*2))
 
 ## -------------
 # groups completely equal
-dat1 <- simdata(a, d, N, itemtype = '2PL')
-dat2 <- simdata(a, d, N*2, itemtype = '2PL')
+dat1 <- simdata(a, d, N, itemtype = 'dich')
+dat2 <- simdata(a, d, N*2, itemtype = 'dich')
 dat <- rbind(dat1, dat2)
 
 #DIF (all other items as anchors)
-SIBTEST(dat, group, focal_set = 6)
+SIBTEST(dat, group, suspect_set = 6)
 
 #DIF (specific anchors)
-SIBTEST(dat, group, match_set = 1:5, focal_set = 6)
+SIBTEST(dat, group, match_set = 1:5, suspect_set = 6)
 
 # DBF (all and specific anchors, respectively)
-SIBTEST(dat, group, focal_set = 11:30)
-SIBTEST(dat, group, match_set = 1:5, focal_set = 11:30)
+SIBTEST(dat, group, suspect_set = 11:30)
+SIBTEST(dat, group, match_set = 1:5, suspect_set = 11:30)
 
 #DTF
-SIBTEST(dat, group, focal_set = 11:30)
+SIBTEST(dat, group, suspect_set = 11:30)
 SIBTEST(dat, group, match_set = 1:10) #equivalent
 
 # different hyper pars
-dat1 <- simdata(a, d, N, itemtype = '2PL')
-dat2 <- simdata(a, d, N*2, itemtype = '2PL', mu = .5, sigma = matrix(1.5))
+dat1 <- simdata(a, d, N, itemtype = 'dich')
+dat2 <- simdata(a, d, N*2, itemtype = 'dich', mu = .5, sigma = matrix(1.5))
 dat <- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 SIBTEST(dat, group, 11:30)
@@ -103,46 +102,39 @@ SIBTEST(dat, group, 6)
 SIBTEST(dat, group, 7)
 SIBTEST(dat, group, 8)
 
-#crossed SIBTEST
-SIBTEST(dat, group, 6, match_set = 1:5, cross=TRUE)
-SIBTEST(dat, group, 7, match_set = 1:5, cross=TRUE)
-SIBTEST(dat, group, 8, match_set = 1:5, cross=TRUE)
-
 ## -------------
 ## systematic differing slopes and intercepts (clear DTF)
-dat1 <- simdata(a, d, N, itemtype = '2PL')
+dat1 <- simdata(a, d, N, itemtype = 'dich')
 dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, 1)),
-  N*2, itemtype = '2PL')
+  N*2, itemtype = 'dich')
 dat <- rbind(dat1, dat2)
 SIBTEST(dat, group, 6:30)
 SIBTEST(dat, group, 11:30)
 
 #DIF testing using valid anchors
-SIBTEST(dat, group, focal_set = 6, match_set = 1:5)
-SIBTEST(dat, group, focal_set = 7, match_set = 1:5)
-SIBTEST(dat, group, focal_set = 30, match_set = 1:5)
-
-SIBTEST(dat, group, focal_set = 11, match_set = 1:10, cross=TRUE)
-SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
+SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
+SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
+SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
+Chalmers, R. P. (accepted). Improving the Crossing-SIBTEST statistic for
+detecting non-uniform DIF. \emph{Psychometrika}.
 
 Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
-  SIBTEST Procedure. Journal of Educational Measurement, 33, 333-353.
+  SIBTEST Procedure. \emph{Journal of Educational Measurement, 33}, 333-353.
 
-Li, H.-H. & Stout, W. (1996). A new procedure for detetion of crossing DIF. Psychometrika, 61, 647-677.
+Li, H.-H. & Stout, W. (1996). A new procedure for detetion of crossing DIF.
+\emph{Psychometrika, 61}, 647-677.
 
 Shealy, R. & Stout, W. (1993). A model-based standardization approach that separates true
   bias/DIF from group ability differences and ddetect test bias/DTF as well as item bias/DIF.
-  Psychometrika, 58, 159-194.
+  \emph{Psychometrika, 58}, 159-194.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
+\keyword{SIBTEST}
 \keyword{SIBTEST,}
-\keyword{crossed-SIBTEST}
+\keyword{crossing}

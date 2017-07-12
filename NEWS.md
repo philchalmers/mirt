@@ -1,5 +1,7 @@
 # Changes in mirt 1.25
 
+- `SIBTEST()` replaced with the asymtotic sampling distribution version of CSIBTEST described by Chalmers (accepted)
+
 - `calcNull` set to `FALSE` by default
 
 - Sandwich ACOV estimate now uses the Oakes estimate in the computations rather than the intensive 

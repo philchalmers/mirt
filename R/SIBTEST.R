@@ -1,21 +1,26 @@
 #' Simultaneous Item Bias Test (SIBTEST)
 #'
-#' Classical test theory approach to detecting DIF for unidimensional tests
-#' by applying a regression-corrected matched-total score approach.
+#' Classical test theory approach to detecting unidirectional and bidirectional (with one
+#' crossing location) DIF. This family of statistics is intended for unidimensional tests,
+#' and applies a regression-corrected matched-total score approach to quantify the response
+#' bias between two groups. Can be used for DIF, DBF, and DTF testing.
+#'
 #' SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a regression
 #' correction based on the KR-20/coefficient alpha reliability index to correct the observed
 #' differences when the latent trait distributions are not equal.
-#' Function supports the standard SIBTEST for dichotomous and poltomous data (compensatory) and
-#' also supports crossed DIF testing (i.e., non-compensatory).
+#' Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
+#' supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymtotic sampling
+#' distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
+#' Chalmers (accepted).
 #'
 #' @param dat integer dataset to be tested containing dichotomous or polytomous responses
 #' @param group a vector indicating group membership
 #' @param match_set an integer vector indicating which items to use as the items which are matched
 #'   (i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
-#'   DIF. If missing, all items other than the items found in the focal_set will be used
+#'   DIF. If missing, all items other than the items found in the suspect_set will be used
 #' @param focal_name name of the focal group; e.g., 'focal'. If not specified then one will be
 #'   selected automatically
-#' @param focal_set an integer vector indicating which items to inspect with SIBTEST. Including only
+#' @param suspect_set an integer vector indicating which items to inspect with SIBTEST. Including only
 #'   one value will perform a DIF test, while including more than one will perform a simultaneous
 #'   bundle test (DBF); including all non-matched items will perform DTF.
 #'   If missing, a simultaneous test using all the items not listed in match_set
@@ -26,36 +31,33 @@
 #'   reference groups conditioned on the matched set
 #' @param pk_focal logical; using the group weights from the focal group instead of the total
 #'   sample? Default is FALSE as per Shealy and Stout's recommendation
-#' @param cross logical; perform the crossing test for non-compensatory bias? Default is \code{FALSE}
-#' @param permute number of permutations to perform when \code{cross = TRUE}. Default is 1000
 #' @param correction logical; apply the composite correction for the difference between focal
 #'   composite scores using the true-score regression technique? Default is \code{TRUE},
 #'   reflecting Shealy and Stout's method
 #' @param details logical; return a data.frame containing the details required to compute SIBTEST?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords SIBTEST, crossed-SIBTEST
+#' @keywords SIBTEST, crossing SIBTEST
 #' @aliases SIBTEST
 #' @export SIBTEST
 #'
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
+#'
+#' Chalmers, R. P. (accepted). Improving the Crossing-SIBTEST statistic for
+#' detecting non-uniform DIF. \emph{Psychometrika}.
 #'
 #' Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
-#'   SIBTEST Procedure. Journal of Educational Measurement, 33, 333-353.
+#'   SIBTEST Procedure. \emph{Journal of Educational Measurement, 33}, 333-353.
 #'
-#' Li, H.-H. & Stout, W. (1996). A new procedure for detetion of crossing DIF. Psychometrika, 61, 647-677.
+#' Li, H.-H. & Stout, W. (1996). A new procedure for detetion of crossing DIF.
+#' \emph{Psychometrika, 61}, 647-677.
 #'
 #' Shealy, R. & Stout, W. (1993). A model-based standardization approach that separates true
 #'   bias/DIF from group ability differences and ddetect test bias/DTF as well as item bias/DIF.
-#'   Psychometrika, 58, 159-194.
+#'   \emph{Psychometrika, 58}, 159-194.
 #'
 #' @examples
 #' \dontrun{
-#'
-#' library(mirt)
 #'
 #' set.seed(1234)
 #' n <- 30
@@ -66,27 +68,27 @@
 #'
 #' ## -------------
 #' # groups completely equal
-#' dat1 <- simdata(a, d, N, itemtype = '2PL')
-#' dat2 <- simdata(a, d, N*2, itemtype = '2PL')
+#' dat1 <- simdata(a, d, N, itemtype = 'dich')
+#' dat2 <- simdata(a, d, N*2, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
 #'
 #' #DIF (all other items as anchors)
-#' SIBTEST(dat, group, focal_set = 6)
+#' SIBTEST(dat, group, suspect_set = 6)
 #'
 #' #DIF (specific anchors)
-#' SIBTEST(dat, group, match_set = 1:5, focal_set = 6)
+#' SIBTEST(dat, group, match_set = 1:5, suspect_set = 6)
 #'
 #' # DBF (all and specific anchors, respectively)
-#' SIBTEST(dat, group, focal_set = 11:30)
-#' SIBTEST(dat, group, match_set = 1:5, focal_set = 11:30)
+#' SIBTEST(dat, group, suspect_set = 11:30)
+#' SIBTEST(dat, group, match_set = 1:5, suspect_set = 11:30)
 #'
 #' #DTF
-#' SIBTEST(dat, group, focal_set = 11:30)
+#' SIBTEST(dat, group, suspect_set = 11:30)
 #' SIBTEST(dat, group, match_set = 1:10) #equivalent
 #'
 #' # different hyper pars
-#' dat1 <- simdata(a, d, N, itemtype = '2PL')
-#' dat2 <- simdata(a, d, N*2, itemtype = '2PL', mu = .5, sigma = matrix(1.5))
+#' dat1 <- simdata(a, d, N, itemtype = 'dich')
+#' dat2 <- simdata(a, d, N*2, itemtype = 'dich', mu = .5, sigma = matrix(1.5))
 #' dat <- rbind(dat1, dat2)
 #' SIBTEST(dat, group, 6:30)
 #' SIBTEST(dat, group, 11:30)
@@ -101,31 +103,23 @@
 #' SIBTEST(dat, group, 7)
 #' SIBTEST(dat, group, 8)
 #'
-#' #crossed SIBTEST
-#' SIBTEST(dat, group, 6, match_set = 1:5, cross=TRUE)
-#' SIBTEST(dat, group, 7, match_set = 1:5, cross=TRUE)
-#' SIBTEST(dat, group, 8, match_set = 1:5, cross=TRUE)
-#'
 #' ## -------------
 #' ## systematic differing slopes and intercepts (clear DTF)
-#' dat1 <- simdata(a, d, N, itemtype = '2PL')
+#' dat1 <- simdata(a, d, N, itemtype = 'dich')
 #' dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, 1)),
-#'   N*2, itemtype = '2PL')
+#'   N*2, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
 #' SIBTEST(dat, group, 6:30)
 #' SIBTEST(dat, group, 11:30)
 #'
 #' #DIF testing using valid anchors
-#' SIBTEST(dat, group, focal_set = 6, match_set = 1:5)
-#' SIBTEST(dat, group, focal_set = 7, match_set = 1:5)
-#' SIBTEST(dat, group, focal_set = 30, match_set = 1:5)
-#'
-#' SIBTEST(dat, group, focal_set = 11, match_set = 1:10, cross=TRUE)
-#' SIBTEST(dat, group, focal_set = 30, match_set = 1:15, cross=TRUE)
+#' SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
+#' SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
+#' SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 #'
 #' }
-SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
-                    guess_correction = 0, Jmin = 2, cross = FALSE, permute = 1000,
+SIBTEST <- function(dat, group, suspect_set, match_set, focal_name,
+                    guess_correction = 0, Jmin = 2,
                     pk_focal = FALSE, correction = TRUE, details = FALSE){
 
     CA <- function(dat, guess_correction = rep(0, ncol(dat))){
@@ -133,7 +127,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         C <- cov(dat)
         d <- diag(C)
         dich <- apply(dat, 2, function(x) length(unique(x)) == 2L)
-        for(i in 1L:ncol(dat)){
+        for(i in seq_len(ncol(dat))){
             if(dich[i] & guess_correction[i] > 0){
                 U <- mean(dat[,i]) - min(dat[,i])
                 v <- max((U - guess_correction[i]) / (1 - guess_correction[i]), 0)
@@ -149,14 +143,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         mod <- lm(diff ~ k, weights = weight)
         cfs <- coef(mod)
         ks <- -cfs[1L]/cfs[2L]
-        ret <- scores > signif(ks, 1L)
-        pick <- which(ret)
-        if(length(pick)){
-            ret[min(pick)] <- NA
-        } else {
-            ret[length(ret)] <- NA
-        }
-        ret
+        scores > signif(ks, 1L)
     }
 
     if(any(is.na(dat)))
@@ -165,18 +152,18 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
         focal_name <- unique(group)[2L]
     stopifnot(focal_name %in% group)
     stopifnot(nrow(dat) == length(group))
-    group <- ifelse(group == focal_name, 'focal', 'reference')
-    stopifnot(!(missing(focal_set) && missing(match_set)))
+    group <- ifelse(group == focal_name, 'reference', 'focal')
+    stopifnot(!(missing(suspect_set) && missing(match_set)))
     index <- 1L:ncol(dat)
-    if(missing(match_set)) match_set <- index[-focal_set]
-    else if(missing(focal_set)) focal_set <- index[-match_set]
+    if(missing(match_set)) match_set <- index[-suspect_set]
+    else if(missing(suspect_set)) suspect_set <- index[-match_set]
     if(length(guess_correction) > 1L){
         stopifnot(length(guess_correction) == ncol(dat))
     } else guess_correction <- rep(guess_correction, ncol(dat))
-    if(missing(focal_set)){
+    if(missing(suspect_set)){
         suspect_set <- index[!(index %in% match_set)]
-    } else suspect_set <- focal_set
-    stopifnot(!any(match_set %in% focal_set))
+    } else suspect_set <- suspect_set
+    stopifnot(!any(match_set %in% suspect_set))
     N <- nrow(dat)
     focal_dat <- dat[group == 'focal',]
     focal_match_scores <- rowSums(focal_dat[,match_set, drop=FALSE])
@@ -200,7 +187,6 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     II[match] <- II[match] & tab2 > Jmin
     tab_ref[match] <- tab2
     II <- II & scores != min(scores) & scores != max(scores)
-    II[scores < mean(guess_correction*ncol(dat))] <- FALSE
 
     n <- length(match_set)
     Xbar_ref <- mean(ref_match_scores)
@@ -209,7 +195,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     b_ref <- CA(ref_dat[,match_set, drop=FALSE], guess_correction[match_set])
     V_ref <- V_focal <- Ybar_ref <- Ybar_focal <- sigma_ref <- sigma_focal <-
         numeric(length(tab_scores))
-    for(kk in 1L:length(tab_scores)){
+    for(kk in seq_len(length(tab_scores))){
         k <- scores[kk]
         pick_ref <- k == ref_match_scores
         pick_focal <- k == focal_match_scores
@@ -226,6 +212,7 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     Ybar_ref <- ifelse(is.nan(Ybar_ref), 0, Ybar_ref)
     Ybar_focal <- ifelse(is.nan(Ybar_focal), 0, Ybar_focal)
     II <- II & sigma_ref != 0 & sigma_focal != 0
+    II[scores < mean(guess_correction*ncol(dat))] <- FALSE
     if(pk_focal){
         tmp <- table(rowSums(focal_dat[ ,match_set, drop=FALSE]))
         tmp <- tmp / sum(tmp)
@@ -238,9 +225,8 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
     tab_focal[tab_focal == 0] <- NA
     tab_ref[tab_ref == 0] <- NA
     sigma_uni <- sqrt(sum(pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref), na.rm = TRUE))
-    crossvec <- logical(length(II))
     ystar_ref_vec <- ystar_focal_vec <- numeric(length(II))
-    for(kk in 1L:length(tab_scores)){
+    for(kk in seq_len(length(tab_scores))){
         if(!II[kk]) next
         if(correction){
             M_ref <- (Ybar_ref[kk+1] - Ybar_ref[kk-1]) / (V_ref[kk+1] - V_ref[kk-1])
@@ -252,48 +238,37 @@ SIBTEST <- function(dat, group, focal_set, match_set, focal_name,
             ystar_focal_vec[kk] <- Ybar_focal[kk]
         }
     }
-    if(cross)
-        crossvec <- find_intersection(ystar_ref_vec - ystar_focal_vec, pmax(tab_ref, tab_focal),
-                                      use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
+    crossvec <- find_intersection(ystar_ref_vec - ystar_focal_vec, pmax(tab_ref, tab_focal),
+                                  use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
 
     # compute stats
-    beta_uni <- 0
-    for(kk in 1L:length(tab_scores)){
-        if(!II[kk] || is.na(crossvec[kk])) next
-        if(!crossvec[kk]) beta_uni <- beta_uni + pkstar[kk] * (ystar_ref_vec[kk] - ystar_focal_vec[kk])
-        else beta_uni <- beta_uni + pkstar[kk] * (ystar_focal_vec[kk] - ystar_ref_vec[kk])
+    beta_uni <- beta_cross <- 0
+    for(kk in seq_len(length(tab_scores))){
+        if(!II[kk]) next
+        beta_uni <- beta_uni + pkstar[kk] * (ystar_focal_vec[kk] - ystar_ref_vec[kk])
+        if(!crossvec[kk]) beta_cross <- beta_cross + pkstar[kk] * (ystar_ref_vec[kk] - ystar_focal_vec[kk])
+        else beta_cross <- beta_cross + pkstar[kk] * (ystar_focal_vec[kk] - ystar_ref_vec[kk])
     }
-    if(cross){
-        sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[!is.na(crossvec)],
-                              na.rm = TRUE))
-        B <- abs(beta_uni/sigma_uni)
-        B_vec <- numeric(permute)
-        for(p in 1L:permute){
-            diff <- sample(c(-1,1), length(ystar_ref_vec), replace = TRUE) *
-                (ystar_ref_vec - ystar_focal_vec)
-            crossvec <- find_intersection(diff, pmax(tab_ref, tab_focal),
-                                          use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
-            sigma_uni <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[!is.na(crossvec)],
-                                  na.rm = TRUE))
-            beta <- 0
-            for(kk in 1L:length(tab_scores)){
-                if(!II[kk] || is.na(crossvec[kk])) next
-                if(!crossvec[kk]) beta <- beta + pkstar[kk] * (diff[kk])
-                else beta <- beta + pkstar[kk] * (diff[kk])
-            }
-            B_vec[p] <- beta/sigma_uni
-        }
-        z <- B * sign(beta_uni)
-        p <- mean(abs(B_vec) >= B)
-    } else {
-        z <- beta_uni / sigma_uni
-        p <- (1 - pnorm(abs(z))) * 2
-    }
+    beta_cross <- abs(beta_cross)
+    X2_uni <- (beta_uni / sigma_uni)^2
+    p_uni <- (1 - pchisq(X2_uni, 1L))
+    beta1 <- sum(pkstar[crossvec] * (ystar_focal_vec[crossvec] - ystar_ref_vec[crossvec]))
+    beta2 <- sum(pkstar[!crossvec] * (ystar_focal_vec[!crossvec] - ystar_ref_vec[!crossvec]))
+    sigma1 <- sqrt(sum(pkstar[crossvec]^2 * (sigma_focal[crossvec]/tab_focal[crossvec] +
+                                                 sigma_ref[crossvec]/tab_ref[crossvec]), na.rm = TRUE))
+    sigma2 <- sqrt(sum(pkstar[!crossvec]^2 * (sigma_focal[!crossvec]/tab_focal[!crossvec] +
+                                                 sigma_ref[!crossvec]/tab_ref[!crossvec]), na.rm = TRUE))
+    df <- 0L
+    if(sigma1 > 0) df <- df + 1L else sigma1 <- NA
+    if(sigma2 > 0) df <- df + 1L else sigma2 <- NA
+    X2_cross <- sum((beta1/sigma1)^2, (beta2/sigma2)^2, na.rm = TRUE)
+    p_cross <- pchisq(X2_cross, df, lower.tail = FALSE)
     ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
-                      n_focal_set = length(focal_set),
-                      beta = beta_uni, SE=sigma_uni, z, p = p)
-    name <- ifelse(cross, 'Crossed_SIBTEST', 'SIBTEST')
-    rownames(ret) <- name
+                      n_suspect_set = length(suspect_set),
+                      beta = c(beta_uni, beta_cross), SE=c(sigma_uni, NA),
+                      X2=c(X2_uni, X2_cross),
+                      df=c(1, df), p = c(p_uni, p_cross))
+    rownames(ret) <- c('SIBTEST', 'CSIBTEST')
     class(ret) <- c('mirt_df', 'data.frame')
     if(details){
         ret <- data.frame(pkstar=unname(as.numeric(pkstar)),
