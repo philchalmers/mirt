@@ -1899,26 +1899,6 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
         }
         g
     }
-    forward_difference2 <- function(par, f, delta, ...){
-        np <- length(par)
-        hess <- matrix(0, np, np)
-        fx <- f(par, ...)
-        fx1 <- numeric(np)
-        for(i in seq_len(np)){
-            tmp <- par
-            tmp[i] <- tmp[i] + delta
-            fx1[i] <- f(tmp, ...)
-        }
-        for(i in seq_len(np)){
-            for(j in i:np){
-                fx1x2 <- par
-                fx1x2[i] <- fx1x2[i] + delta
-                fx1x2[j] <- fx1x2[j] + delta
-                hess[i,j] <- hess[j, i] <- (f(fx1x2, ...) - fx1[i] - fx1[j] + fx) / (delta^2)
-            }
-        }
-        hess
-    }
     central_difference2 <- function(par, f, delta, ...){
         np <- length(par)
         hess <- matrix(0, np, np)
@@ -1950,7 +1930,7 @@ numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 
         else return(matrix(numeric()))
     }
     if(type == 'central'){
-        ret <- if(gradient) central_difference(par=par, f=f, delta=delta, ...)
+        ret <- if(gradient) central_difference(par=par, f=f, delta=delta/2, ...)
         else central_difference2(par=par, f=f, delta=delta, ...)
     } else if(type == 'forward'){
         ret <- if(gradient) forward_difference(par=par, f=f, delta=delta, ...)
