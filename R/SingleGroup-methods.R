@@ -844,6 +844,11 @@ setMethod(
         info <- numeric(nrow(ThetaFull))
         if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace'))
             info <- testinfo(x, ThetaFull, degrees = degrees, which.items=which.items)
+        if(type == 'infoangle'){
+            for(i in seq_len(length(degrees)))
+                info <- info + testinfo(x, ThetaFull, degrees = rep(degrees[i], ncol(ThetaFull)),
+                                        which.items=which.items)
+        }
         mins <- x@Data$mins
         maxs <- extract.mirt(x, 'K') + mins - 1
         rotate <- if(is.null(dots$rotate)) 'none' else dots$rotate
@@ -1015,7 +1020,7 @@ setMethod(
                     main <- 'Information across different angles'
                     if(x@Options$exploratory) main <- paste0(main, ' (rotate = \'', rotate, '\')')
                 }
-                graphics::symbols(plt[,2], plt[,3], circles = sqrt(plt[,1]/pi), inches = .35, fg='white', bg='blue',
+                graphics::symbols(plt$Theta1, plt$Theta2, circles = sqrt(plt$info/pi), inches = .35, fg='white', bg='blue',
                         xlab = expression(theta[1]), ylab = expression(theta[2]),
                         main = main)
             } else if(type == 'SE'){
