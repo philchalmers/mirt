@@ -721,14 +721,22 @@ setMethod(
 #' @param x an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{DiscreteClass}
 #' @param y an arbitrary missing argument required for \code{R CMD check}
-#' @param type type of plot to view; can be \code{'info'} to show the test
-#'   information function, \code{'rxx'} for the reliability function,
-#'   \code{'infocontour'} for the test information contours,
-#'   \code{'SE'} for the test standard error function, \code{'trace'}, \code{'infotrace'}, and \code{'itemscore'}
-#'   for all item probability, information, and scoring or trace lines,
-#'   \code{'infoSE'} for a combined test information and standard error plot, and \code{'score'} and
-#'   \code{'scorecontour'} for the expected total score surface and contour plots.
-#'   If \code{empiricalhist = TRUE} was used in estimation then the type \code{'empiricalhist'}
+#' @param type type of plot to view. Can be
+#'   \describe{
+#'     \item{\code{'info'}}{test information function}
+#'     \item{\code{'rxx'}}{for the reliability function}
+#'     \item{\code{'infocontour'}}{for the test information contours}
+#'     \item{\code{'SE'}}{for the test standard error function}
+#'     \item{\code{'infotrace'}}{item information traceline plots}
+#'     \item{\code{'infoSE'}}{a combined test information and standard error plot}
+#'     \item{\code{'trace'}}{item probability traceline plots}
+#'     \item{\code{'itemscore'}}{item scoring traceline plots}
+#'     \item{\code{'score'}}{expected total score surface}
+#'     \item{\code{'scorecontour'}}{expected total score contour plot}
+#'   }
+#'
+#'   Note that if \code{empiricalhist = TRUE} was used in estimation then
+#'   the type \code{'empiricalhist'}
 #'   also will be available to generate the empirical histogram plot
 #' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 #'   for information-based plots with respect to the first dimension.
