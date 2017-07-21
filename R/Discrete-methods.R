@@ -72,7 +72,11 @@ setMethod(
                 rownames(P) <- paste0('Class_', 1L:nrow(P))
                 ret[[g]][[i]] <- P
             }
-            ret[[g]][[i+1L]] <- data.frame(Theta, prob=object@Internals$Prior[[g]])
+            if(is.matrix(object@Internals$Prior[[g]])){
+                ret[[g]][[i+1L]] <- data.frame(Theta, prob=colMeans(object@Internals$Prior[[g]]))
+            } else {
+                ret[[g]][[i+1L]] <- data.frame(Theta, prob=object@Internals$Prior[[g]])
+            }
             rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
         }
         names(ret) <- extract.mirt(object, 'groupNames')
@@ -87,6 +91,9 @@ setMethod(
     definition = function(object, drop = TRUE, ...){
         class(object) <- 'MultipleGroupClass'
         ret <- coef(object, discrete = TRUE, ...)
+        for(g in seq_len(length(ret)))
+            if(!is.null(ret[[g]]$lr.betas))
+                ret[[g]]$lr.betas <- ret[[g]]$lr.betas[,-ncol(ret[[g]]$lr.betas), drop=FALSE]
         if(drop)
             if(length(ret) == 1L) ret <- ret[[1L]]
         ret

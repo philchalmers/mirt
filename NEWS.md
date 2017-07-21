@@ -1,6 +1,11 @@
 # Changes in mirt 1.25
 
-- `SIBTEST()` replaced with the asymtotic sampling distribution version of CSIBTEST described by Chalmers (accepted)
+- `mdirt()` now supports latent regression covariate predictors. Associated function
+  (e.g., `fscores()`) also include the latent regression information for discrete 
+  models by default
+
+- `SIBTEST()` replaced with the asymtotic sampling distribution version of 
+   CSIBTEST described by Chalmers (accepted)
 
 - `calcNull` set to `FALSE` by default
 

@@ -27,6 +27,7 @@ setMethod(
         names(allPars) <- object@Data$groupNames
         for(g in 1:ngroups){
             tmp <- object@ParObjects$pars[[g]]
+            tmp@Model$lrPars <- object@ParObjects$lrPars
             tmp@Data$data <- object@Data$data[1L, , drop=FALSE]
             allPars[[g]] <- coef(tmp, ...)
         }

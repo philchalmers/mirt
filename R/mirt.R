@@ -1076,23 +1076,8 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  control = list(), technical = list(), ...)
 {
     Call <- match.call()
-    if(!is.null(covdata) && !is.null(formula)){
-        if(empiricalhist)
-            stop('Empirical histogram method not supported with covariates', call.=FALSE)
-        if(!is.data.frame(covdata))
-            stop('covdata must be a data.frame object', call.=FALSE)
-        if(nrow(covdata) != nrow(data))
-            stop('number of rows in covdata do not match number of rows in data', call.=FALSE)
-        if(!(method %in% c('EM', 'QMCEM')))
-            stop('method must be from the EM estimation family', call.=FALSE)
-        tmp <- apply(covdata, 1, function(x) sum(is.na(x)) > 0)
-        if(any(tmp)){
-            message('removing rows with NAs in covdata')
-            covdata <- covdata[-tmp, ]
-            data <- data[-tmp, ]
-        }
-        latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
-    } else latent.regression <- NULL
+    latent.regression <- latentRegression_obj(data=data, covdata=covdata, formula=formula,
+                                              empiricalhist=empiricalhist, method=method)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,

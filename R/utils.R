@@ -360,6 +360,17 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
             Prior[[g]] <- gp@den(gp, gTheta[[g]])
             Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
         }
+    } else if(dentype == 'discrete'){
+        for(g in seq_len(ngroups)){
+            gp <- pars[[g]][[J+1L]]
+            if(full){
+                Prior[[g]] <- gp@den(gp, gTheta[[g]], mus=lrPars@mus)
+                Prior[[g]] <- Prior[[g]]/rowSums(Prior[[g]])
+            } else {
+                Prior[[g]] <- gp@den(gp, gTheta[[g]])
+                Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
+            }
+        }
     } else {
         for(g in seq_len(ngroups)){
             gp <- ExtractGroupPars(pars[[g]][[J+1L]])
@@ -1805,6 +1816,7 @@ collapseCells <- function(O, E, mincell = 1){
 
 MGC2SC <- function(x, which){
     tmp <- x@ParObjects$pars[[which]]
+    tmp@Model$lrPars <- x@ParObjects$lrPars
     ind <- 1L
     for(i in seq_len(x@Data$nitems)){
         tmp@ParObjects$pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@ParObjects$pars[[i]]@parnum) - 1L)
@@ -1987,6 +1999,26 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
         pars <- fn(pars, Theta)
     }
     return(pars)
+}
+latentRegression_obj <- function(data, covdata, formula, empiricalhist, method){
+    if(!is.null(covdata) && !is.null(formula)){
+        if(empiricalhist)
+            stop('Empirical histogram method not supported with covariates', call.=FALSE)
+        if(!is.data.frame(covdata))
+            stop('covdata must be a data.frame object', call.=FALSE)
+        if(nrow(covdata) != nrow(data))
+            stop('number of rows in covdata do not match number of rows in data', call.=FALSE)
+        if(!(method %in% c('EM', 'QMCEM')))
+            stop('method must be from the EM estimation family', call.=FALSE)
+        tmp <- apply(covdata, 1, function(x) sum(is.na(x)) > 0)
+        if(any(tmp)){
+            message('removing rows with NAs in covdata')
+            covdata <- covdata[-tmp, ]
+            data <- data[-tmp, ]
+        }
+        latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
+    } else latent.regression <- NULL
+    latent.regression
 }
 
 # borrowed and modified from emdbook package, March 1 2017

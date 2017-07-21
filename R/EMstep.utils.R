@@ -138,8 +138,9 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         res <- Mstep.LR(Theta=gTheta[[1L]], CUSTOM.IND=CUSTOM.IND, pars=pars[[1L]], lrPars=lrPars,
                         itemloc=itemloc, fulldata=PrepList[[1L]]$fulldata, prior=Prior[[1L]])
         longpars[lrPars@parnum] <- res$beta
-        longpars[pars[[1L]][[J+1L]]@parnum[pars[[1L]][[J+1L]]@est]] <-
-            res$siglong[pars[[1L]][[J+1L]]@est]
+        if(dentype != 'discrete')
+            longpars[pars[[1L]][[J+1L]]@parnum[pars[[1L]][[J+1L]]@est]] <-
+                res$siglong[pars[[1L]][[J+1L]]@est]
     }
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     return(longpars)
@@ -323,7 +324,8 @@ BL.grad <- function(x, ...){
     numerical_deriv(x, BL.LL, ...)
 }
 
-Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior, lrPars, retscores=FALSE){
+Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior,
+                     lrPars, retscores=FALSE){
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
     mu <- lrPars@mus

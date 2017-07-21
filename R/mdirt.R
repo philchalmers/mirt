@@ -48,6 +48,12 @@
 #'   by default
 #' @param return_max logical; when \code{nruns > 1}, return the model that has the most optimal
 #'   maximum likelihood criteria? If FALSE, returns a list of all the estimated objects
+#' @param covdata a data.frame of data used for latent regression models
+#' @param formula an R formula (or list of formulas) indicating how the latent traits
+#'   can be regressed using external covariates in \code{covdata}. If a named list
+#'   of formulas is supplied (where the names correspond to the latent trait names in \code{model})
+#'   then specific regression effects can be estimated for each factor. Supplying a single formula
+#'   will estimate the regression parameters for all latent traits by default
 #' @param pars used for modifying starting values; see \code{\link{mirt}} for details
 #' @param verbose logical; turn on messages to the R console
 #' @param technical list of lower-level inputs. See \code{\link{mirt}} for details
@@ -246,13 +252,13 @@
 #'
 #' }
 mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
+                  covdata = NULL, formula = NULL,
                   optimizer = 'nlminb', return_max = TRUE, group = NULL, GenRandomPars = FALSE,
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
-    dots <- list(...)
-    if(!is.null(dots$formula))
-        stop('mdirt does not currently support latent regression models', call.=FALSE) #TODO
+    latent.regression <- latentRegression_obj(data=data, covdata=covdata, formula=formula,
+                                              empiricalhist=FALSE, method=method)
     technical$customTheta <- customTheta
     itemtype <- 'lca'
     stopifnot(method %in% c('EM', 'BL'))
@@ -261,6 +267,7 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
     if((is(model, 'mirt.model') || is.character(model)) && is.null(technical$customTheta))
         stop('customTheta input required when using a mirt.model type input')
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), method=method,
+                     latent.regression=latent.regression,
                      data=data, model=model, group=group, itemtype=itemtype, optimizer=optimizer,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
                      discrete=TRUE, verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)

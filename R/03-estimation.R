@@ -57,13 +57,21 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is.null(control$tol)) control$tol <- opts$TOL/1000
             if(is.null(control$maxit)) control$maxit <- 50L
         }
-        if(discrete) opts$dentype <- 'custom'
+        if(discrete) opts$dentype <- 'discrete'
         if(discrete && is.null(customGroup)){
-            den <- function(obj, Theta){
+            den <- function(obj, Theta, mus = 0){
                 if(length(Theta) == 1) return(1)
                 par <- obj@par
-                d <- c(exp(par), 1)
-                d / sum(d)
+                if(length(mus) > 1L){
+                    ret <- t(apply(mus, 1L, function(x)
+                        exp(par + x)))
+                    ret <- ret / rowSums(ret)
+                } else {
+                    d <- c(exp(par), 1)
+                    ret <- d / sum(d)
+                }
+                ret
+
             }
             par <- if(is.null(opts$technical$customTheta)){
                 tmpnfact <- model
