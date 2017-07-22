@@ -245,7 +245,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             lrPars@parnum <- parnumber:(parnumber - 1L + length(lrPars@par))
             parnumber <- max(lrPars@parnum) + 1L
             if(opts$dentype == 'discrete'){
-                if(opts$SE) stop('SEs for discrete models with regression terms no yet supported',
+                if(opts$SE) stop('SEs for discrete models with regression terms not yet supported',
                                  .call=FALSE) # TODO
                 tmp <- matrix(1L:length(lrPars@beta), nrow(lrPars@beta), ncol(lrPars@beta))
                 lrPars@est[tmp[,ncol(tmp)]] <- FALSE

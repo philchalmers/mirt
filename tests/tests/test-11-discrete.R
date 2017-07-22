@@ -39,14 +39,6 @@ test_that('discrete', {
     modb <- mdirt(dat, 2, covdata=covdata, formula = ~X, verbose=FALSE)
     expect_equal(logLik(modb), -2401.707, tolerance = 1e-4)
 
-    so <- summary(mod)
-    expect_equal(extract.mirt(mod, 'condnum'), 153.9135, tolerance = 1e-4)
-    expect_equal(extract.mirt(mod, 'logLik'), -2467.408, tolerance = 1e-4)
-    expect_equal(extract.mirt(mod, 'df'), 20)
-    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])[1L]), 0.3317701, tolerance = 1e-2)
-    expect_equal(as.numeric(sort(so$Item_1)), c(0.03656904, 0.15380621, 0.84619379, 0.96343096),
-                 tolerance = 1e-4)
-
     #----------
     # polytomous LCA
     mod2 <- mdirt(Science, 2, verbose=FALSE)
