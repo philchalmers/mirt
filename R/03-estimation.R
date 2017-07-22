@@ -246,7 +246,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             parnumber <- max(lrPars@parnum) + 1L
             if(opts$dentype == 'discrete'){
                 tmp <- matrix(1L:length(lrPars@beta), nrow(lrPars@beta), ncol(lrPars@beta))
-                lrPars@est[tmp[,1]] <- TRUE
+                tmp2 <- tmp[1, ]
+                lrPars@est[tmp2[-length(tmp2)]] <- TRUE
+                lrPars@est[tmp[,ncol(tmp)]] <- FALSE
                 PrepList$all$pars[[ncol(data) + 1L]]@est <- FALSE
             }
         } else lrPars <- list()

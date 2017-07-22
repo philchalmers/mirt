@@ -93,7 +93,7 @@ setMethod(
         ret <- coef(object, discrete = TRUE, ...)
         for(g in seq_len(length(ret)))
             if(!is.null(ret[[g]]$lr.betas))
-                ret[[g]]$lr.betas <- ret[[g]]$lr.betas[,-ncol(ret[[g]]$lr.betas), drop=FALSE]
+                ret[[g]]$GroupPars <- NULL
         if(drop)
             if(length(ret) == 1L) ret <- ret[[1L]]
         ret

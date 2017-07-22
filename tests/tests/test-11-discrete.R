@@ -37,7 +37,7 @@ test_that('discrete', {
     # covdata
     covdata <- data.frame(X = rowSums(dat))
     modb <- mdirt(dat, 2, covdata=covdata, formula = ~X, verbose=FALSE)
-    expect_equal(logLik(modb), -2401.707, tolerance = 1e-4)
+    expect_equal(logLik(modb), -2400.037, tolerance = 1e-4)
 
     #----------
     # polytomous LCA
