@@ -276,6 +276,8 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
 {
     Call <- match.call()
     dots <- list(...)
+    if(!is.null(dots$formula))
+        stop('latent regression models not supported for multiple group yet', call.=FALSE) #TODO
     constrain <- dots$constrain
     invariance.check <- invariance %in% c('free_means', 'free_var')
     if(missing(model)) missingMsg('model')

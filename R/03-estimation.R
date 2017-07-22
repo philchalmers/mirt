@@ -64,7 +64,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 par <- obj@par
                 if(length(mus) > 1L){
                     ret <- t(apply(mus, 1L, function(x)
-                        exp(par + x)))
+                        c(exp(par + x[-ncol(mus)]), 1)))
                     ret <- ret / rowSums(ret)
                 } else {
                     d <- c(exp(par), 1)
@@ -245,10 +245,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             lrPars@parnum <- parnumber:(parnumber - 1L + length(lrPars@par))
             parnumber <- max(lrPars@parnum) + 1L
             if(opts$dentype == 'discrete'){
-                if(opts$SE) stop('SEs for discrete models with regression terms not yet supported',
-                                 .call=FALSE) # TODO
                 tmp <- matrix(1L:length(lrPars@beta), nrow(lrPars@beta), ncol(lrPars@beta))
-                lrPars@est[tmp[,ncol(tmp)]] <- FALSE
+                lrPars@est[tmp[,1]] <- TRUE
+                PrepList$all$pars[[ncol(data) + 1L]]@est <- FALSE
             }
         } else lrPars <- list()
         if(length(latent.regression$lr.random) > 0L){

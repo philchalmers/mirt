@@ -1413,8 +1413,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
         X <- model.matrix(formula, df)
     }
     tXX <- t(X) %*% X
-    if(ncol(X) > 1L) inv_tXX <- try(solve(tXX), silent = TRUE)
-    else inv_tXX <- matrix(0)
+    inv_tXX <- try(solve(tXX), silent = TRUE)
     if(!is.nan(TOL)){
         if(is(inv_tXX, 'try-error'))
             stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)

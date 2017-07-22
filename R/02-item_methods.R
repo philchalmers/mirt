@@ -130,7 +130,11 @@ print.mirt_matrix <- function(x, digits = 3, ...){
 print.mirt_list <- function(x, digits = 3, ...){
     cls <- class(x)[2L]
     class(x) <- cls
-    x <- lapply(x, function(x, digits) round(x, digits=digits), digits=digits)
+    x <- lapply(x, function(x, digits){
+        if(is.list(x) && !is.data.frame(x))
+            lapply(x, function(y) round(y, digits=digits))
+        else round(x, digits=digits)
+    }, digits=digits)
     print(x, ...)
 }
 
