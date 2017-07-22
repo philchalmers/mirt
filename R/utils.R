@@ -1563,6 +1563,17 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
             Prior[[g]] <- gp@den(gp, Theta)
             Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
         }
+    } else if(dentype == 'discrete'){
+        for(g in seq_len(ngroups)){
+            gp <- pars[[g]][[J+1L]]
+            if(full){
+                Prior[[g]] <- gp@den(gp, Theta, mus=lrPars@mus)
+                Prior[[g]] <- Prior[[g]]/rowSums(Prior[[g]])
+            } else {
+                Prior[[g]] <- gp@den(gp, Theta)
+                Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
+            }
+        }
     } else {
         for(g in seq_len(ngroups)){
             gstructgrouppars[[g]] <- ExtractGroupPars(pars2[[g]][[J+1L]])

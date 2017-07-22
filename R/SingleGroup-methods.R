@@ -387,7 +387,6 @@ setMethod(
                     names(allPars$lr.betas) <- c('betas', SEnames)
                 }
             }
-
         }
         if(!as.data.frame)
             class(allPars) <- c('mirt_list', 'list')

@@ -244,6 +244,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                     TOL=opts$TOL)
             lrPars@parnum <- parnumber:(parnumber - 1L + length(lrPars@par))
             parnumber <- max(lrPars@parnum) + 1L
+            if(opts$dentype == 'discrete'){
+                if(opts$SE) stop('SEs for discrete models with regression terms no yet supported',
+                                 .call=FALSE) # TODO
+                tmp <- matrix(1L:length(lrPars@beta), nrow(lrPars@beta), ncol(lrPars@beta))
+                lrPars@est[tmp[,ncol(tmp)]] <- FALSE
+            }
         } else lrPars <- list()
         if(length(latent.regression$lr.random) > 0L){
             for(i in seq_len(length(latent.regression$lr.random))){
