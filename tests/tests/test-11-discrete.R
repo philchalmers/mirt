@@ -35,9 +35,11 @@ test_that('discrete', {
     expect_equal(W$W, 26.37915, tolerance=1e-4)
 
     # covdata
+    set.seed(2)
     covdata <- data.frame(X = rowSums(dat))
-    modb <- mdirt(dat, 2, covdata=covdata, formula = ~X, verbose=FALSE)
-    expect_equal(logLik(modb), -2400.037, tolerance = 1e-4)
+    modb <- mdirt(dat, 2, covdata=covdata, formula = ~X,
+                  verbose=FALSE, GenRandomPars = TRUE)
+    expect_equal(logLik(modb), -2390.676, tolerance = 1e-4)
 
     #----------
     # polytomous LCA
