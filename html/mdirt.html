@@ -25,9 +25,9 @@ grade of measurement models, and so on.
 
 <pre>
 mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
-  optimizer = "nlminb", return_max = TRUE, group = NULL,
-  GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
-  technical = list(), ...)
+  covdata = NULL, formula = NULL, optimizer = "nlminb",
+  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
+  verbose = TRUE, pars = NULL, technical = list(), ...)
 </pre>
 
 
@@ -64,6 +64,18 @@ by default</p>
 <tr valign="top"><td><code>method</code></td>
 <td>
 <p>estimation method. Can be 'EM' or 'BL' (see <code><a href="mirt.html">mirt</a></code> for more details)</p>
+</td></tr>
+<tr valign="top"><td><code>covdata</code></td>
+<td>
+<p>a data.frame of data used for latent regression models</p>
+</td></tr>
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>an R formula (or list of formulas) indicating how the latent traits
+can be regressed using external covariates in <code>covdata</code>. If a named list
+of formulas is supplied (where the names correspond to the latent trait names in <code>model</code>)
+then specific regression effects can be estimated for each factor. Supplying a single formula
+will estimate the regression parameters for all latent traits by default</p>
 </td></tr>
 <tr valign="top"><td><code>optimizer</code></td>
 <td>
@@ -136,6 +148,14 @@ discrete models, grade of membership, etc.). See the examples below.
 </p>
 
 
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
 <h3>See Also</h3>
 
 <p><code><a href="fscores.html">fscores</a></code>, <code><a href="mirt.model.html">mirt.model</a></code>, <code><a href="M2.html">M2</a></code>,
@@ -161,7 +181,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 380 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -181,7 +201,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -480,7 +500,7 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -562,7 +582,7 @@ dat &lt;- key2binary(SAT12,
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 171 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -570,6 +590,7 @@ dat &lt;- key2binary(SAT12,
 ## Estimated parameters: 103 
 ## AIC = 19065.13; AICc = 19108.33
 ## BIC = 19518.02; SABIC = 19191.02
+## G2 (4294967192) = 11189.41, p = 1, RMSEA = 0
 </code></pre>
 
 <pre><code class="r">summary(mod_discrete)
@@ -953,7 +974,7 @@ model &lt;- mirt.model(&#39;C1 = 1-32
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 255 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -961,6 +982,7 @@ model &lt;- mirt.model(&#39;C1 = 1-32
 ## Estimated parameters: 5 
 ## AIC = 25552.15; AICc = 25552.25
 ## BIC = 25574.13; SABIC = 25558.26
+## G2 (4294967290) = 17872.42, p = 1, RMSEA = 0
 </code></pre>
 
 <pre><code class="r">summary(mod_located)
@@ -2509,5 +2531,5 @@ coef(mod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

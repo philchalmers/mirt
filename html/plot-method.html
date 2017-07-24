@@ -47,14 +47,34 @@ plot(x, y, type = "score", npts = 50,
 </td></tr>
 <tr valign="top"><td><code>type</code></td>
 <td>
-<p>type of plot to view; can be <code>'info'</code> to show the test
-information function, <code>'rxx'</code> for the reliability function,
-<code>'infocontour'</code> for the test information contours,
-<code>'SE'</code> for the test standard error function, <code>'trace'</code>, <code>'infotrace'</code>, and <code>'itemscore'</code>
-for all item probability, information, and scoring or trace lines,
-<code>'infoSE'</code> for a combined test information and standard error plot, and <code>'score'</code> and
-<code>'scorecontour'</code> for the expected total score surface and contour plots.
-If <code>empiricalhist = TRUE</code> was used in estimation then the type <code>'empiricalhist'</code>
+<p>type of plot to view. Can be
+</p>
+
+<dl>
+<dt><code>'info'</code></dt><dd><p>test information function</p>
+</dd>
+<dt><code>'rxx'</code></dt><dd><p>for the reliability function</p>
+</dd>
+<dt><code>'infocontour'</code></dt><dd><p>for the test information contours</p>
+</dd>
+<dt><code>'SE'</code></dt><dd><p>for the test standard error function</p>
+</dd>
+<dt><code>'infotrace'</code></dt><dd><p>item information traceline plots</p>
+</dd>
+<dt><code>'infoSE'</code></dt><dd><p>a combined test information and standard error plot</p>
+</dd>
+<dt><code>'trace'</code></dt><dd><p>item probability traceline plots</p>
+</dd>
+<dt><code>'itemscore'</code></dt><dd><p>item scoring traceline plots</p>
+</dd>
+<dt><code>'score'</code></dt><dd><p>expected total score surface</p>
+</dd>
+<dt><code>'scorecontour'</code></dt><dd><p>expected total score contour plot</p>
+</dd>
+</dl>
+
+<p>Note that if <code>empiricalhist = TRUE</code> was used in estimation then
+the type <code>'empiricalhist'</code>
 also will be available to generate the empirical histogram plot</p>
 </td></tr>
 <tr valign="top"><td><code>npts</code></td>
@@ -143,6 +163,14 @@ plot, potentially squishing the 'meat' of the plot to take up less area than vis
 <p>additional arguments to be passed to lattice</p>
 </td></tr>
 </table>
+
+
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
 
 
 <h3>Examples</h3>
@@ -256,5 +284,5 @@ plot(x3, type = &#39;info&#39;)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

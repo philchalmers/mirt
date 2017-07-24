@@ -57,6 +57,14 @@ imputeMissing(x, Theta, warn = TRUE, ...)
 </p>
 
 
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
 <h3>Examples</h3>
 
 <pre><code class="r">## No test: 
@@ -70,7 +78,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -80,7 +88,7 @@ dat &lt;- expand.table(LSAT7)
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">NAperson &lt;- sample(1:nrow(dat), 20, replace = TRUE)
@@ -95,16 +103,16 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 39 EM iterations.
-## mirt version: 1.24 
+## Converged within 1e-04 tolerance after 31 EM iterations.
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2651.297
+## Log-likelihood = -2648.073
 ## Estimated parameters: 10 
-## AIC = 5322.594; AICc = 5322.816
-## BIC = 5371.671; SABIC = 5339.911
+## AIC = 5316.145; AICc = 5316.368
+## BIC = 5365.223; SABIC = 5333.462
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -119,18 +127,18 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 39 EM iterations.
-## mirt version: 1.24 
+## Converged within 1e-04 tolerance after 28 EM iterations.
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## 
-## Log-likelihood = -2663.079
+## Log-likelihood = -2658.381
 ## Estimated parameters: 10 
-## AIC = 5346.157; AICc = 5346.38
-## BIC = 5395.235; SABIC = 5363.474
-## G2 (21) = 32.79, p = 0.0485
-## RMSEA = 0.024, CFI = 0.932, TLI = 0.916
+## AIC = 5336.762; AICc = 5336.985
+## BIC = 5385.84; SABIC = 5354.079
+## G2 (21) = 31.47, p = 0.0661
+## RMSEA = 0.022, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">#with multipleGroup
@@ -144,5 +152,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

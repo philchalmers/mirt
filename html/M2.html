@@ -110,6 +110,10 @@ and optionally the TLI and CFI model fit statistics of <code>calcNull = TRUE</co
 hierarchical item factor models. British Journal of Mathematical and Statistical
 Psychology, 66, 245-276.
 </p>
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
 <p>Maydeu-Olivares, A. &amp; Joe, H. (2006). Limited information goodness-of-fit testing in
 multidimensional contingency tables Psychometrika, 71, 713-732.
 </p>
@@ -128,7 +132,7 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -138,7 +142,7 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">M2(mod1)
@@ -173,17 +177,17 @@ mirtCluster()
 <pre><code class="r">M2(mod2, impute = 10)
 </code></pre>
 
-<pre><code>##               M2 df         p      RMSEA     RMSEA_5    RMSEA_95
-## stats    9.46693  5 0.1518442 0.02720304 0.003556482 0.057728996
-## SD_stats 3.37828  0 0.1314219 0.01242075 0.007724598 0.009006312
-##                SRMSR        TLI        CFI
-## stats    0.028359806 0.95545776 0.97772888
-## SD_stats 0.004938996 0.03347134 0.01673567
+<pre><code>##                M2 df         p       RMSEA      RMSEA_5    RMSEA_95
+## stats    8.341412  5 0.1667598 0.024374291 0.0006218863 0.055157401
+## SD_stats 1.896596  0 0.1052897 0.008651313 0.0018656588 0.005712903
+##                SRMSR        TLI         CFI
+## stats    0.027252155 0.96754144 0.983770722
+## SD_stats 0.003046758 0.01868743 0.009343713
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

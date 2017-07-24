@@ -27,6 +27,10 @@ items obtained from the Law School Admissions Test, section 6.
 
 <h3>References</h3>
 
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
 <p>Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 <em>Psychometrika, 47</em>, 175-186.
 </p>
@@ -59,7 +63,7 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -69,7 +73,7 @@ head(dat)
 ## AIC = 4945.875; AICc = 4945.96
 ## BIC = 4975.322; SABIC = 4956.265
 ## G2 (25) = 21.8, p = 0.6474
-## RMSEA = 0, CFI = 1, TLI = 1.068
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">M2(mod)
@@ -177,5 +181,5 @@ anova(mod, mod2) #equal
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

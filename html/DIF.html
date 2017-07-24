@@ -151,6 +151,19 @@ item parameter estimates do not contain latent distribution characteristics.
 </p>
 
 
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+<p>Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
+make a big DIF: Improved Differential Test Functioning statistics that account for
+sampling variability. <em>Educational and Psychological Measurement, 76</em>, 114-140.
+doi: <a href="http://doi.org/10.1177/0013164415584576">10.1177/0013164415584576</a>
+</p>
+
+
 <h3>See Also</h3>
 
 <p><code><a href="multipleGroup.html">multipleGroup</a></code>
@@ -190,7 +203,9 @@ group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
 # define a parallel cluster (optional) to help speed up internal functions
 mirtCluster()
 
-#  Information matrix with Oakes&#39; identity (not controlling for latent group differences)
+# Information matrix with Oakes&#39; identity (not controlling for latent group differences)
+# NOTE: Without properly equating the groups the following example code is not testing for DIF,
+     # but instead reflects a compbination of DIF + latent-trait distribution effects
 model &lt;- multipleGroup(dat, 1, group, SE = TRUE)
 
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
@@ -505,7 +520,8 @@ resulta1 &lt;- DIF(model, &#39;a1&#39;)
 ## 2 36202.56 36206.34 36348.00 36538.62 -18041.28 0.99   1 0.32
 </code></pre>
 
-<pre><code class="r">#### using items 4 to 15 as anchors
+<pre><code class="r">####
+# using items 4 to 15 as anchors to test for DIF after adjusting for latent-trait differences
 itemnames &lt;- colnames(dat)
 model_anchor &lt;- multipleGroup(dat, model = 1, group = group,
   invariance = c(itemnames[4:15], &#39;free_means&#39;, &#39;free_var&#39;))
@@ -675,5 +691,5 @@ Checking for DIF in 2 more items
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

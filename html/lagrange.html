@@ -62,6 +62,14 @@ obtain the gradient terms</p>
 </p>
 
 
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
 <h3>See Also</h3>
 
 <p><code><a href="../../lavaan/html/lavTestWald.html">wald</a></code>
@@ -130,11 +138,11 @@ lagrange(mod, parnum)
 </code></pre>
 
 <pre><code>##            X2 df          p
-## 1  0.36685161  1 0.54472543
+## 1  0.36685162  1 0.54472542
 ## 5  0.04784961  1 0.82684827
 ## 9  4.69667172  1 0.03022109
 ## 13 1.44920423  1 0.22865568
-## 17 2.55494552  1 0.10994960
+## 17 2.55494551  1 0.10994961
 </code></pre>
 
 <pre><code class="r"># compare to LR test for first two slopes
@@ -156,7 +164,7 @@ coef(mod2, simplify=TRUE)$items
 
 <pre><code>## 
 ## Model 1: mirt(data = dat, model = 1, itemtype = &quot;Rasch&quot;)
-## Model 2: mirt(data = dat, model = &quot;F = 1-5\n                   FREE = (1, a1)&quot;, 
+## Model 2: mirt(data = dat, model = &quot;F = 1-5\\n                   FREE = (1, a1)&quot;, 
 ##     itemtype = &quot;Rasch&quot;)
 </code></pre>
 
@@ -183,7 +191,7 @@ coef(mod2, simplify=TRUE)$items
 
 <pre><code>## 
 ## Model 1: mirt(data = dat, model = 1, itemtype = &quot;Rasch&quot;)
-## Model 2: mirt(data = dat, model = &quot;F = 1-5\n                   FREE = (2, a1)&quot;, 
+## Model 2: mirt(data = dat, model = &quot;F = 1-5\\n                   FREE = (2, a1)&quot;, 
 ##     itemtype = &quot;Rasch&quot;)
 </code></pre>
 
@@ -210,7 +218,7 @@ coef(mod2, simplify=TRUE)$items
 
 <pre><code>## 
 ## Model 1: mirt(data = dat, model = 1, itemtype = &quot;Rasch&quot;)
-## Model 2: mirt(data = dat, model = &quot;F = 1-5\n                   FREE = (3, a1)&quot;, 
+## Model 2: mirt(data = dat, model = &quot;F = 1-5\\n                   FREE = (3, a1)&quot;, 
 ##     itemtype = &quot;Rasch&quot;)
 </code></pre>
 
@@ -241,5 +249,5 @@ lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -37,11 +37,11 @@ also available using the <code><a href="multipleGroup.html">multipleGroup</a></c
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
   optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
-  calcNull = TRUE, draws = 5000, survey.weights = NULL, quadpts = NULL,
+  calcNull = FALSE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
   key = NULL, large = FALSE, GenRandomPars = FALSE,
   accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), alabama_args = list(), spline_args = list(),
+  solnp_args = list(), nloptr_args = list(), spline_args = list(),
   control = list(), technical = list(), ...)
 </pre>
 
@@ -161,10 +161,15 @@ forward difference, and central difference evaluation of observed Hessian matrix
 </p>
 </li>
 <li> <p><code>'crossprod'</code> and <code>'Louis'</code> for standard error computations based on the variance of the
-Fisher scores as well as Louis' (1982) exact computation of the observed information matrix
+Fisher scores as well as Louis' (1982) exact computation of the observed information matrix.
+Note that Louis' estimates can take a long time to obtain for large sample sizes and long tests
 </p>
 </li>
 <li> <p><code>'sandwich'</code> for the sandwich covariance estimate based on the
+<code>'crossprod'</code> and <code>'Oakes'</code> estimates
+</p>
+</li>
+<li> <p><code>'sandwich.Louis'</code> for the sandwich covariance estimate based on the
 <code>'crossprod'</code> and <code>'Louis'</code> estimates
 </p>
 </li>
@@ -234,20 +239,16 @@ few iterations by default) to emulate stochastic EM updates.
 As well, the <code>'Nelder-Mead'</code> and <code>'SANN'</code>
 estimators are also available, but their routine use generally is not required or recommended.
 </p>
-<p>Additionally, estimation subroutines from the <code>Rsolnp</code> and <code>alabama</code>
-packages are available by passing the arguments <code>'solnp'</code> and <code>'alabama'</code>,
+<p>Additionally, estimation subroutines from the <code>Rsolnp</code> and <code>nloptr</code>
+packages are available by passing the arguments <code>'solnp'</code> and <code>'nloptr'</code>,
 respectively. This should be used in conjunction with the <code>solnp_args</code> and
-<code>alabama_args</code> specified below. If equality constraints were specified in the
+<code>nloptr_args</code> specified below. If equality constraints were specified in the
 model definition only the parameter with the lowest <code>parnum</code>
 in the <code>pars = 'values'</code> data.frame is used in the estimation vector passed
 to the objective function, and group hyper-parameters are omitted.
 Equality an inequality functions should be of the form <code>function(p, optim_args)</code>,
 where <code>optim_args</code> is a list of internally parameters that largely can be ignored
-when defining constraints (though use of <code>browser()</code> here may be helpful). Note:
-for the <code>'alabama'</code> optimizer, the starting values
-should be adjusted such that all constraints are met prior to the first maximization-step.
-The <code>'solnp'</code> optimizer is less sensitive to this initial condition restriction, but it may also
-if the model is unstable early in the EM cycles</p>
+when defining constraints (though use of <code>browser()</code> here may be helpful)</p>
 </td></tr>
 <tr valign="top"><td><code>pars</code></td>
 <td>
@@ -285,8 +286,7 @@ specified using <code><a href="mirt.model.html">mirt.model</a></code> syntax (re
 <tr valign="top"><td><code>calcNull</code></td>
 <td>
 <p>logical; calculate the Null model for additional fit statistics (e.g., TLI)?
-Only applicable if the data contains no NA's and the data is not overly sparse, otherwise
-it is ignored</p>
+Only applicable if the data contains no NA's and the data is not overly sparse</p>
 </td></tr>
 <tr valign="top"><td><code>draws</code></td>
 <td>
@@ -394,9 +394,9 @@ after each iteration cycle? Default is TRUE</p>
 <p>a list of arguments to be passed to the <code>solnp::solnp()</code> function for
 equality constraints, inequality constraints, etc</p>
 </td></tr>
-<tr valign="top"><td><code>alabama_args</code></td>
+<tr valign="top"><td><code>nloptr_args</code></td>
 <td>
-<p>a list of arguments to be passed to the <code>alabama::constrOptim.nl()</code>
+<p>a list of arguments to be passed to the <code>nloptr::nloptr()</code>
 function for equality constraints, inequality constraints, etc</p>
 </td></tr>
 <tr valign="top"><td><code>spline_args</code></td>
@@ -864,9 +864,14 @@ Statistics, 35</em>, 307-335.
 </p>
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+<p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
+<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="http://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
 </p>
 <p>Chalmers, R., P. &amp; Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
 Models with the MH-RM Algorithm. <em>Applied Psychological Measurement, 38</em>, 339-358.
+doi: <a href="http://doi.org/10.1177/0146621614520958">10.1177/0146621614520958</a>
 </p>
 <p>Chen, W. H. &amp; Thissen, D. (1997). Local dependence indices for item pairs using item
 response theory. <em>Journal of Educational and Behavioral Statistics, 22</em>, 265-289.
@@ -942,7 +947,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -952,7 +957,7 @@ data &lt;- expand.table(LSAT7)
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(mod1)
@@ -992,7 +997,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1006,7 +1011,7 @@ data &lt;- expand.table(LSAT7)
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">(mod2 &lt;- mirt(data, 1, SE = TRUE, SE.type = &#39;SEM&#39;)) #standard errors with SEM method
@@ -1018,7 +1023,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-05 tolerance after 74 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: none 
 ## Number of rectangular quadrature: 61
@@ -1032,7 +1037,7 @@ data &lt;- expand.table(LSAT7)
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(mod2)
@@ -1084,7 +1089,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1098,7 +1103,7 @@ data &lt;- expand.table(LSAT7)
 ## AIC = 5337.61; AICc = 5337.833
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
-## RMSEA = 0.023, CFI = 0.939, TLI = 0.924
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">residuals(mod1)
@@ -1146,7 +1151,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 43 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1156,7 +1161,7 @@ data &lt;- expand.table(LSAT7)
 ## AIC = 5339.587; AICc = 5339.855
 ## BIC = 5393.573; SABIC = 5358.636
 ## G2 (20) = 31.68, p = 0.0469
-## RMSEA = 0.024, CFI = 0.933, TLI = 0.913
+## RMSEA = 0.024, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(mod1.3PL)
@@ -1446,7 +1451,7 @@ coef(cmod)
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 125 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 31
@@ -1460,7 +1465,7 @@ coef(cmod)
 ## AIC = 5392.596; AICc = 5392.819
 ## BIC = 5441.674; SABIC = 5409.913
 ## G2 (21) = 86.69, p = 0
-## RMSEA = 0.056, CFI = 0.624, TLI = 0.535
+## RMSEA = 0.056, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">###########
@@ -1554,7 +1559,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1564,7 +1569,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 ## AIC = 3253.798; AICc = 3254.761
 ## BIC = 3305.425; SABIC = 3264.176
 ## G2 (242) = 223.62, p = 0.7959
-## RMSEA = 0, CFI = 1, TLI = 1.137
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(pmod1_equalslopes)
@@ -1603,7 +1608,7 @@ model &lt;- &#39;F = 1-4
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1613,7 +1618,7 @@ model &lt;- &#39;F = 1-4
 ## AIC = 3253.798; AICc = 3254.761
 ## BIC = 3305.425; SABIC = 3264.176
 ## G2 (242) = 223.62, p = 0.7959
-## RMSEA = 0, CFI = 1, TLI = 1.137
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(pmod1_equalslopes)
@@ -1735,7 +1740,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 50 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1745,7 +1750,7 @@ summary(pmod2)
 ## AIC = 3257.366; AICc = 3258.817
 ## BIC = 3320.906; SABIC = 3270.139
 ## G2 (239) = 221.19, p = 0.7896
-## RMSEA = 0, CFI = 1, TLI = 1.135
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(gpcmod)
@@ -1783,7 +1788,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 71 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1793,7 +1798,7 @@ summary(pmod2)
 ## AIC = 3264.91; AICc = 3268.18
 ## BIC = 3360.22; SABIC = 3284.069
 ## G2 (231) = 212.73, p = 0.8002
-## RMSEA = 0, CFI = 1, TLI = 1.143
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
@@ -1857,7 +1862,7 @@ extract.mirt(mod1, &#39;time&#39;) #time elapsed for each estimation component
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.610  0.051  0.094  0.459  0.000  0.000
+##  0.572  0.053  0.082  0.429  0.000  0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -1866,7 +1871,7 @@ extract.mirt(mod1, &#39;time&#39;)
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.182  0.058  0.051  0.068  0.000  0.001
+##  0.192  0.053  0.061  0.074  0.000  0.000
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(data, 2, optimizer = &#39;NR&#39;)
@@ -2265,15 +2270,15 @@ fulldata &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 0.001 tolerance after 70 MHRM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: NR1 
 ## 
-## Log-likelihood = -2659.168, SE = 0.018
+## Log-likelihood = -2658.58, SE = 0.018
 ## Estimated parameters: 10 
-## AIC = 5338.337; AICc = 5338.559
-## BIC = 5387.414; SABIC = 5355.654
-## G2 (21) = 32.29, p = 0.0547
-## RMSEA = 0.023, CFI = 0.935, TLI = 0.92
+## AIC = 5337.16; AICc = 5337.382
+## BIC = 5386.237; SABIC = 5354.477
+## G2 (21) = 31.12, p = 0.0717
+## RMSEA = 0.022, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">#Confirmatory models
@@ -2324,63 +2329,63 @@ coef(mod1)
 </code></pre>
 
 <pre><code>## $Item_1
-##        a1 a2      d g u
-## par 1.373  0 -0.955 0 1
+##       a1 a2      d g u
+## par 1.11  0 -0.907 0 1
 ## 
 ## $Item_2
 ##        a1 a2      d g u
-## par 0.569  0 -1.526 0 1
+## par 0.453  0 -1.463 0 1
 ## 
 ## $Item_3
 ##        a1 a2     d g u
-## par 0.846  0 1.433 0 1
+## par 1.039  0 1.532 0 1
 ## 
 ## $Item_4
 ##        a1    a2     d g u
-## par 1.068 0.584 0.036 0 1
+## par 1.167 0.213 0.009 0 1
 ## 
 ## $Item_5
-##     a1    a2   d1    d2     d3
-## par  0 1.628 3.06 2.095 -0.524
+##     a1    a2    d1    d2     d3
+## par  0 1.703 3.275 2.151 -0.559
 ## 
 ## $Item_6
 ##     a1    a2    d1    d2     d3
-## par  0 0.662 2.508 1.059 -1.055
+## par  0 0.401 2.517 1.068 -0.961
 ## 
 ## $Item_7
 ##     a1    a2    d1    d2
-## par  0 0.981 2.008 0.016
+## par  0 0.992 2.006 0.002
 ## 
 ## $Item_8
 ##     a1    a2     d g u
-## par  0 0.901 0.967 0 1
+## par  0 0.864 1.061 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0      1  0.406      1
+## par      0      0      1  0.484      1
 </code></pre>
 
 <pre><code class="r">summary(mod1)
 </code></pre>
 
-<pre><code>##           F1    F2    h2
-## Item_1 0.628 0.000 0.394
-## Item_2 0.317 0.000 0.101
-## Item_3 0.445 0.000 0.198
-## Item_4 0.511 0.279 0.339
-## Item_5 0.000 0.691 0.478
-## Item_6 0.000 0.363 0.131
-## Item_7 0.000 0.499 0.249
-## Item_8 0.000 0.468 0.219
+<pre><code>##           F1    F2     h2
+## Item_1 0.546 0.000 0.2986
+## Item_2 0.257 0.000 0.0661
+## Item_3 0.521 0.000 0.2716
+## Item_4 0.563 0.102 0.3270
+## Item_5 0.000 0.707 0.5004
+## Item_6 0.000 0.229 0.0526
+## Item_7 0.000 0.504 0.2537
+## Item_8 0.000 0.453 0.2048
 ## 
-## SS loadings:  0.954 1.156 
-## Proportion Var:  0.119 0.144 
+## SS loadings:  0.953 1.022 
+## Proportion Var:  0.119 0.128 
 ## 
 ## Factor correlations: 
 ## 
 ##       F1    F2
-## F1 1.000 0.406
-## F2 0.406 1.000
+## F1 1.000 0.484
+## F2 0.484 1.000
 </code></pre>
 
 <pre><code class="r">residuals(mod1)
@@ -2390,14 +2395,14 @@ coef(mod1)
 </code></pre>
 
 <pre><code>##        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-## Item_1     NA  0.014  0.006 -0.007 -0.041  0.023 -0.044 -0.024
-## Item_2  0.396     NA -0.017  0.009 -0.020 -0.020  0.040  0.007
-## Item_3  0.075 -0.545     NA -0.011  0.029 -0.020 -0.011  0.031
-## Item_4 -0.099  0.170 -0.228     NA -0.035  0.037  0.027  0.035
-## Item_5 -3.331 -0.838  1.674 -2.449     NA -0.023  0.046  0.011
-## Item_6  1.013 -0.836 -0.780  2.770 -3.056     NA  0.032 -0.052
-## Item_7 -3.960  3.132 -0.235  1.427  8.452  4.146     NA -0.036
-## Item_8 -1.177  0.088  1.883  2.442  0.222 -5.376 -2.633     NA
+## Item_1     NA -0.005  0.005  0.002  0.016  0.054  0.023 -0.004
+## Item_2 -0.059     NA -0.017  0.019 -0.037 -0.030  0.013 -0.002
+## Item_3  0.046 -0.573     NA -0.003 -0.013 -0.060  0.030 -0.009
+## Item_4  0.006  0.732 -0.016     NA  0.063  0.040 -0.033  0.007
+## Item_5  0.540 -2.739 -0.354  7.839     NA -0.040 -0.029 -0.021
+## Item_6  5.820 -1.776 -7.199  3.143 -9.475     NA  0.034  0.018
+## Item_7  1.066  0.350  1.803 -2.146 -3.406  4.712     NA -0.048
+## Item_8 -0.028 -0.007 -0.170  0.105 -0.884  0.654 -4.556     NA
 </code></pre>
 
 <pre><code class="r">#####
@@ -2413,35 +2418,35 @@ coef(mod3)
 
 <pre><code>## $Item_1
 ##        a1    a2 a3      d g u
-## par 0.627 1.478  0 -1.018 0 1
+## par 0.808 0.644  0 -0.883 0 1
 ## 
 ## $Item_2
 ##        a1    a2 a3      d g u
-## par 0.271 0.558  0 -1.539 0 1
+## par 0.354 0.293  0 -1.463 0 1
 ## 
 ## $Item_3
-##       a1    a2 a3    d g u
-## par 0.44 0.646  0 1.41 0 1
+##        a1    a2 a3     d g u
+## par 0.753 0.653  0 1.514 0 1
 ## 
 ## $Item_4
 ##        a1    a2 a3     d g u
-## par 1.373 0.778  0 0.043 0 1
+## par 1.198 0.893  0 0.011 0 1
 ## 
 ## $Item_5
-##        a1 a2  a3    d1    d2     d3
-## par 1.406  0 1.5 3.476 2.391 -0.588
+##        a1 a2    a3    d1    d2     d3
+## par 1.136  0 0.978 3.086 2.023 -0.521
 ## 
 ## $Item_6
-##        a1 a2    a3    d1    d2     d3
-## par 0.535  0 0.321 2.493 1.054 -1.041
+##       a1 a2    a3    d1    d2     d3
+## par 0.24  0 0.383 2.536 1.077 -0.969
 ## 
 ## $Item_7
-##        a1 a2    a3    d1    d2
-## par 0.785  0 0.496 1.982 0.019
+##       a1 a2    a3    d1    d2
+## par 0.67  0 0.893 2.081 0.006
 ## 
 ## $Item_8
-##        a1 a2    a3     d g u
-## par 0.851  0 0.328 0.975 0 1
+##        a1 a2    a3    d g u
+## par 0.609  0 0.648 1.07 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2451,18 +2456,18 @@ coef(mod3)
 <pre><code class="r">summary(mod3)
 </code></pre>
 
-<pre><code>##            G    F1    F2    h2
-## Item_1 0.268 0.632 0.000 0.471
-## Item_2 0.150 0.308 0.000 0.117
-## Item_3 0.235 0.345 0.000 0.174
-## Item_4 0.592 0.335 0.000 0.462
-## Item_5 0.527 0.000 0.562 0.593
-## Item_6 0.295 0.000 0.177 0.118
-## Item_7 0.405 0.000 0.256 0.229
-## Item_8 0.441 0.000 0.170 0.223
+<pre><code>##            G    F1    F2     h2
+## Item_1 0.406 0.324 0.000 0.2694
+## Item_2 0.201 0.166 0.000 0.0680
+## Item_3 0.382 0.331 0.000 0.2553
+## Item_4 0.529 0.394 0.000 0.4353
+## Item_5 0.501 0.000 0.431 0.4369
+## Item_6 0.136 0.000 0.218 0.0659
+## Item_7 0.329 0.000 0.439 0.3009
+## Item_8 0.317 0.000 0.337 0.2145
 ## 
-## SS loadings:  1.222 0.726 0.442 
-## Proportion Var:  0.153 0.091 0.055 
+## SS loadings:  1.109 0.397 0.54 
+## Proportion Var:  0.139 0.05 0.067 
 ## 
 ## Factor correlations: 
 ## 
@@ -2479,14 +2484,14 @@ coef(mod3)
 </code></pre>
 
 <pre><code>##        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-## Item_1     NA -0.005  0.005 -0.004  0.042  0.027 -0.041 -0.023
-## Item_2 -0.058     NA -0.017  0.007 -0.019 -0.019  0.040  0.003
-## Item_3  0.057 -0.548     NA -0.005  0.029 -0.020 -0.012  0.020
-## Item_4 -0.030  0.087 -0.048     NA -0.030  0.036  0.025  0.007
-## Item_5  3.534 -0.686  1.687 -1.847     NA -0.023  0.047  0.007
-## Item_6  1.431 -0.715 -0.839  2.644 -3.218     NA  0.033 -0.051
-## Item_7 -3.387  3.186 -0.285  1.238  8.983  4.406     NA -0.028
-## Item_8 -1.063  0.021  0.799  0.092  0.085 -5.156 -1.562     NA
+## Item_1     NA -0.003  0.017 -0.009 -0.017  0.056  0.022 -0.009
+## Item_2 -0.018     NA -0.016  0.009 -0.039 -0.029  0.012 -0.006
+## Item_3  0.557 -0.503     NA -0.015 -0.018 -0.058  0.031 -0.013
+## Item_4 -0.161  0.179 -0.445     NA  0.061  0.042 -0.028  0.006
+## Item_5 -0.599 -3.014 -0.682  7.452     NA -0.040  0.028  0.022
+## Item_6  6.322 -1.693 -6.706  3.489 -9.489     NA -0.032  0.015
+## Item_7  1.011  0.304  1.910 -1.579  3.149 -4.114     NA -0.053
+## Item_8 -0.167 -0.062 -0.335  0.079  0.993  0.436 -5.584     NA
 </code></pre>
 
 <pre><code class="r">anova(mod1,mod3)
@@ -2497,9 +2502,9 @@ coef(mod3)
 ## Model 2: mirt(data = dataset, model = model.3, method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 24780.65 24781.21 24836.40 24909.47 -12367.33   NaN NaN   NaN
-## 2 24789.29 24790.17 24859.58 24951.72 -12365.65 3.363   6 0.762
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
+## 1 24784.40 24784.96 24840.15 24913.22 -12369.20    NaN NaN NaN
+## 2 24797.48 24798.36 24867.77 24959.90 -12369.74 -1.079   6   1
 </code></pre>
 
 <pre><code class="r">#####
@@ -2530,7 +2535,7 @@ model.combo &lt;- &#39;
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -2539,6 +2544,8 @@ model.combo &lt;- &#39;
 ## Estimated parameters: 96 
 ## AIC = 19120.06; AICc = 19157.08
 ## BIC = 19542.16; SABIC = 19237.39
+## G2 (4294967199) = 11258.34, p = 1
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">summary(mod.quad)
@@ -2596,7 +2603,7 @@ model.combo &lt;- &#39;
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 20 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 31
@@ -2605,6 +2612,8 @@ model.combo &lt;- &#39;
 ## Estimated parameters: 72 
 ## AIC = 19454.06; AICc = 19474
 ## BIC = 19770.63; SABIC = 19542.05
+## G2 (4294967223) = 11640.33, p = 1
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">anova(mod.quad, mod.combo)
@@ -2692,7 +2701,7 @@ plot(skew, type = &#39;empiricalhist&#39;)
 <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/></p>
 
 <pre><code class="r">#####
-# non-linear parameter constraints with Rsolnp package (alabama supported as well):
+# non-linear parameter constraints with Rsolnp package (nloptr supported as well):
 # Find Rasch model subject to the constraint that the intercepts sum to 0
 
 dat &lt;- expand.table(LSAT6)
@@ -2731,179 +2740,7 @@ LB &lt;- c(rep(-15, 6), 1e-4) # more reasonable lower bound for variance term
 
 mod &lt;- mirt(dat, model, sv=sv, itemtype = &#39;Rasch&#39;, optimizer = &#39;solnp&#39;,
    solnp_args=list(eqfun=eqfun, eqB=0, LB=LB))
-</code></pre>
-
-<pre><code>## 
-## Iter: 1 fn: 4577.6396     Pars:   0.799805 -0.258170 -1.066600  0.002146  0.522820 -0.001709  0.950305
-## Iter: 2 fn: 4577.6395     Pars:   0.799815 -0.258180 -1.066599  0.002141  0.522823 -0.001712  0.950301
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3822.8250     Pars:   0.86237 -0.30555 -1.03804 -0.04414  0.52536  0.64393  0.76728
-## Iter: 2 fn: 3822.8250     Pars:   0.86237 -0.30555 -1.03804 -0.04414  0.52536  0.64393  0.76728
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3601.4400     Pars:   0.94804 -0.34704 -1.07572 -0.07472  0.54944  0.94771  0.67617
-## Iter: 2 fn: 3601.4400     Pars:   0.94806 -0.34703 -1.07573 -0.07473  0.54942  0.94771  0.67617
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3512.0417     Pars:   1.02020 -0.37924 -1.11232 -0.09790  0.56925  1.11748  0.62573
-## Iter: 2 fn: 3512.0417     Pars:   1.02020 -0.37925 -1.11231 -0.09790  0.56926  1.11749  0.62574
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3468.5878     Pars:   1.07629 -0.40336 -1.14116 -0.11537  0.58361  1.22267  0.59541
-## Iter: 2 fn: 3468.5878     Pars:   1.07628 -0.40336 -1.14116 -0.11537  0.58362  1.22267  0.59541
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3444.9388     Pars:   1.11894 -0.42128 -1.16297 -0.12850  0.59381  1.29208  0.57623
-## Iter: 2 fn: 3444.9388     Pars:   1.11892 -0.42127 -1.16298 -0.12849  0.59382  1.29209  0.57623
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3431.1504     Pars:   1.15188 -0.43400 -1.17952 -0.13804  0.59967  1.34063  0.56406
-## Iter: 2 fn: 3431.1495     Pars:   1.15116 -0.43459 -1.17932 -0.13834  0.60109  1.33980  0.56376
-## Iter: 3 fn: 3431.1495     Pars:   1.15113 -0.43459 -1.17933 -0.13833  0.60111  1.33980  0.56377
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3422.7885     Pars:   1.17471 -0.44351 -1.19244 -0.14477  0.60601  1.37491  0.55518
-## Iter: 2 fn: 3422.7884     Pars:   1.17480 -0.44408 -1.19228 -0.14425  0.60581  1.37489  0.55520
-## Iter: 3 fn: 3422.7884     Pars:   1.17471 -0.44346 -1.19244 -0.14486  0.60606  1.37487  0.55520
-## Iter: 4 fn: 3422.7883     Pars:   1.17480 -0.44406 -1.19228 -0.14431  0.60585  1.37485  0.55521
-## Iter: 5 fn: 3422.7883     Pars:   1.17472 -0.44352 -1.19241 -0.14484  0.60606  1.37484  0.55521
-## Iter: 6 fn: 3422.7882     Pars:   1.17482 -0.44415 -1.19224 -0.14428  0.60585  1.37482  0.55523
-## Iter: 7 fn: 3422.7882     Pars:   1.17473 -0.44358 -1.19239 -0.14483  0.60607  1.37480  0.55522
-## Iter: 8 fn: 3422.7881     Pars:   1.17481 -0.44412 -1.19223 -0.14434  0.60588  1.37478  0.55524
-## Iter: 9 fn: 3422.7881     Pars:   1.17472 -0.44353 -1.19238 -0.14492  0.60611  1.37477  0.55524
-## Iter: 10 fn: 3422.7880    Pars:   1.17481 -0.44410 -1.19223 -0.14440  0.60592  1.37475  0.55525
-## Iter: 11 fn: 3422.7880    Pars:   1.17473 -0.44359 -1.19236 -0.14490  0.60612  1.37474  0.55525
-## Iter: 12 fn: 3422.7879    Pars:   1.17480 -0.44399 -1.19225 -0.14454  0.60598  1.37472  0.55526
-## Iter: 13 fn: 3422.7863    Pars:   1.17542 -0.44451 -1.19158 -0.14570  0.60638  1.37351  0.55559
-## Iter: 14 fn: 3422.7863    Pars:   1.17542 -0.44451 -1.19158 -0.14570  0.60638  1.37351  0.55559
-## solnp--&gt; Completed in 14 iterations
-## 
-## Iter: 1 fn: 3417.6365     Pars:   1.19368 -0.45153 -1.20060 -0.15171  0.61016  1.39918  0.55110
-## Iter: 2 fn: 3417.6364     Pars:   1.19379 -0.45220 -1.20043 -0.15106  0.60990  1.39916  0.55110
-## Iter: 3 fn: 3417.6364     Pars:   1.19368 -0.45157 -1.20060 -0.15166  0.61015  1.39914  0.55108
-## Iter: 4 fn: 3417.6363     Pars:   1.19377 -0.45215 -1.20046 -0.15110  0.60994  1.39912  0.55109
-## Iter: 5 fn: 3417.6362     Pars:   1.19365 -0.45151 -1.20063 -0.15171  0.61019  1.39910  0.55107
-## Iter: 6 fn: 3417.6362     Pars:   1.19373 -0.45199 -1.20051 -0.15125  0.61001  1.39908  0.55107
-## Iter: 7 fn: 3417.6341     Pars:   1.19373 -0.45192 -1.20079 -0.15124  0.61023  1.39780  0.55027
-## Iter: 8 fn: 3417.6341     Pars:   1.19373 -0.45192 -1.20080 -0.15124  0.61023  1.39780  0.55026
-## solnp--&gt; Completed in 8 iterations
-## 
-## Iter: 1 fn: 3414.5887     Pars:   1.20896 -0.45805 -1.20853 -0.15579  0.61341  1.41730  0.54713
-## Iter: 2 fn: 3414.5887     Pars:   1.20896 -0.45805 -1.20853 -0.15579  0.61341  1.41730  0.54713
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3412.8410     Pars:   1.21872 -0.46154 -1.21386 -0.15884  0.61551  1.43093  0.54539
-## Iter: 2 fn: 3412.8409     Pars:   1.21882 -0.46204 -1.21373 -0.15836  0.61531  1.43091  0.54541
-## Iter: 3 fn: 3412.8409     Pars:   1.21872 -0.46161 -1.21383 -0.15880  0.61552  1.43088  0.54540
-## Iter: 4 fn: 3412.8408     Pars:   1.21880 -0.46203 -1.21373 -0.15840  0.61536  1.43085  0.54541
-## Iter: 5 fn: 3412.8408     Pars:   1.21868 -0.46149 -1.21385 -0.15897  0.61563  1.43081  0.54539
-## Iter: 6 fn: 3412.8407     Pars:   1.21877 -0.46196 -1.21373 -0.15851  0.61543  1.43079  0.54541
-## Iter: 7 fn: 3412.8401     Pars:   1.21899 -0.46210 -1.21362 -0.15880  0.61552  1.42999  0.54523
-## Iter: 8 fn: 3412.8401     Pars:   1.21906 -0.46209 -1.21362 -0.15881  0.61545  1.43000  0.54519
-## solnp--&gt; Completed in 8 iterations
-## 
-## Iter: 1 fn: 3411.8981     Pars:   1.22673 -0.46514 -1.21752 -0.16108  0.61701  1.43946  0.54417
-## Iter: 2 fn: 3411.8981     Pars:   1.22672 -0.46515 -1.21752 -0.16108  0.61703  1.43946  0.54417
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3411.5772     Pars:   1.23322 -0.46785 -1.22095 -0.16298  0.61857  1.44808  0.54414
-## Iter: 2 fn: 3411.5771     Pars:   1.23323 -0.46785 -1.22095 -0.16299  0.61856  1.44808  0.54396
-## Iter: 3 fn: 3411.5771     Pars:   1.23324 -0.46784 -1.22095 -0.16299  0.61855  1.44808  0.54391
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3411.6418     Pars:   1.23797 -0.46947 -1.22331 -0.16433  0.61914  1.45350  0.54394
-## Iter: 2 fn: 3411.6418     Pars:   1.23796 -0.46948 -1.22331 -0.16432  0.61916  1.45350  0.54406
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3411.9441     Pars:   1.24136 -0.47104 -1.22498 -0.16553  0.62020  1.45752  0.54410
-## Iter: 2 fn: 3411.9440     Pars:   1.24129 -0.47090 -1.22515 -0.16533  0.62010  1.45752  0.54448
-## Iter: 3 fn: 3411.9440     Pars:   1.24136 -0.47106 -1.22505 -0.16533  0.62008  1.45751  0.54448
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3412.4045     Pars:   1.24420 -0.47214 -1.22670 -0.16615  0.62079  1.46090  0.54526
-## Iter: 2 fn: 3412.4045     Pars:   1.24418 -0.47203 -1.22678 -0.16621  0.62084  1.46089  0.54525
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3413.0289     Pars:   1.24602 -0.47272 -1.22767 -0.16667  0.62104  1.46307  0.54612
-## Iter: 2 fn: 3413.0289     Pars:   1.24603 -0.47279 -1.22766 -0.16658  0.62100  1.46306  0.54612
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3413.6920     Pars:   1.24739 -0.47326 -1.22855 -0.16700  0.62143  1.46472  0.54698
-## Iter: 2 fn: 3413.6920     Pars:   1.24740 -0.47331 -1.22855 -0.16695  0.62140  1.46471  0.54698
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3414.3522     Pars:   1.24864 -0.47372 -1.22935 -0.16726  0.62168  1.46620  0.54798
-## Iter: 2 fn: 3414.3522     Pars:   1.24863 -0.47369 -1.22935 -0.16730  0.62171  1.46620  0.54798
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3415.0597     Pars:   1.24940 -0.47417 -1.23001 -0.16730  0.62208  1.46716  0.54902
-## Iter: 2 fn: 3415.0597     Pars:   1.24936 -0.47410 -1.23003 -0.16737  0.62214  1.46716  0.54902
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3415.7944     Pars:   1.25001 -0.47436 -1.23031 -0.16760  0.62226  1.46794  0.55008
-## Iter: 2 fn: 3415.7944     Pars:   1.24998 -0.47435 -1.23029 -0.16764  0.62230  1.46794  0.55008
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3416.5276     Pars:   1.25058 -0.47463 -1.23061 -0.16789  0.62256  1.46863  0.55118
-## Iter: 2 fn: 3416.5276     Pars:   1.25064 -0.47458 -1.23059 -0.16794  0.62247  1.46863  0.55118
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3417.2751     Pars:   1.25108 -0.47476 -1.23127 -0.16773  0.62268  1.46915  0.55121
-## Iter: 2 fn: 3417.2745     Pars:   1.25102 -0.47475 -1.23092 -0.16790  0.62256  1.46915  0.55194
-## Iter: 3 fn: 3417.2745     Pars:   1.25102 -0.47472 -1.23098 -0.16787  0.62256  1.46915  0.55194
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3417.8032     Pars:   1.25154 -0.47495 -1.23152 -0.16794  0.62286  1.46959  0.55198
-## Iter: 2 fn: 3417.8026     Pars:   1.25140 -0.47490 -1.23118 -0.16800  0.62268  1.46959  0.55305
-## Iter: 3 fn: 3417.8026     Pars:   1.25137 -0.47484 -1.23124 -0.16794  0.62266  1.46959  0.55305
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3418.5509     Pars:   1.25162 -0.47496 -1.23128 -0.16804  0.62266  1.47002  0.55308
-## Iter: 2 fn: 3418.5503     Pars:   1.25168 -0.47495 -1.23153 -0.16798  0.62278  1.47002  0.55410
-## Iter: 3 fn: 3418.5503     Pars:   1.25168 -0.47499 -1.23148 -0.16801  0.62280  1.47002  0.55410
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3419.2541     Pars:   1.25207 -0.47510 -1.23208 -0.16798  0.62309  1.47035  0.55414
-## Iter: 2 fn: 3419.2536     Pars:   1.25196 -0.47511 -1.23168 -0.16809  0.62292  1.47035  0.55508
-## Iter: 3 fn: 3419.2536     Pars:   1.25194 -0.47507 -1.23174 -0.16805  0.62291  1.47035  0.55508
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3419.9112     Pars:   1.25227 -0.47520 -1.23222 -0.16802  0.62317  1.47066  0.55512
-## Iter: 2 fn: 3419.9108     Pars:   1.25217 -0.47519 -1.23191 -0.16811  0.62303  1.47066  0.55601
-## Iter: 3 fn: 3419.9108     Pars:   1.25216 -0.47515 -1.23195 -0.16808  0.62302  1.47066  0.55601
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3420.5383     Pars:   1.25230 -0.47514 -1.23214 -0.16811  0.62310  1.47100  0.55670
-## Iter: 2 fn: 3420.5383     Pars:   1.25235 -0.47516 -1.23215 -0.16808  0.62303  1.47100  0.55671
-## solnp--&gt; Completed in 2 iterations
-## 
-## Iter: 1 fn: 3420.9951     Pars:   1.25236 -0.47517 -1.23216 -0.16808  0.62304  1.47123  0.55671
-## Iter: 2 fn: 3420.9947     Pars:   1.25250 -0.47528 -1.23233 -0.16809  0.62319  1.47122  0.55755
-## Iter: 3 fn: 3420.9947     Pars:   1.25250 -0.47528 -1.23233 -0.16809  0.62320  1.47120  0.55755
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3421.5525     Pars:   1.25251 -0.47528 -1.23234 -0.16809  0.62320  1.47143  0.55755
-## Iter: 2 fn: 3421.5522     Pars:   1.25264 -0.47533 -1.23249 -0.16811  0.62329  1.47143  0.55834
-## Iter: 3 fn: 3421.5522     Pars:   1.25264 -0.47533 -1.23249 -0.16811  0.62329  1.47141  0.55834
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3422.0811     Pars:   1.25294 -0.47548 -1.23250 -0.16827  0.62330  1.47166  0.55835
-## Iter: 2 fn: 3422.0808     Pars:   1.25294 -0.47544 -1.23264 -0.16820  0.62334  1.47167  0.55909
-## Iter: 3 fn: 3422.0808     Pars:   1.25291 -0.47543 -1.23268 -0.16816  0.62336  1.47167  0.55909
-## solnp--&gt; Completed in 3 iterations
-## 
-## Iter: 1 fn: 3422.5690     Pars:   1.25292 -0.47543 -1.23269 -0.16816  0.62337  1.47186  0.55909
-## solnp--&gt; Completed in 1 iterations
-## 
-## Iter: 1 fn: 3422.5775     Pars:   1.25293 -0.47543 -1.23270 -0.16817  0.62338  1.47200  0.55909
-## solnp--&gt; Completed in 1 iterations
-## 
-## Iter: 1 fn: 3422.5838     Pars:   1.25296 -0.47545 -1.23274 -0.16817  0.62339  1.47210  0.55909
-## solnp--&gt; Completed in 1 iterations
-</code></pre>
-
-<pre><code class="r">print(mod)
+print(mod)
 </code></pre>
 
 <pre><code>## 
@@ -2913,7 +2750,7 @@ mod &lt;- mirt(dat, model, sv=sv, itemtype = &#39;Rasch&#39;, optimizer = &#39;s
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: solnp 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -2923,7 +2760,7 @@ mod &lt;- mirt(dat, model, sv=sv, itemtype = &#39;Rasch&#39;, optimizer = &#39;s
 ## AIC = 4947.887; AICc = 4948
 ## BIC = 4982.241; SABIC = 4960.009
 ## G2 (25) = 21.81, p = 0.6467
-## RMSEA = 0, CFI = 1, TLI = 1.068
+## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">coef(mod)
@@ -3104,19 +2941,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.71069 -0.32875  0.00536  0.33460  1.69451 
+## -1.57233 -0.33258 -0.00826  0.32893  1.37621 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.006205   0.015203  -0.408    0.683    
-## covdata$X1   0.524463   0.015268  34.351   &lt;2e-16 ***
-## covdata$X2  -1.037703   0.015519 -66.866   &lt;2e-16 ***
+## (Intercept) -0.009986   0.014796  -0.675      0.5    
+## covdata$X1   0.530527   0.014860  35.702   &lt;2e-16 ***
+## covdata$X2  -1.016211   0.015104 -67.279   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4805 on 997 degrees of freedom
-## Multiple R-squared:  0.8443, Adjusted R-squared:  0.844 
-## F-statistic:  2704 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4677 on 997 degrees of freedom
+## Multiple R-squared:  0.8476, Adjusted R-squared:  0.8473 
+## F-statistic:  2773 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[2]]
@@ -3126,19 +2963,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.30034 -0.26470  0.00611  0.31027  1.54231 
+## -1.55506 -0.31962 -0.00309  0.32793  1.43120 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.00381    0.01423  -0.268    0.789    
-## covdata$X1   0.52476    0.01429  36.716   &lt;2e-16 ***
-## covdata$X2  -1.00032    0.01453 -68.856   &lt;2e-16 ***
+## (Intercept)  0.01892    0.01515   1.249    0.212    
+## covdata$X1   0.52852    0.01522  34.735   &lt;2e-16 ***
+## covdata$X2  -1.02213    0.01547 -66.089   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4498 on 997 degrees of freedom
-## Multiple R-squared:  0.8538, Adjusted R-squared:  0.8535 
-## F-statistic:  2911 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4789 on 997 degrees of freedom
+## Multiple R-squared:  0.8425, Adjusted R-squared:  0.8421 
+## F-statistic:  2666 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[3]]
@@ -3147,20 +2984,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.5582 -0.3009  0.0060  0.3211  1.4287 
+##      Min       1Q   Median       3Q      Max 
+## -1.60463 -0.31449  0.00463  0.30040  1.33707 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.001427   0.014596  -0.098    0.922    
-## covdata$X1   0.543604   0.014658  37.085   &lt;2e-16 ***
-## covdata$X2  -1.041170   0.014900 -69.879   &lt;2e-16 ***
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  6.256e-05  1.470e-02   0.004    0.997    
+## covdata$X1   5.339e-01  1.476e-02  36.160   &lt;2e-16 ***
+## covdata$X2  -1.039e+00  1.501e-02 -69.245   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4613 on 997 degrees of freedom
-## Multiple R-squared:  0.8572, Adjusted R-squared:  0.8569 
-## F-statistic:  2992 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4647 on 997 degrees of freedom
+## Multiple R-squared:  0.8541, Adjusted R-squared:  0.8538 
+## F-statistic:  2919 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[4]]
@@ -3169,20 +3006,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.3921 -0.3007  0.0181  0.2995  1.3119 
+##      Min       1Q   Median       3Q      Max 
+## -1.97962 -0.31795  0.01044  0.29025  1.68216 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.01970    0.01422  -1.385    0.166    
-## covdata$X1   0.55018    0.01429  38.514   &lt;2e-16 ***
-## covdata$X2  -1.04708    0.01452 -72.111   &lt;2e-16 ***
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.0003453  0.0148796   0.023    0.981    
+## covdata$X1   0.5306325  0.0149434  35.509   &lt;2e-16 ***
+## covdata$X2  -1.0446083  0.0151893 -68.773   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4496 on 997 degrees of freedom
-## Multiple R-squared:  0.865,  Adjusted R-squared:  0.8647 
-## F-statistic:  3195 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4703 on 997 degrees of freedom
+## Multiple R-squared:  0.8518, Adjusted R-squared:  0.8515 
+## F-statistic:  2866 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[5]]
@@ -3192,19 +3029,19 @@ so
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -1.5411 -0.3192  0.0069  0.3210  1.8607 
+## -1.7118 -0.3183  0.0056  0.3152  1.3760 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.002317   0.015206  -0.152    0.879    
-## covdata$X1   0.542597   0.015272  35.530   &lt;2e-16 ***
-## covdata$X2  -1.034029   0.015523 -66.613   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.01627    0.01454  -1.119    0.264    
+## covdata$X1   0.52968    0.01460  36.268   &lt;2e-16 ***
+## covdata$X2  -1.05615    0.01484 -71.145   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4806 on 997 degrees of freedom
-## Multiple R-squared:  0.8453, Adjusted R-squared:  0.845 
-## F-statistic:  2725 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4596 on 997 degrees of freedom
+## Multiple R-squared:  0.8596, Adjusted R-squared:  0.8593 
+## F-statistic:  3052 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[6]]
@@ -3214,19 +3051,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.28728 -0.27818 -0.00864  0.29570  1.48456 
+## -1.44809 -0.27672  0.01347  0.29559  1.42305 
 ## 
 ## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.0006271  0.0144699  -0.043    0.965    
-## covdata$X1   0.5185418  0.0145320  35.683   &lt;2e-16 ***
-## covdata$X2  -1.0557023  0.0147711 -71.471   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.01682    0.01450   -1.16    0.246    
+## covdata$X1   0.51805    0.01456   35.58   &lt;2e-16 ***
+## covdata$X2  -1.02840    0.01480  -69.49   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4574 on 997 degrees of freedom
-## Multiple R-squared:  0.8598, Adjusted R-squared:  0.8595 
-## F-statistic:  3056 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4582 on 997 degrees of freedom
+## Multiple R-squared:  0.854,  Adjusted R-squared:  0.8537 
+## F-statistic:  2916 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[7]]
@@ -3236,19 +3073,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.49363 -0.30638  0.00775  0.28935  1.59513 
+## -1.17616 -0.32024 -0.00133  0.31392  1.39063 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.005102   0.014495  -0.352    0.725    
-## covdata$X1   0.517467   0.014557  35.548   &lt;2e-16 ***
-## covdata$X2  -1.021773   0.014796 -69.056   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.01661    0.01448   1.147    0.252    
+## covdata$X1   0.53479    0.01455  36.764   &lt;2e-16 ***
+## covdata$X2  -1.02923    0.01479 -69.608   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4581 on 997 degrees of freedom
-## Multiple R-squared:  0.8527, Adjusted R-squared:  0.8524 
-## F-statistic:  2886 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4578 on 997 degrees of freedom
+## Multiple R-squared:  0.856,  Adjusted R-squared:  0.8557 
+## F-statistic:  2963 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[8]]
@@ -3258,19 +3095,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.31674 -0.30836 -0.01857  0.32594  1.41586 
+## -1.38518 -0.30023  0.01201  0.28676  1.37876 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.01344    0.01478   0.909    0.363    
-## covdata$X1   0.50906    0.01484  34.294   &lt;2e-16 ***
-## covdata$X2  -1.02931    0.01509 -68.220   &lt;2e-16 ***
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.0003322  0.0143124   0.023    0.981    
+## covdata$X1   0.5278299  0.0143738  36.722   &lt;2e-16 ***
+## covdata$X2  -1.0285928  0.0146103 -70.402   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4672 on 997 degrees of freedom
-## Multiple R-squared:  0.8485, Adjusted R-squared:  0.8482 
-## F-statistic:  2791 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4524 on 997 degrees of freedom
+## Multiple R-squared:  0.8581, Adjusted R-squared:  0.8579 
+## F-statistic:  3016 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[9]]
@@ -3280,19 +3117,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.39830 -0.32850  0.00588  0.30955  1.38058 
+## -1.43815 -0.33434 -0.01036  0.30448  1.61851 
 ## 
 ## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.0001488  0.0144739    0.01    0.992    
-## covdata$X1   0.5207628  0.0145360   35.83   &lt;2e-16 ***
-## covdata$X2  -1.0264320  0.0147752  -69.47   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.01058    0.01483  -0.713    0.476    
+## covdata$X1   0.52169    0.01489  35.037   &lt;2e-16 ***
+## covdata$X2  -1.02572    0.01513 -67.773   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4575 on 997 degrees of freedom
-## Multiple R-squared:  0.8543, Adjusted R-squared:  0.854 
-## F-statistic:  2923 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4686 on 997 degrees of freedom
+## Multiple R-squared:  0.8482, Adjusted R-squared:  0.8479 
+## F-statistic:  2785 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[10]]
@@ -3302,19 +3139,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.65482 -0.32457 -0.00432  0.34374  1.43701 
+## -1.55057 -0.31117 -0.00252  0.33421  1.41348 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.006304   0.015048   0.419    0.675    
-## covdata$X1   0.508365   0.015112  33.639   &lt;2e-16 ***
-## covdata$X2  -1.043845   0.015361 -67.955   &lt;2e-16 ***
+## (Intercept)  0.005129   0.014317   0.358     0.72    
+## covdata$X1   0.534379   0.014378  37.166   &lt;2e-16 ***
+## covdata$X2  -1.032146   0.014615 -70.624   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4756 on 997 degrees of freedom
-## Multiple R-squared:  0.8467, Adjusted R-squared:  0.8464 
-## F-statistic:  2754 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4525 on 997 degrees of freedom
+## Multiple R-squared:  0.8593, Adjusted R-squared:  0.8591 
+## F-statistic:  3046 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 </code></pre>
 
 <pre><code class="r"># compute Rubin&#39;s multiple imputation average
@@ -3324,9 +3161,9 @@ averageMI(par, SEpar)
 </code></pre>
 
 <pre><code>##                par SEpar       t      df     p
-## (Intercept) -0.002 0.017  -0.112 121.786 0.228
-## covdata$X1   0.526 0.021  24.715  33.246 0.000
-## covdata$X2  -1.034 0.022 -46.736  30.731 0.000
+## (Intercept) -0.001 0.020  -0.062  45.603 0.238
+## covdata$X1   0.529 0.016  33.513 525.416 0.000
+## covdata$X2  -1.032 0.019 -53.534  56.758 0.000
 </code></pre>
 
 <pre><code class="r">############
@@ -3461,5 +3298,5 @@ summary(GHmod2, suppress=.2)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

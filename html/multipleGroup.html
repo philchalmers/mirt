@@ -114,6 +114,14 @@ to by <code>constrain</code> argument, of define equality constraints using the
 </p>
 
 
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
 <h3>See Also</h3>
 
 <p><code><a href="mirt.html">mirt</a></code>, <code><a href="DIF.html">DIF</a></code>, <code><a href="extract.group.html">extract.group</a></code>, <code><a href="DTF.html">DTF</a></code>
@@ -158,7 +166,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.587  0.060  0.095  0.424  0.000  0.001
+##  0.639  0.067  0.102  0.461  0.000  0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -168,7 +176,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.300  0.060  0.079  0.152  0.000  0.001
+##  0.314  0.063  0.085  0.157  0.000  0.001
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -909,7 +917,7 @@ mod_anchor
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within NaN tolerance after 1 EM iterations.
-## mirt version: 1.24 
+## mirt version: 1.25 
 ## M-step optimizer: L-BFGS-B 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1633,8 +1641,8 @@ anova(mod_metric, mod_configural)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 37452.10 37454.22 37561.17 37704.14 -18681.05    NaN NaN NaN
-## 2 37437.44 37441.21 37582.87 37773.49 -18658.72 44.663  15   0
+## 1 37444.55 37446.67 37553.63 37696.59 -18677.28    NaN NaN NaN
+## 2 37433.05 37436.82 37578.48 37769.10 -18656.53 41.503  15   0
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1648,8 +1656,8 @@ anova(mod_metric, mod_configural)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 37571.61 37572.56 37644.33 37739.64 -18755.81     NaN NaN NaN
-## 2 37452.10 37454.22 37561.17 37704.14 -18681.05 149.511  15   0
+## 1 37568.52 37569.47 37641.24 37736.55 -18754.26     NaN NaN NaN
+## 2 37444.55 37446.67 37553.63 37696.59 -18677.28 153.969  15   0
 </code></pre>
 
 <pre><code class="r">############
@@ -2030,5 +2038,5 @@ anova(EH, EH1)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -38,7 +38,7 @@ fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
   return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
   full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
   custom_den = NULL, custom_theta = NULL, min_expected = 1,
-  converge_info = FALSE, ...)
+  converge_info = FALSE, max_theta = 20, start = NULL, ...)
 </pre>
 
 
@@ -177,6 +177,18 @@ response pattern indicating whether a maximum value was found (not relavent non-
 such as EAP and EAPsum). Value is a reflection of the <code>code</code> element from <code><a href="../../stats/html/nlm.html">nlm</a></code>
 (e.g., 1 indicates convergence)</p>
 </td></tr>
+<tr valign="top"><td><code>max_theta</code></td>
+<td>
+<p>the maximum/minimum value any given factor score estimate will achieve using
+any modal estimator method (e.g., MAP, WLE, ML)</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>a matrix of starting values to use for iterative estimation methods. Default
+will start at a vector of 0's for each response pattern, or will start at the EAP
+estimates (unidimensional models only). Must be in the form that matches
+<code>full.scores = FALSE</code> (mostly used in the <code>mirtCAT</code> package)</p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
 <p>additional arguments to be passed to <code>nlm</code></p>
@@ -196,7 +208,8 @@ in parallel to decrease estimation times if a <code><a href="mirtCluster.html">m
 then the returned results will be with respect to the posterior classification for each
 individual. The method inputs for <code>'DiscreteClass'</code> objects may only be <code>'EAP'</code>,
 for posterior classification of each response pattern, or <code>'EAPsum'</code> for posterior
-classification based on the raw sum-score.
+classification based on the raw sum-score. For more information on these algorithms refer to
+the <code>mirtCAT</code> package and the associated JSS paper (Chalmers, 2016).
 </p>
 
 
@@ -208,6 +221,14 @@ classification based on the raw sum-score.
 
 <h3>References</h3>
 
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+<p>Chalmers, R. P. (2016). Generating Adaptive and Non-Adaptive Test Interfaces for
+Multidimensional Item Response Theory Applications. <em>Journal of Statistical Software, 71</em>(5),
+1-39. doi: <a href="http://doi.org/10.18637/jss.v071.i05">10.18637/jss.v071.i05</a>
+</p>
 <p>Embretson, S. E. &amp; Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
 </p>
 <p>Thissen, D., Pommerich, M., Billeaud, K., &amp; Williams, V. S. L. (1995).
@@ -580,13 +601,13 @@ fs &lt;- fscores(mod, MI = 30)
 head(fs)
 </code></pre>
 
-<pre><code>##              F1
-## [1,]  0.3810446
-## [2,]  0.0475383
-## [3,] -0.8746877
-## [4,] -0.8746877
-## [5,]  0.7294408
-## [6,]  0.6560910
+<pre><code>##               F1
+## [1,]  0.40409886
+## [2,]  0.04995962
+## [3,] -0.86238754
+## [4,] -0.86238754
+## [5,]  0.72052252
+## [6,]  0.66834154
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -595,24 +616,24 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 
 <pre><code>## [[1]]
-##        mean         var         min         max 
-##  0.05714977  0.99042436 -2.93656806  2.80268386 
+##         mean          var          min          max 
+## -0.007114992  1.018262736 -3.404457838  2.679950633 
 ## 
 ## [[2]]
-##       mean        var        min        max 
-## -0.0293153  1.0463474 -3.7481024  2.5082624 
+##        mean         var         min         max 
+## -0.03572293  0.94640448 -3.47178617  2.43268936 
 ## 
 ## [[3]]
-##        mean         var         min         max 
-## -0.03772259  1.00916807 -4.42746730  2.89422282 
+##       mean        var        min        max 
+## -0.0279856  0.9839735 -3.2296058  3.5024351 
 ## 
 ## [[4]]
-##         mean          var          min          max 
-##  0.009799712  0.988013463 -2.749617070  2.515079769 
+##        mean         var         min         max 
+##  0.02834431  0.91603346 -2.86901781  3.08167819 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-## -0.01931741  1.07703898 -4.03137395  2.64461573
+##  0.05612169  1.01550086 -3.43157317  2.93057221
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -658,5 +679,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

@@ -54,6 +54,17 @@ randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 </p>
 
 
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+</p>
+<p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
+<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="http://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
 <h3>Examples</h3>
 
 <pre><code class="r">## No test: 
@@ -88,30 +99,30 @@ summary(mod)
 head(effects$Theta)
 </code></pre>
 
-<pre><code>##              F1
-## [1,]  0.5778002
-## [2,]  0.1195199
-## [3,] -0.6200557
-## [4,] -0.6735392
-## [5,]  0.2483436
-## [6,]  0.9086916
+<pre><code>##               F1
+## [1,]  0.48761231
+## [2,] -0.03643771
+## [3,] -0.65546901
+## [4,] -0.71429552
+## [5,]  0.03588258
+## [6,]  1.03734597
 </code></pre>
 
 <pre><code class="r">head(effects$group)
 </code></pre>
 
-<pre><code>##                group
-## group1 -0.0184523598
-## group2 -0.0529617167
-## group3 -0.0129968368
-## group4 -0.0363154605
-## group5  0.0008926416
-## group6 -0.0281223622
+<pre><code>##               group
+## group1 -0.005567870
+## group2 -0.003206529
+## group3  0.028617636
+## group4 -0.017325862
+## group5 -0.018154265
+## group6  0.027484231
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>

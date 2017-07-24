@@ -66,6 +66,10 @@ response pattern?</p>
 
 <h3>References</h3>
 
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
 <p>Drasgow, F., Levine, M. V., &amp; Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
 <em>British Journal of Mathematical and Statistical Psychology, 38</em>, 67-86.
@@ -88,29 +92,24 @@ in IRT. <em>Applied Psychological Measurement, 14</em>, 127-137.
 <pre><code class="r">## No test: 
 
 #make some data
-set.seed(1234)
+set.seed(1)
 a &lt;- matrix(rlnorm(20),ncol=1)
 d &lt;- matrix(rnorm(20),ncol=1)
 items &lt;- rep(&#39;2PL&#39;, 20)
 data &lt;- simdata(a,d, 2000, items)
 
 x &lt;- mirt(data, 1)
-</code></pre>
-
-<pre><code>## EM cycles terminated after 500 iterations.
-</code></pre>
-
-<pre><code class="r">fit &lt;- personfit(x)
+fit &lt;- personfit(x)
 head(fit)
 </code></pre>
 
 <pre><code>##           Zh
-## 1  0.4357979
-## 2  0.8958227
-## 3  0.7357241
-## 4 -1.1529520
-## 5  1.3490941
-## 6  0.3617115
+## 1  0.9931930
+## 2  0.1018533
+## 3 -0.5419248
+## 4 -0.2966258
+## 5  0.4062379
+## 6  1.4271776
 </code></pre>
 
 <pre><code class="r">#using precomputed Theta
@@ -119,12 +118,12 @@ head(personfit(x, Theta=Theta))
 </code></pre>
 
 <pre><code>##           Zh
-## 1  0.4873606
-## 2  1.1414732
-## 3  0.9225494
-## 4 -1.0676924
-## 5  1.3805173
-## 6  0.4714614
+## 1  0.9942162
+## 2  0.1051419
+## 3 -0.4409453
+## 4 -0.2828724
+## 5  0.6001267
+## 6  1.4404214
 </code></pre>
 
 <pre><code class="r">#muliple group Rasch model example
@@ -215,5 +214,5 @@ head(pf)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.24 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
 </body></html>
