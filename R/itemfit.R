@@ -269,8 +269,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret
     }
     boot_PV <- function(mod, org, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
-                        boot = 1000, draws = 30, verbose = FALSE, ...){
-        pb_fun <- function(ind, mod, N, sv, which.items, draws, ...){
+                        itemtype, boot = 1000, draws = 30, verbose = FALSE, ...){
+        pb_fun <- function(ind, mod, N, sv, which.items, draws, itemtype, ...){
             count <- 0L
             while(TRUE){
                 count <- count + 1L
@@ -278,7 +278,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     stop('20 consecutive parametric bootstraps failed for PV_Q1*', call.=FALSE)
                 dat <- simdata(model=mod, N=N)
                 dat[is_NA] <- NA
-                mod2 <- mirt(dat, model, itemtype=extract.mirt(mod, 'itemtype'),
+                mod2 <- mirt(dat, model, itemtype=itemtype,
                              verbose=FALSE, pars=sv, technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
                 tmp <- PV_itemfit(mod2, which.items=which.items, draws=draws, ...)
@@ -293,22 +293,23 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         stopifnot(nrow(org) == length(which.items))
         model <- extract.mirt(mod, 'model')
         sv <- mod2values(mod)
-        retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv,
+        retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv, itemtype=itemtype,
                           which.items=which.items, draws=draws, ...)
         if(nrow(retQ1) == 1L) retQ1 <- t(retQ1)
         Q1 <- (1 + rowSums(org$p.PV_Q1 > t(retQ1), na.rm = TRUE)) / (1 + boot)
         ret <- data.frame("p.PV_Q1_star"=Q1)
         ret
     }
-    StoneFit <- function(mod, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
+    StoneFit <- function(mod, is_NA, which.items = 1:extract.mirt(mod, 'nitems'), itemtype,
                          dfapprox = FALSE, boot = 1000, ETrange = c(-2,2), ETpoints = 11,
                          verbose = FALSE, ...){
-        X2star <- function(mod, which.items, ETrange, ETpoints, ...){
+        X2star <- function(mod, which.items, ETrange, ETpoints, itemtype, ...){
             sv <- mod2values(mod)
             sv$est <- FALSE
             Theta <- matrix(seq(ETrange[1L], ETrange[2L], length.out=ETpoints))
             dat <- extract.mirt(mod, 'data')
-            Emod <- mirt(dat, 1, pars=sv, verbose=FALSE,
+            Emod <- mirt(dat, 1, itemtype=itemtype,
+                         pars=sv, verbose=FALSE,
                          technical=list(storeEtable=TRUE, customTheta=Theta))
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
@@ -335,7 +336,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                              technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
                 ret <- X2star(mod2, which.items=which.items, ETrange=ETrange,
-                              ETpoints=ETpoints, ...)
+                              ETpoints=ETpoints, itemtype=itemtype, ...)
                 if(any(is.nan(ret) | is.na(ret))) next
                 break
             }
@@ -344,12 +345,11 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
 
         N <- nrow(extract.mirt(mod, 'data'))
         X2bs <- matrix(NA, boot, length(which.items))
-        org <- X2star(mod, which.items=which.items,
+        org <- X2star(mod, which.items=which.items, itemtype=itemtype,
                       ETrange=ETrange, ETpoints=ETpoints, ...)
         stopifnot(length(org) == length(which.items))
         sv <- mod2values(mod)
         model <- extract.mirt(mod, 'model')
-        itemtype <- extract.mirt(mod, 'itemtype')
         X2bs <- mySapply(1L:boot, pb_fun, mod=mod, N=N, model=model, is_NA=is_NA,
                          itemtype=itemtype, sv=sv, which.items=which.items,
                          ETrange=ETrange, ETpoints=ETpoints, ...)
@@ -742,24 +742,25 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret$df.S_X2 <- df.S_X2[which.items]
         ret$p.S_X2 <- suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2, lower.tail=FALSE))
     }
+    itemtype <- extract.mirt(x, 'itemtype')
     if(any(c('PV_Q1', 'PV_Q1*') %in% fit_stats)){
-        tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, ...)
+        tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, itemtype=itemtype, ...)
         ret <- cbind(ret, tmp)
     }
     is_NA <- is.na(x@Data$data)
     if('PV_Q1*' %in% fit_stats){
         tmp <- boot_PV(x, is_NA=is_NA, org=tmp, which.items=which.items,
-                       boot=boot, draws=pv_draws, ...)
+                       itemtype=itemtype, boot=boot, draws=pv_draws, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*' %in% fit_stats){
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot, dfapprox=FALSE,
-                 ETrange=ETrange, ETpoints=ETpoints, ...)
+                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*_df' %in% fit_stats){
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot_dfapprox, dfapprox=TRUE,
-                        ETrange=ETrange, ETpoints=ETpoints, ...)
+                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, ...)
         ret <- cbind(ret, tmp)
     }
     class(ret) <- c('mirt_df', 'data.frame')
