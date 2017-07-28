@@ -56,6 +56,9 @@
 #' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
 #'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
 #'   \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent (unless explicitly provided)
+#' @param equal.K logical; when a \code{model} input is supplied, should the generated data contan the same
+#'   number of categories as the original data indicated by \code{extract.mirt(model, 'K')}? Default is TRUE,
+#'   which will redrawn data until this condition is satisfied
 #' @param which.items an integer vector used to indicate which items to simulate when a
 #'   \code{model} input is included. Default simulates all items
 #' @param mins an integer vector (or single value to be used for each item) indicating what
@@ -291,7 +294,7 @@
 #' }
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
-	model = NULL, which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
+	model = NULL, equal.K = TRUE, which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 {
     if(!is.null(prob.list)){
         if(!all(sapply(prob.list, function(x) is.matrix(x) || is.data.frame(x))))
@@ -324,10 +327,14 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         } else N <- nrow(Theta)
         data <- matrix(0, N, nitems)
         colnames(data) <- extract.mirt(model, 'itemnames')
+        K <- extract.mirt(model, 'K')
         for(i in which.items){
             obj <- extract.item(model, i)
             P <- ProbTrace(obj, Theta)
             data[,i] <- respSample(P)
+            if(equal.K)
+                while(length(unique(data[,i])) != K[i])
+                    data[,i] <- respSample(P)
         }
         ret <- t(t(data) + model@Data$mins)
         return(ret[,which.items, drop=FALSE])

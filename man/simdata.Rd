@@ -6,8 +6,8 @@
 \usage{
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE, model = NULL, which.items = NULL, mins = 0,
-  lca_cats = NULL, prob.list = NULL)
+  returnList = FALSE, model = NULL, equal.K = TRUE, which.items = NULL,
+  mins = 0, lca_cats = NULL, prob.list = NULL)
 }
 \arguments{
 \item{a}{a matrix/vector of slope parameters. If slopes are to be constrained to
@@ -71,6 +71,10 @@ latent trait matrix \code{Theta}? Default is FALSE}
 \item{model}{a single group object, typically returned by functions such as \code{\link{mirt}} or
 \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
 \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent (unless explicitly provided)}
+
+\item{equal.K}{logical; when a \code{model} input is supplied, should the generated data contan the same
+number of categories as the original data indicated by \code{extract.mirt(model, 'K')}? Default is TRUE,
+which will redrawn data until this condition is satisfied}
 
 \item{which.items}{an integer vector used to indicate which items to simulate when a
 \code{model} input is included. Default simulates all items}
