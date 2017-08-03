@@ -126,6 +126,7 @@ setMethod(
                                    main = paste("Test Information Contour"), xlab = expression(theta[1]),
                                    ylab = expression(theta[2]),
                                    par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            browser()
             if(type == 'info')
                 return(wireframe(info ~ Theta1 + Theta2|group, data = plt, main = "Test Information",
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
