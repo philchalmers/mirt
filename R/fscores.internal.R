@@ -219,7 +219,7 @@ setMethod(
         dots <- list(...)
         discrete <- FALSE
         if(object@Model$nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum'))
-            warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
+            warning('High-dimensional models factor scores should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                     call.=FALSE)
         if(method == 'Discrete' || method == 'DiscreteSum'){
             discrete <- TRUE

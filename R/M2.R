@@ -40,7 +40,7 @@
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of
 #' hierarchical item factor models. British Journal of Mathematical and Statistical
 #' Psychology, 66, 245-276.
-#' 
+#'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
@@ -221,9 +221,9 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
             warning('Imputing too much data can lead to very conservative results. Use with caution.',
                     call.=FALSE)
-        Theta <- fscores(obj, plausible.draws = impute)
+        Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, ...)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
-                            quadpts=quadpts)
+                            quadpts=quadpts, QMC=QMC, theta_lim=theta_lim)
         ave <- SD <- collect[[1L]]
         ave[ave!= 0] <- SD[SD!=0] <- 0
         for(i in seq_len(impute))
