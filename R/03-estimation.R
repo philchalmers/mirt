@@ -555,22 +555,23 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rlist <- ESTIMATE$rlist
         logLik <- G2 <- SElogLik <- 0
         logPrior <- ESTIMATE$logPrior
+        Pl <- vector('list', length(rlist))
         for(g in seq_len(Data$ngroups)){
-            Pl <- rlist[[g]]$expected
+            Pl[[g]] <- rlist[[g]]$expected
+            Pltmp <- Pl[[g]]
             if(opts$full){
                 rg <- 1
                 G2group[g] <- NaN
             } else {
                 rg <- Data$Freq[[g]]
-                Pl <- Pl[rg != 0]
+                Pltmp <- Pltmp[rg != 0]
                 rg <- rg[rg != 0]
                 Ng <- sum(rg)
-                G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pl)))
+                G2group[g] <- 2 * sum(rg * log(rg/(Ng*Pltmp)))
             }
             G2 <- G2 + G2group[g]
-            logLik <- logLik + sum(rg*log(Pl))
+            logLik <- logLik + sum(rg*log(Pltmp))
         }
-        Pl <- list(Pl)
     } else if(opts$method %in% c('MHRM', 'SEM')){ #MHRM estimation
         Theta <- matrix(0, Data$N, nitems)
         if(opts$method == 'SEM') opts$NCYCLES <- NA
