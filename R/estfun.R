@@ -1,40 +1,64 @@
 #' Extract Empirical Estimating Functions
 #'
 #' A function for extracting the empirical estimating functions of a fitted
-#' \code{\link{mirt}} or \code{\link{multipleGroup}} model. This is the
-#' derivative of the log-likelihood with respect to the parameter vector,
-#' evaluated at the observed (case-wise) data. In other words, this function
-#' returns the case-wise scores, evaluated at the fitted model parameters.
+#' \code{\link{mirt}}, \code{\link{multipleGroup}} or \code{\link{bfactor}}
+#' model. This is the derivative of the log-likelihood with respect to the
+#' parameter vector, evaluated at the observed (case-wise) data. In other
+#' words, this function returns the case-wise scores, evaluated at the fitted
+#' model parameters. Currently, models fitted via the \code{EM} or \code{BL}
+#' method are supported. For the computations, the internal \code{Theta} grid of
+#' the model is being used which was already used during the estimation of
+#' the model itself along with its matching normalized density.
 #'
-#' @return An n x k matrix corresponding to n observations and k parameters.
+#' @return An n x k matrix corresponding to n observations and k parameters
 #'
 #' @aliases estfun.AllModelClass
-#' @param object a computed model object of class \code{SingleGroupClass} or
+#' @param object a fitted model object of class \code{SingleGroupClass} or
 #'   \code{MultipleGroupClass}
 #' @author Lennart Schneider \email{lennart.sch@@web.de}
-#' @keywords empirical estimating functions
-#' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}}
-#' @export estfun.AllModelClass
+#' @keywords scores
+#' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}},
+#'   \code{\link{bfactor}}
+#' @export
 #'
 #' @examples
 #'
 #' \dontrun{
-#' mod <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod")
-#' (sc <- estfun.AllModelClass(mod))
-#' colSums(sc)
-#' vc <- mod@vcov
-#' all.equal(crossprod(sc), chol2inv(chol(vc)), check.attributes = FALSE)
+#' mod1 <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod")
+#' (sc1 <- estfun.AllModelClass(mod1))
+#' colSums(sc1)
+#' vc1 <- vcov(mod1)
+#' all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)
+#' 
+#' group <- rep(c("G1", "G2"), 500)
+#' mod2 <- multipleGroup(expand.table(LSAT7), 1, group, SE = TRUE,
+#'   SE.type = "crossprod")
+#' (sc2 <- estfun.AllModelClass(mod2))
+#' colSums(sc2)
+#' vc2 <- vcov(mod2)
+#' all.equal(crossprod(sc2), chol2inv(chol(vc2)), check.attributes = FALSE)
 #'
 #'}
 
 estfun.AllModelClass <- function(object) {
-  ### only allow for EM and BL?
-  ### only allow for models of class SingleGroupClass and MultipleGroupClass?
+  ### check class
+  stopifnot(class(object) %in% c("SingleGroupClass", "MultipleGroupClass"))
+  ### check estimation method
+  stopifnot(object@Options$method  %in% c("EM", "BL"))
+  ### check latent regression
+  if(length(object@Model$lrPars)) {
+    stop("Scores computations currently not supported for latent regression estimates.")
+  }
+  ### check items
+  CUSTOM.IND <- object@Internals$CUSTOM.IND
+  SLOW.IND <- object@Internals$SLOW.IND
+  whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
+  if(length(whichitems)) {
+    stop("Scores computations currently not supported for at least one of the supplied items.")
+  }
   ### get relevant model info
   constrain <- object@Model$constrain
-  CUSTOM.IND <- object@Internals$CUSTOM.IND
   Data <- object@Data
-  full <- object@Options$full
   group <- object@Data$group
   groupNames <- object@Data$groupNames
   itemloc <- object@Model$itemloc
@@ -44,21 +68,13 @@ estfun.AllModelClass <- function(object) {
   prior <- object@Internals$bfactor$prior
   Priorbetween <- object@Internals$bfactor$Priorbetween
   sitems <- object@Internals$bfactor$sitems
-  SLOW.IND <- object@Internals$SLOW.IND
-  tabdata <- Data$tabdatalong
   Theta <- object@Model$Theta
   isbifactor <- length(Priorbetween[[1L]]) > 0L
-  ### check items
-  whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
-  if(length(whichitems)) {
-    stop("Scores computations currently not supported for at least one of the supplied items.")
-  }
   ### check if not bifactor
   if(!isbifactor) {
     sitems <- as.matrix(0)
     prior <- Priorbetween <- list(matrix(0))
   }
-  ### get rest of relevant model info
   pars <-
   if(ngroups == 1L) {
       list(object@ParObjects$pars)
@@ -71,7 +87,7 @@ estfun.AllModelClass <- function(object) {
   epars <- mod2values(object)
   eparsgroup <- split(epars, epars$group)
   sel <- lapply(eparsgroup, function(x) x$parnum[x$est])
-  ### handle constrains; cb = between groups, cw = within groups
+  ### constrains; cb = between groups, cw = within groups
   if(length(constrain)) {
     if(ngroups) {
       constraingroup <- lapply(constrain, function(x) epars$group[x])
@@ -146,11 +162,10 @@ estfun.AllModelClass <- function(object) {
   sel <- unlist(sel)
   scores <- scores[, sel[!(sel %in% which(redun_constr))]]
   colnames(scores) <-
-  if(all(!is.na(object@vcov))) {
+  if(object@Options$SE) {
     colnames(object@vcov)
   } else {
     NULL
   }
   return(scores)
 }
-
