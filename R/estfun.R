@@ -89,7 +89,7 @@ estfun.AllModelClass <- function(object) {
   sel <- lapply(eparsgroup, function(x) x$parnum[x$est])
   ### constrains; cb = between groups, cw = within groups
   if(length(constrain)) {
-    if(ngroups) {
+    if(ngroups > 1L) {
       constraingroup <- lapply(constrain, function(x) epars$group[x])
       cb <- which(sapply(constraingroup, function(x) !any(duplicated(x))))
       if(length(cb) == 0L) {
