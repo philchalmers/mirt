@@ -1679,3 +1679,93 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     return(ret);
     END_RCPP
 }
+
+RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
+    SEXP RgPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc,
+    SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor)
+{
+    BEGIN_RCPP
+
+    List gpars(Rpars);
+    const List gitemtrace(Rgitemtrace);
+    const List gprior(Rgprior);
+    const NumericMatrix gPrior(RgPrior); //cols are groups
+    const NumericMatrix Theta(RTheta);
+    const IntegerMatrix tabdata(Rtabdata);
+    const IntegerMatrix sitems(Rsitems);
+    const vector<int> itemloc = as< vector<int> >(Ritemloc);
+    const NumericMatrix rs(Rrs); //group stacked
+    const NumericMatrix gPriorbetween(RgPriorbetween);
+    const vector<double> vone(1.0, 1);
+    const int nfact = Theta.ncol();
+    const int nquad = Theta.nrow();
+    const int J = itemloc[itemloc.size()-1] - 1;
+    const int nitems = itemloc.size() - 1;
+    const int npars = as<int>(Rnpars);
+    const int isbifactor = as<int>(Risbifactor);
+    const int ngroups = gpars.length();
+    const int npat = tabdata.nrow();
+    const bool Etable = true;
+    NumericMatrix prior = gprior[0];
+    const int nsfact = prior.ncol();
+    const int nsquad = prior.nrow();
+    const int npquad = gPriorbetween.ncol();
+    IntegerMatrix dat(1, J);
+    NumericMatrix offterm(1, nitems), gradient(npat, npars);
+
+    for(int pat = 0; pat < npat; ++pat){
+        for(int i = 0; i < J; ++i)
+            dat(0, i) = tabdata(pat, i);
+        for(int g = 0; g < ngroups; ++g){
+            NumericMatrix itemtrace = gitemtrace[g];
+            NumericVector tmpvec = gPrior(_,g);
+            vector<double> Prior = as< vector<double> >(tmpvec);
+            vector<double> expected(1), r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
+            if(isbifactor){
+                NumericMatrix prior = gprior[g];
+                NumericVector tmpvec = gPriorbetween(g,_);
+                vector<double> Priorbetween = as< vector<double> >(tmpvec);
+               _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, vone,
+                    dat, sitems, Etable);
+            } else {
+                _Estep(expected, r1vec, Prior, vone, dat, itemtrace, Etable);
+            }
+            NumericMatrix r1 = vec2mat(r1vec, nquad, J);
+            List pars = gpars[g];
+            vector<double> rr(nquad);
+            for(int i = 0; i < nitems; ++i){
+                S4 item = pars[i];
+                NumericMatrix tmpmat(nquad, itemloc[i+1] - itemloc[i]);
+                for(int j = 0; j < tmpmat.ncol(); ++j){
+                    for(int n = 0; n < nquad; ++n){
+                        tmpmat(n,j) = r1(n, itemloc[i] + j - 1);
+                        rr[n] += tmpmat(n,j);
+                    }
+                }
+                item.slot("dat") = tmpmat;
+                pars[i] = item;
+            }
+            for(int n = 0; n < nquad; ++n)
+            	rr[n] /= nitems;
+            S4 item = pars[nitems];
+            item.slot("dat") = dat;
+            item.slot("rr") = wrap(rr);
+            if(isbifactor){
+                NumericVector r2 = wrap(r2vec);
+                NumericMatrix r3 = vec2mat(r3vec, nsquad, nsfact);
+                item.slot("rrb") = r2;
+                item.slot("rrs") = r3;
+            }
+            pars[nitems] = item;
+            NumericMatrix hess(npars, npars);
+            vector<double> grad(npars);
+            _computeDpars(grad, hess, pars, Theta, offterm, itemtrace, Prior,
+                          nitems, npars, 0, 0, 1, true);
+            for(int i = 0; i < npars; ++i){
+                gradient(pat, i) += grad[i];
+            }
+        }
+    }
+    return(gradient);
+    END_RCPP
+}
