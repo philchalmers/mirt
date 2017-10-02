@@ -44,7 +44,7 @@ estfun.AllModelClass <- function(object) {
   ### check class
   stopifnot(class(object) %in% c("SingleGroupClass", "MultipleGroupClass"))
   ### check estimation method
-  stopifnot(object@Options$method  %in% c("EM", "BL"))
+  stopifnot(object@Options$method %in% c("EM", "BL"))
   ### check latent regression
   if(length(object@Model$lrPars)) {
     stop("Scores computations currently not supported for latent regression estimates.")
