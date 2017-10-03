@@ -103,6 +103,22 @@ summary(lmod6)
 coef(mmod6, simplify=TRUE)
 ```
 
+### Constrained graded response model
+
+Same as the previous section, however all the slope/discrimination parameters are constrained to be equal.
+
+```{r}
+(lmod6 <- ltm::grm(Science, IRT.param = FALSE, constrained = TRUE))
+summary(lmod6)
+
+# define loading pattern, and constrain parameters 
+#  called a1 for each item to be equal
+model <- mirt.model('F = 1-4
+                     CONSTRAIN = (1-4, a1)') 
+(mmod6 <- mirt(Science, model, verbose=FALSE))
+coef(mmod6, simplify=TRUE)
+```
+
 ### generalized partial credit
 
 ```{r}
