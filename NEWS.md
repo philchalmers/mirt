@@ -1,3 +1,9 @@
+# Changes in mirt 1.26
+
+- `estfun()` function added to extract gradient information directly from fitted objects 
+  (contributed by Lennart Schneider) 
+
+
 # Changes in mirt 1.25
 
 - `mdirt()` now supports latent regression covariate predictors. Associated function
