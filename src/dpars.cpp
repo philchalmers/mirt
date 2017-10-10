@@ -612,6 +612,94 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
     return(ret);
 }
 
+static inline double CDLL(const vector<double> &par, const NumericMatrix &theta, 
+	NumericMatrix &dat,	const NumericVector &ot, const int &N, const int &nfact, 
+	const int &ncat, const int &itemclass)
+{
+	vector<double> P(N*ncat);
+	P_switch(P, par, theta, ot, N, ncat, nfact, itemclass);
+	double LL = 0.0;
+	for(int j = 0; j < ncat; ++j)
+		for(int i = 0; i < N; ++i)
+			LL += dat(i,j) * log(P[i + j*N]);
+	return(LL);
+}
+
+static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
+	const NumericMatrix &theta, const NumericVector &ot, NumericMatrix &dat, 
+	const int &N, const int &nfact, const int &ncat, const int &estHess, const int &itemclass)
+{
+	const int supported[] = {1, 20}; // supported item class #
+	bool run = false;
+	for(int i = 0; i < 2; ++i)
+		if(supported[i] == itemclass) run = true;
+	if(!run) return;
+
+	double delta = 1e-8;
+	const int npar = par.size();
+	vector<double> parL(npar);
+	vector<double> parU(npar);
+	for(int i = 0; i < npar; ++i){
+		parL[i] = par[i];
+		parU[i] = par[i];
+	}
+
+	//grad
+	for(int i = 0; i < npar; ++i){
+		parL[i] = par[i] - delta;
+		parU[i] = par[i] + delta;
+		double U = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+		double L = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
+		double g = (U - L) / (2 * delta);
+		grad[i] = g;
+		parL[i] = par[i];
+		parU[i] = par[i];
+	}
+
+	//hess
+	if(estHess){
+		double delta = 1e-6;
+		double delta2 = delta*delta;
+		double fx = CDLL(par, theta, dat, ot, N, nfact, ncat, itemclass);
+		for(int i = 0; i < npar; ++i){
+			for(int j = i; j < npar; ++j){
+				if(i == j){
+					parU[i] = par[i] + delta;
+					parL[i] = par[i] - delta;
+					double s2 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+					double s3 = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
+					parU[i] = par[i] + 2*delta;
+					parL[i] = par[i] - 2*delta;
+					double s1 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+					double s4 = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
+					double h = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
+					hess(i, i) = (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * delta2);
+				} else {
+					parU[i] = par[i] + delta;
+					parU[j] = par[j] + delta;
+					double s1 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+					parU[j] = parU[j] - 2*delta;
+					double s2 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+					parU[i] = parU[i] - 2*delta;
+					double s4 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+					parU[j] = parU[j] + 2*delta;
+					double s3 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
+					hess(i, j) = (s1 - s2 - s3 + s4) / (4 * delta2);
+					hess(j, i) = hess(i, j);
+				}
+				parL[i] = par[i];
+				parU[i] = par[i];
+				parL[j] = par[j];
+				parU[j] = par[j];
+			}
+		}
+		
+		
+	}
+
+
+}
+
 static void d_nominal(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
     const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
     const int &N, const int &nfact, const int &ncat, const int &israting, const int &estHess)
@@ -1469,7 +1557,7 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
                     _dgroupEM(tmpgrad, tmphess, item, theta, itemtrace, prior, estHess);
                 }
                 break;
-            case 1 :
+            case 1 : 
                 d_dich(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, estHess);
                 break;
             case 2 :
@@ -1493,6 +1581,7 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
                 d_lca(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, estHess);
                 break;
             default :
+            	d_numerical(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat, estHess, itemclass);
                 break;
         }
         vector<int> parnum = as< vector<int> >(item.slot("parnum"));
@@ -1697,7 +1786,7 @@ RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgpr
     const NumericMatrix rs(Rrs); //group stacked
     const NumericMatrix gPriorbetween(RgPriorbetween);
     const vector<double> vone(1.0, 1);
-    const int nfact = Theta.ncol();
+    // const int nfact = Theta.ncol();
     const int nquad = Theta.nrow();
     const int J = itemloc[itemloc.size()-1] - 1;
     const int nitems = itemloc.size() - 1;

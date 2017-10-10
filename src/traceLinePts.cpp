@@ -383,6 +383,20 @@ void P_lca(vector<double> &P, const vector<double> &par,
     }
 }
 
+void P_switch(vector<double> &P, const vector<double> &par,
+    const NumericMatrix &theta, const NumericVector &ot, 
+    const int &N, const int &ncat, const int &nfact2, const int &itemclass)
+{
+	// add traceline functions for items without pre-evaluated gradient/Hessian here
+    switch(itemclass){
+        case 1 : // example
+            P_dich(P, par, theta, ot, N, nfact2);
+            break;
+        case 20 :
+            break;
+    }
+}
+
 
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot)
 {
@@ -582,9 +596,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         theta = NewTheta;
     }
     switch(itemclass){
-        case 1 :
-            P_dich(P, par, theta, ot, N, nfact2);
-            break;
+        // case 1 :
+        //     P_dich(P, par, theta, ot, N, nfact2);
+        //     break;
         case 2 :
             P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 0);
             break;
@@ -611,8 +625,10 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         case 9 :
             break;
         case 10 :
-            P_lca(P, par, theta, N, ncat, nfact, 0);
+            P_lca(P, par, theta, N, ncat, nfact2, 0);
             break;
+        default :
+            P_switch(P, par, theta, ot, N, ncat, nfact, itemclass);
     }
     int where = (itemloc[which]-1) * N;
     for(int i = 0; i < N*ncat; ++i)
