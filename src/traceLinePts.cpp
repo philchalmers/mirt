@@ -596,9 +596,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         theta = NewTheta;
     }
     switch(itemclass){
-        // case 1 :
-        //     P_dich(P, par, theta, ot, N, nfact2);
-        //     break;
+        case 1 :
+            P_dich(P, par, theta, ot, N, nfact2);
+            break;
         case 2 :
             P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 0);
             break;
