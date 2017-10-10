@@ -629,7 +629,7 @@ static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<
 	const NumericMatrix &theta, const NumericVector &ot, NumericMatrix &dat, 
 	const int &N, const int &nfact, const int &ncat, const int &estHess, const int &itemclass)
 {
-	const int supported[] = {1, 20}; // supported item class #
+	const int supported[] = {1, 9, 20}; // supported item class #
 	bool run = false;
 	for(int i = 0; i < 2; ++i)
 		if(supported[i] == itemclass) run = true;
@@ -650,15 +650,14 @@ static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<
 		parU[i] = par[i] + delta;
 		double U = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
 		double L = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
-		double g = (U - L) / (2 * delta);
-		grad[i] = g;
+		grad[i] = (U - L) / (2 * delta);
+		// Rprintf("%i: %f \n", i, grad[i]);
 		parL[i] = par[i];
 		parU[i] = par[i];
 	}
 
 	//hess
 	if(estHess){
-		double delta = 1e-6;
 		double delta2 = delta*delta;
 		double fx = CDLL(par, theta, dat, ot, N, nfact, ncat, itemclass);
 		for(int i = 0; i < npar; ++i){
@@ -672,7 +671,6 @@ static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<
 					parL[i] = par[i] - 2*delta;
 					double s1 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
 					double s4 = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
-					double h = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
 					hess(i, i) = (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * delta2);
 				} else {
 					parU[i] = par[i] + delta;

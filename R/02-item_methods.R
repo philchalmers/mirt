@@ -9,10 +9,10 @@ Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
                                  'ideal', 'lca', 'spline', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'ideal', 'spline', Experimental_itemtypes())
+Use_R_ProbTrace <- function() c('custom', 'spline', Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit',
-                            'ideal', 'spline', Experimental_itemtypes())
+                            'spline', Experimental_itemtypes())
 
 # ----------------------------------------------------------------
 # helper functions
