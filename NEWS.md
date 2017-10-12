@@ -1,5 +1,10 @@
 # Changes in mirt 1.26
 
+- `numDeriv` dependency removed because `numerical_deriv()` now supports a local 
+  Richardson extrapolation type
+
+- `createItem()` uses central difference as default now instead of forward
+
 - `estfun()` function added to extract gradient information directly from fitted objects 
   (contributed by Lennart Schneider) 
 

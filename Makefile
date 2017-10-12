@@ -44,7 +44,5 @@ clean:
 	$(RM) src/*.so
 	$(RM) ../$(PKGNAME)_$(PKGVERS).tar.gz
 	$(RM) -r ../$(PKGNAME).Rcheck/
-	git checkout -- .
-	git clean -f
 
 

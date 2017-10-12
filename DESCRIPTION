@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.25.3
+Version: 1.25.4
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -34,8 +34,7 @@ Imports:
     Rcpp,
     sfsmisc,
     mgcv,
-    splines,
-    numDeriv
+    splines
 Suggests:
     boot,
     latticeExtra,
