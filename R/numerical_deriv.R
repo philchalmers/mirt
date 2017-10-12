@@ -10,7 +10,9 @@
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
 #' @param type type of difference to compute. Can be either \code{'forward'} for the forward difference,
 #'   \code{'central'} for the central difference (default), or \code{'Richardson'} for the Richardson extropolation.
-#'   Backword difference is acheived by supplying a negative \code{delta} value with \code{'forward'}
+#'   Backword difference is acheived by supplying a negative \code{delta} value with \code{'forward'}.
+#'   When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 100}
+#'   to provide a reasonable perterbation starting location (each \code{delta} is halved at each iteration).
 #' @export numerical_deriv
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords numerical derivatives
