@@ -33,8 +33,8 @@
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified
 #'   then the bounds will be set to Inf
 #' @param derivType if the \code{gr} or \code{hss} terms are not specified this type will be used to
-#'   obtain them numerically. Default is the 'forward' method (fastest), but more exact approaches
-#'   include 'central' and 'Richardson'
+#'   obtain them numerically. Default is the 'Richardson' extrapolation method; see
+#'   \code{\link{numerical_deriv}} for details and other options
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -134,7 +134,7 @@
 #'    P
 #' }
 #'
-#' nom1 <- createItem(name, par=par, est=est, P=P.nom, derivType = 'central')
+#' nom1 <- createItem(name, par=par, est=est, P=P.nom)
 #' nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 #' coef(nommod)
 #' Tnom.dev(4) %*% coef(nommod)[[1]][1:3] #a
@@ -142,7 +142,7 @@
 #'
 #' }
 createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
-                       lbound = NULL, ubound = NULL, derivType = 'forward'){
+                       lbound = NULL, ubound = NULL, derivType = 'Richardson'){
     if(missing(name)) missingMsg('name')
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')

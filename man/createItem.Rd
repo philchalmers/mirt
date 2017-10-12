@@ -5,7 +5,7 @@
 \title{Create a user defined item with correct generic functions}
 \usage{
 createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
-  lbound = NULL, ubound = NULL, derivType = "forward")
+  lbound = NULL, ubound = NULL, derivType = "Richardson")
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -41,8 +41,8 @@ then the bounds will be set to -Inf}
 then the bounds will be set to Inf}
 
 \item{derivType}{if the \code{gr} or \code{hss} terms are not specified this type will be used to
-obtain them numerically. Default is the 'forward' method (fastest), but more exact approaches
-include 'central' and 'Richardson'}
+obtain them numerically. Default is the 'Richardson' extrapolation method; see
+\code{\link{numerical_deriv}} for details and other options}
 }
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.
@@ -145,7 +145,7 @@ P.nom <- function(par, Theta, ncat){
    P
 }
 
-nom1 <- createItem(name, par=par, est=est, P=P.nom, derivType = 'central')
+nom1 <- createItem(name, par=par, est=est, P=P.nom)
 nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 coef(nommod)
 Tnom.dev(4) \%*\% coef(nommod)[[1]][1:3] #a

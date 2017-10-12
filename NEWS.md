@@ -3,7 +3,8 @@
 - `numDeriv` dependency removed because `numerical_deriv()` now supports a local 
   Richardson extrapolation type
 
-- `createItem()` uses central difference as default now instead of forward
+- `createItem()` and `lagrange()` now use Richardson extrapolation as default 
+  instead of the less accurate forward/central difference method
 
 - `estfun()` function added to extract gradient information directly from fitted objects 
   (contributed by Lennart Schneider) 

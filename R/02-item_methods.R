@@ -1111,7 +1111,7 @@ setMethod(
         x2 <- x
         x2@est <- c(rep(FALSE, length(x2@est)-1L), TRUE)
         grad[x2@est] <- numerical_deriv(EML, x@par[x2@est], obj=x2, Theta=Theta,
-                                        type='central')
+                                        type='Richardson')
         if(estHess && any(x@est)){
             hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                     Theta=Theta, type = 'Richardson',
