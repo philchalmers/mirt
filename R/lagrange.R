@@ -76,7 +76,7 @@ lagrange <- function(mod, parnum, SE.type = 'Oakes', type = 'central', ...){
     }
     grads <- function(mod, pn, dat, model, parprior, PrepList, large, sv, ObJeCtIvE, type = 'central', MG, group, ...){
         par <- sv$value[pn]
-        g <- numerical_deriv(par, fn, mod=mod, pn=pn, dat=dat, model=model, parprior=parprior,
+        g <- numerical_deriv(fn, par, mod=mod, pn=pn, dat=dat, model=model, parprior=parprior,
                              PrepList=PrepList, large=large, sv=sv, MG=MG, group=group,
                              ObJeCtIvE=ObJeCtIvE, type=type, ...)
         g

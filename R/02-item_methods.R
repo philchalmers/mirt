@@ -223,12 +223,12 @@ setMethod(
             hess <- matrix(0, length(x@par), length(x@par))
             if(any(x@est)){
                 if(x@usegr) grad <- x@gr(x, Theta)
-                else grad[x@est] <- numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
+                else grad[x@est] <- numerical_deriv(LLfun, x@par[x@est], obj=x, Theta=Theta,
                                                     type=x@derivType)
                 if(estHess){
                     if(x@usehss) hess <- x@hss(x, Theta)
                     else hess[x@est, x@est] <-
-                            numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
+                            numerical_deriv(LLfun, x@par[x@est], obj=x, Theta=Theta,
                                             gradient=FALSE, type=x@derivType)
                 }
             }
@@ -1110,10 +1110,10 @@ setMethod(
         #TODO - can't seem to get the last value of the gradient quite right for some reason....
         x2 <- x
         x2@est <- c(rep(FALSE, length(x2@est)-1L), TRUE)
-        grad[x2@est] <- numerical_deriv(x@par[x2@est], EML, obj=x2, Theta=Theta,
+        grad[x2@est] <- numerical_deriv(EML, x@par[x2@est], obj=x2, Theta=Theta,
                                         type='central')
         if(estHess && any(x@est)){
-            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                     Theta=Theta, type = 'Richardson',
                                                     gradient = FALSE)
         }
@@ -1680,7 +1680,7 @@ setMethod(
         hess <- matrix(0, length(x@par), length(x@par))
         dat <- x@dat
         if(estHess && any(x@est))
-            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
+            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta,
                                                   gradient = FALSE, type = 'Richardson')
         nfact <- x@nfact
         a <- x@par[seq_len(x@nfact)]
@@ -1885,7 +1885,7 @@ setMethod(
         grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q +
                            2 * x@dat[,2] * int)/2
         if(estHess && any(x@est))
-            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                   Theta=Theta, gradient=FALSE, type = 'Richardson')
         return(list(grad = grad, hess=hess))
     }
@@ -2266,10 +2266,10 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(x@usegr) grad <- x@gr(x, Theta)
-        else grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta, type=x@derivType)
+        else grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta, type=x@derivType)
         if(estHess){
             if(x@usehss) hess <- x@hss(x, Theta)
-            else hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+            else hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                        Theta=Theta, type=x@derivType, gradient=FALSE)
         }
         return(list(grad = grad, hess=hess))
