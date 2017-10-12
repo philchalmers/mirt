@@ -53,9 +53,9 @@ numDeriv_DerivTheta <- function(item, Theta){
     tmp <- tmp2 <- matrix(0, nrow(Theta), ncol(Theta))
     for(j in seq_len(item@ncat)){
         for(i in seq_len(nrow(Theta))){
-            tmp[i, ] <- numerical_deriv(P, x=Theta[i, , drop=FALSE], item=item, cat=j,
+            tmp[i, ] <- numerical_deriv(P, Theta[i, , drop=FALSE], item=item, cat=j,
                                         type='Richardson')
-            tmp2[i, ] <- diag(numerical_deriv(P, x=Theta[i, , drop=FALSE], item=item, cat=j,
+            tmp2[i, ] <- diag(numerical_deriv(P, Theta[i, , drop=FALSE], item=item, cat=j,
                                               gradient=FALSE, type='Richardson'))
         }
         grad[[j]] <- tmp
@@ -74,7 +74,7 @@ numDeriv_dP <- function(item, Theta){
     for(i in seq_len(nrow(Theta))){
         tmp <- numeric(length(par))
         for(j in seq_len(item@ncat))
-            tmp <- tmp + numerical_deriv(P, x=par, Theta=Theta[i, , drop=FALSE],
+            tmp <- tmp + numerical_deriv(P, par, Theta=Theta[i, , drop=FALSE],
                               item=item, cat=j, type='Richardson')
         ret[i, item@est] <- tmp
     }
