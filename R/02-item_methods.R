@@ -1590,7 +1590,7 @@ setMethod(
     f = "dP",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta){
-        message('partcomp derivatives not optimized') ##TODO
+        # message('partcomp derivatives not optimized') ##TODO
         numDeriv_dP(x, Theta)
     }
 )
@@ -1783,7 +1783,7 @@ setMethod(
     f = "dP",
     signature = signature(x = 'nestlogit', Theta = 'matrix'),
     definition = function(x, Theta){
-        message('nestlogit derivatives not optimized') ##TODO
+        # message('nestlogit derivatives not optimized') ##TODO
         numDeriv_dP(x, Theta)
     }
 )
