@@ -63,10 +63,10 @@ test_that('mixed dich', {
     if(!is(mod_items.group, 'try-error')){
         cfs <- c(coef(mod_items.group)[['GroupPars']], coef(mod_items.group)[['items:group']])
         expect_equal(cfs[1:3], c(0.000, 0.1431, 2.2536), tolerance = 1e-3)
+        set.seed(1)
+        bs <- boot.mirt(mod_items.group, R=2)
+        expect_is(bs, 'boot')
     }
-    set.seed(1)
-    bs <- boot.mirt(mod_items.group, R=2)
-    expect_is(bs, 'boot')
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
