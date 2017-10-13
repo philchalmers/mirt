@@ -11,7 +11,7 @@
 #' @param type type of difference to compute. Can be either \code{'forward'} for the forward difference,
 #'   \code{'central'} for the central difference (default), or \code{'Richardson'} for the Richardson extropolation.
 #'   Backword difference is acheived by supplying a negative \code{delta} value with \code{'forward'}.
-#'   When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 100}
+#'   When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 10000}
 #'   to provide a reasonable perterbation starting location (each \code{delta} is halved at each iteration).
 #' @export numerical_deriv
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -143,8 +143,8 @@ numerical_deriv <- function(f, par, ...,  delta = 1e-5, gradient = TRUE, type = 
         ret <- if(gradient) forward_difference(par=par, f=f, delta=delta, ...)
         else forward_difference2(par=par, f=f, delta=delta, ...)
     } else if(type == 'Richardson'){
-        ret <- if(gradient) richardson(par=par, f=f, delta=delta*100, ...)
-        else richardson2(par=par, f=f, delta=delta*100, ...)
+        ret <- if(gradient) richardson(par=par, f=f, delta=delta*10000, ...)
+        else richardson2(par=par, f=f, delta=delta*10000, ...)
     }
     ret
 }

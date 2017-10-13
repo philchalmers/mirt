@@ -21,7 +21,7 @@ numerical_deriv(f, par, ..., delta = 1e-05, gradient = TRUE,
 \item{type}{type of difference to compute. Can be either \code{'forward'} for the forward difference,
 \code{'central'} for the central difference (default), or \code{'Richardson'} for the Richardson extropolation.
 Backword difference is acheived by supplying a negative \code{delta} value with \code{'forward'}.
-When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 100}
+When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 10000}
 to provide a reasonable perterbation starting location (each \code{delta} is halved at each iteration).}
 }
 \description{
