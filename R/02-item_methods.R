@@ -2234,6 +2234,7 @@ setMethod("initialize",
               .Object@est <- est
               .Object@P <- P
               .Object@derivType <- derivType
+              .Object@itemclass <- 999L
               if(is.null(gr)){
                   .Object@gr <- dummyfun
                   usegr <- FALSE

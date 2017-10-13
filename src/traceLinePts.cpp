@@ -400,23 +400,6 @@ void P_ideal(vector<double> &P, const vector<double> &par, const NumericMatrix &
     }
 }
 
-void P_switch(vector<double> &P, const vector<double> &par,
-    const NumericMatrix &theta, const NumericVector &ot, 
-    const int &N, const int &ncat, const int &nfact2, const int &itemclass)
-{
-	// add traceline functions for items without pre-evaluated gradient/Hessian here
-    switch(itemclass){
-        case 1 : // example
-            P_dich(P, par, theta, ot, N, nfact2);
-            break;
-        case 9 :
-            P_ideal(P, par, theta, ot, N, nfact2);
-        case 20 :
-            break;
-    }
-}
-
-
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot)
 {
     BEGIN_RCPP
@@ -573,6 +556,23 @@ RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat, SEXP Rreturn
     return(ret);
 
     END_RCPP
+}
+
+void P_switch(vector<double> &P, const vector<double> &par,
+    const NumericMatrix &theta, const NumericVector &ot, 
+    const int &N, const int &ncat, const int &nfact2, const int &itemclass)
+{
+    // add traceline functions for items without pre-evaluated gradient/Hessian here
+    switch(itemclass){
+        case 1 : // example
+            P_dich(P, par, theta, ot, N, nfact2);
+            break;
+        case 6 :
+            P_gpcmIRT(P, par, theta, ot, N, nfact2, ncat);
+            break;
+        case 9 :
+            P_ideal(P, par, theta, ot, N, nfact2);
+    }
 }
 
 void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,

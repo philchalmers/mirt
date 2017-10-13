@@ -55,7 +55,7 @@ test_that('mixed dich', {
                        verbose = FALSE, draws = 1), TRUE)
     if(!is(mod_items, 'try-error')){
         cfs <- c(coef(mod_items)[['GroupPars']], coef(mod_items)[['items']])
-        expect_equal(cfs[1:3], c(0.000, 1.083, 1.125), tolerance = 1e-3)
+        expect_equal(cfs[1:3], c(0.000, 1.083, 1.125), tolerance = 1e-2)
     }
 
     mod_items.group <- try(mixedmirt(data, covdata, model, fixed = ~ 1, SE=FALSE, random = ~ 1|items:group,

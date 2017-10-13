@@ -613,7 +613,7 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
 }
 
 static inline double CDLL(const vector<double> &par, const NumericMatrix &theta, 
-	NumericMatrix &dat,	const NumericVector &ot, const int &N, const int &nfact, 
+	const NumericMatrix &dat, const NumericVector &ot, const int &N, const int &nfact, 
 	const int &ncat, const int &itemclass)
 {
 	vector<double> P(N*ncat);
@@ -626,76 +626,63 @@ static inline double CDLL(const vector<double> &par, const NumericMatrix &theta,
 }
 
 static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
-	const NumericMatrix &theta, const NumericVector &ot, NumericMatrix &dat, 
+	const NumericMatrix &theta, const NumericVector &ot, const NumericMatrix &dat, 
 	const int &N, const int &nfact, const int &ncat, const int &estHess, const int &itemclass)
 {
-	const int supported[] = {1, 9, 20}; // supported item class #
+	const int supported[] = {6, 9, 10}; // supported item class #
 	bool run = false;
-	for(int i = 0; i < 2; ++i)
+	for(int i = 0; i < 3; ++i) // length of supported
 		if(supported[i] == itemclass) run = true;
 	if(!run) return;
 
 	double delta = 1e-8;
 	const int npar = par.size();
-	vector<double> parL(npar);
-	vector<double> parU(npar);
-	for(int i = 0; i < npar; ++i){
-		parL[i] = par[i];
-		parU[i] = par[i];
-	}
+	vector<double> parM(npar);
+	for(int i = 0; i < npar; ++i)
+		parM[i] = par[i];
 
 	//grad
-	for(int i = 0; i < npar; ++i){
-		parL[i] = par[i] - delta;
-		parU[i] = par[i] + delta;
-		double U = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-		double L = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
-		grad[i] = (U - L) / (2 * delta);
-		// Rprintf("%i: %f \n", i, grad[i]);
-		parL[i] = par[i];
-		parU[i] = par[i];
-	}
+    for(int i = 0; i < npar; ++i){
+        parM[i] = par[i] + delta;
+        double U = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+        parM[i] = par[i] - 2*delta;
+        double L = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+        grad[i] = (U - L) / (2 * delta);
+        // Rprintf("%i: %f \n", i, grad[i]);
+        parM[i] = par[i];
+    }
 
-	//hess
-	if(estHess){
-		double delta2 = delta*delta;
-		double fx = CDLL(par, theta, dat, ot, N, nfact, ncat, itemclass);
-		for(int i = 0; i < npar; ++i){
-			for(int j = i; j < npar; ++j){
-				if(i == j){
-					parU[i] = par[i] + delta;
-					parL[i] = par[i] - delta;
-					double s2 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-					double s3 = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
-					parU[i] = par[i] + 2*delta;
-					parL[i] = par[i] - 2*delta;
-					double s1 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-					double s4 = CDLL(parL, theta, dat, ot, N, nfact, ncat, itemclass);
-					hess(i, i) = (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * delta2);
-				} else {
-					parU[i] = par[i] + delta;
-					parU[j] = par[j] + delta;
-					double s1 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-					parU[j] = parU[j] - 2*delta;
-					double s2 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-					parU[i] = parU[i] - 2*delta;
-					double s4 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-					parU[j] = parU[j] + 2*delta;
-					double s3 = CDLL(parU, theta, dat, ot, N, nfact, ncat, itemclass);
-					hess(i, j) = (s1 - s2 - s3 + s4) / (4 * delta2);
-					hess(j, i) = hess(i, j);
-				}
-				parL[i] = par[i];
-				parU[i] = par[i];
-				parL[j] = par[j];
-				parU[j] = par[j];
-			}
-		}
-		
-		
-	}
-
-
+    //hess
+    if(estHess){
+        double delta = 1e-4;
+        double delta2 = delta*delta;
+        double fx = CDLL(par, theta, dat, ot, N, nfact, ncat, itemclass);
+        for(int i = 0; i < npar; ++i){
+            for(int j = i; j < npar; ++j){
+                if(i == j){
+                    parM[i] = par[i] + 2*delta;
+                    double s1 = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+                    parM[i] = par[i] - 2*delta;
+                    double s3 = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+                    hess(i, i) = (s1 - 2 * fx + s3) / (4 * delta2);
+                } else {
+                    parM[i] = par[i] + delta;
+                    parM[j] = par[j] + delta;
+                    double s1 = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+                    parM[j] = parM[j] - 2*delta;
+                    double s2 = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+                    parM[i] = parM[i] - 2*delta;
+                    double s4 = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+                    parM[j] = parM[j] + 2*delta;
+                    double s3 = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+                    hess(i, j) = (s1 - s2 - s3 + s4) / (4 * delta2);
+                    hess(j, i) = hess(i, j);
+                }
+                parM[i] = par[i];
+                parM[j] = par[j];
+            }
+        }
+    }
 }
 
 static void d_nominal(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
@@ -1236,6 +1223,10 @@ void d_gpcmIRT(vector<double> &grad, NumericMatrix &hess, const vector<double> &
     const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
     const int &N, const int &nfact, const int &nzeta, const int &estHess)
 {
+    if(estHess){
+         d_numerical(grad, hess, par, Theta, ot, 
+            dat, N, nfact, nzeta + 1, estHess, 6);
+    }
     vector<double> Pprob(N * (nzeta + 1));
     P_gpcmIRT(Pprob, par, Theta, ot, N, 1, nzeta);
     const NumericMatrix P = vec2mat(Pprob, N, nzeta + 1);
@@ -1274,10 +1265,6 @@ void d_gpcmIRT(vector<double> &grad, NumericMatrix &hess, const vector<double> &
                 grad[j+1] += r1_P[k] * (-a * P(i,k) + P(i,k) * psib );
         }
     }
-    if(estHess){
-         Rprintf("No hessian defined for gpcmIRT class\n"); //TODO   
-    }
-
 }
 
 RcppExport SEXP dparsgpcmIRT(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP Rnzeta, SEXP RestHess)
@@ -1308,6 +1295,10 @@ void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
     const int &N, const int &nfact, const int &estHess)
 {
     const int ncat = dat.ncol();
+    if(estHess){
+        d_numerical(grad, hess, par, Theta, 
+            ot, dat, N, nfact, ncat, estHess, 10);
+    }
     vector<double> p(N*ncat);
     P_lca(p, par, Theta, N, ncat, nfact, 0);
     const NumericMatrix P = vec2mat(p, N, ncat);
@@ -1325,14 +1316,6 @@ void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
                 ind++;
             }
         }
-    }
-    if(estHess){
-        vector<double> P2(N), P3(N);
-        for(int i = 0; i < N; ++i){
-            P2[i] = P[i] * P[i];
-            P3[i] = P2[i] * P[i];
-        }
-        Rprintf("No hessian defined for lca class\n"); //TODO
     }
 }
 
