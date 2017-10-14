@@ -694,7 +694,6 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
 {
     double delta = .1;
     const int rr = 4;
-    int rtrack = 0;
     if(gradient){
         const int npar = par.size();
         NumericMatrix R0(npar, rr);
@@ -702,7 +701,6 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
         _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, true, delta);
         for(int i = 0; i < npar; ++i) R0(i, 0) = grad[i];
         for(int r = 0; r < (rr-1); ++r){
-            rtrack = r;
             delta = delta/2;
             _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, true, delta);
             for(int i = 0; i < npar; ++i) R1(i, 0) = grad[i];
@@ -711,19 +709,11 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
                 for(int i = 0; i < npar; ++i)
                     R1(i, j + 1) = (pwr * R1(i, j) - R0(i, j)) / (pwr - 1);
             }
-            bool converged = true;
-            for(int i = 0; i < npar; ++i){
-                if(abs(R1(i, r + 1) -  R0(i, r)) > 1e-12){
-                    converged = false;
-                    break;
-                }
-            }
-            if(converged) break;
             for(int j = 0; j < r + 1; ++j)
                 for(int i = 0; i < npar; ++i)
                     R0(i,j) = R1(i,j);
         } 
-        for(int i = 0; i < npar; ++i) grad[i] = R1(i, rtrack + 1);
+        for(int i = 0; i < npar; ++i) grad[i] = R1(i, rr - 1);
     } else {
         const int npar = par.size() * par.size();
         const int nrow = hess.nrow();
@@ -734,7 +724,6 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
         mat2vec(dvec, hess);
         for(int i = 0; i < npar; ++i) R0(i, 0) = dvec[i];
         for(int r = 0; r < (rr-1); ++r){
-            rtrack = r;
             delta = delta/2;
             _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, false, delta);
             mat2vec(dvec, hess);
@@ -744,14 +733,6 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
                 for(int i = 0; i < npar; ++i)
                     R1(i, j + 1) = (pwr * R1(i, j) - R0(i, j)) / (pwr - 1);
             }
-            bool converged = true;
-            for(int i = 0; i < npar; ++i){
-                if(abs(R1(i, r + 1) -  R0(i, r)) > 1e-12){
-                    converged = false;
-                    break;
-                }
-            }
-            if(converged) break;
             for(int j = 0; j < r + 1; ++j)
                 for(int i = 0; i < npar; ++i)
                     R0(i,j) = R1(i,j);
@@ -759,7 +740,7 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
         int ind = 0;
         for(int j = 0; j < nrow; ++j){
             for(int i = 0; i < nrow; ++i){
-                hess(i, j) = R1(ind, rtrack + 1);
+                hess(i, j) = R1(ind, rr - 1);
                 ++ind;
             }
         }
