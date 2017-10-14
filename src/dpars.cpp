@@ -744,7 +744,14 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
                 ++ind;
             }
         }
-
+        for(int j = 0; j < nrow; ++j){
+            for(int i = j; i < nrow; ++i){
+                if(i != j){
+                    hess(i, j) = (hess(i, j) + hess(j, i))/2;
+                    hess(j, i) = hess(i,j);
+                }
+            }
+        }
     }
 }
 

@@ -104,7 +104,7 @@ numerical_deriv <- function(f, par, ...,  delta = 1e-5, gradient = TRUE, type = 
         }
         (hess + t(hess))/2
     }
-    richardson <- function(par, f, delta, r = 4L, eps = 1e-12, ...){
+    richardson <- function(par, f, delta, r = 4L, ...){
         R0 <- R1 <- matrix(0, length(par), r)
         R0[, 1L] <- central_difference(par=par, f=f, delta=delta, ...)
         for(i in 1L:(r-1L)){
@@ -112,12 +112,11 @@ numerical_deriv <- function(f, par, ...,  delta = 1e-5, gradient = TRUE, type = 
             R1[ ,1L] <- central_difference(par=par, f=f, delta=delta, ...)
             for (j in 1L:i)
                 R1[ ,j + 1] <- (4^j * R1[ , j] - R0[, j]) / (4^j - 1)
-            if(all(abs(R1[ ,j + 1] - R0[ ,j]) < eps)) break
             R0 <- R1
         }
         R1[ , i+1]
     }
-    richardson2 <- function(par, f, delta, r = 4L, eps = 1e-12, ...){
+    richardson2 <- function(par, f, delta, r = 4L, ...){
         R0 <- R1 <- matrix(0, length(par)^2, r)
         R0[, 1L] <- as.vector(central_difference2(par=par, f=f, delta=delta, ...))
         for(i in 1L:(r-1L)){
@@ -125,7 +124,6 @@ numerical_deriv <- function(f, par, ...,  delta = 1e-5, gradient = TRUE, type = 
             R1[ ,1L] <- as.vector(central_difference2(par=par, f=f, delta=delta, ...))
             for (j in 1L:i)
                 R1[ ,j + 1] <- (4^j * R1[ , j] - R0[, j]) / (4^j - 1)
-            if(all(abs(R1[ ,j + 1] - R0[ ,j]) < eps)) break
             R0 <- R1
         }
         hess <- matrix(R1[ , i+1], length(par), length(par))
