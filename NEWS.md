@@ -7,8 +7,10 @@
   instead of the less accurate forward/central difference method
 
 - `estfun()` function added to extract gradient information directly from fitted objects 
-  (contributed by Lennart Schneider) 
-
+  (contributed by Lennart Schneider)
+  
+- `simdata()` gains an `equal.K` arguemnt to redraw data until $K$ categories are 
+  populated for a given item
 
 # Changes in mirt 1.25
 

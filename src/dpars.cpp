@@ -625,36 +625,25 @@ static inline double CDLL(const vector<double> &par, const NumericMatrix &theta,
 	return(LL);
 }
 
-static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
-	const NumericMatrix &theta, const NumericVector &ot, const NumericMatrix &dat, 
-	const int &N, const int &nfact, const int &ncat, const int &estHess, const int &itemclass)
+static inline double _central(vector<double> &grad, NumericMatrix &hess,
+    const vector<double> &par, const NumericMatrix &theta, 
+    const NumericMatrix &dat, const NumericVector &ot, const int &N, const int &nfact, 
+    const int &ncat, const int &itemclass, const bool gradient, const double delta)
 {
-	const int supported[] = {6, 9, 10}; // supported item class #
-	bool run = false;
-	for(int i = 0; i < 3; ++i) // length of supported
-		if(supported[i] == itemclass) run = true;
-	if(!run) return;
-
-	double delta = 1e-8;
-	const int npar = par.size();
-	vector<double> parM(npar);
-	for(int i = 0; i < npar; ++i)
-		parM[i] = par[i];
-
-	//grad
-    for(int i = 0; i < npar; ++i){
-        parM[i] = par[i] + delta;
-        double U = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
-        parM[i] = par[i] - 2*delta;
-        double L = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
-        grad[i] = (U - L) / (2 * delta);
-        // Rprintf("%i: %f \n", i, grad[i]);
+    const int npar = par.size();
+    vector<double> parM(npar);
+    for(int i = 0; i < npar; ++i)
         parM[i] = par[i];
-    }
-
-    //hess
-    if(estHess){
-        double delta = 1e-4;
+    if(gradient){
+        for(int i = 0; i < npar; ++i){
+            parM[i] = par[i] + delta;
+            double U = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+            parM[i] = par[i] - 2*delta;
+            double L = CDLL(parM, theta, dat, ot, N, nfact, ncat, itemclass);
+            grad[i] = (U - L) / (2 * delta);
+            parM[i] = par[i];
+        }
+    } else {
         double delta2 = delta*delta;
         double fx = CDLL(par, theta, dat, ot, N, nfact, ncat, itemclass);
         for(int i = 0; i < npar; ++i){
@@ -683,6 +672,114 @@ static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<
             }
         }
     }
+}
+
+static inline void mat2vec(vector<double> &ret, const NumericMatrix &mat)
+{
+    const int ncol = mat.ncol();
+    const int nrow = mat.nrow();
+    int ind = 0;
+    for(int j = 0; j < ncol; ++j){
+        for(int i = 0; i < nrow; ++i){
+            ret[ind] = mat(i,j);
+            ++ind;
+        }
+    }
+}
+
+static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
+    const vector<double> &par, const NumericMatrix &theta, 
+    const NumericMatrix &dat, const NumericVector &ot, const int &N, const int &nfact, 
+    const int &ncat, const int &itemclass, const bool gradient)
+{
+    double delta = .1;
+    const int rr = 4;
+    int rtrack = 0;
+    if(gradient){
+        const int npar = par.size();
+        NumericMatrix R0(npar, rr);
+        NumericMatrix R1(npar, rr);
+        _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, true, delta);
+        for(int i = 0; i < npar; ++i) R0(i, 0) = grad[i];
+        for(int r = 0; r < (rr-1); ++r){
+            rtrack = r;
+            delta = delta/2;
+            _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, true, delta);
+            for(int i = 0; i < npar; ++i) R1(i, 0) = grad[i];
+            for(int j = 0; j < (r + 1); ++j){
+                int pwr = pow(4, j + 1);
+                for(int i = 0; i < npar; ++i)
+                    R1(i, j + 1) = (pwr * R1(i, j) - R0(i, j)) / (pwr - 1);
+            }
+            bool converged = true;
+            for(int i = 0; i < npar; ++i){
+                if(abs(R1(i, r + 1) -  R0(i, r)) > 1e-12){
+                    converged = false;
+                    break;
+                }
+            }
+            if(converged) break;
+            for(int j = 0; j < r + 1; ++j)
+                for(int i = 0; i < npar; ++i)
+                    R0(i,j) = R1(i,j);
+        } 
+        for(int i = 0; i < npar; ++i) grad[i] = R1(i, rtrack + 1);
+    } else {
+        const int npar = par.size() * par.size();
+        const int nrow = hess.nrow();
+        vector<double> dvec(npar);
+        NumericMatrix R0(npar, rr);
+        NumericMatrix R1(npar, rr);
+        _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, false, delta);
+        mat2vec(dvec, hess);
+        for(int i = 0; i < npar; ++i) R0(i, 0) = dvec[i];
+        for(int r = 0; r < (rr-1); ++r){
+            rtrack = r;
+            delta = delta/2;
+            _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, false, delta);
+            mat2vec(dvec, hess);
+            for(int i = 0; i < npar; ++i) R1(i, 0) = dvec[i];
+            for(int j = 0; j < (r + 1); ++j){
+                int pwr = pow(4, j + 1);
+                for(int i = 0; i < npar; ++i)
+                    R1(i, j + 1) = (pwr * R1(i, j) - R0(i, j)) / (pwr - 1);
+            }
+            bool converged = true;
+            for(int i = 0; i < npar; ++i){
+                if(abs(R1(i, r + 1) -  R0(i, r)) > 1e-12){
+                    converged = false;
+                    break;
+                }
+            }
+            if(converged) break;
+            for(int j = 0; j < r + 1; ++j)
+                for(int i = 0; i < npar; ++i)
+                    R0(i,j) = R1(i,j);
+        } 
+        int ind = 0;
+        for(int j = 0; j < nrow; ++j){
+            for(int i = 0; i < nrow; ++i){
+                hess(i, j) = R1(ind, rtrack + 1);
+                ++ind;
+            }
+        }
+
+    }
+}
+
+static void d_numerical(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
+	const NumericMatrix &theta, const NumericVector &ot, const NumericMatrix &dat, 
+	const int &N, const int &nfact, const int &ncat, const int &estHess, const int &itemclass)
+{
+	const int supported[] = {6, 9, 10}; // supported item class #
+	bool run = false;
+	for(int i = 0; i < 3; ++i) // length of supported
+		if(supported[i] == itemclass) run = true;
+	if(!run) return;
+
+    _richardson(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, true);
+    if(estHess)
+        _richardson(grad, hess, par, theta, dat, ot, N, nfact, ncat, itemclass, false);
 }
 
 static void d_nominal(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
