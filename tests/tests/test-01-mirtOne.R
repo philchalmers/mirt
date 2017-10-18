@@ -72,7 +72,7 @@ test_that('dich', {
     expect_equal(cfs, c(0.969, 1.851, 0, 1, 1.074, 0.808, 0, 1, 1.717, 1.811, 0, 1, 0.763, 0.486, 0, 1, 0.731, 1.852, 0, 1, 0, 1), tolerance = 1e-2)
     modideal <- mirt(data, 1, verbose=FALSE, itemtype='ideal')
     cfs <- as.numeric(do.call(c, coef(modideal)))
-    expect_equal(cfs, c(0.288, -0.568, 0.422, -0.891, 0.57, -0.564, 0.292, -1, 0.207, -0.559, 0, 1), tolerance = 1e-2)
+    expect_equal(cfs, c(0.3044771,-0.5568209,0.4392835,-0.8806131,0.5976363,-0.5417237,0.3030416,-0.9930241,0.2228816,-0.5508793,0,1), tolerance = 1e-2)
     modspline <- mirt(data, 1, verbose=FALSE, itemtype=c(rep('2PL', 4), 'spline'))
     cfs <- as.numeric(do.call(c, coef(modspline)))
     expect_equal(cfs, c(0.963,1.848,0,1,1.08,0.809,0,1,1.719,1.812,0,1,0.758,0.485,0,1,-0.91,0.359,0.8,11.81,0,1), tolerance = 1e-2)
