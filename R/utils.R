@@ -1953,8 +1953,62 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
     cand
 }
 
+# function borrowed and edited from the sfsmisc package, v1.1-1. Date: 18, Oct, 2017
+QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
+{
+    digitsBase <- function (x, base = 2, ndigits = 1 + floor(1e-09 + log(max(x), base)))
+    {
+        if (any(x < 0))
+            stop("'x' must be non-negative integers")
+        if (any(x != trunc(x)))
+            stop("'x' must be integer-valued")
+        r <- matrix(0, nrow = ndigits, ncol = length(x))
+        if (ndigits >= 1)
+            for (i in ndigits:1) {
+                r[i, ] <- x%%base
+                if (i > 1)
+                    x <- x%/%base
+            }
+        class(r) <- "basedInt"
+        attr(r, "base") <- base
+        r
+    }
+    sHalton <- function (n.max, n.min = 1, base = 2, leap = 1)
+    {
+        stopifnot((leap <- as.integer(leap)) >= 1)
+        nd <- as.integer(1 + log(n.max, base))
+        dB <- digitsBase(if (leap == 1)
+            n.min:n.max
+            else seq(n.min, n.max, by = leap), base = base, ndigits = nd)
+        colSums(dB/base^(nd:1))
+    }
+    stopifnot(1 <= (n <- as.integer(n)), length(n) == 1, 1 <=
+                  (p <- as.integer(p)), length(p) == 1, length(min) ==
+                  p || length(min) == 1, length(max) == p || length(max) ==
+                  1, 1 <= (n.min <- as.integer(n.min)), 1 <= (leap <- as.integer(leap)),
+              (n.max <- n.min + (n - 1:1) * leap) < .Machine$integer.max)
+    pr. <- c(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+             43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101,
+             103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157,
+             163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223,
+             227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277,
+             281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349,
+             353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419,
+             421, 431, 433, 439, 443, 449, 457)
+    pr <- pr.[1:p]
+    if (leap > 1 && any(leap == pr) && length(pr.) >= p + 1)
+        pr <- c(pr[leap != pr], pr.[p + 1])
+    max <- rep.int(max, p)
+    min <- rep.int(min, p)
+    dU <- max - min
+    r <- matrix(0, n, p)
+    for (j in 1:p) r[, j] <- min[j] + dU[j] * sHalton(n.max,
+                                                      n.min, base = pr[j], leap = leap)
+    r
+}
+
 QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
-    qnorm(sfsmisc::QUnif(npts, min=0, max=1, p=nfact, leap=leap))
+    qnorm(QUnif(npts, min=0, max=1, p=nfact, leap=leap))
 }
 
 MC_quad <- function(npts, nfact, lim)
