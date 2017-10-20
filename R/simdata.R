@@ -17,7 +17,7 @@
 #' @param itemtype a character vector of length \code{nrow(a)} (or 1, if all the item types are
 #'   the same) specifying the type of items to simulate. Inputs can either be the same as
 #'   the inputs found in the \code{itemtype} argument in \code{\link{mirt}} or the
-#'   internal clases defined by the package. Typical \code{itemtype} inputs that
+#'   internal classes defined by the package. Typical \code{itemtype} inputs that
 #'   are passed to \code{\link{mirt}} are used then these will be converted into
 #'   the respective internal classes automatically.
 #'
@@ -41,7 +41,7 @@
 #'   for dichotomous items. Must be either a scalar value that will affect all of
 #'   the dichotomous items, or a vector with as many values as to be simulated items
 #' @param upper same as \code{guess}, but for upper bound parameters
-#' @param gpcm_mats a list of matricies specifying the scoring scheme for generalized partial
+#' @param gpcm_mats a list of matrices specifying the scoring scheme for generalized partial
 #'   credit models (see \code{\link{mirt}} for details)
 #' @param sigma a covariance matrix of the underlying distribution. Default is
 #'   the identity matrix. Used when \code{Theta} is not supplied
@@ -55,8 +55,8 @@
 #'   latent trait matrix \code{Theta}? Default is FALSE
 #' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
 #'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
-#'   \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent (unless explicitly provided)
-#' @param equal.K logical; when a \code{model} input is supplied, should the generated data contan the same
+#'   \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundant (unless explicitly provided)
+#' @param equal.K logical; when a \code{model} input is supplied, should the generated data contain the same
 #'   number of categories as the original data indicated by \code{extract.mirt(model, 'K')}? Default is TRUE,
 #'   which will redrawn data until this condition is satisfied
 #' @param which.items an integer vector used to indicate which items to simulate when a

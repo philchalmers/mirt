@@ -11,7 +11,7 @@ personfit(x, method = "EAP", Theta = NULL, stats.only = TRUE, ...)
 
 \item{method}{type of factor score estimation method. See \code{\link{fscores}} for more detail}
 
-\item{Theta}{a matrix of factor scores used for statistics that require emperical estimates. If
+\item{Theta}{a matrix of factor scores used for statistics that require empirical estimates. If
 supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 be used instead}
 
@@ -46,7 +46,7 @@ head(fit)
 Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 head(personfit(x, Theta=Theta))
 
-#muliple group Rasch model example
+#multiple group Rasch model example
 set.seed(12345)
 a <- matrix(rep(1, 15), ncol=1)
 d <- matrix(rnorm(15,0,.7),ncol=1)

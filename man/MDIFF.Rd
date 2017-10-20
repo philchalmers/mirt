@@ -13,7 +13,7 @@ MDIFF(x, which.items = NULL)
 (the default) then MDISC will be computed for all items}
 }
 \description{
-Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
+Returns a matrix containing the MDIFF values (Reckase, 2009). Only supported for items of class
 'dich' and 'graded'.
 }
 \examples{

@@ -336,7 +336,7 @@ control input)}
   \item{MHRM_SE_draws}{number of fixed draws to use when \code{SE=TRUE} and \code{SE.type = 'FMHRM'}
     and the maximum number of draws when \code{SE.type = 'MHRM'}. Default is 2000}
   \item{MCEM_draws}{a function used to determine the number of quadrature points to draw for the
-    \code{'MCEM'} method. Must include one arguemnt which indicates the iteration number of the
+    \code{'MCEM'} method. Must include one argument which indicates the iteration number of the
     EM cycle. Default is \code{function(cycles) 500 + (cycles - 1)*2}, which starts the number of
     draws at 500 and increases by 2 after each full EM iteration}
   \item{info_if_converged}{logical; compute the information matrix when using the MH-RM algorithm

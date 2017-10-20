@@ -42,7 +42,7 @@ item plots are requested then the total score will be formed without the item of
 }
 \details{
 Note that these types of plots should only be used for unidimensional
-tests with monotonitically increasing item
+tests with monotonically increasing item
 response functions. If monotonicity should be true for all items, however, then these plots may
 serve as a visual diagnostic tool so long as the majority of items are indeed monotonic.
 }

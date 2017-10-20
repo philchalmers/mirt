@@ -93,7 +93,7 @@
 #'   to indicate at which iteration (during the burn-in stage) the additional random effect
 #'   variables should begin to be approximated (i.e.,
 #'   elements in \code{lr.random} and \code{random}). The default for \code{RANDSTART} is to start
-#'   at iteration 100, and when random effects are included the default number of burn-in iterations is incrased
+#'   at iteration 100, and when random effects are included the default number of burn-in iterations is increased
 #'   from 150 to 200. See \code{\link{mirt}} for further details
 #' @param ... additional arguments to be passed to the MH-RM estimation engine. See
 #'   \code{\link{mirt}} for more details and examples

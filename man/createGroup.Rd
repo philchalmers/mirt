@@ -27,7 +27,7 @@ defined by \code{createGroup()} and \code{Theta} is a matrix of latent trait par
 
 \item{hss}{Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used.
-The input is idential to the \code{gr} argument}
+The input is identical to the \code{gr} argument}
 
 \item{gen}{a function used when \code{GenRandomPars = TRUE} is passed to the estimation function
 to generate random starting values. Function must be of the form \code{function(object) ...}
@@ -44,7 +44,7 @@ then the bounds will be set to Inf}
 obtain them numerically. Default is 'Richardson'}
 }
 \description{
-Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for definiting
+Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for defining
 customized group-level functions. To use the defined objects pass to the
 \code{mirt(..., customGroup = OBJECT)} command, and ensure that the class parameters are properly labeled.
 }

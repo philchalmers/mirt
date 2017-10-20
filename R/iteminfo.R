@@ -11,7 +11,7 @@
 #' @param total.info logical; return the total information curve for the item? If \code{FALSE},
 #'   information curves for each category are returned as a matrix
 #' @param multidim_matrix logical; compute the information matrix for each row in \code{Theta}? If \code{Theta}
-#'   contains more than 1 row then a list of matricies will be returned, otherwise if \code{Theta} has exactly
+#'   contains more than 1 row then a list of matrices will be returned, otherwise if \code{Theta} has exactly
 #'   one row then a matrix will be returned
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -61,7 +61,7 @@
 #' iteminfo(ii, Theta, degrees=c(45,45)) # equal angle
 #' iteminfo(ii, Theta, degrees=c(90,0)) # first dimension only
 #'
-#' # information matricies
+#' # information matrices
 #' iteminfo(ii, Theta, multidim_matrix = TRUE)
 #' iteminfo(ii, Theta[1, , drop=FALSE], multidim_matrix = TRUE)
 #'

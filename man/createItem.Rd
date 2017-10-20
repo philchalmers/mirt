@@ -27,7 +27,7 @@ the complete data log-likelihood. If not specified a numeric approximation will 
 
 \item{hss}{Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used (required for the MH-RM
-algorithm only). The input is idential to the \code{gr} argument}
+algorithm only). The input is identical to the \code{gr} argument}
 
 \item{gen}{a function used when \code{GenRandomPars = TRUE} is passed to the estimation function
 to generate random starting values. Function must be of the form \code{function(object) ...}

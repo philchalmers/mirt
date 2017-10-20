@@ -84,12 +84,12 @@ indices.
 sample estimated thetas.}
   \item{UDTFR}{Unsigned Expected Test Scores Differences in the Sample. The difference
 in observed summed scale scores expected, on average, across a hypothetical focal
-group with anormally distributed theta, had DF been uniform innature for all items}
+group with a normally distributed theta, had DF been uniform in nature for all items}
   \item{UETSDS}{Unsigned Expected Test Score Differences in the Sample.
-The hypothetical difference inexpected scale scores that would have been present if
+The hypothetical difference expected scale scores that would have been present if
 scale-level DF had been uniform across respondents (i.e., always favoring the
 focal group).}
-  \item{UETSDN}{Identical to UETSDS but computed using anormal distribution.}
+  \item{UETSDN}{Identical to UETSDS but computed using a normal distribution.}
   \item{Test D-Max}{Maximum expected test score differences in the sample.}
   \item{ETSSD}{Expected Test Score Standardized Difference. Cohen's D for expected
 test scores.}

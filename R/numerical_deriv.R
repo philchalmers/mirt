@@ -1,7 +1,7 @@
 #' Compute numerical derivatives
 #'
-#' Compute numerical derivatives using forward/backword difference,
-#' central difference, or Richardson extropolation.
+#' Compute numerical derivatives using forward/backward difference,
+#' central difference, or Richardson extrapolation.
 #'
 #' @param f the objective function being evaluated
 #' @param par a vector of parameters
@@ -9,10 +9,10 @@
 #' @param delta the term used to perturb the \code{f} function. Default is 1e-5
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
 #' @param type type of difference to compute. Can be either \code{'forward'} for the forward difference,
-#'   \code{'central'} for the central difference (default), or \code{'Richardson'} for the Richardson extropolation.
-#'   Backword difference is acheived by supplying a negative \code{delta} value with \code{'forward'}.
+#'   \code{'central'} for the central difference (default), or \code{'Richardson'} for the Richardson extrapolation.
+#'   Backward difference is achieved by supplying a negative \code{delta} value with \code{'forward'}.
 #'   When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 10000}
-#'   to provide a reasonable perterbation starting location (each \code{delta} is halved at each iteration).
+#'   to provide a reasonable perturbation starting location (each \code{delta} is halved at each iteration).
 #' @export numerical_deriv
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords numerical derivatives
@@ -29,7 +29,7 @@
 #' numerical_deriv(f, par, type = 'central')
 #' numerical_deriv(f, par, type = 'Richardson')
 #'
-#' # hessian = h11 -> 18 * x, h22 -> -8, h12 -> h21 -> 0
+#' # Hessian = h11 -> 18 * x, h22 -> -8, h12 -> h21 -> 0
 #' (actual <- matrix(c(18 * par[1], 0, 0, -8), 2, 2))
 #' numerical_deriv(f, par, type = 'forward', gradient = FALSE)
 #' numerical_deriv(f, par, type = 'central', gradient = FALSE)

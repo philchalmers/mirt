@@ -6,7 +6,7 @@
 #' estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory
 #' bi-factor and two-tier analyses are available for modeling item testlets.
 #' Multiple group analysis and mixed effects designs also are available for
-#' detecting differential item and test functioning as well as modelling
+#' detecting differential item and test functioning as well as modeling
 #' item and person covariates. Finally, latent class models such as the DINA,
 #' DINO, multidimensional latent class, and several other discrete variable
 #' models are supported.

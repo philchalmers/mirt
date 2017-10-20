@@ -18,8 +18,8 @@ when using a \code{\link{mirt.model}} input in conjunction with the \code{custom
 the order with which the syntax factors are defined will be associated with the columns in the
 \code{customTheta} input}
 
-\item{customTheta}{input passed to \code{techincal = list(customTheta = ...)}, but is included directly
-in this function for convienience. This input is most interesting for discrete latent models
+\item{customTheta}{input passed to \code{technical = list(customTheta = ...)}, but is included directly
+in this function for convenience. This input is most interesting for discrete latent models
 because it allows for customized patterns of latent class effects.
 The default builds the pattern \code{customTheta = diag(model)},
 which is the typical pattern for the traditional
