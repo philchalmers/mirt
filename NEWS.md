@@ -11,6 +11,9 @@
   
 - `simdata()` gains an `equal.K` arguemnt to redraw data until $K$ categories are 
   populated for a given item
+  
+- Fix initialization of `fscores()` when using 'MH' plausible value imputations (reported by 
+  Charlie Iaconangelo)
 
 # Changes in mirt 1.25
 
