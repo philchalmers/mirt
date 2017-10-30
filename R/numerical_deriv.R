@@ -11,8 +11,9 @@
 #' @param type type of difference to compute. Can be either \code{'forward'} for the forward difference,
 #'   \code{'central'} for the central difference (default), or \code{'Richardson'} for the Richardson extrapolation.
 #'   Backward difference is achieved by supplying a negative \code{delta} value with \code{'forward'}.
-#'   When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 10000}
-#'   to provide a reasonable perturbation starting location (each \code{delta} is halved at each iteration).
+#'   When \code{type = 'Richardson'}, the default value of \code{delta} is increased to \code{delta * 1000} for the
+#'   Hessian and \code{delta * 10} for the gradient to provide a reasonable perturbation starting
+#'   location (each \code{delta} is halved at each iteration).
 #' @export numerical_deriv
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords numerical derivatives
@@ -141,8 +142,8 @@ numerical_deriv <- function(f, par, ...,  delta = 1e-5, gradient = TRUE, type = 
         ret <- if(gradient) forward_difference(par=par, f=f, delta=delta, ...)
         else forward_difference2(par=par, f=f, delta=delta, ...)
     } else if(type == 'Richardson'){
-        ret <- if(gradient) richardson(par=par, f=f, delta=delta*10000, ...)
-        else richardson2(par=par, f=f, delta=delta*10000, ...)
+        ret <- if(gradient) richardson(par=par, f=f, delta=delta*10, ...)
+        else richardson2(par=par, f=f, delta=delta*1000, ...)
     }
     ret
 }
