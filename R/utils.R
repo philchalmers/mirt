@@ -587,7 +587,9 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         matched <- na.omit(match(invariance, itemnames))
         for(i in matched){
             jj <- sum(pars[[1L]][[i]]@est)
-            stopifnot(jj > 0)
+            if(!(jj > 0))
+                stop('Equality constraints applied to items where no parameters were estimated. Please fix',
+                     call.=FALSE)
             for(j in seq_len(jj)){
                 tmp <- c()
                 for(g in seq_len(ngroups))
