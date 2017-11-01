@@ -85,6 +85,7 @@ estfun.AllModelClass <- function(object) {
   L <- Ls$L
   redun_constr <- Ls$redun_constr
   epars <- mod2values(object)
+  epars$group <- factor(epars$group, levels = groupNames)
   eparsgroup <- split(epars, epars$group)
   sel <- lapply(eparsgroup, function(x) x$parnum[x$est])
   ### constrains; cb = between groups, cw = within groups
