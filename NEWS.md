@@ -1,8 +1,19 @@
 # Changes in mirt 1.26
 
-- `estfun()` function added to extract gradient information directly from fitted objects 
-  (contributed by Lennart Schneider) 
+- `numDeriv` dependency removed because `numerical_deriv()` now supports a local 
+  Richardson extrapolation type
 
+- `createItem()` and `lagrange()` now use Richardson extrapolation as default 
+  instead of the less accurate forward/central difference method
+
+- `estfun()` function added to extract gradient information directly from fitted objects 
+  (contributed by Lennart Schneider)
+  
+- `simdata()` gains an `equal.K` arguemnt to redraw data until $K$ categories are 
+  populated for a given item
+  
+- Fix initialization of `fscores()` when using 'MH' plausible value imputations (reported by 
+  Charlie Iaconangelo)
 
 # Changes in mirt 1.25
 

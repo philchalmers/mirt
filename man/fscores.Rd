@@ -43,7 +43,7 @@ is greater than 0 a list of plausible values will be returned}
 
 \item{plausible.type}{type of plausible values to obtain. Can be either \code{'normal'} (default)
 to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain Metropolis-Hastings
-samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguemnts like
+samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguments like
 \code{technical} can be supplied to increase the number of burn-in draws and discarded samples)}
 
 \item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
@@ -97,7 +97,7 @@ to collapse across the conditioned total scores until the expected values are gr
 that this only affect the goodness of fit tests and not the returned EAP for sum scores table}
 
 \item{converge_info}{logical; include a column in the return objects containing a logical for each
-response pattern indicating whether a maximum value was found (not relavent non-iterative methods,
+response pattern indicating whether a maximum value was found (not relevant non-iterative methods,
 such as EAP and EAPsum). Value is a reflection of the \code{code} element from \code{\link{nlm}}
 (e.g., 1 indicates convergence)}
 

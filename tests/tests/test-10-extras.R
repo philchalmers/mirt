@@ -34,8 +34,8 @@ test_that('extras', {
     modideal <- mirt(dataset1, model = mirt.model('F1 = 1-6
                                                   F2 = 5-10'), 'ideal', verbose = FALSE)
     cfs <- as.numeric(coef(modideal, verbose=FALSE)[[5]])
-    expect_equal(extract.mirt(modideal, 'logLik'), -6408.54, tolerance = 1e-3)
-    expect_equal(cfs, c(0.30446, 0.40742, -1.43222), tolerance = 1e-3)
+    expect_equal(extract.mirt(modideal, 'logLik'), -6409.256, tolerance = 1e-3)
+    expect_equal(cfs, c(0.3086649, 0.4154393, -1.4209336), tolerance = 1e-3)
 
     acov <- fscores(mod1, return.acov=TRUE, full.scores=FALSE)
     expect_equal(acov[[1]][1], 0.4799239, tolerance=1e-3)

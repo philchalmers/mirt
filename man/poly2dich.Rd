@@ -16,8 +16,8 @@ dichotomous form. Default uses all input items}
 Returns an integer matrix
 }
 \description{
-Tranforms a matrix of items into a new matrix where the select polytomous items have been
-converted into comperable dichotomous items with the same information.
+Transforms a matrix of items into a new matrix where the select polytomous items have been
+converted into comparable dichotomous items with the same information.
 }
 \examples{
 

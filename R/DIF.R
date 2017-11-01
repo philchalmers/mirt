@@ -103,7 +103,7 @@
 #'
 #' # Information matrix with Oakes' identity (not controlling for latent group differences)
 #' # NOTE: Without properly equating the groups the following example code is not testing for DIF,
-#'      # but instead reflects a compbination of DIF + latent-trait distribution effects
+#'      # but instead reflects a combination of DIF + latent-trait distribution effects
 #' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
 #' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
@@ -131,7 +131,7 @@
 #' anchor <- DIF(model_anchor, c('a1', 'd'), items2test = 1:3)
 #' anchor
 #'
-#' ### drop down approach (freely estimating parameters accross groups) when
+#' ### drop down approach (freely estimating parameters across groups) when
 #' ### specifying a highly constrained model with estimated latent parameters
 #' model_constrained <- multipleGroup(dat, 1, group,
 #'   invariance = c(colnames(dat), 'free_means', 'free_var'))

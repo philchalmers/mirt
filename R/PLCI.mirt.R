@@ -35,8 +35,8 @@
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
-#' Chalmers, R. P., Pek, J., & Liu, Y. (in press). Profile-likelihood Confidence
-#' Intervals in Item Response Theory Models. \emph{Multivariate Behavioral Research}.
+#' Chalmers, R. P., Pek, J., & Liu, Y. (2017). Profile-likelihood Confidence
+#' Intervals in Item Response Theory Models. \emph{Multivariate Behavioral Research, 52}, 533-550.
 #' \doi{10.1080/00273171.2017.1329082}
 #'
 #' Neale, M. C. & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic

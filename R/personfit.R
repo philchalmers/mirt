@@ -10,7 +10,7 @@
 #' @aliases personfit
 #' @param x a computed model object of class \code{SingleGroupClass} or \code{MultipleGroupClass}
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
-#' @param Theta a matrix of factor scores used for statistics that require emperical estimates. If
+#' @param Theta a matrix of factor scores used for statistics that require empirical estimates. If
 #'   supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
 #' @param stats.only logical; return only the person fit statistics without their associated
@@ -59,7 +59,7 @@
 #' Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 #' head(personfit(x, Theta=Theta))
 #'
-#' #muliple group Rasch model example
+#' #multiple group Rasch model example
 #' set.seed(12345)
 #' a <- matrix(rep(1, 15), ncol=1)
 #' d <- matrix(rnorm(15,0,.7),ncol=1)

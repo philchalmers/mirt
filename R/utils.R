@@ -587,7 +587,9 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         matched <- na.omit(match(invariance, itemnames))
         for(i in matched){
             jj <- sum(pars[[1L]][[i]]@est)
-            stopifnot(jj > 0)
+            if(!(jj > 0))
+                stop('Equality constraints applied to items where no parameters were estimated. Please fix',
+                     call.=FALSE)
             for(j in seq_len(jj)){
                 tmp <- c()
                 for(g in seq_len(ngroups))
@@ -1839,131 +1841,6 @@ MGC2SC <- function(x, which){
     tmp
 }
 
-#' Compute numerical derivatives
-#'
-#' Compute numerical derivatives using forward/backword difference,
-#' central difference, or Richardson extropolation.
-#'
-#' @param par a vector of parameters
-#' @param f the objective function being evaluated
-#' @param ... additional arguments to be passed to \code{f} and the \code{numDeriv} package when the
-#'   Richardson type is used
-#' @param delta the term used to perturb the \code{f} function. Default is 1e-5
-#' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
-#' @param type type of difference to compute. Can be either \code{'forward'} for the forward difference,
-#'   \code{'central'} for the central difference, or \code{'Richardson'} for the Richardson extropolation.
-#'   Backword difference is acheived by supplying a negative \code{delta} value
-#' @export numerical_deriv
-#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords numerical derivatives
-#'
-#' @examples
-#'
-#' \dontrun{
-#' f <- function(x) 3*x[1]^3 - 4*x[2]^2
-#' par <- c(3,8)
-#'
-#' # grad = 9 * x^2 , -8 * y
-#' (actual <- c(9 * par[1]^2, -8 * par[2]))
-#' numerical_deriv(par, f, type = 'forward')
-#' numerical_deriv(par, f, type = 'central')
-#' numerical_deriv(par, f, type = 'Richardson')
-#'
-#' # hessian = h11 -> 18 * x, h22 -> -8, h12 -> h21 -> 0
-#' (actual <- matrix(c(18 * par[1], 0, 0, -8), 2, 2))
-#' numerical_deriv(par, f, type = 'forward', gradient = FALSE)
-#' numerical_deriv(par, f, type = 'central', gradient = FALSE)
-#' numerical_deriv(par, f, type = 'Richardson', gradient = FALSE)
-#'
-#' }
-numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 'forward'){
-    forward_difference <- function(par, f, delta, ...){
-        dots <- list(...)
-        np <- length(par)
-        g <- numeric(np)
-        if(is.null(dots$ObJeCtIvE)) fx <- f(par, ...) else fx <- dots$ObJeCtIvE
-        for(i in seq_len(np)){
-            p <- par
-            p[i] <- p[i] + delta
-            g[i] <- (f(p, ...) - fx) / delta
-        }
-        g
-    }
-    forward_difference2 <- function(par, f, delta, ...){
-        dots <- list(...)
-        np <- length(par)
-        hess <- matrix(0, np, np)
-        if(is.null(dots$ObJeCtIvE)) fx <- f(par, ...) else fx <- dots$ObJeCtIvE
-        fx1 <- numeric(np)
-        for(i in seq_len(np)){
-            tmp <- par
-            tmp[i] <- tmp[i] + delta
-            fx1[i] <- f(tmp, ...)
-        }
-        for(i in seq_len(np)){
-            for(j in i:np){
-                fx1x2 <- par
-                fx1x2[i] <- fx1x2[i] + delta
-                fx1x2[j] <- fx1x2[j] + delta
-                hess[i,j] <- hess[j, i] <- (f(fx1x2, ...) - fx1[i] - fx1[j] + fx) / (delta^2)
-            }
-        }
-        hess
-    }
-    central_difference <- function(par, f, delta, ...){
-        np <- length(par)
-        g <- numeric(np)
-        for(i in seq_len(np)){
-            p1 <- p2 <- par
-            p1[i] <- p1[i] + delta
-            p2[i] <- p2[i] - delta
-            g[i] <- (f(p1, ...) - f(p2, ...)) / (2 * delta)
-        }
-        g
-    }
-    central_difference2 <- function(par, f, delta, ...){
-        np <- length(par)
-        hess <- matrix(0, np, np)
-        fx <- f(par, ...)
-        for(i in seq_len(np)){
-            for(j in i:np){
-                if(i == j){
-                    p1 <- p2 <- par
-                    p1[i] <- p1[i] + delta; s2 <- f(p1, ...)
-                    p1[i] <- p1[i] + delta; s1 <- f(p1, ...)
-                    p2[i] <- p2[i] - delta; s3 <- f(p2, ...)
-                    p2[i] <- p2[i] - delta; s4 <- f(p2, ...)
-                    hess[i, i] <- (-s1 + 16 * s2 - 30 * fx + 16 * s3 - s4) / (12 * delta^2)
-                } else {
-                    p <- par
-                    p[i] <- p[i] + delta; p[j] <- p[j] + delta; s1 <- f(p, ...)
-                    p[j] <- p[j] - 2*delta; s2 <- f(p, ...)
-                    p[i] <- p[i] - 2*delta; s4 <- f(p, ...)
-                    p[j] <- p[j] + 2*delta; s3 <- f(p, ...)
-                    hess[i,j] <- hess[j,i] <- (s1 - s2 - s3 + s4) / (4 * delta^2)
-                }
-            }
-        }
-        hess
-    }
-
-    if(!length(par)){
-        if(gradient) return(numeric())
-        else return(matrix(numeric()))
-    }
-    if(type == 'central'){
-        ret <- if(gradient) central_difference(par=par, f=f, delta=delta/2, ...)
-        else central_difference2(par=par, f=f, delta=delta, ...)
-    } else if(type == 'forward'){
-        ret <- if(gradient) forward_difference(par=par, f=f, delta=delta, ...)
-        else forward_difference2(par=par, f=f, delta=delta, ...)
-    } else if(type == 'Richardson'){
-        ret <- if(gradient) numDeriv::grad(f, par, ...)
-        else numDeriv::hessian(f, par, ...)
-    }
-    ret
-}
-
 computeNullModel <- function(data, itemtype, key, group=NULL){
     if(is.null(itemtype)) itemtype <- rep('graded', ncol(data))
     itemtype[itemtype == 'Rasch'] <- 'gpcm'
@@ -2078,8 +1955,62 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
     cand
 }
 
+# function borrowed and edited from the sfsmisc package, v1.1-1. Date: 18, Oct, 2017
+QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
+{
+    digitsBase <- function (x, base = 2, ndigits = 1 + floor(1e-09 + log(max(x), base)))
+    {
+        if (any(x < 0))
+            stop("'x' must be non-negative integers")
+        if (any(x != trunc(x)))
+            stop("'x' must be integer-valued")
+        r <- matrix(0, nrow = ndigits, ncol = length(x))
+        if (ndigits >= 1)
+            for (i in ndigits:1) {
+                r[i, ] <- x%%base
+                if (i > 1)
+                    x <- x%/%base
+            }
+        class(r) <- "basedInt"
+        attr(r, "base") <- base
+        r
+    }
+    sHalton <- function (n.max, n.min = 1, base = 2, leap = 1)
+    {
+        stopifnot((leap <- as.integer(leap)) >= 1)
+        nd <- as.integer(1 + log(n.max, base))
+        dB <- digitsBase(if (leap == 1)
+            n.min:n.max
+            else seq(n.min, n.max, by = leap), base = base, ndigits = nd)
+        colSums(dB/base^(nd:1))
+    }
+    stopifnot(1 <= (n <- as.integer(n)), length(n) == 1, 1 <=
+                  (p <- as.integer(p)), length(p) == 1, length(min) ==
+                  p || length(min) == 1, length(max) == p || length(max) ==
+                  1, 1 <= (n.min <- as.integer(n.min)), 1 <= (leap <- as.integer(leap)),
+              (n.max <- n.min + (n - 1:1) * leap) < .Machine$integer.max)
+    pr. <- c(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+             43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101,
+             103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157,
+             163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223,
+             227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277,
+             281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349,
+             353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419,
+             421, 431, 433, 439, 443, 449, 457)
+    pr <- pr.[1:p]
+    if (leap > 1 && any(leap == pr) && length(pr.) >= p + 1)
+        pr <- c(pr[leap != pr], pr.[p + 1])
+    max <- rep.int(max, p)
+    min <- rep.int(min, p)
+    dU <- max - min
+    r <- matrix(0, n, p)
+    for (j in 1:p) r[, j] <- min[j] + dU[j] * sHalton(n.max,
+                                                      n.min, base = pr[j], leap = leap)
+    r
+}
+
 QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
-    qnorm(sfsmisc::QUnif(npts, min=0, max=1, p=nfact, leap=leap))
+    qnorm(QUnif(npts, min=0, max=1, p=nfact, leap=leap))
 }
 
 MC_quad <- function(npts, nfact, lim)

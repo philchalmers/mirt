@@ -6,7 +6,7 @@
 #' estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory
 #' bi-factor and two-tier analyses are available for modeling item testlets.
 #' Multiple group analysis and mixed effects designs also are available for
-#' detecting differential item and test functioning as well as modelling
+#' detecting differential item and test functioning as well as modeling
 #' item and person covariates. Finally, latent class models such as the DINA,
 #' DINO, multidimensional latent class, and several other discrete variable
 #' models are supported.
@@ -26,7 +26,7 @@
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
-#' @import stats lattice GPArotation Rcpp stats4 methods sfsmisc mgcv splines
+#' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines
 #' @importFrom utils write.table flush.console packageVersion
 #' @importFrom graphics symbols
 #' @exportMethod anova residuals summary logLik vcov
@@ -209,7 +209,7 @@ NULL
 #' @references
 #' Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K.
 #' \emph{Handbook of modern item response theory}. New York: Springer.
-#' 
+#'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}

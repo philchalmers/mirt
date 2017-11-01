@@ -1,9 +1,9 @@
-#' Parametric bootstrap likleihood-ratio test
+#' Parametric bootstrap likelihood-ratio test
 #'
 #' Given two fitted models, compute a parametric bootstrap test to determine whether
 #' the less restrictive models fits significantly better than the more restricted model.
 #' Note that this hypothesis test also works when prior parameter distributions are included for
-#' either model. Function can be run in parallel after using a stuitable \code{\link{mirtCluster}}
+#' either model. Function can be run in parallel after using a suitable \code{\link{mirtCluster}}
 #' definition.
 #'
 #' @aliases boot.LR

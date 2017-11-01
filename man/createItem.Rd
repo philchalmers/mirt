@@ -5,7 +5,7 @@
 \title{Create a user defined item with correct generic functions}
 \usage{
 createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
-  lbound = NULL, ubound = NULL, derivType = "forward")
+  lbound = NULL, ubound = NULL, derivType = "Richardson")
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -27,7 +27,7 @@ the complete data log-likelihood. If not specified a numeric approximation will 
 
 \item{hss}{Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used (required for the MH-RM
-algorithm only). The input is idential to the \code{gr} argument}
+algorithm only). The input is identical to the \code{gr} argument}
 
 \item{gen}{a function used when \code{GenRandomPars = TRUE} is passed to the estimation function
 to generate random starting values. Function must be of the form \code{function(object) ...}
@@ -41,8 +41,8 @@ then the bounds will be set to -Inf}
 then the bounds will be set to Inf}
 
 \item{derivType}{if the \code{gr} or \code{hss} terms are not specified this type will be used to
-obtain them numerically. Default is the 'forward' method (fastest), but more exact approaches
-include 'central' and 'Richardson'}
+obtain them numerically. Default is the 'Richardson' extrapolation method; see
+\code{\link{numerical_deriv}} for details and other options}
 }
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.
@@ -98,7 +98,7 @@ gr <- function(x, Theta){
      grad[1] <- sum((Theta - b) * PQ * (r_P[,2] - r_P[,1]))
 
      ## check with internal numerical form to be safe
-     # numerical_deriv(x@par[x@est], mirt:::EML, obj=x, Theta=Theta, type='Richardson')
+     # numerical_deriv(mirt:::EML, x@par[x@est], obj=x, Theta=Theta, type='Richardson')
      grad
 }
 
@@ -145,7 +145,7 @@ P.nom <- function(par, Theta, ncat){
    P
 }
 
-nom1 <- createItem(name, par=par, est=est, P=P.nom, derivType = 'central')
+nom1 <- createItem(name, par=par, est=est, P=P.nom)
 nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 coef(nommod)
 Tnom.dev(4) \%*\% coef(nommod)[[1]][1:3] #a

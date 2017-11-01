@@ -1,6 +1,6 @@
 #' Compute multidimensional difficulty index
 #'
-#' Returns a matrix containing the MDIFF values (Reckase, 2009). Only suppored for items of class
+#' Returns a matrix containing the MDIFF values (Reckase, 2009). Only supported for items of class
 #' 'dich' and 'graded'.
 #'
 #' @aliases MDIFF

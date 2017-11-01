@@ -1,7 +1,7 @@
 #' Change polytomous items to dichotomous item format
 #'
-#' Tranforms a matrix of items into a new matrix where the select polytomous items have been
-#' converted into comperable dichotomous items with the same information.
+#' Transforms a matrix of items into a new matrix where the select polytomous items have been
+#' converted into comparable dichotomous items with the same information.
 #'
 #' @param data an object of class \code{data.frame} or \code{matrix}
 #' @param which.items a vector indicating which items should be transformed into the

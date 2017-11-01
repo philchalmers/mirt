@@ -37,8 +37,8 @@
 #'   See \code{\link{mirt}} for more details
 #' @param group a factor variable indicating group membership used for multiple group analyses
 #' @param GenRandomPars logical; use random starting values
-#' @param customTheta input passed to \code{techincal = list(customTheta = ...)}, but is included directly
-#'   in this function for convienience. This input is most interesting for discrete latent models
+#' @param customTheta input passed to \code{technical = list(customTheta = ...)}, but is included directly
+#'   in this function for convenience. This input is most interesting for discrete latent models
 #'   because it allows for customized patterns of latent class effects.
 #'   The default builds the pattern \code{customTheta = diag(model)},
 #'   which is the typical pattern for the traditional

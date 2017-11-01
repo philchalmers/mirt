@@ -28,7 +28,7 @@ the bifactor model}
 \item{group}{a factor variable indicating group membership used for multiple group analyses}
 
 \item{quadpts}{number of quadrature nodes to use after accounting for the reduced number of dimensions.
-Scheme is the same as the one used in \code{\link{mirt}}, however it is in regardes to the reduced
+Scheme is the same as the one used in \code{\link{mirt}}, however it is in regards to the reduced
 dimensions (e.g., a bifactor model has 2 dimensions to be integrated)}
 
 \item{invariance}{see \code{\link{multipleGroup}} for details, however, the specific factor variances
@@ -100,7 +100,7 @@ specific[32] <- NA
 mod3 <- bfactor(data, specific)
 anova(mod1, mod3)
 
-# same, but decalred manually (not run)
+# same, but declared manually (not run)
 #sv <- mod2values(mod1)
 #sv$value[220] <- 0 #parameter 220 is the 32 items specific slope
 #sv$est[220] <- FALSE

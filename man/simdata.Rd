@@ -24,7 +24,7 @@ be used}
 \item{itemtype}{a character vector of length \code{nrow(a)} (or 1, if all the item types are
   the same) specifying the type of items to simulate. Inputs can either be the same as
   the inputs found in the \code{itemtype} argument in \code{\link{mirt}} or the
-  internal clases defined by the package. Typical \code{itemtype} inputs that
+  internal classes defined by the package. Typical \code{itemtype} inputs that
   are passed to \code{\link{mirt}} are used then these will be converted into
   the respective internal classes automatically.
 
@@ -61,7 +61,7 @@ so it is best to set these as the values for the first and last categories as we
 where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}. When this is supplied the
 \code{N} input is not required}
 
-\item{gpcm_mats}{a list of matricies specifying the scoring scheme for generalized partial
+\item{gpcm_mats}{a list of matrices specifying the scoring scheme for generalized partial
 credit models (see \code{\link{mirt}} for details)}
 
 \item{returnList}{logical; return a list containing the data, item objects defined
@@ -70,9 +70,9 @@ latent trait matrix \code{Theta}? Default is FALSE}
 
 \item{model}{a single group object, typically returned by functions such as \code{\link{mirt}} or
 \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
-\code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundent (unless explicitly provided)}
+\code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundant (unless explicitly provided)}
 
-\item{equal.K}{logical; when a \code{model} input is supplied, should the generated data contan the same
+\item{equal.K}{logical; when a \code{model} input is supplied, should the generated data contain the same
 number of categories as the original data indicated by \code{extract.mirt(model, 'K')}? Default is TRUE,
 which will redrawn data until this condition is satisfied}
 

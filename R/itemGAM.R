@@ -5,7 +5,7 @@
 #' poorly fitting dichotomous or polytomous items can be inspected using point estimates
 #' (or plausible values) of the latent trait. Plots of the tracelines and their associated standard
 #' errors are available to help interpret the misfit. This function may also be useful when adding
-#' new items to an existing, well estiablished set of items, especially when the parametric form of
+#' new items to an existing, well established set of items, especially when the parametric form of
 #' the items under investigation are unknown.
 #'
 #' @aliases itemGAM

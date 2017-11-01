@@ -51,7 +51,7 @@ SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a 
 correction based on the KR-20/coefficient alpha reliability index to correct the observed
 differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
-supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymtotic sampling
+supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymptotic sampling
 distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
 Chalmers (accepted).
 }
@@ -129,11 +129,11 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
   SIBTEST Procedure. \emph{Journal of Educational Measurement, 33}, 333-353.
 
-Li, H.-H. & Stout, W. (1996). A new procedure for detetion of crossing DIF.
+Li, H.-H. & Stout, W. (1996). A new procedure for detection of crossing DIF.
 \emph{Psychometrika, 61}, 647-677.
 
 Shealy, R. & Stout, W. (1993). A model-based standardization approach that separates true
-  bias/DIF from group ability differences and ddetect test bias/DTF as well as item bias/DIF.
+  bias/DIF from group ability differences and detect test bias/DTF as well as item bias/DIF.
   \emph{Psychometrika, 58}, 159-194.
 }
 \author{

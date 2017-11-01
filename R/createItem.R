@@ -23,7 +23,7 @@
 #'   the complete data log-likelihood. If not specified a numeric approximation will be used
 #' @param hss Hessian function (matrix of second derivatives) of the log-likelihood used in
 #'   estimation. If not specified a numeric approximation will be used (required for the MH-RM
-#'   algorithm only). The input is idential to the \code{gr} argument
+#'   algorithm only). The input is identical to the \code{gr} argument
 #' @param gen a function used when \code{GenRandomPars = TRUE} is passed to the estimation function
 #'   to generate random starting values. Function must be of the form \code{function(object) ...}
 #'   and must return a vector with properties equivalent to the \code{par} object. If NULL,
@@ -33,8 +33,8 @@
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified
 #'   then the bounds will be set to Inf
 #' @param derivType if the \code{gr} or \code{hss} terms are not specified this type will be used to
-#'   obtain them numerically. Default is the 'forward' method (fastest), but more exact approaches
-#'   include 'central' and 'Richardson'
+#'   obtain them numerically. Default is the 'Richardson' extrapolation method; see
+#'   \code{\link{numerical_deriv}} for details and other options
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -87,7 +87,7 @@
 #'      grad[1] <- sum((Theta - b) * PQ * (r_P[,2] - r_P[,1]))
 #'
 #'      ## check with internal numerical form to be safe
-#'      # numerical_deriv(x@par[x@est], mirt:::EML, obj=x, Theta=Theta, type='Richardson')
+#'      # numerical_deriv(mirt:::EML, x@par[x@est], obj=x, Theta=Theta, type='Richardson')
 #'      grad
 #' }
 #'
@@ -134,7 +134,7 @@
 #'    P
 #' }
 #'
-#' nom1 <- createItem(name, par=par, est=est, P=P.nom, derivType = 'central')
+#' nom1 <- createItem(name, par=par, est=est, P=P.nom)
 #' nommod <- mirt(Science, 1, 'nom1', customItems=list(nom1=nom1))
 #' coef(nommod)
 #' Tnom.dev(4) %*% coef(nommod)[[1]][1:3] #a
@@ -142,7 +142,7 @@
 #'
 #' }
 createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
-                       lbound = NULL, ubound = NULL, derivType = 'forward'){
+                       lbound = NULL, ubound = NULL, derivType = 'Richardson'){
     if(missing(name)) missingMsg('name')
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')

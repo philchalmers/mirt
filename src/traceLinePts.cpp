@@ -383,6 +383,22 @@ void P_lca(vector<double> &P, const vector<double> &par,
     }
 }
 
+void P_ideal(vector<double> &P, const vector<double> &par, const NumericMatrix &Theta,
+    const NumericVector &ot, const int &N, const int &nfact)
+{
+    const int len = par.size();
+    for (int i = 0; i < N; ++i){
+        double z = par[len-1];
+        for (int j = 0; j < nfact; ++j)
+            z += par[j] * Theta(i,j);
+        double eta = -0.5 * (z*z);
+        if(eta < -20.0) eta = -20.0;
+        else if(eta > -1e-10) eta = -1e-10;
+        double p = exp(eta);
+        P[i+N] = p;
+        P[i] = 1.0 - p;
+    }
+}
 
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot)
 {
@@ -434,7 +450,7 @@ RcppExport SEXP gpcmIRTTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritemexp, SEXP 
     const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    const int itemexp = as<int>(Ritemexp);
+    // const int itemexp = as<int>(Ritemexp);
     int ncat = par.size() - nfact;
     vector<double> P(N * ncat);
     P_gpcmIRT(P, par, Theta, ot, N, 1, ncat-1);
@@ -542,6 +558,23 @@ RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat, SEXP Rreturn
     END_RCPP
 }
 
+void P_switch(vector<double> &P, const vector<double> &par,
+    const NumericMatrix &theta, const NumericVector &ot, 
+    const int &N, const int &ncat, const int &nfact2, const int &itemclass)
+{
+    // add traceline functions for items without pre-evaluated gradient/Hessian here
+    switch(itemclass){
+        case 1 : // example
+            P_dich(P, par, theta, ot, N, nfact2);
+            break;
+        case 6 :
+            P_gpcmIRT(P, par, theta, ot, N, nfact2, ncat);
+            break;
+        case 9 :
+            P_ideal(P, par, theta, ot, N, nfact2);
+    }
+}
+
 void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     const List &pars, const NumericVector &ot, const vector<int> &itemloc, const int &which,
     const int &nfact, const int &N, const int &USEFIXED)
@@ -609,10 +642,13 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_nested(P, par, theta, N, nfact2, ncat, correct);
             break;
         case 9 :
+            P_ideal(P, par, theta, ot, N, nfact2);
             break;
         case 10 :
-            P_lca(P, par, theta, N, ncat, nfact, 0);
+            P_lca(P, par, theta, N, ncat, nfact2, 0);
             break;
+        default :
+            P_switch(P, par, theta, ot, N, ncat, nfact, itemclass);
     }
     int where = (itemloc[which]-1) * N;
     for(int i = 0; i < N*ncat; ++i)

@@ -26,7 +26,7 @@
 #'   \item \code{'PV_Q1'} : Chalmers and Ng's (2017) plausible-value variant
 #'     of the Q1 statistic.
 #'   \item \code{'PV_Q1*'} : Chalmers and Ng's (2017) plausible-value variant
-#'     of the Q1 statistic that uses parametric boostrapping to obtain a suitable empirical
+#'     of the Q1 statistic that uses parametric bootstrapping to obtain a suitable empirical
 #'     distribution.
 #'   \item \code{'X2*'} : Stone's (2000) fit statistics that require parametric
 #'     bootstrapping

@@ -126,9 +126,12 @@ setMethod(
                 formulas <- try(extract.mirt(object, 'lrformulas'), TRUE)
                 if(!is(formulas, 'try-error'))
                     stop('MH plausible.type currently not supported for latent regression model', call.=FALSE)
+                sv <- mod2values(object)
+                sv$est <- FALSE
                 ret <- mirt(extract.mirt(object, 'data'),
                             extract.mirt(object, 'model'),
                             extract.mirt(object, 'itemtype'),
+                            pars=sv,
                             method='MHRM',
                             technical=technical)
                 if(plausible.draws == 1L) return(ret[[1L]])
