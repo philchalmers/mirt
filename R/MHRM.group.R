@@ -2,6 +2,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                        lrPars = list(), lr.random = list(), DERIV, solnp_args, control)
 {
     if(is.null(random)) random <- list()
+    correction <- 0
     itemtype <- sapply(pars[[1]], class)
     has_graded <- any(itemtype == 'graded')
     RAND <- length(random) > 0L; LR.RAND <- length(lr.random) > 0L
