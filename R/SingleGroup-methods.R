@@ -308,8 +308,9 @@ setMethod(
             if(object@Model$nfact > 1L)
                 stop('traditional parameterization is only available for unidimensional models',
                      call.=FALSE)
-            for(i in 1:(J+1))
-                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]])
+            vcov <- vcov(object)
+            for(i in 1L:J)
+                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]], vcov=vcov)
         }
         allPars <- list()
         if(length(object@ParObjects$pars[[1L]]@SEpar)){
@@ -1263,24 +1264,71 @@ setMethod(
     }
 )
 
-mirt2traditional <- function(x){
+mirt2traditional <- function(x, vcov){
     cls <- class(x)
-    par <- x@par
+    opar <- par <- x@par
     if(cls != 'GroupPars')
         ncat <- x@ncat
     if(cls == 'dich'){
+        fns <- vector('list', 4L)
+        fns[[2]] <- function(par, index, opar){
+            if(index == 2L){
+                opar[1L:2L] <- par
+                ret <- -opar[2L]/opar[1L]
+            }
+            ret
+        }
+        delta_index <- list(NA, 1L:2L, NA, NA)
         par[2] <- -par[2]/par[1]
         names(par) <- c('a', 'b', 'g', 'u')
     } else if(cls == 'graded'){
-        for(i in 2:ncat)
+        fns <- vector('list', ncat+1L)
+        for(i in 2L:ncat){
+            fns[[i]] <- function(par, index, opar){
+                if(index > 1L){
+                    opar[c(1L, index)] <- par
+                    ret <- -opar[index]/opar[1L]
+                }
+                ret
+            }
+        }
+        delta_index <- vector('list', ncat)
+        delta_index[[1L]] <- NA
+        for(i in 2:ncat){
             par[i] <- -par[i]/par[1]
+            delta_index[[i]] <- c(1L, i)
+        }
         names(par) <- c('a', paste0('b', 1:(length(par)-1)))
     } else if(cls == 'gpcm'){
+        fns <- vector('list', ncat+1L)
+        for(i in 2L:ncat){
+            fns[[i]] <- function(par, index, opar){
+                if(index > 1L){
+                    if(index == 2L) opar[c(1, ncat + 2)] <- par
+                    else opar[c(1, ncat + index, ncat + index + 1)] <- par
+                    par <- opar
+                    ds <- par[-1]/par[1]
+                    ds <- ds[-seq_len(ncat)]
+                    newd <- numeric(length(ds)-1L)
+                    for(i in 2:length(ds))
+                        newd[i-1L] <- -(ds[i] - ds[i-1L])
+                    ret <- c(par[1], newd)
+                    ret <- ret[index]
+                }
+                ret
+            }
+        }
+        delta_index <- vector('list', ncat)
+        delta_index[[1L]] <- NA
         ds <- par[-1]/par[1]
         ds <- ds[-seq_len(ncat)]
         newd <- numeric(length(ds)-1L)
-        for(i in 2:length(ds))
+        tmp <- rbind(1:(ncat-1), 2:ncat)
+        for(i in 2:length(ds)){
             newd[i-1L] <- -(ds[i] - ds[i-1L])
+            delta_index[[i]] <- c(1L, tmp[,i-1L] + ncat + 1L)
+        }
+        delta_index[[2L]] <- c(1L, tmp[2L,i-1L] + ncat + 1L)
         par <- c(par[1], newd)
         names(par) <- c('a', paste0('b', 1:length(newd)))
         x@est <- x@est[c(1, (ncat+3L):length(x@est))]
@@ -1304,15 +1352,28 @@ mirt2traditional <- function(x){
         names(as) <- paste0('a', 1:(ncat-1))
         names(ds) <- paste0('c', 1:(ncat-1))
         par <- c(par1, as, ds)
-    } else {
-        if(cls != 'GroupPars')
-            message('No internal transformation defined for itemtype: ', cls)
-        names(par) <- names(x@est)
     }
     x@par <- par
     names(x@est) <- names(par)
-    if(length(x@SEpar))
+    if(is.na(vcov[1L,1L]) || !(cls %in% c('dich', 'graded', 'gpcm'))){
         x@SEpar <- numeric()
+    } else {
+        nms <- colnames(vcov)
+        splt <- strsplit(nms, "\\.")
+        splt <- lapply(splt, function(x) as.integer(x[-1L]))
+        for(i in 1L:length(delta_index)){
+            if(!x@est[i]) next
+            if(is.na(delta_index[[i]][1L])) next
+            grad <- numerical_deriv(fns[[i]], opar[delta_index[[i]]], opar=opar,
+                                    index=i, type = 'Richardson')
+            parnum <- x@parnum[delta_index[[i]]]
+            pick <- numeric(length(grad))
+            for(j in 1L:length(parnum))
+                pick[j] <- min(which(do.call(c, lapply(splt, function(x) any(x %in% parnum[j])))))
+            x@SEpar[i] <- as.vector(sqrt(grad %*% vcov[pick, pick, drop=FALSE] %*% grad))
+        }
+        if(cls == 'gpcm') x@SEpar <- x@SEpar[1L:length(x@par)]
+    }
     x
 }
 

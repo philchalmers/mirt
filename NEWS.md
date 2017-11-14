@@ -1,5 +1,9 @@
 # Changes in mirt 1.26
 
+- Added delta method for several classical IRT parameterization 
+  (via `coef(model, IRTpars = TRUE)`) when a suitable information matrix 
+  was previously estimated
+
 - `numDeriv` dependency removed because `numerical_deriv()` now supports a local 
   Richardson extrapolation type
 
