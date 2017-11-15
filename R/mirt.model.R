@@ -28,9 +28,8 @@
 #'
 #' \item{CONSTRAIN}{A bracketed, comma separated list specifying equality constrains between items.
 #'   The input format is
-#'   \code{CONSTRAIN = (items, ..., parameterName(s), OptionalGroup),
-#'   (items, ..., parameterName, OptionalGroup)}.
-#'   If \code{OptionalGroup} is omitted then the constraints are applied within all groups.
+#'   \code{CONSTRAIN = (items, ..., parameterName(s)),
+#'   (items, ..., parameterName)}.
 #'
 #'   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 #'   the first and last 5 item slopes (a1) can be constrained to be equal by using
@@ -52,9 +51,8 @@
 #'
 #' \item{PRIOR}{A bracketed, comma separate list specifying prior parameter distributions.
 #'   The input format is
-#'   \code{PRIOR = (items, ..., parameterName, priorType, val1, val2, OptionalGroup),
-#'   (items, ..., parameterName, priorType, val1, val2, OptionalGroup)}.
-#'   If \code{OptionalGroup} is omitted then the priors are defined for all groups.
+#'   \code{PRIOR = (items, ..., parameterName, priorType, val1, val2),
+#'   (items, ..., parameterName, priorType, val1, val2)}.
 #'   For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 #'   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
 #'   \code{PRIOR = (1-5, d, norm, 0, 2)}

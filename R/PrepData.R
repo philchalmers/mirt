@@ -12,34 +12,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
     colnames(data) <- itemnames
     J <- ncol(data)
     N <- nrow(data)
-    exploratory <- FALSE
-    if(is(model, 'mirt.model') && any(model$x[,1L] == 'NEXPLORE')){
-        oldmodel <- model
-        model <- as.integer(model$x[model$x[,1L] == 'NEXPLORE', 2L])
-        if(model != 1L) exploratory <- TRUE
-        tmp <- tempfile('tempfile')
-        for(i in 1L:model)
-            cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
-        model <- mirt.model(file=tmp, quiet = TRUE)
-        model$x <- rbind(model$x, oldmodel$x[oldmodel$x[,1L] != 'NEXPLORE'])
-    } else if((is(model, 'numeric') && length(model) == 1L)){
-        if(any(itemtype == 'lca')){
-            tmp <- tempfile('tempfile')
-            for(i in 1L:model)
-                cat(paste('F', i,' = 1-', J, "\n", sep=''), file=tmp, append = TRUE)
-            model <- mirt.model(file=tmp, quiet = TRUE)
-            unlink(tmp)
-        } else {
-            if(model != 1L) exploratory <- TRUE
-            tmp <- tempfile('tempfile')
-            for(i in 1L:model)
-                cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
-            model <- mirt.model(file=tmp, quiet = TRUE)
-            unlink(tmp)
-        }
-    }
-    if(is(model, 'numeric') && length(model) > 1L)
-        model <- bfactor2mod(model, J)
+    exploratory <- attr(model, 'exploratory')
     if(length(guess) == 1L) guess <- rep(guess,J)
     if(length(guess) > J || length(guess) < J)
         stop("The number of guessing parameters is incorrect.", call.=FALSE)
@@ -101,8 +74,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         }
     }
     itemloc <- cumsum(c(1L,K))
-    model <- matrix(model$x,ncol=2)
-    factorNames <- setdiff(model[,1L],keywords)
+    factorNames <- setdiff(model$x[,1L],keywords)
     nfactNames <- length(factorNames)
     nfact <- sum(!grepl('\\(',factorNames))
     index <- 1L:J
@@ -121,7 +93,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         }
         fulldata[is.na(fulldata)] <- 0L
     }
-    pars <- model.elements(model=model, itemtype=itemtype, factorNames=factorNames,
+    pars <- model.elements(model=model$x, itemtype=itemtype, factorNames=factorNames,
                            nfactNames=nfactNames, nfact=nfact, J=J, K=K, fulldata=fulldata,
                            itemloc=itemloc, data=data, N=N, guess=guess, upper=upper,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,

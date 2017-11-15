@@ -435,11 +435,11 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
                             method, itemnames, model, groupNames)
 {
-    if(!is.numeric(model[[1L]])){
-        if(any(model[[1L]]$x[,1L] == 'CONSTRAIN')){
-            groupNames <- as.character(groupNames)
+    if(!is.numeric(model)){
+        groupNames <- as.character(groupNames)
+        if(any(model$x[,1L] == 'CONSTRAIN')){
             names(pars) <- groupNames
-            input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'CONSTRAIN', 2L]
+            input <- model$x[model$x[,1L] == 'CONSTRAIN', 2L]
             input <- gsub(' ', replacement='', x=input)
             elements <- strsplit(input, '\\),\\(')[[1L]]
             elements <- gsub('\\(', replacement='', x=elements)
@@ -520,12 +520,11 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                 }
             }
         }
-        if(any(model[[1L]]$x[,1L] == 'CONSTRAINB')){
+        if(any(model$x[,1L] == 'CONSTRAINB')){
             if(length(unique(groupNames)) == 1L)
                 stop('CONSTRAINB model argument not valid for single group models', call.=FALSE)
-            groupNames <- as.character(groupNames)
             names(pars) <- groupNames
-            input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'CONSTRAINB', 2L]
+            input <- model$x[model$x[,1L] == 'CONSTRAINB', 2L]
             input <- gsub(' ', replacement='', x=input)
             elements <- strsplit(input, '\\),\\(')[[1L]]
             elements <- gsub('\\(', replacement='', x=elements)
@@ -671,89 +670,217 @@ expbeta_sv <- function(val1, val2){
     ret
 }
 
-UpdatePrior <- function(PrepList, model, groupNames){
-    if(!is.numeric(model[[1L]])){
-        if(!length(model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L])) return(PrepList)
+UpdateParameters <- function(PrepList, model, groupNames){
+    if(!is.numeric(model)){
         groupNames <- as.character(groupNames)
-        ngroups <- length(groupNames)
         pars <- vector('list', length(PrepList))
         for(g in seq_len(length(PrepList)))
             pars[[g]] <- PrepList[[g]]$pars
         names(pars) <- groupNames
-        input <- model[[1L]]$x[model[[1L]]$x[,1L] == 'PRIOR', 2L]
-        input <- gsub(' ', replacement='', x=input)
-        elements <- strsplit(input, '\\),\\(')[[1L]]
-        elements <- gsub('\\(', replacement='', x=elements)
-        elements <- gsub('\\)', replacement='', x=elements)
-        esplit <- strsplit(elements, ',')
-        esplit <- lapply(esplit, function(x, groupNames)
-            if(!(x[length(x)] %in% c(groupNames, 'all'))) c(x, 'all') else x,
-                         groupNames=as.character(groupNames))
-        esplit <- lapply(esplit, function(x){
-            newx <- c()
-            if(length(x) < 5L)
-                stop('PRIOR = ... has not been supplied enough arguments', call.=FALSE)
-            for(i in seq_len(length(x)-5L)){
-                if(grepl('-', x[i])){
-                    tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
-                    newx <- c(newx, tmp[1L]:tmp[2L])
-                } else newx <- c(newx, x[i])
-            }
-            x <- c(newx, x[(length(x)-4L):length(x)])
-            x
-        })
-        for(i in seq_len(length(esplit))){
-            if(!(esplit[[i]][length(esplit[[i]])] %in% c(groupNames, 'all')))
-                stop('Invalid group name passed to PRIOR = ... syntax.', call.=FALSE)
-            if(esplit[[i]][length(esplit[[i]])] == 'all'){
-                for(g in seq_len(ngroups)){
-                    sel <- as.numeric(esplit[[i]][1L:(length(esplit[[i]])-5L)])
-                    name <- esplit[[i]][length(esplit[[i]])-4L]
-                    type <- esplit[[i]][length(esplit[[i]])-3L]
-                    if(!(type %in% c('norm', 'beta', 'lnorm', 'expbeta')))
-                        stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
-                    type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
-                    val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
-                    val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
-                    for(j in seq_len(length(sel))){
-                        which <- names(pars[[g]][[sel[j]]]@est) == name
-                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
-                                             call.=FALSE)
-                        pars[[g]][[sel[j]]]@any.prior <- TRUE
-                        pars[[g]][[sel[j]]]@prior.type[which] <- type
-                        pars[[g]][[sel[j]]]@prior_1[which] <- val1
-                        pars[[g]][[sel[j]]]@prior_2[which] <- val2
-                        pars[[g]][[sel[j]]]@par[which] <- switch(type,
-                                                                 '1'=val1,
-                                                                 '2'=exp(val1),
-                                                                 '3'=(val1-1)/(val1 + val2 - 2),
-                                                                 '4'=expbeta_sv(val1, val2))
-                        if(type == '2')
-                            pars[[g]][[sel[j]]]@lbound[which] <- 0
-                        if(type == '3'){
-                            pars[[g]][[sel[j]]]@lbound[which] <- 0
-                            pars[[g]][[sel[j]]]@ubound[which] <- 1
-                        }
+        for(row in 1L:nrow(model$x)){
+            groupsPicked <- strsplit(model$x[row,'OptionalGroups'], split=',')[[1L]]
+            groupsPicked <- which(groupNames %in% groupsPicked)
+            input <- model$x[row,2L]
+            if(model$x[row,1L] == 'START'){
+                elements <- strsplit(input, '\\),\\(')[[1L]]
+                elements <- gsub('\\(', replacement='', x=elements)
+                elements <- gsub('\\)', replacement='', x=elements)
+                esplit <- strsplit(elements, ',')
+                esplit <- lapply(esplit, function(x){
+                    newx <- c()
+                    if(length(x) < 3L)
+                        stop('START = ... has not been supplied enough arguments', call.=FALSE)
+                    for(i in seq_len(length(x)-2L)){
+                        if(grepl('-', x[i])){
+                            tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                            newx <- c(newx, tmp[1L]:tmp[2L])
+                        } else newx <- c(newx, x[i])
                     }
+                    x <- c(newx, x[length(x)-1L], x[length(x)])
+                    x
+                })
+                picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
+                for(i in seq_len(length(picks))){
+                    tmp <- pars[[1L]][picks[[i]]]
+                    len <- length(esplit[[i]])
+                    tmp <- lapply(tmp, function(x, which, val){
+                        if(which %in% c('g', 'u')) val <- qlogis(val)
+                        x@par[names(x@parnum) == which] <- val
+                        x
+                    }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
+                    for(gpick in groupsPicked)
+                        pars[[gpick]][picks[[i]]] <- tmp
                 }
-            } else {
-                sel <- as.numeric(esplit[[i]][seq_len(length(esplit[[i]])-5L)])
-                gname <- esplit[[i]][length(esplit[[i]])]
-                name <- esplit[[i]][length(esplit[[i]])-4L]
-                type <- esplit[[i]][length(esplit[[i]])-3L]
-                if(!(type %in% c('norm', 'beta', 'lnorm', 'expbeta')))
-                    stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
-                type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
-                val1 <- as.numeric(esplit[[i]][length(esplit[[i]])-2L])
-                val2 <- as.numeric(esplit[[i]][length(esplit[[i]])-1L])
-                for(j in seq_len(length(sel))){
-                    which <- names(pars[[gname]][[sel[j]]]@est) == name
-                    if(!any(which)) stop('Parameter \'', name, '\' does not exist for item ', j,
-                                         call.=FALSE)
-                    pars[[gname]][[sel[j]]]@any.prior <- TRUE
-                    pars[[gname]][[sel[j]]]@prior.type[which] <- type
-                    pars[[gname]][[sel[j]]]@prior_1[which] <- val1
-                    pars[[gname]][[sel[j]]]@prior_2[which] <- val2
+            } else if(model$x[row,1L] == 'FIXED'){
+                elements <- strsplit(input, '\\),\\(')[[1L]]
+                elements <- gsub('\\(', replacement='', x=elements)
+                elements <- gsub('\\)', replacement='', x=elements)
+                esplit <- strsplit(elements, ',')
+                esplit <- lapply(esplit, function(x){
+                    newx <- c()
+                    if(length(x) < 2L)
+                        stop('FIXED = ... has not been supplied enough arguments', call.=FALSE)
+                    for(i in seq_len(length(x)-1L)){
+                        if(grepl('-', x[i])){
+                            tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                            newx <- c(newx, tmp[1L]:tmp[2L])
+                        } else newx <- c(newx, x[i])
+                    }
+                    x <- c(newx, x[length(x)])
+                    x
+                })
+                picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-1L)]))
+                for(i in seq_len(length(picks))){
+                    tmp <- pars[[1L]][picks[[i]]]
+                    len <- length(esplit[[i]])
+                    tmp <- lapply(tmp, function(x, which){
+                        x@est[names(x@parnum) == which] <- FALSE
+                        x
+                    }, which=esplit[[i]][len])
+                    for(gpick in groupsPicked)
+                        pars[[gpick]][picks[[i]]] <- tmp
+                }
+            } else if(model$x[row,1L] == 'FREE'){
+                elements <- strsplit(input, '\\),\\(')[[1L]]
+                elements <- gsub('\\(', replacement='', x=elements)
+                elements <- gsub('\\)', replacement='', x=elements)
+                esplit <- strsplit(elements, ',')
+                esplit <- lapply(esplit, function(x){
+                    newx <- c()
+                    if(length(x) < 2L)
+                        stop('FREE = ... has not been supplied enough arguments', call.=FALSE)
+                    for(i in seq_len(length(x)-1L)){
+                        if(grepl('-', x[i])){
+                            tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                            newx <- c(newx, tmp[1L]:tmp[2L])
+                        } else newx <- c(newx, x[i])
+                    }
+                    x <- c(newx, x[length(x)])
+                    x
+                })
+                picks <- lapply(esplit, function(x) as.integer(x[seq_len(length(x)-1L)]))
+                for(i in seq_len(length(picks))){
+                    tmp <- pars[[1L]][picks[[i]]]
+                    len <- length(esplit[[i]])
+                    tmp <- lapply(tmp, function(x, which){
+                        x@est[names(x@parnum) == which] <- TRUE
+                        x
+                    }, which=esplit[[i]][len])
+                    for(gpick in groupsPicked)
+                        pars[[gpick]][picks[[i]]] <- tmp
+                }
+            } else if(model$x[row,1L] == 'LBOUND'){
+                elements <- strsplit(input, '\\),\\(')[[1L]]
+                elements <- gsub('\\(', replacement='', x=elements)
+                elements <- gsub('\\)', replacement='', x=elements)
+                esplit <- strsplit(elements, ',')
+                esplit <- lapply(esplit, function(x){
+                    newx <- c()
+                    if(length(x) < 3L)
+                        stop('LBOUND = ... has not been supplied enough arguments', call.=FALSE)
+                    for(i in seq_len(length(x)-2L)){
+                        if(grepl('-', x[i])){
+                            tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                            newx <- c(newx, tmp[1L]:tmp[2L])
+                        } else newx <- c(newx, x[i])
+                    }
+                    x <- c(newx, x[length(x)-1L], x[length(x)])
+                    x
+                })
+                picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
+                for(i in seq_len(length(picks))){
+                    tmp <- pars[[1L]][picks[[i]]]
+                    len <- length(esplit[[i]])
+                    tmp <- lapply(tmp, function(x, which, val){
+                        if(which %in% c('g', 'u')) val <- qlogis(val)
+                        x@lbound[names(x@parnum) == which] <- val
+                        x
+                    }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
+                    for(gpick in groupsPicked)
+                        pars[[gpick]][picks[[i]]] <- tmp
+                }
+            } else if(model$x[row,1L] == 'UBOUND'){
+                elements <- strsplit(input, '\\),\\(')[[1L]]
+                elements <- gsub('\\(', replacement='', x=elements)
+                elements <- gsub('\\)', replacement='', x=elements)
+                esplit <- strsplit(elements, ',')
+                esplit <- lapply(esplit, function(x){
+                    newx <- c()
+                    if(length(x) < 3L)
+                        stop('UBOUND = ... has not been supplied enough arguments', call.=FALSE)
+                    for(i in seq_len(length(x)-2L)){
+                        if(grepl('-', x[i])){
+                            tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                            newx <- c(newx, tmp[1L]:tmp[2L])
+                        } else newx <- c(newx, x[i])
+                    }
+                    x <- c(newx, x[length(x)-1L], x[length(x)])
+                    x
+                })
+                picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
+                for(i in seq_len(length(picks))){
+                    tmp <- pars[[1L]][picks[[i]]]
+                    len <- length(esplit[[i]])
+                    tmp <- lapply(tmp, function(x, which, val){
+                        if(which %in% c('g', 'u')) val <- qlogis(val)
+                        x@ubound[names(x@parnum) == which] <- val
+                        x
+                    }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
+                    for(gpick in groupsPicked)
+                        pars[[gpick]][picks[[i]]] <- tmp
+                }
+            } else if(model$x[row,1L] == 'PRIOR'){
+                input <- gsub(' ', replacement='', x=input)
+                elements <- strsplit(input, '\\),\\(')[[1L]]
+                elements <- gsub('\\(', replacement='', x=elements)
+                elements <- gsub('\\)', replacement='', x=elements)
+                esplit <- strsplit(elements, ',')
+                esplit <- lapply(esplit, function(x){
+                    newx <- c()
+                    if(length(x) < 5L)
+                        stop('PRIOR = ... has not been supplied enough arguments', call.=FALSE)
+                    for(i in seq_len(length(x)-2L)){
+                        if(grepl('-', x[i])){
+                            tmp <- as.numeric(strsplit(x[i], '-')[[1L]])
+                            newx <- c(newx, tmp[1L]:tmp[2L])
+                        } else newx <- c(newx, x[i])
+                    }
+                    x <- c(newx, x[length(x)-1L], x[length(x)])
+                    x
+                })
+                picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-4L)]))
+                for(i in seq_len(length(picks))){
+                    tmp <- pars[[1L]][picks[[i]]]
+                    len <- length(esplit[[i]])
+                    tmp <- lapply(tmp, function(x, name, type, val1, val2){
+                        if(!(type %in% c('norm', 'beta', 'lnorm', 'expbeta')))
+                            stop('Prior type specified in PRIOR = ... not available', call.=FALSE)
+                        type <- switch(type, norm=1L, lnorm=2L, beta=3L, expbeta=4L, 0L)
+                        which <- names(x@est) == name
+                        if(!any(which)) stop('Parameter \'', name, '\' does not exist for respective item',
+                                             call.=FALSE)
+                        x@any.prior <- TRUE
+                        x@prior.type[which] <- type
+                        x@prior_1[which] <- val1
+                        x@prior_2[which] <- val2
+                        x@par[which] <- switch(type,
+                                               '1'=val1,
+                                               '2'=exp(val1),
+                                               '3'=(val1-1)/(val1 + val2 - 2),
+                                               '4'=expbeta_sv(val1, val2))
+                        if(type == '2')
+                            x@lbound[which] <- 0
+                        if(type == '3'){
+                            x@lbound[which] <- 0
+                            x@ubound[which] <- 1
+                        }
+                        x
+                    }, name = esplit[[i]][len-3L],
+                    type = esplit[[i]][len-2L],
+                    val1 = as.numeric(esplit[[i]][len-1L]),
+                    val2 = as.numeric(esplit[[i]][len]))
+                    for(gpick in groupsPicked)
+                        pars[[gpick]][picks[[i]]] <- tmp
                 }
             }
         }
@@ -761,6 +888,55 @@ UpdatePrior <- function(PrepList, model, groupNames){
             PrepList[[g]]$pars <- pars[[g]]
     }
     return(PrepList)
+}
+
+buildModelSyntax <- function(model, J, groupNames, itemtype){
+    exploratory <- FALSE
+    if(is(model, 'mirt.model') && any(model$x[,1L] == 'NEXPLORE')){
+        oldmodel <- model
+        model <- as.integer(model$x[model$x[,1L] == 'NEXPLORE', 2L])
+        if(model != 1L) exploratory <- TRUE
+        tmp <- tempfile('tempfile')
+        for(i in 1L:model)
+            cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
+        model <- mirt.model(file=tmp, quiet = TRUE)
+        model$x <- rbind(model$x, oldmodel$x[oldmodel$x[,1L] != 'NEXPLORE'])
+    } else if((is(model, 'numeric') && length(model) == 1L)){
+        if(any(itemtype == 'lca')){
+            tmp <- tempfile('tempfile')
+            for(i in 1L:model)
+                cat(paste('F', i,' = 1-', J, "\n", sep=''), file=tmp, append = TRUE)
+            model <- mirt.model(file=tmp, quiet = TRUE)
+            unlink(tmp)
+        } else {
+            if(model != 1L) exploratory <- TRUE
+            tmp <- tempfile('tempfile')
+            for(i in 1L:model)
+                cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
+            model <- mirt.model(file=tmp, quiet = TRUE)
+            unlink(tmp)
+        }
+    }
+    if(is(model, 'numeric') && length(model) > 1L)
+        model <- bfactor2mod(model, J)
+    if(!is.numeric(model)){
+        model$x <- cbind(model$x, OptionalGroups="")
+        for(i in 1L:nrow(model$x)){
+            brackets <- grepl('\\[', model$x[i, 'Type'])
+            if(!brackets){
+                model$x[i,"OptionalGroups"] <- paste0(as.character(groupNames), collapse = ',')
+            } else {
+                tmp <- strsplit(model$x[i, 'Type'], '\\[')[[1L]]
+                tmp[2L] <- gsub("\\]", "", tmp[2L])
+                tmp[2L] <- gsub(" ", "", tmp[2L])
+                model$x[i,"OptionalGroups"] <- tmp[2L]
+                model$x[i,"Type"] <- tmp[1L]
+            }
+        }
+        model$x[,'Type'] <- gsub(" ", "", model$x[,'Type'])
+    }
+    attr(model, 'exploratory') <- exploratory
+    model
 }
 
 ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG = FALSE){
