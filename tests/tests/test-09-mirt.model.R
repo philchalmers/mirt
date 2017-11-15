@@ -33,9 +33,16 @@ test_that('syntax', {
                           FIXED = (1-3, a1)')
     model11 <- mirt.model('F1 = 1-5
                           PRIOR = (1-5, g, expbeta, 10, 40)')
+    model12 <- mirt.model('F1 = 1-5
+                           F2 = 2-5
+                          CONSTRAIN = (1, 2, a1, a2)')
+    model13 <- mirt.model('F = 1-5
+                   CONSTRAINB = (1-5,a1)
+                   CONSTRAINB [male, female]= (1-5,d)')
 
     set.seed(1234)
     group <- sample(c('male', 'female'), 1000, TRUE)
+    group2 <- sample(c('male', 'female', 'other'), 1000, TRUE)
 
     mod0 <- mirt(data, model0, verbose=FALSE, calcNull=FALSE)
     expect_equal(mod2values(mod0)$value, c(0.987973787231699, 1.85608912732841, 0, 1, 1.08103954211169, 0.808007534786952, 0, 1, 1.70595475896956, 1.80426768080187, 0, 1, 0.765076394253259, 0.486005938565521, 0, 1, 0.735771996169788, 1.85448564531374, 0, 1, 0, 1),
@@ -52,9 +59,9 @@ test_that('syntax', {
     mod4 <- multipleGroup(data, model4, group=group, verbose = FALSE)
     expect_equal(mod2values(mod4)$value, c(0.6402557,1.739874,0,1,2.981257,1.739874,0,1,1.193,1.505105,0,1,0.5592716,0.413447,0,1,0.5079869,1.850622,0,1,0,1,0.6402557,1.511852,0,1,2.981257,1.511852,0,1,1.193,1.657372,0,1,0.5592716,0.549165,0,1,0.5079869,1.709392,0,1,0,1),
                  tolerance = 1e-2)
-    # mod5 <- multipleGroup(data, model5, group=group, verbose = FALSE)
-    # expect_equal(mod2values(mod5)$value, c(0.736972,1.863245,0,1,1.486771,0.9502583,0,1,1.059434,1.392984,0,1,1.271924,0.4727863,0,1,0.4711075,1.811339,0,1,0,1,0.736972,1.357013,0,1,1.486771,1.357013,0,1,1.059434,1.357013,0,1,1.271924,1.357013,0,1,0.4711075,1.357013,0,1,0,1),
-    #              tolerance = 1e-2)
+    mod5 <- multipleGroup(data, model5, group=group, verbose = FALSE)
+    expect_equal(mod2values(mod5)$value, c(0.736972,1.863245,0,1,1.486771,0.9502583,0,1,1.059434,1.392984,0,1,1.271924,0.4727863,0,1,0.4711075,1.811339,0,1,0,1,0.736972,1.357013,0,1,1.486771,1.357013,0,1,1.059434,1.357013,0,1,1.271924,1.357013,0,1,0.4711075,1.357013,0,1,0,1),
+                 tolerance = 1e-2)
     mod6 <- mirt(data, model6, verbose=FALSE, calcNull=FALSE)
     expect_equal(mod2values(mod6)$value, c(1.074887,0,1.902959,0,1,1.074887,0,0.8065663,0,1,0,1.00348,1.458001,0,1,0,1.00348,0.520351,0,1,0,1.00348,1.989104,0,1,0,0,1,0.939999,1),
                  tolerance = 1e-2)
@@ -73,6 +80,12 @@ test_that('syntax', {
     mod11 <- mirt(data, model11, '3PL', verbose=FALSE)
     expect_equal(as.vector(unname(coef(mod11)[[1]])),
                  c(1.0767651, 1.6027628, 0.1871268, 1.0000000), tolerance = 1e-4)
+    mod12 <- mirt(data, model12, verbose=FALSE)
+    expect_equal(as.vector(unname(c(coef(mod12)[[1]], coef(mod12)[[2]]))),
+                 c(1.397911,0,2.093339,0,1,0.807397,1.397911,0.9542606,0,1), tolerance = 1e-4)
+    mod13 <- multipleGroup(data, model13, group=group2, verbose = FALSE)
+    expect_equal(mod2values(mod13)$value, c(0.9894497,1.834667,0,1,1.088255,0.8827638,0,1,1.70098,1.834184,0,1,0.7670599,0.4281486,0,1,0.7488499,1.733489,0,1,0,1,0.9894497,1.834667,0,1,1.088255,0.8827638,0,1,1.70098,1.834184,0,1,0.7670599,0.4281486,0,1,0.7488499,1.733489,0,1,0,1,0.9894497,1.908214,0,1,1.088255,0.6470444,0,1,1.70098,1.727515,0,1,0.7670599,0.6209792,0,1,0.7488499,2.190956,0,1,0,1),
+                 tolerance = 1e-2)
 
     data(data.read, package = 'sirt')
     dat <- data.read

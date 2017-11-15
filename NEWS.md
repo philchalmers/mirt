@@ -1,5 +1,10 @@
 # Changes in mirt 1.26
 
+- Square brackets can now be included in the `mirt.model()` sytax to indicate
+  group-specific constraints, priors, starting/fixed values, and so on. These
+  are all of the general form `"CONSTRAIN = [group1, group2] = ..."` or 
+  `"FIXED [group1] = ..."`
+
 - Added delta method for several classical IRT parameterization 
   (via `coef(model, IRTpars = TRUE)`) when a suitable information matrix 
   was previously estimated
