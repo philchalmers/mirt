@@ -10,6 +10,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         stop(paste("Unknown itemtype:", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
     if(any(itemtype %in% c('gpcmIRT', 'monopoly', 'grsmIRT')) && nfact > 1L)
         stop('Multidimensional model not supported for select itemtype(s)', call.=FALSE)
+    if(any(itemtype == 'spline' & K > 2L))
+        stop('spline itemtype only supported for dichotomous items', call.=FALSE)
     if(length(gpcm_mats)){
         tmp <- sapply(gpcm_mats, ncol)
         if(!all(tmp == nfact))
