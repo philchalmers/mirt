@@ -3,7 +3,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
                        customGroup = NULL, GenRandomPars = FALSE, large = FALSE,
                        survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
-                       gpcm_mats=list(), spline_args=list(), control = list(), ...)
+                       gpcm_mats=list(), spline_args=list(), monopoly.k=1,
+                       control = list(), ...)
 {
     start.time <- proc.time()[3L]
     dots <- list(...)
@@ -206,7 +207,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
                          grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                          mixed.design=mixed.design, customItems=customItems,
-                         customGroup=customGroup, spline_args=spline_args,
+                         customGroup=customGroup, spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)

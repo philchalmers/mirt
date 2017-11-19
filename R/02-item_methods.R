@@ -6,12 +6,12 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                 'ideal', 'lca', 'spline', Experimental_itemtypes())
+                                 'ideal', 'lca', 'spline', 'monopoly', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'spline', Experimental_itemtypes())
 
-Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit',
+Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', #'monopoly',
                             'spline', Experimental_itemtypes())
 
 # ----------------------------------------------------------------
@@ -2648,6 +2648,116 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'gpcmIRT', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("monopoly", contains = 'AllItemsClass',
+         representation = representation(k='integer'))
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'monopoly'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'monopoly'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'monopoly'),
+    definition = function(x){
+        x@par[1L]
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'monopoly'),
+    definition = function(x){
+        x@par[-c(1, length(x@par))]
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'monopoly'),
+    definition = function(x){
+        par <- c(rnorm(1),
+                 sort(rnorm(x@ncat-1, 0, 2)),
+                 rnorm(x@k*2))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'monopoly'),
+    definition = function(x){
+        x@par[1L] <- 0
+        x@est[1L] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'monopoly', Theta = 'matrix'),
+    definition = function(x, Theta){
+        .Call('monopolyTraceLinePts', x@par, Theta, x@ncat, x@k)
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'monopoly', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
+            Theta <- cbind(x@fixed.design, Theta)
+        grad <- numeric(length(x@par))
+        grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+                                       Theta=Theta, type='Richardson')
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(estHess && any(x@est))
+            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+                                                  Theta=Theta,
+                                                  gradient=FALSE, type='Richardson')
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        return(ret)
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'monopoly', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'monopoly', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }

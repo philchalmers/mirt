@@ -35,7 +35,11 @@ void P_lca(vector<double> &, const vector<double> &,
 
 void P_switch(vector<double> &, const vector<double> &,
     const NumericMatrix &, const NumericVector &, 
-    const int &, const int &, const int &, const int &);
+    const int &, const int &, const int &, const int &, const int &);
+
+void P_monopoly(vector<double> &, const vector<double> &,
+    const NumericMatrix &, const int &,
+    const int &, const int &, const int &);
 
 void _computeItemTrace(vector<double> &, const NumericMatrix &,
     const List &, const NumericVector &, const vector<int> &, const int &,

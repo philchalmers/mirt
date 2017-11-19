@@ -1,5 +1,8 @@
 # Changes in mirt 1.26
 
+- Add `monopoly` itemtype to fit unidimensional monotonic polynomial item response model
+  for polytomous data (see Falk and Cai, 2016)
+
 - Square brackets can now be included in the `mirt.model()` sytax to indicate
   group-specific constraints, priors, starting/fixed values, and so on. These
   are all of the general form `"CONSTRAIN = [group1, group2] = ..."` or 

@@ -10,7 +10,7 @@ mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
   calcNull = FALSE, draws = 5000, survey.weights = NULL, quadpts = NULL,
   TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
-  key = NULL, large = FALSE, GenRandomPars = FALSE,
+  monopoly.k = 1L, key = NULL, large = FALSE, GenRandomPars = FALSE,
   accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
   solnp_args = list(), nloptr_args = list(), spline_args = list(),
   control = list(), technical = list(), ...)
@@ -54,6 +54,8 @@ of factors to extract is also supported}
       the upper asymptote only (Suh and Bolt, 2010)
     \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
       or the \code{\link{ns}} function (Winsberg, Thissen, and Wainer, 1984)
+    \item \code{'monopoly'} - monotonic polynomial model for unidimensional tests
+      for dichotomous and polytomous response data (Falk and Cai, 2016)
  }
 
  Additionally, user defined item classes can also be defined using the \code{\link{createItem}} function}
@@ -220,6 +222,11 @@ the last item: \code{grsm.block = c(rep(1,3), rep(2,3), NA)}. If NULL the all it
 to be within the same group and therefore have the same number of item categories}
 
 \item{rsm.block}{same as \code{grsm.block}, but for \code{'rsm'} blocks}
+
+\item{monopoly.k}{a vector of values (or a single value to repeated for each item) which indicate
+the degree of the monotone polynomial fitted, where the monotone polynomial
+corresponds to \code{monopoly.k * 2 + 1} (e.g., \code{monopoly.k = 2} fits a
+5th degree polynomial). Default is \code{monopoly.k = 1}, which fits a 3rd degree polynomial}
 
 \item{key}{a numeric vector of the response scoring key. Required when using nested logit item
 types, and must be the same length as the number of items used. Items that are not nested logit
@@ -613,6 +620,12 @@ of categories.
     where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
     values. B-splines with a natural or polynomial basis are supported, and the \code{intercept} input is
     set to \code{TRUE} by default.}
+  \item{monopoly}{Monotone polynomial model for polytomous reponse data of the form
+    \deqn{P(x = k | \theta, \psi) =
+    \frac{exp(\sum_1^k (m^*(\psi) + \xi_{c-1})}
+    {\sum_1^C exp(\sum_1^k (m^*(\psi) + \xi_{c-1}))}}
+    where \eqn{m^*(\psi)} is the monotone polynomial function without the intercept.
+    }
 }
 }
 
@@ -1071,6 +1084,10 @@ Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 3
 
 Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
+
+Falk, C. F. & Cai, L. (2016). Maximum Marginal Likelihood Estimation of a
+Monotonic Polynomial Generalized Partial Credit Model with Applications to
+Multiple Group Analysis. \emph{Psychometrika, 81}, 434-460.
 
 Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
 

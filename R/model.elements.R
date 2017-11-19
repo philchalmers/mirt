@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
                            parnumber, BFACTOR = FALSE, mixed.design, customItems,
-                           customGroup, key, gpcm_mats, spline_args)
+                           customGroup, key, gpcm_mats, spline_args, monopoly.k)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -109,7 +109,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
              call.=FALSE)
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
-                    nfact=nfact+length(prodlist), parprior=parprior,
+                    nfact=nfact+length(prodlist), parprior=parprior, monopoly.k=monopoly.k,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR,
                     mixed.design=mixed.design, customItems=customItems, key=key,
                     gpcm_mats=gpcm_mats, spline_args=spline_args, itemnames=itemnames)

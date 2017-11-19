@@ -132,7 +132,7 @@ void P_gpcmIRT(vector<double> &P, const vector<double> &par,
         for(int j = 0; j < ncat; ++j)
             Pk(i, j) = num[j] / den;
     }
-    
+
     int which = 0;
     for(int i = 0; i < Pk.ncol(); ++i){
         for(int j = 0; j < Pk.nrow(); ++j){
@@ -400,6 +400,121 @@ void P_ideal(vector<double> &P, const vector<double> &par, const NumericMatrix &
     }
 }
 
+void monopoly_z(const double &theta, const vector<double> &b, const int &k, 
+    double &out)
+{
+    out = 0.0;
+    for(int i = 0; i < 2*k+1; ++i)
+        out += b[i] * pow(theta, i+1);
+}
+
+void monopoly_getb (const vector<double> &a, const int &k, 
+    vector<double> &b)
+{
+    for(int i = 0; i < 2*k+1; ++i)
+        b[i] = a[i] / (i+1);
+}
+
+void monopoly_geta (const int &k, const double &alpha, const double &tau,
+          const vector<double> &a, vector<double>  &newa)
+
+{
+  vector<double> t(3);
+  t[0] = 1;
+  t[1] = -2.0 * alpha;
+  t[2] = pow(alpha, 2.0) + exp(tau);
+  int indx = 0;
+  int indx2 = 0;
+  for(int i = 0; i < 2*k-1; ++i){
+    for(int j = 0; j < 2*k+1; ++j){
+      if(j >= indx && j< indx + 3){
+        newa[j] += a[i] * t[indx2];
+        ++indx2;
+      }
+    }
+    ++indx;
+    indx2 = 0;
+  }
+}
+
+void monopoly_getarec (const int &k, const double &omega, const vector<double> &alpha, 
+    const vector<double> &tau, vector<double> &a)
+{
+  vector<double> olda(2*k + 1);
+  olda[0] = exp(omega);
+  for(int i = 1; i <= k; ++i){
+    vector<double> newa(i*2 + 1);
+    std::fill(newa.begin(), newa.end(), 0.0);
+    monopoly_geta(i, alpha[i-1], tau[i-1], olda, newa);
+    for (int j = 0; j < i*2+1; ++j)
+        olda[j] = newa[j];
+  }
+  for(int i = 0; i < 2*k + 1; ++i){
+      a[i] = olda[i];
+  }
+}
+
+void P_monopoly(vector<double> &P, const vector<double> &par,
+    const NumericMatrix &Theta, const int &N,
+    const int &nfact, const int &ncat, const int &k)
+{
+    const double omega = par[0];
+    vector<double> xic(ncat);
+    vector<double> alpha(k);
+    vector<double> tau(k);
+    for(int i = 1; i < ncat; ++i)
+        xic[i] = par[i] + xic[i-1];
+    for(int i = 0; i < k; ++i){
+        alpha[i] = par[i*2 + ncat];
+        tau[i] = par[i*2 + ncat + 1];
+    }
+    vector<double> a(2*k + 1);
+    vector<double> b(2*k + 1);
+    NumericMatrix Num(N, ncat);
+    vector<double> Den(N);
+    for (int i = 0; i < N; ++i){
+        double zp = 0;
+        monopoly_getarec(k, omega, alpha, tau, a);
+        monopoly_getb(a, k, b);
+        monopoly_z(Theta(i, 0), b, k, zp);
+        vector<double> z(ncat);
+        for(int j = 0; j < ncat; ++j)
+            z[j] = xic[j] + zp * j;
+        double maxz = *std::max_element(z.begin(), z.end());
+        for(int j = 0; j < ncat; ++j){
+            z[j] = z[j] - maxz;
+            if(z[j] < -ABS_MAX_Z) z[j] = -ABS_MAX_Z;
+            Num(i,j) = exp(z[j]);
+            Den[i] += Num(i,j);
+        }
+    }
+    int which = 0;
+    for(int j = 0; j < ncat; ++j){
+        for(int i = 0; i < N; ++i){
+            P[which] = Num(i,j) / Den[i];
+            ++which;
+        }
+    }
+}
+
+RcppExport SEXP monopolyTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat, SEXP Rk)
+{
+    BEGIN_RCPP
+
+    const vector<double> par = as< vector<double> >(Rpar);
+    const int k = as<int>(Rk);
+    const int ncat = as<int>(Rncat);
+    const NumericMatrix Theta(RTheta);
+    const int nfact = Theta.ncol();
+    const int N = Theta.nrow();
+    vector<double> P(N*ncat);
+    P_monopoly(P, par, Theta, N, nfact, ncat, k);
+    NumericMatrix ret = vec2mat(P, N, ncat);
+    return(ret);
+
+    END_RCPP
+}
+
 RcppExport SEXP traceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rot)
 {
     BEGIN_RCPP
@@ -559,8 +674,9 @@ RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat, SEXP Rreturn
 }
 
 void P_switch(vector<double> &P, const vector<double> &par,
-    const NumericMatrix &theta, const NumericVector &ot, 
-    const int &N, const int &ncat, const int &nfact2, const int &itemclass)
+    const NumericMatrix &theta, const NumericVector &ot,
+    const int &N, const int &ncat, const int &nfact2, 
+    const int &k, const int &itemclass)
 {
     // add traceline functions for items without pre-evaluated gradient/Hessian here
     switch(itemclass){
@@ -572,6 +688,10 @@ void P_switch(vector<double> &P, const vector<double> &par,
             break;
         case 9 :
             P_ideal(P, par, theta, ot, N, nfact2);
+            break;
+        case 12 :
+            P_monopoly(P, par, theta, N, nfact2, ncat, k);
+            break;
     }
 }
 
@@ -588,8 +708,11 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     int itemclass = as<int>(item.slot("itemclass"));
     int correct = 0;
     int has_mat = 0;
+    int k = 1;
     if(itemclass == 8)
         correct = as<int>(item.slot("correctcat"));
+    if(itemclass == 12)
+        k = as<int>(item.slot("k"));
 
     /*
         1 = dich
@@ -602,6 +725,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         8 = nestlogit
         9 = custom....have to do in R for now
         10 = lca
+        12 = monopoly
     */
 
     if(USEFIXED){
@@ -647,8 +771,11 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         case 10 :
             P_lca(P, par, theta, N, ncat, nfact2, 0);
             break;
+        case 12 :
+            P_monopoly(P, par, Theta, N, nfact2, ncat, k);
+            break;    
         default :
-            P_switch(P, par, theta, ot, N, ncat, nfact, itemclass);
+            P_switch(P, par, theta, ot, N, ncat, nfact, k, itemclass);
     }
     int where = (itemloc[which]-1) * N;
     for(int i = 0; i < N*ncat; ++i)

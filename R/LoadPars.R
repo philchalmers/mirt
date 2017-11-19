@@ -1,13 +1,15 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, gpcm_mats, spline_args, itemnames)
+                     key, gpcm_mats, spline_args, itemnames, monopoly.k)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
     valid.items <- Valid_iteminputs()
     invalid.items <- is.na(match(itemtype, valid.items))
-    if (any(invalid.items & !(itemtype %in% customItemNames)))
+    if(any(invalid.items & !(itemtype %in% customItemNames)))
         stop(paste("Unknown itemtype:", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
+    if(any(itemtype %in% c('gpcmIRT', 'monopoly', 'grsmIRT')) && nfact > 1L)
+        stop('Multidimensional model not supported for select itemtype(s)', call.=FALSE)
     if(length(gpcm_mats)){
         tmp <- sapply(gpcm_mats, ncol)
         if(!all(tmp == nfact))
@@ -67,6 +69,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,], zetas[[i]])
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+        } else if(itemtype[i] == 'monopoly'){
+            val <- c(suppressWarnings(log(lambdas[i,])),
+                     zetas[[i]], rep(0, monopoly.k[i]*2))
+            if(!is.finite(val[1L])) val[1L] <- -4
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L + monopoly.k[i]*2))
+            names(val) <- c('omega', paste('xi', 1L:(K[i]-1L), sep=''),
+                            paste(c('alpha', 'tau'), 1L:(monopoly.k[i]*2), sep=''))
         } else if(itemtype[i] %in% c('gpcmIRT', 'rsm')){
             if(itemtype[i] == 'rsm'){
                 val <- c(1, seq(-2, 2, length.out=K[i]-1), 0)
@@ -333,6 +342,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=K[i],
                              itemclass=6L,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             est=freepars[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(itemtype[i] == 'monopoly'){
+            pars[[i]] <- new('monopoly',
+                             par=startvalues[[i]],
+                             nfact=nfact,
+                             ncat=K[i],
+                             k=as.integer(monopoly.k[i]),
+                             itemclass=12L,
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              prior.type=rep(0L, length(startvalues[[i]])),

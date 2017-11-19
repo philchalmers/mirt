@@ -1,7 +1,8 @@
 PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
-                     customGroup, fulldata = NULL, key, spline_args, internal_constraints)
+                     customGroup, fulldata = NULL, key, spline_args, internal_constraints,
+                     monopoly.k)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
@@ -19,6 +20,9 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
     if(length(upper) == 1L) upper <- rep(upper,J)
     if(length(upper) > J || length(upper) < J)
         stop("The number of upper bound parameters is incorrect.", call.=FALSE)
+    if(length(monopoly.k) == 1L) monopoly.k <- rep(monopoly.k, J)
+    if(length(monopoly.k) > J || length(monopoly.k) < J)
+        stop("The number of monopoly.k values is incorrect.", call.=FALSE)
     if(is.null(key) && any(itemtype %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM')))
         stop('When using nested logit items a scoring key must be provided with key = c(...)',
              call.=FALSE)
@@ -99,7 +103,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
                            parnumber=parnumber, BFACTOR=BFACTOR, mixed.design=mixed.design,
                            customItems=customItems, customGroup=customGroup, key=key,
-                           gpcm_mats=gpcm_mats, spline_args=spline_args)
+                           gpcm_mats=gpcm_mats, spline_args=spline_args, monopoly.k=monopoly.k)
     prodlist <- attr(pars, 'prodlist')
     exploratory <- attr(pars, 'exploratory')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){
