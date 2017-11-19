@@ -692,9 +692,9 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
     const NumericMatrix &dat, const NumericVector &ot, const int &N, const int &nfact, 
     const int &ncat, const int &k, const int &itemclass, const bool gradient)
 {
-    double delta = .1;
     const int rr = 4;
     if(gradient){
+        double delta = .0001;
         const int npar = par.size();
         NumericMatrix R0(npar, rr);
         NumericMatrix R1(npar, rr);
@@ -715,6 +715,7 @@ static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
         } 
         for(int i = 0; i < npar; ++i) grad[i] = R1(i, rr - 1);
     } else {
+        double delta = .01;
         const int npar = par.size() * par.size();
         const int nrow = hess.nrow();
         vector<double> dvec(npar);
