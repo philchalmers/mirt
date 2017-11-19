@@ -1364,8 +1364,7 @@ mirt2traditional <- function(x, vcov){
         for(i in 1L:length(delta_index)){
             if(!x@est[i]) next
             if(is.na(delta_index[[i]][1L])) next
-            grad <- numerical_deriv(fns[[i]], opar[delta_index[[i]]], opar=opar,
-                                    index=i, type = 'Richardson')
+            grad <- numerical_deriv(fns[[i]], opar[delta_index[[i]]], opar=opar, index=i)
             parnum <- x@parnum[delta_index[[i]]]
             pick <- numeric(length(grad))
             for(j in 1L:length(parnum))

@@ -98,7 +98,7 @@ gr <- function(x, Theta){
      grad[1] <- sum((Theta - b) * PQ * (r_P[,2] - r_P[,1]))
 
      ## check with internal numerical form to be safe
-     # numerical_deriv(mirt:::EML, x@par[x@est], obj=x, Theta=Theta, type='Richardson')
+     # numerical_deriv(mirt:::EML, x@par[x@est], obj=x, Theta=Theta)
      grad
 }
 

@@ -13,7 +13,8 @@
   was previously estimated
 
 - `numDeriv` dependency removed because `numerical_deriv()` now supports a local 
-  Richardson extrapolation type
+  Richardson extrapolation type. For best accuracy, this is now used as the default
+  throughout the package
 
 - `createItem()` and `lagrange()` now use Richardson extrapolation as default 
   instead of the less accurate forward/central difference method
