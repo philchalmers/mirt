@@ -91,10 +91,11 @@ will estimate the regression parameters for all latent traits by default}
       Fisher scores as well as Louis' (1982) exact computation of the observed information matrix.
       Note that Louis' estimates can take a long time to obtain for large sample sizes and long tests
     \item \code{'sandwich'} for the sandwich covariance estimate based on the
-      \code{'crossprod'} and \code{'Oakes'} estimates
+      \code{'crossprod'} and \code{'Oakes'} estimates (see Chalmers, in press, for details)
     \item \code{'sandwich.Louis'} for the sandwich covariance estimate based on the
       \code{'crossprod'} and \code{'Louis'} estimates
     \item \code{'Oakes'} for Oakes' (1999) method using a central difference approximation
+      (see Chalmers, in press, for details)
     \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option automatically; EM only)
     \item \code{'Fisher'} for the expected information, \code{'complete'} for information based
       on the complete-data Hessian used in EM algorithm
@@ -297,7 +298,7 @@ control input)}
   \item{set.seed}{seed number used during estimation. Default is 12345}
   \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
     information matrix. Default is 1e-3}
-  \item{symmetric}{logical; force S-EM/Oakes information matrix to be symmetric? Default is TRUE
+  \item{symmetric}{logical; force S-EM/Oakes information matrix estimates to be symmetric? Default is TRUE
     so that computation of standard errors are more stable. Setting this to FALSE can help
     to detect solutions that have not reached the ML estimate}
   \item{SEM_window}{ratio of values used to define the S-EM window based on the
@@ -1113,6 +1114,9 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 
 Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
 \emph{Journal of Educational Measurement, 52}, 200-222. \doi{10.1111/jedm.12072}
+
+Chalmers, R. P. (in press). Numerical Approximation of the ObservedInformation Matrix with Oakes' Identity.
+\emph{British Journal of Mathematical and Statistical Psychology} \doi{10.1111/bmsp.12127}
 
 Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
 Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 339-358.

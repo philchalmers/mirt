@@ -11,7 +11,7 @@
   (e.g., Roberts & Laughlin, 1996). Special thanks to David King for providing the 
   necessary C++ derivative functions and starting values
 
-- Square brackets can now be included in the `mirt.model()` sytax to indicate
+- Square brackets can now be included in the `mirt.model()` syntax to indicate
   group-specific constraints, priors, starting/fixed values, and so on. These
   are all of the general form `"CONSTRAIN = [group1, group2] = ..."` or 
   `"FIXED [group1] = ..."`
@@ -30,7 +30,7 @@
 - `estfun()` function added to extract gradient information directly from fitted objects 
   (contributed by Lennart Schneider)
   
-- `simdata()` gains an `equal.K` arguemnt to redraw data until $K$ categories are 
+- `simdata()` gains an `equal.K` argument to redraw data until $K$ categories are 
   populated for a given item
   
 - Fix initialization of `fscores()` when using 'MH' plausible value imputations (reported by 
@@ -42,7 +42,7 @@
   (e.g., `fscores()`) also include the latent regression information for discrete 
   models by default
 
-- `SIBTEST()` replaced with the asymtotic sampling distribution version of 
+- `SIBTEST()` replaced with the asymptotic sampling distribution version of 
    CSIBTEST described by Chalmers (accepted)
 
 - `calcNull` set to `FALSE` by default
