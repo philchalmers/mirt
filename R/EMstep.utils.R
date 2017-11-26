@@ -298,7 +298,9 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
         }
         g <- grad[est]
         h <- hess[est, est]
-        inv <- MPinv(h) #TODO this could be avoided if no constrains present
+        inv <- try(MPinv(h), TRUE) #TODO this could be avoided if no constrains present
+        if(is(inv, 'try-error'))
+            stop('Newton-Raphson Hessian become non-positive definite in the M-step', call. = FALSE)
         change <- as.vector(g %*% inv)
         change <- ifelse(change > .25, .25, change)
         change <- ifelse(change < -.25, -.25, change)

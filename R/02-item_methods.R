@@ -1,4 +1,3 @@
-# ----------------------------------------------------------------
 # valid itemtype inputs
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
@@ -6,13 +5,13 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                 'ideal', 'lca', 'spline', 'monopoly', Experimental_itemtypes())
+                                 'ideal', 'lca', 'spline', 'monopoly', 'ggum', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'spline', Experimental_itemtypes())
 
-Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', #'monopoly',
-                            'spline', Experimental_itemtypes())
+Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline',
+                            Experimental_itemtypes())
 
 # ----------------------------------------------------------------
 # helper functions
@@ -2142,6 +2141,176 @@ setMethod(
             }
         }
         dp
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("ggum", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'ggum'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'ggum'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'ggum'),
+    definition = function(x){
+        x@par[1L:x@nfact] #slopes
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'ggum'),
+    definition = function(x){
+        x@par[(x@nfact+1L):length(x@par)] #intercepts
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'ggum'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, .2, .2),
+                 rnorm(x@nfact),
+                 sort(rnorm(x@ncat-1L, 0, 1.5), decreasing = TRUE))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'ggum'),
+    definition = function(x){
+        x@par[1L:x@nfact] <- 0
+        x@est[1L:x@nfact] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'ggum', Theta = 'matrix'),
+    definition = function(x, Theta){
+        return(P.ggum(x@par, Theta=Theta, ncat=x@ncat))
+    }
+)
+
+# TODO write this with Rcpp
+P.ggum <- function(par, Theta, ncat)
+{
+    # C <- ncat - 1
+    # D <- (length(par)-C)/2
+    # M <- 2*C + 1
+    #
+    # sumtau <- 0
+    # sumdist<-0
+    # num <- matrix(nrow=nrow(Theta),ncol=(C+1))
+    # P <- matrix(nrow=nrow(Theta),ncol=(C+1))
+    #
+    # for (d in 1:D) {
+    #     dist <- (par[d]**2)*((Theta[,d] - par[(D+d)])**2)
+    #     sumdist <- dist+sumdist
+    # }
+    # dist<-sqrt(sumdist)
+    # z1 <- z2 <- num
+    #
+    # for (w in 0:C) {
+    #
+    #     x1 <- w*dist
+    #     x2 <- (M-w)*dist
+    #
+    #     if (w>0) {
+    #         for (d in 1:D) {
+    #             tau <- (par[d]*par[(w+2*D)])
+    #             sumtau <- tau + sumtau
+    #         }
+    #     }
+    #
+    #     z1[,w + 1] <- x1 + sumtau
+    #     z2[,w + 1] <- x2 + sumtau
+    #
+    #     # num1 <- exp(x1 + sumtau)
+    #     # num2 <- exp(x2 + sumtau)
+    #     #
+    #     # num[,(w+1)] <- num1 + num2
+    #
+    # }
+    #
+    # # numtot <- apply(num, 1, sum)
+    # #
+    # # for (k in 1:(C+1)) {
+    # #     P[,k] <- num[,k]/numtot
+    # # }
+    #
+    # # less overflow this way
+    # maxz1 <- apply(z1, 1, max)
+    # maxz2 <- apply(z2, 1, max)
+    # maxz <- pmax(maxz1, maxz2)
+    # num2 <- exp(z1 - maxz) + exp(z2 - maxz)
+    # den <- rowSums(num2)
+    # P <- num2/den
+    # P <- ifelse(P < 1e-20, 1e-20, P)
+    # P <- ifelse(P > (1 - 1e-20), (1 - 1e-20), P)
+    # return(P)
+
+    return(.Call("ggumTraceLinePts", par, Theta, ncat))
+}
+
+# complete-data derivative used in parameter estimation (here it is done numerically)
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'ggum', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        # NOT USED, but useful for numerical checking
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta,
+                                       type='Richardson')
+        if(estHess){
+            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta,
+                                                  gradient=FALSE, type='Richardson')
+        }
+        return(list(grad=grad, hess=hess))
+
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'ggum', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'ggum', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
     }
 )
 

@@ -5,9 +5,9 @@
 \title{Simulate response patterns}
 \usage{
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-  upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE, model = NULL, equal.K = TRUE, which.items = NULL,
-  mins = 0, lca_cats = NULL, prob.list = NULL)
+  upper = 1, nominal = NULL, t = NULL, Theta = NULL,
+  gpcm_mats = list(), returnList = FALSE, model = NULL, equal.K = TRUE,
+  which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 }
 \arguments{
 \item{a}{a matrix/vector of slope parameters. If slopes are to be constrained to
@@ -29,9 +29,10 @@ be used}
   the respective internal classes automatically.
 
   If the internal class of the object is specified instead, the inputs can
-  be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp'}, or \code{'lca'}, for
+  be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp', 'gumm'}, or \code{'lca'}, for
   dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
-  and latent class analysis model. Note that for the gpcm, nominal, and nested logit models there should
+  generalized graded unfolding model, and latent class analysis model.
+  Note that for the gpcm, nominal, and nested logit models there should
   be as many parameters as desired categories, however to parametrized them for meaningful
   interpretation the first category intercept should
   equal 0 for these models (second column for \code{'nestlogit'}, since first column is for the
@@ -56,6 +57,9 @@ Should be the dimensions as the intercept specification with one less column, wi
 in locations where not applicable. Note that during estimation the first slope will be
 constrained to 0 and the last will be constrained to the number of categories minus 1,
 so it is best to set these as the values for the first and last categories as well}
+
+\item{t}{matrix of t-values for the 'ggum' itemtype, where each row corresponds to a given item.
+Also determines the number of categories, where \code{NA} can be used for non-applicable categories}
 
 \item{Theta}{a user specified matrix of the underlying ability parameters,
 where \code{nrow(Theta) == N} and \code{ncol(Theta) == ncol(a)}. When this is supplied the
@@ -290,6 +294,17 @@ head(pars)
 
 obj <- generate.mirt_object(pars, '3PL')
 dat <- simdata(N=200, model=obj)
+
+#### 10 item GGUMs test with 4 categories each
+a <- rlnorm(10, .2, .2)
+d <- rnorm(10)
+diffs <- t(apply(matrix(runif(10*3, .3, 1), 10), 1, cumsum))
+t <- -(diffs - rowMeans(diffs))
+
+dat <- simdata(a, d, 1000, 'ggum', t=t)
+apply(dat, 2, table)
+# mod <- mirt(dat, 1, 'ggum')
+# coef(mod)
 
 ######
 # prob.list example

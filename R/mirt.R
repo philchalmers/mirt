@@ -243,10 +243,30 @@
 #'     endorsement the probability trace is the 1-4PL model, while for unsuccessful endorsement:
 #'     \deqn{P(x = 0 | \theta, \psi) =
 #'     (1 - P_{1-4PL}(x = 1 | \theta, \psi)) * P_{nominal}(x = k | \theta, \psi)}
-#'     which is the product of the compliment of the dichotomous trace line with the nominal
+#'     which is the product of the complement of the dichotomous trace line with the nominal
 #'     response model. In the nominal model, the slope parameters defined above are constrained
 #'     to be 1's, while the last value of the \eqn{ak} is freely estimated.
 #'   }
+#'   \item{ggum}{The (multidimensional) generalized graded unfolding model is a
+#'     class of ideal point models useful for ordinal response data. The form is
+#'     \deqn{P(z=k|\theta,\psi)=\frac{exp\left[\left(z\sqrt{\sum_{d=1}^{D}
+#'     a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+\sum_{k=0}^{z}\psi_{ik}\right]+
+#'     exp\left[\left((M-z)\sqrt{\sum_{d=1}^{D}a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+
+#'     \sum_{k=0}^{z}\psi_{ik}\right]}{\sum_{w=0}^{C}\left(exp\left[\left(w
+#'     \sqrt{\sum_{d=1}^{D}a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+
+#'     \sum_{k=0}^{z}\psi_{ik}\right]+exp\left[\left((M-w)
+#'     \sqrt{\sum_{d=1}^{D}a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+
+#'     \sum_{k=0}^{z}\psi_{ik}\right]\right)}}
+#'     where \eqn{\theta_{jd}} is the location of the \eqn{j}th individual on the \eqn{d}th dimension,
+#'     \eqn{b_{id}} is the difficulty location of the \eqn{i}th item on the \eqn{d}th dimension,
+#'     \eqn{a_{id}} is the discrimination of the \eqn{j}th individual on the \eqn{d}th dimension
+#'     (where the discrimination values are constrained to be positive),
+#'     \eqn{\psi_{ik}} is the \eqn{k}th subjective response category threshold for the \eqn{i}th item,
+#'     assumed to be symmetric about the item and constant across dimensions, where
+#'     \eqn{\psi_{ik} = \sum_{d=1}^D a_{id} t_{ik}}
+#'     \eqn{z = 1,2,\ldots, C} (where \eqn{C} is the number of categories minus 1),
+#'     and \eqn{M = 2C + 1}.
+#'     }
 #'   \item{spline}{Spline response models attempt to model the response curves uses non-linear and potentially
 #'     non-monotonic patterns. The form is
 #'     \deqn{P(x = 1|\theta, \eta) = \frac{1}{1 + exp(-(\eta_1 * X_1 + \eta_2 * X_2 + \cdots + \eta_n * X_n))}}
@@ -295,6 +315,8 @@
 #'       (unidimensional only; Andrich, 1978)
 #'     \item \code{'nominal'} - nominal response model (Bock, 1972)
 #'     \item \code{'ideal'} - dichotomous ideal point model (Maydeu-Olivares, 2006)
+#'     \item \code{'ggum'} - generalized graded unfolding model (Roberts, Donoghue, & Laughlin, 2000)
+#'       and its multidimensional extension
 #'     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
 #'       Note that constraining the slopes to be equal across items will reduce the model to
 #'       Embretson's (a.k.a. Whitely's) multicomponent model (1980).
@@ -629,6 +651,10 @@
 #'
 #' Rasch, G. (1960). Probabilistic models for some intelligence and attainment tests.
 #' \emph{Danish Institute for Educational Research}.
+#'
+#' Roberts, J. S., Donoghue, J. R., & Laughlin, J. E. (2000).
+#' A General Item Response Theory Model for Unfolding Unidimensional Polytomous Responses.
+#' \emph{Applied Psychological Measurement, 24}, 3-32.
 #'
 #' Maydeu-Olivares, A., Hernandez, A. & McDonald, R. P. (2006).
 #' A Multidimensional Ideal Point Item Response Theory Model for Binary Data.

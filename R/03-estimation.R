@@ -302,6 +302,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in seq_len(Data$ngroups))
             for(i in seq_len(length(PrepList[[g]]$pars)))
                 PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
+
     }
     if(discrete){
         PrepList[[1L]]$exploratory <- FALSE

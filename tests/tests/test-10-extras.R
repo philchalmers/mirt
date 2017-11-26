@@ -35,7 +35,7 @@ test_that('extras', {
                                                   F2 = 5-10'), 'ideal', verbose = FALSE)
     cfs <- as.numeric(coef(modideal, verbose=FALSE)[[5]])
     expect_equal(extract.mirt(modideal, 'logLik'), -6408.54, tolerance = 1e-3)
-    expect_equal(cfs, c(0.3044798, 0.4071647, -1.4320971), tolerance = 1e-3)
+    expect_equal(cfs, c(0.3044798,0.4071647,-1.432097), tolerance = 1e-3)
 
     acov <- fscores(mod1, return.acov=TRUE, full.scores=FALSE)
     expect_equal(acov[[1]][1], 0.4799239, tolerance=1e-3)
