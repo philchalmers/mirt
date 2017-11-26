@@ -803,6 +803,20 @@
 #' anova(gpcmod, nomod)
 #' itemplot(nomod, 3)
 #'
+#' #generalized graded unfolding model
+#' (ggum <- mirt(Science, 1, 'ggum'))
+#' coef(ggum, simplify=TRUE)
+#' plot(ggum)
+#' plot(ggum, type = 'trace')
+#' plot(ggum, type = 'itemscore')
+#'
+#' #monotonic polyomial models
+#' (monopoly <- mirt(Science, 1, 'monopoly'))
+#' coef(monopoly, simplify=TRUE)
+#' plot(monopoly)
+#' plot(monopoly, type = 'trace')
+#' plot(monopoly, type = 'itemscore')
+#'
 #' ## example applying survey weights.
 #' # weight the first half of the cases to be more representative of population
 #' survey.weights <- c(rep(2, nrow(Science)/2), rep(1, nrow(Science)/2))
