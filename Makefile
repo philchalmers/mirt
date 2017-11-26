@@ -37,7 +37,12 @@ knitdocs:
 	mv *.html html/
 	rm R.css
 	git checkout -- .
-	make install	
+	make install
+	make kniterrors
+
+kniterrors:
+	grep -Hrn 'Error: ' html/
+	grep -Hrn 'Warning message: ' html/
 
 clean:
 	$(RM) src/*.o
