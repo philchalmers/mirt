@@ -276,11 +276,11 @@
 #'
 #' #### 10 item GGUMs test with 4 categories each
 #' a <- rlnorm(10, .2, .2)
-#' d <- rnorm(10)
+#' b <- rnorm(10) #passed to d= input, but used as the b parameters
 #' diffs <- t(apply(matrix(runif(10*3, .3, 1), 10), 1, cumsum))
 #' t <- -(diffs - rowMeans(diffs))
 #'
-#' dat <- simdata(a, d, 1000, 'ggum', t=t)
+#' dat <- simdata(a, b, 1000, 'ggum', t=t)
 #' apply(dat, 2, table)
 #' # mod <- mirt(dat, 1, 'ggum')
 #' # coef(mod)
