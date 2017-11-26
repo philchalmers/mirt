@@ -29,7 +29,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 ggum.start.values[[i]] <- c(rep(1, nfact), numeric(nfact),
                                             seq(3, -3, length.out = K[i]-1))
         } else {
-            tmp <- capture.output(a <- as.list(summary(dca, digits=5, origin=TRUE,
+            tmp <- utils::capture.output(a <- as.list(summary(dca, digits=5, origin=TRUE,
                                                        display="species")))
             data.dca <- as.data.frame(a$spec.scores)
             dca.mat <- as.matrix(data.dca[,1:nfact])

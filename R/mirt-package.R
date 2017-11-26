@@ -27,7 +27,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan
-#' @importFrom utils write.table flush.console packageVersion
+#' @importFrom utils write.table flush.console packageVersion capture.output
 #' @importFrom graphics symbols
 #' @exportMethod anova residuals summary logLik vcov
 #' @references
