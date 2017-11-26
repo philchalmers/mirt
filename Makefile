@@ -41,8 +41,8 @@ knitdocs:
 	make kniterrors
 
 kniterrors:
-	grep -Hrn 'Error: ' html/
-	grep -Hrn 'Warning message: ' html/
+	grep -Hrn '## Error' html/
+	grep -Hrn '## Warning' html/
 
 clean:
 	$(RM) src/*.o

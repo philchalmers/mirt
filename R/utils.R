@@ -469,12 +469,15 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         picknames <- esplit[[i]][is.na(sel)]
                         sel <- na.omit(sel)
                         if(length(picknames) > 1L){
-                            if(length(picknames) != length(sel))
-                                stop('Number of items selected not equal to number of parameter names',
-                                     call.=FALSE)
                             constr <- numeric(length(sel))
-                            for(j in seq_len(length(sel)))
-                                constr[j] <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == picknames[j]]
+                            if(length(sel) == 1L){
+                                constr <- p[[sel]]@parnum[names(p[[sel]]@est) %in% picknames]
+                            } else {
+                                if(length(picknames) != length(sel))
+                                    stop('Number of items selected not equal to number of parameter names', call.=FALSE)
+                                for(j in seq_len(length(sel)))
+                                    constr[j] <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == picknames[j]]
+                            }
                         } else {
                             for(j in seq_len(length(sel))){
                                 pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == picknames]
