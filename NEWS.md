@@ -6,6 +6,10 @@
 
 - Add `monopoly` itemtype to fit unidimensional monotonic polynomial item response model
   for polytomous data (see Falk and Cai, 2016)
+  
+- Add `ggum` itemtype to fit unidimensional/multidimensional graded unfolding model 
+  (e.g., Roberts & Laughlin, 1996). Special thanks to David King for providing the 
+  necessary C++ derivative functions and starting values
 
 - Square brackets can now be included in the `mirt.model()` sytax to indicate
   group-specific constraints, priors, starting/fixed values, and so on. These
