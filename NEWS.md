@@ -1,5 +1,9 @@
 # Changes in mirt 1.26
 
+- `mod2values()` and passing `pars = 'values'` now return `data.frame` objects without any
+  factor variables (previously the defaults to `data.frame()` were used, which created factors
+  for all categorical variables by default)
+
 - Add `monopoly` itemtype to fit unidimensional monotonic polynomial item response model
   for polytomous data (see Falk and Cai, 2016)
 

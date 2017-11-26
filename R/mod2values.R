@@ -101,6 +101,6 @@ mod2values <- function(x){
                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', '4'='expbeta', 'none'))
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
                       lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
-                      prior_1=prior_1, prior_2=prior_2)
+                      prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
     ret
 }
