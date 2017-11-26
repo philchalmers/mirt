@@ -53,7 +53,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stopifnot(is(invariance, 'character'))
         stopifnot(is(GenRandomPars, 'logical'))
         stopifnot(is(large, 'logical') || is(large, 'list'))
-        opts <- makeopts(GenRandomPars=GenRandomPars, ...)
+        opts <- makeopts(GenRandomPars=GenRandomPars,
+                         hasCustomGroup=!is.null(customGroup), ...)
         if(opts$Moptim == 'NR'){
             if(is.null(control$tol)) control$tol <- opts$TOL/1000
             if(is.null(control$maxit)) control$maxit <- 50L

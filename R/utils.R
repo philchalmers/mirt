@@ -1274,7 +1274,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      SE = FALSE, verbose = TRUE, GenRandomPars,
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = FALSE, BFACTOR = FALSE,
-                     technical = list(),
+                     technical = list(), hasCustomGroup = FALSE,
                      SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
                      optimizer = NULL, solnp_args = list(), nloptr_args = list(), ...)
 {
@@ -1318,6 +1318,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$dentype <- 'Gaussian'
     if(BFACTOR) opts$dentype <- 'bfactor'
     if(empiricalhist) opts$dentype <- 'EH'
+    if(hasCustomGroup) opts$dentype <- 'custom'
     opts$accelerate = accelerate
     opts$Norder <- ifelse(is.null(technical$Norder), 2L, technical$Norder)
     opts$delta <- ifelse(is.null(technical$delta), 1e-5, technical$delta)

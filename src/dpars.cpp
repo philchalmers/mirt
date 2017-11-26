@@ -1662,6 +1662,8 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         vector<double> prior_2 = as< vector<double> >(item.slot("prior_2"));
         NumericMatrix dat = item.slot("dat");
         switch(itemclass){
+            case -999: //custom group
+                break;
             case -1 :
                 _dgroupLCA(tmpgrad, tmphess, item, theta, estHess);
                 break;
