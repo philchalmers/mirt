@@ -38,7 +38,8 @@ knitdocs:
 	rm R.css
 	git checkout -- .
 	make install
-	make kniterrors
+	grep -Hrn '## Error' html/
+	grep -Hrn '## Warning' html/
 
 kniterrors:
 	grep -Hrn '## Error' html/
