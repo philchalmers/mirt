@@ -626,7 +626,7 @@ static inline double CDLL(const vector<double> &par, const NumericMatrix &theta,
 	return(LL);
 }
 
-static inline double _central(vector<double> &grad, NumericMatrix &hess,
+static inline void _central(vector<double> &grad, NumericMatrix &hess,
     const vector<double> &par, const NumericMatrix &theta,
     const NumericMatrix &dat, const NumericVector &ot, const int &N, const int &nfact,
     const int &ncat, const int &k, const int &itemclass, const bool gradient, const double delta)
@@ -688,7 +688,7 @@ static inline void mat2vec(vector<double> &ret, const NumericMatrix &mat)
     }
 }
 
-static inline double _richardson(vector<double> &grad, NumericMatrix &hess,
+static inline void _richardson(vector<double> &grad, NumericMatrix &hess,
     const vector<double> &par, const NumericMatrix &theta,
     const NumericMatrix &dat, const NumericVector &ot, const int &N, const int &nfact,
     const int &ncat, const int &k, const int &itemclass, const bool gradient)
