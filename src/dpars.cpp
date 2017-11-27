@@ -694,6 +694,7 @@ static inline void _richardson(vector<double> &grad, NumericMatrix &hess,
     const int &ncat, const int &k, const int &itemclass, const bool gradient)
 {
     const int rr = 4;
+    const double four = 4.0;
     if(gradient){
         double delta = .0001;
         const int npar = par.size();
@@ -706,7 +707,8 @@ static inline void _richardson(vector<double> &grad, NumericMatrix &hess,
             _central(grad, hess, par, theta, dat, ot, N, nfact, ncat, k, itemclass, true, delta);
             for(int i = 0; i < npar; ++i) R1(i, 0) = grad[i];
             for(int j = 0; j < (r + 1); ++j){
-                int pwr = pow(4, j + 1);
+                double jj = j;
+                double pwr = pow(four, jj + 1.0);
                 for(int i = 0; i < npar; ++i)
                     R1(i, j + 1) = (pwr * R1(i, j) - R0(i, j)) / (pwr - 1);
             }
@@ -731,7 +733,8 @@ static inline void _richardson(vector<double> &grad, NumericMatrix &hess,
             mat2vec(dvec, hess);
             for(int i = 0; i < npar; ++i) R1(i, 0) = dvec[i];
             for(int j = 0; j < (r + 1); ++j){
-                int pwr = pow(4, j + 1);
+                double jj = j;
+                double pwr = pow(four, jj + 1.0);
                 for(int i = 0; i < npar; ++i)
                     R1(i, j + 1) = (pwr * R1(i, j) - R0(i, j)) / (pwr - 1);
             }
