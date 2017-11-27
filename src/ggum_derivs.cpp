@@ -10,7 +10,7 @@ static vector<double> buildDist(arma::mat &Theta, arma::colvec &par, const int &
 	for (int j=0; j < J; ++j) {
 		double sumdist = 0.0;
 		for (int d=0; d<=(D-1); d++)
-            sumdist += pow(as_scalar(par.row(d)),2)*pow(as_scalar(Theta(j,d)-par.row(D+d)),2) ;
+            sumdist += pow(as_scalar(par.row(d)),2.0)*pow(as_scalar(Theta(j,d)-par.row(D+d)),2.0) ;
         Dist[j] = sqrt(sumdist) ;
     }
     return(Dist);
@@ -69,8 +69,8 @@ static double a1_cpp(
             dentau = exp(sumtau);
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar(Z.row(j)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-                num2_z_prime = as_scalar((M-Z.row(j))*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+                num1_z_prime = as_scalar(Z.row(j)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+                num2_z_prime = as_scalar((M-Z.row(j))*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
                 a = exp_x1+exp_x2 ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
                 c_prime = 0 ;
@@ -92,8 +92,8 @@ static double a1_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = (dentau*((num1_prime+num2_prime)/dist) + (num1+num2)*dentau*dentau_prime) ;
@@ -160,8 +160,8 @@ static double d1_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar(Z.row(j)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
-                num2_z_prime = as_scalar((M-Z.row(j))*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
+                num1_z_prime = as_scalar(Z.row(j)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
+                num2_z_prime = as_scalar((M-Z.row(j))*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
                 a = exp_x1+exp_x2 ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
             }
@@ -171,8 +171,8 @@ static double d1_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
-            num2_prime = as_scalar((M-w)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
+            num1_prime = as_scalar(w*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
+            num2_prime = as_scalar((M-w)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = dentau*(num1_prime+num2_prime)/dist ;
@@ -364,7 +364,7 @@ static double a2_cpp(
 		double x1 = 0 ;
 		double x2 = 0 ;
         
-        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
         for (int w=0; w<=C;w++) {
             x1 = w*dist ;
@@ -380,22 +380,22 @@ static double a2_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar(Z.row(j)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-                num2_z_prime = as_scalar((M-Z.row(j))*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+                num1_z_prime = as_scalar(Z.row(j)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+                num2_z_prime = as_scalar((M-Z.row(j))*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
 
                 a = exp(x1)+exp(x2) ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
 
                 e = a_prime*dist ;
-                e_prime = as_scalar(Z.row(j)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1 +
-                    (M-Z.row(j))*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2)+
-                    ((pow(as_scalar(Z.row(j)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x1) +
-                    (pow(as_scalar((M-Z.row(j))*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x2))/dist ;
+                e_prime = as_scalar(Z.row(j)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1 +
+                    (M-Z.row(j))*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2)+
+                    ((pow(as_scalar(Z.row(j)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x1) +
+                    (pow(as_scalar((M-Z.row(j))*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x2))/dist ;
 
                 f = a*dist ;
-                f_prime = a*(as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist) +
+                f_prime = a*(as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist) +
                     dist*a_prime ;
-                dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+                dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
                 c_prime = 0 ;
                 if (w>0) {
@@ -417,13 +417,13 @@ static double a2_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
 
-            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1 +
-                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2)+
-                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x1) +
-                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x2))/dist ;
+            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1 +
+                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2)+
+                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x1) +
+                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x2))/dist ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = (dentau*((num1_prime+num2_prime)/dist) + (num1+num2)*dentau*dentau_prime) ;
@@ -441,7 +441,7 @@ static double a2_cpp(
         h = b*dist ;
         h_prime = b*dist_prime + b_prime*dist ;
 
-        a2_ln = (f*e_prime-e*f_prime)/pow(f,2) - (h*g_prime-g*h_prime)/pow(h,2) ;
+        a2_ln = (f*e_prime-e*f_prime)/pow(f,2.0) - (h*g_prime-g*h_prime)/pow(h,2.0) ;
         com_a2_ln = com_a2_ln + a2_ln ;
 
     }
@@ -514,23 +514,23 @@ static double d2_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar((Z.row(j)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
-                num2_z_prime = as_scalar(((M-Z.row(j))*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
+                num1_z_prime = as_scalar((Z.row(j)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
+                num2_z_prime = as_scalar(((M-Z.row(j))*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
 
                 a = exp(x1)+exp(x2) ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
 
                 e = a_prime*dist ;
 
-                e_prime = as_scalar(Z.row(j)*pow(par.row(dref2-1),2)*exp_x1 +
-                    (M-Z.row(j))*pow(par.row(dref2-1),2)*exp(x2)) +
-                    (as_scalar(pow((Z.row(j)*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1))),2)*exp_x1) +
-                    as_scalar(pow(((M-Z.row(j))*as_scalar(pow(par.row(dref2-1),2))*(par.row(dref2-1+D)-Theta(j,dref2-1))),2)*exp_x2))/dist ;
+                e_prime = as_scalar(Z.row(j)*pow(par.row(dref2-1),2.0)*exp_x1 +
+                    (M-Z.row(j))*pow(par.row(dref2-1),2.0)*exp(x2)) +
+                    (as_scalar(pow((Z.row(j)*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1))),2.0)*exp_x1) +
+                    as_scalar(pow(((M-Z.row(j))*as_scalar(pow(par.row(dref2-1),2.0))*(par.row(dref2-1+D)-Theta(j,dref2-1))),2.0)*exp_x2))/dist ;
 
                 f = a*dist ;
-                f_prime = a*((pow(as_scalar(par.row(dref2-1)),2)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist) +
+                f_prime = a*((pow(as_scalar(par.row(dref2-1)),2.0)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist) +
                     dist*a_prime ;
-                dist_prime = (pow(as_scalar(par.row(dref2-1)),2)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist ;
+                dist_prime = (pow(as_scalar(par.row(dref2-1)),2.0)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist ;
 
             }
 
@@ -539,13 +539,13 @@ static double d2_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar((w*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
-            num2_prime = as_scalar(((M-w)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
+            num1_prime = as_scalar((w*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
+            num2_prime = as_scalar(((M-w)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
 
-            num1_prime2 = as_scalar(w*pow(par.row(dref2-1),2)*exp_x1 +
-                (M-w)*pow(par.row(dref2-1),2)*exp_x2) +
-                (as_scalar(pow((w*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1))),2)*exp_x1) +
-                as_scalar(pow(((M-w)*as_scalar(pow(par.row(dref2-1),2))*(par.row(dref2-1+D)-Theta(j,dref2-1))),2)*exp_x2))/dist ;
+            num1_prime2 = as_scalar(w*pow(par.row(dref2-1),2.0)*exp_x1 +
+                (M-w)*pow(par.row(dref2-1),2.0)*exp_x2) +
+                (as_scalar(pow((w*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1))),2.0)*exp_x1) +
+                as_scalar(pow(((M-w)*as_scalar(pow(par.row(dref2-1),2.0))*(par.row(dref2-1+D)-Theta(j,dref2-1))),2.0)*exp_x2))/dist ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = dentau*((num1_prime+num2_prime)/dist) ;
@@ -561,7 +561,7 @@ static double d2_cpp(
         h = b*dist ;
         h_prime = b*dist_prime + b_prime*dist ;
 
-        d2_ln = (f*e_prime-e*f_prime)/pow(f,2) - (h*g_prime-g*h_prime)/pow(h,2) ;
+        d2_ln = (f*e_prime-e*f_prime)/pow(f,2.0) - (h*g_prime-g*h_prime)/pow(h,2.0) ;
         com_d2_ln = com_d2_ln + d2_ln ;
 
     }
@@ -657,7 +657,7 @@ static double t2_cpp(
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = U_w*dentau_prime*dentau*(num1+num2) ;
-            num_prime2.row(w) = U_w*pow(dentau_prime,2)*dentau*(num1+num2) ;
+            num_prime2.row(w) = U_w*pow(dentau_prime,2.0)*dentau*(num1+num2) ;
         }
 
         b = sum(num) ;
@@ -670,7 +670,7 @@ static double t2_cpp(
         h = b ;
         h_prime = b_prime ;
 
-        t2_ln = -(h*g_prime - g*h_prime)/pow(h,2) ;
+        t2_ln = -(h*g_prime - g*h_prime)/pow(h,2.0) ;
         com_t2_ln = com_t2_ln + t2_ln ;
 
     }
@@ -740,7 +740,7 @@ static double a2mix_cpp(
 	    double x1 = 0 ;
 	    double x2 = 0 ;
         
-        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
         dist_prime_mix = dist_prime ;
 
 
@@ -758,18 +758,18 @@ static double a2mix_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar(Z.row(j)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-                num2_z_prime = as_scalar((M-Z.row(j))*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+                num1_z_prime = as_scalar(Z.row(j)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+                num2_z_prime = as_scalar((M-Z.row(j))*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
 
                 a = exp(x1)+exp(x2) ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
-                a_prime_mix = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*exp_x1 +
-                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*exp_x2)/dist ;
+                a_prime_mix = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*exp_x1 +
+                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*exp_x2)/dist ;
 
                 e = a_prime*dist ;
 
-                e_prime_mix = (as_scalar(num1_z_prime*(Z.row(j)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))) +
-                    as_scalar(num2_z_prime*((M-Z.row(j))*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))))/dist ;
+                e_prime_mix = (as_scalar(num1_z_prime*(Z.row(j)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))) +
+                    as_scalar(num2_z_prime*((M-Z.row(j))*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))))/dist ;
 
                 f = a*dist ;
                 f_prime_mix = a*dist_prime_mix + dist*a_prime_mix ;
@@ -794,16 +794,16 @@ static double a2mix_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
 
-            num1_prime_mix = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1) ;
-            num2_prime_mix = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2) ;
+            num1_prime_mix = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1) ;
+            num2_prime_mix = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2) ;
 
-            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1 +
-                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2)+
-                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x1) +
-                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x2))/dist ;
+            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1 +
+                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2)+
+                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x1) +
+                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x2))/dist ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = (dentau*((num1_prime+num2_prime)/dist) + (num1+num2)*dentau*dentau_prime) ;
@@ -814,12 +814,12 @@ static double a2mix_cpp(
                 (num1+num2)*(dentau*dentau_prime*dist_prime+dentau*dentau_prime*dentau_prime*dist)+
                 ((num1_prime+num2_prime)/dist)*(dentau*dentau_prime*dist) ;
 
-            num_prime2_mix.row(w) = dentau*(num1_prime*(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)) +
-                num2_prime*((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)))/dist +
+            num_prime2_mix.row(w) = dentau*(num1_prime*(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)) +
+                num2_prime*((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)))/dist +
                 dentau_prime*dentau*(num1_prime+num2_prime)+
                 (num1+num2)*(dentau*dentau_prime*dist_prime_mix+dentau*dentau_prime*dentau_prime*dist) +
-                (((w*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)))*num1 +
-                ((M-w)*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)))*num2)/dist)*(dentau*dentau_prime*dist) ;
+                (((w*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)))*num1 +
+                ((M-w)*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)))*num2)/dist)*(dentau*dentau_prime*dist) ;
 
         }
 
@@ -833,7 +833,7 @@ static double a2mix_cpp(
         h = b*dist ;
         h_prime_mix = b*dist_prime_mix + b_prime_mix*dist ;
 
-        a2mix_ln = (f*e_prime_mix-e*f_prime_mix)/pow(f,2) - (h*g_prime_mix-g*h_prime_mix)/pow(h,2) ;
+        a2mix_ln = (f*e_prime_mix-e*f_prime_mix)/pow(f,2.0) - (h*g_prime_mix-g*h_prime_mix)/pow(h,2.0) ;
 
         com_a2mix_ln = com_a2mix_ln + a2mix_ln ;
 
@@ -911,24 +911,24 @@ static double d2mix_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar((Z.row(j)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
-                num2_z_prime = as_scalar(((M-Z.row(j))*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
+                num1_z_prime = as_scalar((Z.row(j)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
+                num2_z_prime = as_scalar(((M-Z.row(j))*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
 
                 a = exp_x1+exp_x2 ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
 
                 e = a_prime*dist ;
 
-                e_prime_mix = (num1_z_prime*as_scalar(Z.row(j)*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1))) +
-                    num2_z_prime*as_scalar((M-Z.row(j))*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1))))/dist ;
+                e_prime_mix = (num1_z_prime*as_scalar(Z.row(j)*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1))) +
+                    num2_z_prime*as_scalar((M-Z.row(j))*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1))))/dist ;
 
                 f = a*dist ;
 
-                f_prime_mix = a*((pow(as_scalar(par.row(dref2-1)),2)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist) +
-                    as_scalar((Z.row(j)*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) +
-                    as_scalar(((M-Z.row(j))*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
+                f_prime_mix = a*((pow(as_scalar(par.row(dref2-1)),2.0)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist) +
+                    as_scalar((Z.row(j)*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) +
+                    as_scalar(((M-Z.row(j))*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
 
-                dist_prime = (pow(as_scalar(par.row(dref2-1)),2)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist ;
+                dist_prime = (pow(as_scalar(par.row(dref2-1)),2.0)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)))/dist ;
 
             }
 
@@ -936,13 +936,13 @@ static double d2mix_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar((w*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
-            num2_prime = as_scalar(((M-w)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
+            num1_prime = as_scalar((w*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
+            num2_prime = as_scalar(((M-w)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
 
-            num1_prime_mix = as_scalar((w*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) ;
-            num2_prime_mix = as_scalar(((M-w)*pow(par.row(dref2-1),2)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
-            num1_prime2_mix = (num1_prime*(w*pow(as_scalar(par.row(dref2-1)),2)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1))) +
-                num2_prime*((M-w)*pow(as_scalar(par.row(dref2-1)),2)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1))))/dist ;
+            num1_prime_mix = as_scalar((w*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) ;
+            num2_prime_mix = as_scalar(((M-w)*pow(par.row(dref2-1),2.0)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
+            num1_prime2_mix = (num1_prime*(w*pow(as_scalar(par.row(dref2-1)),2.0)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1))) +
+                num2_prime*((M-w)*pow(as_scalar(par.row(dref2-1)),2.0)*as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1))))/dist ;
 
 
             num.row(w) = dentau*(num1+num2) ;
@@ -963,7 +963,7 @@ static double d2mix_cpp(
         h = b*dist ;
         h_prime_mix = b*dist_prime + b_prime_mix*dist ;
 
-        d2mix_ln = (f*e_prime_mix-e*f_prime_mix)/pow(f,2) - (h*g_prime_mix-g*h_prime_mix)/pow(h,2) ;
+        d2mix_ln = (f*e_prime_mix-e*f_prime_mix)/pow(f,2.0) - (h*g_prime_mix-g*h_prime_mix)/pow(h,2.0) ;
         com_d2mix_ln = com_d2mix_ln + d2mix_ln ;
 
     }
@@ -1077,7 +1077,7 @@ static double t2mix_cpp(
         h = b ;
         h_prime_mix = sum(num_prime_mix) ;
 
-        t2mix_ln = -(h*g_prime_mix - g*h_prime_mix)/pow(h,2) ;
+        t2mix_ln = -(h*g_prime_mix - g*h_prime_mix)/pow(h,2.0) ;
         com_t2mix_ln = com_t2mix_ln + t2mix_ln ;
 
     }
@@ -1154,9 +1154,9 @@ static double da2cross_cpp(
 	    double x1 = 0 ;
 	    double x2 = 0 ;
         
-        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
         dist_prime_mix = dist_prime ;
-        dist_prime_cross = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+        dist_prime_cross = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
 
         for (int w=0; w<=C;w++) {
@@ -1173,20 +1173,20 @@ static double da2cross_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar(Z.row(j)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
-                num2_z_prime = as_scalar((M-Z.row(j))*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
+                num1_z_prime = as_scalar(Z.row(j)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
+                num2_z_prime = as_scalar((M-Z.row(j))*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
 
                 a = exp(x1)+exp(x2) ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
 
-                a_prime_cross = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*exp_x1 +
-                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*exp_x2)/dist ;
+                a_prime_cross = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*exp_x1 +
+                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*exp_x2)/dist ;
 
 
                 e = a_prime*dist ;
 
-                e_prime_cross = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num1_z_prime +
-                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num2_z_prime)/dist +
+                e_prime_cross = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num1_z_prime +
+                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num2_z_prime)/dist +
                     as_scalar((2*Z.row(j)*par.row(dref2-1)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) +
                     as_scalar((2*(M-Z.row(j))*par.row(dref2-1)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
 
@@ -1214,23 +1214,23 @@ static double da2cross_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
-            num2_prime = as_scalar((M-w)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
+            num1_prime = as_scalar(w*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
+            num2_prime = as_scalar((M-w)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
 
-            num1_prime_mix = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1) ;
-            num2_prime_mix = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2) ;
+            num1_prime_mix = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1) ;
+            num2_prime_mix = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2) ;
 
-            num1_prime_cross = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1) ;
-            num2_prime_cross = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2) ;
+            num1_prime_cross = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1) ;
+            num2_prime_cross = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2) ;
 
 
-            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1 +
-                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2)+
-                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x1) +
-                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x2))/dist ;
+            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1 +
+                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2)+
+                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x1) +
+                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x2))/dist ;
 
-            num1_prime2_cross = (as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num1_prime +
-                as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num2_prime)/dist +
+            num1_prime2_cross = (as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num1_prime +
+                as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num2_prime)/dist +
                 as_scalar((2*w*par.row(dref2-1)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) +
                 as_scalar((2*(M-w)*par.row(dref2-1)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
 
@@ -1245,12 +1245,12 @@ static double da2cross_cpp(
                 (num1+num2)*(dentau*dentau_prime*dist_prime+dentau*dentau_prime*dentau_prime*dist)+
                 ((num1_prime+num2_prime)/dist)*(dentau*dentau_prime*dist) ;
 
-            num_prime2_mix.row(w) = dentau*(num1_prime*(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)) +
-                num2_prime*((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)))/dist +
+            num_prime2_mix.row(w) = dentau*(num1_prime*(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)) +
+                num2_prime*((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)))/dist +
                 dentau_prime*dentau*(num1_prime+num2_prime)+
                 (num1+num2)*(dentau*dentau_prime*dist_prime_mix+dentau*dentau_prime*dentau_prime*dist) +
-                (((w*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)))*num1 +
-                ((M-w)*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)))*num2)/dist)*(dentau*dentau_prime*dist) ;
+                (((w*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)))*num1 +
+                ((M-w)*(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)))*num2)/dist)*(dentau*dentau_prime*dist) ;
 
             num_prime2_cross.row(w) = dentau*num1_prime2_cross+dentau*dentau_prime*(num1_prime+num2_prime) ;
 
@@ -1266,7 +1266,7 @@ static double da2cross_cpp(
         h = b*dist ;
         h_prime_cross = b*dist_prime_cross + b_prime_cross*dist ;
 
-        da2cross_ln = (f*e_prime_cross-e*f_prime_cross)/pow(f,2) - (h*g_prime_cross-g*h_prime_cross)/pow(h,2) ;
+        da2cross_ln = (f*e_prime_cross-e*f_prime_cross)/pow(f,2.0) - (h*g_prime_cross-g*h_prime_cross)/pow(h,2.0) ;
 
         com_da2cross_ln = com_da2cross_ln + da2cross_ln ;
 
@@ -1340,8 +1340,8 @@ static double da2crossmix_cpp(
 	    double x1 = 0 ;
 	    double x2 = 0 ;
 
-        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
-        dist_prime_cross = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
+        dist_prime_cross = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
         for (int w=0; w<=C;w++) {
             x1 = w*dist ;
@@ -1357,19 +1357,19 @@ static double da2crossmix_cpp(
             }
 
             if (w==as_scalar(Z.row(j))) {
-                num1_z_prime = as_scalar(Z.row(j)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
-                num2_z_prime = as_scalar((M-Z.row(j))*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
+                num1_z_prime = as_scalar(Z.row(j)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
+                num2_z_prime = as_scalar((M-Z.row(j))*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
 
                 a = exp(x1)+exp(x2) ;
                 a_prime = (num1_z_prime+num2_z_prime)/dist ;
 
-                a_prime_cross = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*exp_x1 +
-                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*exp_x2)/dist ;
+                a_prime_cross = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*exp_x1 +
+                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*exp_x2)/dist ;
 
                 e = a_prime*dist ;
 
-                e_prime_cross2 = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num1_z_prime +
-                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num2_z_prime)/dist ;
+                e_prime_cross2 = (as_scalar(Z.row(j)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num1_z_prime +
+                    as_scalar((M-Z.row(j))*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num2_z_prime)/dist ;
 
                 f = a*dist ;
 
@@ -1395,25 +1395,25 @@ static double da2crossmix_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
-            num2_prime = as_scalar((M-w)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
+            num1_prime = as_scalar(w*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x1) ;
+            num2_prime = as_scalar((M-w)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1))*exp_x2) ;
 
-            num1_prime_cross = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1) ;
-            num2_prime_cross = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2) ;
+            num1_prime_cross = as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1) ;
+            num2_prime_cross = as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2) ;
 
 
-            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1 +
-                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2)+
-                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x1) +
-                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x2))/dist ;
+            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1 +
+                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2)+
+                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x1) +
+                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x2))/dist ;
 
-            num1_prime2_cross = (as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num1_prime +
-                as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num2_prime)/dist +
+            num1_prime2_cross = (as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num1_prime +
+                as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num2_prime)/dist +
                 as_scalar((2*w*par.row(dref2-1)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x1) +
                 as_scalar((2*(M-w)*par.row(dref2-1)*(par.row(dref2-1+D)-Theta(j,dref2-1)))*exp_x2) ;
 
-            num1_prime2_cross2 = (as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num1_prime +
-                as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2))*num2_prime)/dist ;
+            num1_prime2_cross2 = (as_scalar(w*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num1_prime +
+                as_scalar((M-w)*par.row(dref2-1)*pow((Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))*num2_prime)/dist ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = dentau*((num1_prime+num2_prime)/dist) ;
@@ -1438,7 +1438,7 @@ static double da2crossmix_cpp(
 
         h = b*dist ;
         h_prime_cross = b*dist_prime_cross + b_prime_cross*dist ;
-        da2crossmix_ln = (f*e_prime_cross2-e*f_prime_cross)/pow(f,2) - (h*g_prime_cross2-g*h_prime_cross)/pow(h,2) ;
+        da2crossmix_ln = (f*e_prime_cross2-e*f_prime_cross)/pow(f,2.0) - (h*g_prime_cross2-g*h_prime_cross)/pow(h,2.0) ;
         com_da2crossmix_ln = com_da2crossmix_ln + da2crossmix_ln ;
 
     }
@@ -1522,13 +1522,13 @@ static double dt2cross_cpp(
 
             if (tauref <= w) {U_w = 1 ; }
 
-            num1_prime = as_scalar((w*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
-            num2_prime = as_scalar(((M-w)*pow(par.row(dref-1),2)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
+            num1_prime = as_scalar((w*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x1) ;
+            num2_prime = as_scalar(((M-w)*pow(par.row(dref-1),2.0)*(par.row(dref-1+D)-Theta(j,dref-1)))*exp_x2) ;
 
-            num1_prime2 = w*pow(as_scalar(par.row(dref2-1)),2)*exp_x1 +
-                (M-w)*pow(as_scalar(par.row(dref2-1)),2)*exp_x2 +
-                ((w*pow(as_scalar(par.row(dref2-1)),2)*pow(as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)),2)*exp_x1) +
-                ((M-w)*pow(as_scalar(par.row(dref2-1)),2)*pow(as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)),2)*exp_x2))/dist ;
+            num1_prime2 = w*pow(as_scalar(par.row(dref2-1)),2.0)*exp_x1 +
+                (M-w)*pow(as_scalar(par.row(dref2-1)),2.0)*exp_x2 +
+                ((w*pow(as_scalar(par.row(dref2-1)),2.0)*pow(as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)),2.0)*exp_x1) +
+                ((M-w)*pow(as_scalar(par.row(dref2-1)),2.0)*pow(as_scalar(par.row(dref2-1+D)-Theta(j,dref2-1)),2.0)*exp_x2))/dist ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = dentau*((num1_prime+num2_prime)/dist) ;
@@ -1546,7 +1546,7 @@ static double dt2cross_cpp(
         h = b*dist ;
         h_prime_cross2 = sum(num_prime_cross2) ;
 
-        dt2cross_ln = -(h*g_prime_cross2-g*h_prime_cross2)/pow(h,2) ;
+        dt2cross_ln = -(h*g_prime_cross2-g*h_prime_cross2)/pow(h,2.0) ;
         com_dt2cross_ln = com_dt2cross_ln + dt2cross_ln ;
 
     }
@@ -1606,7 +1606,7 @@ static double at2cross_cpp(
 	    double lw_prime = 0 ;
 	    double U_w = 0 ;
         
-        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+        dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
         for (int w=0; w<=C;w++) {
             x1 = w*dist ;
@@ -1623,7 +1623,7 @@ static double at2cross_cpp(
 
             if (w==as_scalar(Z.row(j))) {
 
-                dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2))/dist ;
+                dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
                 c_prime = 0 ;
                 if (w>0) {
@@ -1662,13 +1662,13 @@ static double at2cross_cpp(
             num1 = exp_x1 ;
             num2 = exp_x2 ;
 
-            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x1) ;
-            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2)*exp_x2) ;
+            num1_prime = as_scalar(w*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x1) ;
+            num2_prime = as_scalar((M-w)*par.row(dref-1)*pow((Theta(j,dref-1)-par.row(dref-1+D)),2.0)*exp_x2) ;
 
-            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x1 +
-                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)*exp_x2)+
-                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x1) +
-                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2)),2)*exp_x2))/dist ;
+            num1_prime2 = (w*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x1 +
+                (M-w)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)*exp_x2)+
+                ((pow(as_scalar(w*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x1) +
+                (pow(as_scalar((M-w)*par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0)),2.0)*exp_x2))/dist ;
 
             num.row(w) = dentau*(num1+num2) ;
             num_prime.row(w) = (dentau*((num1_prime+num2_prime)/dist) + (num1+num2)*dentau*dentau_prime_t) ;
@@ -1690,7 +1690,7 @@ static double at2cross_cpp(
         h = b*dist ;
         h_prime_cross = sum(num_prime_cross) ;
 
-        at2cross_ln = l_prime - (h*g_prime_cross-g*h_prime_cross)/pow(h,2) ;
+        at2cross_ln = l_prime - (h*g_prime_cross-g*h_prime_cross)/pow(h,2.0) ;
         com_at2cross_ln = com_at2cross_ln + at2cross_ln ;
 
     }
