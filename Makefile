@@ -12,7 +12,7 @@ install:
 	cd ..;\
 	R CMD INSTALL $(PKGSRC)
 
-check: 
+check:
 	Rscript -e "devtools::check(document = FALSE, args = '--as-cran')"
 
 news:
@@ -29,7 +29,7 @@ extratest:
 
 knitdocs:
 	rm -rf html/
-	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R 
+	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R
 	sed -i s/dontrun/donttest/g man/*.Rd
 	make install
 	Rscript -e "library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
@@ -38,12 +38,11 @@ knitdocs:
 	rm R.css
 	git checkout -- .
 	make install
-	grep -Hrn '## Error' html/
-	grep -Hrn '## Warning' html/
+	make kniterrors
 
 kniterrors:
-	grep -Hrn '## Error' html/
-	grep -Hrn '## Warning' html/
+	grep -Hrn '## Error'
+	grep -Hrn '## Warning'
 
 clean:
 	$(RM) src/*.o
