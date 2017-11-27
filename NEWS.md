@@ -13,7 +13,7 @@
 
 - Square brackets can now be included in the `mirt.model()` syntax to indicate
   group-specific constraints, priors, starting/fixed values, and so on. These
-  are all of the general form `"CONSTRAIN = [group1, group2] = ..."` or 
+  are all of the general form `"CONSTRAIN [group1, group2] = ..."` or 
   `"FIXED [group1] = ..."`
 
 - Added delta method for several classical IRT parameterization 
@@ -35,6 +35,8 @@
   
 - Fix initialization of `fscores()` when using 'MH' plausible value imputations (reported by 
   Charlie Iaconangelo)
+
+- Various other small bug fixes and performance improvements
 
 # Changes in mirt 1.25
 

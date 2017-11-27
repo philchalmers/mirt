@@ -635,7 +635,7 @@
 #' \emph{Journal of Educational Measurement, 52}, 200-222. \doi{10.1111/jedm.12072}
 #'
 #' Chalmers, R. P. (in press). Numerical Approximation of the ObservedInformation Matrix with Oakes' Identity.
-#' \emph{British Journal of Mathematical and Statistical Psychology} \doi{10.1111/bmsp.12127}
+#' \emph{British Journal of Mathematical and Statistical Psychology} \emph{DOI: 10.1111/bmsp.12127}
 #'
 #' Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
 #' Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 339-358.
