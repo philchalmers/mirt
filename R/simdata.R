@@ -84,7 +84,6 @@
 #' @export simdata
 #' @examples
 #'
-#' \dontrun{
 #' ### Parameters from Reckase (2009), p. 153
 #'
 #' set.seed(1234)
@@ -134,6 +133,8 @@
 #'
 #' #mod <- mirt(dataset1, 3, method = 'MHRM')
 #' #coef(mod)
+#'
+#' \dontrun{
 #'
 #' ### Unidimensional graded response model with 5 categories each
 #'

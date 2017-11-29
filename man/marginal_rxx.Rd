@@ -20,13 +20,14 @@ available for unidimensional tests.
 }
 \examples{
 
-\dontrun{
 
 dat <- expand.table(deAyala)
 mod <- mirt(dat, 1)
 
 # marginal estimate
 marginal_rxx(mod)
+
+\dontrun{
 
 # empirical estimate (assuming the same prior)
 fscores(mod, returnER = TRUE)

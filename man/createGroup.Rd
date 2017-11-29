@@ -50,8 +50,6 @@ customized group-level functions. To use the defined objects pass to the
 }
 \examples{
 
-\dontrun{
-
 # normal density example, N(mu, sigma^2)
 den <- function(obj, Theta) dnorm(Theta, obj@par[1], sqrt(obj@par[2]))
 par <- c(mu = 0, sigma2 = .5)
@@ -66,7 +64,6 @@ modcustom <- mirt(dat, 1, 'Rasch', customGroup=grp)
 coef(mod)
 coef(modcustom)
 
-}
 }
 \references{
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory

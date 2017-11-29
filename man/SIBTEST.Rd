@@ -56,6 +56,7 @@ distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
 Chalmers (accepted).
 }
 \examples{
+
 \dontrun{
 
 set.seed(1234)

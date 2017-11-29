@@ -141,11 +141,11 @@ the \code{mirtCAT} package and the associated JSS paper (Chalmers, 2016).
 }
 \examples{
 
-\dontrun{
-
 mod <- mirt(Science, 1)
 tabscores <- fscores(mod, full.scores = FALSE)
 head(tabscores)
+
+\dontrun{
 fullscores <- fscores(mod)
 fullscores_with_SE <- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)

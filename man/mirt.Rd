@@ -661,12 +661,16 @@ visit \url{https://github.com/philchalmers/mirt/wiki}.
 
 \examples{
 
-\dontrun{
 #load LSAT section 7 data and compute 1 and 2 factor models
 data <- expand.table(LSAT7)
 
 (mod1 <- mirt(data, 1))
 coef(mod1)
+summary(mod1)
+plot(mod1)
+plot(mod1, type = 'trace')
+
+\dontrun{
 (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors via the Oakes method
 (mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 coef(mod2)

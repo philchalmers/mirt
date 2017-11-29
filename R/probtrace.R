@@ -19,15 +19,12 @@
 #' \code{\link{extract.item}}
 #' @examples
 #'
-#' \dontrun{
 #' mod <- mirt(Science, 1)
 #' extr.2 <- extract.item(mod, 2)
 #' Theta <- matrix(seq(-4,4, by = .1))
 #' traceline <- probtrace(extr.2, Theta)
-#'
 #' head(data.frame(traceline, Theta=Theta))
 #'
-#' }
 probtrace <- function(x, Theta){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')

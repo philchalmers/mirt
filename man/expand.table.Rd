@@ -24,7 +24,6 @@ rightmost column of the input data.
 }
 \examples{
 
-\dontrun{
 data(LSAT7)
 head(LSAT7)
 LSAT7full <- expand.table(LSAT7)
@@ -32,8 +31,6 @@ head(LSAT7full)
 
 LSAT7full <- expand.table(LSAT7, sample = TRUE)
 head(LSAT7full)
-
-}
 
 }
 \references{

@@ -25,7 +25,6 @@
 #' @export iteminfo
 #' @examples
 #'
-#' \dontrun{
 #' mod <- mirt(Science, 1)
 #' extr.2 <- extract.item(mod, 2)
 #' Theta <- matrix(seq(-4,4, by = .1))
@@ -33,6 +32,8 @@
 #'
 #' #do something with the info?
 #' plot(Theta, info.2, type = 'l', main = 'Item information')
+#'
+#' \dontrun{
 #'
 #' #category information curves
 #' cat.info <- iteminfo(extr.2, Theta, total.info = FALSE)

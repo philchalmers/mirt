@@ -61,6 +61,7 @@
 #'   \emph{Psychometrika, 58}, 159-194.
 #'
 #' @examples
+#'
 #' \dontrun{
 #'
 #' set.seed(1234)

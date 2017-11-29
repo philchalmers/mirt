@@ -1,4 +1,4 @@
-# Changes in mirt 1.26.2
+# Changes in mirt 1.26.3
 
 - `mod2values()` and passing `pars = 'values'` now return `data.frame` objects without any
   factor variables (previously the defaults to `data.frame()` were used, which created factors
@@ -36,7 +36,8 @@
 - Fix initialization of `fscores()` when using 'MH' plausible value imputations (reported by 
   Charlie Iaconangelo)
 
-- Various other small bug fixes and performance improvements
+- Various other small bug fixes and performance improvements, fixes for Solaris compatibility,
+  and run a small number of examples during R CMD check
 
 # Changes in mirt 1.25
 

@@ -20,14 +20,12 @@ compute the expected value for an item given the ability parameter(s).
 }
 \examples{
 
-\dontrun{
 mod <- mirt(Science, 1)
 extr.2 <- extract.item(mod, 2)
 Theta <- matrix(seq(-6,6, length.out=200))
 expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
 head(data.frame(expected, Theta=Theta))
 
-}
 }
 \references{
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory

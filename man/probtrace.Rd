@@ -18,15 +18,12 @@ compute the probability trace lines for all categories.
 }
 \examples{
 
-\dontrun{
 mod <- mirt(Science, 1)
 extr.2 <- extract.item(mod, 2)
 Theta <- matrix(seq(-4,4, by = .1))
 traceline <- probtrace(extr.2, Theta)
-
 head(data.frame(traceline, Theta=Theta))
 
-}
 }
 \references{
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory

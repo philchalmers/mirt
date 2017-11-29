@@ -105,7 +105,6 @@ item objects, and Theta matrix.
 }
 \examples{
 
-\dontrun{
 ### Parameters from Reckase (2009), p. 153
 
 set.seed(1234)
@@ -155,6 +154,8 @@ dataset2 <- simdata(a, d, 2000, itemtype = '2PL', mu = mu, sigma = sigma)
 
 #mod <- mirt(dataset1, 3, method = 'MHRM')
 #coef(mod)
+
+\dontrun{
 
 ### Unidimensional graded response model with 5 categories each
 

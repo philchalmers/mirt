@@ -19,14 +19,12 @@
 #' @seealso \code{\link{extract.item}}, \code{\link{expected.test}}
 #' @examples
 #'
-#' \dontrun{
 #' mod <- mirt(Science, 1)
 #' extr.2 <- extract.item(mod, 2)
 #' Theta <- matrix(seq(-6,6, length.out=200))
 #' expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
 #' head(data.frame(expected, Theta=Theta))
 #'
-#' }
 expected.item <- function(x, Theta, min = 0){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')

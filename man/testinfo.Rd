@@ -28,7 +28,6 @@ Given an estimated model compute the test information.
 }
 \examples{
 
-\dontrun{
 dat <- expand.table(deAyala)
 (mirt(dat, 1, '2PL', pars = 'values'))
 mod <- mirt(dat, 1, '2PL', constrain = list(c(1,5,9,13,17)))
@@ -36,6 +35,8 @@ mod <- mirt(dat, 1, '2PL', constrain = list(c(1,5,9,13,17)))
 Theta <- matrix(seq(-4,4,.01))
 tinfo <- testinfo(mod, Theta)
 plot(Theta, tinfo, type = 'l')
+
+\dontrun{
 
 #compare information loss between two tests
 tinfo_smaller <- testinfo(mod, Theta, which.items = 3:5)

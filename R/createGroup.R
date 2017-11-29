@@ -40,8 +40,6 @@
 #' @export createGroup
 #' @examples
 #'
-#' \dontrun{
-#'
 #' # normal density example, N(mu, sigma^2)
 #' den <- function(obj, Theta) dnorm(Theta, obj@par[1], sqrt(obj@par[2]))
 #' par <- c(mu = 0, sigma2 = .5)
@@ -56,7 +54,6 @@
 #' coef(mod)
 #' coef(modcustom)
 #'
-#' }
 createGroup <- function(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
                        lbound = NULL, ubound = NULL, derivType = 'Richardson'){
     if(missing(par)) missingMsg('par')

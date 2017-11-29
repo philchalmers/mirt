@@ -20,7 +20,6 @@
 #' @export expand.table
 #' @examples
 #'
-#' \dontrun{
 #' data(LSAT7)
 #' head(LSAT7)
 #' LSAT7full <- expand.table(LSAT7)
@@ -28,8 +27,6 @@
 #'
 #' LSAT7full <- expand.table(LSAT7, sample = TRUE)
 #' head(LSAT7full)
-#'
-#' }
 #'
 expand.table <- function(tabdata, sample = FALSE) {
     if(missing(tabdata)) missingMsg('tabdata')
