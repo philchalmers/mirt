@@ -67,9 +67,7 @@ doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-
-dat &lt;- expand.table(deAyala)
+<pre><code class="r">dat &lt;- expand.table(deAyala)
 mod &lt;- mirt(dat, 1)
 
 # marginal estimate
@@ -79,7 +77,9 @@ marginal_rxx(mod)
 <pre><code>## [1] 0.6092894
 </code></pre>
 
-<pre><code class="r"># empirical estimate (assuming the same prior)
+<pre><code class="r">## No test: 
+
+# empirical estimate (assuming the same prior)
 fscores(mod, returnER = TRUE)
 </code></pre>
 
@@ -112,5 +112,5 @@ head(fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

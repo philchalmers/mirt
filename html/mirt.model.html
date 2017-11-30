@@ -79,6 +79,22 @@ called <code>COV</code>, and non-linear factor products can be included by enclo
 combination on the left hand side of the declaration (e.g., <code>(F1*F1)</code> would create a
 quadratic factor for <code>F1</code>).
 </p>
+<p>Finally, the keywords <code>CONSTRAIN, CONSTRAINB, PRIOR, FIXED, FREE, START, UBOUND, LBOUND</code> can
+be applied to specific sub-groups in multiple-group models by included square brackets before the
+= sign, where groups are separated by commas. For example, to apply within-group equality
+constraints to a group called &quot;male&quot;, then specifying:
+</p>
+<p><code>CONSTRAIN [male] = (1-5, a1)</code>
+</p>
+<p>is appropriate, while specifying the same constraints to the sub-groups
+&quot;male&quot; and &quot;female&quot; would appear as
+</p>
+<p><code>CONSTRAIN [male, female] = (1-5, a1)</code>
+</p>
+<p>For all other groups in the multi-group model, these within-group equality constraints would not appear. Therefore, these
+bracketed group specifications are useful when modifying priors, starting values, between/within group equality constraints,
+and so on when the specifications for each sub-group may differ.
+</p>
 
 <dl>
 <dt>COV</dt><dd><p>Specify the relationship between the latent factors.
@@ -91,9 +107,8 @@ E.g., <code>MEAN = F1, F2</code> will free the latent means for factors F1 and F
 </dd>
 <dt>CONSTRAIN</dt><dd><p>A bracketed, comma separated list specifying equality constrains between items.
 The input format is
-<code>CONSTRAIN = (items, ..., parameterName(s), OptionalGroup),
-  (items, ..., parameterName, OptionalGroup)</code>.
-If <code>OptionalGroup</code> is omitted then the constraints are applied within all groups.
+<code>CONSTRAIN = (items, ..., parameterName(s)),
+  (items, ..., parameterName)</code>.
 </p>
 <p>For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 the first and last 5 item slopes (a1) can be constrained to be equal by using
@@ -115,9 +130,8 @@ The input format is <code>CONSTRAINB = (items, ..., parameterName),
 </dd>
 <dt>PRIOR</dt><dd><p>A bracketed, comma separate list specifying prior parameter distributions.
 The input format is
-<code>PRIOR = (items, ..., parameterName, priorType, val1, val2, OptionalGroup),
-  (items, ..., parameterName, priorType, val1, val2, OptionalGroup)</code>.
-If <code>OptionalGroup</code> is omitted then the priors are defined for all groups.
+<code>PRIOR = (items, ..., parameterName, priorType, val1, val2),
+  (items, ..., parameterName, priorType, val1, val2)</code>.
 For example, in a single group 10-item dichotomous tests, using the default 2PL model,
 defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
 <code>PRIOR = (1-5, d, norm, 0, 2)</code>
@@ -248,7 +262,7 @@ mirtsyn2 &lt;- &quot;
        PRIOR = (C3,A2-A4,a2,lnorm, .2, .2),(B3,d,norm,0,.0001)&quot;
 # create a mirt model
 mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
-# or equivelently:
+# or equivalently:
 # mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=colnames(dat))
 
 # mod &lt;- mirt(dat , mirtmodel)
@@ -258,5 +272,5 @@ mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

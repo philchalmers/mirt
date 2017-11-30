@@ -24,9 +24,9 @@ a user input matrix of <i>&theta;</i>'s.
 
 <pre>
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-  upper = 1, nominal = NULL, Theta = NULL, gpcm_mats = list(),
-  returnList = FALSE, model = NULL, which.items = NULL, mins = 0,
-  lca_cats = NULL, prob.list = NULL)
+  upper = 1, nominal = NULL, t = NULL, Theta = NULL,
+  gpcm_mats = list(), returnList = FALSE, model = NULL, equal.K = TRUE,
+  which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 </pre>
 
 
@@ -55,14 +55,15 @@ be used</p>
 <p>a character vector of length <code>nrow(a)</code> (or 1, if all the item types are
 the same) specifying the type of items to simulate. Inputs can either be the same as
 the inputs found in the <code>itemtype</code> argument in <code><a href="mirt.html">mirt</a></code> or the
-internal clases defined by the package. Typical <code>itemtype</code> inputs that
+internal classes defined by the package. Typical <code>itemtype</code> inputs that
 are passed to <code><a href="mirt.html">mirt</a></code> are used then these will be converted into
 the respective internal classes automatically.
 </p>
 <p>If the internal class of the object is specified instead, the inputs can
-be <code>'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp'</code>, or <code>'lca'</code>, for
+be <code>'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp', 'gumm'</code>, or <code>'lca'</code>, for
 dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
-and latent class analysis model. Note that for the gpcm, nominal, and nested logit models there should
+generalized graded unfolding model, and latent class analysis model.
+Note that for the gpcm, nominal, and nested logit models there should
 be as many parameters as desired categories, however to parametrized them for meaningful
 interpretation the first category intercept should
 equal 0 for these models (second column for <code>'nestlogit'</code>, since first column is for the
@@ -98,6 +99,11 @@ in locations where not applicable. Note that during estimation the first slope w
 constrained to 0 and the last will be constrained to the number of categories minus 1,
 so it is best to set these as the values for the first and last categories as well</p>
 </td></tr>
+<tr valign="top"><td><code>t</code></td>
+<td>
+<p>matrix of t-values for the 'ggum' itemtype, where each row corresponds to a given item.
+Also determines the number of categories, where <code>NA</code> can be used for non-applicable categories</p>
+</td></tr>
 <tr valign="top"><td><code>Theta</code></td>
 <td>
 <p>a user specified matrix of the underlying ability parameters,
@@ -106,7 +112,7 @@ where <code>nrow(Theta) == N</code> and <code>ncol(Theta) == ncol(a)</code>. Whe
 </td></tr>
 <tr valign="top"><td><code>gpcm_mats</code></td>
 <td>
-<p>a list of matricies specifying the scoring scheme for generalized partial
+<p>a list of matrices specifying the scoring scheme for generalized partial
 credit models (see <code><a href="mirt.html">mirt</a></code> for details)</p>
 </td></tr>
 <tr valign="top"><td><code>returnList</code></td>
@@ -119,7 +125,13 @@ latent trait matrix <code>Theta</code>? Default is FALSE</p>
 <td>
 <p>a single group object, typically returned by functions such as <code><a href="mirt.html">mirt</a></code> or
 <code><a href="bfactor.html">bfactor</a></code>. Supplying this will render all other parameter elements (excluding the
-<code>Theta</code>, <code>N</code>, <code>mu</code>, and <code>sigma</code> inputs) redundent (unless explicitly provided)</p>
+<code>Theta</code>, <code>N</code>, <code>mu</code>, and <code>sigma</code> inputs) redundant (unless explicitly provided)</p>
+</td></tr>
+<tr valign="top"><td><code>equal.K</code></td>
+<td>
+<p>logical; when a <code>model</code> input is supplied, should the generated data contain the same
+number of categories as the original data indicated by <code>extract.mirt(model, 'K')</code>? Default is TRUE,
+which will redrawn data until this condition is satisfied</p>
 </td></tr>
 <tr valign="top"><td><code>which.items</code></td>
 <td>
@@ -171,8 +183,7 @@ doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-### Parameters from Reckase (2009), p. 153
+<pre><code class="r">### Parameters from Reckase (2009), p. 153
 
 set.seed(1234)
 
@@ -221,6 +232,8 @@ dataset2 &lt;- simdata(a, d, 2000, itemtype = &#39;2PL&#39;, mu = mu, sigma = si
 
 #mod &lt;- mirt(dataset1, 3, method = &#39;MHRM&#39;)
 #coef(mod)
+
+## No test: 
 
 ### Unidimensional graded response model with 5 categories each
 
@@ -558,12 +571,12 @@ head(sim)
 </code></pre>
 
 <pre><code>##      Comfort Work Future Benefit
-## [1,]       3    3      3       3
-## [2,]       3    2      2       1
-## [3,]       2    2      3       2
-## [4,]       3    3      3       3
-## [5,]       2    2      2       1
-## [6,]       3    1      4       2
+## [1,]       3    3      3       4
+## [2,]       3    2      1       1
+## [3,]       3    3      3       3
+## [4,]       4    2      3       2
+## [5,]       3    2      2       4
+## [6,]       2    4      3       3
 </code></pre>
 
 <pre><code class="r"># alternatively, define a suitable object with functions from the mirtCAT package
@@ -582,17 +595,37 @@ pars &lt;- data.frame(a1=a1, d=d, g=g)
 head(pars)
 </code></pre>
 
-<pre><code>##         a1          d         g
-## 1 1.504969  0.8015146 0.1824596
-## 2 1.481658  0.3372904 0.2400303
-## 3 1.684421 -0.7301190 0.2181996
-## 4 1.290391  0.4437703 0.2196977
-## 5 1.174943 -0.8999951 0.2191199
-## 6 1.234179 -1.1329357 0.1578217
+<pre><code>##          a1          d         g
+## 1 1.4337637 -0.3971002 0.3033994
+## 2 1.3066389  0.8006201 0.2176897
+## 3 1.0554595  0.3854587 0.1892018
+## 4 1.3347634  2.7953543 0.1743364
+## 5 1.0202023  0.4156724 0.2323224
+## 6 0.9737632  2.4579276 0.2167859
 </code></pre>
 
 <pre><code class="r">obj &lt;- generate.mirt_object(pars, &#39;3PL&#39;)
 dat &lt;- simdata(N=200, model=obj)
+
+#### 10 item GGUMs test with 4 categories each
+a &lt;- rlnorm(10, .2, .2)
+b &lt;- rnorm(10) #passed to d= input, but used as the b parameters
+diffs &lt;- t(apply(matrix(runif(10*3, .3, 1), 10), 1, cumsum))
+t &lt;- -(diffs - rowMeans(diffs))
+
+dat &lt;- simdata(a, b, 1000, &#39;ggum&#39;, t=t)
+apply(dat, 2, table)
+</code></pre>
+
+<pre><code>##   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
+## 0    736    571    592    613    530    607    474    645    868     593
+## 1    157    227    190    186    222    185    242    183     83     188
+## 2     63    117    123    105    149    125    159     96     34     128
+## 3     44     85     95     96     99     83    125     76     15      91
+</code></pre>
+
+<pre><code class="r"># mod &lt;- mirt(dat, 1, &#39;ggum&#39;)
+# coef(mod)
 
 ######
 # prob.list example
@@ -637,5 +670,5 @@ head(dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

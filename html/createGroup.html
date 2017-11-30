@@ -14,7 +14,7 @@
 
 <h3>Description</h3>
 
-<p>Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for definiting
+<p>Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for defining
 customized group-level functions. To use the defined objects pass to the
 <code>mirt(..., customGroup = OBJECT)</code> command, and ensure that the class parameters are properly labeled.
 </p>
@@ -62,7 +62,7 @@ defined by <code>createGroup()</code> and <code>Theta</code> is a matrix of late
 <td>
 <p>Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used.
-The input is idential to the <code>gr</code> argument</p>
+The input is identical to the <code>gr</code> argument</p>
 </td></tr>
 <tr valign="top"><td><code>gen</code></td>
 <td>
@@ -105,69 +105,73 @@ doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-
-# normal density example
-den &lt;- function(obj, Theta) dnorm(Theta, obj@par[1], obj@par[2])
-par &lt;- c(mu = 0, sigma = 1)
+<pre><code class="r"># normal density example, N(mu, sigma^2)
+den &lt;- function(obj, Theta) dnorm(Theta, obj@par[1], sqrt(obj@par[2]))
+par &lt;- c(mu = 0, sigma2 = .5)
 est &lt;- c(FALSE, TRUE)
 lbound &lt;- c(-Inf, 0)
 grp &lt;- createGroup(par, est, den, nfact = 1, lbound=lbound)
 
-mod &lt;- mirt(Science, 1, &#39;Rasch&#39;)
-modcustom &lt;- mirt(Science, 1, &#39;Rasch&#39;, customGroup=grp)
+dat &lt;- expand.table(LSAT6)
+mod &lt;- mirt(dat, 1, &#39;Rasch&#39;)
+modcustom &lt;- mirt(dat, 1, &#39;Rasch&#39;, customGroup=grp)
 
 coef(mod)
 </code></pre>
 
-<pre><code>## $Comfort
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 3.092 5.688 4.299
+<pre><code>## $Item_1
+##     a1     d g u
+## par  1 2.731 0 1
 ## 
-## $Work
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2   d3
-## par  1   0   1   2   3  0 1.897 2.808 0.95
+## $Item_2
+##     a1     d g u
+## par  1 0.999 0 1
 ## 
-## $Future
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.649 4.071 2.936
+## $Item_3
+##     a1    d g u
+## par  1 0.24 0 1
 ## 
-## $Benefit
-##     a1 ak0 ak1 ak2 ak3 d0   d1   d2    d3
-## par  1   0   1   2   3  0 2.45 3.35 1.992
+## $Item_4
+##     a1     d g u
+## par  1 1.307 0 1
+## 
+## $Item_5
+##     a1   d g u
+## par  1 2.1 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 COV_11
-## par      0  1.003
+## par      0  0.572
 </code></pre>
 
 <pre><code class="r">coef(modcustom)
 </code></pre>
 
-<pre><code>## $Comfort
-##     a1 ak0 ak1 ak2 ak3 d0   d1    d2    d3
-## par  1   0   1   2   3  0 3.08 5.674 4.285
+<pre><code>## $Item_1
+##     a1     d g u
+## par  1 2.729 0 1
 ## 
-## $Work
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 1.894 2.804 0.945
+## $Item_2
+##     a1     d g u
+## par  1 0.998 0 1
 ## 
-## $Future
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.644 4.064 2.929
+## $Item_3
+##     a1    d g u
+## par  1 0.24 0 1
 ## 
-## $Benefit
-##     a1 ak0 ak1 ak2 ak3 d0    d1    d2    d3
-## par  1   0   1   2   3  0 2.446 3.345 1.987
+## $Item_4
+##     a1     d g u
+## par  1 1.306 0 1
+## 
+## $Item_5
+##     a1     d g u
+## par  1 2.099 0 1
 ## 
 ## $GroupPars
-##     mu sigma
-## par  0     1
-</code></pre>
-
-<pre><code class="r">## End(No test)
+##     mu sigma2
+## par  0  0.569
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

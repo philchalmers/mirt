@@ -48,8 +48,8 @@ the order with which the syntax factors are defined will be associated with the 
 </td></tr>
 <tr valign="top"><td><code>customTheta</code></td>
 <td>
-<p>input passed to <code>techincal = list(customTheta = ...)</code>, but is included directly
-in this function for convienience. This input is most interesting for discrete latent models
+<p>input passed to <code>technical = list(customTheta = ...)</code>, but is included directly
+in this function for convenience. This input is most interesting for discrete latent models
 because it allows for customized patterns of latent class effects.
 The default builds the pattern <code>customTheta = diag(model)</code>,
 which is the typical pattern for the traditional
@@ -167,8 +167,7 @@ doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-#LSAT6 dataset
+<pre><code class="r">#LSAT6 dataset
 dat &lt;- expand.table(LSAT6)
 
 # fit with 2-3 latent classes
@@ -181,7 +180,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 380 EM iterations.
-## mirt version: 1.25 
+## mirt version: 1.26.3 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -192,7 +191,8 @@ dat &lt;- expand.table(LSAT6)
 ## G2 (20) = 22.73, p = 0.302, RMSEA = 0.012
 </code></pre>
 
-<pre><code class="r">(mod3 &lt;- mdirt(dat, 3))
+<pre><code class="r">## No test: 
+(mod3 &lt;- mdirt(dat, 3))
 </code></pre>
 
 <pre><code>## 
@@ -201,7 +201,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.25 
+## mirt version: 1.26.3 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -500,7 +500,7 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.25 
+## mirt version: 1.26.3 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -582,7 +582,7 @@ dat &lt;- key2binary(SAT12,
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 171 EM iterations.
-## mirt version: 1.25 
+## mirt version: 1.26.3 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -974,7 +974,7 @@ model &lt;- mirt.model(&#39;C1 = 1-32
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 255 EM iterations.
-## mirt version: 1.25 
+## mirt version: 1.26.3 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -2531,5 +2531,5 @@ coef(mod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

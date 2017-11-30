@@ -14,34 +14,33 @@
 
 <h3>Description</h3>
 
-<p>Compute numerical derivatives using forward/backword difference,
-central difference, or Richardson extropolation.
+<p>Compute numerical derivatives using forward/backward difference,
+central difference, or Richardson extrapolation.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-numerical_deriv(par, f, ..., delta = 1e-05, gradient = TRUE,
-  type = "forward")
+numerical_deriv(f, par, ..., delta = 1e-05, gradient = TRUE,
+  type = "Richardson")
 </pre>
 
 
 <h3>Arguments</h3>
 
 <table summary="R argblock">
-<tr valign="top"><td><code>par</code></td>
-<td>
-<p>a vector of parameters</p>
-</td></tr>
 <tr valign="top"><td><code>f</code></td>
 <td>
 <p>the objective function being evaluated</p>
 </td></tr>
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>a vector of parameters</p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
-<p>additional arguments to be passed to <code>f</code> and the <code>numDeriv</code> package when the
-Richardson type is used</p>
+<p>additional arguments to be passed to <code>f</code></p>
 </td></tr>
 <tr valign="top"><td><code>delta</code></td>
 <td>
@@ -54,8 +53,11 @@ Richardson type is used</p>
 <tr valign="top"><td><code>type</code></td>
 <td>
 <p>type of difference to compute. Can be either <code>'forward'</code> for the forward difference,
-<code>'central'</code> for the central difference, or <code>'Richardson'</code> for the Richardson extropolation.
-Backword difference is acheived by supplying a negative <code>delta</code> value</p>
+<code>'central'</code> for the central difference, or <code>'Richardson'</code> for the Richardson extrapolation (default).
+Backward difference is achieved by supplying a negative <code>delta</code> value with <code>'forward'</code>.
+When <code>type = 'Richardson'</code>, the default value of <code>delta</code> is increased to <code>delta * 1000</code> for the
+Hessian and <code>delta * 10</code> for the gradient to provide a reasonable perturbation starting
+location (each <code>delta</code> is halved at each iteration).</p>
 </td></tr>
 </table>
 
@@ -79,25 +81,25 @@ par &lt;- c(3,8)
 <pre><code>## [1]  81 -64
 </code></pre>
 
-<pre><code class="r">numerical_deriv(par, f, type = &#39;forward&#39;)
+<pre><code class="r">numerical_deriv(f, par, type = &#39;forward&#39;)
 </code></pre>
 
 <pre><code>## [1]  81.00027 -64.00004
 </code></pre>
 
-<pre><code class="r">numerical_deriv(par, f, type = &#39;central&#39;)
+<pre><code class="r">numerical_deriv(f, par, type = &#39;central&#39;)
 </code></pre>
 
 <pre><code>## [1]  81 -64
 </code></pre>
 
-<pre><code class="r">numerical_deriv(par, f, type = &#39;Richardson&#39;)
+<pre><code class="r">numerical_deriv(f, par, type = &#39;Richardson&#39;) # default
 </code></pre>
 
 <pre><code>## [1]  81 -64
 </code></pre>
 
-<pre><code class="r"># hessian = h11 -&gt; 18 * x, h22 -&gt; -8, h12 -&gt; h21 -&gt; 0
+<pre><code class="r"># Hessian = h11 -&gt; 18 * x, h22 -&gt; -8, h12 -&gt; h21 -&gt; 0
 (actual &lt;- matrix(c(18 * par[1], 0, 0, -8), 2, 2))
 </code></pre>
 
@@ -106,7 +108,7 @@ par &lt;- c(3,8)
 ## [2,]    0   -8
 </code></pre>
 
-<pre><code class="r">numerical_deriv(par, f, type = &#39;forward&#39;, gradient = FALSE)
+<pre><code class="r">numerical_deriv(f, par, type = &#39;forward&#39;, gradient = FALSE)
 </code></pre>
 
 <pre><code>##          [,1]      [,2]
@@ -114,25 +116,25 @@ par &lt;- c(3,8)
 ## [2,]  0.00000 -7.999574
 </code></pre>
 
-<pre><code class="r">numerical_deriv(par, f, type = &#39;central&#39;, gradient = FALSE)
+<pre><code class="r">numerical_deriv(f, par, type = &#39;central&#39;, gradient = FALSE)
 </code></pre>
 
 <pre><code>##          [,1]      [,2]
-## [1,] 53.99997  0.000000
-## [2,]  0.00000 -8.000356
+## [1,] 54.00004  0.000000
+## [2,]  0.00000 -7.999645
 </code></pre>
 
-<pre><code class="r">numerical_deriv(par, f, type = &#39;Richardson&#39;, gradient = FALSE)
+<pre><code class="r">numerical_deriv(f, par, type = &#39;Richardson&#39;, gradient = FALSE) # default
 </code></pre>
 
-<pre><code>##              [,1]          [,2]
-## [1,] 5.400000e+01  5.918015e-12
-## [2,] 5.918015e-12 -8.000000e+00
+<pre><code>##      [,1] [,2]
+## [1,]   54    0
+## [2,]    0   -8
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

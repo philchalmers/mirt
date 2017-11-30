@@ -22,7 +22,7 @@ more constrained baseline model.
 <h3>Usage</h3>
 
 <pre>
-lagrange(mod, parnum, SE.type = "Oakes", type = "central", ...)
+lagrange(mod, parnum, SE.type = "Oakes", type = "Richardson", ...)
 </pre>
 
 
@@ -138,11 +138,11 @@ lagrange(mod, parnum)
 </code></pre>
 
 <pre><code>##            X2 df          p
-## 1  0.36685162  1 0.54472542
+## 1  0.36685160  1 0.54472543
 ## 5  0.04784961  1 0.82684827
 ## 9  4.69667172  1 0.03022109
 ## 13 1.44920423  1 0.22865568
-## 17 2.55494551  1 0.10994961
+## 17 2.55494552  1 0.10994960
 </code></pre>
 
 <pre><code class="r"># compare to LR test for first two slopes
@@ -249,5 +249,5 @@ lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

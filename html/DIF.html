@@ -205,7 +205,7 @@ mirtCluster()
 
 # Information matrix with Oakes&#39; identity (not controlling for latent group differences)
 # NOTE: Without properly equating the groups the following example code is not testing for DIF,
-     # but instead reflects a compbination of DIF + latent-trait distribution effects
+     # but instead reflects a combination of DIF + latent-trait distribution effects
 model &lt;- multipleGroup(dat, 1, group, SE = TRUE)
 
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
@@ -545,7 +545,7 @@ anchor
 ## 2 36179.95 36181.46 36272.06 36392.78 -18051.97 4.594   2 0.101
 </code></pre>
 
-<pre><code class="r">### drop down approach (freely estimating parameters accross groups) when
+<pre><code class="r">### drop down approach (freely estimating parameters across groups) when
 ### specifying a highly constrained model with estimated latent parameters
 model_constrained &lt;- multipleGroup(dat, 1, group,
   invariance = c(colnames(dat), &#39;free_means&#39;, &#39;free_var&#39;))
@@ -691,5 +691,5 @@ Checking for DIF in 2 more items
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

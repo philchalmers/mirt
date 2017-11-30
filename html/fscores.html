@@ -91,7 +91,7 @@ is greater than 0 a list of plausible values will be returned</p>
 <td>
 <p>type of plausible values to obtain. Can be either <code>'normal'</code> (default)
 to use a normal approximation based on the ACOV matrix, or <code>'MH'</code> to obtain Metropolis-Hastings
-samples from the posterior (silently passes object to <code><a href="mirt.html">mirt</a></code>, therefore arguemnts like
+samples from the posterior (silently passes object to <code><a href="mirt.html">mirt</a></code>, therefore arguments like
 <code>technical</code> can be supplied to increase the number of burn-in draws and discarded samples)</p>
 </td></tr>
 <tr valign="top"><td><code>quadpts</code></td>
@@ -173,7 +173,7 @@ that this only affect the goodness of fit tests and not the returned EAP for sum
 <tr valign="top"><td><code>converge_info</code></td>
 <td>
 <p>logical; include a column in the return objects containing a logical for each
-response pattern indicating whether a maximum value was found (not relavent non-iterative methods,
+response pattern indicating whether a maximum value was found (not relevant non-iterative methods,
 such as EAP and EAPsum). Value is a reflection of the <code>code</code> element from <code><a href="../../stats/html/nlm.html">nlm</a></code>
 (e.g., 1 indicates convergence)</p>
 </td></tr>
@@ -248,9 +248,7 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-
-mod &lt;- mirt(Science, 1)
+<pre><code class="r">mod &lt;- mirt(Science, 1)
 tabscores &lt;- fscores(mod, full.scores = FALSE)
 </code></pre>
 
@@ -275,7 +273,8 @@ tabscores &lt;- fscores(mod, full.scores = FALSE)
 ## [6,]       2    1      2       4 -1.2478570 0.5840105
 </code></pre>
 
-<pre><code class="r">fullscores &lt;- fscores(mod)
+<pre><code class="r">## No test: 
+fullscores &lt;- fscores(mod)
 fullscores_with_SE &lt;- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)
 </code></pre>
@@ -602,12 +601,12 @@ head(fs)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.40409886
-## [2,]  0.04995962
-## [3,] -0.86238754
-## [4,] -0.86238754
-## [5,]  0.72052252
-## [6,]  0.66834154
+## [1,]  0.39357303
+## [2,]  0.05507765
+## [3,] -0.86262930
+## [4,] -0.86262930
+## [5,]  0.71760144
+## [6,]  0.66687315
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -617,23 +616,23 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 
 <pre><code>## [[1]]
 ##         mean          var          min          max 
-## -0.007114992  1.018262736 -3.404457838  2.679950633 
+## -0.007623551  0.994794075 -3.226535046  2.640101674 
 ## 
 ## [[2]]
 ##        mean         var         min         max 
-## -0.03572293  0.94640448 -3.47178617  2.43268936 
+##  0.02348655  0.88684801 -3.48692934  2.93079846 
 ## 
 ## [[3]]
-##       mean        var        min        max 
-## -0.0279856  0.9839735 -3.2296058  3.5024351 
+##         mean          var          min          max 
+##  0.009947193  1.105201721 -2.912209246  2.875658509 
 ## 
 ## [[4]]
 ##        mean         var         min         max 
-##  0.02834431  0.91603346 -2.86901781  3.08167819 
+##  0.01961432  1.06903575 -3.49681636  2.73827767 
 ## 
 ## [[5]]
-##        mean         var         min         max 
-##  0.05612169  1.01550086 -3.43157317  2.93057221
+##         mean          var          min          max 
+## -0.009535244  0.945843078 -3.877809816  2.436483989
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -679,5 +678,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

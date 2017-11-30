@@ -63,12 +63,10 @@ doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-mod &lt;- mirt(Science, 1)
+<pre><code class="r">mod &lt;- mirt(Science, 1)
 extr.2 &lt;- extract.item(mod, 2)
 Theta &lt;- matrix(seq(-4,4, by = .1))
 traceline &lt;- probtrace(extr.2, Theta)
-
 head(data.frame(traceline, Theta=Theta))
 </code></pre>
 
@@ -81,9 +79,6 @@ head(data.frame(traceline, Theta=Theta))
 ## 6 0.7968730 0.1705082 0.03120137 0.0014175155  -3.5
 </code></pre>
 
-<pre><code class="r">## End(No test)
-</code></pre>
 
-
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>

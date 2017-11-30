@@ -67,8 +67,7 @@ doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-mod &lt;- mirt(Science, 1)
+<pre><code class="r">mod &lt;- mirt(Science, 1)
 extr.2 &lt;- extract.item(mod, 2)
 Theta &lt;- matrix(seq(-6,6, length.out=200))
 expected &lt;- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
@@ -84,9 +83,6 @@ head(data.frame(expected, Theta=Theta))
 ## 6 1.019289 -5.698492
 </code></pre>
 
-<pre><code class="r">## End(No test)
-</code></pre>
 
-
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
 </body></html>
