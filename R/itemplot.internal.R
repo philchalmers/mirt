@@ -155,15 +155,14 @@ setMethod(
 
 itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot,
                           theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
-                          add.ylab2 = TRUE, drape = TRUE, ...){
+                          add.ylab2 = TRUE, drape = TRUE, npts = 200, ...){
     if(drop.zeros){
         if(x@Options$exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
         x@ParObjects$pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
     }
     nfact <- min(x@ParObjects$pars[[item]]@nfact, x@Model$nfact)
     if(nfact > 3) stop('Can not plot high dimensional models', call.=FALSE)
-    theta <- seq(theta_lim[1L],theta_lim[2L], length.out=40)
-    if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
+    theta <- seq(theta_lim[1L],theta_lim[2L], length.out=npts/(nfact^2))
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
     if(length(prodlist) > 0){
         Theta <- thetaComb(theta, x@Model$nfact)

@@ -27,6 +27,8 @@
 #'   models that contain several zero slopes
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
+#' @param npts number of quadrature points to be used for plotting features.
+#'   Larger values make plots look smoother
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
 #'   This primarily is an instructive tool for demonstrating how item response curves
 #'   behave when adjusting their parameters
@@ -91,7 +93,7 @@
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
                      CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
                      rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-                     par.strip.text = list(cex = 0.7),
+                     par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
                      auto.key = list(space = 'right'), ...){
@@ -119,7 +121,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,
-                             par.settings=par.settings, auto.key=auto.key, ...)
+                             par.settings=par.settings, auto.key=auto.key, npts=npts, ...)
     if(!is.list(object) && object@Options$exploratory)
         ret$main <- paste0(ret$main, ' (rotate = \'', rotate, '\')')
     return(ret)

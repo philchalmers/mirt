@@ -7,9 +7,9 @@
 itemplot(object, item, type = "trace", degrees = 45, CE = FALSE,
   CEalpha = 0.05, CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,
   6), shiny = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
-  par.strip.text = list(cex = 0.7), par.settings = list(strip.background =
-  list(col = "#9ECAE1"), strip.border = list(col = "black")),
-  auto.key = list(space = "right"), ...)
+  par.strip.text = list(cex = 0.7), npts = 200,
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
+  list(col = "black")), auto.key = list(space = "right"), ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass}
@@ -49,6 +49,9 @@ behave when adjusting their parameters}
 \item{rot}{a list of rotation coordinates to be used for 3 dimensional plots}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+
+\item{npts}{number of quadrature points to be used for plotting features.
+Larger values make plots look smoother}
 
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
 

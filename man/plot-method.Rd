@@ -9,7 +9,7 @@
 \alias{plot,DiscreteClass,missing-method}
 \title{Plot various test-implied functions from models}
 \usage{
-\S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 50,
+\S4method{plot}{SingleGroupClass,missing}(x, y, type = "score", npts = 200,
   degrees = 45, theta_lim = c(-6, 6), which.items = 1:extract.mirt(x,
   "nitems"), MI = 0, CI = 0.95, rot = list(xaxis = -70, yaxis = 30, zaxis
   = 10), facet_items = TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
@@ -123,6 +123,7 @@ x2 <- multipleGroup(Science, 1, group)
 plot(x2)
 plot(x2, type = 'trace')
 plot(x2, type = 'trace', which.items = 1:2)
+plot(x2, type = 'itemscore', which.items = 1:2)
 plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 plot(x2, type = 'info')
 

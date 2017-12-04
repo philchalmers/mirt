@@ -809,6 +809,7 @@ setMethod(
 #' plot(x2)
 #' plot(x2, type = 'trace')
 #' plot(x2, type = 'trace', which.items = 1:2)
+#' plot(x2, type = 'itemscore', which.items = 1:2)
 #' plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 #' plot(x2, type = 'info')
 #'
@@ -820,7 +821,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 50, degrees = 45,
+    definition = function(x, y, type = 'score', npts = 200, degrees = 45,
                           theta_lim = c(-6,6), which.items = 1:extract.mirt(x, 'nitems'),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, main = NULL,
@@ -840,8 +841,7 @@ setMethod(
         nfact <- x@Model$nfact
         if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
         J <- x@Data$nitems
-        theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts)
-        if(nfact == 3) theta <- seq(theta_lim[1L],theta_lim[2L], length.out=20)
+        theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts/(nfact^2))
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@ParObjects$pars, 'prodlist')
         if(all(x@Data$K[which.items] == 2L) && facet_items) auto.key <- FALSE

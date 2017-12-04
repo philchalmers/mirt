@@ -63,7 +63,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 50, degrees = 45,
+    definition = function(x, y, type = 'score', npts = 200, degrees = 45,
                           which.items = 1:extract.mirt(x, 'nitems'),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE,
@@ -84,7 +84,7 @@ setMethod(
         nfact <- x@Model$nfact
         if(nfact > 2) stop("Can't plot high dimensional solutions.", call.=FALSE)
         if(nfact == 1) degrees <- 0
-        theta <- seq(theta_lim[1],theta_lim[2],length.out=npts)
+        theta <- seq(theta_lim[1L],theta_lim[2L], length.out=npts/(nfact^2))
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@ParObjects$pars, 'prodlist')
         if(length(prodlist) > 0)
