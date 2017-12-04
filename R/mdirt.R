@@ -36,6 +36,9 @@
 #' @param optimizer optimizer used for the M-step, set to \code{'nlminb'} by default.
 #'   See \code{\link{mirt}} for more details
 #' @param group a factor variable indicating group membership used for multiple group analyses
+#' @param itemtype a vector indicating the itemtype associated with each item.
+#'   For discrete models this is limited to only 'lca' or items defined using a
+#'   \code{\link{createItem}} definition
 #' @param GenRandomPars logical; use random starting values
 #' @param customTheta input passed to \code{technical = list(customTheta = ...)}, but is included directly
 #'   in this function for convenience. This input is most interesting for discrete latent models
@@ -253,15 +256,19 @@
 #'
 #' }
 mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
-                  covdata = NULL, formula = NULL,
+                  covdata = NULL, formula = NULL, itemtype = 'lca',
                   optimizer = 'nlminb', return_max = TRUE, group = NULL, GenRandomPars = FALSE,
                   verbose = TRUE, pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
+    dots <- list(...)
     latent.regression <- latentRegression_obj(data=data, covdata=covdata, formula=formula,
                                               empiricalhist=FALSE, method=method)
     technical$customTheta <- customTheta
-    itemtype <- 'lca'
+    valid_itemtype <- 'lca'
+    if(!is.null(dots$customItems))
+        valid_itemtype <- c(valid_itemtype, names(dots$customItems))
+    stopifnot(all(itemtype %in% valid_itemtype))
     stopifnot(method %in% c('EM', 'BL'))
     if(nruns > 1) GenRandomPars <- TRUE
     if(is.null(group)) group <- rep('all', nrow(data))

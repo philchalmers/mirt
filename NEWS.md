@@ -1,3 +1,10 @@
+# Changes in mirt 1.27
+
+- `mdirt()` gains support for `createItem()` inputs
+
+- More plotting points added to default `plot()` and `itemplot()` generics to create 
+  smoother traceline functions
+
 # Changes in mirt 1.26.3
 
 - `mod2values()` and passing `pars = 'values'` now return `data.frame` objects without any

@@ -5,9 +5,10 @@
 \title{Multidimensional discrete item response theory}
 \usage{
 mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
-  covdata = NULL, formula = NULL, optimizer = "nlminb",
-  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-  verbose = TRUE, pars = NULL, technical = list(), ...)
+  covdata = NULL, formula = NULL, itemtype = "lca",
+  optimizer = "nlminb", return_max = TRUE, group = NULL,
+  GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
+  technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -38,6 +39,10 @@ can be regressed using external covariates in \code{covdata}. If a named list
 of formulas is supplied (where the names correspond to the latent trait names in \code{model})
 then specific regression effects can be estimated for each factor. Supplying a single formula
 will estimate the regression parameters for all latent traits by default}
+
+\item{itemtype}{a vector indicating the itemtype associated with each item.
+For discrete models this is limited to only 'lca' or items defined using a
+\code{\link{createItem}} definition}
 
 \item{optimizer}{optimizer used for the M-step, set to \code{'nlminb'} by default.
 See \code{\link{mirt}} for more details}
