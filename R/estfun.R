@@ -29,7 +29,7 @@
 #' colSums(sc1)
 #' vc1 <- vcov(mod1)
 #' all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)
-#' 
+#'
 #' group <- rep(c("G1", "G2"), 500)
 #' mod2 <- multipleGroup(expand.table(LSAT7), 1, group, SE = TRUE,
 #'   SE.type = "crossprod")
@@ -43,8 +43,22 @@
 estfun.AllModelClass <- function(object) {
   ### check class
   stopifnot(class(object) %in% c("SingleGroupClass", "MultipleGroupClass"))
+
+  ### check second-order test was passed.
+    if(is.na(object@OptimInfo$secondordertest)){
+        stop('Standard Error estimation required. Please turn on the SE estimation.')
+    } else if(object@OptimInfo$secondordertest != TRUE){
+        stop('The model has not the proper solution; the second-order test was not passed.
+             Reconsidering or Checking your model specification again
+             include factor structures and itemtype specification.')
+    }
+
   ### check estimation method
-  stopifnot(object@Options$method %in% c("EM", "BL"))
+    if(!object@Options$method %in% c("EM", "BL")){
+      warning('Use EM or BL as calibration method if you do not care about accuracy.
+              Use EM or BL are strongly recommended.')
+    }
+
   ### check latent regression
   if(length(object@Model$lrPars)) {
     stop("Scores computations currently not supported for latent regression estimates.")
