@@ -1,5 +1,7 @@
 # Changes in mirt 1.27
 
+- fix `simdata()` bug for new `ggum` itemtype
+
 - `mdirt()` gains support for `createItem()` inputs
 
 - More plotting points added to default `plot()` and `itemplot()` generics to create 
