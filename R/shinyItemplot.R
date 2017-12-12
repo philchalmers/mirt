@@ -20,7 +20,8 @@ shinyItemplot <- function(){
                                         'nominal' = 'nominal',
                                         'gpcm' = 'gpcm',
                                         'partcomp' = 'partcomp',
-                                        'ideal' = 'ideal'),
+                                        'ideal' = 'ideal',
+                                        'ggum' = 'ggum'),
                             selected = 'dich'),
 
                 shiny::selectInput(inputId = "plottype",
@@ -65,7 +66,21 @@ shinyItemplot <- function(){
                                                               min = 0, max = 1, value = 0, step = 0.05),
                                                               shiny::sliderInput(inputId = "upar",
                                                               label = "u value:",
-                                                              min = 0, max = 1, value = 1, step = 0.05)
+                                                              min = 0, max = 1, value = 1, step = 0.05)),
+
+                                          shiny::conditionalPanel(condition = "input.itemclass == 'ggum'",
+                                                                  shiny::sliderInput(inputId = "b1par",
+                                                                                     label = "b1 value:",
+                                                                                     min = -5, max = 5, value = 3, step = 0.25),
+                                                                  shiny::sliderInput(inputId = "t1par",
+                                                                                     label = "t1 value:",
+                                                                                     min = -20, max = 20, value = 6, step = 0.05),
+                                                                  shiny::sliderInput(inputId = "t2par",
+                                                                                     label = "t2 value:",
+                                                                                     min = -20, max = 20, value = 4, step = 0.05),
+                                                                  shiny::sliderInput(inputId = "t3par",
+                                                                                     label = "t3 value:",
+                                                                                     min = -20, max = 20, value = 2, step = 0.05)
                                  ),
 
                                  shiny::conditionalPanel(condition = "input.itemclass == 'ideal'",
@@ -74,7 +89,9 @@ shinyItemplot <- function(){
                                                               min = -5, max = 5, value = 0, step = 0.25)
                                  ),
 
-                                 shiny::conditionalPanel(condition = "input.itemclass != 'dich'",
+                                 shiny::conditionalPanel(condition = "input.itemclass == 'gpcm' ||
+                                                                   input.itemclass == 'nominal' ||
+                                                                   input.itemclass == 'graded'",
                                                          shiny::conditionalPanel(condition = "input.itemclass == 'gpcm' ||
                                                                    input.itemclass == 'nominal'",
                                                                                  shiny::sliderInput(inputId = "d0par",
@@ -89,7 +106,8 @@ shinyItemplot <- function(){
                                                                   shiny::sliderInput(inputId = "d2par",
                                                                   label = "d2 value:",
                                                                   min = -5, max = 5, value = 0, step = 0.25),
-                                                                  shiny::conditionalPanel(condition = "input.itemclass != 'partcomp'",
+                                                                  shiny::conditionalPanel(condition = "input.itemclass != 'partcomp' &&
+                                                                                          input.itemclass != 'ggum'",
                                                                                           shiny::sliderInput(inputId = "d3par",
                                                                                    label = "d3 value:",
                                                                                    min = -5, max = 5, value = -1, step = 0.25)
@@ -209,15 +227,20 @@ shinyItemplot <- function(){
                                    nestlogit='2PLNRM',
                                    partcomp='PC2PL',
                                    nestlogit='2PLNRM',
-                                   ideal='ideal')
+                                   ideal='ideal',
+                                   ggum='ggum')
                 nominal <- NULL
                 model <- 1
+                t <- NULL
+                K <- c(4,4)
                 if(input$nfact) model <- 2
                 if(model == 2 && input$plottype == 'infoSE')
                     stop('infoSE only available for single dimensional models', call.=FALSE)
                 a <- matrix(1,2)
                 d <- matrix(0,2)
-                if(input$itemclass == 'graded'){
+                if(input$itemclass %in% c('dich', 'ideal')){
+                    K <- c(2,2)
+                } else if(input$itemclass == 'graded'){
                     d <- matrix(c(1,0,-1), 2, 3, byrow=TRUE)
                 } else if(input$itemclass == 'gpcm'){
                     d <- matrix(c(0,1,0,-1), 2, 4, byrow=TRUE)
@@ -238,14 +261,16 @@ shinyItemplot <- function(){
                     itemclass[2] <- 'dich'
                     model <- mirt.model('F1 = 1,2
                                         F2 = 1', quiet=TRUE)
+                    K <- c(2,2)
+                } else if(input$itemclass == 'ggum'){
+                    t <- matrix(rep(c(6,4,2), each=2), 2)
                 }
-                dat <- simdata(a=a, d=d, N=100,
-                               itemtype=itemclass, nominal=nominal)
+                dat <- expand.grid(1:K[1], 1:K[2])
                 sv <- mirt(dat, model, itemtype=itemtype, pars = 'values', key=c(1, NA),
-                           technical=list(message=FALSE))
+                           technical=list(message=FALSE, customK=K))
                 sv$est <- FALSE
                 mod <- mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA),
-                            technical=list(message=FALSE))
+                            technical=list(message=FALSE, customK=K))
                 par <- mod@ParObjects$pars[[1]]@par
                 if(input$classical){
                     if(itemclass[1L] == 'dich'){
@@ -270,6 +295,8 @@ shinyItemplot <- function(){
                         par[names(par) == 'd'] <- input$idpar
                     par[names(par) == 'g'] <- logit(input$gpar)
                     par[names(par) == 'u'] <- logit(input$upar)
+                    par[names(par) == 'b1'] <- input$b1par
+                    par[names(par) == 'b2'] <- input$b2par
                     par[names(par) == 'd0'] <- input$d0par
                     par[names(par) == 'd1'] <- input$d1par
                     par[names(par) == 'd2'] <- input$d2par
@@ -278,6 +305,9 @@ shinyItemplot <- function(){
                     par[names(par) == 'ak1'] <- input$ak1par
                     par[names(par) == 'ak2'] <- input$ak2par
                     par[names(par) == 'ak3'] <- input$ak3par
+                    par[names(par) == 't1'] <- input$t1par
+                    par[names(par) == 't2'] <- input$t2par
+                    par[names(par) == 't3'] <- input$t3par
                 }
                 mod@ParObjects$pars[[1]]@par <- par
                 mod
