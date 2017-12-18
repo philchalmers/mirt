@@ -324,7 +324,7 @@ setMethod(
             return(theta1)
         }
         diff <- total_1 - total_0
-        accept <- unif < exp(diff)
+        accept <- log(unif) < diff
         theta1[!accept, ] <- theta0[!accept, ]
         total_1[!accept] <- total_0[!accept]
         attr(theta1, "Proportion Accepted") <- sum(accept)/N

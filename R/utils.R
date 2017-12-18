@@ -46,7 +46,7 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
             return(theta1)
         }
         diff <- total_1 - total_0
-        accept <- unif < exp(diff)
+        accept <- log(unif) < diff
         theta1[!accept, ] <- theta0[!accept, ]
         total_1[!accept] <- total_0[!accept]
         log.lik <- sum(total_1)
