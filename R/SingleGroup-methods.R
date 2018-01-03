@@ -175,7 +175,6 @@ setMethod(
             colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[seq_len(object@Model$nfact)]
             loads <- cbind(F,h2)
-            rownames(loads) <- colnames(object@Data$data)
             if(verbose){
                 if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
@@ -195,7 +194,6 @@ setMethod(
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
             loads <- cbind(L,h2)
-            rownames(loads) <- colnames(object@Data$data)
             Phi <- diag(ncol(F))
             if(!rotF$orthogonal){
                 Phi <- rotF$Phi
