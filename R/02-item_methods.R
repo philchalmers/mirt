@@ -2320,6 +2320,7 @@ setClass('custom', contains = 'AllItemsClass',
          representation = representation(name='character',
                                          P='function',
                                          dps='function',
+                                         dps2='function',
                                          gr='function',
                                          usegr='logical',
                                          hss='function',
@@ -2392,7 +2393,7 @@ setMethod(
 setMethod("initialize",
           'custom',
           function(.Object, name, par, est, lbound, ubound, P, gr, hss, gen, userdata, derivType,
-                   derivType.hss, dps) {
+                   derivType.hss, dps, dps2) {
               dummyfun <- function(...) return(NULL)
               names(est) <- names(par)
               usegr <- usehss <- useuserdata <- TRUE
@@ -2404,6 +2405,7 @@ setMethod("initialize",
               .Object@derivType.hss <- derivType.hss
               .Object@itemclass <- 999L
               .Object@dps <- dps
+              .Object@dps2 <- dps2
               if(is.null(gr)){
                   .Object@gr <- dummyfun
                   usegr <- FALSE

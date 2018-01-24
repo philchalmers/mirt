@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.26.6
+Version: 1.26.7
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -11,7 +11,8 @@ Authors@R: c( person("Phil", family="Chalmers", email =
     person("Carl F.", family="Falk", role=c('ctb')),
     person("Adam", family="Meade", role=c('ctb')),
     person("Lennart", family="Schneider", role=c('ctb')),
-    person("David", family="King", role=c('ctb')))
+    person("David", family="King", role=c('ctb')),
+    person("Chen-Wei", family="Liu", role=c('ctb')))
 Description: Analysis of dichotomous and polytomous response data using
     unidimensional and multidimensional latent trait models under the Item
     Response Theory paradigm (Chalmers (2012) <doi:10.18637/jss.v048.i06>). 

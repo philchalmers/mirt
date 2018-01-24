@@ -44,13 +44,16 @@ then the bounds will be set to Inf}
 \item{derivType}{if the \code{gr} term is not specified this type will be used to
 obtain the gradient numerically or symbolically. Default is the 'Richardson'
 extrapolation method; see \code{\link{numerical_deriv}} for details and other options. If
-\code{'symbolic'} is supplied then the gradient will initially be computed using
+\code{'symbolic'} is supplied then the gradient will be computed using
 a symbolical approach (potentially the most accurate method, though may fail depending
 on how the \code{P} function was defined)}
 
 \item{derivType.hss}{if the \code{hss} term is not specified this type will be used to
-obtain the Hessian numerically. Default is the 'Richardson' extrapolation method; see
-\code{\link{numerical_deriv}} for details and other options}
+obtain the Hessian numerically. Default is the 'Richardson'
+extrapolation method; see \code{\link{numerical_deriv}} for details and other options. If
+\code{'symbolic'} is supplied then the Hessian will be computed using
+a symbolical approach (potentially the most accurate method, though may fail depending
+on how the \code{P} function was defined)}
 }
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.

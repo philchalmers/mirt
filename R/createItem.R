@@ -35,12 +35,15 @@
 #' @param derivType if the \code{gr} term is not specified this type will be used to
 #'   obtain the gradient numerically or symbolically. Default is the 'Richardson'
 #'   extrapolation method; see \code{\link{numerical_deriv}} for details and other options. If
-#'   \code{'symbolic'} is supplied then the gradient will initially be computed using
+#'   \code{'symbolic'} is supplied then the gradient will be computed using
 #'   a symbolical approach (potentially the most accurate method, though may fail depending
 #'   on how the \code{P} function was defined)
 #' @param derivType.hss if the \code{hss} term is not specified this type will be used to
-#'   obtain the Hessian numerically. Default is the 'Richardson' extrapolation method; see
-#'   \code{\link{numerical_deriv}} for details and other options
+#'   obtain the Hessian numerically. Default is the 'Richardson'
+#'   extrapolation method; see \code{\link{numerical_deriv}} for details and other options. If
+#'   \code{'symbolic'} is supplied then the Hessian will be computed using
+#'   a symbolical approach (potentially the most accurate method, though may fail depending
+#'   on how the \code{P} function was defined)
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -162,11 +165,13 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
     if(missing(P)) missingMsg('P')
     if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
         stop('Parameter names cannot be \'g\' or \'u\', please change.', call.=FALSE)
-    dps <- function() NULL
-    if(derivType == "symbolic"){
+    dps <- dps2 <- function() NULL
+    if(derivType == 'symbolic' || derivType.hss == 'symbolic'){
         tmppars <- 1L:length(par)
         names(tmppars) <- rep("par", length(par))
         dps <- Deriv::Deriv(P, tmppars)
+    }
+    if(derivType == "symbolic"){
         gr <- function(x, Theta){
             P <- ProbTrace(x, Theta)
             xLength <- length(x@par)
@@ -179,7 +184,25 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
             grad
         }
     }
+    if(derivType.hss == "symbolic"){
+        dps2 <- Deriv::Deriv(dps, tmppars)
+        hss <- function(x, Theta){
+            P <- ProbTrace(x, Theta)
+            xLength <- length(x@par)
+            ThetaLength <- length(Theta)
+            dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
+            dp2 <- array(x@dps2(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength,xLength))
+            H <- matrix(NA,xLength,xLength)
+            for (i in 1L:xLength){
+                for (j in i:xLength){
+                    H[i,j] <- sum(x@dat*dp2[,,i,j]/P + x@dat*dp1[,,i]*(-dp1[,,j]/(P^2)))
+                    H[j,i] <- H[i,j]
+                }
+            }
+            H
+        }
+    }
     return(new('custom', name=name, par=par, est=est, lbound=lbound,
-               ubound=ubound, P=P, dps=dps, gr=gr, hss=hss, gen=gen, userdata=NULL,
+               ubound=ubound, P=P, dps=dps, dps2=dps2, gr=gr, hss=hss, gen=gen, userdata=NULL,
                derivType=derivType, derivType.hss=derivType.hss))
 }
