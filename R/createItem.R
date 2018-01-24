@@ -32,8 +32,14 @@
 #'   then the bounds will be set to -Inf
 #' @param ubound optional vector indicating the lower bounds of the parameters. If not specified
 #'   then the bounds will be set to Inf
-#' @param derivType if the \code{gr} or \code{hss} terms are not specified this type will be used to
-#'   obtain them numerically. Default is the 'Richardson' extrapolation method; see
+#' @param derivType if the \code{gr} term is not specified this type will be used to
+#'   obtain the gradient numerically or symbolically. Default is the 'Richardson'
+#'   extrapolation method; see \code{\link{numerical_deriv}} for details and other options. If
+#'   \code{'symbolic'} is supplied then the gradient will initially be computed using
+#'   a symbolical approach (potentially the most accurate method, though may fail depending
+#'   on how the \code{P} function was defined)
+#' @param derivType.hss if the \code{hss} term is not specified this type will be used to
+#'   obtain the Hessian numerically. Default is the 'Richardson' extrapolation method; see
 #'   \code{\link{numerical_deriv}} for details and other options
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -67,6 +73,12 @@
 #' coef(mod)
 #' mod2 <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), method = 'MHRM')
 #' coef(mod2)
+#'
+#' # same definition as above, but using symbolic derivative computations
+#' # (can be more accurate/stable)
+#' xs <- createItem(name, par=par, est=est, P=P.old2PL, derivType = 'symbolic')
+#' mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=xs))
+#' coef(mod, simplify=TRUE)
 #'
 #' #several secondary functions supported
 #' M2(mod, calcNull=FALSE)
@@ -142,13 +154,32 @@
 #'
 #' }
 createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
-                       lbound = NULL, ubound = NULL, derivType = 'Richardson'){
+                       lbound = NULL, ubound = NULL, derivType = 'Richardson',
+                       derivType.hss = 'Richardson'){
     if(missing(name)) missingMsg('name')
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')
     if(missing(P)) missingMsg('P')
     if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
         stop('Parameter names cannot be \'g\' or \'u\', please change.', call.=FALSE)
+    dps <- function() NULL
+    if(derivType == "symbolic"){
+        tmppars <- 1L:length(par)
+        names(tmppars) <- rep("par", length(par))
+        dps <- Deriv::Deriv(P, tmppars)
+        gr <- function(x, Theta){
+            P <- ProbTrace(x, Theta)
+            xLength <- length(x@par)
+            ThetaLength <- nrow(Theta)
+            r_P <- x@dat / P
+            dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
+            grad <- numeric(length(x@par))
+            for (i in 1L:xLength)
+                grad[i] <- sum(r_P * dp1[,,i])
+            grad
+        }
+    }
     return(new('custom', name=name, par=par, est=est, lbound=lbound,
-               ubound=ubound, P=P, gr=gr, hss=hss, gen=gen, userdata=NULL, derivType=derivType))
+               ubound=ubound, P=P, dps=dps, gr=gr, hss=hss, gen=gen, userdata=NULL,
+               derivType=derivType, derivType.hss=derivType.hss))
 }

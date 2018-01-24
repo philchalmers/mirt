@@ -329,7 +329,7 @@ control input)}
     Default is TRUE}
   \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?
     Default is FALSE}
-  \item{internal_constrains}{logical; include the internal constrains when using certain
+  \item{internal_constraints}{logical; include the internal constraints when using certain
     IRT models (e.g., 'grsm' itemtype). Disable this if you want to use special optimizers
     such as the solnp. Default is \code{TRUE}}
   \item{gain}{a vector of two values specifying the numerator and exponent

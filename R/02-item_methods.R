@@ -2319,6 +2319,7 @@ setMethod(
 setClass('custom', contains = 'AllItemsClass',
          representation = representation(name='character',
                                          P='function',
+                                         dps='function',
                                          gr='function',
                                          usegr='logical',
                                          hss='function',
@@ -2326,7 +2327,8 @@ setClass('custom', contains = 'AllItemsClass',
                                          usehss='logical',
                                          userdata='matrix',
                                          useuserdata='logical',
-                                         derivType='character'))
+                                         derivType='character',
+                                         derivType.hss='character'))
 
 setMethod(
     f = "print",
@@ -2389,7 +2391,8 @@ setMethod(
 
 setMethod("initialize",
           'custom',
-          function(.Object, name, par, est, lbound, ubound, P, gr, hss, gen, userdata, derivType) {
+          function(.Object, name, par, est, lbound, ubound, P, gr, hss, gen, userdata, derivType,
+                   derivType.hss, dps) {
               dummyfun <- function(...) return(NULL)
               names(est) <- names(par)
               usegr <- usehss <- useuserdata <- TRUE
@@ -2398,7 +2401,9 @@ setMethod("initialize",
               .Object@est <- est
               .Object@P <- P
               .Object@derivType <- derivType
+              .Object@derivType.hss <- derivType.hss
               .Object@itemclass <- 999L
+              .Object@dps <- dps
               if(is.null(gr)){
                   .Object@gr <- dummyfun
                   usegr <- FALSE
@@ -2435,7 +2440,7 @@ setMethod(
         if(estHess){
             if(x@usehss) hess <- x@hss(x, Theta)
             else hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
-                                                       Theta=Theta, type=x@derivType, gradient=FALSE)
+                                                       Theta=Theta, type=x@derivType.hss, gradient=FALSE)
         }
         return(list(grad = grad, hess=hess))
     }

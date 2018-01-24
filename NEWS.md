@@ -1,5 +1,11 @@
 # Changes in mirt 1.27
 
+- `customItem()` gains support for `derivType = 'symbolic'` to symbolically 
+  compute the gradient function automatically
+
+- `customItem()` gains a `derivType.hss` argument to distinguate gradient from 
+  Hessian numerical computations
+
 - fix `simdata()` bug for new `ggum` itemtype
 
 - `mdirt()` gains support for `createItem()` inputs

@@ -29,6 +29,7 @@
 #' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan
 #' @importFrom utils write.table flush.console packageVersion capture.output
 #' @importFrom graphics symbols
+#' @importFrom Deriv Deriv
 #' @exportMethod anova residuals summary logLik vcov
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
