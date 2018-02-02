@@ -14,17 +14,18 @@ mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
 numerically ordered data, with missing data coded as \code{NA}}
 
-\item{model}{number of classes to fit, or alternatively a \code{\link{mirt.model}} definition. Note that
-when using a \code{\link{mirt.model}} input in conjunction with the \code{customTheta} input defined below,
-the order with which the syntax factors are defined will be associated with the columns in the
-\code{customTheta} input}
+\item{model}{number of mutually exclusive classes to fit, or alternatively a more specific
+\code{\link{mirt.model}} definition (which reflects the so-called Q-matrix).
+Note that when using a \code{\link{mirt.model}},
+the order with which the syntax factors/attributes are defined are associated with the
+columns in the \code{customTheta} input}
 
-\item{customTheta}{input passed to \code{technical = list(customTheta = ...)}, but is included directly
-in this function for convenience. This input is most interesting for discrete latent models
-because it allows for customized patterns of latent class effects.
-The default builds the pattern \code{customTheta = diag(model)},
+\item{customTheta}{input passed to \code{technical = list(customTheta = ...)}, but is included
+directly in this function for convenience. This input is most interesting for discrete latent models
+because it allows customized patterns of latent class effects (defines the possible combinations
+of the latent attribute profile). The default builds the pattern \code{customTheta = diag(model)},
 which is the typical pattern for the traditional
-latent class analysis (whereby classes are completely distinct)}
+latent class analysis whereby classes are completely distinct}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
 when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
@@ -251,7 +252,7 @@ model <- mirt.model('C1 = 1-16
                      CONSTRAIN = (1-16, a1), (1-16, a2), (1-16, a3), (1-16, a4), (1-16, a5),
                        (17-32, a6), (17-32, a7), (17-32, a8), (17-32, a9), (17-32, a10)')
 
-theta <- diag(10)
+theta <- diag(10) # defined explicitly. Otherwise, this profile is assumed
 mod <- mdirt(dat, model, customTheta = theta)
 coef(mod, simplify=TRUE)
 summary(mod)

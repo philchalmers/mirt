@@ -483,6 +483,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             theta <- 0
             Theta <- opts$technical$customTheta
             opts$quadpts <- nrow(Theta)
+            if(pars[[1L]][[1L]]@nfact != ncol(Theta))
+                stop("mirt.model definition does not have same number of traits/attributes as customTheta input", call.=FALSE)
         } else {
             if(is.null(opts$quadpts)){
                 tmp <- if(opts$dentype == 'bfactor') PrepList[[1L]]$nfact - attr(model, 'nspec') + 1L
