@@ -91,7 +91,8 @@ shinyItemplot <- function(){
 
                                  shiny::conditionalPanel(condition = "input.itemclass == 'gpcm' ||
                                                                    input.itemclass == 'nominal' ||
-                                                                   input.itemclass == 'graded'",
+                                                                   input.itemclass == 'graded' ||
+                                                                   input.itemclass == 'partcomp'",
                                                          shiny::conditionalPanel(condition = "input.itemclass == 'gpcm' ||
                                                                    input.itemclass == 'nominal'",
                                                                                  shiny::sliderInput(inputId = "d0par",
