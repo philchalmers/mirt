@@ -4,7 +4,7 @@
 \alias{key2binary}
 \title{Score a test by converting response patterns to binary data}
 \usage{
-key2binary(fulldata, key)
+key2binary(fulldata, key, score_missing = FALSE)
 }
 \arguments{
 \item{fulldata}{an object of class \code{data.frame}, \code{matrix}, or
@@ -14,6 +14,9 @@ key2binary(fulldata, key)
 value/row corresponds to each column in \code{fulldata}. If the input is a matrix, multiple
 scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
 in the case of a matrix input, no additional scoring keys)}
+
+\item{score_missing}{logical; should missing data elements be returned as incorrect (i.e., 0)?
+If \code{FALSE}, all missing data terms will be kept as missing}
 }
 \value{
 Returns a numeric matrix with all the response patterns in
@@ -49,6 +52,15 @@ key <- c("B", "D", "D", "C", "E")
 
 d01 <- key2binary(resp, key)
 head(d01)
+
+# score/don't score missing values
+resp[1,1] <- NA
+d01NA <- key2binary(resp, key) # without scoring
+d01NA
+
+d01 <- key2binary(resp, key, score_missing = TRUE) # with scoring
+d01
+
 
 }
 \references{

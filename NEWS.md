@@ -1,5 +1,8 @@
 # Changes in mirt 1.27
 
+- `key2binary()` gains a `score_missing` flag to indicate whether missing values should be scored 
+  as 0 or left as NA
+
 - `customItem()` gains support for `derivType = 'symbolic'` and 
   `derivType.hss = 'symbolic'` to symbolically compute the gradient/Hessian 
   functions (template code-base contributed by Chen-Wei Liu)
