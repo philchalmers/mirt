@@ -670,7 +670,7 @@ UpdateParameters <- function(PrepList, model, groupNames){
                         len <- length(esplit[[i]])
                         tmp <- lapply(tmp, function(x, which, val){
                             if(which %in% c('g', 'u')) val <- qlogis(val)
-                            x@par[names(x@parnum) == which] <- val
+                            x@par[names(x@est) == which] <- val
                             x
                         }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
                         pars[[gpick]][picks[[i]]] <- tmp
@@ -700,7 +700,7 @@ UpdateParameters <- function(PrepList, model, groupNames){
                         tmp <- pars[[gpick]][picks[[i]]]
                         len <- length(esplit[[i]])
                         tmp <- lapply(tmp, function(x, which){
-                            x@est[names(x@parnum) == which] <- FALSE
+                            x@est[names(x@est) == which] <- FALSE
                             x
                         }, which=esplit[[i]][len])
                         pars[[gpick]][picks[[i]]] <- tmp
@@ -730,7 +730,7 @@ UpdateParameters <- function(PrepList, model, groupNames){
                         tmp <- pars[[gpick]][picks[[i]]]
                         len <- length(esplit[[i]])
                         tmp <- lapply(tmp, function(x, which){
-                            x@est[names(x@parnum) == which] <- TRUE
+                            x@est[names(x@est) == which] <- TRUE
                             x
                         }, which=esplit[[i]][len])
                         pars[[gpick]][picks[[i]]] <- tmp
@@ -761,7 +761,7 @@ UpdateParameters <- function(PrepList, model, groupNames){
                         len <- length(esplit[[i]])
                         tmp <- lapply(tmp, function(x, which, val){
                             if(which %in% c('g', 'u')) val <- qlogis(val)
-                            x@lbound[names(x@parnum) == which] <- val
+                            x@lbound[names(x@est) == which] <- val
                             x
                         }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
                         pars[[gpick]][picks[[i]]] <- tmp
@@ -792,7 +792,7 @@ UpdateParameters <- function(PrepList, model, groupNames){
                         len <- length(esplit[[i]])
                         tmp <- lapply(tmp, function(x, which, val){
                             if(which %in% c('g', 'u')) val <- qlogis(val)
-                            x@ubound[names(x@parnum) == which] <- val
+                            x@ubound[names(x@est) == which] <- val
                             x
                         }, which=esplit[[i]][len-1L], val = as.numeric(esplit[[i]][len]))
                         pars[[gpick]][picks[[i]]] <- tmp

@@ -10,12 +10,17 @@
 - `customItem()` gains a `derivType.hss` argument to distinguate gradient from 
   Hessian numerical computations
 
-- fix `simdata()` bug for new `ggum` itemtype
-
 - `mdirt()` gains support for `createItem()` inputs
 
 - More plotting points added to default `plot()` and `itemplot()` generics to create 
   smoother traceline functions
+
+## Bug fixes
+  
+- fix `simdata()` bug for new `ggum` itemtype
+
+- fix new grouping syntax specification in `mirt.model()` when combining START and FIXED 
+  (reported by Garron Gianopulos)
 
 # Changes in mirt 1.26.3
 
