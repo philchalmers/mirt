@@ -3,6 +3,7 @@
 setClass("AllItemsClass",
          representation(par='numeric',
                         SEpar='numeric',
+                        parnames='character',
                         est='logical',
                         constr='logical',
                         itemclass='integer',

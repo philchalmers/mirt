@@ -202,7 +202,7 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
             H
         }
     }
-    return(new('custom', name=name, par=par, est=est, lbound=lbound,
+    return(new('custom', name=name, par=par, est=est, parnames=names(par), lbound=lbound,
                ubound=ubound, P=P, dps=dps, dps2=dps2, gr=gr, hss=hss, gen=gen, userdata=NULL,
                derivType=derivType, derivType.hss=derivType.hss))
 }

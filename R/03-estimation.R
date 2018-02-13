@@ -357,6 +357,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in 2L:Data$ngroups){
             pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
             names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
+            pars[[g]][[nitems + 1L]]@parnames <- names(pars[[g]][[nitems + 1L]]@est)
         }
     }
     if(RETURNVALUES){
@@ -676,7 +677,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(i in seq_len(length(pars[[1L]]))){
             if(class(pars[[g]][[i]]) == 'dich'){
                 tmp <- ESTIMATE$pars[[g]][[i]]@par
-                nms <- names(ESTIMATE$pars[[g]][[i]]@est)
+                nms <- ESTIMATE$pars[[g]][[i]]@parnames
                 if(tmp[nms == 'g'] > tmp[nms == 'u']){
                     if(opts$warn)
                         warning('g paramater greater than u detected. Model did not converge', call.=FALSE)

@@ -47,7 +47,7 @@ mod2values <- function(x){
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
             class <- c(class, rep(class(tmpgroup[[i]]), length(tmpgroup[[i]]@parnum)))
-            parname <- c(parname, names(tmpgroup[[i]]@est))
+            parname <- c(parname, tmpgroup[[i]]@parnames)
             parnum <- c(parnum, tmpgroup[[i]]@parnum)
             par <- c(par, tmpgroup[[i]]@par)
             est <- c(est, tmpgroup[[i]]@est)
@@ -63,7 +63,7 @@ mod2values <- function(x){
         tmpgroup <- x@ParObjects$random
         if(length(tmpgroup)){
             for(i in 1L:length(tmpgroup)){
-                parname <- c(parname, names(tmpgroup[[i]]@est))
+                parname <- c(parname, tmpgroup[[i]]@parnames)
                 parnum <- c(parnum, tmpgroup[[i]]@parnum)
                 par <- c(par, tmpgroup[[i]]@par)
                 est <- c(est, tmpgroup[[i]]@est)
@@ -79,7 +79,7 @@ mod2values <- function(x){
     }
     if(length(x@Model$lrPars) > 0L){
         lrPars <- x@Model$lrPars
-        parname <- c(parname, names(lrPars@est))
+        parname <- c(parname, lrPars@parnames)
         parnum <- c(parnum, lrPars@parnum)
         par <- c(par, lrPars@par)
         est <- c(est, lrPars@est)

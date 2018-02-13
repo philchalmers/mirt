@@ -919,7 +919,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
             if(i <= length(itemnames))
                 item <- c(item, rep(itemnames[i], length(tmpgroup[[i]]@parnum)))
             class <- c(class, rep(class(tmpgroup[[i]]), length(tmpgroup[[i]]@parnum)))
-            parname <- c(parname, names(tmpgroup[[i]]@est))
+            parname <- c(parname, tmpgroup[[i]]@parnames)
             parnum <- c(parnum, tmpgroup[[i]]@parnum)
             par <- c(par, tmpgroup[[i]]@par)
             est <- c(est, tmpgroup[[i]]@est)
@@ -935,7 +935,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         item <- c(item, rep('GROUP', length(tmpgroup[[i]]@parnum)))
     }
     for(i in seq_len(length(random))){
-        parname <- c(parname, names(random[[i]]@est))
+        parname <- c(parname, random[[i]]@parnames)
         parnum <- c(parnum, random[[i]]@parnum)
         par <- c(par, random[[i]]@par)
         est <- c(est, random[[i]]@est)
@@ -951,7 +951,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         item <- c(item, rep('RANDOM', length(random[[i]]@parnum)))
     }
     if(length(lrPars)){
-        parname <- c(parname, names(lrPars@est))
+        parname <- c(parname, lrPars@parnames)
         parnum <- c(parnum, lrPars@parnum)
         par <- c(par, lrPars@par)
         est <- c(est, lrPars@est)
@@ -967,7 +967,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         item <- c(item, rep('BETA', length(lrPars@parnum)))
     }
     for(i in seq_len(length(lr.random))){
-        parname <- c(parname, names(lr.random[[i]]@est))
+        parname <- c(parname, lr.random[[i]]@parnames)
         parnum <- c(parnum, lr.random[[i]]@parnum)
         par <- c(par, lr.random[[i]]@par)
         est <- c(est, lr.random[[i]]@est)
@@ -1529,6 +1529,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N, LR=FALS
         ret[[i]] <- new('RandomPars',
                         par=par,
                         est=est,
+                        parnames=names(est),
                         SEpar=rep(NaN,length(par)),
                         ndim=ndim,
                         lbound=lbound,
@@ -1589,6 +1590,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
                par=par,
                SEpar=rep(NaN,length(par)),
                est=est,
+               parnames=names(est),
                beta=beta,
                sigma=sigma,
                nfact=nfact,

@@ -144,6 +144,7 @@ print.mirt_list <- function(x, digits = 3, ...){
 setClass("GroupPars",
          representation(par='numeric',
                         SEpar='numeric',
+                        parnames='character',
                         est='logical',
                         parnum='numeric',
                         itemclass='integer',
@@ -255,6 +256,7 @@ setMethod(
 setClass("RandomPars",
          representation(par='numeric',
                         SEpar='numeric',
+                        parnames='character',
                         est='logical',
                         between='logical',
                         parnum='numeric',
@@ -352,6 +354,7 @@ setMethod(
 setClass("lrPars",
          representation(par='numeric',
                         SEpar='numeric',
+                        parnames='character',
                         est='logical',
                         beta='matrix',
                         sigma = 'matrix',
@@ -861,7 +864,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'gpcm'),
     definition = function(x){
-        ns <- sum(grepl('ak', names(x@est)))
+        ns <- sum(grepl('ak', x@parnames))
         par <- c(rlnorm(x@nfact, meanlog=-.2, sdlog=.5), rep(NA, ns), 0,
                  sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
         x@par[x@est] <- par[x@est]
@@ -2392,7 +2395,7 @@ setMethod(
 
 setMethod("initialize",
           'custom',
-          function(.Object, name, par, est, lbound, ubound, P, gr, hss, gen, userdata, derivType,
+          function(.Object, name, par, est, parnames, lbound, ubound, P, gr, hss, gen, userdata, derivType,
                    derivType.hss, dps, dps2) {
               dummyfun <- function(...) return(NULL)
               names(est) <- names(par)
@@ -2400,6 +2403,7 @@ setMethod("initialize",
               .Object@name <- name
               .Object@par <- par
               .Object@est <- est
+              .Object@parnames <- parnames
               .Object@P <- P
               .Object@derivType <- derivType
               .Object@derivType.hss <- derivType.hss
@@ -2706,6 +2710,7 @@ setMethod("initialize",
             names(.Object@par) = c(paste("a", seq_len(nfact), sep=""),
                                    paste("b", seq_len(ncat-1L), sep=""), "c")
             .Object@est <- c(rep(TRUE, nfact), rep(TRUE,ncat-1L), TRUE)
+            .Object@parnames <- names(.Object@par)
             .Object@lbound <- rep(-Inf, nfact+ncat)
             .Object@ubound <- rep(Inf, nfact+ncat)
             .Object
@@ -3054,6 +3059,7 @@ setMethod("initialize",
               stopifnot(ncat == 2L)
               .Object@par <- c(a=1, b=0)
               .Object@est <- c(TRUE, TRUE)
+              .Object@parnames <- names(.Object@par)
               .Object@lbound <- rep(-Inf, 2L)
               .Object@ubound <- rep(Inf, 2L)
               .Object

@@ -332,13 +332,13 @@ setMethod(
                                                    object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
                                                  3, byrow = TRUE)
                     rownames(allPars[[i]]) <- c('par', SEnames)
-                    colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
+                    colnames(allPars[[i]]) <- object@ParObjects$pars[[i]]@parnames
                 }
             }
         } else {
             for(i in seq_len(J+1L)){
                 allPars[[i]] <- matrix(object@ParObjects$pars[[i]]@par, 1L)
-                colnames(allPars[[i]]) <- names(object@ParObjects$pars[[i]]@est)
+                colnames(allPars[[i]]) <- object@ParObjects$pars[[i]]@parnames
                 rownames(allPars[[i]]) <- 'par'
             }
         }

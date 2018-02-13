@@ -203,7 +203,7 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
                 if(class(x) == 'graded'){
                     ds <- x@par[-seq_len(x@nfact)]
                     x@par[-seq_len(x@nfact)] <- sort(ds, decreasing = TRUE)
-                    names(x@par) <- names(x@est)
+                    names(x@par) <- x@parnames
                 }
                 return(x)
             })
