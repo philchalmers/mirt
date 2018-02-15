@@ -590,6 +590,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         for (i in which.items){
             for(j in unique(Groups)){
                 dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
+                colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
                 if(nrow(dat) <= 1L) next
                 r <- colSums(dat)
                 N <- nrow(dat)
@@ -599,7 +600,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
-                if(any(N * P < mincell.X2)){
+                if(is.null(empirical.table) && any(N * P < mincell.X2)){
                     while(TRUE){
                         wch <- which(N * P < mincell.X2)
                         if(!length(wch) || length(r) == 1L) break
@@ -618,19 +619,19 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     if(length(r) == 1L) next
                 }
                 E <- N*P
-                X2.value[i] <- X2.value[i] + sum((r - E)^2 / E)
-                df.X2[i] <- df.X2[i] + length(r) - 1L
-                tmp <- r * log(r/E)
-                tmp <- tmp[is.finite(tmp)]
-                if(length(tmp) > 1L){
-                    G2.value[i] <- G2.value[i] + 2*sum(tmp)
-                    df.G2[i] <- df.G2[i] + length(tmp) - 1L
-                }
                 if(!is.null(empirical.table)){
                     Etable[[j]] <- data.frame(Observed=r, Expected=as.vector(E),
                                               z.Residual=as.vector(sqrt((r - E)^2 / E) * sign(r-E)))
-                    rownames(Etable[[j]]) <- 1:nrow(Etable[[j]]) + extract.mirt(x, 'mins')[which.items] - 1
                     mtheta_nms[j] <- mtheta
+                } else {
+                    X2.value[i] <- X2.value[i] + sum((r - E)^2 / E)
+                    df.X2[i] <- df.X2[i] + length(r) - 1L
+                    tmp <- r * log(r/E)
+                    tmp <- tmp[is.finite(tmp)]
+                    if(length(tmp) > 1L){
+                        G2.value[i] <- G2.value[i] + 2*sum(tmp)
+                        df.G2[i] <- df.G2[i] + length(tmp) - 1L
+                    }
                 }
             }
             if(!is.null(empirical.table)){
