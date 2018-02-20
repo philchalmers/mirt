@@ -48,7 +48,9 @@ Suggests:
     Rsolnp,
     nloptr,
     sirt,
-    mirtCAT
+    mirtCAT,
+    future,
+    future.apply
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
