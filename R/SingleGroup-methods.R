@@ -1366,7 +1366,10 @@ mirt2traditional <- function(x, vcov){
             parnum <- x@parnum[delta_index[[i]]]
             pick <- numeric(length(grad))
             for(j in 1L:length(parnum))
-                pick[j] <- min(which(do.call(c, lapply(splt, function(x) any(x %in% parnum[j])))))
+                pick[j] <- suppressWarnings(min(which(do.call(c, lapply(splt, function(x)
+                    any(x %in% parnum[j]))))))
+            grad <- grad[is.finite(pick)]
+            pick <- pick[is.finite(pick)]
             x@SEpar[i] <- as.vector(sqrt(grad %*% vcov[pick, pick, drop=FALSE] %*% grad))
         }
         if(cls == 'gpcm') x@SEpar <- x@SEpar[1L:length(x@par)]

@@ -21,6 +21,8 @@
 
 - fix new grouping syntax specification in `mirt.model()` when combining START and FIXED 
   (reported by Garron Gianopulos)
+  
+- fix `IRTpars = TRUE` input when itemtype was `Rasch` (reported by Benjamin Shear)
 
 # Changes in mirt 1.26.3
 
