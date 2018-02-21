@@ -2211,13 +2211,8 @@ mySapply <- function(X, FUN, ...){
     }
 }
 
-# Function to check whether package is installed -- borrowed from https://stackoverflow.com/a/15974769
-is.installed <- function(mypkg){
-    is.element(mypkg, installed.packages()[,1])
-}
-
 # check opencl environment
 .mirtClusterEnv$OpenCL <- FALSE
-if(.mirtClusterEnv$OpenCL && is.installed('gpuR')){
+if(.mirtClusterEnv$OpenCL && "gpuR" %in% rownames(installed.packages())){
     requireNamespace('gpuR') # FIXME: placeholder of OpenCL support
 }
