@@ -2217,6 +2217,7 @@ is.installed <- function(mypkg){
 }
 
 # check opencl environment
-if(is.installed('gpuR')){
-    requireNamespace('gpuR')
+.mirtClusterEnv$OpenCL <- FALSE
+if(.mirtClusterEnv$OpenCL && is.installed('gpuR')){
+    requireNamespace('gpuR') # FIXME: placeholder of OpenCL support
 }
