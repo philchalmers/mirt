@@ -2210,3 +2210,13 @@ mySapply <- function(X, FUN, ...){
         return(t(sapply(X=X, FUN=FUN, ...)))
     }
 }
+
+# Function to check whether package is installed -- borrowed from https://stackoverflow.com/a/15974769
+is.installed <- function(mypkg){
+    is.element(mypkg, installed.packages()[,1])
+}
+
+# check opencl environment
+if(is.installed('gpuR')){
+    requireNamespace('gpuR')
+}

@@ -50,7 +50,8 @@ Suggests:
     Rsolnp,
     nloptr,
     sirt,
-    mirtCAT
+    mirtCAT,
+    gpuR
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes

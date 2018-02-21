@@ -14,7 +14,8 @@
 #'   maximum number of available local cores will be used
 #' @param ... additional arguments to pass to \code{parallel::makeCluster}
 #' @param remove logical; remove previously defined \code{mirtCluster()}?
-#' @param use_future logical; run asynchronous parallel works using \code{future::future()} and \code{future.apply::future_*apply} internally?
+#' @param use_future logical; run asynchronous parallel works using \code{future::future()}
+#'    and \code{future.apply::future_*apply} internally?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
