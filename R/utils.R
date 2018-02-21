@@ -2214,5 +2214,25 @@ mySapply <- function(X, FUN, ...){
 # check opencl environment
 .mirtClusterEnv$OpenCL <- FALSE
 if(.mirtClusterEnv$OpenCL && "gpuR" %in% rownames(installed.packages())){
-    requireNamespace('gpuR') # FIXME: placeholder of OpenCL support
+    requireNamespace('gpuR') # FIXME: placeholder of OpenCL support -- It's may meaningless if some custom function implemented
+}
+
+mySolve <- function(a, b, ...){
+    if(.mirtClusterEnv$OpenCL && "gpuR" %in% rownames(installed.packages())){
+        if(is.matrix(a)){
+            a <- gpuR::vclMatrix(a) # FIXME: as.vclMatrix? (In current, this is a placeholder)
+        }
+        if(is.matrix(b)){
+            b <- gpuR::vclMatrix(b) # FIXME: as.vclMatrix? (In current, this is a placeholder)
+        }
+        if(is.vector(a)){
+            a <- gpuR::as.vclVector(a)
+        }
+        if(is.vector(b)){
+            b <- gpuR::as.vclVector(b)
+        }
+        return(gpuR::solve(a, b, ...))
+    } else {
+        return(solve(a, b, ...))
+    }
 }
