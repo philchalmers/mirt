@@ -77,6 +77,7 @@
 #' plot(IG2)
 #'
 #' # same as above, but with plausible values to obtain the standard errors
+#' set.seed(4321)
 #' ThetaPV <- fscores(mod, plausible.draws=10)
 #' IG0 <- itemGAM(dat[,1], ThetaPV) #good item
 #' IG1 <- itemGAM(baditems[,1], ThetaPV)
@@ -106,6 +107,7 @@
 #' IG <- itemGAM(SAT12[,32], Theta)
 #' plot(IG)
 #'
+#' set.seed(1423)
 #' ThetaPV <- fscores(mod, plausible.draws=10)
 #' IG2 <- itemGAM(SAT12[,32], ThetaPV)
 #' plot(IG2)
