@@ -94,7 +94,7 @@ test_that('extras', {
     s1 <- coef(mod1, simplify=TRUE)$items
     s2 <- coef(mod2, simplify=TRUE)$items
     pick <- c('a1', 'a2', 'd1', 'd2', 'd3')
-    expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-10)
+    expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-8)
     mod3 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats, TOL = 1e-2, verbose=FALSE)
     expect_equal(extract.mirt(mod3, 'logLik'), -3708.216, tolerance = 1e-4)
     cfs <- as.vector(coef(mod3, simplify=TRUE)$items)
