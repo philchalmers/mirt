@@ -590,8 +590,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         for (i in which.items){
             for(j in unique(Groups)){
                 dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
-                colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
                 if(nrow(dat) <= 1L) next
+                colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
                 r <- colSums(dat)
                 N <- nrow(dat)
                 mtheta <- matrix(group.fun(Theta[Groups == j & pick[,i],]), nrow=1)
