@@ -1,5 +1,8 @@
 # Changes in mirt 1.27
 
+- Special `GROUP` location holder in `mirt.model()` to index the group-level
+  hyper-parameter terms
+
 - `key2binary()` gains a `score_missing` flag to indicate whether missing values should be scored 
   as 0 or left as NA
 

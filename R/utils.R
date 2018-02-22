@@ -636,6 +636,10 @@ expbeta_sv <- function(val1, val2){
 
 UpdateParameters <- function(PrepList, model, groupNames){
     if(!is.numeric(model)){
+        nitems <- length(PrepList[[1L]]$pars) - 1L
+        model$x[,"Parameters"] <- gsub("\\(GROUP,",
+                                       replacement = sprintf("(%i,", nitems + 1L),
+                                       model$x[,"Parameters"])
         groupNames <- as.character(groupNames)
         pars <- vector('list', length(PrepList))
         for(g in seq_len(length(PrepList)))
