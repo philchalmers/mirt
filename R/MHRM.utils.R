@@ -33,8 +33,6 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             for(i in seq_len(length(random))){
                 g[random[[i]]@parnum] <- 0
                 h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
-                if(cycles == (RANDSTART - 1L)) #hack for R 3.4.0
-                   deriv <- RandomDeriv(x=random[[i]], estHess=estHess)
             }
         } else {
             for(i in seq_len(length(random))){
@@ -80,8 +78,9 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     grad <- grad[estpars & !redun_constr]
     ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
     if(any(is.na(grad) | is.infinite(grad))){
-        stop('Model did not converge (unacceptable gradient caused by extreme parameter values)',
-             call.=FALSE)
+        pick <- which(is.na(grad) | is.infinite(grad))
+        grad[pick] <- sample(seq(-.05, .05, length.out=100L), length(pick))
+        ave.h[pick, pick] <- -diag(length(pick))
     }
     list(grad=grad, ave.h=ave.h)
 }
