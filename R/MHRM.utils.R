@@ -34,6 +34,8 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
                 g[random[[i]]@parnum] <- 0
                 h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
             }
+            if(cycles == (RANDSTART - 1L)) #hack for R 3.4.0
+                deriv2 <- RandomDeriv(x=random[[i]], estHess=estHess)
         } else {
             for(i in seq_len(length(random))){
                 deriv2 <- RandomDeriv(x=random[[i]], estHess=estHess)
@@ -59,6 +61,8 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
                 g[lr.random[[i]]@parnum] <- 0
                 h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- -diag(length(lr.random[[i]]@parnum))
             }
+            if(cycles == (RANDSTART - 1L)) #hack for R 3.4.0
+                deriv4 <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
         } else {
             for(i in seq_len(length(lr.random))){
                 deriv4 <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
