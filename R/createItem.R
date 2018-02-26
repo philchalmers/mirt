@@ -199,9 +199,10 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
             dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
             dp2 <- array(x@dps2(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength,xLength))
             H <- matrix(NA,xLength,xLength)
+            P2 <- P^2
             for (i in 1L:xLength){
                 for (j in i:xLength){
-                    H[i,j] <- sum(x@dat*dp2[,,i,j]/P + x@dat*dp1[,,i]*(-dp1[,,j]/(P^2)))
+                    H[i,j] <- sum(x@dat*dp2[,,i,j]/P + x@dat*dp1[,,i]*(-dp1[,,j]/P2))
                     H[j,i] <- H[i,j]
                 }
             }

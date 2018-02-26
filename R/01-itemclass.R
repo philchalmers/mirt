@@ -57,8 +57,6 @@ setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 
 setGeneric('DrawValues', function(x, Theta, ...) standardGeneric("DrawValues"))
 
-setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))
-
 setGeneric('GenRandomPars', function(x) standardGeneric("GenRandomPars"))
 
 setGeneric('CheckIntercepts', function(x) standardGeneric("CheckIntercepts"))

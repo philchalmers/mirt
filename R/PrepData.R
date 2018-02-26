@@ -7,6 +7,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     itemnames <- colnames(data)
+    if(any(itemnames == "")) stop("Items in data input must have valid names", call.=FALSE)
     keywords <- c('COV', 'CONSTRAIN', 'CONSTRAINB', 'PRIOR', 'MEAN', 'START', 'LBOUND', 'UBOUND',
                   'FIXED', 'FREE', 'NEXPLORE')
     data <- as.matrix(data)

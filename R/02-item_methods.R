@@ -335,19 +335,15 @@ setMethod(
     }
 )
 
-setMethod(
-    f = "RandomDeriv",
-    signature = signature(x = 'RandomPars'),
-    definition = function(x, estHess = TRUE){
-        Theta <- x@drawvals
-        pick <- -seq_len(ncol(Theta))
-        out <- .Call("dgroup", x, Theta, matrix(0L), estHess, TRUE, FALSE, FALSE)
-        grad <- out$grad[pick]
-        hess <- out$hess[pick, pick, drop=FALSE]
-        diag(hess) <- -abs(diag(hess)) #hack for very small clusters
-        list(grad=grad, hess=hess)
-    }
-)
+RandomDeriv <- function(x, estHess = TRUE){
+    Theta <- x@drawvals
+    pick <- -seq_len(ncol(Theta))
+    out <- .Call("dgroup", x, Theta, matrix(0L), estHess, TRUE, FALSE, FALSE)
+    grad <- out$grad[pick]
+    hess <- out$hess[pick, pick, drop=FALSE]
+    diag(hess) <- -abs(diag(hess)) #hack for very small clusters
+    list(grad=grad, hess=hess)
+}
 
 # ----------------------------------------------------------------
 
