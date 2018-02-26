@@ -1,5 +1,8 @@
 # Changes in mirt 1.27
 
+- `createItem()` gains a `bytecompile` flag to indicate whether the internal functions should 
+  be byte-compiled before using (default is TRUE)
+
 - Special `GROUP` location holder in `mirt.model()` to index the group-level
   hyper-parameter terms
 

@@ -6,7 +6,7 @@
 \usage{
 createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
   lbound = NULL, ubound = NULL, derivType = "Richardson",
-  derivType.hss = "Richardson")
+  derivType.hss = "Richardson", bytecompile = TRUE)
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -54,6 +54,9 @@ extrapolation method; see \code{\link{numerical_deriv}} for details and other op
 \code{'symbolic'} is supplied then the Hessian will be computed using
 a symbolical approach (potentially the most accurate method, though may fail depending
 on how the \code{P} function was defined)}
+
+\item{bytecompile}{logical; where applicable, byte compile the functions provided? Default is
+\code{TRUE} to provide}
 }
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.

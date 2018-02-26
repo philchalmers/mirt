@@ -44,6 +44,8 @@
 #'   \code{'symbolic'} is supplied then the Hessian will be computed using
 #'   a symbolical approach (potentially the most accurate method, though may fail depending
 #'   on how the \code{P} function was defined)
+#' @param bytecompile logical; where applicable, byte compile the functions provided? Default is
+#'   \code{TRUE} to provide
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -158,20 +160,22 @@
 #' }
 createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
                        lbound = NULL, ubound = NULL, derivType = 'Richardson',
-                       derivType.hss = 'Richardson'){
+                       derivType.hss = 'Richardson', bytecompile = TRUE){
     if(missing(name)) missingMsg('name')
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')
     if(missing(P)) missingMsg('P')
     if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
         stop('Parameter names cannot be \'g\' or \'u\', please change.', call.=FALSE)
+    if(bytecompile) P <- compiler::cmpfun(P)
     dps <- dps2 <- function() NULL
     if(derivType == 'symbolic' || derivType.hss == 'symbolic'){
         tmppars <- 1L:length(par)
         names(tmppars) <- rep("par", length(par))
         dps <- Deriv::Deriv(P, tmppars)
+        if(bytecompile) dps <- compiler::cmpfun(dps)
     }
-    if(derivType == "symbolic"){
+    if(is.null(gr) && derivType == "symbolic"){
         gr <- function(x, Theta){
             P <- ProbTrace(x, Theta)
             xLength <- length(x@par)
@@ -184,8 +188,10 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
             grad
         }
     }
-    if(derivType.hss == "symbolic"){
+    if(bytecompile && !is.null(gr)) gr <- compiler::cmpfun(gr)
+    if(is.null(hss) && derivType.hss == "symbolic"){
         dps2 <- Deriv::Deriv(dps, tmppars)
+        if(bytecompile) dps2 <- compiler::cmpfun(dps2)
         hss <- function(x, Theta){
             P <- ProbTrace(x, Theta)
             xLength <- length(x@par)
@@ -202,6 +208,7 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
             H
         }
     }
+    if(bytecompile && !is.null(hss)) hss <- compiler::cmpfun(hss)
     return(new('custom', name=name, par=par, est=est, parnames=names(par), lbound=lbound,
                ubound=ubound, P=P, dps=dps, dps2=dps2, gr=gr, hss=hss, gen=gen, userdata=NULL,
                derivType=derivType, derivType.hss=derivType.hss))
