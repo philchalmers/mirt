@@ -27,8 +27,9 @@ summary(lmod1)
 #mirt
 model <- mirt.model('Theta = 1-32
               CONSTRAIN = (1-32, a1)')
-(mmod1 <- mirt::mirt(dat, model, verbose=FALSE))
+(mmod1 <- mirt::mirt(dat, model, SE=TRUE, verbose=FALSE))
 coef(mmod1, simplify=TRUE)
+coef(mmod1, printSE=TRUE)
 
 # an equivalent parameterization, constraining the slopes to be 1 and freeing the latent variance
 (mmod1b <- mirt::mirt(dat, 1, itemtype = 'Rasch', verbose=FALSE))
@@ -44,8 +45,9 @@ sqrt(coef(mmod1b)[[33]][2]) #SD of latent variable equivalent to constrained slo
 summary(lmod2)
 
 #mirt
-(mmod2 <- mirt::mirt(dat, 1, verbose=FALSE))
+(mmod2 <- mirt::mirt(dat, 1, SE=TRUE, verbose=FALSE))
 coef(mmod2, simplify=TRUE)
+coef(mmod2, printSE=TRUE)
 ```
 
 (Exploratory) Multidimensional 2PL model
@@ -73,8 +75,9 @@ summary(lmod4)
 #mirt (can be more specific about where the loadings should be)
 model <- mirt.model('Theta = 1-32
                     (Theta*Theta) = 1-32')
-(mmod4 <- mirt::mirt(dat, model, verbose=FALSE))
+(mmod4 <- mirt::mirt(dat, model, SE=TRUE, verbose=FALSE))
 coef(mmod4, simplify=TRUE)
+coef(mmod4, printSE=TRUE)
 ```
 
 3PL model
@@ -84,23 +87,25 @@ coef(mmod4, simplify=TRUE)
 summary(lmod5)
 
 # mirt can also include prior distributions to help stabalize the model
-(mmod5 <- mirt(dat, 1, '3PL', verbose=FALSE))
+(mmod5 <- mirt(dat, 1, '3PL', SE=TRUE, verbose=FALSE))
 coef(mmod5, simplify=TRUE)
+coef(mmod5, printSE=TRUE)
 ```
 
 ## Polytomous data
 
 ### graded response model
 
-`ltm` can get hung up in certain likelihood regions, therefore rerunning the GRM is recommended.
+`ltm` can get hung up in certain likelihood regions, therefore re-running the GRM is recommended using different starting values.
 See this (crossvalidated post)[http://stats.stackexchange.com/questions/63891/is-r-output-reliable-specially-irt-package-ltm/95324#95324] for details.
 
 ```{r}
 (lmod6 <- ltm::grm(Science, IRT.param = FALSE))
 summary(lmod6)
 
-(mmod6 <- mirt(Science, 1, verbose=FALSE))
+(mmod6 <- mirt(Science, 1, SE=TRUE, verbose=FALSE))
 coef(mmod6, simplify=TRUE)
+coef(mmod6, printSE=TRUE)
 ```
 
 ### Constrained graded response model
@@ -115,8 +120,9 @@ summary(lmod6)
 #  called a1 for each item to be equal
 model <- mirt.model('F = 1-4
                      CONSTRAIN = (1-4, a1)') 
-(mmod6 <- mirt(Science, model, verbose=FALSE))
+(mmod6 <- mirt(Science, model, SE=TRUE, verbose=FALSE))
 coef(mmod6, simplify=TRUE)
+coef(mmod6, printSE=TRUE)
 ```
 
 ### generalized partial credit
@@ -125,8 +131,9 @@ coef(mmod6, simplify=TRUE)
 (lmod7 <- ltm::gpcm(Science, IRT.param = FALSE))
 summary(lmod7)
 
-(mmod7 <- mirt(Science, 1, 'gpcm', verbose=FALSE))
+(mmod7 <- mirt(Science, 1, 'gpcm', SE=TRUE, verbose=FALSE))
 coef(mmod7, simplify=TRUE)
+coef(mmod7, printSE=TRUE)
 ```
 
 ## Extra features (e.g., factor scores, residuals, ...)
@@ -144,5 +151,6 @@ head(fs2)
 
 #item fit
 item.fit(lmod2)
-itemfit(mmod2)
+itemfit(mmod2) # more optimal S-X2 statistics
+itemfit(mmod2, fit_stats = 'X2') # Fit stat used by ltm (suboptimal)
 ```
