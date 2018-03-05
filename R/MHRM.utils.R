@@ -359,7 +359,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
 
     #Step 1. Generate m_k datasets of theta
     LL <- 0
-    for(g in seq_len(ngroups)){
+    for(g in seq_len(ngroups)){  # FIXME: parallalise using future::future()
         for(i in seq_len(MHDRAWS))
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
@@ -379,7 +379,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
     }
     if(LR.RAND && cycles > RANDSTART){
         for(j in seq_len(length(lr.random))){
-            for(i in seq_len(MHDRAWS)){
+            for(i in seq_len(MHDRAWS)){ # FIXME: parallalise using future::future()
                 lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], Theta=gtheta0[[1L]],
                                                       itemloc=itemloc, pars=pars[[1L]],
                                                       fulldata=Data$fulldata[[1L]],

@@ -2176,9 +2176,11 @@ missingMsg <- function(string)
 
 .mirtClusterEnv <- new.env(parent=emptyenv())
 .mirtClusterEnv$ncores <- 1L
+.mirtClusterEnv$future <- FALSE
 
 myApply <- function(X, MARGIN, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){
+        # future.apply::future_apply is not yet implemented; use parallel::parApply
         return(t(parallel::parApply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, MARGIN=MARGIN, FUN=FUN, ...)))
     } else {
         return(t(apply(X=X, MARGIN=MARGIN, FUN=FUN, ...)))
@@ -2187,7 +2189,13 @@ myApply <- function(X, MARGIN, FUN, ...){
 
 myLapply <- function(X, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){
-        return(parallel::parLapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
+        if(.mirtClusterEnv$future){
+            if(((requireNamespace('future.apply', quietly = TRUE)))){
+                return(future.apply::future_lapply(X=X, FUN=FUN, ...))
+            }
+        } else {
+            return(parallel::parLapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
+        }
     } else {
         return(lapply(X=X, FUN=FUN, ...))
     }
@@ -2195,8 +2203,40 @@ myLapply <- function(X, FUN, ...){
 
 mySapply <- function(X, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){
-        return(t(parallel::parSapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
+        if(.mirtClusterEnv$future){
+            if(((requireNamespace('future.apply', quietly = TRUE)))){
+                return(t(future.apply::future_sapply(X=X, FUN=FUN, ...)))
+            }
+        } else {
+            return(t(parallel::parSapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
+        }
     } else {
         return(t(sapply(X=X, FUN=FUN, ...)))
+    }
+}
+
+# check opencl environment
+.mirtClusterEnv$OpenCL <- FALSE
+if(.mirtClusterEnv$OpenCL && "gpuR" %in% rownames(installed.packages())){
+    requireNamespace('gpuR') # FIXME: placeholder of OpenCL support -- It's may meaningless if some custom function implemented
+}
+
+mySolve <- function(a, b, ...){
+    if(.mirtClusterEnv$OpenCL && "gpuR" %in% rownames(installed.packages())){
+        if(is.matrix(a)){
+            a <- gpuR::vclMatrix(a) # FIXME: as.vclMatrix? (In current, this is a placeholder)
+        }
+        if(is.matrix(b)){
+            b <- gpuR::vclMatrix(b) # FIXME: as.vclMatrix? (In current, this is a placeholder)
+        }
+        if(is.vector(a)){
+            a <- gpuR::as.vclVector(a)
+        }
+        if(is.vector(b)){
+            b <- gpuR::as.vclVector(b)
+        }
+        return(gpuR::solve(a, b, ...))
+    } else {
+        return(solve(a, b, ...))
     }
 }

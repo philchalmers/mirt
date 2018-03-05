@@ -38,7 +38,9 @@ Imports:
     mgcv,
     vegan,
     Deriv,
-    splines
+    splines,
+    future,
+    future.apply
 Suggests:
     boot,
     latticeExtra,
@@ -48,7 +50,8 @@ Suggests:
     Rsolnp,
     nloptr,
     sirt,
-    mirtCAT
+    mirtCAT,
+    gpuR
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes

@@ -4,7 +4,7 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-mirtCluster(spec, ..., remove = FALSE)
+mirtCluster(spec, ..., remove = FALSE, use_future = FALSE)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
@@ -13,6 +13,8 @@ maximum number of available local cores will be used}
 \item{...}{additional arguments to pass to \code{parallel::makeCluster}}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
+
+\item{use_future}{logical; run asynchronous parallel works using \code{future::future()} and \code{future.apply::future_*apply}?}
 }
 \description{
 This function defines a object that is placed in a relevant internal environment defined in mirt.
@@ -28,6 +30,12 @@ it is not recommended to define a mirtCluster.
 
 #make 4 cores available for parallel computing
 mirtCluster(4)
+
+#make remote clusters for parallel computing (SSH setup required)
+mirtCluster(c('n1', 'n2', 'n3'))
+
+#make remove clusters for asynchronous parallel computing using \\code{future::future} API (SSH setup required)
+mirtCluster(c('n1', 'n2', 'n3))
 
 #' #stop and remove cores
 mirtCluster(remove = TRUE)
