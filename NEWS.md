@@ -1,5 +1,10 @@
 # Changes in mirt 1.27
 
+- Printing IRT parameters via `coef(mod, IRTpars = TRUE)` now computes the delta method 
+  for the `g` and `u` terms as well. Interpreting these is generally not recommended 
+  due to their bounded parameter nature (CIs can be outside the range [0,1]), 
+  but are included for posterity
+
 - `createItem()` gains a `bytecompile` flag to indicate whether the internal functions should 
   be byte-compiled before using (default is TRUE)
 

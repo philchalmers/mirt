@@ -319,7 +319,7 @@ setMethod(
                                                  2, byrow = TRUE)
                     rownames(allPars[[i]]) <- c('par', 'SE')
                     nms <- names(object@ParObjects$pars[[i]]@est)
-                    if(i <= J && object@Model$itemtype[i] != 'custom'){
+                    if(i <= J && object@Model$itemtype[i] != 'custom' && !IRTpars){
                         nms[nms == 'g'] <- 'logit(g)'
                         nms[nms == 'u'] <- 'logit(u)'
                     }
@@ -342,7 +342,7 @@ setMethod(
                 rownames(allPars[[i]]) <- 'par'
             }
         }
-        if(!rawug){
+        if(!rawug && !IRTpars){
             allPars <- lapply(allPars, function(x, digits){
                 x[ , colnames(x) %in% c('g', 'u')] <- antilogit(x[ , colnames(x) %in% c('g', 'u')])
                 x
@@ -1276,8 +1276,20 @@ mirt2traditional <- function(x, vcov){
             }
             ret
         }
-        delta_index <- list(NA, 1L:2L, NA, NA)
+        fns[[3]] <- function(par, index, opar){
+            if(index == 3L)
+                ret <- plogis(par)
+            ret
+        }
+        fns[[4]] <- function(par, index, opar){
+            if(index == 4L)
+                ret <- plogis(par)
+            ret
+        }
+        delta_index <- list(NA, 1L:2L, 3L, 4L)
         par[2] <- -par[2]/par[1]
+        par[3] <- plogis(par[3])
+        par[4] <- plogis(par[4])
         names(par) <- c('a', 'b', 'g', 'u')
     } else if(cls == 'graded'){
         fns <- vector('list', ncat+1L)
