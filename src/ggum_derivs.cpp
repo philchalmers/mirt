@@ -296,14 +296,14 @@ NumericVector ggum_grad (
     NumericVector grad(2*D+C) ;
 
     for (int d=0; d<=(D-1);d++) {
-        grad(d) = a1_cpp(par=par,Theta=Theta,D=D,C=C,Z=Z,dref=(d+1), dist) ;
+        grad(d) = a1_cpp(par,Theta,D,C,Z,(d+1),dist) ;
         ind = D+d ;
-        grad(ind) = d1_cpp(par=par,Theta=Theta,D=D,C=C,Z=Z,dref=(d+1), dist) ;
+        grad(ind) = d1_cpp(par,Theta,D,C,Z,(d+1),dist) ;
     }
 
     for (int t=0; t<=(C-1);t++) {
         ind2 = 2*D+t ;
-        grad(ind2) = t1_cpp(par=par,Theta=Theta,D=D,C=C,Z=Z,tauref=(t+1), dist) ;
+        grad(ind2) = t1_cpp(par,Theta,D,C,Z,(t+1),dist) ;
     }
 
     return(grad) ;
@@ -338,7 +338,6 @@ static double a2_cpp(
 		double dentau_prime = 0 ;
 		double sumtau = 0 ;
 		double dist_prime = 0 ;
-		double sumdist = 0 ;
 		double num1 = 0 ;
 		double num2 = 0 ;
 		double num1_prime = 0 ;
@@ -363,7 +362,7 @@ static double a2_cpp(
 		double a2_ln = 0 ;
 		double x1 = 0 ;
 		double x2 = 0 ;
-        
+
         dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
         for (int w=0; w<=C;w++) {
@@ -476,7 +475,6 @@ static double d2_cpp(
 	    double dentau = 0 ;
 	    double sumtau = 0 ;
 	    double dist_prime = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -596,7 +594,6 @@ static double t2_cpp(
 	    double dentau = 0 ;
 	    double dentau_prime = 0 ;
 	    double sumtau = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double b = 0 ;
@@ -710,7 +707,6 @@ static double a2mix_cpp(
 	    double sumtau = 0 ;
 	    double dist_prime = 0 ;
 	    double dist_prime_mix = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -739,7 +735,7 @@ static double a2mix_cpp(
 	    double a2mix_ln = 0 ;
 	    double x1 = 0 ;
 	    double x2 = 0 ;
-        
+
         dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
         dist_prime_mix = dist_prime ;
 
@@ -870,7 +866,6 @@ static double d2mix_cpp(
 	    double dentau = 0 ;
 	    double sumtau = 0 ;
 	    double dist_prime = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -1000,7 +995,6 @@ static double t2mix_cpp(
 	    double dentau = 0 ;
 	    double dentau_prime = 0 ;
 	    double sumtau = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double b = 0 ;
@@ -1017,7 +1011,7 @@ static double t2mix_cpp(
 	    double U_z = 0 ;
 	    double U_w = 0 ;
 	    double U_w2 = 0 ;
-        
+
         for (int w=0; w<=C;w++) {
             x1 = w*dist ;
             x2 = (M-w)*dist ;
@@ -1121,7 +1115,6 @@ static double da2cross_cpp(
 	    double dist_prime = 0 ;
 	    double dist_prime_mix = 0 ;
 	    double dist_prime_cross = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -1153,7 +1146,7 @@ static double da2cross_cpp(
 	    double da2cross_ln = 0 ;
 	    double x1 = 0 ;
 	    double x2 = 0 ;
-        
+
         dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
         dist_prime_mix = dist_prime ;
         dist_prime_cross = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
@@ -1308,7 +1301,6 @@ static double da2crossmix_cpp(
 	    double sumtau = 0 ;
 	    double dist_prime = 0 ;
 	    double dist_prime_cross = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -1474,7 +1466,6 @@ static double dt2cross_cpp(
 	    double dentau = 0 ;
 	    double dentau_prime = 0 ;
 	    double sumtau = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -1490,7 +1481,7 @@ static double dt2cross_cpp(
 	    double x1 = 0 ;
 	    double x2 = 0 ;
 	    double U_w = 0 ;
-        
+
         for (int w=0; w<=C;w++) {
             x1 = w*dist ;
             x2 = (M-w)*dist ;
@@ -1585,7 +1576,6 @@ static double at2cross_cpp(
 	    double dentau_prime_t = 0 ;
 	    double sumtau = 0 ;
 	    double dist_prime = 0 ;
-	    double sumdist = 0 ;
 	    double num1 = 0 ;
 	    double num2 = 0 ;
 	    double num1_prime = 0 ;
@@ -1605,7 +1595,7 @@ static double at2cross_cpp(
 	    double l_prime = 0 ;
 	    double lw_prime = 0 ;
 	    double U_w = 0 ;
-        
+
         dist_prime = as_scalar(par.row(dref2-1)*pow(as_scalar(Theta(j,dref2-1)-par.row(dref2-1+D)),2.0))/dist ;
 
         for (int w=0; w<=C;w++) {
@@ -1797,8 +1787,8 @@ NumericVector grad_ggum (
         count.zeros() ;
 
         for (int cat=0; cat<=C;cat++) {
-            grad = ggum_grad(par=par,Theta=score.row(j),D=D,C=C,Z=count, Dist[j]) ;
-            scalar1 = arma::as_scalar(dat(j,cat)) ;
+            grad = ggum_grad(par,score.row(j),D,C,count,Dist[j]) ;
+            scalar1 = (double)arma::as_scalar(dat(j,cat)) ;
             grad_sum = grad_sum + grad*scalar1 ;
             count = count + 1 ;
         }
@@ -1838,8 +1828,8 @@ arma::mat hess_ggum (
         count.zeros() ;
 
         for (int cat=0; cat<=C;cat++) {
-            hess = ggum_hess(par=par,Theta=score.row(j),D=D,C=C,Z=count, Dist[j]) ;
-            scalar1 = arma::as_scalar(dat(j,cat)) ;
+            hess = ggum_hess(par,score.row(j),D,C,count,Dist[j]) ;
+            scalar1 = (double)arma::as_scalar(dat(j,cat)) ;
             hess_sum = hess_sum + hess*scalar1 ;
             count = count + 1.0 ;
         }
