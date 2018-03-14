@@ -1385,6 +1385,7 @@ mirt2traditional <- function(x, vcov){
             x@SEpar[i] <- as.vector(sqrt(grad %*% vcov[pick, pick, drop=FALSE] %*% grad))
         }
         if(cls == 'gpcm') x@SEpar <- x@SEpar[1L:length(x@par)]
+        x@parnames <- names(x@par)
     }
     x
 }
