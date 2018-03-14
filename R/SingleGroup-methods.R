@@ -307,8 +307,11 @@ setMethod(
                 stop('traditional parameterization is only available for unidimensional models',
                      call.=FALSE)
             vcov <- vcov(object)
-            for(i in 1L:J)
+            for(i in 1L:J){
+                if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
                 object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]], vcov=vcov)
+
+            }
         }
         allPars <- list()
         if(length(object@ParObjects$pars[[1L]]@SEpar)){
@@ -1400,7 +1403,11 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
         for(i in 2L:ncat)
             par[i] <- -par[i]*par[1L]
         names(par) <- c('a1', paste0('d', 1:(length(par)-1)))
-    } else if(cls == 'gpcm'){
+    } else if(cls %in% c('gpcm', 'gpcmIRT')){
+        if(cls == 'gpcmIRT'){
+            x[-c(1, length(x))] <- x[-c(1, length(x))] + x[length(x)]
+            x <- x[-length(x)]
+        }
         par <- c(x[1L], 0L:(ncat-1L), 0, x[-1L])
         ds <- -par[-c(1:(ncat+1))]*par[1]
         newd <- numeric(length(ds))

@@ -2809,7 +2809,14 @@ setMethod(
     f = "DerivTheta",
     signature = signature(x = 'gpcmIRT', Theta = 'matrix'),
     definition = function(x, Theta){
-        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+        outpar <- traditional2mirt(x@par, cls = 'gpcmIRT', ncat = x@ncat, digits=Inf)
+        xx <- new('gpcm',
+                  par=outpar,
+                  parnames=names(outpar),
+                  nfact=1L,
+                  ncat=x@ncat,
+                  itemclass=3L)
+        DerivTheta(xx, Theta=Theta)
     }
 )
 
