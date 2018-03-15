@@ -7,6 +7,14 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
+    modp2 <- mirt(Science, 1, 'sequential', verbose=FALSE)
+    expect_is(modp2, 'SingleGroupClass')
+    expect_equal(extract.mirt(modp2, 'df'), 239)
+    cfs <- as.numeric(do.call(c, coef(modp2)))
+    expect_equal(cfs, c(0.997414,4.831609,2.750703,-1.365844,1.067633,2.815793,1.104466,-1.87485,2.132679,5.021663,2.223683,-1.784284,0.9942698,3.287169,1.12849,-1.308458,0,1),
+                 tolerance = 1e-2)
+    expect_equal(logLik(modp2), -1609.768, tolerance = 1e-4)
+
     modLouis <- mirt(Science, 1, SE=T, SE.type='Louis', verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modLouis, printSE=TRUE)))

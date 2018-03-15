@@ -115,7 +115,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     gpcm_mats=gpcm_mats, spline_args=spline_args, itemnames=itemnames)
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
-                                            parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm')),
+                                            parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm', 'Tutz')),
                                             customGroup=customGroup)
     attr(ret, 'prodlist') <- prodlist
     attr(ret, 'exploratory') <- exploratory

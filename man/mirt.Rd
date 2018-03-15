@@ -48,6 +48,9 @@ of factors to extract is also supported}
     \item \code{'ideal'} - dichotomous ideal point model (Maydeu-Olivares, 2006)
     \item \code{'ggum'} - generalized graded unfolding model (Roberts, Donoghue, & Laughlin, 2000)
       and its multidimensional extension
+    \item \code{'sequential'} - multidimensional sequential response model (Tutz, 1990) in slope-intercept form
+    \item \code{'Tutz'} - same as the \code{'sequential'} itemtype, except the slopes are fixed to 1
+      and the latent variance terms are freely estimated (similiar to the \code{'Rasch'} itemtype input)
     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
       Note that constraining the slopes to be equal across items will reduce the model to
       Embretson's (a.k.a. Whitely's) multicomponent model (1980).
@@ -597,6 +600,16 @@ of categories.
      is analogous to the relationship between the graded model and the grsm (with an additional
      constraint regarding the fixed discrimination parameters).
    }
+   \item{sequential/Tutz}{
+    The multidimenisonal sequential response model has the form
+    \deqn{P(x = k | \theta, \psi) = \prod (1 - F(a_1 \theta_1 + a_2 \theta_2 + d_{sk}))
+      F(a_1 \theta_1 + a_2 \theta_2 + d_{jk})}
+    where \eqn{F(\cdot)} is the cumlative logistic function.
+    The Tutz variant of this model (Tutz, 1990) (via \code{itemtype = 'Tutz'})
+    assumes that the slope terms are all equal to 1 and the latent
+    variance terms are estimated (i.e., is a Rasch variant).
+
+  }
   \item{ideal}{
     The ideal point model has the form, with the upper bound constraint on \eqn{d} set to 0:
     \deqn{P(x = 1 | \theta, \psi) = exp(-0.5 * (a_1 * \theta_1 + a_2 * \theta_2 + d)^2)}
@@ -1169,6 +1182,9 @@ Proceedings of the 1977 Computerized Adaptive Testing Conference.
 
 Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 \emph{Psychometrika, 47}, 175-186.
+
+Tutz, G. (1990). Sequential item response models with ordered response.
+\emph{British Journal of Mathematical and Statistical Psychology, 43}, 39-55.
 
 Varadhan, R. & Roland, C. (2008). Simple and Globally Convergent Methods for Accelerating
 the Convergence of Any EM Algorithm. \emph{Scandinavian Journal of Statistics, 35}, 335-353.

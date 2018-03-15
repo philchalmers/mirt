@@ -5,12 +5,12 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                 'ideal', 'lca', 'spline', 'monopoly', 'ggum', Experimental_itemtypes())
+                                 'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'spline', Experimental_itemtypes())
+Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', Experimental_itemtypes())
 
-Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline',
+Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'sequential', 'Tutz',
                             Experimental_itemtypes())
 
 # ----------------------------------------------------------------
@@ -77,6 +77,37 @@ numDeriv_dP <- function(item, Theta){
         ret[i, item@est] <- tmp
     }
     ret
+}
+
+symbolicGrad_par <- function(x, Theta, dp1 = NULL, P = NULL){
+    if(is.null(P)) P <- ProbTrace(x, Theta)
+    xLength <- length(x@par)
+    r_P <- x@dat / P
+    if(is.null(dp1))
+        dp1 <- array(x@dps(x@par, Theta, x@ncat), c(nrow(Theta),x@ncat,xLength))
+    grad <- numeric(length(x@par))
+    for (i in 1L:xLength)
+        grad[i] <- sum(r_P * dp1[,,i])
+    grad
+}
+
+symbolicHessian_par <- function(x, Theta, dp1 = NULL, dp2 = NULL, P = NULL){
+    if(is.null(P)) P <- ProbTrace(x, Theta)
+    xLength <- length(x@par)
+    ThetaLength <- length(Theta)
+    if(is.null(dp1))
+        dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
+    if(is.null(dp2))
+        dp2 <- array(x@dps2(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength,xLength))
+    H <- matrix(0,xLength,xLength)
+    P2 <- P^2
+    for (i in 1L:xLength){
+        for (j in i:xLength){
+            H[i,j] <- sum(x@dat*dp2[,,i,j]/P + x@dat*dp1[,,i]*(-dp1[,,j]/P2))
+            H[j,i] <- H[i,j]
+        }
+    }
+    H
 }
 
 # ----------------------------------------------------------------
@@ -2318,8 +2349,6 @@ setMethod(
 setClass('custom', contains = 'AllItemsClass',
          representation = representation(name='character',
                                          P='function',
-                                         dps='function',
-                                         dps2='function',
                                          gr='function',
                                          usegr='logical',
                                          hss='function',
@@ -2932,6 +2961,172 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'monopoly', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("sequential", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'sequential'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'sequential'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'sequential'),
+    definition = function(x){
+        x@par[seq_len(x@nfact)] #slopes
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'sequential'),
+    definition = function(x){
+        x@par[length(x@par)] #intercepts
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'sequential'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 sort(rnorm(x@ncat-1L, sd = 2), decreasing=TRUE))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'sequential'),
+    definition = function(x){
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'sequential', Theta = 'matrix'),
+    definition = function(x, Theta, itemexp = FALSE){
+        par <- x@par
+        a <- par[1L:ncol(Theta)]
+        d <- par[-c(1L:ncol(Theta))]
+        ncat <- length(d) + 1L
+        Z <- matrix(0, nrow(Theta), ncat - 1L)
+        for(i in seq_along(d))
+            Z[,i] <- Theta %*% a + d[i]
+        P <- matrix(0, nrow(Theta), ncat)
+        Psi <- matrix(0, nrow(Theta), ncat + 1L)
+        Psi[,1L] <- 1
+        for(i in seq_along(d))
+            Psi[,i+1L] <- 1 / (1 + exp(-Z[,i]))
+        Pkc <- t(apply(Psi, 1L, cumprod))
+        for(i in 1L:ncat)
+            P[,i] <- Pkc[,i] * (1 -  Psi[,i+1L])
+        if(itemexp) return(list(Psi=Psi, P=P))
+        P
+    }
+)
+
+# complete-data derivative used in parameter estimation (here it is done numerically)
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'sequential', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        dplist <- ProbTrace(x, Theta, itemexp=TRUE)
+        P <- dplist$P
+        Psi <- dplist$Psi
+        Psi2 <- Psi^2
+        ncat <- x@ncat
+        nfact <- ncol(Theta)
+        Pgrad <- vector("list", length(x@par))
+        storage <- matrix(0, nrow(Theta), ncat)
+        # as
+        ind <- 1L
+        for(fact in seq_len(nfact)){
+            for(cat in seq_len(ncat)){
+                collecta <- (cat - 1) * Theta[,fact] * P[,cat]
+                tmp <- Psi[,1L:cat, drop=FALSE]
+                prodtmp <- apply(tmp, 1L, prod)
+                if(cat > 1L){
+                    for(tcat in seq_len(cat-1L)){
+                        collecta <- collecta -
+                            Theta[,fact] * (Psi[,tcat+1L] * P[,cat])
+                    }
+                }
+                collecta <- collecta + prodtmp *
+                    (Theta[,fact] * (Psi2[,cat + 1L] - Psi[,cat + 1L]))
+                storage[,cat] <- collecta
+            }
+            Pgrad[[ind]] <- storage
+            ind <- ind + 1L
+        }
+        #ds
+        for(cat in seq_len(ncat-1L)){
+            tmp <- Psi[,1L:cat, drop=FALSE]
+            prodtmp <- apply(tmp, 1L, prod)
+            for(tcat in 1L:ncat){
+                if(tcat < cat){
+                    storage[,tcat] <- 0
+                } else if(tcat == cat){
+                    storage[,tcat] <- prodtmp * (Psi2[,cat + 1L] - Psi[,cat + 1L])
+                } else {
+                    storage[,tcat] <- P[,tcat] - Psi[,cat + 1L] * P[,tcat]
+                }
+            }
+            Pgrad[[ind]] <- storage
+            ind <- ind + 1L
+        }
+        Pgrad <- array(do.call(c, Pgrad), c(nrow(Theta), x@ncat, length(x@par)))
+        grad <- symbolicGrad_par(x, Theta, dp1=Pgrad, P=P)
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(estHess && any(x@est)){
+            # grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+                                                  Theta=Theta, gradient=FALSE)
+        }
+        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'sequential', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'sequential', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }

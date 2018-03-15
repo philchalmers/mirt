@@ -1,5 +1,9 @@
 # Changes in mirt 1.27
 
+- Added multidimenisonal version of sequential response model (e.g., Tutz, 1990). Includes 
+  `itemtype = 'sequential'` for the multidimenisonal 2PL variant, and `itemtype = 'Tutz'`
+  for the Rasch variant
+
 - Printing IRT parameters via `coef(mod, IRTpars = TRUE)` now computes the delta method 
   for the `g` and `u` terms as well. Interpreting these is generally not recommended 
   due to their bounded parameter nature (CIs can be outside the range [0,1]), 

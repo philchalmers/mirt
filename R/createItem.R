@@ -175,39 +175,13 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
         dps <- Deriv::Deriv(P, tmppars)
         if(bytecompile) dps <- compiler::cmpfun(dps)
     }
-    if(is.null(gr) && derivType == "symbolic"){
-        gr <- function(x, Theta){
-            P <- ProbTrace(x, Theta)
-            xLength <- length(x@par)
-            ThetaLength <- nrow(Theta)
-            r_P <- x@dat / P
-            dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
-            grad <- numeric(length(x@par))
-            for (i in 1L:xLength)
-                grad[i] <- sum(r_P * dp1[,,i])
-            grad
-        }
-    }
+    if(is.null(gr) && derivType == "symbolic")
+        gr <- symbolicGrad_par
     if(bytecompile && !is.null(gr)) gr <- compiler::cmpfun(gr)
     if(is.null(hss) && derivType.hss == "symbolic"){
         dps2 <- Deriv::Deriv(dps, tmppars)
         if(bytecompile) dps2 <- compiler::cmpfun(dps2)
-        hss <- function(x, Theta){
-            P <- ProbTrace(x, Theta)
-            xLength <- length(x@par)
-            ThetaLength <- length(Theta)
-            dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
-            dp2 <- array(x@dps2(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength,xLength))
-            H <- matrix(NA,xLength,xLength)
-            P2 <- P^2
-            for (i in 1L:xLength){
-                for (j in i:xLength){
-                    H[i,j] <- sum(x@dat*dp2[,,i,j]/P + x@dat*dp1[,,i]*(-dp1[,,j]/P2))
-                    H[j,i] <- H[i,j]
-                }
-            }
-            H
-        }
+        hss <- symbolicHessian_par
     }
     if(bytecompile && !is.null(hss)) hss <- compiler::cmpfun(hss)
     return(new('custom', name=name, par=par, est=est, parnames=names(par), lbound=lbound,

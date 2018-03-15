@@ -105,6 +105,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,], zetas[[i]])
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+        } else if(itemtype[i] %in% c('sequential', 'Tutz')){
+            val <- c(lambdas[i,], zetas[[i]])
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+            if(itemtype[i] == 'Tutz'){
+                val[1L] <- 1
+                fp[1L] <- FALSE
+            }
         } else if(itemtype[i] == 'monopoly'){
             val <- c(suppressWarnings(log(lambdas[i,])),
                      zetas[[i]], rep(0, monopoly.k[i]*2))
@@ -349,6 +357,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=K[i],
                              itemclass=2L,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             est=freepars[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(itemtype[i] %in% c('sequential', 'Tutz')){
+            pars[[i]] <- new('sequential',
+                             par=startvalues[[i]],
+                             parnames=names(freepars[[i]]),
+                             nfact=nfact,
+                             ncat=K[i],
+                             itemclass=9L,
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              prior.type=rep(0L, length(startvalues[[i]])),
