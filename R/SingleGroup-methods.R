@@ -226,10 +226,14 @@ setMethod(
 #' @param CI the amount of converged used to compute confidence intervals; default is
 #'   95 percent confidence intervals
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
-#'   Only applicable to unidimensional models
+#'   Only applicable to unidimensional models. If a suitable ACOV estimate was computed in the fitted
+#'   model, and \code{printSE = FALSE}, then suitable CIs will be included based on the delta
+#'   method (where applicable)
 #' @param rotate see \code{summary} method for details. The default rotation is \code{'none'}
 #' @param Target a dummy variable matrix indicting a target rotation pattern
-#' @param printSE logical; print the standard errors instead of the confidence intervals?
+#' @param printSE logical; print the standard errors instead of the confidence intervals? When
+#'   \code{IRTpars = TRUE} then the delta method will be used to compute the associated standard errors
+#'   from mirt's default slope-intercept form
 #' @param as.data.frame logical; convert list output to a data.frame instead?
 #' @param simplify logical; if all items have the same parameter names (indicating they are
 #'   of the same class) then they are collapsed to a matrix, and a list of length 2 is returned

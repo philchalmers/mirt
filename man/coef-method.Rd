@@ -21,14 +21,18 @@
 \item{CI}{the amount of converged used to compute confidence intervals; default is
 95 percent confidence intervals}
 
-\item{printSE}{logical; print the standard errors instead of the confidence intervals?}
+\item{printSE}{logical; print the standard errors instead of the confidence intervals? When
+\code{IRTpars = TRUE} then the delta method will be used to compute the associated standard errors
+from mirt's default slope-intercept form}
 
 \item{rotate}{see \code{summary} method for details. The default rotation is \code{'none'}}
 
 \item{Target}{a dummy variable matrix indicting a target rotation pattern}
 
 \item{IRTpars}{logical; convert slope intercept parameters into traditional IRT parameters?
-Only applicable to unidimensional models}
+Only applicable to unidimensional models. If a suitable ACOV estimate was computed in the fitted
+model, and \code{printSE = FALSE}, then suitable CIs will be included based on the delta
+method (where applicable)}
 
 \item{rawug}{logical; return the untransformed internal g and u parameters?
 If \code{FALSE}, g and u's are converted with the original format along with delta standard errors}
