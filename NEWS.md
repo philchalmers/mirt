@@ -1,7 +1,7 @@
 # Changes in mirt 1.27
 
-- Added multidimenisonal version of sequential response model (e.g., Tutz, 1990). Includes 
-  `itemtype = 'sequential'` for the multidimenisonal 2PL variant, and `itemtype = 'Tutz'`
+- Added multidimensional version of sequential response model (e.g., Tutz, 1990). Includes 
+  `itemtype = 'sequential'` for the multidimensional 2PL variant, and `itemtype = 'Tutz'`
   for the Rasch variant
 
 - Printing IRT parameters via `coef(mod, IRTpars = TRUE)` now computes the delta method 
@@ -22,7 +22,7 @@
   `derivType.hss = 'symbolic'` to symbolically compute the gradient/Hessian 
   functions (template code-base contributed by Chen-Wei Liu)
 
-- `customItem()` gains a `derivType.hss` argument to distinguate gradient from 
+- `customItem()` gains a `derivType.hss` argument to distinguish gradient from 
   Hessian numerical computations
 
 - `mdirt()` gains support for `createItem()` inputs

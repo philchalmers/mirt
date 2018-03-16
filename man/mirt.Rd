@@ -601,7 +601,7 @@ of categories.
      constraint regarding the fixed discrimination parameters).
    }
    \item{sequential/Tutz}{
-    The multidimenisonal sequential response model has the form
+    The multidimensional sequential response model has the form
     \deqn{P(x = k | \theta, \psi) = \prod (1 - F(a_1 \theta_1 + a_2 \theta_2 + d_{sk}))
       F(a_1 \theta_1 + a_2 \theta_2 + d_{jk})}
     where \eqn{F(\cdot)} is the cumlative logistic function.
