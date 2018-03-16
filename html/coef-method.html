@@ -47,7 +47,9 @@ coef(object, CI = 0.95, printSE = FALSE,
 </td></tr>
 <tr valign="top"><td><code>printSE</code></td>
 <td>
-<p>logical; print the standard errors instead of the confidence intervals?</p>
+<p>logical; print the standard errors instead of the confidence intervals? When
+<code>IRTpars = TRUE</code> then the delta method will be used to compute the associated standard errors
+from mirt's default slope-intercept form</p>
 </td></tr>
 <tr valign="top"><td><code>rotate</code></td>
 <td>
@@ -60,7 +62,9 @@ coef(object, CI = 0.95, printSE = FALSE,
 <tr valign="top"><td><code>IRTpars</code></td>
 <td>
 <p>logical; convert slope intercept parameters into traditional IRT parameters?
-Only applicable to unidimensional models</p>
+Only applicable to unidimensional models. If a suitable ACOV estimate was computed in the fitted
+model, and <code>printSE = FALSE</code>, then suitable CIs will be included based on the delta
+method (where applicable)</p>
 </td></tr>
 <tr valign="top"><td><code>rawug</code></td>
 <td>
@@ -143,23 +147,23 @@ coef(x)
 </code></pre>
 
 <pre><code>## $Item.1
-##        a1      d g u
+##         a      b g u
 ## par 0.988 -1.879 0 1
 ## 
 ## $Item.2
-##        a1      d g u
+##         a      b g u
 ## par 1.081 -0.748 0 1
 ## 
 ## $Item.3
-##        a1      d g u
+##         a      b g u
 ## par 1.706 -1.058 0 1
 ## 
 ## $Item.4
-##        a1      d g u
+##         a      b g u
 ## par 0.765 -0.635 0 1
 ## 
 ## $Item.5
-##        a1     d g u
+##         a     b g u
 ## par 0.736 -2.52 0 1
 ## 
 ## $GroupPars
@@ -349,5 +353,5 @@ coef(x2)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
 </body></html>

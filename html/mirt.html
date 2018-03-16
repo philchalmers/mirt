@@ -810,7 +810,7 @@ constraint regarding the fixed discrimination parameters).
 </p>
 </dd>
 <dt>sequential/Tutz</dt><dd>
-<p>The multidimenisonal sequential response model has the form
+<p>The multidimensional sequential response model has the form
 </p>
 <p style="text-align: center;"><i>P(x = k | &theta;, &psi;) = &prod; (1 - F(a_1 &theta;_1 + a_2 &theta;_2 + d_{sk}))
       F(a_1 &theta;_1 + a_2 &theta;_2 + d_{jk})</i></p>
@@ -1027,7 +1027,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1107,7 +1107,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1133,7 +1133,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-05 tolerance after 74 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: none 
 ## Number of rectangular quadrature: 61
@@ -1199,7 +1199,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1261,7 +1261,7 @@ data &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 43 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1560,7 +1560,7 @@ coef(cmod)
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 125 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 31
@@ -1668,7 +1668,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1717,7 +1717,7 @@ model &lt;- &#39;F = 1-4
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 15 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1848,7 +1848,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 50 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1896,7 +1896,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 71 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1961,7 +1961,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 107 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: L-BFGS-B 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -2018,7 +2018,7 @@ summary(pmod2)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 47 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -2084,7 +2084,7 @@ extract.mirt(mod1, &#39;time&#39;) #time elapsed for each estimation component
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.549  0.052  0.078  0.413  0.000  0.000
+##  0.731  0.051  0.080  0.593  0.000  0.000
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -2093,7 +2093,7 @@ extract.mirt(mod1, &#39;time&#39;)
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.179  0.051  0.050  0.071  0.000  0.001
+##  0.183  0.050  0.055  0.073  0.000  0.000
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(data, 2, optimizer = &#39;NR&#39;)
@@ -2492,15 +2492,15 @@ fulldata &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 0.001 tolerance after 70 MHRM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: NR1 
 ## 
-## Log-likelihood = -2658.7, SE = 0.018
+## Log-likelihood = -2659.265, SE = 0.018
 ## Estimated parameters: 10 
-## AIC = 5337.4; AICc = 5337.623
-## BIC = 5386.478; SABIC = 5354.717
-## G2 (21) = 31.34, p = 0.0682
-## RMSEA = 0.022, CFI = NaN, TLI = NaN
+## AIC = 5338.529; AICc = 5338.752
+## BIC = 5387.607; SABIC = 5355.846
+## G2 (21) = 32.49, p = 0.0521
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
 
 <pre><code class="r">#Confirmatory models
@@ -2551,63 +2551,63 @@ coef(mod1)
 </code></pre>
 
 <pre><code>## $Item_1
-##        a1 a2     d g u
-## par 1.503  0 -1.06 0 1
+##        a1 a2      d g u
+## par 1.398  0 -0.967 0 1
 ## 
 ## $Item_2
 ##        a1 a2      d g u
-## par 0.607  0 -1.491 0 1
+## par 0.301  0 -1.429 0 1
 ## 
 ## $Item_3
 ##        a1 a2     d g u
-## par 1.119  0 1.655 0 1
+## par 1.054  0 1.622 0 1
 ## 
 ## $Item_4
 ##        a1    a2     d g u
-## par 1.376 0.491 0.012 0 1
+## par 1.113 0.463 0.083 0 1
 ## 
 ## $Item_5
 ##     a1    a2    d1    d2     d3
-## par  0 1.538 2.894 1.934 -0.522
+## par  0 1.696 3.132 2.068 -0.558
 ## 
 ## $Item_6
-##     a1    a2   d1    d2     d3
-## par  0 0.533 2.51 1.045 -0.999
+##     a1    a2    d1    d2     d3
+## par  0 0.479 2.469 1.034 -1.014
 ## 
 ## $Item_7
-##     a1   a2   d1    d2
-## par  0 0.86 1.94 0.027
+##     a1   a2    d1     d2
+## par  0 0.97 1.899 -0.074
 ## 
 ## $Item_8
-##     a1    a2    d g u
-## par  0 1.074 1.01 0 1
+##     a1    a2     d g u
+## par  0 0.885 1.022 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-## par      0      0      1  0.395      1
+## par      0      0      1  0.433      1
 </code></pre>
 
 <pre><code class="r">summary(mod1)
 </code></pre>
 
 <pre><code>##           F1    F2     h2
-## Item_1 0.662 0.000 0.4382
-## Item_2 0.336 0.000 0.1129
-## Item_3 0.549 0.000 0.3017
-## Item_4 0.613 0.219 0.4242
-## Item_5 0.000 0.670 0.4495
-## Item_6 0.000 0.299 0.0893
-## Item_7 0.000 0.451 0.2033
-## Item_8 0.000 0.534 0.2849
+## Item_1 0.635 0.000 0.4030
+## Item_2 0.174 0.000 0.0304
+## Item_3 0.527 0.000 0.2773
+## Item_4 0.534 0.222 0.3341
+## Item_5 0.000 0.706 0.4983
+## Item_6 0.000 0.271 0.0733
+## Item_7 0.000 0.495 0.2450
+## Item_8 0.000 0.461 0.2129
 ## 
-## SS loadings:  1.229 1.075 
-## Proportion Var:  0.154 0.134 
+## SS loadings:  0.995 1.079 
+## Proportion Var:  0.124 0.135 
 ## 
 ## Factor correlations: 
 ## 
 ##       F1    F2
-## F1 1.000 0.395
-## F2 0.395 1.000
+## F1 1.000 0.433
+## F2 0.433 1.000
 </code></pre>
 
 <pre><code class="r">residuals(mod1)
@@ -2616,15 +2616,15 @@ coef(mod1)
 <pre><code>## LD matrix (lower triangle) and standardized values:
 </code></pre>
 
-<pre><code>##        Item_1 Item_2 Item_3 Item_4  Item_5 Item_6 Item_7 Item_8
-## Item_1     NA -0.007  0.008 -0.007   0.031  0.045  0.065 -0.039
-## Item_2 -0.103     NA -0.008  0.020  -0.029 -0.021  0.020 -0.025
-## Item_3  0.116 -0.114     NA  0.002  -0.066  0.042  0.005  0.009
-## Item_4 -0.112  0.771  0.009     NA  -0.020  0.042  0.018 -0.032
-## Item_5  1.901 -1.737 -8.679 -0.821      NA -0.053 -0.031  0.030
-## Item_6  4.109 -0.909  3.495  3.534 -16.740     NA -0.043 -0.027
-## Item_7  8.455  0.768  0.060  0.673  -3.861 -7.283     NA  0.052
-## Item_8 -3.119 -1.227  0.155 -2.026   1.804 -1.425  5.331     NA
+<pre><code>##        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
+## Item_1     NA -0.004  0.013  0.004 -0.049  0.046 -0.028  0.010
+## Item_2 -0.035     NA -0.024  0.017  0.032  0.016  0.052 -0.005
+## Item_3  0.331 -1.151     NA -0.002  0.035  0.040 -0.051  0.001
+## Item_4  0.027  0.556 -0.011     NA  0.065  0.047  0.013 -0.041
+## Item_5 -4.812  2.070  2.501  8.459     NA -0.031 -0.023  0.023
+## Item_6  4.185  0.483  3.243  4.487 -5.586     NA  0.024  0.018
+## Item_7 -1.620  5.431 -5.192  0.353 -2.167  2.323     NA  0.013
+## Item_8  0.200 -0.046  0.002 -3.374  1.025  0.660  0.362     NA
 </code></pre>
 
 <pre><code class="r">#####
@@ -2639,36 +2639,36 @@ coef(mod3)
 </code></pre>
 
 <pre><code>## $Item_1
-##        a1    a2 a3      d g u
-## par 0.976 0.947  0 -1.008 0 1
+##        a1   a2 a3      d g u
+## par 0.998 1.49  0 -1.091 0 1
 ## 
 ## $Item_2
 ##        a1    a2 a3      d g u
-## par 0.372 0.508  0 -1.495 0 1
+## par 0.346 0.058  0 -1.439 0 1
 ## 
 ## $Item_3
-##        a1    a2 a3     d g u
-## par 0.581 1.163  0 1.752 0 1
+##       a1    a2 a3     d g u
+## par 0.67 0.735  0 1.592 0 1
 ## 
 ## $Item_4
 ##        a1    a2 a3     d g u
-## par 1.698 0.919  0 0.013 0 1
+## par 1.387 0.554  0 0.083 0 1
 ## 
 ## $Item_5
-##        a1 a2    a3    d1    d2     d3
-## par 1.037  0 1.278 2.979 1.994 -0.541
+##        a1 a2    a3    d1   d2    d3
+## par 1.198  0 1.207 3.133 2.07 -0.56
 ## 
 ## $Item_6
 ##        a1 a2    a3    d1    d2     d3
-## par 0.454  0 0.251 2.503 1.041 -0.997
+## par 0.458  0 0.199 2.476 1.037 -1.019
 ## 
 ## $Item_7
-##       a1 a2    a3    d1    d2
-## par 0.67  0 0.517 1.932 0.027
+##        a1 a2    a3    d1     d2
+## par 0.702  0 0.722 1.919 -0.073
 ## 
 ## $Item_8
-##        a1 a2   a3     d g u
-## par 0.568  0 1.05 1.045 0 1
+##        a1 a2    a3     d g u
+## par 0.534  0 0.788 1.042 0 1
 ## 
 ## $GroupPars
 ##     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2678,18 +2678,18 @@ coef(mod3)
 <pre><code class="r">summary(mod3)
 </code></pre>
 
-<pre><code>##            G    F1    F2     h2
-## Item_1 0.448 0.435 0.000 0.3896
-## Item_2 0.205 0.280 0.000 0.1204
-## Item_3 0.271 0.543 0.000 0.3683
-## Item_4 0.660 0.357 0.000 0.5626
-## Item_5 0.438 0.000 0.540 0.4832
-## Item_6 0.255 0.000 0.141 0.0851
-## Item_7 0.353 0.000 0.272 0.1983
-## Item_8 0.273 0.000 0.505 0.3298
+<pre><code>##            G     F1    F2     h2
+## Item_1 0.404 0.6027 0.000 0.5263
+## Item_2 0.199 0.0337 0.000 0.0408
+## Item_3 0.340 0.3728 0.000 0.2544
+## Item_4 0.612 0.2447 0.000 0.4349
+## Item_5 0.498 0.0000 0.502 0.4995
+## Item_6 0.258 0.0000 0.112 0.0793
+## Item_7 0.355 0.0000 0.365 0.2593
+## Item_8 0.274 0.0000 0.404 0.2384
 ## 
-## SS loadings:  1.207 0.689 0.641 
-## Proportion Var:  0.151 0.086 0.08 
+## SS loadings:  1.209 0.563 0.561 
+## Proportion Var:  0.151 0.07 0.07 
 ## 
 ## Factor correlations: 
 ## 
@@ -2706,14 +2706,14 @@ coef(mod3)
 </code></pre>
 
 <pre><code>##        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-## Item_1     NA -0.002  0.010 -0.013  0.027 -0.044  0.045 -0.029
-## Item_2 -0.009     NA -0.018  0.014 -0.030 -0.028  0.016 -0.017
-## Item_3  0.182 -0.649     NA -0.003 -0.060  0.041  0.006  0.032
-## Item_4 -0.364  0.378 -0.013     NA -0.019  0.016 -0.014  0.003
-## Item_5  1.471 -1.763 -7.283 -0.688     NA  0.053 -0.032 -0.023
-## Item_6 -3.855 -1.609  3.405  0.531 16.851     NA -0.041 -0.017
-## Item_7  4.007  0.528  0.078 -0.388 -3.976 -6.745     NA  0.053
-## Item_8 -1.685 -0.567  1.990  0.024 -1.068 -0.552  5.544     NA
+## Item_1     NA  0.002 -0.001 -0.005 -0.050  0.027 -0.030  0.020
+## Item_2  0.005     NA -0.019  0.004 -0.033 -0.014  0.038 -0.015
+## Item_3 -0.002 -0.693     NA  0.009  0.034  0.034 -0.052  0.008
+## Item_4 -0.042  0.028  0.156     NA  0.065 -0.052  0.012 -0.021
+## Item_5 -5.068 -2.124  2.291  8.478     NA -0.030 -0.024 -0.020
+## Item_6  1.503 -0.394  2.329 -5.407 -5.435     NA  0.024  0.023
+## Item_7 -1.758  2.885 -5.396  0.293 -2.307  2.321     NA  0.004
+## Item_8  0.789 -0.441  0.118 -0.865 -0.796  1.061  0.027     NA
 </code></pre>
 
 <pre><code class="r">anova(mod1,mod3)
@@ -2724,9 +2724,9 @@ coef(mod3)
 ## Model 2: mirt(data = dataset, model = model.3, method = &quot;MHRM&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
-## 1 24738.68 24739.24 24794.43 24867.50 -12346.34    NaN NaN   NaN
-## 2 24734.24 24735.13 24804.53 24896.67 -12338.12 16.436   6 0.012
+<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
+## 1 24805.75 24806.31 24861.50 24934.57 -12379.88   NaN NaN   NaN
+## 2 24812.57 24813.46 24882.86 24975.00 -12377.29 5.181   6 0.521
 </code></pre>
 
 <pre><code class="r">#####
@@ -2757,7 +2757,7 @@ model.combo &lt;- &#39;
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -2825,7 +2825,7 @@ model.combo &lt;- &#39;
 ## 
 ## Full-information item factor analysis with 2 factor(s).
 ## Converged within 1e-04 tolerance after 20 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 31
@@ -2972,7 +2972,7 @@ print(mod)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: solnp 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -3162,20 +3162,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.71849 -0.32365 -0.00936  0.32301  1.65188 
+##     Min      1Q  Median      3Q     Max 
+## -1.2903 -0.2927 -0.0104  0.3143  1.3364 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.001377   0.014819  -0.093    0.926    
-## covdata$X1   0.512717   0.014882  34.452   &lt;2e-16 ***
-## covdata$X2  -1.043178   0.015127 -68.961   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.00458    0.01439   0.318     0.75    
+## covdata$X1   0.52466    0.01446  36.292   &lt;2e-16 ***
+## covdata$X2  -1.01787    0.01469 -69.269   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4684 on 997 degrees of freedom
-## Multiple R-squared:  0.8509, Adjusted R-squared:  0.8506 
-## F-statistic:  2846 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.455 on 997 degrees of freedom
+## Multiple R-squared:  0.8544, Adjusted R-squared:  0.8541 
+## F-statistic:  2925 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[2]]
@@ -3184,20 +3184,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.5285 -0.3135 -0.0092  0.2971  1.3470 
+##      Min       1Q   Median       3Q      Max 
+## -1.46270 -0.29875 -0.00113  0.29744  1.55572 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.01052    0.01469   0.716    0.474    
-## covdata$X1   0.54191    0.01475  36.732   &lt;2e-16 ***
-## covdata$X2  -1.03945    0.01500 -69.315   &lt;2e-16 ***
+## (Intercept) -0.01259    0.01398  -0.901    0.368    
+## covdata$X1   0.52102    0.01404  37.111   &lt;2e-16 ***
+## covdata$X2  -1.01458    0.01427 -71.096   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4643 on 997 degrees of freedom
-## Multiple R-squared:  0.8551, Adjusted R-squared:  0.8548 
-## F-statistic:  2942 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4419 on 997 degrees of freedom
+## Multiple R-squared:  0.8606, Adjusted R-squared:  0.8603 
+## F-statistic:  3076 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[3]]
@@ -3206,20 +3206,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.72261 -0.30262  0.00225  0.29472  1.38194 
+##     Min      1Q  Median      3Q     Max 
+## -1.3083 -0.3357  0.0185  0.3073  1.6275 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.01034    0.01447   0.715    0.475    
-## covdata$X1   0.50935    0.01453  35.060   &lt;2e-16 ***
-## covdata$X2  -1.05712    0.01477 -71.587   &lt;2e-16 ***
+## (Intercept) -0.02083    0.01467   -1.42    0.156    
+## covdata$X1   0.52204    0.01473   35.43   &lt;2e-16 ***
+## covdata$X2  -1.02592    0.01498  -68.50   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4572 on 997 degrees of freedom
-## Multiple R-squared:  0.8593, Adjusted R-squared:  0.859 
-## F-statistic:  3045 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4637 on 997 degrees of freedom
+## Multiple R-squared:  0.8509, Adjusted R-squared:  0.8506 
+## F-statistic:  2846 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[4]]
@@ -3229,19 +3229,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.39797 -0.32266  0.01729  0.28466  1.62296 
+## -1.66733 -0.32222 -0.00223  0.32636  1.57177 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.002459   0.014257   0.173    0.863    
-## covdata$X1   0.528802   0.014318  36.933   &lt;2e-16 ***
-## covdata$X2  -1.046308   0.014554 -71.894   &lt;2e-16 ***
+## (Intercept)  0.007608   0.014972   0.508    0.611    
+## covdata$X1   0.506553   0.015037  33.688   &lt;2e-16 ***
+## covdata$X2  -1.024610   0.015284 -67.037   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4506 on 997 degrees of freedom
-## Multiple R-squared:  0.8625, Adjusted R-squared:  0.8622 
-## F-statistic:  3126 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4732 on 997 degrees of freedom
+## Multiple R-squared:  0.8439, Adjusted R-squared:  0.8436 
+## F-statistic:  2695 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[5]]
@@ -3251,19 +3251,19 @@ so
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -1.3882 -0.3277  0.0209  0.2870  1.3966 
+## -1.3706 -0.3080  0.0047  0.3176  1.5377 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.002797   0.014628  -0.191    0.848    
-## covdata$X1   0.526072   0.014691  35.810   &lt;2e-16 ***
-## covdata$X2  -1.042610   0.014932 -69.822   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.01770    0.01479   1.197    0.232    
+## covdata$X1   0.52863    0.01485  35.593   &lt;2e-16 ***
+## covdata$X2  -1.06512    0.01510 -70.553   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4624 on 997 degrees of freedom
-## Multiple R-squared:  0.8553, Adjusted R-squared:  0.855 
-## F-statistic:  2947 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4674 on 997 degrees of freedom
+## Multiple R-squared:  0.8571, Adjusted R-squared:  0.8568 
+## F-statistic:  2990 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[6]]
@@ -3273,19 +3273,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.48922 -0.31996  0.01175  0.32196  1.34136 
+## -1.48206 -0.34098 -0.00142  0.32779  1.62610 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.007568   0.014642  -0.517    0.605    
-## covdata$X1   0.518272   0.014705  35.245   &lt;2e-16 ***
-## covdata$X2  -1.033423   0.014947 -69.141   &lt;2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.00440    0.01517   -0.29    0.772    
+## covdata$X1   0.52690    0.01524   34.58   &lt;2e-16 ***
+## covdata$X2  -1.04177    0.01549  -67.27   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4628 on 997 degrees of freedom
-## Multiple R-squared:  0.8526, Adjusted R-squared:  0.8523 
-## F-statistic:  2883 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4795 on 997 degrees of freedom
+## Multiple R-squared:  0.846,  Adjusted R-squared:  0.8456 
+## F-statistic:  2738 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[7]]
@@ -3294,20 +3294,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.34831 -0.32258  0.00616  0.31852  1.39048 
+##     Min      1Q  Median      3Q     Max 
+## -1.4259 -0.3263 -0.0167  0.3391  1.6035 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.01226    0.01464   0.837    0.403    
-## covdata$X1   0.52187    0.01471  35.486   &lt;2e-16 ***
-## covdata$X2  -1.04060    0.01495 -69.613   &lt;2e-16 ***
+## (Intercept) -0.01248    0.01500  -0.832    0.405    
+## covdata$X1   0.52064    0.01507  34.560   &lt;2e-16 ***
+## covdata$X2  -1.04580    0.01531 -68.296   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4628 on 997 degrees of freedom
-## Multiple R-squared:  0.8543, Adjusted R-squared:  0.854 
-## F-statistic:  2922 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4741 on 997 degrees of freedom
+## Multiple R-squared:  0.8491, Adjusted R-squared:  0.8488 
+## F-statistic:  2805 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[8]]
@@ -3316,20 +3316,20 @@ so
 ## lm(formula = x ~ covdata$X1 + covdata$X2)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.6651 -0.3097  0.0055  0.3275  1.3064 
+##      Min       1Q   Median       3Q      Max 
+## -1.42397 -0.30815 -0.00311  0.32291  1.50113 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.005195   0.014801   0.351    0.726    
-## covdata$X1   0.550052   0.014864  37.005   &lt;2e-16 ***
-## covdata$X2  -1.046762   0.015109 -69.282   &lt;2e-16 ***
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.0001682  0.0155969  -0.011    0.991    
+## covdata$X1   0.5263049  0.0156638  33.600   &lt;2e-16 ***
+## covdata$X2  -1.0439436  0.0159215 -65.568   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4678 on 997 degrees of freedom
-## Multiple R-squared:  0.8554, Adjusted R-squared:  0.8551 
-## F-statistic:  2949 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.493 on 997 degrees of freedom
+## Multiple R-squared:  0.839,  Adjusted R-squared:  0.8387 
+## F-statistic:  2598 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[9]]
@@ -3339,19 +3339,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.47879 -0.30632  0.01135  0.30085  1.45509 
+## -1.38895 -0.31145 -0.00223  0.29781  1.41865 
 ## 
 ## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.0006097  0.0146771   0.042    0.967    
-## covdata$X1   0.5017412  0.0147401  34.039   &lt;2e-16 ***
-## covdata$X2  -1.0489026  0.0149827 -70.008   &lt;2e-16 ***
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.006298   0.014486  -0.435    0.664    
+## covdata$X1   0.530115   0.014548  36.438   &lt;2e-16 ***
+## covdata$X2  -1.038176   0.014788 -70.206   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4639 on 997 degrees of freedom
-## Multiple R-squared:  0.8535, Adjusted R-squared:  0.8532 
-## F-statistic:  2904 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4579 on 997 degrees of freedom
+## Multiple R-squared:  0.8572, Adjusted R-squared:  0.8569 
+## F-statistic:  2993 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 ## 
 ## 
 ## [[10]]
@@ -3361,19 +3361,19 @@ so
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1.46225 -0.32991 -0.01168  0.32109  1.52981 
+## -1.30454 -0.30110  0.01291  0.27349  1.56311 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.008915   0.015070  -0.592    0.554    
-## covdata$X1   0.517754   0.015135  34.209   &lt;2e-16 ***
-## covdata$X2  -1.046243   0.015384 -68.008   &lt;2e-16 ***
+## (Intercept) -0.006839   0.014251   -0.48    0.631    
+## covdata$X1   0.507931   0.014312   35.49   &lt;2e-16 ***
+## covdata$X2  -1.035697   0.014547  -71.19   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4763 on 997 degrees of freedom
-## Multiple R-squared:  0.8477, Adjusted R-squared:  0.8474 
-## F-statistic:  2775 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 0.4504 on 997 degrees of freedom
+## Multiple R-squared:  0.8588, Adjusted R-squared:  0.8585 
+## F-statistic:  3031 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 </code></pre>
 
 <pre><code class="r"># compute Rubin&#39;s multiple imputation average
@@ -3383,9 +3383,9 @@ averageMI(par, SEpar)
 </code></pre>
 
 <pre><code>##                par SEpar       t      df     p
-## (Intercept)  0.002 0.017   0.125 181.353 0.225
-## covdata$X1   0.523 0.021  24.575  33.229 0.000
-## covdata$X2  -1.044 0.016 -63.782 336.272 0.000
+## (Intercept) -0.003 0.019  -0.179  59.391 0.215
+## covdata$X1   0.521 0.017  30.521 144.519 0.000
+## covdata$X2  -1.035 0.022 -47.352  32.463 0.000
 </code></pre>
 
 <pre><code class="r">############
@@ -3520,5 +3520,5 @@ summary(GHmod2, suppress=.2)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
 </body></html>

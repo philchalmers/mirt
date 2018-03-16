@@ -166,7 +166,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.564  0.066  0.090  0.400  0.000  0.001
+##  0.576  0.058  0.091  0.419  0.000  0.001
 </code></pre>
 
 <pre><code class="r">#optionally use Newton-Raphson for (generally) faster convergence in the M-step&#39;s
@@ -176,7 +176,7 @@ slot(mod_fullconstrain, &#39;time&#39;) #time of estimation components
 </code></pre>
 
 <pre><code>## TOTAL:   Data  Estep  Mstep     SE   Post 
-##  0.312  0.059  0.080  0.161  0.000  0.001
+##  0.293  0.057  0.080  0.147  0.000  0.001
 </code></pre>
 
 <pre><code class="r">summary(mod_scalar2)
@@ -917,7 +917,7 @@ mod_anchor
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within NaN tolerance after 1 EM iterations.
-## mirt version: 1.27 
+## mirt version: 1.27.1 
 ## M-step optimizer: L-BFGS-B 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -1641,8 +1641,8 @@ anova(mod_metric, mod_configural)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
-## 1 37446.05 37448.17 37555.12 37698.09 -18678.03    NaN NaN   NaN
-## 2 37439.01 37442.78 37584.44 37775.06 -18659.50 37.044  15 0.001
+## 1 37434.76 37436.88 37543.84 37686.80 -18672.38    NaN NaN   NaN
+## 2 37431.92 37435.69 37577.35 37767.97 -18655.96 32.845  15 0.005
 </code></pre>
 
 <pre><code class="r">anova(mod_fullconstrain, mod_metric)
@@ -1656,8 +1656,8 @@ anova(mod_metric, mod_configural)
 </code></pre>
 
 <pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 37567.52 37568.47 37640.24 37735.55 -18753.76     NaN NaN NaN
-## 2 37446.05 37448.17 37555.12 37698.09 -18678.03 151.472  15   0
+## 1 37567.25 37568.19 37639.96 37735.28 -18753.62     NaN NaN NaN
+## 2 37434.76 37436.88 37543.84 37686.80 -18672.38 162.486  15   0
 </code></pre>
 
 <pre><code class="r">############
@@ -2038,5 +2038,5 @@ anova(EH, EH1)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
 </body></html>
