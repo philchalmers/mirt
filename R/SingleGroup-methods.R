@@ -1368,6 +1368,7 @@ mirt2traditional <- function(x, vcov){
     }
     x@par <- par
     names(x@est) <- names(par)
+    x@parnames <- names(x@par)
     if(is.na(vcov[1L,1L]) || !(cls %in% c('dich', 'graded', 'gpcm'))){
         x@SEpar <- numeric()
     } else {
@@ -1388,7 +1389,6 @@ mirt2traditional <- function(x, vcov){
             x@SEpar[i] <- as.vector(sqrt(grad %*% vcov[pick, pick, drop=FALSE] %*% grad))
         }
         if(cls == 'gpcm') x@SEpar <- x@SEpar[1L:length(x@par)]
-        x@parnames <- names(x@par)
     }
     x
 }
