@@ -22,7 +22,7 @@ dichotomous format, given a response key.
 <h3>Usage</h3>
 
 <pre>
-key2binary(fulldata, key)
+key2binary(fulldata, key, score_missing = FALSE)
 </pre>
 
 
@@ -40,6 +40,11 @@ key2binary(fulldata, key)
 value/row corresponds to each column in <code>fulldata</code>. If the input is a matrix, multiple
 scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
 in the case of a matrix input, no additional scoring keys)</p>
+</td></tr>
+<tr valign="top"><td><code>score_missing</code></td>
+<td>
+<p>logical; should missing data elements be returned as incorrect (i.e., 0)?
+If <code>FALSE</code>, all missing data terms will be kept as missing</p>
 </td></tr>
 </table>
 
@@ -164,6 +169,32 @@ head(d01)
 ## [5,]  1  0  0  0  0
 </code></pre>
 
+<pre><code class="r"># score/don&#39;t score missing values
+resp[1,1] &lt;- NA
+d01NA &lt;- key2binary(resp, key) # without scoring
+d01NA
+</code></pre>
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
+<pre><code>##      V1 V2 V3 V4 V5
+## [1,] NA  0  1  0  1
+## [2,]  1  0  1  0  1
+## [3,]  1  0  1  1  1
+## [4,]  0  1  1  1  1
+## [5,]  1  0  0  0  0
+</code></pre>
+
+<pre><code class="r">d01 &lt;- key2binary(resp, key, score_missing = TRUE) # with scoring
+d01
+</code></pre>
+
+<pre><code>##      V1 V2 V3 V4 V5
+## [1,]  0  0  1  0  1
+## [2,]  1  0  1  0  1
+## [3,]  1  0  1  1  1
+## [4,]  0  1  1  1  1
+## [5,]  1  0  0  0  0
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
 </body></html>

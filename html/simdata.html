@@ -393,7 +393,7 @@ summary(mod2)
 </code></pre>
 
 <pre><code>## 
-## Model 1: mirt(data = dat, model = &quot;F1 = 1-10\\n                   CONSTRAIN = (1-5, a1), (6-10, a1)&quot;)
+## Model 1: mirt(data = dat, model = &quot;F1 = 1-10\n                   CONSTRAIN = (1-5, a1), (6-10, a1)&quot;)
 ## Model 2: mirt(data = dat, model = 1)
 </code></pre>
 
@@ -455,11 +455,14 @@ str(listobj)
 
 <pre><code>## List of 3
 ##  $ itemobjects:List of 4
-##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 20 slots
+##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 23 slots
 ##   .. .. ..@ par          : atomic [1:4] 0.781 -1 -999 999
 ##   .. .. .. ..- attr(*, &quot;na.action&quot;)=Class &#39;omit&#39;  int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
+##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
+##   .. .. ..@ dps          :function ()  
+##   .. .. ..@ dps2         :function ()  
 ##   .. .. ..@ constr       : logi(0) 
 ##   .. .. ..@ itemclass    : int(0) 
 ##   .. .. ..@ parnum       : num(0) 
@@ -477,11 +480,14 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 20 slots
+##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 23 slots
 ##   .. .. ..@ par          : atomic [1:4] 0.756 1.5 -999 999
 ##   .. .. .. ..- attr(*, &quot;na.action&quot;)=Class &#39;omit&#39;  int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
+##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
+##   .. .. ..@ dps          :function ()  
+##   .. .. ..@ dps2         :function ()  
 ##   .. .. ..@ constr       : logi(0) 
 ##   .. .. ..@ itemclass    : int(0) 
 ##   .. .. ..@ parnum       : num(0) 
@@ -499,11 +505,14 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 20 slots
+##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 23 slots
 ##   .. .. ..@ par          : atomic [1:4] 1.14 0 -999 999
 ##   .. .. .. ..- attr(*, &quot;na.action&quot;)=Class &#39;omit&#39;  int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
+##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
+##   .. .. ..@ dps          :function ()  
+##   .. .. ..@ dps2         :function ()  
 ##   .. .. ..@ constr       : logi(0) 
 ##   .. .. ..@ itemclass    : int(0) 
 ##   .. .. ..@ parnum       : num(0) 
@@ -521,11 +530,14 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##   ..$ :Formal class &#39;nestlogit&#39; [package &quot;mirt&quot;] with 21 slots
+##   ..$ :Formal class &#39;nestlogit&#39; [package &quot;mirt&quot;] with 24 slots
 ##   .. .. ..@ correctcat   : int 1
 ##   .. .. ..@ par          : num [1:10] 0.915 1 -999 999 0 ...
 ##   .. .. ..@ SEpar        : num(0) 
+##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
+##   .. .. ..@ dps          :function ()  
+##   .. .. ..@ dps2         :function ()  
 ##   .. .. ..@ constr       : logi(0) 
 ##   .. .. ..@ itemclass    : int(0) 
 ##   .. .. ..@ parnum       : num(0) 
@@ -618,10 +630,10 @@ apply(dat, 2, table)
 </code></pre>
 
 <pre><code>##   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-## 0    736    571    592    613    530    607    474    645    868     593
-## 1    157    227    190    186    222    185    242    183     83     188
-## 2     63    117    123    105    149    125    159     96     34     128
-## 3     44     85     95     96     99     83    125     76     15      91
+## 0    594    376    415    450    415    446    372    527    699     415
+## 1    283    381    352    319    332    337    332    268    237     359
+## 2    104    197    175    191    191    167    210    149     58     167
+## 3     19     46     58     40     62     50     86     56      6      59
 </code></pre>
 
 <pre><code class="r"># mod &lt;- mirt(dat, 1, &#39;ggum&#39;)
@@ -666,9 +678,25 @@ head(dat)
 ## [6,]      0      1      0      1      0
 </code></pre>
 
-<pre><code class="r">## End(No test)
+<pre><code class="r"># prob.list input is useful when defining custom items as well
+name &lt;- &#39;old2PL&#39;
+par &lt;- c(a = .5, b = -2)
+est &lt;- c(TRUE, TRUE)
+P.old2PL &lt;- function(par,Theta, ncat){
+     a &lt;- par[1]
+     b &lt;- par[2]
+     P1 &lt;- 1 / (1 + exp(-1*a*(Theta - b)))
+     cbind(1-P1, P1)
+}
+
+x &lt;- createItem(name, par=par, est=est, P=P.old2PL)
+
+prob.list[[1]] &lt;- x@P(x@par, theta)
+
+
+## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
 </body></html>

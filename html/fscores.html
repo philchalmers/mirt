@@ -601,12 +601,12 @@ head(fs)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.39357303
-## [2,]  0.05507765
-## [3,] -0.86262930
-## [4,] -0.86262930
-## [5,]  0.71760144
-## [6,]  0.66687315
+## [1,]  0.41425408
+## [2,]  0.05334412
+## [3,] -0.89670699
+## [4,] -0.89670699
+## [5,]  0.80044805
+## [6,]  0.67145231
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -615,24 +615,24 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 
 <pre><code>## [[1]]
-##         mean          var          min          max 
-## -0.007623551  0.994794075 -3.226535046  2.640101674 
+##        mean         var         min         max 
+##  0.03005636  0.99716523 -3.41728149  2.95895271 
 ## 
 ## [[2]]
 ##        mean         var         min         max 
-##  0.02348655  0.88684801 -3.48692934  2.93079846 
+##  0.02239418  1.00245052 -2.59960270  3.19884115 
 ## 
 ## [[3]]
-##         mean          var          min          max 
-##  0.009947193  1.105201721 -2.912209246  2.875658509 
+##        mean         var         min         max 
+##  0.02385072  0.95353450 -3.50945075  3.65102870 
 ## 
 ## [[4]]
 ##        mean         var         min         max 
-##  0.01961432  1.06903575 -3.49681636  2.73827767 
+##  0.02485391  0.98815664 -2.87557766  2.95608268 
 ## 
 ## [[5]]
-##         mean          var          min          max 
-## -0.009535244  0.945843078 -3.877809816  2.436483989
+##        mean         var         min         max 
+##  0.01189089  0.91211185 -3.29121270  2.81670880
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -678,5 +678,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
 </body></html>

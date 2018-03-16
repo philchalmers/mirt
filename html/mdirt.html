@@ -25,9 +25,10 @@ grade of measurement models, and so on.
 
 <pre>
 mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
-  covdata = NULL, formula = NULL, optimizer = "nlminb",
-  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-  verbose = TRUE, pars = NULL, technical = list(), ...)
+  covdata = NULL, formula = NULL, itemtype = "lca",
+  optimizer = "nlminb", return_max = TRUE, group = NULL,
+  GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
+  technical = list(), ...)
 </pre>
 
 
@@ -41,19 +42,20 @@ numerically ordered data, with missing data coded as <code>NA</code></p>
 </td></tr>
 <tr valign="top"><td><code>model</code></td>
 <td>
-<p>number of classes to fit, or alternatively a <code><a href="mirt.model.html">mirt.model</a></code> definition. Note that
-when using a <code><a href="mirt.model.html">mirt.model</a></code> input in conjunction with the <code>customTheta</code> input defined below,
-the order with which the syntax factors are defined will be associated with the columns in the
-<code>customTheta</code> input</p>
+<p>number of mutually exclusive classes to fit, or alternatively a more specific
+<code><a href="mirt.model.html">mirt.model</a></code> definition (which reflects the so-called Q-matrix).
+Note that when using a <code><a href="mirt.model.html">mirt.model</a></code>,
+the order with which the syntax factors/attributes are defined are associated with the
+columns in the <code>customTheta</code> input</p>
 </td></tr>
 <tr valign="top"><td><code>customTheta</code></td>
 <td>
-<p>input passed to <code>technical = list(customTheta = ...)</code>, but is included directly
-in this function for convenience. This input is most interesting for discrete latent models
-because it allows for customized patterns of latent class effects.
-The default builds the pattern <code>customTheta = diag(model)</code>,
+<p>input passed to <code>technical = list(customTheta = ...)</code>, but is included
+directly in this function for convenience. This input is most interesting for discrete latent models
+because it allows customized patterns of latent class effects (defines the possible combinations
+of the latent attribute profile). The default builds the pattern <code>customTheta = diag(model)</code>,
 which is the typical pattern for the traditional
-latent class analysis (whereby classes are completely distinct)</p>
+latent class analysis whereby classes are completely distinct</p>
 </td></tr>
 <tr valign="top"><td><code>nruns</code></td>
 <td>
@@ -76,6 +78,12 @@ can be regressed using external covariates in <code>covdata</code>. If a named l
 of formulas is supplied (where the names correspond to the latent trait names in <code>model</code>)
 then specific regression effects can be estimated for each factor. Supplying a single formula
 will estimate the regression parameters for all latent traits by default</p>
+</td></tr>
+<tr valign="top"><td><code>itemtype</code></td>
+<td>
+<p>a vector indicating the itemtype associated with each item.
+For discrete models this is limited to only 'lca' or items defined using a
+<code><a href="createItem.html">createItem</a></code> definition</p>
 </td></tr>
 <tr valign="top"><td><code>optimizer</code></td>
 <td>
@@ -180,7 +188,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 2 classes.
 ## Converged within 1e-04 tolerance after 380 EM iterations.
-## mirt version: 1.26.3 
+## mirt version: 1.27 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -201,7 +209,7 @@ dat &lt;- expand.table(LSAT6)
 ## 
 ## Latent class model with 3 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.26.3 
+## mirt version: 1.27 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -500,7 +508,7 @@ mirtCluster()
 ## 
 ## Latent class model with 2 classes.
 ## FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-## mirt version: 1.26.3 
+## mirt version: 1.27 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -582,7 +590,7 @@ dat &lt;- key2binary(SAT12,
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 171 EM iterations.
-## mirt version: 1.26.3 
+## mirt version: 1.27 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -974,7 +982,7 @@ model &lt;- mirt.model(&#39;C1 = 1-32
 ## 
 ## Latent class model with 3 classes.
 ## Converged within 1e-04 tolerance after 255 EM iterations.
-## mirt version: 1.26.3 
+## mirt version: 1.27 
 ## M-step optimizer: nlminb 
 ## EM acceleration: Ramsay
 ## 
@@ -1615,7 +1623,7 @@ model &lt;- mirt.model(&#39;C1 = 1-16
                      CONSTRAIN = (1-16, a1), (1-16, a2), (1-16, a3), (1-16, a4), (1-16, a5),
                        (17-32, a6), (17-32, a7), (17-32, a8), (17-32, a9), (17-32, a10)&#39;)
 
-theta &lt;- diag(10)
+theta &lt;- diag(10) # defined explicitly. Otherwise, this profile is assumed
 mod &lt;- mdirt(dat, model, customTheta = theta)
 coef(mod, simplify=TRUE)
 </code></pre>
@@ -2531,5 +2539,5 @@ coef(mod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.26.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27 <a href="00Index.html">Index</a>]</div>
 </body></html>
