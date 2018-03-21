@@ -512,7 +512,6 @@ setMethod(
 #'   or generated automatically if not available
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 5000
-#' @param digits number of digits to round printed output do. Default is 3
 #' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
@@ -542,6 +541,12 @@ setMethod(
 #' residuals(x, tables = TRUE)
 #' residuals(x, type = 'exp')
 #' residuals(x, suppress = .15)
+#' residuals(x, df.p = TRUE)
+#'
+#' # extract results manually
+#' out <- residuals(x, df.p = TRUE, verbose=FALSE)
+#' str(out)
+#' out$df.p[1,2]
 #'
 #' # with and without supplied factor scores
 #' Theta <- fscores(x)
@@ -647,17 +652,26 @@ setMethod(
             }
             if(tables) return(listtabs)
             if(df.p){
-                cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-                print(round(df, digits=digits))
-                cat("\n")
+                class(df) <- c('mirt_matrix', 'matrix')
+                if(verbose){
+                    cat("Degrees of freedom (lower triangle) and p-values:\n\n")
+                    print(df, ...)
+                    cat("\n")
+                }
             }
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
+            class(res) <- c('mirt_matrix', 'matrix')
             if(suppress < 1){
                 pick <- abs(res[upper.tri(res)]) < suppress
                 res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
             }
-            class(res) <- c('mirt_matrix', 'matrix')
-            return(res)
+            if(verbose) print(res, ...)
+            if(df.p){
+                ret <- list(df, res)
+                names(ret) <- c('df.p', type)
+                return(invisible(ret))
+            }
+            return(invisible(res))
         } else if(type == 'exp'){
             r <- object@Data$Freq[[1L]]
             res <- (r - object@Internals$Pl * nrow(object@Data$data)) /
@@ -714,7 +728,8 @@ setMethod(
                 res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
             }
             class(res) <- c('mirt_matrix', 'matrix')
-            return(res)
+            if(verbose) print(res, ...)
+            return(invisible(res))
         } else {
             stop('specified type does not exist', call.=FALSE)
         }

@@ -55,8 +55,6 @@ this value will be returned, while all values less than this value will be set t
 \item{quadpts}{number of quadrature nodes to use. The default is extracted from model (if available)
 or generated automatically if not available}
 
-\item{digits}{number of digits to round printed output do. Default is 3}
-
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
 \description{
@@ -71,6 +69,12 @@ residuals(x)
 residuals(x, tables = TRUE)
 residuals(x, type = 'exp')
 residuals(x, suppress = .15)
+residuals(x, df.p = TRUE)
+
+# extract results manually
+out <- residuals(x, df.p = TRUE, verbose=FALSE)
+str(out)
+out$df.p[1,2]
 
 # with and without supplied factor scores
 Theta <- fscores(x)
