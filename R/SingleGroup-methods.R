@@ -512,6 +512,7 @@ setMethod(
 #'   or generated automatically if not available
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 5000
+#' @param digits number of digits to round printed output do. Default is 3
 #' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
@@ -553,7 +554,8 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
+                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, digits=3,
+                          ...)
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
@@ -646,7 +648,7 @@ setMethod(
             if(tables) return(listtabs)
             if(df.p){
                 cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-                print(round(df, 3))
+                print(round(df, digits=digits))
                 cat("\n")
             }
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")

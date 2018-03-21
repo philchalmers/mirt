@@ -11,7 +11,7 @@
 \S4method{residuals}{SingleGroupClass}(object, type = "LD", df.p = FALSE,
   full.scores = FALSE, QMC = FALSE, printvalue = NULL, tables = FALSE,
   verbose = TRUE, Theta = NULL, suppress = 1, theta_lim = c(-6, 6),
-  quadpts = NULL, ...)
+  quadpts = NULL, digits = 3, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass} or
@@ -54,6 +54,8 @@ this value will be returned, while all values less than this value will be set t
 
 \item{quadpts}{number of quadrature nodes to use. The default is extracted from model (if available)
 or generated automatically if not available}
+
+\item{digits}{number of digits to round printed output do. Default is 3}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
