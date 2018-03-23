@@ -882,7 +882,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     N <- sum(r)
     tmp <- dfsubtr
     if(logPrior != 0){
-        AIC <- AICc <- BIC <- SABIC <- NaN
+        AIC <- AICc <- BIC <- SABIC <- HQ <- NaN
         DIC <- -2 * (logLik + logPrior) + 2 * tmp
     } else {
         AIC <- (-2) * logLik + 2 * tmp
@@ -890,6 +890,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         BIC <- (-2) * logLik + tmp*log(N)
         SABIC <- (-2) * logLik + tmp*log((N+2)/24)
         DIC <- AIC
+        HQ <- (-2) * logLik + 2*tmp*log(log(N))
     }
     p.G2 <- 1 - pchisq(G2,df)
     RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
@@ -921,7 +922,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Options <- opts
     Options$exploratory <- PrepList[[1L]]$exploratory
     Fit <- list(G2=G2, p=p.G2, TLI=TLI.G2, CFI=CFI.G2, RMSEA=RMSEA.G2, df=df,
-                AIC=AIC, AICc=AICc, BIC=BIC, SABIC=SABIC, DIC=DIC, logLik=logLik,
+                AIC=AIC, AICc=AICc, BIC=BIC, SABIC=SABIC, DIC=DIC, HQ=HQ, logLik=logLik,
                 logPrior=logPrior, SElogLik=SElogLik, F=F, h2=h2)
     Model <- list(model=oldmodel, factorNames=PrepList[[1L]]$factorNames, itemtype=PrepList[[1L]]$itemtype,
                   itemloc=PrepList[[1L]]$itemloc, nfact=nfact,

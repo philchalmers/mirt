@@ -18,6 +18,7 @@
 #'   \item{BIC}{BIC}
 #'   \item{SABIC}{sample size adjusted BIC}
 #'   \item{DIC}{DIC}
+#'   \item{HQ}{HQ}
 #'   \item{F}{unrotated standardized loadings matrix}
 #'   \item{h2}{factor communality estimates}
 #'   \item{LLhistory}{EM log-likelihood history}
@@ -101,6 +102,7 @@ extract.mirt <- function(x, what){
                   RMSEA = x@Fit$RMSEA,
                   df = x@Fit$df,
                   AIC = x@Fit$AIC,
+                  HQ = x@Fit$HQ,
                   AICc = x@Fit$AICc,
                   BIC = x@Fit$BIC,
                   SABIC = x@Fit$SABIC,

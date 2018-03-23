@@ -402,7 +402,9 @@ setMethod(
 
 #' Compare nested models with likelihood-based statistics
 #'
-#' Compare nested models using likelihood ratio, AIC, BIC, etc.
+#' Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
+#' sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
+#' Sample-Size Adjusted BIC (SABIC), and Hannan–Quinn (HQ) Criterion.
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -412,6 +414,8 @@ setMethod(
 #'   is used to obtain the p-value
 #' @param mix proportion of chi-squared mixtures. Default is 0.5
 #' @param verbose logical; print additional information to console?
+#'
+#' @return a \code{data.frame}/\code{mirt_df} object
 #'
 #' @name anova-method
 #' @references
@@ -429,6 +433,9 @@ setMethod(
 #' x2 <- mirt(Science, 2)
 #' anova(x, x2)
 #'
+#' # in isolation
+#' anova(x)
+#'
 #' # bounded parameter
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1)
@@ -441,6 +448,16 @@ setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, bounded = FALSE, mix = 0.5, verbose = TRUE){
+        if(missing(object2)){
+            ret <- data.frame(AIC = object@Fit$AIC,
+                              AICc = object@Fit$AICc,
+                              SABIC = object@Fit$SABIC,
+                              HQ = object@Fit$HQ,
+                              BIC = object@Fit$BIC,
+                              logLik = object@Fit$logLik)
+            class(ret) <- c('mirt_df', 'data.frame')
+            return(ret)
+        }
         df <- object@Fit$df - object2@Fit$df
         if(df < 0){
             temp <- object
@@ -469,6 +486,7 @@ setMethod(
             ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                               AICc = c(object@Fit$AICc, object2@Fit$AICc),
                               SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
+                              HQ = c(object@Fit$HQ, object2@Fit$HQ),
                               BIC = c(object@Fit$BIC, object2@Fit$BIC),
                               logLik = c(object@Fit$logLik, object2@Fit$logLik),
                               X2 = c(NaN, X2),

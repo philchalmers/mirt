@@ -26,8 +26,13 @@ is used to obtain the p-value}
 
 \item{verbose}{logical; print additional information to console?}
 }
+\value{
+a \code{data.frame}/\code{mirt_df} object
+}
 \description{
-Compare nested models using likelihood ratio, AIC, BIC, etc.
+Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
+sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
+Sample-Size Adjusted BIC (SABIC), and Hannan–Quinn (HQ) Criterion.
 }
 \examples{
 
@@ -35,6 +40,9 @@ Compare nested models using likelihood ratio, AIC, BIC, etc.
 x <- mirt(Science, 1)
 x2 <- mirt(Science, 2)
 anova(x, x2)
+
+# in isolation
+anova(x)
 
 # bounded parameter
 dat <- expand.table(LSAT7)

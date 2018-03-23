@@ -1,3 +1,10 @@
+# Changes in mirt 1.28
+
+- `anova()` will accept a single fitted model object and return information related to AIC, BIC, 
+  log-likelihood, etc
+  
+- Hannan–Quinn (HQ) Criterion added to `anova()`
+
 # Changes in mirt 1.27
 
 - Added multidimensional version of sequential response model (e.g., Tutz, 1990). Includes 
