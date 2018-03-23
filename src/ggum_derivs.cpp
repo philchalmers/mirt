@@ -289,8 +289,6 @@ NumericVector ggum_grad (
         arma::colvec Z,
         double dist) {
 
-    int dref ;
-    int tauref ;
     int ind ;
     int ind2 ;
     NumericVector grad(2*D+C) ;
