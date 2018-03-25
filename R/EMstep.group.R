@@ -351,6 +351,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
+        if(verbose && !is.nan(TOL) && !is.na(TOL)) cat("\n")
         if(cycles == NCYCLES){
             if(list$message)
                 message('EM cycles terminated after ', cycles, ' iterations.')

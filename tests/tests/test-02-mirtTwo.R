@@ -85,7 +85,7 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp5, verbose = FALSE)))
     expect_equal(cfs, c(1.057,0.659,1.454,4.876,3.908,5.844,2.65,2.206,3.093,-1.472,-1.799,-1.146,1.219,0.865,1.573,2.918,2.444,3.391,0.9,0.615,1.185,-2.263,-2.662,-1.864,2.254,1.244,3.265,5.177,3.606,6.747,2.19,1.395,2.985,-1.942,-2.587,-1.298,0.771,0.441,1.1,0,NA,NA,1,NA,NA,2,NA,NA,3,NA,NA,0,NA,NA,2.16,1.537,2.782,2.973,2.276,3.671,1.767,1.128,2.407,0,NA,NA,1,NA,NA),
                  tolerance = 1e-2)
-    modp6 <- mirt(Science, 1, empiricalhist=TRUE, verbose = FALSE, TOL=1e-3)
+    modp6 <- mirt(Science, 1, dentype="empiricalhist", verbose = FALSE, TOL=1e-3)
     expect_is(modp6, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp6, verbose = FALSE)))
     expect_equal(cfs, c(0.856,5.072,2.639,-1.35,1.095,2.951,0.968,-2.181,2.601,5.541,2.634,-1.752,0.988,3.443,1.058,-1.595,0,1),

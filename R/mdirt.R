@@ -77,7 +77,6 @@
 #' @export mdirt
 #' @examples
 #'
-
 #' #LSAT6 dataset
 #' dat <- expand.table(LSAT6)
 #'
@@ -264,7 +263,7 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
     Call <- match.call()
     dots <- list(...)
     latent.regression <- latentRegression_obj(data=data, covdata=covdata, formula=formula,
-                                              empiricalhist=FALSE, method=method)
+                                              dentype = 'discrete', method=method)
     technical$customTheta <- customTheta
     valid_itemtype <- 'lca'
     if(!is.null(dots$customItems))
@@ -279,7 +278,7 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
                      latent.regression=latent.regression,
                      data=data, model=model, group=group, itemtype=itemtype, optimizer=optimizer,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
-                     discrete=TRUE, verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)
+                     dentype = 'discrete', verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)
     if(is(mods[[1L]], 'DiscreteClass')){
         for(i in 1:length(mods)) mods[[i]]@Call <- Call
     }

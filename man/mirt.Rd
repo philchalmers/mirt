@@ -7,13 +7,13 @@ Theory)}
 \usage{
 mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
   covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
-  optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
-  calcNull = FALSE, draws = 5000, survey.weights = NULL, quadpts = NULL,
-  TOL = NULL, gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
-  monopoly.k = 1L, key = NULL, large = FALSE, GenRandomPars = FALSE,
-  accelerate = "Ramsay", empiricalhist = FALSE, verbose = TRUE,
-  solnp_args = list(), nloptr_args = list(), spline_args = list(),
-  control = list(), technical = list(), ...)
+  optimizer = NULL, dentype = "Gaussian", pars = NULL, constrain = NULL,
+  parprior = NULL, calcNull = FALSE, draws = 5000,
+  survey.weights = NULL, quadpts = NULL, TOL = NULL, gpcm_mats = list(),
+  grsm.block = NULL, rsm.block = NULL, monopoly.k = 1L, key = NULL,
+  large = FALSE, GenRandomPars = FALSE, accelerate = "Ramsay",
+  verbose = TRUE, solnp_args = list(), nloptr_args = list(),
+  spline_args = list(), control = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -162,6 +162,17 @@ will estimate the regression parameters for all latent traits by default}
   where \code{optim_args} is a list of internally parameters that largely can be ignored
   when defining constraints (though use of \code{browser()} here may be helpful)}
 
+\item{dentype}{type of density form to use for the latent trait parameters. Current options include
+
+  \itemize{
+    \item \code{'Gaussian'} (default) assumes a multivariate Gaussian distribution with an associated
+      mean vector and variance-covariance matrix
+    \item \code{'empiricalhist'}  estimate latent distribution using an empirical histogram described by
+      Bock and Aitkin (1981). Only applicable for unidimensional models estimated with the EM algorithm.
+      For this option, the number of cycles, TOL, and quadpts are adjusted accommodate for
+      less precision during estimation (namely: \code{TOL = 3e-5}, \code{NCYCLES = 2000}, \code{quadpts = 199})
+   }}
+
 \item{pars}{a data.frame with the structure of how the starting values, parameter numbers,
 estimation logical values, etc, are defined. The user may observe how the model defines the
 values by using \code{pars = 'values'}, and this object can in turn be modified and input back
@@ -208,7 +219,7 @@ the default number of quasi-Monte Carlo integration nodes will be set to 5000 in
 
 \item{TOL}{convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
-If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
+If \code{dentype = 'empiricalhist'} and \code{TOL} is not specified then the default \code{3e-5}
 will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}, and
 to evaluate the starting values without the log-likelihood pass \code{TOL = NA}}
 
@@ -259,11 +270,6 @@ using the fixed internal starting values?}
 is \code{'Ramsay'}, but may also be \code{'squarem'} for the SQUAREM procedure (specifically,
 the gSqS3 approach) described in Varadhan and Roldand (2008).
 To disable the acceleration, pass \code{'none'}}
-
-\item{empiricalhist}{logical; estimate prior distribution using an empirical histogram approach.
-Only applicable for unidimensional models estimated with the EM algorithm.
-The number of cycles, TOL, and quadpts are adjusted
-accommodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)}
 
 \item{verbose}{logical; print observed- (EM) or complete-data (MHRM) log-likelihood
 after each iteration cycle? Default is TRUE}
@@ -991,15 +997,15 @@ datNormal <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaNormal)
 datBimodal <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaBimodal)
 datSkew <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaSkew)
 
-normal <- mirt(datNormal, 1, empiricalhist = TRUE)
+normal <- mirt(datNormal, 1, dentype = "empiricalhist")
 plot(normal, type = 'empiricalhist')
 histogram(ThetaNormal, breaks=30)
 
-bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
+bimodal <- mirt(datBimodal, 1, dentype = "empiricalhist")
 plot(bimodal, type = 'empiricalhist')
 histogram(ThetaBimodal, breaks=30)
 
-skew <- mirt(datSkew, 1, empiricalhist = TRUE)
+skew <- mirt(datSkew, 1, dentype = "empiricalhist")
 plot(skew, type = 'empiricalhist')
 histogram(ThetaSkew, breaks=30)
 

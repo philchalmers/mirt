@@ -2,7 +2,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
                        customGroup = NULL, GenRandomPars = FALSE, large = FALSE,
-                       survey.weights = NULL, discrete=FALSE, latent.regression = NULL,
+                       survey.weights = NULL, latent.regression = NULL,
                        gpcm_mats=list(), spline_args=list(), monopoly.k=1,
                        control = list(), ...)
 {
@@ -59,8 +59,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is.null(control$tol)) control$tol <- opts$TOL/1000
             if(is.null(control$maxit)) control$maxit <- 50L
         }
-        if(discrete) opts$dentype <- 'discrete'
-        if(discrete && is.null(customGroup)){
+
+        if(opts$dentype == "discrete" && is.null(customGroup)){
             den <- function(obj, Theta, mus = 0){
                 if(length(Theta) == 1) return(1)
                 par <- obj@par
@@ -305,7 +305,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 PrepList[[g]]$pars[[i]] <- GenRandomPars(PrepList[[g]]$pars[[i]])
 
     }
-    if(discrete){
+    if(opts$dentype == "discrete"){
         PrepList[[1L]]$exploratory <- FALSE
         if(is.null(opts$technical$customTheta))
             opts$technical$customTheta <- diag(PrepList[[1L]]$nfact)
@@ -480,7 +480,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         temp <- matrix(0L,nrow=nitems,ncol=nspec)
         sitems <- matrix(0L, nrow=sum(PrepList[[1L]]$K), ncol=nspec)
         specific <- NULL
-        if(discrete){
+        if(opts$dentype == "discrete"){
             theta <- 0
             Theta <- opts$technical$customTheta
             opts$quadpts <- nrow(Theta)
@@ -816,7 +816,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     lrPars <- ESTIMATE$lrPars
     class(lrPars) <- 'S4'
     for(g in seq_len(Data$ngroups)){
-        if(opts$method == 'MIXED' || discrete){
+        if(opts$method == 'MIXED' || opts$dentype == "discrete"){
             F <- matrix(NA)
             h2 <- numeric(1)
         } else {
@@ -837,7 +837,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           Fit = list(G2=G2group[g], F=F, h2=h2),
                           Internals = list(Pl = rlist[[g]]$expected, CUSTOM.IND=CUSTOM.IND,
                                            SLOW.IND=SLOW.IND))
-        if(discrete){
+        if(opts$dentype == "discrete"){
             cmods[[g]]@Model$Theta <- Theta
             cmods[[g]]@Internals$Prior <- list(ESTIMATE$Prior[[g]])
         }
@@ -967,7 +967,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$storeEtable)
         Internals$Etable <- ESTIMATE$Etable
     if(opts$method == 'SEM') Options$TOL <- NA
-    if(discrete){
+    if(opts$dentype == "discrete"){
         Fit$F <- Fit$h2 <- NULL
         mod <- new('DiscreteClass',
                    Data=Data,

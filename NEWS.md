@@ -1,5 +1,8 @@
 # Changes in mirt 1.28
 
+- new `dentype` argument added to estimation-based functions to specify the density structure of the 
+  latent traits (default is 'Gaussian'). This update breaks the previous `empiricalhist` logical option 
+
 - `anova()` will accept a single fitted model object and return information related to AIC, BIC, 
   log-likelihood, etc
   

@@ -462,13 +462,19 @@
 #'   the default number of quasi-Monte Carlo integration nodes will be set to 5000 in total
 #' @param TOL convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 #'   \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
-#'   If \code{empiricalhist = TRUE} and \code{TOL} is not specified then the default \code{3e-5}
+#'   If \code{dentype = 'empiricalhist'} and \code{TOL} is not specified then the default \code{3e-5}
 #'   will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}, and
 #'   to evaluate the starting values without the log-likelihood pass \code{TOL = NA}
-#' @param empiricalhist logical; estimate prior distribution using an empirical histogram approach.
-#'   Only applicable for unidimensional models estimated with the EM algorithm.
-#'   The number of cycles, TOL, and quadpts are adjusted
-#'   accommodate for less precision during estimation (TOL = 3e-5, NCYCLES = 2000, quadpts = 199)
+#' @param dentype type of density form to use for the latent trait parameters. Current options include
+#'
+#'   \itemize{
+#'     \item \code{'Gaussian'} (default) assumes a multivariate Gaussian distribution with an associated
+#'       mean vector and variance-covariance matrix
+#'     \item \code{'empiricalhist'}  estimate latent distribution using an empirical histogram described by
+#'       Bock and Aitkin (1981). Only applicable for unidimensional models estimated with the EM algorithm.
+#'       For this option, the number of cycles, TOL, and quadpts are adjusted accommodate for
+#'       less precision during estimation (namely: \code{TOL = 3e-5}, \code{NCYCLES = 2000}, \code{quadpts = 199})
+#'    }
 #' @param survey.weights a optional numeric vector of survey weights to apply for each case in the
 #'   data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT
 #'   approach). The sum of the \code{survey.weights} must equal the total sample size for proper
@@ -1033,15 +1039,15 @@
 #' datBimodal <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaBimodal)
 #' datSkew <- simdata(a, d, 2000, itemtype = '2PL', Theta=ThetaSkew)
 #'
-#' normal <- mirt(datNormal, 1, empiricalhist = TRUE)
+#' normal <- mirt(datNormal, 1, dentype = "empiricalhist")
 #' plot(normal, type = 'empiricalhist')
 #' histogram(ThetaNormal, breaks=30)
 #'
-#' bimodal <- mirt(datBimodal, 1, empiricalhist = TRUE)
+#' bimodal <- mirt(datBimodal, 1, dentype = "empiricalhist")
 #' plot(bimodal, type = 'empiricalhist')
 #' histogram(ThetaBimodal, breaks=30)
 #'
-#' skew <- mirt(datSkew, 1, empiricalhist = TRUE)
+#' skew <- mirt(datSkew, 1, dentype = "empiricalhist")
 #' plot(skew, type = 'empiricalhist')
 #' histogram(ThetaSkew, breaks=30)
 #'
@@ -1146,18 +1152,18 @@
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, SE.type = 'Oakes', method = 'EM',
-                 optimizer = NULL, pars = NULL, constrain = NULL, parprior = NULL,
+                 optimizer = NULL, dentype = 'Gaussian',
+                 pars = NULL, constrain = NULL, parprior = NULL,
                  calcNull = FALSE, draws = 5000, survey.weights = NULL,
                  quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL,
                  rsm.block = NULL, monopoly.k = 1L, key = NULL,
-                 large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay',
-                 empiricalhist = FALSE, verbose = TRUE,
+                 large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay', verbose = TRUE,
                  solnp_args = list(), nloptr_args = list(), spline_args = list(),
                  control = list(), technical = list(), ...)
 {
     Call <- match.call()
-    latent.regression <- latentRegression_obj(data=data, covdata=covdata, formula=formula,
-                                              empiricalhist=empiricalhist, method=method)
+    latent.regression <- latentRegression_obj(data=data, covdata=covdata,
+                                              dentype=dentype, formula=formula, method=method)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,
@@ -1165,10 +1171,10 @@ mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                       technical=technical, verbose=verbose, survey.weights=survey.weights,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       accelerate=accelerate, draws=draws, rsm.block=rsm.block,
-                      empiricalhist=empiricalhist, GenRandomPars=GenRandomPars,
-                      optimizer=optimizer, solnp_args=solnp_args, nloptr_args=nloptr_args,
+                      GenRandomPars=GenRandomPars, optimizer=optimizer,
+                      solnp_args=solnp_args, nloptr_args=nloptr_args,
                       latent.regression=latent.regression, gpcm_mats=gpcm_mats,
-                      control=control, spline_args=spline_args, ...)
+                      control=control, spline_args=spline_args, dentype=dentype, ...)
     if(is(mod, 'SingleGroupClass'))
         mod@Call <- Call
     return(mod)

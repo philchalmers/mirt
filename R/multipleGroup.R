@@ -262,12 +262,12 @@
 #' dat <- simdata(a, d, 4000, itemtype = '2PL', Theta=Theta)
 #' group <- rep(c('G1', 'G2'), each=2000)
 #'
-#' EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
+#' EH <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat))
 #' coef(EH, simplify=TRUE)
 #' plot(EH, type = 'empiricalhist', npts = 60)
 #'
-#' #dif test for item 1
-#' EH1 <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat)[-1])
+#' #DIF test for item 1
+#' EH1 <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat)[-1])
 #' anova(EH, EH1)
 #'
 #' }
@@ -281,8 +281,8 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
     constrain <- dots$constrain
     invariance.check <- invariance %in% c('free_means', 'free_var')
     if(missing(model)) missingMsg('model')
-    if(!is.null(dots$empiricalhist))
-        if(dots$empiricalhist && any(invariance.check))
+    if(!is.null(dots$dentype))
+        if(dots$dentype == "empiricalhist" && any(invariance.check))
             stop('freeing group parameters not meaningful when estimating empirical histograms',
                  call.=FALSE)
     if(sum(invariance.check == 2L) && length(constrain) == 0){

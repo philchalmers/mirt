@@ -1275,11 +1275,11 @@ updateGrad <- function(g, L) L %*% g
 updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
-                     SE = FALSE, verbose = TRUE, GenRandomPars,
+                     SE = FALSE, verbose = TRUE, GenRandomPars, dentype = 'Gaussian',
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = FALSE, BFACTOR = FALSE,
                      technical = list(), hasCustomGroup = FALSE,
-                     SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
+                     SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay',
                      optimizer = NULL, solnp_args = list(), nloptr_args = list(), ...)
 {
     opts <- list()
@@ -1305,6 +1305,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                         'sandwich.Louis', 'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))
         stop('SE.type argument not supported', call.=FALSE)
     if(!(method %in% c('EM', 'QMCEM', 'MCEM'))) accelerate <- 'none'
+    if(!(dentype %in% c('Gaussian', 'empiricalhist', 'discrete')))
+        stop('dentype not supported', call.=FALSE)
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
     opts$draws = draws
@@ -1319,9 +1321,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
-    opts$dentype <- 'Gaussian'
+    if(dentype == "empiricalhist") dentype <- 'EH'
+    opts$dentype <- dentype
     if(BFACTOR) opts$dentype <- 'bfactor'
-    if(empiricalhist) opts$dentype <- 'EH'
     if(hasCustomGroup) opts$dentype <- 'custom'
     opts$accelerate = accelerate
     opts$Norder <- ifelse(is.null(technical$Norder), 2L, technical$Norder)
@@ -1362,7 +1364,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
     opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, technical$keep_vcov_PD)
-    if(empiricalhist){
+    if(dentype == "EH"){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
         if(opts$TOL == 1e-4) opts$TOL <- 3e-5
@@ -2040,9 +2042,10 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
     }
     return(pars)
 }
-latentRegression_obj <- function(data, covdata, formula, empiricalhist, method){
+
+latentRegression_obj <- function(data, covdata, formula, dentype, method){
     if(!is.null(covdata) && !is.null(formula)){
-        if(empiricalhist)
+        if(dentype == "empiricalhist")
             stop('Empirical histogram method not supported with covariates', call.=FALSE)
         if(!is.data.frame(covdata))
             stop('covdata must be a data.frame object', call.=FALSE)

@@ -270,12 +270,12 @@ Theta <- rbind(ThetaNormal, ThetaBimodal)
 dat <- simdata(a, d, 4000, itemtype = '2PL', Theta=Theta)
 group <- rep(c('G1', 'G2'), each=2000)
 
-EH <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat))
+EH <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat))
 coef(EH, simplify=TRUE)
 plot(EH, type = 'empiricalhist', npts = 60)
 
-#dif test for item 1
-EH1 <- multipleGroup(dat, 1, group=group, empiricalhist = TRUE, invariance = colnames(dat)[-1])
+#DIF test for item 1
+EH1 <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat)[-1])
 anova(EH, EH1)
 
 }

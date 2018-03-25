@@ -38,7 +38,7 @@
     \item{\code{'scorecontour'}}{expected total score contour plot}
   }
 
-  Note that if \code{empiricalhist = TRUE} was used in estimation then
+  Note that if \code{dentype = 'empiricalhist'} was used in estimation then
   the type \code{'empiricalhist'}
   also will be available to generate the empirical histogram plot}
 
