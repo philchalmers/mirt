@@ -404,7 +404,7 @@ setMethod(
 #'
 #' Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
 #' sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
-#' Sample-Size Adjusted BIC (SABIC), and Hannan–Quinn (HQ) Criterion.
+#' Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
@@ -577,8 +577,7 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, digits=3,
-                          ...)
+                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))

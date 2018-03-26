@@ -32,7 +32,7 @@ a \code{data.frame}/\code{mirt_df} object
 \description{
 Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
 sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
-Sample-Size Adjusted BIC (SABIC), and Hannan–Quinn (HQ) Criterion.
+Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 }
 \examples{
 
