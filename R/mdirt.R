@@ -108,11 +108,11 @@
 #' # classify individuals either with the largest posterior probability.....
 #' fs <- fscores(mod2)
 #' head(fs)
-#' classes <- matrix(1:2, nrow(fs), 2, byrow=TRUE)
-#' class_max <- classes[t(apply(fs, 1, max) == fs)]
+#' classes <- 1:2
+#' class_max <- classes[apply(apply(fs, 1, max) == fs, 1, which)]
 #' table(class_max)
 #'
-#' # ... or by probability sampling (closer to estimated class proportions)
+#' # ... or by probability sampling (i.e., plausible value draws)
 #' class_prob <- apply(fs, 1, function(x) sample(1:2, 1, prob=x))
 #' table(class_prob)
 #'
