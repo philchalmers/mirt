@@ -20,7 +20,7 @@ Defines the object returned from \code{\link{multipleGroup}}.
     \item{\code{OptimInfo}:}{a list of arguments from the optimization process}
     \item{\code{Internals}:}{a list of internal arguments for secondary computations (inspecting this
       object is generally not required)}
-    \item{\code{vcov}:}{a matrix represented the asymtotic covariance matrix of the parameter estimates}
+    \item{\code{vcov}:}{a matrix represented the asymptotic covariance matrix of the parameter estimates}
     \item{\code{time}:}{a data.frame indicating the breakdown of computation times in seconds}
 }
 }

@@ -116,7 +116,7 @@
 #' class_prob <- apply(fs, 1, function(x) sample(1:2, 1, prob=x))
 #' table(class_prob)
 #'
-#' # plausible value imputations for stocastic classification in both classes
+#' # plausible value imputations for stochastic classification in both classes
 #' pvs <- fscores(mod2, plausible.draws=10)
 #' tabs <- lapply(pvs, function(x) apply(x, 2, table))
 #' tabs[[1]]

@@ -123,7 +123,7 @@
 #' head(dat2)
 #' tail(dat2)
 #'
-#' # items with missing reponses need to be constrained across groups for identification
+#' # items with missing responses need to be constrained across groups for identification
 #' nms <- colnames(dat2)
 #' mod <- multipleGroup(dat2, 1, group, invariance = nms[c(1:2, 14:15)])
 #'

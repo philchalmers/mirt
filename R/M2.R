@@ -83,7 +83,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
         group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
         nitems <- ncol(obj@Data$data)
         if(any(is.na(obj@Data$data)))
-            stop('M2 can not be calulated for data with missing values.', call.=FALSE)
+            stop('M2 can not be calculated for data with missing values.', call.=FALSE)
         adj <- obj@Data$mins
         dat <- t(t(obj@Data$data) - adj)
         N <- nrow(dat)
@@ -111,7 +111,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
             stop('Latent regression models not yet supported')
         if(!discrete){
             #         if(is.null(bfactorlist$Priorbetween[[1L]])){
-            if(TRUE){ #TODO bifactor reduction possibilty? Not as effective at computing marginals
+            if(TRUE){ #TODO bifactor reduction possibility? Not as effective at computing marginals
                 prior <- Priorbetween <- sitems <- specific <- NULL
                 gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
                 if(QMC){
@@ -307,7 +307,7 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     delta <- delta[ ,estpars, drop=FALSE]
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
-        stop('M2 cannot be calulated since df is too low', call.=FALSE)
+        stop('M2 cannot be calculated since df is too low', call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
     N <- nrow(extract.mirt(obj, 'data'))

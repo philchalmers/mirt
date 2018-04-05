@@ -70,7 +70,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         pick <- !sapply(gpcm_mats, is.null) & itemtype %in% c('gpcm', 'Rasch')
         tmp <- gpcm_mats[pick]
         if(!all(sapply(tmp, is.matrix)))
-            stop('Matricies must be used in gpcm_mats', call.=FALSE)
+            stop('Matrices must be used in gpcm_mats', call.=FALSE)
         if(!all(sapply(tmp, nrow) == K[pick])){
             nrows <- sapply(tmp, nrow)
             out <- !sapply(tmp, nrow) == K[pick]

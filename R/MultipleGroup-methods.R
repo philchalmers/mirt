@@ -77,7 +77,7 @@ setMethod(
                          'itemscore', 'infotrace'))
             stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
-            stop('Improper angle specifed. Must be between 0 and 90.', call.=FALSE)
+            stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         ngroups <- x@Data$ngroups
         J <- x@Data$nitems

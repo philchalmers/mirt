@@ -60,7 +60,7 @@ disables this command and instead uses the \code{group.bins} input to try and co
 equally sized bins}
 
 \item{group.fun}{function used when \code{'X2'} or \code{'G2'} are computed. Determines the central
-tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
+tendency measure within each partitioned group. E.g., setting \code{group.fun = median} will
 obtain the median of each respective ability estimate in each subgroup (this is what was used
 by Bock, 1972)}
 
@@ -69,7 +69,7 @@ collapsed across items first if polytomous, and then across scores if necessary}
 
 \item{mincell.X2}{the minimum expected cell size to be used in the X2 computations. Tables will be
 collapsed if polytomous, however if this condition can not be met then the group block will
-be ommited in the computations}
+be omitted in the computations}
 
 \item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
 

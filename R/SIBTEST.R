@@ -16,7 +16,7 @@
 #' @param dat integer dataset to be tested containing dichotomous or polytomous responses
 #' @param group a vector indicating group membership
 #' @param match_set an integer vector indicating which items to use as the items which are matched
-#'   (i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
+#'   (i.e., contain no DIF). These are analogous to 'anchor' items in the likelihood method to locate
 #'   DIF. If missing, all items other than the items found in the suspect_set will be used
 #' @param focal_name name of the focal group; e.g., 'focal'. If not specified then one will be
 #'   selected automatically

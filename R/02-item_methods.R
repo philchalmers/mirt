@@ -116,7 +116,7 @@ symbolicHessian_par <- function(x, Theta, dp1 = NULL, dp2 = NULL, P = NULL){
 
 #' Print generic for customized data.frame console output
 #'
-#' Privides a nicer output for most printed \code{data.frame} objects defined by functions in \code{mirt}.
+#' Provides a nicer output for most printed \code{data.frame} objects defined by functions in \code{mirt}.
 #'
 #' @method print mirt_df
 #' @param x object of class \code{'mirt_df'}
@@ -135,7 +135,7 @@ print.mirt_df <- function(x, digits = 3, ...){
 
 #' Print generic for customized matrix console output
 #'
-#' Privides a nicer output for most printed \code{matrix} objects defined by functions in \code{mirt}.
+#' Provides a nicer output for most printed \code{matrix} objects defined by functions in \code{mirt}.
 #'
 #' @method print mirt_matrix
 #' @param x object of class \code{'mirt_matrix'}
@@ -151,7 +151,7 @@ print.mirt_matrix <- function(x, digits = 3, ...){
 
 #' Print generic for customized list console output
 #'
-#' Privides a nicer output for most printed \code{list} objects defined by functions in \code{mirt}.
+#' Provides a nicer output for most printed \code{list} objects defined by functions in \code{mirt}.
 #'
 #' @method print mirt_list
 #' @param x object of class \code{'mirt_list'}

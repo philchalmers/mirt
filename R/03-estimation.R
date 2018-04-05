@@ -234,7 +234,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         if(!is.null(latent.regression)){
             if(length(PrepListFull$prodlist))
-                stop('Polynominal combinations currently not supported when latent regression effects are used', call.=FALSE)
+                stop('Polynomial combinations currently not supported when latent regression effects are used', call.=FALSE)
             lrPars <- make.lrdesign(df=latent.regression$df, formula=latent.regression$formula,
                                     factorNames=PrepListFull$factorNames, EM=latent.regression$EM,
                                     TOL=opts$TOL)
@@ -330,7 +330,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Data$K <- PrepList[[1L]]$K
     nfact <- PrepList[[1L]]$pars[[nitems+1L]]@nfact
     if(nfact != 1L && any(c('Rasch') %in% itemtype ) && PrepList[[1L]]$exploratory)
-       stop('Rasch itemtypes are for confimatory models only.', call.=FALSE)
+       stop('Rasch itemtype is for confirmatory models only.', call.=FALSE)
     nLambdas <- PrepList[[1L]]$pars[[1L]]@nfact
     if(is.null(constrain)) constrain <- list()
     nspec <- ifelse(!is.null(attr(model, 'nspec')), attr(model, 'nspec'), 1L)
@@ -411,7 +411,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if(any(PrepList[[j]]$pars[[i]]@est))
                     stop(paste0('Multiple Group model will not be identified without ',
                                 'proper constraints (groups contain missing data patterns ',
-                                'where item responses have been completely ommited or, alternatively, ',
+                                'where item responses have been completely omitted or, alternatively, ',
                                 'the number of categories within each group is not equal to the ',
                                 'total number of categories)'),
                          call. = FALSE)
@@ -680,7 +680,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 nms <- ESTIMATE$pars[[g]][[i]]@parnames
                 if(tmp[nms == 'g'] > tmp[nms == 'u']){
                     if(opts$warn)
-                        warning('g paramater greater than u detected. Model did not converge', call.=FALSE)
+                        warning('g parameter greater than u detected. Model did not converge', call.=FALSE)
                     ESTIMATE$converge <- FALSE
                 }
             }
@@ -898,7 +898,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     TLI.G2 <- CFI.G2 <- NaN
     if(opts$calcNull && length(r) * 3L < prod(Data$K) && opts$warn)
         warning(c('Full table of responses is very sparse. ',
-                'Goodness-of-fit statistics may be very innacurate'), call.=FALSE)
+                'Goodness-of-fit statistics may be very inaccurate'), call.=FALSE)
     if(!opts$NULL.MODEL && opts$method != 'MIXED' && opts$calcNull && nmissingtabdata == 0L){
         null.mod <- try(unclass(computeNullModel(data=data, itemtype=itemtype, key=key,
                                                  group=if(length(pars) > 1L) group else NULL)))

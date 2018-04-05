@@ -19,7 +19,7 @@ If missing, a simultaneous test using all the items not listed in match_set
 will be used (i.e., DTF)}
 
 \item{match_set}{an integer vector indicating which items to use as the items which are matched
-(i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
+(i.e., contain no DIF). These are analogous to 'anchor' items in the likelihood method to locate
 DIF. If missing, all items other than the items found in the suspect_set will be used}
 
 \item{focal_name}{name of the focal group; e.g., 'focal'. If not specified then one will be

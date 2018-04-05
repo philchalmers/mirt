@@ -185,7 +185,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     }
     if(plot != 'none'){
         if(is.null(draws))
-            stop('Must specificy number of draws to generate plot confidence intervals', call.=FALSE)
+            stop('Must specify number of draws to generate plot confidence intervals', call.=FALSE)
     }
     if(length(type) > 1L && (plot != 'none' || !is.null(Theta_nodes)))
         stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')

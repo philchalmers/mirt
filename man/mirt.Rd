@@ -50,7 +50,7 @@ of factors to extract is also supported}
       and its multidimensional extension
     \item \code{'sequential'} - multidimensional sequential response model (Tutz, 1990) in slope-intercept form
     \item \code{'Tutz'} - same as the \code{'sequential'} itemtype, except the slopes are fixed to 1
-      and the latent variance terms are freely estimated (similiar to the \code{'Rasch'} itemtype input)
+      and the latent variance terms are freely estimated (similar to the \code{'Rasch'} itemtype input)
     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
       Note that constraining the slopes to be equal across items will reduce the model to
       Embretson's (a.k.a. Whitely's) multicomponent model (1980).
@@ -333,7 +333,7 @@ control input)}
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
   \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
     with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
-    Richarson extrapolation. Default is 1e-5}
+    Richardson extrapolation. Default is 1e-5}
   \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
     Default is TRUE}
   \item{removeEmptyRows}{logical; remove response vectors that only contain \code{NA}'s?
@@ -610,7 +610,7 @@ of categories.
     The multidimensional sequential response model has the form
     \deqn{P(x = k | \theta, \psi) = \prod (1 - F(a_1 \theta_1 + a_2 \theta_2 + d_{sk}))
       F(a_1 \theta_1 + a_2 \theta_2 + d_{jk})}
-    where \eqn{F(\cdot)} is the cumlative logistic function.
+    where \eqn{F(\cdot)} is the cumulative logistic function.
     The Tutz variant of this model (Tutz, 1990) (via \code{itemtype = 'Tutz'})
     assumes that the slope terms are all equal to 1 and the latent
     variance terms are estimated (i.e., is a Rasch variant).
@@ -662,7 +662,7 @@ of categories.
     where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
     values. B-splines with a natural or polynomial basis are supported, and the \code{intercept} input is
     set to \code{TRUE} by default.}
-  \item{monopoly}{Monotone polynomial model for polytomous reponse data of the form
+  \item{monopoly}{Monotone polynomial model for polytomous response data of the form
     \deqn{P(x = k | \theta, \psi) =
     \frac{exp(\sum_1^k (m^*(\psi) + \xi_{c-1})}
     {\sum_1^C exp(\sum_1^k (m^*(\psi) + \xi_{c-1}))}}

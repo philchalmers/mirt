@@ -482,7 +482,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                             for(j in seq_len(length(sel))){
                                 pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == picknames]
                                 if(!length(pick))
-                                    stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j],
+                                    stop('CONSTRAIN = ... indexed a parameter that was not relevant for item ', sel[j],
                                          call.=FALSE)
                                 constr <- c(constr, pick)
                             }
@@ -518,7 +518,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         for(g in groupsPicked){
                             pick <- pars[[g]][[j]]@parnum[names(pars[[g]][[j]]@est) == pickname]
                             if(!length(pick))
-                                stop('CONSTRAINB = ... indexed a parameter that was not relavent accross groups',
+                                stop('CONSTRAINB = ... indexed a parameter that was not relevant across groups',
                                      call.=FALSE)
                             constr <- c(constr, pick)
                         }
@@ -1502,7 +1502,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N, LR=FALS
         if(any(grepl('\\*', splt[2L]) | grepl('\\+', splt[2L])))
             stop('The + and * operators are not supported. Please specify
                  which effects you want to interact with the : operator, and specify
-                 additional random effects in seperate list elements', call.=FALSE)
+                 additional random effects in separate list elements', call.=FALSE)
         gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
         sframe <- model.frame(as.formula(paste0('~',splt[1L])), longdata)
         levels <- interaction(gframe)
@@ -1572,7 +1572,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
     inv_tXX <- try(solve(tXX), silent = TRUE)
     if(!is.nan(TOL)){
         if(is(inv_tXX, 'try-error'))
-            stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)
+            stop('Latent regression design matrix contains multi-collinear terms.', call. = FALSE)
     } else inv_tXX <- matrix(0, ncol(tXX), ncol(tXX))
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
