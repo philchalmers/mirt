@@ -51,6 +51,17 @@ mod2 <- mirt(dat, 1, itemtype = c(rep('2PL', 4), '3PL'))
 anova(mod, mod2) #unbounded test
 anova(mod, mod2, bounded = TRUE) #bounded
 
+# priors
+model <- 'F = 1-5
+          PRIOR = (5, g, norm, -1, 1)'
+mod1b <- mirt(dat, model, itemtype = c(rep('2PL', 4), '3PL'))
+anova(mod1b)
+
+model2 <- 'F = 1-5
+          PRIOR = (1-5, g, norm, -1, 1)'
+mod2b <- mirt(dat, model2, itemtype = '3PL')
+anova(mod1b, mod2b)
+
 }
 }
 \references{

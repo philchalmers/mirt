@@ -443,6 +443,17 @@ setMethod(
 #' anova(mod, mod2) #unbounded test
 #' anova(mod, mod2, bounded = TRUE) #bounded
 #'
+#' # priors
+#' model <- 'F = 1-5
+#'           PRIOR = (5, g, norm, -1, 1)'
+#' mod1b <- mirt(dat, model, itemtype = c(rep('2PL', 4), '3PL'))
+#' anova(mod1b)
+#'
+#' model2 <- 'F = 1-5
+#'           PRIOR = (1-5, g, norm, -1, 1)'
+#' mod2b <- mirt(dat, model2, itemtype = '3PL')
+#' anova(mod1b, mod2b)
+#'
 #' }
 setMethod(
     f = "anova",
@@ -454,10 +465,11 @@ setMethod(
                               SABIC = object@Fit$SABIC,
                               HQ = object@Fit$HQ,
                               BIC = object@Fit$BIC,
-                              DIC = object@Fit$DIC,
                               logLik = object@Fit$logLik)
-            if(object@Fit$logPrior != 0)
+            if(object@Fit$logPrior != 0){
+                ret$DIC <- object@Fit$DIC
                 ret$logPost <- object@Fit$logPrior + object@Fit$logLik
+            }
             class(ret) <- c('mirt_df', 'data.frame')
             return(ret)
         }
