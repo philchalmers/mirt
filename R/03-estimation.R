@@ -881,17 +881,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     r <- rr
     N <- sum(r)
     tmp <- dfsubtr
-    if(logPrior != 0){
-        AIC <- AICc <- BIC <- SABIC <- HQ <- NaN
-        DIC <- -2 * (logLik + logPrior) + 2 * tmp
-    } else {
-        AIC <- (-2) * logLik + 2 * tmp
-        AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
-        BIC <- (-2) * logLik + tmp*log(N)
-        SABIC <- (-2) * logLik + tmp*log((N+2)/24)
-        DIC <- AIC
-        HQ <- (-2) * logLik + 2*tmp*log(log(N))
-    }
+    AIC <- (-2) * logLik + 2 * tmp
+    AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
+    BIC <- (-2) * logLik + tmp*log(N)
+    SABIC <- (-2) * logLik + tmp*log((N+2)/24)
+    DIC <- AIC
+    HQ <- (-2) * logLik + 2*tmp*log(log(N))
+    if(logPrior != 0) DIC <- -2 * (logLik + logPrior) + 2 * tmp
     p.G2 <- 1 - pchisq(G2,df)
     RMSEA.G2 <- rmsea(X2=G2, df=df, N=N)
     null.mod <- unclass(new('SingleGroupClass'))

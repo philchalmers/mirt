@@ -454,7 +454,10 @@ setMethod(
                               SABIC = object@Fit$SABIC,
                               HQ = object@Fit$HQ,
                               BIC = object@Fit$BIC,
+                              DIC = object@Fit$DIC,
                               logLik = object@Fit$logLik)
+            if(object@Fit$logPrior != 0)
+                ret$logPost <- object@Fit$logPrior + object@Fit$logLik
             class(ret) <- c('mirt_df', 'data.frame')
             return(ret)
         }
@@ -479,10 +482,18 @@ setMethod(
         }
         if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
             BF <- (object@Fit$logLik + object@Fit$logPrior) - (object2@Fit$logLik + object2@Fit$logPrior)
-            ret <- data.frame(DIC = c(object@Fit$DIC, object2@Fit$DIC),
+            ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
+                              AICc = c(object@Fit$AICc, object2@Fit$AICc),
+                              SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
+                              HQ = c(object@Fit$HQ, object2@Fit$HQ),
+                              BIC = c(object@Fit$BIC, object2@Fit$BIC),
+                              DIC = c(object@Fit$DIC, object2@Fit$DIC),
+                              logLik = c(object@Fit$logLik, object2@Fit$logLik),
+                              logPost = c(object@Fit$logLik + object@Fit$logPrior,
+                                          object2@Fit$logLik + object2@Fit$logPrior),
                               Bayes_Factor = c(NA, exp(BF)))
         } else {
-            X2 <- round(2*object2@Fit$logLik - 2*object@Fit$logLik, 3)
+            X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
             ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                               AICc = c(object@Fit$AICc, object2@Fit$AICc),
                               SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
