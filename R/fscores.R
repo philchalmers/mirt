@@ -68,6 +68,8 @@
 #'   indicating that no MI draws will be performed
 #' @param response.pattern an optional argument used to calculate the factor scores and standard
 #'   errors for a given response vector or matrix/data.frame
+#' @param append_response.pattern logical; should the inputs from \code{response.pattern} also be
+#'   appended to the factor score output?
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
 #' @param return.acov logical; return a list containing covariance matrices instead of factors
@@ -145,6 +147,10 @@
 #' #or matrix
 #' fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 #'
+#' # return only the scores and their SEs
+#' fscores(mod, method='MAP', response.pattern = c(1,2,3,4),
+#'   append_response.pattern=FALSE)
+#'
 #' #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 #' fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
 #' fscores(mod, method='ML', full.scores = FALSE)
@@ -177,7 +183,8 @@
 #'
 #'}
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
-                    response.pattern = NULL, plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
+                    response.pattern = NULL, append_response.pattern=TRUE,
+                    plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
@@ -221,6 +228,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,
-                            plausible.type=plausible.type, max_theta=max_theta, start=start, ...)
+                            plausible.type=plausible.type, max_theta=max_theta, start=start,
+                            append_response.pattern=append_response.pattern, ...)
     ret
 }

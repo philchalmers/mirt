@@ -2,7 +2,8 @@ setMethod(
 	f = "fscores.internal",
 	signature = 'SingleGroupClass',
 	definition = function(object, rotate, Target, full.scores = FALSE, method = "EAP",
-                          quadpts = NULL, response.pattern = NULL, theta_lim, MI,
+                          quadpts = NULL, response.pattern = NULL, append_response.pattern = TRUE,
+	                      theta_lim, MI,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
@@ -191,7 +192,7 @@ setMethod(
                                custom_theta=custom_theta, converge_info=converge_info,
                                start=start, ...)
                 if(return.acov) return(ret)
-                ret <- cbind(response.pattern, ret)
+                if(append_response.pattern) ret <- cbind(response.pattern, ret)
             } else {
                 pick <- which(!is.na(response.pattern))
                 rp <- response.pattern[,pick,drop=FALSE]
@@ -211,10 +212,10 @@ setMethod(
                                custom_theta=custom_theta, converge_info=converge_info,
                                start=start, ...)
                 if(return.acov) return(ret)
-                ret <- cbind(response.pattern, ret)
+                if(append_response.pattern) ret <- cbind(response.pattern, ret)
             }
             if(return.acov) return(ret)
-            if(!all(mins == 0L))
+            if(!all(mins == 0L) && append_response.pattern)
                 ret[,seq_len(ncol(response.pattern))] <- ret[,seq_len(ncol(response.pattern))] +
                     matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
             return(ret)

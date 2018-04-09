@@ -1,5 +1,8 @@
 # Changes in mirt 1.28
 
+- `fscores()` gains a `append_response.pattern` logical to indicate whether response patterns via the
+  `response.pattern` input should be appended to the factor score results
+
 - new `dentype` argument added to estimation-based functions to specify the density structure of the 
   latent traits (default is 'Gaussian'). This update breaks the previous `empiricalhist` logical option 
 

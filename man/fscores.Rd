@@ -5,11 +5,11 @@
 \title{Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)}
 \usage{
 fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
-  Target = NULL, response.pattern = NULL, plausible.draws = 0,
-  plausible.type = "normal", quadpts = NULL, returnER = FALSE,
-  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
-  custom_den = NULL, custom_theta = NULL, min_expected = 1,
+  Target = NULL, response.pattern = NULL, append_response.pattern = TRUE,
+  plausible.draws = 0, plausible.type = "normal", quadpts = NULL,
+  returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL,
+  verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0,
+  QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
   converge_info = FALSE, max_theta = 20, start = NULL, ...)
 }
 \arguments{
@@ -34,6 +34,9 @@ then this argument is ignored}
 
 \item{response.pattern}{an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame}
+
+\item{append_response.pattern}{logical; should the inputs from \code{response.pattern} also be
+appended to the factor score output?}
 
 \item{plausible.draws}{number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
@@ -159,6 +162,10 @@ head(fullscores)
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 #or matrix
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
+
+# return only the scores and their SEs
+fscores(mod, method='MAP', response.pattern = c(1,2,3,4),
+  append_response.pattern=FALSE)
 
 #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
