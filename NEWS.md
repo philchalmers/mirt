@@ -1,5 +1,7 @@
 # Changes in mirt 1.28
 
+- `M2()`, `itemfit()`, and `fscores()` gain a `na.rm` logical to remove rows of missing data internally
+
 - `fscores()` gains a `append_response.pattern` logical to indicate whether response patterns via the
   `response.pattern` input should be appended to the factor score results
 

@@ -781,7 +781,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
         if(any(is.na(x@Data$data)))
-            stop('Full scores requires a complete dataset (no N\'s)', call.=FALSE)
+            stop('Full scores requires a complete dataset (no NA\'s). If possible, pass na.rm=TRUE', call.=FALSE)
         dat <- x@Data$data
         adj <- extract.mirt(x, 'mins')
         dat <- t(t(dat) - adj)
@@ -793,7 +793,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     } else {
         dat <- x@Data$data
         if(any(is.na(dat)))
-            stop('EAPsum scores are not meaningful when data contains missing values')
+            stop('EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE', call.=FALSE)
         E <- L1 %*% prior * nrow(dat)
         adj <- extract.mirt(x, 'mins')
         dat <- t(t(dat) - adj)

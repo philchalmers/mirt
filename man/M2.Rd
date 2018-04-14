@@ -4,9 +4,9 @@
 \alias{M2}
 \title{Compute the M2 model fit statistic}
 \usage{
-M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
-  impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1,
-  ...)
+M2(obj, calcNull = TRUE, na.rm = FALSE, quadpts = NULL,
+  theta_lim = c(-6, 6), impute = 0, CI = 0.9, residmat = FALSE,
+  QMC = FALSE, suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -14,6 +14,9 @@ M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via \code{\link{createItem}} will not)}
+
+\item{na.rm}{logical; remove rows with any missing values? The M2 family of statistics
+requires a complete dataset in order to be well defined}
 
 \item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
 a suitable value will be chosen based
@@ -64,8 +67,13 @@ M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
 #M2 imputed with missing data present (run in parallel)
 dat[sample(1:prod(dim(dat)), 250)] <- NA
 mod2 <- mirt(dat, 1)
+
+# compute stats using conservative model imputations
 mirtCluster()
 M2(mod2, impute = 10)
+
+# or compute stats by removing missing data row-wise
+M2(mod2, na.rm = TRUE)
 
 }
 }

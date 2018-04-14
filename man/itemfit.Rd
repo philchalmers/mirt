@@ -5,9 +5,9 @@
 \title{Item fit statistics}
 \usage{
 itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
-  group.bins = 10, group.size = NA, group.fun = mean, mincell = 1,
-  mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30, boot = 1000,
-  boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
+  na.rm = FALSE, group.bins = 10, group.size = NA, group.fun = mean,
+  mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30,
+  boot = 1000, boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
   empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
   method = "EAP", Theta = NULL, impute = 0, par.strip.text = list(cex =
   0.7), par.settings = list(strip.background = list(col = "#9ECAE1"),
@@ -49,6 +49,9 @@ Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing re
 
 \item{which.items}{an integer vector indicating which items to test for fit.
 Default tests all possible items}
+
+\item{na.rm}{logical; remove rows with any missing values? This is required for methods such
+as S-X2 because they require the "EAPsum" method from \code{\link{fscores}}}
 
 \item{group.bins}{the number of bins to use for X2 and G2. For example,
 setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic when \code{'X2'} is
@@ -207,13 +210,12 @@ tables$E[[1]]
 data[sample(1:prod(dim(data)), 500)] <- NA
 raschfit <- mirt(data, 1, itemtype='Rasch')
 
+# use imputation if the proportion of missing data is relatively small
 mirtCluster() # run in parallel
 itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
 
-#alternative route: use only valid data, and create a model with the previous parameter estimates
-data2 <- na.omit(data)
-raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-itemfit(raschfit2, 'infit')
+#alternative route: use only valid data by removing rows with missing terms
+itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 
 # note that X2, G2, PV-Q1, and X2* do not require complete datasets
 itemfit(raschfit, c('X2', 'G2'))

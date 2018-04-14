@@ -69,6 +69,8 @@
 #'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 #'   interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
+#' @param na.rm logical; remove rows with any missing values? This is required for methods such
+#'   as S-X2 because they require the "EAPsum" method from \code{\link{fscores}}
 #' @param Theta a matrix of factor scores for each person used for statistics that require
 #'   empirical estimates. If supplied, arguments typically passed to \code{fscores()} will be
 #'   ignored and these values will be used instead. Also required when estimating statistics
@@ -215,13 +217,12 @@
 #' data[sample(1:prod(dim(data)), 500)] <- NA
 #' raschfit <- mirt(data, 1, itemtype='Rasch')
 #'
+#' # use imputation if the proportion of missing data is relatively small
 #' mirtCluster() # run in parallel
 #' itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
 #'
-#' #alternative route: use only valid data, and create a model with the previous parameter estimates
-#' data2 <- na.omit(data)
-#' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-#' itemfit(raschfit2, 'infit')
+#' #alternative route: use only valid data by removing rows with missing terms
+#' itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 #'
 #' # note that X2, G2, PV-Q1, and X2* do not require complete datasets
 #' itemfit(raschfit, c('X2', 'G2'))
@@ -231,7 +232,7 @@
 #'}
 #'
 itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nitems'),
-                    group.bins = 10, group.size = NA, group.fun = mean,
+                    na.rm = FALSE, group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
                     ETrange = c(-2,2), ETpoints = 11,
@@ -403,9 +404,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         S_X2 <- Zh <- infit <- G2 <- FALSE
     }
     J <- ncol(x@Data$data)
+    if(na.rm) x <- removeMissing(x)
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.
-             Consider using imputed datasets', call.=FALSE)
+             Consider using imputed datasets or passing na.rm=TRUE', call.=FALSE)
 
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         discrete <- is(x, 'DiscreteClass')

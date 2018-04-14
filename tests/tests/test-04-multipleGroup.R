@@ -64,6 +64,12 @@ test_that('one factor', {
                                  invariance=c('slopes', 'intercepts', 'free_var'))
     expect_is(mod_missing, 'MultipleGroupClass')
     expect_equal(extract.mirt(mod_missing, 'df'), 32736)
+    out1 <- M2(mod_missing, na.rm=TRUE)
+    out2 <- itemfit(mod_missing, na.rm=TRUE)
+    out3 <- fscores(mod_missing, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
+    expect_equal(out1$M2, 201.2824, tolerance=1e-4)
+    expect_equal(out2$D1$S_X2[1], 8.129985, tolerance=1e-4)
+    expect_equal(out3$D1$expected[1], 4.859826, tolerance=1e-4)
 
     fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
     expect_true(mirt:::closeEnough(fs1[[1]][1:6, 'F1'] - c(-2.0826, -1.6822, -1.3988, -1.5287, -1.7450, -1.3712), -1e-2, 1e-2))

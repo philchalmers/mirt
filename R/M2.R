@@ -14,6 +14,8 @@
 #' @param quadpts number of quadrature points to use during estimation. If \code{NULL},
 #'   a suitable value will be chosen based
 #'   on the rubric found in \code{\link{fscores}}
+#' @param na.rm logical; remove rows with any missing values? The M2 family of statistics
+#'   requires a complete dataset in order to be well defined
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 #'   have a suitable null model (e.g., those created via \code{\link{createItem}} will not)
@@ -59,11 +61,16 @@
 #' #M2 imputed with missing data present (run in parallel)
 #' dat[sample(1:prod(dim(dat)), 250)] <- NA
 #' mod2 <- mirt(dat, 1)
+#'
+#' # compute stats using conservative model imputations
 #' mirtCluster()
 #' M2(mod2, impute = 10)
 #'
+#' # or compute stats by removing missing data row-wise
+#' M2(mod2, na.rm = TRUE)
+#'
 #' }
-M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
+M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
                impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
     fn <- function(Theta, obj, ...){
@@ -213,11 +220,12 @@ M2 <- function(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 5000L
+    if(na.rm) obj <- removeMissing(obj)
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
-            stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
-                 impute argument to compute statistics following multiple
-                 data imputations', call.=FALSE)
+            stop('Fit statistics cannot be computed when there are missing data. Either pass a suitable
+                 impute argument to compute statistics following multiple data imputations,
+                 or remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
         if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
             warning('Imputing too much data can lead to very conservative results. Use with caution.',
                     call.=FALSE)

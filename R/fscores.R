@@ -70,6 +70,9 @@
 #'   errors for a given response vector or matrix/data.frame
 #' @param append_response.pattern logical; should the inputs from \code{response.pattern} also be
 #'   appended to the factor score output?
+#' @param na.rm logical; remove rows with any missing values? This is generally not required due to
+#'   the nature of computing factors scores, however for the "EAPsum" method this may be necessary
+#'   to ensure that the sum-scores correspond to the same composite score
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
 #' @param return.acov logical; return a list containing covariance matrices instead of factors
@@ -183,7 +186,7 @@
 #'
 #'}
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
-                    response.pattern = NULL, append_response.pattern=TRUE,
+                    response.pattern = NULL, append_response.pattern=TRUE, na.rm=FALSE,
                     plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
@@ -203,6 +206,8 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     if(any(extract.mirt(object, 'itemtype') == 'spline') && !(method %in% c('EAP', 'EAPsum')))
         stop('Only EAP and EAPsum method supported when spline items are modeled', call.=FALSE)
     if(returnER) full.scores <- FALSE
+    if(na.rm)
+        object <- removeMissing(object)
     if(is(object, 'DiscreteClass') && plausible.draws > 0L){
         fs <- fscores(object)
         ret <- lapply(seq_len(plausible.draws), function(ind, fs){

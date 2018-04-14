@@ -2104,6 +2104,27 @@ rmsea <- function(X2, df, N){
     ret
 }
 
+removeMissing <- function(obj){
+    dat <- extract.mirt(obj, 'data')
+    obj@Data$data <- na.omit(dat)
+    pick <- attr(obj@Data$data, 'na.action')
+    obj@Data$group <- obj@Data$group[-pick]
+    ind1 <- 0L
+    for(g in seq_len(length(obj@Data$groupNames))){
+        ind2 <- 1L:nrow(obj@Data$fulldata[[g]]) + ind1
+        pick2 <- ind2 %in% pick
+        ind1 <- nrow(obj@Data$fulldata[[g]]) + ind1
+        obj@Data$fulldata[[g]] <- obj@Data$fulldata[[g]][!pick2, , drop=FALSE]
+    }
+    if(is(obj, 'MultipleGroupClass')){
+        for(g in seq_len(length(obj@Data$groupNames))){
+            obj@ParObjects$pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
+                                                         , drop=FALSE]
+        }
+    }
+    obj
+}
+
 controlCandVar <- function(PA, cand, min = .1, max = .6){
     if(PA > max) cand <- cand * 1.05
     else if(PA < min) cand <- cand * 0.9

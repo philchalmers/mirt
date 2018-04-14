@@ -164,5 +164,14 @@ test_that('dich', {
     expect_is(fm1, 'matrix')
     fm2 <- fscores(modm3, method = 'MAP', verbose = FALSE)
     expect_is(fm2, 'matrix')
+
+    data[1,1] <- NA
+    modm1 <- mirt(data, 1, verbose=FALSE)
+    out1 <- M2(modm1, na.rm=TRUE)
+    out2 <- itemfit(modm1, na.rm=TRUE)
+    out3 <- fscores(modm1, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
+    expect_equal(out1$M2, 11.76977, tolerance=1e-4)
+    expect_equal(out2$S_X2[1], 4.8448539, tolerance=1e-4)
+    expect_equal(out3$expected[1], 9.931098, tolerance=1e-4)
 })
 
