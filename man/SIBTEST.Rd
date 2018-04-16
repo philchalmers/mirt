@@ -5,7 +5,8 @@
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
 SIBTEST(dat, group, suspect_set, match_set, focal_name, guess_correction = 0,
-  Jmin = 2, pk_focal = FALSE, correction = TRUE, details = FALSE)
+  Jmin = 2, na.rm = FALSE, pk_focal = FALSE, correction = TRUE,
+  details = FALSE)
 }
 \arguments{
 \item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
@@ -30,6 +31,10 @@ for guessing. It's length should be the same as ncol(dat)}
 
 \item{Jmin}{the minimum number of observations required when splitting the data into focal and
 reference groups conditioned on the matched set}
+
+\item{na.rm}{logical; remove rows in \code{dat} with any missing values? If \code{TRUE},
+rows with missing data will be removed, as well as the corresponding elements in the \code{group}
+input}
 
 \item{pk_focal}{logical; using the group weights from the focal group instead of the total
 sample? Default is FALSE as per Shealy and Stout's recommendation}

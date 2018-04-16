@@ -27,6 +27,9 @@
 #'   will be used (i.e., DTF)
 #' @param guess_correction a vector of numbers from 0 to 1 indicating how much to correct the items
 #'   for guessing. It's length should be the same as ncol(dat)
+#' @param na.rm logical; remove rows in \code{dat} with any missing values? If \code{TRUE},
+#'   rows with missing data will be removed, as well as the corresponding elements in the \code{group}
+#'   input
 #' @param Jmin the minimum number of observations required when splitting the data into focal and
 #'   reference groups conditioned on the matched set
 #' @param pk_focal logical; using the group weights from the focal group instead of the total
@@ -124,7 +127,7 @@
 #'
 #' }
 SIBTEST <- function(dat, group, suspect_set, match_set, focal_name,
-                    guess_correction = 0, Jmin = 2,
+                    guess_correction = 0, Jmin = 2, na.rm = FALSE,
                     pk_focal = FALSE, correction = TRUE, details = FALSE){
 
     CA <- function(dat, guess_correction = rep(0, ncol(dat))){
@@ -151,8 +154,14 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name,
         scores > signif(ks, 1L)
     }
 
+    if(na.rm){
+        is_na <- is.na(rowSums(dat))
+        dat <- dat[!is_na, , drop=FALSE]
+        group <- group[!is_na]
+    }
     if(any(is.na(dat)))
-        stop('SIBTEST does not support datasets with missing values.')
+        stop(c('SIBTEST does not support datasets with missing values. \n  ',
+             'Pass na.rm=TRUE to remove missing rows list-wise'), call.=FALSE)
     if(missing(focal_name))
         focal_name <- unique(group)[2L]
     stopifnot(focal_name %in% group)
