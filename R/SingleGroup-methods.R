@@ -1430,7 +1430,7 @@ mirt2traditional <- function(x, vcov){
     x@par <- par
     names(x@est) <- names(par)
     x@parnames <- names(x@par)
-    if(is.na(vcov[1L,1L]) || !(cls %in% c('dich', 'graded', 'gpcm'))){
+    if(length(vcov) == 0L || (is.na(vcov[1L,1L]) || !(cls %in% c('dich', 'graded', 'gpcm')))){
         x@SEpar <- numeric()
     } else {
         nms <- colnames(vcov)
