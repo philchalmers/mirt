@@ -15,6 +15,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(missing(group)) missingMsg('group')
     if(is.logical(large) && large){
         Data <- opts <- list()
+        opts$zeroExtreme <- FALSE
+        if(!is.null(dots$technical$zeroExtreme)) opts$zeroExtreme <- dots$technical$zeroExtreme
         data <- as.matrix(data)
         if(is.numeric(data))
             data <- matrix(as.integer(data), nrow(data), dimnames=list(rownames(data), colnames(data)))
