@@ -1,7 +1,7 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
                            parnumber, BFACTOR = FALSE, mixed.design, customItems,
-                           customGroup, key, gpcm_mats, spline_args, monopoly.k)
+                           customGroup, key, gpcm_mats, spline_args, monopoly.k, dcIRT_nphi = NULL)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -94,6 +94,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         for(i in seq_len(length(tmp)))
             estgmeans[find[tmp[i] == factorNames]] <- TRUE
     }
+
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
         loads <- eigen(Rpoly)$vector[,seq_len(nfact), drop = FALSE]
@@ -114,9 +115,9 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     mixed.design=mixed.design, customItems=customItems, key=key,
                     gpcm_mats=gpcm_mats, spline_args=spline_args, itemnames=itemnames)
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
-                                            estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
-                                            parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm', 'Tutz')),
-                                            customGroup=customGroup)
+                                             estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
+                                             parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm', 'Tutz')),
+                                             customGroup=customGroup, dcIRT_nphi=dcIRT_nphi)
     attr(ret, 'prodlist') <- prodlist
     attr(ret, 'exploratory') <- exploratory
     return(ret)

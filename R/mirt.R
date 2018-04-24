@@ -462,7 +462,8 @@
 #'   the default number of quasi-Monte Carlo integration nodes will be set to 5000 in total
 #' @param TOL convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 #'   \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
-#'   If \code{dentype = 'empiricalhist'} and \code{TOL} is not specified then the default \code{3e-5}
+#'   If \code{dentype = 'empiricalhist'} (i.e., \code{'EH'}) or \code{'empiricalhist_Woods'} (i.e., \code{'EHW'})
+#'   and \code{TOL} is not specified then the default \code{3e-5}
 #'   will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}, and
 #'   to evaluate the starting values without the log-likelihood pass \code{TOL = NA}
 #' @param dentype type of density form to use for the latent trait parameters. Current options include
@@ -470,10 +471,20 @@
 #'   \itemize{
 #'     \item \code{'Gaussian'} (default) assumes a multivariate Gaussian distribution with an associated
 #'       mean vector and variance-covariance matrix
-#'     \item \code{'empiricalhist'}  estimate latent distribution using an empirical histogram described by
+#'     \item \code{'empiricalhist'} or \code{'EH'} estimates latent distribution using an empirical histogram described by
 #'       Bock and Aitkin (1981). Only applicable for unidimensional models estimated with the EM algorithm.
 #'       For this option, the number of cycles, TOL, and quadpts are adjusted accommodate for
-#'       less precision during estimation (namely: \code{TOL = 3e-5}, \code{NCYCLES = 2000}, \code{quadpts = 199})
+#'       less precision during estimation (namely: \code{TOL = 3e-5}, \code{NCYCLES = 2000}, \code{quadpts = 121})
+#'     \item \code{'empiricalhist_Woods'} or \code{'EHW'} estimates latent distribution using an empirical histogram described by
+#'       Bock and Aitkin (1981), with the same specifications as in \code{dentype = 'empiricalhist'},
+#'       but with the extrapolation-interpolation method described by Woods (2007). NOTE: to improve stability
+#'       in the presence of extreme response styles (i.e., all highest or lowest in each item) the \code{technical} option
+#'       \code{zeroExtreme = TRUE} may be required to down-weight the contribution of these problematic patterns
+#'     \item \code{'Davidian-#'} estimates semiparametric Davidian curves described by Woods and Lin (2009),
+#'       where the \code{#} placeholder represents the number of Davidian parameters to estimate
+#'       (e.g., \code{'Davidian-6'} will estimate 6 smoothing parameters). By default, the number of
+#'       \code{quadpts} is increased to 121, and this method is only applicable for
+#'       unidimensional models estimated with the EM algorithm
 #'    }
 #' @param survey.weights a optional numeric vector of survey weights to apply for each case in the
 #'   data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT
@@ -569,6 +580,11 @@
 #'       computations. For proper integration, the returned vector should sum to
 #'       1 (i.e., normalized). Note that if using the \code{Etable} it will be NULL
 #'       on the first call, therefore the prior will have to deal with this issue accordingly}
+#'     \item{zeroExtreme}{logical; assign extreme response patterns a \code{survey.weight} of 0
+#'       (formally equivalent to removing these data vectors during estimation)?
+#'       When \code{dentype = 'EHW'}, where Woods' extrapolation is utilized,
+#'       this option may be required if the extrapolation causes expected densities to tend towards
+#'       positive or negative infinity. The default is \code{FALSE}}
 #'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
 #'     \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix

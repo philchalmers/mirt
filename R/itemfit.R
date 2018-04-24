@@ -5,6 +5,9 @@
 #' for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
 #' where the functional form of the IRT model was misspecified, or models can be refit using
 #' more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
+#' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+#' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+#' density components (where applicable).
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -715,6 +718,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         Nk <- rowSums(O[[which(sapply(O, is.matrix))[1L]]])
         dots <- list(...)
         QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
+        use_dentype_estimate <- ifelse(is.null(dots$use_dentype_estimate),
+                                       FALSE, dots$use_dentype_estimate)
         quadpts <- dots$quadpts
         if(is.null(quadpts) && QMC) quadpts <- 5000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@Model$nfact)
@@ -726,7 +731,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         gp <- ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@Internals$CUSTOM.IND, den_fun=mirt_dmvnorm,
                     quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC,
-                    which.items=which.items)
+                    which.items=which.items, use_dentype_estimate=use_dentype_estimate)
         for(i in which.items)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)

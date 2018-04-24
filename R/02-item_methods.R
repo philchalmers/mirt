@@ -199,6 +199,7 @@ setClass("GroupPars",
                         theta='matrix',
                         Thetabetween='matrix',
                         density='numeric',
+                        dentype='character',
                         sig='matrix',
                         invsig='matrix',
                         mu='numeric',
@@ -233,6 +234,11 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'GroupPars'),
     definition = function(x){
+        if(x@dentype == "Davidian"){
+            pick <- x@est
+            pick[1L:2L] <- FALSE
+            x@par[pick] <- runif(sum(pick), -pi/2, pi/2)
+        }
         x
     }
 )

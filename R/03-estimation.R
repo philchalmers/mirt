@@ -210,7 +210,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          mixed.design=mixed.design, customItems=customItems,
                          customGroup=customGroup, spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
-                         gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints)
+                         gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
+                         dcIRT_nphi=opts$dcIRT_nphi)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
         }
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
@@ -261,6 +262,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     } else {
         if(!is.list(large)){
             tmpdata <- Data$data
+            if(opts$zeroExtreme){
+                n_is_na <- rowSums(is.na(tmpdata))
+                sums <- colSums(t(tmpdata) - Data$mins, na.rm=TRUE)
+                maxs <- apply(tmpdata, 2L, function(x) length(unique(na.omit(x)))) - 1L
+                if(is.null(survey.weights)) survey.weights <- rep(1, nrow(tmpdata))
+                survey.weights[sums == 0L | (sums + n_is_na) == sum(maxs)] <- 0
+            }
             tmpdata[is.na(tmpdata)] <- 99999L
             stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
             stringtabdata <- unique(stringfulldata)
@@ -354,10 +362,15 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             diag(dummymat) <- TRUE
         }
         tmp <- dummymat[lower.tri(dummymat, TRUE)]
-        for(g in 2L:Data$ngroups){
-            pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
-            names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
-            pars[[g]][[nitems + 1L]]@parnames <- names(pars[[g]][[nitems + 1L]]@est)
+        if(opts$dentype %in% c('Davidian', 'EHW')){
+            for(g in 2L:Data$ngroups)
+                pars[[g]][[nitems + 1L]]@est[2L] <- TRUE
+        } else {
+            for(g in 2L:Data$ngroups){
+                pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
+                names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
+                pars[[g]][[nitems + 1L]]@parnames <- names(pars[[g]][[nitems + 1L]]@est)
+            }
         }
     }
     if(RETURNVALUES){
@@ -420,6 +433,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
     dfsubtr <- nestpars - nconstr
+    if(opts$dentype == 'EH') dfsubtr <- dfsubtr + (opts$quadpts - 1L) * Data$ngroups
+    else if(opts$dentype == 'EHW') dfsubtr <- dfsubtr + (opts$quadpts - 3L) * Data$ngroups
     if(df <= dfsubtr)
         stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ',
              dfsubtr, ' parameters were freely estimated.', call.=FALSE)
@@ -774,7 +789,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior, warn=opts$warn, type=opts$SE.type,
                               delta=opts$delta, lrPars=ESTIMATE$lrPars)
         } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
-            if(opts$dentype == 'EH')
+            if(opts$dentype %in% c('EH', 'EHW'))
                 stop('MHRM standard error not available when using empirical histograms', call.=FALSE)
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                    list = list(NCYCLES=1000L, BURNIN=1L, SEMCYCLES=opts$SEMCYCLES,
@@ -837,7 +852,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           Fit = list(G2=G2group[g], F=F, h2=h2),
                           Internals = list(Pl = rlist[[g]]$expected, CUSTOM.IND=CUSTOM.IND,
                                            SLOW.IND=SLOW.IND))
-        if(opts$dentype == "discrete"){
+        if(opts$dentype %in% c("discrete", 'EH', 'EHW', 'Davidian')){
             cmods[[g]]@Model$Theta <- Theta
             cmods[[g]]@Internals$Prior <- list(ESTIMATE$Prior[[g]])
         }

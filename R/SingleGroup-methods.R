@@ -54,6 +54,11 @@ setMethod(
                 cat('Number of Monte Carlo points:', x@Options$quadpts)
             cat('\n')
         }
+        dentype <- switch(x@Options$dentype,
+               "EH" = "Empirical histogram",
+               "EHW" = 'Empirical histogram (scaled)',
+               x@Options$dentype)
+        cat('Latent density type:', dentype, '\n')
         if(!is.na(x@OptimInfo$condnum)){
             cat("\nInformation matrix estimated with method:", x@Options$SE.type)
             cat("\nCondition number of information matrix = ", x@OptimInfo$condnum,
@@ -373,10 +378,18 @@ setMethod(
             if(discrete){
                 allPars <- list(items=items, group.intercepts=allPars$GroupPars)
             } else {
-                covs <- matrix(NA, nfact, nfact)
-                covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
-                colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
-                allPars <- list(items=items, means=means, cov=covs)
+                if(object@ParObjects$pars[[J+1L]]@dentype == "Davidian"){
+                    covs <- matrix(NA, nfact, nfact)
+                    covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[2L]
+                    colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
+                    allPars <- list(items=items, means=means, cov=covs,
+                                    Davidian_phis=allPars$GroupPars[-c(1:2)])
+                } else {
+                    covs <- matrix(NA, nfact, nfact)
+                    covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
+                    colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
+                    allPars <- list(items=items, means=means, cov=covs)
+                }
             }
         }
         if(.hasSlot(object@Model$lrPars, 'beta')){
@@ -526,6 +539,9 @@ setMethod(
 #' Compute model residuals
 #'
 #' Return model implied residuals for linear dependencies between items or at the person level.
+#' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+#' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+#' density components (where applicable).
 #'
 #' @param object an object of class \code{SingleGroupClass} or
 #'   \code{MultipleGroupClass}. Bifactor models are automatically detected and utilized for
@@ -605,8 +621,10 @@ setMethod(
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
             stop('Latent regression models not yet supported')
-        discrete <- FALSE
-        if(!is.null(dots$discrete)) discrete <- TRUE
+        discrete <- use_dentype_estimate <- FALSE
+        if(!is.null(dots$use_dentype_estimate))
+            use_dentype_estimate <- dots$use_dentype_estimate
+        if(!is.null(dots$discrete) || use_dentype_estimate) discrete <- TRUE
         K <- object@Data$K
         data <- object@Data$data
         N <- nrow(data)
@@ -636,8 +654,6 @@ setMethod(
             }
         } else {
             Theta <- object@Model$Theta
-            if(!any(type %in% c('exp', 'LD', 'LDG2')))
-                stop('residual type not supported for discrete latent variables', call.=FALSE)
         }
         itemnames <- colnames(data)
         listtabs <- list()
@@ -746,6 +762,8 @@ setMethod(
                 return(tabdata)
             }
         } else if(type == 'Q3'){
+            if(discrete && !use_dentype_estimate)
+                stop('residual type not supported for discrete density forms', call.=FALSE)
             dat <- matrix(NA, N, 2L)
             diag(res) <- 1
             for(i in seq_len(J)){
@@ -799,7 +817,10 @@ setMethod(
 #'
 #'   Note that if \code{dentype = 'empiricalhist'} was used in estimation then
 #'   the type \code{'empiricalhist'}
-#'   also will be available to generate the empirical histogram plot
+#'   also will be available to generate the empirical histogram plot, and if
+#'   \code{dentype = 'Davidian-#'} was used then the type \code{'Davidian'}
+#'   will also be available to generate the curve estimates at the quadrature
+#'   nodes used during estimation
 #' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 #'   for information-based plots with respect to the first dimension.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
@@ -895,7 +916,7 @@ setMethod(
     {
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
-                       'infocontour', 'infotrace', 'scorecontour', 'empiricalhist')))
+                       'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian')))
             stop('type supplied is not supported')
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
@@ -1300,14 +1321,13 @@ setMethod(
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             } else if(type == 'empiricalhist'){
+                if(!(x@Options$dentype %in% c('EH', 'EHW')))
+                    stop('Empirical histogram was not estimated for this object', call.=FALSE)
                 if(is.null(main))
                     main <- 'Empirical Histogram'
                 Prior <- x@Internals$Prior[[1L]]
-                if(x@Options$dentype != 'EH')
-                    stop('Empirical histogram was not estimated for this object', call.=FALSE)
-                Theta <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
-                                    length.out = x@Options$quadpts))
-                Prior <- Prior * nrow(x@Data$data)
+                Theta <- x@Model$Theta
+                # Prior <- Prior * nrow(x@Data$data)
                 cuts <- cut(Theta, floor(npts/2))
                 Prior <- do.call(c, lapply(split(Prior, cuts), mean))
                 Theta <- do.call(c, lapply(split(Theta, cuts), mean))
@@ -1316,7 +1336,20 @@ setMethod(
                 plt <- data.frame(Theta = Theta, Prior = Prior)
                 plt <- plt[keep1:keep2, , drop=FALSE]
                 return(xyplot(Prior ~ Theta, plt,
-                              xlab = expression(theta), ylab = 'Expected Frequency',
+                              xlab = expression(theta), ylab = 'Density',
+                              type = 'b', main = main,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            } else if(type == 'Davidian'){
+                if(x@Options$dentype != 'Davidian')
+                   stop('Davidian curve was not estimated for this object', call.=FALSE)
+                if(is.null(main))
+                    main <- 'Davidian Curve'
+                Prior <- x@Internals$Prior[[1L]]
+                Theta <- x@Model$Theta
+                # Prior <- Prior * nrow(x@Data$data)
+                plt <- data.frame(Theta = Theta, Prior = Prior)
+                return(xyplot(Prior ~ Theta, plt,
+                              xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = main,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else {

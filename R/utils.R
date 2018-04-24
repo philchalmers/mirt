@@ -289,12 +289,29 @@ ExtractGroupPars <- function(x){
     if(x@itemclass < 0L) return(list(gmeans=0, gcov=matrix(1)))
     nfact <- x@nfact
     gmeans <- x@par[seq_len(nfact)]
-    tmp <- x@par[-seq_len(nfact)]
-    gcov <- matrix(0, nfact, nfact)
-    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-    if(nfact != 1L)
-        gcov <- gcov + t(gcov) - diag(diag(gcov))
-    return(list(gmeans=gmeans, gcov=gcov))
+
+    # # Names are so often...
+    # if (length(x@par) > 2) {
+    #     names(x@par) <- c("MEAN_1", "COV_11", paste0("PHI_", 1:(length(x@par)-2)))
+    # }
+
+    phi_matches <- grepl("PHI", x@parnames)
+    if (any(phi_matches)) {
+        phi <- x@par[phi_matches]
+        tmp <- x@par[-c(seq_len(nfact), which(phi_matches))]
+        gcov <- matrix(0, nfact, nfact)
+        gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+        if(nfact != 1L)
+            gcov <- gcov + t(gcov) - diag(diag(gcov))
+        return(list(gmeans=gmeans, gcov=gcov, phi=phi))
+    } else {
+        tmp <- x@par[-seq_len(nfact)]
+        gcov <- matrix(0, nfact, nfact)
+        gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+        if(nfact != 1L)
+            gcov <- gcov + t(gcov) - diag(diag(gcov))
+        return(list(gmeans=gmeans, gcov=gcov))
+    }
 }
 
 reloadConstr <- function(par, constr, obj){
@@ -352,9 +369,7 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                         dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
                         MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
-    if(dentype == 'EH'){
-        Prior[[1L]] <- list$EHPrior[[1L]]
-    } else if(dentype == 'custom'){
+    if(dentype == 'custom'){
         for(g in seq_len(ngroups)){
             gp <- pars[[g]][[J+1L]]
             Prior[[g]] <- gp@den(gp, gTheta[[g]])
@@ -370,6 +385,12 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                 Prior[[g]] <- gp@den(gp, gTheta[[g]])
                 Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
             }
+        }
+    } else if(dentype == 'Davidian'){
+        for(g in seq_len(ngroups)){
+            gp <- pars[[g]][[J+1L]]
+            Prior[[g]] <- gp@den(gp, gTheta[[g]])
+            Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
         }
     } else {
         for(g in seq_len(ngroups)){
@@ -402,10 +423,16 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
             }
         }
     }
-    if(dentype == 'EH'){
+    if(dentype %in% c('EH', 'EHW')){
         if(cycles > 1L){
-            for(g in seq_len(ngroups))
-                Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
+            for(g in seq_len(ngroups)){
+                rr <- if(dentype == 'EHW') standardizeQuadrature(gTheta[[g]], pars[[g]][[J+1L]]@rr,
+                                                                 estmean=pars[[g]][[J+1L]]@est[1L],
+                                                                 estsd=pars[[g]][[J+1L]]@est[2L])
+                    else pars[[g]][[J+1L]]@rr
+                Prior[[g]] <- rr / sum(rr)
+                attr(Prior[[g]], 'mean_var') <- attr(rr, 'mean_var')
+            }
         } else {
             for(g in seq_len(ngroups)){
                 Prior[[g]] <- mirt_dmvnorm(gTheta[[g]], 0, matrix(1))
@@ -1288,7 +1315,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws')
+                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
+                "zeroExtreme")
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1305,7 +1333,14 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                         'sandwich.Louis', 'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))
         stop('SE.type argument not supported', call.=FALSE)
     if(!(method %in% c('EM', 'QMCEM', 'MCEM'))) accelerate <- 'none'
-    if(!(dentype %in% c('Gaussian', 'empiricalhist', 'discrete')))
+    if(grepl('Davidian', dentype)){
+        tmp <- strsplit(dentype, '-')[[1]]
+        dentype <- tmp[1L]
+        opts$dcIRT_nphi <- as.integer(tmp[2L])
+        stopifnot(opts$dcIRT_nphi > 1L)
+    }
+    if(!(dentype %in% c('Gaussian', 'empiricalhist', 'discrete', 'empiricalhist_Woods', "Davidian",
+                        "EH", "EHW")))
         stop('dentype not supported', call.=FALSE)
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
@@ -1322,7 +1357,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
     if(dentype == "empiricalhist") dentype <- 'EH'
+    if(dentype == "empiricalhist_Woods") dentype <- 'EHW'
     opts$dentype <- dentype
+    opts$zeroExtreme <- FALSE
+    if(!is.null(technical$zeroExtreme)) opts$zeroExtreme <- technical$zeroExtreme
     if(BFACTOR) opts$dentype <- 'bfactor'
     if(hasCustomGroup) opts$dentype <- 'custom'
     opts$accelerate = accelerate
@@ -1364,12 +1402,17 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
     opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, technical$keep_vcov_PD)
-    if(dentype == "EH"){
+    if(dentype %in% c("EH", 'EHW')){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
         if(opts$TOL == 1e-4) opts$TOL <- 3e-5
-        if(is.null(opts$quadpts)) opts$quadpts <- 199L
+        if(is.null(opts$quadpts)) opts$quadpts <- 121L
         if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
+    }
+    if(dentype == 'Davidian'){
+        if(opts$method != 'EM')
+            stop('Davidian curve method only applicable when method = \'EM\' ', call.=FALSE)
+        if(is.null(opts$quadpts)) opts$quadpts <- 121L
     }
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
@@ -1429,8 +1472,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
 }
 
 reloadPars <- function(longpars, pars, ngroups, J){
-    return(.Call('reloadPars', longpars, pars, ngroups, J,
-                      attr(pars[[1L]], 'nclasspars')))
+    .Call('reloadPars', longpars, pars, ngroups, J,
+          attr(pars[[1L]], 'nclasspars'))
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
@@ -1649,6 +1692,21 @@ reloadRandom <- function(random, longpars){
     random
 }
 
+phi_bound <- function(phi, bound = c(-pi/2, pi/2)){
+    for(i in 1L:length(phi)){
+        while(TRUE){
+            if(phi[i] > bound[1L] && phi[i] <= bound[2L]) break
+            if(phi[i] < bound[1L]){
+                phi[i] <- phi[i] + pi
+            }
+            if(phi[i] >= bound[2L]){
+                phi[i] <- phi[i] - pi
+            }
+        }
+    }
+    phi
+}
+
 smooth.cor <- function(x){
     eig <- eigen(x)
     negvalues <- eig$values <= 0
@@ -1711,7 +1769,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
         lrPars@beta[] <- lrPars@par
         lrPars@mus <- lrPars@X %*% lrPars@beta
     }
-    if(dentype == 'EH'){
+    if(dentype %in% c('EH', 'EHW')){
         Prior[[1L]] <- EHPrior[[1L]]
     } else if(dentype == 'custom'){
         for(g in seq_len(ngroups)){

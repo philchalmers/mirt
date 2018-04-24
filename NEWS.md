@@ -1,12 +1,31 @@
 # Changes in mirt 1.28
 
+- `technical` gains a `zeroExtreme` logical flag to assign survey weights of 0 to extreme 
+  response patterns (FALSE by default). This may be required when
+  Woods' extrapolation-interpolation method is used with empirical histograms 
+  to avoid ill defined extrapolated densities
+
+- `fscores()`, `itemfit()`, `M2()`, and `residuals()` gain a `use_dentype_estimate` argument to 
+  compute EAP-based scores whenever the latent trait density was estimated (e.g., via empirical histograms)
+
+- Empirical histograms can now be now scaled to [0,1] using Woods' extrapolation-interpolation method
+  via the input `dentype = 'empiricalhist_Woods'`. Degrees of freedom updated to reflect this change, 
+  and 121 quadrature points are used instead of the previous 199 for better stability
+  
+- Semiparametric Davidian curve estimation of the shape of the latent trait distribution in
+  unidimensional IRT models was contributed by Oguzhan Ogreden, as well the associated 
+  components used within this framework (such as the interpolation-extrapolation method 
+  described by Woods, 2006). This estimation method is available through the new `dentype` input. 
+  mirt also now links to the `dcurver` package to obtain the associated computation functions 
+  in the EM algorithm
+  
 - `M2()`, `itemfit()`, `SIBTEST()`, and `fscores()` gain an `na.rm` logical to remove rows of missing data
 
 - `fscores()` gains a `append_response.pattern` logical to indicate whether response patterns via the
   `response.pattern` input should be appended to the factor score results
 
 - new `dentype` argument added to estimation-based functions to specify the density structure of the 
-  latent traits (default is 'Gaussian'). This update breaks the previous `empiricalhist` logical option 
+  latent traits (default is `'Gaussian'`). This update breaks the previous `empiricalhist` logical option 
 
 - `anova()` will accept a single fitted model object and return information related to AIC, BIC, 
   log-likelihood, etc
@@ -33,11 +52,11 @@
 - `key2binary()` gains a `score_missing` flag to indicate whether missing values should be scored 
   as 0 or left as NA
 
-- `customItem()` gains support for `derivType = 'symbolic'` and 
+- `createItem()` gains support for `derivType = 'symbolic'` and 
   `derivType.hss = 'symbolic'` to symbolically compute the gradient/Hessian 
   functions (template code-base contributed by Chen-Wei Liu)
 
-- `customItem()` gains a `derivType.hss` argument to distinguish gradient from 
+- `createItem()` gains a `derivType.hss` argument to distinguish gradient from 
   Hessian numerical computations
 
 - `mdirt()` gains support for `createItem()` inputs

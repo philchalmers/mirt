@@ -132,7 +132,18 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         }
         if(is(opt, 'try-error'))
             stop(opt, call.=FALSE)
+
         longpars[est] <- opt$par
+    }
+    if (dentype == "Davidian") {
+        optDC <- Mstep.DC.optim(pars=pars, J=J, gTheta=gTheta, constrain=constrain)
+        for(g in seq_len(length(pars))){
+            tmp <- pars[[g]][[J+1L]]@est
+            pick <- pars[[g]][[J+1L]]@parnum[-c(1L:2L)]
+            pick2 <- 1L:length(pick) + length(pick) * (g-1L)
+            pick3 <- pars[[g]][[J+1L]]@parnum
+            longpars[pick3[tmp]] <- c(optDC$mean_var[g, ], optDC$par[pick2])[tmp]
+        }
     }
     if(full){
         res <- Mstep.LR(Theta=gTheta[[1L]], CUSTOM.IND=CUSTOM.IND, pars=pars[[1L]], lrPars=lrPars,
@@ -143,7 +154,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                 res$siglong[pars[[1L]][[J+1L]]@est]
     }
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
-    return(longpars)
+    longpars
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND,
@@ -172,6 +183,7 @@ Mstep.LL_alt <- function(x0, optim_args){
 }
 
 Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
+
     pick <- length(pars)
     rr <- pars[[pick]]@rr
     if(pars[[pick]]@itemclass < 0L){
@@ -188,7 +200,7 @@ Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
                 gp$gcov <- sds %*% smoothed %*% sds
             } else return(-1e100)
         }
-        if(pars[[pick]]@BFACTOR){
+        if (pars[[pick]]@BFACTOR) {
             theta <- pars[[pick]]@theta
             Thetabetween <- pars[[pick]]@Thetabetween
             nsfact <- ncol(pars[[pick]]@rrs)
@@ -210,6 +222,78 @@ Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
     LL
 }
 
+Mstep.DC.optim <- function(pars, J, gTheta, constrain) {
+    ngroup <- length(pars)
+    orgphi <- std_rr <- vector("list", ngroup)
+    for(g in seq_len(ngroup)){
+        orgphi[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])$phi
+        std_rr[[g]] <- standardizeQuadrature(gTheta[[g]], nq=pars[[g]][[J+1L]]@rr,
+                                             estmean=pars[[g]][[J+1L]]@est[1L],
+                                             estsd=pars[[g]][[J+1L]]@est[2L])
+    }
+    phi <- do.call(c, orgphi) # adjust based on constrain TODO
+    optDC <- nlminb(phi, function (...) -Mstep.DC.LL_group(...),
+                    gradient = function(...) -Mstep.DC.grad_group(...),
+                    gTheta=gTheta, rr = std_rr, constrain = constrain,
+                    orgphi=orgphi)
+    # find equivalent set equal within [-pi/2, pi/2]
+    # there's likely an analytical way to do this, but it's not important
+    if(!all(optDC$par >= -pi/2 & optDC$par <= pi/2)){
+        phi_s <- phi_bound(optDC$par)
+        tmp_LL <- 0
+        all_signs <- lapply(1L:length(phi_s), function(x) c(-1,1))
+        all_signs <- as.matrix(expand.grid(all_signs))
+        for(i in seq_len(nrow(all_signs))){
+            signs <- all_signs[i, ]
+            tmp_LL <- -Mstep.DC.LL_group(phi_s * signs, gTheta=gTheta,
+                                         rr = std_rr, constrain = constrain,
+                                         orgphi=orgphi)
+            if(isTRUE(all.equal(tmp_LL, optDC$objective))) break
+        }
+        optDC$par <- phi_s * signs
+    }
+    optDC$value <- optDC$objective
+    optDC$mean_var <- do.call(rbind, lapply(std_rr, function(x) attr(x, 'mean_var')))
+    optDC # return as long parameter vector for easier transition TODO
+}
+
+Mstep.DC.LL <- function (phi, Theta, rr) {
+    LL <- sum(rr * log(dcurver::ddc(Theta, phi)))
+    LL
+}
+
+Mstep.DC.LL_group <- function (phi, gTheta, rr, constrain, orgphi) {
+    ind1 <- 1L
+    for(g in seq_len(length(gTheta))){
+        ind2 <- length(orgphi[[g]]) + ind1 - 1L
+        orgphi[[g]] <- phi[ind1:ind2]
+        ind1 <- ind2 + 1L
+    }
+    # constrain.... TODO
+    LL <- 0
+    for(g in seq_len(length(gTheta)))
+        LL <- LL + Mstep.DC.LL(orgphi[[g]], gTheta[[g]], rr[[g]])
+    LL
+}
+
+Mstep.DC.grad <- function (phi, Theta, rr) {
+    colSums(dcurver::dc_grad(Theta, phi) * rr)
+}
+
+Mstep.DC.grad_group <- function (phi, gTheta, rr, constrain, orgphi) {
+    ind1 <- 1L
+    for(g in seq_len(length(gTheta))){
+        ind2 <- length(orgphi[[g]]) + ind1 - 1L
+        orgphi[[g]] <- phi[ind1:ind2]
+        ind1 <- ind2 + 1L
+    }
+    # constrain.... TODO
+    grad <- c()
+    for(g in seq_len(length(gTheta)))
+        grad <- c(grad, Mstep.DC.grad(orgphi[[g]], gTheta[[g]], rr[[g]]))
+    grad
+}
+
 LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
     log_itemtrace <- log(computeItemtrace(pars=x, Theta=Theta,
                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND))
@@ -224,6 +308,7 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
                        constrain, itemloc, DERIV, rlist, CUSTOM.IND, SLOW.IND, keep_vcov_PD){
+
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -234,6 +319,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         }
     }
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
+
     if(length(SLOW.IND)){
         for(group in seq_len(ngroups)){
             for (i in SLOW.IND){
@@ -251,6 +337,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     } else {
         grad <- g
     }
+
     return(-grad[est])
 }
 

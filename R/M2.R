@@ -4,6 +4,9 @@
 #' M2* statistic for polytomous data (collapsing over response categories for better stability;
 #' see Cai and Hansen, 2013), as well as associated fit indices that are based on
 #' fitting the null model. Supports single and multiple-group models.
+#' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+#' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+#' density components (where applicable).
 #'
 #' @return Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
 #'   p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
@@ -85,7 +88,8 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
         return(M2(tmpobj, ...))
     }
     M2internal <- function(obj, calcNull, quadpts, theta_lim,
-                           residmat, QMC, discrete){
+                           residmat, QMC, discrete,
+                           use_dentype_estimate = FALSE, ...){
         ret <- list()
         group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
         nitems <- ncol(obj@Data$data)
@@ -116,7 +120,7 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
         bfactorlist <- obj@Internals$bfactor
         if(.hasSlot(obj@Model$lrPars, 'beta'))
             stop('Latent regression models not yet supported')
-        if(!discrete){
+        if(!discrete && !use_dentype_estimate){
             #         if(is.null(bfactorlist$Priorbetween[[1L]])){
             if(TRUE){ #TODO bifactor reduction possibility? Not as effective at computing marginals
                 prior <- Priorbetween <- sitems <- specific <- NULL
@@ -216,6 +220,7 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
     }
 
     #main
+    dots <- list(...)
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)

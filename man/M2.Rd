@@ -56,6 +56,9 @@ Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and
 M2* statistic for polytomous data (collapsing over response categories for better stability;
 see Cai and Hansen, 2013), as well as associated fit indices that are based on
 fitting the null model. Supports single and multiple-group models.
+If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+density components (where applicable).
 }
 \examples{
 \dontrun{

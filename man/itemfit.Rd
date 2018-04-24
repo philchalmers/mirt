@@ -124,6 +124,9 @@ Poorly fitting items should be inspected with the empirical plots/tables
 for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
 where the functional form of the IRT model was misspecified, or models can be refit using
 more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
+If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+density components (where applicable).
 }
 \examples{
 

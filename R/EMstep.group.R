@@ -3,8 +3,20 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     verbose <- list$verbose
     lrPars <- list$lrPars
     nfact <- list$nfact
-    if(list$dentype == 'EH' && nfact != 1L)
+    if(list$dentype %in% c('EH', 'EHW') && nfact != 1L)
         stop('empirical histogram only available for unidimensional models', call.=FALSE)
+    if(list$dentype == 'Davidian'){
+        if(nfact != 1L)
+            stop('Davidian curves estimation only available for unidimensional models', call.=FALSE)
+        if(list$SE)
+            stop('No standard error method currently supported for Davidian curves', call.=FALSE)
+        J <- length(pars[[1L]]) - 1L
+        for(g in seq_len(length(pars))){ # throw error if latent mean/var estimated TODO
+            if(any(pars[[g]][[J+1L]]@est[1L:2L]))
+                stop('Estimating Davidian mean-variance hyper-parameters is not currently supported',
+                     call.=FALSE)
+        }
+    }
     NCYCLES <- list$NCYCLES
     TOL <- list$TOL
     CUSTOM.IND <- list$CUSTOM.IND
@@ -94,6 +106,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     }
     for(i in seq_len(length(constrain)))
         est[constrain[[i]][-1L]] <- FALSE
+    if(list$dentype %in% c('Davidian', 'EHW')) # dont estimate mean/var for extrapolation
+        est[names(est) %in% c('MEAN_1', 'COV_11')] <- FALSE
     if(all(!est) && list$SE)
         stop('Computing ACOV matrix is meaningless when no parameters are estimated', call.=FALSE)
     names(longpars) <- names(est)
@@ -148,6 +162,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     accel <- 0; Mrate <- ifelse(is_SEM, 1, .4)
     Estep.time <- Mstep.time <- 0
     collectLL <- rep(NA, NCYCLES)
+    collect.DC.LL <- rep(NA, NCYCLES)
     hess <- matrix(0)
     Elist <- list()
     startMrate <- ifelse(Moptim == 'L-BFGS-B', 5L, 1L)
@@ -261,7 +276,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
                 } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
             }
-            Estep.time <- Estep.time + proc.time()[3L] - start
             start <- proc.time()[3L]
             preMstep.longpars2 <- preMstep.longpars
             preMstep.longpars <- longpars
@@ -275,10 +289,20 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
                               TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars,
                               control=control)
+            if(dentype == 'EHW' && cycles > 1L){
+                for(g in seq_len(ngroups)){
+                    tmpparnum <- pars[[g]][[J+1L]]@parnum
+                    if(pars[[g]][[J+1L]]@est[1L])
+                        longpars[tmpparnum[1L]] <- attr(Prior[[g]], 'mean_var')['mean']
+                    if(pars[[g]][[J+1L]]@est[2L])
+                        longpars[tmpparnum[2L]] <- attr(Prior[[g]], 'mean_var')['var']
+                }
+            }
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL + LP, max(abs(preMstep.longpars - longpars))))
+
             if(all(abs(preMstep.longpars - longpars) < TOL)){
                 pars <- reloadPars(longpars=longpars, pars=pars,
                                    ngroups=ngroups, J=J)
@@ -367,7 +391,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                " likely indicates a problem in the M-step. \nCheck with the more stable ",
                                "optimizer = \'nlminb\', or supply better starting values"), call.=FALSE)
         }
-        if(cycles > 1L && list$warn && !ANY.PRIOR && list$method != 'MCEM'){
+        if(cycles > 1L && list$warn && !ANY.PRIOR && list$method != 'MCEM' && !dentype %in% c('EHW', 'Davidian')){
             diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
             if(any(diff[length(diff):ceiling(length(diff)*.9)] > .001))
                 warning('Log-likelihood was decreasing near the ML solution. EM method may be unstable',

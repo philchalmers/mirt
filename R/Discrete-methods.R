@@ -20,6 +20,7 @@ setMethod(
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
         cat('EM acceleration:', x@Options$accelerate)
+        cat('\nLatent density type:', 'discrete')
         # cat('\nNumber of classes quadrature:', x@Options$quadpts)
         cat('\n')
         if(!is.na(x@OptimInfo$condnum)){

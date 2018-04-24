@@ -7,10 +7,13 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
-	                      min_expected, converge_info, plausible.type, start, ...)
+	                      min_expected, converge_info, plausible.type, start,
+	                      use_dentype_estimate, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(!is.null(custom_den)) den_fun <- custom_den
+        if(use_dentype_estimate && !(method %in% c('EAP', 'EAPsum', 'plausible')))
+            stop("use_dentype_estimate only supported for EAP, EAPsum, or plausible method", call.=FALSE)
 
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
@@ -190,7 +193,7 @@ setMethod(
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
                                custom_theta=custom_theta, converge_info=converge_info,
-                               start=start, ...)
+                               start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
             } else {
@@ -210,7 +213,7 @@ setMethod(
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
                                custom_theta=custom_theta, converge_info=converge_info,
-                               start=start, ...)
+                               start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
             }
@@ -253,7 +256,8 @@ setMethod(
                                              quadpts=quadpts, gp=gp, verbose=verbose,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
-                                             min_expected=min_expected, ...))
+                                             min_expected=min_expected,
+                                             use_dentype_estimate=use_dentype_estimate, ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		LR <- .hasSlot(object@Model$lrPars, 'beta')
 		USETABDATA <- TRUE
@@ -320,6 +324,11 @@ setMethod(
                     W <- if(QMC) rep(1, nrow(Theta)) else
                         den_fun(ThetaShort, mean=gp$gmeans, sigma=gp$gcov, quad=LR, ...)
                     W <- W/sum(W)
+                }
+                if(use_dentype_estimate){
+                    Theta <- ThetaShort <- object@Model$Theta
+                    W <- object@Internals$Prior[[1L]]
+                    den_fun <- pars[[J+1L]]@den
                 }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                               CUSTOM.IND=CUSTOM.IND)
@@ -663,7 +672,8 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
                    theta_lim, discrete, QMC, den_fun, min_expected,
-                   which.items = 2:length(x@ParObjects$pars)-1, ...){
+                   which.items = 2:length(x@ParObjects$pars)-1,
+                   use_dentype_estimate = FALSE, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -732,6 +742,10 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         if(length(prodlist) > 0L)
             Theta <- prodterms(Theta, prodlist)
     }
+    if(use_dentype_estimate){
+        Theta <- ThetaShort <- x@Model$Theta
+        prior <- x@Internals$Prior[[1L]]
+    }
     pars <- x@ParObjects$pars
     K <- x@Data$K
     J <- length(K)
@@ -788,7 +802,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         scores <- rowSums(dat)
         EAPscores <- ret[match(scores, Sum.Scores), -1L, drop=FALSE]
         pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
-        ret <- EAPscores[,pick, drop=FALSE]
+        ret <- as.matrix(EAPscores[,pick, drop=FALSE])
         rownames(ret) <- NULL
     } else {
         dat <- x@Data$data

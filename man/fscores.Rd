@@ -9,19 +9,24 @@ fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
   na.rm = FALSE, plausible.draws = 0, plausible.type = "normal",
   quadpts = NULL, returnER = FALSE, return.acov = FALSE, mean = NULL,
   cov = NULL, verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,
-  6), MI = 0, QMC = FALSE, custom_den = NULL, custom_theta = NULL,
-  min_expected = 1, converge_info = FALSE, max_theta = 20, start = NULL,
-  ...)
+  6), MI = 0, use_dentype_estimate = FALSE, QMC = FALSE,
+  custom_den = NULL, custom_theta = NULL, min_expected = 1,
+  converge_info = FALSE, max_theta = 20, start = NULL, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
 
-\item{method}{type of factor score estimation method. Can be expected
-a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-(\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
-(\code{"EAPsum"}). Can also be \code{"plausible"} for a single plausible value imputation for
-each case, and this is equivalent to setting \code{plausible.draws = 1}}
+\item{method}{type of factor score estimation method. Can be:
+\itemize{
+    \item \code{"EAP"} for the expected a-posteriori (default)
+    \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
+    \item \code{"ML"} for maximum likelihood
+    \item \code{"WLE"} for weighted likelihood estimation
+    \item \code{"EAPsum"} for the expected a-posteriori for each sum score
+    \item \code{"plausible"} for a single plausible value imputation for each case.
+      This is equivalent to setting \code{plausible.draws = 1}
+ }}
 
 \item{full.scores}{if \code{FALSE} then a summary table with
 factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
@@ -82,6 +87,10 @@ omitted, a range will be generated automatically based on the number of dimensio
 
 \item{MI}{a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed}
+
+\item{use_dentype_estimate}{logical; if the density of the latent trait was estimated in the model
+(e.g., via Davidian curves or empirical histograms), should this information be used to compute
+the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum, and plausible)}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 default number of nodes is 5000}
