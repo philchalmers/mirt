@@ -293,7 +293,8 @@
 #' d2 <- matrix(rnorm(nitems,0,1),ncol=1)
 #' itemtype <- rep('2PL', nrow(a1))
 #' N1 <- 500
-#' N2 <- N1*2
+#' N2 <- N1*2 # second class twice as large
+#'
 #' dataset1 <- simdata(a1, d1, N1, itemtype)
 #' dataset2 <- simdata(a2, d2, N2, itemtype)
 #' dat <- rbind(dataset1, dataset2)

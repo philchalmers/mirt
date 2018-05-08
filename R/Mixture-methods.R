@@ -459,19 +459,10 @@ setMethod(
     signature = signature(object = 'MixtureClass'),
     definition = function(object, ...)
     {
-        stop('TODO')
-        ret <- vector('list', length(object@Data$groupNames))
-        names(ret) <- object@Data$groupNames
-        for(g in 1L:length(ret)){
-            cmod <- object@ParObjects$pars[[g]]
-            cmod@Data <- object@Data
-            cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupName[g], ]
-            cmod@Data$Freq[[1L]] <- cmod@Data$Freq[[g]]
-            cmod@Options$quadpts <- object@Options$quadpts
-            cmod@Internals$bfactor <- object@Internals$bfactor
-            ret[[g]] <- residuals(cmod, verbose = FALSE, ...)
-        }
-        ret
+        stop('residuals() not supported for mixture IRT models yet', call.=FALSE)
+        pis <- ExtractMixtures(object)
+        class(object) <- 'SingleGroupClass'
+        residuals(object, pis=pis, mixture=TRUE, ...)
     }
 )
 
