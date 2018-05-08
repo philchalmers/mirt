@@ -386,7 +386,9 @@ setMethod(
                                     Davidian_phis=allPars$GroupPars[-c(1:2)])
                 } else {
                     covs <- matrix(NA, nfact, nfact)
-                    covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
+                    if(object@ParObjects$pars[[J+1L]]@dentype == "mixture")
+                        covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(seq_len(nfact), length(allPars$GroupPars))]
+                    else covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
                     colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
                     allPars <- list(items=items, means=means, cov=covs)
                 }

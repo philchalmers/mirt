@@ -5,7 +5,9 @@
 #' data under the item response theory paradigm using either Cai's (2010)
 #' Metropolis-Hastings Robbins-Monro (MHRM) algorithm or with an EM algorithm approach. This
 #' function may be used for detecting differential item functioning (DIF), thought the
-#' \code{\link{DIF}} function may provide a more convenient approach.
+#' \code{\link{DIF}} function may provide a more convenient approach. If the grouping
+#' variable is not specified then the \code{dentype} input can be modified to fit
+#' mixture models to estimate any latent group components.
 #'
 #' By default the estimation in \code{multipleGroup} assumes that the models are maximally
 #' independent, and therefore could initially be performed by sub-setting the data and running
@@ -42,6 +44,15 @@
 #'   differential item functioning (DIF) across groups
 #' @param method a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'}
 #'   (default is \code{'EM'}). See \code{\link{mirt}} for details
+#' @param dentype type of density form to use for the latent trait parameters. Current options include
+#'   all of the methods described in \code{\link{mirt}}, as well as
+#'
+#'   \itemize{
+#'     \item \code{'mixture-#'} estimates mixtures of Gaussian distributions,
+#'       where the \code{#} placeholder represents the number of potential grouping variables
+#'       (e.g., \code{'mixture-3'} will estimate 3 underlying classes). Each class is
+#'       assigned the group name \code{MIXTURE_#}, where \code{#} is the class number
+#'    }
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for details and examples
 #'
@@ -55,6 +66,7 @@
 #' @export multipleGroup
 #' @examples
 #' \dontrun{
+#'
 #' #single factor
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
@@ -270,9 +282,44 @@
 #' EH1 <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat)[-1])
 #' anova(EH, EH1)
 #'
+#' #--------------------------------
+#' # Mixture model (no prior group variable specified)
+#'
+#' set.seed(12345)
+#' nitems <- 20
+#' a1 <- matrix(.75, ncol=1, nrow=nitems)
+#' a2 <- matrix(1.25, ncol=1, nrow=nitems)
+#' d1 <- matrix(rnorm(nitems,0,1),ncol=1)
+#' d2 <- matrix(rnorm(nitems,0,1),ncol=1)
+#' itemtype <- rep('2PL', nrow(a1))
+#' N1 <- 500
+#' N2 <- N1*2
+#' dataset1 <- simdata(a1, d1, N1, itemtype)
+#' dataset2 <- simdata(a2, d2, N2, itemtype)
+#' dat <- rbind(dataset1, dataset2)
+#' # group <- c(rep('D1', N1), rep('D2', N2))
+#'
+#' # Mixture Rasch model (Rost, 1990)
+#' models <- 'F1 = 1-20
+#'            CONSTRAIN = (1-20, a1)'
+#' mod_mix <- multipleGroup(dat, models, dentype = 'mixture-2', GenRandomPars = TRUE)
+#' coef(mod_mix, simplify=TRUE)
+#' summary(mod_mix)
+#' plot(mod_mix)
+#' plot(mod_mix, type = 'trace')
+#' itemplot(mod_mix, 1, type = 'info')
+#' head(fscores(mod_mix))
+#' itemfit(mod_mix)
+#'
+#' Mixture 2PL model
+#' mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', GenRandomPars = TRUE)
+#' anova(mod_mix2, mod_mix)
+#' coef(mod_mix2, simplify=TRUE)
+#' itemfit(mod_mix2)
+#'
 #' }
 multipleGroup <- function(data, model, group, invariance = '', method = 'EM', rotate = 'oblimin',
-                          ...)
+                          dentype = 'Gaussian', ...)
 {
     Call <- match.call()
     dots <- list(...)
@@ -295,9 +342,10 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
             stop('Model is not identified without further constrains (may require additional
                  anchoring items).', call.=FALSE)
     }
+    if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
-                      rotate=rotate, ...)
-    if(is(mod, 'MultipleGroupClass'))
+                      rotate=rotate, dentype=dentype, ...)
+    if(is(mod, 'MultipleGroupClass') || is(mod, 'MixtureClass'))
         mod@Call <- Call
     return(mod)
 }

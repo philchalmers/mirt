@@ -107,6 +107,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     dots <- list(...)
     if(missing(object)) missingMsg('object')
     if(missing(item)) missingMsg('item')
+    if(is(object, 'MixtureClass')) class(object) <- "MultipleGroupClass"
     if(is(object, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported', call.=FALSE)
     if(is.list(object)) inames <- colnames(object[[1]]@Data$data)

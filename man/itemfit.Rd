@@ -126,7 +126,8 @@ where the functional form of the IRT model was misspecified, or models can be re
 more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
 If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
 then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
-density components (where applicable).
+density components (where applicable). Currently, only S-X2 statistic supported for
+mixture IRT models.
 }
 \examples{
 

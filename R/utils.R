@@ -12,6 +12,13 @@ thetaComb <- function(theta, nfact)
 	return(Theta)
 }
 
+thetaStack <- function(theta, nclass){
+    thetalist <- vector('list', nclass)
+    for(i in seq_len(nclass))
+        thetalist[[i]] <- theta
+    as.matrix(do.call(rbind, thetalist))
+}
+
 # Product terms
 prodterms <- function(theta0, prodlist)
 {
@@ -289,14 +296,8 @@ ExtractGroupPars <- function(x){
     if(x@itemclass < 0L) return(list(gmeans=0, gcov=matrix(1)))
     nfact <- x@nfact
     gmeans <- x@par[seq_len(nfact)]
-
-    # # Names are so often...
-    # if (length(x@par) > 2) {
-    #     names(x@par) <- c("MEAN_1", "COV_11", paste0("PHI_", 1:(length(x@par)-2)))
-    # }
-
     phi_matches <- grepl("PHI", x@parnames)
-    if (any(phi_matches)) {
+    if (x@dentype == "Davidian") {
         phi <- x@par[phi_matches]
         tmp <- x@par[-c(seq_len(nfact), which(phi_matches))]
         gcov <- matrix(0, nfact, nfact)
@@ -305,13 +306,22 @@ ExtractGroupPars <- function(x){
             gcov <- gcov + t(gcov) - diag(diag(gcov))
         return(list(gmeans=gmeans, gcov=gcov, phi=phi))
     } else {
-        tmp <- x@par[-seq_len(nfact)]
+        par <- x@par
+        if(x@dentype == "mixture") par <- par[-length(par)] # drop pi
+        tmp <- par[-seq_len(nfact)]
         gcov <- matrix(0, nfact, nfact)
         gcov[lower.tri(gcov, diag=TRUE)] <- tmp
         if(nfact != 1L)
             gcov <- gcov + t(gcov) - diag(diag(gcov))
         return(list(gmeans=gmeans, gcov=gcov))
     }
+}
+
+ExtractMixtures <- function(pars){
+    pick <- length(pars[[1L]])
+    logit_pi <- sapply(pars, function(x) x[[pick]]@par[length(x[[pick]]@par)])
+    pi <- exp(logit_pi)
+    pi / sum(pi)
 }
 
 reloadConstr <- function(par, constr, obj){
@@ -365,7 +375,7 @@ updateTheta <- function(npts, nfact, pars, QMC = FALSE){
     Theta
 }
 
-updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
+updatePrior <- function(pars, gTheta, list, ngroups, nfact, J, pis=NULL,
                         dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
                         MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
@@ -450,11 +460,14 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
             for(g in seq_len(ngroups))
                 Prior[[g]] <- matrix(rep(1 / length(gTheta[[g]])),
                                          nrow(lrPars@mus), nrow(gTheta[[g]]))
-
         } else {
             for(g in seq_len(ngroups))
                 Prior[[g]] <- matrix(rep(1 / length(Prior[[g]]), length(Prior[[g]])))
         }
+    }
+    if(dentype == 'mixture'){
+        for(g in seq_len(ngroups))
+            Prior[[g]] <- pis[g] * Prior[[g]]
     }
     return(list(prior=prior, Prior=Prior, Priorbetween=Priorbetween))
 }
@@ -1339,8 +1352,14 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
         opts$dcIRT_nphi <- as.integer(tmp[2L])
         stopifnot(opts$dcIRT_nphi > 1L)
     }
+    if(grepl('mixture', dentype)){
+        tmp <- strsplit(dentype, '-')[[1]]
+        dentype <- tmp[1L]
+        opts$ngroups <- as.integer(tmp[2L])
+        stopifnot(opts$n_mixture > 1L)
+    }
     if(!(dentype %in% c('Gaussian', 'empiricalhist', 'discrete', 'empiricalhist_Woods', "Davidian",
-                        "EH", "EHW")))
+                        "EH", "EHW", 'mixture')))
         stop('dentype not supported', call.=FALSE)
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
@@ -1402,6 +1421,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
     opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, technical$keep_vcov_PD)
+    if(dentype == 'mixture'){
+        if(opts$method != 'EM')
+            stop('Mixture IRT densities only supported when method = \'EM\' ', call.=FALSE)
+    }
     if(dentype %in% c("EH", 'EHW')){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
@@ -1477,11 +1500,23 @@ reloadPars <- function(longpars, pars, ngroups, J){
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
-                             CUSTOM.IND){
-    itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
-    if(length(CUSTOM.IND)){
-        for(i in CUSTOM.IND)
-            itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+                             CUSTOM.IND, pis = NULL){
+    if(is.null(pis)){
+        itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+        if(length(CUSTOM.IND)){
+            for(i in CUSTOM.IND)
+                itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+        }
+    } else {
+        tmp_itemtrace <- vector('list', length(pis))
+        for(g in seq_len(length(pis))){
+            tmp_itemtrace[[g]] <- .Call('computeItemTrace', pars[[g]]@ParObjects$pars, Theta, itemloc, offterm)
+            if(length(CUSTOM.IND)){
+                for(i in CUSTOM.IND)
+                    tmp_itemtrace[[g]][,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[g]]@ParObjects$pars[[i]], Theta=Theta)
+            }
+        }
+        itemtrace <- do.call(rbind, tmp_itemtrace)
     }
     return(itemtrace)
 }

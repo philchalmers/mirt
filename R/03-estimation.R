@@ -16,6 +16,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(is.logical(large) && large){
         Data <- opts <- list()
         opts$zeroExtreme <- FALSE
+        opts$dentype <- 'default'
         if(!is.null(dots$technical$zeroExtreme)) opts$zeroExtreme <- dots$technical$zeroExtreme
         data <- as.matrix(data)
         if(is.numeric(data))
@@ -184,7 +185,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$groupNames <- levels(Data$group)
         if(any(grepl('-', Data$groupNames)))
             stop('Group names cannot contain a dash (-) character', call.=FALSE)
-        Data$ngroups <- length(Data$groupNames)
+        Data$ngroups <- if(!is.null(opts$ngroups)) opts$ngroups else length(Data$groupNames)
         Data$nitems <- ncol(Data$data)
         Data$N <- nrow(Data$data)
         Data$mins <- suppressWarnings(apply(data, 2L, min, na.rm=TRUE))
@@ -198,6 +199,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         PrepList <- vector('list', Data$ngroups)
         names(PrepList) <- Data$groupNames
         tmp <- 1L:Data$ngroups
+        if(opts$dentype == "mixture")
+            Data$groupNames <- paste0("MIXTURE_", seq_len(Data$ngroups))
         model <- buildModelSyntax(model, J=Data$nitems, groupNames=Data$groupNames,
                                   itemtype=itemtype)
         Data$model <- model
@@ -213,7 +216,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          customGroup=customGroup, spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
-                         dcIRT_nphi=opts$dcIRT_nphi)
+                         dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
         }
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
@@ -275,7 +278,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
             stringtabdata <- unique(stringfulldata)
             tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,
-                                      group=Data$group, groupNames=Data$groupNames, nitem=Data$nitems,
+                                      group=Data$group,
+                                      groupNames=if(opts$dentype != 'mixture') Data$groupNames else 'full',
+                                      nitem=Data$nitems,
                                       K=PrepListFull$K, itemloc=PrepListFull$itemloc,
                                       Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
                                       survey.weights=survey.weights)
@@ -286,9 +291,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$tabdatalong <- large$tabdata
         Data$tabdata <- large$tabdata2
         for(g in seq_len(Data$ngroups)){
-            select <- Data$group == Data$groupNames[g]
-            Data$fulldata[[g]] <- PrepListFull$fulldata[select, , drop=FALSE]
-            Data$Freq[[g]] <- large$Freq[[g]]
+            if(opts$dentype == 'mixture'){
+                Data$fulldata[[g]] <- PrepListFull$fulldata
+                Data$Freq[[g]] <- large$Freq[[1L]]
+            } else {
+                select <- Data$group == Data$groupNames[g]
+                Data$fulldata[[g]] <- PrepListFull$fulldata[select, , drop=FALSE]
+                Data$Freq[[g]] <- large$Freq[[g]]
+            }
         }
     }
     if(opts$returnPrepList) return(PrepList)
@@ -375,12 +385,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
+    if(opts$dentype == 'mixture'){
+        tmp <- length(pars[[1L]][[nitems + 1L]]@par)
+        pars[[1L]][[nitems + 1L]]@est[tmp] <- FALSE
+        for(g in 1L:Data$ngroups)
+            pars[[g]][[nitems + 1L]]@par[tmp] <- g - 1
+        names(PrepList) <- Data$groupNames
+    }
     if(RETURNVALUES){
         for(g in seq_len(Data$ngroups))
             PrepList[[g]]$pars <- pars[[g]]
         return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, lr.random=latent.regression$lr.random,
                           random=mixed.design$random, lrPars=lrPars, MG = TRUE))
-
     }
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
@@ -397,6 +413,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     rr <- 0L
     for(g in seq_len(Data$ngroups)){
+        if(g > 1L && opts$dentype == 'mixture') break
         r <- Data$Freq[[g]]
         rr <- rr + r
     }
@@ -420,8 +437,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             warning('Multiple-group model may not be identified without providing anchor items',
                     call.=FALSE)
         for(j in seq_len(Data$ngroups)){
-            tmp <- apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
-                         function(x) length(unique(na.omit(x)))) == Data$K
+            if(opts$dentype != 'mixture')
+                tmp <- apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
+                             function(x) length(unique(na.omit(x)))) == Data$K
             for(i in which(!tmp)){
                 if(any(PrepList[[j]]$pars[[i]]@est))
                     stop(paste0('Multiple Group model will not be identified without ',
@@ -574,6 +592,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         logPrior <- ESTIMATE$logPrior
         Pl <- vector('list', length(rlist))
         for(g in seq_len(Data$ngroups)){
+            if(g > 1L && opts$dentype == 'mixture') break
             Pl[[g]] <- rlist[[g]]$expected
             Pltmp <- Pl[[g]]
             if(opts$full){
@@ -937,8 +956,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Fit <- list(G2=G2, p=p.G2, TLI=TLI.G2, CFI=CFI.G2, RMSEA=RMSEA.G2, df=df,
                 AIC=AIC, AICc=AICc, BIC=BIC, SABIC=SABIC, DIC=DIC, HQ=HQ, logLik=logLik,
                 logPrior=logPrior, SElogLik=SElogLik, F=F, h2=h2)
+    pis <- if(opts$dentype == 'mixture')
+        ExtractMixtures(lapply(cmods, function(x) x@ParObjects$pars)) else NULL
     Model <- list(model=oldmodel, factorNames=PrepList[[1L]]$factorNames, itemtype=PrepList[[1L]]$itemtype,
-                  itemloc=PrepList[[1L]]$itemloc, nfact=nfact,
+                  itemloc=PrepList[[1L]]$itemloc, nfact=nfact, pis=pis,
                   Theta=Theta, constrain=constrain, parprior=parprior, nest=as.integer(dfsubtr),
                   invariance=invariance, lrPars=lrPars, formulas=attr(mixed.design, 'formula'),
                   prodlist=PrepList[[1L]]$prodlist)
@@ -1037,7 +1058,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 Internals$bfactor <- list(prior=ESTIMATE$prior,
                                           Priorbetween=ESTIMATE$Priorbetween,
                                           sitems=ESTIMATE$sitems, specific=specific)
-            mod <- new('MultipleGroupClass',
+            cls <- ifelse(opts$dentype == 'mixture', 'MixtureClass', 'MultipleGroupClass')
+            mod <- new(cls,
                        Data=Data,
                        Options=Options,
                        Fit=Fit,

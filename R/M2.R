@@ -76,6 +76,8 @@
 M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
                impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
+    if(is(obj, 'MixtureModel'))
+        stop('Mixture IRT models not yet supported')
     fn <- function(Theta, obj, ...){
         dat <- imputeMissing(obj, Theta, warn=FALSE)
         tmpobj <- obj

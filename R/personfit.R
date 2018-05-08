@@ -81,6 +81,8 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(missing(x)) missingMsg('x')
     if(is(x, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported', call.=FALSE)
+    if(is(x, 'MixtureClass'))
+        stop('Mixture latent structures not yet supported', call.=FALSE)
     if(any(is.na(x@Data$data)))
         stop('Fit statistics cannot be computed when there are missing data.', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){

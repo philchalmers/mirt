@@ -1,5 +1,8 @@
 # Changes in mirt 1.28
 
+- `multipleGroup()` gains the `dentype` argument to allow for mixture IRT models to be 
+  fitted (e.g., `dentype = 'mixture-3'` fits a three-class mixture model).  
+
 - `technical` gains a `zeroExtreme` logical flag to assign survey weights of 0 to extreme 
   response patterns (FALSE by default). This may be required when
   Woods' extrapolation-interpolation method is used with empirical histograms 

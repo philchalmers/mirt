@@ -124,6 +124,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     ANY.PRIOR <- rep(FALSE, ngroups)
     if(length(prodlist))
         Theta <- prodterms(Theta, prodlist)
+    pis <- NULL
     if(dentype == 'bfactor'){
         Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
         for(g in seq_len(ngroups)){
@@ -162,7 +163,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     accel <- 0; Mrate <- ifelse(is_SEM, 1, .4)
     Estep.time <- Mstep.time <- 0
     collectLL <- rep(NA, NCYCLES)
-    collect.DC.LL <- rep(NA, NCYCLES)
     hess <- matrix(0)
     Elist <- list()
     startMrate <- ifelse(Moptim == 'L-BFGS-B', 5L, 1L)
@@ -228,7 +228,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(MC)
                 gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
                                       nfact=nfact, pars=pars, QMC=QMC)
-            tmp <- updatePrior(pars=pars, gTheta=gTheta,
+            if(dentype == 'mixture') pis <- ExtractMixtures(pars)
+            tmp <- updatePrior(pars=pars, gTheta=gTheta, pis=pis,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars, MC=MC)

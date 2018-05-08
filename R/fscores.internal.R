@@ -3,7 +3,7 @@ setMethod(
 	signature = 'SingleGroupClass',
 	definition = function(object, rotate, Target, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, append_response.pattern = TRUE,
-	                      theta_lim, MI,
+	                      theta_lim, MI, pis=NULL, mixture=FALSE,
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
@@ -232,6 +232,7 @@ setMethod(
             discrete <- TRUE
             method <- ifelse(method == 'Discrete', 'EAP', 'EAPsum')
         }
+        if(mixture) discrete <- TRUE
         mirtCAT <- FALSE
         if(!is.null(dots$mirtCAT)) mirtCAT <- TRUE
         pars <- object@ParObjects$pars
@@ -241,7 +242,7 @@ setMethod(
         prodlist <- attr(pars, 'prodlist')
         nfact <- object@Model$nfact
         itemloc <- object@Model$itemloc
-        gp <- ExtractGroupPars(object@ParObjects$pars[[length(itemloc)]])
+        gp <- if(!discrete) ExtractGroupPars(object@ParObjects$pars[[length(itemloc)]]) else list()
         if(object@Options$exploratory){
             so <- summary(object, rotate=rotate, Target=Target, verbose = FALSE)
             a <- rotateLambdas(so)
@@ -256,7 +257,7 @@ setMethod(
                                              quadpts=quadpts, gp=gp, verbose=verbose,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
-                                             min_expected=min_expected,
+                                             min_expected=min_expected, pis=pis, mixture=mixture,
                                              use_dentype_estimate=use_dentype_estimate, ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		LR <- .hasSlot(object@Model$lrPars, 'beta')
@@ -308,7 +309,7 @@ setMethod(
             if(nfact < 3 || method == 'EAP' && !mirtCAT){
                 if(discrete){
                     ThetaShort <- Theta <- object@Model$Theta
-                    W <- object@Internals$Prior[[1L]]
+                    W <- if(mixture) do.call(c, object@Internals$Prior) else object@Internals$Prior[[1L]]
                 } else {
                     if(is.null(custom_theta)){
                         ThetaShort <- Theta <- if(QMC){
@@ -331,8 +332,9 @@ setMethod(
                     den_fun <- pars[[J+1L]]@den
                 }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                              CUSTOM.IND=CUSTOM.IND)
+                                              CUSTOM.IND=CUSTOM.IND, pis=pis)
                 log_itemtrace <- log(itemtrace)
+                if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
                 if(method == 'EAP' && return.acov){
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
@@ -579,6 +581,21 @@ setMethod(
     }
 )
 
+#------------------------------------------------------------------------------
+setMethod(
+    f = "fscores.internal",
+    signature = 'MixtureClass',
+    definition = function(object, gmeans, gcov, ...)
+    {
+        class(object) <- 'SingleGroupClass'
+        pis <- extract.mirt(object, 'pis')
+        fscores.internal(object, mixture = TRUE,
+                gmean=NULL, gcov=NULL, pis=pis, ...)
+    }
+)
+
+#------------------------------------------------------------------------------
+
 # MAP scoring for mirt
 MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID,
                      ML=FALSE, den_fun, max_theta, ...)
@@ -671,9 +688,9 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND
 
 EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
-                   theta_lim, discrete, QMC, den_fun, min_expected,
+                   theta_lim, discrete, mixture, QMC, den_fun, min_expected,
                    which.items = 2:length(x@ParObjects$pars)-1,
-                   use_dentype_estimate = FALSE, ...){
+                   use_dentype_estimate = FALSE, pis, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -727,7 +744,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
     if(discrete){
         Theta <- ThetaShort <- x@Model$Theta
-        prior <- x@Internals$Prior[[1L]]
+        prior <- if(mixture) do.call(c, x@Internals$Prior) else x@Internals$Prior[[1L]]
     } else {
         nfact <- x@Model$nfact
         ThetaShort <- Theta <- if(QMC){
@@ -751,7 +768,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     J <- length(K)
     itemloc <- x@Model$itemloc
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                  CUSTOM.IND=CUSTOM.IND)
+                                  CUSTOM.IND=CUSTOM.IND, pis=pis)
     itemtrace <- t(itemtrace)
     tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1
@@ -776,6 +793,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         }
         return(Elist)
     }
+    if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
     thetas <- SEthetas <- matrix(0, nrow(L1), x@Model$nfact)
     for(i in seq_len(nrow(thetas))){
         expLW <- L1[i,] * prior

@@ -152,6 +152,8 @@ extract.mirt <- function(x, what){
                   itemdesign = x@Data$itemdesign,
                   itemloc = x@Model$itemloc,
                   CUSTOM.IND = x@Internals$CUSTOM.IND,
+                  dentype = x@Options$dentype,
+                  pis = x@Model$pis,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }

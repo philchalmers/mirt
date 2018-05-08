@@ -7,7 +7,8 @@
 #' more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
 #' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
 #' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
-#' density components (where applicable).
+#' density components (where applicable). Currently, only S-X2 statistic supported for
+#' mixture IRT models.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -441,6 +442,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     dots <- list(...)
     discrete <- dots$discrete
     discrete <- ifelse(is.null(discrete), FALSE, discrete)
+    mixture <- is(x, 'MixtureClass')
+    if(mixture && !all(fit_stats == 'S_X2'))
+        stop("Only S_X2 fit statistic supported for mixture models")
+    pis <- NULL
+    if(mixture){
+        discrete <- TRUE
+        pis <- extract.mirt(x, 'pis')
+    }
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
@@ -728,10 +737,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     call.=FALSE)
         theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
-        gp <- ExtractGroupPars(pars[[length(pars)]])
+        gp <- if(mixture) list() else ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@Internals$CUSTOM.IND, den_fun=mirt_dmvnorm,
-                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC,
-                    which.items=which.items, use_dentype_estimate=use_dentype_estimate)
+                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC, mixture=mixture,
+                    pis=pis, which.items=which.items, use_dentype_estimate=use_dentype_estimate)
         for(i in which.items)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)
@@ -741,9 +750,16 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         for(i in seq_len(J)){
             if (is.null(dim(O[[i]])) || is.null(E[[i]])) next
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
-            df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
+            df.S_X2[i] <- if(mixture){
+                tmp <- sum(sapply(1L:length(pis), function(g)
+                    sum(x@ParObjects$pars[[g]]@ParObjects$pars[[i]]@est)))
+                sum(!is.na(E[[i]])) - nrow(E[[i]]) - tmp
+            } else sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
         }
-        df.S_X2 <- df.S_X2 - sum(pars[[J+1L]]@est)
+        df.S_X2 <- if(mixture){
+            df.S_X2 - sum(sapply(1L:length(pis), function(g)
+                sum(x@ParObjects$pars[[g]]@ParObjects$pars[[J+1L]]@est)))
+        } else df.S_X2 - sum(pars[[J+1L]]@est)
         df.S_X2[df.S_X2 < 0] <- 0
         S_X2[df.S_X2 == 0] <- NaN
         ret$S_X2 <- S_X2[which.items]

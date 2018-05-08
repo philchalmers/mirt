@@ -687,9 +687,9 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     return(pars)
 }
 
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, Rasch = FALSE,
+LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, dentype, Rasch = FALSE,
                           customGroup = NULL, dcIRT_nphi = NULL, ...){
-    if (is.null(dcIRT_nphi)) {
+    if (dentype != 'Davidian') {
         if(!is.null(customGroup)){
             par <- customGroup@par
             parnum <- parnumber:(parnumber + length(par) - 1L)
@@ -718,11 +718,19 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
             diag(tmp) <- 1e-4
             lbound <- c(rep(-Inf, nfact), tmp[tri])
             Nans <- rep(NaN,length(par))
+            if(dentype == 'mixture'){
+                par <- c(par, "PI" = 0)
+                est <- c(est, "PI" = TRUE)
+                parnum <- c(parnum, max(parnum)+1L)
+                Nans <- c(Nans, NaN)
+                lbound <- c(lbound, -Inf)
+            }
+            ubound <- rep(Inf, length(par))
             ret <- new('GroupPars', par=par, est=est, parnames=names(est),
                        nfact=nfact, any.prior=FALSE, den=den,
-                       safe_den=den, parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)),
+                       safe_den=den, parnum=parnum, lbound=lbound, ubound=ubound,
                        prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, rrb=0, rrs=matrix(0),
-                       BFACTOR=FALSE, itemclass=0L, dentype = 'Gaussian')
+                       BFACTOR=FALSE, itemclass=0L, dentype=dentype)
             return(ret)
         }
     } else {
