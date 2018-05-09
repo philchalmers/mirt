@@ -177,6 +177,10 @@ Tnom.dev(4) \%*\% coef(nommod)[[1]][4:6] #d
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
+
+Liu, C.-W. and Chalmers, R. P. (2018). Fitting item response unfolding models to
+  Likert-scale data using mirt in R. \emph{PLoS ONE, 13}, 5.
+  \doi{https://doi.org/10.1371/journal.pone.0196292}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

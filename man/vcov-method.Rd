@@ -4,6 +4,7 @@
 \name{vcov-method}
 \alias{vcov-method}
 \alias{vcov,SingleGroupClass-method}
+\alias{vcov,MixtureClass-method}
 \alias{vcov,MultipleGroupClass-method}
 \alias{vcov,MixedClass-method}
 \alias{vcov,DiscreteClass-method}

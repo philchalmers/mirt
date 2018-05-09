@@ -7,6 +7,7 @@
 \alias{print,MultipleGroupClass-method}
 \alias{print,MixedClass-method}
 \alias{print,DiscreteClass-method}
+\alias{print,MixtureClass-method}
 \title{Print the model objects}
 \usage{
 \S4method{print}{SingleGroupClass}(x)

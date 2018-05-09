@@ -7,6 +7,7 @@
 \alias{coef,MultipleGroupClass-method}
 \alias{coef,MixedClass-method}
 \alias{coef,DiscreteClass-method}
+\alias{coef,MixtureClass-method}
 \title{Extract raw coefs from model object}
 \usage{
 \S4method{coef}{SingleGroupClass}(object, CI = 0.95, printSE = FALSE,

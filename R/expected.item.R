@@ -34,7 +34,6 @@ expected.item <- function(x, Theta, min = 0){
     if(!is(tmp, 'try-error'))
         if(ncol(Theta) != x@nfact)
             stop('Theta does not have the correct number of dimensions', call.=FALSE)
-    browser()
     P <- ProbTrace(x=x, Theta=Theta)
     Emat <- matrix(0:(x@ncat-1), nrow(P), ncol(P), byrow = TRUE)
     E <- rowSums(P * Emat) + min

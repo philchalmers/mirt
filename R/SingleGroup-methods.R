@@ -8,6 +8,7 @@
 #' @name print-method
 #' @aliases print,SingleGroupClass-method
 #'   print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
+#'   print,MixtureClass-method
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
@@ -98,6 +99,7 @@ setMethod(
 #' @name show-method
 #' @aliases show,SingleGroupClass-method
 #'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
+#'   show,MixtureClass-method
 #' @docType methods
 #' @rdname show-method
 #' @references
@@ -149,6 +151,7 @@ setMethod(
 #' @name summary-method
 #' @aliases summary,SingleGroupClass-method
 #'   summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
+#'   summary,MixtureClass-method
 #' @docType methods
 #' @export
 #' @rdname summary-method
@@ -252,6 +255,7 @@ setMethod(
 #' @name coef-method
 #' @aliases coef,SingleGroupClass-method
 #'   coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
+#'   coef,MixtureClass-method
 #' @docType methods
 #' @rdname coef-method
 #' @references
@@ -439,6 +443,7 @@ setMethod(
 #' \doi{10.18637/jss.v048.i06}
 #' @aliases anova,SingleGroupClass-method
 #'   anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
+#'   anova,MixtureClass-method
 #' @docType methods
 #' @rdname anova-method
 #' @examples
@@ -577,7 +582,7 @@ setMethod(
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @name residuals-method
-#' @aliases residuals,SingleGroupClass-method
+#' @aliases residuals,SingleGroupClass-method residuals,MixtureClass-method
 #'   residuals,MultipleGroupClass-method residuals,DiscreteClass-method
 #' @docType methods
 #' @rdname residuals-method
@@ -862,7 +867,7 @@ setMethod(
 #' \doi{10.18637/jss.v048.i06}
 #' @aliases plot,SingleGroupClass-method
 #'   plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
-#'   plot,DiscreteClass,missing-method
+#'   plot,DiscreteClass,missing-method plot,MixtureClass,missing-method
 #' @docType methods
 #' @rdname plot-method
 #' @examples
@@ -1544,7 +1549,7 @@ traditional2mirt <- function(x, cls, ncat, digits = 3){
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @export
-#' @aliases vcov,SingleGroupClass-method
+#' @aliases vcov,SingleGroupClass-method vcov,MixtureClass-method
 #'   vcov,MultipleGroupClass-method vcov,MixedClass-method vcov,DiscreteClass-method
 #' @docType methods
 #' @rdname vcov-method
@@ -1571,7 +1576,7 @@ setMethod(
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #'
 #' @name logLik-method
-#' @aliases logLik,SingleGroupClass-method
+#' @aliases logLik,SingleGroupClass-method logLik,MixtureClass-method
 #'   logLik,MultipleGroupClass-method logLik,MixedClass-method logLik,DiscreteClass-method
 #' @docType methods
 #' @references

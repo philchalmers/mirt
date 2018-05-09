@@ -7,6 +7,7 @@
 \alias{anova,MultipleGroupClass-method}
 \alias{anova,MixedClass-method}
 \alias{anova,DiscreteClass-method}
+\alias{anova,MixtureClass-method}
 \title{Compare nested models with likelihood-based statistics}
 \usage{
 \S4method{anova}{SingleGroupClass}(object, object2, bounded = FALSE,

@@ -7,6 +7,7 @@
 \alias{summary,MultipleGroupClass-method}
 \alias{summary,MixedClass-method}
 \alias{summary,DiscreteClass-method}
+\alias{summary,MixtureClass-method}
 \title{Summary of model object}
 \usage{
 \S4method{summary}{SingleGroupClass}(object, rotate = "oblimin",

@@ -4,6 +4,7 @@
 \name{residuals-method}
 \alias{residuals-method}
 \alias{residuals,SingleGroupClass-method}
+\alias{residuals,MixtureClass-method}
 \alias{residuals,MultipleGroupClass-method}
 \alias{residuals,DiscreteClass-method}
 \title{Compute model residuals}
