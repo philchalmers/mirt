@@ -24,7 +24,8 @@ Description: Analysis of dichotomous and polytomous response data using
     detecting differential item and test functioning as well as modelling
     item and person covariates. Finally, latent class models such as the DINA,
     DINO, multidimensional latent class, and several other discrete latent
-    variable models, including mixture models, are supported.
+    variable models, including mixture and zero-inflated response models, 
+    are supported.
 Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
