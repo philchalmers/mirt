@@ -15,7 +15,7 @@
   via the input `dentype = 'empiricalhist_Woods'`. Degrees of freedom updated to reflect this change, 
   and 121 quadrature points are used instead of the previous 199 for better stability
   
-- Semiparametric Davidian curve estimation of the shape of the latent trait distribution in
+- Semi-parametric Davidian curve estimation of the shape of the latent trait distribution in
   unidimensional IRT models was contributed by Oguzhan Ogreden, as well the associated 
   components used within this framework (such as the interpolation-extrapolation method 
   described by Woods, 2006). This estimation method is available through the new `dentype` input. 
