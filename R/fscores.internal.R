@@ -14,6 +14,8 @@ setMethod(
         if(!is.null(custom_den)) den_fun <- custom_den
         if(use_dentype_estimate && !(method %in% c('EAP', 'EAPsum', 'plausible')))
             stop("use_dentype_estimate only supported for EAP, EAPsum, or plausible method", call.=FALSE)
+        if(method == 'classify')
+            return.acov <- returnER <- full.scores.SE <- FALSE
 
 	    #local functions for apply
 	    MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
@@ -120,6 +122,23 @@ setMethod(
     	        SE <- sqrt(diag(vcov))
             } else SE <- rep(NA, nfact)
 	        return(c(thetas, SE, 1))
+	    }
+	    EAP_classify <- function(ID, log_itemtrace, tabdata, W, nclass){
+	        if(any(is.na(scores[ID, ])))
+	            return(c(scores[ID, ], rep(NA, ncol(scores))))
+	        nfact <- ncol(ThetaShort)
+	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
+	        expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
+	        LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
+	        maxLW <- max(LW)
+	        nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+	        if(nc == 0){
+	            warning('Unable to compute normalization constant for classification estimates',
+	                    call.=FALSE)
+	            return(rep(NaN, nclass))
+	        }
+	        probs <- matrix(expLW / nc, ncol=nclass)
+	        colSums(probs)
 	    }
 
         if(plausible.draws > 0){
@@ -233,6 +252,8 @@ setMethod(
             method <- ifelse(method == 'Discrete', 'EAP', 'EAPsum')
         }
         if(mixture) discrete <- TRUE
+        if(method == 'classify' && !mixture)
+            stop('classify method only applicable for MixtureClass object', call.=FALSE)
         mirtCAT <- FALSE
         if(!is.null(dots$mirtCAT)) mirtCAT <- TRUE
         pars <- object@ParObjects$pars
@@ -277,6 +298,8 @@ setMethod(
     		tabdata <- tabdata[keep, , drop=FALSE]
 		}
 		SEscores <- scores <- matrix(0, nrow(tabdata), nfact)
+		if(mixture && method == 'classify')
+		    scores <- matrix(0, nrow(tabdata), length(pis))
 		drop <- rowSums(tabdata) == 0L
 		scores[drop, ] <- SEscores[drop, ] <- NA
         list_SEscores <- list_scores <- vector('list', MI)
@@ -306,7 +329,7 @@ setMethod(
                     if(!is(pars, 'try-error')) break
                 }
             }
-            if(nfact < 3 || method == 'EAP' && !mirtCAT){
+            if(nfact < 3 || method %in% c('EAP', 'classify') && !mirtCAT){
                 if(discrete){
                     ThetaShort <- Theta <- object@Model$Theta
                     W <- if(mixture) do.call(c, object@Internals$Prior) else object@Internals$Prior[[1L]]
@@ -335,7 +358,10 @@ setMethod(
                                               CUSTOM.IND=CUSTOM.IND, pis=pis)
                 log_itemtrace <- log(itemtrace)
                 if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
-                if(method == 'EAP' && return.acov){
+                if(method == 'classify')
+                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP_classify, log_itemtrace=log_itemtrace,
+                                   tabdata=tabdata, W=W, nclass=length(pis))
+                else if(method == 'EAP' && return.acov){
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
                                    scores=scores, hessian=TRUE)
@@ -344,14 +370,17 @@ setMethod(
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
-                scores <- tmp[ ,seq_len(nfact), drop = FALSE]
-                SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
+                if(method == 'classify') scores <- tmp
+                else {
+                    scores <- tmp[ ,seq_len(nfact), drop = FALSE]
+                    SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
+                }
             }
             if(!is.null(start) && method != "EAP"){ #replace scores with start
                 if(all(dim(scores) == dim(start)))
                     scores <- start
             }
-    		if(method == "EAP"){
+    		if(method %in% c("EAP", 'classify')){
                 #do nothing
     		} else if(method == "MAP"){
                 tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
@@ -387,10 +416,12 @@ setMethod(
     		    converge_info_vec <- rep(1, nrow(scores))
                 if(nrow(scores) < ncol(scores)) scores <- t(scores)
     		} else {
-    		    scores <- tmp[ ,seq_len(nfact), drop = FALSE]
-    		    SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
-    		    colnames(scores) <- paste('F', seq_len(ncol(scores)), sep='')
-    		    converge_info_vec <- tmp[,ncol(tmp)]
+    		    if(method != 'classify'){
+    		        scores <- tmp[ ,seq_len(nfact), drop = FALSE]
+    		        SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
+    		        colnames(scores) <- paste('F', seq_len(ncol(scores)), sep='')
+    		        converge_info_vec <- tmp[,ncol(tmp)]
+    		    } else converge_info_vec <- rep(1L, nrow(scores))
     		    if(impute){
     		        list_SEscores[[mi]] <- SEscores
     		        list_scores[[mi]] <- scores
@@ -437,6 +468,8 @@ setMethod(
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)
             if(converge_info) scoremat <- cbind(scoremat, converged=converge_info_mat)
+            if(method == 'classify')
+                colnames(scoremat) <- paste0("CLASS_", 1L:ncol(scoremat))
             return(scoremat)
 		} else {
             if(return.acov){
@@ -446,28 +479,33 @@ setMethod(
                 names(ret) <- paste0('pattern_', 1:nrow(scores))
                 return(ret)
             }
-            r <- object@Data$Freq[[1L]]
-            T <- E <- matrix(NA, 1L, ncol(scores))
-            for(i in seq_len(nrow(scores))){
-                if(any(scores[i, ] %in% c(Inf, -Inf))) next
-                T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
-                E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
-            }
-            T <- na.omit(T)
-            E <- na.omit(E)
-            reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
-            names(reliability) <- colnames(scores)
-            if(returnER) return(reliability)
-			if(verbose && !discrete){
-                cat("\nMethod: ", method)
-			    if(object@Options$exploratory) cat("\nRotate: ", rotate)
-                cat("\n\nEmpirical Reliability:\n\n")
-                print(round(reliability, 4))
-			}
-			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
-            ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
-            if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
-            if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,seq_len(J)])), ]
+		    if(!method == 'classify'){
+                r <- object@Data$Freq[[1L]]
+                T <- E <- matrix(NA, 1L, ncol(scores))
+                for(i in seq_len(nrow(scores))){
+                    if(any(scores[i, ] %in% c(Inf, -Inf))) next
+                    T <- rbind(T, matrix(rep(scores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
+                    E <- rbind(E, matrix(rep(SEscores[i, ], r[i]), ncol=ncol(scores), byrow = TRUE))
+                }
+                T <- na.omit(T)
+                E <- na.omit(E)
+                reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
+                names(reliability) <- colnames(scores)
+                if(returnER) return(reliability)
+    			if(verbose && !discrete){
+                    cat("\nMethod: ", method)
+    			    if(object@Options$exploratory) cat("\nRotate: ", rotate)
+                    cat("\n\nEmpirical Reliability:\n\n")
+                    print(round(reliability, 4))
+    			}
+    			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
+                ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
+                if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
+                if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,seq_len(J)])), ]
+		    } else {
+		        colnames(scores) <- paste0('CLASS_', 1L:ncol(scores))
+		        ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores)
+		    }
 			return(ret)
 		}
 	}

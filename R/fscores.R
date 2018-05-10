@@ -55,6 +55,8 @@
 #'     \item \code{"EAPsum"} for the expected a-posteriori for each sum score
 #'     \item \code{"plausible"} for a single plausible value imputation for each case.
 #'       This is equivalent to setting \code{plausible.draws = 1}
+#'     \item \code{"classify"} for the posteriori classification probabilities (only
+#'       applicable when the input model was of class \code{MixtureClass})
 #'  }
 #' @param quadpts number of quadratures to use per dimension. If not specified, a suitable
 #'   one will be created which decreases as the number of dimensions increases

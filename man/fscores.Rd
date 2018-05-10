@@ -26,6 +26,8 @@ fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
     \item \code{"EAPsum"} for the expected a-posteriori for each sum score
     \item \code{"plausible"} for a single plausible value imputation for each case.
       This is equivalent to setting \code{plausible.draws = 1}
+    \item \code{"classify"} for the posteriori classification probabilities (only
+      applicable when the input model was of class \code{MixtureClass})
  }}
 
 \item{full.scores}{if \code{FALSE} then a summary table with

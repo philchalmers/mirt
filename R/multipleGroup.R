@@ -51,7 +51,9 @@
 #'     \item \code{'mixture-#'} estimates mixtures of Gaussian distributions,
 #'       where the \code{#} placeholder represents the number of potential grouping variables
 #'       (e.g., \code{'mixture-3'} will estimate 3 underlying classes). Each class is
-#'       assigned the group name \code{MIXTURE_#}, where \code{#} is the class number
+#'       assigned the group name \code{MIXTURE_#}, where \code{#} is the class number.
+#'       Note that internally the mixture coefficients are stored as log values where
+#'       the first mixture group coefficient is fixed at 0
 #'    }
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for details and examples
@@ -309,7 +311,9 @@
 #' plot(mod_mix)
 #' plot(mod_mix, type = 'trace')
 #' itemplot(mod_mix, 1, type = 'info')
-#' head(fscores(mod_mix))
+#'
+#' head(fscores(mod_mix)) # theta estimates
+#' head(fscores(mod_mix, method = 'classify')) # classification probability
 #' itemfit(mod_mix)
 #'
 #' Mixture 2PL model
