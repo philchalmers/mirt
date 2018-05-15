@@ -202,7 +202,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
 SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      gTheta, list, ngroups, J, dentype, sitems,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
-                     delta, prior, Prior, Priorbetween, nfact,
+                     delta, prior, Prior, Priorbetween, nfact, mixtype,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
     r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
@@ -269,6 +269,13 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                         g[pars[[group]][[i]]@parnum] <- deriv$grad
                     }
                 }
+            }
+            if(dentype == 'mixture'){
+                mixtype@par <- sapply(1L:length(pars),
+                                      function(g) sum(pars[[g]][[J+1L]]@par[length(pars[[g]][[J+1L]]@par)]))
+                mixtype@dat <- matrix(sapply(1L:length(pars),
+                                             function(g) sum(pars[[g]][[J+1L]]@rr)), 1L)
+                deriv <- Deriv(mixtype, Theta = matrix(1, 1L, length(pars)))
             }
             tmp <- g %*% L
             if(pick == 0L) return(tmp[est])

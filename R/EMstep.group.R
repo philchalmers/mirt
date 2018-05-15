@@ -124,7 +124,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     ANY.PRIOR <- rep(FALSE, ngroups)
     if(length(prodlist))
         Theta <- prodterms(Theta, prodlist)
-    pis <- NULL
     if(dentype == 'bfactor'){
         Thetabetween <- thetaComb(theta=theta, nfact=nfact-ncol(sitems))
         for(g in seq_len(ngroups)){
@@ -228,8 +227,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(MC)
                 gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
                                       nfact=nfact, pars=pars, QMC=QMC)
-            if(dentype == 'mixture') pis <- ExtractMixtures(pars)
-            tmp <- updatePrior(pars=pars, gTheta=gTheta, pis=pis,
+            tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=cycles,
                                rlist=rlist, full=full, lrPars=lrPars, MC=MC)
@@ -442,6 +440,21 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                       lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
             }
         }
+        if(dentype == 'mixture'){
+            mixtype <- new('lca', par=sapply(1L:length(pars),
+                    function(g) sum(pars[[g]][[J+1L]]@par[length(pars[[g]][[J+1L]]@par)])),
+                    est=as.logical(sapply(1L:length(pars),
+                                          function(g) sum(pars[[g]][[J+1L]]@est[length(pars[[g]][[J+1L]]@est)]))),
+                    parnum=sapply(1L:length(pars),
+                                  function(g) sum(pars[[g]][[J+1L]]@parnum[length(pars[[g]][[J+1L]]@parnum)])),
+                    nfact=length(pars), ncat=length(pars),
+                    any.prior=FALSE, itemclass=10L,
+                    dat=matrix(sapply(1L:length(pars),
+                                      function(g) sum(pars[[g]][[J+1L]]@rr)), 1L),
+                    prior.type=rep(0L, length(par)))
+            deriv <- Deriv(mixtype, Theta = matrix(1, 1L, length(pars)), estHess=TRUE)
+            h[mixtype@parnum, mixtype@parnum] <- deriv$hess
+        } else mixtype <- NULL
         hess <- updateHess(h=h, L=L)
         hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
         if(list$SE.type %in% c('Oakes', 'sandwich') && length(lrPars) && list$SE){
@@ -460,7 +473,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        est=est, shortpars=shortpars, longpars=longpars,
                                        gTheta=gTheta, list=list, ngroups=ngroups, J=J,
                                        dentype=dentype, sitems=sitems, nfact=nfact,
-                                       rlist=rlist, full=full, Data=Data,
+                                       rlist=rlist, full=full, Data=Data, mixtype=mixtype,
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                        PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
@@ -470,7 +483,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                    est=est, shortpars=shortpars, longpars=longpars,
                                    gTheta=gTheta, list=list, ngroups=ngroups, J=J,
                                    dentype=dentype, sitems=sitems, nfact=nfact,
-                                   rlist=rlist, full=full, Data=Data,
+                                   rlist=rlist, full=full, Data=Data, mixtype=mixtype,
                                    specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                    prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                    PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
@@ -480,7 +493,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        est=est, shortpars=shortpars, longpars=longpars,
                                        gTheta=gTheta, list=list, ngroups=ngroups, J=J,
                                        dentype=dentype, sitems=sitems, nfact=nfact,
-                                       rlist=rlist, full=full, Data=Data,
+                                       rlist=rlist, full=full, Data=Data, mixtype=mixtype,
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                        PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,

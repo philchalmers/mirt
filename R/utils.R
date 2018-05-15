@@ -375,7 +375,7 @@ updateTheta <- function(npts, nfact, pars, QMC = FALSE){
     Theta
 }
 
-updatePrior <- function(pars, gTheta, list, ngroups, nfact, J, pis=NULL,
+updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                         dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
                         MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
@@ -466,6 +466,7 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J, pis=NULL,
         }
     }
     if(dentype == 'mixture'){
+        pis <- ExtractMixtures(pars)
         for(g in seq_len(ngroups))
             Prior[[g]] <- pis[g] * Prior[[g]]
     }
@@ -1424,6 +1425,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(dentype == 'mixture'){
         if(opts$method != 'EM')
             stop('Mixture IRT densities only supported when method = \'EM\' ', call.=FALSE)
+        if(SE && !(SE.type %in% c('complete', 'Oakes')))
+            stop('Only Oakes and complete SE.types current supported for mixture models', call.=FALSE)
     }
     if(dentype %in% c("EH", 'EHW')){
         if(opts$method != 'EM')
