@@ -58,6 +58,11 @@ test_that('one factor', {
     cfs <- as.numeric(do.call(c, coef(mod_EH)[[1L]]))
     expect_equal(cfs, c(1.0035,0.5413,0,1,1.186,-0.6822,0,1,0.8913,-0.1695,0,1,0.8556,0.8614,0,1,1.0557,0.1476,0,1,0.5402,0.694,0,1,1.2011,1.0217,0,1,0.8957,-0.3138,0,1,0.8306,-1.0388,0,1,0.6773,-1.072,0,1,0.7762,1.2018,0,1,1.4008,-0.2289,0,1,1.2235,0.4661,0,1,0.9764,0.4707,0,1,0.8229,-0.0455,0,1,0,1),
                  tolerance = 1e-2)
+    mod_mixture <- multipleGroup(dat, 1, itemtype = 'Rasch',
+                                 verbose = FALSE, dentype = 'mixture-2', SE=TRUE)
+    expect_equal(extract.mirt(mod_mixture, 'condnum'), 133.1968, tolerance=1e-4)
+    so <- summary(mod_mixture, verbose=FALSE)
+    expect_equal(so[[1]]$class_proportion, .43211, tolerance=1e-4)
 
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',

@@ -450,8 +450,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     nfact=length(pars), ncat=length(pars),
                     any.prior=FALSE, itemclass=10L,
                     dat=matrix(sapply(1L:length(pars),
-                                      function(g) sum(pars[[g]][[J+1L]]@rr)), 1L),
-                    prior.type=rep(0L, length(par)))
+                                      function(g) sum(pars[[g]][[J+1L]]@rr)), 1L))
             deriv <- Deriv(mixtype, Theta = matrix(1, 1L, length(pars)), estHess=TRUE)
             h[mixtype@parnum, mixtype@parnum] <- deriv$hess
         } else mixtype <- NULL
