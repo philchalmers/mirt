@@ -1,6 +1,7 @@
 language: r
 sudo: false
 cache: packages
+dist: trusty
 
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes"
