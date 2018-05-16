@@ -623,11 +623,13 @@ setMethod(
 setMethod(
     f = "fscores.internal",
     signature = 'MixtureClass',
-    definition = function(object, gmeans, gcov, ...)
+    definition = function(object, gmeans, gcov, method, ...)
     {
         class(object) <- 'SingleGroupClass'
         pis <- extract.mirt(object, 'pis')
-        fscores.internal(object, mixture = TRUE,
+        if(!method %in% c('EAP', 'EAPsum'))
+            stop('factor score method not currently supported for mixture models', call.=FALSE)
+        fscores.internal(object, mixture = TRUE, method=method,
                 gmean=NULL, gcov=NULL, pis=pis, ...)
     }
 )
