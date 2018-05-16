@@ -634,7 +634,7 @@ setMethod(
     {
         class(object) <- 'SingleGroupClass'
         pis <- extract.mirt(object, 'pis')
-        if(!method %in% c('EAP', 'EAPsum'))
+        if(!method %in% c('EAP', 'EAPsum', 'classify'))
             stop('factor score method not currently supported for mixture models', call.=FALSE)
         fscores.internal(object, mixture = TRUE, method=method,
                 gmean=NULL, gcov=NULL, pis=pis, ...)
