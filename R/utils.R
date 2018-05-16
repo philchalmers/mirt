@@ -320,7 +320,8 @@ ExtractGroupPars <- function(x){
 ExtractMixtures <- function(pars){
     pick <- length(pars[[1L]])
     logit_pi <- sapply(pars, function(x) x[[pick]]@par[length(x[[pick]]@par)])
-    pi <- exp(logit_pi)
+    max_logit_pi <- max(logit_pi)
+    pi <- exp(logit_pi - max_logit_pi)
     pi / sum(pi)
 }
 
@@ -1544,7 +1545,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
         if(warn)
-            warning('Could not invert information matrix; model likely is not identified.',
+            warning('Could not invert information matrix; model likely is not empirically identified.',
                     call.=FALSE)
         ESTIMATE$fail_invert_info <- TRUE
         return(ESTIMATE)
