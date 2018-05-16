@@ -223,15 +223,22 @@ setMethod(
                 newmod@Data <- list(data=rp, tabdata=large$tabdata2, K=object@Data$K[pick],
                                     tabdatalong=large$tabdata, Freq=large$Freq,
                                     mins=rep(0L, ncol(response.pattern))[pick])
-                newmod@ParObjects$pars <- newmod@ParObjects$pars[c(pick, length(newmod@ParObjects$pars))]
+                if(mixture){
+                    newmod@ParObjects$pars <- object@ParObjects$pars
+                    class(object) <- "MixtureClass"
+                    pis <- do.call(c, lapply(coef(object, simplify=TRUE), function(x) as.numeric(x$class_proportion)))
+                } else {
+                    pis <- NULL
+                    newmod@ParObjects$pars <- newmod@ParObjects$pars[c(pick, length(newmod@ParObjects$pars))]
+                }
                 newmod@Model$itemloc <- c(1L, 1L + cumsum(object@Data$K[pick]))
                 if(newmod@Options$exploratory)
                     stop('exploratory models not supported for single response pattern inputs', call.=FALSE)
-                ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
+                ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
-                               custom_theta=custom_theta, converge_info=converge_info,
+                               custom_theta=custom_theta, converge_info=converge_info, pis=pis,
                                start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
