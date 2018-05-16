@@ -325,7 +325,7 @@ head(fscores(mod_mix)) # theta estimates
 head(fscores(mod_mix, method = 'classify')) # classification probability
 itemfit(mod_mix)
 
-Mixture 2PL model
+# Mixture 2PL model
 mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', GenRandomPars = TRUE)
 anova(mod_mix2, mod_mix)
 coef(mod_mix2, simplify=TRUE)
