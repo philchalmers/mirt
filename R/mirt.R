@@ -1165,6 +1165,22 @@
 #'               technical = list(customTheta = Theta2, customPriorFun = prior))
 #' summary(GHmod2, suppress=.2)
 #'
+#' ############
+#' # Davidian curve example
+#'
+#' dat <- key2binary(SAT12,
+#'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+#' dav <- mirt(dat, 1, dentype = 'Davidian-4') # use four smoothing parameters
+#' plot(dav, type = 'Davidian') # shape of latent trait disribution
+#' coef(dav, simplify=TRUE)
+#'
+#' fs <- fscores(dav) # assume normal prior
+#' fs2 <- fscores(dav, use_dentype_estimate=TRUE) # use Davidian estimated prior shape
+#' head(cbind(fs, fs2))
+#'
+#' itemfit(dav) # assume normal prior
+#' itemfit(dav, use_dentype_estimate=TRUE) # use Davidian estimated prior shape
+#'
 #' }
 mirt <- function(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, SE.type = 'Oakes', method = 'EM',
