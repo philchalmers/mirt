@@ -3,6 +3,9 @@ warnings_are_errors: true
 sudo: false
 cache: packages
 
+r:
+ - devel
+
 notifications:
   email:
     on_success: change
