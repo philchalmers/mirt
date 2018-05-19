@@ -4,12 +4,16 @@
 \alias{M2}
 \title{Compute the M2 model fit statistic}
 \usage{
-M2(obj, calcNull = TRUE, na.rm = FALSE, quadpts = NULL,
+M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE, quadpts = NULL,
   theta_lim = c(-6, 6), impute = 0, CI = 0.9, residmat = FALSE,
   QMC = FALSE, suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
+
+\item{type}{type of fit statistic to compute. Options are "M2", "M2*" for the univariate and
+bivariate collapsed version of the M2 statistic, and "C2" for a hybrid between
+M2 and M2* where only the bivariate moments are collapsed}
 
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
@@ -52,9 +56,12 @@ Returns a data.frame object with the M2 statistic, along with the degrees of fre
   and optionally the TLI and CFI model fit statistics of \code{calcNull = TRUE}.
 }
 \description{
-Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
-M2* statistic for polytomous data (collapsing over response categories for better stability;
-see Cai and Hansen, 2013), as well as associated fit indices that are based on
+Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic when all data are dichotomous,
+the collapsed M2* statistic (collapsing over univariate and bivariate response categories;
+see Cai and Hansen, 2013), and the hybrid C2 statistic which only collapses only the bivariate
+moments (Cai and Monro, 2014). The C2 variant is mainly useful when polytomous response models
+do not have sufficient degrees of freedom to compute M2*. This function
+also computes associated fit indices that are based on
 fitting the null model. Supports single and multiple-group models.
 If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
 then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
@@ -84,6 +91,10 @@ M2(mod2, na.rm = TRUE)
 Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of
 hierarchical item factor models. British Journal of Mathematical and Statistical
 Psychology, 66, 245-276.
+
+Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response theory
+models for ordinal data}. National Center for Research on Evaulation, Standards,
+& Student Testing. Technical Report.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.

@@ -1,5 +1,10 @@
 # Changes in mirt 1.28
 
+- `M2()` function gains a `type` input to distinguish between the univariate-bivariate 
+  collapsed M2* statistic and the bivariate only collapsed C2 statistic (Cai and Monro, 2014).
+  C2 can be useful for polyomous items when there are too few degrees of freedom to compute
+  the fully collapsed M2* 
+
 - `multipleGroup()` gains the `dentype` argument to allow for mixture IRT models to be 
   fitted (e.g., `dentype = 'mixture-3'` fits a three-class mixture model). This also
   allow modifications such as the zero-inflated IRT model to be fitted

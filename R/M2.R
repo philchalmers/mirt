@@ -1,8 +1,11 @@
 #' Compute the M2 model fit statistic
 #'
-#' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
-#' M2* statistic for polytomous data (collapsing over response categories for better stability;
-#' see Cai and Hansen, 2013), as well as associated fit indices that are based on
+#' Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic when all data are dichotomous,
+#' the collapsed M2* statistic (collapsing over univariate and bivariate response categories;
+#' see Cai and Hansen, 2013), and the hybrid C2 statistic which only collapses only the bivariate
+#' moments (Cai and Monro, 2014). The C2 variant is mainly useful when polytomous response models
+#' do not have sufficient degrees of freedom to compute M2*. This function
+#' also computes associated fit indices that are based on
 #' fitting the null model. Supports single and multiple-group models.
 #' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
 #' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
@@ -14,6 +17,9 @@
 #'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package
+#' @param type type of fit statistic to compute. Options are "M2", "M2*" for the univariate and
+#'   bivariate collapsed version of the M2 statistic, and "C2" for a hybrid between
+#'   M2 and M2* where only the bivariate moments are collapsed
 #' @param quadpts number of quadrature points to use during estimation. If \code{NULL},
 #'   a suitable value will be chosen based
 #'   on the rubric found in \code{\link{fscores}}
@@ -46,6 +52,10 @@
 #' hierarchical item factor models. British Journal of Mathematical and Statistical
 #' Psychology, 66, 245-276.
 #'
+#' Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response theory
+#' models for ordinal data}. National Center for Research on Evaulation, Standards,
+#' & Student Testing. Technical Report.
+#'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
@@ -73,7 +83,7 @@
 #' M2(mod2, na.rm = TRUE)
 #'
 #' }
-M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
+M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
                impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
     if(is(obj, 'MixtureModel'))
@@ -90,7 +100,7 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
         return(M2(tmpobj, ...))
     }
     M2internal <- function(obj, calcNull, quadpts, theta_lim,
-                           residmat, QMC, discrete,
+                           residmat, QMC, discrete, type,
                            use_dentype_estimate = FALSE, ...){
         ret <- list()
         group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
@@ -148,81 +158,166 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
             Theta <- obj@Model$Theta
             Prior <- obj@Internals$Prior[[1L]]
         }
-        E1 <- E11 <- numeric(nitems)
-        E2 <- matrix(NA, nitems, nitems)
-        EIs <- EIs2 <- E11s <- matrix(0, nrow(Theta), nitems)
-        DP <- matrix(0, nrow(Theta), length(estpars))
-        wherepar <- c(1L, numeric(nitems))
-        ind <- 1L
-        for(i in seq_len(nitems)){
-            x <- extract.item(obj, i)
-            EIs[,i] <- expected.item(x, Theta, min=0L)
-            tmp <- ProbTrace(x, Theta)
-            E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
-            for(j in ncol(tmp):2L)
-                tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
-            cfs <- c(0,1)
-            if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
-            EIs2[,i] <- t(cfs %*% t(tmp))
-            tmp <- length(x@parnum)
-            DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
-            ind <- ind + tmp
-            wherepar[i+1L] <- ind
-        }
-        ind <- 1L
-        for(i in seq_len(nitems)){
-            E1[i] <- sum(EIs[,i] * Prior)
-            E11[i] <- sum(E11s[,i] * Prior)
-            for(j in seq_len(nitems)){
-                if(i >= j){
-                    E2[i,j] <- sum(EIs[,i] * EIs[,j] * Prior)
-                    ind <- ind + 1L
+        if(type == "M2*"){
+            E1 <- E11 <- numeric(nitems)
+            E2 <- matrix(NA, nitems, nitems)
+            EIs <- EIs2 <- E11s <- matrix(0, nrow(Theta), nitems)
+            DP <- matrix(0, nrow(Theta), length(estpars))
+            wherepar <- c(1L, numeric(nitems))
+            ind <- 1L
+            for(i in seq_len(nitems)){
+                x <- extract.item(obj, i)
+                EIs[,i] <- expected.item(x, Theta, min=0L)
+                tmp <- ProbTrace(x, Theta)
+                E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
+                for(j in ncol(tmp):2L)
+                    tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
+                cfs <- c(0,1)
+                if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
+                EIs2[,i] <- t(cfs %*% t(tmp))
+                tmp <- length(x@parnum)
+                DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
+                ind <- ind + tmp
+                wherepar[i+1L] <- ind
+            }
+            ind <- 1L
+            for(i in seq_len(nitems)){
+                E1[i] <- sum(EIs[,i] * Prior)
+                E11[i] <- sum(E11s[,i] * Prior)
+                for(j in seq_len(nitems)){
+                    if(i >= j){
+                        E2[i,j] <- sum(EIs[,i] * EIs[,j] * Prior)
+                        ind <- ind + 1L
+                    }
                 }
             }
-        }
-        e <- c(E1, E2[lower.tri(E2)])
-        if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
-            E2[is.na(E2)] <- 0
-            E2 <- E2 + t(E2)
-            diag(E2) <- E11
-            R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
-            Kr <- cov2cor(E2 - outer(E1, E1))
-            SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
-            if(residmat){
-                ret <- matrix(NA, nrow(R), nrow(R))
-                ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
-                colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
-                if(suppress < 1)
-                    ret[lower.tri(ret)][abs(ret[lower.tri(ret)]) < suppress] <- NA
-                return(ret)
-            }
-        } else SRMSR <- NULL
-        delta1 <- matrix(0, nitems, length(estpars))
-        delta2 <- matrix(0, length(p) - nitems, length(estpars))
-        ind <- 1L
-        offset <- pars[[1L]]@parnum[1L] - 1L
-        for(i in seq_len(nitems)){
-            dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * Prior)
-            delta1[i, pars[[i]]@parnum - offset] <- dp
-            for(j in seq_len(nitems)){
-                if(i < j){
-                    dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * EIs[,j] * Prior)
-                    delta2[ind, pars[[i]]@parnum - offset] <- dp
-                    dp <- colSums(DP[ , wherepar[j]:(wherepar[j+1L]-1L), drop=FALSE] * EIs[,i] * Prior)
-                    delta2[ind, pars[[j]]@parnum - offset] <- dp
-                    ind <- ind + 1L
+            e <- c(E1, E2[lower.tri(E2)])
+            if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+                E2[is.na(E2)] <- 0
+                E2 <- E2 + t(E2)
+                diag(E2) <- E11
+                R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+                Kr <- cov2cor(E2 - outer(E1, E1))
+                SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
+                if(residmat){
+                    ret <- matrix(NA, nrow(R), nrow(R))
+                    ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
+                    colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
+                    if(suppress < 1)
+                        ret[lower.tri(ret)][abs(ret[lower.tri(ret)]) < suppress] <- NA
+                    return(ret)
+                }
+            } else SRMSR <- NULL
+            delta1 <- matrix(0, nitems, length(estpars))
+            delta2 <- matrix(0, length(p) - nitems, length(estpars))
+            ind <- 1L
+            offset <- pars[[1L]]@parnum[1L] - 1L
+            for(i in seq_len(nitems)){
+                dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * Prior)
+                delta1[i, pars[[i]]@parnum - offset] <- dp
+                for(j in seq_len(nitems)){
+                    if(i < j){
+                        dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * EIs[,j] * Prior)
+                        delta2[ind, pars[[i]]@parnum - offset] <- dp
+                        dp <- colSums(DP[ , wherepar[j]:(wherepar[j+1L]-1L), drop=FALSE] * EIs[,i] * Prior)
+                        delta2[ind, pars[[j]]@parnum - offset] <- dp
+                        ind <- ind + 1L
+                    }
                 }
             }
+        } else if(type == "C2"){
+            nK <- sum(K-1L)
+            PIs <- matrix(0, nrow(Theta), nK)
+            E1 <- E11 <- numeric(nitems)
+            E2 <- matrix(NA, nitems, nitems)
+            EIs <- EIs2 <- E11s <- matrix(0, nrow(Theta), nitems)
+            DP <- matrix(0, nrow(Theta), length(estpars))
+            DPIs <- vector('list', nitems)
+            wherepar <- c(1L, numeric(nitems))
+            ind <- pind <- 1L
+            for(i in seq_len(nitems)){
+                x <- extract.item(obj, i)
+                EIs[,i] <- expected.item(x, Theta, min=0L)
+                tmp <- ProbTrace(x, Theta)
+                PIs[,pind:(pind+ncol(tmp)-2L)] <- tmp[,-1L]
+                E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
+                for(j in ncol(tmp):2L)
+                    tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
+                cfs <- c(0,1)
+                if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
+                EIs2[,i] <- t(cfs %*% t(tmp))
+                tmp <- length(x@parnum)
+                DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
+                pind <- pind + K[i] - 1L
+                ind <- ind + tmp
+                wherepar[i+1L] <- ind
+            }
+            ind <- 1L
+            for(i in seq_len(nitems)){
+                E1[i] <- sum(EIs[,i] * Prior)
+                E11[i] <- sum(E11s[,i] * Prior)
+                for(j in seq_len(nitems)){
+                    if(i >= j){
+                        E2[i,j] <- sum(EIs[,i] * EIs[,j] * Prior)
+                        ind <- ind + 1L
+                    }
+                }
+            }
+            P1 <- colSums(PIs * Prior)
+            e <- c(P1, E2[lower.tri(E2)])
+            if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+                E2[is.na(E2)] <- 0
+                E2 <- E2 + t(E2)
+                diag(E2) <- E11
+                R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+                Kr <- cov2cor(E2 - outer(E1, E1))
+                SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
+            } else SRMSR <- NULL
+            delta1 <- matrix(0, nK, length(estpars))
+            delta2 <- matrix(0, length(p) - nitems, length(estpars))
+            ind <- pind1 <- pind2 <- 1L
+            offset <- pars[[1L]]@parnum[1L] - 1L
+            for(i in seq_len(nitems)){
+                x <- extract.item(obj, i)
+                tmp <- lapply(numDeriv_dP2(x, Theta), function(x) colSums(x * Prior))
+                dp <- if(length(tmp) == 1L) matrix(tmp[[1L]], nrow=1L) else do.call(rbind, tmp)
+                delta1[pind1:(pind1+nrow(dp)-1L), pars[[i]]@parnum - offset] <- dp
+                pind1 <- pind1 + nrow(dp)
+                pind2 <- pind2 + ncol(dp)
+                for(j in seq_len(nitems)){
+                    if(i < j){
+                        dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * EIs[,j] * Prior)
+                        delta2[ind, pars[[i]]@parnum - offset] <- dp
+                        dp <- colSums(DP[ , wherepar[j]:(wherepar[j+1L]-1L), drop=FALSE] * EIs[,i] * Prior)
+                        delta2[ind, pars[[j]]@parnum - offset] <- dp
+                        ind <- ind + 1L
+                    }
+                }
+            }
+            itemloc <- obj@Model$itemloc
+            itemloc <- itemloc[-length(itemloc)]
+            p <- c(colMeans(obj@Data$fulldata[[1L]][,-itemloc]),
+                   cross[lower.tri(cross)]/N)
+        } else {
+            # M2 TODO
         }
         delta <- rbind(delta1, delta2)
-        Xi2els <- .Call('buildXi2els', nrow(delta1), nrow(delta2), nitems, EIs, EIs2, Prior)
+        Xi2els <- if(type == "M2*"){
+            .Call('buildXi2els', nrow(delta1), nrow(delta2), nitems, EIs, EIs2, Prior)
+        } else .Call('buildXi2els_C2', nrow(delta1), nrow(delta2), ncol(PIs), nitems, PIs, EIs, EIs2, Prior)
         Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))
         ret <- list(Xi2=Xi2, delta=delta, estpars=estpars, p=sqrt(N)*p, e=sqrt(N)*e, SRMSR=SRMSR)
         ret
     }
 
     #main
-    dots <- list(...)
+    if(residmat) type <- "M2*"
+    stopifnot(type %in% c('M2*', 'M2', 'C2'))
+    if(type == "M2"){
+        type <- "M2*"
+        if(!all(extract.mirt(obj, 'K') == 2L))
+            warning("M2 statistic currently not supported for polytomous data. Using M2* instead", call.=FALSE)
+    }
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)
@@ -271,12 +366,13 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
                 pars[[g]]@Model$Theta <- obj@Model$Theta
             }
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
-                                   mins=obj@Data$mins, K=obj@Data$K)
+                                   mins=obj@Data$mins, K=obj@Data$K,
+                                   fulldata=list(obj@Data$fulldata[[g]]))
             ret[[g]] <- M2internal(pars[[g]], calcNull=FALSE, quadpts=quadpts, theta_lim=theta_lim,
-                                   residmat=residmat, QMC=QMC, discrete=discrete, ...)
+                                   residmat=residmat, QMC=QMC, discrete=discrete, type=type, ...)
         } else {
             ret[[g]] <- M2internal(obj, calcNull=FALSE, quadpts=quadpts, theta_lim=theta_lim,
-                                   residmat=residmat, QMC=QMC, discrete=discrete, ...)
+                                   residmat=residmat, QMC=QMC, discrete=discrete, type=type, ...)
         }
         # build
         if(!residmat){
@@ -324,7 +420,9 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
     if((ncol(delta) + 1L) > ncol(tmp))
         stop('M2 cannot be calculated since df is too low', call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
-    C2 <- deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac)
+    C2 <- try(deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac), TRUE)
+    if(is(C2, 'try-error'))
+        stop('Could not invert orthogonal complement matrix', call.=FALSE)
     N <- nrow(extract.mirt(obj, 'data'))
     M2 <- t(p - e) %*% C2 %*% (p - e)
     df <- length(p) - extract.mirt(obj, 'nest')
@@ -349,7 +447,7 @@ M2 <- function(obj, calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(
                                          key=obj@Internals$key))
         if(is(null.mod, 'try-error'))
             stop('Null model did not converge or is not supported', call.=FALSE)
-        null.fit <- M2(null.mod, calcNull=FALSE)
+        null.fit <- M2(null.mod, calcNull=FALSE, type=type)
         newret$TLI <- tli(X2=newret$M2, X2.null=null.fit$M2, df=newret$df,
                           df.null=null.fit$df)
         newret$CFI <- cfi(X2=newret$M2, X2.null=null.fit$M2, df=newret$df,
