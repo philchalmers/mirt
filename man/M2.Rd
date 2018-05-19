@@ -12,7 +12,8 @@ M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE, quadpts = NULL,
 \item{obj}{an estimated model object from the mirt package}
 
 \item{type}{type of fit statistic to compute. Options are "M2", "M2*" for the univariate and
-bivariate collapsed version of the M2 statistic, and "C2" for a hybrid between
+bivariate collapsed version of the M2 statistic ("M2" currently limited to dichotomous
+response data only), and "C2" for a hybrid between
 M2 and M2* where only the bivariate moments are collapsed}
 
 \item{calcNull}{logical; calculate statistics for the null model as well?
@@ -51,9 +52,9 @@ Must be used in conjunction with the argument \code{residmat = TRUE}}
 \item{...}{additional arguments to pass}
 }
 \value{
-Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+Returns a data.frame object with the M2-type statistic, along with the degrees of freedom,
   p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
-  and optionally the TLI and CFI model fit statistics of \code{calcNull = TRUE}.
+  and optionally the TLI and CFI model fit statistics if \code{calcNull = TRUE}.
 }
 \description{
 Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic when all data are dichotomous,

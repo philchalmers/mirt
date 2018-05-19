@@ -11,14 +11,15 @@
 #' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
 #' density components (where applicable).
 #'
-#' @return Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+#' @return Returns a data.frame object with the M2-type statistic, along with the degrees of freedom,
 #'   p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
-#'   and optionally the TLI and CFI model fit statistics of \code{calcNull = TRUE}.
+#'   and optionally the TLI and CFI model fit statistics if \code{calcNull = TRUE}.
 #'
 #' @aliases M2
 #' @param obj an estimated model object from the mirt package
 #' @param type type of fit statistic to compute. Options are "M2", "M2*" for the univariate and
-#'   bivariate collapsed version of the M2 statistic, and "C2" for a hybrid between
+#'   bivariate collapsed version of the M2 statistic ("M2" currently limited to dichotomous
+#'   response data only), and "C2" for a hybrid between
 #'   M2 and M2* where only the bivariate moments are collapsed
 #' @param quadpts number of quadrature points to use during estimation. If \code{NULL},
 #'   a suitable value will be chosen based
