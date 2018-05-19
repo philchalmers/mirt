@@ -85,6 +85,13 @@ M2(mod2, impute = 10)
 # or compute stats by removing missing data row-wise
 M2(mod2, na.rm = TRUE)
 
+# C2 statistic (useful when polytomous IRT models have too few df)
+pmod <- mirt(Science, 1)
+# This fails with too few df:
+# M2(pmod)
+# This, however, works:
+M2(pmod, type = 'C2')
+
 }
 }
 \references{
@@ -93,7 +100,7 @@ hierarchical item factor models. British Journal of Mathematical and Statistical
 Psychology, 66, 245-276.
 
 Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response theory
-models for ordinal data}. National Center for Research on Evaulation, Standards,
+models for ordinal data}. National Center for Research on Evaluation, Standards,
 & Student Testing. Technical Report.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory

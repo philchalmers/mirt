@@ -53,7 +53,7 @@
 #' Psychology, 66, 245-276.
 #'
 #' Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response theory
-#' models for ordinal data}. National Center for Research on Evaulation, Standards,
+#' models for ordinal data}. National Center for Research on Evaluation, Standards,
 #' & Student Testing. Technical Report.
 #'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
@@ -81,6 +81,13 @@
 #'
 #' # or compute stats by removing missing data row-wise
 #' M2(mod2, na.rm = TRUE)
+#'
+#' # C2 statistic (useful when polytomous IRT models have too few df)
+#' pmod <- mirt(Science, 1)
+#' # This fails with too few df:
+#' # M2(pmod)
+#' # This, however, works:
+#' M2(pmod, type = 'C2')
 #'
 #' }
 M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
@@ -316,7 +323,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     if(type == "M2"){
         type <- "M2*"
         if(!all(extract.mirt(obj, 'K') == 2L))
-            warning("M2 statistic currently not supported for polytomous data. Using M2* instead", call.=FALSE)
+            warning("M2 statistic currently not supported for polytomous data. Using M2* or C2 instead", call.=FALSE)
     }
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
@@ -418,7 +425,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     delta <- delta[ ,estpars, drop=FALSE]
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
-        stop('M2 cannot be calculated since df is too low', call.=FALSE)
+        stop('M2() statistic cannot be calculated due to too few degrees of freedom', call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     C2 <- try(deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac), TRUE)
     if(is(C2, 'try-error'))
