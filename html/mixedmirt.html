@@ -243,9 +243,9 @@ anova(mod0, mod1)
 ##     group + items)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8799.543 8799.901 8815.435 8850.364 -4388.772     NaN NaN NaN
-## 2 8109.481 8109.975 8128.261 8169.542 -4041.740 694.063   2   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+## 1 8799.543 8799.901 8815.435 8819.126 8850.364 -4388.772     NaN NaN NaN
+## 2 8109.457 8109.951 8128.238 8132.600 8169.518 -4041.728 694.087   2   0
 </code></pre>
 
 <pre><code class="r">summary(mod1)
@@ -363,17 +363,17 @@ library(lme4)
 <pre><code class="r">lmod0 &lt;- glmer(value ~ 0 + variable + (1|id), long, family = binomial)
 </code></pre>
 
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control
-## $checkConv, : Model failed to converge with max|grad| = 0.0292334 (tol =
-## 0.001, component 1)
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
+## control$checkConv, : Model failed to converge with max|grad| = 0.0292334
+## (tol = 0.001, component 1)
 </code></pre>
 
 <pre><code class="r">lmod1 &lt;- glmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
 </code></pre>
 
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control
-## $checkConv, : Model failed to converge with max|grad| = 0.00585234 (tol =
-## 0.001, component 1)
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
+## control$checkConv, : Model failed to converge with max|grad| = 0.00585234
+## (tol = 0.001, component 1)
 </code></pre>
 
 <pre><code class="r">anova(lmod0, lmod1)
@@ -402,9 +402,9 @@ anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, give
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df   p
-## 1 8109.481 8109.975 8128.261 8169.542 -4041.740    NaN NaN NaN
-## 2 7976.151 7977.543 8007.934 8077.793 -3966.075 151.33   9   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+## 1 8109.457 8109.951 8128.238 8132.600 8169.518 -4041.728     NaN NaN NaN
+## 2 7974.260 7975.652 8006.043 8013.425 8075.902 -3965.130 153.197   9   0
 </code></pre>
 
 <pre><code class="r">#continuous predictor with group
@@ -444,9 +444,9 @@ summary(mod2)
 ##     group + items, itemtype = &quot;2PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 8088.897 8089.468 8109.122 8153.578 -4030.448     NaN NaN NaN
-## 2 7976.151 7977.543 8007.934 8077.793 -3966.075 128.746   8   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+## 1 8088.553 8089.124 8108.778 8113.476 8153.234 -4030.276     NaN NaN NaN
+## 2 7974.260 7975.652 8006.043 8013.425 8075.902 -3965.130 130.292   8   0
 </code></pre>
 
 <pre><code class="r">#view fixed design matrix with and without unique item level intercepts
@@ -625,22 +625,42 @@ summary(rmod1)
 rmod2 &lt;- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
 </code></pre>
 
-<pre><code>## Error: Inf or NaN values appeared in the gradient
+<pre><code>## MHRM terminated after 2000 iterations.
 </code></pre>
 
 <pre><code class="r">summary(rmod2)
 </code></pre>
 
-<pre><code>## Error in summary(rmod2): object &#39;rmod2&#39; not found
+<pre><code>## 
+## Call:
+## mixedmirt(data = data, covdata = covdata, model = 1, random = list(~1 | 
+##     group, ~1 | items))
+## 
+## --------------
+## FIXED EFFECTS:
+##             Estimate Std.Error z.value
+## (Intercept)   -9.866        NA      NA
+## 
+## --------------
+## RANDOM EFFECT COVARIANCE(S):
+## Correlations on upper diagonal
+## 
+## $Theta
+##      F1
+## F1 70.2
+## 
+## $group
+##           COV_group
+## COV_group       157
+## 
+## $items
+##           COV_items
+## COV_items      1.26
 </code></pre>
 
 <pre><code class="r">eff &lt;- randef(rmod2) #estimate random effects
-</code></pre>
 
-<pre><code>## Error in is(x, &quot;MixedClass&quot;): object &#39;rmod2&#39; not found
-</code></pre>
-
-<pre><code class="r">#random slopes with fixed intercepts (suppressed correlation)
+#random slopes with fixed intercepts (suppressed correlation)
 rmod3 &lt;- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
 summary(rmod3)
 </code></pre>
@@ -670,11 +690,11 @@ str(eff)
 </code></pre>
 
 <pre><code>## List of 2
-##  $ Theta: num [1:750, 1] -0.0922 0.1759 0.0355 0.0114 -0.024 ...
+##  $ Theta: num [1:750, 1] -0.0789 0.1206 0.0691 0.0274 -0.0436 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr &quot;F1&quot;
-##  $ group: num [1:50, 1:2] -0.65 -1.48 -1.55 -1.64 -1.56 ...
+##  $ group: num [1:50, 1:2] -0.65 -1.5 -1.66 -1.61 -1.54 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : chr [1:50] &quot;G1&quot; &quot;G2&quot; &quot;G3&quot; &quot;G4&quot; ...
 ##   .. ..$ : chr [1:2] &quot;group&quot; &quot;pseudoIQ&quot;
@@ -955,9 +975,9 @@ anova(twoPL, LLTM) #much better fit
 ##     itemtype = &quot;2PL&quot;, itemdesign = itemdesign, technical = list(MHcand = 0.8))
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik       X2  df   p
-## 1 25466.92 25466.96 25470.59 25480.11 -12730.46      NaN NaN NaN
-## 2 20483.04 20487.25 20524.59 20632.53 -10207.52 5045.887  31   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik       X2  df   p
+## 1 25464.51 25464.54 25468.17 25469.64 25477.70 -12729.25      NaN NaN NaN
+## 2 20483.26 20487.47 20524.81 20541.45 20632.75 -10207.63 5043.249  31   0
 </code></pre>
 
 <pre><code class="r">summary(twoPL)
@@ -1584,9 +1604,9 @@ summary(mod2)
 ##     group, itemtype = &quot;gpcm&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik     X2  df     p
-## 1 3266.563 3267.677 3277.739 3322.161 -1619.281    NaN NaN   NaN
-## 2 3257.689 3259.325 3271.260 3325.200 -1611.845 14.874   3 0.002
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df     p
+## 1 3266.517 3267.631 3277.693 3288.552 3322.115 -1619.258    NaN NaN   NaN
+## 2 3257.788 3259.424 3271.359 3284.544 3325.299 -1611.894 14.729   3 0.002
 </code></pre>
 
 <pre><code class="r">#graded model
@@ -1678,9 +1698,9 @@ anova(rmod0, rmod1b)
 ##     items + group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9698.483 9698.780 9716.375 9751.310 -4838.242     NaN NaN NaN
-## 2 9472.386 9472.797 9493.531 9534.817 -4723.193 230.097   2   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+## 1 9698.483 9698.780 9716.375 9718.663 9751.310 -4838.242     NaN NaN NaN
+## 2 9476.017 9476.428 9497.162 9499.866 9538.448 -4725.008 226.466   2   0
 </code></pre>
 
 <pre><code class="r">coef(rmod1a, simplify=TRUE)
@@ -1750,9 +1770,9 @@ anova(mod0, mod1b)
 ##     items, itemtype = &quot;2PL&quot;, lr.fixed = ~group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 9706.089 9707.044 9738.620 9802.136 -4833.044     NaN NaN NaN
-## 2 9481.556 9482.710 9517.341 9587.209 -4718.778 228.532   2   0
+<pre><code>##        AIC     AICc    SABIC      HQ      BIC    logLik      X2  df   p
+## 1 9706.089 9707.044 9738.620 9742.78 9802.136 -4833.044     NaN NaN NaN
+## 2 9483.950 9485.104 9519.735 9524.31 9589.603 -4719.975 226.138   2   0
 </code></pre>
 
 <pre><code class="r">coef(mod1a)$lr.betas
@@ -1806,14 +1826,14 @@ coef(mod2)[11:12]
 
 <pre><code>## $GroupPars
 ##     MEAN_1 MEAN_2   COV_11 COV_21   COV_22
-## par      0      0 1.040788      0 1.104222
+## par      0      0 1.038899      0 1.103518
 ## 
 ## $lr.betas
-##                     F1        F2
-## (Intercept) 0.00000000 0.0000000
-## groupg2     0.72365272 0.9062363
-## groupg3     1.74791098 1.6976451
-## contvar     0.04152182 0.0000000
+##                     F1       F2
+## (Intercept) 0.00000000 0.000000
+## groupg2     0.72243394 0.903647
+## groupg3     1.74584158 1.694935
+## contvar     0.05057034 0.000000
 </code></pre>
 
 <pre><code class="r">mod2b &lt;- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
@@ -1832,24 +1852,24 @@ summary(mod2b)
 ## Correlations on upper diagonal
 ## 
 ## $Theta
-##      F1   F2
-## F1 1.02 0.00
-## F2 0.00 1.07
+##    F1   F2
+## F1  1 0.00
+## F2  0 1.04
 ## 
 ## --------------
 ## LATENT REGRESSION FIXED EFFECTS:
 ## 
 ##                F1    F2
 ## (Intercept) 0.000 0.000
-## groupg2     0.721 0.834
-## groupg3     1.742 1.624
-## contvar     0.044 0.000
+## groupg2     0.697 0.845
+## groupg3     1.733 1.633
+## contvar     0.041 0.000
 ## 
-##             Std.Error_F1 Std.Error_F2  z_F1  z_F2
-## (Intercept)           NA           NA    NA    NA
-## groupg2            0.211        0.530 3.420 1.574
-## groupg3            0.181        0.537 9.625 3.028
-## contvar            0.063           NA 0.688    NA
+##             Std.Error_F1 Std.Error_F2   z_F1   z_F2
+## (Intercept)           NA           NA     NA     NA
+## groupg2            0.148        0.118  4.702  7.140
+## groupg3            0.121        0.119 14.267 13.664
+## contvar            0.057           NA  0.714     NA
 </code></pre>
 
 <pre><code class="r">####################################################
@@ -1934,9 +1954,9 @@ summary(mod2)
 ##     items + group_pred, random = ~1 | group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23551.93 23552.09 23581.02 23619.14 -11763.97     NaN NaN NaN
-## 2 22746.36 22746.54 22777.87 22819.17 -11360.18 807.571   1   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df   p
+## 1 23545.58 23545.73 23574.66 23570.26 23612.79 -11760.79    NaN NaN NaN
+## 2 22742.64 22742.82 22774.15 22769.37 22815.45 -11358.32 804.94   1   0
 </code></pre>
 
 <pre><code class="r"># can also be fit for Rasch/non-Rasch models with the lr.random input
@@ -2010,9 +2030,9 @@ summary(mod2b)
 ##     items + group_pred, lr.random = ~1 | group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik      X2  df   p
-## 1 23558.82 23558.95 23585.48 23620.43 -11768.41     NaN NaN NaN
-## 2 22745.70 22745.86 22774.79 22812.91 -11360.85 815.113   1   0
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+## 1 23565.97 23566.10 23592.63 23588.59 23627.58 -11771.98     NaN NaN NaN
+## 2 22745.45 22745.61 22774.54 22770.13 22812.66 -11360.73 822.515   1   0
 </code></pre>
 
 <pre><code class="r">mod3 &lt;- mixedmirt(dat, covdata, 1, fixed = ~ 0 + items, lr.random = ~ 1|group, itemtype = &#39;2PL&#39;)
@@ -2053,26 +2073,26 @@ summary(mod3)
 ##     items, itemtype = &quot;2PL&quot;, lr.random = ~1 | group)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 23558.82 23558.95 23585.48 23620.43 -11768.41   NaN NaN   NaN
-## 2 23568.62 23569.04 23617.10 23680.64 -11764.31 8.196   9 0.515
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
+## 1 23565.97 23566.10 23592.63 23588.59 23627.58 -11771.98   NaN NaN   NaN
+## 2 23568.72 23569.14 23617.19 23609.85 23680.73 -11764.36 15.25   9 0.084
 </code></pre>
 
 <pre><code class="r">head(cbind(randef(mod3)$group, random_intercept))
 </code></pre>
 
 <pre><code>##         group random_intercept
-## G1  1.0820294       1.51178117
-## G2 -0.5354123       0.38984324
-## G3 -0.8154740      -0.62124058
-## G4 -1.8400023      -2.21469989
-## G5  1.0952764       1.12493092
-## G6 -0.7930904      -0.04493361
+## G1  1.1204871       1.51178117
+## G2 -0.5408937       0.38984324
+## G3 -0.9698818      -0.62124058
+## G4 -1.9937819      -2.21469989
+## G5  0.7194493       1.12493092
+## G6 -0.6205195      -0.04493361
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

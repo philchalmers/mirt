@@ -78,10 +78,11 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.27.1 
+## mirt version: 1.28 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
+## Latent density type: Gaussian 
 ## 
 ## Log-likelihood = -2658.805
 ## Estimated parameters: 10 
@@ -103,16 +104,17 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.27.1 
+## Converged within 1e-04 tolerance after 34 EM iterations.
+## mirt version: 1.28 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
+## Latent density type: Gaussian 
 ## 
-## Log-likelihood = -2650.955
+## Log-likelihood = -2647.335
 ## Estimated parameters: 10 
-## AIC = 5321.91; AICc = 5322.132
-## BIC = 5370.988; SABIC = 5339.227
+## AIC = 5314.671; AICc = 5314.893
+## BIC = 5363.748; SABIC = 5331.988
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -127,17 +129,18 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.27.1 
+## Converged within 1e-04 tolerance after 25 EM iterations.
+## mirt version: 1.28 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
+## Latent density type: Gaussian 
 ## 
-## Log-likelihood = -2660.356
+## Log-likelihood = -2659.193
 ## Estimated parameters: 10 
-## AIC = 5340.713; AICc = 5340.935
-## BIC = 5389.79; SABIC = 5358.03
-## G2 (21) = 31.31, p = 0.0686
+## AIC = 5338.385; AICc = 5338.608
+## BIC = 5387.463; SABIC = 5355.702
+## G2 (21) = 31.61, p = 0.064
 ## RMSEA = 0.022, CFI = NaN, TLI = NaN
 </code></pre>
 
@@ -152,5 +155,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

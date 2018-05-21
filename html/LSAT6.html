@@ -63,10 +63,11 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.27.1 
+## mirt version: 1.28 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
+## Latent density type: Gaussian 
 ## 
 ## Log-likelihood = -2466.938
 ## Estimated parameters: 6 
@@ -126,9 +127,9 @@ anova(mod, mod2) #equal
 ## Model 2: mirt(data = dat, model = model)
 </code></pre>
 
-<pre><code>##        AIC    AICc    SABIC      BIC    logLik  X2  df   p
-## 1 4945.875 4945.96 4956.266 4975.322 -2466.938 NaN NaN NaN
-## 2 4945.875 4945.96 4956.265 4975.322 -2466.938   0   0   1
+<pre><code>##        AIC    AICc    SABIC       HQ      BIC    logLik  X2  df   p
+## 1 4945.875 4945.96 4956.266 4957.067 4975.322 -2466.938 NaN NaN NaN
+## 2 4945.875 4945.96 4956.265 4957.067 4975.322 -2466.938   0   0   0
 </code></pre>
 
 <pre><code class="r">M2(mod2)
@@ -181,5 +182,5 @@ anova(mod, mod2) #equal
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

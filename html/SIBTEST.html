@@ -25,7 +25,8 @@ bias between two groups. Can be used for DIF, DBF, and DTF testing.
 
 <pre>
 SIBTEST(dat, group, suspect_set, match_set, focal_name, guess_correction = 0,
-  Jmin = 2, pk_focal = FALSE, correction = TRUE, details = FALSE)
+  Jmin = 2, na.rm = FALSE, pk_focal = FALSE, correction = TRUE,
+  details = FALSE)
 </pre>
 
 
@@ -51,7 +52,7 @@ will be used (i.e., DTF)</p>
 <tr valign="top"><td><code>match_set</code></td>
 <td>
 <p>an integer vector indicating which items to use as the items which are matched
-(i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
+(i.e., contain no DIF). These are analogous to 'anchor' items in the likelihood method to locate
 DIF. If missing, all items other than the items found in the suspect_set will be used</p>
 </td></tr>
 <tr valign="top"><td><code>focal_name</code></td>
@@ -68,6 +69,12 @@ for guessing. It's length should be the same as ncol(dat)</p>
 <td>
 <p>the minimum number of observations required when splitting the data into focal and
 reference groups conditioned on the matched set</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>logical; remove rows in <code>dat</code> with any missing values? If <code>TRUE</code>,
+rows with missing data will be removed, as well as the corresponding elements in the <code>group</code>
+input</p>
 </td></tr>
 <tr valign="top"><td><code>pk_focal</code></td>
 <td>
@@ -358,5 +365,5 @@ SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

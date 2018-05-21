@@ -60,8 +60,9 @@ are passed to <code><a href="mirt.html">mirt</a></code> are used then these will
 the respective internal classes automatically.
 </p>
 <p>If the internal class of the object is specified instead, the inputs can
-be <code>'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp', 'gumm'</code>, or <code>'lca'</code>, for
-dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
+be <code>'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'</code>,
+or <code>'lca'</code>, for dichotomous, graded, generalized partial credit, sequential,
+nominal, nested logit, partially compensatory,
 generalized graded unfolding model, and latent class analysis model.
 Note that for the gpcm, nominal, and nested logit models there should
 be as many parameters as desired categories, however to parametrized them for meaningful
@@ -397,9 +398,9 @@ summary(mod2)
 ## Model 2: mirt(data = dat, model = 1)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 54857.31 54857.38 54897.39 54935.52 -27416.66   NaN NaN   NaN
-## 2 54870.85 54871.02 54937.64 55001.19 -27415.42 2.465   8 0.963
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
+## 1 54857.31 54857.38 54897.39 54884.72 54935.52 -27416.66   NaN NaN   NaN
+## 2 54870.85 54871.02 54937.64 54916.53 55001.19 -27415.42 2.465   8 0.963
 </code></pre>
 
 <pre><code class="r">#### Unidimensional nonlinear factor pattern
@@ -698,5 +699,5 @@ prob.list[[1]] &lt;- x@P(x@par, theta)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

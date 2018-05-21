@@ -15,6 +15,9 @@
 <h3>Description</h3>
 
 <p>Return model implied residuals for linear dependencies between items or at the person level.
+If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+then passing <code>use_dentype_estimate = TRUE</code> will use the internally saved quadrature and
+density components (where applicable).
 </p>
 
 
@@ -127,9 +130,8 @@ residuals(x)
 </code></pre>
 
 <pre><code>## LD matrix (lower triangle) and standardized values:
-</code></pre>
-
-<pre><code>##         Comfort    Work  Future Benefit
+## 
+##         Comfort    Work  Future Benefit
 ## Comfort      NA  -0.147  -0.101   0.152
 ## Work    -25.512      NA   0.088  -0.141
 ## Future  -12.002   9.208      NA  -0.122
@@ -389,13 +391,54 @@ residuals(x)
 </code></pre>
 
 <pre><code>## LD matrix (lower triangle) and standardized values:
-</code></pre>
-
-<pre><code>##         Comfort Work Future Benefit
+## 
+##         Comfort Work Future Benefit
 ## Comfort      NA   NA     NA   0.152
 ## Work         NA   NA     NA      NA
 ## Future       NA   NA     NA      NA
 ## Benefit      NA   NA     NA      NA
+</code></pre>
+
+<pre><code class="r">residuals(x, df.p = TRUE)
+</code></pre>
+
+<pre><code>## Degrees of freedom (lower triangle) and p-values:
+## 
+##         Comfort  Work Future Benefit
+## Comfort      NA 0.002  0.213   0.001
+## Work          9    NA  0.418   0.006
+## Future        9 9.000     NA   0.042
+## Benefit       9 9.000  9.000      NA
+## 
+## LD matrix (lower triangle) and standardized values:
+## 
+##         Comfort    Work  Future Benefit
+## Comfort      NA  -0.147  -0.101   0.152
+## Work    -25.512      NA   0.088  -0.141
+## Future  -12.002   9.208      NA  -0.122
+## Benefit  27.321 -23.235 -17.461      NA
+</code></pre>
+
+<pre><code class="r"># extract results manually
+out &lt;- residuals(x, df.p = TRUE, verbose=FALSE)
+str(out)
+</code></pre>
+
+<pre><code>## List of 2
+##  $ df.p: mirt_matrix [1:4, 1:4] NA 9 9 9 0.00245 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:4] &quot;Comfort&quot; &quot;Work&quot; &quot;Future&quot; &quot;Benefit&quot;
+##   .. ..$ : chr [1:4] &quot;Comfort&quot; &quot;Work&quot; &quot;Future&quot; &quot;Benefit&quot;
+##  $ LD  : mirt_matrix [1:4, 1:4] NA -25.512 -12.002 27.321 -0.147 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:4] &quot;Comfort&quot; &quot;Work&quot; &quot;Future&quot; &quot;Benefit&quot;
+##   .. ..$ : chr [1:4] &quot;Comfort&quot; &quot;Work&quot; &quot;Future&quot; &quot;Benefit&quot;
+</code></pre>
+
+<pre><code class="r">out$df.p[1,2]
+</code></pre>
+
+<pre><code>## [1] 0.002454207
 </code></pre>
 
 <pre><code class="r"># with and without supplied factor scores
@@ -404,9 +447,8 @@ residuals(x, type = &#39;Q3&#39;, Theta=Theta)
 </code></pre>
 
 <pre><code>## Q3 matrix:
-</code></pre>
-
-<pre><code>##         Comfort   Work Future Benefit
+## 
+##         Comfort   Work Future Benefit
 ## Comfort   1.000 -0.203 -0.252   0.085
 ## Work     -0.203  1.000 -0.208  -0.242
 ## Future   -0.252 -0.208  1.000  -0.320
@@ -417,9 +459,8 @@ residuals(x, type = &#39;Q3&#39;, Theta=Theta)
 </code></pre>
 
 <pre><code>## Q3 matrix:
-</code></pre>
-
-<pre><code>##         Comfort   Work Future Benefit
+## 
+##         Comfort   Work Future Benefit
 ## Comfort   1.000 -0.262 -0.419   0.053
 ## Work     -0.262  1.000 -0.428  -0.295
 ## Future   -0.419 -0.428  1.000  -0.514
@@ -430,5 +471,5 @@ residuals(x, type = &#39;Q3&#39;, Theta=Theta)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

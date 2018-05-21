@@ -168,9 +168,9 @@ coef(mod2, simplify=TRUE)$items
 ##     itemtype = &quot;Rasch&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 5341.802 5341.886 5352.192 5371.248 -2664.901   NaN NaN   NaN
-## 2 5343.264 5343.377 5355.386 5377.618 -2664.632 0.538   1 0.463
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
+## 1 5341.802 5341.886 5352.192 5352.994 5371.248 -2664.901   NaN NaN   NaN
+## 2 5343.264 5343.377 5355.386 5356.321 5377.618 -2664.632 0.538   1 0.463
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(dat, &#39;F = 1-5
@@ -195,9 +195,9 @@ coef(mod2, simplify=TRUE)$items
 ##     itemtype = &quot;Rasch&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 5341.802 5341.886 5352.192 5371.248 -2664.901   NaN NaN   NaN
-## 2 5343.720 5343.833 5355.842 5378.075 -2664.860 0.081   1 0.776
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
+## 1 5341.802 5341.886 5352.192 5352.994 5371.248 -2664.901   NaN NaN   NaN
+## 2 5343.720 5343.833 5355.842 5356.777 5378.075 -2664.860 0.081   1 0.775
 </code></pre>
 
 <pre><code class="r">mod2 &lt;- mirt(dat, &#39;F = 1-5
@@ -222,9 +222,9 @@ coef(mod2, simplify=TRUE)$items
 ##     itemtype = &quot;Rasch&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC      BIC    logLik    X2  df     p
-## 1 5341.802 5341.886 5352.192 5371.248 -2664.901   NaN NaN   NaN
-## 2 5335.131 5335.243 5347.252 5369.485 -2660.565 8.671   1 0.003
+<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
+## 1 5341.802 5341.886 5352.192 5352.994 5371.248 -2664.901   NaN NaN   NaN
+## 2 5335.131 5335.243 5347.252 5348.188 5369.485 -2660.565 8.671   1 0.003
 </code></pre>
 
 <pre><code class="r"># test slopes first two slopes and last three slopes jointly
@@ -249,5 +249,5 @@ lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>

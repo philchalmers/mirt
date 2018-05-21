@@ -33,10 +33,11 @@ for latent regression predictor effects.
 
 <pre>
 fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
-  Target = NULL, response.pattern = NULL, plausible.draws = 0,
-  plausible.type = "normal", quadpts = NULL, returnER = FALSE,
-  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0, QMC = FALSE,
+  Target = NULL, response.pattern = NULL, append_response.pattern = TRUE,
+  na.rm = FALSE, plausible.draws = 0, plausible.type = "normal",
+  quadpts = NULL, returnER = FALSE, return.acov = FALSE, mean = NULL,
+  cov = NULL, verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,
+  6), MI = 0, use_dentype_estimate = FALSE, QMC = FALSE,
   custom_den = NULL, custom_theta = NULL, min_expected = 1,
   converge_info = FALSE, max_theta = 20, start = NULL, ...)
 </pre>
@@ -52,11 +53,33 @@ fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
 </td></tr>
 <tr valign="top"><td><code>method</code></td>
 <td>
-<p>type of factor score estimation method. Can be expected
-a-posteriori (<code>"EAP"</code>), Bayes modal (<code>"MAP"</code>), weighted likelihood estimation
-(<code>"WLE"</code>), maximum likelihood (<code>"ML"</code>), or expected a-posteriori for sum scores
-(<code>"EAPsum"</code>). Can also be <code>"plausible"</code> for a single plausible value imputation for
-each case, and this is equivalent to setting <code>plausible.draws = 1</code></p>
+<p>type of factor score estimation method. Can be:
+</p>
+
+<ul>
+<li> <p><code>"EAP"</code> for the expected a-posteriori (default)
+</p>
+</li>
+<li> <p><code>"MAP"</code> for the maximum a-posteriori (i.e, Bayes modal)
+</p>
+</li>
+<li> <p><code>"ML"</code> for maximum likelihood
+</p>
+</li>
+<li> <p><code>"WLE"</code> for weighted likelihood estimation
+</p>
+</li>
+<li> <p><code>"EAPsum"</code> for the expected a-posteriori for each sum score
+</p>
+</li>
+<li> <p><code>"plausible"</code> for a single plausible value imputation for each case.
+This is equivalent to setting <code>plausible.draws = 1</code>
+</p>
+</li>
+<li> <p><code>"classify"</code> for the posteriori classification probabilities (only
+applicable when the input model was of class <code>MixtureClass</code>)
+</p>
+</li></ul>
 </td></tr>
 <tr valign="top"><td><code>full.scores</code></td>
 <td>
@@ -78,6 +101,17 @@ then this argument is ignored</p>
 <td>
 <p>an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame</p>
+</td></tr>
+<tr valign="top"><td><code>append_response.pattern</code></td>
+<td>
+<p>logical; should the inputs from <code>response.pattern</code> also be
+appended to the factor score output?</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>logical; remove rows with any missing values? This is generally not required due to
+the nature of computing factors scores, however for the &quot;EAPsum&quot; method this may be necessary
+to ensure that the sum-scores correspond to the same composite score</p>
 </td></tr>
 <tr valign="top"><td><code>plausible.draws</code></td>
 <td>
@@ -140,6 +174,12 @@ omitted, a range will be generated automatically based on the number of dimensio
 <td>
 <p>a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed</p>
+</td></tr>
+<tr valign="top"><td><code>use_dentype_estimate</code></td>
+<td>
+<p>logical; if the density of the latent trait was estimated in the model
+(e.g., via Davidian curves or empirical histograms), should this information be used to compute
+the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum, and plausible)</p>
 </td></tr>
 <tr valign="top"><td><code>QMC</code></td>
 <td>
@@ -329,6 +369,15 @@ fscores(mod, method=&#39;MAP&#39;, response.pattern = rbind(c(1,2,3,4), c(2,2,1,
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
 ## [1,]       1    2      3       4 -0.3704194 0.6054169
 ## [2,]       2    2      1       3 -1.6937559 0.5773972
+</code></pre>
+
+<pre><code class="r"># return only the scores and their SEs
+fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4),
+  append_response.pattern=FALSE)
+</code></pre>
+
+<pre><code>##              F1     SE_F1
+## [1,] -0.3704194 0.6054169
 </code></pre>
 
 <pre><code class="r">#use custom latent variable properties (diffuse prior for MAP is very close to ML)
@@ -601,12 +650,12 @@ head(fs)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.40211572
-## [2,]  0.05701942
-## [3,] -0.88395828
-## [4,] -0.88395828
-## [5,]  0.76837361
-## [6,]  0.66764681
+## [1,]  0.38298525
+## [2,]  0.04023723
+## [3,] -0.88098449
+## [4,] -0.88098449
+## [5,]  0.70264182
+## [6,]  0.66007674
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -615,24 +664,24 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 
 <pre><code>## [[1]]
-##        mean         var         min         max 
-## -0.01142743  0.95462142 -3.24568174  2.56948318 
+##         mean          var          min          max 
+## -0.007522653  1.002499808 -3.328861557  2.812620339 
 ## 
 ## [[2]]
-##         mean          var          min          max 
-##  0.008840666  0.948485530 -3.499514775  3.327967792 
+##        mean         var         min         max 
+##  0.01507731  1.01055758 -3.63042910  3.24854454 
 ## 
 ## [[3]]
 ##        mean         var         min         max 
-##  0.05024689  1.02052806 -3.36165276  3.72094659 
+##  0.04019166  1.04806862 -4.06894078  2.81924633 
 ## 
 ## [[4]]
-##        mean         var         min         max 
-## -0.05323835  1.06322696 -3.85170853  3.28865123 
+##         mean          var          min          max 
+##  0.007133171  0.935667264 -3.769091279  2.820258490 
 ## 
 ## [[5]]
-##        mean         var         min         max 
-## -0.01056678  1.02342401 -3.83823354  2.85256398
+##       mean        var        min        max 
+## -0.0618064  0.9496245 -2.9523143  2.9582835
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -678,5 +727,5 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.27.1 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
 </body></html>
