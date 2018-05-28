@@ -236,6 +236,8 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
 {
     Call <- match.call()
     dots <- list(...)
+    if(!is.null(dots$dentype))
+        stop('bfactor does not currently support changing the dentype input', call.=FALSE)
     if(!is.null(dots$method))
         stop('method cannot be changed for bifactor models', call.=FALSE)
     if(!is.null(dots$formula))

@@ -3,7 +3,8 @@
 #' \code{mdirt} fits a variety of item response models with discrete latent variables.
 #' These include, but are not limited to, latent class analysis, multidimensional latent
 #' class models, multidimensional discrete latent class models, DINA/DINO models,
-#' grade of measurement models, and so on.
+#' grade of measurement models, C-RUM, and so on. If response models are not defined explicitly
+#' then customized models can defined using the \code{\link{createItem}} function.
 #'
 #' Posterior classification accuracy for each response pattern may be obtained
 #' via the \code{\link{fscores}} function. The \code{summary()} function will display
@@ -55,9 +56,9 @@
 #' @param covdata a data.frame of data used for latent regression models
 #' @param formula an R formula (or list of formulas) indicating how the latent traits
 #'   can be regressed using external covariates in \code{covdata}. If a named list
-#'   of formulas is supplied (where the names correspond to the latent trait names in \code{model})
+#'   of formulas is supplied (where the names correspond to the latent trait/attribute names in \code{model})
 #'   then specific regression effects can be estimated for each factor. Supplying a single formula
-#'   will estimate the regression parameters for all latent traits by default
+#'   will estimate the regression parameters for all latent variables by default
 #' @param pars used for modifying starting values; see \code{\link{mirt}} for details
 #' @param verbose logical; turn on messages to the R console
 #' @param technical list of lower-level inputs. See \code{\link{mirt}} for details
@@ -182,12 +183,13 @@
 #'                      A2 = 6-10
 #'                      A1A2 = 11-15')
 #'
-#' mod <- mdirt(dat, model, customTheta = theta)
-#' coef(mod)
-#' summary(mod)
-#' M2(mod) # fits well
+#' # last 5 items are DINA (first 10 are unidimensional C-RUMs)
+#' DINA <- mdirt(dat, model, customTheta = theta)
+#' coef(DINA)
+#' summary(DINA)
+#' M2(DINA) # fits well (as it should)
 #'
-#' cfs <- coef(mod, simplify=TRUE)$items[11:15,]
+#' cfs <- coef(DINA, simplify=TRUE)$items[11:15,]
 #' cbind(guess, estguess = plogis(cfs[,1]))
 #' cbind(slip, estslip = 1 - plogis(rowSums(cfs)))
 #'
@@ -207,11 +209,27 @@
 #'                      CONSTRAIN = (11,a2,a3,a4), (12,a2,a3,a4), (13,a2,a3,a4),
 #'                                  (14,a2,a3,a4), (15,a2,a3,a4)')
 #'
-#' mod <- mdirt(dat, model, customTheta = theta)
-#' coef(mod, simplify=TRUE)
-#' summary(mod)
-#' M2(mod) #doesn't fit as well, because not the generating model
+#' # last five items are DINOs (first 10 are unidimensional C-RUMs)
+#' DINO <- mdirt(dat, model, customTheta = theta)
+#' coef(DINO, simplify=TRUE)
+#' summary(DINO)
+#' M2(DINO) #doesn't fit as well, because not the generating model
 #'
+#' ## C-RUM (analogous to MIRT model)
+#' theta <- matrix(c(1,0,0,
+#'                   1,1,0,
+#'                   1,0,1,
+#'                   1,1,1), 4, 3, byrow=TRUE)
+#' model <- mirt.model('Intercept = 1-15
+#'                      A1 = 1-5, 11-15
+#'                      A2 = 6-15')
+#'
+#' CRUM <- mdirt(dat, model, customTheta = theta)
+#' coef(CRUM, simplify=TRUE)
+#' summary(CRUM)
+#'
+#' # good fit, but oversaturated (main effects for items 11-15 can be set to 0)
+#' M2(CRUM)
 #'
 #' #------------------
 #' #multidimensional latent class model
@@ -262,6 +280,8 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
 {
     Call <- match.call()
     dots <- list(...)
+    if(!is.null(dots$dentype))
+        stop('mdirt does not support changing the dentype input', call.=FALSE)
     latent.regression <- latentRegression_obj(data=data, covdata=covdata, formula=formula,
                                               dentype = 'discrete', method=method)
     technical$customTheta <- customTheta
