@@ -44,10 +44,10 @@
 #' @param GenRandomPars logical; use random starting values
 #' @param customTheta input passed to \code{technical = list(customTheta = ...)}, but is included
 #'   directly in this function for convenience. This input is most interesting for discrete latent models
-#'   because it allows customized patterns of latent class effects (defines the possible combinations
+#'   because it allows customized patterns of latent classes (i.e., defines the possible combinations
 #'   of the latent attribute profile). The default builds the pattern \code{customTheta = diag(model)},
 #'   which is the typical pattern for the traditional
-#'   latent class analysis whereby classes are completely distinct
+#'   latent class analysis whereby class membership mutually distinct and exaustive
 #' @param nruns a numeric value indicating how many times the model should be fit to the data
 #'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
 #'   by default
@@ -185,7 +185,7 @@
 #'
 #' # last 5 items are DINA (first 10 are unidimensional C-RUMs)
 #' DINA <- mdirt(dat, model, customTheta = theta)
-#' coef(DINA)
+#' coef(DINA, simplify=TRUE)
 #' summary(DINA)
 #' M2(DINA) # fits well (as it should)
 #'
@@ -200,7 +200,7 @@
 #'                   1,0,1,
 #'                   1,1,1), 4, 3, byrow=TRUE)
 #' # define theta matrix with negative interaction term
-#' theta <- cbind(theta, -theta[,2] * theta[,3])
+#' (theta <- cbind(theta, -theta[,2] * theta[,3]))
 #'
 #' model <- mirt.model('Intercept = 1-15
 #'                      A1 = 1-5, 11-15

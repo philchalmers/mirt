@@ -6,7 +6,8 @@ setMethod(
     {
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
-        cat("Latent class model with ", x@Model$nfact, " classes.\n", sep="")
+        cat("Latent class model with ", x@Model$nfact, " classes and ", nrow(x@Model$Theta),
+            " profiles.\n", sep="")
         EMquad <- ''
         if(x@Options$method == 'EM') EMquad <- c('\n     using ', x@Options$quadpts, ' quadrature')
         method <- x@Options$method
@@ -63,6 +64,7 @@ setMethod(
         ret <- vector('list', ngroups)
         items <- vector('list', object@Data$nitems + 1L)
         names(items) <- c(colnames(object@Data$data), 'Class.Probability')
+        prof <- apply(Theta, 1L, function(x) sprintf("P[%s]", paste0(x, collapse=' ')))
         for(g in seq_len(ngroups)){
             ret[[g]] <- items
             pars <- object@ParObjects$pars[[g]]
@@ -70,7 +72,7 @@ setMethod(
                 item <- extract.item(pars, i)
                 P <- probtrace(item, Theta)
                 colnames(P) <- paste0('category_', 1L:ncol(P))
-                rownames(P) <- paste0('Class_', 1L:nrow(P))
+                rownames(P) <- prof
                 ret[[g]][[i]] <- P
             }
             if(is.matrix(object@Internals$Prior[[g]])){
@@ -78,7 +80,7 @@ setMethod(
             } else {
                 ret[[g]][[i+1L]] <- data.frame(Theta, prob=object@Internals$Prior[[g]])
             }
-            rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
+            rownames(ret[[g]][[i+1L]]) <- paste0('Profile_', 1L:nrow(ret[[g]][[i+1L]]))
         }
         names(ret) <- extract.mirt(object, 'groupNames')
         for(i in seq_len(length(ret))) class(ret[[i]]) <- c('mirt_list', 'list')
