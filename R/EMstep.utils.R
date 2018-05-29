@@ -158,7 +158,6 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         } else {
             stop('M-step optimizer not supported', call.=FALSE)
         }
-        if(is(opt, 'try-error')) browser()
         if(is(opt, 'try-error'))
             stop(opt, call.=FALSE)
 
