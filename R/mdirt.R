@@ -46,8 +46,9 @@
 #'   directly in this function for convenience. This input is most interesting for discrete latent models
 #'   because it allows customized patterns of latent classes (i.e., defines the possible combinations
 #'   of the latent attribute profile). The default builds the pattern \code{customTheta = diag(model)},
-#'   which is the typical pattern for the traditional
-#'   latent class analysis whereby class membership mutually distinct and exaustive
+#'   which is the typical pattern for the traditional latent class analysis whereby class
+#'   membership mutually distinct and exaustive. See \code{\link{thetaComb}} for a quick method
+#'   to generate a matrix with all possible combinations
 #' @param nruns a numeric value indicating how many times the model should be fit to the data
 #'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
 #'   by default
@@ -70,7 +71,7 @@
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
-#' @seealso \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}},
+#' @seealso \code{\link{thetaComb}}, \code{\link{fscores}}, \code{\link{mirt.model}}, \code{\link{M2}},
 #'   \code{\link{itemfit}}, \code{\link{boot.mirt}}, \code{\link{mirtCluster}},
 #'   \code{\link{wald}}, \code{\link{coef-method}}, \code{\link{summary-method}},
 #'   \code{\link{anova-method}}, \code{\link{residuals-method}}
@@ -142,8 +143,7 @@
 #'      key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
 #' # define Theta grid for three latent classes
-#' (Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1),
-#'    ncol=3, byrow=TRUE))
+#' (Theta <- thetaComb(0:1, 3))
 #' (mod_discrete <- mdirt(dat, 3, customTheta = Theta))
 #' summary(mod_discrete)
 #'
@@ -173,10 +173,7 @@
 #' dat <- simdata(a, Theta=Theta, itemtype = 'lca')
 #'
 #' # first column is the intercept, 2nd and 3rd are attributes
-#' theta <- matrix(c(1,0,0,
-#'                   1,1,0,
-#'                   1,0,1,
-#'                   1,1,1), 4, 3, byrow=TRUE)
+#' theta <- cbind(1, thetaComb(0:1, 2))
 #' theta <- cbind(theta, theta[,2] * theta[,3]) #DINA interaction of main attributes
 #' model <- mirt.model('Intercept = 1-15
 #'                      A1 = 1-5
@@ -195,10 +192,7 @@
 #'
 #'
 #' ### DINO model example
-#' theta <- matrix(c(1,0,0,
-#'                   1,1,0,
-#'                   1,0,1,
-#'                   1,1,1), 4, 3, byrow=TRUE)
+#' theta <- cbind(1, thetaComb(0:1, 2))
 #' # define theta matrix with negative interaction term
 #' (theta <- cbind(theta, -theta[,2] * theta[,3]))
 #'
@@ -216,10 +210,7 @@
 #' M2(DINO) #doesn't fit as well, because not the generating model
 #'
 #' ## C-RUM (analogous to MIRT model)
-#' theta <- matrix(c(1,0,0,
-#'                   1,1,0,
-#'                   1,0,1,
-#'                   1,1,1), 4, 3, byrow=TRUE)
+#' theta <- cbind(1, thetaComb(0:1, 2))
 #' model <- mirt.model('Intercept = 1-15
 #'                      A1 = 1-5, 11-15
 #'                      A2 = 6-15')

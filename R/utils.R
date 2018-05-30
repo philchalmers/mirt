@@ -1,4 +1,29 @@
-# theta combinations
+#' Create all possible combinations of vector input
+#'
+#' This function constructs all possible k-way combinations of an input vector.
+#' It is primarily useful when used in conjunction with the \code{\link{mdirt}} function,
+#' though users may have other uses for it as well. See \code{\link{expand.grid}} for more
+#' flexible combination formats.
+#'
+#' @param x the vector from which all possible combinations should be obtained
+#' @param k the number of observations (and therefore the number of columns to return in
+#'   the matrix of combinations)
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @return a matrix with all possible combinations
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#' @export
+#' @examples
+#'
+#' # all possible joint combinations for the vector -4 to 4
+#' thetaComb(-4:4, 2)
+#'
+#' # all possible binary combinations for four observations
+#' thetaComb(c(0,1), 4)
+#'
 thetaComb <- function(theta, nfact)
 {
 	if (nfact == 1L){
@@ -8,7 +33,8 @@ thetaComb <- function(theta, nfact)
         for(i in seq_len(nfact))
             thetalist[[i]] <- theta
         Theta <- as.matrix(expand.grid(thetalist))
-    }
+	}
+    colnames(Theta) <- NULL
 	return(Theta)
 }
 
