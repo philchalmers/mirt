@@ -154,6 +154,7 @@ extract.mirt <- function(x, what){
                   CUSTOM.IND = x@Internals$CUSTOM.IND,
                   dentype = x@Options$dentype,
                   pis = x@Model$pis,
+                  nestpars=x@Model$nestpars,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }
