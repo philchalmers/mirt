@@ -1,3 +1,8 @@
+# Changes in mirt 1.29
+
+- `structure` argument added to `mdirt()` function to allow log-linear models for 
+  simplifiying the profile probability model computations
+
 # Changes in mirt 1.28
 
 - `M2()` function gains a `type` input to distinguish between the univariate-bivariate 

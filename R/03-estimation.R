@@ -71,14 +71,23 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ret <- t(apply(mus, 1L, function(x)
                         c(exp(par + x[-ncol(mus)]), 1)))
                     ret <- ret / rowSums(ret)
+                } else if(length(obj@structure)){
+                    d <- exp(obj@structure %*% par)
+                    d[length(d)] <- 1
+                    ret <- as.vector(d / sum(d))
                 } else {
                     d <- c(exp(par), 1)
                     ret <- d / sum(d)
                 }
                 ret
-
             }
-            par <- if(is.null(opts$technical$customTheta)){
+            par <- if(!is.null(dots$structure)){
+                if(is.null(opts$technical$customTheta))
+                    stop('customTheta must be defined when using structure input', call.=FALSE)
+                opts$structure <- model.matrix(dots$structure, as.data.frame(opts$technical$customTheta))
+                tmpnfact <- ncol(opts$technical$customTheta)
+                numeric(ncol(opts$structure))
+            } else if(is.null(opts$technical$customTheta)){
                 tmpnfact <- model
                 numeric(model-1L)
             } else {
@@ -218,6 +227,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
                          dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
+        }
+        if(!is.null(opts$structure)){
+            PrepList[[1L]]$pars[[Data$nitems+1L]]@structure <- opts$structure
+            PrepList[[1L]]$pars[[Data$nitems+1L]]@parnames <-
+                names(PrepList[[1L]]$pars[[Data$nitems+1L]]@est) <- colnames(opts$structure)
+            PrepList[[1L]]$pars[[Data$nitems+1L]]@itemclass <- -999L
         }
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
         attr(PrepListFull$pars, 'nclasspars') <- attr(PrepList[[1L]]$pars, 'nclasspars') <-
@@ -429,6 +444,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     if(length(lrPars))
         nestpars <- nestpars + sum(lrPars@est)
+    if(!is.null(dots$structure)) nestpars <- nestpars - 1L
     if(length(constrain) > 0L)
         for(i in seq_len(length(constrain)))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
@@ -474,7 +490,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     lr.random=latent.regression$lr.random, lrPars=lrPars)
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% Use_R_ProbTrace())
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% Use_R_Deriv())
-    if(pars[[1]][[length(pars[[1L]])]]@itemclass == -999L)
+    if(pars[[1]][[length(pars[[1L]])]]@itemclass %in% c(-1L, -999L))
         SLOW.IND <- c(SLOW.IND, length(pars[[1L]]))
     if(opts$dentype != 'Gaussian' && opts$method %in% c('MHRM', 'MIXED', 'SEM'))
         stop('Non-Gaussian densities not currently supported with MHRM algorithm')

@@ -4,8 +4,8 @@
 \alias{mdirt}
 \title{Multidimensional discrete item response theory}
 \usage{
-mdirt(data, model, customTheta = NULL, nruns = 1, method = "EM",
-  covdata = NULL, formula = NULL, itemtype = "lca",
+mdirt(data, model, customTheta = NULL, structure = NULL, nruns = 1,
+  method = "EM", covdata = NULL, formula = NULL, itemtype = "lca",
   optimizer = "nlminb", return_max = TRUE, group = NULL,
   GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
   technical = list(), ...)
@@ -27,6 +27,11 @@ of the latent attribute profile). The default builds the pattern \code{customThe
 which is the typical pattern for the traditional latent class analysis whereby class
 membership mutually distinct and exaustive. See \code{\link{thetaComb}} for a quick method
 to generate a matrix with all possible combinations}
+
+\item{structure}{an R formula allowing the profile probability patterns (i.e., the structural component of
+the model) to be fitted according to a log-linear model. When \code{NULL}, all profile probabilities
+(except one) will be estimated. Use of this input requires that the \code{customTheta} input is supplied,
+and that the column names in this matrix match the names found within this formula}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
 when using random starting values. If greater than 1, \code{GenRandomPars} is set to true

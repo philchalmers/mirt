@@ -60,6 +60,10 @@
 #'   of formulas is supplied (where the names correspond to the latent trait/attribute names in \code{model})
 #'   then specific regression effects can be estimated for each factor. Supplying a single formula
 #'   will estimate the regression parameters for all latent variables by default
+#' @param structure an R formula allowing the profile probability patterns (i.e., the structural component of
+#'   the model) to be fitted according to a log-linear model. When \code{NULL}, all profile probabilities
+#'   (except one) will be estimated. Use of this input requires that the \code{customTheta} input is supplied,
+#'   and that the column names in this matrix match the names found within this formula
 #' @param pars used for modifying starting values; see \code{\link{mirt}} for details
 #' @param verbose logical; turn on messages to the R console
 #' @param technical list of lower-level inputs. See \code{\link{mirt}} for details
@@ -264,7 +268,7 @@
 #'
 #'
 #' }
-mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
+mdirt <- function(data, model, customTheta = NULL, structure = NULL, nruns = 1, method = 'EM',
                   covdata = NULL, formula = NULL, itemtype = 'lca',
                   optimizer = 'nlminb', return_max = TRUE, group = NULL, GenRandomPars = FALSE,
                   verbose = TRUE, pars = NULL, technical = list(), ...)
@@ -286,7 +290,7 @@ mdirt <- function(data, model, customTheta = NULL, nruns = 1, method = 'EM',
     if((is(model, 'mirt.model') || is.character(model)) && is.null(technical$customTheta))
         stop('customTheta input required when using a mirt.model type input')
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), method=method,
-                     latent.regression=latent.regression,
+                     latent.regression=latent.regression, structure=structure,
                      data=data, model=model, group=group, itemtype=itemtype, optimizer=optimizer,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars,
                      dentype = 'discrete', verbose=ifelse(nruns > 1L, FALSE, verbose), pars=pars, ...)

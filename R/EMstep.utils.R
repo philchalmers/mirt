@@ -354,7 +354,6 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
                        constrain, itemloc, DERIV, rlist, CUSTOM.IND, SLOW.IND, keep_vcov_PD){
-
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -365,7 +364,6 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
         }
     }
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
-
     if(length(SLOW.IND)){
         for(group in seq_len(ngroups)){
             for (i in SLOW.IND){
