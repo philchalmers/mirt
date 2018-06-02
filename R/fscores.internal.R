@@ -449,6 +449,8 @@ setMethod(
                 stabdata2 <- apply(tabdata2, 1, paste, sep='', collapse = '/')
                 sfulldata <- apply(object@Data$data, 1, paste, sep='', collapse = '/')
                 scoremat <- scores[match(sfulldata, stabdata2), , drop = FALSE]
+                if(discrete)
+                    colnames(scoremat) <- paste0("Class_", 1:ncol(scoremat))
                 if(return.acov){
                     ret <- vector('list', nrow(scoremat))
                     for(i in seq_len(nrow(scoremat)))
@@ -462,6 +464,8 @@ setMethod(
     			colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             } else {
                 scoremat <- scores
+                if(discrete)
+                    colnames(scoremat) <- paste0("Class_", 1:ncol(scoremat))
                 SEscoremat <- SEscores
                 converge_info_mat <- converge_info_vec
                 if(return.acov){
@@ -472,6 +476,8 @@ setMethod(
                     return(ret)
                 } else colnames(SEscoremat) <- paste0('SE_',colnames(scores))
             }
+		    if(discrete)
+		        colnames(scoremat) <- paste0("Class_", 1:ncol(scoremat))
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)
             if(converge_info) scoremat <- cbind(scoremat, converged=converge_info_mat)
@@ -510,7 +516,7 @@ setMethod(
                 if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
                 if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,seq_len(J)])), ]
 		    } else {
-		        colnames(scores) <- paste0('CLASS_', 1L:ncol(scores))
+		        colnames(scores) <- paste0('Class_', 1L:ncol(scores))
 		        ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores)
 		    }
 			return(ret)
@@ -866,6 +872,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
         EAPscores <- ret[match(scores, Sum.Scores), -1L, drop=FALSE]
+        if(discrete)
+            colnames(EAPscores) <- gsub('Theta.', 'Class_', colnames(EAPscores))
         pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
         ret <- as.matrix(EAPscores[,pick, drop=FALSE])
         rownames(ret) <- NULL
