@@ -66,7 +66,7 @@ understanding DIF within each item}
 \description{
 Function performs various omnibus differential item (DIF), bundle (DBF), and test (DTF)
 functioning procedures on an object
-estimated with \code{multipleGroup()}. The compenstatory and non-compensatory statistics provided
+estimated with \code{multipleGroup()}. The compensatory and non-compensatory statistics provided
 are described in Chalmers (accepted), which generally can be interpreted as IRT generalizations
 of the SIBTEST and CSIBTEST statistics. These require the ACOV matrix to be computed in the
 fitted multiple-group model (otherwise, sets of plausible draws from the posterior are explicitly

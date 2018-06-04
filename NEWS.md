@@ -1,8 +1,8 @@
 # Changes in mirt 1.29
 
-- Added Differential Response Function (DRF) statistics from upcoming publication (Chalmers, accepted). 
-  These related to compensatory and non-compensatory measures of response bias for DIF, DBF, and DTF 
-  for IRT model fitted within the multiple-group estimation framework
+- Added Differential Response Function (DRF) statistics from upcoming publication (Chalmers, accepted)
+  in a new function entitled `DRF()`. These related to compensatory and non-compensatory measures 
+  of response bias for DIF, DBF, and DTF for IRT model fitted within the multiple-group estimation framework
 
 - `structure` argument added to `mdirt()` function to allow log-linear models for 
   simplifiying the profile probability model computations
