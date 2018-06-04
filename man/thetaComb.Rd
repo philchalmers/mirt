@@ -4,13 +4,16 @@
 \alias{thetaComb}
 \title{Create all possible combinations of vector input}
 \usage{
-thetaComb(theta, nfact)
+thetaComb(theta, nfact, intercept = FALSE)
 }
 \arguments{
-\item{x}{the vector from which all possible combinations should be obtained}
+\item{theta}{the vector from which all possible combinations should be obtained}
 
-\item{k}{the number of observations (and therefore the number of columns to return in
+\item{nfact}{the number of observations (and therefore the number of columns to return in
 the matrix of combinations)}
+
+\item{intercept}{logical; should a vector of 1's be appended to the first column of the
+result to include an intercept design component? Default is \code{FALSE}}
 }
 \value{
 a matrix with all possible combinations
@@ -28,6 +31,9 @@ thetaComb(-4:4, 2)
 
 # all possible binary combinations for four observations
 thetaComb(c(0,1), 4)
+
+# all possible binary combinations for four observations (with intercept)
+thetaComb(c(0,1), 4, intercept=TRUE)
 
 }
 \references{

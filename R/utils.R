@@ -5,9 +5,11 @@
 #' though users may have other uses for it as well. See \code{\link{expand.grid}} for more
 #' flexible combination formats.
 #'
-#' @param x the vector from which all possible combinations should be obtained
-#' @param k the number of observations (and therefore the number of columns to return in
+#' @param theta the vector from which all possible combinations should be obtained
+#' @param nfact the number of observations (and therefore the number of columns to return in
 #'   the matrix of combinations)
+#' @param intercept logical; should a vector of 1's be appended to the first column of the
+#'   result to include an intercept design component? Default is \code{FALSE}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @return a matrix with all possible combinations
@@ -24,7 +26,10 @@
 #' # all possible binary combinations for four observations
 #' thetaComb(c(0,1), 4)
 #'
-thetaComb <- function(theta, nfact)
+#' # all possible binary combinations for four observations (with intercept)
+#' thetaComb(c(0,1), 4, intercept=TRUE)
+#'
+thetaComb <- function(theta, nfact, intercept = FALSE)
 {
 	if (nfact == 1L){
         Theta <- matrix(theta)
@@ -34,6 +39,7 @@ thetaComb <- function(theta, nfact)
             thetalist[[i]] <- theta
         Theta <- as.matrix(expand.grid(thetalist))
 	}
+    if(intercept) Theta <- cbind(1, Theta)
     colnames(Theta) <- NULL
 	return(Theta)
 }
