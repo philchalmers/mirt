@@ -1,9 +1,5 @@
 Package: mirt
-<<<<<<< HEAD
-Version: 1.28.2
-=======
-Version: 0.01
->>>>>>> DRF
+Version: 1.28.3
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =

@@ -25,9 +25,9 @@ because they are exactly equal across groups). Selecting fewer items will result
 'differential bundle functioning'}
 
 \item{param_set}{an N x p matrix of parameter values drawn from the posterior (e.g., using the
-parametric sampling approach, boostrap, of MCMC). If supplied, then these will be used to compute
-the DRF measures. Can be much more efficient to precompute these values if DIF, DBF, or DTF are
-being evaluated within the same model (especially when using the boostrap method).
+parametric sampling approach, bootstrap, of MCMC). If supplied, then these will be used to compute
+the DRF measures. Can be much more efficient to pre-compute these values if DIF, DBF, or DTF are
+being evaluated within the same model (especially when using the bootstrap method).
 See \code{\link{draw_parameters}}}
 
 \item{CI}{range of confidence interval when using draws input}
@@ -66,14 +66,11 @@ understanding DIF within each item}
 \description{
 Function performs various omnibus differential item (DIF), bundle (DBF), and test (DTF)
 functioning procedures on an object
-estimated with \code{multipleGroup()}. If the latent means/covariances are suspected to differ
-then the input object should contain a set of 'anchor' items to ensure that only differential
-test features are being detected rather than group differences. Returns signed (average area
-above and below) and unsigned (total area) statistics, with descriptives such as the percent
-average bias between expected group scores for each statistic. If a grid of Theta values is passed,
-these can be evaluated as well to determine specific DRF location effects. For best results,
-the baseline model should contain a set of 'anchor' items and have freely estimated
-hyper-parameters in the focal groups. See \code{\link{DIF}} for details.
+estimated with \code{multipleGroup()}. The compenstatory and non-compensatory statistics provided
+are described in Chalmers (accepted), which generally can be interpreted as IRT generalizations
+of the SIBTEST and CSIBTEST statistics. These require the ACOV matrix to be computed in the
+fitted multiple-group model (otherwise, sets of plausible draws from the posterior are explicitly
+required).
 }
 \examples{
 \dontrun{
@@ -116,7 +113,7 @@ mirtCluster()
 DRF(mod, draws = 500)
 DRF(mod, draws = 500, plot=TRUE)
 
-# predraw parameter set to save computations
+# pre-draw parameter set to save computations
 param_set <- draw_parameters(mod, draws = 500)
 DRF(mod, focal_items = 6, param_set=param_set) #DIF
 DRF(mod, DIF=TRUE, param_set=param_set) #DIF
@@ -271,9 +268,8 @@ DRF(simmod, draws = 500)
 }
 }
 \references{
-Chalmers, R. P., Counsell, A., and Flora, D. B. (in press). It might not
-  make a big DIF: Improved Differential Test Functioning statistics that account for
-  sampling variability. \emph{Educational and Psychological Measurement}.
+Chalmers, R. P. (accepted). Model-Based Measures for Detecting and Quantifying Response Bias.
+  \emph{Psychometrika}.
 }
 \seealso{
 \code{\link{multipleGroup}}, \code{\link{DIF}}
