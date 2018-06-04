@@ -2193,6 +2193,14 @@ latentRegression_obj <- function(data, covdata, formula, dentype, method){
     latent.regression
 }
 
+bs_range <- function(x, CI){
+    ss <- sort(x)
+    N <- length(ss)
+    ret <- c(lower = ss[floor(N * (1-CI)/2)],
+             upper = ss[ceiling(N * (1 - (1-CI)/2))])
+    ret
+}
+
 # borrowed and modified from emdbook package, March 1 2017
 mixX2 <- function (p, df = 1, mix = 0.5, lower.tail = TRUE)
 {
