@@ -8,7 +8,7 @@ empirical_plot(data, which.items = NULL, smooth = FALSE, formula = resp ~
   s(TS, k = 5), main = NULL, par.strip.text = list(cex = 0.7),
   boxplot = FALSE, par.settings = list(strip.background = list(col =
   "#9ECAE1"), strip.border = list(col = "black")), auto.key = list(space =
-  "right"), ...)
+  "right", points = FALSE, lines = TRUE), ...)
 }
 \arguments{
 \item{data}{a \code{data.frame} or \code{matrix} of item responses (see \code{\link{mirt}}

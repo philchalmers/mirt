@@ -30,7 +30,7 @@ setMethod(
     f = "itemplot.internal",
     signature = signature(object = 'MultipleGroupClass'),
     definition = function(object, item, type, degrees, CE, CEalpha, CEdraws, rot,
-        auto.key = TRUE, main = NULL, ...)
+        auto.key, main = NULL, ...)
     {
         Pinfo <- list()
         gnames <- object@Data$groupNames

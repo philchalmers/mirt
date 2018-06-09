@@ -1,5 +1,8 @@
 # Changes in mirt 1.29
 
+- lattice `auto.key` default now reports lines rather than points. This is now more consistent
+  when, for example, color theme is changed to black and white in the trellis window
+
 - Added Differential Response Function (DRF) statistics from upcoming publication (Chalmers, accepted)
   in a new function entitled `DRF()`. These are related to compensatory and non-compensatory measures 
   of response bias for DIF, DBF, and DTF available from the SIBTEST framework but 

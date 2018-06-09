@@ -208,7 +208,7 @@ plot.itemGAM <- function(x, y = NULL,
                          par.strip.text = list(cex = 0.7),
                          par.settings = list(strip.background = list(col = '#9ECAE1'),
                                              strip.border = list(col = "black")),
-                         auto.key = list(space = 'right'), ...){
+                         auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     class(x) <- 'data.frame'
     if(length(unique(x$cat)) == 2L){
         x <- subset(x, cat == 'cat_2')

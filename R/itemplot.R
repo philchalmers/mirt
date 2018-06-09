@@ -96,7 +96,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                      par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
-                     auto.key = list(space = 'right'), ...){
+                     auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)

@@ -71,7 +71,7 @@ setMethod(
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
-                          auto.key = list(space = 'right'), ...)
+                          auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace',
                          'itemscore', 'infotrace', 'Davidian'))

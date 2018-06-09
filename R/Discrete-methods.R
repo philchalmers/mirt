@@ -133,7 +133,7 @@ setMethod(
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
-                          auto.key = list(space = 'right'), ...)
+                          auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...)
     {
         if(extract.mirt(x, 'ngroups') > 1L)
             stop('plot methods do not support multiple group latent class models yet',

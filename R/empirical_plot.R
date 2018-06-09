@@ -58,7 +58,7 @@ empirical_plot <- function(data, which.items = NULL, smooth = FALSE, formula = r
                            main = NULL, par.strip.text = list(cex = 0.7), boxplot = FALSE,
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
-                           auto.key = list(space = 'right'), ...){
+                           auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
     if(boxplot) smooth <- FALSE
     data <- na.omit(as.matrix(data))

@@ -16,8 +16,8 @@
   = 10), facet_items = TRUE, main = NULL, drape = TRUE, colorkey = TRUE,
   ehist.cut = 1e-10, add.ylab2 = TRUE, par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), auto.key = list(space = "right"), profile = FALSE,
-  ...)
+  list(col = "black")), auto.key = list(space = "right", points = FALSE, lines
+  = TRUE), profile = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{SingleGroupClass},

@@ -254,7 +254,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                 par.strip.text = list(cex = 0.7),
                 par.settings = list(strip.background = list(col = '#9ECAE1'),
                                  strip.border = list(col = "black")),
-                auto.key = list(space = 'right'), ...){
+                auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
 
     compute_ps <- function(x, xs, X2=FALSE){
         if(X2){
@@ -584,7 +584,7 @@ plot.DRF <- function(Theta, DV, itemnames, CIs = NULL, DIF = FALSE, CI,
                      main = 'Signed DIF', par.strip.text = list(cex = 0.7),
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
-                     auto.key = list(space = 'right'), ...){
+                     auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
 
     panel.bands <- function(x, y, upper, lower, fill, col,
                             subscripts, ..., font, fontface){
