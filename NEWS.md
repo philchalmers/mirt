@@ -10,6 +10,8 @@
 
 - `structure` argument added to `mdirt()` function to allow log-linear models for 
   simplifiying the profile probability model computations
+  
+- fix `survey.weights` input for multiple group models (reported by Leigh Allison)
 
 # Changes in mirt 1.28
 

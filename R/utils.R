@@ -1311,7 +1311,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
         if(!is.null(survey.weights)){
             Freq <- mySapply(seq_len(nrow(tabdata)), function(x, std, tstd, w)
                 sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata,
-                w=survey.weights)
+                w=survey.weights[group == groupNames[g]])
         } else {
             Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
                 match(tmpstringdata, stringtabdata)))

@@ -13,6 +13,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         stop('items must have unique names in data input', call.=FALSE)
     if(missing(model)) missingMsg('model')
     if(missing(group)) missingMsg('group')
+    if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data))
+        stop('group input provided is not valid', call.=FALSE)
     if(is.logical(large) && large){
         Data <- opts <- list()
         opts$zeroExtreme <- FALSE
@@ -33,7 +35,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         tmp <- list(...)
         if(!is.null(tmp$technical$customK)) K <- tmp$technical$customK
         itemloc <- c(1L, cumsum(K) + 1L)
-        PrepListFull <- list(K=K, itemloc=itemloc, Names=NULL, itemnames=colnames(Data$data))
+        Names <- NULL
+        for(i in 1L:length(K))
+            Names <- c(Names, paste("Item.",i,"_",1L:K[i],sep=""))
+        PrepListFull <- list(K=K, itemloc=itemloc,
+                             Names=Names, itemnames=colnames(Data$data))
     } else {
         if(missing(data) || is.null(nrow(data)))
             stop('data argument is required', call.=FALSE)
