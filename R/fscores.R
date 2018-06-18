@@ -218,6 +218,8 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     if(returnER) full.scores <- FALSE
     if(na.rm)
         object <- removeMissing(object)
+    if(theta_lim[1L] < max_theta) theta_lim[1L] <- -max_theta
+    if(theta_lim[2L] > max_theta) theta_lim[2L] <- max_theta
     if(is(object, 'DiscreteClass') && plausible.draws > 0L){
         fs <- fscores(object)
         ret <- lapply(seq_len(plausible.draws), function(ind, fs){
