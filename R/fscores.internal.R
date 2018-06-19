@@ -33,7 +33,7 @@ setMethod(
             }
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2 + 1L))
-            if(hessian){
+            if(hessian && any(diag(estimate$hessian) > 0)){
                 vcov <- try(solve(estimate$hessian))
                 if(return.acov) return(vcov)
     	        SEest <- try(sqrt(diag(vcov)))
@@ -50,7 +50,7 @@ setMethod(
 	        if(is(estimate, 'try-error'))
 	            return(rep(NA, ncol(scores)*2 + 1L))
 	        est <- estimate$estimate
-            if(hessian){
+            if(hessian && any(diag(estimate$hessian) > 0)){
                 pick <- diag(estimate$hessian) > 0
                 if(!all(pick)){
     	            vcov_small <- try(solve(estimate$hessian[pick,pick,drop=FALSE]))
