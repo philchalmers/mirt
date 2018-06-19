@@ -432,7 +432,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     if(is(C2, 'try-error'))
         stop('Could not invert orthogonal complement matrix', call.=FALSE)
     N <- nrow(extract.mirt(obj, 'data'))
-    M2 <- t(p - e) %*% C2 %*% (p - e)
+    M2 <- abs(t(p - e) %*% C2 %*% (p - e))
     df <- length(p) - extract.mirt(obj, 'nest')
     newret <- list(M2=M2, df=df)
     newret$p <- 1 - pchisq(M2, df)
