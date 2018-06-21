@@ -13,6 +13,9 @@
   
 - fix `survey.weights` input for multiple group models (reported by Leigh Allison)
 
+- fix `itemtype = "rsm"` block restriction when items contain unequal category lengths 
+  (reported by Aiden Loe)
+
 # Changes in mirt 1.28
 
 - `M2()` function gains a `type` input to distinguish between the univariate-bivariate 

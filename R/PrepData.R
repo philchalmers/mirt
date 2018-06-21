@@ -159,7 +159,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         if(any(itemtype == 'rsm')){
             unique.rsmgroups <- unique(na.omit(rsm.block))
             for(group in unique.rsmgroups){
-                Kk <- unique(K[rsm.block[rsm.block == unique.rsmgroups[group]]])
+                Kk <- unique(K[rsm.block == unique.rsmgroups[group]])
                 if(length(Kk) > 1L) stop('Rating scale models require that items to have the
                                         same number of categories', call.=FALSE)
                 for(k in 1L:(Kk-1L)){
