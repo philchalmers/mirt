@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, gpcm_mats, spline_args, itemnames, monopoly.k)
+                     key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -647,6 +647,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(pars[[i]]@est) - 1L)
             pars[[i]]@parnum <- tmp2
             pars[[i]]@fixed.design <- fixed.design.list[[i]]
+            if(pars[[i]]@useuserdata) pars[[i]]@userdata <- list(customItemsData[[i]])
             parnumber <- parnumber + length(pars[[i]]@est)
             next
         }

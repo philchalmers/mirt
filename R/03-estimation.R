@@ -1,7 +1,8 @@
 ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1,
                        invariance = '', pars = NULL, constrain = NULL, key = NULL,
                        parprior = NULL, mixed.design = NULL, customItems = NULL,
-                       customGroup = NULL, GenRandomPars = FALSE, large = FALSE,
+                       customItemsData = NULL, customGroup = NULL,
+                       GenRandomPars = FALSE, large = FALSE,
                        survey.weights = NULL, latent.regression = NULL,
                        gpcm_mats=list(), spline_args=list(), monopoly.k=1,
                        control = list(), ...)
@@ -57,6 +58,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             stopifnot(is(parprior, 'list'))
         if(!is.null(customItems))
             stopifnot(is(customItems, 'list'))
+        if(!is.null(customItemsData))
+            stopifnot(is(customItemsData, 'list') || length(customItemsData) == ncol(data))
         if(!is.null(customGroup))
             stopifnot(is(customGroup, 'GroupPars'))
         stopifnot(is(invariance, 'character'))
@@ -229,6 +232,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
                          grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                          mixed.design=mixed.design, customItems=customItems,
+                         customItemsData=customItemsData,
                          customGroup=customGroup, spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,

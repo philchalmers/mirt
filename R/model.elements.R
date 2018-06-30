@@ -1,7 +1,8 @@
 model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K, fulldata,
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
-                           parnumber, BFACTOR = FALSE, mixed.design, customItems, dentype,
-                           customGroup, key, gpcm_mats, spline_args, monopoly.k, dcIRT_nphi = NULL)
+                           parnumber, BFACTOR = FALSE, mixed.design, customItems, customItemsData,
+                           dentype, customGroup, key, gpcm_mats, spline_args,
+                           monopoly.k, dcIRT_nphi = NULL)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -109,7 +110,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
         stop('Partially compensatory models can only be estimated within a confirmatory model',
              call.=FALSE)
     ret <- LoadPars(itemtype=itemtype, itemloc=itemloc, lambdas=lambdas, zetas=zetas,
-                    guess=guess, upper=upper, fulldata=fulldata, J=J, K=K,
+                    guess=guess, upper=upper, fulldata=fulldata, J=J, K=K, customItemsData=customItemsData,
                     nfact=nfact+length(prodlist), parprior=parprior, monopoly.k=monopoly.k,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR,
                     mixed.design=mixed.design, customItems=customItems, key=key,

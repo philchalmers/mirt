@@ -1,5 +1,9 @@
 # Changes in mirt 1.29
 
+- `createItem()` functions gain an optional argument to the function defintions to allow for
+  list-specified data from functions such as `mirt()` via silenent `mirt(..., customItemsData)`
+  argument
+
 - lattice `auto.key` default now reports lines rather than points. This is now more consistent
   when, for example, color theme is changed to black and white in the trellis window
 
