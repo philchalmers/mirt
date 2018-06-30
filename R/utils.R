@@ -1411,7 +1411,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$customPriorFun = technical$customPriorFun
     if(dentype == "empiricalhist") dentype <- 'EH'
     if(dentype == "empiricalhist_Woods") dentype <- 'EHW'
-    opts$dentype <- dentype
+    opts$dentype <- opts$odentype <- dentype
     opts$zeroExtreme <- FALSE
     if(!is.null(technical$zeroExtreme)) opts$zeroExtreme <- technical$zeroExtreme
     if(BFACTOR) opts$dentype <- 'bfactor'

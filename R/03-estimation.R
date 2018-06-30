@@ -1028,7 +1028,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$storeEtable)
         Internals$Etable <- ESTIMATE$Etable
     if(opts$method == 'SEM') Options$TOL <- NA
-    if(opts$dentype == "discrete"){
+    if(opts$odentype == "discrete"){
         Fit$F <- Fit$h2 <- NULL
         mod <- new('DiscreteClass',
                    Data=Data,
@@ -1085,7 +1085,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 Internals$bfactor <- list(prior=ESTIMATE$prior,
                                           Priorbetween=ESTIMATE$Priorbetween,
                                           sitems=ESTIMATE$sitems, specific=specific)
-            cls <- ifelse(opts$dentype == 'mixture', 'MixtureClass', 'MultipleGroupClass')
+            cls <- ifelse(opts$odentype == 'mixture', 'MixtureClass', 'MultipleGroupClass')
             mod <- new(cls,
                        Data=Data,
                        Options=Options,
