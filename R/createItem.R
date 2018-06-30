@@ -23,12 +23,15 @@
 #'   called \code{ncat}, and (optionally) a fourth argument termed \code{itemdata}
 #'   may be included containing further  users specification information.
 #'   The last optional input is to be utilized within the estimation functions
-#'   such as \code{\link{mirt}} via the list input \code{customItemsData}}
+#'   such as \code{\link{mirt}} via the list input \code{customItemsData}
 #'   to more naturally recycle custom-item definitions. Therefore, these inputs must be of the form
 #'
 #'   \code{function(par, Theta, ncat){...}}
+#'
 #'   or
+#'
 #'   \code{function(par, Theta, ncat, itemdata){...}}
+#'
 #'   to be valid; however, the names of the arguements is not relavent.
 #'
 #'   Finally, this function must return a \code{matrix} object of category probabilities, where
