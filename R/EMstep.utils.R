@@ -357,7 +357,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    if(pars[[1L]][[J + 1L]]@itemclass == -1L){
+    if(pars[[1L]][[J + 1L]]@itemclass %in% c(-1L, -999L)){
         for(g in seq_len(length(pars))){
             gp <- pars[[g]][[J + 1L]]
             pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])

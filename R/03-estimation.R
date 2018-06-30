@@ -582,7 +582,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         if(is.null(opts$technical$customTheta))
                             Theta <- thetaComb(theta, nfact)
                     } else stop('Greater than ', opts$MAXQUAD, ' quadrature points.', call.=FALSE)
-                    if(opts$message && nfact > 3L)
+                    if(opts$message && nfact > 3L && !(opts$odentype %in% c('custom', 'discrete')))
                         message('EM quadrature for high dimensional models are better handled
                                  \twith the \"QMCEM\" or \"MCEM\" method')
                 }
