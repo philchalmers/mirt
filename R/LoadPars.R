@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData)
+                     key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData, item.Q)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -535,6 +535,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              itemclass=10L,
+                             item.Q=item.Q[[i]],
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              lbound=rep(-Inf, length(startvalues[[i]])),

@@ -1354,7 +1354,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                      rsm.block = NULL, calcNull = FALSE, BFACTOR = FALSE,
                      technical = list(), hasCustomGroup = FALSE,
                      SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay',
-                     optimizer = NULL, solnp_args = list(), nloptr_args = list(), ...)
+                     optimizer = NULL, solnp_args = list(), nloptr_args = list(),
+                     item.Q = NULL, ...)
 {
     opts <- list()
     tnames <- names(technical)
@@ -1409,6 +1410,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
+    opts$item.Q = item.Q
     if(dentype == "empiricalhist") dentype <- 'EH'
     if(dentype == "empiricalhist_Woods") dentype <- 'EHW'
     opts$dentype <- opts$odentype <- dentype

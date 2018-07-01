@@ -4,10 +4,10 @@
 \alias{mdirt}
 \title{Multidimensional discrete item response theory}
 \usage{
-mdirt(data, model, customTheta = NULL, structure = NULL, nruns = 1,
-  method = "EM", covdata = NULL, formula = NULL, itemtype = "lca",
-  optimizer = "nlminb", return_max = TRUE, group = NULL,
-  GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
+mdirt(data, model, customTheta = NULL, structure = NULL, item.Q = NULL,
+  nruns = 1, method = "EM", covdata = NULL, formula = NULL,
+  itemtype = "lca", optimizer = "nlminb", return_max = TRUE,
+  group = NULL, GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
   technical = list(), ...)
 }
 \arguments{
@@ -32,6 +32,14 @@ to generate a matrix with all possible combinations}
 the model) to be fitted according to a log-linear model. When \code{NULL}, all profile probabilities
 (except one) will be estimated. Use of this input requires that the \code{customTheta} input is supplied,
 and that the column names in this matrix match the names found within this formula}
+
+\item{item.Q}{a list of item-level Q-matricies indicating how the respective categories should be
+modeled by the underlying attributes. Each matrix must represent a \eqn{K_i \times A} matrix,
+where \eqn{K_i} represents the number of categories for the ith item, and \eqn{A} is the number
+of attributes included in the \code{Theta} matrix; otherwise, a value of\code{NULL} will default
+to a matrix consisting of 1's for each \eqn{K_i \times A} element except for the first row, which
+contains only 0's for proper identification. Incidentally, the first row of each matrix \code{must}
+contain only 0's so that the first category represents the reference category for identification}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
 when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
@@ -99,6 +107,17 @@ For proper identification, the first category slope parameters
 (\eqn{a1} and \eqn{a2}) are never freely estimated. Alternatively, supplying a different
 grid of \eqn{\theta} values will allow the estimation of similar models (multidimensional
 discrete models, grade of membership, etc.). See the examples below.
+
+When the \code{item.Q} for is utilized, the above equation can be understood as
+
+\deqn{P(x = k|\theta_1, \theta_2, a1, a2) = \frac{exp(a1 \theta_1 Q_{j1} + a2 \theta_2 Q_{j2})}{
+  \sum_j^K exp(a1 \theta_1 Q_{j1} + a2 \theta_2 Q_{j2})}}
+
+where by construction \code{Q} is a \eqn{K_i \times A} matrix indicating whether the category should
+be modeled according to the latent class structure. For the standard latent class model, the Q-matrix
+has as many rows as categories, as many columns as the number of classes/attributes modeled,
+and consist of 0's in the first row and 1's elsewhere. This of course can be over-written by passing
+an alternative \code{item.Q} definition for each respective item.
 }
 
 \examples{

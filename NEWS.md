@@ -1,5 +1,7 @@
 # Changes in mirt 1.29
 
+- `mdirt()` gains a `item.Q` list to specify Q-matricies at the item-category level for each item
+  
 - `createItem()` functions gain an optional argument to the function defintions to allow for
   list-specified data from functions such as `mirt()` via silenent `mirt(..., customItemsData)`
   argument

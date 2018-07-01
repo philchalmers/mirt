@@ -1982,7 +1982,8 @@ setMethod(
 # ----------------------------------------------------------------
 
 setClass("lca", contains = 'AllItemsClass',
-         representation = representation(score='numeric'))
+         representation = representation(score='numeric',
+                                         item.Q='matrix'))
 
 setMethod(
     f = "print",
@@ -2036,15 +2037,15 @@ setMethod(
     }
 )
 
-P.lca <- function(par, Theta, ncat, returnNum = FALSE){
-    return(.Call('lcaTraceLinePts', par, Theta, ncat, returnNum))
+P.lca <- function(par, Theta, ncat, item.Q, returnNum = FALSE){
+    return(.Call('lcaTraceLinePts', par, Theta, item.Q, ncat, returnNum))
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        P <- P.lca(x@par, Theta=Theta, ncat=x@ncat)
+        P <- P.lca(x@par, Theta=Theta, ncat=x@ncat, item.Q=x@item.Q)
         return(P)
     }
 )
@@ -2053,7 +2054,8 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        ret <- .Call('dparslca', x@par, Theta, FALSE, x@dat, offterm) #TODO change FALSE to estHess
+        ret <- .Call('dparslca', x@par, Theta, x@item.Q,
+                     FALSE, x@dat, offterm) #TODO change FALSE to estHess
         if(estHess && any(x@est)){
             ret$hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                          Theta=Theta, gradient=FALSE)

@@ -1,8 +1,8 @@
 PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
-                     customItemsData, customGroup, fulldata = NULL, key,
-                     spline_args, internal_constraints, monopoly.k, dentype, dcIRT_nphi)
+                     customGroup, customItemsData, fulldata = NULL, key,
+                     spline_args, internal_constraints, monopoly.k, dentype, dcIRT_nphi, item.Q)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
@@ -106,7 +106,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                            customItems=customItems, customItemsData=customItemsData,
                            customGroup=customGroup, key=key,
                            gpcm_mats=gpcm_mats, spline_args=spline_args, monopoly.k=monopoly.k,
-                           dcIRT_nphi=dcIRT_nphi, dentype=dentype)
+                           dcIRT_nphi=dcIRT_nphi, dentype=dentype, item.Q=item.Q)
     prodlist <- attr(pars, 'prodlist')
     exploratory <- attr(pars, 'exploratory')
     if(is(pars[[1L]], 'numeric') || is(pars[[1L]], 'logical')){

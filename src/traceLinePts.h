@@ -30,11 +30,11 @@ void P_nested(vector<double> &, const vector<double> &,
 void P_comp(vector<double> &, const vector<double> &,
     const NumericMatrix &, const int &, const int &);
 
-void P_lca(vector<double> &, const vector<double> &,
+void P_lca(vector<double> &, const vector<double> &, const NumericMatrix &,
 	const NumericMatrix &, const int &, const int &, const int &, const int &);
 
 void P_switch(vector<double> &, const vector<double> &,
-    const NumericMatrix &, const NumericVector &, 
+    const NumericMatrix &, const NumericVector &,
     const int &, const int &, const int &, const int &, const int &);
 
 void P_monopoly(vector<double> &, const vector<double> &,
