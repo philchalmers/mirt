@@ -52,7 +52,7 @@
 #' @param itemtype a vector indicating the itemtype associated with each item.
 #'   For discrete models this is limited to only 'lca' or items defined using a
 #'   \code{\link{createItem}} definition
-#' @param item.Q a list of item-level Q-matricies indicating how the respective categories should be
+#' @param item.Q a list of item-level Q-matrices indicating how the respective categories should be
 #'   modeled by the underlying attributes. Each matrix must represent a \eqn{K_i \times A} matrix,
 #'   where \eqn{K_i} represents the number of categories for the ith item, and \eqn{A} is the number
 #'   of attributes included in the \code{Theta} matrix; otherwise, a value of\code{NULL} will default
@@ -65,7 +65,7 @@
 #'   because it allows customized patterns of latent classes (i.e., defines the possible combinations
 #'   of the latent attribute profile). The default builds the pattern \code{customTheta = diag(model)},
 #'   which is the typical pattern for the traditional latent class analysis whereby class
-#'   membership mutually distinct and exaustive. See \code{\link{thetaComb}} for a quick method
+#'   membership mutually distinct and exhaustive. See \code{\link{thetaComb}} for a quick method
 #'   to generate a matrix with all possible combinations
 #' @param nruns a numeric value indicating how many times the model should be fit to the data
 #'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
@@ -241,7 +241,7 @@
 #' coef(CRUM, simplify=TRUE)
 #' summary(CRUM)
 #'
-#' # good fit, but oversaturated (main effects for items 11-15 can be set to 0)
+#' # good fit, but over-saturated (main effects for items 11-15 can be set to 0)
 #' M2(CRUM)
 #'
 #' #------------------

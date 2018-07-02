@@ -1,9 +1,9 @@
 # Changes in mirt 1.29
 
-- `mdirt()` gains a `item.Q` list to specify Q-matricies at the item-category level for each item
+- `mdirt()` gains a `item.Q` list to specify Q-matrices at the item-category level for each item
   
-- `createItem()` functions gain an optional argument to the function defintions to allow for
-  list-specified data from functions such as `mirt()` via silenent `mirt(..., customItemsData)`
+- `createItem()` functions gain an optional argument to the function definitions to allow for
+  list-specified data from functions such as `mirt()` via a silent `mirt(..., customItemsData)`
   argument
 
 - lattice `auto.key` default now reports lines rather than points. This is now more consistent
@@ -15,7 +15,7 @@
   for IRT model fitted within the multiple-group estimation framework
 
 - `structure` argument added to `mdirt()` function to allow log-linear models for 
-  simplifiying the profile probability model computations
+  simplifying the profile probability model computations
   
 - fix `survey.weights` input for multiple group models (reported by Leigh Allison)
 

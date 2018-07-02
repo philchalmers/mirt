@@ -480,7 +480,7 @@
 #'       but with the extrapolation-interpolation method described by Woods (2007). NOTE: to improve stability
 #'       in the presence of extreme response styles (i.e., all highest or lowest in each item) the \code{technical} option
 #'       \code{zeroExtreme = TRUE} may be required to down-weight the contribution of these problematic patterns
-#'     \item \code{'Davidian-#'} estimates semiparametric Davidian curves described by Woods and Lin (2009),
+#'     \item \code{'Davidian-#'} estimates semi-parametric Davidian curves described by Woods and Lin (2009),
 #'       where the \code{#} placeholder represents the number of Davidian parameters to estimate
 #'       (e.g., \code{'Davidian-6'} will estimate 6 smoothing parameters). By default, the number of
 #'       \code{quadpts} is increased to 121, and this method is only applicable for
@@ -1171,7 +1171,7 @@
 #' dat <- key2binary(SAT12,
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' dav <- mirt(dat, 1, dentype = 'Davidian-4') # use four smoothing parameters
-#' plot(dav, type = 'Davidian') # shape of latent trait disribution
+#' plot(dav, type = 'Davidian') # shape of latent trait distribution
 #' coef(dav, simplify=TRUE)
 #'
 #' fs <- fscores(dav) # assume normal prior

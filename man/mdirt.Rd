@@ -25,7 +25,7 @@ directly in this function for convenience. This input is most interesting for di
 because it allows customized patterns of latent classes (i.e., defines the possible combinations
 of the latent attribute profile). The default builds the pattern \code{customTheta = diag(model)},
 which is the typical pattern for the traditional latent class analysis whereby class
-membership mutually distinct and exaustive. See \code{\link{thetaComb}} for a quick method
+membership mutually distinct and exhaustive. See \code{\link{thetaComb}} for a quick method
 to generate a matrix with all possible combinations}
 
 \item{structure}{an R formula allowing the profile probability patterns (i.e., the structural component of
@@ -33,7 +33,7 @@ the model) to be fitted according to a log-linear model. When \code{NULL}, all p
 (except one) will be estimated. Use of this input requires that the \code{customTheta} input is supplied,
 and that the column names in this matrix match the names found within this formula}
 
-\item{item.Q}{a list of item-level Q-matricies indicating how the respective categories should be
+\item{item.Q}{a list of item-level Q-matrices indicating how the respective categories should be
 modeled by the underlying attributes. Each matrix must represent a \eqn{K_i \times A} matrix,
 where \eqn{K_i} represents the number of categories for the ith item, and \eqn{A} is the number
 of attributes included in the \code{Theta} matrix; otherwise, a value of\code{NULL} will default
@@ -262,7 +262,7 @@ CRUM <- mdirt(dat, model, customTheta = theta)
 coef(CRUM, simplify=TRUE)
 summary(CRUM)
 
-# good fit, but oversaturated (main effects for items 11-15 can be set to 0)
+# good fit, but over-saturated (main effects for items 11-15 can be set to 0)
 M2(CRUM)
 
 #------------------
