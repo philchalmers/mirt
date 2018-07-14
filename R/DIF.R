@@ -200,6 +200,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
 
     if(missing(MGmodel)) missingMsg('MGmodel')
     if(missing(which.par)) missingMsg('which.par')
+    if(!is(MGmodel, 'MultipleGroupClass'))
+        stop('Input model must be fitted by multipleGroup()', call.=FALSE)
+
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
         message('No hyper-parameters were estimated in the DIF model. For effective
