@@ -1,18 +1,17 @@
 #' Full-Information Item Factor Analysis (Multidimensional Item Response
 #' Theory)
 #'
-#' \code{mirt} fits an unconditional maximum likelihood factor analysis model
+#' \code{mirt} fits a maximum likelihood (or maximum a posteriori) factor analysis model
 #' to any mixture of dichotomous and polytomous data under the item response theory paradigm
 #' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm, with
 #' an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
 #' quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
-#' of the MH-RM algorithm).
-#' Models containing 'explanatory' person or item level predictors
+#' of the MH-RM algorithm). Models containing 'explanatory' person or item level predictors
 #' can only be included by using the \code{\link{mixedmirt}} function, though latent
-#' regression models can be fit using the \code{formula} input below. Tests that form a
-#' two-tier or bi-factor structure should be estimated with the \code{\link{bfactor}} function,
-#' which uses a dimension reduction EM algorithm for modeling item parcels.
-#' Multiple group analyses (useful for DIF and DTF testing) are
+#' regression models can be fit using the \code{formula} input in this function. 
+#' Tests that form a two-tier or bi-factor structure should be estimated with the 
+#' \code{\link{bfactor}} function, which uses a dimension reduction EM algorithm for 
+#' modeling item parcels.  Multiple group analyses (useful for DIF and DTF testing) are
 #' also available using the \code{\link{multipleGroup}} function.
 #'
 #' @section Confirmatory and Exploratory IRT:
