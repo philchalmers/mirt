@@ -22,6 +22,9 @@
 - fix `itemtype = "rsm"` block restriction when items contain unequal category lengths 
   (reported by Aiden Loe)
 
+- `SIBTEST()` computation of beta coefficient changed to match Shealy and Stout's (1993) 
+  form of `p_k * (Y_R - Y_F)` (was previously `p_k * (Y_F - Y_R)`; reported by Craig Wells)
+
 # Changes in mirt 1.28
 
 - `M2()` function gains a `type` input to distinguish between the univariate-bivariate 

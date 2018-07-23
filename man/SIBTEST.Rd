@@ -9,9 +9,10 @@ SIBTEST(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
   correction = TRUE, details = FALSE)
 }
 \arguments{
-\item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
+\item{dat}{integer-based dataset to be tested, containing dichotomous or polytomous responses}
 
-\item{group}{a vector indicating group membership}
+\item{group}{a vector indicating group membership with the same length as the number of rows in
+\code{dat}}
 
 \item{suspect_set}{an integer vector indicating which items to inspect with SIBTEST. Including only
 one value will perform a DIF test, while including more than one will perform a simultaneous
@@ -21,9 +22,9 @@ will be used (i.e., DTF)}
 
 \item{match_set}{an integer vector indicating which items to use as the items which are matched
 (i.e., contain no DIF). These are analogous to 'anchor' items in the likelihood method to locate
-DIF. If missing, all items other than the items found in the suspect_set will be used}
+DIF. If missing, all items other than the items found in the \code{suspect_set} will be used}
 
-\item{focal_name}{name of the focal group; e.g., 'focal'. If not specified then one will be
+\item{focal_name}{name of the focal group; e.g., \code{'focal'}. If not specified then one will be
 selected automatically using \code{unique(group)[2]}}
 
 \item{guess_correction}{a vector of numbers from 0 to 1 indicating how much to correct the items
@@ -41,7 +42,7 @@ sample? Default is FALSE as per Shealy and Stout's recommendation}
 
 \item{correction}{logical; apply the composite correction for the difference between focal
 composite scores using the true-score regression technique? Default is \code{TRUE},
-reflecting Shealy and Stout's method}
+reflecting Shealy and Stout's linear extrapolation method}
 
 \item{details}{logical; return a data.frame containing the details required to compute SIBTEST?}
 }
@@ -58,7 +59,8 @@ differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
 supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymptotic sampling
 distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
-Chalmers (2018).
+Chalmers (2018). For convenience, the beta coefficient for CSIBTEST is always reported as an
+absolute value.
 }
 \examples{
 
