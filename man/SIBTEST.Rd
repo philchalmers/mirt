@@ -4,9 +4,9 @@
 \alias{SIBTEST}
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
-SIBTEST(dat, group, suspect_set, match_set, focal_name, guess_correction = 0,
-  Jmin = 2, na.rm = FALSE, pk_focal = FALSE, correction = TRUE,
-  details = FALSE)
+SIBTEST(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
+  guess_correction = 0, Jmin = 2, na.rm = FALSE, pk_focal = FALSE,
+  correction = TRUE, details = FALSE)
 }
 \arguments{
 \item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
@@ -24,7 +24,7 @@ will be used (i.e., DTF)}
 DIF. If missing, all items other than the items found in the suspect_set will be used}
 
 \item{focal_name}{name of the focal group; e.g., 'focal'. If not specified then one will be
-selected automatically}
+selected automatically using \code{unique(group)[2]}}
 
 \item{guess_correction}{a vector of numbers from 0 to 1 indicating how much to correct the items
 for guessing. It's length should be the same as ncol(dat)}
@@ -58,7 +58,7 @@ differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
 supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymptotic sampling
 distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
-Chalmers (accepted).
+Chalmers (2018).
 }
 \examples{
 
@@ -125,8 +125,8 @@ SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 }
 }
 \references{
-Chalmers, R. P. (accepted). Improving the Crossing-SIBTEST statistic for
-detecting non-uniform DIF. \emph{Psychometrika}.
+Chalmers, R. P. (2018). Improving the Crossing-SIBTEST statistic for
+detecting non-uniform DIF. \emph{Psychometrika, 83}, 2, 376-386.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
