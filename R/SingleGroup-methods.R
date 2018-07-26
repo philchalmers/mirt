@@ -327,7 +327,7 @@ setMethod(
             }
         }
         allPars <- list()
-        if(length(object@ParObjects$pars[[1L]]@SEpar)){
+        if(length(object@ParObjects$pars[[1L]]@SEpar) && !simplify){
             if(printSE){
                 for(i in seq_len(J+1L)){
                     allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
@@ -1458,6 +1458,8 @@ mirt2traditional <- function(x, vcov){
     } else if(cls == 'nestlogit'){
         par1 <- par[1:4]
         par1[2] <- -par1[2]/par1[1]
+        par1[3] <- plogis(par1[3])
+        par1[4] <- plogis(par1[4])
         names(par1) <- c('a', 'b', 'g', 'u')
         par2 <- par[5:length(par)]
         as <- par2[1:(ncat-1)]

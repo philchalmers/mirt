@@ -576,6 +576,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=K[i],
                              stype=stype,
+                             item.Q=matrix(1, K[i], length(p)),
                              Theta_prime=matrix(0),
                              sargs=sargs,
                              nfixedeffects=nfixedeffects,
@@ -587,6 +588,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ubound=rep(Inf, length(p)),
                              prior_1=rep(NaN,length(p)),
                              prior_2=rep(NaN,length(p)))
+            pars[[i]]@item.Q[1L, ] <- 0
             tmp2 <- parnumber:(parnumber + length(p) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(p)

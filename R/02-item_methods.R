@@ -2096,6 +2096,7 @@ setMethod(
 setClass("spline", contains = 'AllItemsClass',
          representation = representation(stype='character',
                                          Theta_prime='matrix',
+                                         item.Q='matrix',
                                          sargs='list'))
 
 setMethod(
@@ -2154,7 +2155,8 @@ setMethod(
     definition = function(x, Theta, useDesign = TRUE, ot=0){
         if(nrow(Theta) != nrow(x@Theta_prime))
             x <- loadSplineParsItem(x, Theta)
-        P <- P.lca(x@par, Theta=x@Theta_prime, ncat=x@ncat)
+        P <- P.lca(x@par, item.Q=x@item.Q,
+                   Theta=x@Theta_prime, ncat=x@ncat)
         return(P)
     }
 )
@@ -2163,7 +2165,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'spline', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        ret <- .Call('dparslca', x@par, x@Theta_prime, FALSE, x@dat, offterm)
+        ret <- .Call('dparslca', x@par, x@Theta_prime, x@item.Q, FALSE, x@dat, offterm)
         if(estHess && any(x@est)){
             ret$hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                         Theta=x@Theta_prime, gradient=FALSE)
