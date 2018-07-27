@@ -63,7 +63,7 @@ createGroup <- function(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
     safe_den <- function(obj, Theta){
         d <- obj@den(obj, Theta)
         d <- ifelse(d < 1e-300, 1e-300, d)
-        d
+        as.vector(d)
     }
     names(est) <- names(par)
     dummyfun <- function(...) return(NULL)
