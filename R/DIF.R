@@ -21,6 +21,8 @@
 #' @param which.par a character vector containing the parameter names which will be inspected for
 #'   DIF
 #' @param Wald logical; perform Wald tests for DIF instead of likelihood ratio test?
+#' @param optimizer type of optimizer to use in the M-step (default to the \code{nlminb} solver).
+#'   See \code{\link{mirt}} for details
 #' @param items2test a numeric vector, or character vector containing the item names, indicating
 #'   which items will be tested for DIF. In models where anchor items are known, omit them from
 #'   this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
@@ -77,7 +79,7 @@
 #'   sampling variability. \emph{Educational and Psychological Measurement, 76}, 114-140.
 #'   \doi{10.1177/0013164415584576}
 #' @keywords DIF
-#' @seealso \code{\link{multipleGroup}}
+#' @seealso \code{\link{multipleGroup}}, \code{\link{DRF}}
 #, \code{\link{DTF}}
 #' @export DIF
 #' @examples
@@ -151,10 +153,11 @@
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
-                max_run = Inf, plotdif = FALSE, type = 'trace', verbose = TRUE, ...){
+                max_run = Inf, plotdif = FALSE, type = 'trace', optimizer='nlminb',
+                verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, ...)
+                          return_models, optimizer, ...)
     {
         constrain <- model@Model$constrain
         parnum <- list()
@@ -179,6 +182,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             return(res)
         }
         if(drop){
+            sv <- values
             for(j in seq_len(length(parnum))){
                 for(i in length(constrain):1L){
                     if(all(parnum[[j]] == sort(constrain[[i]])))
@@ -186,12 +190,14 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                 }
             }
         } else {
+            sv <- NULL
             for(i in seq_len(length(parnum)))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
         newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
-                                  invariance = invariance, constrain=constrain,
-                                  itemtype = model@Model$itemtype, verbose = FALSE, ...)
+                                  invariance = invariance, constrain=constrain, pars=sv,
+                                  itemtype = model@Model$itemtype, optimizer=optimizer,
+                                  verbose = FALSE, ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
         if(return_models) aov <- newmodel
@@ -241,7 +247,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     if(!length(invariance)) invariance <- ''
     res <- myLapply(X=items2test, FUN=loop_test, model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
-                    return_models=return_models, ...)
+                    return_models=return_models, optimizer=optimizer, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -291,13 +297,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                     }
                 }
             }
-            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model,
+            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model, optimizer=optimizer,
                                           group=MGmodel@Data$group, itemtype=MGmodel@Model$itemtype,
                                           invariance = invariance, constrain=constrain,
                                           verbose = FALSE, ...)
             pick <- !keep
             if(drop) pick <- !pick
-            tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
+            tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel, optimizer=optimizer,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
                             itemnames=itemnames, invariance=invariance, return_models=FALSE, ...)
             names(tmp) <- itemnames[items2test][pick]
@@ -310,7 +316,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             cat('\nComputing final DIF estimates...\n')
         pick <- !keep
         if(drop) pick <- !pick
-        res <- myLapply(X=items2test[pick], FUN=loop_test, model=MGmodel,
+        res <- myLapply(X=items2test[pick], FUN=loop_test, model=MGmodel, optimizer=optimizer,
                         which.par=which.par, values=values, Wald=Wald, drop=drop,
                         itemnames=itemnames, invariance=invariance, return_models=return_models,
                         ...)

@@ -348,7 +348,7 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 \doi{10.18637/jss.v048.i06}
 }
 \seealso{
-\code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}, \code{\link{DTF}}
+\code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}, \code{\link{DRF}}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

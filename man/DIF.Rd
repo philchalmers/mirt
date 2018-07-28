@@ -7,7 +7,7 @@
 DIF(MGmodel, which.par, scheme = "add", items2test = 1:extract.mirt(MGmodel,
   "nitems"), seq_stat = "SABIC", Wald = FALSE, p.adjust = "none",
   return_models = FALSE, max_run = Inf, plotdif = FALSE, type = "trace",
-  verbose = TRUE, ...)
+  optimizer = "nlminb", verbose = TRUE, ...)
 }
 \arguments{
 \item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference
@@ -67,6 +67,9 @@ searches. The default is to perform search until no further DIF is found}
 \item{type}{the \code{type} of plot argument passed to \code{plot()}. Default is 'trace', though
 another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
 mirt's \code{plot()} function is set to \code{TRUE}}
+
+\item{optimizer}{type of optimizer to use in the M-step (default to the \code{nlminb} solver).
+See \code{\link{mirt}} for details}
 
 \item{verbose}{logical print extra information to the console?}
 
@@ -170,7 +173,7 @@ Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
   \doi{10.1177/0013164415584576}
 }
 \seealso{
-\code{\link{multipleGroup}}
+\code{\link{multipleGroup}}, \code{\link{DRF}}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

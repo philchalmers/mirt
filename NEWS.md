@@ -24,6 +24,9 @@
 
 - `SIBTEST()` computation of beta coefficient changed to match Shealy and Stout's (1993) 
   form of `p_k * (Y_R - Y_F)` (was previously `p_k * (Y_F - Y_R)`; reported by Craig Wells)
+  
+- Fix negative chi-square differences in `DIF()` function due to non-converged sub-models 
+  (reported by Daniel McKelvey)
 
 # Changes in mirt 1.28
 
