@@ -4,11 +4,11 @@
 \alias{mdirt}
 \title{Multidimensional discrete item response theory}
 \usage{
-mdirt(data, model, customTheta = NULL, structure = NULL, item.Q = NULL,
-  nruns = 1, method = "EM", covdata = NULL, formula = NULL,
-  itemtype = "lca", optimizer = "nlminb", return_max = TRUE,
-  group = NULL, GenRandomPars = FALSE, verbose = TRUE, pars = NULL,
-  technical = list(), ...)
+mdirt(data, model, customTheta = NULL, structure = NULL,
+  item.Q = NULL, nruns = 1, method = "EM", covdata = NULL,
+  formula = NULL, itemtype = "lca", optimizer = "nlminb",
+  return_max = TRUE, group = NULL, GenRandomPars = FALSE,
+  verbose = TRUE, pars = NULL, technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of

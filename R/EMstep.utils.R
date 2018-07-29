@@ -148,6 +148,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                 }
             }
         } else if(Moptim == 'nlminb'){
+            if(is.null(control$iter.max))
+                control$iter.max <- max(ceiling(Mrate * 100), 25)
             opt <- try(nlminb(p, Mstep.LL, Mstep.grad,
                               DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                               est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,

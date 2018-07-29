@@ -8,9 +8,9 @@
 #' quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
 #' of the MH-RM algorithm). Models containing 'explanatory' person or item level predictors
 #' can only be included by using the \code{\link{mixedmirt}} function, though latent
-#' regression models can be fit using the \code{formula} input in this function. 
-#' Tests that form a two-tier or bi-factor structure should be estimated with the 
-#' \code{\link{bfactor}} function, which uses a dimension reduction EM algorithm for 
+#' regression models can be fit using the \code{formula} input in this function.
+#' Tests that form a two-tier or bi-factor structure should be estimated with the
+#' \code{\link{bfactor}} function, which uses a dimension reduction EM algorithm for
 #' modeling item parcels.  Multiple group analyses (useful for DIF and DTF testing) are
 #' also available using the \code{\link{multipleGroup}} function.
 #'
@@ -357,8 +357,7 @@
 #'   \code{SE.type = 'MHRM'} by default to avoid the use of quadrature
 #' @param optimizer a character indicating which numerical optimizer to use. By default, the EM
 #'   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds box-constraints and
-#'   \code{'L-BFGS-B'} when there are. Another good option which supports bound constraints is
-#'   the \code{'nlminb'}, which may be more stable than the BFGS family of optimizers (though slightly slower).
+#'   \code{'nlminb'} when there are.
 #'
 #'   Other options include the Newton-Raphson (\code{'NR'}),
 #'   which can be more efficient than the \code{'BFGS'} but not as stable for more complex
@@ -366,11 +365,11 @@
 #'   and the related \code{'NR1'} which is also the Newton-Raphson
 #'   but consists of only 1 update that has been coupled with RM Hessian (only
 #'   applicable when the MH-RM algorithm is used). The MH-RM algorithm uses the \code{'NR1'} by default,
-#'   and though currently the \code{'BFGS'}, \code{'L-BFGS-B'}, and \code{'NR'}
+#'   though currently the \code{'BFGS'}, \code{'L-BFGS-B'}, and \code{'NR'}
 #'   are also supported with this method (with
-#'   few iterations by default) to emulate stochastic EM updates.
+#'   fewer iterations by default) to emulate stochastic EM updates.
 #'   As well, the \code{'Nelder-Mead'} and \code{'SANN'}
-#'   estimators are also available, but their routine use generally is not required or recommended.
+#'   estimators are available, but their routine use generally is not required or recommended.
 #'
 #'   Additionally, estimation subroutines from the \code{Rsolnp} and \code{nloptr}
 #'   packages are available by passing the arguments \code{'solnp'} and \code{'nloptr'},

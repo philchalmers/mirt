@@ -5,15 +5,16 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-  covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
-  optimizer = NULL, dentype = "Gaussian", pars = NULL, constrain = NULL,
-  parprior = NULL, calcNull = FALSE, draws = 5000,
-  survey.weights = NULL, quadpts = NULL, TOL = NULL, gpcm_mats = list(),
-  grsm.block = NULL, rsm.block = NULL, monopoly.k = 1L, key = NULL,
-  large = FALSE, GenRandomPars = FALSE, accelerate = "Ramsay",
-  verbose = TRUE, solnp_args = list(), nloptr_args = list(),
-  spline_args = list(), control = list(), technical = list(), ...)
+mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
+  SE = FALSE, covdata = NULL, formula = NULL, SE.type = "Oakes",
+  method = "EM", optimizer = NULL, dentype = "Gaussian",
+  pars = NULL, constrain = NULL, parprior = NULL, calcNull = FALSE,
+  draws = 5000, survey.weights = NULL, quadpts = NULL, TOL = NULL,
+  gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
+  monopoly.k = 1L, key = NULL, large = FALSE,
+  GenRandomPars = FALSE, accelerate = "Ramsay", verbose = TRUE,
+  solnp_args = list(), nloptr_args = list(), spline_args = list(),
+  control = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -136,8 +137,7 @@ will estimate the regression parameters for all latent traits by default}
 
 \item{optimizer}{a character indicating which numerical optimizer to use. By default, the EM
   algorithm will use the \code{'BFGS'} when there are no upper and lower bounds box-constraints and
-  \code{'L-BFGS-B'} when there are. Another good option which supports bound constraints is
-  the \code{'nlminb'}, which may be more stable than the BFGS family of optimizers (though slightly slower).
+  \code{'nlminb'} when there are.
 
   Other options include the Newton-Raphson (\code{'NR'}),
   which can be more efficient than the \code{'BFGS'} but not as stable for more complex
@@ -145,11 +145,11 @@ will estimate the regression parameters for all latent traits by default}
   and the related \code{'NR1'} which is also the Newton-Raphson
   but consists of only 1 update that has been coupled with RM Hessian (only
   applicable when the MH-RM algorithm is used). The MH-RM algorithm uses the \code{'NR1'} by default,
-  and though currently the \code{'BFGS'}, \code{'L-BFGS-B'}, and \code{'NR'}
+  though currently the \code{'BFGS'}, \code{'L-BFGS-B'}, and \code{'NR'}
   are also supported with this method (with
-  few iterations by default) to emulate stochastic EM updates.
+  fewer iterations by default) to emulate stochastic EM updates.
   As well, the \code{'Nelder-Mead'} and \code{'SANN'}
-  estimators are also available, but their routine use generally is not required or recommended.
+  estimators are available, but their routine use generally is not required or recommended.
 
   Additionally, estimation subroutines from the \code{Rsolnp} and \code{nloptr}
   packages are available by passing the arguments \code{'solnp'} and \code{'nloptr'},
@@ -397,9 +397,9 @@ an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
 quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
 of the MH-RM algorithm). Models containing 'explanatory' person or item level predictors
 can only be included by using the \code{\link{mixedmirt}} function, though latent
-regression models can be fit using the \code{formula} input in this function. 
-Tests that form a two-tier or bi-factor structure should be estimated with the 
-\code{\link{bfactor}} function, which uses a dimension reduction EM algorithm for 
+regression models can be fit using the \code{formula} input in this function.
+Tests that form a two-tier or bi-factor structure should be estimated with the
+\code{\link{bfactor}} function, which uses a dimension reduction EM algorithm for
 modeling item parcels.  Multiple group analyses (useful for DIF and DTF testing) are
 also available using the \code{\link{multipleGroup}} function.
 }

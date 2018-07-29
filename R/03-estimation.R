@@ -71,6 +71,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is.null(control$tol)) control$tol <- opts$TOL/1000
             if(is.null(control$maxit)) control$maxit <- 50L
         }
+        if(opts$Moptim == 'nlminb')
+            if(is.null(control$rel.tol)) control$rel.tol <- opts$TOL/100
 
         if(opts$dentype == "discrete" && is.null(customGroup)){
             den <- function(obj, Theta, mus = 0){

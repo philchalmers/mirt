@@ -4,9 +4,10 @@
 \alias{DIF}
 \title{Differential item functioning statistics}
 \usage{
-DIF(MGmodel, which.par, scheme = "add", items2test = 1:extract.mirt(MGmodel,
-  "nitems"), seq_stat = "SABIC", Wald = FALSE, p.adjust = "none",
-  return_models = FALSE, max_run = Inf, plotdif = FALSE, type = "trace",
+DIF(MGmodel, which.par, scheme = "add",
+  items2test = 1:extract.mirt(MGmodel, "nitems"), seq_stat = "SABIC",
+  Wald = FALSE, p.adjust = "none", return_models = FALSE,
+  max_run = Inf, plotdif = FALSE, type = "trace",
   optimizer = "nlminb", verbose = TRUE, ...)
 }
 \arguments{

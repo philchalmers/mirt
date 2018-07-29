@@ -1,5 +1,9 @@
 # Changes in mirt 1.29
 
+- When lower/upper bounded parameters are included the default optimizer is now 'nlminb' rather 
+  than 'L-BFGS-B'. This is mainly due to the instability in the 'L-BFGS-B' algorithm which 
+  is prone to converging instantly for unknown reasons
+
 - `mdirt()` gains a `item.Q` list to specify Q-matrices at the item-category level for each item
   
 - `createItem()` functions gain an optional argument to the function definitions to allow for
