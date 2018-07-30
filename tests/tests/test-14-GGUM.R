@@ -4,13 +4,13 @@ test_that('GGUM', {
 
     mod <- suppressWarnings(mirt(Science, 1, 'ggum', verbose=FALSE, TOL=1e-3, SE=TRUE))
     cfs <- as.vector(coef(mod, simplify=TRUE)$items)
-    expect_equal(cfs, c(1.709598,0.9826335,2.98249,1.334567,0.1497495,0.7743619,0.5923796,0.1931122,2.908172,2.693359,2.540201,2.556675,2.349809,1.803254,1.610007,1.371799,-0.1264261,-0.8272219,0.2777304,-0.2542214), tolerance = 1e-3)
+    expect_equal(cfs, c(1.709904,0.9833967,2.98503,1.33512,0.1484389,0.7721983,0.5906746,0.1916301,2.907631,2.690887,2.538483,2.555878,2.349385,1.801324,1.608703,1.37137,-0.1264094,-0.8269402,0.2774447,-0.2540586), tolerance = 1e-3)
     expect_equal(logLik(mod), -1624.744, tolerance = 1e-4)
     fs <- fscores(mod)
-    expect_equal(as.vector(fs[1:6]), c(0.3274676,0.1678313,-0.8463551,-0.8463551,0.9050643,0.2260045), tolerance = 1e-4)
+    expect_equal(as.vector(fs[1:6]), c(0.3269168,0.1676617,-0.8460879,-0.8460879,0.9035116,0.2250832), tolerance = 1e-4)
     fit <- itemfit(mod)
-    expect_equal(fit$p.S_X2, c(0.428228,0.3061431,0.2439318,0.2789786), tolerance = 1e-4)
-    expect_equal(extract.mirt(mod, 'condnum'), 729.1741, tolerance = 1e-4)
+    expect_equal(fit$p.S_X2, c(0.4282546,0.3060346,0.2437971,0.2790412), tolerance = 1e-4)
+    expect_equal(extract.mirt(mod, 'condnum'), 735.6286, tolerance = 1e-4)
 
     mod2 <- mirt(Science, 2, 'ggum', TOL = .1, verbose=FALSE)
     cfs <- as.vector(coef(mod2, simplify=TRUE)$items)

@@ -45,11 +45,10 @@ test_that('discrete', {
     # polytomous LCA
     mod2 <- mdirt(Science, 2, verbose=FALSE)
     so <- summary(mod2)
-    expect_equal(extract.mirt(mod2, 'logLik'), -1622.442, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod2, 'logLik'), -1624.642, tolerance = 1e-4)
     expect_equal(extract.mirt(mod2, 'df'), 230)
-    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.2983372,0.7016628), tolerance = 1e-2)
-    expect_equal(as.numeric(sort(so$Comfort)), c(7.164881e-07,0.01822795,0.05114743,0.09455495,
-                                                 0.1212209,0.4730082,0.4758437,0.7659962),
+    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.3962724,0.6037276), tolerance = 1e-2)
+    expect_equal(as.numeric(sort(so$Comfort)), c(6.97863e-05,0.02113318,0.05856795,0.0967485,0.1089279,0.4070116,0.5343507,0.7731905),
                  tolerance = 1e-2)
 
     #----------
@@ -108,7 +107,7 @@ test_that('discrete', {
                  verbose = FALSE)
     expect_equal(logLik(mod), -9598.103, tolerance = 1e-4)
     expect_equal(as.numeric(coef(mod)[[1]][[33]]), .4165249, tolerance=1e-2)
-    expect_equal(M2(mod)$M2, 1239.02, tolerance = 1e-4)
+    expect_equal(M2(mod)$M2, 1239.17, tolerance = 1e-4)
 
 #
 #     data(data.read, package = 'sirt')

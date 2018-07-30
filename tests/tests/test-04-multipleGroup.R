@@ -77,7 +77,7 @@ test_that('one factor', {
     out3 <- fscores(mod_missing, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
     expect_equal(out1$M2, 166.4414, tolerance=1e-4)
     expect_equal(out2$D1$S_X2[1], 7.633155, tolerance=1e-4)
-    expect_equal(out3$D1$expected[1], 5.258545, tolerance=1e-4)
+    expect_equal(out3$D1$expected[1], 5.258545, tolerance=1e-2)
 
     fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
     expect_true(mirt:::closeEnough(fs1[[1]][1:6, 'F1'] - c(-2.083008, -1.653961, -1.405526, -1.573013, -1.723711, -1.324450), -1e-2, 1e-2))
