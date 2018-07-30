@@ -102,12 +102,12 @@ mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
                              invariance=c('slopes', 'intercepts', 'free_var'))
 mod_fullconstrain <- multipleGroup(dat, models, group = group,
                              invariance=c('slopes', 'intercepts'))
-slot(mod_fullconstrain, 'time') #time of estimation components
+extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 
 #optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod_fullconstrain <- multipleGroup(dat, models, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
-slot(mod_fullconstrain, 'time') #time of estimation components
+extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 
 summary(mod_scalar2)
 coef(mod_scalar2, simplify=TRUE)

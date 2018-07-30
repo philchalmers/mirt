@@ -21,8 +21,6 @@
 #' @param which.par a character vector containing the parameter names which will be inspected for
 #'   DIF
 #' @param Wald logical; perform Wald tests for DIF instead of likelihood ratio test?
-#' @param optimizer type of optimizer to use in the M-step (default to the \code{nlminb} solver).
-#'   See \code{\link{mirt}} for details
 #' @param items2test a numeric vector, or character vector containing the item names, indicating
 #'   which items will be tested for DIF. In models where anchor items are known, omit them from
 #'   this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
@@ -153,11 +151,10 @@
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
-                max_run = Inf, plotdif = FALSE, type = 'trace', optimizer='nlminb',
-                verbose = TRUE, ...){
+                max_run = Inf, plotdif = FALSE, type = 'trace', verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, optimizer, ...)
+                          return_models, ...)
     {
         constrain <- model@Model$constrain
         parnum <- list()
@@ -196,8 +193,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         }
         newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain, pars=sv,
-                                  itemtype = model@Model$itemtype, optimizer=optimizer,
-                                  verbose = FALSE, ...)
+                                  itemtype = model@Model$itemtype, verbose=FALSE, ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
         if(return_models) aov <- newmodel
@@ -247,7 +243,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     if(!length(invariance)) invariance <- ''
     res <- myLapply(X=items2test, FUN=loop_test, model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
-                    return_models=return_models, optimizer=optimizer, ...)
+                    return_models=return_models, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -297,13 +293,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                     }
                 }
             }
-            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model, optimizer=optimizer,
+            updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model,
                                           group=MGmodel@Data$group, itemtype=MGmodel@Model$itemtype,
                                           invariance = invariance, constrain=constrain,
                                           verbose = FALSE, ...)
             pick <- !keep
             if(drop) pick <- !pick
-            tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel, optimizer=optimizer,
+            tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
                             itemnames=itemnames, invariance=invariance, return_models=FALSE, ...)
             names(tmp) <- itemnames[items2test][pick]
@@ -316,7 +312,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             cat('\nComputing final DIF estimates...\n')
         pick <- !keep
         if(drop) pick <- !pick
-        res <- myLapply(X=items2test[pick], FUN=loop_test, model=MGmodel, optimizer=optimizer,
+        res <- myLapply(X=items2test[pick], FUN=loop_test, model=MGmodel,
                         which.par=which.par, values=values, Wald=Wald, drop=drop,
                         itemnames=itemnames, invariance=invariance, return_models=return_models,
                         ...)

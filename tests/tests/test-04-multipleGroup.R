@@ -60,11 +60,12 @@ test_that('one factor', {
     cfs <- as.numeric(do.call(c, coef(mod_EH)[[1L]]))
     expect_equal(cfs, c(1.019061,0.5052184,0,1,1.209095,-0.7255769,0,1,0.9008162,-0.2009865,0,1,0.8723441,0.8312948,0,1,1.076235,0.1099079,0,1,0.5510721,0.6746446,0,1,1.219269,0.9782172,0,1,0.9121723,-0.3459642,0,1,0.8412548,-1.067533,0,1,0.6879252,-1.096485,0,1,0.7896133,1.173946,0,1,1.419879,-0.2785068,0,1,1.247844,0.4227584,0,1,0.9913394,0.4356204,0,1,0.8361253,-0.074975,0,1,0,1),
                  tolerance = 1e-2)
-    mod_mixture <- suppressWarnings(multipleGroup(dat, 1, itemtype = 'Rasch',
+    set.seed(1)
+    mod_mixture <- suppressWarnings(multipleGroup(dat, 1, itemtype = 'Rasch', GenRandomPars = TRUE,
                                  verbose = FALSE, dentype = 'mixture-2', SE=TRUE))
-    expect_equal(extract.mirt(mod_mixture, 'condnum'), 115.5504, tolerance=1e-4)
+    expect_equal(extract.mirt(mod_mixture, 'condnum'), 115.5747, tolerance=1e-4)
     so <- summary(mod_mixture, verbose=FALSE)
-    expect_equal(so[[1]]$class_proportion, .5119582, tolerance=1e-4)
+    expect_equal(so[[1]]$class_proportion, .512121, tolerance=1e-4)
 
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
@@ -74,9 +75,9 @@ test_that('one factor', {
     out1 <- M2(mod_missing, na.rm=TRUE)
     out2 <- itemfit(mod_missing, na.rm=TRUE)
     out3 <- fscores(mod_missing, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
-    expect_equal(out1$M2, 166.4427, tolerance=1e-4)
-    expect_equal(out2$D1$S_X2[1], 7.633289, tolerance=1e-4)
-    expect_equal(out3$D1$expected[1], 5.259084, tolerance=1e-4)
+    expect_equal(out1$M2, 166.4414, tolerance=1e-4)
+    expect_equal(out2$D1$S_X2[1], 7.633155, tolerance=1e-4)
+    expect_equal(out3$D1$expected[1], 5.258545, tolerance=1e-4)
 
     fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
     expect_true(mirt:::closeEnough(fs1[[1]][1:6, 'F1'] - c(-2.083008, -1.653961, -1.405526, -1.573013, -1.723711, -1.324450), -1e-2, 1e-2))
@@ -102,7 +103,7 @@ test_that('one factor', {
     expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.733099, 7.851266, 11.000000, 0.726562),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
-    expect_true(mirt:::closeEnough(fit3$M2 - 165.1441, -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fit3$M2 - 165.1392, -1e-4, 1e-4))
     expect_equal(fit3$SRMSR.D1, 0.02754769, tolerance = 1e-4)
     expect_equal(fit3$TLI, 1.005392, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
@@ -110,15 +111,15 @@ test_that('one factor', {
     # missing by design
     dat[group == 'D1',1:2] <- NA
     dat[group == 'D2',14:15] <- NA
-    mod <- multipleGroup(dat, 1, group, invariance = c('slopes', 'interecepts', 'free_means',
+    mod <- multipleGroup(dat, 1, group, invariance = c('slopes', 'intercepts', 'free_means',
                                                        'free_var'), verbose=FALSE)
     cfs <- coef(mod, simplify=TRUE)
-    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.130563,1.182241,1.094837,1.696546,1.078965,-0.1962843),
+    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.139968,1.192491,1.093887,0.5647073,-0.5384472,-0.2615739),
                  tolerance=1e-4)
-    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7340702, 0.9270486, 0.5077596), tolerance=1e-4)
+    expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7325525, 0.9279133, 0.5071795), tolerance=1e-4)
     expect_is(plot(mod, type = 'trace'), 'trellis')
     ifit <- itemfit(mod, 'X2')
-    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.000342801, 0.001680097), tolerance=1e-4)
+    expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002541653, 0.0009022802), tolerance=1e-4)
 
     #missing data
     set.seed(1234)
