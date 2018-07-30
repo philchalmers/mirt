@@ -5,16 +5,15 @@
 \title{Full-Information Item Factor Analysis (Multidimensional Item Response
 Theory)}
 \usage{
-mirt(data, model, itemtype = NULL, guess = 0, upper = 1,
-  SE = FALSE, covdata = NULL, formula = NULL, SE.type = "Oakes",
-  method = "EM", optimizer = NULL, dentype = "Gaussian",
-  pars = NULL, constrain = NULL, parprior = NULL, calcNull = FALSE,
-  draws = 5000, survey.weights = NULL, quadpts = NULL, TOL = NULL,
-  gpcm_mats = list(), grsm.block = NULL, rsm.block = NULL,
-  monopoly.k = 1L, key = NULL, large = FALSE,
-  GenRandomPars = FALSE, accelerate = "Ramsay", verbose = TRUE,
-  solnp_args = list(), nloptr_args = list(), spline_args = list(),
-  control = list(), technical = list(), ...)
+mirt(data, model, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
+  covdata = NULL, formula = NULL, SE.type = "Oakes", method = "EM",
+  optimizer = NULL, dentype = "Gaussian", pars = NULL, constrain = NULL,
+  parprior = NULL, calcNull = FALSE, draws = 5000,
+  survey.weights = NULL, quadpts = NULL, TOL = NULL, gpcm_mats = list(),
+  grsm.block = NULL, rsm.block = NULL, monopoly.k = 1L, key = NULL,
+  large = FALSE, GenRandomPars = FALSE, accelerate = "Ramsay",
+  verbose = TRUE, solnp_args = list(), nloptr_args = list(),
+  spline_args = list(), control = list(), technical = list(), ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of

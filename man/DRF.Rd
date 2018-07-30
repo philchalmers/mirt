@@ -6,11 +6,10 @@
 \usage{
 DRF(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, "nitems"),
   param_set = NULL, CI = 0.95, npts = 1000, quadpts = NULL,
-  theta_lim = c(-6, 6), Theta_nodes = NULL, plot = FALSE,
-  DIF = FALSE, par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"),
-  strip.border = list(col = "black")), auto.key = list(space = "right",
-  points = FALSE, lines = TRUE), ...)
+  theta_lim = c(-6, 6), Theta_nodes = NULL, plot = FALSE, DIF = FALSE,
+  par.strip.text = list(cex = 0.7), par.settings = list(strip.background =
+  list(col = "#9ECAE1"), strip.border = list(col = "black")),
+  auto.key = list(space = "right", points = FALSE, lines = TRUE), ...)
 }
 \arguments{
 \item{mod}{a multipleGroup object which estimated only 2 groups}

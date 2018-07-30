@@ -6,9 +6,8 @@
 \usage{
 simdata(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
   upper = 1, nominal = NULL, t = NULL, Theta = NULL,
-  gpcm_mats = list(), returnList = FALSE, model = NULL,
-  equal.K = TRUE, which.items = NULL, mins = 0, lca_cats = NULL,
-  prob.list = NULL)
+  gpcm_mats = list(), returnList = FALSE, model = NULL, equal.K = TRUE,
+  which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 }
 \arguments{
 \item{a}{a matrix/vector of slope parameters. If slopes are to be constrained to

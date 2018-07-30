@@ -4,8 +4,8 @@
 \alias{bfactor}
 \title{Full-Information Item Bi-factor and Two-Tier Analysis}
 \usage{
-bfactor(data, model, model2 = paste0("G = 1-", ncol(data)),
-  group = NULL, quadpts = NULL, invariance = "", ...)
+bfactor(data, model, model2 = paste0("G = 1-", ncol(data)), group = NULL,
+  quadpts = NULL, invariance = "", ...)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of

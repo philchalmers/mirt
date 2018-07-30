@@ -4,9 +4,9 @@
 \alias{DTF}
 \title{Differential test functioning statistics}
 \usage{
-DTF(mod, draws = NULL, CI = 0.95, npts = 1000, theta_lim = c(-6,
-  6), Theta_nodes = NULL, plot = "none", auto.key = list(space =
-  "right", points = FALSE, lines = TRUE), ...)
+DTF(mod, draws = NULL, CI = 0.95, npts = 1000, theta_lim = c(-6, 6),
+  Theta_nodes = NULL, plot = "none", auto.key = list(space = "right",
+  points = FALSE, lines = TRUE), ...)
 }
 \arguments{
 \item{mod}{a multipleGroup object which estimated only 2 groups}

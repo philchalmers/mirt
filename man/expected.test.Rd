@@ -4,8 +4,8 @@
 \alias{expected.test}
 \title{Function to calculate expected test score}
 \usage{
-expected.test(x, Theta, group = NULL, mins = TRUE,
-  individual = FALSE, which.items = NULL)
+expected.test(x, Theta, group = NULL, mins = TRUE, individual = FALSE,
+  which.items = NULL)
 }
 \arguments{
 \item{x}{an estimated mirt object}

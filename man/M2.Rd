@@ -4,9 +4,9 @@
 \alias{M2}
 \title{Compute the M2 model fit statistic}
 \usage{
-M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE,
-  quadpts = NULL, theta_lim = c(-6, 6), impute = 0, CI = 0.9,
-  residmat = FALSE, QMC = FALSE, suppress = 1, ...)
+M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE, quadpts = NULL,
+  theta_lim = c(-6, 6), impute = 0, CI = 0.9, residmat = FALSE,
+  QMC = FALSE, suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
