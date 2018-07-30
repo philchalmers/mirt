@@ -2,22 +2,24 @@ context('GGUM')
 
 test_that('GGUM', {
 
-    mod <- suppressWarnings(mirt(Science, 1, 'ggum', verbose=FALSE, TOL=1e-3, SE=TRUE))
+    mod <- suppressWarnings(mirt(Science, 1, c('graded', 'graded', 'graded', 'ggum'),
+                                 verbose=FALSE, SE=TRUE))
     cfs <- as.vector(coef(mod, simplify=TRUE)$items)
-    expect_equal(cfs, c(1.709904,0.9833967,2.98503,1.33512,0.1484389,0.7721983,0.5906746,0.1916301,2.907631,2.690887,2.538483,2.555878,2.349385,1.801324,1.608703,1.37137,-0.1264094,-0.8269402,0.2774447,-0.2540586), tolerance = 1e-3)
-    expect_equal(logLik(mod), -1624.744, tolerance = 1e-4)
+    expect_equal(cfs, c(1.049862,1.218629,2.280344,0.7421556,4.869889,2.917697,5.214802,NA,2.645195,0.8993259,2.206224,NA,-1.469685,-2.262823,-1.957192,NA,NA,NA,NA,3.477198,NA,NA,NA,6.342889,NA,NA,NA,4.566828,NA,NA,NA,1.719266), tolerance = 1e-3)
+    expect_equal(logLik(mod), -1609.924, tolerance = 1e-4)
     fs <- fscores(mod)
-    expect_equal(as.vector(fs[1:6]), c(0.3269168,0.1676617,-0.8460879,-0.8460879,0.9035116,0.2250832), tolerance = 1e-4)
+    expect_equal(as.vector(fs[1:6]), c(0.4267278,0.04564096,-0.9137894,-0.9137894,0.5612607,0.6853446), tolerance = 1e-4)
     fit <- itemfit(mod)
-    expect_equal(fit$p.S_X2, c(0.4282546,0.3060346,0.2437971,0.2790412), tolerance = 1e-4)
-    expect_equal(extract.mirt(mod, 'condnum'), 735.6286, tolerance = 1e-4)
+    expect_equal(fit$p.S_X2, c(0.6012163,0.3808717,0.5043588,0.4040644), tolerance = 1e-4)
+    expect_equal(extract.mirt(mod, 'condnum'), 2745.397, tolerance = 1e-4)
 
-    mod2 <- mirt(Science, 2, 'ggum', TOL = .1, verbose=FALSE)
+    mod2 <- mirt(Science, 2,c('graded', 'graded', 'graded', 'ggum'), TOL=.01,
+                 verbose=FALSE)
     cfs <- as.vector(coef(mod2, simplify=TRUE)$items)
-    expect_equal(cfs, c(0.3546753,1.463776,2.275139,0.7488499,1.964075,1.109024,2.353222,1.642901,3.491854,0.5043591,0.4489166,0.2560512,0.1463108,-0.357271,-0.05547154,0.1603908,2.57393,1.461018,1.514204,1.745221,2.074269,1.030846,1.049058,1.004315,0.271844,-0.07844877,0.3124729,0.02956934), tolerance = 1e-4)
-    expect_equal(logLik(mod2), -1614.866, tolerance = 1e-4)
+    expect_equal(cfs, c(-1.618017,-0.9619207,-1.670646,1.04929,-0.2230827,1.414658,1.191751,1e-04,5.601737,3.359375,4.890594,NA,3.118574,1.04238,2.061643,NA,-1.756586,-2.625442,-1.828546,NA,NA,NA,NA,-3.295782,NA,NA,NA,-0.8652751,NA,NA,NA,5.7103,NA,NA,NA,4.16543,NA,NA,NA,1.901035), tolerance = 1e-4)
+    expect_equal(logLik(mod2), -1602.618, tolerance = 1e-4)
     fs <- fscores(mod2)
-    expect_equal(as.vector(fs[1:6]), c(0.3408671,0.2480399,-0.2098457,-0.2098457,0.4436503,0.3223817), tolerance = 1e-4)
+    expect_equal(as.vector(fs[1:6]), c(-0.468552,-0.1095452,0.4325408,0.4325408,0.01797148,-0.8290412), tolerance = 1e-4)
 
     # mod3 <- mirt(Science, 1, 'ggum', optimizer='NR', pars=mod2values(mod), verbose=FALSE)
     # cfs <- as.vector(coef(mod3, simplify=TRUE)$items)
@@ -31,8 +33,8 @@ test_that('GGUM', {
     # unequal categories
     dat <- Science
     dat[,1] <- ifelse(Science[,1] == 1, 2, Science[,1]) - 1
-    mod4 <- mirt(dat, 1, 'ggum', verbose=FALSE, TOL = .1)
-    expect_equal(logLik(mod4), -1612.458, tolerance = 1e-4)
+    mod4 <- mirt(dat, 1, c('ggum', 'graded', 'graded', 'graded'), verbose=FALSE)
+    expect_equal(logLik(mod4), -1595.793, tolerance = 1e-4)
 
 })
 
