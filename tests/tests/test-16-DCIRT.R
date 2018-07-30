@@ -136,24 +136,24 @@ test_that('DCIRT-MG', {
     # plot(mod_configural)
     expect_equal(extract.mirt(mod_configural, 'logLik'), -23882.37, tolerance=1e-4)
     cfs <- coef(mod_configural)$G2$GroupPars
-    expect_equal(as.vector(cfs), c(0,1,1.416242,0.1019247,-0.2287069,0.6025107,-0.8074479,-0.8554728), tolerance=1e-4)
+    expect_equal(as.vector(cfs), c(0,1,1.414418,0.08941072,-0.2462128,0.5657355,-0.8215269,-0.9705975), tolerance=1e-4)
 
     cfs2 <- coef(mod_configural, simplify=TRUE)
     expect_equal(c(0, 1, cfs2$G2$Davidian_phis), as.vector(cfs))
 
     fs1 <- fscores(mod_configural)
     fs2 <- fscores(mod_configural, use_dentype_estimate = TRUE)
-    expect_equal(fs1[1:3], c(-1.5041069, -0.8120434, -1.2609567), tolerance=1e-4)
-    expect_equal(fs2[1:3], c(-1.3713864, -0.8386877, -1.1999741), tolerance=1e-4)
+    expect_equal(fs1[1:3], c(-1.510665,-0.8180199,-1.268329), tolerance=1e-4)
+    expect_equal(fs2[1:3], c(-1.385374,-0.8463518,-1.212446), tolerance=1e-4)
     fs1 <- fscores(mod_configural, method = 'EAPsum')
     fs2 <- fscores(mod_configural, method = 'EAPsum', use_dentype_estimate = TRUE)
-    expect_equal(fs1[1:2], c(-1.4348050, -0.8254455), tolerance=1e-4)
-    expect_equal(fs2[1:2], c(-1.315712, -0.850681), tolerance=1e-4)
+    expect_equal(fs1[1:2], c(-1.441303,-0.8309972), tolerance=1e-4)
+    expect_equal(fs2[1:2], c(-1.3294050, -0.8582679), tolerance=1e-4)
 
     out <- itemfit(mod_configural)
     out2 <- itemfit(mod_configural, use_dentype_estimate=TRUE)
-    expect_equal(out$G2$S_X2[1:3], c(10.114686, 15.166886, 8.988814), tolerance=1e-4)
-    expect_equal(out2$G2$S_X2[1:3], c(10.224082, 15.392918, 9.010734), tolerance=1e-4)
+    expect_equal(out$G2$S_X2[1:3], c(10.11545,15.17313,8.989033), tolerance=1e-4)
+    expect_equal(out2$G2$S_X2[1:3], c(10.2253,15.41447,9.010604), tolerance=1e-4)
 
     pp <- plot(mod_configural, type = 'Davidian')
     expect_is(pp, 'trellis')
