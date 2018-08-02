@@ -5,7 +5,7 @@
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
 SIBTEST(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
-  guess_correction = 0, Jmin = 2, na.rm = FALSE, pk_focal = FALSE,
+  guess_correction = 0, Jmin = 5, na.rm = FALSE, pk_focal = FALSE,
   correction = TRUE, details = FALSE)
 }
 \arguments{

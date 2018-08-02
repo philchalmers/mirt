@@ -129,7 +129,7 @@
 #'
 #' }
 SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
-                    guess_correction = 0, Jmin = 2, na.rm = FALSE,
+                    guess_correction = 0, Jmin = 5, na.rm = FALSE,
                     pk_focal = FALSE, correction = TRUE, details = FALSE){
 
     CA <- function(dat, guess_correction = rep(0, ncol(dat))){
