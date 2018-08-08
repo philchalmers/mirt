@@ -402,9 +402,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             stop('Please rewrite rating scale models as gpcm', call.=FALSE)
         if(any(itemtype %in% c('Rasch')))
             stop('Rasch itemtype is ambiguous, please specify either gpcm or dich/2PL class', call.=FALSE)
-        itemtype <- ifelse(itemtype %in% c('2PL', '3PL', '3PLu', '4PL'), 'dich', itemtype)
-        itemtype <- ifelse(itemtype %in% c('PC2PL', 'PC3PL'), 'partcomp', itemtype)
-        itemtype <- ifelse(itemtype %in% c("2PLNRM", "3PLNRM", "3PLuNRM", "4PLNRM"), 'nestlogit', itemtype)
+        itemtype <- toInternalItemtype(itemtype)
     }
 	if(any(itemtype == 'ggum') && is.null(t))
 	    stop('ggum requires t matrix input')

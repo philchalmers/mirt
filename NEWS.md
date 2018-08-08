@@ -21,6 +21,9 @@
 - `structure` argument added to `mdirt()` function to allow log-linear models for 
   simplifying the profile probability model computations
   
+- export internally used `traditional2mirt()` function to transform a small selection of 
+  classical IRT parameterizations into the slope-intercept form
+  
 - fix `survey.weights` input for multiple group models (reported by Leigh Allison)
 
 - fix `itemtype = "rsm"` block restriction when items contain unequal category lengths 

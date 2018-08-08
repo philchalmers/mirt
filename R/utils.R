@@ -2271,6 +2271,13 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
     cand
 }
 
+toInternalItemtype <- function(itemtype){
+    itemtype <- ifelse(itemtype %in% c('2PL', '3PL', '3PLu', '4PL'), 'dich', itemtype)
+    itemtype <- ifelse(itemtype %in% c('PC2PL', 'PC3PL'), 'partcomp', itemtype)
+    itemtype <- ifelse(itemtype %in% c("2PLNRM", "3PLNRM", "3PLuNRM", "4PLNRM"), 'nestlogit', itemtype)
+    itemtype
+}
+
 # function borrowed and edited from the sfsmisc package, v1.1-1. Date: 18, Oct, 2017
 QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
 {
