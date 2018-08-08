@@ -222,31 +222,31 @@
 #' DRF(mod)
 #' DRF(mod, draws = 500)
 #'
-#' ####
-#' # bifactor model
-#'
-#' #simulate data
-#' a <- matrix(c(rlnorm(30, .2, .2), rlnorm(15, .2, .2),
-#'             numeric(30), rlnorm(15, .2, .2)), 30)
-#' d <- matrix(rnorm(30))
-#'
-#' sigma <- sigma2 <- diag(3)
-#' sigma2[1,1] <- 2
-#' d2 <- d + matrix(c(numeric(5), rnorm(25, 0, .1)))
-#' dat1 <- simdata(a, d, 1000, itemtype='dich', sigma=sigma)
-#' dat2 <- simdata(a, d2, 1000, itemtype='dich', sigma=sigma2, mu=c(0.5, 0, 0))
-#' dat <- rbind(dat1, dat2)
-#' group <- rep(c('group1', 'group2'), each = 1000)
-#'
-#' specific <- c(rep(1,15),rep(2,15))
-#' nms <- colnames(dat)
-#' simmod <- bfactor(dat, specific, group=group, SE=TRUE,
-#'                   invariance = c('free_means', 'free_var', nms[1:5]))
-#' coef(simmod, simplify=TRUE)
-#'
-#' DRF(simmod)
-#' DRF(simmod, draws = 500)
-#'
+# ####
+# # bifactor model
+#
+# #simulate data
+# a <- matrix(c(rlnorm(30, .2, .2), rlnorm(15, .2, .2),
+#             numeric(30), rlnorm(15, .2, .2)), 30)
+# d <- matrix(rnorm(30))
+#
+# sigma <- sigma2 <- diag(3)
+# sigma2[1,1] <- 2
+# d2 <- d + matrix(c(numeric(5), rnorm(25, 0, .1)))
+# dat1 <- simdata(a, d, 1000, itemtype='dich', sigma=sigma)
+# dat2 <- simdata(a, d2, 1000, itemtype='dich', sigma=sigma2, mu=c(0.5, 0, 0))
+# dat <- rbind(dat1, dat2)
+# group <- rep(c('group1', 'group2'), each = 1000)
+#
+# specific <- c(rep(1,15),rep(2,15))
+# nms <- colnames(dat)
+# simmod <- bfactor(dat, specific, group=group, SE=TRUE,
+#                   invariance = c('free_means', 'free_var', nms[1:5]))
+# coef(simmod, simplify=TRUE)
+#
+# DRF(simmod)
+# DRF(simmod, draws = 500)
+#
 #' }
 DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'), param_set = NULL,
                 CI = .95, npts = 1000, quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
