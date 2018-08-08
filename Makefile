@@ -36,6 +36,7 @@ knitdocs:
 	mkdir html
 	mv *.html html/
 	rm R.css
+	rm -rf figure/
 	git checkout -- .
 	make install
 	make kniterrors
