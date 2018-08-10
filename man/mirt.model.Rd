@@ -44,6 +44,20 @@ Factors are first named and then specify which numerical items they affect
 by enclosing the left hand term within brackets. To finish the declaration of
 a model simply enter a blank line with only a carriage return (i.e., the
 'enter' or 'return' key), or instead read in an input version of the model syntax.
+The associated slopes throughout the package label these coefficients as
+\code{a1, a2, ..., ak}, where the associated number is assigned according to the
+respective order of the defined factors.
+
+For example, if the syntax were
+
+\code{"G = 1-10
+       F = 1-5
+       A = 6-10"}
+
+then the \code{G} factor would be assigned the slopes \code{a1} for each item, \code{F} assigned
+the slopes \code{a2}, and \code{A} assigned the slopes \code{a3}. The same principle applies to the
+\code{\link{bfactor}} function whereby the slopes are automatically included for the specific factors
+after the general factor structure has been assigned.
 
 There is an optional keyword for specifying the correlation between relationships between factors
 called \code{COV}, and non-linear factor products can be included by enclosing the product
