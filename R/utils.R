@@ -1587,8 +1587,10 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     SEtmp <- diag(solve(info))
     if(any(SEtmp < 0)){
         if(warn)
-            warning("Negative SEs set to NaN.\n", call.=FALSE)
-        SEtmp[SEtmp < 0 ] <- NaN
+            warning('Could not invert information matrix; model likely is not empirically identified.',
+                    call.=FALSE)
+        ESTIMATE$fail_invert_info <- TRUE
+        return(ESTIMATE)
     }
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
@@ -1911,7 +1913,7 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
         NCOL <- ncol(sigma)
         if(check)
             if (!all(ev$values >= -sqrt(.Machine$double.eps) * abs(ev$values[1])))
-                warning("sigma is numerically not positive definite", call.=FALSE)
+                warning("sigma is numerically non-positive definite", call.=FALSE)
     } else {
         ev <- pre.ev
         NCOL <- length(ev$values)

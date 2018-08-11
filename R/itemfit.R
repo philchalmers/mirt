@@ -456,7 +456,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                  impute argument to compute statistics following multiple data
                  imputations', call.=FALSE)
         if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
-            warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
+            warning('Imputations for large amounts of missing data may be overly conservative. Use with caution', call.=FALSE)
         stopifnot(impute > 1L)
         if(is.null(Theta))
             Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)

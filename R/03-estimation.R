@@ -840,7 +840,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               delta=opts$delta, lrPars=ESTIMATE$lrPars)
         } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
             if(opts$dentype %in% c('EH', 'EHW'))
-                stop('MHRM standard error not available when using empirical histograms', call.=FALSE)
+                stop('MHRM standard error methods not available when using empirical histograms', call.=FALSE)
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                    list = list(NCYCLES=1000L, BURNIN=1L, SEMCYCLES=opts$SEMCYCLES,
                                                KDRAWS=opts$KDRAWS, MHDRAWS=opts$MHDRAWS,
@@ -1018,9 +1018,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     OptimInfo$condnum <- kappa(info, exact=TRUE)
                     OptimInfo$secondordertest <- all(eigen(info)$values > 0)
                     } else OptimInfo$secondordertest <- FALSE
-                } else {
-                    OptimInfo$secondordertest <- FALSE
-                }
+            } else {
+                OptimInfo$secondordertest <- FALSE
+            }
         }
     }
     Internals <- list(collectLL=ESTIMATE$collectLL, Prior=ESTIMATE$Prior, Pl=Pl,
