@@ -63,7 +63,7 @@ test_that('one factor', {
     set.seed(1)
     mod_mixture <- suppressWarnings(multipleGroup(dat, 1, itemtype = 'Rasch', GenRandomPars = TRUE,
                                  verbose = FALSE, dentype = 'mixture-2', SE=TRUE))
-    expect_equal(extract.mirt(mod_mixture, 'condnum'), 115.5747, tolerance=1e-4)
+    expect_equal(extract.mirt(mod_mixture, 'condnum'), 112.2736, tolerance=1e-4)
     so <- summary(mod_mixture, verbose=FALSE)
     expect_equal(so[[1]]$class_proportion, .512121, tolerance=1e-4)
 
