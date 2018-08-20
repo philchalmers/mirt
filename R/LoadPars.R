@@ -701,14 +701,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
             return(customGroup)
         } else {
             nfact <- length(gmeans)
-            den <- function(obj, Theta){
-                gpars <- ExtractGroupPars(obj)
-                mu <- gpars$gmeans
-                sigma <- gpars$gcov
-                d <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
-                d <- ifelse(d < 1e-300, 1e-300, d)
-                d
-            }
+            den <- Theta_mvtnorm_den
             fn <- paste('COV_', 1L:nfact, sep='')
             FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
             FNMEANS <- paste('MEAN_', 1L:nfact, sep='')
@@ -741,12 +734,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
         nfact <- length(gmeans)
         if (nfact > 1) stop("Multidimensional DC-IRT models are not supported.")
         # DC Density:
-        den <- function(obj, Theta) {
-            gpars <- ExtractGroupPars(obj)
-            phi <- gpars$phi
-            d <- dcurver::ddc(Theta, phi = gpars$phi)
-            d
-        }
+        den <- Theta_DC_den
         fn <- paste('COV_', 1L:nfact, sep='')
         FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
         FNMEANS <- paste('MEAN_', 1L:nfact, sep='')
@@ -771,4 +759,38 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
                BFACTOR=FALSE, itemclass=0L, dentype = 'Davidian')
         return(ret)
       }
+}
+
+Theta_mvtnorm_den <- function(obj, Theta){
+    gpars <- ExtractGroupPars(obj)
+    mu <- gpars$gmeans
+    sigma <- gpars$gcov
+    d <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
+    d <- ifelse(d < 1e-300, 1e-300, d)
+    d
+}
+
+Theta_DC_den <- function(obj, Theta) {
+    gpars <- ExtractGroupPars(obj)
+    phi <- gpars$phi
+    d <- dcurver::ddc(Theta, phi = gpars$phi)
+    d
+}
+
+Theta_discrete_den <- function(obj, Theta, mus = 0){
+    if(length(Theta) == 1) return(1)
+    par <- obj@par
+    if(length(mus) > 1L){
+        ret <- t(apply(mus, 1L, function(x)
+            c(exp(par + x[-ncol(mus)]), 1)))
+        ret <- ret / rowSums(ret)
+    } else if(length(obj@structure)){
+        d <- exp(obj@structure %*% par)
+        d[length(d)] <- 1
+        ret <- as.vector(d / sum(d))
+    } else {
+        d <- c(exp(par), 1)
+        ret <- d / sum(d)
+    }
+    ret
 }

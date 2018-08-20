@@ -75,23 +75,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is.null(control$rel.tol)) control$rel.tol <- opts$TOL/100
 
         if(opts$dentype == "discrete" && is.null(customGroup)){
-            den <- function(obj, Theta, mus = 0){
-                if(length(Theta) == 1) return(1)
-                par <- obj@par
-                if(length(mus) > 1L){
-                    ret <- t(apply(mus, 1L, function(x)
-                        c(exp(par + x[-ncol(mus)]), 1)))
-                    ret <- ret / rowSums(ret)
-                } else if(length(obj@structure)){
-                    d <- exp(obj@structure %*% par)
-                    d[length(d)] <- 1
-                    ret <- as.vector(d / sum(d))
-                } else {
-                    d <- c(exp(par), 1)
-                    ret <- d / sum(d)
-                }
-                ret
-            }
+            den <- Theta_discrete_den
             par <- if(!is.null(dots$structure)){
                 if(is.null(opts$technical$customTheta))
                     stop('customTheta must be defined when using structure input', call.=FALSE)
