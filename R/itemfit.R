@@ -269,9 +269,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         }
         Q1_m <- rowMeans(Q1)
         df.X2_m <- rowMeans(df.X2)
+        RMSEA.X2_m <- rmsea(Q1_m, df.X2_m, N=nrow(pv[[1L]]))
         p.Q1 <- pchisq(Q1_m, df.X2_m, lower.tail = FALSE)
         p.Q1 <- ifelse(df.X2_m == 0, NaN, p.Q1)
-        ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, p.PV_Q1=p.Q1)
+        ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, RMSEA.PV_Q1=RMSEA.X2_m, p.PV_Q1=p.Q1)
         ret
     }
     boot_PV <- function(mod, org, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
