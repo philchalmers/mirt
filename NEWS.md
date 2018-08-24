@@ -1,3 +1,8 @@
+# Changes in mirt 1.30
+
+- Where applicable, RMSEA statistics are reported in `itemfit()` for tests that return suitable 
+  X2 and df components
+
 # Changes in mirt 1.29
 
 - When lower/upper bounded parameters are included the default optimizer is now 'nlminb' rather 

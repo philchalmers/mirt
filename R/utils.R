@@ -2239,9 +2239,9 @@ tli <- function(X2, X2.null, df, df.null)
 
 
 rmsea <- function(X2, df, N){
-    ret <- ifelse((X2 - df) > 0,
-                  sqrt(X2 - df) / sqrt(df * (N-1)), 0)
-    ret <- ifelse(is.na(ret), NaN, ret)
+    ret <- suppressWarnings(ifelse( (X2/df - 1) > 0 & df > 0,
+                   sqrt((X2/df - 1) / (N-1)), 0))
+    ret <- ifelse(df <= 0, NaN, ret)
     ret
 }
 

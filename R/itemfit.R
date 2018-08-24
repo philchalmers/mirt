@@ -8,7 +8,8 @@
 #' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
 #' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
 #' density components (where applicable). Currently, only S-X2 statistic supported for
-#' mixture IRT models.
+#' mixture IRT models. Finally, where applicable the root mean-square error of approximation (RMSEA)
+#' is reported to help guage the magnitude of item misfit.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -370,6 +371,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 df[i] <- upsilon[i] - sum(item@est)
             }
             ret <- data.frame(X2_star_scaled=org/gamma, df.X2_star_scaled=df,
+                              RMSEA.X2_star_scaled=rmsea(org/gamma, df, N=N),
                               p.X2_star_scaled=pchisq(org/gamma, df, lower.tail=FALSE))
         } else {
             p <- apply(t(X2bs) > org, 1, mean)
@@ -706,6 +708,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         if(X2){
             ret$X2 <- X2.value[which.items]
             ret$df.X2 <- df.X2[which.items]
+            ret$RMSEA.X2 <- rmsea(ret$X2, ret$df.X2, N=nrow(fulldata))
             ret$p.X2 <- suppressWarnings(pchisq(ret$X2, ret$df.X2, lower.tail=FALSE))
             ret$df.X2[ret$df.X2 <= 0] <- 0
             ret$p.X2[ret$df.X2 <= 0] <- NaN
@@ -713,6 +716,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         if(G2){
             ret$G2 <- G2.value[which.items]
             ret$df.G2 <- df.G2[which.items]
+            ret$RMSEA.G2 <- rmsea(ret$G2, ret$df.G2, N=nrow(fulldata))
             ret$p.G2 <- suppressWarnings(pchisq(ret$G2, ret$df.G2, lower.tail=FALSE))
             ret$df.G2[ret$df.G2 <= 0] <- 0
             ret$p.G2[ret$df.G2 <= 0] <- NaN
@@ -764,6 +768,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         S_X2[df.S_X2 == 0] <- NaN
         ret$S_X2 <- S_X2[which.items]
         ret$df.S_X2 <- df.S_X2[which.items]
+        ret$RMSEA.S_X2 <- rmsea(ret$S_X2, ret$df.S_X2, N=nrow(dat))
         ret$p.S_X2 <- suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2, lower.tail=FALSE))
     }
     itemtype <- extract.mirt(x, 'itemtype')
