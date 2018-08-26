@@ -213,6 +213,9 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         plausible.draws <- 1
         method <- 'EAP'
     }
+    if(is(object, "MultipleGroupClass") && !is.null(response.pattern))
+        stop(c("response.pattern input cannot be used with multiple-group models. ",
+               "Please extract the group you want first with the extract.group() and supply this object to fscores()"), call.=FALSE)
     if(any(extract.mirt(object, 'itemtype') == 'spline') && !(method %in% c('EAP', 'EAPsum')))
         stop('Only EAP and EAPsum method supported when spline items are modeled', call.=FALSE)
     if(returnER) full.scores <- FALSE
