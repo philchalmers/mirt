@@ -100,7 +100,7 @@ test_that('one factor', {
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
     fit2 <- itemfit(mod_metric, c('S_X2', 'Zh'))
     expect_is(fit2, 'list')
-    expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.733099, 7.851266, 11.000000, 0.726562),
+    expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.733099, 7.851266, 11.000000, 0, 0.726562),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
     expect_true(mirt:::closeEnough(fit3$M2 - 165.1392, -1e-4, 1e-4))
