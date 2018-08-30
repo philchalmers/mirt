@@ -2,6 +2,9 @@
 
 - Where applicable, RMSEA statistics are reported in `itemfit()` for tests that return suitable 
   X2 and df components
+  
+- Fix negative TLI and CFI values when using the C2 statistic from the `M2()` function (reported 
+  by Jake Kraska)
 
 # Changes in mirt 1.29
 

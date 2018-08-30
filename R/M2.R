@@ -310,7 +310,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             # M2 TODO
         }
         delta <- rbind(delta1, delta2)
-        abcats <- do.call(c, lapply(1:nitems, function(x) rep(x, each=K[x]-1)))
+        abcats <- do.call(c, lapply(1:nitems, function(x) rep(x, each=K[x]-1))) - 1L
         Xi2els <- if(type == "M2*"){
             .Call('buildXi2els', nrow(delta1), nrow(delta2), nitems, EIs, EIs2, Prior)
         } else .Call('buildXi2els_C2', nrow(delta1), nrow(delta2), ncol(PIs), nitems, PIs, EIs, EIs2, Prior, abcats)
