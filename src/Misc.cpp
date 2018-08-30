@@ -283,12 +283,12 @@ RcppExport SEXP buildXi2els_C2(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems0,
                         pab += EIs(n,i) * EIs(n,j) * Prior[n];
                         pc += PIs(n,k) * Prior[n];
                     }
-                    if(abcats[i] == abcats[k]){ 
+                    if(i == abcats[k]){ 
 	                    if(i == k){
 	                        for(int n = 0; n < N; ++n)
 	                            pabc += EIs2(n,i) * EIs(n,j) * Prior[n];
 	                    }
-                    } else if(abcats[j] == abcats[k]){
+                    } else if(j == abcats[k]){
 	                    if(j == k){
 	                        for(int n = 0; n < N; ++n)
 	                            pabc += EIs(n,i) * EIs2(n,j) * Prior[n];
