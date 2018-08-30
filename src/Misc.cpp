@@ -235,7 +235,7 @@ RcppExport SEXP buildXi2els(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems, SEXP REIs,
 }
 
 RcppExport SEXP buildXi2els_C2(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems0, 
-	SEXP Rnitems, SEXP RPIs, SEXP REIs, SEXP REIs2, SEXP RPrior)
+	SEXP Rnitems, SEXP RPIs, SEXP REIs, SEXP REIs2, SEXP RPrior, SEXP Rabcats)
 {
     BEGIN_RCPP
     const int dim1 = as<int>(Rdim1);
@@ -246,6 +246,7 @@ RcppExport SEXP buildXi2els_C2(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems0,
     const NumericMatrix EIs(REIs);
     const NumericMatrix EIs2(REIs2);
     const vector<double> Prior = as< vector<double> >(RPrior);
+    const vector<int> abcats = as< vector<int> >(Rabcats);
     const int N = EIs.nrow();
     NumericMatrix Xi11(dim1, dim1);
     NumericMatrix Xi12(dim1, dim2);
@@ -259,9 +260,10 @@ RcppExport SEXP buildXi2els_C2(SEXP Rdim1, SEXP Rdim2, SEXP Rnitems0,
                     pa += PIs(n,i) * Prior[n];
                     pb += PIs(n,j) * Prior[n];
                 }
-                if(i == j){
-                    for(int n = 0; n < N; ++n)
-                        pab += PIs(n,i) * Prior[n];
+                if(abcats[i] == abcats[j]){
+                	if(i == j)
+	                    for(int n = 0; n < N; ++n)
+	                        pab += PIs(n,i) * Prior[n];
                 } else {
                     for(int n = 0; n < N; ++n)
                 		pab += PIs(n,i) * PIs(n,j) * Prior[n];
