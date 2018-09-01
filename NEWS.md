@@ -1,5 +1,7 @@
 # Changes in mirt 1.30
 
+- `DIF()` now simplifies the output by default rather than returning lists from `anova()`. Wald tests are always simplified
+
 - Where applicable, RMSEA statistics are reported in `itemfit()` for tests that return suitable 
   X2 and df components
   
