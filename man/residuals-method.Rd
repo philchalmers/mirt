@@ -9,10 +9,10 @@
 \alias{residuals,DiscreteClass-method}
 \title{Compute model residuals}
 \usage{
-\S4method{residuals}{SingleGroupClass}(object, type = "LD", df.p = FALSE,
-  full.scores = FALSE, QMC = FALSE, printvalue = NULL, tables = FALSE,
-  verbose = TRUE, Theta = NULL, suppress = 1, theta_lim = c(-6, 6),
-  quadpts = NULL, ...)
+\S4method{residuals}{SingleGroupClass}(object, type = "LD",
+  df.p = FALSE, full.scores = FALSE, QMC = FALSE,
+  printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
+  suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass} or

@@ -52,7 +52,7 @@ test_that('extras', {
     expect_equal(c(PLCI$lower_2.5, PLCI$upper_97.5), c(0.7008617, 4.0112247, 1.4530232, 5.9667792),
                   tolerance=1e-3)
     DIFF <- suppressMessages(DIF(model1a, which.par='d', items2test = c(1,3)))
-    expect_is(DIFF, 'list')
+    expect_is(DIFF, 'data.frame')
     expect_equal(DIFF[2,'AIC'], -3.414, tolerance = 1e-3)
     DIFF2 <- suppressMessages(DIF(model2, which.par=c('a1', 'd'), items2test = c(1,3), scheme='drop'))
     expect_is(DIFF2, 'data.frame')

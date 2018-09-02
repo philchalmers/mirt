@@ -4,11 +4,12 @@
 \alias{empirical_ES}
 \title{Empirical effect sizes based on latent trait estimates}
 \usage{
-empirical_ES(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(mod,
-  "nitems"), DIF = TRUE, npts = 61, theta_lim = c(-6, 6), ref.group = 1,
-  plot = FALSE, par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), ...)
+empirical_ES(mod, Theta.focal = NULL,
+  focal_items = 1L:extract.mirt(mod, "nitems"), DIF = TRUE,
+  npts = 61, theta_lim = c(-6, 6), ref.group = 1, plot = FALSE,
+  par.strip.text = list(cex = 0.7),
+  par.settings = list(strip.background = list(col = "#9ECAE1"),
+  strip.border = list(col = "black")), ...)
 }
 \arguments{
 \item{mod}{a multipleGroup object which estimated only 2 groups}
