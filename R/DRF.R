@@ -49,8 +49,8 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R. P. (accepted). Model-Based Measures for Detecting and Quantifying Response Bias.
-#'   \emph{Psychometrika}.
+#' Chalmers, R. P. (2018). Model-Based Measures for Detecting and Quantifying Response Bias.
+#'   \emph{Psychometrika, 83}(3), 696-732. \doi{10.1007/s11336-018-9626-9}
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 #' @keywords DRF
 #' @export DRF

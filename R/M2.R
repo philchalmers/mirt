@@ -50,8 +50,8 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of
-#' hierarchical item factor models. British Journal of Mathematical and Statistical
-#' Psychology, 66, 245-276.
+#' hierarchical item factor models. \emph{British Journal of Mathematical and Statistical
+#' Psychology, 66}, 245-276.
 #'
 #' Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response theory
 #' models for ordinal data}. National Center for Research on Evaluation, Standards,
@@ -62,7 +62,7 @@
 #' \doi{10.18637/jss.v048.i06}
 #'
 #' Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
-#' multidimensional contingency tables Psychometrika, 71, 713-732.
+#' multidimensional contingency tables. \emph{Psychometrika, 71}, 713-732.
 #' @keywords model fit
 #' @export M2
 #' @examples
