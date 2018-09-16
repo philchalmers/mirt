@@ -198,7 +198,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 }
             }
             e <- c(E1, E2[lower.tri(E2)])
-            if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+            if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'sequential', 'GroupPars'))){
                 E2[is.na(E2)] <- 0
                 E2 <- E2 + t(E2)
                 diag(E2) <- E11
@@ -269,7 +269,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             }
             P1 <- colSums(PIs * Prior)
             e <- c(P1, E2[lower.tri(E2)])
-            if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'GroupPars'))){
+            if(all(sapply(obj@ParObjects$pars, class) %in% c('dich', 'graded', 'gpcm', 'sequential', 'GroupPars'))){
                 E2[is.na(E2)] <- 0
                 E2 <- E2 + t(E2)
                 diag(E2) <- E11
