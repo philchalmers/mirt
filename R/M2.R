@@ -175,14 +175,12 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             ind <- 1L
             for(i in seq_len(nitems)){
                 x <- extract.item(obj, i)
+                scs <- 1L:x@ncat - 1L
                 EIs[,i] <- expected.item(x, Theta, min=0L)
-                tmp <- ProbTrace(x, Theta)
-                E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
-                for(j in ncol(tmp):2L)
-                    tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
-                cfs <- c(0,1)
-                if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
-                EIs2[,i] <- t(cfs %*% t(tmp))
+                prob <- ProbTrace(x, Theta)
+                E11s[,i] <- colSums((1L:ncol(prob)-1L)^2 * t(prob))
+                cfs <- scs * scs
+                EIs2[,i] <- t(cfs %*% t(prob))
                 tmp <- length(x@parnum)
                 DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
                 ind <- ind + tmp
@@ -245,16 +243,13 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             ind <- pind <- 1L
             for(i in seq_len(nitems)){
                 x <- extract.item(obj, i)
+                scs <- 1L:x@ncat - 1L
                 EIs[,i] <- expected.item(x, Theta, min=0L)
-                tmp <- prob <- ProbTrace(x, Theta)
-                PIs[,pind:(pind+ncol(tmp)-2L)] <- tmp[,-1L]
-                E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
-                for(j in ncol(tmp):2L)
-                    tmp[,j-1L] <- tmp[,j] + tmp[,j-1L]
-                cfs <- c(0,1)
-                if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
-                EIs2[,i] <- t(cfs %*% t(tmp))
-                # rowSums(t(0:3 * 0:3 * t(prob)))
+                prob <- ProbTrace(x, Theta)
+                PIs[,pind:(pind+ncol(prob)-2L)] <- prob[,-1L]
+                E11s[,i] <- colSums((1L:ncol(prob)-1L)^2 * t(prob))
+                cfs <- scs * scs
+                EIs2[,i] <- t(cfs %*% t(prob))
                 tmp <- length(x@parnum)
                 DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
                 pind <- pind + K[i] - 1L
