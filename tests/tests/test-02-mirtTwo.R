@@ -8,8 +8,8 @@ test_that('poly', {
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
     C2 <- M2(modp1, type = 'C2')
-    expect_equal(C2$M2, .2806438, tolerance=1e-4)
-    expect_equal(C2$p, .8690785, tolerance=1e-4)
+    expect_equal(C2$M2, 19.17929, tolerance=1e-4)
+    expect_equal(C2$p, 6.84337e-05, tolerance=1e-4)
     modp2 <- mirt(Science, 1, 'sequential', verbose=FALSE)
     expect_is(modp2, 'SingleGroupClass')
     expect_equal(extract.mirt(modp2, 'df'), 239)

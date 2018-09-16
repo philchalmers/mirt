@@ -246,7 +246,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             for(i in seq_len(nitems)){
                 x <- extract.item(obj, i)
                 EIs[,i] <- expected.item(x, Theta, min=0L)
-                tmp <- ProbTrace(x, Theta)
+                tmp <- prob <- ProbTrace(x, Theta)
                 PIs[,pind:(pind+ncol(tmp)-2L)] <- tmp[,-1L]
                 E11s[,i] <- colSums((1L:ncol(tmp)-1L)^2 * t(tmp))
                 for(j in ncol(tmp):2L)
@@ -254,6 +254,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 cfs <- c(0,1)
                 if(K[i] > 2L) cfs <- c(cfs, 2:(ncol(tmp)-1L) * 2 - 1)
                 EIs2[,i] <- t(cfs %*% t(tmp))
+                # rowSums(t(0:3 * 0:3 * t(prob)))
                 tmp <- length(x@parnum)
                 DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
                 pind <- pind + K[i] - 1L
@@ -311,7 +312,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         }
         delta <- rbind(delta1, delta2)
         abcats <- do.call(c, lapply(1:nitems, function(x) rep(x, each=K[x]-1))) - 1L
-        abcats2 <- do.call(c, lapply(K, function(x) 1L:x - 1L))
+        abcats2 <- do.call(c, lapply(K, function(x) 2L:x - 1L))
         Xi2els <- if(type == "M2*"){
             .Call('buildXi2els', nrow(delta1), nrow(delta2), nitems, EIs, EIs2, Prior)
         } else .Call('buildXi2els_C2', nrow(delta1), nrow(delta2), ncol(PIs), nitems,
