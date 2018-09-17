@@ -320,11 +320,9 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     #main
     if(residmat) type <- "M2*"
     stopifnot(type %in% c('M2*', 'M2', 'C2'))
-    if(type == "M2"){
-        type <- "M2*"
+    if(type == "M2")
         if(!all(extract.mirt(obj, 'K') == 2L))
-            warning("M2 statistic currently not supported for polytomous data. Using M2* or C2 instead", call.=FALSE)
-    }
+            stop("M2 statistic currently not supported for polytomous data. Use M2* or C2 instead", call.=FALSE)
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)
