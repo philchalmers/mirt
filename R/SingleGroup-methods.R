@@ -1419,7 +1419,7 @@ mirt2traditional <- function(x, vcov){
         for(i in 2L:ncat){
             fns[[i]] <- function(par, index, opar){
                 if(index > 1L){
-                    if(index == 2L) opar[c(1, ncat + 2)] <- par
+                    if(index == 2L) opar[c(1, ncat + 3)] <- par
                     else opar[c(1, ncat + index, ncat + index + 1)] <- par
                     par <- opar
                     ds <- par[-1]/par[1]
@@ -1443,7 +1443,7 @@ mirt2traditional <- function(x, vcov){
             newd[i-1L] <- -(ds[i] - ds[i-1L])
             delta_index[[i]] <- c(1L, tmp[,i-1L] + ncat + 1L)
         }
-        delta_index[[2L]] <- c(1L, tmp[2L,i-1L] + ncat + 1L)
+        delta_index[[2L]] <- c(1L, ncat + 3L)
         par <- c(par[1], newd)
         names(par) <- c('a', paste0('b', 1:length(newd)))
         x@est <- x@est[c(1, (ncat+3L):length(x@est))]

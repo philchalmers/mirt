@@ -8,6 +8,8 @@
 - Fix negative TLI and CFI values when using the C2 statistic from the `M2()` function (reported 
   by Jake Kraska and Charlie Iaconangelo)
 
+- Fix delta method SEs for `'gpcm'` itemtype (reported by Lennart Schneider)
+
 # Changes in mirt 1.29
 
 - When lower/upper bounded parameters are included the default optimizer is now 'nlminb' rather 
