@@ -1,5 +1,35 @@
-# theta combinations
-thetaComb <- function(theta, nfact)
+#' Create all possible combinations of vector input
+#'
+#' This function constructs all possible k-way combinations of an input vector.
+#' It is primarily useful when used in conjunction with the \code{\link{mdirt}} function,
+#' though users may have other uses for it as well. See \code{\link{expand.grid}} for more
+#' flexible combination formats.
+#'
+#' @param theta the vector from which all possible combinations should be obtained
+#' @param nfact the number of observations (and therefore the number of columns to return in
+#'   the matrix of combinations)
+#' @param intercept logical; should a vector of 1's be appended to the first column of the
+#'   result to include an intercept design component? Default is \code{FALSE}
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @return a matrix with all possible combinations
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#' @export
+#' @examples
+#'
+#' # all possible joint combinations for the vector -4 to 4
+#' thetaComb(-4:4, 2)
+#'
+#' # all possible binary combinations for four observations
+#' thetaComb(c(0,1), 4)
+#'
+#' # all possible binary combinations for four observations (with intercept)
+#' thetaComb(c(0,1), 4, intercept=TRUE)
+#'
+thetaComb <- function(theta, nfact, intercept = FALSE)
 {
 	if (nfact == 1L){
         Theta <- matrix(theta)
@@ -8,8 +38,17 @@ thetaComb <- function(theta, nfact)
         for(i in seq_len(nfact))
             thetalist[[i]] <- theta
         Theta <- as.matrix(expand.grid(thetalist))
-    }
+	}
+    if(intercept) Theta <- cbind(1, Theta)
+    colnames(Theta) <- NULL
 	return(Theta)
+}
+
+thetaStack <- function(theta, nclass){
+    thetalist <- vector('list', nclass)
+    for(i in seq_len(nclass))
+        thetalist[[i]] <- theta
+    as.matrix(do.call(rbind, thetalist))
 }
 
 # Product terms
@@ -289,12 +328,33 @@ ExtractGroupPars <- function(x){
     if(x@itemclass < 0L) return(list(gmeans=0, gcov=matrix(1)))
     nfact <- x@nfact
     gmeans <- x@par[seq_len(nfact)]
-    tmp <- x@par[-seq_len(nfact)]
-    gcov <- matrix(0, nfact, nfact)
-    gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-    if(nfact != 1L)
-        gcov <- gcov + t(gcov) - diag(diag(gcov))
-    return(list(gmeans=gmeans, gcov=gcov))
+    phi_matches <- grepl("PHI", x@parnames)
+    if (x@dentype == "Davidian") {
+        phi <- x@par[phi_matches]
+        tmp <- x@par[-c(seq_len(nfact), which(phi_matches))]
+        gcov <- matrix(0, nfact, nfact)
+        gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+        if(nfact != 1L)
+            gcov <- gcov + t(gcov) - diag(diag(gcov))
+        return(list(gmeans=gmeans, gcov=gcov, phi=phi))
+    } else {
+        par <- x@par
+        if(x@dentype == "mixture") par <- par[-length(par)] # drop pi
+        tmp <- par[-seq_len(nfact)]
+        gcov <- matrix(0, nfact, nfact)
+        gcov[lower.tri(gcov, diag=TRUE)] <- tmp
+        if(nfact != 1L)
+            gcov <- gcov + t(gcov) - diag(diag(gcov))
+        return(list(gmeans=gmeans, gcov=gcov))
+    }
+}
+
+ExtractMixtures <- function(pars){
+    pick <- length(pars[[1L]])
+    logit_pi <- sapply(pars, function(x) x[[pick]]@par[length(x[[pick]]@par)])
+    max_logit_pi <- max(logit_pi)
+    pi <- exp(logit_pi - max_logit_pi)
+    pi / sum(pi)
 }
 
 reloadConstr <- function(par, constr, obj){
@@ -352,9 +412,7 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                         dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
                         MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
-    if(dentype == 'EH'){
-        Prior[[1L]] <- list$EHPrior[[1L]]
-    } else if(dentype == 'custom'){
+    if(dentype == 'custom'){
         for(g in seq_len(ngroups)){
             gp <- pars[[g]][[J+1L]]
             Prior[[g]] <- gp@den(gp, gTheta[[g]])
@@ -370,6 +428,12 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                 Prior[[g]] <- gp@den(gp, gTheta[[g]])
                 Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
             }
+        }
+    } else if(dentype == 'Davidian'){
+        for(g in seq_len(ngroups)){
+            gp <- pars[[g]][[J+1L]]
+            Prior[[g]] <- gp@den(gp, gTheta[[g]])
+            Prior[[g]] <- Prior[[g]] / sum(Prior[[g]])
         }
     } else {
         for(g in seq_len(ngroups)){
@@ -402,10 +466,16 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
             }
         }
     }
-    if(dentype == 'EH'){
+    if(dentype %in% c('EH', 'EHW')){
         if(cycles > 1L){
-            for(g in seq_len(ngroups))
-                Prior[[g]] <- rowSums(rlist[[g]][[1L]]) / sum(rlist[[g]][[1L]])
+            for(g in seq_len(ngroups)){
+                rr <- if(dentype == 'EHW') standardizeQuadrature(gTheta[[g]], pars[[g]][[J+1L]]@rr,
+                                                                 estmean=pars[[g]][[J+1L]]@est[1L],
+                                                                 estsd=pars[[g]][[J+1L]]@est[2L])
+                    else pars[[g]][[J+1L]]@rr
+                Prior[[g]] <- rr / sum(rr)
+                attr(Prior[[g]], 'mean_var') <- attr(rr, 'mean_var')
+            }
         } else {
             for(g in seq_len(ngroups)){
                 Prior[[g]] <- mirt_dmvnorm(gTheta[[g]], 0, matrix(1))
@@ -423,11 +493,15 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
             for(g in seq_len(ngroups))
                 Prior[[g]] <- matrix(rep(1 / length(gTheta[[g]])),
                                          nrow(lrPars@mus), nrow(gTheta[[g]]))
-
         } else {
             for(g in seq_len(ngroups))
                 Prior[[g]] <- matrix(rep(1 / length(Prior[[g]]), length(Prior[[g]])))
         }
+    }
+    if(dentype == 'mixture'){
+        pis <- ExtractMixtures(pars)
+        for(g in seq_len(ngroups))
+            Prior[[g]] <- pis[g] * Prior[[g]]
     }
     return(list(prior=prior, Prior=Prior, Priorbetween=Priorbetween))
 }
@@ -482,7 +556,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                             for(j in seq_len(length(sel))){
                                 pick <- p[[sel[j]]]@parnum[names(p[[sel[j]]]@est) == picknames]
                                 if(!length(pick))
-                                    stop('CONSTRAIN = ... indexed a parameter that was not relavent for item ', sel[j],
+                                    stop('CONSTRAIN = ... indexed a parameter that was not relevant for item ', sel[j],
                                          call.=FALSE)
                                 constr <- c(constr, pick)
                             }
@@ -518,7 +592,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         for(g in groupsPicked){
                             pick <- pars[[g]][[j]]@parnum[names(pars[[g]][[j]]@est) == pickname]
                             if(!length(pick))
-                                stop('CONSTRAINB = ... indexed a parameter that was not relavent accross groups',
+                                stop('CONSTRAINB = ... indexed a parameter that was not relevant across groups',
                                      call.=FALSE)
                             constr <- c(constr, pick)
                         }
@@ -636,6 +710,10 @@ expbeta_sv <- function(val1, val2){
 
 UpdateParameters <- function(PrepList, model, groupNames){
     if(!is.numeric(model)){
+        nitems <- length(PrepList[[1L]]$pars) - 1L
+        model$x[,"Parameters"] <- gsub("\\(GROUP,",
+                                       replacement = sprintf("(%i,", nitems + 1L),
+                                       model$x[,"Parameters"])
         groupNames <- as.character(groupNames)
         pars <- vector('list', length(PrepList))
         for(g in seq_len(length(PrepList)))
@@ -1233,7 +1311,7 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
         if(!is.null(survey.weights)){
             Freq <- mySapply(seq_len(nrow(tabdata)), function(x, std, tstd, w)
                 sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata,
-                w=survey.weights)
+                w=survey.weights[group == groupNames[g]])
         } else {
             Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
                 match(tmpstringdata, stringtabdata)))
@@ -1271,12 +1349,13 @@ updateGrad <- function(g, L) L %*% g
 updateHess <- function(h, L) L %*% h %*% L
 
 makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NULL,
-                     SE = FALSE, verbose = TRUE, GenRandomPars,
+                     SE = FALSE, verbose = TRUE, GenRandomPars, dentype = 'Gaussian',
                      SEtol = .001, grsm.block = NULL, D = 1, TOL = NULL,
                      rsm.block = NULL, calcNull = FALSE, BFACTOR = FALSE,
                      technical = list(), hasCustomGroup = FALSE,
-                     SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay', empiricalhist = FALSE,
-                     optimizer = NULL, solnp_args = list(), nloptr_args = list(), ...)
+                     SE.type = 'Oakes', large = NULL, accelerate = 'Ramsay',
+                     optimizer = NULL, solnp_args = list(), nloptr_args = list(),
+                     item.Q = NULL, ...)
 {
     opts <- list()
     tnames <- names(technical)
@@ -1284,7 +1363,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'gain', 'warn', 'message', 'customK', 'customPriorFun', 'customTheta', 'MHcand',
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
-                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws')
+                'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
+                "zeroExtreme")
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1301,6 +1381,21 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                         'sandwich.Louis', 'Oakes', 'complete', 'SEM', 'Fisher', 'MHRM', 'FMHRM', 'numerical')))
         stop('SE.type argument not supported', call.=FALSE)
     if(!(method %in% c('EM', 'QMCEM', 'MCEM'))) accelerate <- 'none'
+    if(grepl('Davidian', dentype)){
+        tmp <- strsplit(dentype, '-')[[1]]
+        dentype <- tmp[1L]
+        opts$dcIRT_nphi <- as.integer(tmp[2L])
+        stopifnot(opts$dcIRT_nphi > 1L)
+    }
+    if(grepl('mixture', dentype)){
+        tmp <- strsplit(dentype, '-')[[1]]
+        dentype <- tmp[1L]
+        opts$ngroups <- as.integer(tmp[2L])
+        stopifnot(opts$n_mixture > 1L)
+    }
+    if(!(dentype %in% c('Gaussian', 'empiricalhist', 'discrete', 'empiricalhist_Woods', "Davidian",
+                        "EH", "EHW", 'mixture')))
+        stop('dentype not supported', call.=FALSE)
     opts$method = method
     if(draws < 1) stop('draws must be greater than 0', call.=FALSE)
     opts$draws = draws
@@ -1315,9 +1410,13 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull
     opts$customPriorFun = technical$customPriorFun
-    opts$dentype <- 'Gaussian'
+    opts$item.Q = item.Q
+    if(dentype == "empiricalhist") dentype <- 'EH'
+    if(dentype == "empiricalhist_Woods") dentype <- 'EHW'
+    opts$dentype <- opts$odentype <- dentype
+    opts$zeroExtreme <- FALSE
+    if(!is.null(technical$zeroExtreme)) opts$zeroExtreme <- technical$zeroExtreme
     if(BFACTOR) opts$dentype <- 'bfactor'
-    if(empiricalhist) opts$dentype <- 'EH'
     if(hasCustomGroup) opts$dentype <- 'custom'
     opts$accelerate = accelerate
     opts$Norder <- ifelse(is.null(technical$Norder), 2L, technical$Norder)
@@ -1358,12 +1457,23 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$internal_constraints  <- ifelse(is.null(technical$internal_constraints),
                                          TRUE, technical$internal_constraints)
     opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, technical$keep_vcov_PD)
-    if(empiricalhist){
+    if(dentype == 'mixture'){
+        if(opts$method != 'EM')
+            stop('Mixture IRT densities only supported when method = \'EM\' ', call.=FALSE)
+        if(SE && !(SE.type %in% c('complete', 'Oakes')))
+            stop('Only Oakes and complete SE.types current supported for mixture models', call.=FALSE)
+    }
+    if(dentype %in% c("EH", 'EHW')){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
         if(opts$TOL == 1e-4) opts$TOL <- 3e-5
-        if(is.null(opts$quadpts)) opts$quadpts <- 199L
+        if(is.null(opts$quadpts)) opts$quadpts <- 121L
         if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
+    }
+    if(dentype == 'Davidian'){
+        if(opts$method != 'EM')
+            stop('Davidian curve method only applicable when method = \'EM\' ', call.=FALSE)
+        if(is.null(opts$quadpts)) opts$quadpts <- 121L
     }
     if(is.null(opts$theta_lim)) opts$theta_lim <- c(-6,6)
     if(method == 'QMCEM' && is.null(opts$quadpts)) opts$quadpts <- 5000L
@@ -1423,16 +1533,28 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
 }
 
 reloadPars <- function(longpars, pars, ngroups, J){
-    return(.Call('reloadPars', longpars, pars, ngroups, J,
-                      attr(pars[[1L]], 'nclasspars')))
+    .Call('reloadPars', longpars, pars, ngroups, J,
+          attr(pars[[1L]], 'nclasspars'))
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
-                             CUSTOM.IND){
-    itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
-    if(length(CUSTOM.IND)){
-        for(i in CUSTOM.IND)
-            itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+                             CUSTOM.IND, pis = NULL){
+    if(is.null(pis)){
+        itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+        if(length(CUSTOM.IND)){
+            for(i in CUSTOM.IND)
+                itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+        }
+    } else {
+        tmp_itemtrace <- vector('list', length(pis))
+        for(g in seq_len(length(pis))){
+            tmp_itemtrace[[g]] <- .Call('computeItemTrace', pars[[g]]@ParObjects$pars, Theta, itemloc, offterm)
+            if(length(CUSTOM.IND)){
+                for(i in CUSTOM.IND)
+                    tmp_itemtrace[[g]][,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[g]]@ParObjects$pars[[i]], Theta=Theta)
+            }
+        }
+        itemtrace <- do.call(rbind, tmp_itemtrace)
     }
     return(itemtrace)
 }
@@ -1457,7 +1579,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
         if(warn)
-            warning('Could not invert information matrix; model likely is not identified.',
+            warning('Could not invert information matrix; model likely is not empirically identified.',
                     call.=FALSE)
         ESTIMATE$fail_invert_info <- TRUE
         return(ESTIMATE)
@@ -1465,8 +1587,10 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     SEtmp <- diag(solve(info))
     if(any(SEtmp < 0)){
         if(warn)
-            warning("Negative SEs set to NaN.\n", call.=FALSE)
-        SEtmp[SEtmp < 0 ] <- NaN
+            warning('Could not invert information matrix; model likely is not empirically identified.',
+                    call.=FALSE)
+        ESTIMATE$fail_invert_info <- TRUE
+        return(ESTIMATE)
     }
     SEtmp <- sqrt(SEtmp)
     SE <- rep(NA, length(longpars))
@@ -1496,7 +1620,7 @@ make.randomdesign <- function(random, longdata, covnames, itemdesign, N, LR=FALS
         if(any(grepl('\\*', splt[2L]) | grepl('\\+', splt[2L])))
             stop('The + and * operators are not supported. Please specify
                  which effects you want to interact with the : operator, and specify
-                 additional random effects in seperate list elements', call.=FALSE)
+                 additional random effects in separate list elements', call.=FALSE)
         gframe <- model.frame(as.formula(paste0('~',splt[2L])), longdata)
         sframe <- model.frame(as.formula(paste0('~',splt[1L])), longdata)
         levels <- interaction(gframe)
@@ -1566,7 +1690,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
     inv_tXX <- try(solve(tXX), silent = TRUE)
     if(!is.nan(TOL)){
         if(is(inv_tXX, 'try-error'))
-            stop('Latent regression design matrix contains multicollinear terms.', call. = FALSE)
+            stop('Latent regression design matrix contains multi-collinear terms.', call. = FALSE)
     } else inv_tXX <- matrix(0, ncol(tXX), ncol(tXX))
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
@@ -1643,6 +1767,21 @@ reloadRandom <- function(random, longpars){
     random
 }
 
+phi_bound <- function(phi, bound = c(-pi/2, pi/2)){
+    for(i in 1L:length(phi)){
+        while(TRUE){
+            if(phi[i] > bound[1L] && phi[i] <= bound[2L]) break
+            if(phi[i] < bound[1L]){
+                phi[i] <- phi[i] + pi
+            }
+            if(phi[i] >= bound[2L]){
+                phi[i] <- phi[i] - pi
+            }
+        }
+    }
+    phi
+}
+
 smooth.cor <- function(x){
     eig <- eigen(x)
     negvalues <- eig$values <= 0
@@ -1705,7 +1844,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
         lrPars@beta[] <- lrPars@par
         lrPars@mus <- lrPars@X %*% lrPars@beta
     }
-    if(dentype == 'EH'){
+    if(dentype %in% c('EH', 'EHW')){
         Prior[[1L]] <- EHPrior[[1L]]
     } else if(dentype == 'custom'){
         for(g in seq_len(ngroups)){
@@ -1774,7 +1913,7 @@ mirt_rmvnorm <- function(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean
         NCOL <- ncol(sigma)
         if(check)
             if (!all(ev$values >= -sqrt(.Machine$double.eps) * abs(ev$values[1])))
-                warning("sigma is numerically not positive definite", call.=FALSE)
+                warning("sigma is numerically non-positive definite", call.=FALSE)
     } else {
         ev <- pre.ev
         NCOL <- length(ev$values)
@@ -1995,9 +2134,9 @@ computeNullModel <- function(data, itemtype, key, group=NULL){
     itemtype[itemtype == 'Rasch'] <- 'gpcm'
     if(!is.null(group)){
         null.mod <- multipleGroup(data, 1L, itemtype=itemtype, group=group, verbose=FALSE,
-                                  key=key, technical=list(NULL.MODEL=TRUE))
+                                  key=key, quadpts=3, technical=list(NULL.MODEL=TRUE))
     } else {
-        null.mod <- mirt(data, 1L, itemtype=itemtype, verbose=FALSE, key=key,
+        null.mod <- mirt(data, 1L, itemtype=itemtype, verbose=FALSE, key=key, quadpts=3,
                          technical=list(NULL.MODEL=TRUE))
     }
     null.mod
@@ -2036,9 +2175,10 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
     }
     return(pars)
 }
-latentRegression_obj <- function(data, covdata, formula, empiricalhist, method){
+
+latentRegression_obj <- function(data, covdata, formula, dentype, method){
     if(!is.null(covdata) && !is.null(formula)){
-        if(empiricalhist)
+        if(dentype == "empiricalhist")
             stop('Empirical histogram method not supported with covariates', call.=FALSE)
         if(!is.data.frame(covdata))
             stop('covdata must be a data.frame object', call.=FALSE)
@@ -2055,6 +2195,14 @@ latentRegression_obj <- function(data, covdata, formula, empiricalhist, method){
         latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
     } else latent.regression <- NULL
     latent.regression
+}
+
+bs_range <- function(x, CI){
+    ss <- sort(x)
+    N <- length(ss)
+    ret <- c(lower = ss[floor(N * (1-CI)/2)],
+             upper = ss[ceiling(N * (1 - (1-CI)/2))])
+    ret
 }
 
 # borrowed and modified from emdbook package, March 1 2017
@@ -2091,10 +2239,31 @@ tli <- function(X2, X2.null, df, df.null)
 
 
 rmsea <- function(X2, df, N){
-    ret <- ifelse((X2 - df) > 0,
-                  sqrt(X2 - df) / sqrt(df * (N-1)), 0)
-    ret <- ifelse(is.na(ret), NaN, ret)
+    ret <- suppressWarnings(ifelse( (X2/df - 1) > 0 & df > 0,
+                   sqrt((X2/df - 1) / (N-1)), 0))
+    ret <- ifelse(df <= 0, NaN, ret)
     ret
+}
+
+removeMissing <- function(obj){
+    dat <- extract.mirt(obj, 'data')
+    obj@Data$data <- na.omit(dat)
+    pick <- attr(obj@Data$data, 'na.action')
+    obj@Data$group <- obj@Data$group[-pick]
+    ind1 <- 0L
+    for(g in seq_len(length(obj@Data$groupNames))){
+        ind2 <- 1L:nrow(obj@Data$fulldata[[g]]) + ind1
+        pick2 <- ind2 %in% pick
+        ind1 <- nrow(obj@Data$fulldata[[g]]) + ind1
+        obj@Data$fulldata[[g]] <- obj@Data$fulldata[[g]][!pick2, , drop=FALSE]
+    }
+    if(is(obj, 'MultipleGroupClass')){
+        for(g in seq_len(length(obj@Data$groupNames))){
+            obj@ParObjects$pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
+                                                         , drop=FALSE]
+        }
+    }
+    obj
 }
 
 controlCandVar <- function(PA, cand, min = .1, max = .6){
@@ -2102,6 +2271,13 @@ controlCandVar <- function(PA, cand, min = .1, max = .6){
     else if(PA < min) cand <- cand * 0.9
     if(cand < .001) cand <- .001
     cand
+}
+
+toInternalItemtype <- function(itemtype){
+    itemtype <- ifelse(itemtype %in% c('2PL', '3PL', '3PLu', '4PL'), 'dich', itemtype)
+    itemtype <- ifelse(itemtype %in% c('PC2PL', 'PC3PL'), 'partcomp', itemtype)
+    itemtype <- ifelse(itemtype %in% c("2PLNRM", "3PLNRM", "3PLuNRM", "4PLNRM"), 'nestlogit', itemtype)
+    itemtype
 }
 
 # function borrowed and edited from the sfsmisc package, v1.1-1. Date: 18, Oct, 2017

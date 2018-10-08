@@ -18,6 +18,7 @@
 #'   \item{BIC}{BIC}
 #'   \item{SABIC}{sample size adjusted BIC}
 #'   \item{DIC}{DIC}
+#'   \item{HQ}{HQ}
 #'   \item{F}{unrotated standardized loadings matrix}
 #'   \item{h2}{factor communality estimates}
 #'   \item{LLhistory}{EM log-likelihood history}
@@ -101,6 +102,7 @@ extract.mirt <- function(x, what){
                   RMSEA = x@Fit$RMSEA,
                   df = x@Fit$df,
                   AIC = x@Fit$AIC,
+                  HQ = x@Fit$HQ,
                   AICc = x@Fit$AICc,
                   BIC = x@Fit$BIC,
                   SABIC = x@Fit$SABIC,
@@ -150,6 +152,9 @@ extract.mirt <- function(x, what){
                   itemdesign = x@Data$itemdesign,
                   itemloc = x@Model$itemloc,
                   CUSTOM.IND = x@Internals$CUSTOM.IND,
+                  dentype = x@Options$dentype,
+                  pis = x@Model$pis,
+                  nestpars=x@Model$nestpars,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }

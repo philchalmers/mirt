@@ -4,14 +4,16 @@
 \alias{SIBTEST}
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
-SIBTEST(dat, group, suspect_set, match_set, focal_name,
-  guess_correction = 0, Jmin = 2, pk_focal = FALSE,
-  correction = TRUE, details = FALSE)
+SIBTEST(dat, group, suspect_set, match_set,
+  focal_name = unique(group)[2], guess_correction = 0, Jmin = 5,
+  na.rm = FALSE, pk_focal = FALSE, correction = TRUE,
+  details = FALSE)
 }
 \arguments{
-\item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}
+\item{dat}{integer-based dataset to be tested, containing dichotomous or polytomous responses}
 
-\item{group}{a vector indicating group membership}
+\item{group}{a vector indicating group membership with the same length as the number of rows in
+\code{dat}}
 
 \item{suspect_set}{an integer vector indicating which items to inspect with SIBTEST. Including only
 one value will perform a DIF test, while including more than one will perform a simultaneous
@@ -20,11 +22,11 @@ If missing, a simultaneous test using all the items not listed in match_set
 will be used (i.e., DTF)}
 
 \item{match_set}{an integer vector indicating which items to use as the items which are matched
-(i.e., contain no DIF). These are analogous to 'achor' items in the likelihood method to locate
-DIF. If missing, all items other than the items found in the suspect_set will be used}
+(i.e., contain no DIF). These are analogous to 'anchor' items in the likelihood method to locate
+DIF. If missing, all items other than the items found in the \code{suspect_set} will be used}
 
-\item{focal_name}{name of the focal group; e.g., 'focal'. If not specified then one will be
-selected automatically}
+\item{focal_name}{name of the focal group; e.g., \code{'focal'}. If not specified then one will be
+selected automatically using \code{unique(group)[2]}}
 
 \item{guess_correction}{a vector of numbers from 0 to 1 indicating how much to correct the items
 for guessing. It's length should be the same as ncol(dat)}
@@ -32,12 +34,16 @@ for guessing. It's length should be the same as ncol(dat)}
 \item{Jmin}{the minimum number of observations required when splitting the data into focal and
 reference groups conditioned on the matched set}
 
+\item{na.rm}{logical; remove rows in \code{dat} with any missing values? If \code{TRUE},
+rows with missing data will be removed, as well as the corresponding elements in the \code{group}
+input}
+
 \item{pk_focal}{logical; using the group weights from the focal group instead of the total
 sample? Default is FALSE as per Shealy and Stout's recommendation}
 
 \item{correction}{logical; apply the composite correction for the difference between focal
 composite scores using the true-score regression technique? Default is \code{TRUE},
-reflecting Shealy and Stout's method}
+reflecting Shealy and Stout's linear extrapolation method}
 
 \item{details}{logical; return a data.frame containing the details required to compute SIBTEST?}
 }
@@ -54,7 +60,8 @@ differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
 supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymptotic sampling
 distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
-Chalmers (accepted).
+Chalmers (2018). For convenience, the beta coefficient for CSIBTEST is always reported as an
+absolute value.
 }
 \examples{
 
@@ -121,8 +128,8 @@ SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 }
 }
 \references{
-Chalmers, R. P. (accepted). Improving the Crossing-SIBTEST statistic for
-detecting non-uniform DIF. \emph{Psychometrika}.
+Chalmers, R. P. (2018). Improving the Crossing-SIBTEST statistic for
+detecting non-uniform DIF. \emph{Psychometrika, 83}, 2, 376-386.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.

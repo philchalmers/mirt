@@ -2,21 +2,28 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
                   itemloc, CUSTOM.IND, dentype, ngroups, rlist, full, Etable = TRUE){
     LL <- 0
     tabdata <- if(full) Data$fulldata[[1L]] else Data$tabdatalong
-    for(g in seq_len(ngroups)){
-        freq <- if(full) 1 else Data$Freq[[g]]
-        if(dentype == 'bfactor'){
-            rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                        Theta=gTheta[[g]], prior=prior[[g]],
-                                        Priorbetween=Priorbetween[[g]], specific=specific,
-                                        sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                                        Etable=Etable)
-        } else {
-            rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                     CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[g]],
-                                     prior=Prior[[g]], itemloc=itemloc, full=full, Etable=Etable)
+    if(dentype == 'mixture'){
+        rlist <- Estep.mixture(pars=pars, tabdata=tabdata, freq=Data$Freq[[1L]],
+                               CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[1L]],
+                               prior=Prior, itemloc=itemloc, full=full, Etable=Etable)
+        LL <- sum(Data$Freq[[1L]] * log(rlist[[1L]]$expected))
+    } else {
+        for(g in seq_len(ngroups)){
+            freq <- if(full) 1 else Data$Freq[[g]]
+            if(dentype == 'bfactor'){
+                rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
+                                            Theta=gTheta[[g]], prior=prior[[g]],
+                                            Priorbetween=Priorbetween[[g]], specific=specific,
+                                            sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                            Etable=Etable)
+            } else {
+                rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
+                                         CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[g]],
+                                         prior=Prior[[g]], itemloc=itemloc, full=full, Etable=Etable)
+            }
+            LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
+            rlist[[g]]$r1[is.nan(rlist[[g]]$r1)] <- 0
         }
-        LL <- LL + sum(freq * log(rlist[[g]]$expected), na.rm = TRUE)
-        rlist[[g]]$r1[is.nan(rlist[[g]]$r1)] <- 0
     }
     return(list(rlist=rlist, LL=LL))
 }
@@ -40,6 +47,27 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Priorbetween, speci
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata, freq, sitems, Etable)
+    return(retlist)
+}
+
+# Estep for mixture Gaussian
+Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full = FALSE,
+                       itemtrace=NULL, deriv = FALSE, Etable = TRUE)
+{
+    ngroups <- length(pars)
+    if(is.null(itemtrace)){
+        itemtrace <- vector('list', ngroups)
+        for(g in seq_len(ngroups))
+            itemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta,
+                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+    }
+    tmp <- .Call("Estep", do.call(rbind, itemtrace),
+                 do.call(c, prior), tabdata, freq, Etable)
+    retlist <- vector('list', ngroups)
+    nrows <- nrow(itemtrace[[1L]])
+    for(g in seq_len(ngroups))
+        retlist[[g]] <- list(r1=tmp$r1[1L:nrows + (g-1)*nrows, ],
+                             expected= if(g == 1) tmp$expected else NA)
     return(retlist)
 }
 
@@ -120,6 +148,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                 }
             }
         } else if(Moptim == 'nlminb'){
+            if(is.null(control$iter.max))
+                control$iter.max <- max(ceiling(Mrate * 100), 25)
             opt <- try(nlminb(p, Mstep.LL, Mstep.grad,
                               DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                               est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
@@ -132,7 +162,28 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
         }
         if(is(opt, 'try-error'))
             stop(opt, call.=FALSE)
+
         longpars[est] <- opt$par
+    }
+    if (dentype == "Davidian") {
+        optDC <- Mstep.DC.optim(pars=pars, J=J, gTheta=gTheta, constrain=constrain)
+        for(g in seq_len(length(pars))){
+            tmp <- pars[[g]][[J+1L]]@est
+            pick <- pars[[g]][[J+1L]]@parnum[-c(1L:2L)]
+            pick2 <- 1L:length(pick) + length(pick) * (g-1L)
+            pick3 <- pars[[g]][[J+1L]]@parnum
+            longpars[pick3[tmp]] <- c(optDC$mean_var[g, ], optDC$par[pick2])[tmp]
+        }
+    }
+    if (dentype == "mixture") {
+        optMix <- Mstep.mixture(pars=pars, Prior=Prior,
+                                J=J, gTheta=gTheta, constrain=constrain)
+        for(g in seq_len(length(pars))){
+            tmp <- pars[[g]][[J+1L]]@est
+            pick <- pars[[g]][[J+1L]]@parnum[length(tmp)]
+            if(tmp[length(tmp)])
+                longpars[pick] <- optMix[g]
+        }
     }
     if(full){
         res <- Mstep.LR(Theta=gTheta[[1L]], CUSTOM.IND=CUSTOM.IND, pars=pars[[1L]], lrPars=lrPars,
@@ -143,7 +194,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
                 res$siglong[pars[[1L]][[J+1L]]@est]
     }
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
-    return(longpars)
+    longpars
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND,
@@ -188,7 +239,7 @@ Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
                 gp$gcov <- sds %*% smoothed %*% sds
             } else return(-1e100)
         }
-        if(pars[[pick]]@BFACTOR){
+        if (pars[[pick]]@BFACTOR) {
             theta <- pars[[pick]]@theta
             Thetabetween <- pars[[pick]]@Thetabetween
             nsfact <- ncol(pars[[pick]]@rrs)
@@ -210,6 +261,87 @@ Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
     LL
 }
 
+Mstep.DC.optim <- function(pars, J, gTheta, constrain) {
+    ngroup <- length(pars)
+    orgphi <- std_rr <- vector("list", ngroup)
+    for(g in seq_len(ngroup)){
+        orgphi[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])$phi
+        std_rr[[g]] <- standardizeQuadrature(gTheta[[g]], nq=pars[[g]][[J+1L]]@rr,
+                                             estmean=pars[[g]][[J+1L]]@est[1L],
+                                             estsd=pars[[g]][[J+1L]]@est[2L])
+    }
+    phi <- do.call(c, orgphi) # adjust based on constrain TODO
+    optDC <- nlminb(phi, function (...) -Mstep.DC.LL_group(...),
+                    gradient = function(...) -Mstep.DC.grad_group(...),
+                    gTheta=gTheta, rr = std_rr, constrain = constrain,
+                    orgphi=orgphi)
+    # find equivalent set equal within [-pi/2, pi/2]
+    # there's likely an analytical way to do this, but it's not important
+    if(!all(optDC$par >= -pi/2 & optDC$par <= pi/2)){
+        phi_s <- phi_bound(optDC$par)
+        tmp_LL <- 0
+        all_signs <- lapply(1L:length(phi_s), function(x) c(-1,1))
+        all_signs <- as.matrix(expand.grid(all_signs))
+        for(i in seq_len(nrow(all_signs))){
+            signs <- all_signs[i, ]
+            tmp_LL <- -Mstep.DC.LL_group(phi_s * signs, gTheta=gTheta,
+                                         rr = std_rr, constrain = constrain,
+                                         orgphi=orgphi)
+            if(isTRUE(all.equal(tmp_LL, optDC$objective))) break
+        }
+        optDC$par <- phi_s * signs
+    }
+    optDC$value <- optDC$objective
+    optDC$mean_var <- do.call(rbind, lapply(std_rr, function(x) attr(x, 'mean_var')))
+    optDC # return as long parameter vector for easier transition TODO
+}
+
+Mstep.DC.LL <- function (phi, Theta, rr) {
+    LL <- sum(rr * log(dcurver::ddc(Theta, phi)))
+    LL
+}
+
+Mstep.DC.LL_group <- function (phi, gTheta, rr, constrain, orgphi) {
+    ind1 <- 1L
+    for(g in seq_len(length(gTheta))){
+        ind2 <- length(orgphi[[g]]) + ind1 - 1L
+        orgphi[[g]] <- phi[ind1:ind2]
+        ind1 <- ind2 + 1L
+    }
+    # constrain.... TODO
+    LL <- 0
+    for(g in seq_len(length(gTheta)))
+        LL <- LL + Mstep.DC.LL(orgphi[[g]], gTheta[[g]], rr[[g]])
+    LL
+}
+
+Mstep.DC.grad <- function (phi, Theta, rr) {
+    colSums(dcurver::dc_grad(Theta, phi) * rr)
+}
+
+Mstep.DC.grad_group <- function (phi, gTheta, rr, constrain, orgphi) {
+    ind1 <- 1L
+    for(g in seq_len(length(gTheta))){
+        ind2 <- length(orgphi[[g]]) + ind1 - 1L
+        orgphi[[g]] <- phi[ind1:ind2]
+        ind1 <- ind2 + 1L
+    }
+    # constrain.... TODO
+    grad <- c()
+    for(g in seq_len(length(gTheta)))
+        grad <- c(grad, Mstep.DC.grad(orgphi[[g]], gTheta[[g]], rr[[g]]))
+    grad
+}
+
+Mstep.mixture <- function(pars, Prior, gTheta, J, constrain){
+    rrs <- sapply(1L:length(pars),
+                  function(g) sum(pars[[g]][[J+1L]]@rr))
+    total <- sum(rrs)
+    lps <- log(rrs/total)
+    lps <- lps - lps[1L]
+    lps
+}
+
 LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
     log_itemtrace <- log(computeItemtrace(pars=x, Theta=Theta,
                                           itemloc=itemloc, CUSTOM.IND=CUSTOM.IND))
@@ -227,7 +359,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-    if(pars[[1L]][[J + 1L]]@itemclass == -1L){
+    if(pars[[1L]][[J + 1L]]@itemclass %in% c(-1L, -999L)){
         for(g in seq_len(length(pars))){
             gp <- pars[[g]][[J + 1L]]
             pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
@@ -251,6 +383,7 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
     } else {
         grad <- g
     }
+
     return(-grad[est])
 }
 

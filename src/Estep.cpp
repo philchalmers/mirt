@@ -174,20 +174,20 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                 for (int q = 0; q < nbquad; ++q)
                     tempsum[q] += L[q + i*nbquad]/maxL;
             for (int i = 0; i < nbquad; ++i)
-                Plk[i + fact*nbquad] = tempsum[i] * maxL; 
+                Plk[i + fact*nbquad] = tempsum[i] * maxL;
         }
         vector<double> Pls(nbquad, 1.0);
         vector<double> PlsPlk(nbquad, 1.0);
         for (int i = 0; i < nbquad; ++i){
             for(int fact = 0; fact < sfact; ++fact)
-                Pls[i] = Pls[i] * Plk[i + fact*nbquad]; 
+                Pls[i] = Pls[i] * Plk[i + fact*nbquad];
             PlsPlk[i] = Pls[i] * Priorbetween[i];
         }
         double sumexp = 0.0;
         const double maxPlsPlk = *std::max_element(PlsPlk.begin(), PlsPlk.end());
         for (int i = 0; i < nbquad; ++i)
             sumexp += PlsPlk[i] / maxPlsPlk;
-        expected[pat] = sumexp * maxPlsPlk; 
+        expected[pat] = sumexp * maxPlsPlk;
         if(Etable){
             for (int fact = 0; fact < sfact; ++fact)
                 for (int i = 0; i < nbquad; ++i)
@@ -200,10 +200,10 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
             for (int fact = 0; fact < sfact; ++fact)
             	for (int i = 0; i < npquad; ++i)
             		for (int j = 0; j < nbquad; ++j)
-                		ris[i + npquad*fact] += posterior[j + i*nbquad + nquad*fact] * 
+                		ris[i + npquad*fact] += posterior[j + i*nbquad + nquad*fact] *
                 		     prior(i, fact) * Priorbetween[j];
             for (int i = 0; i < nbquad; ++i)
-            	ri[i] += r[pat] * Priorbetween[i] * Pls[i] / expected[pat]; 
+            	ri[i] += r[pat] * Priorbetween[i] * Pls[i] / expected[pat];
             for (int item = 0; item < nitems; ++item)
                 if (data(pat,item))
                     for (int fact = 0; fact < sfact; ++fact)

@@ -22,8 +22,9 @@
 #'   the respective internal classes automatically.
 #'
 #'   If the internal class of the object is specified instead, the inputs can
-#'   be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp', 'gumm'}, or \code{'lca'}, for
-#'   dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
+#'   be \code{'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'},
+#'   or \code{'lca'}, for dichotomous, graded, generalized partial credit, sequential,
+#'   nominal, nested logit, partially compensatory,
 #'   generalized graded unfolding model, and latent class analysis model.
 #'   Note that for the gpcm, nominal, and nested logit models there should
 #'   be as many parameters as desired categories, however to parametrized them for meaningful
@@ -378,7 +379,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(missing(d)) d <- matrix(1, nrow(a))
     if(is.vector(d)) d <- matrix(d)
     if(any(itemtype == 'nominal') && is.null(nominal))
-        stop('nominal itemtypes require a \'nominal\' matrix input of scoring coefs (the ak values)',
+        stop('nominal itemtypes require a \'nominal\' matrix input of scoring coefficients (the ak values)',
              call.=FALSE)
     if(any(apply(d, 1, function(x) all(is.na(x)))))
         stop('d input contains only NA elements associated with its respective item. Please fix', call.=FALSE)
@@ -400,10 +401,8 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         if(any(itemtype %in% c('grsm', 'grsmIRT')))
             stop('Please rewrite rating scale models as gpcm', call.=FALSE)
         if(any(itemtype %in% c('Rasch')))
-            stop('Rasch itemtype is ambiguous, please specifiy either gpcm or dich/2PL class', call.=FALSE)
-        itemtype <- ifelse(itemtype %in% c('2PL', '3PL', '3PLu', '4PL'), 'dich', itemtype)
-        itemtype <- ifelse(itemtype %in% c('PC2PL', 'PC3PL'), 'partcomp', itemtype)
-        itemtype <- ifelse(itemtype %in% c("2PLNRM", "3PLNRM", "3PLuNRM", "4PLNRM"), 'nestlogit', itemtype)
+            stop('Rasch itemtype is ambiguous, please specify either gpcm or dich/2PL class', call.=FALSE)
+        itemtype <- toInternalItemtype(itemtype)
     }
 	if(any(itemtype == 'ggum') && is.null(t))
 	    stop('ggum requires t matrix input')

@@ -7,8 +7,8 @@
 DIF(MGmodel, which.par, scheme = "add",
   items2test = 1:extract.mirt(MGmodel, "nitems"), seq_stat = "SABIC",
   Wald = FALSE, p.adjust = "none", return_models = FALSE,
-  max_run = Inf, plotdif = FALSE, type = "trace", verbose = TRUE,
-  ...)
+  max_run = Inf, plotdif = FALSE, type = "trace", simplify = TRUE,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference
@@ -69,6 +69,10 @@ searches. The default is to perform search until no further DIF is found}
 another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
 mirt's \code{plot()} function is set to \code{TRUE}}
 
+\item{simplify}{logical; simplify the output by returning a data.frame object with
+the differences between AIC, BIC, etc, as well as the chi-squared test (X2) and associated
+df and p-values}
+
 \item{verbose}{logical print extra information to the console?}
 
 \item{...}{additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}}
@@ -116,22 +120,28 @@ mirtCluster()
      # but instead reflects a combination of DIF + latent-trait distribution effects
 model <- multipleGroup(dat, 1, group, SE = TRUE)
 
+# Likelihood-ratio test for DIF (as well as model information)
+DIF(model, c('a1', 'd'))
+DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
+
+#same as above, but using Wald tests with Benjamini & Hochberg adjustment
+DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
+
+# equate the groups by assuming the first 10 items have no DIF
+itemnames <- colnames(dat)
+model <- multipleGroup(dat, 1, group, SE = TRUE,
+   invariance = c(itemnames[1:10], 'free_means', 'free_var'))
+
 #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
 resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)
 resulta1d
 
-#same as above, but using Wald tests with Benjamini & Hochberg adjustment
-resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
-resulta1dWald
-round(resulta1dWald$adj_pvals, 4)
-
 #test whether adding only slope constraints results in DIF for all items
-resulta1 <- DIF(model, 'a1')
-resulta1
+DIF(model, 'a1')
 
-#following up on resulta1d, to determine whether it's a1 or d parameter causing DIF
-(a1s <- DIF(model, 'a1', items2test = 1:3))
-(ds <- DIF(model, 'd', items2test = 1:3))
+#Determine whether it's a1 or d parameter causing DIF (could be joint, however)
+(a1s <- DIF(model, 'a1', items2test = 11:13))
+(ds <- DIF(model, 'd', items2test = 11:13))
 
 ####
 # using items 4 to 15 as anchors to test for DIF after adjusting for latent-trait differences
@@ -155,7 +165,8 @@ stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential')
 stepup
 
 #step down procedure for highly constrained model
-model <- multipleGroup(dat, 1, group, invariance = itemnames)
+model <- multipleGroup(dat, 1, group,
+  invariance = c(itemnames, 'free_means', 'free_var'))
 stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 stepdown
 }
@@ -171,7 +182,7 @@ Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
   \doi{10.1177/0013164415584576}
 }
 \seealso{
-\code{\link{multipleGroup}}
+\code{\link{multipleGroup}}, \code{\link{DRF}}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

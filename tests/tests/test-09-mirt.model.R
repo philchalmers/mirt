@@ -39,6 +39,10 @@ test_that('syntax', {
     model13 <- mirt.model('F = 1-5
                    CONSTRAINB = (1-5,a1)
                    CONSTRAINB [male, female]= (1-5,d)')
+    model14 <- mirt.model("F = 1-5
+                          FIXED = (1-5, a1)
+                          START = (1-5, a1, 1.0)
+                          FREE = (GROUP, COV_11)")
 
     set.seed(1234)
     group <- sample(c('male', 'female'), 1000, TRUE)
@@ -85,6 +89,9 @@ test_that('syntax', {
                  c(1.397911,0,2.093339,0,1,0.807397,1.397911,0.9542606,0,1), tolerance = 1e-4)
     mod13 <- multipleGroup(data, model13, group=group2, verbose = FALSE)
     expect_equal(mod2values(mod13)$value, c(0.9894497,1.834667,0,1,1.088255,0.8827638,0,1,1.70098,1.834184,0,1,0.7670599,0.4281486,0,1,0.7488499,1.733489,0,1,0,1,0.9894497,1.834667,0,1,1.088255,0.8827638,0,1,1.70098,1.834184,0,1,0.7670599,0.4281486,0,1,0.7488499,1.733489,0,1,0,1,0.9894497,1.908214,0,1,1.088255,0.6470444,0,1,1.70098,1.727515,0,1,0.7670599,0.6209792,0,1,0.7488499,2.190956,0,1,0,1),
+                 tolerance = 1e-2)
+    mod14 <- mirt(data, model14, verbose = FALSE)
+    expect_equal(mod2values(mod14)$value, c(1,1.868016,0,1,1,0.7908857,0,1,1,1.46078,0,1,1,0.5214175,0,1,1,1.99271,0,1,0,1.021912),
                  tolerance = 1e-2)
 
     data(data.read, package = 'sirt')

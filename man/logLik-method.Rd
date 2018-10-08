@@ -4,6 +4,7 @@
 \name{logLik-method}
 \alias{logLik-method}
 \alias{logLik,SingleGroupClass-method}
+\alias{logLik,MixtureClass-method}
 \alias{logLik,MultipleGroupClass-method}
 \alias{logLik,MixedClass-method}
 \alias{logLik,DiscreteClass-method}

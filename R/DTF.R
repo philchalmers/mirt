@@ -40,7 +40,7 @@
 #' Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
 #'   make a big DIF: Improved Differential Test Functioning statistics that account for
 #'   sampling variability. \emph{Educational and Psychological Measurement, 76}, 114-140.
-#'   \doi{10.1177/0013164415584576}  
+#'   \doi{10.1177/0013164415584576}
 #'
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
 #' @keywords DTF
@@ -118,7 +118,7 @@
 #'
 #' }
 DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), Theta_nodes = NULL,
-                plot = 'none', auto.key = TRUE, ...){
+                plot = 'none', auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
 
     bs_range <- function(x, CI){
         ss <- sort(x)
@@ -185,7 +185,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     }
     if(plot != 'none'){
         if(is.null(draws))
-            stop('Must specificy number of draws to generate plot confidence intervals', call.=FALSE)
+            stop('Must specify number of draws to generate plot confidence intervals', call.=FALSE)
     }
     if(length(type) > 1L && (plot != 'none' || !is.null(Theta_nodes)))
         stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')

@@ -96,7 +96,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                      par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
-                     auto.key = list(space = 'right'), ...){
+                     auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)
@@ -107,6 +107,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     dots <- list(...)
     if(missing(object)) missingMsg('object')
     if(missing(item)) missingMsg('item')
+    if(is(object, 'MixtureClass')) class(object) <- "MultipleGroupClass"
     if(is(object, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported', call.=FALSE)
     if(is.list(object)) inames <- colnames(object[[1]]@Data$data)

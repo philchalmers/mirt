@@ -5,11 +5,12 @@
 \title{Item fit statistics}
 \usage{
 itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x,
-  "nitems"), group.bins = 10, group.size = NA, group.fun = mean,
-  mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30,
-  boot = 1000, boot_dfapprox = 200, ETrange = c(-2, 2),
-  ETpoints = 11, empirical.plot = NULL, empirical.CI = 0.95,
-  empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
+  "nitems"), na.rm = FALSE, group.bins = 10, group.size = NA,
+  group.fun = mean, mincell = 1, mincell.X2 = 2,
+  S_X2.tables = FALSE, pv_draws = 30, boot = 1000,
+  boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
+  empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
+  method = "EAP", Theta = NULL, impute = 0,
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"),
   strip.border = list(col = "black")), ...)
@@ -51,6 +52,9 @@ Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing re
 \item{which.items}{an integer vector indicating which items to test for fit.
 Default tests all possible items}
 
+\item{na.rm}{logical; remove rows with any missing values? This is required for methods such
+as S-X2 because they require the "EAPsum" method from \code{\link{fscores}}}
+
 \item{group.bins}{the number of bins to use for X2 and G2. For example,
 setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic when \code{'X2'} is
 requested}
@@ -61,7 +65,7 @@ disables this command and instead uses the \code{group.bins} input to try and co
 equally sized bins}
 
 \item{group.fun}{function used when \code{'X2'} or \code{'G2'} are computed. Determines the central
-tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
+tendency measure within each partitioned group. E.g., setting \code{group.fun = median} will
 obtain the median of each respective ability estimate in each subgroup (this is what was used
 by Bock, 1972)}
 
@@ -70,7 +74,7 @@ collapsed across items first if polytomous, and then across scores if necessary}
 
 \item{mincell.X2}{the minimum expected cell size to be used in the X2 computations. Tables will be
 collapsed if polytomous, however if this condition can not be met then the group block will
-be ommited in the computations}
+be omitted in the computations}
 
 \item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
 
@@ -122,6 +126,11 @@ Poorly fitting items should be inspected with the empirical plots/tables
 for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
 where the functional form of the IRT model was misspecified, or models can be refit using
 more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
+If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+density components (where applicable). Currently, only S-X2 statistic supported for
+mixture IRT models. Finally, where applicable the root mean-square error of approximation (RMSEA)
+is reported to help guage the magnitude of item misfit.
 }
 \examples{
 
@@ -208,13 +217,12 @@ tables$E[[1]]
 data[sample(1:prod(dim(data)), 500)] <- NA
 raschfit <- mirt(data, 1, itemtype='Rasch')
 
+# use imputation if the proportion of missing data is relatively small
 mirtCluster() # run in parallel
 itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
 
-#alternative route: use only valid data, and create a model with the previous parameter estimates
-data2 <- na.omit(data)
-raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-itemfit(raschfit2, 'infit')
+#alternative route: use only valid data by removing rows with missing terms
+itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 
 # note that X2, G2, PV-Q1, and X2* do not require complete datasets
 itemfit(raschfit, c('X2', 'G2'))

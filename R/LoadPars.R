@@ -1,6 +1,6 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, gpcm_mats, spline_args, itemnames, monopoly.k)
+                     key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData, item.Q)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -105,6 +105,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,], zetas[[i]])
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+        } else if(itemtype[i] %in% c('sequential', 'Tutz')){
+            val <- c(lambdas[i,], zetas[[i]])
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
+            names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+            if(itemtype[i] == 'Tutz'){
+                val[1L] <- 1
+                fp[1L] <- FALSE
+            }
         } else if(itemtype[i] == 'monopoly'){
             val <- c(suppressWarnings(log(lambdas[i,])),
                      zetas[[i]], rep(0, monopoly.k[i]*2))
@@ -364,6 +372,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
+        if(itemtype[i] %in% c('sequential', 'Tutz')){
+            pars[[i]] <- new('sequential',
+                             par=startvalues[[i]],
+                             parnames=names(freepars[[i]]),
+                             nfact=nfact,
+                             ncat=K[i],
+                             itemclass=9L,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             est=freepars[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
         if(itemtype[i] == 'gpcm'){
             pars[[i]] <- new('gpcm',
                              par=startvalues[[i]],
@@ -505,6 +535,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              itemclass=10L,
+                             item.Q=item.Q[[i]],
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              lbound=rep(-Inf, length(startvalues[[i]])),
@@ -545,6 +576,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=K[i],
                              stype=stype,
+                             item.Q=matrix(1, K[i], length(p)),
                              Theta_prime=matrix(0),
                              sargs=sargs,
                              nfixedeffects=nfixedeffects,
@@ -556,6 +588,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              ubound=rep(Inf, length(p)),
                              prior_1=rep(NaN,length(p)),
                              prior_2=rep(NaN,length(p)))
+            pars[[i]]@item.Q[1L, ] <- 0
             tmp2 <- parnumber:(parnumber + length(p) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(p)
@@ -617,6 +650,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             tmp2 <- parnumber:(parnumber + length(pars[[i]]@est) - 1L)
             pars[[i]]@parnum <- tmp2
             pars[[i]]@fixed.design <- fixed.design.list[[i]]
+            if(pars[[i]]@useuserdata) pars[[i]]@userdata <- list(customItemsData[[i]])
             parnumber <- parnumber + length(pars[[i]]@est)
             next
         }
@@ -657,41 +691,106 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     return(pars)
 }
 
-LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, Rasch = FALSE,
-                          customGroup = NULL){
-    if(!is.null(customGroup)){
-        par <- customGroup@par
-        parnum <- parnumber:(parnumber + length(par) - 1L)
-        customGroup@parnum <- parnum
-        return(customGroup)
+LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior, dentype, Rasch = FALSE,
+                          customGroup = NULL, dcIRT_nphi = NULL, ...){
+    if (dentype != 'Davidian') {
+        if(!is.null(customGroup)){
+            par <- customGroup@par
+            parnum <- parnumber:(parnumber + length(par) - 1L)
+            customGroup@parnum <- parnum
+            return(customGroup)
+        } else {
+            nfact <- length(gmeans)
+            den <- Theta_mvtnorm_den
+            fn <- paste('COV_', 1L:nfact, sep='')
+            FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
+            FNMEANS <- paste('MEAN_', 1L:nfact, sep='')
+            tri <- lower.tri(gcov, diag=TRUE)
+            par <- c(gmeans, gcov[tri])
+            parnum <- parnumber:(parnumber + length(par) - 1L)
+            if(Rasch) diag(estgcov) <- TRUE
+            est <- c(estgmeans,estgcov[tri])
+            names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])
+            tmp <- matrix(-Inf, nfact, nfact)
+            diag(tmp) <- 1e-4
+            lbound <- c(rep(-Inf, nfact), tmp[tri])
+            Nans <- rep(NaN,length(par))
+            if(dentype == 'mixture'){
+                par <- c(par, "PI" = 0)
+                est <- c(est, "PI" = TRUE)
+                parnum <- c(parnum, max(parnum)+1L)
+                Nans <- c(Nans, NaN)
+                lbound <- c(lbound, -Inf)
+            }
+            ubound <- rep(Inf, length(par))
+            ret <- new('GroupPars', par=par, est=est, parnames=names(est),
+                       nfact=nfact, any.prior=FALSE, den=den,
+                       safe_den=den, parnum=parnum, lbound=lbound, ubound=ubound,
+                       prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, rrb=0, rrs=matrix(0),
+                       BFACTOR=FALSE, itemclass=0L, dentype=dentype)
+            return(ret)
+        }
     } else {
         nfact <- length(gmeans)
-        den <- function(obj, Theta){
-            gpars <- ExtractGroupPars(obj)
-            mu <- gpars$gmeans
-            sigma <- gpars$gcov
-            d <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
-            d <- ifelse(d < 1e-300, 1e-300, d)
-            d
-        }
+        if (nfact > 1) stop("Multidimensional DC-IRT models are not supported.")
+        # DC Density:
+        den <- Theta_DC_den
         fn <- paste('COV_', 1L:nfact, sep='')
         FNCOV <- outer(fn, 1L:nfact, FUN=paste, sep='')
         FNMEANS <- paste('MEAN_', 1L:nfact, sep='')
+        FNPHI <- paste('PHI_', 1L:dcIRT_nphi, sep='')
         tri <- lower.tri(gcov, diag=TRUE)
-        par <- c(gmeans, gcov[tri])
+        phi <- rep(1.570789, dcIRT_nphi)
+        estphi <- rep(T, dcIRT_nphi)
+        par <- c(gmeans, gcov[tri], phi)
         parnum <- parnumber:(parnumber + length(par) - 1L)
         if(Rasch) diag(estgcov) <- TRUE
-        est <- c(estgmeans,estgcov[tri])
-        names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri])
+        est <- c(estgmeans,estgcov[tri], estphi)
+        names(parnum) <- names(par) <- names(est) <- c(FNMEANS,FNCOV[tri],FNPHI)
         tmp <- matrix(-Inf, nfact, nfact)
         diag(tmp) <- 1e-4
-        lbound <- c(rep(-Inf, nfact), tmp[tri])
+        lbound <- c(rep(-Inf, nfact), tmp[tri], rep(-pi/2, dcIRT_nphi))
+        ubound <- c(rep(Inf, length(par)-dcIRT_nphi), rep(pi/2, dcIRT_nphi))
         Nans <- rep(NaN,length(par))
         ret <- new('GroupPars', par=par, est=est, parnames=names(est),
-                   nfact=nfact, any.prior=FALSE, den=den,
-                   safe_den=den, parnum=parnum, lbound=lbound, ubound=rep(Inf, length(par)),
-                   prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, rrb=0, rrs=matrix(0),
-                   BFACTOR=FALSE, itemclass=0L)
+               nfact=nfact, any.prior=FALSE, den=den,
+               safe_den=den, parnum=parnum, lbound=lbound, ubound=ubound,
+               prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans, rrb=0, rrs=matrix(0),
+               BFACTOR=FALSE, itemclass=0L, dentype = 'Davidian')
         return(ret)
+      }
+}
+
+Theta_mvtnorm_den <- function(obj, Theta){
+    gpars <- ExtractGroupPars(obj)
+    mu <- gpars$gmeans
+    sigma <- gpars$gcov
+    d <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
+    d <- ifelse(d < 1e-300, 1e-300, d)
+    d
+}
+
+Theta_DC_den <- function(obj, Theta) {
+    gpars <- ExtractGroupPars(obj)
+    phi <- gpars$phi
+    d <- dcurver::ddc(Theta, phi = gpars$phi)
+    d
+}
+
+Theta_discrete_den <- function(obj, Theta, mus = 0){
+    if(length(Theta) == 1) return(1)
+    par <- obj@par
+    if(length(mus) > 1L){
+        ret <- t(apply(mus, 1L, function(x)
+            c(exp(par + x[-ncol(mus)]), 1)))
+        ret <- ret / rowSums(ret)
+    } else if(length(obj@structure)){
+        d <- exp(obj@structure %*% par)
+        d[length(d)] <- 1
+        ret <- as.vector(d / sum(d))
+    } else {
+        d <- c(exp(par), 1)
+        ret <- d / sum(d)
     }
+    ret
 }

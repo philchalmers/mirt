@@ -7,6 +7,7 @@
 \alias{plot,MultipleGroupClass-method}
 \alias{plot,SingleGroupClass,missing-method}
 \alias{plot,DiscreteClass,missing-method}
+\alias{plot,MixtureClass,missing-method}
 \title{Plot various test-implied functions from models}
 \usage{
 \S4method{plot}{SingleGroupClass,missing}(x, y, type = "score",
@@ -16,8 +17,8 @@
   main = NULL, drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10,
   add.ylab2 = TRUE, par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"),
-  strip.border = list(col = "black")), auto.key = list(space = "right"),
-  profile = FALSE, ...)
+  strip.border = list(col = "black")), auto.key = list(space = "right",
+  points = FALSE, lines = TRUE), profile = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{SingleGroupClass},
@@ -39,9 +40,12 @@
     \item{\code{'scorecontour'}}{expected total score contour plot}
   }
 
-  Note that if \code{empiricalhist = TRUE} was used in estimation then
+  Note that if \code{dentype = 'empiricalhist'} was used in estimation then
   the type \code{'empiricalhist'}
-  also will be available to generate the empirical histogram plot}
+  also will be available to generate the empirical histogram plot, and if
+  \code{dentype = 'Davidian-#'} was used then the type \code{'Davidian'}
+  will also be available to generate the curve estimates at the quadrature
+  nodes used during estimation}
 
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}

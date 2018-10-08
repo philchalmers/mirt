@@ -71,13 +71,13 @@ setMethod(
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
-                          auto.key = list(space = 'right'), ...)
+                          auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace',
-                         'itemscore', 'infotrace'))
+                         'itemscore', 'infotrace', 'Davidian'))
             stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
-            stop('Improper angle specifed. Must be between 0 and 90.', call.=FALSE)
+            stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         ngroups <- x@Data$ngroups
         J <- x@Data$nitems
@@ -179,9 +179,8 @@ setMethod(
             if(type == 'empiricalhist'){
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
-                    Theta[[g]] <- as.matrix(seq(-(.8 * sqrt(x@Options$quadpts)), .8 * sqrt(x@Options$quadpts),
-                                           length.out = x@Options$quadpts))
-                    Prior[[g]] <- x@Internals$Prior[[g]] * nrow(x@Data$data)
+                    Theta[[g]] <- x@Model$Theta
+                    Prior[[g]] <- x@Internals$Prior[[g]] #* nrow(x@Data$data)
                     cuts <- cut(Theta[[g]], floor(npts/2))
                     Prior[[g]] <- do.call(c, lapply(split(Prior[[g]], cuts), mean))
                     Theta[[g]] <- do.call(c, lapply(split(Theta[[g]], cuts), mean))
@@ -193,9 +192,27 @@ setMethod(
                 }
                 plt <- do.call(rbind, pltfull)
                 return(xyplot(Prior ~ Theta, plt, groups=plt$group, auto.key = auto.key,
-                              xlab = expression(theta), ylab = 'Expected Frequency',
+                              xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = 'Empirical Histogram',
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            }
+            if(type == 'Davidian'){
+                if(x@Options$dentype != 'Davidian')
+                    stop('Davidian curve was not estimated for this object', call.=FALSE)
+                main <- 'Davidian Curve'
+                Prior <- Theta <- pltfull <- vector('list', ngroups)
+                for(g in 1L:ngroups){
+                    Theta[[g]] <- x@Model$Theta
+                    Prior[[g]] <- x@Internals$Prior[[g]] #* nrow(x@Data$data)
+                    plt <- data.frame(Theta=Theta[[g]], Prior=Prior[[g]], group=x@Data$groupNames[g])
+                    pltfull[[g]] <- plt
+                }
+                plt <- do.call(rbind, pltfull)
+                return(xyplot(Prior ~ Theta, plt, groups=plt$group, auto.key = auto.key,
+                              xlab = expression(theta), ylab = 'Density',
+                              type = 'b', main = main,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
+
             }
             if(type == 'trace'){
                 plt <- vector('list', ngroups)

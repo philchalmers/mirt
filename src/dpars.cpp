@@ -1382,7 +1382,8 @@ RcppExport SEXP dparsgpcmIRT(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP R
 }
 
 void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
-    const NumericMatrix &Theta, const NumericVector &ot, const NumericMatrix &dat,
+    const NumericMatrix &Theta, const NumericMatrix &item_Q,
+    const NumericVector &ot, const NumericMatrix &dat,
     const int &N, const int &nfact, const int &estHess)
 {
     const int ncat = dat.ncol();
@@ -1391,7 +1392,7 @@ void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
             ot, dat, N, nfact, ncat, 0, estHess, 10);
     }
     vector<double> p(N*ncat);
-    P_lca(p, par, Theta, N, ncat, nfact, 0);
+    P_lca(p, par, Theta, item_Q, N, ncat, nfact, 0);
     const NumericMatrix P = vec2mat(p, N, ncat);
 
     for (int i = 0; i < N; ++i){
@@ -1403,19 +1404,20 @@ void d_lca(vector<double> &grad, NumericMatrix &hess, const vector<double> &par,
                     if (kk != k)
                         val -= dat(i, kk) * P(i, k);
                 val *= Theta(i, j);
-                grad[ind] += val;
+                grad[ind] += val * item_Q(k, j);
                 ind++;
             }
         }
     }
 }
 
-RcppExport SEXP dparslca(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP Rdat, SEXP Rot)
+RcppExport SEXP dparslca(SEXP Rx, SEXP RTheta, SEXP Ritem_Q, SEXP RestHess, SEXP Rdat, SEXP Rot)
 {
     BEGIN_RCPP
 
     const vector<double> par = as< vector<double> >(Rx);
     const NumericMatrix Theta(RTheta);
+    const NumericMatrix item_Q(Ritem_Q);
     const NumericMatrix dat(Rdat);
     const NumericVector ot(Rot);
     const int estHess = as<int>(RestHess);
@@ -1423,7 +1425,7 @@ RcppExport SEXP dparslca(SEXP Rx, SEXP RTheta, SEXP RestHess, SEXP Rdat, SEXP Ro
     const int N = Theta.nrow();
     NumericMatrix hess (par.size(), par.size());
     vector<double> grad (par.size());
-    d_lca(grad, hess, par, Theta, ot, dat, N, nfact, estHess);
+    d_lca(grad, hess, par, Theta, item_Q, ot, dat, N, nfact, estHess);
     List ret;
     ret["grad"] = wrap(grad);
     ret["hess"] = hess;
@@ -1664,6 +1666,8 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         vector<double> prior_1 = as< vector<double> >(item.slot("prior_1"));
         vector<double> prior_2 = as< vector<double> >(item.slot("prior_2"));
         NumericMatrix dat = item.slot("dat");
+        NumericMatrix item_Q;
+        if(itemclass == 10) item_Q = as<NumericMatrix>(item.slot("item.Q"));
         switch(itemclass){
             case -999: //custom group
                 break;
@@ -1698,7 +1702,7 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
                 d_gpcmIRT(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, ncat - 1, estHess);
                 break;
             case 10 :
-                d_lca(tmpgrad, tmphess, par, theta, offterm(_,i), dat, N, nfact2, estHess);
+                d_lca(tmpgrad, tmphess, par, theta, item_Q, offterm(_,i), dat, N, nfact2, estHess);
                 break;
             case 11 :
                 d_ggum(tmpgrad, tmphess, par, theta, dat, N, nfact2, ncat, estHess);

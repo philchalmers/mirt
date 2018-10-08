@@ -28,6 +28,9 @@
 #'   when using sequential schemes)
 #' @param return_models logical; return estimated model objects for further analysis?
 #'   Default is FALSE
+#' @param simplify logical; simplify the output by returning a data.frame object with
+#'   the differences between AIC, BIC, etc, as well as the chi-squared test (X2) and associated
+#'   df and p-values
 #' @param scheme type of DIF analysis to perform, either by adding or dropping constraints across
 #'   groups. These can be:
 #' \describe{
@@ -77,7 +80,7 @@
 #'   sampling variability. \emph{Educational and Psychological Measurement, 76}, 114-140.
 #'   \doi{10.1177/0013164415584576}
 #' @keywords DIF
-#' @seealso \code{\link{multipleGroup}}
+#' @seealso \code{\link{multipleGroup}}, \code{\link{DRF}}
 #, \code{\link{DTF}}
 #' @export DIF
 #' @examples
@@ -106,22 +109,28 @@
 #'      # but instead reflects a combination of DIF + latent-trait distribution effects
 #' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
+#' # Likelihood-ratio test for DIF (as well as model information)
+#' DIF(model, c('a1', 'd'))
+#' DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
+#'
+#' #same as above, but using Wald tests with Benjamini & Hochberg adjustment
+#' DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
+#'
+#' # equate the groups by assuming the first 10 items have no DIF
+#' itemnames <- colnames(dat)
+#' model <- multipleGroup(dat, 1, group, SE = TRUE,
+#'    invariance = c(itemnames[1:10], 'free_means', 'free_var'))
+#'
 #' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
 #' resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)
 #' resulta1d
 #'
-#' #same as above, but using Wald tests with Benjamini & Hochberg adjustment
-#' resulta1dWald <- DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
-#' resulta1dWald
-#' round(resulta1dWald$adj_pvals, 4)
-#'
 #' #test whether adding only slope constraints results in DIF for all items
-#' resulta1 <- DIF(model, 'a1')
-#' resulta1
+#' DIF(model, 'a1')
 #'
-#' #following up on resulta1d, to determine whether it's a1 or d parameter causing DIF
-#' (a1s <- DIF(model, 'a1', items2test = 1:3))
-#' (ds <- DIF(model, 'd', items2test = 1:3))
+#' #Determine whether it's a1 or d parameter causing DIF (could be joint, however)
+#' (a1s <- DIF(model, 'a1', items2test = 11:13))
+#' (ds <- DIF(model, 'd', items2test = 11:13))
 #'
 #' ####
 #' # using items 4 to 15 as anchors to test for DIF after adjusting for latent-trait differences
@@ -145,13 +154,14 @@
 #' stepup
 #'
 #' #step down procedure for highly constrained model
-#' model <- multipleGroup(dat, 1, group, invariance = itemnames)
+#' model <- multipleGroup(dat, 1, group,
+#'   invariance = c(itemnames, 'free_means', 'free_var'))
 #' stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
 #' stepdown
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
-                max_run = Inf, plotdif = FALSE, type = 'trace', verbose = TRUE, ...){
+                max_run = Inf, plotdif = FALSE, type = 'trace', simplify = TRUE, verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
                           return_models, ...)
@@ -179,6 +189,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             return(res)
         }
         if(drop){
+            sv <- values
             for(j in seq_len(length(parnum))){
                 for(i in length(constrain):1L){
                     if(all(parnum[[j]] == sort(constrain[[i]])))
@@ -186,12 +197,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                 }
             }
         } else {
+            sv <- NULL
             for(i in seq_len(length(parnum)))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
         newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
-                                  invariance = invariance, constrain=constrain,
-                                  itemtype = model@Model$itemtype, verbose = FALSE, ...)
+                                  invariance = invariance, constrain=constrain, pars=sv,
+                                  itemtype = model@Model$itemtype, verbose=FALSE, ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
         if(return_models) aov <- newmodel
@@ -200,6 +212,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
 
     if(missing(MGmodel)) missingMsg('MGmodel')
     if(missing(which.par)) missingMsg('which.par')
+    if(!is(MGmodel, 'MultipleGroupClass'))
+        stop('Input model must be fitted by multipleGroup()', call.=FALSE)
+
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
         message('No hyper-parameters were estimated in the DIF model. For effective
@@ -357,6 +372,27 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         } else {
             message('No DIF items were detected for plotting.')
         }
+    }
+    pick <- names(res)
+    pick <- pick[pick != 'adj_pvals']
+    if(Wald && !return_models){
+        adj_pvals <- res$adj_pvals
+        res <- do.call(rbind, res[pick])
+        res$adj_pvals <- adj_pvals
+        class(res) <- c('mirt_df', 'data.frame')
+        return(res)
+    }
+    if(simplify && !return_models){
+        adj_pvals <- res$adj_pvals
+        out <- lapply(res[pick], function(x){
+             r <- x[2L, ] - x[1L, ]
+             r[,c("X2", 'df', 'p')] <- x[2L, c("X2", 'df', 'p')]
+             r$logLik <- NULL
+             r
+         })
+         res <- do.call(rbind, out)
+         res$adj_pvals <- adj_pvals
+         class(res) <- c('mirt_df', 'data.frame')
     }
     return(res)
 }

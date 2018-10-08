@@ -30,8 +30,9 @@ be used}
   the respective internal classes automatically.
 
   If the internal class of the object is specified instead, the inputs can
-  be \code{'dich', 'graded', 'gpcm','nominal', 'nestlogit', 'partcomp', 'gumm'}, or \code{'lca'}, for
-  dichotomous, graded, generalized partial credit, nominal, nested logit, partially compensatory,
+  be \code{'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'},
+  or \code{'lca'}, for dichotomous, graded, generalized partial credit, sequential,
+  nominal, nested logit, partially compensatory,
   generalized graded unfolding model, and latent class analysis model.
   Note that for the gpcm, nominal, and nested logit models there should
   be as many parameters as desired categories, however to parametrized them for meaningful

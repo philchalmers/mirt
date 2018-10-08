@@ -5,6 +5,8 @@ setClass("AllItemsClass",
                         SEpar='numeric',
                         parnames='character',
                         est='logical',
+                        dps='function',
+                        dps2='function',
                         constr='logical',
                         itemclass='integer',
                         parnum='numeric',
@@ -56,8 +58,6 @@ setGeneric("vcov", function(object, ...) standardGeneric("vcov"))
 setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 
 setGeneric('DrawValues', function(x, Theta, ...) standardGeneric("DrawValues"))
-
-setGeneric('RandomDeriv', function(x, ...) standardGeneric("RandomDeriv"))
 
 setGeneric('GenRandomPars', function(x) standardGeneric("GenRandomPars"))
 

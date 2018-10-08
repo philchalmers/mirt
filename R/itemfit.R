@@ -5,6 +5,11 @@
 #' for unidimensional models, otherwise \code{\link{itemGAM}} can be used to diagnose
 #' where the functional form of the IRT model was misspecified, or models can be refit using
 #' more flexible semi-parametric response models (e.g., \code{itemtype = 'spline'}).
+#' If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+#' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+#' density components (where applicable). Currently, only S-X2 statistic supported for
+#' mixture IRT models. Finally, where applicable the root mean-square error of approximation (RMSEA)
+#' is reported to help guage the magnitude of item misfit.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -45,7 +50,7 @@
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
 #'   collapsed if polytomous, however if this condition can not be met then the group block will
-#'   be ommited in the computations
+#'   be omitted in the computations
 #' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2}
 #'   statistic. The default \code{NA}
@@ -55,7 +60,7 @@
 #'   setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic when \code{'X2'} is
 #'   requested
 #' @param group.fun function used when \code{'X2'} or \code{'G2'} are computed. Determines the central
-#'   tendancy measure within each partitioned group. E.g., setting \code{group.fun = median} will
+#'   tendency measure within each partitioned group. E.g., setting \code{group.fun = median} will
 #'   obtain the median of each respective ability estimate in each subgroup (this is what was used
 #'   by Bock, 1972)
 #' @param empirical.plot a single numeric value or character of the item name indicating which
@@ -69,6 +74,8 @@
 #'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 #'   interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items
 #' @param method type of factor score estimation method. See \code{\link{fscores}} for more detail
+#' @param na.rm logical; remove rows with any missing values? This is required for methods such
+#'   as S-X2 because they require the "EAPsum" method from \code{\link{fscores}}
 #' @param Theta a matrix of factor scores for each person used for statistics that require
 #'   empirical estimates. If supplied, arguments typically passed to \code{fscores()} will be
 #'   ignored and these values will be used instead. Also required when estimating statistics
@@ -215,13 +222,12 @@
 #' data[sample(1:prod(dim(data)), 500)] <- NA
 #' raschfit <- mirt(data, 1, itemtype='Rasch')
 #'
+#' # use imputation if the proportion of missing data is relatively small
 #' mirtCluster() # run in parallel
 #' itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
 #'
-#' #alternative route: use only valid data, and create a model with the previous parameter estimates
-#' data2 <- na.omit(data)
-#' raschfit2 <- mirt(data2, 1, itemtype = 'Rasch', pars=mod2values(raschfit), TOL=NaN)
-#' itemfit(raschfit2, 'infit')
+#' #alternative route: use only valid data by removing rows with missing terms
+#' itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 #'
 #' # note that X2, G2, PV-Q1, and X2* do not require complete datasets
 #' itemfit(raschfit, c('X2', 'G2'))
@@ -231,7 +237,7 @@
 #'}
 #'
 itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nitems'),
-                    group.bins = 10, group.size = NA, group.fun = mean,
+                    na.rm = FALSE, group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
                     ETrange = c(-2,2), ETpoints = 11,
@@ -263,9 +269,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         }
         Q1_m <- rowMeans(Q1)
         df.X2_m <- rowMeans(df.X2)
+        RMSEA.X2_m <- rmsea(Q1_m, df.X2_m, N=nrow(pv[[1L]]))
         p.Q1 <- pchisq(Q1_m, df.X2_m, lower.tail = FALSE)
         p.Q1 <- ifelse(df.X2_m == 0, NaN, p.Q1)
-        ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, p.PV_Q1=p.Q1)
+        ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, RMSEA.PV_Q1=RMSEA.X2_m, p.PV_Q1=p.Q1)
         ret
     }
     boot_PV <- function(mod, org, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
@@ -365,6 +372,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 df[i] <- upsilon[i] - sum(item@est)
             }
             ret <- data.frame(X2_star_scaled=org/gamma, df.X2_star_scaled=df,
+                              RMSEA.X2_star_scaled=rmsea(org/gamma, df, N=N),
                               p.X2_star_scaled=pchisq(org/gamma, df, lower.tail=FALSE))
         } else {
             p <- apply(t(X2bs) > org, 1, mean)
@@ -403,9 +411,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         S_X2 <- Zh <- infit <- G2 <- FALSE
     }
     J <- ncol(x@Data$data)
+    if(na.rm) x <- removeMissing(x)
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.
-             Consider using imputed datasets', call.=FALSE)
+             Consider using imputed datasets or passing na.rm=TRUE', call.=FALSE)
 
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         discrete <- is(x, 'DiscreteClass')
@@ -436,13 +445,21 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     dots <- list(...)
     discrete <- dots$discrete
     discrete <- ifelse(is.null(discrete), FALSE, discrete)
+    mixture <- is(x, 'MixtureClass')
+    if(mixture && !all(fit_stats == 'S_X2'))
+        stop("Only S_X2 fit statistic supported for mixture models")
+    pis <- NULL
+    if(mixture){
+        discrete <- TRUE
+        pis <- extract.mirt(x, 'pis')
+    }
     if(impute != 0 && !is(x, 'MultipleGroupClass')){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data. Pass a suitable
                  impute argument to compute statistics following multiple data
                  imputations', call.=FALSE)
         if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
-            warning('Imputations for large amounts of missing data may be overly conservative', call.=FALSE)
+            warning('Imputations for large amounts of missing data may be overly conservative. Use with caution', call.=FALSE)
         stopifnot(impute > 1L)
         if(is.null(Theta))
             Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)
@@ -590,8 +607,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         for (i in which.items){
             for(j in unique(Groups)){
                 dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
-                colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
                 if(nrow(dat) <= 1L) next
+                colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
                 r <- colSums(dat)
                 N <- nrow(dat)
                 mtheta <- matrix(group.fun(Theta[Groups == j & pick[,i],]), nrow=1)
@@ -692,6 +709,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         if(X2){
             ret$X2 <- X2.value[which.items]
             ret$df.X2 <- df.X2[which.items]
+            ret$RMSEA.X2 <- rmsea(ret$X2, ret$df.X2, N=nrow(fulldata))
             ret$p.X2 <- suppressWarnings(pchisq(ret$X2, ret$df.X2, lower.tail=FALSE))
             ret$df.X2[ret$df.X2 <= 0] <- 0
             ret$p.X2[ret$df.X2 <= 0] <- NaN
@@ -699,6 +717,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         if(G2){
             ret$G2 <- G2.value[which.items]
             ret$df.G2 <- df.G2[which.items]
+            ret$RMSEA.G2 <- rmsea(ret$G2, ret$df.G2, N=nrow(fulldata))
             ret$p.G2 <- suppressWarnings(pchisq(ret$G2, ret$df.G2, lower.tail=FALSE))
             ret$df.G2[ret$df.G2 <= 0] <- 0
             ret$p.G2[ret$df.G2 <= 0] <- NaN
@@ -713,6 +732,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         Nk <- rowSums(O[[which(sapply(O, is.matrix))[1L]]])
         dots <- list(...)
         QMC <- ifelse(is.null(dots$QMC), FALSE, dots$QMC)
+        use_dentype_estimate <- ifelse(is.null(dots$use_dentype_estimate),
+                                       FALSE, dots$use_dentype_estimate)
         quadpts <- dots$quadpts
         if(is.null(quadpts) && QMC) quadpts <- 5000L
         if(is.null(quadpts)) quadpts <- select_quadpts(x@Model$nfact)
@@ -721,10 +742,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     call.=FALSE)
         theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
-        gp <- ExtractGroupPars(pars[[length(pars)]])
+        gp <- if(mixture) list() else ExtractGroupPars(pars[[length(pars)]])
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@Internals$CUSTOM.IND, den_fun=mirt_dmvnorm,
-                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC,
-                    which.items=which.items)
+                    quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC, mixture=mixture,
+                    pis=pis, which.items=which.items, use_dentype_estimate=use_dentype_estimate)
         for(i in which.items)
             E[[i]] <- E[[i]] * Nk
         coll <- collapseCells(O, E, mincell=mincell)
@@ -734,13 +755,21 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         for(i in seq_len(J)){
             if (is.null(dim(O[[i]])) || is.null(E[[i]])) next
             S_X2[i] <- sum((O[[i]] - E[[i]])^2 / E[[i]], na.rm = TRUE)
-            df.S_X2[i] <- sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
+            df.S_X2[i] <- if(mixture){
+                tmp <- sum(sapply(1L:length(pis), function(g)
+                    sum(x@ParObjects$pars[[g]]@ParObjects$pars[[i]]@est)))
+                sum(!is.na(E[[i]])) - nrow(E[[i]]) - tmp
+            } else sum(!is.na(E[[i]])) - nrow(E[[i]]) - sum(pars[[i]]@est)
         }
-        df.S_X2 <- df.S_X2 - sum(pars[[J+1L]]@est)
+        df.S_X2 <- if(mixture){
+            df.S_X2 - sum(sapply(1L:length(pis), function(g)
+                sum(x@ParObjects$pars[[g]]@ParObjects$pars[[J+1L]]@est)))
+        } else df.S_X2 - sum(pars[[J+1L]]@est)
         df.S_X2[df.S_X2 < 0] <- 0
         S_X2[df.S_X2 == 0] <- NaN
         ret$S_X2 <- S_X2[which.items]
         ret$df.S_X2 <- df.S_X2[which.items]
+        ret$RMSEA.S_X2 <- rmsea(ret$S_X2, ret$df.S_X2, N=nrow(dat))
         ret$p.S_X2 <- suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2, lower.tail=FALSE))
     }
     itemtype <- extract.mirt(x, 'itemtype')

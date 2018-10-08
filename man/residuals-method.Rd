@@ -4,6 +4,7 @@
 \name{residuals-method}
 \alias{residuals-method}
 \alias{residuals,SingleGroupClass-method}
+\alias{residuals,MixtureClass-method}
 \alias{residuals,MultipleGroupClass-method}
 \alias{residuals,DiscreteClass-method}
 \title{Compute model residuals}
@@ -59,6 +60,9 @@ or generated automatically if not available}
 }
 \description{
 Return model implied residuals for linear dependencies between items or at the person level.
+If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+density components (where applicable).
 }
 \examples{
 
@@ -69,6 +73,12 @@ residuals(x)
 residuals(x, tables = TRUE)
 residuals(x, type = 'exp')
 residuals(x, suppress = .15)
+residuals(x, df.p = TRUE)
+
+# extract results manually
+out <- residuals(x, df.p = TRUE, verbose=FALSE)
+str(out)
+out$df.p[1,2]
 
 # with and without supplied factor scores
 Theta <- fscores(x)

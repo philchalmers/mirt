@@ -6,7 +6,8 @@ setMethod(
     {
         cat("\nCall:\n", paste(deparse(x@Call), sep = "\n", collapse = "\n"),
             "\n\n", sep = "")
-        cat("Latent class model with ", x@Model$nfact, " classes.\n", sep="")
+        cat("Latent class model with ", x@Model$nfact, " classes and ", nrow(x@Model$Theta),
+            " profiles.\n", sep="")
         EMquad <- ''
         if(x@Options$method == 'EM') EMquad <- c('\n     using ', x@Options$quadpts, ' quadrature')
         method <- x@Options$method
@@ -20,6 +21,7 @@ setMethod(
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
         cat('EM acceleration:', x@Options$accelerate)
+        cat('\nLatent density type:', 'discrete')
         # cat('\nNumber of classes quadrature:', x@Options$quadpts)
         cat('\n')
         if(!is.na(x@OptimInfo$condnum)){
@@ -32,7 +34,7 @@ setMethod(
         if(length(x@Fit$logLik) > 0){
             cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                 paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
-            cat('Estimated parameters:', length(extract.mirt(x, 'parvec')), '\n')
+            cat('Estimated parameters:', extract.mirt(x, 'nestpars'), '\n')
             cat("AIC = ", x@Fit$AIC, "; AICc = ", x@Fit$AICc, "\n", sep='')
             cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             if(!is.nan(x@Fit$p)){
@@ -62,6 +64,7 @@ setMethod(
         ret <- vector('list', ngroups)
         items <- vector('list', object@Data$nitems + 1L)
         names(items) <- c(colnames(object@Data$data), 'Class.Probability')
+        prof <- apply(Theta, 1L, function(x) sprintf("P[%s]", paste0(x, collapse=' ')))
         for(g in seq_len(ngroups)){
             ret[[g]] <- items
             pars <- object@ParObjects$pars[[g]]
@@ -69,7 +72,7 @@ setMethod(
                 item <- extract.item(pars, i)
                 P <- probtrace(item, Theta)
                 colnames(P) <- paste0('category_', 1L:ncol(P))
-                rownames(P) <- paste0('Class_', 1L:nrow(P))
+                rownames(P) <- prof
                 ret[[g]][[i]] <- P
             }
             if(is.matrix(object@Internals$Prior[[g]])){
@@ -77,7 +80,7 @@ setMethod(
             } else {
                 ret[[g]][[i+1L]] <- data.frame(Theta, prob=object@Internals$Prior[[g]])
             }
-            rownames(ret[[g]][[i+1L]]) <- paste0('Class_', 1L:nrow(ret[[g]][[i+1L]]))
+            rownames(ret[[g]][[i+1L]]) <- paste0('Profile_', 1L:nrow(ret[[g]][[i+1L]]))
         }
         names(ret) <- extract.mirt(object, 'groupNames')
         for(i in seq_len(length(ret))) class(ret[[i]]) <- c('mirt_list', 'list')
@@ -130,7 +133,7 @@ setMethod(
                           par.strip.text = list(cex = 0.7),
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
-                          auto.key = list(space = 'right'), ...)
+                          auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...)
     {
         if(extract.mirt(x, 'ngroups') > 1L)
             stop('plot methods do not support multiple group latent class models yet',

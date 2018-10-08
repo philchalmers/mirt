@@ -32,9 +32,11 @@ test_that('dich', {
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE, SE=TRUE)
     expect_is(modm3, 'SingleGroupClass')
     expect_equal(extract.mirt(modm3, 'df'), 25)
-    expect_equal(extract.mirt(modm3, 'condnum'), 4.488478, tolerance = 1e-4)
+    expect_equal(extract.mirt(modm3, 'condnum'), 4.488772, tolerance = 1e-4)
     LG <- lagrange(modm3, parnum = list(1, 5))
-    expect_equal(LG$X2, c(0.36994988, 0.05424863), tolerance = 1e-4)
+    expect_equal(LG$X2, c(0.37024340, 0.05429718), tolerance = 1e-4)
+    LG2 <- lagrange(modm3, parnum = list(c(1, 5)))
+    expect_equal(LG2$X2, 0.4816444, tolerance = 1e-4)
     dat <- expand.table(LSAT6)
     modm3 <- mirt(dat, 1, itemtype = 'Rasch', SE = TRUE, SE.type = 'SEM', verbose=FALSE)
     expect_is(modm3, 'SingleGroupClass')
@@ -164,5 +166,14 @@ test_that('dich', {
     expect_is(fm1, 'matrix')
     fm2 <- fscores(modm3, method = 'MAP', verbose = FALSE)
     expect_is(fm2, 'matrix')
+
+    data[1,1] <- NA
+    modm1 <- mirt(data, 1, verbose=FALSE)
+    out1 <- M2(modm1, na.rm=TRUE)
+    out2 <- itemfit(modm1, na.rm=TRUE)
+    out3 <- fscores(modm1, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
+    expect_equal(out1$M2, 11.76977, tolerance=1e-4)
+    expect_equal(out2$S_X2[1], 4.8448539, tolerance=1e-4)
+    expect_equal(out3$expected[1], 9.931098, tolerance=1e-4)
 })
 

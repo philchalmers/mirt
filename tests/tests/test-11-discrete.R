@@ -7,15 +7,15 @@ test_that('discrete', {
     dat <- expand.table(LSAT6)
     mod <- mdirt(dat, 2, verbose=FALSE, SE=TRUE, SE.type = 'Richardson')
     so <- summary(mod)
-    expect_equal(extract.mirt(mod, 'condnum'), 153.9135, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod, 'condnum'), 153.6806, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'logLik'), -2467.408, tolerance = 1e-4)
     expect_equal(extract.mirt(mod, 'df'), 20)
     expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])[1L]), 0.3317701, tolerance = 1e-2)
-    expect_equal(as.numeric(sort(so$Item_1)), c(0.03656904, 0.15380621, 0.84619379, 0.96343096),
+    expect_equal(as.numeric(sort(so$Item_1)), c(0.03705052,0.1555339,0.8444661,0.9629495),
                  tolerance = 1e-4)
 
     M <- M2(mod)
-    expect_equal(M$M2, 4.594614, tolerance = 1e-4)
+    expect_equal(M$M2, 4.603509, tolerance = 1e-4)
     fs <- fscores(mod, full.scores=FALSE)
     pick <- apply(fs[1:5, c('Class_1', 'Class_2')], 1, max)
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
@@ -25,17 +25,17 @@ test_that('discrete', {
                  tolerance=1e-2)
 
     resid <- residuals(mod, type = 'exp')
-    expect_equal(resid$res[1:3], c(1.066, 0.155, -0.340), tolerance = 1e-2)
+    expect_equal(resid$res[1:3], c(1.0380029, 0.1373462, -0.3478477), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
-    expect_equal(as.numeric(residLD[2:4, 1]), c(0.113, 0.428, -0.126), tolerance=1e-2)
+    expect_equal(as.numeric(residLD[2:4, 1]), c(0.1092414, 0.4115837, -0.1316043), tolerance=1e-2)
     ifit <- itemfit(mod)
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
     W <- wald(mod, L = matrix(c(1,numeric(9), 0), nrow=1))
-    expect_equal(W$W, 26.37915, tolerance=1e-4)
+    expect_equal(W$W, 25.58544, tolerance=1e-4)
 
     # covdata
-    set.seed(2)
+    set.seed(4)
     covdata <- data.frame(X = rowSums(dat))
     modb <- mdirt(dat, 2, covdata=covdata, formula = ~X,
                   verbose=FALSE, GenRandomPars = TRUE)
@@ -45,11 +45,10 @@ test_that('discrete', {
     # polytomous LCA
     mod2 <- mdirt(Science, 2, verbose=FALSE)
     so <- summary(mod2)
-    expect_equal(extract.mirt(mod2, 'logLik'), -1622.442, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod2, 'logLik'), -1624.642, tolerance = 1e-4)
     expect_equal(extract.mirt(mod2, 'df'), 230)
-    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.2983372,0.7016628), tolerance = 1e-2)
-    expect_equal(as.numeric(sort(so$Comfort)), c(7.164881e-07,0.01822795,0.05114743,0.09455495,
-                                                 0.1212209,0.4730082,0.4758437,0.7659962),
+    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.3962724,0.6037276), tolerance = 1e-2)
+    expect_equal(as.numeric(sort(so$Comfort)), c(6.97863e-05,0.02113318,0.05856795,0.0967485,0.1089279,0.4070116,0.5343507,0.7731905),
                  tolerance = 1e-2)
 
     #----------
@@ -94,7 +93,7 @@ test_that('discrete', {
     mod_discrete <- mdirt(dat, 3, customTheta = Theta, TOL = 1e-2, verbose=FALSE)
     expect_equal(extract.mirt(mod_discrete, 'logLik'), -9432.635, tolerance = 1e-4)
     so <- summary(mod_discrete)
-    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0,0.00343,0.04468,0.06794,0.07886,0.19287,0.23432,0.37791), tolerance = 1e-2)
+    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.0004940534,0.003972187,0.04249068,0.05372494,0.08291352,0.2009768,0.2657006,0.3497273), tolerance = 1e-2)
 
     #-----------------
 
@@ -107,8 +106,8 @@ test_that('discrete', {
     mod <- mdirt(dat, model, group = group, customTheta = Theta,
                  verbose = FALSE)
     expect_equal(logLik(mod), -9598.103, tolerance = 1e-4)
-    expect_equal(as.numeric(coef(mod)[[1]][[33]]), .436, tolerance=1e-2)
-    expect_equal(M2(mod)$M2, 1239.88, tolerance = 1e-4)
+    expect_equal(as.numeric(coef(mod)[[1]][[33]]), .4165249, tolerance=1e-2)
+    expect_equal(M2(mod)$M2, 1239.17, tolerance = 1e-4)
 
 #
 #     data(data.read, package = 'sirt')

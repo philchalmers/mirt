@@ -1,13 +1,122 @@
+# Changes in mirt 1.30
+
+- `DIF()` now simplifies the output by default rather than returning lists from `anova()`. Wald tests are always simplified
+
+- Where applicable, RMSEA statistics are reported in `itemfit()` for tests that return suitable 
+  X2 and df components
+  
+- Fix negative TLI and CFI values when using the C2 statistic from the `M2()` function (reported 
+  by Jake Kraska and Charlie Iaconangelo)
+
+- Fix delta method SEs for `'gpcm'` itemtype (reported by Lennart Schneider)
+
+# Changes in mirt 1.29
+
+- When lower/upper bounded parameters are included the default optimizer is now 'nlminb' rather 
+  than 'L-BFGS-B'. This is mainly due to the instability in the 'L-BFGS-B' algorithm which 
+  is prone to converging instantly for unknown reasons
+
+- `mdirt()` gains a `item.Q` list to specify Q-matrices at the item-category level for each item
+  
+- `createItem()` functions gain an optional argument to the function definitions to allow for
+  list-specified data from functions such as `mirt()` via a silent `mirt(..., customItemsData)`
+  argument
+
+- lattice `auto.key` default now reports lines rather than points. This is now more consistent
+  when, for example, color theme is changed to black and white in the trellis window
+
+- Added Differential Response Function (DRF) statistics from upcoming publication (Chalmers, accepted)
+  in a new function entitled `DRF()`. These are related to compensatory and non-compensatory measures 
+  of response bias for DIF, DBF, and DTF available from the SIBTEST framework but 
+  for IRT model fitted within the multiple-group estimation framework
+
+- `structure` argument added to `mdirt()` function to allow log-linear models for 
+  simplifying the profile probability model computations
+  
+- export internally used `traditional2mirt()` function to transform a small selection of 
+  classical IRT parameterizations into the slope-intercept form
+  
+- fix `survey.weights` input for multiple group models (reported by Leigh Allison)
+
+- fix `itemtype = "rsm"` block restriction when items contain unequal category lengths 
+  (reported by Aiden Loe)
+
+- `SIBTEST()` computation of beta coefficient changed to match Shealy and Stout's (1993) 
+  form of `p_k * (Y_R - Y_F)` (was previously `p_k * (Y_F - Y_R)`; reported by Craig Wells). 
+  As well, `Jmin` default is increased to 5 to avoid conservative Type I error behavior in 
+  longer tests
+  
+- Fix negative chi-square differences in `DIF()` function due to non-converged sub-models 
+  (reported by Daniel McKelvey)
+
+# Changes in mirt 1.28
+
+- `M2()` function gains a `type` input to distinguish between the univariate-bivariate 
+  collapsed M2* statistic and the bivariate only collapsed C2 statistic (Cai and Monro, 2014).
+  C2 can be useful for polyomous items when there are too few degrees of freedom to compute
+  the fully collapsed M2* 
+
+- `multipleGroup()` gains the `dentype` argument to allow for mixture IRT models to be 
+  fitted (e.g., `dentype = 'mixture-3'` fits a three-class mixture model). This also
+  allow modifications such as the zero-inflated IRT model to be fitted
+
+- `technical` gains a `zeroExtreme` logical flag to assign survey weights of 0 to extreme 
+  response patterns (FALSE by default). This may be required when
+  Woods' extrapolation-interpolation method is used with empirical histograms 
+  to avoid ill defined extrapolated densities
+
+- `fscores()`, `itemfit()`, `M2()`, and `residuals()` gain a `use_dentype_estimate` argument to 
+  compute EAP-based scores whenever the latent trait density was estimated (e.g., via empirical histograms)
+
+- Empirical histograms can now be now scaled to [0,1] using Woods' extrapolation-interpolation method
+  via the input `dentype = 'empiricalhist_Woods'`. Degrees of freedom updated to reflect this change, 
+  and 121 quadrature points are used instead of the previous 199 for better stability
+  
+- Semi-parametric Davidian curve estimation of the shape of the latent trait distribution in
+  unidimensional IRT models was contributed by Oguzhan Ogreden, as well the associated 
+  components used within this framework (such as the interpolation-extrapolation method 
+  described by Woods, 2006). This estimation method is available through the new `dentype` input. 
+  mirt also now links to the `dcurver` package to obtain the associated computation functions 
+  in the EM algorithm
+  
+- `M2()`, `itemfit()`, `SIBTEST()`, and `fscores()` gain an `na.rm` logical to remove rows of missing data
+
+- `fscores()` gains a `append_response.pattern` logical to indicate whether response patterns via the
+  `response.pattern` input should be appended to the factor score results
+
+- new `dentype` argument added to estimation-based functions to specify the density structure of the 
+  latent traits (default is `'Gaussian'`). This update breaks the previous `empiricalhist` logical option 
+
+- `anova()` will accept a single fitted model object and return information related to AIC, BIC, 
+  log-likelihood, etc
+  
+- Hannan–Quinn (HQ) Criterion added to `anova()`
+
 # Changes in mirt 1.27
+
+- Added multidimensional version of sequential response model (e.g., Tutz, 1990). Includes 
+  `itemtype = 'sequential'` for the multidimensional 2PL variant, and `itemtype = 'Tutz'`
+  for the Rasch variant
+
+- Printing IRT parameters via `coef(mod, IRTpars = TRUE)` now computes the delta method 
+  for the `g` and `u` terms as well. Interpreting these is generally not recommended 
+  due to their bounded parameter nature (CIs can be outside the range [0,1]), 
+  but are included for posterity
+
+- `createItem()` gains a `bytecompile` flag to indicate whether the internal functions should 
+  be byte-compiled before using (default is TRUE)
+
+- Special `GROUP` location holder in `mirt.model()` to index the group-level
+  hyper-parameter terms
 
 - `key2binary()` gains a `score_missing` flag to indicate whether missing values should be scored 
   as 0 or left as NA
 
-- `customItem()` gains support for `derivType = 'symbolic'` and 
+- `createItem()` gains support for `derivType = 'symbolic'` and 
   `derivType.hss = 'symbolic'` to symbolically compute the gradient/Hessian 
   functions (template code-base contributed by Chen-Wei Liu)
 
-- `customItem()` gains a `derivType.hss` argument to distinguate gradient from 
+- `createItem()` gains a `derivType.hss` argument to distinguish gradient from 
   Hessian numerical computations
 
 - `mdirt()` gains support for `createItem()` inputs
@@ -21,6 +130,8 @@
 
 - fix new grouping syntax specification in `mirt.model()` when combining START and FIXED 
   (reported by Garron Gianopulos)
+  
+- fix `IRTpars = TRUE` input when itemtype was `Rasch` (reported by Benjamin Shear)
 
 # Changes in mirt 1.26.3
 

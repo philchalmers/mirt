@@ -47,6 +47,7 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
     if(missing(Theta)) missingMsg('Theta')
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not yet supported.', call.=FALSE)
+    data <- extract.mirt(x, 'data')
     if(warn && sum(is.na(data))/length(data) > .1)
         warning('Imputing too much data can lead to very conservative results. Use with caution.',
                 call.=FALSE)
@@ -66,7 +67,6 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
         return(data)
     }
     pars <- extract.mirt(x, 'pars')
-    data <- extract.mirt(x, 'data')
     nfact <- pars[[1L]]@nfact
     if(!is(Theta, 'matrix') || nrow(Theta) != nrow(data) || ncol(Theta) != nfact)
         stop('Theta must be a matrix of size N x nfact', call.=FALSE)
@@ -86,7 +86,7 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
     Nind <- 1L:N
     mins <- extract.mirt(x, 'mins')
     for (i in seq_len(J)){
-        if(!any(is.na(data[,i]))) next
+        if(!any(is.na(data[,i,drop=FALSE]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
         for(j in seq_len(length(NAind))){

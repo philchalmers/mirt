@@ -343,8 +343,8 @@ void P_comp(vector<double> &P, const vector<double> &par,
     }
 }
 
-void P_lca(vector<double> &P, const vector<double> &par,
-    const NumericMatrix &Theta, const int &N, const int &ncat, const int &nfact,
+void P_lca(vector<double> &P, const vector<double> &par, const NumericMatrix &Theta,
+    const NumericMatrix &item_Q, const int &N, const int &ncat, const int &nfact,
     const int &returnNum)
 {
     NumericMatrix Num(N, ncat);
@@ -356,7 +356,7 @@ void P_lca(vector<double> &P, const vector<double> &par,
         for(int j = 1; j < ncat; ++j){
             double innerprod = 0.0;
             for(int p = 0; p < nfact; ++p)
-                innerprod += par[p + which_par] * Theta(i, p);
+                innerprod += par[p + which_par] * Theta(i, p) * item_Q(j,p);
             which_par += nfact;
             z[j] = innerprod;
         }
@@ -724,18 +724,19 @@ RcppExport SEXP ggumTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat)
     END_RCPP
 }
 
-RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rncat, SEXP RreturnNum)
+RcppExport SEXP lcaTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Ritem_Q, SEXP Rncat, SEXP RreturnNum)
 {
     BEGIN_RCPP
 
     const vector<double> par = as< vector<double> >(Rpar);
     const int ncat = as<int>(Rncat);
     const NumericMatrix Theta(RTheta);
+    const NumericMatrix item_Q(Ritem_Q);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     const int returnNum = as<int>(RreturnNum);
     vector<double> P(N*ncat);
-    P_lca(P, par, Theta, N, ncat, nfact, returnNum);
+    P_lca(P, par, Theta, item_Q, N, ncat, nfact, returnNum);
     NumericMatrix ret = vec2mat(P, N, ncat);
     return(ret);
 
@@ -785,6 +786,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         correct = as<int>(item.slot("correctcat"));
     if(itemclass == 12)
         k = as<int>(item.slot("k"));
+    NumericMatrix item_Q;
+    if(itemclass == 10)
+        item_Q = as<NumericMatrix>(item.slot("item.Q"));
 
     /*
         1 = dich
@@ -842,7 +846,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_ideal(P, par, theta, ot, N, nfact2);
             break;
         case 10 :
-            P_lca(P, par, theta, N, ncat, nfact2, 0);
+            P_lca(P, par, theta, item_Q, N, ncat, nfact2, 0);
             break;
         case 11 :
             P_ggum(P, par, theta, N, nfact2, ncat);

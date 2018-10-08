@@ -46,11 +46,18 @@
 #'   to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain Metropolis-Hastings
 #'   samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguments like
 #'   \code{technical} can be supplied to increase the number of burn-in draws and discarded samples)
-#' @param method type of factor score estimation method. Can be expected
-#'   a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-#'   (\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
-#'   (\code{"EAPsum"}). Can also be \code{"plausible"} for a single plausible value imputation for
-#'   each case, and this is equivalent to setting \code{plausible.draws = 1}
+#' @param method type of factor score estimation method. Can be:
+#' \itemize{
+#'     \item \code{"EAP"} for the expected a-posteriori (default)
+#'     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
+#'     \item \code{"ML"} for maximum likelihood
+#'     \item \code{"WLE"} for weighted likelihood estimation
+#'     \item \code{"EAPsum"} for the expected a-posteriori for each sum score
+#'     \item \code{"plausible"} for a single plausible value imputation for each case.
+#'       This is equivalent to setting \code{plausible.draws = 1}
+#'     \item \code{"classify"} for the posteriori classification probabilities (only
+#'       applicable when the input model was of class \code{MixtureClass})
+#'  }
 #' @param quadpts number of quadratures to use per dimension. If not specified, a suitable
 #'   one will be created which decreases as the number of dimensions increases
 #'   (and therefore for estimates such as EAP, will be less accurate). This is determined from
@@ -66,8 +73,16 @@
 #'   'group' values from the computed mirt object will be used
 #' @param MI a number indicating how many multiple imputation draws to perform. Default is 0,
 #'   indicating that no MI draws will be performed
+#' @param use_dentype_estimate logical; if the density of the latent trait was estimated in the model
+#'   (e.g., via Davidian curves or empirical histograms), should this information be used to compute
+#'   the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum, and plausible)
 #' @param response.pattern an optional argument used to calculate the factor scores and standard
 #'   errors for a given response vector or matrix/data.frame
+#' @param append_response.pattern logical; should the inputs from \code{response.pattern} also be
+#'   appended to the factor score output?
+#' @param na.rm logical; remove rows with any missing values? This is generally not required due to
+#'   the nature of computing factors scores, however for the "EAPsum" method this may be necessary
+#'   to ensure that the sum-scores correspond to the same composite score
 #' @param returnER logical; return empirical reliability (also known as marginal reliability)
 #'   estimates as a numeric values?
 #' @param return.acov logical; return a list containing covariance matrices instead of factors
@@ -145,6 +160,10 @@
 #' #or matrix
 #' fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 #'
+#' # return only the scores and their SEs
+#' fscores(mod, method='MAP', response.pattern = c(1,2,3,4),
+#'   append_response.pattern=FALSE)
+#'
 #' #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 #' fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
 #' fscores(mod, method='ML', full.scores = FALSE)
@@ -177,9 +196,10 @@
 #'
 #'}
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
-                    response.pattern = NULL, plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
+                    response.pattern = NULL, append_response.pattern=TRUE, na.rm=FALSE,
+                    plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
+                    full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, use_dentype_estimate=FALSE,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
                     converge_info = FALSE, max_theta = 20, start = NULL, ...)
 {
@@ -193,9 +213,16 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         plausible.draws <- 1
         method <- 'EAP'
     }
+    if(is(object, "MultipleGroupClass") && !is.null(response.pattern))
+        stop(c("response.pattern input cannot be used with multiple-group models. ",
+               "Please extract the group you want first with the extract.group() and supply this object to fscores()"), call.=FALSE)
     if(any(extract.mirt(object, 'itemtype') == 'spline') && !(method %in% c('EAP', 'EAPsum')))
         stop('Only EAP and EAPsum method supported when spline items are modeled', call.=FALSE)
     if(returnER) full.scores <- FALSE
+    if(na.rm)
+        object <- removeMissing(object)
+    if(theta_lim[1L] < -max_theta) theta_lim[1L] <- -max_theta
+    if(theta_lim[2L] > max_theta) theta_lim[2L] <- max_theta
     if(is(object, 'DiscreteClass') && plausible.draws > 0L){
         fs <- fscores(object)
         ret <- lapply(seq_len(plausible.draws), function(ind, fs){
@@ -221,6 +248,8 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,
-                            plausible.type=plausible.type, max_theta=max_theta, start=start, ...)
+                            plausible.type=plausible.type, max_theta=max_theta, start=start,
+                            use_dentype_estimate=use_dentype_estimate,
+                            append_response.pattern=append_response.pattern, ...)
     ret
 }

@@ -46,24 +46,24 @@ test_that('extras', {
     boot <- boot.mirt(model1a, R=5)
     cfs <- boot$t0
     cfs <- cfs[cfs != 0 & cfs != 1]
-    expect_equal(as.numeric(cfs), c(1.200932,0.03966039,1.202983,1.253283,1.162713,0.1054175,0.935932,0.4109794,1.202011,-0.5220202,0.5644482,0.6966761,1.219665,-0.7151297,0.9018733,-0.1465739,0.855102,0.7757409,0.7616776,0.1306053,0.3678973,-0.1117068,0.4865936,1.258095,1.270467,0.3109331,1.126136,0.3280035,1.441583,-0.3823625,0.5785964,0.6331239,1.531089,-0.5576562,1.289808,-0.1500941,1.141839,0.94723,0.9748633,0.2646415),
+    expect_equal(as.numeric(cfs), c(1.200941,0.03964278,1.202968,1.253258,1.162712,0.1054011,0.9359284,0.410968,1.20204,-0.5220437,0.5644495,0.696662,1.219704,-0.7151586,0.9018765,-0.1465849,0.8550952,0.7757281,0.7616766,0.1305874,0.7119052,-0.09370059,0.6546074,1.274378,1.36438,0.38146,1.207508,0.5272688,1.370619,-0.426826,0.6340348,0.57111,1.651928,-0.5331716,1.068324,-0.1782871,1.121677,0.8790566,0.7972691,0.2748593),
                  tolerance=1e-3)
     PLCI <- PLCI.mirt(mirt(Science, 1, verbose=FALSE), parnum=c(1,2))
     expect_equal(c(PLCI$lower_2.5, PLCI$upper_97.5), c(0.7008617, 4.0112247, 1.4530232, 5.9667792),
                   tolerance=1e-3)
     DIFF <- suppressMessages(DIF(model1a, which.par='d', items2test = c(1,3)))
-    expect_is(DIFF, 'list')
-    expect_equal(DIFF[[1L]][2,'logLik'], -12519.45, tolerance = 1e-3)
+    expect_is(DIFF, 'data.frame')
+    expect_equal(DIFF[2,'AIC'], -3.414, tolerance = 1e-3)
     DIFF2 <- suppressMessages(DIF(model2, which.par=c('a1', 'd'), items2test = c(1,3), scheme='drop'))
-    expect_is(DIFF2, 'list')
-    expect_equal(DIFF2[[1L]][,'logLik'], c(-12562.00, -12539.75), tolerance = 1e-3)
+    expect_is(DIFF2, 'data.frame')
+    expect_equal(DIFF2[1L, 'X2'], 18.88, tolerance = 1e-3)
 
     WALD <- suppressMessages(DIF(model1a, which.par='d', items2test = 1:3, Wald=TRUE))
-    expect_is(WALD, 'list')
-    expect_equal(WALD[[1]]$W[1], 2.101652, tolerance = 1e-3)
-    expect_equal(WALD[[1]]$p[1], .1471401, tolerance = 1e-3)
+    expect_is(WALD, 'data.frame')
+    expect_equal(WALD$W[1], 1.532718, tolerance = 1e-3)
+    expect_equal(WALD$p[1], 0.2157049, tolerance = 1e-3)
     WALD2 <- suppressMessages(DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr'))
-    expect_equal(as.numeric(WALD2$adj_pvals), c(2.027518e-06,0.0001081836,0.2437397,0.370737,0.2437397,0.8028216,0.2010698,0.2010698,0.2437397,0.2437397), tolerance = 1e-3)
+    expect_equal(as.numeric(WALD2$adj_pvals), c(0.02473307,0.01580279,0.1261503,0.4299811,0.4672727,0.4565218,0.05971613,0.5671398,0.4299811,0.4565218), tolerance = 1e-3)
     extr.2 <- extract.item(mod1, 2)
     Theta <- matrix(seq(-6,6, length.out=200))
     expected <- expected.item(extr.2, Theta)
@@ -94,7 +94,7 @@ test_that('extras', {
     s1 <- coef(mod1, simplify=TRUE)$items
     s2 <- coef(mod2, simplify=TRUE)$items
     pick <- c('a1', 'a2', 'd1', 'd2', 'd3')
-    expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-10)
+    expect_true(sum(abs(s1[,pick] - s2[,pick])) < 1e-8)
     mod3 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats, TOL = 1e-2, verbose=FALSE)
     expect_equal(extract.mirt(mod3, 'logLik'), -3708.216, tolerance = 1e-4)
     cfs <- as.vector(coef(mod3, simplify=TRUE)$items)

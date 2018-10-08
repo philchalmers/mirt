@@ -2,7 +2,12 @@
 #'
 #' Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.
 #' To use the defined objects pass to the \code{mirt(..., customItems = list())} command, and
-#' ensure that the classes are properly labeled and unique in the list.
+#' ensure that the classes are properly labeled and unique in the list. Additionally,
+#' the input \code{mirt(..., customItemsData = list())} can also be included to specify additional
+#' item-level information to better recycle custom-item defintions (e.g., for supplying varying
+#' Q-matricies), where the \code{list} input must have the same length as the number of items.
+#' For further examples regarding how this function can be used for
+#' fitting unfolding-type models see Liu and Chalmers (2018).
 #'
 #' The \code{summary()} function will not return proper standardized loadings since the function
 #' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001
@@ -14,8 +19,23 @@
 #' @param est a logical vector indicating which parameters should be freely estimated by default
 #' @param P the probability trace function for all categories (first column is category 1, second
 #'   category two, etc). First input contains a vector of all the item parameters, the second input
-#'   must be a matrix called \code{Theta}, and the third input must be the number of categories
-#'   called \code{ncat}. Function also must return a \code{matrix} object of category probabilities
+#'   must be a matrix called \code{Theta}, the third input must be the number of categories
+#'   called \code{ncat}, and (optionally) a fourth argument termed \code{itemdata}
+#'   may be included containing further  users specification information.
+#'   The last optional input is to be utilized within the estimation functions
+#'   such as \code{\link{mirt}} via the list input \code{customItemsData}
+#'   to more naturally recycle custom-item definitions. Therefore, these inputs must be of the form
+#'
+#'   \code{function(par, Theta, ncat){...}}
+#'
+#'   or
+#'
+#'   \code{function(par, Theta, ncat, itemdata){...}}
+#'
+#'   to be valid; however, the names of the arguements is not relavent.
+#'
+#'   Finally, this function must return a \code{matrix} object of category probabilities, where
+#'   the columns represent each respective category
 #' @param gr gradient function (vector of first derivatives) of the log-likelihood used in
 #'   estimation. The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object
 #'   defined by \code{createItem()} and \code{Theta} is a matrix of latent trait parameters.
@@ -44,12 +64,18 @@
 #'   \code{'symbolic'} is supplied then the Hessian will be computed using
 #'   a symbolical approach (potentially the most accurate method, though may fail depending
 #'   on how the \code{P} function was defined)
+#' @param bytecompile logical; where applicable, byte compile the functions provided? Default is
+#'   \code{TRUE} to provide
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
+#'
+#' Liu, C.-W. and Chalmers, R. P. (2018). Fitting item response unfolding models to
+#'   Likert-scale data using mirt in R. \emph{PLoS ONE, 13}, 5.
+#'   \doi{https://doi.org/10.1371/journal.pone.0196292}
 #' @keywords createItem
 #' @export createItem
 #' @examples
@@ -158,51 +184,37 @@
 #' }
 createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
                        lbound = NULL, ubound = NULL, derivType = 'Richardson',
-                       derivType.hss = 'Richardson'){
+                       derivType.hss = 'Richardson', bytecompile = TRUE){
     if(missing(name)) missingMsg('name')
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')
     if(missing(P)) missingMsg('P')
+    nms_args <- names(formals(P))
+    if(!(length(nms_args) %in% c(3L,4L)))
+        stop('P function does not have the correct number of arguments', call.=FALSE)
     if(any(names(par) %in% c('g', 'u')) || any(names(est) %in% c('g', 'u')))
         stop('Parameter names cannot be \'g\' or \'u\', please change.', call.=FALSE)
+    if(bytecompile) P <- compiler::cmpfun(P)
     dps <- dps2 <- function() NULL
     if(derivType == 'symbolic' || derivType.hss == 'symbolic'){
         tmppars <- 1L:length(par)
         names(tmppars) <- rep("par", length(par))
         dps <- Deriv::Deriv(P, tmppars)
+        if(bytecompile) dps <- compiler::cmpfun(dps)
     }
-    if(derivType == "symbolic"){
-        gr <- function(x, Theta){
-            P <- ProbTrace(x, Theta)
-            xLength <- length(x@par)
-            ThetaLength <- nrow(Theta)
-            r_P <- x@dat / P
-            dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
-            grad <- numeric(length(x@par))
-            for (i in 1L:xLength)
-                grad[i] <- sum(r_P * dp1[,,i])
-            grad
-        }
-    }
-    if(derivType.hss == "symbolic"){
+    if(is.null(gr) && derivType == "symbolic")
+        gr <- symbolicGrad_par
+    if(bytecompile && !is.null(gr)) gr <- compiler::cmpfun(gr)
+    if(is.null(hss) && derivType.hss == "symbolic"){
         dps2 <- Deriv::Deriv(dps, tmppars)
-        hss <- function(x, Theta){
-            P <- ProbTrace(x, Theta)
-            xLength <- length(x@par)
-            ThetaLength <- length(Theta)
-            dp1 <- array(x@dps(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength))
-            dp2 <- array(x@dps2(x@par, Theta, x@ncat), c(ThetaLength,x@ncat,xLength,xLength))
-            H <- matrix(NA,xLength,xLength)
-            for (i in 1L:xLength){
-                for (j in i:xLength){
-                    H[i,j] <- sum(x@dat*dp2[,,i,j]/P + x@dat*dp1[,,i]*(-dp1[,,j]/(P^2)))
-                    H[j,i] <- H[i,j]
-                }
-            }
-            H
-        }
+        if(bytecompile) dps2 <- compiler::cmpfun(dps2)
+        hss <- symbolicHessian_par
     }
-    return(new('custom', name=name, par=par, est=est, parnames=names(par), lbound=lbound,
+    if(bytecompile && !is.null(hss)) hss <- compiler::cmpfun(hss)
+    ret <- new('custom', name=name, par=par, est=est, parnames=names(par), lbound=lbound,
                ubound=ubound, P=P, dps=dps, dps2=dps2, gr=gr, hss=hss, gen=gen, userdata=NULL,
-               derivType=derivType, derivType.hss=derivType.hss))
+               derivType=derivType, derivType.hss=derivType.hss)
+    ret@useuserdata <- if(length(nms_args) == 3L) FALSE else TRUE
+    ret
+
 }

@@ -4,16 +4,24 @@
 \alias{M2}
 \title{Compute the M2 model fit statistic}
 \usage{
-M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
-  impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE,
-  suppress = 1, ...)
+M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE,
+  quadpts = NULL, theta_lim = c(-6, 6), impute = 0, CI = 0.9,
+  residmat = FALSE, QMC = FALSE, suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
 
+\item{type}{type of fit statistic to compute. Options are "M2", "M2*" for the univariate and
+bivariate collapsed version of the M2 statistic ("M2" currently limited to dichotomous
+response data only), and "C2" for a hybrid between
+M2 and M2* where only the bivariate moments are collapsed}
+
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via \code{\link{createItem}} will not)}
+
+\item{na.rm}{logical; remove rows with any missing values? The M2 family of statistics
+requires a complete dataset in order to be well defined}
 
 \item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
 a suitable value will be chosen based
@@ -44,15 +52,21 @@ Must be used in conjunction with the argument \code{residmat = TRUE}}
 \item{...}{additional arguments to pass}
 }
 \value{
-Returns a data.frame object with the M2 statistic, along with the degrees of freedom,
+Returns a data.frame object with the M2-type statistic, along with the degrees of freedom,
   p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
-  and optionally the TLI and CFI model fit statistics of \code{calcNull = TRUE}.
+  and optionally the TLI and CFI model fit statistics if \code{calcNull = TRUE}.
 }
 \description{
-Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic for dichotomous data and the
-M2* statistic for polytomous data (collapsing over response categories for better stability;
-see Cai and Hansen, 2013), as well as associated fit indices that are based on
+Computes the M2 (Maydeu-Olivares & Joe, 2006) statistic when all data are dichotomous,
+the collapsed M2* statistic (collapsing over univariate and bivariate response categories;
+see Cai and Hansen, 2013), and the hybrid C2 statistic which only collapses only the bivariate
+moments (Cai and Monro, 2014). The C2 variant is mainly useful when polytomous response models
+do not have sufficient degrees of freedom to compute M2*. This function
+also computes associated fit indices that are based on
 fitting the null model. Supports single and multiple-group models.
+If the latent trait density was approximated (e.g., Davidian curves, Empirical histograms, etc)
+then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
+density components (where applicable).
 }
 \examples{
 \dontrun{
@@ -64,22 +78,38 @@ M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
 #M2 imputed with missing data present (run in parallel)
 dat[sample(1:prod(dim(dat)), 250)] <- NA
 mod2 <- mirt(dat, 1)
+
+# compute stats using conservative model imputations
 mirtCluster()
 M2(mod2, impute = 10)
+
+# or compute stats by removing missing data row-wise
+M2(mod2, na.rm = TRUE)
+
+# C2 statistic (useful when polytomous IRT models have too few df)
+pmod <- mirt(Science, 1)
+# This fails with too few df:
+# M2(pmod)
+# This, however, works:
+M2(pmod, type = 'C2')
 
 }
 }
 \references{
 Cai, L. & Hansen, M. (2013). Limited-information goodness-of-fit testing of
-hierarchical item factor models. British Journal of Mathematical and Statistical
-Psychology, 66, 245-276.
+hierarchical item factor models. \emph{British Journal of Mathematical and Statistical
+Psychology, 66}, 245-276.
+
+Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response theory
+models for ordinal data}. National Center for Research on Evaluation, Standards,
+& Student Testing. Technical Report.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 
 Maydeu-Olivares, A. & Joe, H. (2006). Limited information goodness-of-fit testing in
-multidimensional contingency tables Psychometrika, 71, 713-732.
+multidimensional contingency tables. \emph{Psychometrika, 71}, 713-732.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

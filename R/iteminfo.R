@@ -82,7 +82,7 @@ iteminfo <- function(x, Theta, degrees = NULL, total.info = TRUE, multidim_matri
         return(ret)
     }
     if(is.null(degrees) && ncol(Theta) != 1L)
-        stop('Multidimensional information requires prespecified angles in degrees',
+        stop('Multidimensional information requires pre-specified angles in degrees',
              call.=FALSE)
     cosangle <- cos(d2r(degrees))
     info <- if(use_degrees){

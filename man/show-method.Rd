@@ -7,6 +7,7 @@
 \alias{show,MultipleGroupClass-method}
 \alias{show,MixedClass-method}
 \alias{show,DiscreteClass-method}
+\alias{show,MixtureClass-method}
 \title{Show model object}
 \usage{
 \S4method{show}{SingleGroupClass}(object)

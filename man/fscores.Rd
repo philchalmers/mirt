@@ -6,22 +6,30 @@
 \usage{
 fscores(object, method = "EAP", full.scores = TRUE,
   rotate = "oblimin", Target = NULL, response.pattern = NULL,
-  plausible.draws = 0, plausible.type = "normal", quadpts = NULL,
-  returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL,
-  verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6, 6),
-  MI = 0, QMC = FALSE, custom_den = NULL, custom_theta = NULL,
-  min_expected = 1, converge_info = FALSE, max_theta = 20,
-  start = NULL, ...)
+  append_response.pattern = TRUE, na.rm = FALSE, plausible.draws = 0,
+  plausible.type = "normal", quadpts = NULL, returnER = FALSE,
+  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
+  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0,
+  use_dentype_estimate = FALSE, QMC = FALSE, custom_den = NULL,
+  custom_theta = NULL, min_expected = 1, converge_info = FALSE,
+  max_theta = 20, start = NULL, ...)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{DiscreteClass}}
 
-\item{method}{type of factor score estimation method. Can be expected
-a-posteriori (\code{"EAP"}), Bayes modal (\code{"MAP"}), weighted likelihood estimation
-(\code{"WLE"}), maximum likelihood (\code{"ML"}), or expected a-posteriori for sum scores
-(\code{"EAPsum"}). Can also be \code{"plausible"} for a single plausible value imputation for
-each case, and this is equivalent to setting \code{plausible.draws = 1}}
+\item{method}{type of factor score estimation method. Can be:
+\itemize{
+    \item \code{"EAP"} for the expected a-posteriori (default)
+    \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
+    \item \code{"ML"} for maximum likelihood
+    \item \code{"WLE"} for weighted likelihood estimation
+    \item \code{"EAPsum"} for the expected a-posteriori for each sum score
+    \item \code{"plausible"} for a single plausible value imputation for each case.
+      This is equivalent to setting \code{plausible.draws = 1}
+    \item \code{"classify"} for the posteriori classification probabilities (only
+      applicable when the input model was of class \code{MixtureClass})
+ }}
 
 \item{full.scores}{if \code{FALSE} then a summary table with
 factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
@@ -35,6 +43,13 @@ then this argument is ignored}
 
 \item{response.pattern}{an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame}
+
+\item{append_response.pattern}{logical; should the inputs from \code{response.pattern} also be
+appended to the factor score output?}
+
+\item{na.rm}{logical; remove rows with any missing values? This is generally not required due to
+the nature of computing factors scores, however for the "EAPsum" method this may be necessary
+to ensure that the sum-scores correspond to the same composite score}
 
 \item{plausible.draws}{number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
@@ -75,6 +90,10 @@ omitted, a range will be generated automatically based on the number of dimensio
 
 \item{MI}{a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed}
+
+\item{use_dentype_estimate}{logical; if the density of the latent trait was estimated in the model
+(e.g., via Davidian curves or empirical histograms), should this information be used to compute
+the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum, and plausible)}
 
 \item{QMC}{logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 default number of nodes is 5000}
@@ -160,6 +179,10 @@ head(fullscores)
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 #or matrix
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
+
+# return only the scores and their SEs
+fscores(mod, method='MAP', response.pattern = c(1,2,3,4),
+  append_response.pattern=FALSE)
 
 #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)

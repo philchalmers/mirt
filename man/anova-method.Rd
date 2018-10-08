@@ -7,6 +7,7 @@
 \alias{anova,MultipleGroupClass-method}
 \alias{anova,MixedClass-method}
 \alias{anova,DiscreteClass-method}
+\alias{anova,MixtureClass-method}
 \title{Compare nested models with likelihood-based statistics}
 \usage{
 \S4method{anova}{SingleGroupClass}(object, object2, bounded = FALSE,
@@ -26,8 +27,13 @@ is used to obtain the p-value}
 
 \item{verbose}{logical; print additional information to console?}
 }
+\value{
+a \code{data.frame}/\code{mirt_df} object
+}
 \description{
-Compare nested models using likelihood ratio, AIC, BIC, etc.
+Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
+sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
+Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 }
 \examples{
 
@@ -36,12 +42,26 @@ x <- mirt(Science, 1)
 x2 <- mirt(Science, 2)
 anova(x, x2)
 
+# in isolation
+anova(x)
+
 # bounded parameter
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)
 mod2 <- mirt(dat, 1, itemtype = c(rep('2PL', 4), '3PL'))
 anova(mod, mod2) #unbounded test
 anova(mod, mod2, bounded = TRUE) #bounded
+
+# priors
+model <- 'F = 1-5
+          PRIOR = (5, g, norm, -1, 1)'
+mod1b <- mirt(dat, model, itemtype = c(rep('2PL', 4), '3PL'))
+anova(mod1b)
+
+model2 <- 'F = 1-5
+          PRIOR = (1-5, g, norm, -1, 1)'
+mod2b <- mirt(dat, model2, itemtype = '3PL')
+anova(mod1b, mod2b)
 
 }
 }

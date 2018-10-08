@@ -33,26 +33,24 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             for(i in seq_len(length(random))){
                 g[random[[i]]@parnum] <- 0
                 h[random[[i]]@parnum, random[[i]]@parnum] <- -diag(length(random[[i]]@parnum))
-                if(cycles == (RANDSTART - 1L)) #hack for R 3.4.0
-                   deriv <- RandomDeriv(x=random[[i]], estHess=estHess)
             }
         } else {
             for(i in seq_len(length(random))){
-                deriv <- RandomDeriv(x=random[[i]], estHess=estHess)
-                g[random[[i]]@parnum] <- deriv$grad
+                deriv2 <- RandomDeriv(x=random[[i]], estHess=estHess)
+                g[random[[i]]@parnum] <- deriv2$grad
                 if(estHess)
-                    h[random[[i]]@parnum, random[[i]]@parnum] <- deriv$hess
+                    h[random[[i]]@parnum, random[[i]]@parnum] <- deriv2$hess
             }
         }
     }
     if(LRPARS){
-        deriv <- Deriv(lrPars, cov=gstructgrouppars[[1L]]$gcov,
+        deriv3 <- Deriv(lrPars, cov=gstructgrouppars[[1L]]$gcov,
                        theta=gtheta[[1L]][,1L:nfact, drop=FALSE], estHess=estHess)
-        g[lrPars@parnum] <- deriv$grad
+        g[lrPars@parnum] <- deriv3$grad
         if(estHess)
-            for(i in 0L:(ncol(deriv$grad)-1L))
-                h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
-                  lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+            for(i in 0L:(ncol(deriv3$grad)-1L))
+                h[lrPars@parnum[1L:nrow(deriv3$grad) + nrow(deriv3$grad)*i],
+                  lrPars@parnum[1L:nrow(deriv3$grad) + nrow(deriv3$grad)*i]] <- deriv3$hess
 
     }
     if(LR.RAND){
@@ -60,15 +58,13 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             for(i in seq_len(length(lr.random))){
                 g[lr.random[[i]]@parnum] <- 0
                 h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- -diag(length(lr.random[[i]]@parnum))
-                if(cycles == (RANDSTART - 1L)) #hack for R 3.4.0
-                    deriv <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
             }
         } else {
             for(i in seq_len(length(lr.random))){
-                deriv <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
-                g[lr.random[[i]]@parnum] <- deriv$grad
+                deriv4 <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
+                g[lr.random[[i]]@parnum] <- deriv4$grad
                 if(estHess)
-                    h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- deriv$hess
+                    h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- deriv4$hess
             }
         }
     }
@@ -81,10 +77,8 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     }
     grad <- grad[estpars & !redun_constr]
     ave.h <- ave.h[estpars & !redun_constr, estpars & !redun_constr]
-    if(any(is.na(grad) | is.infinite(grad))){
-        stop('Model did not converge (unacceptable gradient caused by extreme parameter values)',
-             call.=FALSE)
-    }
+    if(any(is.infinite(grad) | is.nan(grad)))
+        stop('Inf or NaN values appeared in the gradient', call.=FALSE)
     list(grad=grad, ave.h=ave.h)
 }
 

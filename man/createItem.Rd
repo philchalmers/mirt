@@ -6,7 +6,7 @@
 \usage{
 createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
   lbound = NULL, ubound = NULL, derivType = "Richardson",
-  derivType.hss = "Richardson")
+  derivType.hss = "Richardson", bytecompile = TRUE)
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}
@@ -16,9 +16,24 @@ createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
 \item{est}{a logical vector indicating which parameters should be freely estimated by default}
 
 \item{P}{the probability trace function for all categories (first column is category 1, second
-category two, etc). First input contains a vector of all the item parameters, the second input
-must be a matrix called \code{Theta}, and the third input must be the number of categories
-called \code{ncat}. Function also must return a \code{matrix} object of category probabilities}
+  category two, etc). First input contains a vector of all the item parameters, the second input
+  must be a matrix called \code{Theta}, the third input must be the number of categories
+  called \code{ncat}, and (optionally) a fourth argument termed \code{itemdata}
+  may be included containing further  users specification information.
+  The last optional input is to be utilized within the estimation functions
+  such as \code{\link{mirt}} via the list input \code{customItemsData}
+  to more naturally recycle custom-item definitions. Therefore, these inputs must be of the form
+
+  \code{function(par, Theta, ncat){...}}
+
+  or
+
+  \code{function(par, Theta, ncat, itemdata){...}}
+
+  to be valid; however, the names of the arguements is not relavent.
+
+  Finally, this function must return a \code{matrix} object of category probabilities, where
+  the columns represent each respective category}
 
 \item{gr}{gradient function (vector of first derivatives) of the log-likelihood used in
 estimation. The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object
@@ -54,11 +69,19 @@ extrapolation method; see \code{\link{numerical_deriv}} for details and other op
 \code{'symbolic'} is supplied then the Hessian will be computed using
 a symbolical approach (potentially the most accurate method, though may fail depending
 on how the \code{P} function was defined)}
+
+\item{bytecompile}{logical; where applicable, byte compile the functions provided? Default is
+\code{TRUE} to provide}
 }
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.
 To use the defined objects pass to the \code{mirt(..., customItems = list())} command, and
-ensure that the classes are properly labeled and unique in the list.
+ensure that the classes are properly labeled and unique in the list. Additionally,
+the input \code{mirt(..., customItemsData = list())} can also be included to specify additional
+item-level information to better recycle custom-item defintions (e.g., for supplying varying
+Q-matricies), where the \code{list} input must have the same length as the number of items.
+For further examples regarding how this function can be used for
+fitting unfolding-type models see Liu and Chalmers (2018).
 }
 \details{
 The \code{summary()} function will not return proper standardized loadings since the function
@@ -174,6 +197,10 @@ Tnom.dev(4) \%*\% coef(nommod)[[1]][4:6] #d
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
+
+Liu, C.-W. and Chalmers, R. P. (2018). Fitting item response unfolding models to
+  Likert-scale data using mirt in R. \emph{PLoS ONE, 13}, 5.
+  \doi{https://doi.org/10.1371/journal.pone.0196292}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

@@ -11,13 +11,27 @@
 #' by enclosing the left hand term within brackets. To finish the declaration of
 #' a model simply enter a blank line with only a carriage return (i.e., the
 #' 'enter' or 'return' key), or instead read in an input version of the model syntax.
+#' The associated slopes throughout the package label these coefficients as
+#' \code{a1, a2, ..., ak}, where the associated number is assigned according to the
+#' respective order of the defined factors.
+#'
+#' For example, if the syntax were
+#'
+#' \code{"G = 1-10
+#'        F = 1-5
+#'        A = 6-10"}
+#'
+#' then the \code{G} factor would be assigned the slopes \code{a1} for each item, \code{F} assigned
+#' the slopes \code{a2}, and \code{A} assigned the slopes \code{a3}. The same principle applies to the
+#' \code{\link{bfactor}} function whereby the slopes are automatically included for the specific factors
+#' after the general factor structure has been assigned.
 #'
 #' There is an optional keyword for specifying the correlation between relationships between factors
 #' called \code{COV}, and non-linear factor products can be included by enclosing the product
 #' combination on the left hand side of the declaration (e.g., \code{(F1*F1)} would create a
 #' quadratic factor for \code{F1}).
 #'
-#' Finally, the keywords \code{CONSTRAIN, CONSTRAINB, PRIOR, FIXED, FREE, START, UBOUND, LBOUND} can
+#' The keywords \code{CONSTRAIN, CONSTRAINB, PRIOR, FIXED, FREE, START, UBOUND, LBOUND} can
 #' be applied to specific sub-groups in multiple-group models by included square brackets before the
 #' = sign, where groups are separated by commas. For example, to apply within-group equality
 #' constraints to a group called "male", then specifying:
@@ -32,6 +46,13 @@
 #' For all other groups in the multi-group model, these within-group equality constraints would not appear. Therefore, these
 #' bracketed group specifications are useful when modifying priors, starting values, between/within group equality constraints,
 #' and so on when the specifications for each sub-group may differ.
+#'
+#' Finally, the keyword \code{GROUP} can be used to specify the group-level
+#' hyper-parameter terms, such as the means and variance of the default Gaussian
+#' distribution. For example, to set the starting value of the variance
+#' parameter (\code{COV_11}) to 1.5:
+#'
+#' \code{START = (GROUP, COV_11, 1.5)}
 #'
 #' \describe{
 #'   \item{COV}{Specify the relationship between the latent factors.
