@@ -4,13 +4,14 @@
 \alias{itemfit}
 \title{Item fit statistics}
 \usage{
-itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x, "nitems"),
-  group.bins = 10, group.size = NA, group.fun = mean, mincell = 1,
-  mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30, boot = 1000,
-  boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
-  empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
-  method = "EAP", Theta = NULL, impute = 0, par.strip.text = list(cex =
-  0.7), par.settings = list(strip.background = list(col = "#9ECAE1"),
+itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x,
+  "nitems"), group.bins = 10, group.size = NA, group.fun = mean,
+  mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE, pv_draws = 30,
+  boot = 1000, boot_dfapprox = 200, ETrange = c(-2, 2),
+  ETpoints = 11, empirical.plot = NULL, empirical.CI = 0.95,
+  empirical.table = NULL, method = "EAP", Theta = NULL, impute = 0,
+  par.strip.text = list(cex = 0.7),
+  par.settings = list(strip.background = list(col = "#9ECAE1"),
   strip.border = list(col = "black")), ...)
 }
 \arguments{

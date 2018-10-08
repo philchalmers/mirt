@@ -4,8 +4,9 @@
 \alias{SIBTEST}
 \title{Simultaneous Item Bias Test (SIBTEST)}
 \usage{
-SIBTEST(dat, group, suspect_set, match_set, focal_name, guess_correction = 0,
-  Jmin = 2, pk_focal = FALSE, correction = TRUE, details = FALSE)
+SIBTEST(dat, group, suspect_set, match_set, focal_name,
+  guess_correction = 0, Jmin = 2, pk_focal = FALSE,
+  correction = TRUE, details = FALSE)
 }
 \arguments{
 \item{dat}{integer dataset to be tested containing dichotomous or polytomous responses}

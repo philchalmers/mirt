@@ -4,11 +4,20 @@
 \alias{estfun.AllModelClass}
 \title{Extract Empirical Estimating Functions}
 \usage{
-estfun.AllModelClass(object)
+estfun.AllModelClass(x, weights = x@Internals$survey.weights)
 }
 \arguments{
-\item{object}{a fitted model object of class \code{SingleGroupClass} or
+\item{x}{a fitted model object of class \code{SingleGroupClass} or
 \code{MultipleGroupClass}}
+
+\item{weights}{by default, the \code{survey.weights} which were (optionally)
+specified when fitting the model are included to calculate the scores.
+If specified by the user, this should be a numeric vector of length equal
+to the total sample size. Note that if not all cases were weighted equally
+when fitting the model, the weights must be corrected by taking their
+square root if the scores are being used to compute the outer product of
+gradients (OPG) estimate of the variance-covariance matrix (see examples
+below).}
 }
 \value{
 An n x k matrix corresponding to n observations and k parameters
@@ -27,19 +36,46 @@ the model itself along with its matching normalized density.
 \examples{
 
 \dontrun{
+# fit a 2PL on the LSAT7 data and get the scores
 mod1 <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod")
-(sc1 <- estfun.AllModelClass(mod1))
+sc1 <- estfun.AllModelClass(mod1)
+# get the gradient
 colSums(sc1)
+# calculate the OPG estimate of the variance-covariance matrix "by hand"
 vc1 <- vcov(mod1)
 all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)
 
+# fit a multiple group 2PL and do the same as above
 group <- rep(c("G1", "G2"), 500)
 mod2 <- multipleGroup(expand.table(LSAT7), 1, group, SE = TRUE,
   SE.type = "crossprod")
-(sc2 <- estfun.AllModelClass(mod2))
+sc2 <- estfun.AllModelClass(mod2)
 colSums(sc2)
 vc2 <- vcov(mod2)
 all.equal(crossprod(sc2), chol2inv(chol(vc2)), check.attributes = FALSE)
+
+# fit a bifactor model with 2 specific factors and do the same as above
+mod3 <- bfactor(expand.table(LSAT7), c(2, 2, 1, 1, 2), SE = TRUE,
+  SE.type = "crossprod")
+sc3 <- estfun.AllModelClass(mod3)
+colSums(sc3)
+vc3 <- vcov(mod3)
+all.equal(crossprod(sc3), chol2inv(chol(vc3)), check.attributes = FALSE)
+
+# fit a 2PL, not weighting all cases equally
+survey.weights <- c(rep(2, sum(LSAT7$freq) / 2), rep(1, sum(LSAT7$freq) / 2))
+survey.weights <- survey.weights / sum(survey.weights) * sum(LSAT7$freq)
+mod4 <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod",
+  survey.weights = survey.weights)
+sc4 <- estfun.AllModelClass(mod4, weights = mod4@Internals$survey.weights)
+# get the gradient
+colSums(sc4)
+# to calculate the OPG estimate of the variance-covariance matrix "by hand",
+# the weights must be adjusted by taking their square root
+sc4_crp <- estfun.AllModelClass(mod4,
+  weights = sqrt(mod4@Internals$survey.weights))
+vc4 <- vcov(mod4)
+all.equal(crossprod(sc4_crp), chol2inv(chol(vc4)), check.attributes = FALSE)
 
 }
 }

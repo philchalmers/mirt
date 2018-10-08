@@ -5,8 +5,8 @@
 \title{Compute the M2 model fit statistic}
 \usage{
 M2(obj, calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
-  impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE, suppress = 1,
-  ...)
+  impute = 0, CI = 0.9, residmat = FALSE, QMC = FALSE,
+  suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}

@@ -9,8 +9,9 @@ itemGAM(item, Theta, formula = resp ~ s(Theta, k = 10), CI = 0.95,
   theta_lim = c(-3, 3), return.models = FALSE, ...)
 
 \method{plot}{itemGAM}(x, y = NULL, par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border =
-  list(col = "black")), auto.key = list(space = "right"), ...)
+  par.settings = list(strip.background = list(col = "#9ECAE1"),
+  strip.border = list(col = "black")), auto.key = list(space = "right"),
+  ...)
 }
 \arguments{
 \item{item}{a single poorly fitting item to be investigated. Can be a vector or matrix}
