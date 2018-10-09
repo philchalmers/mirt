@@ -1896,9 +1896,9 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     END_RCPP
 }
 
-RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
-    SEXP RgPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc,
-    SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor)
+RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior,
+    SEXP Rgprior, SEXP RgPriorbetween, SEXP Rtabdata, SEXP Rsitems,
+    SEXP Ritemloc, SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor)
 {
     BEGIN_RCPP
 
@@ -1910,10 +1910,8 @@ RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgpr
     const IntegerMatrix tabdata(Rtabdata);
     const IntegerMatrix sitems(Rsitems);
     const vector<int> itemloc = as< vector<int> >(Ritemloc);
-    const NumericMatrix rs(Rrs); //group stacked
     const NumericMatrix gPriorbetween(RgPriorbetween);
     const vector<double> vone(1.0, 1);
-    // const int nfact = Theta.ncol();
     const int nquad = Theta.nrow();
     const int J = itemloc[itemloc.size()-1] - 1;
     const int nitems = itemloc.size() - 1;
@@ -1982,6 +1980,7 @@ RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgpr
             }
         }
     }
+
     return(gradient);
     END_RCPP
 }
