@@ -52,6 +52,7 @@ Objects which can be extracted from mirt objects include:
   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
     tabulated frequencies}
   \item{exp_resp}{expected probability of the unique response patterns}
+  \item{survey.weights}{if supplied, the vector of survey weights used during estimation (NULL if missing)}
   \item{converged}{a logical value indicating whether the model terminated within
     the convergence criteria}
   \item{iterations}{number of iterations it took to reach the convergence criteria}
