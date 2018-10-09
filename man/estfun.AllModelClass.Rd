@@ -4,7 +4,7 @@
 \alias{estfun.AllModelClass}
 \title{Extract Empirical Estimating Functions}
 \usage{
-estfun.AllModelClass(x, weights = x@Internals$survey.weights)
+estfun.AllModelClass(x, weights = extract.mirt(x, "survey.weights"))
 }
 \arguments{
 \item{x}{a fitted model object of class \code{SingleGroupClass} or
@@ -62,18 +62,19 @@ colSums(sc3)
 vc3 <- vcov(mod3)
 all.equal(crossprod(sc3), chol2inv(chol(vc3)), check.attributes = FALSE)
 
-# fit a 2PL, not weighting all cases equally
+# fit a 2PL not weighting all cases equally
 survey.weights <- c(rep(2, sum(LSAT7$freq) / 2), rep(1, sum(LSAT7$freq) / 2))
 survey.weights <- survey.weights / sum(survey.weights) * sum(LSAT7$freq)
 mod4 <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod",
   survey.weights = survey.weights)
-sc4 <- estfun.AllModelClass(mod4, weights = mod4@Internals$survey.weights)
+sc4 <- estfun.AllModelClass(mod4,
+  weights = extract.mirt(mod4, "survey.weights"))
 # get the gradient
 colSums(sc4)
 # to calculate the OPG estimate of the variance-covariance matrix "by hand",
 # the weights must be adjusted by taking their square root
 sc4_crp <- estfun.AllModelClass(mod4,
-  weights = sqrt(mod4@Internals$survey.weights))
+  weights = sqrt(extract.mirt(mod4, "survey.weights")))
 vc4 <- vcov(mod4)
 all.equal(crossprod(sc4_crp), chol2inv(chol(vc4)), check.attributes = FALSE)
 
