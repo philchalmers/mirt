@@ -452,7 +452,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                                          key=obj@Internals$key))
         if(is(null.mod, 'try-error'))
             stop('Null model did not converge or is not supported', call.=FALSE)
-        null.fit <- M2(null.mod, calcNull=FALSE, type=type, quadpts=1)
+        null.fit <- M2(null.mod, calcNull=FALSE, type=type, quadpts=2)
         newret$TLI <- tli(X2=newret$M2, X2.null=null.fit$M2, df=newret$df,
                           df.null=null.fit$df)
         newret$CFI <- cfi(X2=newret$M2, X2.null=null.fit$M2, df=newret$df,
