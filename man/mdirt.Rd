@@ -306,11 +306,38 @@ coef(mod, simplify=TRUE)
 summary(mod)
 
 
+#------------------
+# Probabilistic Guttman Model (Proctor, 1970)
+
+# example analysis can also be found in the sirt package (see ?prob.guttman)
+data(data.read, package = 'sirt')
+head(data.read)
+
+Theta <- matrix(c(1,0,0,0,
+                  1,1,0,0,
+                  1,1,1,0,
+                  1,1,1,1), 4, byrow=TRUE)
+
+model <- mirt.model("INTERCEPT = 1-12
+                     C1 = 1,7,9,11
+                     C2 = 2,5,8,10,12
+                     C3 = 3,4,6")
+
+mod <- mdirt(data.read, model, customTheta=Theta)
+summary(mod)
+
+M2(mod)
+itemfit(mod)
+
+
 }
 }
 \references{
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+
+Proctor, C. H. (1970). A probabilistic formulation and statistical analysis for Guttman scaling.
+  \emph{Psychometrika, 35}, 73-78.
 \doi{10.18637/jss.v048.i06}
 }
 \seealso{
