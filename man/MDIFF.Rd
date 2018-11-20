@@ -4,13 +4,17 @@
 \alias{MDIFF}
 \title{Compute multidimensional difficulty index}
 \usage{
-MDIFF(x, which.items = NULL)
+MDIFF(x, which.items = NULL, group = NULL)
 }
 \arguments{
-\item{x}{an object of class 'SingleGroupClass'}
+\item{x}{an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
+\code{group} input were supplied}
 
 \item{which.items}{a vector indicating which items to select. If NULL is used
 (the default) then MDISC will be computed for all items}
+
+\item{group}{group argument to pass to \code{\link{extract.group}} function. Required when the input object is
+a multiple-group model}
 }
 \description{
 Returns a matrix containing the MDIFF values (Reckase, 2009). Only supported for items of class

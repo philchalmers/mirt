@@ -4,15 +4,20 @@
 \alias{areainfo}
 \title{Function to calculate the area under a selection of information curves}
 \usage{
-areainfo(x, theta_lim, which.items = 1:extract.mirt(x, "nitems"), ...)
+areainfo(x, theta_lim, which.items = 1:extract.mirt(x, "nitems"),
+  group = NULL, ...)
 }
 \arguments{
-\item{x}{an estimated mirt object}
+\item{x}{an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
+\code{group} input were supplied}
 
 \item{theta_lim}{range of integration to be computed}
 
 \item{which.items}{an integer vector indicating which items to include in the expected information function.
 Default uses all possible items}
+
+\item{group}{group argument to pass to \code{\link{extract.group}} function. Required when the input object is
+a multiple-group model}
 
 \item{...}{additional arguments passed to \code{\link{integrate}}}
 }

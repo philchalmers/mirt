@@ -3,10 +3,13 @@
 #' Compute the area within test or item information over a definite integral range.
 #'
 #' @aliases areainfo
-#' @param x an estimated mirt object
+#' @param x an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
+#'   \code{group} input were supplied
 #' @param theta_lim range of integration to be computed
 #' @param which.items an integer vector indicating which items to include in the expected information function.
 #'   Default uses all possible items
+#' @param group group argument to pass to \code{\link{extract.group}} function. Required when the input object is
+#'   a multiple-group model
 #' @param ... additional arguments passed to \code{\link{integrate}}
 #'
 #' @return a \code{data.frame} with the lower and upper integration range, the information area
@@ -43,11 +46,17 @@
 #'            paste("(", round(100 * area$Proportion, 2), "%)", sep = "")), cex = 1.2)
 #'
 #' }
-areainfo <- function(x, theta_lim, which.items = 1:extract.mirt(x, 'nitems'), ...){
+areainfo <- function(x, theta_lim, which.items = 1:extract.mirt(x, 'nitems'), group = NULL, ...){
+    if(is(x, 'MultipleGroupClass') && is.null(group))
+        stop('Input must be a SingleGroupClass object or a MultipleGroupClass object with a suitable group input',
+             call.=FALSE)
+    if(!is.null(group) && is(x, 'MultipleGroupClass'))
+        x <- extract.group(x=x, group=group)
     f <- function(theta, x, which.items)
         testinfo(x=x, Theta=matrix(theta), which.items=which.items)
     if(missing(x)) missingMsg('x')
     if(missing(theta_lim)) missingMsg('theta_lim')
+    stopifnot(is(x, 'SingleGroupClass'))
     stopifnot(length(theta_lim) == 2L)
     stopifnot(extract.mirt(x, 'nfact') == 1L)
 

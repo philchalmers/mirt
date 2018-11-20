@@ -3,15 +3,16 @@
 #' Given an estimated model compute the test information.
 #'
 #' @aliases testinfo
-#' @param x an estimated mirt object
+#' @param x an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
+#'   \code{group} input were supplied
 #' @param Theta a matrix of latent trait values
 #' @param degrees a vector of angles in degrees that are between 0 and 90.
 #'   Only applicable when the input object is multidimensional
 #' @param individual logical; return a data.frame of information traceline for each item?
-#' @param group a number signifying which group the item should be extracted from (applies to
-#'   'MultipleGroupClass' objects only)
 #' @param which.items an integer vector indicating which items to include in the expected information function.
 #'   Default uses all possible items
+#' @param group group argument to pass to \code{\link{extract.group}} function. Required when the input object is
+#'   a multiple-group model
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -47,6 +48,11 @@
 testinfo <- function(x, Theta, degrees = NULL, group = NULL, individual = FALSE,
                      which.items = 1:extract.mirt(x, 'nitems')){
     if(missing(x)) missingMsg('x')
+    if(is(x, 'MultipleGroupClass') && is.null(group))
+        stop('Input must be a SingleGroupClass object or a MultipleGroupClass object with a suitable group input',
+             call.=FALSE)
+    if(!is.null(group) && is(x, 'MultipleGroupClass'))
+        x <- extract.group(x=x, group=group)
     if(missing(Theta)) missingMsg('Theta')
     if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
     J <- length(extract.mirt(x, 'K'))

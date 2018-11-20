@@ -4,10 +4,14 @@
 \alias{MDISC}
 \title{Compute multidimensional discrimination index}
 \usage{
-MDISC(x)
+MDISC(x, group = NULL)
 }
 \arguments{
-\item{x}{an object of class 'SingleGroupClass'}
+\item{x}{an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
+\code{group} input were supplied}
+
+\item{group}{group argument to pass to \code{\link{extract.group}} function. Required when the input object is
+a multiple-group model}
 }
 \description{
 Returns a vector containing the MDISC values for each item in the model input object (Reckase, 2009).
