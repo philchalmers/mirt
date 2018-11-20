@@ -1089,8 +1089,11 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), M
     pars$value[pars$name %in% c('g', 'u')] <- logit(pars$value[pars$name %in% c('g', 'u')])
     pars$lbound[pars$name %in% c('g', 'u')] <- logit(pars$lbound[pars$name %in% c('g', 'u')])
     pars$ubound[pars$name %in% c('g', 'u')] <- logit(pars$ubound[pars$name %in% c('g', 'u')])
-    if(PrepList[[1L]]$nfact > 1L)
-        PrepList[[1L]]$exploratory <- all(pars$est[pars$name %in% paste0('a', seq_len(PrepList[[1L]]$nfact))])
+    if(PrepList[[1L]]$nfact > 1L){
+        mat <- matrix(pars$est[pars$name %in% paste0('a', seq_len(PrepList[[1L]]$nfact))],
+                      nrow = length(PrepList[[1L]]$K), ncol = PrepList[[1L]]$nfact)
+        PrepList[[1L]]$exploratory <- all(sort(colSums(!mat)) == seq(0L, PrepList[[1L]]$nfact - 1L))
+    }
     ind <- 1L
     for(g in seq_len(length(PrepList))){
         for(i in seq_len(length(PrepList[[g]]$pars))){
