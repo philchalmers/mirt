@@ -30,8 +30,6 @@
 #'
 expand.table <- function(tabdata, sample = FALSE) {
     if(missing(tabdata)) missingMsg('tabdata')
-    if (sum(tabdata[,ncol(tabdata)]) <= nrow(tabdata))
-        stop("Frequencies must be on the right of the data matrix.", call.=FALSE)
     stopifnot(is.data.frame(tabdata) || is.matrix(tabdata))
     freq <- tabdata[,ncol(tabdata)]
     tabdata <- tabdata[,-ncol(tabdata), drop=FALSE]
