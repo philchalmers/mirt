@@ -25,7 +25,7 @@
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model string to be passed to, or a model object returned from, \code{\link{mirt.model}}
 #'   declaring how the global model is to be estimated (useful to apply constraints here)
-#' @param group a character vector indicating group membership
+#' @param group a \code{character} or \code{factor} vector indicating group membership
 #' @param rotate rotation if models are exploratory (see \code{\link{mirt}} for details)
 #' @param invariance a character vector containing the following possible options:
 #'   \describe{

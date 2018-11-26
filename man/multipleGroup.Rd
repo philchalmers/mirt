@@ -14,7 +14,7 @@ numerically ordered data, with missing data coded as \code{NA}}
 \item{model}{string to be passed to, or a model object returned from, \code{\link{mirt.model}}
 declaring how the global model is to be estimated (useful to apply constraints here)}
 
-\item{group}{a character vector indicating group membership}
+\item{group}{a \code{character} or \code{factor} vector indicating group membership}
 
 \item{invariance}{a character vector containing the following possible options:
   \describe{
