@@ -7,7 +7,8 @@ Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
 
-ordinal_itemtypes <- function() c('dich', 'graded', 'gpcm', 'sequential', 'ggum')
+ordinal_itemtypes <- function() c('dich', 'graded', 'gpcm', 'sequential', 'ggum', 'rating', 'spline', 'monopoly',
+                                  'partcomp', 'rsm', 'ideal', 'grsmIRT')
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', Experimental_itemtypes())
