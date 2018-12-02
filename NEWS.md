@@ -1,5 +1,7 @@
 # Changes in mirt 1.30
 
+- SRMSR now reported in `M2()` for GGUMs (suggested by Bo on the mirt-package forum)
+
 - `weights` argument added to `estfun.AllModelClass` to allow for the inclusion
   of `survey.weights` to calculate the scores
 
