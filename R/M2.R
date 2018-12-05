@@ -333,6 +333,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             stop('Fit statistics cannot be computed when there are missing data. Either pass a suitable
                  impute argument to compute statistics following multiple data imputations,
                  or remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
+        if(residmat) stop('residmat not supported when imputing data')
         if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
             warning('Imputing too much data can lead to very conservative results. Use with caution.',
                     call.=FALSE)
