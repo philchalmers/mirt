@@ -53,10 +53,12 @@
 #'     stops when no more items showing DIF are found and returns the items that displayed DIF}
 #' }
 #' @param seq_stat select a statistic to test for in the sequential schemes. Potential values are
-#'   (in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, and \code{'BIC'}.
+#'   (in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
 #'   If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
 #'   (e.g., \code{seq_stat = .05} will test for the difference of p < .05 in the add scheme,
-#'   or p > .05 in the drop scheme), along with the specified \code{p.adjust} input
+#'   or p > .05 in the drop scheme), along with the specified \code{p.adjust} input.
+#'   For models fitted with prior distributions \code{'DIC'} is also supported, though for these models
+#'   the p-value approach is not
 #' @param max_run a number indicating the maximum number of cycles to perform in sequential
 #'   searches. The default is to perform search until no further DIF is found
 #' @param plotdif logical; create item plots for items that are displaying DIF according to the
@@ -214,6 +216,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     if(missing(which.par)) missingMsg('which.par')
     if(!is(MGmodel, 'MultipleGroupClass'))
         stop('Input model must be fitted by multipleGroup()', call.=FALSE)
+    aov <- anova(MGmodel)
+    has_priors <- !is.null(aov$DIC)
+    if(has_priors && is.numeric(seq_stat))
+        stop('p-value seq_stat for models fitted with Bayesian priors in not meaningful. Please select alternative',
+             call.=FALSE)
 
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
@@ -241,7 +248,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     if(is.numeric(seq_stat)){
         pval <- seq_stat
         seq_stat <- 'p'
-    } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC'))){
+    } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC', 'DIC'))){
         stop('Invalid seq_stat input', call.=FALSE)
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
@@ -360,11 +367,15 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                     statdiff <- do.call(c, lapply(res, function(x, stat){
                         if(stat == 'p') return(x[2L, 'p'])
                         return(x[1L, stat] - x[2L, stat])
-                    }, stat = 'p'))
+                    }, stat = seq_stat))
                 }
             }
-            statdiff <- p.adjust(statdiff, p.adjust)
-            keep <- statdiff > pval
+            if(seq_stat == 'p' || Wald){
+                statdiff <- p.adjust(statdiff, p.adjust)
+                keep <- statdiff > pval
+            } else {
+                keep <- !(statdiff < 0 & !sapply(statdiff, closeEnough, low=-1e-4, up=1e-4))
+            }
         }
         which.item <- which(!keep)
         if(length(which.item)){
@@ -386,12 +397,14 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         adj_pvals <- res$adj_pvals
         out <- lapply(res[pick], function(x){
              r <- x[2L, ] - x[1L, ]
-             r[,c("X2", 'df', 'p')] <- x[2L, c("X2", 'df', 'p')]
+             if(!has_priors)
+                r[,c("X2", 'df', 'p')] <- x[2L, c("X2", 'df', 'p')]
+             else r[,c('df', 'Bayes_Factor')] <- x[2L, c('df', 'Bayes_Factor')]
              r$logLik <- NULL
              r
          })
          res <- do.call(rbind, out)
-         res$adj_pvals <- adj_pvals
+         if(!has_priors) res$adj_pvals <- adj_pvals
          class(res) <- c('mirt_df', 'data.frame')
     }
     return(res)

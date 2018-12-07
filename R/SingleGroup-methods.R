@@ -444,6 +444,7 @@ setMethod(
 #' @aliases anova,SingleGroupClass-method
 #'   anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
 #'   anova,MixtureClass-method
+#' @export
 #' @docType methods
 #' @rdname anova-method
 #' @examples
@@ -523,6 +524,7 @@ setMethod(
                               logLik = c(object@Fit$logLik, object2@Fit$logLik),
                               logPost = c(object@Fit$logLik + object@Fit$logPrior,
                                           object2@Fit$logLik + object2@Fit$logPrior),
+                              df = c(NaN, abs(df)),
                               Bayes_Factor = c(NA, exp(BF)))
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
