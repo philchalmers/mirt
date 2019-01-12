@@ -2354,7 +2354,11 @@ missingMsg <- function(string)
 
 myApply <- function(X, MARGIN, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){
-        return(t(parallel::parApply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, MARGIN=MARGIN, FUN=FUN, ...)))
+        if('future.apply' %in% rownames(installed.packages())){
+            return(t(future.apply::future_apply(X=X, MARGIN=MARGIN, FUN=FUN, ...)))
+        } else {
+            return(t(parallel::parApply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, MARGIN=MARGIN, FUN=FUN, ...)))
+        }
     } else {
         return(t(apply(X=X, MARGIN=MARGIN, FUN=FUN, ...)))
     }
@@ -2362,7 +2366,11 @@ myApply <- function(X, MARGIN, FUN, ...){
 
 myLapply <- function(X, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){
-        return(parallel::parLapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
+        if('future.apply' %in% rownames(installed.packages())){
+            return(t(future.apply::future_lapply(X=X, FUN=FUN, ...)))
+        } else {
+            return(parallel::parLapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
+        }
     } else {
         return(lapply(X=X, FUN=FUN, ...))
     }
@@ -2370,7 +2378,11 @@ myLapply <- function(X, FUN, ...){
 
 mySapply <- function(X, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){
-        return(t(parallel::parSapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
+        if('future.apply' %in% rownames(installed.packages())){
+            return(t(future.apply::future_sapply(X=X, FUN=FUN, ...)))
+        } else {
+            return(t(parallel::parSapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
+        }
     } else {
         return(t(sapply(X=X, FUN=FUN, ...)))
     }
