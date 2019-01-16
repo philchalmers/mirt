@@ -1,5 +1,8 @@
 # Changes in mirt 1.30
 
+- `empirical.poly.collapse` argument added to `itemfit()` to plot expected score functions for polytomous
+   items (suggested by Keri Brady)
+
 - SRMSR now reported in `M2()` for GGUMs (suggested by Bo on the mirt-package forum)
 
 - `weights` argument added to `estfun.AllModelClass` to allow for the inclusion
