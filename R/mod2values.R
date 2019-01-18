@@ -28,7 +28,7 @@
 #'
 #' }
 mod2values <- function(x){
-    if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
+    if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass') || is(x, 'MixtureClass')){
         PrepList <- x@ParObjects$pars
         names(PrepList) <- x@Data$groupNames
         MG <- TRUE

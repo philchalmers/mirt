@@ -202,10 +202,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         oldmodel <- model
         PrepList <- vector('list', Data$ngroups)
-        names(PrepList) <- Data$groupNames
         tmp <- 1L:Data$ngroups
         if(opts$dentype == "mixture")
             Data$groupNames <- paste0("MIXTURE_", seq_len(Data$ngroups))
+        names(PrepList) <- Data$groupNames
         model <- buildModelSyntax(model, J=Data$nitems, groupNames=Data$groupNames,
                                   itemtype=itemtype)
         Data$model <- model
