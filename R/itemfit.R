@@ -685,7 +685,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             empirical.plot_points <- empirical.plot_points[,-2]
             colnames(empirical.plot_points) <- c('theta', paste0('p.', 1:K))
             if(empirical.poly.collapse){
-                score <- 1L:ncol(P) - 1L
+                score <- 1L:ncol(empirical.plot_P) - 1L
                 plt1 <- data.frame(ThetaFull, colSums(t(empirical.plot_P) * score))
                 plt2 <- data.frame(empirical.plot_points[,1], colSums(t(empirical.plot_points[,-1]) * score))
                 colnames(plt1) <- colnames(plt2) <- c('Theta', "E")
