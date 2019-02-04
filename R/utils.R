@@ -2252,6 +2252,7 @@ removeMissing <- function(obj){
     dat <- extract.mirt(obj, 'data')
     obj@Data$data <- na.omit(dat)
     pick <- attr(obj@Data$data, 'na.action')
+    if(is.null(pick)) return(obj)
     obj@Data$group <- obj@Data$group[-pick]
     ind1 <- 0L
     for(g in seq_len(length(obj@Data$groupNames))){
