@@ -699,7 +699,7 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
         }
         infos <- det(infos)
         if(closeEnough(infos, -1e-20, 1e-20))
-            stop('Information matrix has a determinate of 0', call.=FALSE)
+            stop('Information matrix has a determinant of 0', call.=FALSE)
     }
     return(-(log(sqrt(infos)) + L))
 }
