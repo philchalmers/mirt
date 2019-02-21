@@ -22,7 +22,8 @@ better accuracy}
 \item{type}{type of residuals to be displayed.
 Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
 X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
-Yen (1984), or \code{'exp'} for the expected values for the frequencies of every response pattern.
+Yen (1984), \code{'exp'} for the expected values for the frequencies of every response pattern,
+and \code{'expfull'} for the expected values for every theoretically observable response pattern.
 For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
 residuals in the form of signed Cramers V coefficients}
 
@@ -74,6 +75,25 @@ residuals(x, tables = TRUE)
 residuals(x, type = 'exp')
 residuals(x, suppress = .15)
 residuals(x, df.p = TRUE)
+
+# Pearson's X2 estimate for goodness-of-fit
+full_table <- residuals(x, type = 'expfull')
+head(full_table)
+X2 <- with(full_table, sum((freq - exp)^2 / exp))
+df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+p <- pchisq(X2, df = df, lower.tail=FALSE)
+data.frame(X2, df, p, row.names='Pearson-X2')
+
+# above FOG test as a function
+PearsonX2 <- function(x){
+   full_table <- residuals(x, type = 'expfull')
+   X2 <- with(full_table, sum((freq - exp)^2 / exp))
+   df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+   p <- pchisq(X2, df = df, lower.tail=FALSE)
+   data.frame(X2, df, p, row.names='Pearson-X2')
+}
+PearsonX2(x)
+
 
 # extract results manually
 out <- residuals(x, df.p = TRUE, verbose=FALSE)

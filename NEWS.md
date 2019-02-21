@@ -1,3 +1,8 @@
+# Changes in mirt 1.31
+
+- `residuals()` gains an `'expfull'` method to compute an expected value table for 
+  all possible response patterns (not just those observed in the data)
+
 # Changes in mirt 1.30
 
 - `empirical.poly.collapse` argument added to `itemfit()` to plot expected score functions for polytomous
