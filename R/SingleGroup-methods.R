@@ -803,7 +803,14 @@ setMethod(
             sv <- mod2values(object)
             itemtype <- extract.mirt(object, 'itemtype')
             nfact <- extract.mirt(object, 'nfact')
-            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN)
+            tmpdat <- matrix(0, nrow=2, ncol=nitems)
+            colnames(tmpdat) <- colnames(tabdata)
+            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large=TRUE,
+                                      technical = list(customK=K))
+            large$tabdata <- poly2dich(tabdata)
+            large$Freq$all <- rep(1L, nrow(tabdata))
+            large$tabdata2 <- matrix(1L)
+            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large=large)
             Pl <- full_object@Internals$Pl
             r <- integer(length(Pl))
             ro <- object@Data$Freq[[1L]]
@@ -814,8 +821,6 @@ setMethod(
             }
             res <- (r - Pl * N) / sqrt(Pl * N)
             expected <- N * Pl
-            ISNA <- is.na(rowSums(tabdata))
-            expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,r,expected,res)
             colnames(tabdata) <- c(colnames(object@Data$data),"freq","exp","res")
             tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]
