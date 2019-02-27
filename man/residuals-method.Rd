@@ -12,7 +12,8 @@
 \S4method{residuals}{SingleGroupClass}(object, type = "LD",
   df.p = FALSE, full.scores = FALSE, QMC = FALSE,
   printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-  suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
+  suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
+  ...)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass} or
@@ -22,7 +23,8 @@ better accuracy}
 \item{type}{type of residuals to be displayed.
 Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
 X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
-Yen (1984), \code{'exp'} for the expected values for the frequencies of every response pattern,
+Yen (1984), \code{'JSI'} for the jack-knife statistic proposed Edwards et al. (2018),
+\code{'exp'} for the expected values for the frequencies of every response pattern,
 and \code{'expfull'} for the expected values for every theoretically observable response pattern.
 For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
 residuals in the form of signed Cramers V coefficients}
@@ -56,6 +58,8 @@ this value will be returned, while all values less than this value will be set t
 
 \item{quadpts}{number of quadrature nodes to use. The default is extracted from model (if available)
 or generated automatically if not available}
+
+\item{fold}{logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
@@ -105,6 +109,28 @@ Theta <- fscores(x)
 residuals(x, type = 'Q3', Theta=Theta)
 residuals(x, type = 'Q3', method = 'ML')
 
+# Edwards et al. (2018) JSI statistic
+N <- 250
+a <- rnorm(10, 1.7, 0.3)
+d <- rnorm(10)
+dat <- simdata(a,d,N=250, itemtype = '2PL')
+
+mod <- mirt(dat, 1)
+residuals(mod, type = 'JSI')
+residuals(mod, type = 'JSI', fold=FALSE) # unfolded
+
+# LD between items 1-2
+aLD <- numeric(10)
+aLD[1:2] <- rnorm(2, 2.55, 0.15)
+a2 <- cbind(a, aLD)
+dat <- simdata(a2,d,N=250, itemtype = '2PL')
+
+mod <- mirt(dat, 1)
+
+# JSI executed in parallel over multiple cores
+mirtCluster()
+residuals(mod, type = 'JSI')
+
 }
 }
 \references{
@@ -114,6 +140,10 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 
 Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
+
+Edwards, M. C., Houts, C. R. & Cai, L. (2018). A Diagnostic Procedure to Detect Departures
+From Local Independence in Item Response Theory Models.
+\emph{Psychological Methods, 23}, 138-149.
 
 Yen, W. (1984). Effects of local item dependence on the fit and equating performance of the three
 parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.

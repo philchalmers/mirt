@@ -1,6 +1,9 @@
 # Changes in mirt 1.31
 
-- `residuals()` gains an `'expfull'` method to compute an expected value table for 
+- `residuals()` gains a `'JSI'` type to compute the JSI statistics proposed 
+  by Edwards et al. (2018)
+
+- `residuals()` gains an `'expfull'` type to compute an expected value table for 
   all possible response patterns (not just those observed in the data)
 
 # Changes in mirt 1.30

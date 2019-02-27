@@ -558,7 +558,8 @@ setMethod(
 #' @param type type of residuals to be displayed.
 #'   Can be either \code{'LD'} or \code{'LDG2'} for a local dependence matrix based on the
 #'   X2 or G2 statistics (Chen & Thissen, 1997), \code{'Q3'} for the statistic proposed by
-#'   Yen (1984), \code{'exp'} for the expected values for the frequencies of every response pattern,
+#'   Yen (1984), \code{'JSI'} for the jack-knife statistic proposed Edwards et al. (2018),
+#'   \code{'exp'} for the expected values for the frequencies of every response pattern,
 #'   and \code{'expfull'} for the expected values for every theoretically observable response pattern.
 #'   For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
 #'   residuals in the form of signed Cramers V coefficients
@@ -575,6 +576,7 @@ setMethod(
 #'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
 #' @param theta_lim range for the integration grid
+#' @param fold logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?
 #' @param quadpts number of quadrature nodes to use. The default is extracted from model (if available)
 #'   or generated automatically if not available
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
@@ -596,6 +598,10 @@ setMethod(
 #'
 #' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 #' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
+#'
+#' Edwards, M. C., Houts, C. R. & Cai, L. (2018). A Diagnostic Procedure to Detect Departures
+#' From Local Independence in Item Response Theory Models.
+#' \emph{Psychological Methods, 23}, 138-149.
 #'
 #' Yen, W. (1984). Effects of local item dependence on the fit and equating performance of the three
 #' parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.
@@ -639,13 +645,35 @@ setMethod(
 #' residuals(x, type = 'Q3', Theta=Theta)
 #' residuals(x, type = 'Q3', method = 'ML')
 #'
+#' # Edwards et al. (2018) JSI statistic
+#' N <- 250
+#' a <- rnorm(10, 1.7, 0.3)
+#' d <- rnorm(10)
+#' dat <- simdata(a, d, N=250, itemtype = '2PL')
+#'
+#' mod <- mirt(dat, 1)
+#' residuals(mod, type = 'JSI')
+#' residuals(mod, type = 'JSI', fold=FALSE) # unfolded
+#'
+#' # LD between items 1-2
+#' aLD <- numeric(10)
+#' aLD[1:2] <- rnorm(2, 2.55, 0.15)
+#' a2 <- cbind(a, aLD)
+#' dat <- simdata(a2, d, N=250, itemtype = '2PL')
+#'
+#' mod <- mirt(dat, 1)
+#'
+#' # JSI executed in parallel over multiple cores
+#' mirtCluster()
+#' residuals(mod, type = 'JSI')
+#'
 #' }
 setMethod(
     f = "residuals",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, ...)
+                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE, ...)
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
@@ -858,6 +886,30 @@ setMethod(
             class(res) <- c('mirt_matrix', 'matrix')
             if(verbose) print(res, ...)
             return(invisible(res))
+        } else if(type == 'JSI'){
+            nfact <- extract.mirt(object, 'nfact')
+            stopifnot(nfact == 1L)
+            nitems <- extract.mirt(object, 'nitems')
+            as_drop <- myLapply(seq_len(nitems), function(item, mod, ...){
+                itemtype <- extract.mirt(mod, 'itemtype')[-item]
+                tmpdat <- extract.mirt(mod, 'data')[,-item]
+                tmpmod <- mirt(tmpdat, 1L, itemtype=itemtype, SE=TRUE, verbose=FALSE, ...)
+                ret <- sapply(coef(tmpmod, printSE=TRUE)[1:ncol(tmpdat)], function(x) x[1L:2L, 'a1'])
+                ret
+            }, mod=object, ...)
+            as <- sapply(coef(object)[1:nitems], function(x) x[1L, 'a1'])
+            retmat <- matrix(NA, nitems, nitems)
+            colnames(retmat) <- rownames(retmat) <- extract.mirt(object, 'itemnames')
+            for(i in seq_len(nitems)){
+                tmp <- as_drop[[i]]
+                pick <- colnames(tmp)
+                zs <- (as[pick] - tmp[1L, ]) / tmp[2L, ]
+                retmat[i, pick] <- zs
+            }
+            if(fold) retmat <- retmat + t(retmat)
+            class(retmat) <- c('mirt_matrix', 'matrix')
+            retmat
+
         } else {
             stop('specified type does not exist', call.=FALSE)
         }
