@@ -89,7 +89,7 @@ dat <- rbind(dat1, dat2)
 #DIF (all other items as anchors)
 SIBTEST(dat, group, suspect_set = 6)
 
-# CSIBTEST with randomization method
+# Include CSIBTEST with randomization method
 SIBTEST(dat, group, suspect_set = 6, LiStout1996 = TRUE)
 
 #DIF (specific anchors)
@@ -134,6 +134,10 @@ SIBTEST(dat, group, 11:30)
 SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
 SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
 SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
+
+# randomization method is fairly poor when smaller matched-set used
+SIBTEST(dat, group, suspect_set = 30, match_set = 1:5, LiStout1996=TRUE)
+SIBTEST(dat, group, suspect_set = 30, LiStout1996=TRUE)
 
 }
 }

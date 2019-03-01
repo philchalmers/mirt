@@ -89,7 +89,7 @@
 #' #DIF (all other items as anchors)
 #' SIBTEST(dat, group, suspect_set = 6)
 #'
-#' # CSIBTEST with randomization method
+#' # Include CSIBTEST with randomization method
 #' SIBTEST(dat, group, suspect_set = 6, LiStout1996 = TRUE)
 #'
 #' #DIF (specific anchors)
@@ -134,6 +134,10 @@
 #' SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
 #' SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
 #' SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
+#'
+#' # randomization method is fairly poor when smaller matched-set used
+#' SIBTEST(dat, group, suspect_set = 30, match_set = 1:5, LiStout1996=TRUE)
+#' SIBTEST(dat, group, suspect_set = 30, LiStout1996=TRUE)
 #'
 #' }
 SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
@@ -304,13 +308,25 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
     p_cross <- pchisq(X2_cross, df, lower.tail = FALSE)
     B_vec <- numeric(permute)
     sigma_cross <- NA
+    ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
+                      n_suspect_set = length(suspect_set),
+                      beta = c(beta_uni, beta_cross), SE=c(sigma_uni, NA),
+                      X2=c(X2_uni, X2_cross),
+                      df=c(1, df), p = c(p_uni, p_cross))
+    rownames(ret) <- c('SIBTEST', 'CSIBTEST')
     if(LiStout1996){
-        df <- NA
         crossvec <- find_intersectionNA(ystar_ref_vec - ystar_focal_vec, pmax(tab_ref, tab_focal),
-                                      use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
+                                        use = pmax(tab_ref, tab_focal)/N > .01, scores=scores)
+        beta_cross2 <- 0
+        for(kk in seq_len(length(tab_scores))){
+            if(!II[kk] || is.na(crossvec[kk])) next
+            if(!crossvec[kk]) beta_cross2 <- beta_cross2 + pkstar[kk] * (ystar_ref_vec[kk] - ystar_focal_vec[kk])
+            else beta_cross2 <- beta_cross2 + pkstar[kk] * (ystar_focal_vec[kk] - ystar_ref_vec[kk])
+        }
         sigma_cross <- sqrt(sum((pkstar^2 * (sigma_focal/tab_focal + sigma_ref/tab_ref))[!is.na(crossvec)],
                               na.rm = TRUE))
-        B <- abs(beta_uni/sigma_cross)
+        beta_cross2 <- abs(beta_cross2)
+        B <- abs(beta_cross2/sigma_cross)
         for(p in 1L:permute){
             diff <- sample(c(-1,1), length(ystar_ref_vec), replace = TRUE) *
                 (ystar_ref_vec - ystar_focal_vec)
@@ -324,14 +340,16 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
             }
             B_vec[p] <- beta/sigma_cross
         }
-        p_cross <- mean(abs(B_vec) >= B)
+        p_cross2 <- mean(abs(B_vec) >= B)
+        ret <- rbind(ret, data.frame(focal_group=focal_name, n_matched_set=length(match_set),
+                                     n_suspect_set = length(suspect_set),
+                                     beta = beta_cross2, SE=sigma_cross,
+                                     X2=B^2,
+                                     df=NA, p = p_cross2))
+        rownames(ret) <- c('SIBTEST', 'CSIBTEST', 'CSIBTEST_randomized')
     }
-    ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
-                      n_suspect_set = length(suspect_set),
-                      beta = c(beta_uni, beta_cross), SE=c(sigma_uni, sigma_cross),
-                      X2=c(X2_uni, X2_cross),
-                      df=c(1, df), p = c(p_uni, p_cross))
-    rownames(ret) <- c('SIBTEST', 'CSIBTEST')
+
+
     class(ret) <- c('mirt_df', 'data.frame')
     if(details){
         ret <- data.frame(pkstar=unname(as.numeric(pkstar)),
