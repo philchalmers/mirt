@@ -113,7 +113,7 @@ residuals(x, type = 'Q3', method = 'ML')
 N <- 250
 a <- rnorm(10, 1.7, 0.3)
 d <- rnorm(10)
-dat <- simdata(a,d,N=250, itemtype = '2PL')
+dat <- simdata(a, d, N=250, itemtype = '2PL')
 
 mod <- mirt(dat, 1)
 residuals(mod, type = 'JSI')
@@ -123,7 +123,7 @@ residuals(mod, type = 'JSI', fold=FALSE) # unfolded
 aLD <- numeric(10)
 aLD[1:2] <- rnorm(2, 2.55, 0.15)
 a2 <- cbind(a, aLD)
-dat <- simdata(a2,d,N=250, itemtype = '2PL')
+dat <- simdata(a2, d, N=250, itemtype = '2PL')
 
 mod <- mirt(dat, 1)
 

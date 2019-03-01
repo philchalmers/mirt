@@ -6,8 +6,8 @@
 \usage{
 SIBTEST(dat, group, suspect_set, match_set,
   focal_name = unique(group)[2], guess_correction = 0, Jmin = 5,
-  na.rm = FALSE, pk_focal = FALSE, correction = TRUE,
-  details = FALSE)
+  na.rm = FALSE, LiStout1996 = FALSE, permute = 1000,
+  pk_focal = FALSE, correction = TRUE, details = FALSE)
 }
 \arguments{
 \item{dat}{integer-based dataset to be tested, containing dichotomous or polytomous responses}
@@ -38,6 +38,12 @@ reference groups conditioned on the matched set}
 rows with missing data will be removed, as well as the corresponding elements in the \code{group}
 input}
 
+\item{LiStout1996}{logical; perform the crossing test for non-compensatory bias
+using Li and Stout's (1996) permutation approach? Default is \code{FALSE}, which uses the
+Chalmers (2018) mixed degrees of freedom method}
+
+\item{permute}{number of permutations to perform when \code{LiStout1996 = TRUE}. Default is 1000}
+
 \item{pk_focal}{logical; using the group weights from the focal group instead of the total
 sample? Default is FALSE as per Shealy and Stout's recommendation}
 
@@ -60,8 +66,8 @@ differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
 supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymptotic sampling
 distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
-Chalmers (2018). For convenience, the beta coefficient for CSIBTEST is always reported as an
-absolute value.
+Chalmers (2018) and the permutation method described by Li and Stout (1996).
+For convenience, the beta coefficient for CSIBTEST is always reported as an absolute value.
 }
 \examples{
 
@@ -83,8 +89,12 @@ dat <- rbind(dat1, dat2)
 #DIF (all other items as anchors)
 SIBTEST(dat, group, suspect_set = 6)
 
+# CSIBTEST with randomization method
+SIBTEST(dat, group, suspect_set = 6, LiStout1996 = TRUE)
+
 #DIF (specific anchors)
 SIBTEST(dat, group, match_set = 1:5, suspect_set = 6)
+SIBTEST(dat, group, match_set = 1:5, suspect_set = 6, LiStout1996=TRUE)
 
 # DBF (all and specific anchors, respectively)
 SIBTEST(dat, group, suspect_set = 11:30)
