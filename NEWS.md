@@ -1,5 +1,8 @@
 # Changes in mirt 1.31
 
+- `SIBTEST()` gains a `plot` argument to create various plots depicting the (weighted) differences 
+  between the focal subtest versus the matched subtest information
+
 - `residuals()` gains a `'JSI'` type to compute the JSI statistics proposed 
   by Edwards et al. (2018)
 

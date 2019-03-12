@@ -44,6 +44,14 @@
 #'   composite scores using the true-score regression technique? Default is \code{TRUE},
 #'   reflecting Shealy and Stout's linear extrapolation method
 #' @param details logical; return a data.frame containing the details required to compute SIBTEST?
+#' @param plot a character input indicating the type of plot to construct. Options are \code{'none'}
+#'   (default), \code{'observed'} for the scaled focal subtest scores against the matched subtest
+#'   scores, \code{'weights'} for the proportion weights used (i.e., the proportion of observations at
+#'   each matched score), \code{'difference'} for the difference between the scaled focal subtest scores
+#'   against the matched subtest scores, and \code{'wdifference'} for the conditional differences multiplied
+#'   by each respective weight. Note that the last plot reflects the compnents used in SIBTEST, and therefore
+#'   the sum of these plotted observations will equal the beta coefficient for SIBTEST
+#' @param ... additional plotting arguments to be passed
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords SIBTEST, crossing SIBTEST
@@ -86,13 +94,18 @@
 #' dat2 <- simdata(a, d, N*2, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
 #'
-#' #DIF (all other items as anchors)
+#' # DIF (all other items as anchors)
 #' SIBTEST(dat, group, suspect_set = 6)
+#'
+#' # Some plots depicting the above tests
+#' SIBTEST(dat, group, suspect_set = 6, plot = 'observed')
+#' SIBTEST(dat, group, suspect_set = 6, plot = 'weights')
+#' SIBTEST(dat, group, suspect_set = 6, plot = 'wdifference')
 #'
 #' # Include CSIBTEST with randomization method
 #' SIBTEST(dat, group, suspect_set = 6, LiStout1996 = TRUE)
 #'
-#' #DIF (specific anchors)
+#' # DIF (specific anchors)
 #' SIBTEST(dat, group, match_set = 1:5, suspect_set = 6)
 #' SIBTEST(dat, group, match_set = 1:5, suspect_set = 6, LiStout1996=TRUE)
 #'
@@ -100,7 +113,7 @@
 #' SIBTEST(dat, group, suspect_set = 11:30)
 #' SIBTEST(dat, group, match_set = 1:5, suspect_set = 11:30)
 #'
-#' #DTF
+#' # DTF
 #' SIBTEST(dat, group, suspect_set = 11:30)
 #' SIBTEST(dat, group, match_set = 1:10) #equivalent
 #'
@@ -111,12 +124,12 @@
 #' SIBTEST(dat, group, 6:30)
 #' SIBTEST(dat, group, 11:30)
 #'
-#' #DIF testing with anchors 1 through 5
+#' # DIF testing with anchors 1 through 5
 #' SIBTEST(dat, group, 6, match_set = 1:5)
 #' SIBTEST(dat, group, 7, match_set = 1:5)
 #' SIBTEST(dat, group, 8, match_set = 1:5)
 #'
-#' #DIF testing with all other items as anchors
+#' # DIF testing with all other items as anchors
 #' SIBTEST(dat, group, 6)
 #' SIBTEST(dat, group, 7)
 #' SIBTEST(dat, group, 8)
@@ -130,7 +143,12 @@
 #' SIBTEST(dat, group, 6:30)
 #' SIBTEST(dat, group, 11:30)
 #'
-#' #DIF testing using valid anchors
+#' # Some plots depicting the above tests
+#' SIBTEST(dat, group, suspect_set = 11:30, plot = 'observed')
+#' SIBTEST(dat, group, suspect_set = 11:30, plot = 'weights')
+#' SIBTEST(dat, group, suspect_set = 11:30, plot = 'wdifference')
+#'
+#' # DIF testing using valid anchors
 #' SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
 #' SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
 #' SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
@@ -142,7 +160,8 @@
 #' }
 SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
                     guess_correction = 0, Jmin = 5, na.rm = FALSE, LiStout1996 = FALSE,
-                    permute = 1000, pk_focal = FALSE, correction = TRUE, details = FALSE){
+                    permute = 1000, pk_focal = FALSE, correction = TRUE, details = FALSE,
+                    plot = 'none', ...){
 
     CA <- function(dat, guess_correction = rep(0, ncol(dat))){
         n <- ncol(dat)
@@ -348,8 +367,6 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                                      df=NA, p = p_cross2))
         rownames(ret) <- c('SIBTEST', 'CSIBTEST', 'CSIBTEST_randomized')
     }
-
-
     class(ret) <- c('mirt_df', 'data.frame')
     if(details){
         ret <- data.frame(pkstar=unname(as.numeric(pkstar)),
@@ -358,6 +375,38 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                           Ystar_focal=ystar_focal_vec, Ystar_ref=ystar_ref_vec,
                           row.names = names(pkstar))
         if(LiStout1996) attr(ret, "B_vec") <- B_vec
+    }
+    if(plot != 'none'){
+        ret <- data.frame(total_score = 1:length(pkstar) - 1,
+                          pkstar=unname(as.numeric(pkstar)),
+                          Ystar=c(ystar_focal_vec, ystar_ref_vec),
+                          Ystar_diff =ystar_focal_vec - ystar_ref_vec,
+                          Ystar_diff_pkstar =unname((ystar_focal_vec - ystar_ref_vec)*as.numeric(pkstar)),
+                          group = rep(c('focal', 'reference'), each=length(pkstar)))
+        if(plot != "freq")
+            for(i in 1L:nrow(ret))
+                if(ret$pkstar[i] == 0) ret[i, ] <- NA
+        if(plot == "observed")
+            return(lattice::xyplot(Ystar ~ total_score, data=ret, groups = group, xlab='Matched subtest',
+                                   ylab = 'Scaled focal subtest', auto.key=list(space='right'), ...))
+        if(plot == "weights")
+            return(lattice::xyplot(pkstar~total_score, data=subset(ret, group=='focal'),
+                                   xlab='Matched subtest', ylab = 'Proportion', type = 'b', ...))
+        if(plot == "difference")
+            return(lattice::xyplot(Ystar_diff~total_score, data=subset(ret, group=='focal'),
+                                   xlab='Matched subtest', ylab = 'Focal subtest difference',
+                                   panel = function(x, y, ...){
+                                       panel.xyplot(x, y, ...)
+                                       panel.abline(h=0, lty=2, col='red')
+                                   }, ...))
+        if(plot == "wdifference")
+            return(lattice::xyplot(Ystar_diff_pkstar~total_score, data=subset(ret, group=='focal'),
+                                   xlab='Matched subtest', ylab = 'Weighted focal subtest difference',
+                                   panel = function(x, y, ...){
+                                       panel.xyplot(x, y, ...)
+                                       panel.abline(h=0, lty=2, col='red')
+                                   }, ...))
+        stop('plot argument not supported', call.=FALSE)
     }
     ret
 }
