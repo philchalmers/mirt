@@ -28,6 +28,9 @@
 #'   when using sequential schemes)
 #' @param return_models logical; return estimated model objects for further analysis?
 #'   Default is FALSE
+#' @param return_seq_model logical; on the last iteration of the sequential schemes, return
+#'   the fitted multiple-group model containing the freely estimated parameters indicative of
+#'   DIF? This is generally only useful when \code{scheme = 'add_sequential'}. Default is FALSE
 #' @param simplify logical; simplify the output by returning a data.frame object with
 #'   the differences between AIC, BIC, etc, as well as the chi-squared test (X2) and associated
 #'   df and p-values
@@ -45,12 +48,15 @@
 #'     loop treat DIF tests that satisfy the \code{seq_stat} criteria as invariant. The loop is
 #'     then re-run on the remaining invariant items to determine if they are now displaying DIF in
 #'     the less constrained model, and when no new invariant item is found the algorithm stops and
-#'     returns the items that displayed DIF}
+#'     returns the items that displayed DIF. Note that the DIF statistics are relative to this final,
+#'     less constrained model which includes the DIF effects}
 #'   \item{'drop_sequential'}{sequentially loop over the items being tested, and at the end of the
 #'     loop treat items that violate the \code{seq_stat} criteria as demonstrating DIF. The loop is
 #'     then re-run, leaving the items that previously demonstrated DIF as variable across groups,
 #'     and the remaining test items that previously showed invariance are re-tested. The algorithm
-#'     stops when no more items showing DIF are found and returns the items that displayed DIF}
+#'     stops when no more items showing DIF are found and returns the items that displayed DIF.
+#'     Note that the DIF statistics are relative to this final,
+#'     less constrained model which includes the DIF effects}
 #' }
 #' @param seq_stat select a statistic to test for in the sequential schemes. Potential values are
 #'   (in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
@@ -88,7 +94,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' #simulate data where group 2 has a smaller slopes and more extreme intercepts
+#' # simulate data where group 2 has a smaller slopes and more extreme intercepts
 #' set.seed(12345)
 #' a1 <- a2 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 #' d1 <- d2 <- matrix(rnorm(15,0,.7),ncol=1)
@@ -115,55 +121,54 @@
 #' DIF(model, c('a1', 'd'))
 #' DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
 #'
-#' #same as above, but using Wald tests with Benjamini & Hochberg adjustment
+#' # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 #' DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
 #'
-#' # equate the groups by assuming the first 10 items have no DIF
+#' # equate the groups by assuming the last 5 items have no DIF
 #' itemnames <- colnames(dat)
 #' model <- multipleGroup(dat, 1, group, SE = TRUE,
-#'    invariance = c(itemnames[1:10], 'free_means', 'free_var'))
+#'    invariance = c(itemnames[11:ncol(dat)], 'free_means', 'free_var'))
 #'
-#' #test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
-#' resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)
+#' # test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
+#' resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE, items2test=1:10)
 #' resulta1d
 #'
-#' #test whether adding only slope constraints results in DIF for all items
-#' DIF(model, 'a1')
+#' # test whether adding only slope constraints results in DIF for all items
+#' DIF(model, 'a1', items2test=1:10)
 #'
-#' #Determine whether it's a1 or d parameter causing DIF (could be joint, however)
-#' (a1s <- DIF(model, 'a1', items2test = 11:13))
-#' (ds <- DIF(model, 'd', items2test = 11:13))
-#'
-#' ####
-#' # using items 4 to 15 as anchors to test for DIF after adjusting for latent-trait differences
-#' itemnames <- colnames(dat)
-#' model_anchor <- multipleGroup(dat, model = 1, group = group,
-#'   invariance = c(itemnames[4:15], 'free_means', 'free_var'))
-#' anchor <- DIF(model_anchor, c('a1', 'd'), items2test = 1:3)
-#' anchor
+#' # Determine whether it's a1 or d parameter causing DIF (could be joint, however)
+#' (a1s <- DIF(model, 'a1', items2test = 1:3))
+#' (ds <- DIF(model, 'd', items2test = 1:3))
 #'
 #' ### drop down approach (freely estimating parameters across groups) when
 #' ### specifying a highly constrained model with estimated latent parameters
 #' model_constrained <- multipleGroup(dat, 1, group,
 #'   invariance = c(colnames(dat), 'free_means', 'free_var'))
-#' dropdown <- DIF(model_constrained, 'd', scheme = 'drop')
+#' dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 #' dropdown
+#'
+#' ### sequential schemes
 #'
 #' ### sequential searches using SABIC as the selection criteria
 #' # starting from completely different models
-#' model <- multipleGroup(dat, 1, group)
-#' stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential')
+#' stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
+#'               items2test=1:10)
 #' stepup
 #'
-#' #step down procedure for highly constrained model
-#' model <- multipleGroup(dat, 1, group,
-#'   invariance = c(itemnames, 'free_means', 'free_var'))
-#' stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
+#' # step down procedure for highly constrained model
+#' stepdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop_sequential')
 #' stepdown
+#'
+#' # view final MG model (only useful when scheme is 'add_sequential')
+#' updated_mod <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
+#'                return_seq_model=TRUE)
+#' plot(updated_mod, type='trace')
+#'
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
-                max_run = Inf, plotdif = FALSE, type = 'trace', simplify = TRUE, verbose = TRUE, ...){
+                return_seq_model = FALSE, max_run = Inf, plotdif = FALSE, type = 'trace',
+                simplify = TRUE, verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
                           return_models, ...)
@@ -224,8 +229,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
 
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
-        message('No hyper-parameters were estimated in the DIF model. For effective
-                \tDIF testing, freeing the focal group hyper-parameters is recommended.')
+        message(paste('No hyper-parameters were estimated in the DIF model. For effective',
+                'DIF testing, freeing the focal group hyper-parameters is recommended.'))
     bfactorlist <- MGmodel@Internals$bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
         stop('bifactor models are currently not supported in this function', call.=FALSE)
@@ -283,11 +288,17 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                     keep <- statdiff > 0
                 else keep <- statdiff < 0
             }
+            if(run_number == 2L && all(!keep)){
+                ret <- data.frame()
+                class(ret) <- c('mirt_df', 'data.frame')
+                return(ret)
+            }
             if(all(keep == lastkeep)) break
-            lastkeep <- keep
+            if(drop && run_number > 2L){
+                lastkeep <- keep | lastkeep
+            } else lastkeep <- keep
             if(verbose)
-                cat(sprintf('\rChecking for DIF in %d more items',
-                            ifelse(drop, sum(keep), sum(!keep))))
+                cat(sprintf('\rChecking for DIF in %d more items', sum(!keep)))
             if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
             constrain <- updatedModel@Model$constrain
             for(j in seq_len(length(keep))){
@@ -327,9 +338,10 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         }
         if(verbose)
             cat('\nComputing final DIF estimates...\n')
-        pick <- !keep
+        pick <- !lastkeep
         if(drop) pick <- !pick
-        res <- myLapply(X=items2test[pick], FUN=loop_test, model=MGmodel,
+        if(return_seq_model) return(updatedModel)
+        res <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
                         which.par=which.par, values=values, Wald=Wald, drop=drop,
                         itemnames=itemnames, invariance=invariance, return_models=return_models,
                         ...)

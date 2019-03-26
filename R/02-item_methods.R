@@ -145,10 +145,12 @@ symbolicHessian_par <- function(x, Theta, dp1 = NULL, dp2 = NULL, P = NULL){
 print.mirt_df <- function(x, digits = 3, ...){
     cls <- class(x)[2L]
     class(x) <- cls
-    clsss <- sapply(x, class)
-    for(i in 1:length(clsss))
-        if(clsss[i] == 'numeric')
-            x[,i] <- round(x[,i], digits=digits)
+    if(nrow(x) > 0){
+        clsss <- sapply(x, class)
+        for(i in 1:length(clsss))
+            if(clsss[i] == 'numeric')
+                x[,i] <- round(x[,i], digits=digits)
+    }
     print(x, ...)
 }
 

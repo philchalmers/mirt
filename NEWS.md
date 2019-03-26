@@ -1,5 +1,11 @@
 # Changes in mirt 1.31
 
+- Added `return_seq_model` to  `DIF()` to return the final MG model on the last iteration of the
+  sequential search schemes
+
+- Bugfix in `DIF()` when sequential scheme was selected but no items contained DIF on the first
+  iteration (reported by Scott Withrow)
+
 - `SIBTEST()` gains a `plot` argument to create various plots depicting the (weighted) differences 
   between the focal subtest versus the matched subtest information
 

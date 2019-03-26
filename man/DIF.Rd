@@ -7,8 +7,8 @@
 DIF(MGmodel, which.par, scheme = "add",
   items2test = 1:extract.mirt(MGmodel, "nitems"), seq_stat = "SABIC",
   Wald = FALSE, p.adjust = "none", return_models = FALSE,
-  max_run = Inf, plotdif = FALSE, type = "trace", simplify = TRUE,
-  verbose = TRUE, ...)
+  return_seq_model = FALSE, max_run = Inf, plotdif = FALSE,
+  type = "trace", simplify = TRUE, verbose = TRUE, ...)
 }
 \arguments{
 \item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference
@@ -31,12 +31,15 @@ DIF}
     loop treat DIF tests that satisfy the \code{seq_stat} criteria as invariant. The loop is
     then re-run on the remaining invariant items to determine if they are now displaying DIF in
     the less constrained model, and when no new invariant item is found the algorithm stops and
-    returns the items that displayed DIF}
+    returns the items that displayed DIF. Note that the DIF statistics are relative to this final,
+    less constrained model which includes the DIF effects}
   \item{'drop_sequential'}{sequentially loop over the items being tested, and at the end of the
     loop treat items that violate the \code{seq_stat} criteria as demonstrating DIF. The loop is
     then re-run, leaving the items that previously demonstrated DIF as variable across groups,
     and the remaining test items that previously showed invariance are re-tested. The algorithm
-    stops when no more items showing DIF are found and returns the items that displayed DIF}
+    stops when no more items showing DIF are found and returns the items that displayed DIF.
+    Note that the DIF statistics are relative to this final,
+    less constrained model which includes the DIF effects}
 }}
 
 \item{items2test}{a numeric vector, or character vector containing the item names, indicating
@@ -60,6 +63,10 @@ Adjustments are located in the \code{adj_pvals} element in the returned list}
 
 \item{return_models}{logical; return estimated model objects for further analysis?
 Default is FALSE}
+
+\item{return_seq_model}{logical; on the last iteration of the sequential schemes, return
+the fitted multiple-group model containing the freely estimated parameters indicative of
+DIF? This is generally only useful when \code{scheme = 'add_sequential'}. Default is FALSE}
 
 \item{max_run}{a number indicating the maximum number of cycles to perform in sequential
 searches. The default is to perform search until no further DIF is found}
@@ -99,7 +106,7 @@ item parameter estimates do not contain latent distribution characteristics.
 \examples{
 \dontrun{
 
-#simulate data where group 2 has a smaller slopes and more extreme intercepts
+# simulate data where group 2 has a smaller slopes and more extreme intercepts
 set.seed(12345)
 a1 <- a2 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d1 <- d2 <- matrix(rnorm(15,0,.7),ncol=1)
@@ -126,51 +133,49 @@ model <- multipleGroup(dat, 1, group, SE = TRUE)
 DIF(model, c('a1', 'd'))
 DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
 
-#same as above, but using Wald tests with Benjamini & Hochberg adjustment
+# same as above, but using Wald tests with Benjamini & Hochberg adjustment
 DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
 
-# equate the groups by assuming the first 10 items have no DIF
+# equate the groups by assuming the last 5 items have no DIF
 itemnames <- colnames(dat)
 model <- multipleGroup(dat, 1, group, SE = TRUE,
-   invariance = c(itemnames[1:10], 'free_means', 'free_var'))
+   invariance = c(itemnames[11:ncol(dat)], 'free_means', 'free_var'))
 
-#test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
-resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE)
+# test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
+resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE, items2test=1:10)
 resulta1d
 
-#test whether adding only slope constraints results in DIF for all items
-DIF(model, 'a1')
+# test whether adding only slope constraints results in DIF for all items
+DIF(model, 'a1', items2test=1:10)
 
-#Determine whether it's a1 or d parameter causing DIF (could be joint, however)
-(a1s <- DIF(model, 'a1', items2test = 11:13))
-(ds <- DIF(model, 'd', items2test = 11:13))
-
-####
-# using items 4 to 15 as anchors to test for DIF after adjusting for latent-trait differences
-itemnames <- colnames(dat)
-model_anchor <- multipleGroup(dat, model = 1, group = group,
-  invariance = c(itemnames[4:15], 'free_means', 'free_var'))
-anchor <- DIF(model_anchor, c('a1', 'd'), items2test = 1:3)
-anchor
+# Determine whether it's a1 or d parameter causing DIF (could be joint, however)
+(a1s <- DIF(model, 'a1', items2test = 1:3))
+(ds <- DIF(model, 'd', items2test = 1:3))
 
 ### drop down approach (freely estimating parameters across groups) when
 ### specifying a highly constrained model with estimated latent parameters
 model_constrained <- multipleGroup(dat, 1, group,
   invariance = c(colnames(dat), 'free_means', 'free_var'))
-dropdown <- DIF(model_constrained, 'd', scheme = 'drop')
+dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 dropdown
+
+### sequential schemes
 
 ### sequential searches using SABIC as the selection criteria
 # starting from completely different models
-model <- multipleGroup(dat, 1, group)
-stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential')
+stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
+              items2test=1:10)
 stepup
 
-#step down procedure for highly constrained model
-model <- multipleGroup(dat, 1, group,
-  invariance = c(itemnames, 'free_means', 'free_var'))
-stepdown <- DIF(model, c('a1', 'd'), scheme = 'drop_sequential')
+# step down procedure for highly constrained model
+stepdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop_sequential')
 stepdown
+
+# view final MG model (only useful when scheme is 'add_sequential')
+updated_mod <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
+               return_seq_model=TRUE)
+plot(updated_mod, type='trace')
+
 }
 }
 \references{
