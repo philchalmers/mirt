@@ -1,7 +1,7 @@
 #' Function to calculate the marginal reliability
 #'
-#' Given an estimated model and a prior density function, compute the marginal reliability. This is only
-#' available for unidimensional tests.
+#' Given an estimated model and a prior density function, compute the marginal reliability
+#' (Thissen and Wainer, 2001). This is only available for unidimensional tests.
 #'
 #' @aliases marginal_rxx
 #' @param mod an object of class \code{'SingleGroupClass'}
@@ -14,6 +14,9 @@
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
+#'
+#' Thissen, D. and Wainer, H. (2001). Test Scoring. Lawrence Erlbaum Associates.
+#'
 #' @keywords reliability
 #' @export marginal_rxx
 #' @seealso \code{\link{empirical_rxx}}, \code{\link{extract.group}}, \code{\link{testinfo}}
