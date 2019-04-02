@@ -374,20 +374,22 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
-        if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
-        if(MC)
-            gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
-                                  nfact=nfact, pars=pars, QMC=QMC)
-        tmp <- updatePrior(pars=pars, gTheta=gTheta,
-                           list=list, ngroups=ngroups, nfact=nfact,
-                           J=J, dentype=dentype, sitems=sitems, cycles=cycles,
-                           rlist=rlist, full=full, lrPars=lrPars, MC=MC)
-        prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
-        Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
-                       Priorbetween=Priorbetween, specific=specific, sitems=sitems,
-                       ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                       dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
-        rlist <- Elist$rlist; LL <- Elist$LL
+        if(!is.na(TOL) && !is.nan(TOL)){
+            if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
+            if(MC)
+                gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
+                                      nfact=nfact, pars=pars, QMC=QMC)
+            tmp <- updatePrior(pars=pars, gTheta=gTheta,
+                               list=list, ngroups=ngroups, nfact=nfact,
+                               J=J, dentype=dentype, sitems=sitems, cycles=cycles,
+                               rlist=rlist, full=full, lrPars=lrPars, MC=MC)
+            prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
+            Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
+                           Priorbetween=Priorbetween, specific=specific, sitems=sitems,
+                           ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+            rlist <- Elist$rlist; LL <- Elist$LL
+        }
         if(verbose && !is.nan(TOL) && !is.na(TOL)) cat("\n")
         if(cycles == NCYCLES){
             if(list$message)
