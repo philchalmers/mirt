@@ -216,7 +216,7 @@ gamma.cor <- function(x)
 {
 	concordant <- function(x){
 			mat.lr <- function(r, c, r.x, c.x){
-				lr <- x[(r.x > r) & (c.x > c)]
+				lr <- as.numeric(x[(r.x > r) & (c.x > c)])
 				sum(lr)
 			}
 		r.x <- row(x)
@@ -225,7 +225,7 @@ gamma.cor <- function(x)
 	}
 	discordant <- function(x){
 		mat.ll <- function(r, c, r.x, c.x){
-			ll <- x[(r.x > r) & (c.x < c)]
+			ll <- as.numeric(x[(r.x > r) & (c.x < c)])
 			sum(ll)
 		}
 		r.x <- row(x)
