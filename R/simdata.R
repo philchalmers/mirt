@@ -455,6 +455,10 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             } else if(itemtype[i] == 'lca'){
                 par <- na.omit(a[i, ])
             } else {
+                if(itemtype[i] == 'nominal'){
+                    if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
+                        stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
+                }
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
             }
             obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
