@@ -8,9 +8,9 @@ test_that('GGUM', {
     expect_equal(cfs, c(1.049862,1.218629,2.280344,0.7421556,4.869889,2.917697,5.214802,NA,2.645195,0.8993259,2.206224,NA,-1.469685,-2.262823,-1.957192,NA,NA,NA,NA,3.477198,NA,NA,NA,6.342889,NA,NA,NA,4.566828,NA,NA,NA,1.719266), tolerance = 1e-3)
     expect_equal(logLik(mod), -1609.924, tolerance = 1e-4)
     fs <- fscores(mod)
-    expect_equal(as.vector(fs[1:6]), c(0.4267278,0.04564096,-0.9137894,-0.9137894,0.5612607,0.6853446), tolerance = 1e-4)
+    expect_equal(as.vector(fs[1:6]), c(0.4267278,0.04564096,-0.9137894,-0.9137894,0.5612607,0.6853446), tolerance = 1e-2)
     fit <- itemfit(mod)
-    expect_equal(fit$p.S_X2, c(0.6012163,0.3808717,0.5043588,0.4040644), tolerance = 1e-4)
+    expect_equal(fit$p.S_X2, c(0.6012163,0.3808717,0.5043588,0.4040644), tolerance = 1e-2)
     # expect_equal(extract.mirt(mod, 'condnum'), 2745.397, tolerance = 1e-4)
 
     mod2 <- mirt(Science, 2,c('graded', 'graded', 'graded', 'ggum'), TOL=.01,
