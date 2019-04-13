@@ -64,6 +64,22 @@ prodterms <- function(theta0, prodlist)
     ret
 }
 
+update_cand.var <- function(PAs, CTVs){
+    pick <- max(which(!is.na(PAs)))
+    if(PAs[pick] < .4 & PAs[pick] > .3) return(CTVs[pick])
+    if(PAs[pick] < .01) return(min(CTVs, na.rm = TRUE)/10)
+    if(PAs[pick] > .99) return(max(CTVs, na.rm = TRUE)*5)
+    if(length(unique(CTVs)) < 4L){
+        return(CTVs[pick] * ifelse(PAs[pick] > .5, 1.1, .8))
+    }
+    df <- data.frame(PAs, CTVs)
+    mod <- lm(plogis(PAs) ~ CTVs, data=df)
+    fn <- function(x) (.5 - qlogis(predict(mod, data.frame(CTVs=x))))^2
+    root <- nlm(f = fn, p = CTVs[pick])$estimate
+    if(root < 0) root <- min(CTVs, na.rm = TRUE) / 2
+    return(root)
+}
+
 # MH sampler for theta values
 draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var,
                         prior.mu, prodlist, OffTerm, CUSTOM.IND)

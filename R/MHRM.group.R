@@ -70,6 +70,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
     for(g in seq_len(ngroups)){
+        PAs <- CTVs <- rep(NA, 25L)
         for(i in seq_len(31L)){
             gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
                                         itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
@@ -77,17 +78,10 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                                         prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
             if(is.null(list$cand.t.var)){
                 if(i > 5L){
-                    if(attr(gtheta0[[g]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                    else if(attr(gtheta0[[g]],"Proportion Accepted") > .25 && nfact > 3L)
-                        cand.t.var <- cand.t.var + tmp
-                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .2 && nfact < 4L)
-                        cand.t.var <- cand.t.var - tmp
-                    else if(attr(gtheta0[[g]],"Proportion Accepted") < .1)
-                        cand.t.var <- cand.t.var - 2*tmp
-                    if (cand.t.var < 0){
-                        cand.t.var <- tmp
-                        tmp <- tmp / 2
-                    }
+                    pa <- attr(gtheta0[[g]],"Proportion Accepted")
+                    PAs[i-5L] <- pa
+                    CTVs[i-5L] <- cand.t.var
+                    cand.t.var <- update_cand.var(PAs, CTVs)
                 }
             }
         }

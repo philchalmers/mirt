@@ -224,14 +224,14 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
 MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTerm, RAND, LR.RAND, RANDSTART,
                        gtheta0, J, N, cycles, itemloc, CUSTOM.IND, Data, nfact, prodlist, ngroups,
                        MHDRAWS, BURNIN, SEMCYCLES, cand.t.var, list, verbose){
-    if((RAND || LR.RAND) && cycles == RANDSTART){
+    if((RAND || LR.RAND) && cycles == RANDSTART || cycles == BURNIN){
         gtheta0[[1L]] <- matrix(0, nrow(gtheta0[[1L]]), ncol(gtheta0[[1L]]))
         if(RAND){
             OffTerm <- OffTerm(random, J=J, N=N)
             if(!is.null(list$cand.t.var))
                 for(j in seq_len(length(random))) random[[j]]@cand.t.var <- list$cand.t.var[j + 1L]
                 for(j in seq_len(length(random))){
-                    tmp <- .1
+                    PAs <- CTVs <- rep(NA, 25L)
                     for(i in seq_len(31L)){
                         random[[j]]@drawvals <- DrawValues(random[[j]], itemloc=itemloc,
                                                            Theta=gtheta0[[1L]],
@@ -240,16 +240,10 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                         OffTerm <- OffTerm(random, J=J, N=N)
                         if(is.null(list$cand.t.var)){
                             if(i > 5L){
-                                if(attr(random[[j]]@drawvals,"Proportion Accepted") > .4)
-                                    random[[j]]@cand.t.var <- random[[j]]@cand.t.var + 2*tmp
-                                if(attr(random[[j]]@drawvals,"Proportion Accepted") < .2)
-                                    random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 2*tmp
-                                if(attr(random[[j]]@drawvals,"Proportion Accepted") < .05)
-                                    random[[j]]@cand.t.var <- random[[j]]@cand.t.var - 5*tmp
-                                if (random[[j]]@cand.t.var < 0){
-                                    random[[j]]@cand.t.var <- tmp
-                                    tmp <- tmp / 10
-                                }
+                                pa <- attr(random[[j]]@drawvals,"Proportion Accepted")
+                                PAs[i-5L] <- pa
+                                CTVs[i-5L] <- random[[j]]@cand.t.var
+                                random[[j]]@cand.t.var <- update_cand.var(PAs, CTVs)
                             }
                         }
                     }
@@ -265,7 +259,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                         list$cand.t.var[j + length(random) + 1L]
             }
             for(j in seq_len(length(lr.random))){
-                tmp <- .1
+                PAs <- CTVs <- rep(NA, 25L)
                 for(i in seq_len(31L)){
                     lr.random[[j]]@drawvals <- DrawValues(lr.random[[j]], itemloc=itemloc,
                                                           Theta=gtheta0[[1L]], LR=TRUE,
@@ -273,15 +267,11 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                                                           offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND)
                     if(is.null(list$cand.t.var)){
                         if(i > 5L){
-                            if(attr(lr.random[[j]]@drawvals,"Proportion Accepted") > .4)
-                                lr.random[[j]]@cand.t.var <- lr.random[[j]]@cand.t.var + 2*tmp
-                            if(attr(lr.random[[j]]@drawvals,"Proportion Accepted") < .2)
-                                lr.random[[j]]@cand.t.var <- lr.random[[j]]@cand.t.var - 2*tmp
-                            if(attr(lr.random[[j]]@drawvals,"Proportion Accepted") < .05)
-                                lr.random[[j]]@cand.t.var <- lr.random[[j]]@cand.t.var - 5*tmp
-                            if (lr.random[[j]]@cand.t.var < 0){
-                                lr.random[[j]]@cand.t.var <- tmp
-                                tmp <- tmp / 10
+                            if(i > 5L){
+                                pa <- attr(lr.random[[j]]@drawvals,"Proportion Accepted")
+                                PAs[i-5L] <- pa
+                                CTVs[i-5L] <- lr.random[[j]]@cand.t.var
+                                lr.random[[j]]@cand.t.var <- update_cand.var(PAs, CTVs)
                             }
                         }
                     }
@@ -300,7 +290,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
             }
         }
         cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
-        tmp <- .1
+        PAs <- CTVs <- rep(NA, 25L)
         for(i in seq_len(31L)){
             gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                          itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
@@ -308,17 +298,10 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                                          prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
             if(is.null(list$cand.t.var)){
                 if(i > 5L){
-                    if(attr(gtheta0[[1L]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                    else if(attr(gtheta0[[1L]],"Proportion Accepted") > .25 && nfact > 3L)
-                        cand.t.var <- cand.t.var + tmp
-                    else if(attr(gtheta0[[1L]],"Proportion Accepted") < .2 && nfact < 4L)
-                        cand.t.var <- cand.t.var - tmp
-                    else if(attr(gtheta0[[1L]],"Proportion Accepted") < .1)
-                        cand.t.var <- cand.t.var - 2*tmp
-                    if (cand.t.var < 0){
-                        cand.t.var <- tmp
-                        tmp <- tmp / 2
-                    }
+                    pa <- attr(gtheta0[[1L]],"Proportion Accepted")
+                    PAs[i-5L] <- pa
+                    CTVs[i-5L] <- cand.t.var
+                    cand.t.var <- update_cand.var(PAs, CTVs)
                 }
             }
         }
@@ -328,7 +311,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         pars[[1L]][[length(pars[[1L]])]]@par[pars[[1L]][[length(pars[[1L]])]]@est] <-
             tmp2[pars[[1L]][[length(pars[[1L]])]]@est]
         cand.t.var <- if(is.null(list$cand.t.var)) .5 else list$cand.t.var[1L]
-        tmp <- .1
+        PAs <- CTVs <- rep(NA, 25L)
         for(i in seq_len(31L)){
             gtheta0[[1L]] <- draw.thetas(theta0=gtheta0[[1L]], pars=pars[[1L]], fulldata=Data$fulldata[[1L]],
                                          itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
@@ -336,17 +319,10 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                                          prior.mu=gstructgrouppars[[1L]]$gmeans, prodlist=prodlist)
             if(is.null(list$cand.t.var)){
                 if(i > 5L){
-                    if(attr(gtheta0[[1L]],"Proportion Accepted") > .35) cand.t.var <- cand.t.var + 2*tmp
-                    else if(attr(gtheta0[[1L]],"Proportion Accepted") > .25 && nfact > 3L)
-                        cand.t.var <- cand.t.var + tmp
-                    else if(attr(gtheta0[[1L]],"Proportion Accepted") < .2 && nfact < 4L)
-                        cand.t.var <- cand.t.var - tmp
-                    else if(attr(gtheta0[[1L]],"Proportion Accepted") < .1)
-                        cand.t.var <- cand.t.var - 2*tmp
-                    if (cand.t.var < 0){
-                        cand.t.var <- tmp
-                        tmp <- tmp / 2
-                    }
+                    pa <- attr(gtheta0[[1L]],"Proportion Accepted")
+                    PAs[i-5L] <- pa
+                    CTVs[i-5L] <- cand.t.var
+                    cand.t.var <- update_cand.var(PAs, CTVs)
                 }
             }
         }

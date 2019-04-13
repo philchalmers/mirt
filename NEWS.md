@@ -1,5 +1,9 @@
 # Changes in mirt 1.31
 
+- Acceptance ratio when using MH samplers now retuned prior to 'Stage 2' during estimation so that 
+  these ratios are better behaved. As well, an heuristic improved method for increasing/decreasing
+  the acceptance ratios is now implemented
+
 - Added `return_seq_model` to  `DIF()` to return the final MG model on the last iteration of the
   sequential search schemes
 
