@@ -225,6 +225,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                        gtheta0, J, N, cycles, itemloc, CUSTOM.IND, Data, nfact, prodlist, ngroups,
                        MHDRAWS, BURNIN, SEMCYCLES, cand.t.var, list, verbose){
     if((RAND || LR.RAND) && cycles == RANDSTART || cycles == BURNIN){
+        target <- if(cycles == BURNIN) .4 else .5
         gtheta0[[1L]] <- matrix(0, nrow(gtheta0[[1L]]), ncol(gtheta0[[1L]]))
         if(RAND){
             OffTerm <- OffTerm(random, J=J, N=N)
@@ -243,7 +244,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                                 pa <- attr(random[[j]]@drawvals,"Proportion Accepted")
                                 PAs[i-5L] <- pa
                                 CTVs[i-5L] <- random[[j]]@cand.t.var
-                                random[[j]]@cand.t.var <- update_cand.var(PAs, CTVs)
+                                random[[j]]@cand.t.var <- update_cand.var(PAs, CTVs, target=target)
                             }
                         }
                     }
@@ -271,7 +272,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                                 pa <- attr(lr.random[[j]]@drawvals,"Proportion Accepted")
                                 PAs[i-5L] <- pa
                                 CTVs[i-5L] <- lr.random[[j]]@cand.t.var
-                                lr.random[[j]]@cand.t.var <- update_cand.var(PAs, CTVs)
+                                lr.random[[j]]@cand.t.var <- update_cand.var(PAs, CTVs, target=target)
                             }
                         }
                     }
@@ -301,7 +302,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                     pa <- attr(gtheta0[[1L]],"Proportion Accepted")
                     PAs[i-5L] <- pa
                     CTVs[i-5L] <- cand.t.var
-                    cand.t.var <- update_cand.var(PAs, CTVs)
+                    cand.t.var <- update_cand.var(PAs, CTVs, target=target)
                 }
             }
         }
@@ -322,7 +323,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                     pa <- attr(gtheta0[[1L]],"Proportion Accepted")
                     PAs[i-5L] <- pa
                     CTVs[i-5L] <- cand.t.var
-                    cand.t.var <- update_cand.var(PAs, CTVs)
+                    cand.t.var <- update_cand.var(PAs, CTVs, target=target)
                 }
             }
         }

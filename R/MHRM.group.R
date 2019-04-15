@@ -108,7 +108,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     SEM.stores2 <- vector('list', SEMCYCLES)
     conv <- 0L
     k <- 1L
-    gamma <- .25
+    gamma <- .2
     longpars <- rep(NA,nfullpars)
     for(g in seq_len(ngroups)){
         for(i in seq_len(J+1L))
@@ -179,7 +179,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     {
         if(cycles == BURNIN + 1L) stagecycle <- 2L
         if(stagecycle == 3L)
-            gamma <- (gain[1L] / (cycles - SEMCYCLES - BURNIN - 1L))^(gain[2L])
+            gamma <- gain_fun(gain, t = cycles - SEMCYCLES - BURNIN - 1L)
         if(cycles == (BURNIN + SEMCYCLES + 1L)){
             stagecycle <- 3L
             longpars <- colMeans(SEM.stores)

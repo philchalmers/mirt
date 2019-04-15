@@ -64,7 +64,9 @@ prodterms <- function(theta0, prodlist)
     ret
 }
 
-update_cand.var <- function(PAs, CTVs){
+gain_fun <- function(gain, t) (gain[1L] / t)^gain[2L]
+
+update_cand.var <- function(PAs, CTVs, target = .5){
     pick <- max(which(!is.na(PAs)))
     if(PAs[pick] < .4 & PAs[pick] > .3) return(CTVs[pick])
     if(PAs[pick] < .01) return(min(CTVs, na.rm = TRUE)/10)
@@ -74,7 +76,7 @@ update_cand.var <- function(PAs, CTVs){
     }
     df <- data.frame(PAs, CTVs)
     mod <- lm(plogis(PAs) ~ CTVs, data=df)
-    fn <- function(x) (.5 - qlogis(predict(mod, data.frame(CTVs=x))))^2
+    fn <- function(x) (target - qlogis(predict(mod, data.frame(CTVs=x))))^2
     root <- nlm(f = fn, p = CTVs[pick])$estimate
     if(root < 0) root <- min(CTVs, na.rm = TRUE) / 2
     return(root)
