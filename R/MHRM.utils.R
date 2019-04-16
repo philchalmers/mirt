@@ -208,7 +208,7 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
     if(LRPARS){
         lrPars@par <- lrPars@beta[] <- longpars[lrPars@parnum]
         lrPars@mus <- lrPars@X %*% lrPars@beta
-        gstructgrouppars[[1L]]$gmeans <- lrPars@mus
+        gstructgrouppars[[1L]]$gmeans <- t(t(lrPars@mus) + gstructgrouppars[[1L]]$gmeans)
     }
     if(LR.RAND && cycles > RANDSTART){
         for(j in seq_len(length(lr.random)))
@@ -361,26 +361,6 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
                                                       itemloc=itemloc, pars=pars[[1L]],
                                                       fulldata=Data$fulldata[[1L]],
                                                       offterm0=OffTerm, CUSTOM.IND=CUSTOM.IND, LR=TRUE)
-            }
-        }
-    }
-    #adjust cand.t.var
-    PA <- sapply(gtheta0, function(x) attr(x, "Proportion Accepted"))
-    NS <- sapply(gtheta0, function(x) nrow(x))
-    if(is.null(list$cand.t.var)){
-        cand.t.var <- controlCandVar(sum(PA * NS / sum(NS)), cand.t.var)
-        if(RAND && cycles > (RANDSTART + 1L)){
-            for(j in seq_len(length(random))){
-                random[[j]]@cand.t.var <- controlCandVar(
-                    attr(random[[j]]@drawvals, "Proportion Accepted"),
-                    random[[j]]@cand.t.var, min = .01, max = .5)
-            }
-        }
-        if(LR.RAND && cycles > (RANDSTART + 1L)){
-            for(j in seq_len(length(lr.random))){
-                lr.random[[j]]@cand.t.var <- controlCandVar(
-                    attr(lr.random[[j]]@drawvals, "Proportion Accepted"),
-                    lr.random[[j]]@cand.t.var, min = .01, max = .5)
             }
         }
     }
