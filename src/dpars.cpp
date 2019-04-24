@@ -41,12 +41,12 @@ static void add2outer(NumericMatrix &out, const vector<double> &vec, const doubl
             out(i,j) = out(i,j) + vec[i] * vec[j] * r;
 }
 
-static void add2hess(NumericMatrix &out, const NumericMatrix &in, const double &r)
-{
-    for(int i = 0; i < in.ncol(); ++i)
-        for(int j = 0; j < in.ncol(); ++j)
-            out(i,j) = out(i,j) + in(i,j) * r;
-}
+// static void add2hess(NumericMatrix &out, const NumericMatrix &in, const double &r)
+// {
+//     for(int i = 0; i < in.ncol(); ++i)
+//         for(int j = 0; j < in.ncol(); ++j)
+//             out(i,j) = out(i,j) + in(i,j) * r;
+// }
 
 static void matrixMult(vector<double> &c, const vector<double> &a, const vector<double> &b,
                        const int *dim)
@@ -1791,8 +1791,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     const int nsquad = prior.nrow();
     const int npquad = gPriorbetween.ncol();
     IntegerMatrix dat(1, J);
-    NumericMatrix Igrad(npars, npars), IgradP(npars, npars), Ihess(npars, npars),
-        offterm(1, nitems);
+    NumericMatrix Igrad(npars, npars), IgradP(npars, npars), offterm(1, nitems);
 
     for(int pat = 0; pat < npat; ++pat){
         for(int i = 0; i < J; ++i)
@@ -1878,7 +1877,6 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
                     vector<double> tmpgrad(npars);
                     _computeDpars(tmpgrad, hess, pars, theta, offterm, itemtrace, Prior,
                                   nitems, npars, 1, 0, 1, true);
-                    add2hess(Ihess, hess, rs(g,pat) * w[n]);
                     add2outer(IgradP, tmpgrad, rs(g,pat) * w[n]);
                     for(int j = 0; j < npars; ++j)
                         grad[j] += tmpgrad[j] * w[n];
@@ -1891,7 +1889,6 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     List ret;
     ret["Igrad"] = Igrad;
     ret["IgradP"] = IgradP;
-    ret["Ihess"] = Ihess;
     return(ret);
     END_RCPP
 }

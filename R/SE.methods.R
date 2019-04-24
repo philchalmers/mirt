@@ -171,7 +171,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior, do.call(rbind, Priorbetween),
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
-    Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]; Ihess <- infolist[["Ihess"]]
+    Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]
     if(length(whichitems)){
         warning('Internal information matrix computations currently not supported for at
         least one of the supplied items. Information matrix/standard errors not computed', call.=FALSE)
@@ -179,10 +179,9 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     }
     Igrad <- updateHess(Igrad, L=Ls$L)
     IgradP <- updateHess(IgradP, L=Ls$L)
-    Ihess <- updateHess(Ihess, L=Ls$L)
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     IgradP <- IgradP[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
-    Ihess <- Ihess[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
+    Ihess <- complete
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){

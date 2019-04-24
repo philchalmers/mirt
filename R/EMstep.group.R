@@ -427,7 +427,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     collectLL <- as.numeric(na.omit(collectLL))
     LP <- unname(LP)
     start.time.SE <- proc.time()[3L]
-    if(list$SE.type %in% c('SEM', 'Oakes', 'complete', 'sandwich') && list$SE){
+    if(list$SE.type %in% c('SEM', 'Oakes', 'complete', 'sandwich', 'Louis') && list$SE){
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
         for(group in seq_len(ngroups)){
