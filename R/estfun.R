@@ -76,7 +76,7 @@
 #'
 #'}
 
-estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"))
+estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights", centering=TRUE))
 {
   ## check class
   stopifnot(class(x) %in% c("SingleGroupClass", "MultipleGroupClass"))
