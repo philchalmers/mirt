@@ -204,6 +204,11 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"))
     weights <- rep.int(1L, Data$N)
   }
   scores <- scores * weights
+  ## apply centering
+  if(centering){
+    corrector <- apply(scores, 2, mean)
+    t(apply(scores, 1, function(x) x - corrector))
+  }          
   ## apply proper naming
   colnames(scores) <-
   if(x@Options$SE) {
