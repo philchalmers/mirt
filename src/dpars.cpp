@@ -1876,7 +1876,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
                     NumericMatrix hess(npars, npars);
                     vector<double> tmpgrad(npars);
                     _computeDpars(tmpgrad, hess, pars, theta, offterm, itemtrace, Prior,
-                                  nitems, npars, 1, 0, 1, true);
+                                  nitems, npars, 1, 0, 1, false);
                     add2outer(IgradP, tmpgrad, rs(g,pat) * w[n]);
                     for(int j = 0; j < npars; ++j)
                         grad[j] += tmpgrad[j] * w[n];
