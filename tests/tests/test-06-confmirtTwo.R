@@ -53,11 +53,11 @@ test_that('confirmatory mods', {
     expect_is(mod1, 'SingleGroupClass')
     expect_equal(extract.mirt(mod1, 'df'), 1512)
     cfs <- as.numeric(do.call(c, coef(mod1)))
-    expect_equal(cfs, c(1.6592,0,-1.0015,0,1,0.4588,0,-1.4308,0,1,0.9201,0,1.4623,0,1,0.8413,0.4269,0.038,0,1,0,1.4071,2.9023,1.9254,-0.4004,0,0.6263,2.4973,1.0223,-1.0313,0,0.8677,1.998,0.0892,0,0.9166,1.1144,0,1,0,0,1,0.4774,1),
+    expect_equal(cfs, c(1.725311,0,-1.003746,0,1,0.4296214,0,-1.418875,0,1,0.8736704,0,1.451735,0,1,0.8736917,0.4298316,0.05164668,0,1,0,1.380402,2.886302,1.919996,-0.3822423,0,0.6367169,2.507395,1.030947,-1.026989,0,0.8973311,2.019848,0.09872695,0,0.923406,1.123934,0,1,0,0,1,0.4793236,1),
                  tolerance = 1e-2)
     Theta <- expand.grid(-4:4, -4:4)
     info <- testinfo(mod1, Theta, degrees = c(30,40))
-    expect_equal(info[1:4], c(0.3018910, 0.3689341, 0.4608809, 0.6010538), tolerance = 1e-4)
+    expect_equal(info[1:4], c(0.3079868,0.3687883,0.4502187,0.593109), tolerance = 1e-4)
 
     mod1b <- mirt(dataset,model.1, verbose = FALSE)
     expect_is(mod1b, 'SingleGroupClass')
@@ -70,14 +70,14 @@ test_that('confirmatory mods', {
     expect_is(mod.quad, 'SingleGroupClass')
     expect_equal(extract.mirt(mod.quad, 'df'), 1510)
     cfs <- as.numeric(do.call(c, coef(mod.quad)))
-    expect_equal(cfs, c(0.9216,0.4482,-1.1633,0,1,0.3867,0.0833,-1.4982,0,1,0.7688,0.2348,1.1864,0,1,1.0083,0.0735,-0.0144,0,1,1.1327,0,2.6885,1.771,-0.3681,0.5721,0,2.4748,1.0122,-1.0161,0.7917,0,1.9597,0.0861,0.9188,0,1.1163,0,1,0,1),
+    expect_equal(cfs, c(0.9008854,0.4617326,-1.174335,0,1,0.3751464,0.07415233,-1.487041,0,1,0.7719363,0.255426,1.169278,0,1,1.037831,0.1488222,-0.06758965,0,1,1.136647,0,2.685626,1.767618,-0.3708233,0.5774083,0,2.475542,1.012218,-1.018043,0.7840536,0,1.954257,0.0851495,0.9447677,0,1.122107,0,1,0,1),
                  tolerance = 1e-2)
 
     mod.combo <- mirt(dataset, model.combo, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(mod.combo, 'SingleGroupClass')
     expect_equal(extract.mirt(mod.combo, 'df'), 1512)
     cfs <- as.numeric(do.call(c, coef(mod.combo)))
-    expect_equal(cfs, c(2.1777,0,1.0919,-1.2019,0,1,0.3737,0,0,-1.413,0,1,0.8558,0,0,1.4316,0,1,0.9581,0,0,0.0316,0,1,0,1.3907,-0.1952,2.9383,1.9537,-0.3665,0,0.6466,0,2.5157,1.0365,-1.0288,0,0.9055,0,2.033,0.1057,0,0.8483,0,1.1054,0,1,0,0,1,0,1),
+    expect_equal(cfs, c(2.175565,0,1.124398,-1.196377,0,1,0.3772646,0,0,-1.411797,0,1,0.8485753,0,0,1.431696,0,1,0.9730396,0,0,0.03585494,0,1,0,1.414372,-0.2296381,2.96445,1.970084,-0.3634654,0,0.6340928,0,2.509455,1.035055,-1.022543,0,0.9094451,0,2.034747,0.1080139,0,0.877999,0,1.115907,0,1,0,0,1,0,1),
                  tolerance = 1e-2)
 
     mod.combob <- mirt(dataset, model.combo, verbose = FALSE)
@@ -90,7 +90,7 @@ test_that('confirmatory mods', {
     fs1 <- fscores(mod1, verbose = FALSE, full.scores=FALSE)
     expect_is(fs1, 'matrix')
     fs2 <- fscores(mod1, method = 'WLE', response.pattern = dataset[1:2,])
-    expect_equal(as.vector(fs2[,c('F1', 'F2')]), c(-0.3940940, -0.8773481, -2.1421944,  0.7922160),
+    expect_equal(as.vector(fs2[,c('F1', 'F2')]), c(-0.3647738,-0.8722322,-2.168684,0.7796325),
                  tolerance=1e-4)
     fs3 <- fscores(mod.quad, full.scores=TRUE, verbose = FALSE)
     expect_is(fs3, 'matrix')
