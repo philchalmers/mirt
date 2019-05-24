@@ -11,7 +11,7 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x,
   boot_dfapprox = 200, ETrange = c(-2, 2), ETpoints = 11,
   empirical.plot = NULL, empirical.CI = 0.95, empirical.table = NULL,
   empirical.poly.collapse = FALSE, method = "EAP", Theta = NULL,
-  impute = 0, par.strip.text = list(cex = 0.7),
+  par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"),
   strip.border = list(col = "black")), ...)
 }
@@ -112,11 +112,6 @@ empirical estimates. If supplied, arguments typically passed to \code{fscores()}
 ignored and these values will be used instead. Also required when estimating statistics
 with missing data via imputation}
 
-\item{impute}{a number indicating how many imputations to perform (passed to
-\code{\link{imputeMissing}}) when there are missing data present.
-Will return a data.frame object with the mean estimates
-of the stats and their imputed standard deviations}
-
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
 
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
@@ -173,7 +168,7 @@ itemfit(x, 'PV_Q1')
 # itemfit(x, 'X2*') # Stone's 1993 statistic
 # itemfit(x, 'X2*_df') # Stone's 2000 scaled statistic with df estimate
 
-#empirical tables
+#empirical tables for X2 statistic
 itemfit(x, empirical.table=1)
 itemfit(x, empirical.table=21)
 
@@ -213,7 +208,7 @@ itemfit(mod, empirical.table = 1)
 mod2 <- mirt(dat, 1, 'Rasch')
 itemfit(mod2, 'infit', method = 'ML')
 
-#massive list of tables
+#massive list of tables for S-X2
 tables <- itemfit(mod, S_X2.tables = TRUE)
 
 #observed and expected total score patterns for item 1 (post collapsing)
@@ -224,11 +219,7 @@ tables$E[[1]]
 dat[sample(1:prod(dim(dat)), 100)] <- NA
 raschfit <- mirt(dat, 1, itemtype='Rasch')
 
-# use imputation if the proportion of missing data is relatively small
-mirtCluster() # run in parallel
-itemfit(raschfit, c('S_X2', 'infit'), impute = 10)
-
-#alternative route: use only valid data by removing rows with missing terms
+#use only valid data by removing rows with missing terms
 itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 
 # note that X2, G2, PV-Q1, and X2* do not require complete datasets

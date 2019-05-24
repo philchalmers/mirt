@@ -5,8 +5,8 @@
 \title{Compute the M2 model fit statistic}
 \usage{
 M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE,
-  quadpts = NULL, theta_lim = c(-6, 6), impute = 0, CI = 0.9,
-  residmat = FALSE, QMC = FALSE, suppress = 1, ...)
+  quadpts = NULL, theta_lim = c(-6, 6), CI = 0.9, residmat = FALSE,
+  QMC = FALSE, suppress = 1, ...)
 }
 \arguments{
 \item{obj}{an estimated model object from the mirt package}
@@ -28,11 +28,6 @@ a suitable value will be chosen based
 on the rubric found in \code{\link{fscores}}}
 
 \item{theta_lim}{lower and upper range to evaluate latent trait integral for each dimension}
-
-\item{impute}{a number indicating how many imputations to perform
-(passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
-a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
-of the stats and their imputed standard deviations}
 
 \item{CI}{numeric value from 0 to 1 indicating the range of the confidence interval for
 RMSEA. Default returns the 90\% interval}
@@ -75,15 +70,10 @@ dat <- as.matrix(expand.table(LSAT7))
 M2(mod1)
 M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
 
-#M2 imputed with missing data present (run in parallel)
+#M2 with missing data present
 dat[sample(1:prod(dim(dat)), 250)] <- NA
 mod2 <- mirt(dat, 1)
-
-# compute stats using conservative model imputations
-mirtCluster()
-M2(mod2, impute = 10)
-
-# or compute stats by removing missing data row-wise
+# Compute stats by removing missing data row-wise
 M2(mod2, na.rm = TRUE)
 
 # C2 statistic (useful when polytomous IRT models have too few df)

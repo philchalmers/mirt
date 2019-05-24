@@ -30,10 +30,10 @@
 #'   Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 #'   have a suitable null model (e.g., those created via \code{\link{createItem}} will not)
 #' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension
-#' @param impute a number indicating how many imputations to perform
-#'   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
-#'   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
-#'   of the stats and their imputed standard deviations
+# @param impute a number indicating how many imputations to perform
+#   (passed to \code{\link{imputeMissing}}) when there are missing data present. This requires
+#   a precomputed \code{Theta} input. Will return a data.frame object with the mean estimates
+#   of the stats and their imputed standard deviations
 #' @param CI numeric value from 0 to 1 indicating the range of the confidence interval for
 #'   RMSEA. Default returns the 90\% interval
 #' @param residmat logical; return the residual matrix used to compute the SRMSR statistic?
@@ -72,15 +72,10 @@
 #' M2(mod1)
 #' M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
 #'
-#' #M2 imputed with missing data present (run in parallel)
+#' #M2 with missing data present
 #' dat[sample(1:prod(dim(dat)), 250)] <- NA
 #' mod2 <- mirt(dat, 1)
-#'
-#' # compute stats using conservative model imputations
-#' mirtCluster()
-#' M2(mod2, impute = 10)
-#'
-#' # or compute stats by removing missing data row-wise
+#' # Compute stats by removing missing data row-wise
 #' M2(mod2, na.rm = TRUE)
 #'
 #' # C2 statistic (useful when polytomous IRT models have too few df)
@@ -92,8 +87,9 @@
 #'
 #' }
 M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
-               impute = 0, CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
+                CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
 
+    impute <- 0
     if(is(obj, 'MixtureModel'))
         stop('Mixture IRT models not yet supported')
     fn <- function(Theta, obj, ...){
@@ -330,13 +326,12 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     if(na.rm) obj <- removeMissing(obj)
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
-            stop('Fit statistics cannot be computed when there are missing data. Either pass a suitable
-                 impute argument to compute statistics following multiple data imputations,
-                 or remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
+            stop('Fit statistics cannot be computed when there are missing data.
+                 Remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
         if(residmat) stop('residmat not supported when imputing data')
-        if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
-            warning('Imputing too much data can lead to very conservative results. Use with caution.',
-                    call.=FALSE)
+        # if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
+        #     warning('Imputing too much data can lead to very conservative results. Use with caution.',
+        #             call.=FALSE)
         Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, ...)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts, QMC=QMC, theta_lim=theta_lim)
