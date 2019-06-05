@@ -24,10 +24,10 @@
 #'   gradients (OPG) estimate of the variance-covariance matrix (see examples
 #'   below).
 #' @param centering a boolean variable that allows the centering of the case-wise 
-#' scores (i.e., setting their expected value to 0). If the case-wise scores were 
+#' scores (i.e., setting their expected values to 0). If the case-wise scores were 
 #' obtained from maximum likelihood estimates, this setting does not affect the result. 
 #' 
-#' @author Lennart Schneider \email{lennart.sch@@web.de}; centering argument contributed by Rudolf Debelak (rudolf.debelak@psychologie.uzh.ch)
+#' @author Lennart Schneider \email{lennart.sch@@web.de}; centering argument contributed by Rudolf Debelak (\email{rudolf.debelak@psychologie.uzh.ch})
 #' @keywords scores
 #' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}},
 #'   \code{\link{bfactor}}
