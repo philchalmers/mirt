@@ -23,7 +23,11 @@
 #'   square root if the scores are being used to compute the outer product of
 #'   gradients (OPG) estimate of the variance-covariance matrix (see examples
 #'   below).
-#' @author Lennart Schneider \email{lennart.sch@@web.de}
+#' @param centering a boolean variable that allows the centering of the case-wise 
+#' scores (i.e., setting their expected value to 0). If the case-wise scores were 
+#' obtained from maximum likelihood estimates, this setting does not affect the result. 
+#' 
+#' @author Lennart Schneider \email{lennart.sch@@web.de}; centering argument contributed by Rudolf Debelak (rudolf.debelak@psychologie.uzh.ch)
 #' @keywords scores
 #' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}},
 #'   \code{\link{bfactor}}
@@ -76,7 +80,7 @@
 #'
 #'}
 
-estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights", centering=TRUE))
+estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"), centering=TRUE)
 {
   ## check class
   stopifnot(class(x) %in% c("SingleGroupClass", "MultipleGroupClass"))
@@ -207,7 +211,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights", 
   ## apply centering
   if(centering){
     corrector <- apply(scores, 2, mean)
-    t(apply(scores, 1, function(x) x - corrector))
+    t(apply(scores, 1, function(x) {x - corrector}))
   }          
   ## apply proper naming
   colnames(scores) <-
