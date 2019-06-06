@@ -3,7 +3,8 @@ Version: 1.30.6
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
-    "rphilip.chalmers@gmail.com", role = c("aut", "cre", "cph")),
+                     "rphilip.chalmers@gmail.com", role = c("aut", "cre"), 
+                     comment = c(ORCID="0000-0001-5332-2810")),
     person("Joshua", family="Pritikin", role=c('ctb')),
     person("Alexander", family="Robitzsch", role=c('ctb')),
     person("Mateusz", family="Zoltak", role=c('ctb')),
