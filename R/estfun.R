@@ -23,10 +23,10 @@
 #'   square root if the scores are being used to compute the outer product of
 #'   gradients (OPG) estimate of the variance-covariance matrix (see examples
 #'   below).
-#' @param centering a boolean variable that allows the centering of the case-wise 
-#' scores (i.e., setting their expected values to 0). If the case-wise scores were 
-#' obtained from maximum likelihood estimates, this setting does not affect the result. 
-#' 
+#' @param centering a boolean variable that allows the centering of the case-wise
+#' scores (i.e., setting their expected values to 0). If the case-wise scores were
+#' obtained from maximum likelihood estimates, this setting does not affect the result.
+#'
 #' @author Lennart Schneider \email{lennart.sch@@web.de}; centering argument contributed by Rudolf Debelak (\email{rudolf.debelak@psychologie.uzh.ch})
 #' @keywords scores
 #' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}},
@@ -44,7 +44,7 @@
 #' # calculate the OPG estimate of the variance-covariance matrix "by hand"
 #' vc1 <- vcov(mod1)
 #' all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)
-#' 
+#'
 #' # fit a multiple group 2PL and do the same as above
 #' group <- rep(c("G1", "G2"), 500)
 #' mod2 <- multipleGroup(expand.table(LSAT7), 1, group, SE = TRUE,
@@ -80,7 +80,7 @@
 #'
 #'}
 
-estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"), centering=TRUE)
+estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"), centering=FALSE)
 {
   ## check class
   stopifnot(class(x) %in% c("SingleGroupClass", "MultipleGroupClass"))
@@ -212,7 +212,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
   if(centering){
     corrector <- apply(scores, 2, mean)
     t(apply(scores, 1, function(x) {x - corrector}))
-  }          
+  }
   ## apply proper naming
   colnames(scores) <-
   if(x@Options$SE) {

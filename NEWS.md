@@ -1,5 +1,7 @@
 # Changes in mirt 1.31
 
+- `estfun()` gains a `centering` argument to center the scores (contributed by Rudolf Debelak)
+
 - `impute` argument in `itemfit()` and `M2()` have been deprecated in favour of removing data
   row-wise via `na.rm=TRUE`
 

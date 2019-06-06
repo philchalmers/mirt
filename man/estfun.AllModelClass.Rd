@@ -4,7 +4,8 @@
 \alias{estfun.AllModelClass}
 \title{Extract Empirical Estimating Functions}
 \usage{
-estfun.AllModelClass(x, weights = extract.mirt(x, "survey.weights"))
+estfun.AllModelClass(x, weights = extract.mirt(x, "survey.weights"),
+  centering = FALSE)
 }
 \arguments{
 \item{x}{a fitted model object of class \code{SingleGroupClass} or
@@ -18,6 +19,10 @@ when fitting the model, the weights must be corrected by taking their
 square root if the scores are being used to compute the outer product of
 gradients (OPG) estimate of the variance-covariance matrix (see examples
 below).}
+
+\item{centering}{a boolean variable that allows the centering of the case-wise
+scores (i.e., setting their expected values to 0). If the case-wise scores were
+obtained from maximum likelihood estimates, this setting does not affect the result.}
 }
 \value{
 An n x k matrix corresponding to n observations and k parameters
@@ -85,6 +90,6 @@ all.equal(crossprod(sc4_crp), chol2inv(chol(vc4)), check.attributes = FALSE)
   \code{\link{bfactor}}
 }
 \author{
-Lennart Schneider \email{lennart.sch@web.de}
+Lennart Schneider \email{lennart.sch@web.de}; centering argument contributed by Rudolf Debelak (\email{rudolf.debelak@psychologie.uzh.ch})
 }
 \keyword{scores}
