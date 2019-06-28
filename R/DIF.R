@@ -87,7 +87,7 @@
 #'   make a big DIF: Improved Differential Test Functioning statistics that account for
 #'   sampling variability. \emph{Educational and Psychological Measurement, 76}, 114-140.
 #'   \doi{10.1177/0013164415584576}
-#' @keywords DIF
+#' @keywords differential item functioning
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DRF}}
 #, \code{\link{DTF}}
 #' @export DIF

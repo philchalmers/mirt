@@ -43,7 +43,7 @@
 #'   \doi{10.1177/0013164415584576}
 #'
 #' @seealso \code{\link{multipleGroup}}, \code{\link{DIF}}
-#' @keywords DTF
+#' @keywords differential test functioning
 #' @export DTF
 #' @examples
 #' \dontrun{

@@ -137,4 +137,6 @@ Chalmers, R. P., Counsell, A., and Flora, D. B. (2016). It might not
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
-\keyword{DTF}
+\keyword{differential}
+\keyword{functioning}
+\keyword{test}

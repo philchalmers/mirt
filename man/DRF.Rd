@@ -253,4 +253,6 @@ Chalmers, R. P. (2018). Model-Based Measures for Detecting and Quantifying Respo
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
-\keyword{DRF}
+\keyword{differential}
+\keyword{functioning}
+\keyword{response}
