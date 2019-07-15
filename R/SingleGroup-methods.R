@@ -60,12 +60,14 @@ setMethod(
                "EHW" = 'Empirical histogram (scaled)',
                x@Options$dentype)
         cat('Latent density type:', dentype, '\n')
-        if(!is.na(x@OptimInfo$condnum)){
+        if(!is.na(x@OptimInfo$secondordertest)){
             cat("\nInformation matrix estimated with method:", x@Options$SE.type)
-            cat("\nCondition number of information matrix = ", x@OptimInfo$condnum,
-                '\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
-                    'is not a maximum, or the information matrix is too inaccurate' else
-                        'is a possible local maximum', '\n', sep = "")
+            cat('\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
+                'is not a maximum or the information matrix is too inaccurate' else
+                    'is a possible local maximum', sep = "")
+            if(x@OptimInfo$secondordertest)
+                cat("\nCondition number of information matrix = ", x@OptimInfo$condnum)
+            cat('\n')
         }
         if(length(x@Fit$logLik) > 0){
             if(x@Fit$logPrior != 0){

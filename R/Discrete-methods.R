@@ -24,12 +24,14 @@ setMethod(
         cat('\nLatent density type:', 'discrete')
         # cat('\nNumber of classes quadrature:', x@Options$quadpts)
         cat('\n')
-        if(!is.na(x@OptimInfo$condnum)){
+        if(!is.na(x@OptimInfo$secondordertest)){
             cat("\nInformation matrix estimated with method:", x@Options$SE.type)
-            cat("\nCondition number of information matrix = ", x@OptimInfo$condnum,
-                '\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
-                    'is not a maximum, or the information matrix is too inaccurate' else
-                        'is a possible local maximum', '\n', sep = "")
+            cat('\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
+                'is not a maximum or the information matrix is too inaccurate' else
+                    'is a possible local maximum', sep = "")
+            if(x@OptimInfo$secondordertest)
+                cat("\nCondition number of information matrix = ", x@OptimInfo$condnum)
+            cat('\n')
         }
         if(length(x@Fit$logLik) > 0){
             cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
