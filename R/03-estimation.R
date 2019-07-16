@@ -159,6 +159,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     s <- sort(unique(data[,ind]))
                     se <- min(s, na.rm = TRUE):(length(s) + min(s) - 1L)
                     ret <- se[s == key[ind]]
+                    if(!length(ret)) ret <- NA
                     ret
                 }, data=data, key=key)
             }
