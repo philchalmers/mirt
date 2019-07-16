@@ -23,6 +23,9 @@
 
 - `residuals()` gains an `'expfull'` type to compute an expected value table for 
   all possible response patterns (not just those observed in the data)
+  
+- Fix for `key` variable for nested-logit models when data are collapsed to have equal intervals 
+  (reported by Emil Kirkegaard)
 
 # Changes in mirt 1.30
 

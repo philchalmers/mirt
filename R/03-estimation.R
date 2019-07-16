@@ -154,6 +154,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
         if(nrow(data) > 1L && is.null(opts$technical$customK)){
+            if(!is.null(key)){
+                key <- sapply(1L:length(key), function(ind, data, key){
+                    s <- sort(unique(data[,ind]))
+                    se <- min(s, na.rm = TRUE):(length(s) + min(s) - 1L)
+                    ret <- se[s == key[ind]]
+                    ret
+                }, data=data, key=key)
+            }
             data <- apply(data, 2L, function(x, message){
                 s <- sort(unique(x))
                 se <- min(s, na.rm = TRUE):max(x, na.rm = TRUE)
@@ -195,7 +203,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$N <- nrow(Data$data)
         Data$mins <- suppressWarnings(apply(data, 2L, min, na.rm=TRUE))
         Data$mins[!is.finite(Data$mins)] <- 0L
-        if(!is.null(key)) key <- key - (Data$mins - 1L)
         if(is.character(model)){
             tmp <- any(sapply(colnames(data), grepl, x=model))
             model <- mirt.model(model, itemnames = if(tmp) colnames(data) else NULL)
