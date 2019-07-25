@@ -7,22 +7,31 @@
 probtrace(x, Theta)
 }
 \arguments{
-\item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}
+\item{x}{either an extracted internal mirt object containing item information
+(see \code{\link{extract.item}}) or a model of class \code{SingleGroupClass}
+typically returned by the function \code{\link{mirt}} or \code{\link{bfactor}}}
 
 \item{Theta}{a vector (unidimensional) or matrix (unidimensional/multidimensional) of
 latent trait values}
 }
 \description{
-Given an internal mirt object extracted from an estimated model
-compute the probability trace lines for all categories.
+Given an internal mirt object extracted from an estimated model, or the
+single-group estimated model itself, compute the probability trace
+lines for all categories.
 }
 \examples{
 
 mod <- mirt(Science, 1)
+
+# single item probabilty tracelines for Item 2
 extr.2 <- extract.item(mod, 2)
 Theta <- matrix(seq(-4,4, by = .1))
 traceline <- probtrace(extr.2, Theta)
 head(data.frame(traceline, Theta=Theta))
+
+# probability tracelines for all items in test
+tracelines <- probtrace(mod, Theta)
+head(tracelines)
 
 }
 \references{
@@ -31,7 +40,7 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 \doi{10.18637/jss.v048.i06}
 }
 \seealso{
-\code{\link{extract.item}}
+\code{\link{extract.item}}, \code{\link{extract.group}}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
