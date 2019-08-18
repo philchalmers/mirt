@@ -26,6 +26,9 @@
   
 - Fix for `key` variable for nested-logit models when data are collapsed to have equal intervals 
   (reported by Emil Kirkegaard)
+  
+- Added delta method for IRT parameter transformations when using multiple-group models 
+  (reported by Alex Miller)
 
 # Changes in mirt 1.30
 
