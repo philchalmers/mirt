@@ -1,8 +1,7 @@
 context('basics')
 
 test_that('basics', {
-    set.seed(1)
-    group <- sample(c('G1', 'G2'), nrow(Science), TRUE)
+    group <- rep(c('G1', 'G2'), each=nrow(Science)/2)
     gmod <- multipleGroup(Science, 1, group=group, TOL = NaN)
     mod <- extract.group(gmod, 1)
     item1 <- extract.item(gmod, 2, group=1)
@@ -14,7 +13,7 @@ test_that('basics', {
     expect_equal(P[1:8], c(0.4615411,0.2679321,0.1351536,0.06255336,0.02770248,0.01201941,
                            0.005167734,0.3854359), tolerance=1e-6)
     theta_se <- fscores(mod, full.scores.SE = TRUE)
-    expect_equal(unname(empirical_rxx(theta_se)), 0.509281, tolerance = 1e-4)
+    expect_equal(unname(empirical_rxx(theta_se)), 0.4627935 , tolerance = 1e-4)
     tscore <- expected.test(mod, Theta)
     expect_equal(tscore, c(7.935196,9.270222,10.53705,11.69166,12.7803,13.83405,14.73532), tolerance=1e-6)
     IG <- itemGAM(Science[group == 'G1',1], theta_se[,1, drop=FALSE])
