@@ -9,7 +9,10 @@ likert2int(x, levels = NULL)
 \arguments{
 \item{x}{a matrix of character values or data.frame of character/factor vectors}
 
-\item{levels}{}
+\item{levels}{a named character vector indicating which integer values
+should be assigned to which elements. If omitted, the order of the elements
+will be determined after converting each column in \code{x} to a factor
+variable}
 }
 \description{
 Given a matrix or data.frame object consisting of Likert responses return an
@@ -46,17 +49,20 @@ intdat2 <- likert2int(dat2, levels = lvl2)
 head(dat2)
 head(intdat2)
 
-# full dataset
+# full dataset (using both mapping schemes)
 intdat <- likert2int(dat, levels = c(lvl1, lvl2))
 head(dat)
 head(intdat)
 
 
 #####
-# data.frame as input (characters set to factors by default)
+# data.frame as input with ordered factors
 
 dat1 <- data.frame(dat1)
 dat2 <- data.frame(dat2)
+dat.old <- cbind(dat1, dat2)
+colnames(dat.old) <- paste0('Item_', 1:10)
+str(dat.old) # factors are leveled alphabetically by default
 
 # create explicit ordering in factor variables
 for(i in 1:ncol(dat1))
@@ -67,6 +73,7 @@ for(i in 1:ncol(dat2))
    levels(dat2[[i]]) <- c('SD', 'D', 'N', 'A', 'SA')
 
 dat <- cbind(dat1, dat2)
+colnames(dat) <- colnames(dat.old)
 str(dat) # note ordering
 
 intdat <- likert2int(dat)
