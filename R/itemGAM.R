@@ -27,7 +27,7 @@
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
-#' @keywords item fit, traceline
+#' @keywords item fit
 #' @seealso \code{\link{itemfit}}
 #' @export itemGAM
 #' @examples

@@ -184,5 +184,4 @@ Shealy, R. & Stout, W. (1993). A model-based standardization approach that separ
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{SIBTEST}
-\keyword{SIBTEST,}
-\keyword{crossing}
+\keyword{crossing-SIBTEST}

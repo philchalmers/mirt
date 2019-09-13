@@ -163,6 +163,5 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
-\keyword{fit,}
+\keyword{fit}
 \keyword{item}
-\keyword{traceline}
