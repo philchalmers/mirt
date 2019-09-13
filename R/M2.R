@@ -324,6 +324,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         stop('MixedClass objects are not yet supported', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 5000L
     if(na.rm) obj <- removeMissing(obj)
+    if(na.rm) message('Sample size after row-wise response data removal: ', nrow(extract.mirt(obj, 'data')))
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data.

@@ -416,6 +416,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
     J <- ncol(x@Data$data)
     if(na.rm) x <- removeMissing(x)
+    if(na.rm) message('Sample size after row-wise response data removal: ', nrow(extract.mirt(x, 'data')))
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.
              Pass na.rm=TRUE to remove missing data row-wise', call.=FALSE)
