@@ -278,6 +278,10 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
         if (is.matrix(itemnames) || is.data.frame(itemnames)){
             items <- colnames(itemnames)
         } else items <- as.character(itemnames)
+        tmpmod <- mirt.model(input)
+        if(any(tmpmod$x[,1] %in% itemnames))
+          stop('Keywords and latent trait/class names must differ from colnames(data)',
+               call.=FALSE)
 
         # admissible strings
         vecstr <- c( "\n" , "\\(" , "=" , "-" , "," , "\\)" )
