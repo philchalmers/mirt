@@ -283,12 +283,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                         itemtype, boot = 1000, draws = 30, verbose = FALSE, ...){
         pb_fun <- function(ind, mod, N, sv, which.items, draws, itemtype, ...){
             count <- 0L
+            K <- extract.mirt(mod, 'K')
             while(TRUE){
                 count <- count + 1L
                 if(count == 20)
                     stop('20 consecutive parametric bootstraps failed for PV_Q1*', call.=FALSE)
                 dat <- simdata(model=mod, N=N)
                 dat[is_NA] <- NA
+                if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
                 mod2 <- mirt(dat, model, itemtype=itemtype,
                              verbose=FALSE, pars=sv, technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
@@ -337,12 +339,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         pb_fun <- function(ind, is_NA, mod, N, model, itemtype, sv, which.items, ETrange,
                            ETpoints, ...){
             count <- 0L
+            K <- extract.mirt(mod, 'K')
             while(TRUE){
                 count <- count + 1L
                 if(count == 20)
                     stop('20 consecutive parametric bootstraps failed for X2*', call.=FALSE)
                 dat <- simdata(model=mod, N=N)
                 dat[is_NA] <- NA
+                if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
                 mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
                              technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next

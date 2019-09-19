@@ -1,3 +1,11 @@
+# Changes in mirt 1.32
+
+- latent trait/class names now are forced to be different than the data column names 
+  (bug reported by Nathan Carter)
+  
+- fixed `X2*_df` and `PV_Q1*` when missing data pattern resulted in dropped categories
+  (reported by Mac Pank)
+
 # Changes in mirt 1.31
 
 - added `likert2int()` to convert Likert-type character/factor responses to integert data
