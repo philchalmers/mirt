@@ -550,6 +550,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                                     } else newx <- c(newx, x[i])
                                 }
                                 x <- c(newx, x[length(x)])
+                                if(x[1L] == 'GROUP') x[1L] <- J + 1L
                                 x
                             })
                 for(i in seq_len(length(esplit))){
@@ -600,6 +601,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         } else newx <- c(newx, x[i])
                     }
                     x <- c(newx, x[length(x)])
+                    if(x[1L] == 'GROUP') x[1L] <- J + 1L
                     x
                 })
                 for(i in seq_len(length(esplit))){
