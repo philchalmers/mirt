@@ -248,15 +248,18 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
     if(is.numeric(model))
         if(length(model) != ncol(data))
             stop('length of model must equal the number of items', call.=FALSE)
-    nspec <- length(na.omit(unique(model)))
+    uniq_vals <- sort(na.omit(unique(model)))
     specific <- model
+    for(i in seq_len(length(uniq_vals)))
+        specific[uniq_vals[i] == model & !is.na(model)] <- i
+    nspec <- length(uniq_vals)
     if(is.character(model2)){
         tmp <- any(sapply(colnames(data), grepl, x=model2))
         model2 <- mirt.model(model2, itemnames = if(tmp) colnames(data) else NULL)
     }
     if(!is(model2, 'mirt.model'))
         stop('model2 must be an appropriate second-tier model', call.=FALSE)
-    model <- bfactor2mod(model, ncol(data))
+    model <- bfactor2mod(specific, ncol(data))
     model$x <- rbind(model2$x, model$x)
     attr(model, 'nspec') <- nspec
     attr(model, 'specific') <- specific

@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- numeric model specification in `bfactor()` bug patched when intervals were not 
+  1 unit apart due to NA placeholders (reported by Luis Manuel Lozano)
+
 - latent trait/class names now are forced to be different than the data column names 
   (bug reported by Nathan Carter)
   
