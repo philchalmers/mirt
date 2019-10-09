@@ -15,7 +15,9 @@ mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
 numerically ordered data, with missing data coded as \code{NA}}
 
 \item{covdata}{a \code{data.frame} that consists of the \code{nrow(data)} by \code{K}
-'person level' fixed and random predictors}
+'person level' fixed and random predictors. If missing data are present in this object
+then the observations from \code{covdata} and \code{data} will be removed row-wise
+via the \code{rowSums(is.na(covdata)) > 0}}
 
 \item{model}{an object returned from, or a string to be passed to, \code{mirt.model()}
 to declare how the IRT model is to be estimated. See \code{\link{mirt.model}} for
