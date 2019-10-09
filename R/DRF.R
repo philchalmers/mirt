@@ -3,7 +3,7 @@
 #' Function performs various omnibus differential item (DIF), bundle (DBF), and test (DTF)
 #' functioning procedures on an object
 #' estimated with \code{multipleGroup()}. The compensatory and non-compensatory statistics provided
-#' are described in Chalmers (accepted), which generally can be interpreted as IRT generalizations
+#' are described in Chalmers (2018), which generally can be interpreted as IRT generalizations
 #' of the SIBTEST and CSIBTEST statistics. These require the ACOV matrix to be computed in the
 #' fitted multiple-group model (otherwise, sets of plausible draws from the posterior are explicitly
 #' required).
@@ -559,8 +559,13 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
     ubound[logits] <- logit(ubound[logits])
     est <- m2v$est
     constrain <- mod@Model$constrain
-    pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars,
-                 mod@ParObjects$pars[[2L]]@ParObjects$pars)
+    ngroups <- extract.mirt(mod, 'ngroups')
+    pars <- if(ngroups > 1L){
+        lapply(1:ngroups, function(i) mod@ParObjects$pars[[i]]@ParObjects$pars)
+    } else {
+        list(mod@ParObjects$pars)
+    }
+
     if(method == 'parametric'){
         if(!mod@OptimInfo$secondordertest)
             stop('ACOV matrix is not positive definite')
@@ -574,7 +579,7 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
         ret <- do.call(rbind, ret)
         if(any(logits))
             ret[,logits] <- antilogit(ret[,logits])
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=extract.mirt(mod, 'nitems'))
         return(ret)
     } else stop('bootstrap not supported yet') #TODO
 

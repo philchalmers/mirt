@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- bugfix for single-group models for `draw_parameters()` (reported by Keri Brady 
+  and @ddueber)
+
 - numeric model specification in `bfactor()` bug patched when intervals were not 
   1 unit apart due to NA placeholders (reported by Luis Manuel Lozano)
 
