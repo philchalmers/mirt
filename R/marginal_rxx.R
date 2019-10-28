@@ -43,7 +43,7 @@
 marginal_rxx <- function(mod, density = dnorm, ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(is(mod, 'SingleGroupClass'))
-    fn <- function(theta, mod, den){
+    fn <- function(theta, mod, den, ...){
         TI <- testinfo(mod, matrix(theta))
         TI / (TI + 1) * den(theta, ...)
     }
