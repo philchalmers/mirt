@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- use proper `mins` internal when using `extract.group()` to keep the original minimum
+  response scoring pattern (reported by Adam Ťápal)
+
 - bugfix for single-group models for `draw_parameters()` (reported by Keri Brady 
   and @ddueber)
 

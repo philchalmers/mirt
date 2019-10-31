@@ -47,10 +47,12 @@ extract.group <- function(x, group){
     groupvec <- extract.mirt(x, 'group')
     groupNames <- extract.mirt(x, 'groupNames')
     itemtype <- extract.mirt(x, 'itemtype')
+    mins <- extract.mirt(x, 'mins')
     sv <- mirt(dat[groupvec == groupNames[group], ], nfact, itemtype=itemtype,
                 pars = 'values', technical = list(customK = K))
     sv$value <- vals$value
     mod <- mirt(dat[groupvec == groupNames[group], ], nfact, itemtype=itemtype,
-                pars = sv, technical = list(customK = K, warn=FALSE), TOL = NaN, quadpts=1L)
+                pars = sv, technical = list(customK = K, warn=FALSE, mins=mins),
+                TOL = NaN, quadpts=1L)
     return(mod)
 }

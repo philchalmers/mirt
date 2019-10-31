@@ -204,6 +204,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Data$N <- nrow(Data$data)
         Data$mins <- suppressWarnings(apply(data, 2L, min, na.rm=TRUE))
         Data$mins[!is.finite(Data$mins)] <- 0L
+        if(!is.null(opts$technical$mins)) Data$mins <- opts$technical$mins
         if(is.character(model)){
             tmp <- any(sapply(colnames(data), grepl, x=model))
             model <- mirt.model(model, itemnames = if(tmp) colnames(data) else NULL)
