@@ -400,7 +400,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 pars[[g]][[nitems + 1L]]@est[2L] <- TRUE
         } else {
             for(g in 2L:Data$ngroups){
-                pars[[g]][[nitems + 1L]]@est <- c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
+                pars[[g]][[nitems + 1L]]@est <- pars[[g]][[nitems + 1L]]@est |
+                    c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
                 names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
                 pars[[g]][[nitems + 1L]]@parnames <- names(pars[[g]][[nitems + 1L]]@est)
             }

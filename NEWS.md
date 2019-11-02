@@ -1,5 +1,9 @@
 # Changes in mirt 1.32
 
+- fix for `invariance = 'free_var'` argument in `multipleGroup()` for multidiemnsional 
+  models with correlated traits, which previously fixed the correlation parameters 
+  inadvertently (reported by Ruoyi Zhu)
+
 - use proper `mins` internal when using `extract.group()` to keep the original minimum
   response scoring pattern (reported by Adam Ťápal)
 
