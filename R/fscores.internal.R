@@ -11,6 +11,12 @@ setMethod(
 	                      use_dentype_estimate, ...)
 	{
         den_fun <- mirt_dmvnorm
+        if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom'){
+            den_fun <- function(Theta, ...){
+                obj <- object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]
+                obj@den(obj, Theta=Theta)
+            }
+        }
         if(!is.null(custom_den)) den_fun <- custom_den
         if(use_dentype_estimate && !(method %in% c('EAP', 'EAPsum', 'plausible')))
             stop("use_dentype_estimate only supported for EAP, EAPsum, or plausible method", call.=FALSE)
