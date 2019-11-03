@@ -126,7 +126,6 @@ setMethod(
 	    EAP_classify <- function(ID, log_itemtrace, tabdata, W, nclass){
 	        if(any(is.na(scores[ID, ])))
 	            return(c(scores[ID, ], rep(NA, ncol(scores))))
-	        nfact <- ncol(ThetaShort)
 	        L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
 	        expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
 	        LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
