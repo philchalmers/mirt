@@ -29,10 +29,11 @@
 #' @param rotate rotation if models are exploratory (see \code{\link{mirt}} for details)
 #' @param invariance a character vector containing the following possible options:
 #'   \describe{
-#'     \item{\code{'free_means'}}{for freely estimating all latent means
-#'       (reference group constrained to 0)}
-#'     \item{\code{'free_var'}}{for freely estimating all latent variances
-#'       (reference group constrained to 1's)}
+#'     \item{\code{'free_mean'} or \code{'free_means'}}{freely estimate all latent means in all focal groups
+#'       (reference group constrained to a vector of 0's)}
+#'     \item{\code{'free_var'}, \code{'free_vars'}, \code{'free_variance'}, or \code{'free_variances'}}{
+#'       freely estimate all latent variances in focal groups
+#'       (reference group variances all constrained to 1)}
 #'     \item{\code{'slopes'}}{to constrain all the slopes to be equal across all groups}
 #'     \item{\code{'intercepts'}}{to constrain all the intercepts to be equal across all
 #'       groups, note for nominal models this also includes the category specific slope parameters}
@@ -339,6 +340,8 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
     dots <- list(...)
     if(!is.null(dots$formula))
         stop('latent regression models not supported for multiple group yet', call.=FALSE) #TODO
+    invariance[invariance %in% c("free_mean")] <- 'free_means'
+    invariance[invariance %in% c("free_vars", 'free_variance', 'free_variances')] <- 'free_var'
     constrain <- dots$constrain
     invariance.check <- invariance %in% c('free_means', 'free_var')
     if(missing(model)) missingMsg('model')
