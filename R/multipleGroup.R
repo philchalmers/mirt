@@ -356,7 +356,7 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
                 warn <- FALSE
         }
         if(warn)
-            stop('Model is not identified without further constrains (may require additional
+            stop('Model is not identified without further constraints (may require additional
                  anchoring items).', call.=FALSE)
     }
     if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
