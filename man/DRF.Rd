@@ -7,7 +7,7 @@
 DRF(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, "nitems"),
   param_set = NULL, CI = 0.95, npts = 1000, quadpts = NULL,
   theta_lim = c(-6, 6), Theta_nodes = NULL, plot = FALSE,
-  DIF = FALSE, par.strip.text = list(cex = 0.7),
+  DIF = FALSE, p.adjust = "none", par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"),
   strip.border = list(col = "black")), auto.key = list(space = "right",
   points = FALSE, lines = TRUE), ...)
@@ -55,6 +55,10 @@ If plausible parameter sets were obtained/supplied then imputed confidence inter
 \item{DIF}{logical; return a list of item-level imputation properties using the DRF statistics?
 These can generally be used as a DIF detection method and as a graphical display for
 understanding DIF within each item}
+
+\item{p.adjust}{string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
+Adjustments are located in the \code{adj_pvals} element in the returned list. Only applicable when
+\code{DIF = TRUE}}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
 

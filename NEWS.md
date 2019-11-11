@@ -1,5 +1,7 @@
 # Changes in mirt 1.32
 
+- added `p.adjust` argument to `DRF()` (requested by Keri J. S. Brady)
+
 - fix for `invariance = 'free_var'` argument in `multipleGroup()` for multidiemnsional 
   models with correlated traits, which previously fixed the correlation parameters 
   inadvertently (reported by Ruoyi Zhu)
