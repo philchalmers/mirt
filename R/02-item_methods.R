@@ -27,17 +27,41 @@ EML <- function(par, obj, Theta){
     return(LL)
 }
 
-EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND){
+EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND, bfactor_info){
     obj <- pars[[length(pars)]]
     obj@par[obj@est] <- x
-    gpars <- ExtractGroupPars(obj)
-    mu <- gpars$gmeans
-    sigma <- gpars$gcov
+    gp <- ExtractGroupPars(obj)
+    mu <- gp$gmeans
+    sigma <- gp$gcov
     prior <- mirt_dmvnorm(Theta, mean=mu, sigma=sigma)
     prior <- prior/sum(prior)
-    rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq,
-                        Theta=Theta, prior=prior, itemloc=itemloc,
-                        CUSTOM.IND=CUSTOM.IND, full=FALSE)
+    if(obj@dentype == 'bfactor'){
+        J <- length(itemloc) - 1L
+        sitems <- bfactor_info$sitems
+        nfact <- bfactor_info$nfact
+        theta <- pars[[J+1L]]@theta
+        Thetabetween <- pars[[J+1L]]@Thetabetween
+        p <- matrix(0, nrow(Theta), ncol(sitems))
+        pp <- matrix(0, nrow(theta), ncol(sitems))
+        for(i in seq_len(ncol(sitems))){
+            sel <- c(seq_len(nfact-ncol(sitems)), i + nfact - ncol(sitems))
+            p[,i] <- mirt_dmvnorm(Theta[ ,sel], gp$gmeans[sel], gp$gcov[sel,sel,drop=FALSE])
+            pp[,i] <- dnorm(theta, gp$gmeans[sel[length(sel)]],
+                            sqrt(gp$gcov[sel[length(sel)],sel[length(sel)],drop=FALSE]))
+        }
+        pb <- mirt_dmvnorm(Thetabetween, gp$gmeans[seq_len(ncol(Thetabetween))],
+                           gp$gcov[seq_len(ncol(Thetabetween)), seq_len(ncol(Thetabetween)), drop=FALSE])
+        Priorbetween <- pb / sum(pb)
+        prior <- t(t(pp) / colSums(pp))
+        rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, freq=freq,
+                               Theta=Theta, prior=prior,
+                               Priorbetween=Priorbetween, specific=bfactor_info$specific,
+                               sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+    } else {
+        rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq,
+                            Theta=Theta, prior=prior, itemloc=itemloc,
+                            CUSTOM.IND=CUSTOM.IND, full=FALSE)
+    }
     tmp <- log(rlist$expected)
     pick <- is.finite(tmp)
     LL <- sum(freq[pick]*tmp[pick])
@@ -269,7 +293,7 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
-                          tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL){
+                          tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL, bfactor_info=NULL){
         if(x@itemclass < 0L){
             LLfun <- function(par, obj, Theta){
                 obj@par[obj@est] <- par
@@ -298,9 +322,12 @@ setMethod(
                 if(estHess){
                     if(any(x@est)){
                         hess[x@est,x@est] <- numerical_deriv(EML2, x@par[x@est], Theta=Theta,
-                                                               pars=pars, tabdata=tabdata, freq=freq,
-                                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                                                               gradient=FALSE)
+                                                             pars=pars, tabdata=tabdata, freq=freq,
+                                                             itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                                             bfactor_info=bfactor_info,
+                                                             type = if(pars[[length(pars)]]@dentype == 'bfactor') "central"
+                                                                             else "Richardson",
+                                                             gradient=FALSE)
                     }
                 }
                 return(list(grad=grad, hess=hess))

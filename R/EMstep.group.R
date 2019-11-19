@@ -441,7 +441,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            Theta=gTheta[[group]], EM = TRUE,
                            pars=pars[[group]], tabdata=Data$tabdatalong,
                            freq=Data$Freq[[group]], prior=Prior[[group]],
-                           itemloc=itemloc, estHess=TRUE)
+                           itemloc=itemloc,
+                           bfactor_info=if(dentype == 'bfactor')
+                               list(specific=specific, sitems=sitems, nfact=nfact) else NULL,
+                           estHess=TRUE)
             ind2 <- ind1 + length(deriv$grad) - 1L
             h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
             ind1 <- ind2 + 1L

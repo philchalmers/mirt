@@ -2,6 +2,9 @@
 
 - added `p.adjust` argument to `DRF()` (requested by Keri J. S. Brady)
 
+- support for computation of the ACOV matrix when the variance of the specific 
+  factors are freely estimated in `bfactor()` 
+
 - fix for `invariance = 'free_var'` argument in `multipleGroup()` for multidiemnsional 
   models with correlated traits, which previously fixed the correlation parameters 
   inadvertently (reported by Ruoyi Zhu)
