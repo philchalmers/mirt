@@ -63,8 +63,8 @@ test_that('mixed dich', {
 
     #model using 2PL items instead of only Rasch, and with missing data
     data[1,1] <- covdata[1,2] <- NA
-    mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
-                                        itemtype = '2PL', verbose = FALSE, draws = 1)
+    expect_warning(mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
+                                        itemtype = '2PL', verbose = FALSE, draws = 1))
     expect_is(mod1b, 'MixedClass')
     expect_equal(extract.mirt(mod1b, 'df'), 1001)
     cfs <- as.numeric(do.call(c, coef(mod1b)))
