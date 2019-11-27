@@ -867,7 +867,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             SEthetas[i, ] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * expLW / nc))
         }
     }
-    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), Theta=thetas, SE.Theta=SEthetas)
+    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), Theta=thetas, SE_Theta=SEthetas)
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
         if(any(is.na(x@Data$data)))
