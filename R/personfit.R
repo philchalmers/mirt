@@ -1,8 +1,8 @@
 #' Person fit statistics
 #'
 #' \code{personfit} calculates the Zh values from Drasgow, Levine and Williams (1985) for
-#' unidimensional and multidimensional models. For Rasch models infit and outfit statistics are
-#' also produced. The returned object is a \code{data.frame}
+#' unidimensional and multidimensional models, as well as the infit and outfit statistics.
+#' The returned object is a \code{data.frame}
 #' consisting either of the tabulated data or full data with the statistics appended to the
 #' rightmost columns.
 #'
@@ -136,42 +136,29 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
                     sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
     }
     Zh <- (LL - mu) / sqrt(sigma2)
-    if(all(x@Model$itemtype %in% c('Rasch', '2PL', 'rsm', 'gpcm'))){
-        infit <- FALSE
-        oneslopes <- rep(FALSE, length(x@Model$itemtype))
-        slope <- x@ParObjects$pars[[1L]]@par[1L]
-        for(i in seq_len(length(x@Model$itemtype)))
-            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], slope-1e-10, slope+1e-10)
-        if(all(oneslopes)){
-            W <- resid <- C <- matrix(0, ncol=J, nrow=N)
-            K <- x@Data$K
-            for (i in seq_len(J)){
-                P <- ProbTrace(x=pars[[i]], Theta=Theta)
-                Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
-                dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]
-                item <- extract.item(x, i)
-                resid[, i] <- rowSums(dat*Emat) - rowSums(Emat * P)
-                W[ ,i] <- rowSums((Emat - rowSums(Emat * P))^2 * P)
-                C[ ,i] <- rowSums((Emat - rowSums(Emat * P))^4 * P)
-            }
-            W[W^2 < 1e-5] <- sqrt(1e-5)
-            if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))
-            outfit <- rowSums(resid^2/W) / J
-            q.outfit <- sqrt(rowSums((C / W^2) / J^2) - 1 / J)
-            q.outfit[q.outfit > 1.4142] <- 1.4142
-            z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
-            infit <- rowSums(resid^2) / rowSums(W)
-            q.infit <- sqrt(rowSums(C - W^2) / rowSums(W)^2)
-            q.infit[q.infit > 1.4142] <- 1.4142
-            z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
-            ret <- data.frame(x@Data$data, outfit=outfit, z.outfit=z.outfit,
-                              infit=infit, z.infit=z.infit, Zh=Zh)
-        } else {
-            ret <- data.frame(x@Data$data, Zh=Zh)
-        }
-    } else {
-        ret <- data.frame(x@Data$data, Zh=Zh)
+    W <- resid <- C <- matrix(0, ncol=J, nrow=N)
+    K <- x@Data$K
+    for (i in seq_len(J)){
+        P <- ProbTrace(x=pars[[i]], Theta=Theta)
+        Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
+        dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]
+        item <- extract.item(x, i)
+        resid[, i] <- rowSums(dat*Emat) - rowSums(Emat * P)
+        W[ ,i] <- rowSums((Emat - rowSums(Emat * P))^2 * P)
+        C[ ,i] <- rowSums((Emat - rowSums(Emat * P))^4 * P)
     }
+    W[W^2 < 1e-5] <- sqrt(1e-5)
+    if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))
+    outfit <- rowSums(resid^2/W) / J
+    q.outfit <- sqrt(rowSums((C / W^2) / J^2) - 1 / J)
+    q.outfit[q.outfit > 1.4142] <- 1.4142
+    z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
+    infit <- rowSums(resid^2) / rowSums(W)
+    q.infit <- sqrt(rowSums(C - W^2) / rowSums(W)^2)
+    q.infit[q.infit > 1.4142] <- 1.4142
+    z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
+    ret <- data.frame(x@Data$data, outfit=outfit, z.outfit=z.outfit,
+                      infit=infit, z.infit=z.infit, Zh=Zh)
     if(stats.only)
         ret <- ret[, !(colnames(ret) %in% colnames(x@Data$data)), drop=FALSE]
     return(ret)

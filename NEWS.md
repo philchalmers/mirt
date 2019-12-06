@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- allow infit/outfit statistics to be computed for non-Rasch models (suggested by 
+  Alexander Freund for use with GGUMs)
+
 - added `p.adjust` argument to `DRF()` (requested by Keri J. S. Brady)
 
 - support for computation of the ACOV matrix when the variance of the specific 

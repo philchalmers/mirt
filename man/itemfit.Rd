@@ -42,8 +42,7 @@ itemfit(x, fit_stats = "S_X2", which.items = 1:extract.mirt(x,
     bootstrapping
   \item \code{'X2*_df'} : Stone's (2000) fit statistics that require parametric
     bootstrapping to obtain scaled versions of the X2* and degrees of freedom
-  \item \code{'infit'} : (Unidimensional Rasch model only) compute the
-    infit and outfit statistics. Ignored if models are not from the Rasch family
+  \item \code{'infit'} : Compute the infit and outfit statistics
 }
 
 Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing response data

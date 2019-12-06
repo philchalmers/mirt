@@ -37,8 +37,7 @@
 #'     bootstrapping
 #'   \item \code{'X2*_df'} : Stone's (2000) fit statistics that require parametric
 #'     bootstrapping to obtain scaled versions of the X2* and degrees of freedom
-#'   \item \code{'infit'} : (Unidimensional Rasch model only) compute the
-#'     infit and outfit statistics. Ignored if models are not from the Rasch family
+#'   \item \code{'infit'} : Compute the infit and outfit statistics
 #' }
 #'
 #' Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing response data
@@ -462,51 +461,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         discrete <- TRUE
         pis <- extract.mirt(x, 'pis')
     }
-    # if(impute != 0 && !is(x, 'MultipleGroupClass')){
-    #     if(impute == 0)
-    #         stop('Fit statistics cannot be computed when there are missing data. Pass na.rm=TRUE to remove cases row-wise', call.=FALSE)
-    #     if(sum(is.na(x@Data$data)) / length(x@Data$data) > .10)
-    #         warning('Imputations for large amounts of missing data may be overly conservative. Use with caution', call.=FALSE)
-    #     stopifnot(impute > 1L)
-    #     if(is.null(Theta))
-    #         Theta <- fscores(x, plausible.draws = impute, method = ifelse(method == 'MAP', 'MAP', 'EAP'), ...)
-    #     collect <- vector('list', impute)
-    #     vals <- mod2values(x)
-    #     vals$est <- FALSE
-    #     collect <- myLapply(1L:impute, fn, Theta=Theta, obj=x, vals=vals, fit_stats=fit_stats,
-    #                         group.size=group.size, group.bins=group.bins,
-    #                         mincell=mincell, mincell.X2=mincell.X2,
-    #                         S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-    #                         empirical.CI=empirical.CI, empirical.table=empirical.table,
-    #                         method=method, impute=0, discrete=discrete, ...)
-    #     ave <- SD <- collect[[1L]]
-    #     pick1 <- 1:nrow(ave)
-    #     pick2 <- sapply(ave, is.numeric)
-    #     ave[pick1, pick2] <- SD[pick1, pick2] <- 0
-    #     for(i in seq_len(impute))
-    #         ave[pick1, pick2] <- ave[pick1, pick2] + collect[[i]][pick1, pick2]
-    #     ave[pick1, pick2] <- ave[pick1, pick2]/impute
-    #     for(i in seq_len(impute))
-    #         SD[pick1, pick2] <- SD[pick1, pick2] + (ave[pick1, pick2] - collect[[i]][pick1, pick2])^2
-    #     SD[pick1, pick2] <- sqrt(SD[pick1, pick2]/impute)
-    #     SD$item <- paste0('SD_', SD$item)
-    #     SD <- rbind(NA, SD)
-    #     ret <- rbind(ave, SD)
-    #     class(ret) <- c('mirt_df', 'data.frame')
-    #     return(ret)
-    # }
     if(S_X2.tables || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data)[which.items])
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
-    if(all(x@Model$itemtype %in% c('Rasch', '2PL', 'rsm', 'gpcm')) && infit){
-        infit <- FALSE
-        oneslopes <- rep(FALSE, length(x@Model$itemtype))
-        slope <- x@ParObjects$pars[[1L]]@par[1L]
-        for(i in seq_len(length(x@Model$itemtype)))
-            oneslopes[i] <- closeEnough(x@ParObjects$pars[[i]]@par[1L], slope-1e-10, slope+1e-10)
-        if(all(oneslopes)) infit <- TRUE
-    } else infit <- FALSE
     if(Zh || infit){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
@@ -541,7 +499,6 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         }
         tmp <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
         if(Zh) ret$Zh <- tmp[which.items]
-        #if all Rasch models, infit and outfit
         if(infit){
             attr(x, 'inoutfitreturn') <- TRUE
             pf <- personfit(x, method=method, Theta=Theta)
