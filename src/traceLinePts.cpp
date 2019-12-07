@@ -530,11 +530,12 @@ void P_ggum(vector<double> &P, const vector<double> &par,
             z1[w] = w * dist[i] + sumtau;
             z2[w] = (M - w) * dist[i] + sumtau;
         }
-        double maxz1 = *std::max_element(z1.begin(), z1.end());
-        double maxz2 = *std::max_element(z2.begin(), z2.end());
-        double maxz = std::max(maxz1, maxz2);
+        // double maxz1 = *std::max_element(z1.begin(), z1.end());
+        // double maxz2 = *std::max_element(z2.begin(), z2.end());
+        // double maxz = std::max(maxz1, maxz2);
         for(int j = 0; j < ncat; ++j){
-            Num(i,j) = exp(z1[j] - maxz) + exp(z2[j] - maxz);
+            // Num(i,j) = exp(z1[j] - maxz) + exp(z2[j] - maxz);
+            Num(i,j) = exp(z1[j]) + exp(z2[j]);
             Den[i] += Num(i,j);
         }
     }
