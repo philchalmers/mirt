@@ -390,7 +390,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
             rlist <- Elist$rlist; LL <- Elist$LL
         }
-        if(verbose && !is.nan(TOL) && !is.na(TOL)) cat("\n")
         if(cycles == NCYCLES){
             if(list$message)
                 message('EM cycles terminated after ', cycles, ' iterations.')

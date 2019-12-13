@@ -832,7 +832,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems,
                               CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior, warn=opts$warn, type=opts$SE.type,
                               delta=opts$delta, lrPars=ESTIMATE$lrPars)
-        } else if(opts$SE.type == 'MHRM' && opts$method == 'EM'){
+        } else if(opts$SE.type %in% c('MHRM', 'FMHRM') && opts$method == 'EM'){
             if(opts$dentype %in% c('EH', 'EHW'))
                 stop('MHRM standard error methods not available when using empirical histograms', call.=FALSE)
             ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
