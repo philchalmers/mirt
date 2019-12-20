@@ -555,14 +555,12 @@ setMethod(
                   colnames(nx) <- c(names[seq_len(ncol(nx)-nclass)], paste0('Class_', seq_len(nclass)))
                   nx
                 }, nclass=nclass)
-            } else if(method == 'DiscreteSum'){
-                names <- paste0('Class_', seq_len(object@Model$nfact))
-                names2 <- paste0('SE.Theta.', seq_len(object@Model$nfact))
-                ret <- lapply(ret, function(x, names, names2){
-                    nx <- x[,!(colnames(x) %in% names2)]
-                    colnames(nx) <- c('Sum.Scores', names, 'observed', 'expected')
-                    nx
-                }, names=names, names2=names2)
+            } else {
+                ret <- lapply(ret, function(x){
+                    nms <- colnames(x)
+                    colnames(x) <- gsub('Theta.', 'Class_', nms)
+                    x
+                })
             }
         }
         if(length(ret) == 1L) ret <- ret[[1L]]

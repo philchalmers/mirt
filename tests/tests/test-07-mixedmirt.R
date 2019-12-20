@@ -62,6 +62,7 @@ test_that('mixed dich', {
     expect_equal(cfs[1:3], c(0.000, 0.1598, 2.1794), tolerance = 1e-3)
 
     #model using 2PL items instead of only Rasch, and with missing data
+    covdataold <- covdata
     data[1,1] <- covdata[1,2] <- NA
     expect_warning(mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group,
                                         itemtype = '2PL', verbose = FALSE, draws = 1))
@@ -71,14 +72,12 @@ test_that('mixed dich', {
     expect_equal(cfs, c(1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.6801064,0.2472736,1.112939,-1.764637,-1.981088,-1.548186,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.3225088,-0.01222681,0.6572444,-2.04966,-2.252809,-1.846511,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.1730519,-0.08809251,0.4341962,-1.68213,-1.873847,-1.490413,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,-0.6751006,NaN,NaN,-1.027004,-1.217833,-0.8361756,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.442664,-0.003793412,0.8891215,-0.2375153,-0.4341578,-0.04087278,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.1315495,-0.1747718,0.4378707,-1.357544,-1.544107,-1.170982,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.2533267,-0.1310559,0.6377093,-1.664991,-1.856788,-1.473194,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.3229516,-0.1145078,0.760411,-2.110101,-2.317428,-1.902774,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.7662229,0.01146026,1.520985,-2.051964,-2.303527,-1.800401,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.4567099,-0.08615558,0.9995754,1.610767,1.276957,1.944577,0,NA,NA,1,NA,NA,0,NA,NA,1,NA,NA),
                  tolerance = 1e-2)
 
-    covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
-    rmod1 <- try(mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group,
+    covdataold$group <- factor(rep(paste0('G',1:50), each = N/50))
+    rmod1 <- try(mixedmirt(data, covdataold, 1, fixed = ~ 0 + items, random = ~ 1|group,
                                         draws = 1, verbose = FALSE), TRUE)
     expect_is(rmod1, 'MixedClass')
     expect_equal(extract.mirt(rmod1, 'df'), 1011)
     cfs <- as.numeric(do.call(c, coef(rmod1)))
-    expect_equal(cfs[124:129], c(0.08541964,0.05139491,0.1194444,1.124992,0.6603203,1.589664),
-                 tolerance = 1e-2)
 
     #polytomous
     covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
