@@ -4,8 +4,14 @@
 \alias{numerical_deriv}
 \title{Compute numerical derivatives}
 \usage{
-numerical_deriv(f, par, ..., delta = 1e-05, gradient = TRUE,
-  type = "Richardson")
+numerical_deriv(
+  f,
+  par,
+  ...,
+  delta = 1e-05,
+  gradient = TRUE,
+  type = "Richardson"
+)
 }
 \arguments{
 \item{f}{the objective function being evaluated}

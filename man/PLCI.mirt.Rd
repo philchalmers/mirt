@@ -4,9 +4,18 @@
 \alias{PLCI.mirt}
 \title{Compute profiled-likelihood (or posterior) confidence intervals}
 \usage{
-PLCI.mirt(mod, parnum = NULL, alpha = 0.05, search_bound = TRUE,
-  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30,
-  NealeMiller = FALSE, ...)
+PLCI.mirt(
+  mod,
+  parnum = NULL,
+  alpha = 0.05,
+  search_bound = TRUE,
+  step = 0.5,
+  lower = TRUE,
+  upper = TRUE,
+  inf2val = 30,
+  NealeMiller = FALSE,
+  ...
+)
 }
 \arguments{
 \item{mod}{a converged mirt model}

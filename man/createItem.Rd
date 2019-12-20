@@ -4,9 +4,20 @@
 \alias{createItem}
 \title{Create a user defined item with correct generic functions}
 \usage{
-createItem(name, par, est, P, gr = NULL, hss = NULL, gen = NULL,
-  lbound = NULL, ubound = NULL, derivType = "Richardson",
-  derivType.hss = "Richardson", bytecompile = TRUE)
+createItem(
+  name,
+  par,
+  est,
+  P,
+  gr = NULL,
+  hss = NULL,
+  gen = NULL,
+  lbound = NULL,
+  ubound = NULL,
+  derivType = "Richardson",
+  derivType.hss = "Richardson",
+  bytecompile = TRUE
+)
 }
 \arguments{
 \item{name}{a character indicating the item class name to be defined}

@@ -4,8 +4,16 @@
 \alias{multipleGroup}
 \title{Multiple Group Estimation}
 \usage{
-multipleGroup(data, model, group, invariance = "", method = "EM",
-  rotate = "oblimin", dentype = "Gaussian", ...)
+multipleGroup(
+  data,
+  model,
+  group,
+  invariance = "",
+  method = "EM",
+  rotate = "oblimin",
+  dentype = "Gaussian",
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of

@@ -10,8 +10,14 @@
 \alias{summary,MixtureClass-method}
 \title{Summary of model object}
 \usage{
-\S4method{summary}{SingleGroupClass}(object, rotate = "oblimin",
-  Target = NULL, suppress = 0, verbose = TRUE, ...)
+\S4method{summary}{SingleGroupClass}(
+  object,
+  rotate = "oblimin",
+  Target = NULL,
+  suppress = 0,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},

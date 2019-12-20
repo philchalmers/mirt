@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- fix bug in `'drop_sequential'` scheme in `DIF()` introduced in the previous 
+  version of mirt due to some internal organization changes (reported by Balal Izanloo)
+
 - allow infit/outfit statistics to be computed for non-Rasch models (suggested by 
   Alexander Freund for use with GGUMs)
 

@@ -4,8 +4,13 @@
 \alias{areainfo}
 \title{Function to calculate the area under a selection of information curves}
 \usage{
-areainfo(x, theta_lim, which.items = 1:extract.mirt(x, "nitems"),
-  group = NULL, ...)
+areainfo(
+  x,
+  theta_lim,
+  which.items = 1:extract.mirt(x, "nitems"),
+  group = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
@@ -48,7 +53,7 @@ plot(info ~ Theta, type = 'l')
 pick <- Theta >= -2 & Theta <=0
 polygon(c(-2, Theta[pick], 0), c(0, info[pick], 0), col='lightblue')
 text(x = 2, y = 0.5, labels = paste("Total Information:", round(area$TotalInfo, 3),
-           "\\n\\nInformation in (-2, 0):", round(area$Info, 3),
+           "\n\nInformation in (-2, 0):", round(area$Info, 3),
            paste("(", round(100 * area$Proportion, 2), "\%)", sep = "")), cex = 1.2)
 
 }

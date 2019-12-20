@@ -4,11 +4,23 @@
 \alias{DIF}
 \title{Differential item functioning statistics}
 \usage{
-DIF(MGmodel, which.par, scheme = "add",
-  items2test = 1:extract.mirt(MGmodel, "nitems"), seq_stat = "SABIC",
-  Wald = FALSE, p.adjust = "none", return_models = FALSE,
-  return_seq_model = FALSE, max_run = Inf, plotdif = FALSE,
-  type = "trace", simplify = TRUE, verbose = TRUE, ...)
+DIF(
+  MGmodel,
+  which.par,
+  scheme = "add",
+  items2test = 1:extract.mirt(MGmodel, "nitems"),
+  seq_stat = "SABIC",
+  Wald = FALSE,
+  p.adjust = "none",
+  return_models = FALSE,
+  return_seq_model = FALSE,
+  max_run = Inf,
+  plotdif = FALSE,
+  type = "trace",
+  simplify = TRUE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{MGmodel}{an object returned from \code{\link{multipleGroup}} to be used as the reference
@@ -159,7 +171,7 @@ model_constrained <- multipleGroup(dat, 1, group,
 dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 dropdown
 
-### sequential schemes
+### sequential schemes (add constraints)
 
 ### sequential searches using SABIC as the selection criteria
 # starting from completely different models

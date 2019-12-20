@@ -4,8 +4,14 @@
 \alias{testinfo}
 \title{Function to calculate test information}
 \usage{
-testinfo(x, Theta, degrees = NULL, group = NULL, individual = FALSE,
-  which.items = 1:extract.mirt(x, "nitems"))
+testinfo(
+  x,
+  Theta,
+  degrees = NULL,
+  group = NULL,
+  individual = FALSE,
+  which.items = 1:extract.mirt(x, "nitems")
+)
 }
 \arguments{
 \item{x}{an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable

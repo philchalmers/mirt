@@ -10,10 +10,20 @@
 \alias{coef,MixtureClass-method}
 \title{Extract raw coefs from model object}
 \usage{
-\S4method{coef}{SingleGroupClass}(object, CI = 0.95, printSE = FALSE,
-  rotate = "none", Target = NULL, IRTpars = FALSE, rawug = FALSE,
-  as.data.frame = FALSE, simplify = FALSE, unique = FALSE,
-  verbose = TRUE, ...)
+\S4method{coef}{SingleGroupClass}(
+  object,
+  CI = 0.95,
+  printSE = FALSE,
+  rotate = "none",
+  Target = NULL,
+  IRTpars = FALSE,
+  rawug = FALSE,
+  as.data.frame = FALSE,
+  simplify = FALSE,
+  unique = FALSE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},

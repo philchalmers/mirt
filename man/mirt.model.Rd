@@ -4,8 +4,14 @@
 \alias{mirt.model}
 \title{Specify model loadings}
 \usage{
-mirt.model(input = NULL, itemnames = NULL, file = "", COV = NULL,
-  quiet = TRUE, ...)
+mirt.model(
+  input = NULL,
+  itemnames = NULL,
+  file = "",
+  COV = NULL,
+  quiet = TRUE,
+  ...
+)
 }
 \arguments{
 \item{input}{input for writing out the model syntax. Can either be a string declaration of
@@ -93,7 +99,7 @@ parameter (\code{COV_11}) to 1.5:
   factors with an asterisk (e.g., F1*F2), or with an asterisk between three or more factors
   to estimate all the possible correlations (e.g., F1*F2*F3)}
 
-\item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
+ \item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
   E.g., \code{MEAN = F1, F2} will free the latent means for factors F1 and F2}
 
 \item{CONSTRAIN}{A bracketed, comma separated list specifying equality constrains between items.
@@ -101,21 +107,21 @@ parameter (\code{COV_11}) to 1.5:
   \code{CONSTRAIN = (items, ..., parameterName(s)),
   (items, ..., parameterName)}.
 
-For example, in a single group 10-item dichotomous tests, using the default 2PL model,
+  For example, in a single group 10-item dichotomous tests, using the default 2PL model,
   the first and last 5 item slopes (a1) can be constrained to be equal by using
   \code{CONSTRAIN = (1-5, a1), (6-10, a1)}, or some combination
   such as \code{CONSTRAIN = (1-3,4,5,a1), (6,7,8-10,a1)}.
 
-When constraining parameters to be equal across items with different parameter names, a
+  When constraining parameters to be equal across items with different parameter names, a
   balanced bracketed vector must be supplied. E.g., setting the first slope for item 1 equal to
   the second slope in item 3 would be \code{CONSTRAIN = (1, 3, a1, a2)}
   }
 
-\item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
+ \item{CONSTRAINB}{A bracketed, comma separate list specifying equality constrains between groups.
   The input format is \code{CONSTRAINB = (items, ..., parameterName),
   (items, ..., parameterName)}.
 
-For example, in a two group 10-item dichotomous tests, using the default 2PL model, the first
+  For example, in a two group 10-item dichotomous tests, using the default 2PL model, the first
   5 item slopes (a1) can be constrained to be equal across both groups by using
   \code{CONSTRAINB = (1-5, a1)}, or some combination such as \code{CONSTRAINB = (1-3,4,5,a1)}}
 
@@ -127,7 +133,7 @@ For example, in a two group 10-item dichotomous tests, using the default 2PL mod
   defining a normal prior of N(0,2) for the first 5 item intercepts (d) can be defined by
   \code{PRIOR = (1-5, d, norm, 0, 2)}
 
-Currently supported priors are of the form: \code{(items, norm, mean, sd)}
+  Currently supported priors are of the form: \code{(items, norm, mean, sd)}
   for the normal/Gaussian, \code{(items, lnorm, log_mean, log_sd)} for log-normal,
   \code{(items, beta, alpha, beta)} for beta, and \code{(items, expbeta, alpha, beta)}
   for the beta distribution after applying the
@@ -139,7 +145,7 @@ Currently supported priors are of the form: \code{(items, norm, mean, sd)}
   The input format is \code{LBOUND = (items, ..., parameterName, value),
   (items, ..., parameterName, value)}.
 
-For example, in a single group 10-item dichotomous tests, using the 3PL model and
+  For example, in a single group 10-item dichotomous tests, using the 3PL model and
   setting lower bounds for the 'g' parameters for the first 5 items to 0.2 is accomplished with
   \code{LBOUND = (1-5, g, 0.2)}}
 
@@ -149,7 +155,7 @@ For example, in a single group 10-item dichotomous tests, using the 3PL model an
   The input is of the form \code{(items, ..., parameterName, value)}. For instance, setting the 10th and
   12th to 15th item slope parameters (a1) to 1.0 is specified with \code{START = (10, 12-15, a1, 1.0)}
 
-For more hands on control of the starting values pass the argument \code{pars = 'values'} through
+  For more hands on control of the starting values pass the argument \code{pars = 'values'} through
   whatever estimation function is being used}
 
 \item{FIXED}{A bracketed, comma separate list specifying which parameters should be fixed at their
@@ -157,7 +163,7 @@ For more hands on control of the starting values pass the argument \code{pars = 
   The input is of the form \code{(items, ..., parameterName)}. For instance, fixing the 10th and
   12th to 15th item slope parameters (a1) is accomplished with \code{FIXED = (10, 12-15, a1)}
 
-For more hands on control of the estimated values pass the argument \code{pars = 'values'} through
+  For more hands on control of the estimated values pass the argument \code{pars = 'values'} through
   whatever estimation function is being used}
 
 \item{FREE}{Equivalent to the \code{FIXED} input, except that parameters are freely estimated instead

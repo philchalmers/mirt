@@ -4,15 +4,36 @@
 \alias{fscores}
 \title{Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)}
 \usage{
-fscores(object, method = "EAP", full.scores = TRUE,
-  rotate = "oblimin", Target = NULL, response.pattern = NULL,
-  append_response.pattern = TRUE, na.rm = FALSE, plausible.draws = 0,
-  plausible.type = "normal", quadpts = NULL, returnER = FALSE,
-  return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-  full.scores.SE = FALSE, theta_lim = c(-6, 6), MI = 0,
-  use_dentype_estimate = FALSE, QMC = FALSE, custom_den = NULL,
-  custom_theta = NULL, min_expected = 1, converge_info = FALSE,
-  max_theta = 20, start = NULL, ...)
+fscores(
+  object,
+  method = "EAP",
+  full.scores = TRUE,
+  rotate = "oblimin",
+  Target = NULL,
+  response.pattern = NULL,
+  append_response.pattern = TRUE,
+  na.rm = FALSE,
+  plausible.draws = 0,
+  plausible.type = "normal",
+  quadpts = NULL,
+  returnER = FALSE,
+  return.acov = FALSE,
+  mean = NULL,
+  cov = NULL,
+  verbose = TRUE,
+  full.scores.SE = FALSE,
+  theta_lim = c(-6, 6),
+  MI = 0,
+  use_dentype_estimate = FALSE,
+  QMC = FALSE,
+  custom_den = NULL,
+  custom_theta = NULL,
+  min_expected = 1,
+  converge_info = FALSE,
+  max_theta = 20,
+  start = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{a computed model object of class \code{SingleGroupClass},

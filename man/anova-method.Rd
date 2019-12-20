@@ -10,8 +10,7 @@
 \alias{anova,MixtureClass-method}
 \title{Compare nested models with likelihood-based statistics}
 \usage{
-\S4method{anova}{SingleGroupClass}(object, object2, bounded = FALSE,
-  mix = 0.5, verbose = TRUE)
+\S4method{anova}{SingleGroupClass}(object, object2, bounded = FALSE, mix = 0.5, verbose = TRUE)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},

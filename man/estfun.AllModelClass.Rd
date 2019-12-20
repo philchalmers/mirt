@@ -4,8 +4,11 @@
 \alias{estfun.AllModelClass}
 \title{Extract Empirical Estimating Functions}
 \usage{
-estfun.AllModelClass(x, weights = extract.mirt(x, "survey.weights"),
-  centering = FALSE)
+estfun.AllModelClass(
+  x,
+  weights = extract.mirt(x, "survey.weights"),
+  centering = FALSE
+)
 }
 \arguments{
 \item{x}{a fitted model object of class \code{SingleGroupClass} or

@@ -4,11 +4,24 @@
 \alias{mixedmirt}
 \title{Mixed effects modeling for MIRT models}
 \usage{
-mixedmirt(data, covdata = NULL, model, fixed = ~1, random = NULL,
-  itemtype = "Rasch", lr.fixed = ~1, lr.random = NULL,
-  itemdesign = NULL, constrain = NULL, pars = NULL,
-  return.design = FALSE, SE = TRUE, internal_constraints = TRUE,
-  technical = list(SEtol = 1e-04), ...)
+mixedmirt(
+  data,
+  covdata = NULL,
+  model,
+  fixed = ~1,
+  random = NULL,
+  itemtype = "Rasch",
+  lr.fixed = ~1,
+  lr.random = NULL,
+  itemdesign = NULL,
+  constrain = NULL,
+  pars = NULL,
+  return.design = FALSE,
+  SE = TRUE,
+  internal_constraints = TRUE,
+  technical = list(SEtol = 1e-04),
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
@@ -101,10 +114,10 @@ using parallel estimation via \code{\link{mirtCluster}}.
 \details{
 For dichotomous response models, \code{mixedmirt} follows the general form
 
-\deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-1 * [\theta a +
+ \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{1 + exp(-1 * [\theta a +
  X \beta + Z \delta])}}
 
-where X is a design matrix with associated \eqn{\beta} fixed effect intercept coefficients,
+ where X is a design matrix with associated \eqn{\beta} fixed effect intercept coefficients,
  and Z is a design matrix with associated \eqn{\delta} random effects for the intercepts.
  For simplicity and easier interpretation, the unique item intercept values typically found in
  \eqn{X \beta}
@@ -112,20 +125,20 @@ where X is a design matrix with associated \eqn{\beta} fixed effect intercept co
  To observe how the design matrices are structured prior to reassignment and estimation pass
  the argument \code{return.design = TRUE}.
 
-Polytomous IRT models follow a similar format except the item intercepts are automatically
+ Polytomous IRT models follow a similar format except the item intercepts are automatically
  estimated internally, rendering the \code{items} argument in the fixed formula redundant and
  therefore must be omitted from the specification. If there are a mixture of dichotomous and
  polytomous items the intercepts for the dichotomous models are also estimated for consistency.
 
-The decomposition of the \eqn{\theta} parameters is also possible to form
+ The decomposition of the \eqn{\theta} parameters is also possible to form
  latent regression and multilevel IRT models by using the \code{lr.fixed} and \code{lr.random}
  inputs. These effects decompose \eqn{\theta} such that
 
-\deqn{\theta = V \Gamma + W \zeta + \epsilon}
+ \deqn{\theta = V \Gamma + W \zeta + \epsilon}
 
-where V and W are fixed and random effects design matrices for the associated coefficients.
+ where V and W are fixed and random effects design matrices for the associated coefficients.
 
-To simulate maximum a posteriori estimates for the random effect terms
+ To simulate maximum a posteriori estimates for the random effect terms
  use the \code{\link{randef}} function.
 }
 \examples{

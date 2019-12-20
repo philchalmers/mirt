@@ -4,8 +4,18 @@
 \alias{createGroup}
 \title{Create a user defined group-level object with correct generic functions}
 \usage{
-createGroup(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
-  lbound = NULL, ubound = NULL, derivType = "Richardson")
+createGroup(
+  par,
+  est,
+  den,
+  nfact,
+  gr = NULL,
+  hss = NULL,
+  gen = NULL,
+  lbound = NULL,
+  ubound = NULL,
+  derivType = "Richardson"
+)
 }
 \arguments{
 \item{par}{a named vector of the starting values for the parameters}

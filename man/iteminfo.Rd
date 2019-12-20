@@ -4,8 +4,7 @@
 \alias{iteminfo}
 \title{Function to calculate item information}
 \usage{
-iteminfo(x, Theta, degrees = NULL, total.info = TRUE,
-  multidim_matrix = FALSE)
+iteminfo(x, Theta, degrees = NULL, total.info = TRUE, multidim_matrix = FALSE)
 }
 \arguments{
 \item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}

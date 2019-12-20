@@ -4,8 +4,13 @@
 \alias{draw_parameters}
 \title{Draw plausible parameter instantiations from a given model}
 \usage{
-draw_parameters(mod, draws, method = c("parametric", "boostrap"),
-  redraws = 20, ...)
+draw_parameters(
+  mod,
+  draws,
+  method = c("parametric", "boostrap"),
+  redraws = 20,
+  ...
+)
 }
 \arguments{
 \item{mod}{estimated single or multiple-group model}
