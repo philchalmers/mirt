@@ -25,7 +25,9 @@
 #'   numerically ordered data, with missing data coded as \code{NA}
 #' @param model string to be passed to, or a model object returned from, \code{\link{mirt.model}}
 #'   declaring how the global model is to be estimated (useful to apply constraints here)
-#' @param group a \code{character} or \code{factor} vector indicating group membership
+#' @param group a \code{character} or \code{factor} vector indicating group membership. If a \code{character}
+#'   vector is supplied this will be automatically transformed into a \code{\link{factor}} variable.
+#'   As well, the first level of the (factorized) grouping variable will be treated as the "reference" group
 #' @param invariance a character vector containing the following possible options:
 #'   \describe{
 #'     \item{\code{'free_mean'} or \code{'free_means'}}{freely estimate all latent means in all focal groups
