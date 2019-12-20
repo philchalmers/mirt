@@ -10,7 +10,6 @@ multipleGroup(
   group,
   invariance = "",
   method = "EM",
-  rotate = "oblimin",
   dentype = "Gaussian",
   ...
 )
@@ -43,8 +42,6 @@ declaring how the global model is to be estimated (useful to apply constraints h
 
 \item{method}{a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'}
 (default is \code{'EM'}). See \code{\link{mirt}} for details}
-
-\item{rotate}{rotation if models are exploratory (see \code{\link{mirt}} for details)}
 
 \item{dentype}{type of density form to use for the latent trait parameters. Current options include
   all of the methods described in \code{\link{mirt}}, as well as

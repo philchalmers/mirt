@@ -26,7 +26,6 @@
 #' @param model string to be passed to, or a model object returned from, \code{\link{mirt.model}}
 #'   declaring how the global model is to be estimated (useful to apply constraints here)
 #' @param group a \code{character} or \code{factor} vector indicating group membership
-#' @param rotate rotation if models are exploratory (see \code{\link{mirt}} for details)
 #' @param invariance a character vector containing the following possible options:
 #'   \describe{
 #'     \item{\code{'free_mean'} or \code{'free_means'}}{freely estimate all latent means in all focal groups
@@ -333,7 +332,7 @@
 #' coef(zip, simplify=TRUE)
 #'
 #' }
-multipleGroup <- function(data, model, group, invariance = '', method = 'EM', rotate = 'oblimin',
+multipleGroup <- function(data, model, group, invariance = '', method = 'EM',
                           dentype = 'Gaussian', ...)
 {
     Call <- match.call()
@@ -361,7 +360,7 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM', ro
     }
     if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
-                      rotate=rotate, dentype=dentype, ...)
+                      dentype=dentype, ...)
     if(is(mod, 'MultipleGroupClass') || is(mod, 'MixtureClass'))
         mod@Call <- Call
     return(mod)
