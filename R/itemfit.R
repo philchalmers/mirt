@@ -725,7 +725,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         gp <- if(mixture) list() else ExtractGroupPars(pars[[length(pars)]])
         if(x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom'){
             den_fun <- function(Theta, ...){
-                obj <- x@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]
+                obj <- x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]
                 obj@den(obj, Theta=Theta)
             }
         } else den_fun <- mirt_dmvnorm
