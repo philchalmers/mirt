@@ -212,7 +212,7 @@ setMethod(
                 large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@Data$K),
                               large=TRUE))
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
-                                   tabdatalong=large$tabdata, Freq=large$Freq,
+                                   tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,
                                    K=extract.mirt(object, 'K'), mins=rep(0L, ncol(response.pattern)))
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
@@ -228,7 +228,7 @@ setMethod(
                 large <- suppressWarnings(mirt(rp, nfact, large=TRUE,
                                             technical=list(customK=object@Data$K[pick])))
                 newmod@Data <- list(data=rp, tabdata=large$tabdata2, K=object@Data$K[pick],
-                                    tabdatalong=large$tabdata, Freq=large$Freq,
+                                    tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,
                                     mins=rep(0L, ncol(response.pattern))[pick])
                 if(mixture){
                     newmod@ParObjects$pars <- object@ParObjects$pars
