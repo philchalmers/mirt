@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- fix `method = 'classify'` option in `fscores()` when more than two mixtures are fitted
+  (reported by Lisa Limeri)
+
 - fix bug in `'drop_sequential'` scheme in `DIF()` introduced in the previous 
   version of mirt due to some internal organization changes (reported by Balal Izanloo)
 
