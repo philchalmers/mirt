@@ -273,7 +273,15 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 if(dentype == 'bfactor'){
                     pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
-                } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+                } else {
+                    pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+                    if(dentype %in% c('EHW', 'Davidian') ||
+                       (dentype == 'custom' && pars[[g]][[J+1L]]@standardize))
+                        pars[[g]][[J+1L]]@rr <- standardizeQuadrature(gTheta[[g]],
+                                                        nq=pars[[g]][[J+1L]]@rr,
+                                                        estmean=pars[[g]][[J+1L]]@est['MEAN_1'],
+                                                        estsd=pars[[g]][[J+1L]]@est['COV_11'])
+                }
             }
             start <- proc.time()[3L]
             preMstep.longpars2 <- preMstep.longpars

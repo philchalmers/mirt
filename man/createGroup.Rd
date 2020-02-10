@@ -9,6 +9,7 @@ createGroup(
   est,
   den,
   nfact,
+  standardize = FALSE,
   gr = NULL,
   hss = NULL,
   gen = NULL,
@@ -29,7 +30,13 @@ Function also must return a \code{numeric} vector object corresponding to the as
 each row in the \code{Theta} input}
 
 \item{nfact}{number of factors required for the model. E.g., for unidimensional models with only one
-dimension of integration \code{nfact = 1}}
+ dimension of integration \code{nfact = 1}
+@param standardize logical; use standardization of the quadrature table method proposed by
+  Woods and Thissen (2006)? If TRUE, the logical elements named \code{'MEAN_1'} and \code{'COV_11'}
+  can be included in the parameter vector, and when these values are set to FALSE in the \code{est}
+  input the E-table will be standardized to these fixed values (e.g.,
+  \code{par <- c(a1=1, d=0, MEAN_1=0, COV_11=1)} with \code{est <- c(TRUE, TRUE, FALSE, FALSE)} will
+  standardize the E-table to have a 0 mean and unit variance)}
 
 \item{gr}{gradient function (vector of first derivatives) of the log-likelihood used in
 estimation. The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object
