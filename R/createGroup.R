@@ -14,7 +14,7 @@
 #'   each row in the \code{Theta} input
 #' @param nfact number of factors required for the model. E.g., for unidimensional models with only one
 #'   dimension of integration \code{nfact = 1}
-#'  @param standardize logical; use standardization of the quadrature table method proposed by
+#' @param standardize logical; use standardization of the quadrature table method proposed by
 #'    Woods and Thissen (2006)? If TRUE, the logical elements named \code{'MEAN_1'} and \code{'COV_11'}
 #'    can be included in the parameter vector, and when these values are set to FALSE in the \code{est}
 #'    input the E-table will be standardized to these fixed values (e.g.,
