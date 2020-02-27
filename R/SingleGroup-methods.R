@@ -1685,7 +1685,7 @@ traditional2mirt <- function(x, cls, ncat){
         names(par) <- c('a1', paste0('d', 1:(length(par)-1)))
     } else if(cls %in% c('gpcm', 'gpcmIRT')){
         if(cls == 'gpcmIRT'){
-            x[-c(1, length(x))] <- x[-c(1, length(x))] + x[length(x)]
+            x[-c(1, length(x))] <- x[-c(1, length(x))] - x[length(x)]
             x <- x[-length(x)]
         }
         par <- c(x[1L], 0L:(ncat-1L), 0, x[-1L])

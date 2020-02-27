@@ -1,5 +1,8 @@
 # Changes in mirt 1.32
 
+- `itemtype = 'rsm'` reported the incorrect information functions due to use of - instead of +
+  from `traditional2mirt()` (reported by Nasser Hasan)
+
 - fix `method = 'classify'` option in `fscores()` when more than two mixtures are fitted
   (reported by Lisa Limeri)
 
