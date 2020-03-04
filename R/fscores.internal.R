@@ -67,7 +67,8 @@ setMethod(
                 } else vcov <- try(solve(estimate$hessian))
     	        if(return.acov) return(vcov)
     	        SEest <- try(sqrt(diag(vcov)))
-                if(any(SEest > 30)){
+    	        if(any(is.nan(SEest))) SEest <- rep(NA, ncol(scores))
+    	        else if(any(SEest > 30)){
                     est[SEest > 30] <- Inf * sign(est[SEest > 30])
                     SEest[SEest > 30] <- NA
                 }
