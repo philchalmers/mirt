@@ -266,9 +266,7 @@ Mstep.DC.optim <- function(pars, J, gTheta, constrain) {
     orgphi <- std_rr <- vector("list", ngroup)
     for(g in seq_len(ngroup)){
         orgphi[[g]] <- ExtractGroupPars(pars[[g]][[J+1L]])$phi
-        std_rr[[g]] <- standardizeQuadrature(gTheta[[g]], nq=pars[[g]][[J+1L]]@rr,
-                                             estmean=pars[[g]][[J+1L]]@est[1L],
-                                             estsd=pars[[g]][[J+1L]]@est[2L])
+        std_rr[[g]] <- pars[[g]][[J+1L]]@rr
     }
     phi <- do.call(c, orgphi) # adjust based on constrain TODO
     optDC <- nlminb(phi, function (...) -Mstep.DC.LL_group(...),

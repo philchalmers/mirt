@@ -318,11 +318,13 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         X2star <- function(mod, which.items, ETrange, ETpoints, itemtype, ...){
             sv <- mod2values(mod)
             sv$est <- FALSE
-            Theta <- matrix(seq(ETrange[1L], ETrange[2L], length.out=ETpoints))
+            nfact <- extract.mirt(mod, 'nfact')
+            Theta <- thetaComb(seq(ETrange[1L], ETrange[2L], length.out=ETpoints),
+                               nfact=nfact)
             dat <- extract.mirt(mod, 'data')
-            Emod <- mirt(dat, 1, itemtype=itemtype,
+            Emod <- mirt(dat, extract.mirt(mod, 'model'), itemtype=itemtype,
                          pars=sv, verbose=FALSE,
-                         technical=list(storeEtable=TRUE, customTheta=Theta))
+                         technical=list(storeEtable=TRUE, customTheta=Theta), ...)
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
             X2 <- rep(NA, ncol(dat))
@@ -347,7 +349,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 dat[is_NA] <- NA
                 if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
                 mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
-                             technical=list(warn=FALSE))
+                             technical=list(warn=FALSE), ...)
                 if(!extract.mirt(mod2, 'converged')) next
                 ret <- X2star(mod2, which.items=which.items, ETrange=ETrange,
                               ETpoints=ETpoints, itemtype=itemtype, ...)

@@ -14,6 +14,12 @@
 #'   each row in the \code{Theta} input
 #' @param nfact number of factors required for the model. E.g., for unidimensional models with only one
 #'   dimension of integration \code{nfact = 1}
+#' @param standardize logical; use standardization of the quadrature table method proposed by
+#'    Woods and Thissen (2006)? If TRUE, the logical elements named \code{'MEAN_1'} and \code{'COV_11'}
+#'    can be included in the parameter vector, and when these values are set to FALSE in the \code{est}
+#'    input the E-table will be standardized to these fixed values (e.g.,
+#'    \code{par <- c(a1=1, d=0, MEAN_1=0, COV_11=1)} with \code{est <- c(TRUE, TRUE, FALSE, FALSE)} will
+#'    standardize the E-table to have a 0 mean and unit variance)
 #' @param gr gradient function (vector of first derivatives) of the log-likelihood used in
 #'   estimation. The function must be of the form \code{gr(x, Theta)}, where \code{x} is the object
 #'   defined by \code{createGroup()} and \code{Theta} is a matrix of latent trait parameters
@@ -54,8 +60,9 @@
 #' coef(mod)
 #' coef(modcustom)
 #'
-createGroup <- function(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
-                       lbound = NULL, ubound = NULL, derivType = 'Richardson'){
+createGroup <- function(par, est, den, nfact, standardize = FALSE,
+                        gr = NULL, hss = NULL, gen = NULL,
+                        lbound = NULL, ubound = NULL, derivType = 'Richardson'){
     if(missing(par)) missingMsg('par')
     if(missing(est)) missingMsg('est')
     if(missing(den)) missingMsg('den')
@@ -82,7 +89,7 @@ createGroup <- function(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
     ubound <- if(!is.null(ubound)) ubound  else rep(Inf, length(par))
     Nans <- rep(NaN,length(par))
     return(new('GroupPars', par=par, est=est, parnames=names(est), dentype='custom',
-               den=den, safe_den=safe_den, nfact=as.integer(nfact),
+               den=den, safe_den=safe_den, nfact=as.integer(nfact), standardize=standardize,
                itemclass= -999L, any.prior=FALSE, lbound=lbound, usegr=usegr, usehss=usehss,
                ubound=ubound, gr=gr, hss=hss, gen=gen, derivType=derivType,
                prior.type=rep(0L, length(par)), prior_1=Nans, prior_2=Nans))
