@@ -61,14 +61,15 @@ setMethod(
             if(hessian && any(diag(estimate$hessian) > 0)){
                 pick <- diag(estimate$hessian) > 0
                 if(!all(pick)){
-    	            vcov_small <- try(solve(estimate$hessian[pick,pick,drop=FALSE]))
+    	            vcov_small <- try(solve(estimate$hessian[pick,pick,drop=FALSE]), TRUE)
                     vcov <- matrix(0, length(pick), length(pick))
                     vcov[pick,pick] <- vcov_small
-                } else vcov <- try(solve(estimate$hessian))
+                } else vcov <- try(solve(estimate$hessian), TRUE)
     	        if(return.acov) return(vcov)
-    	        SEest <- try(sqrt(diag(vcov)))
-    	        if(any(is.nan(SEest))) SEest <- rep(NA, ncol(scores))
-    	        else if(any(SEest > 30)){
+    	        SEest <- try(sqrt(diag(vcov)), TRUE)
+    	        if(is(vcov, 'try-error') || is(SEest, 'try-error') || any(is.nan(SEest))){
+    	            SEest <- rep(NA, ncol(scores))
+    	        } else if(any(SEest > 30)){
                     est[SEest > 30] <- Inf * sign(est[SEest > 30])
                     SEest[SEest > 30] <- NA
                 }
