@@ -439,7 +439,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         r <- Data$Freq[[g]]
         rr <- rr + r
     }
-    df <- prod(PrepList[[1L]]$K) - 1
+    df <- Data$ngroups * (prod(PrepList[[1L]]$K) - 1)
     if(df > 1e10) df <- 1e10
     nestpars <- nconstr <- 0L
     for(g in seq_len(Data$ngroups))
