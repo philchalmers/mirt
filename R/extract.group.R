@@ -51,8 +51,16 @@ extract.group <- function(x, group){
     sv <- mirt(dat[groupvec == groupNames[group], ], nfact, itemtype=itemtype,
                 pars = 'values', technical = list(customK = K))
     sv$value <- vals$value
+    sv$est <- vals$est
+    constrain <- extract.mirt(x, 'constrain')
+    constrain <- lapply(constrain, function(x) x - vals$parnum[1L] - 1L)
+    if(length(constrain)){
+        parnum <- sv$parnum
+        for(i in length(constrain):1L)
+            if(!all(constrain[[i]] %in% parnum)) constrain[[i]] <- NULL
+    }
     mod <- mirt(dat[groupvec == groupNames[group], ], nfact, itemtype=itemtype,
                 pars = sv, technical = list(customK = K, warn=FALSE, mins=mins),
-                TOL = NaN, quadpts=1L)
+                TOL = NaN, quadpts=1L, constrain=constrain)
     return(mod)
 }
