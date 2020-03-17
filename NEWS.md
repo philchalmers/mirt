@@ -1,5 +1,9 @@
 # Changes in mirt 1.32
 
+- Positive/negative sign remove from chi-square componenets in `residuals(type = 'LD')` 
+  (requested by Cengiz Zopluoglu to help avoid confusion). Sign is still however present in the
+  standardized correlation estimates
+
 - `itemtype = 'rsm'` reported the incorrect information functions due to use of - instead of +
   from `traditional2mirt()` (reported by Nasser Hasan)
 
