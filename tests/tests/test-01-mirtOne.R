@@ -90,7 +90,7 @@ test_that('dich', {
     ifit <- itemfit(mod, QMC=TRUE)
     expect_equal(ifit$p.S_X2[1], .7984, tolerance = 1e-2)
     rfit <- residuals(mod, QMC=TRUE, verbose=FALSE)
-    expect_equal(as.numeric(rfit[,1]), c(NA, 0.0468866, 0.3906001, -0.2476980, -0.5195561), tolerance = 1e-2)
+    expect_equal(as.numeric(rfit[,1]), c(NA, 0.0468866, 0.3906001, 0.2476980, 0.5195561), tolerance = 1e-2)
 
     fm1 <- fscores(modm1, verbose = FALSE, full.scores=FALSE)
     expect_is(fm1, 'matrix')
@@ -117,7 +117,7 @@ test_that('dich', {
     expect_equal(as.numeric(attr(fm6, 'fit')['rxx_Theta.1']), 0.4319948, tolerance = 1e-4)
 
     res1 <- residuals(modm1, verbose = FALSE)
-    expect_equal(as.numeric(res1), c(NA, -0.45, -0.855, 2.58, 2.396, -0.021, NA, 1.055, -0.265, -1.381, -0.029, 0.032, NA, -0.154, -0.003, 0.051, -0.016, -0.012, NA, 0, 0.049, -0.037, -0.002, 0, NA),
+    expect_equal(as.numeric(res1), c(NA,0.451213,0.8562096,2.577395,2.392183,-0.02124177,NA,1.053826,0.2662122,1.383089,-0.02926106,0.03246269,NA,0.1542321,0.002940504,0.05076805,-0.01631601,-0.01241902,NA,9.962506e-06,0.04890994,-0.0371899,-0.00171479,9.981236e-05,NA),
                  tolerance = 1e-2)
     res2 <- residuals(modm2, verbose = FALSE)
     expect_is(res1, 'matrix')
