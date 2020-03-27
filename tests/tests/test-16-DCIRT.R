@@ -28,8 +28,8 @@ test_that('DCIRT', {
     expect_equal(fs2[1:3], c(-1.236668, -0.919067, -1.236668), tolerance=1e-4)
     resid <- residuals(mod, verbose=FALSE)
     resid2 <- residuals(mod, use_dentype_estimate=TRUE, verbose=FALSE)
-    expect_equal(unname(resid[2:4,1]), c(3.454542, -5.869551, -0.119278), tolerance=1e-4)
-    expect_equal(unname(resid2[2:4,1]), c(2.1035571, -1.9256263, -0.1226077), tolerance=1e-4)
+    expect_equal(unname(resid[2:4,1]), c(3.454542, 5.869551, 0.119278), tolerance=1e-4)
+    expect_equal(unname(resid2[2:4,1]), c(2.1035571, 1.9256263, 0.1226077), tolerance=1e-4)
 
     pp <- plot(mod, type = 'empiricalhist')
     expect_is(pp, 'trellis')
@@ -163,7 +163,7 @@ test_that('DCIRT-MG', {
                                 invariance=colnames(dat)[1:5])
     # coef(mod_scalar0, simplify=TRUE)
     expect_equal(extract.mirt(mod_scalar0, 'logLik'), -23968.56, tolerance=1e-4)
-    expect_equal(extract.mirt(mod_scalar0, 'df'), 33554329)
+    expect_equal(extract.mirt(mod_scalar0, 'df'), 67108760)
     # plot(mod_scalar0)
     pp <- plot(mod_scalar0, type = 'Davidian')
     expect_is(pp, 'trellis')
@@ -185,7 +185,7 @@ test_that('DCIRT-MG', {
     mod_scalarEHW <- multipleGroup(dat, 1, group = group, verbose=FALSE, dentype='EHW',
                                 invariance=c(colnames(dat)[1:10], 'free_var','free_means'))
     # plot(mod_scalarEHW)
-    expect_equal(extract.mirt(mod_scalarEHW, 'df'), 33554113)
+    expect_equal(extract.mirt(mod_scalarEHW, 'df'), 67108544)
     expect_equal(extract.mirt(mod_scalarEHW, 'logLik'), -23877.63, tolerance=1e-4)
     cfs <- as.vector(unname(coef(mod_scalarEHW)$G2$GroupPars))
     expect_equal(cfs, c(0.5093032, 0.6000460), tolerance=1e-4)

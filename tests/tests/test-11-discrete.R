@@ -27,7 +27,7 @@ test_that('discrete', {
     resid <- residuals(mod, type = 'exp')
     expect_equal(resid$res[1:3], c(1.0380029, 0.1373462, -0.3478477), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
-    expect_equal(as.numeric(residLD[2:4, 1]), c(0.1092414, 0.4115837, -0.1316043), tolerance=1e-2)
+    expect_equal(as.numeric(residLD[2:4, 1]), c(0.1092414, 0.4115837, 0.1316043), tolerance=1e-2)
     ifit <- itemfit(mod)
     expect_equal(ifit$S_X2, c(0.4345528,1.6995487,0.7470039,0.1830134,0.1429708), tolerance=1e-2)
 
@@ -256,3 +256,4 @@ test_that('discrete', {
 #     mod.pars[ind,"value"] <- 0
 #
 #     mod_multidim <- mdirt(dat, mirtmodel, itemtype = '2PL', technical = list(customTheta=Theta))
+

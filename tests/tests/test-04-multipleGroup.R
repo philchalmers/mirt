@@ -36,11 +36,11 @@ test_that('one factor', {
     cfs <- as.numeric(na.omit(cfs[cfs != 0 & cfs != 1]))
     expect_equal(cfs, c(1.0706,0.8462,1.295,0.524,0.3627,0.6852,1.217,0.9668,1.4672,-0.6995,-0.8745,-0.5244,0.9488,0.7445,1.1532,-0.1877,-0.3385,-0.037,0.8975,0.6948,1.1002,0.8423,0.681,1.0036,1.097,0.8781,1.316,0.1274,-0.0294,0.2841,0.5648,0.3916,0.7381,0.6824,0.5383,0.8266,1.2742,1.0146,1.5337,1.0016,0.8129,1.1904,0.9249,0.7242,1.1255,-0.3298,-0.4801,-0.1794,0.8903,0.6815,1.0992,-1.0591,-1.2284,-0.8897,0.723,0.5272,0.9188,-1.0828,-1.2463,-0.9192,0.8303,0.6252,1.0354,1.1879,1.0155,1.3604,1.4757,1.1986,1.7528,-0.252,-0.429,-0.0749,1.2905,1.0339,1.5471,0.4451,0.2742,0.616,1.0348,0.8239,1.2457,0.4526,0.2955,0.6096,0.8637,0.665,1.0624,-0.0617,-0.2093,0.0859),
                  tolerance = 1e-2)
-    expect_equal(extract.mirt(mod_configural, 'df'), 32707)
+    expect_equal(extract.mirt(mod_configural, 'df'), 65474)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE,
                                 method = 'EM', optimizer = 'NR')
     expect_is(mod_metric, 'MultipleGroupClass')
-    expect_equal(extract.mirt(mod_metric, 'df'), 32722)
+    expect_equal(extract.mirt(mod_metric, 'df'), 65489)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_var','free_means'))
     expect_equal(logLik(mod_scalar2), -17915.33, tolerance = 1e-4)
@@ -49,7 +49,7 @@ test_that('one factor', {
     expect_equal(cfs, c(1.104323,0.5385656,1.20104,-0.6295554,1.061246,-0.2649867,0.8824239,0.9004537,1.081875,0.1640334,0.4445889,0.636301,1.180488,0.9758879,0.977318,-0.3768236,0.8786338,-1.034887,0.6847666,-1.117687,0.948221,1.213217,1.389262,-0.2233858,1.261964,0.4288545,1.153485,0.4531765,0.7745967,-0.06987377),
                  tolerance = 1e-2)
     expect_is(mod_scalar2, 'MultipleGroupClass')
-    expect_equal(extract.mirt(mod_scalar2, 'df'), 32735)
+    expect_equal(extract.mirt(mod_scalar2, 'df'), 65502)
     newmodel <- mirt.model('F = 1-15
                             CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')
@@ -71,7 +71,7 @@ test_that('one factor', {
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_var'))
     expect_is(mod_missing, 'MultipleGroupClass')
-    expect_equal(extract.mirt(mod_missing, 'df'), 32736)
+    expect_equal(extract.mirt(mod_missing, 'df'), 65503)
     out1 <- M2(mod_missing, na.rm=TRUE)
     out2 <- itemfit(mod_missing, na.rm=TRUE)
     out3 <- fscores(mod_missing, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
