@@ -532,6 +532,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     logPrior <- 0
     Pl <- vector('list', Data$ngroups)
     if(opts$method %in% c('EM', 'BL', 'QMCEM', 'MCEM')){
+        logLik <- G2 <- SElogLik <- 0
         if(length(lrPars)){
             if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson')))
                 stop('Information matrix method for latent regression estimates not supported',
@@ -903,8 +904,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     #missing stats for MHRM
-    if(opts$method %in% c('MHRM', 'MIXED', 'SEM') && 
+    if(opts$method %in% c('MHRM', 'MIXED', 'SEM') &&
        (!opts$logLik_if_converged || !(!ESTIMATE$converge && opts$logLik_if_converged))){
+        logLik <- G2 <- SElogLik <- 0
         if(opts$draws > 0L){
             if(opts$verbose) cat("\nCalculating log-likelihood...\n")
             flush.console()
@@ -928,7 +930,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(!opts$technical$parallel)
                 .mirtClusterEnv$ncores <- ncores
         }
-    } 
+    }
 
     ####post estimation stats
     if(opts$Moptim %in% c('solnp', 'nloptr')){
