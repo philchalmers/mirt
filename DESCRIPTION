@@ -64,4 +64,4 @@ URL: https://github.com/philchalmers/mirt,
     https://github.com/philchalmers/mirt/wiki,
     https://groups.google.com/forum/#!forum/mirt-package
 BugReports: https://github.com/philchalmers/mirt/issues?state=open
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

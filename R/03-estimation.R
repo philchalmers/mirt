@@ -528,6 +528,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
 
     #EM estimation
     opts$times$start.time.Estimate <- proc.time()[3L]
+    logLik <- G2 <- SElogLik <- NaN
+    logPrior <- 0
+    Pl <- vector('list', Data$ngroups)
     if(opts$method %in% c('EM', 'BL', 'QMCEM', 'MCEM')){
         if(length(lrPars)){
             if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson')))
@@ -611,9 +614,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         lrPars <- ESTIMATE$lrPars
         startlongpars <- ESTIMATE$longpars
         rlist <- ESTIMATE$rlist
-        logLik <- G2 <- SElogLik <- 0
         logPrior <- ESTIMATE$logPrior
-        Pl <- vector('list', length(rlist))
         for(g in seq_len(Data$ngroups)){
             if(g > 1L && opts$dentype == 'mixture') break
             Pl[[g]] <- rlist[[g]]$expected
@@ -902,9 +903,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     #missing stats for MHRM
-    if(opts$method %in% c('MHRM', 'MIXED', 'SEM')){
-        Pl <- vector('list', Data$ngroups)
-        logPrior <- logLik <- SElogLik <- G2 <- 0
+    if(opts$method %in% c('MHRM', 'MIXED', 'SEM') && 
+       (!opts$logLik_if_converged || !(!ESTIMATE$converge && opts$logLik_if_converged))){
         if(opts$draws > 0L){
             if(opts$verbose) cat("\nCalculating log-likelihood...\n")
             flush.console()
@@ -928,7 +928,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(!opts$technical$parallel)
                 .mirtClusterEnv$ncores <- ncores
         }
-    }
+    } 
 
     ####post estimation stats
     if(opts$Moptim %in% c('solnp', 'nloptr')){

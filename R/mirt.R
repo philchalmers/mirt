@@ -614,7 +614,7 @@
 #'       draws at 500 and increases by 2 after each full EM iteration}
 #'     \item{info_if_converged}{logical; compute the information matrix when using the MH-RM algorithm
 #'       only if the model converged within a suitable number of iterations? Default is \code{TRUE}}
-#'     \item{loglik_if_converged}{logical; compute the observed log-likelihood when using the MH-RM algorithm
+#'     \item{logLik_if_converged}{logical; compute the observed log-likelihood when using the MH-RM algorithm
 #'       only if the model converged within a suitable number of iterations? Default is \code{TRUE}}
 #'     \item{keep_vcov_PD}{logical; attempt to keep the variance-covariance matrix of the latent traits
 #'       positive definite during estimation in the EM algorithm? This generally improves the convergence
