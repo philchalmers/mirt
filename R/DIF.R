@@ -284,11 +284,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             } else {
                 keep <- statdiff < 0
             }
-            if(run_number == 2L && all(!keep)){
+            if(run_number == 2L && ((scheme == 'add_sequential' && all(!keep)) ||
+                                    (scheme == 'drop_sequential' && all(keep)))){
+                if(verbose)
+                    message('sequential scheme not required; all/no items contain DIF on first iteration')
+                if(return_seq_model) return(MGmodel)
                 if(scheme == 'add_sequential'){
                     scheme <- 'add'
-                    if(verbose)
-                        message('sequential scheme not required; all/no items contain DIF on first iteration')
                     break
                 }
                 ret <- data.frame()
