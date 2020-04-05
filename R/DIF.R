@@ -284,14 +284,17 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             } else {
                 keep <- statdiff < 0
             }
-            if(run_number == 2L && ((scheme == 'add_sequential' && all(!keep)) ||
-                                    (scheme == 'drop_sequential' && all(keep)))){
+            if(run_number == 2L && (all(!keep) || all(keep))){
                 if(verbose)
                     message('sequential scheme not required; all/no items contain DIF on first iteration')
                 if(return_seq_model) return(MGmodel)
                 if(scheme == 'add_sequential'){
                     scheme <- 'add'
-                    break
+                    if(all(!keep)) break
+                }
+                if(scheme == 'drop_sequential'){
+                    scheme <- 'drop'
+                    if(all(!keep)) break
                 }
                 ret <- data.frame()
                 class(ret) <- c('mirt_df', 'data.frame')
@@ -341,11 +344,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             run_number <- run_number + 1L
         }
 
-        if(verbose && scheme != 'add')
+        if(verbose && !(scheme %in% c('add', 'drop')))
             cat('\nComputing final DIF estimates...\n')
         pick <- !lastkeep
         if(return_seq_model) return(updatedModel)
-        if(scheme != 'add'){ # will equal 'add' if all items on first loop have DIF
+        if(!(scheme %in% c('add', 'drop'))){ # will equal 'add/drop' if all items on first loop have DIF
             res <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                             itemnames=itemnames, invariance=invariance, return_models=return_models,
