@@ -999,7 +999,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Data$itemdesign <- attr(mixed.design, 'itemdesign')
     ParObjects <- list(pars=cmods, lrPars=lrPars, random=ESTIMATE$random, lr.random=ESTIMATE$lr.random)
     OptimInfo <- list(iter=ESTIMATE$cycles, converged=ESTIMATE$converge, cand.t.var=ESTIMATE$cand.t.var,
-                      condnum=NA, secondordertest=NA, SEMconv=SEMconv)
+                      condnum=NA, secondordertest=NA, SEMconv=SEMconv, aveAR=ESTIMATE$aveAR)
     vcov <- matrix(NA, 1, 1)
     if(Options$SE){
         information <- ESTIMATE$info

@@ -164,6 +164,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             UBOUND <- c(UBOUND, lr.random[[i]]@ubound)
         }
     }
+    aveAR <- vector('list', NCYCLES)
     control$fnscale <- -1
     if(is.null(control$maxit)) control$maxit <- 15
     if(list$Moptim == 'BFGS')
@@ -219,6 +220,9 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         gtheta0 <- with(tmp, gtheta0)
         OffTerm <- with(tmp, OffTerm)
         printmsg <- with(tmp, printmsg)
+
+        if(stagecycle == 3L)
+            aveAR[[cycles - SEMCYCLES - BURNIN]] <- tmp$AR
         cand.t.var <- with(tmp, cand.t.var)
         gthetatmp <- gtheta0
         if(length(prodlist))
@@ -368,8 +372,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         cycles <- BURNIN + SEMCYCLES
     }
     ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
-                correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var, L=L,
-                random=random, lrPars=lrPars, lr.random=lr.random,
+                correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var,
+                L=L, random=random, lrPars=lrPars, lr.random=lr.random, aveAR=colMeans(do.call(rbind, aveAR)),
                 time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),
                 estindex_unique=estindex_unique, shortpars=longpars[estpars & !redun_constr],
                 fail_invert_info=fail_invert_info, Prior=vector('list', ngroups), collectLL=NaN)

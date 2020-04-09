@@ -24,6 +24,8 @@ setMethod(
         cat('\nLatent density type:', 'discrete')
         # cat('\nNumber of classes quadrature:', x@Options$quadpts)
         cat('\n')
+        if(method == 'MHRM')
+            cat("Average MH acceptance ratio(s):", paste0(round(x@OptimInfo$aveAR,3), collapse=', '), "\n")
         if(!is.na(x@OptimInfo$secondordertest)){
             cat("\nInformation matrix estimated with method:", x@Options$SE.type)
             cat('\nSecond-order test: model ', if(!x@OptimInfo$secondordertest)
