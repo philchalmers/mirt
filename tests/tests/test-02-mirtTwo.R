@@ -44,7 +44,7 @@ test_that('poly', {
     cfs <- as.numeric(do.call(c, coef(modp1)))
     expect_equal(cfs, c(1.041, 4.864, 2.64, -1.466, 1.226, 2.924, 0.901, -2.266, 2.296, 5.238, 2.216, -1.965, 1.095, 3.348, 0.992, -1.688, 0, 1),
                  tolerance = 1e-2)
-    vals <- mirt(Science, 1, large = TRUE, verbose=FALSE)
+    vals <- mirt(Science, 1, large = 'return', verbose=FALSE)
     modp1 <- mirt(Science, 1, large = vals, verbose=FALSE)
     expect_is(modp1, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modp1)))

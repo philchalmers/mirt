@@ -287,16 +287,23 @@ corresponds to \code{monopoly.k * 2 + 1} (e.g., \code{monopoly.k = 2} fits a
 types, and must be the same length as the number of items used. Items that are not nested logit
 will ignore this vector, so use \code{NA} in item locations that are not applicable}
 
-\item{large}{either a \code{logical}, indicating whether the internal collapsed data should
-  be returned, or a \code{list} of internally computed data tables. If \code{TRUE} is passed,
-  a list containing  the organized tables is returned. This list object can then be passed back
-  into \code{large} to avoid reorganizing the data again (useful when the dataset are very large
-  and computing the tabulated data is computationally burdensome).
+\item{large}{a \code{logical} indicating whether unique response patterns should be obtained prior
+  to performing the estimation so as to avoid repeating computations on identical patterns.
+  The default \code{TRUE} provides the correct degrees of freedom for the model since all unique patterns
+  are tallied (typically only affects goodness of fit statistics such as G2, but also will influence
+  nested model comparison methods such as \code{anova(mod1, mod2)}), while \code{FALSE} will use the
+  number of rows in \code{data} as a placeholder for the total degrees of freedom. As such, model
+  objects should only be compared if all flags were set to \code{TRUE} or all were set to \code{FALSE}
 
-  The best strategy for large data is to always pass the internal data to the estimation
-  function, shown below:
+  Alternatively, if the collapse table of frequencies is desired for the purpose of saving computations
+  (i.e., only computing the collapsed frequencies for the data onte-time) then a character vector can
+  be passed with the arguement \code{large = 'return'} to return a list of all the desired
+  table information used by \code{mirt}. This list object can then be reused by passing it back
+  into the \code{large} argument to avoid re-tallying the data again
+  (again, useful when the dataset are very large and computing the tabulated data is
+  computationally burdensome). This strategy is shown below:
   \describe{
-  \item{Compute organized data}{e.g., \code{internaldat <- mirt(Science, 1, large = TRUE)}}
+  \item{Compute organized data}{e.g., \code{internaldat <- mirt(Science, 1, large = 'return')}}
   \item{Pass the organized data to all estimation functions}{e.g.,
   \code{mod <- mirt(Science, 1, large = internaldat)}}
 }}

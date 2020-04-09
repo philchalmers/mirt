@@ -1311,8 +1311,11 @@ nameInfoMatrix <- function(info, correction, L, npars){
     return(info)
 }
 
-maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem, K, itemloc,
+maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
                         Names, itemnames, survey.weights){
+    tmpdata[is.na(tmpdata)] <- 99999L
+    stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
+    stringtabdata <- unique(stringfulldata)
     tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
     tabdata2 <- do.call(rbind, tabdata2)
     tabdata2[tabdata2 == 99999L] <- NA
@@ -1339,6 +1342,31 @@ maketabData <- function(stringfulldata, stringtabdata, group, groupNames, nitem,
             Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
                 match(tmpstringdata, stringtabdata)))
         }
+        groupFreq[[g]] <- Freq
+    }
+    ret <- list(tabdata=tabdata, tabdata2=tabdata2, Freq=groupFreq)
+    ret
+}
+
+maketabDataLarge <- function(tmpdata, group, groupNames, nitem, K, itemloc,
+                             Names, itemnames, survey.weights){
+    tabdata2 <- tmpdata
+    tabdata <- matrix(0L, nrow(tabdata2), sum(K))
+    for(i in seq_len(nitem)){
+        uniq <- sort(na.omit(unique(tabdata2[,i])))
+        if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
+        for(j in seq_len(length(uniq)))
+            tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
+    }
+    tabdata[is.na(tabdata)] <- 0L
+    colnames(tabdata) <- Names
+    colnames(tabdata2) <- itemnames
+    groupFreq <- vector('list', length(groupNames))
+    names(groupFreq) <- groupNames
+    for(g in seq_len(length(groupNames))){
+        Freq <- as.integer(group == groupNames[g])
+        if(!is.null(survey.weights))
+            Freq <- Freq * survey.weights
         groupFreq[[g]] <- Freq
     }
     ret <- list(tabdata=tabdata, tabdata2=tabdata2, Freq=groupFreq)

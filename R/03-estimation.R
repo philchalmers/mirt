@@ -16,7 +16,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(missing(group)) missingMsg('group')
     if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data))
         stop('group input provided is not valid', call.=FALSE)
-    if(is.logical(large) && large){
+    if(is.character(large) && large == 'return'){
         Data <- opts <- list()
         opts$zeroExtreme <- FALSE
         opts$dentype <- 'default'
@@ -64,7 +64,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             stopifnot(is(customGroup, 'GroupPars'))
         stopifnot(is(invariance, 'character'))
         stopifnot(is(GenRandomPars, 'logical'))
-        stopifnot(is(large, 'logical') || is(large, 'list'))
+        stopifnot(is(large, 'logical') || is(large, 'list') || is(large, 'character'))
         opts <- makeopts(GenRandomPars=GenRandomPars,
                          hasCustomGroup=!is.null(customGroup), ...)
         if(opts$Moptim == 'NR'){
@@ -295,17 +295,20 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 if(is.null(survey.weights)) survey.weights <- rep(1, nrow(tmpdata))
                 survey.weights[sums == 0L | (sums + n_is_na) == sum(maxs)] <- 0
             }
-            tmpdata[is.na(tmpdata)] <- 99999L
-            stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
-            stringtabdata <- unique(stringfulldata)
-            tmptabdata <- maketabData(stringfulldata=stringfulldata, stringtabdata=stringtabdata,
-                                      group=Data$group,
-                                      groupNames=if(opts$dentype != 'mixture') Data$groupNames else 'full',
-                                      nitem=Data$nitems,
-                                      K=PrepListFull$K, itemloc=PrepListFull$itemloc,
-                                      Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
-                                      survey.weights=survey.weights)
-            if(is.logical(large) && large){
+            tmptabdata <- if(is.logical(large) && large){
+                maketabDataLarge(tmpdata=tmpdata, group=Data$group,
+                                 groupNames=if(opts$dentype != 'mixture') Data$groupNames else 'full',
+                                 nitem=Data$nitems, K=PrepListFull$K, itemloc=PrepListFull$itemloc,
+                                 Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
+                                 survey.weights=survey.weights)
+            } else {
+                maketabData(tmpdata=tmpdata, group=Data$group,
+                            groupNames=if(opts$dentype != 'mixture') Data$groupNames else 'full',
+                            nitem=Data$nitems, K=PrepListFull$K, itemloc=PrepListFull$itemloc,
+                            Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
+                            survey.weights=survey.weights)
+            }
+            if(is.character(large) && large == 'return'){
                 return(tmptabdata)
             } else large <- tmptabdata
         }

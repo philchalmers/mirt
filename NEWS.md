@@ -1,5 +1,10 @@
 # Changes in mirt 1.32
 
+- Behaviour of `mirt(..., large)` has now been modified, where `large = TRUE` now skips computing
+  the unique response patterns for datasets that likely contain little to no repeated response patterns
+  (suggested by Matthias von Davier). The previous two-step behaviour is now acheive by passing 
+  `large = 'return'`, storing this list object, and passing it back to the `large` input argument 
+
 - Positive/negative sign remove from chi-square componenets in `residuals(type = 'LD')` 
   (requested by Cengiz Zopluoglu to help avoid confusion). Sign is still however present in the
   standardized correlation estimates
