@@ -372,7 +372,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     max_score <- sum(mod@Data$mins + mod@Data$K - 1L)
 
     large <- multipleGroup(extract.mirt(mod, 'data'), 1, group=extract.mirt(mod, 'group'),
-                           large=TRUE)
+                           large='return')
     details <- list(data = extract.mirt(mod, 'data'),
                     model = extract.mirt(mod, 'model'),
                     group = extract.mirt(mod, 'group'),

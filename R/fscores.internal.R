@@ -212,7 +212,7 @@ setMethod(
             newmod <- object
             if(nrow(response.pattern) > 1L){
                 large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@Data$K),
-                              large=TRUE))
+                              large='return'))
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
                                    tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,
                                    K=extract.mirt(object, 'K'), mins=rep(0L, ncol(response.pattern)))
@@ -227,7 +227,7 @@ setMethod(
             } else {
                 pick <- which(!is.na(response.pattern))
                 rp <- response.pattern[,pick,drop=FALSE]
-                large <- suppressWarnings(mirt(rp, nfact, large=TRUE,
+                large <- suppressWarnings(mirt(rp, nfact, large='return',
                                             technical=list(customK=object@Data$K[pick])))
                 newmod@Data <- list(data=rp, tabdata=large$tabdata2, K=object@Data$K[pick],
                                     tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,

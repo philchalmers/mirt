@@ -837,12 +837,12 @@ setMethod(
             nfact <- extract.mirt(object, 'nfact')
             tmpdat <- matrix(0, nrow=2, ncol=nitems)
             colnames(tmpdat) <- colnames(tabdata)
-            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large=TRUE,
+            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return',
                                       technical = list(customK=K))
             large$tabdata <- poly2dich(tabdata)
             large$Freq$all <- rep(1L, nrow(tabdata))
             large$tabdata2 <- matrix(1L)
-            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large=large)
+            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return')
             Pl <- full_object@Internals$Pl
             r <- integer(length(Pl))
             ro <- object@Data$Freq[[1L]]
