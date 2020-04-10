@@ -12,6 +12,7 @@ static vector<double> buildDist(arma::mat &Theta, arma::colvec &par, const int &
 		for (int d=0; d<=(D-1); d++)
             sumdist += pow(as_scalar(par.row(d)),2.0)*pow(as_scalar(Theta(j,d)-par.row(D+d)),2.0) ;
         Dist[j] = sqrt(sumdist) ;
+        if(Dist[j] < 1e-100) Dist[j] = 1e-100;
     }
     return(Dist);
 }
