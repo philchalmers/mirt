@@ -11,7 +11,7 @@ notifications:
     on_success: change
     on_failure: change
 
-r_binary_packages:
+r_packages:
   - Rcpp
   - RcppArmadillo
   - testthat
