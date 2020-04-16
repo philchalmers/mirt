@@ -45,6 +45,7 @@ Objects which can be extracted from mirt objects include:
   \item{method}{estimation method used}
   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
   \item{itemnames}{a vector of item names from the input data}
+  \item{factorNames}{a vector of factor names from the model definition}
   \item{data}{raw input data of item responses}
   \item{covdata}{raw input data of data used as covariates}
   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into

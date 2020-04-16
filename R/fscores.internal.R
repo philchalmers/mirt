@@ -435,7 +435,8 @@ setMethod(
     		    if(method != 'classify'){
     		        scores <- tmp[ ,seq_len(nfact), drop = FALSE]
     		        SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
-    		        colnames(scores) <- paste('F', seq_len(ncol(scores)), sep='')
+    		        factorNames <- extract.mirt(object, 'factorNames')
+    		        colnames(scores) <- factorNames[!grepl('\\(',factorNames)]
     		        converge_info_vec <- tmp[,ncol(tmp)]
     		    } else converge_info_vec <- rep(1L, nrow(scores))
     		    if(impute){
@@ -870,7 +871,10 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             SEthetas[i, ] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * expLW / nc))
         }
     }
-    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), Theta=thetas, SE_Theta=SEthetas)
+    factorNames <- extract.mirt(x, 'factorNames')
+    colnames(thetas) <- factorNames[!grepl('\\(',factorNames)]
+    colnames(SEthetas) <- paste0('SE_', colnames(thetas))
+    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), thetas, SEthetas)
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
         if(any(is.na(x@Data$data)))
@@ -906,7 +910,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         rxx <- apply(tmp[,pick, drop=FALSE], 2L, var) /
             (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+x@Model$nfact, drop=FALSE], 2L,
                                                             function(x) mean(x^2)))
-        names(rxx) <- paste0('rxx_Theta.', seq_len(x@Model$nfact))
+        names(rxx) <- paste0('rxx_', factorNames)
         fit <- data.frame(df=df, X2=X2, p.X2 = suppressWarnings(pchisq(X2, df, lower.tail=FALSE)))
         fit <- cbind(fit, t(as.data.frame(rxx)))
         rownames(fit) <- 'stats'

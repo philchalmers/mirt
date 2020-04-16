@@ -11,6 +11,9 @@
 
 - `itemtype = 'rsm'` reported the incorrect information functions due to use of - instead of +
   from `traditional2mirt()` (reported by Nasser Hasan)
+  
+- column names of the `fscores()` results now correspond to the model syntax definition names instead
+  of the previous F# convention
 
 - fix `method = 'classify'` option in `fscores()` when more than two mixtures are fitted
   (reported by Lisa Limeri)
