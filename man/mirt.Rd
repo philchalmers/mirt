@@ -566,8 +566,8 @@ These are:
 \section{IRT Models}{
 
 
-The parameter labels use the follow convention, here using two factors and \eqn{k} as the number
-of categories.
+The parameter labels use the follow convention, here using two factors and \eqn{K} as the total
+number of categories (using \eqn{k} for specific category instances).
 
 \describe{
   \item{Rasch}{
@@ -582,9 +582,9 @@ of categories.
       1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
   }
   \item{graded}{
-    The graded model consists of sequential 2PL models, and here \eqn{k} is
-    the predicted category.
+    The graded model consists of sequential 2PL models,
     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
+    Note that \eqn{P(x \ge 1 | \theta, \phi) = 1} while \eqn{P(x \ge K + 1 | \theta, \phi) = 0}
   }
   \item{grsm and grsmIRT}{
     A more constrained version of the graded model where graded spacing is equal across item
@@ -600,14 +600,14 @@ of categories.
     with the form of other IRT models in \code{mirt}
   }
   \item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and ordered values
-    from 0:(k-1) (in the nominal model \eqn{d_0} is also set to 0). Additionally, for
-    identification in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(k-1)} = (k - 1)}.
+    from \eqn{0:(K-1)} (in the nominal model \eqn{d_0} is also set to 0). Additionally, for
+    identification in the nominal model \eqn{ak_0 = 0}, \eqn{ak_{(K-1)} = (K - 1)}.
     \deqn{P(x = k | \theta, \psi) =
     \frac{exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}
-    {\sum_1^k exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
+    {\sum_{k=1}^K exp(ak_{k-1} * (a_1 * \theta_1 + a_2 * \theta_2) + d_{k-1})}}
 
     For the partial credit model (when \code{itemtype = 'Rasch'}; unidimensional only) the above
-    model is further constrained so that \eqn{ak = (0,1,\ldots, k-1)}, \eqn{a_1 = 1}, and the
+    model is further constrained so that \eqn{ak = (0,1,\ldots, K-1)}, \eqn{a_1 = 1}, and the
     latent variance of \eqn{\theta_1} is freely estimated. Alternatively, the partial credit model
     can be obtained by containing all the slope parameters in the gpcms to be equal.
     More specific scoring function may be included by passing a suitable list or matrices
@@ -625,7 +625,7 @@ of categories.
     NOTE: The nominal model can become numerical unstable if poor choices for the high and low
     values are chosen, resulting in \code{ak} values greater than \code{abs(10)} or more. It is
     recommended to choose high and low anchors that cause the estimated parameters to fall
-    between 0 and the number of categories - 1 either by theoretical means or by re-estimating
+    between 0 and \eqn{K - 1} either by theoretical means or by re-estimating
     the model with better values following convergence.
   }
    \item{gpcmIRT and rsm}{
@@ -633,7 +633,7 @@ of categories.
      data. It will obtain the same fit as the \code{gpcm} presented above, however the parameterization
      allows for the Rasch/generalized rating scale model as a special case.
 
-     E.g., for a 4 category response model,
+     E.g., for a K = 4 category response model,
 
      \deqn{P(x = 0 | \theta, \psi) = exp(1) / G}
      \deqn{P(x = 1 | \theta, \psi) = exp(1 + a(\theta - b1) + c) / G}
@@ -714,7 +714,7 @@ of categories.
   \item{monopoly}{Monotone polynomial model for polytomous response data of the form
     \deqn{P(x = k | \theta, \psi) =
     \frac{exp(\sum_1^k (m^*(\psi) + \xi_{c-1})}
-    {\sum_1^C exp(\sum_1^k (m^*(\psi) + \xi_{c-1}))}}
+    {\sum_1^C exp(\sum_1^K (m^*(\psi) + \xi_{c-1}))}}
     where \eqn{m^*(\psi)} is the monotone polynomial function without the intercept.
     }
 }
