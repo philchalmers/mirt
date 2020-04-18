@@ -46,6 +46,9 @@ Objects which can be extracted from mirt objects include:
   \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
   \item{itemnames}{a vector of item names from the input data}
   \item{factorNames}{a vector of factor names from the model definition}
+  \item{rowID}{an integer vector indicating all valid row numbers used in the model estimation
+   (when all cases are used this will be \code{1:nrow(data)}). Mostly useful when the option
+    \code{technical = list(removeEmptyRows = TRUE)} was passed}
   \item{data}{raw input data of item responses}
   \item{covdata}{raw input data of data used as covariates}
   \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into

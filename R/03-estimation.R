@@ -175,6 +175,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 x
             }, message = opts$message)
         }
+        Data$rowID <- 1L:nrow(data)
         if(any(rowSums(is.na(data)) == ncol(data))){
             if(!opts$removeEmptyRows)
                 stop('data contains completely empty response patterns. ',
@@ -182,6 +183,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                      call.=FALSE)
             else {
                 pick <- rowSums(is.na(data)) != ncol(data)
+                Data$rowID <- unname(which(pick))
                 data <- subset(data, pick)
                 group <- subset(group, pick)
                 if(!is.null(latent.regression) || !is.null(mixed.design))
