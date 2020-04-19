@@ -1,6 +1,15 @@
 #include "Misc.h"
 #include "Estep.h"
 
+// #ifdef _OPENMP
+#include <omp.h>
+// [[Rcpp::plugins(openmp)]]
+// #endif
+
+#pragma omp declare reduction(vec_double_plus : std::vector<double> : \
+    std::transform(omp_out.begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::plus<double>())) \
+    initializer(omp_priv = decltype(omp_orig)(omp_orig.size()))
+
 const double ABSMIN = std::numeric_limits<double>::min();
 
 void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double> &prior,
@@ -11,6 +20,13 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
     const int nitems = data.ncol();
     const int npat = r.size();
 
+    const int maxThreads = omp_get_num_procs();
+    omp_set_num_threads(maxThreads);
+    Rcout << maxThreads;
+    const int falz = omp_get_num_threads();
+    Rcout << falz;
+
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < 1e-10) continue;
         vector<double> posterior(nquad,1.0);
@@ -72,6 +88,13 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
     const int nitems = data.ncol();
     const int npat = data.nrow();
 
+    const int maxThreads = omp_get_num_procs();
+    omp_set_num_threads(maxThreads);
+    Rcout << maxThreads;
+    const int falz = omp_get_num_threads();
+    Rcout << falz;
+
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
@@ -147,7 +170,13 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
         }
     }
 
+    const int maxThreads = omp_get_num_procs();
+    omp_set_num_threads(maxThreads);
+    Rcout << maxThreads;
+    const int falz = omp_get_num_threads();
+    Rcout << falz;
 
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < 1e-10) continue;
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
