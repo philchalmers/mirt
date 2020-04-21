@@ -1,10 +1,9 @@
 #include "Misc.h"
 #include "Estep.h"
 
-// #ifdef _OPENMP
+#ifdef _OPENMP
 #include <omp.h>
-// [[Rcpp::plugins(openmp)]]
-// #endif
+#endif
 
 #pragma omp declare reduction(vec_double_plus : std::vector<double> : \
     std::transform(omp_out.begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::plus<double>())) \
