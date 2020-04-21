@@ -283,6 +283,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                                         estsd=pars[[g]][[J+1L]]@est['COV_11'])
                 }
             }
+            Estep.time <- Estep.time + proc.time()[3L] - start
             start <- proc.time()[3L]
             preMstep.longpars2 <- preMstep.longpars
             preMstep.longpars <- longpars
