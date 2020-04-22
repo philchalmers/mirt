@@ -4,11 +4,14 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-mirtCluster(spec, openMP_threads, remove = FALSE)
+mirtCluster(spec, omp_threads, remove = FALSE, ...)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
 maximum number of available local cores will be used}
+
+\item{omp_threads}{number of OpenMP threads to use (currently applies to E-step computations only).
+Defaults to using all processors available when no input is given}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
 

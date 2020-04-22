@@ -73,6 +73,9 @@ or generated automatically if not available}
 
 \item{fold}{logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?}
 
+\item{technical}{list of technical arguments when models are re-estimated (see \code{\link{mirt}}
+for details)}
+
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
 \description{

@@ -590,6 +590,8 @@ setMethod(
 #' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
+#' @param technical list of technical arguments when models are re-estimated (see \code{\link{mirt}}
+#'   for details)
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @name residuals-method
