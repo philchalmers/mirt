@@ -6,7 +6,7 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
     if(dentype == 'mixture'){
         rlist <- Estep.mixture(pars=pars, tabdata=tabdata, freq=Data$Freq[[1L]],
                                CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[1L]],
-                               prior=Prior, itemloc=itemloc, full=full, Etable=Etable)
+                               prior=Prior, itemloc=itemloc, full=full, Etable=Etable, omp_threads=omp_threads)
         LL <- sum(Data$Freq[[1L]] * log(rlist[[1L]]$expected))
     } else {
         for(g in seq_len(ngroups)){

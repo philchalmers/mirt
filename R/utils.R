@@ -1886,7 +1886,7 @@ longpars_constrain <- function(longpars, constrain){
 }
 
 BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
-               CUSTOM.IND, EHPrior, Data, dentype, itemloc, theta, constrain, lrPars){
+               CUSTOM.IND, EHPrior, Data, dentype, itemloc, theta, constrain, lrPars, omp_threads){
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
@@ -1942,7 +1942,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
                                tabdata=Data$tabdatalong,
                                freq=if(full) rep(1L, nrow(Prior[[1L]])) else Data$Freq[[g]],
                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
-                               CUSTOM.IND=CUSTOM.IND, full=full, Etable=FALSE)$expected
+                               CUSTOM.IND=CUSTOM.IND, full=full, Etable=FALSE, omp_threads=omp_threads)$expected
         LL <- LL + sum(Data$Freq[[g]] * log(expected), na.rm = TRUE)
     }
     LL

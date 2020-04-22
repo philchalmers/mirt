@@ -179,8 +179,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                          Theta=Theta, PrepList=PrepList, dentype=dentype, lrPars=lrPars,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                         constrain=constrain, EHPrior=NULL, Data=Data, method=Moptim,
-                         control=control, hessian=list$SE,
+                         constrain=constrain, EHPrior=NULL, Data=Data, omp_threads=list$omp_threads,
+                         method=Moptim, control=control, hessian=list$SE,
                          lower=lower, upper=upper), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par

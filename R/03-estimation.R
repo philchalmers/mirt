@@ -838,7 +838,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                               dentype=opts$dentype, itemloc=PrepList[[1L]]$itemloc, ESTIMATE=ESTIMATE,
                               constrain=constrain, Ls=Ls, specific=oldmodel, sitems=sitems,
                               CUSTOM.IND=CUSTOM.IND, EHPrior=ESTIMATE$Prior, warn=opts$warn, type=opts$SE.type,
-                              delta=opts$delta, lrPars=ESTIMATE$lrPars)
+                              delta=opts$delta, lrPars=ESTIMATE$lrPars, omp_threads=opts$omp_threads)
         } else if(opts$SE.type %in% c('MHRM', 'FMHRM') && opts$method == 'EM'){
             if(opts$dentype %in% c('EH', 'EHW'))
                 stop('MHRM standard error methods not available when using empirical histograms', call.=FALSE)
@@ -869,7 +869,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                         account for prior parameter distribution information')
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
                                   constrain=constrain, Ls=Ls, N=nrow(data), full=opts$full,
-                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn)
+                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn, omp_threads=opts$omp_threads)
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior
