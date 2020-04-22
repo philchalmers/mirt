@@ -31,10 +31,12 @@
 #' mirtCluster(remove = TRUE)
 #'
 #' }
-mirtCluster <- function(spec, ..., remove = FALSE){
+mirtCluster <- function(spec, openMP_threads, remove = FALSE){
     if(requireNamespace("parallel", quietly = TRUE)){
         if(missing(spec))
             spec <- parallel::detectCores()
+        if(missing(openMP_threads))
+            .mirtClusterEnv$omp_threads <- parallel::detectCores()
         if(remove){
             if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
                 message('There is no visible mirtCluster() definition')
@@ -43,6 +45,7 @@ mirtCluster <- function(spec, ..., remove = FALSE){
             parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
             .mirtClusterEnv$MIRTCLUSTER <- NULL
             .mirtClusterEnv$ncores <- 1L
+            .mirtClusterEnv$omp_threads <- 1L
             return(invisible())
         }
         if(!is.null(.mirtClusterEnv$MIRTCLUSTER)){

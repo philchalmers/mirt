@@ -85,6 +85,7 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
             technical$message <- technical$warn <- technical$parallel <- FALSE
             technical$PLCI <- TRUE
         }
+        technical$omp <- FALSE
         tmpmod <- mirt::mirt(dat, model, itemtype=itemtype, pars = sv, verbose = FALSE,
                              parprior=parprior, PrepList=PrepList, large=large, calcNull=FALSE,
                              technical=technical, constrain=constrain, ...)

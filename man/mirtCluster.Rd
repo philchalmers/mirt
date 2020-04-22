@@ -4,15 +4,15 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-mirtCluster(spec, ..., remove = FALSE)
+mirtCluster(spec, openMP_threads, remove = FALSE)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
 maximum number of available local cores will be used}
 
-\item{...}{additional arguments to pass to \code{parallel::makeCluster}}
-
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
+
+\item{...}{additional arguments to pass to \code{parallel::makeCluster}}
 }
 \description{
 This function defines a object that is placed in a relevant internal environment defined in mirt.

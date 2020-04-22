@@ -1415,7 +1415,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
                 'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
-                "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged')
+                "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged', 'omp')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1494,6 +1494,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$message <- if(is.null(technical$message)) TRUE else technical$message
     opts$technical <- technical
     opts$technical$parallel <- ifelse(is.null(technical$parallel), TRUE, technical$parallel)
+    opts$technical$omp <- ifelse(is.null(technical$omp), TRUE, technical$omp)
     opts$MAXQUAD <- ifelse(is.null(technical$MAXQUAD), 20000L, technical$MAXQUAD)
     opts$NCYCLES <- ifelse(is.null(technical$NCYCLES), 2000L, technical$NCYCLES)
     if(opts$method %in% c('EM', 'QMCEM', 'MCEM'))
@@ -2403,6 +2404,7 @@ missingMsg <- function(string)
 
 .mirtClusterEnv <- new.env(parent=emptyenv())
 .mirtClusterEnv$ncores <- 1L
+.mirtClusterEnv$omp_threads <- 1L
 
 myApply <- function(X, MARGIN, FUN, ...){
     if(.mirtClusterEnv$ncores > 1L){

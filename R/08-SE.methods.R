@@ -95,11 +95,11 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
-                                            itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND)
+                                            itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND, omp_threads=1L)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                          CUSTOM.IND=list$CUSTOM.IND, Theta=Theta,
-                                         prior=Prior[[g]], itemloc=itemloc, full=full)
+                                         prior=Prior[[g]], itemloc=itemloc, full=full, omp_threads=1L)
             }
         }
         for(g in seq_len(ngroups)){
@@ -236,7 +236,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
+                           omp_threads=1L)
             rlist <- Elist$rlist
             longpars <- longpars_old
             pars <- reloadPars(longpars=longpars, pars=pars,

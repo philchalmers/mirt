@@ -349,7 +349,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 dat[is_NA] <- NA
                 if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
                 mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
-                             technical=list(warn=FALSE), ...)
+                             technical=list(warn=FALSE, omp=FALSE), ...)
                 if(!extract.mirt(mod2, 'converged')) next
                 ret <- X2star(mod2, which.items=which.items, ETrange=ETrange,
                               ETpoints=ETpoints, itemtype=itemtype, ...)

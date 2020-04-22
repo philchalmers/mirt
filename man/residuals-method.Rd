@@ -23,6 +23,7 @@
   theta_lim = c(-6, 6),
   quadpts = NULL,
   fold = TRUE,
+  technical = list(),
   ...
 )
 }

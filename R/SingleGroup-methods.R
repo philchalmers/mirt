@@ -679,7 +679,8 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE, ...)
+                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
+                          technical = list(), ...)
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
@@ -896,13 +897,15 @@ setMethod(
             nfact <- extract.mirt(object, 'nfact')
             stopifnot(nfact == 1L)
             nitems <- extract.mirt(object, 'nitems')
-            as_drop <- myLapply(seq_len(nitems), function(item, mod, ...){
+            technical$omp <- FALSE
+            as_drop <- myLapply(seq_len(nitems), function(item, mod, technical, ...){
                 itemtype <- extract.mirt(mod, 'itemtype')[-item]
                 tmpdat <- extract.mirt(mod, 'data')[,-item]
-                tmpmod <- mirt(tmpdat, 1L, itemtype=itemtype, SE=TRUE, verbose=FALSE, ...)
+                tmpmod <- mirt(tmpdat, 1L, itemtype=itemtype, SE=TRUE, verbose=FALSE,
+                               technical=technical, ...)
                 ret <- sapply(coef(tmpmod, printSE=TRUE)[1:ncol(tmpdat)], function(x) x[1L:2L, 'a1'])
                 ret
-            }, mod=object, ...)
+            }, mod=object, technical=technical, ...)
             as <- sapply(coef(object)[1:nitems], function(x) x[1L, 'a1'])
             retmat <- matrix(NA, nitems, nitems)
             colnames(retmat) <- rownames(retmat) <- extract.mirt(object, 'itemnames')

@@ -64,12 +64,12 @@ lagrange <- function(mod, parnum, SE.type = 'Oakes', type = 'Richardson', ...){
                                         pars = sv2, verbose = FALSE, parprior=parprior, PrepList=PrepList,
                                         large=large, TOL=NaN, calcNull=FALSE,
                                         technical=list(message=FALSE, warn=FALSE,
-                                                       parallel=FALSE, Etable=FALSE), ...)
+                                                       parallel=FALSE, Etable=FALSE, omp=FALSE), ...)
 
         } else {
             mod2 <- mirt::mirt(dat, model, pars = sv2, verbose = FALSE, parprior=parprior, PrepList=PrepList,
                                large=large, TOL=NaN, calcNull=FALSE, technical=list(message=FALSE, warn=FALSE,
-                                                                       parallel=FALSE, Etable=FALSE), ...)
+                                                                       parallel=FALSE, Etable=FALSE, omp=FALSE), ...)
         }
         ret <- extract.mirt(mod2, 'logLik')
         ret
