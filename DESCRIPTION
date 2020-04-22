@@ -31,7 +31,7 @@ Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
     stats,
-    R (>= 3.6.2),
+    R (>= 3.6.0),
     stats4,
     lattice,
     methods
