@@ -198,11 +198,12 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific,
-                                            sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                                            sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                            omp_threads=list$omp_threads)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                          CUSTOM.IND=CUSTOM.IND, Theta=Theta,
-                                         prior=Prior[[g]], itemloc=itemloc)
+                                         prior=Prior[[g]], itemloc=itemloc, omp_threads=list$omp_threads)
             }
             LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
         }
@@ -239,7 +240,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
+                           omp_threads=list$omp_threads)
             rlist <- Elist$rlist; LL <- Elist$LL
             if(any(ANY.PRIOR)){
                 LP <- 0
@@ -348,7 +350,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                                           dentype=dentype, rlist=rlist, full=full)
+                                           dentype=dentype, rlist=rlist, full=full, omp_threads=list$omp_threads)
                             if(Elist$LL <= collectLL[cycles]){
                                 accel <- (accel - 1) / 2
                                 count <- count + 1L
@@ -396,7 +398,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
+                           omp_threads=list$omp_threads)
             rlist <- Elist$rlist; LL <- Elist$LL
         }
         if(cycles == NCYCLES){
@@ -504,7 +507,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                        PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
-                                       SLOW.IND=list$SLOW.IND, Norder=list$Norder)
+                                       SLOW.IND=list$SLOW.IND, Norder=list$Norder, omp_threads=list$omp_threads)
             } else {
                 zero_g <- SE.Oakes(0L, pars=pars, L=L, constrain=constrain, delta=0,
                                    est=est, shortpars=shortpars, longpars=longpars,
@@ -514,7 +517,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                    specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                    prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                    PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
-                                   SLOW.IND=list$SLOW.IND, Norder=1L)
+                                   SLOW.IND=list$SLOW.IND, Norder=1L, omp_threads=list$omp_threads)
                 missing_info <- mySapply(seq_len(length(shortpars)), SE.Oakes,
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
@@ -524,7 +527,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
                                        PrepList=PrepList, ANY.PRIOR=ANY.PRIOR, DERIV=DERIV,
-                                       SLOW.IND=list$SLOW.IND, zero_g=zero_g, Norder=1L)
+                                       SLOW.IND=list$SLOW.IND, zero_g=zero_g, Norder=1L, omp_threads=list$omp_threads)
             }
             if(list$symmetric) missing_info <- (missing_info + t(missing_info))/2
             pars <- reloadPars(longpars=longpars, pars=pars,

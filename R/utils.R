@@ -1489,6 +1489,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(is.null(technical$symmetric)) technical$symmetric <- TRUE
     opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
         else technical$removeEmptyRows
+    opts$omp_threads <- ifelse(is.null(technical$omp), .mirtClusterEnv$omp_threads, 1L)
     opts$PLCI <- ifelse(is.null(technical$PLCI), FALSE, technical$PLCI)
     opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn
     opts$message <- if(is.null(technical$message)) TRUE else technical$message

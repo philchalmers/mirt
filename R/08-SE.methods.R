@@ -202,7 +202,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      gTheta, list, ngroups, J, dentype, sitems,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact, mixtype,
-                     PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
+                     PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, omp_threads,
+                     zero_g = NULL){
     r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
     if(Richardson){
@@ -237,7 +238,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
-                           omp_threads=1L)
+                           omp_threads=omp_threads)
             rlist <- Elist$rlist
             longpars <- longpars_old
             pars <- reloadPars(longpars=longpars, pars=pars,
