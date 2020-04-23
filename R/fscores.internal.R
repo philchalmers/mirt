@@ -594,6 +594,7 @@ setMethod(
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                                 mean=gmean[[g]], cov=gcov[[g]], MI=MI, plausible.draws=plausible.draws,
                            full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)
+            if(plausible.draws == 1L) ret[[g]] <- list(ret[[g]])
         }
         names(ret) <- object@Data$groupNames
         if(plausible.draws > 0){
@@ -609,6 +610,7 @@ setMethod(
                 }
                 out2[[i]] <- out
             }
+            if(plausible.draws == 1L) out2 <- out2[[1L]]
             return(out2)
         }
         if(full.scores){
