@@ -11,7 +11,7 @@ mirtCluster(spec, omp_threads, remove = FALSE, ...)
 maximum number of available local cores will be used}
 
 \item{omp_threads}{number of OpenMP threads to use (currently applies to E-step computations only).
-Defaults to using all processors available when no input is given}
+Not used when argument input is missing}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
 
@@ -32,8 +32,11 @@ it is not recommended to define a mirtCluster.
 #make 4 cores available for parallel computing
 mirtCluster(4)
 
-#' #stop and remove cores
+#stop and remove cores
 mirtCluster(remove = TRUE)
+
+# create 3 core achitecture in R, and 4 thread architecture with OpenMP
+mirtCluster(spec = 3, omp_threads = 4)
 
 }
 }
