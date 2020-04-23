@@ -847,7 +847,7 @@ setMethod(
             large$tabdata <- poly2dich(tabdata)
             large$Freq$all <- rep(1L, nrow(tabdata))
             large$tabdata2 <- matrix(1L)
-            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return')
+            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large=large)
             Pl <- full_object@Internals$Pl
             r <- integer(length(Pl))
             ro <- object@Data$Freq[[1L]]
