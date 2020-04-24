@@ -4,15 +4,18 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-mirtCluster(spec, ..., remove = FALSE)
+mirtCluster(spec, omp_threads, remove = FALSE, ...)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
 maximum number of available local cores will be used}
 
-\item{...}{additional arguments to pass to \code{parallel::makeCluster}}
+\item{omp_threads}{number of OpenMP threads to use (currently applies to E-step computations only).
+Not used when argument input is missing}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
+
+\item{...}{additional arguments to pass to \code{parallel::makeCluster}}
 }
 \description{
 This function defines a object that is placed in a relevant internal environment defined in mirt.
@@ -29,8 +32,11 @@ it is not recommended to define a mirtCluster.
 #make 4 cores available for parallel computing
 mirtCluster(4)
 
-#' #stop and remove cores
+#stop and remove cores
 mirtCluster(remove = TRUE)
+
+# create 3 core achitecture in R, and 4 thread architecture with OpenMP
+mirtCluster(spec = 3, omp_threads = 4)
 
 }
 }

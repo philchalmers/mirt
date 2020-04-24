@@ -590,6 +590,8 @@ setMethod(
 #' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
+#' @param technical list of technical arguments when models are re-estimated (see \code{\link{mirt}}
+#'   for details)
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @name residuals-method
@@ -679,7 +681,8 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE, ...)
+                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
+                          technical = list(), ...)
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
@@ -844,7 +847,7 @@ setMethod(
             large$tabdata <- poly2dich(tabdata)
             large$Freq$all <- rep(1L, nrow(tabdata))
             large$tabdata2 <- matrix(1L)
-            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return')
+            full_object <- mirt(tabdata, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large=large)
             Pl <- full_object@Internals$Pl
             r <- integer(length(Pl))
             ro <- object@Data$Freq[[1L]]
@@ -896,13 +899,15 @@ setMethod(
             nfact <- extract.mirt(object, 'nfact')
             stopifnot(nfact == 1L)
             nitems <- extract.mirt(object, 'nitems')
-            as_drop <- myLapply(seq_len(nitems), function(item, mod, ...){
+            technical$omp <- FALSE
+            as_drop <- myLapply(seq_len(nitems), function(item, mod, technical, ...){
                 itemtype <- extract.mirt(mod, 'itemtype')[-item]
                 tmpdat <- extract.mirt(mod, 'data')[,-item]
-                tmpmod <- mirt(tmpdat, 1L, itemtype=itemtype, SE=TRUE, verbose=FALSE, ...)
+                tmpmod <- mirt(tmpdat, 1L, itemtype=itemtype, SE=TRUE, verbose=FALSE,
+                               technical=technical, ...)
                 ret <- sapply(coef(tmpmod, printSE=TRUE)[1:ncol(tmpdat)], function(x) x[1L:2L, 'a1'])
                 ret
-            }, mod=object, ...)
+            }, mod=object, technical=technical, ...)
             as <- sapply(coef(object)[1:nitems], function(x) x[1L, 'a1'])
             retmat <- matrix(NA, nitems, nitems)
             colnames(retmat) <- rownames(retmat) <- extract.mirt(object, 'itemnames')

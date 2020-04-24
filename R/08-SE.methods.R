@@ -1,6 +1,6 @@
 SE.Numerical <- function(pars, Theta, theta, dentype, itemloc, PrepList, ESTIMATE, constrain, Ls,
                   CUSTOM.IND, specific=NULL, sitems=NULL, EHPrior = NULL, warn, Data, type,
-                  delta, lrPars){
+                  delta, lrPars, omp_threads){
     longpars <- ESTIMATE$longpars
     rlist <- ESTIMATE$rlist
     infological=ESTIMATE$infological
@@ -30,7 +30,7 @@ SE.Numerical <- function(pars, Theta, theta, dentype, itemloc, PrepList, ESTIMAT
                             constrain=constrain,
                             specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
                             EHPrior=EHPrior, Data=Data, theta=theta, type=type,
-                            delta = delta, gradient = FALSE)
+                            delta = delta, omp_threads=omp_threads, gradient = FALSE)
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- updateHess(h=Hess, L=Ls$L)
@@ -95,11 +95,11 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                             Theta=Theta, prior=prior[[g]],
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
-                                            itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND)
+                                            itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND, omp_threads=1L)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
                                          CUSTOM.IND=list$CUSTOM.IND, Theta=Theta,
-                                         prior=Prior[[g]], itemloc=itemloc, full=full)
+                                         prior=Prior[[g]], itemloc=itemloc, full=full, omp_threads=1L)
             }
         }
         for(g in seq_len(ngroups)){
@@ -202,7 +202,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      gTheta, list, ngroups, J, dentype, sitems,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact, mixtype,
-                     PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, zero_g = NULL){
+                     PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, omp_threads,
+                     zero_g = NULL){
     r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
     if(Richardson){
@@ -236,7 +237,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
-                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable)
+                           dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
+                           omp_threads=omp_threads)
             rlist <- Elist$rlist
             longpars <- longpars_old
             pars <- reloadPars(longpars=longpars, pars=pars,
@@ -298,7 +300,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
 }
 
 SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, SLOW.IND,
-                      warn, Data, full){
+                      warn, Data, full, omp_threads){
     pars <- ESTIMATE$pars
     itemloc <- PrepList[[1L]]$itemloc
     ngroups <- length(pars)
@@ -335,7 +337,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
         for(g in seq_len(ngroups)){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
             rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, freq=1L, CUSTOM.IND=CUSTOM.IND, full=full,
-                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE)
+                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE, omp_threads=omp_threads)
             for(i in seq_len(nitems)){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                 pars[[g]][[i]]@dat <- rlist$r1[, tmp]

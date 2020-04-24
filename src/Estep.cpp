@@ -1,6 +1,15 @@
 #include "Misc.h"
 #include "Estep.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+// reduction expression contributed by Matthias von Davier, 04/04/2020
+#pragma omp declare reduction(vec_double_plus : std::vector<double> : \
+    std::transform(omp_out.begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::plus<double>())) \
+    initializer(omp_priv = decltype(omp_orig)(omp_orig.size()))
+
 const double ABSMIN = std::numeric_limits<double>::min();
 
 void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double> &prior,
@@ -11,8 +20,9 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
     const int nitems = data.ncol();
     const int npat = r.size();
 
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
-        if(r[pat] < 1e-10) continue;
+        if(r[pat] < ABSMIN) continue;
         vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
             posterior[q] = posterior[q] * prior[q];
@@ -40,13 +50,16 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
 }
 
 //Estep for mirt
-RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtable)
+RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtable,
+                      SEXP Romp_threads)
 {
     BEGIN_RCPP
 
     const vector<double> prior = as< vector<double> >(Rprior);
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
+    const int omp_threads = as<int>(Romp_threads);
+    omp_set_num_threads(omp_threads);
     const IntegerMatrix data(RX);
     const NumericMatrix itemtrace(Ritemtrace);
     const int nquad = prior.size();
@@ -72,6 +85,7 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
     const int nitems = data.ncol();
     const int npat = data.nrow();
 
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
@@ -100,7 +114,8 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
 }
 
 //Estep for mirt
-RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable)
+RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
+                       SEXP Romp_threads)
 {
     BEGIN_RCPP
 
@@ -108,6 +123,8 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable)
     const IntegerMatrix data(RX);
     const NumericMatrix itemtrace(Ritemtrace);
     const bool Etable = as<bool>(REtable);
+    const int omp_threads = as<int>(Romp_threads);
+    omp_set_num_threads(omp_threads);
     const int nquad = prior.ncol();
     const int nitems = data.ncol();
     const int npat = data.nrow();
@@ -147,9 +164,9 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
         }
     }
 
-
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
-        if(r[pat] < 1e-10) continue;
+        if(r[pat] < ABSMIN) continue;
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
         vector<double> likelihoods(nquad*sfact, 1.0);
         for (int fact = 0; fact < sfact; ++fact){
@@ -223,7 +240,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
 
 //Estep for bfactor
 RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, SEXP RX,
-    SEXP Rr, SEXP Rsitems, SEXP REtable)
+    SEXP Rr, SEXP Rsitems, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
@@ -233,6 +250,8 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     const vector<double> Priorbetween = as< vector<double> >(RPriorbetween);
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
+    const int omp_threads = as<int>(Romp_threads);
+    omp_set_num_threads(omp_threads);
     const IntegerMatrix data(RX);
     const IntegerMatrix sitems(Rsitems);
     const int nitems = data.ncol();

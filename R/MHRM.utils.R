@@ -36,7 +36,7 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             }
         } else {
             for(i in seq_len(length(random))){
-                deriv2 <- RandomDeriv(x=random[[i]], estHess=estHess)
+                deriv2 <- force(RandomDeriv(x=random[[i]], estHess=estHess))
                 g[random[[i]]@parnum] <- deriv2$grad
                 if(estHess)
                     h[random[[i]]@parnum, random[[i]]@parnum] <- deriv2$hess
@@ -61,7 +61,7 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
             }
         } else {
             for(i in seq_len(length(lr.random))){
-                deriv4 <- RandomDeriv(x=lr.random[[i]], estHess=estHess)
+                deriv4 <- force(RandomDeriv(x=lr.random[[i]], estHess=estHess))
                 g[lr.random[[i]]@parnum] <- deriv4$grad
                 if(estHess)
                     h[lr.random[[i]]@parnum, lr.random[[i]]@parnum] <- deriv4$hess

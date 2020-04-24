@@ -349,7 +349,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 dat[is_NA] <- NA
                 if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
                 mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
-                             technical=list(warn=FALSE), ...)
+                             technical=list(warn=FALSE, omp=FALSE), ...)
                 if(!extract.mirt(mod2, 'converged')) next
                 ret <- X2star(mod2, which.items=which.items, ETrange=ETrange,
                               ETpoints=ETpoints, itemtype=itemtype, ...)
@@ -725,7 +725,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         theta_lim <- dots$theta_lim
         if(is.null(theta_lim)) theta_lim <- c(-6,6)
         gp <- if(mixture) list() else ExtractGroupPars(pars[[length(pars)]])
-        if(x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom'){
+        if(!mixture && x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom'){
             den_fun <- function(Theta, ...){
                 obj <- x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]
                 obj@den(obj, Theta=Theta)

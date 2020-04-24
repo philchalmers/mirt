@@ -56,11 +56,11 @@ EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND, bfactor_inf
         rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, freq=freq,
                                Theta=Theta, prior=prior,
                                Priorbetween=Priorbetween, specific=bfactor_info$specific,
-                               sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                               sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, omp_threads=1L)
     } else {
         rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq,
                             Theta=Theta, prior=prior, itemloc=itemloc,
-                            CUSTOM.IND=CUSTOM.IND, full=FALSE)
+                            CUSTOM.IND=CUSTOM.IND, full=FALSE, omp_threads=1L)
     }
     tmp <- log(rlist$expected)
     pick <- is.finite(tmp)

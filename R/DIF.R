@@ -171,9 +171,10 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                 simplify = TRUE, verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, ...)
+                          return_models, technical = list(), ...)
     {
         constrain <- model@Model$constrain
+        technical$omp <- FALSE
         parnum <- list()
         for(i in seq_len(length(which.par)))
             parnum[[i]] <- values$parnum[values$name == which.par[i] &
@@ -210,7 +211,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         }
         newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain, pars=sv,
-                                  itemtype = model@Model$itemtype, verbose=FALSE, ...)
+                                  itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
+                                  ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
         if(return_models) aov <- newmodel

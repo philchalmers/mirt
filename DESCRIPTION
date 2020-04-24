@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.31.9
+Version: 1.31.10
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -31,7 +31,7 @@ Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
     stats,
-    R (>= 3.1.0),
+    R (>= 3.6.0),
     stats4,
     lattice,
     methods
