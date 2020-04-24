@@ -12,6 +12,12 @@
 
 const double ABSMIN = std::numeric_limits<double>::min();
 
+void if_omp_set_num_threads(const int &omp_threads){
+    #ifdef _OPENMP
+        omp_set_num_threads(omp_threads);
+    #endif
+}
+
 void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double> &prior,
     const vector<double> &r, const IntegerMatrix &data, const NumericMatrix &itemtrace,
     const bool &Etable)
@@ -59,7 +65,7 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtab
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
-    omp_set_num_threads(omp_threads);
+    if_omp_set_num_threads(omp_threads);
     const IntegerMatrix data(RX);
     const NumericMatrix itemtrace(Ritemtrace);
     const int nquad = prior.size();
@@ -124,7 +130,7 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
     const NumericMatrix itemtrace(Ritemtrace);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
-    omp_set_num_threads(omp_threads);
+    if_omp_set_num_threads(omp_threads);
     const int nquad = prior.ncol();
     const int nitems = data.ncol();
     const int npat = data.nrow();
@@ -251,7 +257,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
-    omp_set_num_threads(omp_threads);
+    if_omp_set_num_threads(omp_threads);
     const IntegerMatrix data(RX);
     const IntegerMatrix sitems(Rsitems);
     const int nitems = data.ncol();

@@ -1,4 +1,4 @@
-# Changes in mirt 1.32
+# Changes in mirt 1.32.1
 
 - OpenMP support added to E-step portion of the package, where number of threads can be 
   specified via the `mirtCluster()` function argument `omp_threads`. Special thanks to 
