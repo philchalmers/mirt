@@ -350,7 +350,7 @@ multipleGroup <- function(data, model, group, invariance = '', method = 'EM',
         if(dots$dentype == "empiricalhist" && any(invariance.check))
             stop('freeing group parameters not meaningful when estimating empirical histograms',
                  call.=FALSE)
-    if(sum(invariance.check == 2L) && length(constrain) == 0){
+    if(invariance.check == 2L && length(constrain) == 0){
         warn <- TRUE
         if(is(model, 'mirt.model')){
             if(any(model$x[,1L] == 'CONSTRAINB'))
