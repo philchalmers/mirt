@@ -1700,8 +1700,10 @@ traditional2mirt <- function(x, cls, ncat){
         newd <- numeric(length(ds))
         for(i in length(ds):2L)
             newd[i] <- (ds[i] + ds[i-1L])
-        for(i in length(newd):3L)
-            newd[i] <- newd[i] + newd[i-2L]
+        for(i in length(newd):3L){
+            pick <- if(i %% 2 == 0) seq(2, i, by = 2) else seq(1, i, by = 2)
+            newd[i] <- sum(newd[pick])
+        }
         par <- c(par[1:(ncat+1)], newd)
         names(par) <- c('a1', paste0('ak', 0:(ncat-1)), paste0('d', 0:(ncat-1)))
     } else if(cls == 'nominal'){

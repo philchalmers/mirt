@@ -1,3 +1,7 @@
+# Changes in mirt 1.33
+
+- fixed `traditional2mirt()` math for gpcm when 5 or more category items are supplied (reported by Aiden Loe)
+
 # Changes in mirt 1.32.1
 
 - OpenMP support added to E-step portion of the package, where number of threads can be 
