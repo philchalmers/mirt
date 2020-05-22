@@ -5,7 +5,10 @@
 #include <omp.h>
 #endif
 
+//
 // reduction expression contributed by Matthias von Davier, 04/04/2020
+// extended MvD 5/13/2020
+//
 #pragma omp declare reduction(vec_double_plus : std::vector<double> : \
     std::transform(omp_out.begin(), omp_out.end(), omp_in.begin(), omp_out.begin(), std::plus<double>())) \
     initializer(omp_priv = decltype(omp_orig)(omp_orig.size()))
@@ -170,7 +173,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
         }
     }
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec)
+#pragma omp parallel for schedule(static) reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < ABSMIN) continue;
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
@@ -236,6 +239,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
     }   //end main
 
     if(Etable){
+#pragma omp parallel for schedule(static) reduction(vec_double_plus : r1)
         for (int item = 0; item < nitems; ++item)
             for (int fact = 0; fact < sfact; ++fact)
                 if(sitems(item, fact))
@@ -299,6 +303,7 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
     vector<double> scores(N * nfact);
     vector<double> scores2(N * nfact*(nfact + 1)/2);
 
+#pragma omp parallel for schedule(static) reduction(vec_double_plus : scores,scores2)
     for(int pat = 0; pat < N; ++pat){
 
         vector<double> L(n);
