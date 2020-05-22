@@ -1521,7 +1521,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
         if(opts$TOL == 1e-4) opts$TOL <- 3e-5
         if(is.null(opts$quadpts)) opts$quadpts <- 121L
-        if(opts$NCYCLES == 500L) opts$NCYCLES <- 2000L
+        if(is.null(opts$technical$NCYCLES)) opts$NCYCLES <- 2000L
     }
     if(dentype == 'Davidian'){
         if(opts$method != 'EM')
