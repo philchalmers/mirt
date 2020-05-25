@@ -40,8 +40,12 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
     if(requireNamespace("parallel", quietly = TRUE)){
         if(missing(spec))
             spec <- parallel::detectCores()
+            #spec <- 1L
         if(missing(omp_threads))
-            .mirtClusterEnv$omp_threads <- 1L
+           # .mirtClusterEnv$omp_threads <- 1L
+           .mirtClusterEnv$omp_threads <- parallel::detectCores()
+        else 
+           .mirtClusterEnv$omp_threads <- omp_threads
         if(remove){
             if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
                 message('There is no visible mirtCluster() definition')
@@ -50,16 +54,22 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
             parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
             .mirtClusterEnv$MIRTCLUSTER <- NULL
             .mirtClusterEnv$ncores <- 1L
-            .mirtClusterEnv$omp_threads <- 1L
+            # .mirtClusterEnv$omp_threads <- 1L
             return(invisible())
         }
         if(!is.null(.mirtClusterEnv$MIRTCLUSTER)){
             message('mirtCluster() has already been defined')
             return(invisible())
         }
-        .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
-        .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
-        mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible())
+       if (spec > 1L) {
+           message('mirtCluster() initialization')
+          .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
+          .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
+          parallel::setDefaultCluster(.mirtClusterEnv$MIRTCLUSTER)
+           mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible())
+       } else {
+           message('mirtCluster(1) NO NEED to initialize')
+       }
     }
     return(invisible())
 }

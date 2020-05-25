@@ -174,7 +174,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                           return_models, technical = list(), ...)
     {
         constrain <- model@Model$constrain
-        technical$omp <- FALSE
+        technical$omp <- TRUE
         parnum <- list()
         for(i in seq_len(length(which.par)))
             parnum[[i]] <- values$parnum[values$name == which.par[i] &

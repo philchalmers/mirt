@@ -899,7 +899,7 @@ setMethod(
             nfact <- extract.mirt(object, 'nfact')
             stopifnot(nfact == 1L)
             nitems <- extract.mirt(object, 'nitems')
-            technical$omp <- FALSE
+            technical$omp <- TRUE
             as_drop <- myLapply(seq_len(nitems), function(item, mod, technical, ...){
                 itemtype <- extract.mirt(mod, 'itemtype')[-item]
                 tmpdat <- extract.mirt(mod, 'data')[,-item]

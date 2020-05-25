@@ -109,8 +109,8 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- sum(structure$est)
-    if(is.null(technical)) technical <- list(parallel=FALSE)
-    else technical$parallel <- FALSE
+    if(is.null(technical)) technical <- list(parallel=TRUE)
+    else technical$parallel <- TRUE
     if(requireNamespace("boot", quietly = TRUE)){
       boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, class=class,
                     parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,

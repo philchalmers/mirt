@@ -85,7 +85,7 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
             technical$message <- technical$warn <- technical$parallel <- FALSE
             technical$PLCI <- TRUE
         }
-        technical$omp <- FALSE
+        technical$omp <- TRUE
         tmpmod <- mirt::mirt(dat, model, itemtype=itemtype, pars = sv, verbose = FALSE,
                              parprior=parprior, PrepList=PrepList, large=large, calcNull=FALSE,
                              technical=technical, constrain=constrain, ...)
@@ -154,7 +154,7 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
         mid <- sv$value[parnum]
         if(closeEnough(lower, -1e-2, 1e-2) && closeEnough(upper, 1 + -1e-2, 1 + 1e-2))
             step <- step/10
-        if(closeEnough(lower, -1e-2, 1e-2) && upper > 10L) step <- step/3
+        if(closeEnough(lower,OD -1e-2, 1e-2) && upper > 10L) step <- step/3
         conv <- TRUE
         if(direction[X] == 'lower'){
             possible_bound <- TRUE

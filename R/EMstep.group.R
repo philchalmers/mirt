@@ -310,8 +310,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             EMhistory[cycles+1L,] <- longpars
             if(verbose)
-                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
-                            cycles, LL + LP, max(abs(preMstep.longpars - longpars))))
+                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f Threads: %d',
+                            cycles, LL + LP, max(abs(preMstep.longpars - longpars)),list$omp_threads))
 
             if(all(abs(preMstep.longpars - longpars) < TOL)){
                 pars <- reloadPars(longpars=longpars, pars=pars,

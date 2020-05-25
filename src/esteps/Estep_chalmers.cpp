@@ -1,10 +1,10 @@
-#ifdef _OPENMP
-#include <omp.h>
-// [[Rcpp::plugins(openmp)]]
-#endif
-#
 #include "Misc.h"
 #include "Estep.h"
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 //
 // reduction expression contributed by Matthias von Davier, 04/04/2020
 // extended MvD 5/13/2020
@@ -29,7 +29,7 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
     const int nitems = data.ncol();
     const int npat = r.size();
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec,expected)
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < ABSMIN) continue;
         vector<double> posterior(nquad,1.0);
@@ -94,7 +94,7 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
     const int nitems = data.ncol();
     const int npat = data.nrow();
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec,expected)
+#pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         vector<double> posterior(nquad,1.0);
         for(int q = 0; q < nquad; ++q)
@@ -173,7 +173,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
         }
     }
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec,ri,ris)
+#pragma omp parallel for schedule(static) reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < ABSMIN) continue;
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
@@ -239,7 +239,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
     }   //end main
 
     if(Etable){
-#pragma omp parallel for reduction(vec_double_plus : r1)
+#pragma omp parallel for schedule(static) reduction(vec_double_plus : r1)
         for (int item = 0; item < nitems; ++item)
             for (int fact = 0; fact < sfact; ++fact)
                 if(sitems(item, fact))
