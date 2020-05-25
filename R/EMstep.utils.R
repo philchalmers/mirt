@@ -205,26 +205,16 @@ Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CU
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(ngroups)
-    if(requireNamespace("parallel", quietly = TRUE)){
-      LLs <- as.numeric(parallel::mclapply(c(1:seq_len(ngroups)), 
-             function(g) LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
-             itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g]),
-             mc.cores=.mirtClusterEnv$ncores))
-      LLs <- LLs + as.numeric(parallel::mclapply(c(1:seq_len(ngroups)),
-             function(g) if(any(pars[[g]][[J+1L]]@est)) {
-                 Mstep.LL.group(pars=pars[[g]], Theta=gTheta[[g]],keep_vcov_PD=keep_vcov_PD)
-                 } else {0}, mc.cores=.mirtClusterEnv$ncores ))
-    } else {
-      for(g in seq_len(ngroups)){
-        LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
-                              itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
-      }
-      for(g in seq_len(ngroups)){
-        if(any(pars[[g]][[J+1L]]@est))
-            LLs[g] <- LLs[g] + Mstep.LL.group(pars=pars[[g]], Theta=gTheta[[g]],
-                                              keep_vcov_PD=keep_vcov_PD)
-      }
-    }    
+    igroups <- seq_len(ngroups)
+    for(g in igroups){
+      LLs[g] <- LogLikMstep(pars[[g]], Theta=gTheta[[g]], rs=rlist[[g]],
+                        itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, any.prior=ANY.PRIOR[g])
+    }
+    for(g in igroups){
+      if(any(pars[[g]][[J+1L]]@est))
+        LLs[g] <- LLs[g] + Mstep.LL.group(pars=pars[[g]], Theta=gTheta[[g]],
+                                  keep_vcov_PD=keep_vcov_PD)
+    }
     return(-sum(LLs))
 }
 
