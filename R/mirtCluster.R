@@ -51,6 +51,7 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
                 message('There is no visible mirtCluster() definition')
                 return(invisible())
             }
+            parallel::setDefaultCluster(.mirtClusterEnv$OLD_DEFAULT)
             parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
             .mirtClusterEnv$MIRTCLUSTER <- NULL
             .mirtClusterEnv$ncores <- 1L
@@ -65,6 +66,7 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
            message('mirtCluster() initialization')
           .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
           .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
+          .mirtClusterEnv$OLD_DEFAULT <- parallel::getDefaultCluster()
           parallel::setDefaultCluster(.mirtClusterEnv$MIRTCLUSTER)
            mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible())
        } else {
