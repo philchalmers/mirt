@@ -38,6 +38,11 @@
 #' }
 mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
     if(requireNamespace("parallel", quietly = TRUE)){
+        if(!exists(".mirtClusterEnv")){
+            .mirtClusterEnv <- new.env(parent=emptyenv())
+            .mirtClusterEnv$ncores <- 1L
+            .mirtClusterEnv$omp_threads <- 1L
+        }
         if(missing(spec))
             spec <- parallel::detectCores()
             #spec <- 1L
