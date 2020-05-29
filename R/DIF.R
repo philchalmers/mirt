@@ -282,9 +282,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                 }, stat = seq_stat))
             if(seq_stat == 'p'){
                 statdiff <- p.adjust(statdiff, p.adjust)
-                keep <- statdiff > pval
+                keep <- statdiff >= pval
             } else {
-                keep <- statdiff < 0
+                keep <- statdiff <= 0
             }
             if(run_number == 2L && (all(!keep) || all(keep))){
                 if(verbose)
@@ -380,7 +380,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                 if(stat == 'p') return(x[2L, 'p'])
                 return(x[1L, stat] - x[2L, stat])
             }, stat = seq_stat))
-            keep <- statdiff < 0
+            keep <- statdiff <= 0
         } else {
             statdiff <- res$adj_pvals
             if(is.null(statdiff)){
@@ -395,9 +395,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             }
             if(seq_stat == 'p' || Wald){
                 statdiff <- p.adjust(statdiff, p.adjust)
-                keep <- statdiff > pval
+                keep <- statdiff >= pval
             } else {
-                keep <- !(statdiff < 0 & !sapply(statdiff, closeEnough, low=-1e-4, up=1e-4))
+                keep <- !(statdiff <= 0 & !sapply(statdiff, closeEnough, low=-1e-4, up=1e-4))
             }
         }
         which.item <- which(!keep)
