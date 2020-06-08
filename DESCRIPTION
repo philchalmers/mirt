@@ -27,7 +27,6 @@ Description: Analysis of dichotomous and polytomous response data using
     DINO, multidimensional latent class, and several other discrete latent
     variable models, including mixture and zero-inflated response models, 
     are supported.
-Roxygen: list(wrap = FALSE)
 VignetteBuilder: knitr
 Depends:
     stats,
