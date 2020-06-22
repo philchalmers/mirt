@@ -255,7 +255,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     if(is.numeric(seq_stat)){
         pval <- seq_stat
         seq_stat <- 'p'
-    } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC', 'DIC'))){
+    } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC', 'DIC', 'HQ'))){
         stop('Invalid seq_stat input', call.=FALSE)
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
