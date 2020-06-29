@@ -1,5 +1,7 @@
 # Changes in mirt 1.33
 
+- Fix for GGUMs using model syntax input (was ignoring the slope loading specifications; reported by Ben Listyg)
+
 - fixed `traditional2mirt()` math for gpcm when 5 or more category items are supplied (reported by Aiden Loe)
 
 # Changes in mirt 1.32.1
