@@ -9,7 +9,7 @@
 #' then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
 #' density components (where applicable). Currently, only S-X2 statistic supported for
 #' mixture IRT models. Finally, where applicable the root mean-square error of approximation (RMSEA)
-#' is reported to help guage the magnitude of item misfit.
+#' is reported to help gauge the magnitude of item misfit.
 #'
 #' @aliases itemfit
 #' @param x a computed model object of class \code{SingleGroupClass},
@@ -280,7 +280,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
     boot_PV <- function(mod, org, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
                         itemtype, boot = 1000, draws = 30, verbose = FALSE, ...){
-        pb_fun <- function(ind, mod, N, sv, which.items, draws, itemtype, ...){
+        pb_fun <- function(ind, mod, N, sv, which.items, draws, itemtype, model, ...){
             count <- 0L
             K <- extract.mirt(mod, 'K')
             while(TRUE){
@@ -306,7 +306,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         model <- extract.mirt(mod, 'model')
         sv <- mod2values(mod)
         retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv, itemtype=itemtype,
-                          which.items=which.items, draws=draws, ...)
+                          which.items=which.items, draws=draws, model=model, ...)
         if(nrow(retQ1) == 1L) retQ1 <- t(retQ1)
         Q1 <- (1 + rowSums(org$p.PV_Q1 > t(retQ1), na.rm = TRUE)) / (1 + boot)
         ret <- data.frame("p.PV_Q1_star"=Q1)

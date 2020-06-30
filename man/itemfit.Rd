@@ -144,7 +144,7 @@ If the latent trait density was approximated (e.g., Davidian curves, Empirical h
 then passing \code{use_dentype_estimate = TRUE} will use the internally saved quadrature and
 density components (where applicable). Currently, only S-X2 statistic supported for
 mixture IRT models. Finally, where applicable the root mean-square error of approximation (RMSEA)
-is reported to help guage the magnitude of item misfit.
+is reported to help gauge the magnitude of item misfit.
 }
 \examples{
 
