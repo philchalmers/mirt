@@ -1,7 +1,7 @@
 #' Wald statistics for mirt models
 #'
 #' Compute a Wald test given an \code{L} vector or matrix of numeric contrasts. Requires that the
-#' model information matrix be computed (including \code{SE = TRUE} when using the EM method). Use
+#' model information matrix be computed (by passing \code{SE = TRUE} when estimating the model). Use
 #' \code{wald(model)} to observe how the information matrix columns are named, especially if
 #' the estimated model contains constrained parameters (e.g., 1PL).
 #'
