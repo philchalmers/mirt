@@ -1,5 +1,10 @@
 # Changes in mirt 1.33
 
+- Added `fixedCalib()` function to perform the five fixed-calibration methods describe by Kim (2006)
+
+- Empirical histogram `dentype` convergence tollerance no longer modified (default now the same as the Gaussian
+  `dentype` criteria)
+
 - Fix for GGUMs using model syntax input (was ignoring the slope loading specifications; reported by Ben Listyg)
 
 - fixed `traditional2mirt()` math for gpcm when 5 or more category items are supplied (reported by Aiden Loe)

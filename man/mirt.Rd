@@ -256,9 +256,7 @@ the default number of quasi-Monte Carlo integration nodes will be set to 5000 in
 
 \item{TOL}{convergence threshold for EM or MH-RM; defaults are .0001 and .001. If
 \code{SE.type = 'SEM'} and this value is not specified, the default is set to \code{1e-5}.
-If \code{dentype = 'empiricalhist'} (i.e., \code{'EH'}) or \code{'empiricalhist_Woods'} (i.e., \code{'EHW'})
-and \code{TOL} is not specified then the default \code{3e-5}
-will be used. To evaluate the model using only the starting values pass \code{TOL = NaN}, and
+To evaluate the model using only the starting values pass \code{TOL = NaN}, and
 to evaluate the starting values without the log-likelihood pass \code{TOL = NA}}
 
 \item{gpcm_mats}{a list of matrices specifying how the scoring coefficients in the (generalized)

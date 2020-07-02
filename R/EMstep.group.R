@@ -385,14 +385,14 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
-        if(!is.na(TOL) && !is.nan(TOL)){
+        if(is.nan(TOL) || is.numeric(TOL)){
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             if(MC)
                 gTheta <- updateTheta(npts=if(QMC) list$quadpts else list$MCEM_draws(cycles),
                                       nfact=nfact, pars=pars, QMC=QMC)
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
                                list=list, ngroups=ngroups, nfact=nfact,
-                               J=J, dentype=dentype, sitems=sitems, cycles=cycles,
+                               J=J, dentype=dentype, sitems=sitems, cycles=2L,
                                rlist=rlist, full=full, lrPars=lrPars, MC=MC)
             prior <- tmp$prior; Prior <- tmp$Prior; Priorbetween <- tmp$Priorbetween
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,

@@ -1477,8 +1477,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$storeEtable <- ifelse(is.null(technical$storeEtable), FALSE, technical$storeEtable)
     if(!is.null(TOL))
         if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- FALSE
-    opts$TOL <- ifelse(is.null(TOL), if(method %in% c('EM', 'QMCEM', 'MCEM')) 1e-4 else
-        if(method == 'BL') 1e-8 else 1e-3, TOL)
+    opts$TOL <- ifelse(is.null(TOL),
+                       if(method %in% c('EM', 'QMCEM', 'MCEM')) 1e-4 else
+                           if(method == 'BL') 1e-8 else 1e-3, TOL)
     if(SE.type == 'SEM' && SE){
         opts$accelerate <- 'none'
         if(is.null(TOL)) opts$TOL <- 1e-5
@@ -1519,7 +1520,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(dentype %in% c("EH", 'EHW')){
         if(opts$method != 'EM')
             stop('empirical histogram method only applicable when method = \'EM\' ', call.=FALSE)
-        if(opts$TOL == 1e-4) opts$TOL <- 3e-5
         if(is.null(opts$quadpts)) opts$quadpts <- 121L
         if(is.null(opts$technical$NCYCLES)) opts$NCYCLES <- 2000L
     }
