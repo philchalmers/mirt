@@ -2,7 +2,8 @@
 #'
 #' Implements the set of fixed-item calibration methods described by Kim (2006). The initial
 #' calibrated model must be fitted via \code{\link{mirt}}, and is currently limited to
-#' unidimensional models only.
+#' unidimensional models only. For more flexible calibration of items, including a
+#' fixed-item calibration variant, see \code{\link{multipleGroup}}.
 #'
 #' @param old_mod a model of class SingleGroupClass fitted using \code{\link{mirt}}
 #'
@@ -21,6 +22,8 @@
 #'   (see \code{\link{mirt}} for details)
 #'
 #' @param ... additional arguments to pass to \code{\link{mirt}}
+#'
+#' @seealso \code{\link{mirt}}, \code{\link{multipleGroup}}
 #'
 #' @export
 #'

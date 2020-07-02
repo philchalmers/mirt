@@ -36,7 +36,8 @@ Supports one (\code{"OEM"}) and many (\code{"MEM"})}
 \description{
 Implements the set of fixed-item calibration methods described by Kim (2006). The initial
 calibrated model must be fitted via \code{\link{mirt}}, and is currently limited to
-unidimensional models only.
+unidimensional models only. For more flexible calibration of items, including a
+fixed-item calibration variant, see \code{\link{multipleGroup}}.
 }
 \examples{
 \dontrun{
@@ -99,4 +100,7 @@ plot(MWU_MEM, type = 'empiricalhist')
 \references{
 Kim, S. (2006). A comparative study of IRT fixed parameter calibration methods.
 \emph{Journal of Educational Measurement, 4}(43), 355–381.
+}
+\seealso{
+\code{\link{mirt}}, \code{\link{multipleGroup}}
 }
