@@ -1,9 +1,11 @@
 #' Fixed-item calibration method
 #'
 #' Implements the set of fixed-item calibration methods described by Kim (2006). The initial
-#' calibrated model must be fitted via \code{\link{mirt}}, and is currently limited to
-#' unidimensional models only. For more flexible calibration of items, including a
-#' fixed-item calibration variant, see \code{\link{multipleGroup}}.
+#' calibrated model must be fitted via \code{\link{mirt}}, is currently limited to
+#' unidimensional models only, and should only be utilized when the new set of responses
+#' are obtained from a population with similar distributional characteristics in the latent traits.
+#' For more flexible calibration of items, including a fixed-item calibration variant involving
+#' anchor items for equating, see \code{\link{multipleGroup}}.
 #'
 #' @param old_mod a model of class SingleGroupClass fitted using \code{\link{mirt}}
 #'
@@ -44,48 +46,54 @@
 #'
 #' # calibration data theta ~ N(0,1)
 #' N <- 3000
-#' dataset1 <- simdata(a, d, N, itemtype)
+#' dataset1 <- simdata(a, d, N = N, itemtype=itemtype)
 #'
-#' # more extreme to-be-calibrate data (Kim, 2006, p. 365)
-#' dataset2 <- simdata(a, d, N = 1000, itemtype=itemtype,
-#'                     mu=1, sigma=matrix(1.4^2))
+#' # new data (again, theta ~ N(0,1))
+#' dataset2 <- simdata(a, d, N = 1000, itemtype=itemtype)
 #'
 #' # last 40% of experimental items not given to calibration group
 #' #     (unobserved; hence removed)
 #' dataset1 <- dataset1[,-c(J:(J*.6))]
+#' head(dataset1)
 #'
 #' # assume first 60% of items not given to new group
 #' dataset2[,colnames(dataset1)] <- NA
-#'
-#' # calibrated model
-#' mod <- mirt(dataset1, model = 1)
-#' coef(mod, simplify=TRUE)
+#' head(dataset2)
 #'
 #' #--------------------------------------
+#'
+#' # calibrated model from dataset1 only
+#' mod <- mirt(dataset1, model = 1)
+#' coef(mod, simplify=TRUE)
 #'
 #' # No Prior Weights Updating and One EM Cycle (NWU-OEM)
 #' NWU_OEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'NWU', NEMC = 'OEM')
 #' coef(NWU_OEM, simplify=TRUE)
+#' data.frame(coef(NWU_OEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 #' plot(NWU_OEM, type = 'empiricalhist')
 #'
 #' # No Prior Weights Updating and Multiple EM Cycles (NWU-MEM)
 #' NWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'NWU')
 #' coef(NWU_MEM, simplify=TRUE)
+#' data.frame(coef(NWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 #' plot(NWU_MEM, type = 'empiricalhist')
 #'
 #' # One Prior Weights Updating and One EM Cycle (OWU-OEM)
 #' OWU_OEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU', NEMC = "OEM")
 #' coef(OWU_OEM, simplify=TRUE)
+#' data.frame(coef(OWU_OEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 #' plot(OWU_OEM, type = 'empiricalhist')
 #'
 #' # One Prior Weights Updating and Multiple EM Cycles (OWU-MEM)
 #' OWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU')
 #' coef(OWU_MEM, simplify=TRUE)
+#' data.frame(coef(OWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 #' plot(OWU_MEM, type = 'empiricalhist')
 #'
 #' # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 #' MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 #' coef(MWU_MEM, simplify=TRUE)
+#' data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 #' plot(MWU_MEM, type = 'empiricalhist')
 #'
 #' }
