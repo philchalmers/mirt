@@ -333,6 +333,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
         PrepList[[g]]$tabdata <- tabdata
         gTheta[[g]] <- Theta
     }
+    info <- 0
     for(pat in seq_len(nrow(tabdata))){
         for(g in seq_len(ngroups)){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
@@ -346,11 +347,9 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
             pars[[g]][[nitems + 1L]]@rr <- rowSums(rlist$r1)
         }
         DX <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, nitems), ncol(L), 0L, 0L, 1L, TRUE)$grad
-        collectL[pat] <- rlist$expected
-        DX[DX != 0] <-  rlist$expected - exp(log(rlist$expected) - DX[DX != 0])
-        collectgrad[pat, ] <- DX
+        info <- info + DX %*% t(DX) * rlist$expected
     }
-    info <- N * t(collectgrad) %*% diag(1/collectL) %*% collectgrad
+    info <- N * info
     info <- updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)

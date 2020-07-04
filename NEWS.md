@@ -1,5 +1,7 @@
 # Changes in mirt 1.33
 
+- Corrected outer-product summation for `SE.type = 'Fisher'` computation (reported by Felix Zimmer)
+
 - Added `fixedCalib()` function to perform the five fixed-calibration methods describe by Kim (2006)
 
 - Empirical histogram `dentype` convergence tollerance no longer modified (default now the same as the Gaussian
