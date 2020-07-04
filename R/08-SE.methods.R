@@ -326,8 +326,6 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
         for(j in seq_len(length(uniq)))
             tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
     }
-    collectL <- numeric(nrow(tabdata))
-    collectgrad <- matrix(0, nrow(tabdata), length(DX))
     gTheta <- vector('list', ngroups)
     for(g in seq_len(ngroups)){
         PrepList[[g]]$tabdata <- tabdata

@@ -28,7 +28,7 @@ test_that('dich', {
                  tolerance = 1e-2)
     expect_is(modm2, 'SingleGroupClass')
     modm2b <- mirt(data, 1, SE = TRUE, SE.type = 'Fisher', verbose=FALSE)
-    expect_equal(extract.mirt(modm2b, 'condnum'), 19.69469, tolerance = 1e-3)
+    expect_equal(extract.mirt(modm2b, 'condnum'), 29.0323, tolerance = 1e-3)
     modm3 <- mirt(data, 1, itemtype = 'Rasch', verbose=FALSE, SE=TRUE)
     expect_is(modm3, 'SingleGroupClass')
     expect_equal(extract.mirt(modm3, 'df'), 25)
