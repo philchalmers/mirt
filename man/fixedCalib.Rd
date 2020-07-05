@@ -20,18 +20,22 @@ with the \code{mod} object, observed responses/NA placeholders must be included
 to link the item names used in the original \code{mod} definition
 (i.e., \code{extract.mirt(mod, what = 'itemnames')})}
 
+\item{model}{type of model to fit for the complete dataset (not that for the fixed items
+in \code{old_mod} the factor loadings/constraints specified by the potential \code{\link{mirt.model}}
+specification is not relevant)}
+
 \item{old_mod}{a model of class SingleGroupClass fitted using \code{\link{mirt}}}
 
 \item{PAU}{prior ability update (PAU) approach. Supports none (\code{"NWU"}),
 one (\code{"OWU"}), and many (\code{"MWU"})}
 
+\item{NEMC}{number of EM cycles (NEMC) to use for the to-be-estimated parameters.
+Supports one (\code{"OEM"}) and many (\code{"MEM"})}
+
 \item{technical}{list of technical estimation arguments
 (see \code{\link{mirt}} for details)}
 
 \item{...}{additional arguments to pass to \code{\link{mirt}}}
-
-\item{NEM}{number of EM cycles (NEMC) to use for the to-be-estimated parameters.
-Supports one (\code{"OEM"}) and many (\code{"MEM"})}
 }
 \description{
 Implements the set of fixed-item calibration methods described by Kim (2006). The initial

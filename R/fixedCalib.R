@@ -9,6 +9,10 @@
 #'
 #' @param old_mod a model of class SingleGroupClass fitted using \code{\link{mirt}}
 #'
+#' @param model type of model to fit for the complete dataset (not that for the fixed items
+#'   in \code{old_mod} the factor loadings/constraints specified by the potential \code{\link{mirt.model}}
+#'   specification is not relevant)
+#'
 #' @param data new data to be used for calibration. Note that to be consistent
 #'   with the \code{mod} object, observed responses/NA placeholders must be included
 #'   to link the item names used in the original \code{mod} definition
@@ -17,7 +21,7 @@
 #' @param PAU prior ability update (PAU) approach. Supports none (\code{"NWU"}),
 #'   one (\code{"OWU"}), and many (\code{"MWU"})
 #'
-#' @param NEM number of EM cycles (NEMC) to use for the to-be-estimated parameters.
+#' @param NEMC number of EM cycles (NEMC) to use for the to-be-estimated parameters.
 #'   Supports one (\code{"OEM"}) and many (\code{"MEM"})
 #'
 #' @param technical list of technical estimation arguments
