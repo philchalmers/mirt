@@ -10,3 +10,4 @@ html/
 data/dataComplete.RData
 data/dataSparse.RData
 data/data2Dim.RData
+tests/tests/testdata/
