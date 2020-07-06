@@ -36,7 +36,7 @@
 #' @references
 #'
 #' Kim, S. (2006). A comparative study of IRT fixed parameter calibration methods.
-#' \emph{Journal of Educational Measurement, 4}(43), 355–381.
+#' \emph{Journal of Educational Measurement, 4}(43), 355-381.
 #'
 #' @examples
 #' \dontrun{

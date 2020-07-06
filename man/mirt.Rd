@@ -1267,7 +1267,7 @@ and Full-information Item Factor Analysis} [Computer software]. Lincolnwood,
 IL: Scientific Software International.
 
 Woods, C. M., and Lin, N. (2009). Item Response Theory With Estimation of the Latent Density Using Davidian Curves.
-\emph{Applied Psychological Measurement},33(2), 102–117.
+\emph{Applied Psychological Measurement},33(2), 102-117.
 }
 \seealso{
 \code{\link{bfactor}},  \code{\link{multipleGroup}},  \code{\link{mixedmirt}},

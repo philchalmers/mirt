@@ -111,7 +111,7 @@ plot(MWU_MEM, type = 'empiricalhist')
 }
 \references{
 Kim, S. (2006). A comparative study of IRT fixed parameter calibration methods.
-\emph{Journal of Educational Measurement, 4}(43), 355–381.
+\emph{Journal of Educational Measurement, 4}(43), 355-381.
 }
 \seealso{
 \code{\link{mirt}}, \code{\link{multipleGroup}}
