@@ -143,7 +143,7 @@ test_that('DCIRT-MG', {
         dat <- rbind(dat_bm, dat_bm2)
         colnames(dat) <- paste0("Item", 1:ncol(dat))
         group <- rep(c('G1', 'G2'), each = nrow(dat_bm))
-        save(dat_bm, group, file = 'tests/tests/testdata/dcirt3.rds')
+        save(dat_bm, dat, group, file = 'tests/tests/testdata/dcirt3.rds')
     }
     load('testdata/dcirt3.rds')
 
