@@ -241,7 +241,7 @@ setMethod(
                 plt <- do.call(rbind, plt)
                 plt$item <- factor(plt$item, levels = colnames(x@Data$data)[which.items])
                 if(facet_items){
-                    return(xyplot(P ~ Theta|item, plt, groups = plt$cat:plt$group, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta|item, plt, groups = plt$cat:factor(plt$group), ylim = c(-0.1,1.1),
                            xlab = expression(theta), ylab = expression(P(theta)),
                            auto.key = auto.key, type = 'l', main = 'Item trace lines',
                            par.strip.text=par.strip.text, par.settings=par.settings, ...))
