@@ -2,17 +2,22 @@ context('DIF')
 
 test_that('DIF', {
 
-    set.seed(12345)
-    a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
-    d1 <- d2 <- matrix(rnorm(10,0,.7),ncol=1)
-    a2[1:2, ] <- a1[1:2, ]/3
-    d1[c(1,3), ] <- d2[c(1,3), ]/4
-    itemtype <- rep('dich', nrow(a1))
-    N <- 1000
-    dataset1 <- simdata(a1, d1, N, itemtype)
-    dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
-    dat <- rbind(dataset1, dataset2)
-    group <- c(rep('D1', N), rep('D2', N))
+    if(FALSE){
+        rm(list=ls())
+        set.seed(12345)
+        a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
+        d1 <- d2 <- matrix(rnorm(10,0,.7),ncol=1)
+        a2[1:2, ] <- a1[1:2, ]/3
+        d1[c(1,3), ] <- d2[c(1,3), ]/4
+        itemtype <- rep('dich', nrow(a1))
+        N <- 1000
+        dataset1 <- simdata(a1, d1, N, itemtype)
+        dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
+        dat <- rbind(dataset1, dataset2)
+        group <- c(rep('D1', N), rep('D2', N))
+        save(dat, group, file = 'tests/tests/testdata/dif1.rds')
+    }
+    load('testdata/dif1.rds')
     model1a <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE)
     model2 <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE,
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))

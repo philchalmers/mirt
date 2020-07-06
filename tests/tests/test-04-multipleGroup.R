@@ -1,15 +1,21 @@
 context('multipleGroup')
 
 test_that('one factor', {
-    set.seed(12345)
-    a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
-    d <- matrix(rnorm(15,0,.7),ncol=1)
-    itemtype <- rep('dich', nrow(a))
-    N <- 1000
-    dataset1 <- simdata(a, d, N, itemtype)
-    dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
-    dat <- rbind(dataset1, dataset2)
-    group <- c(rep('D1', N), rep('D2', N))
+    if(FALSE){
+        rm(list=ls())
+        set.seed(12345)
+        a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+        d <- matrix(rnorm(15,0,.7),ncol=1)
+        itemtype <- rep('dich', nrow(a))
+        N <- 1000
+        dataset1 <- simdata(a, d, N, itemtype)
+        dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+        dat <- rbind(dataset1, dataset2)
+        group <- c(rep('D1', N), rep('D2', N))
+        save(dat, group, file = 'tests/tests/testdata/MG1.rds')
+    }
+    load('testdata/MG1.rds')
+
     MGmodel1 <- 'F1 = 1-15'
     models <- mirt.model(MGmodel1, quiet = TRUE)
 
@@ -58,7 +64,7 @@ test_that('one factor', {
                             dentype="empiricalhist", optimizer = 'NR')
     expect_is(mod_EH, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_EH)[[1L]]))
-    expect_equal(cfs, c(1.019061,0.5052184,0,1,1.209095,-0.7255769,0,1,0.9008162,-0.2009865,0,1,0.8723441,0.8312948,0,1,1.076235,0.1099079,0,1,0.5510721,0.6746446,0,1,1.219269,0.9782172,0,1,0.9121723,-0.3459642,0,1,0.8412548,-1.067533,0,1,0.6879252,-1.096485,0,1,0.7896133,1.173946,0,1,1.419879,-0.2785068,0,1,1.247844,0.4227584,0,1,0.9913394,0.4356204,0,1,0.8361253,-0.074975,0,1,0,1),
+    expect_equal(cfs, c(0.9915433,0.5344622,0,1,1.163903,-0.6905668,0,1,0.8828766,-0.1765539,0,1,0.8374425,0.8539179,0,1,1.031439,0.1393504,0,1,0.5279401,0.689807,0,1,1.179048,1.011893,0,1,0.8773885,-0.3201687,0,1,0.8273324,-1.047761,0,1,0.6713642,-1.076773,0,1,0.7647824,1.196511,0,1,1.385943,-0.2402286,0,1,1.196881,0.4558509,0,1,0.963759,0.4638302,0,1,0.8105823,-0.05165506,0,1,0,1),
                  tolerance = 1e-2)
     set.seed(1)
     mod_mixture <- suppressWarnings(multipleGroup(dat, 1, itemtype = 'Rasch', GenRandomPars = TRUE,
@@ -100,7 +106,7 @@ test_that('one factor', {
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
     fit2 <- itemfit(mod_metric, c('S_X2', 'Zh'))
     expect_is(fit2, 'list')
-    expect_equal(as.numeric(fit2[[1]][1L,]), c(1.000000, 2.733099, 7.851266, 11.000000, 0, 0.726562),
+    expect_equal(as.numeric(fit2[[1]][1L,-1L]), c(2.733099, 7.851266, 11.000000, 0, 0.726562),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
     expect_true(mirt:::closeEnough(fit3$M2 - 165.1392, -1e-4, 1e-4))
@@ -122,16 +128,20 @@ test_that('one factor', {
     expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002541653, 0.0009022802), tolerance=1e-4)
 
     #missing data
-    set.seed(1234)
-    Theta1 <- rnorm(1000, -1)
-    Theta2 <- rnorm(1000, 1)
-    Theta <- matrix(rbind(Theta1, Theta2))
-    d <- rnorm(10,4)
-    d <- cbind(d, d-1, d-2, d-3, d-4, d-5, d-6)
-    a <- matrix(rlnorm(10, meanlog=.1))
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        Theta1 <- rnorm(1000, -1)
+        Theta2 <- rnorm(1000, 1)
+        Theta <- matrix(rbind(Theta1, Theta2))
+        d <- rnorm(10,4)
+        d <- cbind(d, d-1, d-2, d-3, d-4, d-5, d-6)
+        a <- matrix(rlnorm(10, meanlog=.1))
+        dat <- simdata(a,d,2000, itemtype = rep('graded', 10), Theta=Theta)
+        save(dat, file = 'tests/tests/testdata/MG2.rds')
+    }
+    load('testdata/MG2.rds')
     group <- factor(c(rep('g1',1000), rep('g2',1000)))
-
-    dat <- simdata(a,d,2000, itemtype = rep('graded', 10), Theta=Theta)
     x <- multipleGroup(dat, 1, group=group, method='EM', verbose = FALSE)
     expect_is(x, 'MultipleGroupClass')
     out <- empirical_ES(x)
@@ -147,18 +157,24 @@ test_that('one factor', {
     expect_true(mirt:::closeEnough(cfs - c(0.54559,2.87963,2.09834,1.04898,0.08764,-1.01597,-1.88808,-2.80774,0.5721,3.66458,2.86098,2.07309,0.97108,-0.04591,-1.13943,-2.04077,2.19508,3.985,2.93076,1.92402,0.93888,-3e-04,-0.92533,-2.15966,2.75051,5.52755,4.54548,3.22867,2.2928,1.26823,0.37394,-0.49598,0.40521,2.24053,1.23686,0.3006,-0.65966,-1.68032,-2.71625,-3.65993,5.18399,3.21456,2.30067,1.19408,0.1821,-0.8039,-1.83942,-2.96744,2.50677,2.45572,1.40808,0.48888,-0.67763,-1.67403,-2.61442,-3.75363,1.90942,4.6516,3.56213,2.57738,1.45019,0.65221,-0.43677,-1.41043,2.0672,3.3566,2.50567,1.64636,0.6884,-0.28202,-1.35771,-2.31969,2.54578,2.31928,1.26861,0.29768,-0.87537,-1.86427,-2.76917,-3.71823), -1e-2, 1e-2))
 
     # three factor
-    set.seed(12345)
-    a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
+    if(FALSE){
+        rm(list=ls())
+        set.seed(12345)
+        a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
                   rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
-    d <- matrix(rnorm(15,0,.7),ncol=1)
-    mu <- c(-.4, -.7, .1)
-    sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
-    itemtype <- rep('dich', nrow(a))
-    N <- 1000
-    dataset1 <- simdata(a, d, N, itemtype)
-    dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
-    dat <- rbind(dataset1, dataset2)
-    group <- c(rep('D1', N), rep('D2', N))
+        d <- matrix(rnorm(15,0,.7),ncol=1)
+        mu <- c(-.4, -.7, .1)
+        sigma <- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
+        itemtype <- rep('dich', nrow(a))
+        N <- 1000
+        dataset1 <- simdata(a, d, N, itemtype)
+        dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
+        dat <- rbind(dataset1, dataset2)
+        group <- c(rep('D1', N), rep('D2', N))
+        save(dat, group, file = 'tests/tests/testdata/MG3.rds')
+    }
+    load('testdata/MG3.rds')
+
     MGmodelg1 <- '
     F1 = 1-5
     F2 = 6-10

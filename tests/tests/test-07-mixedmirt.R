@@ -1,15 +1,21 @@
 context('mixedmirt')
 
 test_that('mixed dich', {
-    set.seed(1234)
-    N <- 750
-    a <- matrix(rlnorm(10,.2,.5),10,1)
-    d <- matrix(rnorm(10), 10)
-    Theta <- matrix(sort(rnorm(N)))
-    pseudoIQ <- scale(Theta * 5 + 100  + rnorm(N, 0 , 5))
-    group <- factor(rep(c('G1','G2','G3'), each = N/3))
-    data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
-    covdata <- data.frame(group, pseudoIQ)
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        N <- 750
+        a <- matrix(rlnorm(10,.2,.5),10,1)
+        d <- matrix(rnorm(10), 10)
+        Theta <- matrix(sort(rnorm(N)))
+        pseudoIQ <- scale(Theta * 5 + 100  + rnorm(N, 0 , 5))
+        group <- factor(rep(c('G1','G2','G3'), each = N/3))
+        data <- simdata(a,d,N, itemtype = rep('dich',10), Theta=Theta)
+        covdata <- data.frame(group, pseudoIQ)
+        save(data, covdata, file = 'tests/tests/testdata/mixed1.rds')
+    }
+    load('testdata/mixed1.rds')
+
     mixedmirt1 <- 'Theta = 1-10'
     model <- mirt.model(mixedmirt1, quiet = TRUE)
 
@@ -72,7 +78,7 @@ test_that('mixed dich', {
     expect_equal(cfs, c(1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.6801064,0.2472736,1.112939,-1.764637,-1.981088,-1.548186,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.3225088,-0.01222681,0.6572444,-2.04966,-2.252809,-1.846511,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.1730519,-0.08809251,0.4341962,-1.68213,-1.873847,-1.490413,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,-0.6751006,NaN,NaN,-1.027004,-1.217833,-0.8361756,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.442664,-0.003793412,0.8891215,-0.2375153,-0.4341578,-0.04087278,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.1315495,-0.1747718,0.4378707,-1.357544,-1.544107,-1.170982,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.2533267,-0.1310559,0.6377093,-1.664991,-1.856788,-1.473194,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.3229516,-0.1145078,0.760411,-2.110101,-2.317428,-1.902774,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.7662229,0.01146026,1.520985,-2.051964,-2.303527,-1.800401,0,NA,NA,1,NA,NA,1.055344,0.910874,1.199815,2.313518,2.1583,2.468737,0.4567099,-0.08615558,0.9995754,1.610767,1.276957,1.944577,0,NA,NA,1,NA,NA,0,NA,NA,1,NA,NA),
                  tolerance = 1e-2)
 
-    covdataold$group <- factor(rep(paste0('G',1:50), each = N/50))
+    covdataold$group <- factor(rep(paste0('G',1:50), each = nrow(data)/50))
     rmod1 <- try(mixedmirt(data, covdataold, 1, fixed = ~ 0 + items, random = ~ 1|group,
                                         draws = 1, verbose = FALSE), TRUE)
     expect_is(rmod1, 'MixedClass')
@@ -119,13 +125,18 @@ test_that('mixed dich', {
 
 
     ## latent regression
-    set.seed(1234)
-    n <- 250
-    Theta <- matrix(c(rnorm(n, -1, sd = sqrt(1/3)),
-                      rnorm(n,0, sd = sqrt(1/3)),
-                      rnorm(n, 1, sd = sqrt(1/3))))
-    dat <- simdata(matrix(rlnorm(10)), matrix(rnorm(10)), N=n*3, Theta=Theta, itemtype = 'dich')
-    covdata <- data.frame(group=rep(c('g1', 'g2', 'g3'), each=n))
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        n <- 250
+        Theta <- matrix(c(rnorm(n, -1, sd = sqrt(1/3)),
+                          rnorm(n,0, sd = sqrt(1/3)),
+                          rnorm(n, 1, sd = sqrt(1/3))))
+        dat <- simdata(matrix(rlnorm(10)), matrix(rnorm(10)), N=n*3, Theta=Theta, itemtype = 'dich')
+        covdata <- data.frame(group=rep(c('g1', 'g2', 'g3'), each=n))
+        save(dat, covdata, Theta, file = 'tests/tests/testdata/mixed2.rds')
+    }
+    load('testdata/mixed2.rds')
 
     mod <- mixedmirt(dat, covdata = covdata, 1, itemtype = '2PL', fixed = ~ 0 + items,
                      lr.fixed = ~ group, verbose=FALSE, SE=TRUE)

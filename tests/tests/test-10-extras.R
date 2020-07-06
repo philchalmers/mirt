@@ -13,17 +13,23 @@ test_that('extras', {
     expect_equal(as.numeric(fs1[1,c('F1', 'SE_F1')]), c(-2.4766, .4988), tolerance = 1e-3)
     expect_equal(as.numeric(fs2[5,c('F1', 'SE_F1')]), c(-1.9121, .9381), tolerance = 1e-3)
 
-    set.seed(12345)
-    a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
-    d1 <- d2 <- matrix(rnorm(10,0,.7),ncol=1)
-    a2[1:2, ] <- a1[1:2, ]/3
-    d1[c(1,3), ] <- d2[c(1,3), ]/4
-    itemtype <- rep('dich', nrow(a1))
-    N <- 1000
-    dataset1 <- simdata(a1, d1, N, itemtype)
-    dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
-    dat <- rbind(dataset1, dataset2)
-    group <- c(rep('D1', N), rep('D2', N))
+    if(FALSE){
+        rm(list=ls())
+        set.seed(12345)
+        a1 <- a2 <- matrix(abs(rnorm(10,1,.3)), ncol=1)
+        d1 <- d2 <- matrix(rnorm(10,0,.7),ncol=1)
+        a2[1:2, ] <- a1[1:2, ]/3
+        d1[c(1,3), ] <- d2[c(1,3), ]/4
+        itemtype <- rep('dich', nrow(a1))
+        N <- 1000
+        dataset1 <- simdata(a1, d1, N, itemtype)
+        dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
+        dat <- rbind(dataset1, dataset2)
+        group <- c(rep('D1', N), rep('D2', N))
+        save(dat, group, dataset1, dataset2, file = 'tests/tests/testdata/extras1.rds')
+    }
+    load('testdata/extras1.rds')
+
     model1a <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'Louis')
     model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, SE.type = 'Richardson',
                              pars = mod2values(model1a), technical = list(warn=FALSE))

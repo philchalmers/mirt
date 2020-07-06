@@ -1,31 +1,36 @@
 context('confmirtTwo')
 
 test_that('confirmatory mods', {
-    set.seed(1234)
-    a <- matrix(c(
-        1.5,NA,
-        0.5,NA,
-        1.0,NA,
-        1.0,0.5,
-        NA,1.5,
-        NA,0.5,
-        NA,1.0,
-        NA,1.0),ncol=2,byrow=TRUE)
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        a <- matrix(c(
+            1.5,NA,
+            0.5,NA,
+            1.0,NA,
+            1.0,0.5,
+            NA,1.5,
+            NA,0.5,
+            NA,1.0,
+            NA,1.0),ncol=2,byrow=TRUE)
 
-    d <- matrix(c(
-        -1.0,NA,NA,
-        -1.5,NA,NA,
-        1.5,NA,NA,
-        0.0,NA,NA,
-        3.0,2.0,-0.5,
-        2.5,1.0,-1,
-        2.0,0.0,NA,
-        1.0,NA,NA),ncol=3,byrow=TRUE)
+        d <- matrix(c(
+            -1.0,NA,NA,
+            -1.5,NA,NA,
+            1.5,NA,NA,
+            0.0,NA,NA,
+            3.0,2.0,-0.5,
+            2.5,1.0,-1,
+            2.0,0.0,NA,
+            1.0,NA,NA),ncol=3,byrow=TRUE)
 
-    sigma <- diag(2)
-    sigma[1,2] <- sigma[2,1] <- .4
-    items <- c(rep('dich',4), rep('graded',3), 'dich')
-    dataset <- simdata(a,d,2000,items,sigma)
+        sigma <- diag(2)
+        sigma[1,2] <- sigma[2,1] <- .4
+        items <- c(rep('dich',4), rep('graded',3), 'dich')
+        dataset <- simdata(a,d,2000,items,sigma)
+        save(dataset, file = 'tests/tests/testdata/conftwo1.rds')
+    }
+    load('testdata/conftwo1.rds')
 
     #analyses
     #CIFA for 2 factor crossed structure

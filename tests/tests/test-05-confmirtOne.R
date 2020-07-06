@@ -27,12 +27,12 @@ test_that('exploratory mods', {
     expect_equal(cfs, c(-1.389256,0.3038708,2.108244,0,1,-1.055821,-1.13757,0.9310239,0,1,-1.376235,-0.6974982,1.71311,0,1,-0.8597142,0.05825403,0.499093,0,1,-0.8210638,0,1.893461,0,1,0,0,1,0,1),
                  tolerance = 1e-2)
     expect_is(twofact, 'SingleGroupClass')
-    modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, 1),
-                                                                     c(4,8,12,16,20,'norm', 1.7, 1)), method = 'MHRM', draws = 10)
+    modm7 <- mirt(fulldata, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, .25),
+                                                                     c(4,8,12,16,20,'norm', 1.7, .25)), method = 'MHRM', draws = 10)
     expect_equal(extract.mirt(modm7, 'df'), 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(2.076082,3.394769,0.1313658,0.9112089,7.075741,2.033372,0.3096492,0.8819971,6.420532,5.242989,0.2432712,0.9177682,1.575515,1.463716,0.1246533,0.7821553,3.224306,5.699081,0.1380552,0.8893149,0,1), tolerance = 1e-2)
+    expect_equal(cfs, c(2.90192,4.881019,0.1521635,0.8792823,7.489837,4.620599,0.1951292,0.8302804,7.416031,7.45117,0.1592872,0.8854679,1.346444,0.8865102,0.1496983,0.8434956,3.265852,6.134814,0.1539274,0.8753093,0,1), tolerance = 1e-2)
     fulldata[1,1] <- fulldata[2,2] <- NA
     onefactmissing <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(onefactmissing, 'SingleGroupClass')

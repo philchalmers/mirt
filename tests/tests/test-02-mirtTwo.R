@@ -137,13 +137,18 @@ test_that('poly', {
                                              0.6321478,  0.6544024), tolerance = 1e-4)
 
     ##rating scale test
-    set.seed(1234)
-    a <- matrix(rep(1, 10))
-    d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
-    cc <- seq(-1, 1, length.out=10)
-    data <- simdata(a, d + cc, 2000, itemtype = rep('graded',10))
-    sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values', verbose=FALSE)
-    sv[,'value'] <- c(as.vector(t(cbind(a,d,cc))),0,1)
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        a <- matrix(rep(1, 10))
+        d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
+        cc <- seq(-1, 1, length.out=10)
+        data <- simdata(a, d + cc, 2000, itemtype = rep('graded',10))
+        sv <- mirt(data, 1, itemtype = 'grsm', pars = 'values', verbose=FALSE)
+        sv[,'value'] <- c(as.vector(t(cbind(a,d,cc))),0,1)
+        save(data, sv, file = 'tests/tests/testdata/rst.rds')
+    }
+    load('testdata/rst.rds')
     grsm <- mirt(data, 1, itemtype = 'grsm', pars = sv, calcNull= FALSE, verbose=FALSE, TOL=1e-5)
     rsm <- mirt(data, 1, itemtype = 'rsm', calcNull= FALSE, verbose=FALSE, TOL = 1e-3)
     expect_is(grsm, 'SingleGroupClass')

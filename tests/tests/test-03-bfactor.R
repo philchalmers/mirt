@@ -44,46 +44,52 @@ test_that('dich data', {
     expect_equal(extract.mirt(nestmod, 'logLik'), -11626.06, tolerance = 1e-4)
 
     #simulate data
-    set.seed(1234)
-    a <- matrix(c(
-        1,0.5,NA,
-        1,0.5,NA,
-        1,0.5,NA,
-        1,0.5,NA,
-        1,0.5,NA,
-        1,0.5,NA,
-        1,0.5,NA,
-        1,NA,0.5,
-        1,NA,0.5,
-        1,NA,0.5,
-        1,NA,0.5,
-        1,NA,0.5,
-        1,NA,0.5,
-        1,NA,0.5),ncol=3,byrow=TRUE)
+    if(FALSE){
+        rm(list=ls())
 
-    d <- matrix(c(
-        -1.0,NA,NA,
-        -1.5,NA,NA,
-        1.5,NA,NA,
-        0.0,NA,NA,
-        0.0,-1.0,1.5,
-        0.0,2.0,-0.5,
-        3.0,2.0,-0.5,
-        3.0,2.0,-0.5,
-        2.5,1.0,-1,
-        2.0,0.0,NA,
-        -1.0,NA,NA,
-        -1.5,NA,NA,
-        1.5,NA,NA,
-        0.0,NA,NA),ncol=3,byrow=TRUE)
+        set.seed(1234)
+        a <- matrix(c(
+            1,0.5,NA,
+            1,0.5,NA,
+            1,0.5,NA,
+            1,0.5,NA,
+            1,0.5,NA,
+            1,0.5,NA,
+            1,0.5,NA,
+            1,NA,0.5,
+            1,NA,0.5,
+            1,NA,0.5,
+            1,NA,0.5,
+            1,NA,0.5,
+            1,NA,0.5,
+            1,NA,0.5),ncol=3,byrow=TRUE)
 
-    nominal <- matrix(NA, nrow(d), ncol(d))
-    nominal[5, ] <- c(0,1.2,2)
-    sigma <- diag(3)
-    set.seed(1234)
-    items <- itemtype <- c(rep('dich', 4), 'nominal', 'gpcm', rep('graded',4),rep('dich', 4))
-    dataset <- simdata(a,d,3000,itemtype, sigma=sigma, nominal=nominal)
+        d <- matrix(c(
+            -1.0,NA,NA,
+            -1.5,NA,NA,
+            1.5,NA,NA,
+            0.0,NA,NA,
+            0.0,-1.0,1.5,
+            0.0,2.0,-0.5,
+            3.0,2.0,-0.5,
+            3.0,2.0,-0.5,
+            2.5,1.0,-1,
+            2.0,0.0,NA,
+            -1.0,NA,NA,
+            -1.5,NA,NA,
+            1.5,NA,NA,
+            0.0,NA,NA),ncol=3,byrow=TRUE)
 
+        nominal <- matrix(NA, nrow(d), ncol(d))
+        nominal[5, ] <- c(0,1.2,2)
+        sigma <- diag(3)
+        set.seed(1234)
+        items <- itemtype <- c(rep('dich', 4), 'nominal', 'gpcm', rep('graded',4),rep('dich', 4))
+        dataset <- simdata(a,d,3000,itemtype, sigma=sigma, nominal=nominal)
+
+        save(dataset, items, file = 'tests/tests/testdata/bfactor1.rds')
+    }
+    load('testdata/bfactor1.rds')
     specific <- c(rep(1,7),rep(2,7))
     items[items == 'dich'] <- '2PL'
     simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3)
@@ -112,32 +118,37 @@ test_that('dich data', {
     expect_is(sum, 'list')
 
     #two-tier
-    set.seed(1234)
-    a <- matrix(c(
-        0,1,0.5,NA,NA,
-        0,1,0.5,NA,NA,
-        0,1,0.5,NA,NA,
-        0,1,0.5,NA,NA,
-        0,1,0.5,NA,NA,
-        0,1,NA,0.5,NA,
-        0,1,NA,0.5,NA,
-        0,1,NA,0.5,NA,
-        1,0,NA,0.5,NA,
-        1,0,NA,0.5,NA,
-        1,0,NA,0.5,NA,
-        1,0,NA,NA,0.5,
-        1,0,NA,NA,0.5,
-        1,0,NA,NA,0.5,
-        1,0,NA,NA,0.5,
-        1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        a <- matrix(c(
+            0,1,0.5,NA,NA,
+            0,1,0.5,NA,NA,
+            0,1,0.5,NA,NA,
+            0,1,0.5,NA,NA,
+            0,1,0.5,NA,NA,
+            0,1,NA,0.5,NA,
+            0,1,NA,0.5,NA,
+            0,1,NA,0.5,NA,
+            1,0,NA,0.5,NA,
+            1,0,NA,0.5,NA,
+            1,0,NA,0.5,NA,
+            1,0,NA,NA,0.5,
+            1,0,NA,NA,0.5,
+            1,0,NA,NA,0.5,
+            1,0,NA,NA,0.5,
+            1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
 
-    d <- matrix(rnorm(16))
-    items <- rep('dich', 16)
+        d <- matrix(rnorm(16))
+        items <- rep('dich', 16)
 
-    sigma <- diag(5)
-    sigma[1,2] <- sigma[2,1] <- .7
-    dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+        sigma <- diag(5)
+        sigma[1,2] <- sigma[2,1] <- .7
+        dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 
+        save(dataset, items, file = 'tests/tests/testdata/bfactor2.rds')
+    }
+    load('testdata/bfactor2.rds')
     specific <- c(rep(1,5),rep(2,6),rep(3,5))
     model <- mirt.model('
         G1 = 1-8

@@ -2,18 +2,23 @@ context('DCIRT')
 
 test_that('DCIRT', {
 
-    set.seed(1234)
-    N <- 1000
-    P <- 25
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        N <- 1000
+        P <- 25
 
-    # First, sample item parameters:
-    a <- matrix(rlnorm(25, .2, .3))
-    b <- matrix(rnorm(25, 0, 1.2))
-    d <- -a*b # IRT -> FA (mirt)
+        # First, sample item parameters:
+        a <- matrix(rlnorm(25, .2, .3))
+        b <- matrix(rnorm(25, 0, 1.2))
+        d <- -a*b # IRT -> FA (mirt)
 
-    # Then, sample latent traits and simulate data:
-    bimodal.woodslin <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))
-    dat_bm <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin))
+        # Then, sample latent traits and simulate data:
+        bimodal.woodslin <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))
+        dat_bm <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin))
+        save(dat_bm, file = 'tests/tests/testdata/dcirt1.rds')
+    }
+    load('testdata/dcirt1.rds')
 
     mod <- mirt(dat_bm, 1, dentype = 'empiricalhist_Woods', verbose=FALSE,
                 technical = list(zeroExtreme = TRUE))
@@ -65,18 +70,23 @@ test_that('DCIRT', {
 
 test_that('DCIRT Option Errors and Warnings', {
 
-    set.seed(1234)
-    N <- 1000
-    P <- 25
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        N <- 1000
+        P <- 25
 
-    # First, sample item parameters:
-    a <- matrix(rlnorm(25, .2, .3))
-    b <- matrix(rnorm(25, 0, 1.2))
-    d <- -a*b # IRT -> FA (mirt)
+        # First, sample item parameters:
+        a <- matrix(rlnorm(25, .2, .3))
+        b <- matrix(rnorm(25, 0, 1.2))
+        d <- -a*b # IRT -> FA (mirt)
 
-    # Then, sample latent traits and simulate data:
-    bimodal.woodslin <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))
-    dat_bm <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin))
+        # Then, sample latent traits and simulate data:
+        bimodal.woodslin <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))
+        dat_bm <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin))
+        save(dat_bm, file = 'tests/tests/testdata/dcirt2.rds')
+    }
+    load('testdata/dcirt2.rds')
 
     # Err from in dcurver:: ?
     expect_error(mirt(dat_bm, model = 1, dentype='Davidian-12', verbose=FALSE))
@@ -113,23 +123,29 @@ test_that('DCIRT Option Errors and Warnings', {
 # })
 
 test_that('DCIRT-MG', {
-    set.seed(1234)
-    N <- 1000
-    P <- 25
 
-    # First, sample item parameters:
-    a <- matrix(rlnorm(25, .2, .3))
-    b <- matrix(rnorm(25, 0, 1.2))
-    d <- -a*b # IRT -> FA (mirt)
+    if(FALSE){
+        rm(list=ls())
+        set.seed(1234)
+        N <- 1000
+        P <- 25
 
-    # Then, sample latent traits and simulate data:
-    bimodal.woodslin <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))
-    dat_bm <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin))
-    bimodal.woodslin2 <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))*.75 + .5
-    dat_bm2 <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin2))
-    dat <- rbind(dat_bm, dat_bm2)
-    colnames(dat) <- paste0("Item", 1:ncol(dat))
-    group <- rep(c('G1', 'G2'), each = nrow(dat_bm))
+        # First, sample item parameters:
+        a <- matrix(rlnorm(25, .2, .3))
+        b <- matrix(rnorm(25, 0, 1.2))
+        d <- -a*b # IRT -> FA (mirt)
+
+        # Then, sample latent traits and simulate data:
+        bimodal.woodslin <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))
+        dat_bm <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin))
+        bimodal.woodslin2 <- c(rnorm(N*.6, mean = -.70, sd = .50), rnorm(N*.4, mean = 1.05, sd = .54))*.75 + .5
+        dat_bm2 <- simdata(a, d, itemtype = 'dich', Theta = as.matrix(bimodal.woodslin2))
+        dat <- rbind(dat_bm, dat_bm2)
+        colnames(dat) <- paste0("Item", 1:ncol(dat))
+        group <- rep(c('G1', 'G2'), each = nrow(dat_bm))
+        save(dat_bm, group, file = 'tests/tests/testdata/dcirt3.rds')
+    }
+    load('testdata/dcirt3.rds')
 
     mod_configural <- multipleGroup(dat, 1, group = group, dentype='Davidian-6',
                                     verbose = FALSE)
