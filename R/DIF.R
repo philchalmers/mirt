@@ -174,6 +174,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                           return_models, technical = list(), ...)
     {
         constrain <- model@Model$constrain
+        mirt_model <- model@Model$model
+        mirt_model$x <- mirt_model$x[mirt_model$x[,"Type"] != 'CONSTRAINB', ]
         technical$omp <- FALSE
         parnum <- list()
         for(i in seq_len(length(which.par)))
@@ -200,7 +202,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             sv <- values
             for(j in seq_len(length(parnum))){
                 for(i in length(constrain):1L){
-                    if(all(parnum[[j]] == sort(constrain[[i]])))
+                    if(all(parnum[[j]] %in% sort(constrain[[i]])))
                         constrain[[i]] <- NULL
                 }
             }
@@ -209,7 +211,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             for(i in seq_len(length(parnum)))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
-        newmodel <- multipleGroup(model@Data$data, model@Model$model, group=model@Data$group,
+        newmodel <- multipleGroup(model@Data$data, mirt_model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain, pars=sv,
                                   itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
                                   ...)
