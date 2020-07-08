@@ -175,7 +175,10 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     {
         constrain <- model@Model$constrain
         mirt_model <- model@Model$model
-        mirt_model$x <- mirt_model$x[mirt_model$x[,"Type"] != 'CONSTRAINB', ]
+        if(is(mirt_model, 'mirt.model')){
+            mirt_model <- mirt.model(mirt_model)
+            mirt_model$x <- mirt_model$x[mirt_model$x[,"Type"] != 'CONSTRAINB', ]
+        }
         technical$omp <- FALSE
         parnum <- list()
         for(i in seq_len(length(which.par)))
