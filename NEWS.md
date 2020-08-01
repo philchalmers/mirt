@@ -1,5 +1,8 @@
 # Changes in mirt 1.33
 
+- Syntax input from the `car` package's `lht()` function adopted within `mirt`'s `wald()` function
+  for easier specifications (see examples)
+
 - Better cope with syntax definitions of models in `DIF()`, particularly with the `CONSTRAINB` form
   (reported by Hao Wu)
 

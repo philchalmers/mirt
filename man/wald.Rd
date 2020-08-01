@@ -10,7 +10,9 @@ wald(object, L, C = 0)
 \item{object}{estimated object from \code{mirt}, \code{bfactor},
 \code{multipleGroup}, \code{mixedmirt}, or \code{mdirt}}
 
-\item{L}{a coefficient matrix with dimensions nconstrasts x npars.
+\item{L}{a coefficient matrix with dimensions nconstrasts x npars,
+or a character vector giving the hypothesis in symbolic form
+(syntax format borrowed from the \code{car} package; see \code{Details} below).
 Omitting this value will return the column names of the
 information matrix used to identify the (potentially constrained) parameters}
 
@@ -25,6 +27,7 @@ the estimated model contains constrained parameters (e.g., 1PL).
 }
 \examples{
 \dontrun{
+
 #View parnumber index
 data(LSAT7)
 data <- expand.table(LSAT7)
@@ -42,6 +45,10 @@ L <- matrix(0, 1, 10)
 L[1,3] <- 1
 wald(mod, L)
 
+# same as above using character syntax input
+infonames
+wald(mod, "a1.5 = 0")
+
 #simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
 L <- matrix(0, 2, 10)
 L[1,1] <- L[2, 7] <- 1
@@ -49,13 +56,44 @@ L[1,3] <- L[2, 9] <- -1
 L
 wald(mod, L)
 
-#logLiklihood tests (requires estimating a new model)
+# Again, using more efficient syntax
+infonames
+wald(mod, c("a1.1 = a1.5", "a1.13 = a1.17"))
+
+#log-Liklihood tests (requires estimating a new model)
 cmodel <- 'theta = 1-5
            CONSTRAIN = (1,2, a1), (4,5, a1)'
 mod2 <- mirt(data, cmodel)
-#or, eqivalently
+#or, equivalently
 #mod2 <- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
 anova(mod2, mod)
+
+#####
+# test equality of means in multi-group model:
+#    H0: (mu1 - mu2) = (mu3 - mu4)
+
+set.seed(12345)
+a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+itemtype <- rep('2PL', nrow(a))
+N <- 500
+dataset1 <- simdata(a, d, N, itemtype)
+dataset2 <- simdata(a, d, N, itemtype, mu = .5)
+dataset3 <- simdata(a, d, N, itemtype, mu = -1)
+dataset4 <- simdata(a, d, N, itemtype, mu = -.5)
+dat <- rbind(dataset1, dataset2, dataset3, dataset4)
+group <- factor(rep(paste0('D', 1:4), each=N))
+levels(group)
+models <- 'F1 = 1-15'
+
+# 3 means estimated
+mod_free <- multipleGroup(dat, models, group = group, SE=TRUE,
+                          invariance=c('slopes', 'intercepts', 'free_var','free_means'))
+
+wald(mod_free) # obtain parameter names
+# reference group mean = 0 by default
+wald(mod_free, c("0 - MEAN_1.123 = MEAN_1.185 - MEAN_1.247"))
+
 
 }
 }
