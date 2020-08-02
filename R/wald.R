@@ -7,7 +7,7 @@
 #'
 #'
 #' @aliases wald
-#' @param L a coefficient matrix with dimensions nconstrasts x npars,
+#' @param L a coefficient matrix with dimensions \code{nconstrasts x npars.estimated},
 #'   or a character vector giving the hypothesis in symbolic form
 #'   (syntax format borrowed from the \code{car} package; see \code{Details} below).
 #'   Omitting this value will return the column names of the
@@ -15,11 +15,11 @@
 #' @param object estimated object from \code{mirt}, \code{bfactor},
 #'   \code{multipleGroup}, \code{mixedmirt}, or \code{mdirt}
 #' @param C a constant vector of population parameters to be compared along side L, where
-#'   \code{length(C) == ncol(L)}. By default a vector of 0's is constructed
+#'   \code{length(C) == row(L)}. By default a vector of 0's is constructed. Note that when using
+#'   the syntax input for \code{L} this argument is omitted
 #'
-#' @Details
-#'
-#' From the \code{car} package documentation: {"The hypothesis matrix can be supplied as a numeric matrix (or vector), the rows of which
+#' The following description is borrowed from \code{car} package documentation pertaining to the character vector
+#' input to the argument \code{L}: "The hypothesis matrix can be supplied as a numeric matrix (or vector), the rows of which
 #' specify linear combinations of the model
 #' coefficients, which are tested equal to the corresponding entries in the right-hand-side vector, which defaults to a vector of zeroes.
 #'
@@ -101,8 +101,9 @@
 #' # 3 means estimated
 #' mod_free <- multipleGroup(dat, models, group = group, SE=TRUE,
 #'                           invariance=c('slopes', 'intercepts', 'free_var','free_means'))
-#'
 #' wald(mod_free) # obtain parameter names
+#' # View(mod2values(mod_free))
+#'
 #' # reference group mean = 0 by default
 #' wald(mod_free, c("0 - MEAN_1.123 = MEAN_1.185 - MEAN_1.247"))
 #'

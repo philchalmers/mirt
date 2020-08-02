@@ -10,14 +10,27 @@ wald(object, L, C = 0)
 \item{object}{estimated object from \code{mirt}, \code{bfactor},
 \code{multipleGroup}, \code{mixedmirt}, or \code{mdirt}}
 
-\item{L}{a coefficient matrix with dimensions nconstrasts x npars,
+\item{L}{a coefficient matrix with dimensions \code{nconstrasts x npars.estimated},
 or a character vector giving the hypothesis in symbolic form
 (syntax format borrowed from the \code{car} package; see \code{Details} below).
 Omitting this value will return the column names of the
 information matrix used to identify the (potentially constrained) parameters}
 
 \item{C}{a constant vector of population parameters to be compared along side L, where
-\code{length(C) == ncol(L)}. By default a vector of 0's is constructed}
+  \code{length(C) == row(L)}. By default a vector of 0's is constructed. Note that when using
+  the syntax input for \code{L} this argument is omitted
+
+The following description is borrowed from \code{car} package documentation pertaining to the character vector
+input to the argument \code{L}: "The hypothesis matrix can be supplied as a numeric matrix (or vector), the rows of which
+specify linear combinations of the model
+coefficients, which are tested equal to the corresponding entries in the right-hand-side vector, which defaults to a vector of zeroes.
+
+Alternatively, the hypothesis can be specified symbolically as a character vector with one or more elements, each of which gives either
+a linear combination of coefficients, or a linear equation in the coefficients (i.e., with both a left and right side separated by an
+equals sign). Components of a linear expression or linear equation can consist of numeric constants, or numeric constants multiplying
+coefficient names (in which case the number precedes the coefficient, and may be separated from it by spaces or an asterisk);
+constants of 1 or -1 may be omitted. Spaces are always optional. Components are separated by plus or minus signs. Newlines or tabs
+in hypotheses will be treated as spaces. See the examples below."}
 }
 \description{
 Compute a Wald test given an \code{L} vector or matrix of numeric contrasts. Requires that the
@@ -89,8 +102,9 @@ models <- 'F1 = 1-15'
 # 3 means estimated
 mod_free <- multipleGroup(dat, models, group = group, SE=TRUE,
                           invariance=c('slopes', 'intercepts', 'free_var','free_means'))
-
 wald(mod_free) # obtain parameter names
+# View(mod2values(mod_free))
+
 # reference group mean = 0 by default
 wald(mod_free, c("0 - MEAN_1.123 = MEAN_1.185 - MEAN_1.247"))
 
