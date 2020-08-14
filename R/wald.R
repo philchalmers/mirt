@@ -138,7 +138,7 @@ wald <- function(object, L, C = 0){
         stop('C must be a vector of constant population parameters', call.=FALSE)
     if(length(C) == 1L){
         C <- numeric(ncol(L))
-    } else if(length(C) != nrow(L)){
+    } else if(length(C) != ncol(L)){
         stop('length(C) must be the same as ncol(L)', call.=FALSE)
     }
     W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
