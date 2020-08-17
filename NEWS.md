@@ -1,5 +1,7 @@
 # Changes in mirt 1.33
 
+- Added `read.mirt()` function back to package now that `plink` is again available on CRAN
+
 - Syntax input from the `car` package's `lht()` function adopted within `mirt`'s `wald()` function
   for easier specifications (see examples)
 

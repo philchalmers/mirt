@@ -2,7 +2,7 @@
 % Please edit documentation in R/mirt.model.R
 \name{mirt.model}
 \alias{mirt.model}
-\title{Specify model loadings}
+\title{Specify model information}
 \usage{
 mirt.model(
   input = NULL,

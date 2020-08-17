@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.32.6
+Version: 1.32.7
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -51,6 +51,7 @@ Suggests:
     Rsolnp,
     nloptr,
     sirt,
+    plink,
     mirtCAT
 ByteCompile: yes
 LazyLoad: yes

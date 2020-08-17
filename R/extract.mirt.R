@@ -163,6 +163,7 @@ extract.mirt <- function(x, what){
                   dentype = x@Options$dentype,
                   pis = x@Model$pis,
                   nestpars=x@Model$nestpars,
+                  prodlist=x@Model$prodlist,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }
