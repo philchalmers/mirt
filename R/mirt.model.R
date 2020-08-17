@@ -1,4 +1,4 @@
-#' Specify model loadings
+#' Specify model information
 #'
 #' The \code{mirt.model} function scans/reads user input to specify the
 #' confirmatory model. Item locations must be used in the specifications if no
@@ -267,6 +267,7 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
         return(vec)
     }
 
+    remove_temp <- FALSE
     if(!is.null(itemnames)){
         # the following block of code and above functions were largely contributed by Alexander
 
@@ -346,15 +347,17 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
                 }
             }
             file <- tempfile()
+            remove_temp <- TRUE
             write.table(minput, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
         }
         mod <- scan(file = file, what = list(type = "", pars = ""),
     		sep = "=", strip.white = TRUE, comment.char = "#", fill = TRUE, quiet=quiet, ...)
         mod$pars <- gsub(' ', '', mod$pars)
-    	mod <- cbind(mod$type, mod$pars)
-    	colnames(mod) <- c("Type","Parameters")
-    	mod <- list(x = mod)
-    	class(mod) <- 'mirt.model'
-    	return(mod)
+        if(remove_temp) unlink(file)
+      	mod <- cbind(mod$type, mod$pars)
+      	colnames(mod) <- c("Type","Parameters")
+      	mod <- list(x = mod)
+      	class(mod) <- 'mirt.model'
+      	return(mod)
     }
 }

@@ -969,6 +969,7 @@ buildModelSyntax <- function(model, J, groupNames, itemtype){
             cat(paste('F', i,' = 1-', (J-i+1L), "\n", sep=''), file=tmp, append = TRUE)
         model <- mirt.model(file=tmp, quiet = TRUE)
         model$x <- rbind(model$x, oldmodel$x[oldmodel$x[,1L] != 'NEXPLORE'])
+        unlink(tmp)
     } else if((is(model, 'numeric') && length(model) == 1L)){
         if(any(itemtype == 'lca')){
             tmp <- tempfile('tempfile')
