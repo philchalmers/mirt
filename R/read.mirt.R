@@ -22,25 +22,24 @@
 #' plinkpars <- read.mirt(mod1)
 #' plot(plinkpars)
 #' plot(mod1, type = 'trace')
-#' itemplot(mod1, 1)
 #'
 #' #graded
 #' mod2 <- mirt(Science, 1)
 #' plinkpars <- read.mirt(mod2)
 #' plot(plinkpars)
-#' itemplot(mod2, 1)
+#' plot(mod2, type = 'trace')
 #'
 #' #gpcm
 #' mod3 <- mirt(Science, 1, itemtype = 'gpcm')
 #' plinkpars <- read.mirt(mod3)
 #' plot(plinkpars)
-#' itemplot(mod3, 1)
+#' plot(mod3, type = 'trace')
 #'
 #' #nominal
 #' mod4 <- mirt(Science, 1, itemtype = 'nominal')
 #' plinkpars <- read.mirt(mod4)
 #' plot(plinkpars)
-#' itemplot(mod4, 1)
+#' plot(mod4, type = 'trace')
 #'
 #' ## multidimensional
 #'
@@ -49,7 +48,7 @@
 #' plinkpars <- read.mirt(mod1)
 #' plinkpars
 #' plot(plinkpars)
-#' itemplot(mod1, 1)
+#' plot(mod1, type = 'trace')
 #'
 #' cmod <- mirt.model('
 #'    F1 = 1,4,5
@@ -63,7 +62,7 @@
 #' plinkpars <- read.mirt(mod2)
 #' plinkpars
 #' plot(plinkpars)
-#' itemplot(mod2, 1)
+#' plot(mod2, type = 'trace')
 #'
 #' ### multiple group equating example
 #' set.seed(1234)

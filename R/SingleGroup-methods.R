@@ -1221,6 +1221,31 @@ setMethod(
                                  zlab=expression(I(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            } else if(type == 'trace'){
+                if(is.null(main))
+                    main <- 'Item trace lines'
+                P <- vector('list', length(which.items))
+                names(P) <- colnames(x@Data$data)[which.items]
+                ind <- 1L
+                for(i in which.items){
+                    tmp <- probtrace(extract.item(x, i), ThetaFull)
+                    if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
+                    tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(ThetaFull),
+                                                                 labels=paste0('P', seq_len(ncol(tmp)))))
+                    P[[ind]] <- tmp2
+                    ind <- ind + 1L
+                }
+                nrs <- sapply(P, nrow)
+                Pstack <- do.call(rbind, P)
+                names <- c()
+                for(i in seq_len(length(nrs)))
+                    names <- c(names, rep(names(P)[i], nrs[i]))
+                plotobj <- data.frame(Pstack, item=names, Theta=ThetaFull)
+                plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
+                return(wireframe(P ~ Theta.1 * Theta.2 | item, plotobj, zlim = c(-0.1,1.1), group=plotobj$cat,
+                                 zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'SEcontour'){
                 if(is.null(main)){
                     main <- "Test Standard Errors"

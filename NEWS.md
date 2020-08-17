@@ -1,5 +1,7 @@
 # Changes in mirt 1.33
 
+- `plot(..., type = 'trace')` now supported for two-dimensional models to create faceted traceline points
+
 - Added `read.mirt()` function back to package now that `plink` is again available on CRAN
 
 - Syntax input from the `car` package's `lht()` function adopted within `mirt`'s `wald()` function
