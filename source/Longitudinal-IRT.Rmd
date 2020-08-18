@@ -26,9 +26,10 @@ model <- 'Time1 = 1-20
           MEAN = Time2, Time3'
 itemloadings <- rep(1:20, times = 3) 
 
-#construct constraints dynatically
+#construct constraints manually 
 #obtain starting values
 sv <- bfactor(dat, itemloadings, model, pars='values')
+head(sv)
 
 # set up within time constraints
 wtconstr <- sv$parnum[(sv$name == 'a1' | sv$name == 'a2' | sv$name == 'a3') & sv$est]
@@ -39,7 +40,7 @@ itemnames <- colnames(dat)
 pick <- c(0,20,40)
 for(i in 1:20){
     
-    # accross time item constraints
+    # across time item constraints
     constraints[[paste0('slope.', i)]] <- sv$parnum[sv$name == paste0('a',3+i) & sv$est]
     for(j in 1:2){
         constraints[[paste0('intercept.', i, '_', j)]] <- 
@@ -61,11 +62,61 @@ coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22
                        'COV_32', 'COV_33')]
 ```
 
-When computing latent trait scores it's best to use a method that isn't as affected by higher dimensionality, such as the MAP approach. 
+When computing latent trait scores it's best to use a method that isn't as affected by higher dimensionality, such as the MAP approach. The  following uses the `mirt.model()` syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via `sprintf()` and the `stringr` package. 
+
+```{r eval=FALSE}
+itemloadings <- rep(1:20, times = 3) # will be associated with slopes a4, a5, ..., a23
+model <- 'Time1 = 1-20
+          Time2 = 21-40
+          Time3 = 41-60
+          COV = Time1*Time2*Time3, Time2*Time2, Time3*Time3
+          MEAN = Time2, Time3
+          CONSTRAIN = (1,21,41, a1,a2,a3), (2,22,42, a1,a2,a3), (3,23,43, a1,a2,a3), 
+                      (4,24,44, a1,a2,a3), (5,25,45, a1,a2,a3), (6,26,46, a1,a2,a3),
+                      (7,27,47, a1,a2,a3), (8,28,48, a1,a2,a3), (9,29,49, a1,a2,a3), 
+                      (10,30,50, a1,a2,a3), (11,31,51, a1,a2,a3), (12,32,52, a1,a2,a3),
+                      (13,33,53, a1,a2,a3), (14,34,54, a1,a2,a3), (15,35,55, a1,a2,a3),
+                      (16,36,56, a1,a2,a3), (17,37,57, a1,a2,a3), (18,38,58, a1,a2,a3),
+                      (19,39,59, a1,a2,a3), (20,40,60, a1,a2,a3),     # time-slope 
+                      
+                      (1,21,41, a4), (2,22,42, a5), (3,23,43, a6), 
+                      (4,24,44, a7), (5,25,45, a8), (6,26,46, a9),
+                      (7,27,47, a10), (8,28,48, a11), (9,29,49, a12), 
+                      (10,30,50, a13), (11,31,51, a14), (12,32,52, a15),
+                      (13,33,53, a16), (14,34,54, a17), (15,35,55, a18),
+                      (16,36,56, a19), (17,37,57, a20), (18,38,58, a21),
+                      (19,39,59, a22), (20,40,60, a23),     # item-time slope 
+                      
+                      (1,21,41, d1), (2,22,42, d1), (3,23,43, d1), 
+                      (4,24,44, d1), (5,25,45, d1), (6,26,46, d1),
+                      (7,27,47, d1), (8,28,48, d1), (9,29,49, d1), 
+                      (10,30,50, d1), (11,31,51, d1), (12,32,52, d1),
+                      (13,33,53, d1), (14,34,54, d1), (15,35,55, d1),
+                      (16,36,56, d1), (17,37,57, d1), (18,38,58, d1),
+                      (19,39,59, d1), (20,40,60, d1),     # item-time intercept 1 
+                      
+                      (1,21,41, d2), (2,22,42, d2), (3,23,43, d2), 
+                      (4,24,44, d2), (5,25,45, d2), (6,26,46, d2),
+                      (7,27,47, d2), (8,28,48, d2), (9,29,49, d2), 
+                      (10,30,50, d2), (11,31,51, d2), (12,32,52, d2),
+                      (13,33,53, d2), (14,34,54, d2), (15,35,55, d2),
+                      (16,36,56, d2), (17,37,57, d2), (18,38,58, d2),
+                      (19,39,59, d2), (20,40,60, d2)     # item-time intercept 2 
+                     '
+
+#estimate model (low quadrature just as an example; not as accurate.
+#                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
+(mod <- bfactor(dat, itemloadings, model, quadpts=7, TOL=1e-3, optimizer = 'nlminb'))
+
+coef(mod, simplify=TRUE)
+coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22', 
+                       'COV_32', 'COV_33')]
+```
+
 
 ## Linear latent growth curve IRT 
 
-Specific factors represent residula terms per item. Requires only 3 dimensions 
+Specific factors represent residual terms per item. Requires only 3 dimensions 
 (max 3 dimensions of integration for unidimensional models).
 
 ```{r}
@@ -75,7 +126,7 @@ model <- mirt.model('Intercept = 1-60
                      MEAN = Intercept, Slope')
 itemloadings <- rep(1:20, times = 3) 
 
-#construct constraints dynatically
+#construct constraints manually
 #obtain starting values
 sv <- bfactor(dat, itemloadings, model, pars='values')
 
@@ -90,7 +141,7 @@ constraints <- list()
 itemnames <- colnames(dat)
 pick <- c(0,20,40)
 for(i in 1:20){    
-    # accross time item constraints
+    # across time item constraints
     constraints[[paste0('slope.', i)]] <- sv$parnum[sv$name == paste0('a',2+i) & sv$est]
     for(j in 1:2){
         constraints[[paste0('intercept.', i, '_', j)]] <- 
@@ -102,6 +153,48 @@ for(i in 1:20){
 #                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
 mod2 <- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, pars=sv, 
                 optimizer = 'nlminb')
+
+coef(mod2, simplify=TRUE)
+
+coef(mod2)$GroupPars[,c('MEAN_1', 'MEAN_2', 'COV_11', 'COV_21', 'COV_22')]
+```
+
+The following uses the `mirt.model()` syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via `sprintf()` and the `stringr` package. 
+
+```{r eval=FALSE}
+itemloadings <- rep(1:20, times = 3)  # will be associated with slopes a3, a4, ..., a22
+model <- mirt.model('Intercept = 1-60
+                     Slope = 1-60
+                     COV = Intercept*Slope, Intercept*Intercept, Slope*Slope
+                     MEAN = Intercept, Slope
+                     FIXED = (1-60, a1), (1-60, a2)
+                     START = (1-60, a1, 1.0), (1-20, a2, 0.0), (21-40, a2, 1.0), (41-60, a2, 2.0)
+                     CONSTRAIN = (1,21,41, a3), (2,22,42, a4), (3,23,43, a5), 
+                      (4,24,44, a6), (5,25,45, a7), (6,26,46, a8),
+                      (7,27,47, a9), (8,28,48, a10), (9,29,49, a11), 
+                      (10,30,50, a12), (11,31,51, a13), (12,32,52, a14),
+                      (13,33,53, a15), (14,34,54, a16), (15,35,55, a17),
+                      (16,36,56, a18), (17,37,57, a19), (18,38,58, a20),
+                      (19,39,59, a21), (20,40,60, a22),     # item-time slope 
+                      
+                      (1,21,41, d1), (2,22,42, d1), (3,23,43, d1), 
+                      (4,24,44, d1), (5,25,45, d1), (6,26,46, d1),
+                      (7,27,47, d1), (8,28,48, d1), (9,29,49, d1), 
+                      (10,30,50, d1), (11,31,51, d1), (12,32,52, d1),
+                      (13,33,53, d1), (14,34,54, d1), (15,35,55, d1),
+                      (16,36,56, d1), (17,37,57, d1), (18,38,58, d1),
+                      (19,39,59, d1), (20,40,60, d1),     # item-time intercept 1 
+                      
+                      (1,21,41, d2), (2,22,42, d2), (3,23,43, d2), 
+                      (4,24,44, d2), (5,25,45, d2), (6,26,46, d2),
+                      (7,27,47, d2), (8,28,48, d2), (9,29,49, d2), 
+                      (10,30,50, d2), (11,31,51, d2), (12,32,52, d2),
+                      (13,33,53, d2), (14,34,54, d2), (15,35,55, d2),
+                      (16,36,56, d2), (17,37,57, d2), (18,38,58, d2),
+                      (19,39,59, d2), (20,40,60, d2)     # item-time intercept 2 
+                    ')
+
+mod2 <- bfactor(dat, itemloadings, model, quadpts=9, optimizer = 'nlminb')
 
 coef(mod2, simplify=TRUE)
 
