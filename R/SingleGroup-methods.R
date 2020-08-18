@@ -954,6 +954,8 @@ setMethod(
 #'   \code{dentype = 'Davidian-#'} was used then the type \code{'Davidian'}
 #'   will also be available to generate the curve estimates at the quadrature
 #'   nodes used during estimation
+#' @param drop2 logical; where appropriate, for dichotomous response items drop the lowest category
+#'   and provide information pertaining only to the second response option?
 #' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 #'   for information-based plots with respect to the first dimension.
 #'   If a vector is used then a bubble plot is created with the summed information across the angles specified
@@ -1037,7 +1039,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 200, degrees = 45,
+    definition = function(x, y, type = 'score', npts = 200, drop2 = TRUE, degrees = 45,
                           theta_lim = c(-6,6), which.items = 1:extract.mirt(x, 'nitems'),
                           MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, main = NULL,
@@ -1229,7 +1231,7 @@ setMethod(
                 ind <- 1L
                 for(i in which.items){
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
-                    if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
+                    if(ncol(tmp) == 2L && drop2) tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(ThetaFull),
                                                                  labels=paste0('P', seq_len(ncol(tmp)))))
                     P[[ind]] <- tmp2
@@ -1420,7 +1422,7 @@ setMethod(
                 ind <- 1L
                 for(i in which.items){
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
-                    if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
+                    if(ncol(tmp) == 2L && facet_items && drop2) tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
                                                            labels=paste0('P', seq_len(ncol(tmp)))))
                     P[[ind]] <- tmp2
@@ -1439,7 +1441,7 @@ setMethod(
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
-                    return(xyplot(P ~ Theta, plotobj, groups=plotobj$item, ylim = c(-0.1,1.1),
+                    return(xyplot(P ~ Theta|cat, plotobj, groups=plotobj$item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
                                   auto.key = auto.key, type = 'l', main = main,
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))

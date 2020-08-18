@@ -64,7 +64,7 @@ setMethod(
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
-    definition = function(x, y, type = 'score', npts = 200, degrees = 45,
+    definition = function(x, y, type = 'score', npts = 200, drop2 = TRUE, degrees = 45,
                           which.items = 1:extract.mirt(x, 'nitems'),
                           rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE,
@@ -223,7 +223,7 @@ setMethod(
                     count <- 1
                     for(i in which.items){
                         tmp <- probtrace(extract.item(x, i, group=g), ThetaFull)
-                        if(ncol(tmp) == 2L) tmp <- tmp[,2, drop=FALSE]
+                        if(ncol(tmp) == 2L && drop2) tmp <- tmp[,2, drop=FALSE]
                         tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(ThetaFull),
                                                                      labels=paste0('cat', 1L:ncol(tmp))))
                         P[[count]] <- tmp2

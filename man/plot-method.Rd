@@ -15,6 +15,7 @@
   y,
   type = "score",
   npts = 200,
+  drop2 = TRUE,
   degrees = 45,
   theta_lim = c(-6, 6),
   which.items = 1:extract.mirt(x, "nitems"),
@@ -64,6 +65,9 @@
 
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}
+
+\item{drop2}{logical; where appropriate, for dichotomous response items drop the lowest category
+and provide information pertaining only to the second response option?}
 
 \item{degrees}{numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 for information-based plots with respect to the first dimension.
