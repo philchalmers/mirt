@@ -1067,7 +1067,7 @@ setMethod(
         if(length(degrees) > ncol(ThetaFull)) type <- 'infoangle'
         if(length(degrees) == 1L) degrees <- rep(degrees, ncol(ThetaFull))
         info <- numeric(nrow(ThetaFull))
-        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE', 'infotrace'))
+        if(type %in% c('info', 'infocontour', 'rxx', 'SE', 'infoSE'))
             info <- testinfo(x, ThetaFull, degrees = degrees, which.items=which.items)
         if(type == 'infoangle'){
             for(i in seq_len(length(degrees)))
@@ -1243,6 +1243,38 @@ setMethod(
                 plotobj <- data.frame(Pstack, item=names, Theta=ThetaFull)
                 plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
                 return(wireframe(P ~ Theta.1 * Theta.2 | item, plotobj, zlim = c(-0.1,1.1), group=plotobj$cat,
+                                 zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            } else if(type == 'infotrace'){
+                if(is.null(main))
+                    main <- 'Item information trace lines'
+                I <- matrix(NA, nrow(Theta), J)
+                for(i in which.items)
+                    I[,i] <- iteminfo(extract.item(x, i), ThetaFull, degrees=degrees)
+                I <- t(na.omit(t(I)))
+                items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
+                plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items)
+                plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
+                return(wireframe(I ~ Theta.1 * Theta.2 | item, plotobj, group=plotobj$cat,
+                                 zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
+                                 par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            } else if(type == 'itemscore'){
+                if(is.null(main))
+                    main <- 'Expected item scoring function'
+                S <- vector('list', length(which.items))
+                names(S) <- colnames(x@Data$data)[which.items]
+                ind <- 1L
+                for(i in which.items){
+                    S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
+                    ind <- ind + 1L
+                }
+                Sstack <- do.call(c, S)
+                names <- rep(names(S), each = nrow(ThetaFull))
+                plotobj <- data.frame(S=Sstack, item=names, Theta=ThetaFull)
+                plotobj$item <- factor(plotobj$item, levels = colnames(x@Data$data)[which.items])
+                return(wireframe(S ~ Theta.1 * Theta.2 | item, plotobj, group=plotobj$cat,
                                  zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = colorkey, drape = drape,
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))

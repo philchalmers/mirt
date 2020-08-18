@@ -1,6 +1,7 @@
 # Changes in mirt 1.33
 
-- `plot(..., type = 'trace')` now supported for two-dimensional models to create faceted traceline points
+- `plot(..., type =)` now supports `'trace'`, `'infotrace'`, `'itemscore'`, and `''` for two-dimensional 
+  models to create faceted graphics
 
 - Added `read.mirt()` function back to package now that `plink` is again available on CRAN
 
