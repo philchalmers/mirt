@@ -1,22 +1,25 @@
 IRT approaches to longitudinal data
 ===================================
 
-Two approaches are demonstrated here for longitudinal data. A direct modeling approach, 
+Two approaches are demonstrated here for longitudinal data. A direct modelling approach, 
 where a latent variable is estimated for each time point, and a linear latent growth curve 
 approach which estimates the variability of person trajectories. The latter is limited to
 only 3 dimensions for any number of time points, whereas the former increases in complexity
 as the time points increase.
 
-## Direct estimation of latent factors for each wave
+# Direct estimation of latent factors for each wave
 
 Two tier approach used in Cai 2010's two-tier article. This example requires 4 dimensions 
-of integration (1 for each time point + residual item factor)
+of integration (1 for each time point + residual item factor). Below identical models are specified,
+however the approach used (syntax vs R containers) are presented for posterity. 
 
 ```{r}
 library(mirt)
 load('longitudinal-IRT.Rdata')
 head(dat)
 ```
+
+### Model constructed using R containers
 
 ```{r}
 model <- 'Time1 = 1-20
@@ -62,7 +65,11 @@ coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22
                        'COV_32', 'COV_33')]
 ```
 
-When computing latent trait scores it's best to use a method that isn't as affected by higher dimensionality, such as the MAP approach. The  following uses the `mirt.model()` syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via `sprintf()` and the `stringr` package. 
+When computing latent trait scores it's best to use a method that isn't as affected by higher dimensionality, such as the MAP approach. 
+
+### Model constructed using mirt's sytax input
+
+The  following uses the `mirt.model()` syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via `sprintf()` and the `stringr` package. 
 
 ```{r eval=FALSE}
 itemloadings <- rep(1:20, times = 3) # will be associated with slopes a4, a5, ..., a23
@@ -114,10 +121,13 @@ coef(mod)$GroupPars[,c('MEAN_2', 'MEAN_3', 'COV_11', 'COV_21', 'COV_31', 'COV_22
 ```
 
 
-## Linear latent growth curve IRT 
+# Linear latent growth curve IRT 
 
 Specific factors represent residual terms per item. Requires only 3 dimensions 
-(max 3 dimensions of integration for unidimensional models).
+(max 3 dimensions of integration for unidimensional models). Below identical models are specified,
+however the approach used (syntax vs R containers) are presented for posterity. 
+
+### Model constructed using R containers
 
 ```{r}
 model <- mirt.model('Intercept = 1-60
@@ -158,6 +168,8 @@ coef(mod2, simplify=TRUE)
 
 coef(mod2)$GroupPars[,c('MEAN_1', 'MEAN_2', 'COV_11', 'COV_21', 'COV_22')]
 ```
+
+### Model constructed using mirt's sytax input
 
 The following uses the `mirt.model()` syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via `sprintf()` and the `stringr` package. 
 
