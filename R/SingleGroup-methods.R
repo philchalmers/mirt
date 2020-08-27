@@ -989,6 +989,7 @@ setMethod(
 #' @param ... additional arguments to be passed to lattice
 #'
 #' @name plot-method
+#' @export
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.

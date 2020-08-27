@@ -61,6 +61,7 @@ setMethod(
     }
 )
 
+#' @rdname plot-method
 setMethod(
     f = "plot",
     signature = signature(x = 'MultipleGroupClass', y = 'missing'),
