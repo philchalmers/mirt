@@ -9,7 +9,7 @@ extract.group(x, group)
 \arguments{
 \item{x}{mirt model of class 'MultipleGroupClass'}
 
-\item{group}{a number signifying which group should be extracted}
+\item{group}{the name of the group to extract}
 }
 \description{
 Extract a single group from an object defined by \code{\link{multipleGroup}}.
@@ -29,7 +29,7 @@ group <- c(rep('D1', N), rep('D2', N))
 models <- 'F1 = 1-15'
 
 mod_configural <- multipleGroup(dat, models, group = group)
-group.1 <- extract.group(mod_configural, 1) #extract first group
+group.1 <- extract.group(mod_configural, 'D1') #extract first group
 summary(group.1)
 plot(group.1)
 }

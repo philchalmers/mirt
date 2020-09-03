@@ -1,5 +1,8 @@
 # Changes in mirt 1.33
 
+- `extract.group()` now explicitly requires the group name to be passed rather than the group number (this 
+  is a far more natural route)
+
 - `plot(..., type =)` now supports `'trace'`, `'infotrace'`, `'itemscore'`, and `''` for two-dimensional 
   models to create faceted graphics
 

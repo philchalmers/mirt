@@ -4,7 +4,7 @@
 #'
 #' @aliases extract.group
 #' @param x mirt model of class 'MultipleGroupClass'
-#' @param group a number signifying which group should be extracted
+#' @param group the name of the group to extract
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -29,7 +29,7 @@
 #' models <- 'F1 = 1-15'
 #'
 #' mod_configural <- multipleGroup(dat, models, group = group)
-#' group.1 <- extract.group(mod_configural, 1) #extract first group
+#' group.1 <- extract.group(mod_configural, 'D1') #extract first group
 #' summary(group.1)
 #' plot(group.1)
 #' }
@@ -38,9 +38,15 @@ extract.group <- function(x, group){
     if(missing(group)) missingMsg('group')
     if(!is(x, 'MultipleGroupClass'))
         stop('Model was not estimated with multipleGroup()', call.=FALSE)
-    if(missing(group)) stop('Must specify group number', call.=FALSE)
+    if(missing(group)) stop('Must specify group number or name', call.=FALSE)
+    stopifnot(length(group) == 1L)
+    if(!is.numeric(group)){
+        groupNames <- extract.mirt(x, 'groupNames')
+        stopifnot(any(group == groupNames))
+        group <- which(group == groupNames)
+    }
     vals <- mod2values(x)
-    vals <- vals[vals$group == x@Data$groupNames[group], ]
+    vals <- vals[vals$group == groupNames[group], ]
     dat <- extract.mirt(x, 'data')
     nfact <- extract.mirt(x, 'nfact')
     K <- extract.mirt(x, 'K')
