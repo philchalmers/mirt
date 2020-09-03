@@ -201,7 +201,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         mu <- tmpitem@par[tmpitem@est]
         vcov <- extract.mirt(x, 'vcov')
         smallinfo <- vcov[tmp, tmp]
-        smallinfo <-(smallinfo + t(smallinfo))/2 #make symetric
+        smallinfo <- (smallinfo + t(smallinfo))/2 #make symmetric
         delta <- mirt_rmvnorm(CEdraws, mean=mu, sigma=smallinfo)
         tmp <- mirt_dmvnorm(delta, mu, smallinfo)
         sorttmp <- sort(tmp)

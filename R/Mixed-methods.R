@@ -45,7 +45,7 @@ setMethod(
         sigma <- matrix(0, object@Model$nfact, object@Model$nfact)
         sigma[lower.tri(sigma, TRUE)] <- par
         if(object@Model$nfact > 1L){
-            sigma <- sigma + t(sigma) - diag(diag(sigma))
+            sigma <- makeSymMat(sigma)
             csigma <- cov2cor(sigma)
             sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
         }
@@ -59,7 +59,7 @@ setMethod(
                 sigma <- matrix(0, object@ParObjects$random[[i]]@ndim, object@ParObjects$random[[i]]@ndim)
                 sigma[lower.tri(sigma, TRUE)] <- par
                 if(ncol(sigma) > 1L){
-                    sigma <- sigma + t(sigma) - diag(diag(sigma))
+                    sigma <- makeSymMat(sigma)
                     csigma <- cov2cor(sigma)
                     sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
                 }
@@ -98,7 +98,7 @@ setMethod(
                                 object@ParObjects$lr.random[[i]]@ndim)
                 sigma[lower.tri(sigma, TRUE)] <- par
                 if(ncol(sigma) > 1L){
-                    sigma <- sigma + t(sigma) - diag(diag(sigma))
+                    sigma <- makeSymMat(sigma)
                     csigma <- cov2cor(sigma)
                     sigma[upper.tri(sigma, diag=FALSE)] <- csigma[upper.tri(sigma, diag=FALSE)]
                 }

@@ -11,8 +11,7 @@ setMethod(
                 for(i in seq_len(length(lr.random))){
                     mat <- matrix(0, lr.random[[i]]@ndim, lr.random[[i]]@ndim)
                     mat[lower.tri(mat, TRUE)] <- lr.random[[i]]@par
-                    if(ncol(mat) > 1L)
-                        mat <- mat + t(mat) - diag(diag(mat))
+                    mat <- makeSymMat(mat)
                     mus[,i] <- mirt_rmvnorm(nrow(lr.random[[i]]@drawvals), sigma = mat)[lr.random[[i]]@mtch]
                 }
                 mus <- rowSums(mus) + lrPars@mus
@@ -26,8 +25,7 @@ setMethod(
                 for(i in seq_len(length(random))){
                     mat <- matrix(0, random[[i]]@ndim, random[[i]]@ndim)
                     mat[lower.tri(mat, TRUE)] <- random[[i]]@par
-                    if(ncol(mat) > 1L)
-                        mat <- mat + t(mat) - diag(diag(mat))
+                    mat <- makeSymMat(mat)
                     random[[i]]@drawvals <- mirt_rmvnorm(nrow(random[[i]]@drawvals), sigma = mat)
                 }
                 ot <- OffTerm(random, J=J, N=N)

@@ -352,8 +352,7 @@ ExtractGroupPars <- function(x){
         tmp <- x@par[-c(seq_len(nfact), which(phi_matches))]
         gcov <- matrix(0, nfact, nfact)
         gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-        if(nfact != 1L)
-            gcov <- gcov + t(gcov) - diag(diag(gcov))
+        gcov <- makeSymMat(gcov)
         return(list(gmeans=gmeans, gcov=gcov, phi=phi))
     } else {
         par <- x@par
@@ -361,8 +360,7 @@ ExtractGroupPars <- function(x){
         tmp <- par[-seq_len(nfact)]
         gcov <- matrix(0, nfact, nfact)
         gcov[lower.tri(gcov, diag=TRUE)] <- tmp
-        if(nfact != 1L)
-            gcov <- gcov + t(gcov) - diag(diag(gcov))
+        gcov <- makeSymMat(gcov)
         return(list(gmeans=gmeans, gcov=gcov))
     }
 }
@@ -2493,6 +2491,13 @@ MC_quad <- function(npts, nfact, lim)
 
 respSample <- function(P) .Call("respSample", P)
 
+makeSymMat <- function(mat){
+    if(ncol(mat) > 1L){
+        mat[is.na(mat)] <- 0
+        mat <- mat + t(mat) - diag(diag(mat))
+    }
+    mat
+}
 missingMsg <- function(string)
     stop(paste0('\'', string, '\' argument is missing.'), call.=FALSE)
 

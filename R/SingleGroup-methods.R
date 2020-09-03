@@ -398,7 +398,7 @@ setMethod(
                     if(object@ParObjects$pars[[J+1L]]@dentype == "mixture")
                         covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(seq_len(nfact), length(allPars$GroupPars))]
                     else covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
-                    covs[upper.tri(covs, FALSE)] <- covs[lower.tri(covs, FALSE)]
+                    covs <- makeSymMat(covs)
                     colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
                     allPars <- list(items=items, means=means, cov=covs)
                 }
