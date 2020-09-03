@@ -112,7 +112,7 @@ test_that('discrete', {
                  verbose = FALSE)
     expect_equal(logLik(mod), -9598.103, tolerance = 1e-4)
     expect_equal(as.numeric(coef(mod)[[1]][[33]]), .4165249, tolerance=1e-2)
-    expect_equal(M2(mod)$M2, 1239.17, tolerance = 1e-4)
+    expect_equal(M2(mod)$M2, 1239.17, tolerance = 1)
 
 #
 #     data(data.read, package = 'sirt')
