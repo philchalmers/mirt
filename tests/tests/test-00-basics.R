@@ -4,6 +4,8 @@ test_that('basics', {
     group <- rep(c('G1', 'G2'), each=nrow(Science)/2)
     gmod <- multipleGroup(Science, 1, group=group, TOL = NaN)
     mod <- extract.group(gmod, 1)
+    mod2 <- extract.group(gmod, 'G1')
+    expect_true(identical(logLik(mod), logLik(mod2)))
     item1 <- extract.item(gmod, 2, group=1)
     item2 <- extract.item(mod, 2)
     Theta <- matrix(-3:3)

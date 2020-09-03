@@ -35,13 +35,12 @@
 #' }
 extract.group <- function(x, group){
     if(missing(x)) missingMsg('x')
-    if(missing(group)) missingMsg('group')
     if(!is(x, 'MultipleGroupClass'))
         stop('Model was not estimated with multipleGroup()', call.=FALSE)
     if(missing(group)) stop('Must specify group number or name', call.=FALSE)
     stopifnot(length(group) == 1L)
-    if(!is.numeric(group)){
-        groupNames <- extract.mirt(x, 'groupNames')
+    groupNames <- extract.mirt(x, 'groupNames')
+    if(is.character(group)){
         stopifnot(any(group == groupNames))
         group <- which(group == groupNames)
     }
