@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert traditional IRT metric into slope-intercept form used...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for traditional2mirt {mirt}"><tr><td>traditional2mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert traditional IRT metric into slope-intercept form used in mirt</h2>
+
+<h3>Description</h3>
+
+<p>This is a helper function for users who have previously available traditional/classical
+IRT parameters and want to know the equivalent slope-intercept translation used in <code>mirt</code>.
+Note that this function assumes that the supplied models are unidimensional by definition (i.e.,
+will have only one slope/discrimination). If there is no supported slope-interecept transformation
+available then the original vector of parameters will be returned by default.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+traditional2mirt(x, cls, ncat)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a vector of parameters to tranform</p>
+</td></tr>
+<tr valign="top"><td><code>cls</code></td>
+<td>
+<p>the class or itemtype of the supplied model</p>
+</td></tr>
+<tr valign="top"><td><code>ncat</code></td>
+<td>
+<p>the number of categories implied by the IRT model</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Supported class transformations for the <code>cls</code> input are:
+</p>
+
+<dl>
+<dt>Rasch, 2PL, 3PL, 3PLu, 4PL</dt><dd>
+<p>Form must be: (discrimination, difficulty, lower-bound, upper-bound)
+</p>
+</dd>
+<dt>graded</dt><dd>
+<p>Form must be: (discrimination, difficulty 1, difficulty 2, ..., difficulty k-1)
+</p>
+</dd>
+<dt>gpcm</dt><dd>
+<p>Form must be: (discrimination, difficulty 1, difficulty 2, ..., difficulty k-1)
+</p>
+</dd>
+<dt>nominal</dt><dd>
+<p>Form must be: (discrimination 1, discrimination 2, ..., discrimination k,
+difficulty 1, difficulty 2, ..., difficulty k)
+</p>
+</dd>
+</dl>
+
+
+
+<h3>Value</h3>
+
+<p>a named vector of slope-intercept parameters (if supported)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r"># classical 3PL model
+vec &lt;- c(a=1.5, b=-1, g=.1, u=1)
+slopeint &lt;- traditional2mirt(vec, &#39;3PL&#39;, ncat=2)
+slopeint
+</code></pre>
+
+<pre><code>##  a1   d   g   u 
+## 1.5 1.5 0.1 1.0
+</code></pre>
+
+<pre><code class="r"># classical graded model (four category)
+vec &lt;- c(a=1.5, b1=-1, b2=0, b3=1.5)
+slopeint &lt;- traditional2mirt(vec, &#39;graded&#39;, ncat=4)
+slopeint
+</code></pre>
+
+<pre><code>##    a1    d1    d2    d3 
+##  1.50  1.50  0.00 -2.25
+</code></pre>
+
+<pre><code class="r"># classical generalize partial credit model (four category)
+vec &lt;- c(a=1.5, b1=-1, b2=0, b3=1.5)
+slopeint &lt;- traditional2mirt(vec, &#39;gpcm&#39;, ncat=4)
+slopeint
+</code></pre>
+
+<pre><code>##    a1   ak0   ak1   ak2   ak3    d0    d1    d2    d3 
+##  1.50  0.00  1.00  2.00  3.00  0.00  1.50  1.50 -0.75
+</code></pre>
+
+<pre><code class="r"># classical nominal model (4 category)
+vec &lt;- c(a1=.5, a2 = -1, a3=1, a4=-.5, d1=1, d2=-1, d3=-.5, d4=.5)
+slopeint &lt;- traditional2mirt(vec, &#39;nominal&#39;, ncat=4)
+slopeint
+</code></pre>
+
+<pre><code>##         a1        ak0        ak1        ak2        ak3         d0         d1 
+## -0.3333333  0.0000000  4.5000000 -1.5000000  3.0000000  0.0000000 -2.0000000 
+##         d2         d3 
+## -1.5000000 -0.5000000
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.31.9 <a href="00Index.html">Index</a>]</div>
+</body></html>

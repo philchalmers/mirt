@@ -238,18 +238,18 @@ mod13a &lt;- CDM::din( dat , q.matrix=Q , rule=&quot;DINA&quot;, progress = FALS
 summary(mod13a)
 </code></pre>
 
-<pre><code>## CDM 5.5-21 (Built 2017-04-11 10:33:11)
+<pre><code>## CDM 7.5-15 (Built 2020-03-10 14:19:21)
 </code></pre>
 
 <pre><code>## Call:
 ##  CDM::din(data = dat, q.matrix = Q, rule = &quot;DINA&quot;, progress = FALSE) 
 ## 
-## Date of Analysis: 2017-07-24 13:31:16 
-## Time difference of 0.02457547 secs
-## Computation Time: 0.02457547 
+## Date of Analysis: 2020-09-04 00:50:13 
+## Time difference of 0.02698302 secs
+## Computation Time: 0.02698302 
 ## 
 ## 
-## Deviance =  3847.473  |   Log-Likelihood = -1923.737 
+## Deviance = 3847.473  |   Log-Likelihood= -1923.737 
 ## 
 ## Number of iterations: 40 
 ## 
@@ -257,8 +257,8 @@ summary(mod13a)
 ## Number of skill class parameters: 7 
 ## 
 ## Information criteria: 
-##   AIC =  3909.473 
-##   BIC =  4027.056 
+##   AIC = 3909.473 
+##   BIC = 4027.056 
 ## 
 ## Mean of RMSEA item fit: 0.053 
 ## 
@@ -299,15 +299,15 @@ summary(mod13a)
 cbind( Theta , mod13a$attribute.patt.splitted)
 </code></pre>
 
-<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6]
-## [1,]    0    0    0    0    0    0
-## [2,]    1    0    0    1    0    0
-## [3,]    0    1    0    0    1    0
-## [4,]    0    0    1    0    0    1
-## [5,]    1    1    0    1    1    0
-## [6,]    1    0    1    1    0    1
-## [7,]    0    1    1    0    1    1
-## [8,]    1    1    1    1    1    1
+<pre><code>##            Skill1 Skill2 Skill3
+## [1,] 0 0 0      0      0      0
+## [2,] 1 0 0      1      0      0
+## [3,] 0 1 0      0      1      0
+## [4,] 0 0 1      0      0      1
+## [5,] 1 1 0      1      1      0
+## [6,] 1 0 1      1      0      1
+## [7,] 0 1 1      0      1      1
+## [8,] 1 1 1      1      1      1
 </code></pre>
 
 <pre><code class="r">#-- Model 13b: gdm (in CDM)
@@ -316,75 +316,80 @@ summary(mod13b)
 </code></pre>
 
 <pre><code>## -----------------------------------------------------------------------------
-## CDM 5.5-21 (2017-04-11 10:33:11) 
+## CDM 7.5-15 (2020-03-10 14:19:21) 
 ## 
-## Date of Analysis: 2017-07-24 13:31:20 
-## Time difference of 3.639353 secs
-## Computation Time: 3.639353 
+## Date of Analysis: 2020-09-04 00:50:18 
+## Time difference of 4.275365 secs
+## Computation Time: 4.275365 
 ## 
 ## General Diagnostic Model 
+## 
+## Call:
+## CDM::gdm(data = dat, theta.k = Theta, Qmatrix = Q, skillspace = &quot;full&quot;, 
+##     progress = FALSE)
 ## 
 ##     328 Cases,  12 Items,  1 Group(s) , 3 Dimension(s)
 ##     Saturated skill space
 ## 
 ## -----------------------------------------------------------------------------
-## Number of iterations = 1000
+## Number of iterations= 1000
 ## Maximum number of iterations was reached.
 ## 
-## Deviance =  3847.13  | Log Likelihood =  -1923.57 
-## Number of persons =  328 
-## Number of estimated parameters =  31 
-##   Number of estimated item parameters =  24 
-##        12 Intercepts and 12 Slopes 
-##        0 centered intercepts and 0 centered slopes 
-##   Number of estimated distribution parameters =  7 
-## AIC  =  3909.13  | penalty = 62    | AIC = -2*LL + 2*p  
-## AICc =  3915.84  | penalty = 68.7    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
-## BIC  =  4026.72  | penalty = 179.58    | BIC = -2*LL + log(n)*p  
-## CAIC =  4057.72  | penalty = 210.58   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
+## Deviance = 3865.64 | Log Likelihood = -1932.82
+## Number of persons = 328
+## Number of estimated parameters = 31
+##   Number of estimated item parameters = 24
+##       12 Intercepts and 12 Slopes 
+##       0 centered intercepts and 0 centered slopes 
+##   Number of estimated distribution parameters = 7
+## 
+## AIC = 3928  | penalty = 62    | AIC = -2*LL + 2*p  
+## AICc = 3934  | penalty = 68.7    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)  
+## BIC = 4045  | penalty = 179.58    | BIC = -2*LL + log(n)*p   
+## CAIC = 4076  | penalty = 210.58    | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)   
 ## 
 ## -----------------------------------------------------------------------------
 ## Trait Distribution
 ## 
 ## M Trait:
 ##           F1    F2    F3
-## Group1 0.527 0.492 0.932
+## Group1 0.524 0.507 0.816
 ## 
 ## SD Trait:
 ##           F1  F2    F3
-## Group1 0.499 0.5 0.251
+## Group1 0.499 0.5 0.387
 ## 
 ## Skewness Trait:
-##            F1    F2     F3
-## Group1 -0.107 0.033 -3.442
+##            F1     F2     F3
+## Group1 -0.098 -0.028 -1.634
 ## 
 ## Correlations Trait: 
 ## Group 1 
 ##       F1    F2    F3
-## F1 1.000 0.869 0.129
-## F2 0.869 1.000 0.120
-## F3 0.129 0.120 1.000
+## F1 1.000 0.861 0.368
+## F2 0.861 1.000 0.349
+## F3 0.368 0.349 1.000
 ## 
 ## EAP Reliability:
 ##         F1    F2    F3
-## [1,] 0.687 0.643 0.951
+## [1,] 0.709 0.651 0.657
 ## -----------------------------------------------------------------------------
 ## Item Parameters 
-##    item   N     M b.Cat1   a.F1  a.F2  a.F3 itemfit.rmsea
-## 1    A1 328 0.851  0.774 34.653 0.000 0.000         0.024
-## 2    A2 328 0.738 -0.046  3.268 0.000 0.000         0.038
-## 3    A3 328 0.567 -0.848  2.279 0.000 0.000         0.015
-## 4    A4 328 0.460 -1.161  1.822 0.000 0.000         0.048
-## 5    B1 328 0.713  0.319  0.000 1.434 0.000         0.043
-## 6    B2 328 0.506 -0.646  0.000 1.372 0.000         0.067
-## 7    B3 328 0.909  1.565  0.000 3.368 0.000         0.089
-## 8    B4 328 0.683 -0.150  0.000 2.473 0.000         0.048
-## 9    C1 328 0.933 -1.441  0.000 0.000 5.754         0.022
-## 10   C2 328 0.713 -2.936  0.000 0.000 4.098         0.140
-## 11   C3 328 0.872 -6.213  0.000 0.000 8.882         0.027
-## 12   C4 328 0.735 -5.446  0.000 0.000 6.759         0.068
+##    item   N     M b.Cat1   a.F1  a.F2   a.F3 itemfit.rmsea
+## 1    A1 328 0.851  0.781 33.674 0.000  0.000         0.039
+## 2    A2 328 0.738 -0.062  3.456 0.000  0.000         0.020
+## 3    A3 328 0.567 -0.843  2.283 0.000  0.000         0.031
+## 4    A4 328 0.460 -1.160  1.830 0.000  0.000         0.018
+## 5    B1 328 0.713  0.273  0.000 1.500  0.000         0.045
+## 6    B2 328 0.506 -0.657  0.000 1.348  0.000         0.054
+## 7    B3 328 0.909  1.551  0.000 3.022  0.000         0.041
+## 8    B4 328 0.683 -0.169  0.000 2.388  0.000         0.044
+## 9    C1 328 0.933  0.886  0.000 0.000 33.997         0.066
+## 10   C2 328 0.713 -0.685  0.000 0.000  2.078         0.104
+## 11   C3 328 0.872 -0.105  0.000 0.000  3.323         0.049
+## 12   C4 328 0.735 -1.041  0.000 0.000  2.709         0.033
 ## 
-## Mean of RMSEA item fit: 0.052
+## Mean of RMSEA item fit: 0.045
 </code></pre>
 
 <pre><code class="r">#-- Model 13c: mirt (in mirt)
@@ -409,170 +414,170 @@ mod.pars[ind,&quot;value&quot;] &lt;- qlogis(.8) - qlogis(.2)
 mod.pars
 </code></pre>
 
-<pre><code>##    group  item     class   name parnum     value lbound ubound   est
-## 1    all    A1      dich     a1      1  2.772589   -Inf    Inf  TRUE
-## 2    all    A1      dich     a2      2  0.000000   -Inf    Inf FALSE
-## 3    all    A1      dich     a3      3  0.000000   -Inf    Inf FALSE
-## 4    all    A1      dich      d      4 -1.386294   -Inf    Inf  TRUE
-## 5    all    A1      dich      g      5  0.000000  0e+00      1 FALSE
-## 6    all    A1      dich      u      6  1.000000  0e+00      1 FALSE
-## 7    all    A2      dich     a1      7  2.772589   -Inf    Inf  TRUE
-## 8    all    A2      dich     a2      8  0.000000   -Inf    Inf FALSE
-## 9    all    A2      dich     a3      9  0.000000   -Inf    Inf FALSE
-## 10   all    A2      dich      d     10 -1.386294   -Inf    Inf  TRUE
-## 11   all    A2      dich      g     11  0.000000  0e+00      1 FALSE
-## 12   all    A2      dich      u     12  1.000000  0e+00      1 FALSE
-## 13   all    A3      dich     a1     13  2.772589   -Inf    Inf  TRUE
-## 14   all    A3      dich     a2     14  0.000000   -Inf    Inf FALSE
-## 15   all    A3      dich     a3     15  0.000000   -Inf    Inf FALSE
-## 16   all    A3      dich      d     16 -1.386294   -Inf    Inf  TRUE
-## 17   all    A3      dich      g     17  0.000000  0e+00      1 FALSE
-## 18   all    A3      dich      u     18  1.000000  0e+00      1 FALSE
-## 19   all    A4      dich     a1     19  2.772589   -Inf    Inf  TRUE
-## 20   all    A4      dich     a2     20  0.000000   -Inf    Inf FALSE
-## 21   all    A4      dich     a3     21  0.000000   -Inf    Inf FALSE
-## 22   all    A4      dich      d     22 -1.386294   -Inf    Inf  TRUE
-## 23   all    A4      dich      g     23  0.000000  0e+00      1 FALSE
-## 24   all    A4      dich      u     24  1.000000  0e+00      1 FALSE
-## 25   all    B1      dich     a1     25  0.000000   -Inf    Inf FALSE
-## 26   all    B1      dich     a2     26  2.772589   -Inf    Inf  TRUE
-## 27   all    B1      dich     a3     27  0.000000   -Inf    Inf FALSE
-## 28   all    B1      dich      d     28 -1.386294   -Inf    Inf  TRUE
-## 29   all    B1      dich      g     29  0.000000  0e+00      1 FALSE
-## 30   all    B1      dich      u     30  1.000000  0e+00      1 FALSE
-## 31   all    B2      dich     a1     31  0.000000   -Inf    Inf FALSE
-## 32   all    B2      dich     a2     32  2.772589   -Inf    Inf  TRUE
-## 33   all    B2      dich     a3     33  0.000000   -Inf    Inf FALSE
-## 34   all    B2      dich      d     34 -1.386294   -Inf    Inf  TRUE
-## 35   all    B2      dich      g     35  0.000000  0e+00      1 FALSE
-## 36   all    B2      dich      u     36  1.000000  0e+00      1 FALSE
-## 37   all    B3      dich     a1     37  0.000000   -Inf    Inf FALSE
-## 38   all    B3      dich     a2     38  2.772589   -Inf    Inf  TRUE
-## 39   all    B3      dich     a3     39  0.000000   -Inf    Inf FALSE
-## 40   all    B3      dich      d     40 -1.386294   -Inf    Inf  TRUE
-## 41   all    B3      dich      g     41  0.000000  0e+00      1 FALSE
-## 42   all    B3      dich      u     42  1.000000  0e+00      1 FALSE
-## 43   all    B4      dich     a1     43  0.000000   -Inf    Inf FALSE
-## 44   all    B4      dich     a2     44  2.772589   -Inf    Inf  TRUE
-## 45   all    B4      dich     a3     45  0.000000   -Inf    Inf FALSE
-## 46   all    B4      dich      d     46 -1.386294   -Inf    Inf  TRUE
-## 47   all    B4      dich      g     47  0.000000  0e+00      1 FALSE
-## 48   all    B4      dich      u     48  1.000000  0e+00      1 FALSE
-## 49   all    C1      dich     a1     49  0.000000   -Inf    Inf FALSE
-## 50   all    C1      dich     a2     50  0.000000   -Inf    Inf FALSE
-## 51   all    C1      dich     a3     51  2.772589   -Inf    Inf  TRUE
-## 52   all    C1      dich      d     52 -1.386294   -Inf    Inf  TRUE
-## 53   all    C1      dich      g     53  0.000000  0e+00      1 FALSE
-## 54   all    C1      dich      u     54  1.000000  0e+00      1 FALSE
-## 55   all    C2      dich     a1     55  0.000000   -Inf    Inf FALSE
-## 56   all    C2      dich     a2     56  0.000000   -Inf    Inf FALSE
-## 57   all    C2      dich     a3     57  2.772589   -Inf    Inf  TRUE
-## 58   all    C2      dich      d     58 -1.386294   -Inf    Inf  TRUE
-## 59   all    C2      dich      g     59  0.000000  0e+00      1 FALSE
-## 60   all    C2      dich      u     60  1.000000  0e+00      1 FALSE
-## 61   all    C3      dich     a1     61  0.000000   -Inf    Inf FALSE
-## 62   all    C3      dich     a2     62  0.000000   -Inf    Inf FALSE
-## 63   all    C3      dich     a3     63  2.772589   -Inf    Inf  TRUE
-## 64   all    C3      dich      d     64 -1.386294   -Inf    Inf  TRUE
-## 65   all    C3      dich      g     65  0.000000  0e+00      1 FALSE
-## 66   all    C3      dich      u     66  1.000000  0e+00      1 FALSE
-## 67   all    C4      dich     a1     67  0.000000   -Inf    Inf FALSE
-## 68   all    C4      dich     a2     68  0.000000   -Inf    Inf FALSE
-## 69   all    C4      dich     a3     69  2.772589   -Inf    Inf  TRUE
-## 70   all    C4      dich      d     70 -1.386294   -Inf    Inf  TRUE
-## 71   all    C4      dich      g     71  0.000000  0e+00      1 FALSE
-## 72   all    C4      dich      u     72  1.000000  0e+00      1 FALSE
-## 73   all GROUP GroupPars MEAN_1     73  0.000000   -Inf    Inf FALSE
-## 74   all GROUP GroupPars MEAN_2     74  0.000000   -Inf    Inf FALSE
-## 75   all GROUP GroupPars MEAN_3     75  0.000000   -Inf    Inf FALSE
-## 76   all GROUP GroupPars COV_11     76  1.000000  1e-04    Inf FALSE
-## 77   all GROUP GroupPars COV_21     77  0.000000   -Inf    Inf FALSE
-## 78   all GROUP GroupPars COV_31     78  0.000000   -Inf    Inf FALSE
-## 79   all GROUP GroupPars COV_22     79  1.000000  1e-04    Inf FALSE
-## 80   all GROUP GroupPars COV_32     80  0.000000   -Inf    Inf FALSE
-## 81   all GROUP GroupPars COV_33     81  1.000000  1e-04    Inf FALSE
-##    prior.type prior_1 prior_2
-## 1        none     NaN     NaN
-## 2        none     NaN     NaN
-## 3        none     NaN     NaN
-## 4        none     NaN     NaN
-## 5        none     NaN     NaN
-## 6        none     NaN     NaN
-## 7        none     NaN     NaN
-## 8        none     NaN     NaN
-## 9        none     NaN     NaN
-## 10       none     NaN     NaN
-## 11       none     NaN     NaN
-## 12       none     NaN     NaN
-## 13       none     NaN     NaN
-## 14       none     NaN     NaN
-## 15       none     NaN     NaN
-## 16       none     NaN     NaN
-## 17       none     NaN     NaN
-## 18       none     NaN     NaN
-## 19       none     NaN     NaN
-## 20       none     NaN     NaN
-## 21       none     NaN     NaN
-## 22       none     NaN     NaN
-## 23       none     NaN     NaN
-## 24       none     NaN     NaN
-## 25       none     NaN     NaN
-## 26       none     NaN     NaN
-## 27       none     NaN     NaN
-## 28       none     NaN     NaN
-## 29       none     NaN     NaN
-## 30       none     NaN     NaN
-## 31       none     NaN     NaN
-## 32       none     NaN     NaN
-## 33       none     NaN     NaN
-## 34       none     NaN     NaN
-## 35       none     NaN     NaN
-## 36       none     NaN     NaN
-## 37       none     NaN     NaN
-## 38       none     NaN     NaN
-## 39       none     NaN     NaN
-## 40       none     NaN     NaN
-## 41       none     NaN     NaN
-## 42       none     NaN     NaN
-## 43       none     NaN     NaN
-## 44       none     NaN     NaN
-## 45       none     NaN     NaN
-## 46       none     NaN     NaN
-## 47       none     NaN     NaN
-## 48       none     NaN     NaN
-## 49       none     NaN     NaN
-## 50       none     NaN     NaN
-## 51       none     NaN     NaN
-## 52       none     NaN     NaN
-## 53       none     NaN     NaN
-## 54       none     NaN     NaN
-## 55       none     NaN     NaN
-## 56       none     NaN     NaN
-## 57       none     NaN     NaN
-## 58       none     NaN     NaN
-## 59       none     NaN     NaN
-## 60       none     NaN     NaN
-## 61       none     NaN     NaN
-## 62       none     NaN     NaN
-## 63       none     NaN     NaN
-## 64       none     NaN     NaN
-## 65       none     NaN     NaN
-## 66       none     NaN     NaN
-## 67       none     NaN     NaN
-## 68       none     NaN     NaN
-## 69       none     NaN     NaN
-## 70       none     NaN     NaN
-## 71       none     NaN     NaN
-## 72       none     NaN     NaN
-## 73       none     NaN     NaN
-## 74       none     NaN     NaN
-## 75       none     NaN     NaN
-## 76       none     NaN     NaN
-## 77       none     NaN     NaN
-## 78       none     NaN     NaN
-## 79       none     NaN     NaN
-## 80       none     NaN     NaN
-## 81       none     NaN     NaN
+<pre><code>##    group  item     class   name parnum     value lbound ubound   est prior.type
+## 1    all    A1      dich     a1      1  2.772589   -Inf    Inf  TRUE       none
+## 2    all    A1      dich     a2      2  0.000000   -Inf    Inf FALSE       none
+## 3    all    A1      dich     a3      3  0.000000   -Inf    Inf FALSE       none
+## 4    all    A1      dich      d      4 -1.386294   -Inf    Inf  TRUE       none
+## 5    all    A1      dich      g      5  0.000000  0e+00      1 FALSE       none
+## 6    all    A1      dich      u      6  1.000000  0e+00      1 FALSE       none
+## 7    all    A2      dich     a1      7  2.772589   -Inf    Inf  TRUE       none
+## 8    all    A2      dich     a2      8  0.000000   -Inf    Inf FALSE       none
+## 9    all    A2      dich     a3      9  0.000000   -Inf    Inf FALSE       none
+## 10   all    A2      dich      d     10 -1.386294   -Inf    Inf  TRUE       none
+## 11   all    A2      dich      g     11  0.000000  0e+00      1 FALSE       none
+## 12   all    A2      dich      u     12  1.000000  0e+00      1 FALSE       none
+## 13   all    A3      dich     a1     13  2.772589   -Inf    Inf  TRUE       none
+## 14   all    A3      dich     a2     14  0.000000   -Inf    Inf FALSE       none
+## 15   all    A3      dich     a3     15  0.000000   -Inf    Inf FALSE       none
+## 16   all    A3      dich      d     16 -1.386294   -Inf    Inf  TRUE       none
+## 17   all    A3      dich      g     17  0.000000  0e+00      1 FALSE       none
+## 18   all    A3      dich      u     18  1.000000  0e+00      1 FALSE       none
+## 19   all    A4      dich     a1     19  2.772589   -Inf    Inf  TRUE       none
+## 20   all    A4      dich     a2     20  0.000000   -Inf    Inf FALSE       none
+## 21   all    A4      dich     a3     21  0.000000   -Inf    Inf FALSE       none
+## 22   all    A4      dich      d     22 -1.386294   -Inf    Inf  TRUE       none
+## 23   all    A4      dich      g     23  0.000000  0e+00      1 FALSE       none
+## 24   all    A4      dich      u     24  1.000000  0e+00      1 FALSE       none
+## 25   all    B1      dich     a1     25  0.000000   -Inf    Inf FALSE       none
+## 26   all    B1      dich     a2     26  2.772589   -Inf    Inf  TRUE       none
+## 27   all    B1      dich     a3     27  0.000000   -Inf    Inf FALSE       none
+## 28   all    B1      dich      d     28 -1.386294   -Inf    Inf  TRUE       none
+## 29   all    B1      dich      g     29  0.000000  0e+00      1 FALSE       none
+## 30   all    B1      dich      u     30  1.000000  0e+00      1 FALSE       none
+## 31   all    B2      dich     a1     31  0.000000   -Inf    Inf FALSE       none
+## 32   all    B2      dich     a2     32  2.772589   -Inf    Inf  TRUE       none
+## 33   all    B2      dich     a3     33  0.000000   -Inf    Inf FALSE       none
+## 34   all    B2      dich      d     34 -1.386294   -Inf    Inf  TRUE       none
+## 35   all    B2      dich      g     35  0.000000  0e+00      1 FALSE       none
+## 36   all    B2      dich      u     36  1.000000  0e+00      1 FALSE       none
+## 37   all    B3      dich     a1     37  0.000000   -Inf    Inf FALSE       none
+## 38   all    B3      dich     a2     38  2.772589   -Inf    Inf  TRUE       none
+## 39   all    B3      dich     a3     39  0.000000   -Inf    Inf FALSE       none
+## 40   all    B3      dich      d     40 -1.386294   -Inf    Inf  TRUE       none
+## 41   all    B3      dich      g     41  0.000000  0e+00      1 FALSE       none
+## 42   all    B3      dich      u     42  1.000000  0e+00      1 FALSE       none
+## 43   all    B4      dich     a1     43  0.000000   -Inf    Inf FALSE       none
+## 44   all    B4      dich     a2     44  2.772589   -Inf    Inf  TRUE       none
+## 45   all    B4      dich     a3     45  0.000000   -Inf    Inf FALSE       none
+## 46   all    B4      dich      d     46 -1.386294   -Inf    Inf  TRUE       none
+## 47   all    B4      dich      g     47  0.000000  0e+00      1 FALSE       none
+## 48   all    B4      dich      u     48  1.000000  0e+00      1 FALSE       none
+## 49   all    C1      dich     a1     49  0.000000   -Inf    Inf FALSE       none
+## 50   all    C1      dich     a2     50  0.000000   -Inf    Inf FALSE       none
+## 51   all    C1      dich     a3     51  2.772589   -Inf    Inf  TRUE       none
+## 52   all    C1      dich      d     52 -1.386294   -Inf    Inf  TRUE       none
+## 53   all    C1      dich      g     53  0.000000  0e+00      1 FALSE       none
+## 54   all    C1      dich      u     54  1.000000  0e+00      1 FALSE       none
+## 55   all    C2      dich     a1     55  0.000000   -Inf    Inf FALSE       none
+## 56   all    C2      dich     a2     56  0.000000   -Inf    Inf FALSE       none
+## 57   all    C2      dich     a3     57  2.772589   -Inf    Inf  TRUE       none
+## 58   all    C2      dich      d     58 -1.386294   -Inf    Inf  TRUE       none
+## 59   all    C2      dich      g     59  0.000000  0e+00      1 FALSE       none
+## 60   all    C2      dich      u     60  1.000000  0e+00      1 FALSE       none
+## 61   all    C3      dich     a1     61  0.000000   -Inf    Inf FALSE       none
+## 62   all    C3      dich     a2     62  0.000000   -Inf    Inf FALSE       none
+## 63   all    C3      dich     a3     63  2.772589   -Inf    Inf  TRUE       none
+## 64   all    C3      dich      d     64 -1.386294   -Inf    Inf  TRUE       none
+## 65   all    C3      dich      g     65  0.000000  0e+00      1 FALSE       none
+## 66   all    C3      dich      u     66  1.000000  0e+00      1 FALSE       none
+## 67   all    C4      dich     a1     67  0.000000   -Inf    Inf FALSE       none
+## 68   all    C4      dich     a2     68  0.000000   -Inf    Inf FALSE       none
+## 69   all    C4      dich     a3     69  2.772589   -Inf    Inf  TRUE       none
+## 70   all    C4      dich      d     70 -1.386294   -Inf    Inf  TRUE       none
+## 71   all    C4      dich      g     71  0.000000  0e+00      1 FALSE       none
+## 72   all    C4      dich      u     72  1.000000  0e+00      1 FALSE       none
+## 73   all GROUP GroupPars MEAN_1     73  0.000000   -Inf    Inf FALSE       none
+## 74   all GROUP GroupPars MEAN_2     74  0.000000   -Inf    Inf FALSE       none
+## 75   all GROUP GroupPars MEAN_3     75  0.000000   -Inf    Inf FALSE       none
+## 76   all GROUP GroupPars COV_11     76  1.000000  1e-04    Inf FALSE       none
+## 77   all GROUP GroupPars COV_21     77  0.000000   -Inf    Inf FALSE       none
+## 78   all GROUP GroupPars COV_31     78  0.000000   -Inf    Inf FALSE       none
+## 79   all GROUP GroupPars COV_22     79  1.000000  1e-04    Inf FALSE       none
+## 80   all GROUP GroupPars COV_32     80  0.000000   -Inf    Inf FALSE       none
+## 81   all GROUP GroupPars COV_33     81  1.000000  1e-04    Inf FALSE       none
+##    prior_1 prior_2
+## 1      NaN     NaN
+## 2      NaN     NaN
+## 3      NaN     NaN
+## 4      NaN     NaN
+## 5      NaN     NaN
+## 6      NaN     NaN
+## 7      NaN     NaN
+## 8      NaN     NaN
+## 9      NaN     NaN
+## 10     NaN     NaN
+## 11     NaN     NaN
+## 12     NaN     NaN
+## 13     NaN     NaN
+## 14     NaN     NaN
+## 15     NaN     NaN
+## 16     NaN     NaN
+## 17     NaN     NaN
+## 18     NaN     NaN
+## 19     NaN     NaN
+## 20     NaN     NaN
+## 21     NaN     NaN
+## 22     NaN     NaN
+## 23     NaN     NaN
+## 24     NaN     NaN
+## 25     NaN     NaN
+## 26     NaN     NaN
+## 27     NaN     NaN
+## 28     NaN     NaN
+## 29     NaN     NaN
+## 30     NaN     NaN
+## 31     NaN     NaN
+## 32     NaN     NaN
+## 33     NaN     NaN
+## 34     NaN     NaN
+## 35     NaN     NaN
+## 36     NaN     NaN
+## 37     NaN     NaN
+## 38     NaN     NaN
+## 39     NaN     NaN
+## 40     NaN     NaN
+## 41     NaN     NaN
+## 42     NaN     NaN
+## 43     NaN     NaN
+## 44     NaN     NaN
+## 45     NaN     NaN
+## 46     NaN     NaN
+## 47     NaN     NaN
+## 48     NaN     NaN
+## 49     NaN     NaN
+## 50     NaN     NaN
+## 51     NaN     NaN
+## 52     NaN     NaN
+## 53     NaN     NaN
+## 54     NaN     NaN
+## 55     NaN     NaN
+## 56     NaN     NaN
+## 57     NaN     NaN
+## 58     NaN     NaN
+## 59     NaN     NaN
+## 60     NaN     NaN
+## 61     NaN     NaN
+## 62     NaN     NaN
+## 63     NaN     NaN
+## 64     NaN     NaN
+## 65     NaN     NaN
+## 66     NaN     NaN
+## 67     NaN     NaN
+## 68     NaN     NaN
+## 69     NaN     NaN
+## 70     NaN     NaN
+## 71     NaN     NaN
+## 72     NaN     NaN
+## 73     NaN     NaN
+## 74     NaN     NaN
+## 75     NaN     NaN
+## 76     NaN     NaN
+## 77     NaN     NaN
+## 78     NaN     NaN
+## 79     NaN     NaN
+## 80     NaN     NaN
+## 81     NaN     NaN
 </code></pre>
 
 <pre><code class="r">#* define prior for latent class analysis
@@ -603,14 +608,14 @@ cbind(Theta, extract.mirt(mod13c, &quot;Prior&quot;)[[1]])
 </code></pre>
 
 <pre><code>##      [,1] [,2] [,3]        [,4]
-## [1,]    0    0    0 0.040517211
-## [2,]    1    0    0 0.008688461
-## [3,]    0    1    0 0.007497902
-## [4,]    0    0    1 0.415900556
-## [5,]    1    1    0 0.010802275
-## [6,]    1    0    1 0.041186267
-## [7,]    0    1    1 0.009559938
-## [8,]    1    1    1 0.465847391
+## [1,]    0    0    0 0.040517629
+## [2,]    1    0    0 0.008688677
+## [3,]    0    1    0 0.007497199
+## [4,]    0    0    1 0.415904645
+## [5,]    1    1    0 0.010802342
+## [6,]    1    0    1 0.041193529
+## [7,]    0    1    1 0.009551118
+## [8,]    1    1    1 0.465844863
 </code></pre>
 
 <pre><code class="r">#-* comparisons of estimated parameters
@@ -629,18 +634,18 @@ round(dfr[, c(1,3,5,2,4,6)],3)
 </code></pre>
 
 <pre><code>##    din.guess gdm.guess mirt.guess din.slip gdm.slip mirt.slip
-## 1      0.691     0.684      0.685    0.817    0.000     0.000
-## 2      0.000     0.489      0.488    0.014    0.038     0.038
-## 3      0.491     0.300      0.300    0.431    0.193     0.193
-## 4      0.031     0.239      0.239    0.104    0.340     0.340
-## 5      0.302     0.579      0.579    0.188    0.148     0.148
-## 6      0.184     0.344      0.343    0.013    0.326     0.327
-## 7      0.244     0.827      0.827    0.050    0.007     0.008
-## 8      0.337     0.463      0.461    0.239    0.089     0.090
-## 9      0.568     0.191      0.189    0.000    0.013     0.013
-## 10     0.163     0.050      0.050    0.065    0.238     0.239
-## 11     0.329     0.002      0.001    0.000    0.065     0.065
-## 12     0.344     0.004      0.000    0.212    0.212     0.212
+## 1      0.691     0.686      0.685    0.817    0.000     0.000
+## 2      0.000     0.485      0.488    0.014    0.032     0.038
+## 3      0.491     0.301      0.300    0.431    0.192     0.193
+## 4      0.031     0.239      0.239    0.104    0.338     0.340
+## 5      0.302     0.568      0.579    0.188    0.145     0.148
+## 6      0.184     0.341      0.343    0.013    0.334     0.327
+## 7      0.244     0.825      0.827    0.050    0.010     0.008
+## 8      0.337     0.458      0.461    0.239    0.098     0.090
+## 9      0.568     0.708      0.189    0.000    0.000     0.013
+## 10     0.163     0.335      0.050    0.065    0.199     0.239
+## 11     0.329     0.474      0.001    0.000    0.038     0.065
+## 12     0.344     0.261      0.000    0.212    0.159     0.212
 </code></pre>
 
 <pre><code class="r"># estimated class sizes
@@ -651,59 +656,51 @@ round(dfr,3)
 </code></pre>
 
 <pre><code>##   Theta.1 Theta.2 Theta.3   din   gdm  mirt
-## 1       0       0       0 0.039 0.041 0.041
-## 2       1       0       0 0.008 0.009 0.009
-## 3       0       1       0 0.009 0.007 0.007
-## 4       0       0       1 0.394 0.417 0.416
-## 5       1       1       0 0.011 0.011 0.011
-## 6       1       0       1 0.017 0.042 0.041
-## 7       0       1       1 0.042 0.008 0.010
-## 8       1       1       1 0.480 0.465 0.466
+## 1       0       0       0 0.039 0.147 0.041
+## 2       1       0       0 0.008 0.011 0.009
+## 3       0       1       0 0.009 0.011 0.007
+## 4       0       0       1 0.394 0.302 0.416
+## 5       1       1       0 0.011 0.014 0.011
+## 6       1       0       1 0.017 0.033 0.041
+## 7       0       1       1 0.042 0.015 0.010
+## 8       1       1       1 0.480 0.467 0.466
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.4.1 (2017-06-30)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.2 LTS
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 18363)
 ## 
 ## Matrix products: default
-## BLAS: /usr/lib/libblas/libblas.so.3.6.0
-## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
-##  [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
-##  [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
-## [1] methods   stats4    stats     graphics  grDevices utils     datasets 
+## [1] stats4    stats     graphics  grDevices utils     datasets  methods  
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] CDM_5.5-21      mvtnorm_1.0-6   sirt_2.0-25     ltm_1.0-0      
-##  [5] polycor_0.7-9   msm_1.6.4       MASS_7.3-47     mirt_1.25      
-##  [9] lattice_0.20-35 knitr_1.16     
+##  [1] CDM_7.5-15      mvtnorm_1.1-1   sirt_3.9-4      ltm_1.1-1      
+##  [5] polycor_0.7-10  msm_1.6.8       MASS_7.3-51.6   mirt_1.32.7    
+##  [9] lattice_0.20-41 knitr_1.29     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.11          compiler_3.4.1        highr_0.6            
-##  [4] plyr_1.8.4            tools_3.4.1           boot_1.3-19          
-##  [7] evaluate_0.10         nlme_3.1-131          mgcv_1.8-17          
-## [10] igraph_1.0.1          Matrix_1.2-10         psych_1.7.5          
-## [13] parallel_3.4.1        expm_0.999-2          TAM_2.1-43           
-## [16] pbivnorm_0.6.0        WrightMap_1.2.1       coda_0.19-1          
-## [19] kappalab_0.4-7        ic.infer_1.1-5        stringr_1.2.0        
-## [22] gtools_3.5.0          combinat_0.0-8        grid_3.4.1           
-## [25] lavaan.survey_1.1.3.1 survival_2.41-3       sm_2.2-5.4           
-## [28] foreign_0.8-69        GPArotation_2014.11-1 lavaan_0.5-23.1097   
-## [31] kernlab_0.9-25        magrittr_1.5          splines_3.4.1        
-## [34] sfsmisc_1.1-1         mnormt_1.5-5          lpSolve_5.6.13       
-## [37] mime_0.5              quadprog_1.5-5        survey_3.32          
-## [40] stringi_1.1.5         markdown_0.8
+##  [1] Rcpp_1.0.5            cluster_2.1.0         magrittr_1.5         
+##  [4] splines_4.0.2         Deriv_4.0.1           highr_0.8            
+##  [7] dcurver_0.9.1         stringr_1.4.0         tools_4.0.2          
+## [10] parallel_4.0.2        grid_4.0.2            nlme_3.1-148         
+## [13] mgcv_1.8-31           xfun_0.15             vegan_2.5-6          
+## [16] survival_3.1-12       TAM_3.5-19            permute_0.9-5        
+## [19] GPArotation_2014.11-1 Matrix_1.2-18         mime_0.9             
+## [22] evaluate_0.14         stringi_1.4.6         compiler_4.0.2       
+## [25] expm_0.999-4          markdown_1.1
 </code></pre>
 
 </body>

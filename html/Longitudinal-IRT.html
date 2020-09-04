@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title></title>
+<title>IRT approaches to longitudinal data</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -17,7 +17,45 @@ window.onload = function() {
 };
 </script>
 
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
 
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
 
 
 
@@ -163,10 +201,902 @@ hr {
 </head>
 
 <body>
-<p>RDX2
-X</p>
+<h1>IRT approaches to longitudinal data</h1>
 
-<p>data.frame</p>
+<p>Two approaches are demonstrated here for longitudinal data. A direct modelling approach, 
+where a latent variable is estimated for each time point, and a linear latent growth curve 
+approach which estimates the variability of person trajectories. The latter is limited to
+only 3 dimensions for any number of time points, whereas the former increases in complexity
+as the time points increase.</p>
+
+<h1>Direct estimation of latent factors for each wave</h1>
+
+<p>Two tier approach used in Cai 2010&#39;s two-tier article. This example requires 4 dimensions 
+of integration (1 for each time point + residual item factor). Below identical models are specified,
+however the approach used (syntax vs R containers) are presented for posterity. </p>
+
+<pre><code class="r">library(mirt)
+</code></pre>
+
+<pre><code>## Loading required package: stats4
+</code></pre>
+
+<pre><code>## Loading required package: lattice
+</code></pre>
+
+<pre><code class="r">load(&#39;longitudinal-IRT.Rdata&#39;)
+head(dat)
+</code></pre>
+
+<pre><code>##   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
+## 1      2      0      0      0      1      0      0      1      0       0
+## 2      2      0      1      0      1      0      0      2      2       0
+## 3      2      0      0      0      0      0      2      0      1       0
+## 4      2      1      2      2      0      2      2      1      1       2
+## 5      0      1      2      0      2      0      2      0      0       2
+## 6      0      1      0      0      0      2      0      1      0       2
+##   Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18 Item_19
+## 1       0       2       0       1       0       2       0       2       0
+## 2       0       2       2       2       2       0       0       2       0
+## 3       0       0       2       2       0       1       0       0       0
+## 4       2       2       2       2       0       2       2       2       1
+## 5       0       2       2       1       0       2       1       2       0
+## 6       1       2       0       0       0       1       0       0       0
+##   Item_20 Item_1.1 Item_2.1 Item_3.1 Item_4.1 Item_5.1 Item_6.1 Item_7.1
+## 1       2        0        0        1        2        0        2        0
+## 2       2        2        0        2        2        0        2        2
+## 3       0        0        0        1        0        1        0        2
+## 4       2        2        2        1        2        1        2        1
+## 5       2        2        0        2        0        1        0        0
+## 6       2        0        0        0        2        0        0        0
+##   Item_8.1 Item_9.1 Item_10.1 Item_11.1 Item_12.1 Item_13.1 Item_14.1 Item_15.1
+## 1        0        1         2         0         0         2         2         0
+## 2        1        0         2         1         2         2         1         0
+## 3        0        0         0         1         1         0         1         0
+## 4        2        2         2         2         2         1         2         2
+## 5        2        0         2         2         1         0         2         2
+## 6        1        1         2         0         0         0         1         0
+##   Item_16.1 Item_17.1 Item_18.1 Item_19.1 Item_20.1 Item_1.2 Item_2.2 Item_3.2
+## 1         2         0         2         0         2        2        1        0
+## 2         2         1         2         0         2        2        0        0
+## 3         0         0         0         1         0        2        1        2
+## 4         2         2         2         2         2        2        2        2
+## 5         2         1         2         2         2        2        0        2
+## 6         1         0         1         0         0        0        2        0
+##   Item_4.2 Item_5.2 Item_6.2 Item_7.2 Item_8.2 Item_9.2 Item_10.2 Item_11.2
+## 1        2        0        0        1        1        0         0         1
+## 2        2        1        0        0        2        2         2         2
+## 3        0        1        0        1        1        2         2         0
+## 4        2        1        2        2        2        2         2         0
+## 5        0        0        2        0        1        2         1         0
+## 6        2        0        2        2        2        1         0         1
+##   Item_12.2 Item_13.2 Item_14.2 Item_15.2 Item_16.2 Item_17.2 Item_18.2
+## 1         2         0         2         0         2         0         0
+## 2         0         0         2         0         2         0         2
+## 3         2         1         1         0         2         2         0
+## 4         2         2         2         2         2         2         2
+## 5         2         2         2         0         2         2         2
+## 6         2         2         2         2         2         0         0
+##   Item_19.2 Item_20.2
+## 1         0         0
+## 2         1         0
+## 3         2         2
+## 4         2         2
+## 5         2         2
+## 6         0         2
+</code></pre>
+
+<h3>Model constructed using R containers</h3>
+
+<pre><code class="r">model &lt;- &#39;Time1 = 1-20
+          Time2 = 21-40
+          Time3 = 41-60
+          COV = Time1*Time2*Time3, Time2*Time2, Time3*Time3
+          MEAN = Time2, Time3&#39;
+itemloadings &lt;- rep(1:20, times = 3) 
+
+#construct constraints manually 
+#obtain starting values
+sv &lt;- bfactor(dat, itemloadings, model, pars=&#39;values&#39;)
+head(sv)
+</code></pre>
+
+<pre><code>##   group   item  class name parnum value lbound ubound   est prior.type prior_1
+## 1   all Item_1 graded   a1      1 0.851   -Inf    Inf  TRUE       none     NaN
+## 2   all Item_1 graded   a2      2 0.000   -Inf    Inf FALSE       none     NaN
+## 3   all Item_1 graded   a3      3 0.000   -Inf    Inf FALSE       none     NaN
+## 4   all Item_1 graded   a4      4 0.851   -Inf    Inf  TRUE       none     NaN
+## 5   all Item_1 graded   a5      5 0.000   -Inf    Inf FALSE       none     NaN
+## 6   all Item_1 graded   a6      6 0.000   -Inf    Inf FALSE       none     NaN
+##   prior_2
+## 1     NaN
+## 2     NaN
+## 3     NaN
+## 4     NaN
+## 5     NaN
+## 6     NaN
+</code></pre>
+
+<pre><code class="r"># set up within time constraints
+wtconstr &lt;- sv$parnum[(sv$name == &#39;a1&#39; | sv$name == &#39;a2&#39; | sv$name == &#39;a3&#39;) &amp; sv$est]
+
+# create constraint list
+constraints &lt;- list()
+itemnames &lt;- colnames(dat)
+pick &lt;- c(0,20,40)
+for(i in 1:20){
+
+    # across time item constraints
+    constraints[[paste0(&#39;slope.&#39;, i)]] &lt;- sv$parnum[sv$name == paste0(&#39;a&#39;,3+i) &amp; sv$est]
+    for(j in 1:2){
+        constraints[[paste0(&#39;intercept.&#39;, i, &#39;_&#39;, j)]] &lt;- 
+            sv$parnum[sv$name == paste0(&#39;d&#39;,j) &amp; (sv$item %in% itemnames[pick + i]) &amp; sv$est]
+    }
+
+    #across time constraints
+    constraints[[paste0(&#39;Time.&#39;, i)]] &lt;- wtconstr[pick + i]
+}
+
+#estimate model (low quadrature just as an example; not as accurate.
+#                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
+(mod &lt;- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=7, TOL=1e-3,
+                optimizer = &#39;nlminb&#39;))
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -50000.701, Max-Change: 0.69775
+Iteration: 2, Log-Lik: -49989.124, Max-Change: 0.56257
+Iteration: 3, Log-Lik: -49510.166, Max-Change: 0.34350
+</code></pre>
+
+<pre><code>## Warning: Latent trait variance-covariance matrix became non-positive definite.
+</code></pre>
+
+<pre><code>## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+</code></pre>
+
+<pre><code>## 
+## Call:
+## bfactor(data = dat, model = itemloadings, model2 = model, quadpts = 7, 
+##     constrain = constraints, TOL = 0.001, optimizer = &quot;nlminb&quot;)
+## 
+## Full-information item factor analysis with 23 factor(s).
+## FAILED TO CONVERGE within 0.001 tolerance after 3 EM iterations.
+## mirt version: 1.32.7 
+## M-step optimizer: nlminb 
+## EM acceleration: Ramsay 
+## Number of rectangular quadrature: 7
+## Latent density type: bfactor 
+## 
+## Log-likelihood = NA
+## Estimated parameters: 247 
+## AIC = NA; AICc = NA
+## BIC = NA; SABIC = NA
+## G2 (1e+10) = NA, p = NA
+## RMSEA = NA, CFI = NaN, TLI = NaN
+</code></pre>
+
+<pre><code class="r">coef(mod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $items
+##              a1    a2    a3    a4    a5    a6   a7    a8    a9   a10   a11
+## Item_1    0.823 0.000 0.000 0.615 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_2    0.974 0.000 0.000 0.000 0.679 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_3    0.892 0.000 0.000 0.000 0.000 0.607 0.00 0.000 0.000 0.000 0.000
+## Item_4    0.894 0.000 0.000 0.000 0.000 0.000 0.55 0.000 0.000 0.000 0.000
+## Item_5    0.691 0.000 0.000 0.000 0.000 0.000 0.00 0.554 0.000 0.000 0.000
+## Item_6    1.067 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.582 0.000 0.000
+## Item_7    0.627 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.523 0.000
+## Item_8    0.769 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.493
+## Item_9    0.758 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_10   0.938 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_11   0.645 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_12   0.912 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_13   1.015 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_14   0.843 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_15   0.707 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_16   0.703 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_17   0.986 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_18   0.857 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_19   0.947 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_20   0.725 0.000 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_1.1  0.000 0.823 0.000 0.615 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_2.1  0.000 0.974 0.000 0.000 0.679 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_3.1  0.000 0.892 0.000 0.000 0.000 0.607 0.00 0.000 0.000 0.000 0.000
+## Item_4.1  0.000 0.894 0.000 0.000 0.000 0.000 0.55 0.000 0.000 0.000 0.000
+## Item_5.1  0.000 0.691 0.000 0.000 0.000 0.000 0.00 0.554 0.000 0.000 0.000
+## Item_6.1  0.000 1.067 0.000 0.000 0.000 0.000 0.00 0.000 0.582 0.000 0.000
+## Item_7.1  0.000 0.627 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.523 0.000
+## Item_8.1  0.000 0.769 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.493
+## Item_9.1  0.000 0.758 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_10.1 0.000 0.938 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_11.1 0.000 0.645 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_12.1 0.000 0.912 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_13.1 0.000 1.015 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_14.1 0.000 0.843 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_15.1 0.000 0.707 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_16.1 0.000 0.703 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_17.1 0.000 0.986 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_18.1 0.000 0.857 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_19.1 0.000 0.947 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_20.1 0.000 0.725 0.000 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_1.2  0.000 0.000 0.823 0.615 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_2.2  0.000 0.000 0.974 0.000 0.679 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_3.2  0.000 0.000 0.892 0.000 0.000 0.607 0.00 0.000 0.000 0.000 0.000
+## Item_4.2  0.000 0.000 0.894 0.000 0.000 0.000 0.55 0.000 0.000 0.000 0.000
+## Item_5.2  0.000 0.000 0.691 0.000 0.000 0.000 0.00 0.554 0.000 0.000 0.000
+## Item_6.2  0.000 0.000 1.067 0.000 0.000 0.000 0.00 0.000 0.582 0.000 0.000
+## Item_7.2  0.000 0.000 0.627 0.000 0.000 0.000 0.00 0.000 0.000 0.523 0.000
+## Item_8.2  0.000 0.000 0.769 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.493
+## Item_9.2  0.000 0.000 0.758 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_10.2 0.000 0.000 0.938 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_11.2 0.000 0.000 0.645 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_12.2 0.000 0.000 0.912 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_13.2 0.000 0.000 1.015 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_14.2 0.000 0.000 0.843 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_15.2 0.000 0.000 0.707 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_16.2 0.000 0.000 0.703 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_17.2 0.000 0.000 0.986 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_18.2 0.000 0.000 0.857 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_19.2 0.000 0.000 0.947 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+## Item_20.2 0.000 0.000 0.725 0.000 0.000 0.000 0.00 0.000 0.000 0.000 0.000
+##             a12   a13  a14   a15   a16   a17   a18   a19   a20   a21   a22
+## Item_1    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_2    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_3    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_4    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_5    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_6    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_7    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_8    0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_9    0.582 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_10   0.000 0.609 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_11   0.000 0.000 0.53 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_12   0.000 0.000 0.00 0.549 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_13   0.000 0.000 0.00 0.000 0.604 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_14   0.000 0.000 0.00 0.000 0.000 0.584 0.000 0.000 0.000 0.000 0.000
+## Item_15   0.000 0.000 0.00 0.000 0.000 0.000 0.554 0.000 0.000 0.000 0.000
+## Item_16   0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.571 0.000 0.000 0.000
+## Item_17   0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.571 0.000 0.000
+## Item_18   0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.635 0.000
+## Item_19   0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.632
+## Item_20   0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_1.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_2.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_3.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_4.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_5.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_6.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_7.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_8.1  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_9.1  0.582 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_10.1 0.000 0.609 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_11.1 0.000 0.000 0.53 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_12.1 0.000 0.000 0.00 0.549 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_13.1 0.000 0.000 0.00 0.000 0.604 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_14.1 0.000 0.000 0.00 0.000 0.000 0.584 0.000 0.000 0.000 0.000 0.000
+## Item_15.1 0.000 0.000 0.00 0.000 0.000 0.000 0.554 0.000 0.000 0.000 0.000
+## Item_16.1 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.571 0.000 0.000 0.000
+## Item_17.1 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.571 0.000 0.000
+## Item_18.1 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.635 0.000
+## Item_19.1 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.632
+## Item_20.1 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_1.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_2.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_3.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_4.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_5.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_6.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_7.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_8.2  0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_9.2  0.582 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_10.2 0.000 0.609 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_11.2 0.000 0.000 0.53 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_12.2 0.000 0.000 0.00 0.549 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_13.2 0.000 0.000 0.00 0.000 0.604 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_14.2 0.000 0.000 0.00 0.000 0.000 0.584 0.000 0.000 0.000 0.000 0.000
+## Item_15.2 0.000 0.000 0.00 0.000 0.000 0.000 0.554 0.000 0.000 0.000 0.000
+## Item_16.2 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.571 0.000 0.000 0.000
+## Item_17.2 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.571 0.000 0.000
+## Item_18.2 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.635 0.000
+## Item_19.2 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.632
+## Item_20.2 0.000 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+##             a23     d1     d2
+## Item_1    0.000  0.453 -0.143
+## Item_2    0.000 -0.224 -1.745
+## Item_3    0.000  0.919 -1.174
+## Item_4    0.000  0.299 -0.408
+## Item_5    0.000  0.735 -1.649
+## Item_6    0.000  0.237  0.090
+## Item_7    0.000  1.750  0.218
+## Item_8    0.000  1.529 -1.676
+## Item_9    0.000  1.388  0.410
+## Item_10   0.000  0.891  0.460
+## Item_11   0.000  0.423 -0.837
+## Item_12   0.000  1.312  0.282
+## Item_13   0.000  1.694  0.672
+## Item_14   0.000  3.413  1.001
+## Item_15   0.000  0.289  0.094
+## Item_16   0.000  1.883  0.958
+## Item_17   0.000  1.189 -1.070
+## Item_18   0.000  0.961  0.020
+## Item_19   0.000 -0.252 -0.921
+## Item_20   0.613  1.540  1.167
+## Item_1.1  0.000  0.453 -0.143
+## Item_2.1  0.000 -0.224 -1.745
+## Item_3.1  0.000  0.919 -1.174
+## Item_4.1  0.000  0.299 -0.408
+## Item_5.1  0.000  0.735 -1.649
+## Item_6.1  0.000  0.237  0.090
+## Item_7.1  0.000  1.750  0.218
+## Item_8.1  0.000  1.529 -1.676
+## Item_9.1  0.000  1.388  0.410
+## Item_10.1 0.000  0.891  0.460
+## Item_11.1 0.000  0.423 -0.837
+## Item_12.1 0.000  1.312  0.282
+## Item_13.1 0.000  1.694  0.672
+## Item_14.1 0.000  3.413  1.001
+## Item_15.1 0.000  0.289  0.094
+## Item_16.1 0.000  1.883  0.958
+## Item_17.1 0.000  1.189 -1.070
+## Item_18.1 0.000  0.961  0.020
+## Item_19.1 0.000 -0.252 -0.921
+## Item_20.1 0.613  1.540  1.167
+## Item_1.2  0.000  0.453 -0.143
+## Item_2.2  0.000 -0.224 -1.745
+## Item_3.2  0.000  0.919 -1.174
+## Item_4.2  0.000  0.299 -0.408
+## Item_5.2  0.000  0.735 -1.649
+## Item_6.2  0.000  0.237  0.090
+## Item_7.2  0.000  1.750  0.218
+## Item_8.2  0.000  1.529 -1.676
+## Item_9.2  0.000  1.388  0.410
+## Item_10.2 0.000  0.891  0.460
+## Item_11.2 0.000  0.423 -0.837
+## Item_12.2 0.000  1.312  0.282
+## Item_13.2 0.000  1.694  0.672
+## Item_14.2 0.000  3.413  1.001
+## Item_15.2 0.000  0.289  0.094
+## Item_16.2 0.000  1.883  0.958
+## Item_17.2 0.000  1.189 -1.070
+## Item_18.2 0.000  0.961  0.020
+## Item_19.2 0.000 -0.252 -0.921
+## Item_20.2 0.613  1.540  1.167
+## 
+## $means
+## Time1 Time2 Time3    S1    S2    S3    S4    S5    S6    S7    S8    S9   S10 
+## 0.000 0.057 0.670 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 
+##   S11   S12   S13   S14   S15   S16   S17   S18   S19   S20 
+## 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 
+## 
+## $cov
+##       Time1 Time2 Time3 S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 S11 S12 S13 S14 S15 S16
+## Time1 1.000 1.303 0.788  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## Time2 1.303 1.249 0.958  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## Time3 0.788 0.958 1.687  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S1    0.000 0.000 0.000  1  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S2    0.000 0.000 0.000  0  1  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S3    0.000 0.000 0.000  0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S4    0.000 0.000 0.000  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0
+## S5    0.000 0.000 0.000  0  0  0  0  1  0  0  0  0   0   0   0   0   0   0   0
+## S6    0.000 0.000 0.000  0  0  0  0  0  1  0  0  0   0   0   0   0   0   0   0
+## S7    0.000 0.000 0.000  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0
+## S8    0.000 0.000 0.000  0  0  0  0  0  0  0  1  0   0   0   0   0   0   0   0
+## S9    0.000 0.000 0.000  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0
+## S10   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0
+## S11   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0
+## S12   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   1   0   0   0   0
+## S13   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   1   0   0   0
+## S14   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   1   0   0
+## S15   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0
+## S16   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   1
+## S17   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S18   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S19   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+## S20   0.000 0.000 0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0
+##       S17 S18 S19 S20
+## Time1   0   0   0   0
+## Time2   0   0   0   0
+## Time3   0   0   0   0
+## S1      0   0   0   0
+## S2      0   0   0   0
+## S3      0   0   0   0
+## S4      0   0   0   0
+## S5      0   0   0   0
+## S6      0   0   0   0
+## S7      0   0   0   0
+## S8      0   0   0   0
+## S9      0   0   0   0
+## S10     0   0   0   0
+## S11     0   0   0   0
+## S12     0   0   0   0
+## S13     0   0   0   0
+## S14     0   0   0   0
+## S15     0   0   0   0
+## S16     0   0   0   0
+## S17     1   0   0   0
+## S18     0   1   0   0
+## S19     0   0   1   0
+## S20     0   0   0   1
+</code></pre>
+
+<pre><code class="r">coef(mod)$GroupPars[,c(&#39;MEAN_2&#39;, &#39;MEAN_3&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_31&#39;, &#39;COV_22&#39;, 
+                       &#39;COV_32&#39;, &#39;COV_33&#39;)]
+</code></pre>
+
+<pre><code>##     MEAN_2     MEAN_3     COV_11     COV_21     COV_31     COV_22     COV_32 
+## 0.05692118 0.66997440 1.00000000 1.30251161 0.78809879 1.24862641 0.95759440 
+##     COV_33 
+## 1.68729163
+</code></pre>
+
+<p>When computing latent trait scores it&#39;s best to use a method that isn&#39;t as affected by higher dimensionality, such as the MAP approach. </p>
+
+<h3>Model constructed using mirt&#39;s sytax input</h3>
+
+<p>The  following uses the <code>mirt.model()</code> syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via <code>sprintf()</code> and the <code>stringr</code> package. </p>
+
+<pre><code class="r">itemloadings &lt;- rep(1:20, times = 3) # will be associated with slopes a4, a5, ..., a23
+model &lt;- &#39;Time1 = 1-20
+          Time2 = 21-40
+          Time3 = 41-60
+          COV = Time1*Time2*Time3, Time2*Time2, Time3*Time3
+          MEAN = Time2, Time3
+          CONSTRAIN = (1,21,41, a1,a2,a3), (2,22,42, a1,a2,a3), (3,23,43, a1,a2,a3), 
+                      (4,24,44, a1,a2,a3), (5,25,45, a1,a2,a3), (6,26,46, a1,a2,a3),
+                      (7,27,47, a1,a2,a3), (8,28,48, a1,a2,a3), (9,29,49, a1,a2,a3), 
+                      (10,30,50, a1,a2,a3), (11,31,51, a1,a2,a3), (12,32,52, a1,a2,a3),
+                      (13,33,53, a1,a2,a3), (14,34,54, a1,a2,a3), (15,35,55, a1,a2,a3),
+                      (16,36,56, a1,a2,a3), (17,37,57, a1,a2,a3), (18,38,58, a1,a2,a3),
+                      (19,39,59, a1,a2,a3), (20,40,60, a1,a2,a3),     # time-slope 
+
+                      (1,21,41, a4), (2,22,42, a5), (3,23,43, a6), 
+                      (4,24,44, a7), (5,25,45, a8), (6,26,46, a9),
+                      (7,27,47, a10), (8,28,48, a11), (9,29,49, a12), 
+                      (10,30,50, a13), (11,31,51, a14), (12,32,52, a15),
+                      (13,33,53, a16), (14,34,54, a17), (15,35,55, a18),
+                      (16,36,56, a19), (17,37,57, a20), (18,38,58, a21),
+                      (19,39,59, a22), (20,40,60, a23),     # item-time slope 
+
+                      (1,21,41, d1), (2,22,42, d1), (3,23,43, d1), 
+                      (4,24,44, d1), (5,25,45, d1), (6,26,46, d1),
+                      (7,27,47, d1), (8,28,48, d1), (9,29,49, d1), 
+                      (10,30,50, d1), (11,31,51, d1), (12,32,52, d1),
+                      (13,33,53, d1), (14,34,54, d1), (15,35,55, d1),
+                      (16,36,56, d1), (17,37,57, d1), (18,38,58, d1),
+                      (19,39,59, d1), (20,40,60, d1),     # item-time intercept 1 
+
+                      (1,21,41, d2), (2,22,42, d2), (3,23,43, d2), 
+                      (4,24,44, d2), (5,25,45, d2), (6,26,46, d2),
+                      (7,27,47, d2), (8,28,48, d2), (9,29,49, d2), 
+                      (10,30,50, d2), (11,31,51, d2), (12,32,52, d2),
+                      (13,33,53, d2), (14,34,54, d2), (15,35,55, d2),
+                      (16,36,56, d2), (17,37,57, d2), (18,38,58, d2),
+                      (19,39,59, d2), (20,40,60, d2)     # item-time intercept 2 
+                     &#39;
+
+#estimate model (low quadrature just as an example; not as accurate.
+#                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
+(mod &lt;- bfactor(dat, itemloadings, model, quadpts=7, TOL=1e-3, optimizer = &#39;nlminb&#39;))
+
+coef(mod, simplify=TRUE)
+coef(mod)$GroupPars[,c(&#39;MEAN_2&#39;, &#39;MEAN_3&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_31&#39;, &#39;COV_22&#39;, 
+                       &#39;COV_32&#39;, &#39;COV_33&#39;)]
+</code></pre>
+
+<h1>Linear latent growth curve IRT</h1>
+
+<p>Specific factors represent residual terms per item. Requires only 3 dimensions 
+(max 3 dimensions of integration for unidimensional models). Below identical models are specified,
+however the approach used (syntax vs R containers) are presented for posterity. </p>
+
+<h3>Model constructed using R containers</h3>
+
+<pre><code class="r">model &lt;- mirt.model(&#39;Intercept = 1-60
+                     Slope = 1-60
+                     COV = Intercept*Slope, Intercept*Intercept, Slope*Slope
+                     MEAN = Intercept, Slope&#39;)
+itemloadings &lt;- rep(1:20, times = 3) 
+
+#construct constraints manually
+#obtain starting values
+sv &lt;- bfactor(dat, itemloadings, model, pars=&#39;values&#39;)
+
+# time constants for linear trend
+sv$value[sv$name == &#39;a1&#39;] &lt;- 1
+sv$est[sv$name == &#39;a1&#39;] &lt;- FALSE
+sv$value[sv$name == &#39;a2&#39;] &lt;- rep(0:2, each=20)
+sv$est[sv$name == &#39;a2&#39;] &lt;- FALSE
+
+# create constraint list
+constraints &lt;- list()
+itemnames &lt;- colnames(dat)
+pick &lt;- c(0,20,40)
+for(i in 1:20){    
+    # across time item constraints
+    constraints[[paste0(&#39;slope.&#39;, i)]] &lt;- sv$parnum[sv$name == paste0(&#39;a&#39;,2+i) &amp; sv$est]
+    for(j in 1:2){
+        constraints[[paste0(&#39;intercept.&#39;, i, &#39;_&#39;, j)]] &lt;- 
+            sv$parnum[sv$name == paste0(&#39;d&#39;,j) &amp; (sv$item %in% itemnames[pick + i]) &amp; sv$est]
+    }
+}
+
+#estimate model (low quadrature just as an example; not as accurate.
+#                Could use as starting values for model with higher quadpts via pars=mod2values(mod))
+mod2 &lt;- bfactor(dat, itemloadings, model, constrain=constraints, quadpts=9, pars=sv, 
+                optimizer = &#39;nlminb&#39;)
+</code></pre>
+
+<pre><code>## 
+Iteration: 1, Log-Lik: -50645.079, Max-Change: 1.20216
+Iteration: 2, Log-Lik: -50167.537, Max-Change: 0.30470
+Iteration: 3, Log-Lik: -50011.984, Max-Change: 0.12046
+Iteration: 4, Log-Lik: -50018.821, Max-Change: 0.08804
+Iteration: 5, Log-Lik: -49994.441, Max-Change: 0.02746
+</code></pre>
+
+<pre><code>## Warning: Latent trait variance-covariance matrix became non-positive definite.
+</code></pre>
+
+<pre><code>## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+
+## Warning in log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values): NaNs
+## produced
+</code></pre>
+
+<pre><code class="r">coef(mod2, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $items
+##           a1 a2    a3    a4  a5    a6    a7    a8    a9   a10   a11   a12   a13
+## Item_1     1  0 0.573 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_2     1  0 0.000 0.545 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_3     1  0 0.000 0.000 0.5 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_4     1  0 0.000 0.000 0.0 0.437 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_5     1  0 0.000 0.000 0.0 0.000 0.557 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_6     1  0 0.000 0.000 0.0 0.000 0.000 0.388 0.000 0.000 0.000 0.000 0.000
+## Item_7     1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.597 0.000 0.000 0.000 0.000
+## Item_8     1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.432 0.000 0.000 0.000
+## Item_9     1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.526 0.000 0.000
+## Item_10    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.459 0.000
+## Item_11    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.601
+## Item_12    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_13    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_14    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_15    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_16    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_17    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_18    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_19    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_20    1  0 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_1.1   1  1 0.573 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_2.1   1  1 0.000 0.545 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_3.1   1  1 0.000 0.000 0.5 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_4.1   1  1 0.000 0.000 0.0 0.437 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_5.1   1  1 0.000 0.000 0.0 0.000 0.557 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_6.1   1  1 0.000 0.000 0.0 0.000 0.000 0.388 0.000 0.000 0.000 0.000 0.000
+## Item_7.1   1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.597 0.000 0.000 0.000 0.000
+## Item_8.1   1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.432 0.000 0.000 0.000
+## Item_9.1   1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.526 0.000 0.000
+## Item_10.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.459 0.000
+## Item_11.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.601
+## Item_12.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_13.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_14.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_15.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_16.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_17.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_18.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_19.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_20.1  1  1 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_1.2   1  2 0.573 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_2.2   1  2 0.000 0.545 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_3.2   1  2 0.000 0.000 0.5 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_4.2   1  2 0.000 0.000 0.0 0.437 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_5.2   1  2 0.000 0.000 0.0 0.000 0.557 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_6.2   1  2 0.000 0.000 0.0 0.000 0.000 0.388 0.000 0.000 0.000 0.000 0.000
+## Item_7.2   1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.597 0.000 0.000 0.000 0.000
+## Item_8.2   1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.432 0.000 0.000 0.000
+## Item_9.2   1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.526 0.000 0.000
+## Item_10.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.459 0.000
+## Item_11.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.601
+## Item_12.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_13.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_14.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_15.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_16.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_17.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_18.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_19.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+## Item_20.2  1  2 0.000 0.000 0.0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+##             a14  a15   a16   a17   a18   a19   a20   a21   a22     d1     d2
+## Item_1    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.596  0.012
+## Item_2    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 -0.074 -1.511
+## Item_3    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.035 -0.999
+## Item_4    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.428 -0.251
+## Item_5    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.896 -1.620
+## Item_6    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.344  0.249
+## Item_7    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  2.060  0.421
+## Item_8    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.716 -1.591
+## Item_9    0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.580  0.590
+## Item_10   0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.008  0.599
+## Item_11   0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.568 -0.763
+## Item_12   0.392 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.423  0.433
+## Item_13   0.000 0.41 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.735  0.784
+## Item_14   0.000 0.00 0.446 0.000 0.000 0.000 0.000 0.000 0.000  3.602  1.170
+## Item_15   0.000 0.00 0.000 0.553 0.000 0.000 0.000 0.000 0.000  0.440  0.246
+## Item_16   0.000 0.00 0.000 0.000 0.582 0.000 0.000 0.000 0.000  2.156  1.200
+## Item_17   0.000 0.00 0.000 0.000 0.000 0.398 0.000 0.000 0.000  1.257 -0.861
+## Item_18   0.000 0.00 0.000 0.000 0.000 0.000 0.506 0.000 0.000  1.087  0.169
+## Item_19   0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.483 0.000 -0.115 -0.745
+## Item_20   0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.612  1.789  1.409
+## Item_1.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.596  0.012
+## Item_2.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 -0.074 -1.511
+## Item_3.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.035 -0.999
+## Item_4.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.428 -0.251
+## Item_5.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.896 -1.620
+## Item_6.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.344  0.249
+## Item_7.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  2.060  0.421
+## Item_8.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.716 -1.591
+## Item_9.1  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.580  0.590
+## Item_10.1 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.008  0.599
+## Item_11.1 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.568 -0.763
+## Item_12.1 0.392 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.423  0.433
+## Item_13.1 0.000 0.41 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.735  0.784
+## Item_14.1 0.000 0.00 0.446 0.000 0.000 0.000 0.000 0.000 0.000  3.602  1.170
+## Item_15.1 0.000 0.00 0.000 0.553 0.000 0.000 0.000 0.000 0.000  0.440  0.246
+## Item_16.1 0.000 0.00 0.000 0.000 0.582 0.000 0.000 0.000 0.000  2.156  1.200
+## Item_17.1 0.000 0.00 0.000 0.000 0.000 0.398 0.000 0.000 0.000  1.257 -0.861
+## Item_18.1 0.000 0.00 0.000 0.000 0.000 0.000 0.506 0.000 0.000  1.087  0.169
+## Item_19.1 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.483 0.000 -0.115 -0.745
+## Item_20.1 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.612  1.789  1.409
+## Item_1.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.596  0.012
+## Item_2.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000 -0.074 -1.511
+## Item_3.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.035 -0.999
+## Item_4.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.428 -0.251
+## Item_5.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.896 -1.620
+## Item_6.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.344  0.249
+## Item_7.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  2.060  0.421
+## Item_8.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.716 -1.591
+## Item_9.2  0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.580  0.590
+## Item_10.2 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.008  0.599
+## Item_11.2 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  0.568 -0.763
+## Item_12.2 0.392 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.423  0.433
+## Item_13.2 0.000 0.41 0.000 0.000 0.000 0.000 0.000 0.000 0.000  1.735  0.784
+## Item_14.2 0.000 0.00 0.446 0.000 0.000 0.000 0.000 0.000 0.000  3.602  1.170
+## Item_15.2 0.000 0.00 0.000 0.553 0.000 0.000 0.000 0.000 0.000  0.440  0.246
+## Item_16.2 0.000 0.00 0.000 0.000 0.582 0.000 0.000 0.000 0.000  2.156  1.200
+## Item_17.2 0.000 0.00 0.000 0.000 0.000 0.398 0.000 0.000 0.000  1.257 -0.861
+## Item_18.2 0.000 0.00 0.000 0.000 0.000 0.000 0.506 0.000 0.000  1.087  0.169
+## Item_19.2 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.483 0.000 -0.115 -0.745
+## Item_20.2 0.000 0.00 0.000 0.000 0.000 0.000 0.000 0.000 0.612  1.789  1.409
+## 
+## $means
+## Intercept     Slope        S1        S2        S3        S4        S5        S6 
+##    -0.138    -0.006     0.000     0.000     0.000     0.000     0.000     0.000 
+##        S7        S8        S9       S10       S11       S12       S13       S14 
+##     0.000     0.000     0.000     0.000     0.000     0.000     0.000     0.000 
+##       S15       S16       S17       S18       S19       S20 
+##     0.000     0.000     0.000     0.000     0.000     0.000 
+## 
+## $cov
+##           Intercept  Slope S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 S11 S12 S13 S14 S15
+## Intercept     2.063 -0.017  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## Slope        -0.017  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S1            0.000  0.000  1  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S2            0.000  0.000  0  1  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S3            0.000  0.000  0  0  1  0  0  0  0  0  0   0   0   0   0   0   0
+## S4            0.000  0.000  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0
+## S5            0.000  0.000  0  0  0  0  1  0  0  0  0   0   0   0   0   0   0
+## S6            0.000  0.000  0  0  0  0  0  1  0  0  0   0   0   0   0   0   0
+## S7            0.000  0.000  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0
+## S8            0.000  0.000  0  0  0  0  0  0  0  1  0   0   0   0   0   0   0
+## S9            0.000  0.000  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0
+## S10           0.000  0.000  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0
+## S11           0.000  0.000  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0
+## S12           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   1   0   0   0
+## S13           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   1   0   0
+## S14           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   1   0
+## S15           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1
+## S16           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S17           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S18           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S19           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+## S20           0.000  0.000  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0
+##           S16 S17 S18 S19 S20
+## Intercept   0   0   0   0   0
+## Slope       0   0   0   0   0
+## S1          0   0   0   0   0
+## S2          0   0   0   0   0
+## S3          0   0   0   0   0
+## S4          0   0   0   0   0
+## S5          0   0   0   0   0
+## S6          0   0   0   0   0
+## S7          0   0   0   0   0
+## S8          0   0   0   0   0
+## S9          0   0   0   0   0
+## S10         0   0   0   0   0
+## S11         0   0   0   0   0
+## S12         0   0   0   0   0
+## S13         0   0   0   0   0
+## S14         0   0   0   0   0
+## S15         0   0   0   0   0
+## S16         1   0   0   0   0
+## S17         0   1   0   0   0
+## S18         0   0   1   0   0
+## S19         0   0   0   1   0
+## S20         0   0   0   0   1
+</code></pre>
+
+<pre><code class="r">coef(mod2)$GroupPars[,c(&#39;MEAN_1&#39;, &#39;MEAN_2&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_22&#39;)]
+</code></pre>
+
+<pre><code>##       MEAN_1       MEAN_2       COV_11       COV_21       COV_22 
+## -0.137769154 -0.006014854  2.063330485 -0.016905489  0.000100000
+</code></pre>
+
+<h3>Model constructed using mirt&#39;s sytax input</h3>
+
+<p>The following uses the <code>mirt.model()</code> syntax approach and provides equivalent results, so choose whatever you prefer.  That said, due to the pattern and complexity it may be better to use string construction approaches, such as those available via <code>sprintf()</code> and the <code>stringr</code> package. </p>
+
+<pre><code class="r">itemloadings &lt;- rep(1:20, times = 3)  # will be associated with slopes a3, a4, ..., a22
+model &lt;- mirt.model(&#39;Intercept = 1-60
+                     Slope = 1-60
+                     COV = Intercept*Slope, Intercept*Intercept, Slope*Slope
+                     MEAN = Intercept, Slope
+                     FIXED = (1-60, a1), (1-60, a2)
+                     START = (1-60, a1, 1.0), (1-20, a2, 0.0), (21-40, a2, 1.0), (41-60, a2, 2.0)
+                     CONSTRAIN = (1,21,41, a3), (2,22,42, a4), (3,23,43, a5), 
+                      (4,24,44, a6), (5,25,45, a7), (6,26,46, a8),
+                      (7,27,47, a9), (8,28,48, a10), (9,29,49, a11), 
+                      (10,30,50, a12), (11,31,51, a13), (12,32,52, a14),
+                      (13,33,53, a15), (14,34,54, a16), (15,35,55, a17),
+                      (16,36,56, a18), (17,37,57, a19), (18,38,58, a20),
+                      (19,39,59, a21), (20,40,60, a22),     # item-time slope 
+
+                      (1,21,41, d1), (2,22,42, d1), (3,23,43, d1), 
+                      (4,24,44, d1), (5,25,45, d1), (6,26,46, d1),
+                      (7,27,47, d1), (8,28,48, d1), (9,29,49, d1), 
+                      (10,30,50, d1), (11,31,51, d1), (12,32,52, d1),
+                      (13,33,53, d1), (14,34,54, d1), (15,35,55, d1),
+                      (16,36,56, d1), (17,37,57, d1), (18,38,58, d1),
+                      (19,39,59, d1), (20,40,60, d1),     # item-time intercept 1 
+
+                      (1,21,41, d2), (2,22,42, d2), (3,23,43, d2), 
+                      (4,24,44, d2), (5,25,45, d2), (6,26,46, d2),
+                      (7,27,47, d2), (8,28,48, d2), (9,29,49, d2), 
+                      (10,30,50, d2), (11,31,51, d2), (12,32,52, d2),
+                      (13,33,53, d2), (14,34,54, d2), (15,35,55, d2),
+                      (16,36,56, d2), (17,37,57, d2), (18,38,58, d2),
+                      (19,39,59, d2), (20,40,60, d2)     # item-time intercept 2 
+                    &#39;)
+
+mod2 &lt;- bfactor(dat, itemloadings, model, quadpts=9, optimizer = &#39;nlminb&#39;)
+
+coef(mod2, simplify=TRUE)
+
+coef(mod2)$GroupPars[,c(&#39;MEAN_1&#39;, &#39;MEAN_2&#39;, &#39;COV_11&#39;, &#39;COV_21&#39;, &#39;COV_22&#39;)]
+</code></pre>
 
 </body>
 

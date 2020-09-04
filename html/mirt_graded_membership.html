@@ -230,106 +230,161 @@ colnames(dat) &lt;- paste0( &quot;I&quot; , 1:I)
 
 #** Model 1: estimate latent class model
 mod1 &lt;- gom.em(dat, K=2, problevels= c(0,1) , model=&quot;GOM&quot;, progress = FALSE )
-summary(mod1)
 </code></pre>
 
-<pre><code>## ----------------------------------------------------------------------------------
-## sirt 2.0-25 (2017-05-11 13:52:31) 
+<pre><code>##   0:     11146.239: -1.57117 -1.95874 -1.86628 -2.42936 -1.58315 -0.951507 -1.25370 -1.11453 -2.51371 -0.764076  1.72480  1.36079  1.21448  1.22730 0.797383 0.959441  1.03650  1.16077 0.880661  2.23621 -0.319547
+##   2:     11146.238: -1.57244 -1.95979 -1.86756 -2.43043 -1.58377 -0.952397 -1.25449 -1.11554 -2.51460 -0.764964  1.72362  1.35952  1.21355  1.22600 0.796431 0.958887  1.03563  1.16006 0.879537  2.23494 -0.320130
+##   4:     11146.238: -1.57311 -1.96067 -1.86857 -2.43175 -1.58413 -0.952546 -1.25474 -1.11577 -2.51579 -0.765009  1.72335  1.35944  1.21355  1.22595 0.796369 0.958880  1.03561  1.16006 0.879502  2.23409 -0.320567
+##   6:     11146.238: -1.57306 -1.96072 -1.86858 -2.43207 -1.58408 -0.952594 -1.25473 -1.11580 -2.51612 -0.765084  1.72331  1.35934  1.21347  1.22587 0.796436 0.958884  1.03557  1.16000 0.879528  2.23407 -0.320859
+##   8:     11146.238: -1.57309 -1.96074 -1.86861 -2.43214 -1.58410 -0.952587 -1.25475 -1.11580 -2.51620 -0.765061  1.72330  1.35937  1.21350  1.22592 0.796417 0.958894  1.03560  1.16004 0.879539  2.23404 -0.320916
+##  10:     11146.238: -1.57309 -1.96074 -1.86861 -2.43214 -1.58410 -0.952587 -1.25475 -1.11580 -2.51620 -0.765061  1.72330  1.35937  1.21350  1.22592 0.796417 0.958894  1.03560  1.16004 0.879539  2.23404 -0.320916
+</code></pre>
+
+<pre><code class="r">summary(mod1)
+</code></pre>
+
+<pre><code>## -----------------------------------------------------------------
+## sirt 3.9-4 (2020-02-17 12:57:09) 
+## R version 4.0.2 (2020-06-22) x86_64, mingw32 | nodename=DESKTOP-D4PMMFV | login=rphil 
 ## 
-## Date of Analysis: 2017-07-24 13:31:08 
-## Time difference of 0.05584311 secs
-## Computation Time: 0.05584311 
+## Call:
+## gom.em(dat = dat, K = 2, problevels = c(0, 1), model = &quot;GOM&quot;, 
+##     progress = FALSE)
+## 
+## Date of Analysis: 2020-09-04 00:49:55 
+## Time difference of 0.168895 secs
+## Computation Time: 0.168895 
 ## 
 ##   Function &#39;gom.em&#39; 
+## 
+## --- Information about Newton-Raphson algorithm of optimization ---
+## 
+## Optimizer = nlminb 
+## Converged = FALSE 
+## Optimization Function Value = 11146.24 
+## Number of iterations = 10 
+## Elapsed time =  Time difference of 0.1499059 secs
+## 
 ##    Discrete Grade of Membership Model
 ## 
 ##     1000 Cases,  10 Items,  2 Classes , 2 Discrete Integration Points
-## ----------------------------------------------------------------------------------
-## Number of iterations = 9 
-## Deviance =  11146.27  | Log Likelihood =  -5573.14 
-## Number of persons =  1000 
-## Number of estimated parameters =  21 
-##   Number of estimated item parameters =  20 
-##   Number of estimated distribution parameters =  1 
-## AIC  =  11188.27  | penalty = 42    | AIC = -2*LL + 2*p  
-## AICc =  11189.22  | penalty = 42.94    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
-## BIC  =  11291.34  | penalty = 145.06    | BIC = -2*LL + log(n)*p  
-## CAIC =  11312.34  | penalty = 166.06   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
+## -----------------------------------------------------------------
+## Number of EM iterations = 9 
+## Deviance = 11146.24  | Log Likelihood = -5573.12 
+## Number of persons = 1000 
+## Number of estimated parameters = 21 
+##   Number of estimated item parameters = 20 
+##   Number of estimated distribution parameters = 1 
 ## 
-## ----------------------------------------------------------------------------------
+## AIC  =  11188  | penalty = 42    | AIC=-2*LL + 2*p    
+## AICc =  11189  | penalty = 42.94    | AICc=-2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)   
+## BIC  =  11291  | penalty = 145.06    | BIC=-2*LL + log(n)*p    
+## CAIC =  11312  | penalty = 166.06    | CAIC=-2*LL + [log(n)+1]*p  (consistent AIC)   
+## 
+## -----------------------------------------------------------------
 ## Membership Function Descriptives 
 ##                    Class1 Class2
 ## p.Class             0.420  0.580
 ## p.problevel0.class  0.580  0.420
 ## p.problevel1.class  0.420  0.580
-## M.problevel0.class  0.770  0.181
-## M.problevel1.class  0.181  0.770
-## ----------------------------------------------------------------------------------
+## M.problevel0.class  0.771  0.182
+## M.problevel1.class  0.182  0.771
+## -----------------------------------------------------------------
 ## Item Parameters 
 ##    item    N     p lam.Cl1 lam.Cl2
-## 1    I1 1000 0.564   0.171   0.848
-## 2    I2 1000 0.513   0.123   0.795
-## 3    I3 1000 0.503   0.133   0.770
-## 4    I4 1000 0.482   0.080   0.772
+## 1    I1 1000 0.564   0.172   0.849
+## 2    I2 1000 0.513   0.123   0.796
+## 3    I3 1000 0.503   0.134   0.771
+## 4    I4 1000 0.482   0.081   0.773
 ## 5    I5 1000 0.471   0.170   0.689
 ## 6    I6 1000 0.536   0.278   0.723
-## 7    I7 1000 0.521   0.221   0.738
-## 8    I8 1000 0.545   0.246   0.761
-## 9    I9 1000 0.441   0.074   0.706
-## 10  I10 1000 0.657   0.317   0.903
+## 7    I7 1000 0.521   0.222   0.738
+## 8    I8 1000 0.545   0.247   0.761
+## 9    I9 1000 0.441   0.075   0.707
+## 10  I10 1000 0.657   0.318   0.903
 </code></pre>
 
 <pre><code class="r">#** Model 2: estimate GOM
 mod2 &lt;- gom.em(dat, K=2, problevels= seq(0,1,0.5) , model=&quot;GOM&quot;, progress = FALSE )
-summary(mod2)
 </code></pre>
 
-<pre><code>## ----------------------------------------------------------------------------------
-## sirt 2.0-25 (2017-05-11 13:52:31) 
+<pre><code>##   0:     11077.788: -2.02255 -2.44497 -2.50845 -3.15900 -1.91699 -1.19362 -1.45189 -1.39108 -3.27716 -0.944203  2.13281  1.63345  1.49626  1.44908 0.968595  1.13970  1.18468  1.37809  1.07529  2.72903 -0.368931 -0.987892
+##   2:     11077.783: -2.01990 -2.44305 -2.50605 -3.15713 -1.91497 -1.19179 -1.45059 -1.38901 -3.27577 -0.942890  2.12930  1.63078  1.49346  1.44675 0.966666  1.13765  1.18304  1.37551  1.07314  2.72658 -0.373459 -0.998178
+##   4:     11077.777: -2.01739 -2.44058 -2.50267 -3.15389 -1.91342 -1.19143 -1.45029 -1.38823 -3.27324 -0.942927  2.12565  1.62945  1.49247  1.44606 0.966344  1.13738  1.18283  1.37488  1.07288  2.72244 -0.369974 -1.00208
+##   6:     11077.776: -2.01639 -2.43906 -2.50022 -3.14952 -1.91292 -1.19076 -1.44981 -1.38775 -3.26993 -0.942559  2.12662  1.62924  1.49194  1.44558 0.966699  1.13734  1.18270  1.37449  1.07290  2.72144 -0.369053 -1.00086
+##   8:     11077.776: -2.01641 -2.43902 -2.50010 -3.14772 -1.91251 -1.19080 -1.44971 -1.38738 -3.26860 -0.942503  2.12564  1.62914  1.49211  1.44567 0.966136  1.13704  1.18255  1.37450  1.07244  2.72238 -0.368994 -1.00285
+##  10:     11077.776: -2.01620 -2.43894 -2.50005 -3.14769 -1.91259 -1.19085 -1.44981 -1.38757 -3.26856 -0.942342  2.12577  1.62936  1.49217  1.44572 0.966141  1.13711  1.18264  1.37460  1.07252  2.72202 -0.368923 -1.00269
+##  12:     11077.776: -2.01609 -2.43891 -2.50005 -3.14770 -1.91264 -1.19086 -1.44983 -1.38761 -3.26857 -0.942332  2.12588  1.62939  1.49222  1.44578 0.966182  1.13714  1.18266  1.37465  1.07255  2.72172 -0.368749 -1.00264
+##  14:     11077.776: -2.01610 -2.43888 -2.50001 -3.14765 -1.91263 -1.19087 -1.44983 -1.38761 -3.26852 -0.942267  2.12586  1.62943  1.49221  1.44576 0.966181  1.13714  1.18265  1.37462  1.07255  2.72168 -0.368707 -1.00271
+##  16:     11077.776: -2.01593 -2.43880 -2.49987 -3.14743 -1.91263 -1.19082 -1.44983 -1.38763 -3.26835 -0.942274  2.12591  1.62937  1.49221  1.44576 0.966158  1.13718  1.18266  1.37460  1.07263  2.72156 -0.368693 -1.00267
+##  18:     11077.776: -2.01598 -2.43879 -2.49987 -3.14736 -1.91260 -1.19084 -1.44981 -1.38757 -3.26830 -0.942231  2.12587  1.62944  1.49220  1.44576 0.966198  1.13713  1.18267  1.37464  1.07254  2.72160 -0.368685 -1.00277
+##  20:     11077.776: -2.01599 -2.43879 -2.49987 -3.14737 -1.91260 -1.19084 -1.44981 -1.38758 -3.26830 -0.942241  2.12586  1.62943  1.49220  1.44576 0.966187  1.13713  1.18266  1.37464  1.07254  2.72160 -0.368681 -1.00276
+</code></pre>
+
+<pre><code class="r">summary(mod2)
+</code></pre>
+
+<pre><code>## -----------------------------------------------------------------
+## sirt 3.9-4 (2020-02-17 12:57:09) 
+## R version 4.0.2 (2020-06-22) x86_64, mingw32 | nodename=DESKTOP-D4PMMFV | login=rphil 
 ## 
-## Date of Analysis: 2017-07-24 13:31:09 
-## Time difference of 0.01644492 secs
-## Computation Time: 0.01644492 
+## Call:
+## gom.em(dat = dat, K = 2, problevels = seq(0, 1, 0.5), model = &quot;GOM&quot;, 
+##     progress = FALSE)
+## 
+## Date of Analysis: 2020-09-04 00:49:55 
+## Time difference of 0.231858 secs
+## Computation Time: 0.231858 
 ## 
 ##   Function &#39;gom.em&#39; 
+## 
+## --- Information about Newton-Raphson algorithm of optimization ---
+## 
+## Optimizer = nlminb 
+## Converged = FALSE 
+## Optimization Function Value = 11077.78 
+## Number of iterations = 21 
+## Elapsed time =  Time difference of 0.2098689 secs
+## 
 ##    Discrete Grade of Membership Model
 ## 
 ##     1000 Cases,  10 Items,  2 Classes , 3 Discrete Integration Points
-## ----------------------------------------------------------------------------------
-## Number of iterations = 9 
-## Deviance =  11077.85  | Log Likelihood =  -5538.93 
-## Number of persons =  1000 
-## Number of estimated parameters =  22 
-##   Number of estimated item parameters =  20 
-##   Number of estimated distribution parameters =  2 
-## AIC  =  11121.85  | penalty = 44    | AIC = -2*LL + 2*p  
-## AICc =  11122.89  | penalty = 45.04    | AICc = -2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)
-## BIC  =  11229.82  | penalty = 151.97    | BIC = -2*LL + log(n)*p  
-## CAIC =  11251.82  | penalty = 173.97   | CAIC = -2*LL + [log(n)+1]*p  (consistent AIC)
+## -----------------------------------------------------------------
+## Number of EM iterations = 13 
+## Deviance = 11077.78  | Log Likelihood = -5538.89 
+## Number of persons = 1000 
+## Number of estimated parameters = 22 
+##   Number of estimated item parameters = 20 
+##   Number of estimated distribution parameters = 2 
 ## 
-## ----------------------------------------------------------------------------------
+## AIC  =  11122  | penalty = 44    | AIC=-2*LL + 2*p    
+## AICc =  11123  | penalty = 45.04    | AICc=-2*LL + 2*p + 2*p*(p+1)/(n-p-1)  (bias corrected AIC)   
+## BIC  =  11230  | penalty = 151.97    | BIC=-2*LL + log(n)*p    
+## CAIC =  11252  | penalty = 173.97    | CAIC=-2*LL + [log(n)+1]*p  (consistent AIC)   
+## 
+## -----------------------------------------------------------------
 ## Membership Function Descriptives 
 ##                      Class1 Class2
-## p.Class               0.424  0.576
-## p.problevel0.class    0.485  0.334
-## p.problevel0.5.class  0.181  0.181
-## p.problevel1.class    0.334  0.485
-## M.problevel0.class    0.808  0.137
-## M.problevel0.5.class  0.471  0.471
-## M.problevel1.class    0.137  0.808
-## ----------------------------------------------------------------------------------
+## p.Class               0.425  0.575
+## p.problevel0.class    0.486  0.336
+## p.problevel0.5.class  0.178  0.178
+## p.problevel1.class    0.336  0.486
+## M.problevel0.class    0.808  0.138
+## M.problevel0.5.class  0.473  0.473
+## M.problevel1.class    0.138  0.808
+## -----------------------------------------------------------------
 ## Item Parameters 
 ##    item    N     p lam.Cl1 lam.Cl2
-## 1    I1 1000 0.564   0.116   0.894
-## 2    I2 1000 0.513   0.079   0.836
-## 3    I3 1000 0.503   0.074   0.816
-## 4    I4 1000 0.482   0.040   0.809
-## 5    I5 1000 0.471   0.127   0.724
-## 6    I6 1000 0.536   0.232   0.757
-## 7    I7 1000 0.521   0.189   0.765
-## 8    I8 1000 0.545   0.198   0.798
-## 9    I9 1000 0.441   0.036   0.745
-## 10  I10 1000 0.657   0.279   0.938
+## 1    I1 1000 0.564   0.118   0.893
+## 2    I2 1000 0.513   0.080   0.836
+## 3    I3 1000 0.503   0.076   0.816
+## 4    I4 1000 0.482   0.041   0.809
+## 5    I5 1000 0.471   0.129   0.724
+## 6    I6 1000 0.536   0.233   0.757
+## 7    I7 1000 0.521   0.190   0.765
+## 8    I8 1000 0.545   0.200   0.798
+## 9    I9 1000 0.441   0.037   0.745
+## 10  I10 1000 0.657   0.280   0.938
 </code></pre>
 
 <pre><code class="r"># inspect distribution
@@ -337,9 +392,9 @@ cbind( mod2$theta.k , mod2$pi.k )
 </code></pre>
 
 <pre><code>##      [,1] [,2]      [,3]
-## [1,]  1.0  0.0 0.3335666
-## [2,]  0.5  0.5 0.1810114
-## [3,]  0.0  1.0 0.4854220
+## [1,]  1.0  0.0 0.3359931
+## [2,]  0.5  0.5 0.1782190
+## [3,]  0.0  1.0 0.4857879
 </code></pre>
 
 <pre><code class="r">#***
@@ -417,7 +472,7 @@ nest &lt;- as.integer(sum(mod2values(mod2m)$est) + nrow(Theta)-1 )
 <pre><code>## $items
 ##         a1    a2
 ## I1  -2.016 2.126
-## I2  -2.439 1.629
+## I2  -2.439 1.630
 ## I3  -2.500 1.492
 ## I4  -3.147 1.446
 ## I5  -1.912 0.966
@@ -441,54 +496,46 @@ round( cbind( &quot;sirt&quot; = mod2$pi.k , &quot;mirt&quot; = extract.mirt(mod
 </code></pre>
 
 <pre><code>##         sirt    mirt
-## [1,] 0.33357 0.33603
-## [2,] 0.18101 0.17820
-## [3,] 0.48542 0.48577
+## [1,] 0.33599 0.33603
+## [2,] 0.17822 0.17820
+## [3,] 0.48579 0.48577
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 3.4.1 (2017-06-30)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.2 LTS
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 18363)
 ## 
 ## Matrix products: default
-## BLAS: /usr/lib/libblas/libblas.so.3.6.0
-## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
-##  [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
-##  [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
-## [1] methods   stats4    stats     graphics  grDevices utils     datasets 
+## [1] stats4    stats     graphics  grDevices utils     datasets  methods  
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] mvtnorm_1.0-6   sirt_2.0-25     ltm_1.0-0       polycor_0.7-9  
-## [5] msm_1.6.4       MASS_7.3-47     mirt_1.25       lattice_0.20-35
-## [9] knitr_1.16     
+## [1] mvtnorm_1.1-1   sirt_3.9-4      ltm_1.1-1       polycor_0.7-10 
+## [5] msm_1.6.8       MASS_7.3-51.6   mirt_1.32.7     lattice_0.20-41
+## [9] knitr_1.29     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.11          compiler_3.4.1        highr_0.6            
-##  [4] plyr_1.8.4            tools_3.4.1           boot_1.3-19          
-##  [7] evaluate_0.10         nlme_3.1-131          mgcv_1.8-17          
-## [10] igraph_1.0.1          Matrix_1.2-10         psych_1.7.5          
-## [13] parallel_3.4.1        expm_0.999-2          TAM_2.1-43           
-## [16] pbivnorm_0.6.0        WrightMap_1.2.1       coda_0.19-1          
-## [19] kappalab_0.4-7        ic.infer_1.1-5        stringr_1.2.0        
-## [22] gtools_3.5.0          combinat_0.0-8        grid_3.4.1           
-## [25] lavaan.survey_1.1.3.1 survival_2.41-3       sm_2.2-5.4           
-## [28] CDM_5.5-21            foreign_0.8-69        GPArotation_2014.11-1
-## [31] lavaan_0.5-23.1097    kernlab_0.9-25        magrittr_1.5         
-## [34] splines_3.4.1         sfsmisc_1.1-1         mnormt_1.5-5         
-## [37] lpSolve_5.6.13        mime_0.5              quadprog_1.5-5       
-## [40] survey_3.32           stringi_1.1.5         markdown_0.8
+##  [1] Rcpp_1.0.5            cluster_2.1.0         magrittr_1.5         
+##  [4] splines_4.0.2         Deriv_4.0.1           highr_0.8            
+##  [7] dcurver_0.9.1         stringr_1.4.0         tools_4.0.2          
+## [10] parallel_4.0.2        grid_4.0.2            nlme_3.1-148         
+## [13] mgcv_1.8-31           xfun_0.15             vegan_2.5-6          
+## [16] survival_3.1-12       TAM_3.5-19            permute_0.9-5        
+## [19] GPArotation_2014.11-1 Matrix_1.2-18         mime_0.9             
+## [22] evaluate_0.14         stringi_1.4.6         compiler_4.0.2       
+## [25] CDM_7.5-15            expm_0.999-4          markdown_1.1
 </code></pre>
 
 </body>

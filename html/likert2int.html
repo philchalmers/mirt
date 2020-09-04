@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert ordered Likert-scale responses (character or factors)...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body>
+
+<table width="100%" summary="page for likert2int {mirt}"><tr><td>likert2int {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert ordered Likert-scale responses (character or factors) to integers</h2>
+
+<h3>Description</h3>
+
+<p>Given a matrix or data.frame object consisting of Likert responses return an
+object of the same dimensions with integer values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+likert2int(x, levels = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a matrix of character values or data.frame of character/factor vectors</p>
+</td></tr>
+<tr valign="top"><td><code>levels</code></td>
+<td>
+<p>a named character vector indicating which integer values
+should be assigned to which elements. If omitted, the order of the elements
+will be determined after converting each column in <code>x</code> to a factor
+variable</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="key2binary.html">key2binary</a></code>, <code><a href="poly2dich.html">poly2dich</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+#simulate data
+
+dat1 &lt;- matrix(sample(c(&#39;Disagree&#39;, &#39;Strongly Disagree&#39;, &#39;Agree&#39;,
+                        &#39;Neutral&#39;, &#39;Strongly Agree&#39;), 1000*5, replace=TRUE),
+               nrow=1000, ncol=5)
+dat1[2,2] &lt;- dat1[3,3] &lt;- dat1[1,3] &lt;- NA # NAs added for flavour
+dat2 &lt;- matrix(sample(c(&#39;D&#39;, &#39;SD&#39;, &#39;A&#39;, &#39;N&#39;, &#39;SA&#39;), 1000*5, replace=TRUE),
+               nrow=1000, ncol=5)
+dat &lt;- cbind(dat1, dat2)
+
+# separately
+intdat1 &lt;- likert2int(dat1)
+head(dat1)
+</code></pre>
+
+<pre><code>##      [,1]                [,2]                [,3]               
+## [1,] &quot;Neutral&quot;           &quot;Agree&quot;             NA                 
+## [2,] &quot;Disagree&quot;          NA                  &quot;Agree&quot;            
+## [3,] &quot;Disagree&quot;          &quot;Strongly Agree&quot;    NA                 
+## [4,] &quot;Strongly Agree&quot;    &quot;Neutral&quot;           &quot;Strongly Disagree&quot;
+## [5,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot;
+## [6,] &quot;Strongly Disagree&quot; &quot;Neutral&quot;           &quot;Strongly Agree&quot;   
+##      [,4]                [,5]            
+## [1,] &quot;Strongly Agree&quot;    &quot;Agree&quot;         
+## [2,] &quot;Disagree&quot;          &quot;Neutral&quot;       
+## [3,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
+## [4,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
+## [5,] &quot;Agree&quot;             &quot;Strongly Agree&quot;
+## [6,] &quot;Neutral&quot;           &quot;Agree&quot;
+</code></pre>
+
+<pre><code class="r">head(intdat1)
+</code></pre>
+
+<pre><code>##   V1 V2 V3 V4 V5
+## 1  3  1 NA  4  1
+## 2  2 NA  1  2  3
+## 3  2  4 NA  5  1
+## 4  4  3  5  5  1
+## 5  2  5  5  1  4
+## 6  5  3  4  3  1
+</code></pre>
+
+<pre><code class="r"># more useful with explicit levels
+lvl1 &lt;- c(&#39;Strongly Disagree&#39;=1, &#39;Disagree&#39;=2, &#39;Neutral&#39;=3, &#39;Agree&#39;=4,
+          &#39;Strongly Agree&#39;=5)
+intdat1 &lt;- likert2int(dat1, levels = lvl1)
+head(dat1)
+</code></pre>
+
+<pre><code>##      [,1]                [,2]                [,3]               
+## [1,] &quot;Neutral&quot;           &quot;Agree&quot;             NA                 
+## [2,] &quot;Disagree&quot;          NA                  &quot;Agree&quot;            
+## [3,] &quot;Disagree&quot;          &quot;Strongly Agree&quot;    NA                 
+## [4,] &quot;Strongly Agree&quot;    &quot;Neutral&quot;           &quot;Strongly Disagree&quot;
+## [5,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot;
+## [6,] &quot;Strongly Disagree&quot; &quot;Neutral&quot;           &quot;Strongly Agree&quot;   
+##      [,4]                [,5]            
+## [1,] &quot;Strongly Agree&quot;    &quot;Agree&quot;         
+## [2,] &quot;Disagree&quot;          &quot;Neutral&quot;       
+## [3,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
+## [4,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
+## [5,] &quot;Agree&quot;             &quot;Strongly Agree&quot;
+## [6,] &quot;Neutral&quot;           &quot;Agree&quot;
+</code></pre>
+
+<pre><code class="r">head(intdat1)
+</code></pre>
+
+<pre><code>##   V1 V2 V3 V4 V5
+## 1  3  4 NA  5  4
+## 2  2 NA  4  2  3
+## 3  2  5 NA  1  4
+## 4  5  3  1  1  4
+## 5  2  1  1  4  5
+## 6  1  3  5  3  4
+</code></pre>
+
+<pre><code class="r"># second data
+lvl2 &lt;- c(&#39;SD&#39;=1, &#39;D&#39;=2, &#39;N&#39;=3, &#39;A&#39;=4, &#39;SA&#39;=5)
+intdat2 &lt;- likert2int(dat2, levels = lvl2)
+head(dat2)
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,] &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; &quot;SA&quot; &quot;SA&quot;
+## [2,] &quot;N&quot;  &quot;D&quot;  &quot;A&quot;  &quot;SD&quot; &quot;SD&quot;
+## [3,] &quot;SA&quot; &quot;N&quot;  &quot;A&quot;  &quot;N&quot;  &quot;A&quot; 
+## [4,] &quot;D&quot;  &quot;N&quot;  &quot;A&quot;  &quot;A&quot;  &quot;SD&quot;
+## [5,] &quot;SA&quot; &quot;N&quot;  &quot;D&quot;  &quot;SD&quot; &quot;SA&quot;
+## [6,] &quot;A&quot;  &quot;SD&quot; &quot;D&quot;  &quot;A&quot;  &quot;SD&quot;
+</code></pre>
+
+<pre><code class="r">head(intdat2)
+</code></pre>
+
+<pre><code>##   V1 V2 V3 V4 V5
+## 1  1  1  1  5  5
+## 2  3  2  4  1  1
+## 3  5  3  4  3  4
+## 4  2  3  4  4  1
+## 5  5  3  2  1  5
+## 6  4  1  2  4  1
+</code></pre>
+
+<pre><code class="r"># full dataset (using both mapping schemes)
+intdat &lt;- likert2int(dat, levels = c(lvl1, lvl2))
+head(dat)
+</code></pre>
+
+<pre><code>##      [,1]                [,2]                [,3]               
+## [1,] &quot;Neutral&quot;           &quot;Agree&quot;             NA                 
+## [2,] &quot;Disagree&quot;          NA                  &quot;Agree&quot;            
+## [3,] &quot;Disagree&quot;          &quot;Strongly Agree&quot;    NA                 
+## [4,] &quot;Strongly Agree&quot;    &quot;Neutral&quot;           &quot;Strongly Disagree&quot;
+## [5,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot;
+## [6,] &quot;Strongly Disagree&quot; &quot;Neutral&quot;           &quot;Strongly Agree&quot;   
+##      [,4]                [,5]             [,6] [,7] [,8] [,9] [,10]
+## [1,] &quot;Strongly Agree&quot;    &quot;Agree&quot;          &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; &quot;SA&quot; &quot;SA&quot; 
+## [2,] &quot;Disagree&quot;          &quot;Neutral&quot;        &quot;N&quot;  &quot;D&quot;  &quot;A&quot;  &quot;SD&quot; &quot;SD&quot; 
+## [3,] &quot;Strongly Disagree&quot; &quot;Agree&quot;          &quot;SA&quot; &quot;N&quot;  &quot;A&quot;  &quot;N&quot;  &quot;A&quot;  
+## [4,] &quot;Strongly Disagree&quot; &quot;Agree&quot;          &quot;D&quot;  &quot;N&quot;  &quot;A&quot;  &quot;A&quot;  &quot;SD&quot; 
+## [5,] &quot;Agree&quot;             &quot;Strongly Agree&quot; &quot;SA&quot; &quot;N&quot;  &quot;D&quot;  &quot;SD&quot; &quot;SA&quot; 
+## [6,] &quot;Neutral&quot;           &quot;Agree&quot;          &quot;A&quot;  &quot;SD&quot; &quot;D&quot;  &quot;A&quot;  &quot;SD&quot;
+</code></pre>
+
+<pre><code class="r">head(intdat)
+</code></pre>
+
+<pre><code>##   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10
+## 1  3  4 NA  5  4  1  1  1  5   5
+## 2  2 NA  4  2  3  3  2  4  1   1
+## 3  2  5 NA  1  4  5  3  4  3   4
+## 4  5  3  1  1  4  2  3  4  4   1
+## 5  2  1  1  4  5  5  3  2  1   5
+## 6  1  3  5  3  4  4  1  2  4   1
+</code></pre>
+
+<pre><code class="r">#####
+# data.frame as input with ordered factors
+
+dat1 &lt;- data.frame(dat1)
+dat2 &lt;- data.frame(dat2)
+dat.old &lt;- cbind(dat1, dat2)
+colnames(dat.old) &lt;- paste0(&#39;Item_&#39;, 1:10)
+str(dat.old) # factors are leveled alphabetically by default
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    1000 obs. of  10 variables:
+##  $ Item_1 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 3 2 2 4 2 5 1 1 1 4 ...
+##  $ Item_2 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 1 NA 4 3 5 3 1 3 1 2 ...
+##  $ Item_3 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: NA 1 NA 5 5 4 5 1 1 2 ...
+##  $ Item_4 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 4 2 5 5 1 3 5 5 5 1 ...
+##  $ Item_5 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 1 3 1 1 4 1 4 1 2 5 ...
+##  $ Item_6 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 5 3 4 2 4 1 4 5 3 4 ...
+##  $ Item_7 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 5 2 3 3 3 5 5 4 5 3 ...
+##  $ Item_8 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 5 1 1 1 2 2 4 3 4 2 ...
+##  $ Item_9 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 4 5 3 1 5 1 2 3 5 5 ...
+##  $ Item_10: Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 4 5 1 5 4 5 3 1 5 4 ...
+</code></pre>
+
+<pre><code class="r"># create explicit ordering in factor variables
+for(i in 1:ncol(dat1))
+   levels(dat1[[i]]) &lt;- c(&#39;Strongly Disagree&#39;, &#39;Disagree&#39;, &#39;Neutral&#39;, &#39;Agree&#39;,
+                          &#39;Strongly Agree&#39;)
+
+for(i in 1:ncol(dat2))
+   levels(dat2[[i]]) &lt;- c(&#39;SD&#39;, &#39;D&#39;, &#39;N&#39;, &#39;A&#39;, &#39;SA&#39;)
+
+dat &lt;- cbind(dat1, dat2)
+colnames(dat) &lt;- colnames(dat.old)
+str(dat) # note ordering
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    1000 obs. of  10 variables:
+##  $ Item_1 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 3 2 2 4 2 5 1 1 1 4 ...
+##  $ Item_2 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 1 NA 4 3 5 3 1 3 1 2 ...
+##  $ Item_3 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: NA 1 NA 5 5 4 5 1 1 2 ...
+##  $ Item_4 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 4 2 5 5 1 3 5 5 5 1 ...
+##  $ Item_5 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 1 3 1 1 4 1 4 1 2 5 ...
+##  $ Item_6 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 5 3 4 2 4 1 4 5 3 4 ...
+##  $ Item_7 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 5 2 3 3 3 5 5 4 5 3 ...
+##  $ Item_8 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 5 1 1 1 2 2 4 3 4 2 ...
+##  $ Item_9 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 4 5 3 1 5 1 2 3 5 5 ...
+##  $ Item_10: Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 4 5 1 5 4 5 3 1 5 4 ...
+</code></pre>
+
+<pre><code class="r">intdat &lt;- likert2int(dat)
+head(dat)
+</code></pre>
+
+<pre><code>##           Item_1            Item_2            Item_3            Item_4
+## 1        Neutral Strongly Disagree              &lt;NA&gt;             Agree
+## 2       Disagree              &lt;NA&gt; Strongly Disagree          Disagree
+## 3       Disagree             Agree              &lt;NA&gt;    Strongly Agree
+## 4          Agree           Neutral    Strongly Agree    Strongly Agree
+## 5       Disagree    Strongly Agree    Strongly Agree Strongly Disagree
+## 6 Strongly Agree           Neutral             Agree           Neutral
+##              Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
+## 1 Strongly Disagree     SA     SA     SA      A       A
+## 2           Neutral      N      D     SD     SA      SA
+## 3 Strongly Disagree      A      N     SD      N      SD
+## 4 Strongly Disagree      D      N     SD     SD      SA
+## 5             Agree      A      N      D     SA       A
+## 6 Strongly Disagree     SD     SA      D     SD      SA
+</code></pre>
+
+<pre><code class="r">head(intdat)
+</code></pre>
+
+<pre><code>##   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
+## 1      3      1     NA      4      1      5      5      5      4       4
+## 2      2     NA      1      2      3      3      2      1      5       5
+## 3      2      4     NA      5      1      4      3      1      3       1
+## 4      4      3      5      5      1      2      3      1      1       5
+## 5      2      5      5      1      4      4      3      2      5       4
+## 6      5      3      4      3      1      1      5      2      1       5
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.31.9 <a href="00Index.html">Index</a>]</div>
+</body></html>
