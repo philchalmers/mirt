@@ -1405,6 +1405,8 @@ setMethod(
             } else if(type == 'infoSE'){
                 if(is.null(main))
                     main <- 'Test Information and Standard Errors'
+                par.settings <- c(par.settings,
+                                  lattice::simpleTheme(col = c("#0080ff",'red'), lty = 1:2))
                 obj1 <- xyplot(info~Theta, plt, type='l', main = main,
                                xlab = expression(theta), ylab=expression(I(theta)),
                                par.strip.text=par.strip.text, par.settings=par.settings)
