@@ -83,8 +83,8 @@
 #' plot(pmod, type='trace', par.settings=bwtheme)
 #' itemplot(pmod, 1, type = 'trace', par.settings=bwtheme)
 #'
+#' # infoSE plot
 #' itemplot(pmod, 1, type = 'infoSE')
-#' update(trellis.last.object(), par.settings = bwtheme)
 #'
 #' # uncomment to run interactive shiny applet
 #' # itemplot(shiny = TRUE)
