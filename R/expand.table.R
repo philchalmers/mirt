@@ -96,10 +96,11 @@ expand.table <- function(tabdata, freq = colnames(tabdata)[ncol(tabdata)],
                          sample = FALSE) {
     if(missing(tabdata)) missingMsg('tabdata')
     stopifnot(is.data.frame(tabdata) || is.matrix(tabdata))
+    tabdat <- as.matrix(tabdata)
     if(is.character(freq)){
         stopifnot(length(freq) == 1L)
         tmp <- tabdata[,freq]
-        tabdata <- subset(tabdata, select = -freq)
+        tabdata <- tabdata[, colnames(tabdata) != freq, drop=FALSE]
         freq <- tmp
     }
     stopifnot(length(freq) == nrow(tabdata))
