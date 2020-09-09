@@ -281,19 +281,23 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
                       xlab="Focal Group Theta",
                       ylab="Expected Score",
                       groups=plt$group ,
-                      col=c("red","black"),
+                      col=c("black","red"),
                       jitter.y=TRUE,
-                      main='Expected scores',
+                      main='Expected Scores',
                       par.settings=par.settings,
                       par.strip.text=par.strip.text, ...))
       } else {
-          plot.df1 <- data.frame(Theta=Theta.focal[,1],ETS=ETS.foc.obs,group='foc')
-          plot.df2 <- data.frame(Theta=Theta.focal[,1],ETS=ETS.ref.obs,group='ref')
+          grps <- unique(extract.mirt(mod, 'group'))
+          if(nchar(as.character(grps[1])) > 30 || nchar(as.character(grps[2])) > 30){
+            grps <- c("ref","foc") 
+          }
+          plot.df1 <- data.frame(Theta=Theta.focal[,1],ETS=ETS.foc.obs,group=as.character(grps[1]))
+          plot.df2 <- data.frame(Theta=Theta.focal[,1],ETS=ETS.ref.obs,group=as.character(grps[2]))
           plot.df <- rbind(plot.df1,plot.df2)
           mykey <- list(space = 'top',
                 columns = 2,
                 text = list(as.character(unique(plot.df$group))),
-                points = list(pch = 1, col=c("red","black"))
+                points = list(pch = 1, col=c("black","red"))
           )
           main <- if(extract.mirt(mod, 'nitems') == length(focal_items))
               "Expected Test Scores" else "Expected Bundle Scores"
@@ -301,7 +305,7 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
                               xlab="Focal Group Theta",
                               ylab="Expected Test Score",
                               groups=plot.df$group ,
-                              col=c("red","black"),
+                              col=c("black","red"),
                               key = mykey,
                               jitter.y=TRUE,
                               main=main))
