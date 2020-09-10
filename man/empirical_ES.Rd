@@ -11,8 +11,8 @@ empirical_ES(
   DIF = TRUE,
   npts = 61,
   theta_lim = c(-6, 6),
-  ref.group = 1,
   plot = FALSE,
+  type = "b",
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
     = "black")),
@@ -20,7 +20,9 @@ empirical_ES(
 )
 }
 \arguments{
-\item{mod}{a multipleGroup object which estimated only 2 groups}
+\item{mod}{a multipleGroup object which estimated only 2 groups. The first group in this object
+is assumed to be the reference group, which conforms to the \code{invariance} arguments in
+\code{\link{multipleGroup}}}
 
 \item{Theta.focal}{an optional matrix of Theta values from the focal group to be evaluated. If not supplied
 the default values to \code{\link{fscores}} will be used in conjunction with the \code{...}
@@ -38,11 +40,10 @@ only DBF and DTF statistics will be reported}
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}}
 
-\item{ref.group}{either 1 or 2 to indicate which group is considered the 'reference' group. Default
-is 1}
-
 \item{plot}{logical; plot expected scores of items/test where expected scores are computed
 using focal group thetas and both focal and reference group item parameters}
+
+\item{type}{type of objects to draw in \code{lattice}; default plots both points and lines}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
 
@@ -117,7 +118,9 @@ N <- 1000
 dataset1 <- simdata(a, d, N, itemtype)
 dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
-group <- c(rep('Ref', N), rep('Focal', N))
+
+# ensure 'Ref' is the first group (and therefore reference group during estimation)
+group <- factor(c(rep('Ref', N), rep('Focal', N)), levels = c('Ref', 'Focal'))
 
 mod <- multipleGroup(dat, 1, group = group,
    invariance = c(colnames(dat)[1:5], 'free_means', 'free_var'))
@@ -142,7 +145,7 @@ N <- 1000
 dataset1 <- simdata(a1, d1, N, itemtype)
 dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
-group <- c(rep('Ref', N), rep('Focal', N))
+group <- factor(c(rep('Ref', N), rep('Focal', N)), levels = c('Ref', 'Focal'))
 
 mod <- multipleGroup(dat, 1, group = group,
    invariance = c(colnames(dat)[1:5], 'free_means', 'free_var'))
@@ -160,8 +163,8 @@ Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 
-  Meade, A. W. (2010).  A taxonomy of effect size measures for the differential functioning
-  of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
+Meade, A. W. (2010). A taxonomy of effect size measures for the differential functioning
+of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 }
 \author{
 Adam Meade and Phil Chalmers \email{rphilip.chalmers@gmail.com}

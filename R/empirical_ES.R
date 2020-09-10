@@ -50,7 +50,9 @@
 #' test scores.}
 #' }
 #'
-#' @param mod a multipleGroup object which estimated only 2 groups
+#' @param mod a multipleGroup object which estimated only 2 groups. The first group in this object
+#'   is assumed to be the reference group, which conforms to the \code{invariance} arguments in
+#'   \code{\link{multipleGroup}}
 #' @param focal_items a numeric vector indicating which items to include the tests. The
 #'   default uses all of the items. Selecting fewer items will result in tests of
 #'   'differential bundle functioning' when \code{DIF = FALSE}
@@ -62,10 +64,9 @@
 #'   arguments passed
 #' @param DIF logical; return a data.frame of item-level imputation properties? If \code{FALSE},
 #'   only DBF and DTF statistics will be reported
-#' @param ref.group either 1 or 2 to indicate which group is considered the 'reference' group. Default
-#'   is 1
 #' @param plot logical; plot expected scores of items/test where expected scores are computed
 #'  using focal group thetas and both focal and reference group item parameters
+#' @param type type of objects to draw in \code{lattice}; default plots both points and lines
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
 #' @param ... additional arguments to be passed to \code{\link{fscores}} and \code{\link{xyplot}}
@@ -76,8 +77,8 @@
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
-#'   Meade, A. W. (2010).  A taxonomy of effect size measures for the differential functioning
-#'   of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
+#' Meade, A. W. (2010). A taxonomy of effect size measures for the differential functioning
+#' of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 #' @export empirical_ES
 #' @examples
 #' \dontrun{
@@ -91,7 +92,9 @@
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
-#' group <- c(rep('Ref', N), rep('Focal', N))
+#'
+#' # ensure 'Ref' is the first group (and therefore reference group during estimation)
+#' group <- factor(c(rep('Ref', N), rep('Focal', N)), levels = c('Ref', 'Focal'))
 #'
 #' mod <- multipleGroup(dat, 1, group = group,
 #'    invariance = c(colnames(dat)[1:5], 'free_means', 'free_var'))
@@ -116,7 +119,7 @@
 #' dataset1 <- simdata(a1, d1, N, itemtype)
 #' dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
-#' group <- c(rep('Ref', N), rep('Focal', N))
+#' group <- factor(c(rep('Ref', N), rep('Focal', N)), levels = c('Ref', 'Focal'))
 #'
 #' mod <- multipleGroup(dat, 1, group = group,
 #'    invariance = c(colnames(dat)[1:5], 'free_means', 'free_var'))
@@ -129,12 +132,13 @@
 #'
 #' }
 empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
-                 DIF = TRUE, npts = 61, theta_lim=c(-6,6), ref.group = 1, plot=FALSE,
+                 DIF = TRUE, npts = 61, theta_lim=c(-6,6), plot=FALSE, type = 'b',
                  par.strip.text = list(cex = 0.7),
                  par.settings = list(strip.background = list(col = '#9ECAE1'),
                                      strip.border = list(col = "black")), ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(extract.mirt(mod, 'ngroups') == 2L)
+    ref.group <- 1
     ref <- extract.group(mod, ref.group)
     focal <- extract.group(mod, ifelse(ref.group == 1, 2, 1))
     focal_select <- extract.mirt(mod, 'group') != extract.mirt(mod, 'groupNames')[ref.group]
@@ -262,37 +266,37 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     if(!plot && !DIF) return(df.test.output)
 
     # plots
+    order <- order(Theta.focal[,1])
     if(DIF){
         nms <- rep(extract.mirt(mod, 'itemnames')[focal_items], each = nrow(Theta.focal)*2)
         nms <- factor(nms, levels = extract.mirt(mod, 'itemnames')[focal_items])
-        plt <- data.frame(S=c(df.foc.obs[,1],df.ref.obs[,1]),
-                             Theta=c(Theta.focal[,1], Theta.focal[,1]),
+        plt <- data.frame(S=c(df.foc.obs[order,1],df.ref.obs[order,1]),
+                             Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
                              group=c(rep(c('foc', 'ref'), each = nrow(Theta.focal))))
         if(ncol(df.foc.obs)>1){
           for(i in 2:ncol(df.foc.obs)){
-            plt.df <- data.frame(S=c(df.foc.obs[,i],df.ref.obs[,i]),
-                                 Theta=c(Theta.focal[,1], Theta.focal[,1]),
+            plt.df <- data.frame(S=c(df.foc.obs[order,i],df.ref.obs[order,i]),
+                                 Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
                                  group=rep(c('foc', 'ref'), each = nrow(Theta.focal)))
             plt <- rbind(plt, plt.df)
           }
         }
         plt$Item <- nms
-        return(xyplot(S ~ Theta|Item, plt,
+        return(xyplot(S ~ Theta|Item, plt, type = type, cex = .5,
                       xlab="Focal Group Theta",
                       ylab="Expected Score",
                       groups=plt$group ,
                       col=c("black","red"),
-                      jitter.y=TRUE,
                       main='Expected Scores',
                       par.settings=par.settings,
                       par.strip.text=par.strip.text, ...))
       } else {
           grps <- unique(extract.mirt(mod, 'group'))
           if(nchar(as.character(grps[1])) > 30 || nchar(as.character(grps[2])) > 30){
-            grps <- c("ref","foc") 
+            grps <- c("ref","foc")
           }
-          plot.df1 <- data.frame(Theta=Theta.focal[,1],ETS=ETS.foc.obs,group=as.character(grps[1]))
-          plot.df2 <- data.frame(Theta=Theta.focal[,1],ETS=ETS.ref.obs,group=as.character(grps[2]))
+          plot.df1 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.foc.obs[order],group=as.character(grps[1]))
+          plot.df2 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.ref.obs[order],group=as.character(grps[2]))
           plot.df <- rbind(plot.df1,plot.df2)
           mykey <- list(space = 'top',
                 columns = 2,
@@ -301,13 +305,12 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
           )
           main <- if(extract.mirt(mod, 'nitems') == length(focal_items))
               "Expected Test Scores" else "Expected Bundle Scores"
-          return(xyplot(ETS~Theta, plot.df,
+          return(xyplot(ETS~Theta, plot.df, type = type, cex = .6,
                               xlab="Focal Group Theta",
                               ylab="Expected Test Score",
                               groups=plot.df$group ,
                               col=c("black","red"),
                               key = mykey,
-                              jitter.y=TRUE,
                               main=main))
     }# end if plot
     invisible()
