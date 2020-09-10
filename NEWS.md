@@ -1,5 +1,8 @@
 # Changes in mirt 1.33
 
+- Added `RMSD_DIF()` to compute marginal effect size measure recently used in PISA anlayses when investigating 
+  'badness-of-fit' DIF effects when using constrained multiple-group models
+
 - `extract.group()` now explicitly requires the group name to be passed rather than the group number (this 
   is a far more natural route)
 
