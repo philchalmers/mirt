@@ -14,6 +14,10 @@
 #' @param group group membership vector
 #' @param pooled_mod a multiple-group model (used to compute the model-implied
 #'   probability in the goodness-of-fit test)
+#' @param flag a numeric value used as a cut-off to help flag larger RMSD values
+#'   (e.g., \code{flag = .03} will highlight only categories with RMSD values greater than
+#'   .03)
+#'
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #'
@@ -56,6 +60,7 @@
 #' coef(pooled_mod, simplify=TRUE)
 #'
 #' RMSD_DIF(dat, group=group, pooled_mod)
+#' RMSD_DIF(dat, group=group, pooled_mod, flag = .03)
 #'
 #' # more freely estimated model (item 1 has 2 parameters estimated)
 #' MGmod <- multipleGroup(dat, 1, group=group,
@@ -64,6 +69,7 @@
 #'
 #' # RMSD in item.1 now reduced (MG model accounts for DIF)
 #' RMSD_DIF(dat, group=group, MGmod)
+#' RMSD_DIF(dat, group=group, MGmod, flag = .03)
 #'
 #'
 #' #################
@@ -94,8 +100,9 @@
 #' pooled_mod <- multipleGroup(dat, 1, group=group, invariance = colnames(dat))
 #' coef(pooled_mod, simplify=TRUE)
 #'
-#' # Item_1 fits poorly in several categories (RMSD > .3)
+#' # Item_1 fits poorly in several categories (RMSD > .05)
 #' RMSD_DIF(dat, group=group, pooled_mod)
+#' RMSD_DIF(dat, group=group, pooled_mod, flag = .05)
 #'
 #' # more freely estimated model (item 1 has more parameters estimated)
 #' MGmod <- multipleGroup(dat, 1, group=group,
@@ -104,10 +111,11 @@
 #'
 #' # RMSDs in Item_1 now reduced (MG model better accounts for DIF)
 #' RMSD_DIF(dat, group=group, MGmod)
+#' RMSD_DIF(dat, group=group, MGmod, flag = .05)
 #'
 #' }
 #'
-RMSD_DIF <- function(dat, group, pooled_mod){
+RMSD_DIF <- function(dat, group, pooled_mod, flag = 0){
     stopifnot(nrow(dat) == length(group))
     which.groups <- extract.mirt(pooled_mod, 'groupNames')
     ret <- vector('list', length(which.groups))
@@ -149,9 +157,13 @@ RMSD_DIF <- function(dat, group, pooled_mod){
         colnames(items) <- unms
         for(i in seq_len(nrow(items)))
             items[i, nms[[i]]] <- ret2[[i]]
+        if(flag > 0)
+            items[items < flag] <- NA
         items <- as.data.frame(items)
         class(items) <- c('mirt_df', 'data.frame')
+
         ret[[which.group]] <- items
+
     }
     ret
 }
