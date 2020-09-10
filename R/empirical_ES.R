@@ -272,12 +272,12 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
         nms <- factor(nms, levels = extract.mirt(mod, 'itemnames')[focal_items])
         plt <- data.frame(S=c(df.foc.obs[order,1],df.ref.obs[order,1]),
                              Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
-                             group=c(rep(c('foc', 'ref'), each = nrow(Theta.focal))))
+                             group=c(rep(extract.mirt(mod, 'groupNames'), each = nrow(Theta.focal))))
         if(ncol(df.foc.obs)>1){
           for(i in 2:ncol(df.foc.obs)){
             plt.df <- data.frame(S=c(df.foc.obs[order,i],df.ref.obs[order,i]),
                                  Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
-                                 group=rep(c('foc', 'ref'), each = nrow(Theta.focal)))
+                                 group=rep(extract.mirt(mod, 'groupNames'), each = nrow(Theta.focal)))
             plt <- rbind(plt, plt.df)
           }
         }
@@ -291,7 +291,7 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
                       par.settings=par.settings,
                       par.strip.text=par.strip.text, ...))
       } else {
-          grps <- unique(extract.mirt(mod, 'group'))
+          grps <- extract.mirt(mod, 'groupNames')
           if(nchar(as.character(grps[1])) > 30 || nchar(as.character(grps[2])) > 30){
             grps <- c("ref","foc")
           }
