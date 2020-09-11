@@ -95,6 +95,8 @@
 expand.table <- function(tabdata, freq = colnames(tabdata)[ncol(tabdata)],
                          sample = FALSE) {
     if(missing(tabdata)) missingMsg('tabdata')
+    if(is.null(colnames(tabdata)) && is.null(freq))
+        stop('Please either supply colnames to tabdata or provide a vector of counts in freq', call.=FALSE)
     stopifnot(is.data.frame(tabdata) || is.matrix(tabdata))
     tabdat <- as.matrix(tabdata)
     if(is.character(freq)){
