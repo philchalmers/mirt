@@ -63,7 +63,7 @@
 #' coef(pooled_mod, simplify=TRUE)
 #'
 #' RMSD_DIF(dat, group=group, pooled_mod)
-#' RMSD_DIF(dat, group=group, pooled_mod, den = 'empirical')
+#' RMSD_DIF(dat, group=group, pooled_mod, dentype = 'empirical')
 #' RMSD_DIF(dat, group=group, pooled_mod, flag = .03)
 #'
 #' # more freely estimated model (item 1 has 2 parameters estimated)
