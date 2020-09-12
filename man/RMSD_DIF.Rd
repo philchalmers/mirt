@@ -4,7 +4,7 @@
 \alias{RMSD_DIF}
 \title{RMSD effect size statistic to quantify category-level DIF}
 \usage{
-RMSD_DIF(dat, group, pooled_mod, flag = 0)
+RMSD_DIF(dat, group, pooled_mod, flag = 0, den = "norm")
 }
 \arguments{
 \item{dat}{complete dataset}
@@ -17,6 +17,10 @@ probability in the goodness-of-fit test)}
 \item{flag}{a numeric value used as a cut-off to help flag larger RMSD values
 (e.g., \code{flag = .03} will highlight only categories with RMSD values greater than
 .03)}
+
+\item{den}{density to use for the latent trait.
+Can be \code{'norm'} to use a standard-normal Gaussian density (default),
+or \code{'empirical'} to use the density estimate obtained via the E-table}
 }
 \description{
 This function computes a set of RMSD "badness-of-fit" statistics when investing
@@ -56,6 +60,7 @@ pooled_mod <- multipleGroup(dat, 1, group=group, invariance = colnames(dat))
 coef(pooled_mod, simplify=TRUE)
 
 RMSD_DIF(dat, group=group, pooled_mod)
+RMSD_DIF(dat, group=group, pooled_mod, den = 'empirical')
 RMSD_DIF(dat, group=group, pooled_mod, flag = .03)
 
 # more freely estimated model (item 1 has 2 parameters estimated)

@@ -17,6 +17,9 @@
 #' @param flag a numeric value used as a cut-off to help flag larger RMSD values
 #'   (e.g., \code{flag = .03} will highlight only categories with RMSD values greater than
 #'   .03)
+#' @param dentype density to use for the latent trait.
+#'   Can be \code{'norm'} to use a standard-normal Gaussian density (default),
+#'   or \code{'empirical'} to use the density estimate obtained via the E-table
 #'
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -60,6 +63,7 @@
 #' coef(pooled_mod, simplify=TRUE)
 #'
 #' RMSD_DIF(dat, group=group, pooled_mod)
+#' RMSD_DIF(dat, group=group, pooled_mod, den = 'empirical')
 #' RMSD_DIF(dat, group=group, pooled_mod, flag = .03)
 #'
 #' # more freely estimated model (item 1 has 2 parameters estimated)
@@ -115,7 +119,7 @@
 #'
 #' }
 #'
-RMSD_DIF <- function(dat, group, pooled_mod, flag = 0){
+RMSD_DIF <- function(dat, group, pooled_mod, flag = 0, dentype = 'norm'){
     stopifnot(nrow(dat) == length(group))
     which.groups <- extract.mirt(pooled_mod, 'groupNames')
     ret <- vector('list', length(which.groups))
@@ -136,8 +140,13 @@ RMSD_DIF <- function(dat, group, pooled_mod, flag = 0){
         Etable <- mod_g@Internals$Etable[[1]]$r1
 
         # standard normal dist for theta
-        f_theta <- dnorm(Theta)
-        f_theta <- as.vector(f_theta / sum(f_theta))
+        if(dentype == 'norm'){
+            f_theta <- dnorm(Theta)
+            f_theta <- as.vector(f_theta / sum(f_theta))
+        } else if(dentype == 'empirical'){
+            f_theta <- rowSums(Etable) / sum(Etable)
+        } else stop('dentype not supported', call.=FALSE)
+
         itemloc <- extract.mirt(mod_g, 'itemloc')
         which.items <- 1L:ncol(dat)
         ret2 <- vector('list', ncol(dat))
