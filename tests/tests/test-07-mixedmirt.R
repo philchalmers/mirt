@@ -45,7 +45,7 @@ test_that('mixed dich', {
                  tolerance = 1e-2)
     names <- wald(mod1)
     L <- matrix(c(1, numeric(length(names) - 1L)), 1L)
-    wld <- wald(mod1, L, C=as.numeric(L))
+    wld <- wald(mod1, L, C=1)
     expect_equal(wld$W[1], .7341243, tolerance = 1e-4)
     set.seed(1)
     bs <- boot.mirt(mod1, R=2)

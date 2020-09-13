@@ -16,7 +16,7 @@
 #'   \code{multipleGroup}, \code{mixedmirt}, or \code{mdirt}
 #' @param C a constant vector of population parameters to be compared along side L, where
 #'   \code{length(C) == row(L)}. By default a vector of 0's is constructed. Note that when using
-#'   the syntax input for \code{L} this argument is omitted
+#'   the syntax input for \code{L} this argument is ignored
 #'
 #' The following description is borrowed from \code{car} package documentation pertaining to the character vector
 #' input to the argument \code{L}: "The hypothesis matrix can be supplied as a numeric matrix (or vector), the rows of which
@@ -109,7 +109,7 @@
 #'
 #'
 #' }
-wald <- function(object, L, C = 0){
+wald <- function(object, L, C = NULL){
     if(missing(object)) missingMsg('object')
     covB <- extract.mirt(object, 'vcov')
     if(all(dim(covB) == c(1,1)))
@@ -129,6 +129,7 @@ wald <- function(object, L, C = 0){
         L <- tmp[, -NCOL(tmp), drop = FALSE]
         # rownames(L) <- L
     }
+    if(is.null(C)) C <- numeric(nrow(L))
     if(!is.matrix(L)){
         stop('L must be a matrix', call.=FALSE)
     } else if(ncol(L) != length(Names)){
@@ -136,11 +137,8 @@ wald <- function(object, L, C = 0){
     }
     if(!is.vector(C))
         stop('C must be a vector of constant population parameters', call.=FALSE)
-    if(length(C) == 1L){
-        C <- numeric(ncol(L))
-    } else if(length(C) != nrow(L)){
-        stop('length(C) must be the same as ncol(L)', call.=FALSE)
-    }
+    if(length(C) != nrow(L))
+        stop('length(C) must be the same as nrow(L)', call.=FALSE)
     W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))

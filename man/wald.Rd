@@ -4,7 +4,7 @@
 \alias{wald}
 \title{Wald statistics for mirt models}
 \usage{
-wald(object, L, C = 0)
+wald(object, L, C = NULL)
 }
 \arguments{
 \item{object}{estimated object from \code{mirt}, \code{bfactor},
@@ -18,7 +18,7 @@ information matrix used to identify the (potentially constrained) parameters}
 
 \item{C}{a constant vector of population parameters to be compared along side L, where
   \code{length(C) == row(L)}. By default a vector of 0's is constructed. Note that when using
-  the syntax input for \code{L} this argument is omitted
+  the syntax input for \code{L} this argument is ignored
 
 The following description is borrowed from \code{car} package documentation pertaining to the character vector
 input to the argument \code{L}: "The hypothesis matrix can be supplied as a numeric matrix (or vector), the rows of which
