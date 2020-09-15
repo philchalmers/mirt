@@ -10,8 +10,6 @@
 #' then the multiple-group model should be adjusted to better account for the large response bias
 #' due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hartig (2019) for details.
 #'
-#' @param dat complete dataset
-#' @param group group membership vector
 #' @param pooled_mod a multiple-group model (used to compute the model-implied
 #'   probability in the goodness-of-fit test)
 #' @param flag a numeric value used as a cut-off to help flag larger RMSD values
@@ -66,9 +64,9 @@
 #'    invariance = c(colnames(dat), 'free_mean', 'free_var'))
 #' coef(pooled_mod, simplify=TRUE)
 #'
-#' RMSD_DIF(dat, group=group, pooled_mod)
-#' RMSD_DIF(dat, group=group, pooled_mod, dentype = 'empirical')
-#' RMSD_DIF(dat, group=group, pooled_mod, flag = .03)
+#' RMSD_DIF(pooled_mod)
+#' RMSD_DIF(pooled_mod, dentype = 'empirical')
+#' RMSD_DIF(pooled_mod, flag = .03)
 #'
 #' # more freely estimated model (item 1 has 2 parameters estimated)
 #' MGmod <- multipleGroup(dat, 1, group=group,
@@ -76,8 +74,8 @@
 #' coef(MGmod, simplify=TRUE)
 #'
 #' # RMSD in item.1 now reduced (MG model accounts for DIF)
-#' RMSD_DIF(dat, group=group, MGmod)
-#' RMSD_DIF(dat, group=group, MGmod, flag = .03)
+#' RMSD_DIF(MGmod)
+#' RMSD_DIF(MGmod, flag = .03)
 #'
 #'
 #' #################
@@ -110,9 +108,9 @@
 #' coef(pooled_mod, simplify=TRUE)
 #'
 #' # Item_1 fits poorly in several categories (RMSD > .05)
-#' RMSD_DIF(dat, group=group, pooled_mod)
-#' RMSD_DIF(dat, group=group, pooled_mod, flag = .05)
-#' RMSD_DIF(dat, group=group, pooled_mod, flag = .1, probfun = FALSE) # use expected score function
+#' RMSD_DIF(pooled_mod)
+#' RMSD_DIF(pooled_mod, flag = .05)
+#' RMSD_DIF(pooled_mod, flag = .1, probfun = FALSE) # use expected score function
 #'
 #' # more freely estimated model (item 1 has more parameters estimated)
 #' MGmod <- multipleGroup(dat, 1, group=group,
@@ -120,15 +118,15 @@
 #' coef(MGmod, simplify=TRUE)
 #'
 #' # RMSDs in Item_1 now reduced (MG model better accounts for DIF)
-#' RMSD_DIF(dat, group=group, MGmod)
-#' RMSD_DIF(dat, group=group, MGmod, flag = .05)
-#' RMSD_DIF(dat, group=group, MGmod, probfun = FALSE, flag = .1) # use expected score function
+#' RMSD_DIF(MGmod)
+#' RMSD_DIF(MGmod, flag = .05)
+#' RMSD_DIF(MGmod, probfun = FALSE, flag = .1) # use expected score function
 #'
 #' }
 #'
-RMSD_DIF <- function(dat, group, pooled_mod, flag = 0,
-                     probfun = TRUE, dentype = 'norm'){
-    stopifnot(nrow(dat) == length(group))
+RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
+    dat <- extract.mirt(pooled_mod, 'data')
+    group <- extract.mirt(pooled_mod, "group")
     which.groups <- extract.mirt(pooled_mod, 'groupNames')
     ret <- vector('list', length(which.groups))
     names(ret) <- which.groups

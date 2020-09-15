@@ -4,13 +4,9 @@
 \alias{RMSD_DIF}
 \title{RMSD effect size statistic to quantify category-level DIF}
 \usage{
-RMSD_DIF(dat, group, pooled_mod, flag = 0, probfun = TRUE, dentype = "norm")
+RMSD_DIF(pooled_mod, flag = 0, probfun = TRUE, dentype = "norm")
 }
 \arguments{
-\item{dat}{complete dataset}
-
-\item{group}{group membership vector}
-
 \item{pooled_mod}{a multiple-group model (used to compute the model-implied
 probability in the goodness-of-fit test)}
 
@@ -64,9 +60,9 @@ pooled_mod <- multipleGroup(dat, 1, group=group,
    invariance = c(colnames(dat), 'free_mean', 'free_var'))
 coef(pooled_mod, simplify=TRUE)
 
-RMSD_DIF(dat, group=group, pooled_mod)
-RMSD_DIF(dat, group=group, pooled_mod, dentype = 'empirical')
-RMSD_DIF(dat, group=group, pooled_mod, flag = .03)
+RMSD_DIF(pooled_mod)
+RMSD_DIF(pooled_mod, dentype = 'empirical')
+RMSD_DIF(pooled_mod, flag = .03)
 
 # more freely estimated model (item 1 has 2 parameters estimated)
 MGmod <- multipleGroup(dat, 1, group=group,
@@ -74,8 +70,8 @@ MGmod <- multipleGroup(dat, 1, group=group,
 coef(MGmod, simplify=TRUE)
 
 # RMSD in item.1 now reduced (MG model accounts for DIF)
-RMSD_DIF(dat, group=group, MGmod)
-RMSD_DIF(dat, group=group, MGmod, flag = .03)
+RMSD_DIF(MGmod)
+RMSD_DIF(MGmod, flag = .03)
 
 
 #################
@@ -108,9 +104,9 @@ pooled_mod <- multipleGroup(dat, 1, group=group,
 coef(pooled_mod, simplify=TRUE)
 
 # Item_1 fits poorly in several categories (RMSD > .05)
-RMSD_DIF(dat, group=group, pooled_mod)
-RMSD_DIF(dat, group=group, pooled_mod, flag = .05)
-RMSD_DIF(dat, group=group, pooled_mod, flag = .1, probfun = FALSE) # use expected score function
+RMSD_DIF(pooled_mod)
+RMSD_DIF(pooled_mod, flag = .05)
+RMSD_DIF(pooled_mod, flag = .1, probfun = FALSE) # use expected score function
 
 # more freely estimated model (item 1 has more parameters estimated)
 MGmod <- multipleGroup(dat, 1, group=group,
@@ -118,9 +114,9 @@ MGmod <- multipleGroup(dat, 1, group=group,
 coef(MGmod, simplify=TRUE)
 
 # RMSDs in Item_1 now reduced (MG model better accounts for DIF)
-RMSD_DIF(dat, group=group, MGmod)
-RMSD_DIF(dat, group=group, MGmod, flag = .05)
-RMSD_DIF(dat, group=group, MGmod, probfun = FALSE, flag = .1) # use expected score function
+RMSD_DIF(MGmod)
+RMSD_DIF(MGmod, flag = .05)
+RMSD_DIF(MGmod, probfun = FALSE, flag = .1) # use expected score function
 
 }
 
