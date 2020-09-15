@@ -17,6 +17,9 @@
 #' @param flag a numeric value used as a cut-off to help flag larger RMSD values
 #'   (e.g., \code{flag = .03} will highlight only categories with RMSD values greater than
 #'   .03)
+#' @param probfun logical; use probability functions to compute RMSD? If FALSE, the expected score
+#'   functions will be integrated instead, which may be useful for collapsing across the
+#'   categories in polytomous items
 #' @param dentype density to use for the latent trait.
 #'   Can be \code{'norm'} to use a standard-normal Gaussian density (default),
 #'   or \code{'empirical'} to use the density estimate obtained via the E-table
@@ -59,7 +62,8 @@
 #' #-----
 #'
 #' # fully pooled model
-#' pooled_mod <- multipleGroup(dat, 1, group=group, invariance = colnames(dat))
+#' pooled_mod <- multipleGroup(dat, 1, group=group,
+#'    invariance = c(colnames(dat), 'free_mean', 'free_var'))
 #' coef(pooled_mod, simplify=TRUE)
 #'
 #' RMSD_DIF(dat, group=group, pooled_mod)
@@ -68,7 +72,7 @@
 #'
 #' # more freely estimated model (item 1 has 2 parameters estimated)
 #' MGmod <- multipleGroup(dat, 1, group=group,
-#'                        invariance = colnames(dat)[-1])
+#'                        invariance = c(colnames(dat)[-1], 'free_mean', 'free_var'))
 #' coef(MGmod, simplify=TRUE)
 #'
 #' # RMSD in item.1 now reduced (MG model accounts for DIF)
@@ -101,25 +105,29 @@
 #' #-----
 #'
 #' # fully pooled model
-#' pooled_mod <- multipleGroup(dat, 1, group=group, invariance = colnames(dat))
+#' pooled_mod <- multipleGroup(dat, 1, group=group,
+#'          invariance = c(colnames(dat), 'free_mean', 'free_var'))
 #' coef(pooled_mod, simplify=TRUE)
 #'
 #' # Item_1 fits poorly in several categories (RMSD > .05)
 #' RMSD_DIF(dat, group=group, pooled_mod)
 #' RMSD_DIF(dat, group=group, pooled_mod, flag = .05)
+#' RMSD_DIF(dat, group=group, pooled_mod, flag = .1, probfun = FALSE) # use expected score function
 #'
 #' # more freely estimated model (item 1 has more parameters estimated)
 #' MGmod <- multipleGroup(dat, 1, group=group,
-#'                        invariance = colnames(dat)[-1])
+#'                        invariance = c(colnames(dat)[-1], 'free_mean', 'free_var'))
 #' coef(MGmod, simplify=TRUE)
 #'
 #' # RMSDs in Item_1 now reduced (MG model better accounts for DIF)
 #' RMSD_DIF(dat, group=group, MGmod)
 #' RMSD_DIF(dat, group=group, MGmod, flag = .05)
+#' RMSD_DIF(dat, group=group, MGmod, probfun = FALSE, flag = .1) # use expected score function
 #'
 #' }
 #'
-RMSD_DIF <- function(dat, group, pooled_mod, flag = 0, dentype = 'norm'){
+RMSD_DIF <- function(dat, group, pooled_mod, flag = 0,
+                     probfun = TRUE, dentype = 'norm'){
     stopifnot(nrow(dat) == length(group))
     which.groups <- extract.mirt(pooled_mod, 'groupNames')
     ret <- vector('list', length(which.groups))
@@ -157,7 +165,12 @@ RMSD_DIF <- function(dat, group, pooled_mod, flag = 0, dentype = 'norm'){
             P_o <- O / rowSums(O)
             item <- extract.item(smod, which.items[i])
             P_e <- probtrace(item, Theta)
-            ret2[[i]] <- sqrt(colSums((P_o - P_e)^2 * f_theta))
+            ret2[[i]] <- if(probfun){
+                sqrt(colSums((P_o - P_e)^2 * f_theta))
+            } else {
+                S <- 1L:ncol(P_o)-  1L
+                c("S(theta)" = sqrt(sum(( colSums(S*t(P_o - P_e)) )^2 * f_theta)))
+            }
         }
         nms <- lapply(ret2, names)
         unms <- unique(do.call(c, nms))
