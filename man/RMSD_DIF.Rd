@@ -19,7 +19,8 @@ functions will be integrated instead, which may be useful for collapsing across 
 categories in polytomous items}
 
 \item{dentype}{density to use for the latent trait.
-Can be \code{'norm'} to use a standard-normal Gaussian density (default),
+Can be \code{'norm'} to use a normal Gaussian density where the mean/variance are extracted
+from the model object(default), \code{'snorm'} for a standard normal distribution,
 or \code{'empirical'} to use the density estimate obtained via the E-table}
 }
 \description{

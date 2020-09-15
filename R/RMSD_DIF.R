@@ -19,7 +19,8 @@
 #'   functions will be integrated instead, which may be useful for collapsing across the
 #'   categories in polytomous items
 #' @param dentype density to use for the latent trait.
-#'   Can be \code{'norm'} to use a standard-normal Gaussian density (default),
+#'   Can be \code{'norm'} to use a normal Gaussian density where the mean/variance are extracted
+#'   from the model object(default), \code{'snorm'} for a standard normal distribution,
 #'   or \code{'empirical'} to use the density estimate obtained via the E-table
 #'
 #'
@@ -146,8 +147,14 @@ RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
         Etable <- mod_g@Internals$Etable[[1]]$r1
 
         # standard normal dist for theta
-        if(dentype == 'norm'){
-            f_theta <- dnorm(Theta)
+        if(dentype %in% c('norm', 'snorm')){
+            mu <- sv$value[sv$name == "MEAN_1"]
+            sigma2 <- mu <- sv$value[sv$name == "COV_11"]
+            if(dentype == 'snorm'){
+                mu <- 0
+                sigma2 <- 1
+            }
+            f_theta <- dnorm(Theta, mean = mu, sd = sqrt(sigma2))
             f_theta <- as.vector(f_theta / sum(f_theta))
         } else if(dentype == 'empirical'){
             f_theta <- rowSums(Etable) / sum(Etable)
