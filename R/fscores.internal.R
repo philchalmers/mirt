@@ -427,6 +427,7 @@ setMethod(
             } else {
                 stop('method not defined', call.=FALSE)
             }
+
     		if(return.acov){
     		    scores <- tmp
     		    converge_info_vec <- rep(1, nrow(scores))
@@ -491,7 +492,12 @@ setMethod(
 		        colnames(scoremat) <- paste0("Class_", 1:ncol(scoremat))
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)
-            if(converge_info) scoremat <- cbind(scoremat, converged=converge_info_mat)
+            if(any(na.omit(converge_info_mat) != 1)){
+                attr(scoremat, 'converge_info_code') <- converge_info_mat
+                whc <- which(converge_info_mat != 1)
+                warning(paste0("The following factor score estimates failed to converge successfully:\n    ",
+                               paste0(whc, collapse=',')), call.=FALSE)
+            }
             if(method == 'classify')
                 colnames(scoremat) <- paste0("CLASS_", 1L:ncol(scoremat))
             return(scoremat)
