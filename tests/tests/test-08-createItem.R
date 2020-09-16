@@ -47,8 +47,8 @@ test_that('old2PL', {
     expect_is(mod, 'SingleGroupClass')
     expect_is(coef(mod), 'list')
 
-    fs <- fscores(mod, converge_info = TRUE)
-    expect_equal(unname(fs[1,]), c(-1.828444, 1), tolerance = 1e-4)
+    fs <- fscores(mod)
+    expect_equal(unname(fs[1,]), c(-1.828444), tolerance = 1e-4)
 })
 
 
