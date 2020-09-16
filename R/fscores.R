@@ -111,10 +111,6 @@
 #' @param min_expected when computing goodness of fit tests when \code{method = 'EAPsum'}, this value is used
 #'   to collapse across the conditioned total scores until the expected values are greater than this value. Note
 #'   that this only affect the goodness of fit tests and not the returned EAP for sum scores table
-#' @param converge_info logical; include a column in the return objects containing a logical for each
-#'   response pattern indicating whether a maximum value was found (not relevant non-iterative methods,
-#'   such as EAP and EAPsum). Value is a reflection of the \code{code} element from \code{\link{nlm}}
-#'   (e.g., 1 indicates convergence)
 #' @param ... additional arguments to be passed to \code{nlm}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -201,7 +197,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, use_dentype_estimate=FALSE,
                     QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
-                    converge_info = FALSE, max_theta = 20, start = NULL, ...)
+                    max_theta = 20, start = NULL, ...)
 {
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 5000
@@ -244,7 +240,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
-                            theta_lim=theta_lim, MI=MI, converge_info=converge_info,
+                            theta_lim=theta_lim, MI=MI,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,

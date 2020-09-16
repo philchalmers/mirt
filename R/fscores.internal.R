@@ -7,7 +7,7 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
-	                      min_expected, converge_info, plausible.type, start,
+	                      min_expected, plausible.type, start,
 	                      use_dentype_estimate, ...)
 	{
         den_fun <- mirt_dmvnorm
@@ -171,14 +171,14 @@ setMethod(
             } else if(plausible.type == 'normal'){
                 fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
                               quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE, cov=gcov,
-                              return.acov = FALSE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
+                              return.acov = FALSE, QMC=QMC, custom_den=custom_den, ...)
                 if(any(is.na(fs)))
                     stop('Plausible values cannot be drawn for completely empty response patterns.
                          Please remove these from your analysis.', call.=FALSE)
                 fs_acov <- fscores(object, rotate = rotate, Target=Target, full.scores = TRUE, method=method,
                               quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE,
                               plausible.draws=0, full.scores.SE=FALSE, cov=gcov,
-                              return.acov = TRUE, QMC=QMC, custom_den=custom_den, converge_info=FALSE, ...)
+                              return.acov = TRUE, QMC=QMC, custom_den=custom_den, ...)
                 suppressWarnings(jit <- myLapply(seq_len(nrow(fs)), function(i, mu, sig)
                     mirt_rmvnorm(plausible.draws, mean = mu[i,], sigma = sig[[i]]),
                     mu=fs, sig=fs_acov))
@@ -220,7 +220,7 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
-                               custom_theta=custom_theta, converge_info=converge_info,
+                               custom_theta=custom_theta,
                                start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
@@ -247,7 +247,7 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
-                               custom_theta=custom_theta, converge_info=converge_info, pis=pis,
+                               custom_theta=custom_theta, pis=pis,
                                start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
@@ -530,7 +530,6 @@ setMethod(
     			}
     			colnames(SEscores) <- paste('SE_', colnames(scores), sep='')
                 ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores,SEscores)
-                if(converge_info) ret <- cbind(ret, converged=converge_info_vec)
                 if(nrow(ret) > 1L) ret <- ret[do.call(order, as.data.frame(ret[,seq_len(J)])), ]
 		    } else {
 		        colnames(scores) <- paste0('Class_', 1L:ncol(scores))
