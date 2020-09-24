@@ -97,7 +97,7 @@ dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 
-mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
+mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
 #limited information fit statistics
 M2(mod_configural)
 
@@ -176,13 +176,13 @@ coef(mod_anchor, printSE=TRUE)
 #############
 #DIF test for each item (using all other items as anchors)
 itemnames <- colnames(dat)
-refmodel <- multipleGroup(dat, models, group = group, SE=TRUE,
-                             invariance=c('free_means', 'free_var', itemnames))
+refmodel <- multipleGroup(dat, 1, group = group, SE=TRUE,
+                          invariance=c('free_means', 'free_var', itemnames))
 
 #loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
+    estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
                              invariance=c('free_means', 'free_var', itemnames[-i]))
 
 (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
@@ -195,14 +195,14 @@ p.adjust(p, method = 'BH')
 #constrain all intercepts
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
-    estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
+    estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
                              invariance=c('free_means', 'free_var', 'intercepts',
                              itemnames[-i]))
 
 (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
 
 #quickly test with Wald test using DIF()
-mod_configural2 <- multipleGroup(dat, models, group = group, SE=TRUE)
+mod_configural2 <- multipleGroup(dat, 1, group = group, SE=TRUE)
 DIF(mod_configural2, which.par = c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
 
 
