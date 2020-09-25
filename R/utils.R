@@ -1193,10 +1193,11 @@ DerivativePriors <- function(x, grad, hess){
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
     }
     if(any(x@prior.type %in% c(3L, 4L))){ #beta
-        ind <- x@prior.type %in% c(3L, 4L)
-        val <- x@par[ind]
+        tmp <- x@par
         ind <- x@prior.type == 4L
-        val[ind] <- plogis(val[ind])
+        tmp[ind] <- plogis(tmp[ind])
+        ind <- x@prior.type %in% c(3L, 4L)
+        val <- tmp[ind]
         val <- ifelse(val < 1e-10, 1e-10, val)
         val <- ifelse(val > 1-1e-10, 1-1e-10, val)
         a <- x@prior_1[ind]
