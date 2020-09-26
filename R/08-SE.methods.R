@@ -177,6 +177,22 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         least one of the supplied items. Information matrix/standard errors not computed', call.=FALSE)
         return(ESTIMATE)
     }
+    if(type != 'Louis'){
+        Iprior <- matrix(0, nrow(Igrad), ncol(Igrad))
+        ind1 <- 1L
+        for(group in seq_len(length(pars))){
+            for (i in seq_len(length(pars[[group]]))){
+                np <- length(pars[[group]][[i]]@par)
+                deriv <- DerivativePriors(x=pars[[group]][[i]], grad=numeric(np),
+                                          hess=matrix(0, np, np))
+                ind2 <- ind1 + np - 1L
+                Iprior[ind1:ind2, ind1:ind2] <- deriv$hess
+                ind1 <- ind2 + 1L
+            }
+        }
+        Iprior <- -updateHess(Iprior, L=Ls$L)
+        Iprior <- Iprior[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
+    }
     Igrad <- updateHess(Igrad, L=Ls$L)
     IgradP <- updateHess(IgradP, L=Ls$L)
     Igrad <- Igrad[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
@@ -185,13 +201,13 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     if(type == 'Louis'){
         info <- -Ihess - IgradP + Igrad
     } else if(type == 'crossprod'){
-        info <- Igrad
+        info <- Igrad + Iprior
     } else if(type == 'sandwich.Louis'){
         tmp <- solve(-Ihess - IgradP + Igrad)
-        info <- solve(tmp %*% Igrad %*% tmp)
+        info <- solve(tmp %*% (Igrad + Iprior) %*% tmp)
     } else if(type == 'sandwich'){
         tmp <- -solve(ESTIMATE$hess)
-        info <- solve(tmp %*% Igrad %*% tmp)
+        info <- solve(tmp %*% (Igrad + Iprior) %*% tmp)
     }
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
