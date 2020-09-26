@@ -11,7 +11,8 @@
 #'   \code{'median'} the median of the difficulty estimates, and
 #'   \code{'trimmed'} to find the trimmed mean after removing the first
 #'   and last difficulty estimates
-#' @param interval interval range to search, passed to \code{\link{uniroot}}
+#' @param interval interval range to search for \code{'IRF'} type
+#' @param ... additional arguments to pass to \code{\link{uniroot}}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -29,6 +30,7 @@
 #' \dontrun{
 #'
 #' mod <- mirt(Science, 1)
+#' coef(mod, simplify=TRUE, IRTpars = TRUE)$items
 #'
 #' gen.difficulty(mod)
 #' gen.difficulty(mod, type = 'mean')
@@ -36,12 +38,13 @@
 #' # also works for dichotomous items (though this is unnecessary)
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1)
+#' coef(mod, simplify=TRUE, IRTpars = TRUE)$items
 #'
 #' gen.difficulty(mod)
 #' gen.difficulty(mod, type = 'mean')
 #'
 #' }
-gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30)){
+gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30), ...){
 
     LImean <- function(mod, type){
         cfs <- coef(mod, IRTpars = TRUE)
@@ -59,10 +62,10 @@ gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30)){
         ret
     }
 
-    LIIRF_1 <- function(item){
+    LIIRF_1 <- function(item, ...){
         m <- attr(item, 'm')
         fn <- function(theta) expected.item(item, theta) - m
-        uniroot(fn, interval=interval)$root
+        uniroot(fn, interval=interval, ...)$root
     }
 
     if(type %in% c("mean", "median", "trimmed")){
@@ -75,7 +78,7 @@ gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30)){
                            attr(out, 'm') <- m[x]
                            out
                         })
-        ret <- sapply(items, LIIRF_1)
+        ret <- sapply(items, LIIRF_1, ...)
     } else stop('type not supported')
     names(ret) <- extract.mirt(mod, 'itemnames')
     ret

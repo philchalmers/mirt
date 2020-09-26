@@ -4,7 +4,7 @@
 \alias{gen.difficulty}
 \title{Generalized item difficulty summaries}
 \usage{
-gen.difficulty(mod, type = "IRF", interval = c(-30, 30))
+gen.difficulty(mod, type = "IRF", interval = c(-30, 30), ...)
 }
 \arguments{
 \item{mod}{a single factor model estimated by \code{\link{mirt}}}
@@ -16,7 +16,9 @@ Can be \code{'IRF'} to use the item response function (default),
 \code{'trimmed'} to find the trimmed mean after removing the first
 and last difficulty estimates}
 
-\item{interval}{interval range to search, passed to \code{\link{uniroot}}}
+\item{interval}{interval range to search for \code{'IRF'} type}
+
+\item{...}{additional arguments to pass to \code{\link{uniroot}}}
 }
 \description{
 Function provides the four generalized item difficulty representations
@@ -28,6 +30,7 @@ These estimates are used to gauge how difficult a polytomous item may be.
 \dontrun{
 
 mod <- mirt(Science, 1)
+coef(mod, simplify=TRUE, IRTpars = TRUE)$items
 
 gen.difficulty(mod)
 gen.difficulty(mod, type = 'mean')
@@ -35,6 +38,7 @@ gen.difficulty(mod, type = 'mean')
 # also works for dichotomous items (though this is unnecessary)
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)
+coef(mod, simplify=TRUE, IRTpars = TRUE)$items
 
 gen.difficulty(mod)
 gen.difficulty(mod, type = 'mean')
