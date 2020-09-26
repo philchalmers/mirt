@@ -856,9 +856,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                    DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich.Louis', 'sandwich')) &&
                   !(opts$method %in% c('MHRM', 'SEM', 'MIXED'))){
-            if(logPrior != 0 && opts$warn)
-                warning('Information matrix with the crossprod, Louis, and sandwich method
-                        do not account for prior parameter distribution information')
             ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
                                   constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
