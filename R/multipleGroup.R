@@ -81,24 +81,23 @@
 #' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
-#' models <- 'F1 = 1-15'
 #'
-#' mod_configural <- multipleGroup(dat, models, group = group) #completely separate analyses
+#' mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
 #' #limited information fit statistics
 #' M2(mod_configural)
 #'
-#' mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes')) #equal slopes
+#' mod_metric <- multipleGroup(dat, 1, group = group, invariance=c('slopes')) #equal slopes
 #' #equal intercepts, free variance and means
-#' mod_scalar2 <- multipleGroup(dat, models, group = group,
+#' mod_scalar2 <- multipleGroup(dat, 1, group = group,
 #'                              invariance=c('slopes', 'intercepts', 'free_var','free_means'))
-#' mod_scalar1 <- multipleGroup(dat, models, group = group,  #fixed means
+#' mod_scalar1 <- multipleGroup(dat, 1, group = group,  #fixed means
 #'                              invariance=c('slopes', 'intercepts', 'free_var'))
-#' mod_fullconstrain <- multipleGroup(dat, models, group = group,
+#' mod_fullconstrain <- multipleGroup(dat, 1, group = group,
 #'                              invariance=c('slopes', 'intercepts'))
 #' extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #'
 #' #optionally use Newton-Raphson for (generally) faster convergence in the M-step's
-#' mod_fullconstrain <- multipleGroup(dat, models, group = group, optimizer = 'NR',
+#' mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
 #'                              invariance=c('slopes', 'intercepts'))
 #' extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #'
@@ -119,10 +118,10 @@
 #'
 #'
 #' #test whether first 6 slopes should be equal across groups
-#' values <- multipleGroup(dat, models, group = group, pars = 'values')
+#' values <- multipleGroup(dat, 1, group = group, pars = 'values')
 #' values
 #' constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
-#' equalslopes <- multipleGroup(dat, models, group = group, constrain = constrain)
+#' equalslopes <- multipleGroup(dat, 1, group = group, constrain = constrain)
 #' anova(equalslopes, mod_configural)
 #'
 #' #same as above, but using mirt.model syntax
@@ -162,13 +161,13 @@
 #' #############
 #' #DIF test for each item (using all other items as anchors)
 #' itemnames <- colnames(dat)
-#' refmodel <- multipleGroup(dat, models, group = group, SE=TRUE,
-#'                              invariance=c('free_means', 'free_var', itemnames))
+#' refmodel <- multipleGroup(dat, 1, group = group, SE=TRUE,
+#'                           invariance=c('free_means', 'free_var', itemnames))
 #'
 #' #loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
-#'     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
+#'     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
 #'                              invariance=c('free_means', 'free_var', itemnames[-i]))
 #'
 #' (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
@@ -181,15 +180,40 @@
 #' #constrain all intercepts
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
-#'     estmodels[[i]] <- multipleGroup(dat, models, group = group, verbose = FALSE, calcNull=FALSE,
+#'     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
 #'                              invariance=c('free_means', 'free_var', 'intercepts',
 #'                              itemnames[-i]))
 #'
 #' (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
 #'
 #' #quickly test with Wald test using DIF()
-#' mod_configural2 <- multipleGroup(dat, models, group = group, SE=TRUE)
+#' mod_configural2 <- multipleGroup(dat, 1, group = group, SE=TRUE)
 #' DIF(mod_configural2, which.par = c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
+#'
+#'
+#'
+#' #############
+#' # Three group model where the latent variable parameters are constrained to
+#' # be equal in the focal groups
+#'
+#' set.seed(12345)
+#' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+#' d <- matrix(rnorm(15,0,.7),ncol=1)
+#' itemtype <- rep('2PL', nrow(a))
+#' N <- 1000
+#' dataset1 <- simdata(a, d, N, itemtype)
+#' dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+#' dataset3 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
+#' dat <- rbind(dataset1, dataset2, dataset3)
+#' group <- rep(c('D1', 'D2', 'D3'), each=N)
+#' model <- 'F1 = 1-15
+#'           FREE[D2, D3] = (GROUP, MEAN_1), (GROUP, COV_11)
+#'           CONSTRAINB[D2,D3] = (GROUP, MEAN_1), (GROUP, COV_11)'
+#'
+#' mod <- multipleGroup(dat, model, group = group, invariance = colnames(dat))
+#' coef(mod, simplify=TRUE)
+#'
+#'
 #'
 #' #############
 #' #multiple factors
