@@ -1,5 +1,8 @@
 # Changes in mirt 1.33
 
+- Added `gen.difficulty()` to compute the generalized difficulty statistics 
+   described by Ali, Chang, and Anderson (2015) for polytomous response models (suggested by Alexander Freund)
+
 - Added `RMSD_DIF()` to compute marginal effect size measure recently used in PISA anlayses when investigating 
   'badness-of-fit' DIF effects when using constrained multiple-group models
 
