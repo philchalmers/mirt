@@ -393,11 +393,11 @@
 #'       Fisher scores as well as Louis' (1982) exact computation of the observed information matrix.
 #'       Note that Louis' estimates can take a long time to obtain for large sample sizes and long tests
 #'     \item \code{'sandwich'} for the sandwich covariance estimate based on the
-#'       \code{'crossprod'} and \code{'Oakes'} estimates (see Chalmers, in press, for details)
+#'       \code{'crossprod'} and \code{'Oakes'} estimates (see Chalmers, 2018, for details)
 #'     \item \code{'sandwich.Louis'} for the sandwich covariance estimate based on the
 #'       \code{'crossprod'} and \code{'Louis'} estimates
 #'     \item \code{'Oakes'} for Oakes' (1999) method using a central difference approximation
-#'       (see Chalmers, in press, for details)
+#'       (see Chalmers, 2018, for details)
 #'     \item \code{'SEM'} for the supplemented EM (disables the \code{accelerate} option automatically; EM only)
 #'     \item \code{'Fisher'} for the expected information, \code{'complete'} for information based
 #'       on the complete-data Hessian used in EM algorithm
@@ -672,7 +672,7 @@
 #' Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
 #' \emph{Journal of Educational Measurement, 52}, 200-222. \doi{10.1111/jedm.12072}
 #'
-#' Chalmers, R. P. (in press). Numerical Approximation of the ObservedInformation Matrix with Oakes' Identity.
+#' Chalmers, R. P. (2018). Numerical Approximation of the Observed Information Matrix with Oakes' Identity.
 #' \emph{British Journal of Mathematical and Statistical Psychology} \emph{DOI: 10.1111/bmsp.12127}
 #'
 #' Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
