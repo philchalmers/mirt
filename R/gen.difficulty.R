@@ -68,6 +68,7 @@ gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30), ...){
         uniroot(fn, interval=interval, ...)$root
     }
 
+    stopifnot(extract.mirt(mod, 'nfact') == 1L)
     if(type %in% c("mean", "median", "trimmed")){
         ret <- LImean(mod, type=type)
     } else if(type == "IRF"){

@@ -385,6 +385,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
         } #END EM
+        if(verbose && !list$SE) cat('\n')
         if(is.nan(TOL) || is.numeric(TOL)){
             if(length(lrPars)) lrPars@mus <- lrPars@X %*% lrPars@beta
             if(MC)
