@@ -45,6 +45,20 @@ kniterrors:
 	grep -Hrn '## Error'
 	grep -Hrn '## Warning'
 
+pkgdown:
+	rm -rf html/
+	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R
+	sed -i s/dontrun/donttest/g man/*.Rd
+	make install
+	Rscript -e "library('pkgdown',quietly=TRUE);build_site()"
+	git checkout -- .
+	make install
+	make kniterrors
+
+
+
+
+
 clean:
 	$(RM) src/*.o
 	$(RM) src/*.so
