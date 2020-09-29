@@ -6,6 +6,7 @@ mirt.Rproj
 ^.*\.Rproj$
 ^Makefile$
 .travis.yml
+_pkgdown.yml
 html/
 data/dataComplete.RData
 data/dataSparse.RData
