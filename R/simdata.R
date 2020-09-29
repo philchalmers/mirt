@@ -59,7 +59,9 @@
 #'   latent trait matrix \code{Theta}? Default is FALSE
 #' @param model a single group object, typically returned by functions such as \code{\link{mirt}} or
 #'   \code{\link{bfactor}}. Supplying this will render all other parameter elements (excluding the
-#'   \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundant (unless explicitly provided)
+#'   \code{Theta}, \code{N}, \code{mu}, and \code{sigma} inputs) redundant (unless explicitly provided).
+#'   This input can therefore be used to create parametric bootstrap data whereby plausible data implied by the
+#'   estimated model can be generated and evaluated
 #' @param equal.K logical; when a \code{model} input is supplied, should the generated data contain the same
 #'   number of categories as the original data indicated by \code{extract.mirt(model, 'K')}? Default is TRUE,
 #'   which will redrawn data until this condition is satisfied
