@@ -1373,7 +1373,8 @@ maketabDataLarge <- function(tmpdata, group, groupNames, nitem, K, itemloc,
     ret
 }
 
-makeLmats <- function(pars, constrain, random = list(), lrPars = list(), lr.random = list()){
+makeLmats <- function(pars, constrain, random = list(), lrPars = list(), lr.random = list(),
+                      nconstrain = NULL){
     ngroups <- length(pars)
     J <- length(pars[[1L]]) - 1L
     L <- c()
@@ -1392,6 +1393,14 @@ makeLmats <- function(pars, constrain, random = list(), lrPars = list(), lr.rand
         L[constrain[[i]], constrain[[i]]] <- 1L
         for(j in 2L:length(constrain[[i]]))
             redun_constr[constrain[[i]][j]] <- TRUE
+    }
+    if(!is.null(nconstrain)){
+        for(i in seq_len(length(nconstrain))){
+            stopifnot(length(nconstrain[[i]]) == 2L)
+            L[nconstrain[[i]], nconstrain[[i]]] <- c(1L, -1L)
+            for(j in 2L:length(nconstrain[[i]]))
+                redun_constr[nconstrain[[i]][j]] <- TRUE
+        }
     }
     return(list(L=L, redun_constr=redun_constr))
 }
@@ -1415,7 +1424,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'parallel', 'NULL.MODEL', 'theta_lim', 'RANDSTART', 'MHDRAWS', 'removeEmptyRows',
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
                 'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
-                "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged', 'omp')
+                "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged', 'omp', 'nconstrain')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1879,14 +1888,19 @@ RMSEA.CI <- function(X2, df, N, ci.lower=.05, ci.upper=.95) {
     return(c(RMSEA.lower, RMSEA.upper))
 }
 
-longpars_constrain <- function(longpars, constrain){
+longpars_constrain <- function(longpars, constrain, nconstrain = NULL){
     for(i in seq_len(length(constrain)))
         longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+    if(!is.null(nconstrain)){
+        for(i in seq_len(length(nconstrain)))
+            longpars[nconstrain[[i]][-1L]] <- -longpars[nconstrain[[i]][1L]]
+    }
     longpars
 }
 
-BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems,
+BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific, sitems, nconstrain,
                CUSTOM.IND, EHPrior, Data, dentype, itemloc, theta, constrain, lrPars, omp_threads){
+    #TODO use nconstrain
     longpars[est] <- p
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     pars2 <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)

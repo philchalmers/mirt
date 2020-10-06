@@ -76,7 +76,7 @@ Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND
 Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L, ANY.PRIOR,
                   UBOUND, LBOUND, constrain, DERIV, Prior, rlist, CUSTOM.IND, solnp_args,
                   SLOW.IND, dentype, nfact, Moptim, Mrate, TOL, full,
-                  lrPars, keep_vcov_PD, control){
+                  lrPars, keep_vcov_PD, control, nconstrain = NULL){
     p <- longpars[est]
     if(length(p)){
         if(Moptim == 'BFGS'){
@@ -85,8 +85,8 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='BFGS', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
-                             itemloc=itemloc, keep_vcov_PD=keep_vcov_PD),
+                             PrepList=PrepList, L=L, constrain=constrain, nconstrain=nconstrain,
+                             ANY.PRIOR=ANY.PRIOR, itemloc=itemloc, keep_vcov_PD=keep_vcov_PD),
                        silent=TRUE)
         } else if(Moptim == 'L-BFGS-B'){
             if(is.null(control$maxit))
@@ -94,32 +94,32 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             opt <- try(optim(p, fn=Mstep.LL, gr=Mstep.grad, method='L-BFGS-B', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             PrepList=PrepList, L=L, constrain=constrain, nconstrain=nconstrain, ANY.PRIOR=ANY.PRIOR,
                              itemloc=itemloc, keep_vcov_PD=keep_vcov_PD, lower=LBOUND[est], upper=UBOUND[est]),
                        silent=TRUE)
         } else if(Moptim == 'Nelder-Mead'){
             opt <- try(optim(p, fn=Mstep.LL, method='Nelder-Mead', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             PrepList=PrepList, L=L, constrain=constrain, nconstrain=nconstrain, ANY.PRIOR=ANY.PRIOR,
                              itemloc=itemloc, keep_vcov_PD=keep_vcov_PD),
                        silent=TRUE)
         } else if(Moptim == 'SANN'){
             opt <- try(optim(p, fn=Mstep.LL, method='SANN', control=control,
                              DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                              est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                             PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                             PrepList=PrepList, L=L, constrain=constrain, nconstrain=nconstrain, ANY.PRIOR=ANY.PRIOR,
                              itemloc=itemloc, keep_vcov_PD=keep_vcov_PD),
                        silent=TRUE)
         } else if(Moptim == 'NR'){
             opt <- try(Mstep.NR(p=p, est=est, longpars=longpars, pars=pars, ngroups=ngroups,
                                 J=J, gTheta=gTheta, PrepList=PrepList, L=L,  ANY.PRIOR=ANY.PRIOR,
-                                constrain=constrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
+                                constrain=constrain, nconstrain=nconstrain, LBOUND=LBOUND, UBOUND=UBOUND, SLOW.IND=SLOW.IND,
                                 itemloc=itemloc, DERIV=DERIV, rlist=rlist, control=control), TRUE)
         } else if(Moptim %in% c('solnp', 'nloptr')){
             optim_args <- list(CUSTOM.IND=CUSTOM.IND, est=est, longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J, gTheta=gTheta, PrepList=PrepList, L=L,
-                               ANY.PRIOR=ANY.PRIOR, constrain=constrain, LBOUND=LBOUND,
+                               ANY.PRIOR=ANY.PRIOR, constrain=constrain, nconstrain=nconstrain, LBOUND=LBOUND,
                                UBOUND=UBOUND, SLOW.IND=SLOW.IND, itemloc=itemloc, DERIV=DERIV,
                                rlist=rlist, keep_vcov_PD=keep_vcov_PD)
             if(Moptim == 'solnp'){
@@ -155,7 +155,7 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             opt <- try(nlminb(p, Mstep.LL, Mstep.grad,
                               DERIV=DERIV, rlist=rlist, CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                               est=est, longpars=longpars, pars=pars, ngroups=ngroups, J=J, gTheta=gTheta,
-                              PrepList=PrepList, L=L, constrain=constrain, ANY.PRIOR=ANY.PRIOR,
+                              PrepList=PrepList, L=L, constrain=constrain, nconstrain=nconstrain, ANY.PRIOR=ANY.PRIOR,
                               itemloc=itemloc, keep_vcov_PD=keep_vcov_PD,
                               lower=LBOUND[est], upper=UBOUND[est], control=control),
                        silent=TRUE)
@@ -195,14 +195,16 @@ Mstep <- function(pars, est, longpars, ngroups, J, gTheta, itemloc, PrepList, L,
             longpars[pars[[1L]][[J+1L]]@parnum[pars[[1L]][[J+1L]]@est]] <-
                 res$siglong[pars[[1L]][[J+1L]]@est]
     }
-    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
+                                   nconstrain=nconstrain)
     longpars
 }
 
 Mstep.LL <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, CUSTOM.IND,
-                     SLOW.IND, constrain, itemloc, DERIV, rlist, ANY.PRIOR, keep_vcov_PD){
+                     SLOW.IND, constrain, nconstrain, itemloc, DERIV, rlist, ANY.PRIOR, keep_vcov_PD){
     longpars[est] <- p
-    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
+                                   nconstrain=nconstrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     LLs <- numeric(ngroups)
     for(g in seq_len(ngroups)){
@@ -220,7 +222,7 @@ Mstep.LL_alt <- function(x0, optim_args){
                     ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta,
                     PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND,
                     SLOW.IND=optim_args$SLOW.IND, keep_vcov_PD=optim_args$keep_vcov_PD,
-                    constrain=optim_args$constrain, itemloc=optim_args$itemloc,
+                    constrain=optim_args$constrain, nconstrain=optim_args$nconstrain, itemloc=optim_args$itemloc,
                     DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
@@ -355,9 +357,10 @@ LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
 }
 
 Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
-                       constrain, itemloc, DERIV, rlist, CUSTOM.IND, SLOW.IND, keep_vcov_PD){
+                       constrain, nconstrain, itemloc, DERIV, rlist, CUSTOM.IND, SLOW.IND, keep_vcov_PD){
     longpars[est] <- p
-    longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
+                                   nconstrain=nconstrain)
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     if(pars[[1L]][[J + 1L]]@itemclass %in% c(-1L, -999L)){
         for(g in seq_len(length(pars))){
@@ -392,12 +395,12 @@ Mstep.grad_alt <- function(x0, optim_args){
                       ngroups=optim_args$ngroups, J=optim_args$J, gTheta=optim_args$gTheta,
                       PrepList=optim_args$PrepList, L=optim_args$L, CUSTOM.IND=optim_args$CUSTOM.IND,
                       SLOW.IND=optim_args$SLOW.IND, keep_vcov_PD=optim_args$keep_vcov_PD,
-                      constrain=optim_args$constrain, itemloc=optim_args$itemloc,
+                      constrain=optim_args$constrain, nconstrain=optim_args$nconstrain, itemloc=optim_args$itemloc,
                       DERIV=optim_args$DERIV, rlist=optim_args$rlist, ANY.PRIOR=optim_args$ANY.PRIOR))
 }
 
 Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, ANY.PRIOR,
-                     constrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, control)
+                     constrain, nconstrain, LBOUND, UBOUND, itemloc, DERIV, rlist, SLOW.IND, control)
 {
     plast2 <- plast <- p
     ubound <- UBOUND[est]
@@ -405,7 +408,8 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
     lastchange <- 0
     for(iter in seq_len(control$maxit)){
         longpars[est] <- p
-        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
+                                       nconstrain=nconstrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
         dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L, 1L, TRUE)
         if(length(SLOW.IND)){

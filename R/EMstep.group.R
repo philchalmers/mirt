@@ -1,4 +1,5 @@
-EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, solnp_args, control)
+EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, solnp_args, control,
+                     nconstrain=NULL)
 {
     verbose <- list$verbose
     lrPars <- list$lrPars
@@ -179,7 +180,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                          Theta=Theta, PrepList=PrepList, dentype=dentype, lrPars=lrPars,
                          specific=specific, sitems=sitems, CUSTOM.IND=CUSTOM.IND,
-                         constrain=constrain, EHPrior=NULL, Data=Data, omp_threads=list$omp_threads,
+                         constrain=constrain, nconstrain=nconstrain,
+                         EHPrior=NULL, Data=Data, omp_threads=list$omp_threads,
                          method=Moptim, control=control, hessian=list$SE,
                          lower=lower, upper=upper), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
@@ -296,7 +298,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                               CUSTOM.IND=CUSTOM.IND, SLOW.IND=list$SLOW.IND,
                               PrepList=PrepList, L=L, UBOUND=UBOUND, LBOUND=LBOUND, Moptim=Moptim,
                               dentype=dentype, nfact=nfact, keep_vcov_PD=list$keep_vcov_PD,
-                              rlist=rlist, constrain=constrain, DERIV=DERIV, Mrate=Mrate,
+                              rlist=rlist, constrain=constrain, nconstrain=nconstrain, DERIV=DERIV, Mrate=Mrate,
                               TOL=list$MSTEPTOL, solnp_args=solnp_args, full=full, lrPars=lrPars,
                               control=control)
             if(dentype == 'EHW' && cycles > 1L){

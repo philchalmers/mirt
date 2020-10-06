@@ -457,6 +457,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(length(lrPars))
         nestpars <- nestpars + sum(lrPars@est)
     if(!is.null(dots$structure)) nestpars <- nestpars - 1L
+    if(!is.null(opts$technical$nconstrain))
+        constrain <- c(constrain, opts$technical$nconstrain)
     if(length(constrain) > 0L)
         for(i in seq_len(length(constrain)))
             nconstr <- nconstr + length(constrain[[i]]) - 1L
@@ -499,7 +501,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             DERIV[[g]][[i]] <- selectMethod(Deriv, c(class(pars[[g]][[i]]), 'matrix'))
     }
     Ls <- makeLmats(pars, constrain, random = mixed.design$random,
-                    lr.random=latent.regression$lr.random, lrPars=lrPars)
+                    lr.random=latent.regression$lr.random, lrPars=lrPars,
+                    nconstrain=opts$technical$nconstrain)
     CUSTOM.IND <- which(sapply(pars[[1L]], class) %in% Use_R_ProbTrace())
     SLOW.IND <- which(sapply(pars[[1L]], class) %in% Use_R_Deriv())
     if(pars[[1]][[length(pars[[1L]])]]@itemclass %in% c(-1L, -999L))
@@ -613,7 +616,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          NULL.MODEL=opts$NULL.MODEL, PLCI=opts$PLCI, Norder=opts$Norder,
                                          keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric,
                                          MCEM_draws=opts$MCEM_draws, omp_threads=opts$omp_threads),
-                             Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
+                             Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control,
+                             nconstrain=opts$technical$nconstrain)
         if(opts$method == 'MCEM')
             opts$quadpts <- opts$MCEM_draws(ESTIMATE$cycles)
         opts$Moptim <- ESTIMATE$Moptim
