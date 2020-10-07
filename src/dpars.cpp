@@ -1633,7 +1633,8 @@ static void d_priors(vector<double> &grad, NumericMatrix &hess, const int &ind,
 static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List &pars,
     const NumericMatrix &Theta, const NumericMatrix &offterm, const NumericMatrix &itemtrace,
     const vector<double> &prior, const int &nitems, const int &npars,
-    const int &estHess, const int &USEFIXED, const int &EM, const bool &EMcomplete)
+    const int &estHess, const int &USEFIXED, const int &EM, const bool &EMcomplete,
+    const bool &useIprior)
 {
     int nfact = Theta.ncol();
     int N = Theta.nrow();
@@ -1714,8 +1715,9 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         vector<int> parnum = as< vector<int> >(item.slot("parnum"));
         int where = parnum[0] - 1;
         for(int len = 0; len < par_size; ++len){
-            if(prior_type[len])
-                d_priors(tmpgrad, tmphess, len, prior_type[len], prior_1[len], prior_2[len], par[len]);
+            if(useIprior)
+                if(prior_type[len])
+                    d_priors(tmpgrad, tmphess, len, prior_type[len], prior_1[len], prior_2[len], par[len]);
             grad[where + len] = tmpgrad[len];
             if(estHess){
                 for(int len2 = 0; len2 < par_size; ++len2)
@@ -1748,7 +1750,7 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
         List pars = gpars[group];
         NumericMatrix Theta = gTheta[group];
         _computeDpars(grad, hess, pars, Theta, offterm, dummy, dummy2, nitems, npars,
-            estHess, USEFIXED, EM, EMcomplete);
+            estHess, USEFIXED, EM, EMcomplete, true);
     }
 
     List ret;
@@ -1841,7 +1843,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
                 NumericMatrix hess(npars, npars);
                 vector<double> grad(npars);
                 _computeDpars(grad, hess, pars, Theta, offterm, itemtrace, Prior,
-                              nitems, npars, 0, 0, 1, true);
+                              nitems, npars, 0, 0, 1, true, false);
                 add2outer(Igrad, grad, rs(g, pat));
             } else {
                 for(int i = 0; i < nitems; ++i){
@@ -1876,7 +1878,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
                     NumericMatrix hess(npars, npars);
                     vector<double> tmpgrad(npars);
                     _computeDpars(tmpgrad, hess, pars, theta, offterm, itemtrace, Prior,
-                                  nitems, npars, 0, 0, 1, true);
+                                  nitems, npars, 0, 0, 1, true, false);
                     add2outer(IgradP, tmpgrad, rs(g,pat) * w[n]);
                     for(int j = 0; j < npars; ++j)
                         grad[j] += tmpgrad[j] * w[n];
@@ -1971,7 +1973,7 @@ RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior,
             NumericMatrix hess(npars, npars);
             vector<double> grad(npars);
             _computeDpars(grad, hess, pars, Theta, offterm, itemtrace, Prior,
-                          nitems, npars, 0, 0, 1, true);
+                          nitems, npars, 0, 0, 1, true,true);
             for(int i = 0; i < npars; ++i){
                 gradient(pat, i) += grad[i];
             }
