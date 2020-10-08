@@ -163,17 +163,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ret
                 }, data=data, key=key)
             }
-            data <- apply(data, 2L, function(x, message){
-                s <- sort(unique(x))
-                se <- min(s, na.rm = TRUE):max(x, na.rm = TRUE)
-                if(length(s) != length(se)){
-                    if(message)
-                        message('Item re-scored so that all values are within a distance of 1')
-                    for(i in 2L:length(s))
-                        x <- ifelse(x == s[i], se[i], x)
-                }
-                x
-            }, message = opts$message)
+            data <- remap.distance(data, message = opts$message)
         }
         Data$rowID <- 1L:nrow(data)
         if(any(rowSums(is.na(data)) == ncol(data))){
