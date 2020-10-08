@@ -49,6 +49,7 @@ remap.distance <- function(data, message = TRUE) {
         x
     }, data=data, nms=nms, message=message)
     rownames(ret) <- rownames(data)
+    colnames(ret) <- colnames(data)
     ret
 }
 
