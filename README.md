@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](http://www.r-pkg.org/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
+[![Travis-CI Build Status](https://travis-ci.org/philchalmers/mirt.svg?branch=master)](https://travis-ci.org/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](https://www.r-pkg.org:443/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
 
 # mirt
 
@@ -27,7 +27,7 @@ than the version on CRAN. To install this package from source:
 
 1) Obtain recent gcc, g++, and gfortran compilers. Windows users can install the
    [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) suite while Mac users will have to
-   download the necessary tools from the [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12) suite and its
+   download the necessary tools from the [Xcode](https://apps.apple.com/ca/app/xcode/id497799835?mt=12) suite and its
    related command line tools (found within Xcode's Preference Pane under Downloads/Components); most Linux
    distributions should already have up to date compilers (or if not they can be updated easily). 
    Windows users should include the checkbox option of installing Rtools to their path for 
@@ -53,12 +53,12 @@ repository directly.
 
 1) Obtain recent gcc, g++, and gfortran compilers (see above instructions).
 
-2) Install the [git command line tools](http://git-scm.com/downloads).
+2) Install the [git command line tools](https://git-scm.com/downloads).
 
 3) Open a terminal/command-line tool. The following code will download the repository 
 code to your computer, and install the package directly using R tools 
 (Windows users may also have to add R and git to their 
-[path](http://www.computerhope.com/issues/ch000549.htm))
+[path](https://www.computerhope.com/issues/ch000549.htm))
 
 ```
 git clone https://github.com/philchalmers/mirt
