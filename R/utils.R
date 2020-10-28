@@ -1749,11 +1749,11 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
         X <- model.matrix(formula, df)
     }
     tXX <- t(X) %*% X
-    inv_tXX <- try(solve(tXX), silent = TRUE)
+    qr_XX <- try(qr(tXX), silent = TRUE)
     if(!is.nan(TOL)){
-        if(is(inv_tXX, 'try-error'))
-            stop('Latent regression design matrix contains multi-collinear terms.', call. = FALSE)
-    } else inv_tXX <- matrix(0, ncol(tXX), ncol(tXX))
+        if(is(qr_XX, 'try-error'))
+            stop('Latent regression design matrix contains problematic terms.', call. = FALSE)
+    } else qr_XX <- qr(0)
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
@@ -1784,7 +1784,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
                df=df,
                X=X,
                tXX=tXX,
-               inv_tXX=inv_tXX,
+               qr_XX=list(qr = qr_XX),
                lbound=rep(-Inf,length(par)),
                ubound=rep(Inf,length(par)),
                any.prior=FALSE,

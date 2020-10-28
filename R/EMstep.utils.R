@@ -472,7 +472,7 @@ Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior,
     ret <- .Call('EAPgroup', itemtrace, fulldata, Theta, prior, mu)
     scores <- ret[[1L]]; vars <- ret[[2L]]
     if(retscores) return(scores)
-    beta <- lrPars@inv_tXX %*% t(X) %*% scores
+    beta <- qr.solve(lrPars@qr_XX$qr, t(X) %*% scores)
     siglong <- colMeans(vars)
     beta[!lrPars@est] <- lrPars@par[!lrPars@est]
     return(list(beta=beta, siglong=c(rep(0, ncol(Theta)), siglong)))
