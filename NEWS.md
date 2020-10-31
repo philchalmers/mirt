@@ -1,4 +1,4 @@
-# Changes in mirt 1.33
+# Changes in mirt 1.33.1
 
 - Added `gen.difficulty()` to compute the generalized difficulty statistics 
    described by Ali, Chang, and Anderson (2015) for polytomous response models (suggested by Alexander Freund)
