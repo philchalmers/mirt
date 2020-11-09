@@ -61,7 +61,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(!is.null(customItemsData))
             stopifnot(is(customItemsData, 'list') || length(customItemsData) == ncol(data))
         if(!is.null(customGroup))
-            stopifnot(is(customGroup, 'GroupPars'))
+            stopifnot(is(customGroup, 'GroupPars') || is.list(customGroup))
         stopifnot(is(invariance, 'character'))
         stopifnot(is(GenRandomPars, 'logical'))
         stopifnot(is(large, 'logical') || is(large, 'list') || is(large, 'character'))
@@ -254,7 +254,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     PrepList[[g]]$pars[[i]]@parnum <- parnumber:(parnumber + length(PrepList[[g]]$pars[[i]]@parnum) - 1L)
                     parnumber <- max(PrepList[[g]]$pars[[i]]@parnum) + 1L
                 }
-                if(!is.null(customGroup)) PrepList[[g]]$customGroup <- customGroup[[g]]
+                if(!is.null(customGroup)){
+                    customGroup[[g]]@parnum <- PrepList[[g]]$pars[[Data$nitems + 1L]]@parnum
+                    PrepList[[g]]$pars[[Data$nitems + 1L]] <- customGroup[[g]]
+                }
             }
         }
         if(length(mixed.design$random) > 0L){
