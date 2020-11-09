@@ -210,6 +210,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         model <- buildModelSyntax(model, J=Data$nitems, groupNames=Data$groupNames,
                                   itemtype=itemtype)
         Data$model <- model
+        if(!is.null(customGroup)){
+            if(Data$ngroups == 1L) customGroup <- list(customGroup)
+            else {
+                if(Data$ngroups != length(customGroup) && length(customGroup) == 1L){
+                    tmplst <- vector('list', Data$ngroups)
+                    for(g in seq_len(Data$ngroups))
+                        tmplst[[g]] <- customGroup
+                    customGroup <- tmplst
+                    rm(tmplst)
+                }
+            }
+        }
         if(!is.null(dots$PrepList)) {
             PrepListFull <- PrepList[[1L]] <- dots$PrepList
         } else {
@@ -220,7 +232,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                          mixed.design=mixed.design, customItems=customItems,
                          customItemsData=customItemsData,
-                         customGroup=customGroup, spline_args=spline_args, monopoly.k=monopoly.k,
+                         customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
                          dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q)
@@ -242,6 +254,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     PrepList[[g]]$pars[[i]]@parnum <- parnumber:(parnumber + length(PrepList[[g]]$pars[[i]]@parnum) - 1L)
                     parnumber <- max(PrepList[[g]]$pars[[i]]@parnum) + 1L
                 }
+                if(!is.null(customGroup)) PrepList[[g]]$customGroup <- customGroup[[g]]
             }
         }
         if(length(mixed.design$random) > 0L){

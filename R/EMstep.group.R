@@ -279,7 +279,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
                 } else {
                     pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
-                    if(dentype %in% c('EHW', 'Davidian') ||
+                    if(dentype == 'EHW' && g == 1L || dentype == "Davidian" ||
                        (dentype == 'custom' && pars[[g]][[J+1L]]@standardize))
                         pars[[g]][[J+1L]]@rr <- standardizeQuadrature(gTheta[[g]],
                                                         nq=pars[[g]][[J+1L]]@rr,
