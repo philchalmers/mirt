@@ -1293,7 +1293,7 @@ nameInfoMatrix <- function(info, correction, L, npars){
     tmp <- outer(seq_len(npars), rep(1L, npars))
     matind <- matrix(0, ncol(tmp), nrow(tmp))
     matind[lower.tri(matind, diag = TRUE)] <- tmp[lower.tri(tmp, diag = TRUE)]
-    matind <- matind * L
+    matind <- matind * as.matrix(L) # TODO as.matrix could be avoided
     matind[matind == 0 ] <- NA
     matind[!is.na(matind)] <- tmp[!is.na(matind)]
     shortnames <- c()
@@ -1373,35 +1373,61 @@ maketabDataLarge <- function(tmpdata, group, groupNames, nitem, K, itemloc,
     ret
 }
 
+sparseLmat <- function(L, constrain, nconstrain){
+    # no constrain
+    L <- as.numeric(L)
+    whc <- which(L == 1)
+    vals <- L[whc]
+    full_loc <- cbind(whc, whc)
+
+    # constrain
+    for(i in seq_len(length(constrain))){
+        cexp <- expand.grid(constrain[[i]], constrain[[i]])
+        cexp <- cexp[cexp[,1] != cexp[,2], ]
+        full_loc <- rbind(full_loc, as.matrix(cexp))
+        vals <- c(vals, rep(1, nrow(cexp)))
+    }
+
+    # nconstrain
+    for(i in seq_len(length(nconstrain))){
+        cexp <- expand.grid(nconstrain[[i]], nconstrain[[i]])
+        cexp <- cexp[cexp[,1] != cexp[,2], ]
+        full_loc <- rbind(full_loc, as.matrix(cexp))
+        vals <- c(vals, c(1,-1))
+    }
+
+    ret <- Matrix::sparseMatrix(i = full_loc[,1], j = full_loc[,2], x=vals,
+                                dims = c(length(L), length(L)))
+    attr(ret, 'diag') <- L
+    ret
+}
+
 makeLmats <- function(pars, constrain, random = list(), lrPars = list(), lr.random = list(),
                       nconstrain = NULL){
     ngroups <- length(pars)
     J <- length(pars[[1L]]) - 1L
-    L <- c()
+    LL <- c()
     for(g in seq_len(ngroups))
         for(i in seq_len(J+1L))
-            L <- c(L, pars[[g]][[i]]@est)
+            LL <- c(LL, pars[[g]][[i]]@est)
     for(i in seq_len(length(random)))
-        L <- c(L, random[[i]]@est)
+        LL <- c(LL, random[[i]]@est)
     if(length(lrPars))
-        L <- c(L, lrPars@est)
+        LL <- c(LL, lrPars@est)
     for(i in seq_len(length(lr.random)))
-        L <- c(L, lr.random[[i]]@est)
-    L <- diag(as.numeric(L))
-    redun_constr <- rep(FALSE, ncol(L))
-    for(i in seq_len(length(constrain))){
-        L[constrain[[i]], constrain[[i]]] <- 1L
+        LL <- c(LL, lr.random[[i]]@est)
+    redun_constr <- rep(FALSE, length(LL))
+    for(i in seq_len(length(constrain)))
         for(j in 2L:length(constrain[[i]]))
             redun_constr[constrain[[i]][j]] <- TRUE
-    }
     if(!is.null(nconstrain)){
         for(i in seq_len(length(nconstrain))){
             stopifnot(length(nconstrain[[i]]) == 2L)
-            L[nconstrain[[i]], nconstrain[[i]]] <- c(1L, -1L)
             for(j in 2L:length(nconstrain[[i]]))
                 redun_constr[nconstrain[[i]][j]] <- TRUE
         }
     }
+    L <- sparseLmat(LL, constrain=constrain, nconstrain=nconstrain)
     return(list(L=L, redun_constr=redun_constr))
 }
 

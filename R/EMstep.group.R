@@ -8,7 +8,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         stop('empirical histogram only available for unidimensional models', call.=FALSE)
     if(list$dentype == 'Davidian'){
         if(nfact != 1L)
-            stop('Davidian curves estimation only available for unidimensional models', call.=FALSE)
+            stop('Davidian curves estimation only availablae for unidimensional models', call.=FALSE)
         if(list$SE)
             stop('No standard error method currently supported for Davidian curves', call.=FALSE)
         J <- length(pars[[1L]]) - 1L
@@ -74,15 +74,15 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
-    if(any(diag(L)[!estpars] > 0L) && !list$PLCI){
+    if(any(attr(L, 'diag')[!estpars] > 0L) && !list$PLCI){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
+             paste(paste0(redindex[Diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!', call.=FALSE)
     }
     prior <- rlist <- r <- vector('list', ngroups)
     #make sure constrained pars are equal
-    tmp <- rowSums(L)
+    tmp <- Matrix::rowSums(L)
     tmp[tmp == 0L] <- 1L
     check <- as.numeric(L %*% longpars) / tmp
     longpars[estpars] <- check[estpars]
@@ -489,7 +489,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             h[mixtype@parnum, mixtype@parnum] <- deriv$hess
         } else mixtype <- NULL
         hess <- updateHess(h=h, L=L)
-        hess <- hess[estpars & !redun_constr, estpars & !redun_constr]
+        hess <- as.matrix(hess[estpars & !redun_constr, estpars & !redun_constr])
         if(list$SE.type %in% c('Oakes', 'sandwich') && length(lrPars) && list$SE){
             warning('Oakes method not supported for models with latent regression effects', call.=FALSE)
         } else if(list$SE.type %in% c('Oakes', 'sandwich') && list$SE){

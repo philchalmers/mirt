@@ -36,6 +36,7 @@ Depends:
     methods
 Imports:
     GPArotation,
+    Matrix,
     Rcpp,
     mgcv,
     vegan,

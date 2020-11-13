@@ -130,14 +130,14 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     L <- Ls$L
     redun_constr <- Ls$redun_constr
     estindex_unique <- index[estpars & !redun_constr]
-    if(any(diag(L)[!estpars] > 0L)){
+    if(any(attr(L, 'diag')[!estpars] > 0L)){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(paste0(redindex[diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
+             paste(paste0(redindex[Diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!', call.=FALSE)
     }
     #make sure constrained pars are equal
-    tmp <- rowSums(L)
+    tmp <- Matrix::rowSums(L)
     tmp[tmp == 0L] <- 1L
     check <- as.numeric(L %*% longpars) / tmp
     longpars[estpars] <- check[estpars]
@@ -371,7 +371,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         info <- matrix(0, 1L, 1L)
         cycles <- BURNIN + SEMCYCLES
     }
-    ret <- list(pars=pars, cycles = cycles - BURNIN - SEMCYCLES, info=if(list$expl) matrix(0) else info,
+    ret <- list(pars=pars, cycles = cycles-BURNIN-SEMCYCLES, info=if(list$expl) matrix(0) else as.matrix(info),
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var,
                 L=L, random=random, lrPars=lrPars, lr.random=lr.random, aveAR=colMeans(do.call(rbind, aveAR)),
                 time=c(MH_draws = as.numeric(Draws.time), Mstep=as.numeric(Mstep.time)),

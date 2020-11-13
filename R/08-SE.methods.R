@@ -34,7 +34,7 @@ SE.Numerical <- function(pars, Theta, theta, dentype, itemloc, PrepList, ESTIMAT
     Hess <- matrix(0, length(longpars), length(longpars))
     Hess[est, est] <- -hess
     Hess <- updateHess(h=Hess, L=Ls$L)
-    info <- Hess[infological, infological]
+    info <- as.matrix(Hess[infological, infological])
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     return(ESTIMATE)
 }
@@ -209,6 +209,7 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
         tmp <- -solve(ESTIMATE$hess)
         info <- solve(tmp %*% (Igrad + Iprior) %*% tmp)
     }
+    info <- as.matrix(info)
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     return(ESTIMATE)
@@ -364,7 +365,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, CUSTOM.IND, S
         info <- info + DX %*% t(DX) * rlist$expected
     }
     info <- N * info
-    info <- updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique]
+    info <- as.matrix(updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique])
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
     ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
     return(ESTIMATE)

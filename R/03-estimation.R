@@ -99,6 +99,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             customGroup <- createGroup(par=par, est=est, den=den, nfact=tmpnfact,
                                        gen=function(object) rnorm(length(object@par), 0, 1/2))
             customGroup@itemclass <- -1L
+            rm(tmpnfact)
         }
         if(!is.null(survey.weights)){
             stopifnot(opts$method %in% c('EM', 'QMCEM', 'MCEM'))
@@ -319,6 +320,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(is.character(large) && large == 'return'){
                 return(tmptabdata)
             } else large <- tmptabdata
+            rm(tmpdata, tmptabdata)
         }
         Data$tabdatalong <- large$tabdata
         Data$tabdata <- large$tabdata2
@@ -327,8 +329,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 Data$fulldata[[g]] <- PrepListFull$fulldata
                 Data$Freq[[g]] <- large$Freq[[1L]]
             } else {
-                select <- Data$group == Data$groupNames[g]
-                Data$fulldata[[g]] <- PrepListFull$fulldata[select, , drop=FALSE]
+                Data$fulldata[[g]] <- PrepListFull$fulldata[Data$group == Data$groupNames[g],
+                                                            , drop=FALSE]
                 Data$Freq[[g]] <- large$Freq[[g]]
             }
         }
@@ -690,6 +692,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE$info <- tmp$info
             ESTIMATE$fail_invert_info <- tmp$fail_invert_info
             ESTIMATE$time <- c(ESTIMATE$time, SE=sum(tmp$time))
+            rm(tmp)
         }
         rlist <- vector('list', Data$ngroups)
         for(g in seq_len(Data$ngroups))
@@ -744,6 +747,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             ESTIMATE$info <- tmp$info
             ESTIMATE$fail_invert_info <- tmp$fail_invert_info
             ESTIMATE$time <- c(ESTIMATE$time, SE=sum(tmp$time))
+            rm(tmp)
         }
         rlist <- vector('list', Data$ngroups)
         for(g in seq_len(Data$ngroups))
@@ -880,6 +884,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior
+        rm(tmp)
     }
     opts$times$end.time.SE <- proc.time()[3L]
     opts$times$start.time.post <- proc.time()[3L]
