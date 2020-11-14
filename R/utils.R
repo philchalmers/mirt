@@ -1512,7 +1512,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
     opts$storeEtable <- ifelse(is.null(technical$storeEtable), FALSE, technical$storeEtable)
     if(!is.null(TOL))
-        if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- FALSE
+        if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- opts$verbose <- FALSE
     opts$TOL <- ifelse(is.null(TOL),
                        if(method %in% c('EM', 'QMCEM', 'MCEM')) 1e-4 else
                            if(method == 'BL') 1e-8 else 1e-3, TOL)
