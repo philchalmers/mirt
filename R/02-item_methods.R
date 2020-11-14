@@ -2088,7 +2088,7 @@ setMethod(
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         ret <- .Call('dparslca', x@par, Theta, x@item.Q,
-                     FALSE, x@dat, offterm) #TODO change FALSE to estHess
+                     estHess, x@dat, offterm) #TODO use estHess in Rcpp
         if(estHess && any(x@est)){
             ret$hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
                                                          Theta=Theta, gradient=FALSE)
