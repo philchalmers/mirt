@@ -594,7 +594,9 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
 
     vector<double> grad(npars2);
-    NumericMatrix hess(npars2, npars2);
+    NumericMatrix hess(1, 1);
+    if(estHess)
+    	NumericMatrix hess(npars2, npars2);
     if(EM){
         if(EMcomplete){
             _dgroupEMCD(grad, hess, obj, Theta, estHess);
@@ -1744,7 +1746,9 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     const int EM = as<int>(REM);
     vector<double> grad(npars);
     vector<double> dummy2(npars);
-    NumericMatrix hess(npars, npars);
+    NumericMatrix hess(1, 1);
+    if(estHess)
+    	NumericMatrix hess(npars, npars);
 
     for(int group = 0; group < gpars.length(); ++group){
         List pars = gpars[group];
