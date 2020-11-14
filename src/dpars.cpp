@@ -594,9 +594,9 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
 
     vector<double> grad(npars2);
-    NumericMatrix hess(1, 1);
-    if(estHess)
-    	NumericMatrix hess(npars2, npars2);
+    int dim = 1; 
+    if(estHess) dim = npars2;
+    NumericMatrix hess(dim, dim);
     if(EM){
         if(EMcomplete){
             _dgroupEMCD(grad, hess, obj, Theta, estHess);
@@ -1063,7 +1063,6 @@ static void d_nominal2(vector<double> &grad, NumericMatrix &hess, const vector<d
     //hess
     if(estHess){
 
-
         //a's
         for(int j = 0; j < nfact; ++j){
 
@@ -1149,7 +1148,9 @@ RcppExport SEXP dparsNominal(SEXP Rx, SEXP RTheta, SEXP Roffterm,
     const int has_mat = as<int>(x.slot("mat"));
     int size = par.size();
     vector<double> grad(size);
-    NumericMatrix hess(size, size);
+    int dim = 1; 
+    if(estHess) dim = size;
+    NumericMatrix hess(dim, dim);
     if(has_mat){
         d_nominal2(grad, hess, par, Theta, ot, dat, N, nfact, ncat, israting, estHess);
     } else {
@@ -1301,7 +1302,9 @@ RcppExport SEXP dparsPoly(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP Rnze
     const int estHess = as<int>(RestHess);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    NumericMatrix hess(nfact + nzeta, nfact + nzeta);
+    int dim = 1; 
+    if(estHess) dim = nfact + nzeta;
+    NumericMatrix hess(dim, dim);
     vector<double> grad(nfact + nzeta);
     d_poly(grad, hess, par, Theta, ot, dat, N, nfact, nzeta, estHess);
     List ret;
@@ -1372,7 +1375,9 @@ RcppExport SEXP dparsgpcmIRT(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP R
     const int estHess = as<int>(RestHess);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    NumericMatrix hess(nfact + nzeta, nfact + nzeta);
+    int dim = 1;
+    if(estHess) dim = nfact + nzeta;
+    NumericMatrix hess(dim, dim);
     vector<double> grad(nfact + nzeta);
     d_gpcmIRT(grad, hess, par, Theta, ot, dat, N, nfact, nzeta, estHess);
     List ret;
@@ -1425,7 +1430,9 @@ RcppExport SEXP dparslca(SEXP Rx, SEXP RTheta, SEXP Ritem_Q, SEXP RestHess, SEXP
     const int estHess = as<int>(RestHess);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    NumericMatrix hess (par.size(), par.size());
+    int dim = 1;
+    if(estHess) dim = par.size();
+    NumericMatrix hess (dim, dim);
     vector<double> grad (par.size());
     d_lca(grad, hess, par, Theta, item_Q, ot, dat, N, nfact, estHess);
     List ret;
@@ -1746,9 +1753,9 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     const int EM = as<int>(REM);
     vector<double> grad(npars);
     vector<double> dummy2(npars);
-    NumericMatrix hess(1, 1);
-    if(estHess)
-    	NumericMatrix hess(npars, npars);
+    int dim = 1; 
+    if(estHess) dim = npars;
+    NumericMatrix hess(dim, dim);
 
     for(int group = 0; group < gpars.length(); ++group){
         List pars = gpars[group];
