@@ -77,7 +77,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     if(any(attr(L, 'diag')[!estpars] > 0L) && !list$PLCI){
         redindex <- index[!estpars]
         stop('Constraint applied to fixed parameter(s) ',
-             paste(paste0(redindex[Diag(L)[!estpars] > 0L]), ''), ' but should only be applied to
+             paste(paste0(redindex[attr(L, 'diag')[!estpars] > 0L]), ''), ' but should only be applied to
                  estimated parameters. Please fix!', call.=FALSE)
     }
     prior <- rlist <- r <- vector('list', ngroups)
