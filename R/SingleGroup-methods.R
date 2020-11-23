@@ -1423,9 +1423,11 @@ setMethod(
                 P <- vector('list', length(which.items))
                 names(P) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
+                alltwocats <- all(extract.mirt(x, 'K')[which.items] == 2L)
                 for(i in which.items){
                     tmp <- probtrace(extract.item(x, i), ThetaFull)
-                    if(ncol(tmp) == 2L && facet_items && drop2) tmp <- tmp[,2, drop=FALSE]
+                    if(ncol(tmp) == 2L && (facet_items || (!facet_items && alltwocats)) && drop2)
+                        tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
                                                            labels=paste0('P', seq_len(ncol(tmp)))))
                     P[[ind]] <- tmp2
