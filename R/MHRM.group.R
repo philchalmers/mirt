@@ -185,10 +185,11 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             stagecycle <- 3L
             longpars <- colMeans(SEM.stores)
             if(!no_stage_3){
-                Tau <- SEM.stores2[[1L]]
-                for(i in 2L:SEMCYCLES)
-                    Tau <- Tau + SEM.stores2[[i]]
-                Tau <- Tau/SEMCYCLES
+                Tau <- SEM.stores2[[1L]]/SEMCYCLES
+                if(SEMCYCLES > 1L){
+                    for(i in 2L:SEMCYCLES)
+                        Tau <- Tau + SEM.stores2[[i]]/SEMCYCLES
+                }
             }
             k <- KDRAWS
             gamma <- 0
