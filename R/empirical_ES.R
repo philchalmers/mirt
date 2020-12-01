@@ -270,16 +270,27 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
 
     # plots
     order <- order(Theta.focal[,1])
+    grps <- extract.mirt(mod, 'groupNames')
+    mykey <- list(space = 'top',
+                  columns = 2,
+                  text = list(sort(grps)),
+                  points = list(pch = 1, col=c("black","red"))
+    )
+    # fix stupid lattice aesthetic garbage
+    if(all(mykey$text[[1]] == grps)){
+      mykey$text[[1]] <- c(grps[2], grps[1])
+      mykey$points$col <- c("red", "black")
+    }
     if(DIF){
         nms <- rep(extract.mirt(mod, 'itemnames')[focal_items], each = nrow(Theta.focal)*2)
         nms <- factor(nms, levels = extract.mirt(mod, 'itemnames')[focal_items])
-        plt <- data.frame(S=c(df.foc.obs[order,1],df.ref.obs[order,1]),
+        plt <- data.frame(S=c(df.ref.obs[order,1],df.foc.obs[order,1]),
                              Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
                              group=c(rep(extract.mirt(mod, 'groupNames'), each = nrow(Theta.focal))))
         if(ncol(df.foc.obs)>1){
           for(i in 2:ncol(df.foc.obs)){
-            plt.df <- data.frame(S=c(df.foc.obs[order,i],df.ref.obs[order,i]),
-                                 Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
+            plt.df <- data.frame(S=c(df.ref.obs[order,i],df.foc.obs[order,i]),
+                                 Theta=c(Theta.focal[order,1],Theta.focal[order,1]),
                                  group=rep(extract.mirt(mod, 'groupNames'), each = nrow(Theta.focal)))
             plt <- rbind(plt, plt.df)
           }
@@ -290,22 +301,14 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
                       ylab="Expected Score",
                       groups=plt$group ,
                       col=c("black","red"),
+                      key=mykey,
                       main='Expected Scores',
                       par.settings=par.settings,
                       par.strip.text=par.strip.text, ...))
       } else {
-          grps <- extract.mirt(mod, 'groupNames')
-          if(nchar(as.character(grps[1])) > 30 || nchar(as.character(grps[2])) > 30){
-            grps <- c("ref","foc")
-          }
-          plot.df1 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.foc.obs[order],group=as.character(grps[1]))
-          plot.df2 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.ref.obs[order],group=as.character(grps[2]))
+          plot.df1 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.foc.obs[order],group=as.character(grps[2]))
+          plot.df2 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.ref.obs[order],group=as.character(grps[1]))
           plot.df <- rbind(plot.df1,plot.df2)
-          mykey <- list(space = 'top',
-                columns = 2,
-                text = list(as.character(unique(plot.df$group))),
-                points = list(pch = 1, col=c("black","red"))
-          )
           main <- if(extract.mirt(mod, 'nitems') == length(focal_items))
               "Expected Test Scores" else "Expected Bundle Scores"
           return(xyplot(ETS~Theta, plot.df, type = type, cex = .6,

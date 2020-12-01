@@ -13,7 +13,6 @@ empirical_ES(
   theta_lim = c(-6, 6),
   plot = FALSE,
   type = "b",
-  ref.group = 1,
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
     = "black")),
@@ -45,10 +44,6 @@ used in conjunction with \code{npts}}
 using focal group thetas and both focal and reference group item parameters}
 
 \item{type}{type of objects to draw in \code{lattice}; default plots both points and lines}
-
-\item{ref.group}{default group to use for the reference group (default is 1, conforming to the
-default setup in \code{\link{multipleGroup}}), and is passed to \code{\link{extract.group}};
-hence, can be either a number to extract or the name of the grouping variable}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
 
