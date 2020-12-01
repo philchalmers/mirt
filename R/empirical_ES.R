@@ -53,9 +53,9 @@
 #' @param mod a multipleGroup object which estimated only 2 groups. The first group in this object
 #'   is assumed to be the reference group by default (i.e., \code{ref.group = 1}), which conforms to the
 #'    \code{invariance} arguments in \code{\link{multipleGroup}}
-#' @param ref.group default group to use for the reference group (default is 1, conforming to the
-#'   default setup in \code{\link{multipleGroup}}), and is passed to \code{\link{extract.group}};
-#'   hence, can be either a number to extract or the name of the grouping variable
+# @param ref.group default group to use for the reference group (default is 1, conforming to the
+#   default setup in \code{\link{multipleGroup}}), and is passed to \code{\link{extract.group}};
+#   hence, can be either a number to extract or the name of the grouping variable
 #' @param focal_items a numeric vector indicating which items to include the tests. The
 #'   default uses all of the items. Selecting fewer items will result in tests of
 #'   'differential bundle functioning' when \code{DIF = FALSE}
@@ -136,7 +136,7 @@
 #' }
 empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                  DIF = TRUE, npts = 61, theta_lim=c(-6,6), plot=FALSE, type = 'b',
-                 ref.group = 1, par.strip.text = list(cex = 0.7),
+                 par.strip.text = list(cex = 0.7),
                  par.settings = list(strip.background = list(col = '#9ECAE1'),
                                      strip.border = list(col = "black")), ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
