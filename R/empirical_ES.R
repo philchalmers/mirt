@@ -141,7 +141,7 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
                                      strip.border = list(col = "black")), ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(extract.mirt(mod, 'ngroups') == 2L)
-    # ref.group <- 1
+    ref.group <- 1
     ref <- extract.group(mod, ref.group)
     focal <- extract.group(mod, ifelse(ref.group == 1, 2, 1))
     focal_select <- extract.mirt(mod, 'group') != extract.mirt(mod, 'groupNames')[ref.group]
