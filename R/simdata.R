@@ -247,7 +247,7 @@
 #'
 #' dataset <- simdata(a,d,2000,items,nominal=nominal)
 #'
-#' #mod <- mirt(dataset, 1, itemtype = c('2PL', '2PL', '2PL', '2PLNRM'), key=c(NA,NA,NA,1))
+#' #mod <- mirt(dataset, 1, itemtype = c('2PL', '2PL', '2PL', '2PLNRM'), key=c(NA,NA,NA,0))
 #' #coef(mod)
 #' #itemplot(mod,4)
 #'
