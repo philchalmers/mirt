@@ -2097,6 +2097,12 @@ collapseCells <- function(O, E, mincell = 1){
             On <- na.omit(On)
         }
 
+        if(nrow(On) == 0){
+            E[[i]] <- En
+            O[[i]] <- On
+            break
+        }
+
         #drop 0's and 1's
         drop <- rowSums(On) == 0L
         On <- On[!drop,]
