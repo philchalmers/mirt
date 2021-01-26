@@ -462,6 +462,7 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, rs
     if(plot) return(c(T1, T2))
     if(is.null(rs)){
         mod2 <- with(details, multipleGroup(data=data, model=model, group=group, itemtype=itemtype, large=large,
+                                            constrain=extract.mirt(mod, 'constrain'),
                                             quadpts=quadpts, TOL=TOL, pars=mod2values(mod), technical=technical))
         r1 <- rowSums(mod2@Internals$Etable[[1L]]$r1)
         r2 <- rowSums(mod2@Internals$Etable[[2L]]$r1)
