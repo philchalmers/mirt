@@ -218,6 +218,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                                   ...)
         aov <- anova(newmodel, model, verbose = FALSE)
         attr(aov, 'parnum') <- parnum
+        attr(aov, 'converged') <- extract.mirt(newmodel, 'converged')
         if(return_models) aov <- newmodel
         return(aov)
     }
@@ -362,8 +363,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         }
     }
 
-    for(i in seq_len(length(res)))
-        attr(res[[i]], 'parnum') <- NULL
+    converged <- logical(length(res))
+    for(i in seq_len(length(res))){
+        converged[i] <- attr(res[[i]], 'converged')
+        attr(res[[i]], 'converged') <- attr(res[[i]], 'parnum') <- NULL
+    }
     if(return_models) return(res)
     if(p.adjust != 'none'){
         if(Wald){
@@ -429,7 +433,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
              r$logLik <- NULL
              r
          })
-         res <- do.call(rbind, out)
+         res <- cbind(converged, do.call(rbind, out))
          if(!has_priors) res$adj_pvals <- adj_pvals
          class(res) <- c('mirt_df', 'data.frame')
     }
