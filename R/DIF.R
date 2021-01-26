@@ -362,10 +362,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             names(res) <- itemnames[items2test][pick]
         }
     }
-
     converged <- logical(length(res))
     for(i in seq_len(length(res))){
-        converged[i] <- attr(res[[i]], 'converged')
+        if(!Wald) converged[i] <- attr(res[[i]], 'converged')
         attr(res[[i]], 'converged') <- attr(res[[i]], 'parnum') <- NULL
     }
     if(return_models) return(res)
