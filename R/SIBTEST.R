@@ -213,6 +213,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
              'Pass na.rm=TRUE to remove missing rows list-wise'), call.=FALSE)
     stopifnot(focal_name %in% group)
     stopifnot(nrow(dat) == length(group))
+    stopifnot(length(unique(group)) == 2L)
     group <- ifelse(group == focal_name, 'focal', 'reference')
 
     stopifnot(!(missing(suspect_set) && missing(match_set)))
