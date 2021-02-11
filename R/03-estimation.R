@@ -880,8 +880,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 warning('Information matrix with the Fisher method does not
                         account for prior parameter distribution information')
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
-                                  constrain=constrain, Ls=Ls, N=nrow(data), full=opts$full,
-                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn, omp_threads=opts$omp_threads)
+                                  constrain=constrain, Ls=Ls, full=opts$full,
+                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
+                                  omp_threads=opts$omp_threads)
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior

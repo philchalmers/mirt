@@ -2,6 +2,8 @@
 
 - added `converged` element in `DIF()` output to evaluate whether the nested model iteration converged
 
+- Fix `SE.type = 'Fisher'` computation in multi-group models (reported by Felix Zimmer)
+
 # Changes in mirt 1.33.1
 
 - Added `gen.difficulty()` to compute the generalized difficulty statistics 
