@@ -316,8 +316,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
     R[ , r, 2L]
 }
 
-SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND, SLOW.IND,
-                      warn, Data, full, omp_threads){
+SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND,
+                      SLOW.IND, warn, Data, full, omp_threads){
     pars <- ESTIMATE$pars
     Ns <- table(Data$group)
     itemloc <- PrepList[[1L]]$itemloc
@@ -352,30 +352,39 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND, SLOW
     info_list <- vector('list', ngroups)
     for(g in seq_len(ngroups)){
         info <- 0
+        # reset
+        for(gg in seq_len(ngroups)){
+            for(i in seq_len(nitems)){
+                tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
+                pars[[gg]][[i]]@dat <- pars[[gg]][[i]]@itemtrace <-
+                    matrix(0, nrow(Theta), length(tmp))
+            }
+            pars[[gg]][[nitems + 1L]]@rr <-
+                numeric(length(pars[[gg]][[nitems + 1L]]@rr))
+        }
         for(pat in seq_len(nrow(tabdata))){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
-            rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, freq=1L, CUSTOM.IND=CUSTOM.IND, full=full,
-                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc, deriv=TRUE, omp_threads=omp_threads)
+            rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, freq=1L,
+                                CUSTOM.IND=CUSTOM.IND, full=full,
+                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
+                                deriv=TRUE, omp_threads=omp_threads)
             for(i in seq_len(nitems)){
                 tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
                 pars[[g]][[i]]@dat <- rlist$r1[, tmp]
                 pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
             }
             pars[[g]][[nitems + 1L]]@rr <- rowSums(rlist$r1)
-            DX <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, nitems), ncol(L), 0L, 0L, 1L, TRUE)$grad
+            DX <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, nitems),
+                        ncol(L), 0L, 0L, 1L, TRUE)$grad
             info <- info + DX %*% t(DX) * rlist$expected
         }
         info_list[[g]] <- Ns[g] * info
-        # reset
-        pars[[g]][[nitems + 1L]]@rr <- numeric(length(rlist$r1))
-        for(i in seq_len(nitems)){
-            tmp <- c(itemloc[i]:(itemloc[i+1L] - 1L))
-            pars[[g]][[i]]@dat <- matrix(0, nrow(rlist$r1), length(tmp))
-        }
     }
     info <- Reduce("+", info_list)
-    info <- as.matrix(updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique, ESTIMATE$estindex_unique])
+    info <- as.matrix(updateHess(info, L=Ls$L)[ESTIMATE$estindex_unique,
+                                               ESTIMATE$estindex_unique])
     colnames(info) <- rownames(info) <- names(ESTIMATE$correction)
-    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE, constrain=constrain, warn=warn)
+    ESTIMATE <- loadESTIMATEinfo(info=info, ESTIMATE=ESTIMATE,
+                                 constrain=constrain, warn=warn)
     return(ESTIMATE)
 }
