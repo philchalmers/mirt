@@ -157,8 +157,7 @@
 #' fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 #'
 #' # return only the scores and their SEs
-#' fscores(mod, method='MAP', response.pattern = c(1,2,3,4),
-#'   append_response.pattern=FALSE)
+#' fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 #'
 #' #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 #' fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
@@ -192,7 +191,7 @@
 #'
 #'}
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
-                    response.pattern = NULL, append_response.pattern=TRUE, na.rm=FALSE,
+                    response.pattern = NULL, append_response.pattern = FALSE, na.rm = FALSE,
                     plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
                     full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, use_dentype_estimate=FALSE,

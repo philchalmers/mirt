@@ -2,6 +2,8 @@
 
 - added `converged` element in `DIF()` output to evaluate whether the nested model iteration converged
 
+- added support for plausible-value draws in `fscores()` when using `response.pattern` argument
+
 - Fix `SE.type = 'Fisher'` computation in multi-group models (reported by Felix Zimmer)
 
 # Changes in mirt 1.33.1

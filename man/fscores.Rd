@@ -11,7 +11,7 @@ fscores(
   rotate = "oblimin",
   Target = NULL,
   response.pattern = NULL,
-  append_response.pattern = TRUE,
+  append_response.pattern = FALSE,
   na.rm = FALSE,
   plausible.draws = 0,
   plausible.type = "normal",
@@ -196,8 +196,7 @@ fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 
 # return only the scores and their SEs
-fscores(mod, method='MAP', response.pattern = c(1,2,3,4),
-  append_response.pattern=FALSE)
+fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 
 #use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
