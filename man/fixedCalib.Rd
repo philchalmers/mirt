@@ -67,10 +67,6 @@ dataset2 <- simdata(a, d, N = 1000, itemtype=itemtype)
 dataset1 <- dataset1[,-c(J:(J*.6))]
 head(dataset1)
 
-# assume first 60\% of items not given to new group
-dataset2[,colnames(dataset1)] <- NA
-head(dataset2)
-
 #--------------------------------------
 
 # calibrated model from dataset1 only
@@ -106,6 +102,51 @@ MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 coef(MWU_MEM, simplify=TRUE)
 data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 plot(MWU_MEM, type = 'empiricalhist')
+
+# factor scores distribution check
+fs <- fscores(MWU_MEM)
+hist(fs)
+c(mean_calib=mean(fs[1:N, ]), sd_calib=sd(fs[1:N, ]))
+c(mean_exper=mean(fs[-c(1:N), ]), sd_exper=sd(fs[-c(1:N), ]))
+
+
+############################
+## Item length constraint example for each participant in the experimental
+## items group. In this example, all participants were forced to have a test
+## length of J=30, though the item pool had J=50 total items.
+
+# new experimental data (relatively extreme, theta ~ N(.5,1.5))
+dataset2 <- simdata(a, d, N = 1000, itemtype=itemtype,
+    mu=.5, sigma=matrix(1.5))
+
+# Add missing values to each participant in new dataset where individuals
+# were randomly administered 10 experimental items, subject to the constraint
+# that each participant received a test with J=30 items.
+dataset2 <- t(apply(dataset2, 1, function(x){
+   NA_precalib <- sample(1:30, 10)
+   NA_experimental <- sample(31:50, 10)
+   x[c(NA_precalib, NA_experimental)] <- NA
+   x
+}))
+head(dataset2)
+
+# check that all individuals had 30 items
+all(rowSums(!is.na(dataset2)) == 30)
+
+#' Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
+MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
+coef(MWU_MEM, simplify=TRUE)
+data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+plot(MWU_MEM, type = 'empiricalhist')
+
+## factor scores check
+fs <- fscores(MWU_MEM)
+hist(fs)
+c(mean_calib=mean(fs[1:N, ]), sd_calib=sd(fs[1:N, ]))
+
+## shrinkage, but generally different from calibrated sample
+c(mean_exper=mean(fs[-c(1:N), ]), sd_exper=sd(fs[-c(1:N), ]))
+
 
 }
 }
