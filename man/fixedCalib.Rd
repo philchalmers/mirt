@@ -74,19 +74,21 @@ mod <- mirt(dataset1, model = 1)
 coef(mod, simplify=TRUE)
 
 # No Prior Weights Updating and One EM Cycle (NWU-OEM)
-NWU_OEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'NWU', NEMC = 'OEM')
+NWU_OEM <- fixedCalib(dataset2, model=1, old_mod=mod, PAU='NWU', NEMC='OEM')
 coef(NWU_OEM, simplify=TRUE)
-data.frame(coef(NWU_OEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+data.frame(coef(NWU_OEM, simplify=TRUE)$items[,c('a1','d')],
+           pop_a1=a, pop_d=d)
 plot(NWU_OEM, type = 'empiricalhist')
 
 # No Prior Weights Updating and Multiple EM Cycles (NWU-MEM)
 NWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'NWU')
 coef(NWU_MEM, simplify=TRUE)
-data.frame(coef(NWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+data.frame(coef(NWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+           pop_a1=a, pop_d=d)
 plot(NWU_MEM, type = 'empiricalhist')
 
 # One Prior Weights Updating and One EM Cycle (OWU-OEM)
-OWU_OEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU', NEMC = "OEM")
+OWU_OEM <- fixedCalib(dataset2, model=1, old_mod=mod, PAU='OWU', NEMC="OEM")
 coef(OWU_OEM, simplify=TRUE)
 data.frame(coef(OWU_OEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 plot(OWU_OEM, type = 'empiricalhist')
@@ -94,13 +96,15 @@ plot(OWU_OEM, type = 'empiricalhist')
 # One Prior Weights Updating and Multiple EM Cycles (OWU-MEM)
 OWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU')
 coef(OWU_MEM, simplify=TRUE)
-data.frame(coef(OWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+data.frame(coef(OWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+           pop_a1=a, pop_d=d)
 plot(OWU_MEM, type = 'empiricalhist')
 
 # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 coef(MWU_MEM, simplify=TRUE)
-data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+           pop_a1=a, pop_d=d)
 plot(MWU_MEM, type = 'empiricalhist')
 
 # factor scores distribution check
@@ -136,7 +140,8 @@ all(rowSums(!is.na(dataset2)) == 30)
 #' Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 coef(MWU_MEM, simplify=TRUE)
-data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+           pop_a1=a, pop_d=d)
 plot(MWU_MEM, type = 'empiricalhist')
 
 ## factor scores check

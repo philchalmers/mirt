@@ -67,19 +67,21 @@
 #' coef(mod, simplify=TRUE)
 #'
 #' # No Prior Weights Updating and One EM Cycle (NWU-OEM)
-#' NWU_OEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'NWU', NEMC = 'OEM')
+#' NWU_OEM <- fixedCalib(dataset2, model=1, old_mod=mod, PAU='NWU', NEMC='OEM')
 #' coef(NWU_OEM, simplify=TRUE)
-#' data.frame(coef(NWU_OEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+#' data.frame(coef(NWU_OEM, simplify=TRUE)$items[,c('a1','d')],
+#'            pop_a1=a, pop_d=d)
 #' plot(NWU_OEM, type = 'empiricalhist')
 #'
 #' # No Prior Weights Updating and Multiple EM Cycles (NWU-MEM)
 #' NWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'NWU')
 #' coef(NWU_MEM, simplify=TRUE)
-#' data.frame(coef(NWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+#' data.frame(coef(NWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+#'            pop_a1=a, pop_d=d)
 #' plot(NWU_MEM, type = 'empiricalhist')
 #'
 #' # One Prior Weights Updating and One EM Cycle (OWU-OEM)
-#' OWU_OEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU', NEMC = "OEM")
+#' OWU_OEM <- fixedCalib(dataset2, model=1, old_mod=mod, PAU='OWU', NEMC="OEM")
 #' coef(OWU_OEM, simplify=TRUE)
 #' data.frame(coef(OWU_OEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
 #' plot(OWU_OEM, type = 'empiricalhist')
@@ -87,13 +89,15 @@
 #' # One Prior Weights Updating and Multiple EM Cycles (OWU-MEM)
 #' OWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU')
 #' coef(OWU_MEM, simplify=TRUE)
-#' data.frame(coef(OWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+#' data.frame(coef(OWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+#'            pop_a1=a, pop_d=d)
 #' plot(OWU_MEM, type = 'empiricalhist')
 #'
 #' # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 #' MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 #' coef(MWU_MEM, simplify=TRUE)
-#' data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+#' data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+#'            pop_a1=a, pop_d=d)
 #' plot(MWU_MEM, type = 'empiricalhist')
 #'
 #' # factor scores distribution check
@@ -129,7 +133,8 @@
 #' #' Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 #' MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 #' coef(MWU_MEM, simplify=TRUE)
-#' data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')], pop_a1=a, pop_d=d)
+#' data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')],
+#'            pop_a1=a, pop_d=d)
 #' plot(MWU_MEM, type = 'empiricalhist')
 #'
 #' ## factor scores check
@@ -142,7 +147,7 @@
 #'
 #'
 #' }
-fixedCalib <- function(data, model = 1, old_mod,  PAU = 'MWU', NEMC = "MEM",
+fixedCalib <- function(data, model = 1, old_mod, PAU = 'MWU', NEMC = "MEM",
                        technical = list(), ...){
 
     stopifnot(PAU %in% c('NWU', 'OWU', 'MWU'))
@@ -151,7 +156,7 @@ fixedCalib <- function(data, model = 1, old_mod,  PAU = 'MWU', NEMC = "MEM",
     global_prior <- NULL
     custom_den_const <- function(obj, Theta) global_prior
     custom_den_EH <- function(obj, Theta) {
-        ret <- if(length(obj@rr) == 0L) # very first EM iteration use global info
+        ret <- if(length(obj@rr) == 0L) # first EM iteration use global info
             global_prior
         else obj@rr / sum(obj@rr) # prior from normalized E-table of counts
         ret
@@ -166,12 +171,13 @@ fixedCalib <- function(data, model = 1, old_mod,  PAU = 'MWU', NEMC = "MEM",
     tmp <- t(data.frame(rep(NA, ncol(data) - ncol(olddata))))
     rownames(tmp) <- NULL
     olddata <- data.frame(olddata, tmp)
-    colnames(olddata) <- c(old_itemnames, colnames(data)[!(colnames(data) %in% old_itemnames)])
+    colnames(olddata) <- c(old_itemnames,
+                           colnames(data)[!(colnames(data) %in% old_itemnames)])
     fulldata <- rbind(olddata, data)
 
     sv <- mod2values(old_mod)
     sv$est <- FALSE
-    sv2 <- mirt(fulldata, model, pars='values')
+    sv2 <- mirt(fulldata, model, pars='values', ...)
     for(item in c(old_itemnames, 'GROUP')){
         pick1 <- sv$item == item
         pick2 <- sv2$item == item
@@ -187,10 +193,12 @@ fixedCalib <- function(data, model = 1, old_mod,  PAU = 'MWU', NEMC = "MEM",
         FC_mod_den <- mirt(data=extract.mirt(old_mod, 'data'),
                            model=extract.mirt(old_mod, 'model'),
                            pars=sv, dentype = 'EH', verbose=FALSE,
-                           technical = list(NCYCLES = 1L, message = FALSE))
+                           technical = list(NCYCLES = 1L, message = FALSE),
+                           ...)
         global_prior <- FC_mod_den@Internals$Prior[[1L]]
         den <- if(PAU == 'OWU') custom_den_const else custom_den_EH
-        par <- c(MEAN_1 = 0, COV_11 = 1) # names preserved to avoid new starting value issues
+        # names preserved to avoid new starting value issues
+        par <- c(MEAN_1 = 0, COV_11 = 1)
         est <- c(FALSE, FALSE)
         grp <- createGroup(par, est, den, nfact = 1L)
     }
@@ -202,6 +210,7 @@ fixedCalib <- function(data, model = 1, old_mod,  PAU = 'MWU', NEMC = "MEM",
              technical=technical, ...)
     }
     sv_final <- mod2values(mod)
-    FC_mod_den <- mirt(fulldata, model, pars=sv_final, dentype='EH', TOL=NaN, ...)
+    FC_mod_den <- mirt(fulldata, model, pars=sv_final,
+                       dentype='EH', TOL=NaN, ...)
     FC_mod_den
 }
