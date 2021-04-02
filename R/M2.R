@@ -427,7 +427,8 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         stop('Could not invert orthogonal complement matrix', call.=FALSE)
     N <- nrow(extract.mirt(obj, 'data'))
     M2 <- abs(t(p - e) %*% C2 %*% (p - e))
-    df <- qr(deltac)$rank
+    df <- length(p) - extract.mirt(obj, 'nest')
+    # df <- qr(deltac)$rank
     newret <- list(M2=M2, df=df)
     newret$p <- 1 - pchisq(M2, df)
     newret$RMSEA <- rmsea(X2=M2, df=df, N=N)
