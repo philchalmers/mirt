@@ -111,8 +111,8 @@ test_that('one factor', {
     fit3 <- M2(mod_scalar2)
     expect_true(mirt:::closeEnough(fit3$M2 - 165.1392, -1e-4, 1e-4))
     expect_equal(fit3$SRMSR.D1, 0.02754769, tolerance = 1e-4)
-    expect_equal(fit3$TLI, 1.00559, tolerance = 1e-4)
-    expect_true(mirt:::closeEnough(fit3$df - 210, -1e-4, 1e-4))
+    expect_equal(fit3$TLI, 1.00559, tolerance = 1e-2)
+    expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
 
     # missing by design
     dat[group == 'D1',1:2] <- NA
