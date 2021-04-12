@@ -205,6 +205,30 @@
 #' summary(mod2)
 #' anova(mod, mod2)
 #'
+#' #### Convert classical 3PL paramerization into slope-intercept form
+#' nitems <- 50
+#' as <- rlnorm(nitems, .2, .2)
+#' bs <- rnorm(nitems, 0, 1)
+#' gs <- rbeta(nitems, 5, 17)
+#'
+#' # convert first item (only intercepts differ in resulting transformation)
+#' traditional2mirt(c('a'=as[1], 'b'=bs[1], 'g'=gs[1], 'u'=1), cls='3PL')
+#'
+#' # convert all difficulties to intercepts
+#' ds <- numeric(nitems)
+#' for(i in 1:nitems)
+#'    ds[i] <- traditional2mirt(c('a'=as[i], 'b'=bs[i], 'g'=gs[i], 'u'=1),
+#'                              cls='3PL')[2]
+#'
+#' dat <- simdata(as, ds, N=5000, guess=gs, itemtype = '3PL')
+#'
+#' # estimate with beta prior for guessing parameters
+#' # mod <- mirt(dat, model="Theta = 1-50
+#' #                         PRIOR = (1-50, g, expbeta, 5, 17)", itemtype = '3PL')
+#' # coef(mod, simplify=TRUE, IRTpars=TRUE)$items
+#' # data.frame(as, bs, gs, us=1)
+#'
+#'
 #' #### Unidimensional nonlinear factor pattern
 #'
 #' theta <- rnorm(2000)
@@ -292,7 +316,7 @@
 #' ######
 #' # prob.list example
 #'
-#' # custom probabilty function that returns a matrix
+#' # custom probability function that returns a matrix
 #' fun <- function(a, b, theta){
 #'     P <- 1 / (1 + exp(-a * (theta-b)))
 #'     cbind(1-P, P)
