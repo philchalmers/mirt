@@ -76,7 +76,6 @@ setMethod(
                 cat("\nLog-posterior = ", x@Fit$logLik + x@Fit$logPrior, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
                 cat('Estimated parameters:', length(extract.mirt(x, 'parvec')), '\n')
-                cat("DIC = ", x@Fit$DIC, "\n", sep='')
             } else {
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
@@ -494,7 +493,6 @@ setMethod(
                               BIC = object@Fit$BIC,
                               logLik = object@Fit$logLik)
             if(object@Fit$logPrior != 0){
-                ret$DIC <- object@Fit$DIC
                 ret$logPost <- object@Fit$logPrior + object@Fit$logLik
             }
             class(ret) <- c('mirt_df', 'data.frame')

@@ -31,7 +31,6 @@ Objects which can be extracted from mirt objects include:
   \item{AICc}{corrected AIC}
   \item{BIC}{BIC}
   \item{SABIC}{sample size adjusted BIC}
-  \item{DIC}{DIC}
   \item{HQ}{HQ}
   \item{F}{unrotated standardized loadings matrix}
   \item{h2}{factor communality estimates}

@@ -52,9 +52,9 @@ test_that('DIF', {
               PRIOR = (6, a1, lnorm, .2, .3)"
     model2 <- multipleGroup(dat, model, group, SE = TRUE, verbose=FALSE, invariance = c(colnames(dat)[1:5],
                                                                                      'free_means', 'free_var'))
-    out <- DIF(model2, which.par = c('a1', 'd'), items2test = 6:10, seq_stat = 'DIC')
+    out <- DIF(model2, which.par = c('a1', 'd'), items2test = 6:10, seq_stat = 'BIC')
     expect_is(out, 'data.frame')
-    expect_equal(out$Bayes_Factor, c(0.08699142,0.03477748,0.1278902,0.08952973,0.6469454), tolerance = 1e-4)
+    expect_equal(out$BIC, c(10.67146,9.156784,11.49356,10.82003,14.46583), tolerance = 1e-4)
 
 
 })

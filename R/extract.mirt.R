@@ -17,7 +17,6 @@
 #'   \item{AICc}{corrected AIC}
 #'   \item{BIC}{BIC}
 #'   \item{SABIC}{sample size adjusted BIC}
-#'   \item{DIC}{DIC}
 #'   \item{HQ}{HQ}
 #'   \item{F}{unrotated standardized loadings matrix}
 #'   \item{h2}{factor communality estimates}
@@ -111,7 +110,6 @@ extract.mirt <- function(x, what){
                   AICc = x@Fit$AICc,
                   BIC = x@Fit$BIC,
                   SABIC = x@Fit$SABIC,
-                  DIC = x@Fit$DIC,
                   method = x@Options$method,
                   logPrior = x@Fit$logPrior,
                   F = x@Fit$F,

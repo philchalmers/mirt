@@ -64,9 +64,7 @@ when using sequential schemes)}
 (in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
 If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
 (e.g., \code{seq_stat = .05} will test for the difference of p < .05 in the add scheme,
-or p > .05 in the drop scheme), along with the specified \code{p.adjust} input.
-For models fitted with prior distributions \code{'DIC'} is also supported, though for these models
-the p-value approach is not}
+or p > .05 in the drop scheme), along with the specified \code{p.adjust} input}
 
 \item{Wald}{logical; perform Wald tests for DIF instead of likelihood ratio test?}
 
