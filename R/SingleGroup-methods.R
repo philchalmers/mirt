@@ -520,18 +520,15 @@ setMethod(
             cat('\n')
         }
         if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
-            BF <- (object@Fit$logLik + object@Fit$logPrior) - (object2@Fit$logLik + object2@Fit$logPrior)
             ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                               AICc = c(object@Fit$AICc, object2@Fit$AICc),
                               SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
                               HQ = c(object@Fit$HQ, object2@Fit$HQ),
                               BIC = c(object@Fit$BIC, object2@Fit$BIC),
-                              DIC = c(object@Fit$DIC, object2@Fit$DIC),
+                              df = c(NaN, abs(df)),
                               logLik = c(object@Fit$logLik, object2@Fit$logLik),
                               logPost = c(object@Fit$logLik + object@Fit$logPrior,
-                                          object2@Fit$logLik + object2@Fit$logPrior),
-                              df = c(NaN, abs(df)),
-                              Bayes_Factor = c(NA, exp(BF)))
+                                          object2@Fit$logLik + object2@Fit$logPrior))
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
             ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
