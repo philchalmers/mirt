@@ -32,7 +32,7 @@ test_that('exploratory mods', {
     expect_equal(extract.mirt(modm7, 'df'), 11)
     expect_is(modm7, 'SingleGroupClass')
     cfs <- as.numeric(do.call(c, coef(modm7)))
-    expect_equal(cfs, c(2.90192,4.881019,0.1521635,0.8792823,7.489837,4.620599,0.1951292,0.8302804,7.416031,7.45117,0.1592872,0.8854679,1.346444,0.8865102,0.1496983,0.8434956,3.265852,6.134814,0.1539274,0.8753093,0,1), tolerance = 1e-2)
+    expect_equal(cfs, c(2.503,4.279,0.153,0.883,3.114,1.908,0.183,0.852,8.703,8.461,0.157,0.89,1.331,0.874,0.15,0.843,2.568,5.007,0.154,0.878,0,1), tolerance = 1e-2)
     fulldata[1,1] <- fulldata[2,2] <- NA
     onefactmissing <- mirt(fulldata, 1, verbose = FALSE, draws = 10, method = 'MHRM')
     expect_is(onefactmissing, 'SingleGroupClass')
