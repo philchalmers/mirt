@@ -2537,12 +2537,6 @@ hasConverged <- function(p0, p1, TOL){
     all(abs(p0 - p1) < TOL)
 }
 
-hasConverged2 <- function(p0, TOL, nms){
-    pick <- nms %in% c('g', 'u')
-    p0[pick] <- plogis(p0[pick])
-    all(abs(p0) < TOL)
-}
-
 QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
     qnorm(QUnif(npts, min=0, max=1, p=nfact, leap=leap))
 }

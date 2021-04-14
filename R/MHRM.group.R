@@ -270,6 +270,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         #Step 3. Update R-M step
         Tau <- Tau + gamma*(ave.h - Tau)
+        longpars0 <- longpars
         if(list$Moptim == 'NR1'){
             correction <- try(solve(Tau, grad), TRUE)
             if(is(correction, 'try-error')){
@@ -288,7 +289,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(verbose)
             cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f",
                                   gamma, max(abs(gamma*correction))), sep='')
-        if(hasConverged2(gamma*correction, TOL, names(estpars))) conv <- conv + 1L
+        if(hasConverged(longpars0, longpars, TOL)) conv <- conv + 1L
             else conv <- 0L
         if(!list$SE && conv >= 3L) break
         if(list$SE.type == 'MHRM' && list$SE &&
