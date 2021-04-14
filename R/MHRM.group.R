@@ -288,8 +288,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(verbose)
             cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f",
                                   gamma, max(abs(gamma*correction))), sep='')
-        if(all(abs(gamma*correction) < TOL)) conv <- conv + 1L
-        else conv <- 0L
+        if(hasConverged2(gamma*correction, TOL, names(estpars))) conv <- conv + 1L
+            else conv <- 0L
         if(!list$SE && conv >= 3L) break
         if(list$SE.type == 'MHRM' && list$SE &&
            cycles >= (400L + BURNIN + SEMCYCLES) && conv >= 3L) break

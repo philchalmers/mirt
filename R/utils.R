@@ -2530,6 +2530,19 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
     r
 }
 
+hasConverged <- function(p0, p1, TOL){
+    pick <- names(p0) %in% c('g', 'u')
+    p0[pick] <- plogis(p0[pick])
+    p1[pick] <- plogis(p1[pick])
+    all(abs(p0 - p1) < TOL)
+}
+
+hasConverged2 <- function(p0, TOL, nms){
+    pick <- nms %in% c('g', 'u')
+    p0[pick] <- plogis(p0[pick])
+    all(abs(p0) < TOL)
+}
+
 QMC_quad <- function(npts, nfact, lim, leap=409, norm=FALSE){
     qnorm(QUnif(npts, min=0, max=1, p=nfact, leap=leap))
 }
