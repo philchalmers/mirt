@@ -44,6 +44,13 @@ anova(x, x2)
 # in isolation
 anova(x)
 
+# with priors on first model
+model <- "Theta = 1-4
+          PRIOR = (1-4, a1, lnorm, 0, 10)"
+xp <- mirt(Science, model)
+anova(xp, x2)
+anova(xp)
+
 # bounded parameter
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)

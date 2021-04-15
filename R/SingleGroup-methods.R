@@ -462,6 +462,13 @@ setMethod(
 #' # in isolation
 #' anova(x)
 #'
+#' # with priors on first model
+#' model <- "Theta = 1-4
+#'           PRIOR = (1-4, a1, lnorm, 0, 10)"
+#' xp <- mirt(Science, model)
+#' anova(xp, x2)
+#' anova(xp)
+#'
 #' # bounded parameter
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1)
@@ -486,14 +493,16 @@ setMethod(
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, bounded = FALSE, mix = 0.5, verbose = TRUE){
         if(missing(object2)){
+            hasPriors <- object@Fit$logPrior != 0
             ret <- data.frame(AIC = object@Fit$AIC,
                               AICc = object@Fit$AICc,
                               SABIC = object@Fit$SABIC,
                               HQ = object@Fit$HQ,
                               BIC = object@Fit$BIC,
                               logLik = object@Fit$logLik)
-            if(object@Fit$logPrior != 0){
-                ret$logPost <- object@Fit$logPrior + object@Fit$logLik
+            if(hasPriors){
+                ret <- ret[!(colnames(ret) %in% c('AIC', 'AICc'))]
+                ret$logPost = object@Fit$logPrior + object@Fit$logLik
             }
             class(ret) <- c('mirt_df', 'data.frame')
             return(ret)
@@ -518,9 +527,7 @@ setMethod(
             cat('\n')
         }
         if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
-            ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
-                              AICc = c(object@Fit$AICc, object2@Fit$AICc),
-                              SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
+            ret <- data.frame(SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
                               HQ = c(object@Fit$HQ, object2@Fit$HQ),
                               BIC = c(object@Fit$BIC, object2@Fit$BIC),
                               df = c(NaN, abs(df)),
