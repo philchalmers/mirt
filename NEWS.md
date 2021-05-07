@@ -6,6 +6,8 @@
 
 - Fix `SE.type = 'Fisher'` computation in multi-group models (reported by Felix Zimmer)
 
+- Switch `par` and `f` inputs in `numerical_deriv()`
+
 # Changes in mirt 1.33.1
 
 - Added `gen.difficulty()` to compute the generalized difficulty statistics 

@@ -3,8 +3,8 @@
 #' Compute numerical derivatives using forward/backward difference,
 #' central difference, or Richardson extrapolation.
 #'
+#' @param par a vector of parameters to find partial derivative at
 #' @param f the objective function being evaluated
-#' @param par a vector of parameters
 #' @param ... additional arguments to be passed to \code{f}
 #' @param delta the term used to perturb the \code{f} function. Default is 1e-5
 #' @param gradient logical; compute the gradient terms? If FALSE then the Hessian is computed instead
@@ -26,18 +26,18 @@
 #'
 #' # grad = 9 * x^2 , -8 * y
 #' (actual <- c(9 * par[1]^2, -8 * par[2]))
-#' numerical_deriv(f, par, type = 'forward')
-#' numerical_deriv(f, par, type = 'central')
-#' numerical_deriv(f, par, type = 'Richardson') # default
+#' numerical_deriv(par, f, type = 'forward')
+#' numerical_deriv(par, f, type = 'central')
+#' numerical_deriv(par, f, type = 'Richardson') # default
 #'
 #' # Hessian = h11 -> 18 * x, h22 -> -8, h12 -> h21 -> 0
 #' (actual <- matrix(c(18 * par[1], 0, 0, -8), 2, 2))
-#' numerical_deriv(f, par, type = 'forward', gradient = FALSE)
-#' numerical_deriv(f, par, type = 'central', gradient = FALSE)
-#' numerical_deriv(f, par, type = 'Richardson', gradient = FALSE) # default
+#' numerical_deriv(par, f, type = 'forward', gradient = FALSE)
+#' numerical_deriv(par, f, type = 'central', gradient = FALSE)
+#' numerical_deriv(par, f, type = 'Richardson', gradient = FALSE) # default
 #'
 #' }
-numerical_deriv <- function(f, par, ...,  delta = 1e-5, gradient = TRUE, type = 'Richardson'){
+numerical_deriv <- function(par, f, ...,  delta = 1e-5, gradient = TRUE, type = 'Richardson'){
     forward_difference <- function(par, f, delta, ...){
         dots <- list(...)
         np <- length(par)

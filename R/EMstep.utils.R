@@ -460,7 +460,7 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
 }
 
 BL.grad <- function(x, ...){
-    numerical_deriv(BL.LL, x, ...)
+    numerical_deriv(x, BL.LL, ...)
 }
 
 Mstep.LR <- function(Theta, CUSTOM.IND, pars, itemloc, fulldata, prior,

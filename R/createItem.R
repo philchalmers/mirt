@@ -128,7 +128,7 @@
 #'      grad[1] <- sum((Theta - b) * PQ * (r_P[,2] - r_P[,1]))
 #'
 #'      ## check with internal numerical form to be safe
-#'      # numerical_deriv(mirt:::EML, x@par[x@est], obj=x, Theta=Theta)
+#'      # numerical_deriv(x@par[x@est], mirt:::EML, obj=x, Theta=Theta)
 #'      grad
 #' }
 #'

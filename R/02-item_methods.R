@@ -79,8 +79,8 @@ numDeriv_DerivTheta <- function(item, Theta){
     tmp <- tmp2 <- matrix(0, nrow(Theta), ncol(Theta))
     for(j in seq_len(item@ncat)){
         for(i in seq_len(nrow(Theta))){
-            tmp[i, ] <- numerical_deriv(P, Theta[i, , drop=FALSE], item=item, cat=j)
-            tmp2[i, ] <- diag(numerical_deriv(P, Theta[i, , drop=FALSE], item=item, cat=j,
+            tmp[i, ] <- numerical_deriv(Theta[i, , drop=FALSE], P, item=item, cat=j)
+            tmp2[i, ] <- diag(numerical_deriv(Theta[i, , drop=FALSE], P, item=item, cat=j,
                                               gradient=FALSE))
         }
         grad[[j]] <- tmp
@@ -99,7 +99,7 @@ numDeriv_dP <- function(item, Theta){
     for(i in seq_len(nrow(Theta))){
         tmp <- numeric(length(par))
         for(j in seq_len(item@ncat))
-            tmp <- tmp + numerical_deriv(P, par, Theta=Theta[i, , drop=FALSE],
+            tmp <- tmp + numerical_deriv(par, P, Theta=Theta[i, , drop=FALSE],
                               item=item, cat=j)
         ret[i, item@est] <- tmp
     }
@@ -306,12 +306,12 @@ setMethod(
             hess <- matrix(0, length(x@par), length(x@par))
             if(any(x@est)){
                 if(x@usegr) grad <- x@gr(x, Theta)
-                else grad[x@est] <- numerical_deriv(LLfun, x@par[x@est], obj=x, Theta=Theta,
+                else grad[x@est] <- numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
                                                     type=x@derivType)
                 if(estHess){
                     if(x@usehss) hess <- x@hss(x, Theta)
                     else hess[x@est, x@est] <-
-                            numerical_deriv(LLfun, x@par[x@est], obj=x, Theta=Theta,
+                            numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
                                             gradient=FALSE, type=x@derivType)
                 }
             }
@@ -322,7 +322,7 @@ setMethod(
                 hess <- matrix(0, length(x@par), length(x@par))
                 if(estHess){
                     if(any(x@est)){
-                        hess[x@est,x@est] <- numerical_deriv(EML2, x@par[x@est], Theta=Theta,
+                        hess[x@est,x@est] <- numerical_deriv(x@par[x@est], EML2, Theta=Theta,
                                                              pars=pars, tabdata=tabdata, freq=freq,
                                                              itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                                              bfactor_info=bfactor_info,
@@ -1194,9 +1194,9 @@ setMethod(
         #TODO - can't seem to get the last value of the gradient quite right for some reason....
         x2 <- x
         x2@est <- c(rep(FALSE, length(x2@est)-1L), TRUE)
-        grad[x2@est] <- numerical_deriv(EML, x@par[x2@est], obj=x2, Theta=Theta)
+        grad[x2@est] <- numerical_deriv(x@par[x2@est], EML, obj=x2, Theta=Theta)
         if(estHess && any(x@est)){
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                     Theta=Theta, gradient=FALSE)
         }
         ####
@@ -1762,7 +1762,7 @@ setMethod(
         hess <- matrix(0, length(x@par), length(x@par))
         dat <- x@dat
         if(estHess && any(x@est))
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta,
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
                                                   gradient = FALSE)
         nfact <- x@nfact
         a <- x@par[seq_len(x@nfact)]
@@ -1967,7 +1967,7 @@ setMethod(
         grad[i+1L] <- -sum(2 * x@dat[,1] * int * -P / Q +
                            2 * x@dat[,2] * int)/2
         if(estHess && any(x@est))
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                   Theta=Theta, gradient=FALSE)
         return(list(grad = grad, hess=hess))
     }
@@ -2090,7 +2090,7 @@ setMethod(
         ret <- .Call('dparslca', x@par, Theta, x@item.Q,
                      estHess, x@dat, offterm) #TODO use estHess in Rcpp
         if(estHess && any(x@est)){
-            ret$hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                          Theta=Theta, gradient=FALSE)
         }
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -2200,7 +2200,7 @@ setMethod(
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         ret <- .Call('dparslca', x@par, x@Theta_prime, x@item.Q, FALSE, x@dat, offterm)
         if(estHess && any(x@est)){
-            ret$hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                         Theta=x@Theta_prime, gradient=FALSE)
         }
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -2375,10 +2375,10 @@ setMethod(
         # NOT USED, but useful for numerical checking
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
-        grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta,
+        grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
                                        type='Richardson')
         if(estHess){
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta,
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta,
                                                   gradient=FALSE, type='Richardson')
         }
         return(list(grad=grad, hess=hess))
@@ -2526,10 +2526,10 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(x@usegr) grad <- x@gr(x, Theta)
-        else grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta, type=x@derivType)
+        else grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta, type=x@derivType)
         if(estHess){
             if(x@usehss) hess <- x@hss(x, Theta)
-            else hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            else hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                        Theta=Theta, type=x@derivType.hss, gradient=FALSE)
         }
         return(list(grad = grad, hess=hess))
@@ -2748,11 +2748,11 @@ setMethod(
 
     if (sum(Nest)>0) {
       grad <- rep(0, length(x@par))
-      grad[x@est & Nest] <- numerical_deriv(EML, x@par[x@est & Nest], obj=x, Theta=Theta)
+      grad[x@est & Nest] <- numerical_deriv(x@par[x@est & Nest], EML, obj=x, Theta=Theta)
     }
 
     if(estHess && any(x@est))
-      hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+      hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                               Theta=Theta, gradient=FALSE)
     ret <- list(grad=grad, hess=hess)
     if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -2883,7 +2883,7 @@ setMethod(
                      length(x@par) - ncol(Theta), FALSE)
         hess <- matrix(0, length(x@par), length(x@par))
         if(estHess && any(x@est))
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                     Theta=Theta, gradient=FALSE)
         ret <- list(grad=ret$grad, hess=hess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -2996,10 +2996,10 @@ setMethod(
         if(nrow(x@fixed.design) > 1L && ncol(x@fixed.design) > 0L)
             Theta <- cbind(x@fixed.design, Theta)
         grad <- numeric(length(x@par))
-        grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta)
+        grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
         hess <- matrix(0, length(x@par), length(x@par))
         if(estHess && any(x@est))
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                   Theta=Theta, gradient=FALSE)
         ret <- list(grad=grad, hess=hess)
         if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
@@ -3165,11 +3165,11 @@ setMethod(
         grad <- symbolicGrad_par(x, Theta, dp1=Pgrad, P=P)
         hess <- matrix(0, length(x@par), length(x@par))
         if(estHess && any(x@est)){
-            # grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta)
-            hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+            # grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                   Theta=Theta, gradient=FALSE)
         }
-        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+        return(list(grad=grad, hess=hess)) #TODO replace with analytic derivatives
     }
 )
 
@@ -3278,13 +3278,13 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(any(x@est)){
-            grad[x@est] <- numerical_deriv(EML, x@par[x@est], obj=x, Theta=Theta)
+            grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
             if(estHess){
-                hess[x@est, x@est] <- numerical_deriv(EML, x@par[x@est], obj=x,
+                hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                             Theta=Theta, gradient=FALSE)
             }
         }
-        return(list(grad=grad, hess=hess)) #replace with analytical derivatives
+        return(list(grad=grad, hess=hess)) #TODO replace with analytic derivatives
     }
 )
 

@@ -24,7 +24,7 @@ SE.Numerical <- function(pars, Theta, theta, dentype, itemloc, PrepList, ESTIMAT
         est <- c(est, lrPars@est)
         shortpars <- longpars[est]
     }
-    hess <- numerical_deriv(BL.LL, shortpars, est=est, longpars=longpars, lrPars=lrPars,
+    hess <- numerical_deriv(shortpars, BL.LL, est=est, longpars=longpars, lrPars=lrPars,
                             pars=pars, ngroups=ngroups, J=J, itemloc=itemloc,
                             Theta=Theta, PrepList=PrepList, dentype=dentype,
                             constrain=constrain,
