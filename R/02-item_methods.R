@@ -116,7 +116,7 @@ numDeriv_dP2 <- function(item, Theta){
     ret <- lapply(2L:item@ncat - 1L, function(x) tmpmat)
     for(i in seq_len(nrow(Theta))){
         for(j in 2L:item@ncat)
-            ret[[j-1L]][i, item@est] <- numerical_deriv(P, par, Theta=Theta[i, , drop=FALSE],
+            ret[[j-1L]][i, item@est] <- numerical_deriv(par, P, Theta=Theta[i, , drop=FALSE],
                                                      item=item, cat=j)
     }
     ret
