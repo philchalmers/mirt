@@ -88,6 +88,8 @@ createGroup <- function(par, est, den, nfact, standardize = FALSE,
     lbound <- if(!is.null(lbound)) lbound  else rep(-Inf, length(par))
     ubound <- if(!is.null(ubound)) ubound  else rep(Inf, length(par))
     Nans <- rep(NaN,length(par))
+    if(any(names(par) %in% c('g', 'u', 'PI')) || any(names(est) %in% c('g', 'u', 'PI')))
+        stop('Parameter names cannot be \'g\', \'u\', or \'PI\', please change.', call.=FALSE)
     return(new('GroupPars', par=par, est=est, parnames=names(est), dentype='custom',
                den=den, safe_den=safe_den, nfact=as.integer(nfact), standardize=standardize,
                itemclass= -999L, any.prior=FALSE, lbound=lbound, usegr=usegr, usehss=usehss,

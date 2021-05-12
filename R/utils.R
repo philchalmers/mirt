@@ -368,8 +368,12 @@ ExtractGroupPars <- function(x){
 ExtractMixtures <- function(pars){
     pick <- length(pars[[1L]])
     logit_pi <- sapply(pars, function(x) x[[pick]]@par[length(x[[pick]]@par)])
-    max_logit_pi <- max(logit_pi)
-    pi <- exp(logit_pi - max_logit_pi)
+    sumexp(logit_pi)
+}
+
+sumexp <- function(logit){
+    max_logit <- max(logit)
+    pi <- exp(logit - max_logit)
     pi / sum(pi)
 }
 
@@ -2534,11 +2538,15 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
 
 hasConverged <- function(p0, p1, TOL){
     pick <- names(p0) %in% c('g', 'u')
-    p0[pick] <- plogis(p0[pick])
-    p1[pick] <- plogis(p1[pick])
+    if(any(pick)){
+        p0[pick] <- plogis(p0[pick])
+        p1[pick] <- plogis(p1[pick])
+    }
     pick <- names(p0) == c('PI')
-    p0[pick] <- exp(p0[pick]) / sum(exp(p0[pick])) ## TODO not the best numerically
-    p1[pick] <- exp(p1[pick]) / sum(exp(p1[pick]))
+    if(any(pick)){
+        p0[pick] <- sumexp(p0[pick])
+        p1[pick] <- sumexp(p1[pick])
+    }
     all(abs(p0 - p1) < TOL)
 }
 
