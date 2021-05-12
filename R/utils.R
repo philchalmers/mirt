@@ -368,10 +368,10 @@ ExtractGroupPars <- function(x){
 ExtractMixtures <- function(pars){
     pick <- length(pars[[1L]])
     logit_pi <- sapply(pars, function(x) x[[pick]]@par[length(x[[pick]]@par)])
-    sumexp(logit_pi)
+    psumexp(logit_pi)
 }
 
-sumexp <- function(logit){
+psumexp <- function(logit){
     max_logit <- max(logit)
     pi <- exp(logit - max_logit)
     pi / sum(pi)
@@ -2544,8 +2544,8 @@ hasConverged <- function(p0, p1, TOL){
     }
     pick <- names(p0) == c('PI')
     if(any(pick)){
-        p0[pick] <- sumexp(p0[pick])
-        p1[pick] <- sumexp(p1[pick])
+        p0[pick] <- psumexp(p0[pick])
+        p1[pick] <- psumexp(p1[pick])
     }
     all(abs(p0 - p1) < TOL)
 }
