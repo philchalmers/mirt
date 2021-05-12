@@ -286,7 +286,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     customGroup[[g]]@parnum <- PrepList[[g]]$pars[[Data$nitems + 1L]]@parnum
                     PrepList[[g]]$pars[[Data$nitems + 1L]] <- customGroup[[g]]
                 }
-
             }
         }
         if(length(mixed.design$random) > 0L){

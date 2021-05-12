@@ -363,7 +363,7 @@
 #' coef(zip, simplify=TRUE)
 #'
 #' }
-multipleGroup <- function(data, model, group, itemtype,
+multipleGroup <- function(data, model, group, itemtype = NULL,
                           invariance = '', method = 'EM',
                           dentype = 'Gaussian', ...)
 {
@@ -392,7 +392,7 @@ multipleGroup <- function(data, model, group, itemtype,
     }
     if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
-                      dentype=dentype, ...)
+                      itemtype=itemtype, dentype=dentype, ...)
     if(is(mod, 'MultipleGroupClass') || is(mod, 'MixtureClass'))
         mod@Call <- Call
     return(mod)

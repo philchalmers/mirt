@@ -8,7 +8,7 @@ multipleGroup(
   data,
   model,
   group,
-  itemtype,
+  itemtype = NULL,
   invariance = "",
   method = "EM",
   dentype = "Gaussian",
