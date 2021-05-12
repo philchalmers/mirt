@@ -286,9 +286,11 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 pind2 <- pind2 + ncol(dp)
                 for(j in seq_len(nitems)){
                     if(i < j){
-                        dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] * EIs[,j] * Prior)
+                        dp <- colSums(DP[ , wherepar[i]:(wherepar[i+1L]-1L), drop=FALSE] *
+                                          EIs[,j] * Prior)
                         delta2[ind, pars[[i]]@parnum - offset] <- dp
-                        dp <- colSums(DP[ , wherepar[j]:(wherepar[j+1L]-1L), drop=FALSE] * EIs[,i] * Prior)
+                        dp <- colSums(DP[ , wherepar[j]:(wherepar[j+1L]-1L), drop=FALSE] *
+                                          EIs[,i] * Prior)
                         delta2[ind, pars[[j]]@parnum - offset] <- dp
                         ind <- ind + 1L
                     }
@@ -318,21 +320,22 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     stopifnot(type %in% c('M2*', 'M2', 'C2'))
     if(type == "M2")
         if(!all(extract.mirt(obj, 'K') == 2L))
-            stop("M2 statistic currently not supported for polytomous data. Use M2* or C2 instead", call.=FALSE)
+            stop("M2 statistic currently not supported for polytomous data. Use M2* or C2 instead",
+                 call.=FALSE)
     if(missing(obj)) missingMsg('obj')
     if(is(obj, 'MixedClass'))
         stop('MixedClass objects are not yet supported', call.=FALSE)
+    if(is(obj, 'MixtureClass'))
+        stop('MixtureClass objects are not yet supported', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 5000L
     if(na.rm) obj <- removeMissing(obj)
-    if(na.rm) message('Sample size after row-wise response data removal: ', nrow(extract.mirt(obj, 'data')))
+    if(na.rm) message('Sample size after row-wise response data removal: ',
+                      nrow(extract.mirt(obj, 'data')))
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data.
                  Remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
         if(residmat) stop('residmat not supported when imputing data')
-        # if(sum(is.na(obj@Data$data))/length(obj@Data$data) > .1)
-        #     warning('Imputing too much data can lead to very conservative results. Use with caution.',
-        #             call.=FALSE)
         Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, ...)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts, QMC=QMC, theta_lim=theta_lim)
@@ -370,6 +373,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
                                    mins=obj@Data$mins, K=obj@Data$K,
                                    fulldata=list(obj@Data$fulldata[[g]]))
+            if(is(obj, 'MixtureClass')) pars[[g]]@Data$data <- extract.mirt(obj, 'data')
             ret[[g]] <- M2internal(pars[[g]], calcNull=FALSE, quadpts=quadpts, theta_lim=theta_lim,
                                    residmat=residmat, QMC=QMC, discrete=discrete, type=type, ...)
         } else {
@@ -420,7 +424,8 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     delta <- delta[ ,estpars, drop=FALSE]
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
-        stop('M2() statistic cannot be calculated due to too few degrees of freedom', call.=FALSE)
+        stop('M2() statistic cannot be calculated due to too few degrees of freedom',
+             call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     C2 <- try(deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac), TRUE)
     if(is(C2, 'try-error'))
@@ -446,7 +451,8 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         newret$SRMSR <- SRMSR
     }
     if(calcNull){
-        null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype, group=obj@Data$group,
+        null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype,
+                                         group=obj@Data$group,
                                          key=obj@Internals$key))
         if(is(null.mod, 'try-error'))
             stop('Null model did not converge or is not supported', call.=FALSE)
