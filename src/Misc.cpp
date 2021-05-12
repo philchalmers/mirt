@@ -37,15 +37,15 @@ RcppExport SEXP reloadPars(SEXP Rlongpars, SEXP Rpars, SEXP Rngroups, SEXP RJ,
     List pars(Rpars);
     const int ngroups = as<int>(Rngroups);
     const int J = as<int>(RJ);
-    const vector<int> nclasspars = as< vector<int> >(Rnclasspars);
+    const IntegerMatrix nclasspars(Rnclasspars);
     int ind = 0;
 
     for(int g = 0; g < ngroups; ++g){
         List glist = pars[g];
         for(int i = 0; i < (J+1); ++i){
             S4 item = glist[i];
-            NumericVector par(nclasspars[i]);
-            for(int j = 0; j < nclasspars[i]; ++j){
+            NumericVector par(nclasspars(g,i));
+            for(int j = 0; j < nclasspars(g,i); ++j){
                 par(j) = longpars(ind);
                 ++ind;
             }

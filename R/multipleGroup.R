@@ -28,6 +28,8 @@
 #' @param group a \code{character} or \code{factor} vector indicating group membership. If a \code{character}
 #'   vector is supplied this will be automatically transformed into a \code{\link{factor}} variable.
 #'   As well, the first level of the (factorized) grouping variable will be treated as the "reference" group
+#' @param itemtype can be same type of input as is documented in \code{\link{mirt}}, however may also be a
+#'   \code{ngroups} by \code{nitems} matrix specifying the type of IRT models for each group individually
 #' @param invariance a character vector containing the following possible options:
 #'   \describe{
 #'     \item{\code{'free_mean'} or \code{'free_means'}}{freely estimate all latent means in all focal groups
@@ -358,7 +360,8 @@
 #' coef(zip, simplify=TRUE)
 #'
 #' }
-multipleGroup <- function(data, model, group, invariance = '', method = 'EM',
+multipleGroup <- function(data, model, group, itemtype,
+                          invariance = '', method = 'EM',
                           dentype = 'Gaussian', ...)
 {
     Call <- match.call()

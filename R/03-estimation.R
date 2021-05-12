@@ -50,6 +50,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                  call.=FALSE)
         if(!(is.factor(group) || is.character(group)) || length(group) != nrow(data))
             stop('group input provided is not valid', call.=FALSE)
+        if(is.matrix(itemtype)){
+            itemtypefull <- itemtype
+            itemtype <- itemtypefull[1L,]
+        } else itemtypefull <- NULL
         if(!is.null(itemtype))
             stopifnot(is(itemtype, 'character'))
         if(!is.null(constrain))
@@ -194,6 +198,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(any(grepl('-', Data$groupNames)))
             stop('Group names cannot contain a dash (-) character', call.=FALSE)
         Data$ngroups <- if(!is.null(opts$ngroups)) opts$ngroups else length(Data$groupNames)
+        if(!is.null(itemtypefull))
+            if(Data$ngroups != nrow(itemtypefull))
+                stop("number of groups does not match number of rows in itemtype", call.=FALSE)
         Data$nitems <- ncol(Data$data)
         Data$N <- nrow(Data$data)
         Data$mins <- suppressWarnings(apply(data, 2L, min, na.rm=TRUE))
@@ -239,6 +246,21 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
                          dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q)
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
+            if(!is.null(itemtypefull)){
+                for(g in 2L:nrow(itemtypefull)){
+                    PrepList[[g]] <-
+                        PrepData(data=Data$data, model=Data$model, itemtype=itemtypefull[g,], guess=guess,
+                                 upper=upper, parprior=parprior, verbose=opts$verbose,
+                                 technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
+                                 grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
+                                 mixed.design=mixed.design, customItems=customItems,
+                                 customItemsData=customItemsData,
+                                 customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
+                                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
+                                 gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
+                                 dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q)
+                }
+            }
         }
         if(!is.null(opts$structure)){
             PrepList[[1L]]$pars[[Data$nitems+1L]]@structure <- opts$structure
@@ -248,18 +270,23 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         parnumber <- max(PrepList[[1L]]$pars[[Data$nitems+1L]]@parnum) + 1L
         attr(PrepListFull$pars, 'nclasspars') <- attr(PrepList[[1L]]$pars, 'nclasspars') <-
-            sapply(PrepListFull$pars, function(y) length(y@parnum))
+            matrix(sapply(PrepListFull$pars, function(y) length(y@parnum)), nrow=1L)
         for(g in seq_len(Data$ngroups)){
             if(g != 1L){
-                PrepList[[g]] <- list(pars=PrepList[[1L]]$pars)
+                if(is.null(itemtypefull))
+                    PrepList[[g]] <- list(pars=PrepList[[1L]]$pars)
+                else attr(PrepList[[g]]$pars, 'nclasspars') <-
+                        sapply(PrepList[[g]]$pars, function(y) length(y@parnum))
                 for(i in 1L:length(PrepList[[g]]$pars)){
-                    PrepList[[g]]$pars[[i]]@parnum <- parnumber:(parnumber + length(PrepList[[g]]$pars[[i]]@parnum) - 1L)
+                    PrepList[[g]]$pars[[i]]@parnum <- parnumber:(parnumber +
+                                                    length(PrepList[[g]]$pars[[i]]@parnum) - 1L)
                     parnumber <- max(PrepList[[g]]$pars[[i]]@parnum) + 1L
                 }
                 if(!is.null(customGroup)){
                     customGroup[[g]]@parnum <- PrepList[[g]]$pars[[Data$nitems + 1L]]@parnum
                     PrepList[[g]]$pars[[Data$nitems + 1L]] <- customGroup[[g]]
                 }
+
             }
         }
         if(length(mixed.design$random) > 0L){

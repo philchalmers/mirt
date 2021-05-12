@@ -1622,8 +1622,10 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
 }
 
 reloadPars <- function(longpars, pars, ngroups, J){
-    .Call('reloadPars', longpars, pars, ngroups, J,
-          attr(pars[[1L]], 'nclasspars'))
+    nclasspars <- if(ngroups > 1L)
+        do.call(rbind, lapply(pars, function(x) attr(x, 'nclasspars')))
+    else attr(pars[[1L]], 'nclasspars')
+    .Call('reloadPars', longpars, pars, ngroups, J, nclasspars)
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
@@ -2534,6 +2536,9 @@ hasConverged <- function(p0, p1, TOL){
     pick <- names(p0) %in% c('g', 'u')
     p0[pick] <- plogis(p0[pick])
     p1[pick] <- plogis(p1[pick])
+    pick <- names(p0) == c('PI')
+    p0[pick] <- exp(p0[pick]) / sum(exp(p0[pick])) ## TODO not the best numerically
+    p1[pick] <- exp(p1[pick]) / sum(exp(p1[pick]))
     all(abs(p0 - p1) < TOL)
 }
 
