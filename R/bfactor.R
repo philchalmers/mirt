@@ -70,6 +70,9 @@
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
+#' Bradlow, E.T., Wainer, H., & Wang, X. (1999). A Bayesian random effects model for testlets.
+#' \emph{Psychometrika, 64}, 153-168.
+#'
 #' Gibbons, R. D., & Hedeker, D. R. (1992). Full-information Item Bi-Factor
 #' Analysis. \emph{Psychometrika, 57}, 423-436.
 #'
@@ -77,6 +80,9 @@
 #' Kupfer, D. J., Frank, E., Grochocinski, V. J., & Stover, A. (2007).
 #' Full-Information item bifactor analysis of graded response data.
 #' \emph{Applied Psychological Measurement, 31}, 4-19.
+#'
+#' Wainer, H., Bradlow, E.T., & Wang, X. (2007). Testlet response theory and its applications.
+#' New York, NY: Cambridge University Press.
 #'
 #' @keywords models
 #' @export bfactor
@@ -157,7 +163,7 @@
 #' coef(simmod)
 #'
 #' #########
-#' # testlet response model
+#' # General testlet response model (Wainer, 2007)
 #'
 #' #simulate data
 #' set.seed(1234)
@@ -183,6 +189,18 @@
 #'
 #' simmod <- bfactor(dataset, specific, model)
 #' coef(simmod, simplify=TRUE)
+#'
+#' # Constrained testlet model (Bradlow, 1999)
+#' model2 <- "G = 1-12
+#'           CONSTRAIN = (1, a1, a2), (2, a1, a2), (3, a1, a2), (4, a1, a2),
+#'             (5, a1, a3), (6, a1, a3), (7, a1, a3), (8, a1, a3),
+#'             (9, a1, a4), (10, a1, a4), (11, a1, a4), (12, a1, a4),
+#'             (GROUP, COV_22, COV_33, COV_44)
+#'           COV = S1*S1, S2*S2, S3*S3"
+#'
+#' simmod2 <- bfactor(dataset, specific, model2)
+#' coef(simmod2, simplify=TRUE)
+#' anova(simmod, simmod2)
 #'
 #'
 #' #########
