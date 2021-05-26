@@ -4,13 +4,15 @@
 \alias{poly2dich}
 \title{Change polytomous items to dichotomous item format}
 \usage{
-poly2dich(data, which.items = 1:ncol(data))
+poly2dich(data, which.items = 1:ncol(data), sep = "_cat.")
 }
 \arguments{
 \item{data}{an object of class \code{data.frame} or \code{matrix}}
 
 \item{which.items}{a vector indicating which items should be transformed into the
 dichotomous form. Default uses all input items}
+
+\item{sep}{character vector pattern to append to each item name in \code{data}}
 }
 \value{
 Returns an integer matrix

@@ -6,6 +6,7 @@
 #' @param data an object of class \code{data.frame} or \code{matrix}
 #' @param which.items a vector indicating which items should be transformed into the
 #'   dichotomous form. Default uses all input items
+#' @param sep character vector pattern to append to each item name in \code{data}
 #' @return Returns an integer matrix
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -29,7 +30,7 @@
 #'
 #' }
 #'
-poly2dich <- function(data, which.items = 1:ncol(data)) {
+poly2dich <- function(data, which.items = 1:ncol(data), sep='_cat.') {
     if(missing(data)) missingMsg('data')
     stopifnot(is.data.frame(data) || is.matrix(data))
     stopifnot(length(which.items) > 0L)
@@ -40,7 +41,7 @@ poly2dich <- function(data, which.items = 1:ncol(data)) {
             old <- data[,i]
             u <- sort(na.omit(unique(old)))
             new <- matrix(0L, nrow(data), length(u))
-            colnames(new) <- paste(nms[i], u, sep='.')
+            colnames(new) <- paste(nms[i], u, sep=sep)
             new[is.na(old), ] <- NA
             for(j in seq_len(length(u))) new[u[j] == old, j] <- 1L
             ret[[i]] <- new
