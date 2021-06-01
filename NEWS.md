@@ -1,8 +1,12 @@
 # Changes in mirt 1.34
 
-- added `converged` element in `DIF()` output to evaluate whether the nested model iteration converged
+- Previous `technical = list(removeEmptyRows = TRUE)` input now deprecated. Response patterns
+  that are now completely missing are supplied NA placeholders within estimation and 
+  post-estimation supporting functions (e.g., `fscores()`, `personfit()`, `fixed()`, etc)
 
-- added support for plausible-value draws in `fscores()` when using `response.pattern` argument
+- Added `converged` element in `DIF()` output to evaluate whether the nested model iteration converged
+
+- Added support for plausible-value draws in `fscores()` when using `response.pattern` argument
 
 - Fix `SE.type = 'Fisher'` computation in multi-group models (reported by Felix Zimmer)
 

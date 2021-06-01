@@ -502,6 +502,10 @@ setMethod(
             }
             if(method == 'classify')
                 colnames(scoremat) <- paste0("CLASS_", 1L:ncol(scoremat))
+            if(full.scores){
+                completely_missing <- extract.mirt(object, 'completely_missing')
+                scoremat <- addMissing(scoremat, whc=completely_missing)
+            }
             return(scoremat)
 		} else {
             if(return.acov){
@@ -898,6 +902,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
         ret <- as.matrix(EAPscores[,pick, drop=FALSE])
         rownames(ret) <- NULL
+        completely_missing <- extract.mirt(x, 'completely_missing')
+        ret <- addMissing(ret, whc=completely_missing)
     } else {
         dat <- x@Data$data
         if(any(is.na(dat)))

@@ -356,6 +356,12 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     svinput <- pars
     iconstrain <- constrain
     covdataold <- covdata
+    completely_missing <- which(rowSums(is.na(data)) == ncol(data))
+    if(length(completely_missing)){
+        data <- data[-completely_missing, , drop=FALSE]
+        if(!is.null(covdata))
+            covdata <- covdata[-completely_missing, , drop=FALSE]
+    }
     itemdesignold <- if(is.null(itemdesign)) data.frame() else itemdesign
     if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
     if(any(itemtype %in% c('spline', 'ideal'))){
@@ -480,5 +486,6 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
                       SE=SE, latent.regression=latent.regression, technical=technical, ...)
     if(is(mod, 'MixedClass'))
         mod@Call <- Call
+    mod@Data$completely_missing <- completely_missing
     return(mod)
 }

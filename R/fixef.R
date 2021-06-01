@@ -54,5 +54,8 @@ fixef <- function(x){
     if(!length(lrPars))
         stop('No latent regression parameters were defined in the supplied model', call.=FALSE)
     ret <- lrPars@X %*% lrPars@beta
+    completely_missing <- extract.mirt(x, 'completely_missing')
+    ret <- addMissing(ret, whc=completely_missing)
+    rownames(ret) <- NULL
     ret
 }

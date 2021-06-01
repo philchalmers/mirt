@@ -1459,6 +1459,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
+    if(any(tnames == 'removeEmptyRows'))
+        warning(c('removeEmptyRows option has been deprecated. Complete NA response vectors now supported ',
+                  'by using NA placeholders'), call.=FALSE)
     if((method %in% c('MHRM', 'MIXED', 'SEM')) && SE.type == 'Oakes') SE.type <- 'MHRM'
     if(method == 'MCEM' && SE && SE.type != 'complete')
         stop('SE.type not currently supported for MCEM method', call.=FALSE)
@@ -1528,8 +1531,6 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
             stop('SEM information matrix not supported with QMCEM estimation', call.=FALSE)
     }
     if(is.null(technical$symmetric)) technical$symmetric <- TRUE
-    opts$removeEmptyRows <- if(is.null(technical$removeEmptyRows)) FALSE
-        else technical$removeEmptyRows
     opts$omp_threads <- ifelse(is.null(technical$omp), .mirtClusterEnv$omp_threads, 1L)
     opts$PLCI <- ifelse(is.null(technical$PLCI), FALSE, technical$PLCI)
     opts$warn <- if(is.null(technical$warn)) TRUE else technical$warn
@@ -2298,6 +2299,9 @@ latentRegression_obj <- function(data, covdata, formula, dentype, method){
             covdata <- covdata[-tmp, ]
             data <- data[-tmp, ]
         }
+        completely_missing <- which(rowSums(is.na(data)) == ncol(data))
+        if(length(completely_missing))
+            covdata <- covdata[-completely_missing, , drop=FALSE]
         latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
     } else latent.regression <- NULL
     latent.regression
@@ -2558,6 +2562,17 @@ MC_quad <- function(npts, nfact, lim)
     qnorm(matrix(runif(n=npts * nfact, min = lim[1L], max = lim[2]), npts, nfact))
 
 respSample <- function(P) .Call("respSample", P)
+
+addMissing <- function(mat, whc){
+    if(length(whc)){
+        tmp <- mat
+        mat <- rbind(mat, tmp[1L:length(whc), , drop=FALSE])
+        id <- 1L:nrow(mat)
+        mat[whc, ] <- NA
+        mat[!(id %in% whc), ] <- tmp
+    }
+    mat
+}
 
 makeSymMat <- function(mat){
     if(ncol(mat) > 1L){

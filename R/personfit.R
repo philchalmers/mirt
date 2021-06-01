@@ -110,6 +110,8 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
     fulldata <- x@Data$fulldata[[1L]]
+    if(nrow(fulldata) < nrow(Theta))
+        Theta <- Theta[extract.mirt(x, 'rowID'), , drop=FALSE]
     for(i in seq_len(ncol(Theta))){
         tmp <- Theta[,i]
         tmp[tmp %in% c(-Inf, Inf)] <- NA
@@ -159,8 +161,11 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
     ret <- data.frame(x@Data$data, outfit=outfit, z.outfit=z.outfit,
                       infit=infit, z.infit=z.infit, Zh=Zh)
+    rownames(ret) <- NULL
     if(stats.only)
         ret <- ret[, !(colnames(ret) %in% colnames(x@Data$data)), drop=FALSE]
+    completely_missing <- extract.mirt(x, 'completely_missing')
+    ret <- addMissing(ret, whc=completely_missing)
     return(ret)
 }
 
