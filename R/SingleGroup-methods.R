@@ -701,6 +701,9 @@ setMethod(
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
+        if(!is.null(Theta))
+            if(nrow(Theta) > nrow(data))
+                Theta <- Theta[-extract.mirt(object, 'completely_missing'), , drop=FALSE]
         if(!discrete){
             if(is.null(quadpts)){
                 if(QMC) quadpts <- 5000L
@@ -714,11 +717,12 @@ setMethod(
                     QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim)
                 else {
                     if(nfact > 3L)
-                        warning('High-dimensional models should use QMC integration instead', call.=FALSE)
+                        warning('High-dimensional models should use QMC integration instead',
+                                call.=FALSE)
                     thetaComb(theta, nfact)
                 }
             } else if(is.null(Theta)){
-                Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, ...)
+                Theta <- fscores(object, verbose=FALSE, full.scores=TRUE, leave_missing=TRUE, ...)
             }
         } else {
             Theta <- object@Model$Theta

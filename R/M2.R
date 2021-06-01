@@ -336,7 +336,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             stop('Fit statistics cannot be computed when there are missing data.
                  Remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
         if(residmat) stop('residmat not supported when imputing data')
-        Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, ...)
+        Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, leave_missing=TRUE, ...)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts, QMC=QMC, theta_lim=theta_lim)
         ave <- SD <- collect[[1L]]

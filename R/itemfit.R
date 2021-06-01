@@ -425,6 +425,9 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
         stop('Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.
              Pass na.rm=TRUE to remove missing data row-wise', call.=FALSE)
+    if(!is.null(Theta))
+        if(nrow(Theta) > nrow(x@Data$data))
+            Theta <- Theta[-extract.mirt(x, 'completely_missing'), , drop=FALSE]
 
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         discrete <- is(x, 'DiscreteClass')
@@ -433,7 +436,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 x@ParObjects$pars[[g]]@ParObjects$pars[[J+1L]]@est[] <- FALSE
         ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
-            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute, ...)
+            Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute,
+                             leave_missing=TRUE, ...)
         for(g in seq_len(x@Data$ngroups)){
             if(impute > 0L){
                 tmpTheta <- vector('list', impute)
@@ -469,7 +473,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     pars <- x@ParObjects$pars
     if(Zh || infit){
         if(is.null(Theta))
-            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method,
+                             leave_missing=TRUE, ...)
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@Model$nfact + length(prodlist)
         fulldata <- x@Data$fulldata[[1L]]
@@ -521,7 +526,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
     if(( (X2 || G2) || !is.null(empirical.plot) || !is.null(empirical.table)) && x@Model$nfact == 1L){
         if(is.null(Theta))
-            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, ...)
+            Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method,
+                             leave_missing=TRUE, ...)
         nfact <- ncol(Theta)
         prodlist <- attr(pars, 'prodlist')
         fulldata <- x@Data$fulldata[[1L]]

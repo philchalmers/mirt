@@ -146,7 +146,8 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     focal <- extract.group(mod, ifelse(ref.group == 1, 2, 1))
     focal_select <- extract.mirt(mod, 'group') != extract.mirt(mod, 'groupNames')[ref.group]
     if(is.null(Theta.focal)){
-        Theta <- fscores(mod, full.scores = TRUE, full.scores.SE = FALSE, ...)
+        Theta <- fscores(mod, full.scores = TRUE, full.scores.SE = FALSE,
+                         leave_missing=TRUE, ...)
         Theta.focal <- Theta[focal_select, , drop = FALSE]
     } else Theta.focal <- as.matrix(Theta.focal)
     if(sum(focal_select) != nrow(Theta.focal))

@@ -8,7 +8,7 @@ setMethod(
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
 	                      min_expected, plausible.type, start,
-	                      use_dentype_estimate, ...)
+	                      use_dentype_estimate, leave_missing = FALSE, ...)
 	{
         den_fun <- mirt_dmvnorm
         if(extract.mirt(object, 'ngroups') == 1L){
@@ -166,12 +166,14 @@ setMethod(
                             pars=sv,
                             method='MHRM',
                             technical=technical)
+                completely_missing <- extract.mirt(object, 'completely_missing')
+                ret <- lapply(ret, function(x) addMissing(x, whc=completely_missing))
                 if(plausible.draws == 1L) return(ret[[1L]])
                 else return(ret)
             } else if(plausible.type == 'normal'){
                 fs <- fscores(object, rotate=rotate, Target=Target, full.scores = TRUE, method=method,
                               quadpts = quadpts, theta_lim=theta_lim, verbose=FALSE, cov=gcov,
-                              return.acov = FALSE, QMC=QMC, custom_den=custom_den, ...)
+                              return.acov = FALSE, QMC=QMC, custom_den=custom_den, leave_missing=TRUE, ...)
                 if(any(is.na(fs)))
                     stop('Plausible values cannot be drawn for completely empty response patterns.
                          Please remove these from your analysis.', call.=FALSE)
@@ -186,9 +188,11 @@ setMethod(
                     stop('Could not draw unique plausible values. Response pattern ACOVs may
                          not be positive definite')
                 ret <- vector('list', plausible.draws)
+                completely_missing <- extract.mirt(object, 'completely_missing')
                 for(i in seq_len(plausible.draws)){
                     ret[[i]] <- matrix(NA, nrow(fs), ncol(fs))
                     for(j in seq_len(nrow(fs))) ret[[i]][j,] <- jit[[j]][i,]
+                    ret[[i]] <- addMissing(ret[[i]], whc=completely_missing)
                 }
                 if(plausible.draws == 1L) return(ret[[1L]])
                 else return(ret)
@@ -297,7 +301,8 @@ setMethod(
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
                                              min_expected=min_expected, pis=pis, mixture=mixture,
-                                             use_dentype_estimate=use_dentype_estimate, ...))
+                                             use_dentype_estimate=use_dentype_estimate,
+                                             leave_missing=leave_missing, ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		LR <- .hasSlot(object@Model$lrPars, 'beta')
 		USETABDATA <- TRUE
@@ -502,7 +507,7 @@ setMethod(
             }
             if(method == 'classify')
                 colnames(scoremat) <- paste0("CLASS_", 1L:ncol(scoremat))
-            if(full.scores){
+            if(full.scores && !leave_missing){
                 completely_missing <- extract.mirt(object, 'completely_missing')
                 scoremat <- addMissing(scoremat, whc=completely_missing)
             }
@@ -765,7 +770,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    quadpts = NULL, S_X2 = FALSE, gp, verbose, CUSTOM.IND,
                    theta_lim, discrete, mixture, QMC, den_fun, min_expected,
                    which.items = 2:length(x@ParObjects$pars)-1,
-                   use_dentype_estimate = FALSE, pis, ...){
+                   use_dentype_estimate = FALSE, pis, leave_missing, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -902,8 +907,10 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
         ret <- as.matrix(EAPscores[,pick, drop=FALSE])
         rownames(ret) <- NULL
-        completely_missing <- extract.mirt(x, 'completely_missing')
-        ret <- addMissing(ret, whc=completely_missing)
+        if(!leave_missing){
+            completely_missing <- extract.mirt(x, 'completely_missing')
+            ret <- addMissing(ret, whc=completely_missing)
+        }
     } else {
         dat <- x@Data$data
         if(any(is.na(dat)))
