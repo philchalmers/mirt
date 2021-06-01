@@ -16,7 +16,67 @@ extract.mirt(x, what)
 A generic function to extract the internal objects from estimated models.
 }
 \details{
+Objects which can be extracted from mirt objects include:
 
+\describe{
+  \item{logLik}{observed log-likelihood}
+  \item{logPrior}{log term contributed by prior parameter distributions}
+  \item{G2}{goodness of fit statistic}
+  \item{df}{degrees of freedom}
+  \item{p}{p-value for G2 statistic}
+  \item{RMSEA}{root mean-square error of approximation based on G2}
+  \item{CFI}{CFI fit statistic}
+  \item{TLI}{TLI fit statistic}
+  \item{AIC}{AIC}
+  \item{AICc}{corrected AIC}
+  \item{BIC}{BIC}
+  \item{SABIC}{sample size adjusted BIC}
+  \item{HQ}{HQ}
+  \item{F}{unrotated standardized loadings matrix}
+  \item{h2}{factor communality estimates}
+  \item{LLhistory}{EM log-likelihood history}
+  \item{tabdata}{a tabular version of the raw response data input. Frequencies are stored
+    in \code{freq}}
+  \item{freq}{frequencies associated with \code{tabdata}}
+  \item{K}{an integer vector indicating the number of unique elements for each item}
+  \item{mins}{an integer vector indicating the lowest category found in the input \code{data}}
+  \item{model}{input model syntax}
+  \item{method}{estimation method used}
+  \item{itemtype}{a vector of item types for each respective item (e.g., 'graded', '2PL', etc)}
+  \item{itemnames}{a vector of item names from the input data}
+  \item{factorNames}{a vector of factor names from the model definition}
+  \item{rowID}{an integer vector indicating all valid row numbers used in the model estimation
+   (when all cases are used this will be \code{1:nrow(data)})}
+  \item{data}{raw input data of item responses}
+  \item{covdata}{raw input data of data used as covariates}
+  \item{tabdatalong}{similar to \code{tabdata}, however the responses have been transformed into
+    dummy coded variables}
+  \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
+    tabulated frequencies}
+  \item{exp_resp}{expected probability of the unique response patterns}
+  \item{survey.weights}{if supplied, the vector of survey weights used during estimation (NULL if missing)}
+  \item{converged}{a logical value indicating whether the model terminated within
+    the convergence criteria}
+  \item{iterations}{number of iterations it took to reach the convergence criteria}
+  \item{nest}{number of freely estimated parameters}
+  \item{parvec}{vector containing uniquely estimated parameters}
+  \item{vcov}{parameter covariance matrix (associated with parvec)}
+  \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
+  \item{constrain}{a list of item parameter constraints to indicate which item parameters were equal
+    during estimation}
+  \item{Prior}{prior density distribution for the latent traits}
+  \item{key}{if supplied, the data scoring key}
+  \item{nfact}{number of latent traits/factors}
+  \item{nitems}{number of items}
+  \item{ngroups}{number of groups}
+  \item{groupNames}{character vector of unique group names}
+  \item{group}{a character vector indicating the group membership}
+  \item{secondordertest}{a logical indicating whether the model passed the second-order test
+    based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
+  \item{SEMconv}{logical; check whether the supplemented EM information matrix converged. Will be \code{NA}
+    if not applicable}
+  \item{time}{estimation time, broken into different sections}
+}
 }
 \examples{
 
