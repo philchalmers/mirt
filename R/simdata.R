@@ -452,6 +452,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	if(is.null(sigma)) sigma <- diag(nfact)
 	if(is.null(mu)) mu <- rep(0,nfact)
 	if(!is.null(Theta)){
+	    if(!is.matrix(Theta)) Theta <- matrix(Theta)
 		if(ncol(Theta) != nfact)
 			stop("The input Theta matrix does not have the correct dimensions", call.=FALSE)
 	    N <- nrow(Theta)

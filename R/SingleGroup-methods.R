@@ -701,9 +701,11 @@ setMethod(
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
-        if(!is.null(Theta))
+        if(!is.null(Theta)){
+            if(!is.matrix(Theta)) Theta <- matrix(Theta)
             if(nrow(Theta) > nrow(data))
                 Theta <- Theta[-extract.mirt(object, 'completely_missing'), , drop=FALSE]
+        }
         if(!discrete){
             if(is.null(quadpts)){
                 if(QMC) quadpts <- 5000L
