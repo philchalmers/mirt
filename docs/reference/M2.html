@@ -81,7 +81,7 @@ density components (where applicable)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -260,7 +260,7 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 28 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -287,10 +287,10 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='co'># Compute stats by removing missing data row-wise</span>
 <span class='fu'>M2</span><span class='op'>(</span><span class='va'>mod2</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Sample size after row-wise response data removal: 773</span></div><div class='output co'>#&gt;             M2 df          p      RMSEA    RMSEA_5   RMSEA_95      SRMSR
-#&gt; stats 13.13517  5 0.02214451 0.04590813 0.01594371 0.07697174 0.04017033
-#&gt;             TLI       CFI
-#&gt; stats 0.9088344 0.9544172</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Sample size after row-wise response data removal: 773</span></div><div class='output co'>#&gt;             M2 df          p      RMSEA RMSEA_5  RMSEA_95      SRMSR       TLI
+#&gt; stats 10.11077  5 0.07215684 0.03638727       0 0.0687938 0.03390482 0.9396013
+#&gt;             CFI
+#&gt; stats 0.9698006</div><div class='input'>
 <span class='co'># C2 statistic (useful when polytomous IRT models have too few df)</span>
 <span class='va'>pmod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='co'># This fails with too few df:</span>

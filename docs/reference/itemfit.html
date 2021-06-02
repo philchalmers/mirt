@@ -81,7 +81,7 @@ is reported to help gauge the magnitude of item misfit." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -505,27 +505,27 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class='co'># PV and X2* statistics (parametric bootstrap stats not run to save time)</span>
 <span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>'PV_Q1'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       item   PV_Q1 df.PV_Q1 RMSEA.PV_Q1 p.PV_Q1
-#&gt; 1   Item_1   7.958        8       0.000   0.438
-#&gt; 2   Item_2   8.604        8       0.006   0.377
-#&gt; 3   Item_3   7.410        8       0.000   0.493
-#&gt; 4   Item_4   7.243        8       0.000   0.511
-#&gt; 5   Item_5   8.602        8       0.006   0.377
-#&gt; 6   Item_6   9.415        8       0.009   0.309
-#&gt; 7   Item_7   8.565        8       0.006   0.380
-#&gt; 8   Item_8  10.259        8       0.012   0.247
-#&gt; 9   Item_9  10.556        8       0.013   0.228
-#&gt; 10 Item_10   9.051        8       0.008   0.338
-#&gt; 11 Item_11   9.017        8       0.008   0.341
-#&gt; 12 Item_12   7.520        8       0.000   0.482
-#&gt; 13 Item_13   8.663        8       0.006   0.371
-#&gt; 14 Item_14  10.018        8       0.011   0.264
-#&gt; 15 Item_15   9.011        8       0.008   0.341
-#&gt; 16 Item_16   8.226        8       0.004   0.412
-#&gt; 17 Item_17   7.659        8       0.000   0.467
-#&gt; 18 Item_18   8.250        8       0.004   0.409
-#&gt; 19 Item_19   6.956        8       0.000   0.541
-#&gt; 20 Item_20   8.122        8       0.003   0.422
-#&gt; 21 baditem 128.442        8       0.087   0.000</div><div class='input'>
+#&gt; 1   Item_1   7.911        8       0.000   0.442
+#&gt; 2   Item_2   8.385        8       0.005   0.397
+#&gt; 3   Item_3   9.797        8       0.011   0.280
+#&gt; 4   Item_4   8.810        8       0.007   0.359
+#&gt; 5   Item_5   8.239        8       0.004   0.410
+#&gt; 6   Item_6   8.703        8       0.007   0.368
+#&gt; 7   Item_7   8.779        8       0.007   0.361
+#&gt; 8   Item_8   8.607        8       0.006   0.377
+#&gt; 9   Item_9   9.423        8       0.009   0.308
+#&gt; 10 Item_10   7.429        8       0.000   0.491
+#&gt; 11 Item_11   9.771        8       0.011   0.281
+#&gt; 12 Item_12   7.390        8       0.000   0.495
+#&gt; 13 Item_13   8.534        8       0.006   0.383
+#&gt; 14 Item_14   8.940        8       0.008   0.347
+#&gt; 15 Item_15   8.154        8       0.003   0.419
+#&gt; 16 Item_16   7.888        8       0.000   0.444
+#&gt; 17 Item_17   7.390        8       0.000   0.495
+#&gt; 18 Item_18   8.092        8       0.002   0.425
+#&gt; 19 Item_19   8.438        8       0.005   0.392
+#&gt; 20 Item_20   9.015        8       0.008   0.341
+#&gt; 21 baditem 121.177        8       0.084   0.000</div><div class='input'>
 <span class='co'># mirtCluster() # improve speed of bootstrap samples by running in parallel</span>
 <span class='co'># itemfit(x, 'PV_Q1*')</span>
 <span class='co'># itemfit(x, 'X2*') # Stone's 1993 statistic</span>
@@ -685,53 +685,53 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 </div><div class='img'><img src='itemfit-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>raschfit</span>, empirical.table<span class='op'>=</span><span class='fl'>1</span>, Theta<span class='op'>=</span><span class='va'>Theta</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`theta = -1.7718`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0      176 166.44926  0.7402803
-#&gt; cat_1       24  33.55074 -1.6488687
+#&gt; cat_0      177 166.44926  0.8177906
+#&gt; cat_1       23  33.55074 -1.8215117
 #&gt; 
 #&gt; $`theta = -1.0782`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0      151 142.51602  0.7106697
-#&gt; cat_1       49  57.48398 -1.1189900
+#&gt; cat_0      150 142.51602  0.6269036
+#&gt; cat_1       50  57.48398 -0.9870955
 #&gt; 
 #&gt; $`theta = -0.7497`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0      133 128.19072  0.4247680
-#&gt; cat_1       67  71.80928 -0.5675312
+#&gt; cat_0      132 128.19072  0.3364454
+#&gt; cat_1       68  71.80928 -0.4495237
 #&gt; 
 #&gt; $`theta = -0.4577`
-#&gt;       Observed Expected  z.Residual
-#&gt; cat_0      115 114.2782  0.06752015
-#&gt; cat_1       85  85.7218 -0.07795957
+#&gt;       Observed Expected z.Residual
+#&gt; cat_0      118 114.2782  0.3481537
+#&gt; cat_1       82  85.7218 -0.4019824
 #&gt; 
 #&gt; $`theta = -0.193`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0       89 101.13957  -1.207099
-#&gt; cat_1      111  98.86043   1.220934
+#&gt; cat_0       86 101.13957  -1.505404
+#&gt; cat_1      114  98.86043   1.522658
 #&gt; 
 #&gt; $`theta = 0.0765`
 #&gt;       Observed Expected z.Residual
-#&gt; cat_0       70  87.7275  -1.892691
-#&gt; cat_1      130 112.2725   1.673057
+#&gt; cat_0       75  87.7275  -1.358862
+#&gt; cat_1      125 112.2725   1.201175
 #&gt; 
 #&gt; $`theta = 0.3374`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0       77  75.15333  0.2130175
-#&gt; cat_1      123 124.84667 -0.1652726
+#&gt; cat_0       72  75.15333 -0.3637435
+#&gt; cat_1      128 124.84667  0.2822155
 #&gt; 
 #&gt; $`theta = 0.6728`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0       53  60.18187 -0.9257732
-#&gt; cat_1      147 139.81813  0.6073733
+#&gt; cat_0       54  60.18187 -0.7968690
+#&gt; cat_1      146 139.81813  0.5228029
 #&gt; 
 #&gt; $`theta = 1.0787`
 #&gt;       Observed  Expected  z.Residual
-#&gt; cat_0       45  44.57924  0.06301925
-#&gt; cat_1      155 155.42076 -0.03375088
+#&gt; cat_0       44  44.57924 -0.08675380
+#&gt; cat_1      156 155.42076  0.04646226
 #&gt; 
 #&gt; $`theta = 1.9249`
-#&gt;       Observed  Expected  z.Residual
-#&gt; cat_0       21  21.91506 -0.19546933
-#&gt; cat_1      179 178.08494  0.06857035
+#&gt;       Observed  Expected   z.Residual
+#&gt; cat_0       22  21.91506  0.018144153
+#&gt; cat_1      178 178.08494 -0.006364942
 #&gt; </div><div class='input'>
 <span class='co'># fit a new more flexible model for the mis-fitting item</span>
 <span class='va'>itemtype</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='st'>'2PL'</span>, <span class='fl'>20</span><span class='op'>)</span>, <span class='st'>'spline'</span><span class='op'>)</span>
@@ -891,16 +891,16 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fl'>1</span>, <span class='st'>'Rasch'</span><span class='op'>)</span>
 <span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>mod2</span>, <span class='st'>'infit'</span>, method <span class='op'>=</span> <span class='st'>'ML'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       item outfit z.outfit infit z.infit
-#&gt; 1   Item_1  0.914   -3.079 0.925  -3.064
-#&gt; 2   Item_2  1.122    4.064 1.093   3.525
-#&gt; 3   Item_3  0.991   -0.323 0.979  -0.827
-#&gt; 4   Item_4  0.943   -2.020 0.941  -2.409
-#&gt; 5   Item_5  1.073    2.460 1.056   2.112
-#&gt; 6   Item_6  0.969   -1.097 0.965  -1.380
-#&gt; 7   Item_7  0.881   -4.352 0.894  -4.412
-#&gt; 8   Item_8  0.842   -5.779 0.864  -5.737
-#&gt; 9   Item_9  0.867   -4.893 0.869  -5.519
-#&gt; 10 Item_10  0.867   -4.825 0.886  -4.710</div><div class='input'>
+#&gt; 1   Item_1  0.914   -3.080 0.925  -3.065
+#&gt; 2   Item_2  1.122    4.063 1.093   3.524
+#&gt; 3   Item_3  0.990   -0.324 0.979  -0.828
+#&gt; 4   Item_4  0.943   -2.021 0.941  -2.410
+#&gt; 5   Item_5  1.073    2.459 1.056   2.112
+#&gt; 6   Item_6  0.969   -1.098 0.965  -1.381
+#&gt; 7   Item_7  0.881   -4.353 0.894  -4.413
+#&gt; 8   Item_8  0.842   -5.779 0.864  -5.738
+#&gt; 9   Item_9  0.867   -4.894 0.869  -5.520
+#&gt; 10 Item_10  0.867   -4.825 0.886  -4.711</div><div class='input'>
 <span class='co'>#massive list of tables for S-X2</span>
 <span class='va'>tables</span> <span class='op'>&lt;-</span> <span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>mod</span>, S_X2.tables <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
@@ -979,110 +979,110 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class='co'>#use only valid data by removing rows with missing terms</span>
 <span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>raschfit</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'S_X2'</span>, <span class='st'>'infit'</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Sample size after row-wise response data removal: 1902</span></div><div class='output co'>#&gt;       item outfit z.outfit infit z.infit    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
-#&gt; 1   Item_1  0.886   -4.565 0.898  -4.330 100.645      99      0.003  0.435
-#&gt; 2   Item_2  1.001    0.064 1.004   0.152 194.385     100      0.022  0.000
-#&gt; 3   Item_3  0.929   -2.726 0.935  -2.668 109.760     100      0.007  0.237
-#&gt; 4   Item_4  0.909   -3.640 0.915  -3.612 104.504      99      0.005  0.333
-#&gt; 5   Item_5  0.977   -0.819 0.984  -0.615 148.129     101      0.016  0.002
-#&gt; 6   Item_6  0.922   -3.052 0.930  -2.919  93.553      99      0.000  0.636
-#&gt; 7   Item_7  0.871   -5.253 0.885  -4.987  92.262      99      0.000  0.671
-#&gt; 8   Item_8  0.829   -7.063 0.846  -6.791  98.176      99      0.000  0.505
-#&gt; 9   Item_9  0.855   -5.984 0.863  -6.008 121.483      99      0.011  0.062
-#&gt; 10 Item_10  0.859   -5.632 0.874  -5.370 115.273      99      0.009  0.126</div><div class='input'>
+#&gt; 1   Item_1  0.886   -4.564 0.898  -4.329 100.645      99      0.003  0.435
+#&gt; 2   Item_2  1.002    0.066 1.004   0.154 194.402     100      0.022  0.000
+#&gt; 3   Item_3  0.929   -2.725 0.935  -2.666 109.765     100      0.007  0.237
+#&gt; 4   Item_4  0.909   -3.639 0.915  -3.611 104.507      99      0.005  0.333
+#&gt; 5   Item_5  0.977   -0.818 0.984  -0.613 148.139     101      0.016  0.002
+#&gt; 6   Item_6  0.923   -3.051 0.930  -2.918  93.554      99      0.000  0.636
+#&gt; 7   Item_7  0.871   -5.252 0.885  -4.986  92.260      99      0.000  0.671
+#&gt; 8   Item_8  0.829   -7.062 0.846  -6.790  98.170      99      0.000  0.505
+#&gt; 9   Item_9  0.855   -5.983 0.863  -6.007 121.479      99      0.011  0.062
+#&gt; 10 Item_10  0.859   -5.631 0.874  -5.369 115.269      99      0.009  0.126</div><div class='input'>
 <span class='co'># note that X2, G2, PV-Q1, and X2* do not require complete datasets</span>
 <span class='va'>thetas</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>raschfit</span>, method <span class='op'>=</span> <span class='st'>'ML'</span><span class='op'>)</span> <span class='co'># save scores for faster computations</span>
 <span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>raschfit</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'X2'</span>, <span class='st'>'G2'</span><span class='op'>)</span>, Theta<span class='op'>=</span><span class='va'>thetas</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       item      X2 df.X2 RMSEA.X2  p.X2     G2 df.G2 RMSEA.G2  p.G2
-#&gt; 1   Item_1  41.784    36    0.009 0.234 42.488    36    0.009 0.212
-#&gt; 2   Item_2 113.533    36    0.033 0.000 95.462    36    0.029 0.000
-#&gt; 3   Item_3  25.475    36    0.000 0.904 25.439    36    0.000 0.905
-#&gt; 4   Item_4  60.797    36    0.019 0.006 62.671    36    0.019 0.004
-#&gt; 5   Item_5  68.962    36    0.021 0.001 63.532    36    0.020 0.003
-#&gt; 6   Item_6  37.420    36    0.004 0.404 37.500    36    0.005 0.400
-#&gt; 7   Item_7  48.593    36    0.013 0.078 52.796    36    0.015 0.035
-#&gt; 8   Item_8  59.178    36    0.018 0.009 68.292    34    0.022 0.000
-#&gt; 9   Item_9  65.140    36    0.020 0.002 70.612    36    0.022 0.000
-#&gt; 10 Item_10  50.656    36    0.014 0.053 57.007    35    0.018 0.011</div><div class='input'><span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>raschfit</span>, empirical.plot<span class='op'>=</span><span class='fl'>1</span>, Theta<span class='op'>=</span><span class='va'>thetas</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       item      X2 df.X2 RMSEA.X2  p.X2      G2 df.G2 RMSEA.G2  p.G2
+#&gt; 1   Item_1  35.182    36    0.000 0.507  36.466    36    0.003 0.447
+#&gt; 2   Item_2 121.089    36    0.034 0.000 103.753    36    0.031 0.000
+#&gt; 3   Item_3  29.872    36    0.000 0.754  28.086    36    0.000 0.824
+#&gt; 4   Item_4  57.038    36    0.017 0.014  58.628    36    0.018 0.010
+#&gt; 5   Item_5  60.581    36    0.018 0.006  56.483    36    0.017 0.016
+#&gt; 6   Item_6  32.552    36    0.000 0.633  32.714    36    0.000 0.626
+#&gt; 7   Item_7  45.357    36    0.011 0.136  48.490    36    0.013 0.080
+#&gt; 8   Item_8  66.248    36    0.021 0.002  75.260    34    0.025 0.000
+#&gt; 9   Item_9  69.872    36    0.022 0.001  76.065    36    0.024 0.000
+#&gt; 10 Item_10  43.905    36    0.010 0.171  47.783    36    0.013 0.091</div><div class='input'><span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>raschfit</span>, empirical.plot<span class='op'>=</span><span class='fl'>1</span>, Theta<span class='op'>=</span><span class='va'>thetas</span><span class='op'>)</span>
 </div><div class='img'><img src='itemfit-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>itemfit</span><span class='op'>(</span><span class='va'>raschfit</span>, empirical.table<span class='op'>=</span><span class='fl'>1</span>, Theta<span class='op'>=</span><span class='va'>thetas</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`theta = -0.9139`
 #&gt;       Observed  Expected  z.Residual
-#&gt; cat_0       73 75.879690 -0.33058490
-#&gt; cat_1       96 93.320262  0.27739871
-#&gt; cat_2       23 22.388410  0.12925548
-#&gt; cat_3        3  3.361717 -0.19728219
-#&gt; cat_4        3  3.049922 -0.02858553
+#&gt; cat_0       74 75.878184 -0.21561535
+#&gt; cat_1       94 93.322107  0.07017277
+#&gt; cat_2       24 22.388634  0.34054965
+#&gt; cat_3        3  3.361568 -0.19720529
+#&gt; cat_4        3  3.049507 -0.02835001
 #&gt; 
 #&gt; $`theta = -0.4776`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0       58 49.961320  1.1372810
-#&gt; cat_1       91 95.058402 -0.4162554
-#&gt; cat_2       39 35.281254  0.6260723
-#&gt; cat_3        7  8.195738 -0.4176784
-#&gt; cat_4        5 11.503285 -1.9174403
+#&gt; cat_0       56 49.959436  0.8546115
+#&gt; cat_1       94 95.060298 -0.1087498
+#&gt; cat_2       38 35.282249  0.4575426
+#&gt; cat_3        7  8.195672 -0.4176569
+#&gt; cat_4        5 11.502345 -1.9172415
 #&gt; 
 #&gt; $`theta = -0.2792`
-#&gt;       Observed Expected z.Residual
-#&gt; cat_0       35 38.24743 -0.5250956
-#&gt; cat_1       90 88.73957  0.1338014
-#&gt; cat_2       38 40.16329 -0.3413502
-#&gt; cat_3       16 11.37711  1.3705598
-#&gt; cat_4       19 19.47261 -0.1070998
+#&gt;       Observed Expected  z.Residual
+#&gt; cat_0       37 38.24559 -0.20141078
+#&gt; cat_1       88 88.74113 -0.07867452
+#&gt; cat_2       36 40.16466 -0.65713925
+#&gt; cat_3       16 11.37717  1.37053576
+#&gt; cat_4       21 19.47145  0.34640246
 #&gt; 
 #&gt; $`theta = -0.1507`
-#&gt;       Observed Expected z.Residual
-#&gt; cat_0       26 31.34557 -0.9547865
-#&gt; cat_1       86 82.69918  0.3629699
-#&gt; cat_2       45 42.56211  0.3736827
-#&gt; cat_3       17 13.70994  0.8885583
-#&gt; cat_4       23 26.68319 -0.7130263
+#&gt;       Observed Expected  z.Residual
+#&gt; cat_0       26 31.34384 -0.95450326
+#&gt; cat_1       82 82.70045 -0.07702359
+#&gt; cat_2       48 42.56366  0.83327231
+#&gt; cat_3       17 13.71012  0.88850374
+#&gt; cat_4       24 26.68192 -0.51920400
 #&gt; 
 #&gt; $`theta = -0.0419`
 #&gt;       Observed Expected z.Residual
-#&gt; cat_0       21 26.35372 -1.0428807
-#&gt; cat_1       82 77.52098  0.5087139
-#&gt; cat_2       40 44.48294 -0.6721498
-#&gt; cat_3       23 15.97564  1.7574284
-#&gt; cat_4       33 34.66672 -0.2830788
+#&gt; cat_0       20 26.35210 -1.2373990
+#&gt; cat_1       88 77.52198  1.1900548
+#&gt; cat_2       38 44.48462 -0.9722535
+#&gt; cat_3       22 15.97593  1.5071520
+#&gt; cat_4       31 34.66538 -0.6225447
 #&gt; 
 #&gt; $`theta = 0.0657`
 #&gt;       Observed Expected z.Residual
-#&gt; cat_0       21 21.56228 -0.1210898
-#&gt; cat_1       82 70.63216  1.3526227
-#&gt; cat_2       41 45.13435 -0.6153938
-#&gt; cat_3       17 18.05104 -0.2473832
-#&gt; cat_4       38 43.62017 -0.8509528
+#&gt; cat_0       20 21.56083 -0.3361417
+#&gt; cat_1       80 70.63288  1.1145585
+#&gt; cat_2       46 45.13607  0.1285922
+#&gt; cat_3       16 18.05144 -0.4828398
+#&gt; cat_4       37 43.61878 -1.0021697
 #&gt; 
 #&gt; $`theta = 0.1664`
-#&gt;       Observed Expected  z.Residual
-#&gt; cat_0       12 17.63477 -1.34181165
-#&gt; cat_1       58 63.88522 -0.73631279
-#&gt; cat_2       63 45.14688  2.65705294
-#&gt; cat_3       13 19.96851 -1.55943460
-#&gt; cat_4       54 53.36462  0.08697813
+#&gt;       Observed Expected z.Residual
+#&gt; cat_0       13 17.63348 -1.1034142
+#&gt; cat_1       54 63.88568 -1.2368152
+#&gt; cat_2       54 45.14861  1.3173140
+#&gt; cat_3       17 19.96901 -0.6644047
+#&gt; cat_4       62 53.36322  1.1823085
 #&gt; 
 #&gt; $`theta = 0.2742`
 #&gt;       Observed Expected z.Residual
-#&gt; cat_0       10 13.78811 -1.0201637
-#&gt; cat_1       51 55.63459 -0.6213536
-#&gt; cat_2       45 43.79072  0.1827417
-#&gt; cat_3       19 21.57296 -0.5539598
-#&gt; cat_4       74 64.21363  1.2212598
+#&gt; cat_0        9 13.78701 -1.2892275
+#&gt; cat_1       63 55.63481  0.9874402
+#&gt; cat_2       48 43.79237  0.6358266
+#&gt; cat_3       17 21.57354 -0.9846727
+#&gt; cat_4       62 64.21227 -0.2760764
 #&gt; 
 #&gt; $`theta = 0.4179`
 #&gt;       Observed  Expected z.Residual
-#&gt; cat_0        6  9.623228 -1.1679795
-#&gt; cat_1       54 44.830583  1.3694763
-#&gt; cat_2       42 40.740365  0.1973477
-#&gt; cat_3       27 23.172132  0.7951955
-#&gt; cat_4       69 79.633692 -1.1916141
+#&gt; cat_0        7  9.622387 -0.8453865
+#&gt; cat_1       48 44.830545  0.4733666
+#&gt; cat_2       43 40.741843  0.3537804
+#&gt; cat_3       27 23.172801  0.7950452
+#&gt; cat_4       73 79.632425 -0.7432370
 #&gt; 
 #&gt; $`theta = 0.6973`
-#&gt;       Observed   Expected  z.Residual
-#&gt; cat_0        2   4.336669 -1.12206778
-#&gt; cat_1       25  26.713776 -0.33157854
-#&gt; cat_2       38  32.100453  1.04126937
-#&gt; cat_3       22  24.142242 -0.43599314
-#&gt; cat_4      110 109.706860  0.02798709
+#&gt;       Observed   Expected z.Residual
+#&gt; cat_0        2   4.336223 -1.1219112
+#&gt; cat_1       24  26.713487 -0.5250037
+#&gt; cat_2       39  32.101475  1.2175694
+#&gt; cat_3       22  24.142965 -0.4361339
+#&gt; cat_4      110 109.705850  0.0280837
 #&gt; </div><div class='input'>
 <span class='co'># }</span>
 

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -236,7 +236,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 
 <span class='va'>Theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>.01</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>tinfo</span> <span class='op'>&lt;-</span> <span class='fu'>testinfo</span><span class='op'>(</span><span class='va'>mod</span>, <span class='va'>Theta</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>tinfo</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>tinfo</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
 </div><div class='img'><img src='testinfo-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># \donttest{</span>
 
@@ -244,11 +244,11 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>tinfo_smaller</span> <span class='op'>&lt;-</span> <span class='fu'>testinfo</span><span class='op'>(</span><span class='va'>mod</span>, <span class='va'>Theta</span>, which.items <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>
 
 <span class='co'>#removed item informations</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='iteminfo.html'>iteminfo</a></span><span class='op'>(</span><span class='fu'><a href='extract.item.html'>extract.item</a></span><span class='op'>(</span><span class='va'>mod</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='va'>Theta</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
-</div><div class='img'><img src='testinfo-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='iteminfo.html'>iteminfo</a></span><span class='op'>(</span><span class='fu'><a href='extract.item.html'>extract.item</a></span><span class='op'>(</span><span class='va'>mod</span>, <span class='fl'>2</span><span class='op'>)</span>, <span class='va'>Theta</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='iteminfo.html'>iteminfo</a></span><span class='op'>(</span><span class='fu'><a href='extract.item.html'>extract.item</a></span><span class='op'>(</span><span class='va'>mod</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='va'>Theta</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
+</div><div class='img'><img src='testinfo-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='iteminfo.html'>iteminfo</a></span><span class='op'>(</span><span class='fu'><a href='extract.item.html'>extract.item</a></span><span class='op'>(</span><span class='va'>mod</span>, <span class='fl'>2</span><span class='op'>)</span>, <span class='va'>Theta</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
 </div><div class='img'><img src='testinfo-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#most loss of info around -1 when removing items 1 and 2; expected given item info functions</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>tinfo_smaller</span> <span class='op'>-</span> <span class='va'>tinfo</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>tinfo_smaller</span> <span class='op'>-</span> <span class='va'>tinfo</span>, type <span class='op'>=</span> <span class='st'>'l'</span><span class='op'>)</span>
 </div><div class='img'><img src='testinfo-4.png' alt='' width='700' height='433' /></div><div class='input'>
 
 <span class='co'># }</span>

@@ -79,7 +79,7 @@ on the objects returned from the estimation." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -509,62 +509,62 @@ Full-Information item bifactor analysis of graded response data.
 
 <span class='va'>specific</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>7</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>7</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>simmod</span> <span class='op'>&lt;-</span> <span class='fu'>bfactor</span><span class='op'>(</span><span class='va'>dataset</span>, <span class='va'>specific</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>simmod</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>EM cycles terminated after 500 iterations.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>simmod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item_1
 #&gt;        a1    a2 a3      d g u
-#&gt; par 0.964 0.397  0 -1.031 0 1
+#&gt; par 1.737 2.214  0 -1.731 0 1
 #&gt; 
 #&gt; $Item_2
 #&gt;        a1    a2 a3      d g u
-#&gt; par 1.223 0.662  0 -1.688 0 1
+#&gt; par 1.012 0.292  0 -1.404 0 1
 #&gt; 
 #&gt; $Item_3
-#&gt;       a1   a2 a3     d g u
-#&gt; par 1.14 0.58  0 1.574 0 1
+#&gt;        a1    a2 a3     d g u
+#&gt; par 0.982 0.325  0 1.546 0 1
 #&gt; 
 #&gt; $Item_4
-#&gt;        a1    a2 a3      d g u
-#&gt; par 1.058 0.508  0 -0.031 0 1
+#&gt;       a1     a2 a3      d g u
+#&gt; par 1.06 -0.084  0 -0.028 0 1
 #&gt; 
 #&gt; $Item_5
-#&gt;        a1    a2 a3    d1   d2     d3
-#&gt; par 0.898 0.612  0 2.439 0.86 -1.144
+#&gt;      a1    a2 a3    d1   d2     d3
+#&gt; par 1.1 0.055  0 2.496 0.99 -1.008
 #&gt; 
 #&gt; $Item_6
 #&gt;        a1    a2 a3    d1    d2     d3
-#&gt; par 1.012 0.532  0 2.847 1.935 -0.524
+#&gt; par 1.118 0.016  0 2.974 1.986 -0.515
 #&gt; 
 #&gt; $Item_7
 #&gt;        a1    a2 a3    d1    d2     d3
-#&gt; par 1.007 0.679  0 2.971 1.978 -0.506
+#&gt; par 1.113 0.103  0 2.846 1.885 -0.575
 #&gt; 
 #&gt; $Item_8
-#&gt;        a1 a2    a3    d1    d2     d3
-#&gt; par 0.855  0 0.642 2.879 1.984 -0.502
+#&gt;        a1 a2    a3    d1   d2     d3
+#&gt; par 0.941  0 0.803 2.997 1.98 -0.519
 #&gt; 
 #&gt; $Item_9
-#&gt;        a1 a2    a3    d1    d2    d3
-#&gt; par 0.999  0 0.492 2.421 0.904 -1.11
+#&gt;        a1 a2    a3    d1    d2     d3
+#&gt; par 0.869  0 0.522 2.342 0.951 -1.026
 #&gt; 
 #&gt; $Item_10
-#&gt;        a1 a2    a3    d1     d2
-#&gt; par 1.081  0 0.661 2.023 -0.042
+#&gt;        a1 a2    a3    d1    d2
+#&gt; par 0.817  0 0.477 1.826 0.017
 #&gt; 
 #&gt; $Item_11
 #&gt;        a1 a2    a3      d g u
-#&gt; par 1.057  0 0.499 -0.997 0 1
+#&gt; par 0.853  0 0.759 -1.062 0 1
 #&gt; 
 #&gt; $Item_12
-#&gt;        a1 a2    a3     d g u
-#&gt; par 0.991  0 0.706 -1.57 0 1
+#&gt;        a1 a2    a3      d g u
+#&gt; par 0.748  0 0.729 -1.602 0 1
 #&gt; 
 #&gt; $Item_13
 #&gt;        a1 a2    a3     d g u
-#&gt; par 0.886  0 0.465 1.497 0 1
+#&gt; par 0.887  0 0.836 1.713 0 1
 #&gt; 
 #&gt; $Item_14
-#&gt;        a1 a2    a3      d g u
-#&gt; par 0.958  0 0.401 -0.012 0 1
+#&gt;        a1 a2    a3    d g u
+#&gt; par 0.842  0 0.813 0.01 0 1
 #&gt; 
 #&gt; $GroupPars
 #&gt;     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33

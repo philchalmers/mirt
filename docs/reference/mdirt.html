@@ -76,7 +76,7 @@ then customized models can defined using the createItem function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -274,7 +274,7 @@ for more details and examples</p></td>
     <p>Posterior classification accuracy for each response pattern may be obtained
 via the <code><a href='fscores.html'>fscores</a></code> function. The <code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code> function will display
 the category probability values given the class membership, which can also
-be displayed graphically with <code><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot()</a></code>, while <code><a href='https://rdrr.io/r/stats/coef.html'>coef()</a></code>
+be displayed graphically with <code><a href='https://rdrr.io/r/graphics/plot.html'>plot()</a></code>, while <code><a href='https://rdrr.io/r/stats/coef.html'>coef()</a></code>
 displays the raw coefficient values (and their standard errors, if estimated). Finally,
 <code><a href='https://rdrr.io/r/stats/anova.html'>anova()</a></code> is used to compare nested models, while
 <code><a href='M2.html'>M2</a></code> and <code><a href='itemfit.html'>itemfit</a></code> may be used for model fitting purposes.</p>
@@ -329,7 +329,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Latent class model with 2 classes and 2 profiles.
 #&gt; Converged within 1e-04 tolerance after 363 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: nlminb 
 #&gt; EM acceleration: Ramsay
 #&gt; Latent density type: discrete
@@ -346,7 +346,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Latent class model with 3 classes and 3 profiles.
 #&gt; FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: nlminb 
 #&gt; EM acceleration: Ramsay
 #&gt; Latent density type: discrete
@@ -428,7 +428,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 2: mdirt(data = dat, model = 3)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
 #&gt; 1 4956.816 4957.084 4975.865 4977.335 5010.802 -2467.408   NaN NaN   NaN
-#&gt; 2 4964.498 4965.121 4993.937 4996.208 5047.930 -2465.249 4.319   6 0.634</div><div class='input'><span class='fu'><a href='M2.html'>M2</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
+#&gt; 2 4964.498 4965.121 4993.937 4996.208 5047.930 -2465.249 4.318   6 0.634</div><div class='input'><span class='fu'><a href='M2.html'>M2</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             M2 df         p RMSEA RMSEA_5   RMSEA_95
 #&gt; stats 4.603509  5 0.4661549     0       0 0.04215944</div><div class='input'><span class='fu'><a href='itemfit.html'>itemfit</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
@@ -438,39 +438,39 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 4 Item_4 0.184       2          0  0.912
 #&gt; 5 Item_5 0.145       2          0  0.930</div><div class='input'>
 <span class='co'># generate classification plots</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
-</div><div class='img'><img src='mdirt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, facet_items <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='img'><img src='mdirt-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, profile <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
+</div><div class='img'><img src='mdirt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, facet_items <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='mdirt-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, profile <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='mdirt-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># available for polytomous data</span>
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'>mdirt</span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Comfort
 #&gt;        category_1 category_2 category_3 category_4
-#&gt; P[1 0]      0.018      0.095      0.766      0.121
-#&gt; P[0 1]      0.000      0.051      0.474      0.475
+#&gt; P[1 0]      0.021      0.097      0.773      0.109
+#&gt; P[0 1]      0.000      0.059      0.534      0.407
 #&gt; 
 #&gt; $Work
 #&gt;        category_1 category_2 category_3 category_4
-#&gt; P[1 0]      0.115      0.329      0.520      0.036
-#&gt; P[0 1]      0.013      0.065      0.537      0.385
+#&gt; P[1 0]      0.125      0.339      0.504      0.033
+#&gt; P[0 1]      0.022      0.115      0.559      0.304
 #&gt; 
 #&gt; $Future
 #&gt;        category_1 category_2 category_3 category_4
-#&gt; P[1 0]      0.051      0.262      0.619      0.068
-#&gt; P[0 1]      0.001      0.000      0.340      0.659
+#&gt; P[1 0]      0.059      0.304      0.637      0.001
+#&gt; P[0 1]      0.001      0.000      0.381      0.617
 #&gt; 
 #&gt; $Benefit
 #&gt;        category_1 category_2 category_3 category_4
-#&gt; P[1 0]      0.072      0.323      0.516      0.089
-#&gt; P[0 1]      0.011      0.097      0.437      0.455
+#&gt; P[1 0]      0.074      0.339      0.508      0.079
+#&gt; P[0 1]      0.022      0.127      0.468      0.382
 #&gt; 
 #&gt; $Class.Probability
 #&gt;           F1 F2  prob
-#&gt; Profile_1  1  0 0.701
-#&gt; Profile_2  0  1 0.299
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
-</div><div class='img'><img src='mdirt-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, profile<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; Profile_1  1  0 0.604
+#&gt; Profile_2  0  1 0.396
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
+</div><div class='img'><img src='mdirt-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, profile<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='mdirt-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># classification based on response patterns</span>
 <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod2</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
@@ -490,7 +490,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; [13,]      0      1      1      1      0 0.53111944 0.46888056
 #&gt; [14,]      0      1      1      1      1 0.24698538 0.75301462
 #&gt; [15,]      1      0      0      0      0 0.94648118 0.05351882
-#&gt; [16,]      1      0      0      0      1 0.83662440 0.16337560
+#&gt; [16,]      1      0      0      0      1 0.83662439 0.16337561
 #&gt; [17,]      1      0      0      1      0 0.83052457 0.16947543
 #&gt; [18,]      1      0      0      1      1 0.58660671 0.41339329
 #&gt; [19,]      1      0      1      0      0 0.76692257 0.23307743
@@ -525,14 +525,14 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>class_prob</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; class_prob
 #&gt;   1   2 
-#&gt; 340 660 </div><div class='input'>
+#&gt; 314 686 </div><div class='input'>
 <span class='co'># plausible value imputations for stochastic classification in both classes</span>
 <span class='va'>pvs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod2</span>, plausible.draws<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>
 <span class='va'>tabs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>pvs</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>2</span>, <span class='va'>table</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>tabs</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 </div><div class='output co'>#&gt;   [,1] [,2]
-#&gt; 0  667  338
-#&gt; 1  333  662</div><div class='input'>
+#&gt; 0  687  343
+#&gt; 1  313  657</div><div class='input'>
 
 <span class='co'># fit with random starting points (run in parallel to save time)</span>
 <span class='fu'><a href='mirtCluster.html'>mirtCluster</a></span><span class='op'>(</span><span class='op'>)</span>
@@ -555,7 +555,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Latent class model with 2 classes and 3 profiles.
 #&gt; FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: nlminb 
 #&gt; EM acceleration: Ramsay
 #&gt; Latent density type: discrete
@@ -624,15 +624,15 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Latent class model with 3 classes and 8 profiles.
 #&gt; Converged within 1e-04 tolerance after 132 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: nlminb 
 #&gt; EM acceleration: Ramsay
 #&gt; Latent density type: discrete
 #&gt; 
-#&gt; Log-likelihood = -9429.728
+#&gt; Log-likelihood = -9429.725
 #&gt; Estimated parameters: 103 
-#&gt; AIC = 19065.46; AICc = 19108.65
-#&gt; BIC = 19518.34; SABIC = 19191.34
+#&gt; AIC = 19065.45; AICc = 19108.64
+#&gt; BIC = 19518.33; SABIC = 19191.34
 #&gt; G2 (4294967192) = 11189.73, p = 1, RMSEA = 0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod_discrete</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item.1
 #&gt;          category_1 category_2
@@ -651,8 +651,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[1 0 0]      0.945      0.055
 #&gt; P[0 1 0]      0.165      0.835
 #&gt; P[1 1 0]      0.774      0.226
-#&gt; P[0 0 1]      0.073      0.927
-#&gt; P[1 0 1]      0.575      0.425
+#&gt; P[0 0 1]      0.072      0.928
+#&gt; P[1 0 1]      0.574      0.426
 #&gt; P[0 1 1]      0.015      0.985
 #&gt; P[1 1 1]      0.211      0.789
 #&gt; 
@@ -660,7 +660,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
 #&gt; P[1 0 0]      0.929      0.071
-#&gt; P[0 1 0]      0.338      0.662
+#&gt; P[0 1 0]      0.337      0.663
 #&gt; P[1 1 0]      0.870      0.130
 #&gt; P[0 0 1]      0.271      0.729
 #&gt; P[1 0 1]      0.830      0.170
@@ -671,7 +671,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
 #&gt; P[1 0 0]      0.844      0.156
-#&gt; P[0 1 0]      0.224      0.776
+#&gt; P[0 1 0]      0.223      0.777
 #&gt; P[1 1 0]      0.609      0.391
 #&gt; P[0 0 1]      0.428      0.572
 #&gt; P[1 0 1]      0.802      0.198
@@ -686,7 +686,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[1 1 0]      0.647      0.353
 #&gt; P[0 0 1]      0.137      0.863
 #&gt; P[1 0 1]      0.449      0.551
-#&gt; P[0 1 1]      0.053      0.947
+#&gt; P[0 1 1]      0.054      0.946
 #&gt; P[1 1 1]      0.225      0.775
 #&gt; 
 #&gt; $Item.6
@@ -697,7 +697,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[1 1 0]      0.893      0.107
 #&gt; P[0 0 1]      0.473      0.527
 #&gt; P[1 0 1]      0.937      0.063
-#&gt; P[0 1 1]      0.311      0.689
+#&gt; P[0 1 1]      0.310      0.690
 #&gt; P[1 1 1]      0.882      0.118
 #&gt; 
 #&gt; $Item.7
@@ -747,7 +747,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item.11
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
-#&gt; P[1 0 0]      0.986      0.014
+#&gt; P[1 0 0]      0.987      0.013
 #&gt; P[0 1 0]      0.001      0.999
 #&gt; P[1 1 0]      0.039      0.961
 #&gt; P[0 0 1]      0.000      1.000
@@ -761,7 +761,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[1 0 0]      0.621      0.379
 #&gt; P[0 1 0]      0.434      0.566
 #&gt; P[1 1 0]      0.557      0.443
-#&gt; P[0 0 1]      0.524      0.476
+#&gt; P[0 0 1]      0.523      0.477
 #&gt; P[1 0 1]      0.643      0.357
 #&gt; P[0 1 1]      0.457      0.543
 #&gt; P[1 1 1]      0.580      0.420
@@ -770,7 +770,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
 #&gt; P[1 0 0]      0.849      0.151
-#&gt; P[0 1 0]      0.316      0.684
+#&gt; P[0 1 0]      0.315      0.685
 #&gt; P[1 1 0]      0.721      0.279
 #&gt; P[0 0 1]      0.087      0.913
 #&gt; P[1 0 1]      0.348      0.652
@@ -782,8 +782,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0]      0.500      0.500
 #&gt; P[1 0 0]      0.857      0.143
 #&gt; P[0 1 0]      0.108      0.892
-#&gt; P[1 1 0]      0.421      0.579
-#&gt; P[0 0 1]      0.113      0.887
+#&gt; P[1 1 0]      0.422      0.578
+#&gt; P[0 0 1]      0.112      0.888
 #&gt; P[1 0 1]      0.432      0.568
 #&gt; P[0 1 1]      0.015      0.985
 #&gt; P[1 1 1]      0.085      0.915
@@ -804,7 +804,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0]      0.500      0.500
 #&gt; P[1 0 0]      0.846      0.154
 #&gt; P[0 1 0]      0.298      0.702
-#&gt; P[1 1 0]      0.700      0.300
+#&gt; P[1 1 0]      0.699      0.301
 #&gt; P[0 0 1]      0.315      0.685
 #&gt; P[1 0 1]      0.716      0.284
 #&gt; P[0 1 1]      0.164      0.836
@@ -813,7 +813,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item.17
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
-#&gt; P[1 0 0]      0.695      0.305
+#&gt; P[1 0 0]      0.694      0.306
 #&gt; P[0 1 0]      0.062      0.938
 #&gt; P[1 1 0]      0.130      0.870
 #&gt; P[0 0 1]      0.008      0.992
@@ -857,7 +857,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item.21
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
-#&gt; P[1 0 0]      0.433      0.567
+#&gt; P[1 0 0]      0.434      0.566
 #&gt; P[0 1 0]      0.223      0.777
 #&gt; P[1 1 0]      0.180      0.820
 #&gt; P[0 0 1]      0.110      0.890
@@ -902,7 +902,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
 #&gt; P[1 0 0]      0.869      0.131
-#&gt; P[0 1 0]      0.350      0.650
+#&gt; P[0 1 0]      0.351      0.649
 #&gt; P[1 1 0]      0.782      0.218
 #&gt; P[0 0 1]      0.280      0.720
 #&gt; P[1 0 1]      0.721      0.279
@@ -927,7 +927,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0]      0.137      0.863
 #&gt; P[1 1 0]      0.451      0.549
 #&gt; P[0 0 1]      0.023      0.977
-#&gt; P[1 0 1]      0.110      0.890
+#&gt; P[1 0 1]      0.109      0.891
 #&gt; P[0 1 1]      0.004      0.996
 #&gt; P[1 1 1]      0.019      0.981
 #&gt; 
@@ -978,7 +978,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item.32
 #&gt;          category_1 category_2
 #&gt; P[0 0 0]      0.500      0.500
-#&gt; P[1 0 0]      0.728      0.272
+#&gt; P[1 0 0]      0.729      0.271
 #&gt; P[0 1 0]      0.568      0.432
 #&gt; P[1 1 0]      0.779      0.221
 #&gt; P[0 0 1]      0.702      0.298
@@ -1008,16 +1008,16 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; mdirt(data = dat, model = model, customTheta = diag(3))
 #&gt; 
 #&gt; Latent class model with 3 classes and 3 profiles.
-#&gt; Converged within 1e-04 tolerance after 343 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; Converged within 1e-04 tolerance after 364 EM iterations.
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: nlminb 
 #&gt; EM acceleration: Ramsay
 #&gt; Latent density type: discrete
 #&gt; 
 #&gt; Log-likelihood = -12771.08
 #&gt; Estimated parameters: 98 
-#&gt; AIC = 25552.15; AICc = 25552.26
-#&gt; BIC = 25574.14; SABIC = 25558.27
+#&gt; AIC = 25552.15; AICc = 25552.25
+#&gt; BIC = 25574.14; SABIC = 25558.26
 #&gt; G2 (4294967290) = 17872.43, p = 1, RMSEA = 0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod_located</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item.1
 #&gt;          category_1 category_2
@@ -1213,9 +1213,9 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Class.Probability
 #&gt;           C1 C2 C3  prob
-#&gt; Profile_1  1  0  0 0.338
-#&gt; Profile_2  0  1  0 0.498
-#&gt; Profile_3  0  0  1 0.164
+#&gt; Profile_1  1  0  0 0.339
+#&gt; Profile_2  0  1  0 0.497
+#&gt; Profile_3  0  0  1 0.163
 #&gt; </div><div class='input'>
 <span class='co'>#-----------------</span>
 <span class='co'>### DINA model example</span>
@@ -1248,25 +1248,25 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>DINA</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
 #&gt;             a1     a2     a3     a4
-#&gt; Item_1  -0.023 -0.079  0.000  0.000
-#&gt; Item_2   0.606 -1.052  0.000  0.000
-#&gt; Item_3  -0.459  0.535  0.000  0.000
-#&gt; Item_4   0.221 -0.322  0.000  0.000
-#&gt; Item_5   0.216 -0.320  0.000  0.000
+#&gt; Item_1  -0.026 -0.075  0.000  0.000
+#&gt; Item_2   0.599 -1.046  0.000  0.000
+#&gt; Item_3  -0.456  0.533  0.000  0.000
+#&gt; Item_4   0.219 -0.319  0.000  0.000
+#&gt; Item_5   0.215 -0.319  0.000  0.000
 #&gt; Item_6  -0.090  0.000  0.267  0.000
-#&gt; Item_7  -0.752  0.000  1.172  0.000
-#&gt; Item_8  -0.271  0.000  0.223  0.000
-#&gt; Item_9  -1.043  0.000  1.424  0.000
-#&gt; Item_10  0.435  0.000 -0.630  0.000
-#&gt; Item_11  0.503  0.000  0.000 -0.759
-#&gt; Item_12  0.225  0.000  0.000 -0.478
-#&gt; Item_13 -0.118  0.000  0.000  0.139
+#&gt; Item_7  -0.752  0.000  1.170  0.000
+#&gt; Item_8  -0.272  0.000  0.224  0.000
+#&gt; Item_9  -1.045  0.000  1.426  0.000
+#&gt; Item_10  0.436  0.000 -0.631  0.000
+#&gt; Item_11  0.502  0.000  0.000 -0.758
+#&gt; Item_12  0.225  0.000  0.000 -0.479
+#&gt; Item_13 -0.119  0.000  0.000  0.140
 #&gt; Item_14 -0.449  0.000  0.000  0.840
-#&gt; Item_15 -0.484  0.000  0.000  0.834
+#&gt; Item_15 -0.484  0.000  0.000  0.836
 #&gt; 
 #&gt; $group.intercepts
 #&gt;         c1     c2     c3
-#&gt; par -1.245 -1.621 -1.231
+#&gt; par -1.236 -1.637 -1.226
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>DINA</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item_1
 #&gt;            category_1 category_2
@@ -1277,30 +1277,30 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item_2
 #&gt;            category_1 category_2
-#&gt; P[1 0 0 0]      0.353      0.647
+#&gt; P[1 0 0 0]      0.354      0.646
 #&gt; P[1 1 0 0]      0.610      0.390
-#&gt; P[1 0 1 0]      0.353      0.647
+#&gt; P[1 0 1 0]      0.354      0.646
 #&gt; P[1 1 1 1]      0.610      0.390
 #&gt; 
 #&gt; $Item_3
 #&gt;            category_1 category_2
-#&gt; P[1 0 0 0]      0.613      0.387
+#&gt; P[1 0 0 0]      0.612      0.388
 #&gt; P[1 1 0 0]      0.481      0.519
-#&gt; P[1 0 1 0]      0.613      0.387
+#&gt; P[1 0 1 0]      0.612      0.388
 #&gt; P[1 1 1 1]      0.481      0.519
 #&gt; 
 #&gt; $Item_4
 #&gt;            category_1 category_2
-#&gt; P[1 0 0 0]      0.445      0.555
+#&gt; P[1 0 0 0]      0.446      0.554
 #&gt; P[1 1 0 0]      0.525      0.475
-#&gt; P[1 0 1 0]      0.445      0.555
+#&gt; P[1 0 1 0]      0.446      0.554
 #&gt; P[1 1 1 1]      0.525      0.475
 #&gt; 
 #&gt; $Item_5
 #&gt;            category_1 category_2
-#&gt; P[1 0 0 0]      0.446      0.554
+#&gt; P[1 0 0 0]      0.447      0.553
 #&gt; P[1 1 0 0]      0.526      0.474
-#&gt; P[1 0 1 0]      0.446      0.554
+#&gt; P[1 0 1 0]      0.447      0.553
 #&gt; P[1 1 1 1]      0.526      0.474
 #&gt; 
 #&gt; $Item_6
@@ -1319,15 +1319,15 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item_8
 #&gt;            category_1 category_2
-#&gt; P[1 0 0 0]      0.567      0.433
-#&gt; P[1 1 0 0]      0.567      0.433
+#&gt; P[1 0 0 0]      0.568      0.432
+#&gt; P[1 1 0 0]      0.568      0.432
 #&gt; P[1 0 1 0]      0.512      0.488
 #&gt; P[1 1 1 1]      0.512      0.488
 #&gt; 
 #&gt; $Item_9
 #&gt;            category_1 category_2
-#&gt; P[1 0 0 0]      0.739      0.261
-#&gt; P[1 1 0 0]      0.739      0.261
+#&gt; P[1 0 0 0]      0.740      0.260
+#&gt; P[1 1 0 0]      0.740      0.260
 #&gt; P[1 0 1 0]      0.406      0.594
 #&gt; P[1 1 1 1]      0.406      0.594
 #&gt; 
@@ -1364,7 +1364,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[1 0 0 0]      0.610      0.390
 #&gt; P[1 1 0 0]      0.610      0.390
 #&gt; P[1 0 1 0]      0.610      0.390
-#&gt; P[1 1 1 1]      0.404      0.596
+#&gt; P[1 1 1 1]      0.403      0.597
 #&gt; 
 #&gt; $Item_15
 #&gt;            category_1 category_2
@@ -1375,27 +1375,27 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Class.Probability
 #&gt;           Intercept A1 A2 A1A2  prob
-#&gt; Profile_1         1  0  0    0 0.162
-#&gt; Profile_2         1  1  0    0 0.111
-#&gt; Profile_3         1  0  1    0 0.164
-#&gt; Profile_4         1  1  1    1 0.563
+#&gt; Profile_1         1  0  0    0 0.163
+#&gt; Profile_2         1  1  0    0 0.109
+#&gt; Profile_3         1  0  1    0 0.165
+#&gt; Profile_4         1  1  1    1 0.562
 #&gt; </div><div class='input'><span class='fu'><a href='M2.html'>M2</a></span><span class='op'>(</span><span class='va'>DINA</span><span class='op'>)</span> <span class='co'># fits well (as it should)</span>
 </div><div class='output co'>#&gt;             M2 df         p RMSEA RMSEA_5   RMSEA_95
-#&gt; stats 87.04475 90 0.5686254     0       0 0.01589062</div><div class='input'>
+#&gt; stats 87.04969 90 0.5684777     0       0 0.01589276</div><div class='input'>
 <span class='va'>cfs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>DINA</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>items</span><span class='op'>[</span><span class='fl'>11</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span>
 <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>guess</span>, estguess <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span><span class='va'>cfs</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;              guess  estguess
-#&gt; Item_11 0.32210618 0.6231287
-#&gt; Item_12 0.21331157 0.5559793
-#&gt; Item_13 0.14056317 0.4704336
-#&gt; Item_14 0.06866689 0.3896319
-#&gt; Item_15 0.28139862 0.3814212</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>slip</span>, estslip <span class='op'>=</span> <span class='fl'>1</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>cfs</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; Item_11 0.32210618 0.6229531
+#&gt; Item_12 0.21331157 0.5559500
+#&gt; Item_13 0.14056317 0.4703830
+#&gt; Item_14 0.06866689 0.3897167
+#&gt; Item_15 0.28139862 0.3813465</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>slip</span>, estslip <span class='op'>=</span> <span class='fl'>1</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Logistic.html'>plogis</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>cfs</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;              slip   estslip
-#&gt; Item_11 0.3877218 0.5637253
-#&gt; Item_12 0.5348058 0.5630697
-#&gt; Item_13 0.7359368 0.4947888
-#&gt; Item_14 0.8247931 0.4035540
-#&gt; Item_15 0.3900682 0.4131540</div><div class='input'>
+#&gt; Item_11 0.3877218 0.5637233
+#&gt; Item_12 0.5348058 0.5631323
+#&gt; Item_13 0.7359368 0.4947257
+#&gt; Item_14 0.8247931 0.4034460
+#&gt; Item_15 0.3900682 0.4129429</div><div class='input'>
 
 <span class='co'>### DINO model example</span>
 <span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='thetaComb.html'>thetaComb</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
@@ -1419,24 +1419,24 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 </div><div class='output co'>#&gt; $items
 #&gt;             a1     a2     a3     a4
 #&gt; Item_1  -0.052 -0.339  0.000  0.000
-#&gt; Item_2  -0.086 -0.247  0.000  0.000
-#&gt; Item_3  -0.228  2.419  0.000  0.000
-#&gt; Item_4   0.147 -3.296  0.000  0.000
+#&gt; Item_2  -0.087 -0.247  0.000  0.000
+#&gt; Item_3  -0.227  2.440  0.000  0.000
+#&gt; Item_4   0.145 -3.299  0.000  0.000
 #&gt; Item_5   0.003 -0.037  0.000  0.000
-#&gt; Item_6  -0.096  0.000  0.230  0.000
-#&gt; Item_7  -1.473  0.000  1.776  0.000
-#&gt; Item_8  -0.068  0.000 -0.046  0.000
-#&gt; Item_9  -0.765  0.000  0.885  0.000
-#&gt; Item_10  0.538  0.000 -0.642  0.000
-#&gt; Item_11  4.801 -4.994 -4.994 -4.994
-#&gt; Item_12  0.283 -0.373 -0.373 -0.373
-#&gt; Item_13 -0.562  0.593  0.593  0.593
-#&gt; Item_14 -0.834  0.972  0.972  0.972
-#&gt; Item_15 -0.726  0.809  0.809  0.809
+#&gt; Item_6  -0.095  0.000  0.229  0.000
+#&gt; Item_7  -1.472  0.000  1.776  0.000
+#&gt; Item_8  -0.066  0.000 -0.048  0.000
+#&gt; Item_9  -0.760  0.000  0.880  0.000
+#&gt; Item_10  0.536  0.000 -0.640  0.000
+#&gt; Item_11  4.800 -4.993 -4.993 -4.993
+#&gt; Item_12  0.282 -0.372 -0.372 -0.372
+#&gt; Item_13 -0.561  0.592  0.592  0.592
+#&gt; Item_14 -0.834  0.971  0.971  0.971
+#&gt; Item_15 -0.724  0.807  0.807  0.807
 #&gt; 
 #&gt; $group.intercepts
-#&gt;        c1     c2   c3
-#&gt; par 0.595 -2.716 2.48
+#&gt;        c1     c2    c3
+#&gt; par 0.614 -2.618 2.498
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>DINO</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item_1
 #&gt;             category_1 category_2
@@ -1455,15 +1455,15 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item_3
 #&gt;             category_1 category_2
 #&gt; P[1 0 0 0]       0.557      0.443
-#&gt; P[1 1 0 0]       0.101      0.899
+#&gt; P[1 1 0 0]       0.099      0.901
 #&gt; P[1 0 1 0]       0.557      0.443
-#&gt; P[1 1 1 -1]      0.101      0.899
+#&gt; P[1 1 1 -1]      0.099      0.901
 #&gt; 
 #&gt; $Item_4
 #&gt;             category_1 category_2
-#&gt; P[1 0 0 0]       0.463      0.537
+#&gt; P[1 0 0 0]       0.464      0.536
 #&gt; P[1 1 0 0]       0.959      0.041
-#&gt; P[1 0 1 0]       0.463      0.537
+#&gt; P[1 0 1 0]       0.464      0.536
 #&gt; P[1 1 1 -1]      0.959      0.041
 #&gt; 
 #&gt; $Item_5
@@ -1482,8 +1482,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item_7
 #&gt;             category_1 category_2
-#&gt; P[1 0 0 0]       0.814      0.186
-#&gt; P[1 1 0 0]       0.814      0.186
+#&gt; P[1 0 0 0]       0.813      0.187
+#&gt; P[1 1 0 0]       0.813      0.187
 #&gt; P[1 0 1 0]       0.425      0.575
 #&gt; P[1 1 1 -1]      0.425      0.575
 #&gt; 
@@ -1491,13 +1491,13 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;             category_1 category_2
 #&gt; P[1 0 0 0]       0.517      0.483
 #&gt; P[1 1 0 0]       0.517      0.483
-#&gt; P[1 0 1 0]       0.528      0.472
-#&gt; P[1 1 1 -1]      0.528      0.472
+#&gt; P[1 0 1 0]       0.529      0.471
+#&gt; P[1 1 1 -1]      0.529      0.471
 #&gt; 
 #&gt; $Item_9
 #&gt;             category_1 category_2
-#&gt; P[1 0 0 0]       0.682      0.318
-#&gt; P[1 1 0 0]       0.682      0.318
+#&gt; P[1 0 0 0]       0.681      0.319
+#&gt; P[1 1 0 0]       0.681      0.319
 #&gt; P[1 0 1 0]       0.470      0.530
 #&gt; P[1 1 1 -1]      0.470      0.530
 #&gt; 
@@ -1538,20 +1538,20 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item_15
 #&gt;             category_1 category_2
-#&gt; P[1 0 0 0]       0.674      0.326
+#&gt; P[1 0 0 0]       0.673      0.327
 #&gt; P[1 1 0 0]       0.479      0.521
 #&gt; P[1 0 1 0]       0.479      0.521
 #&gt; P[1 1 1 -1]      0.479      0.521
 #&gt; 
 #&gt; $Class.Probability
 #&gt;           Intercept A1 A2 Yoshi  prob
-#&gt; Profile_1         1  0  0     0 0.122
-#&gt; Profile_2         1  1  0     0 0.004
+#&gt; Profile_1         1  0  0     0 0.123
+#&gt; Profile_2         1  1  0     0 0.005
 #&gt; Profile_3         1  0  1     0 0.806
-#&gt; Profile_4         1  1  1    -1 0.067
+#&gt; Profile_4         1  1  1    -1 0.066
 #&gt; </div><div class='input'><span class='fu'><a href='M2.html'>M2</a></span><span class='op'>(</span><span class='va'>DINO</span><span class='op'>)</span> <span class='co'>#doesn't fit as well, because not the generating model</span>
-</div><div class='output co'>#&gt;             M2 df         p RMSEA RMSEA_5 RMSEA_95
-#&gt; stats 83.00213 90 0.6864141     0       0 0.014019</div><div class='input'>
+</div><div class='output co'>#&gt;             M2 df         p RMSEA RMSEA_5   RMSEA_95
+#&gt; stats 83.00225 90 0.6864109     0       0 0.01401906</div><div class='input'>
 <span class='co'>## C-RUM (analogous to MIRT model)</span>
 <span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='thetaComb.html'>thetaComb</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.model.html'>mirt.model</a></span><span class='op'>(</span><span class='st'>'Intercept = 1-15
@@ -1562,32 +1562,32 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>CRUM</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
 #&gt;             a1     a2     a3
-#&gt; Item_1   0.121 -1.270  0.000
-#&gt; Item_2  -0.010 -0.565  0.000
-#&gt; Item_3  -0.032 -0.380  0.000
-#&gt; Item_4   0.076 -0.428  0.000
-#&gt; Item_5   0.059 -0.351  0.000
-#&gt; Item_6  -0.112  0.000  0.236
-#&gt; Item_7  -2.742  0.000  3.024
-#&gt; Item_8   0.201  0.000 -0.339
-#&gt; Item_9  -0.579  0.000  0.645
+#&gt; Item_1   0.121 -1.275  0.000
+#&gt; Item_2  -0.011 -0.564  0.000
+#&gt; Item_3  -0.033 -0.379  0.000
+#&gt; Item_4   0.076 -0.431  0.000
+#&gt; Item_5   0.059 -0.353  0.000
+#&gt; Item_6  -0.111  0.000  0.236
+#&gt; Item_7  -2.737  0.000  3.019
+#&gt; Item_8   0.202  0.000 -0.339
+#&gt; Item_9  -0.578  0.000  0.644
 #&gt; Item_10  0.513  0.000 -0.587
-#&gt; Item_11  5.164  0.512 -5.321
-#&gt; Item_12  0.534 -0.634 -0.516
-#&gt; Item_13 -0.202 -0.709  0.302
-#&gt; Item_14 -2.980  2.147  2.934
-#&gt; Item_15 -4.036  2.882  3.951
+#&gt; Item_11  5.144  0.518 -5.301
+#&gt; Item_12  0.537 -0.637 -0.520
+#&gt; Item_13 -0.199 -0.713  0.299
+#&gt; Item_14 -2.996  2.161  2.950
+#&gt; Item_15 -4.073  2.916  3.990
 #&gt; 
 #&gt; $group.intercepts
-#&gt;         c1    c2   c3
-#&gt; par -5.407 0.026 2.29
+#&gt;         c1    c2    c3
+#&gt; par -5.422 0.034 2.301
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>CRUM</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item_1
 #&gt;          category_1 category_2
-#&gt; P[1 0 0]      0.470      0.530
-#&gt; P[1 1 0]      0.759      0.241
-#&gt; P[1 0 1]      0.470      0.530
-#&gt; P[1 1 1]      0.759      0.241
+#&gt; P[1 0 0]       0.47       0.53
+#&gt; P[1 1 0]       0.76       0.24
+#&gt; P[1 0 1]       0.47       0.53
+#&gt; P[1 1 1]       0.76       0.24
 #&gt; 
 #&gt; $Item_2
 #&gt;          category_1 category_2
@@ -1599,23 +1599,23 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item_3
 #&gt;          category_1 category_2
 #&gt; P[1 0 0]      0.508      0.492
-#&gt; P[1 1 0]      0.602      0.398
+#&gt; P[1 1 0]      0.601      0.399
 #&gt; P[1 0 1]      0.508      0.492
-#&gt; P[1 1 1]      0.602      0.398
+#&gt; P[1 1 1]      0.601      0.399
 #&gt; 
 #&gt; $Item_4
 #&gt;          category_1 category_2
 #&gt; P[1 0 0]      0.481      0.519
-#&gt; P[1 1 0]      0.587      0.413
+#&gt; P[1 1 0]      0.588      0.412
 #&gt; P[1 0 1]      0.481      0.519
-#&gt; P[1 1 1]      0.587      0.413
+#&gt; P[1 1 1]      0.588      0.412
 #&gt; 
 #&gt; $Item_5
 #&gt;          category_1 category_2
 #&gt; P[1 0 0]      0.485      0.515
-#&gt; P[1 1 0]      0.572      0.428
+#&gt; P[1 1 0]      0.573      0.427
 #&gt; P[1 0 1]      0.485      0.515
-#&gt; P[1 1 1]      0.572      0.428
+#&gt; P[1 1 1]      0.573      0.427
 #&gt; 
 #&gt; $Item_6
 #&gt;          category_1 category_2
@@ -1647,8 +1647,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item_10
 #&gt;          category_1 category_2
-#&gt; P[1 0 0]      0.375      0.625
-#&gt; P[1 1 0]      0.375      0.625
+#&gt; P[1 0 0]      0.374      0.626
+#&gt; P[1 1 0]      0.374      0.626
 #&gt; P[1 0 1]      0.518      0.482
 #&gt; P[1 1 1]      0.518      0.482
 #&gt; 
@@ -1657,47 +1657,47 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[1 0 0]      0.006      0.994
 #&gt; P[1 1 0]      0.003      0.997
 #&gt; P[1 0 1]      0.539      0.461
-#&gt; P[1 1 1]      0.412      0.588
+#&gt; P[1 1 1]      0.411      0.589
 #&gt; 
 #&gt; $Item_12
 #&gt;          category_1 category_2
-#&gt; P[1 0 0]      0.370      0.630
+#&gt; P[1 0 0]      0.369      0.631
 #&gt; P[1 1 0]      0.525      0.475
 #&gt; P[1 0 1]      0.496      0.504
-#&gt; P[1 1 1]      0.649      0.351
+#&gt; P[1 1 1]      0.650      0.350
 #&gt; 
 #&gt; $Item_13
 #&gt;          category_1 category_2
 #&gt; P[1 0 0]      0.550      0.450
 #&gt; P[1 1 0]      0.713      0.287
 #&gt; P[1 0 1]      0.475      0.525
-#&gt; P[1 1 1]      0.648      0.352
+#&gt; P[1 1 1]      0.649      0.351
 #&gt; 
 #&gt; $Item_14
 #&gt;          category_1 category_2
 #&gt; P[1 0 0]      0.952      0.048
 #&gt; P[1 1 0]      0.697      0.303
-#&gt; P[1 0 1]      0.512      0.488
-#&gt; P[1 1 1]      0.109      0.891
+#&gt; P[1 0 1]      0.511      0.489
+#&gt; P[1 1 1]      0.108      0.892
 #&gt; 
 #&gt; $Item_15
 #&gt;          category_1 category_2
 #&gt; P[1 0 0]      0.983      0.017
-#&gt; P[1 1 0]      0.760      0.240
+#&gt; P[1 1 0]      0.761      0.239
 #&gt; P[1 0 1]      0.521      0.479
-#&gt; P[1 1 1]      0.057      0.943
+#&gt; P[1 1 1]      0.056      0.944
 #&gt; 
 #&gt; $Class.Probability
 #&gt;           Intercept A1 A2  prob
 #&gt; Profile_1         1  0  0 0.000
 #&gt; Profile_2         1  1  0 0.086
-#&gt; Profile_3         1  0  1 0.829
-#&gt; Profile_4         1  1  1 0.084
+#&gt; Profile_3         1  0  1 0.830
+#&gt; Profile_4         1  1  1 0.083
 #&gt; </div><div class='input'>
 <span class='co'># good fit, but over-saturated (main effects for items 11-15 can be set to 0)</span>
 <span class='fu'><a href='M2.html'>M2</a></span><span class='op'>(</span><span class='va'>CRUM</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             M2 df         p RMSEA RMSEA_5   RMSEA_95
-#&gt; stats 75.27815 85 0.7656073     0       0 0.01263654</div><div class='input'>
+#&gt; stats 75.28523 85 0.7654267     0       0 0.01264072</div><div class='input'>
 <span class='co'>#------------------</span>
 <span class='co'>#multidimensional latent class model</span>
 
@@ -1722,43 +1722,43 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'>mdirt</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, customTheta <span class='op'>=</span> <span class='va'>theta</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
-#&gt;             a1     a2     a3     a4     a5    a6    a7   a8    a9   a10
-#&gt; Item.1  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.2  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.3  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.4  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.5  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.6  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.7  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.8  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.9  -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.10 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.11 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.12 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.13 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.14 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.15 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.16 -0.929 -0.682 -0.572 -0.539 -0.367 0.000 0.000 0.00 0.000 0.000
-#&gt; Item.17  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.18  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.19  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.20  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.21  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.22  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.23  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.24  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.25  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.26  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.27  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.28  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.29  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.30  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.31  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
-#&gt; Item.32  0.000  0.000  0.000  0.000  0.000 0.309 0.446 1.39 1.397 1.421
+#&gt;             a1     a2     a3     a4     a5   a6    a7   a8    a9  a10
+#&gt; Item.1  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.2  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.3  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.4  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.5  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.6  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.7  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.8  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.9  -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.10 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.11 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.12 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.13 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.14 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.15 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.16 -0.928 -0.682 -0.573 -0.541 -0.364 0.00 0.000 0.00 0.000 0.00
+#&gt; Item.17  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.18  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.19  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.20  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.21  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.22  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.23  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.24  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.25  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.26  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.27  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.28  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.29  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.30  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.31  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
+#&gt; Item.32  0.000  0.000  0.000  0.000  0.000 0.31 0.445 1.39 1.397 1.42
 #&gt; 
 #&gt; $group.intercepts
-#&gt;         c1     c2    c3   c4    c5    c6    c7    c8    c9
-#&gt; par -2.739 -1.479 0.137 1.49 2.183 2.891 2.309 2.146 1.112
+#&gt;         c1     c2    c3    c4    c5    c6    c7    c8    c9
+#&gt; par -2.737 -1.477 0.141 1.493 2.186 2.891 2.307 2.148 1.106
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item.1
 #&gt;                        category_1 category_2
@@ -1766,7 +1766,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1779,7 +1779,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1792,7 +1792,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1805,7 +1805,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1818,7 +1818,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1831,7 +1831,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1844,7 +1844,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1857,7 +1857,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1870,7 +1870,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1883,7 +1883,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1896,7 +1896,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1909,7 +1909,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1922,7 +1922,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1935,7 +1935,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1948,7 +1948,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1961,7 +1961,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 1 0 0 0 0 0 0 0 0]      0.664      0.336
 #&gt; P[0 0 1 0 0 0 0 0 0 0]      0.639      0.361
 #&gt; P[0 0 0 1 0 0 0 0 0 0]      0.632      0.368
-#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.591      0.409
+#&gt; P[0 0 0 0 1 0 0 0 0 0]      0.590      0.410
 #&gt; P[0 0 0 0 0 1 0 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.500      0.500
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.500      0.500
@@ -1979,7 +1979,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.18
 #&gt;                        category_1 category_2
@@ -1992,7 +1992,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.19
 #&gt;                        category_1 category_2
@@ -2005,7 +2005,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.20
 #&gt;                        category_1 category_2
@@ -2018,7 +2018,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.21
 #&gt;                        category_1 category_2
@@ -2031,7 +2031,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.22
 #&gt;                        category_1 category_2
@@ -2044,7 +2044,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.23
 #&gt;                        category_1 category_2
@@ -2057,7 +2057,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.24
 #&gt;                        category_1 category_2
@@ -2070,7 +2070,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.25
 #&gt;                        category_1 category_2
@@ -2083,7 +2083,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.26
 #&gt;                        category_1 category_2
@@ -2096,7 +2096,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.27
 #&gt;                        category_1 category_2
@@ -2109,7 +2109,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.28
 #&gt;                        category_1 category_2
@@ -2122,7 +2122,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.29
 #&gt;                        category_1 category_2
@@ -2135,7 +2135,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.30
 #&gt;                        category_1 category_2
@@ -2148,7 +2148,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.31
 #&gt;                        category_1 category_2
@@ -2161,7 +2161,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Item.32
 #&gt;                        category_1 category_2
@@ -2174,7 +2174,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; P[0 0 0 0 0 0 1 0 0 0]      0.390      0.610
 #&gt; P[0 0 0 0 0 0 0 1 0 0]      0.199      0.801
 #&gt; P[0 0 0 0 0 0 0 0 1 0]      0.198      0.802
-#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.194      0.806
+#&gt; P[0 0 0 0 0 0 0 0 0 1]      0.195      0.805
 #&gt; 
 #&gt; $Class.Probability
 #&gt;            C1 C2 C3 C4 C5 C6 C7 C8 C9 C10  prob
@@ -2182,9 +2182,9 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Profile_2   0  1  0  0  0  0  0  0  0   0 0.004
 #&gt; Profile_3   0  0  1  0  0  0  0  0  0   0 0.021
 #&gt; Profile_4   0  0  0  1  0  0  0  0  0   0 0.080
-#&gt; Profile_5   0  0  0  0  1  0  0  0  0   0 0.160
+#&gt; Profile_5   0  0  0  0  1  0  0  0  0   0 0.161
 #&gt; Profile_6   0  0  0  0  0  1  0  0  0   0 0.325
-#&gt; Profile_7   0  0  0  0  0  0  1  0  0   0 0.182
+#&gt; Profile_7   0  0  0  0  0  0  1  0  0   0 0.181
 #&gt; Profile_8   0  0  0  0  0  0  0  1  0   0 0.154
 #&gt; Profile_9   0  0  0  0  0  0  0  0  1   0 0.055
 #&gt; Profile_10  0  0  0  0  0  0  0  0  0   1 0.018
@@ -2206,37 +2206,37 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $items
 #&gt;             a1     a2
 #&gt; Item.1  -1.462 -0.238
-#&gt; Item.2  -0.522  1.906
-#&gt; Item.3  -1.638 -0.087
-#&gt; Item.4  -1.181  0.114
-#&gt; Item.5  -0.149  1.966
+#&gt; Item.2  -0.521  1.906
+#&gt; Item.3  -1.638 -0.086
+#&gt; Item.4  -1.181  0.115
+#&gt; Item.5  -0.148  1.966
 #&gt; Item.6  -2.913 -1.119
 #&gt; Item.7   0.469  2.108
 #&gt; Item.8  -1.833 -0.731
 #&gt; Item.9   1.888  2.722
 #&gt; Item.10 -0.972  0.381
-#&gt; Item.11  4.482  9.816
+#&gt; Item.11  4.483  9.816
 #&gt; Item.12 -0.381 -0.305
-#&gt; Item.13  0.008  1.821
-#&gt; Item.14  0.411  2.339
-#&gt; Item.15  0.737  3.357
-#&gt; Item.16 -0.997  0.141
-#&gt; Item.17  2.648  4.628
+#&gt; Item.13  0.008  1.822
+#&gt; Item.14  0.411  2.340
+#&gt; Item.15  0.737  3.360
+#&gt; Item.16 -0.997  0.142
+#&gt; Item.17  2.649  4.628
 #&gt; Item.18 -1.588  0.583
-#&gt; Item.19 -0.415  1.057
+#&gt; Item.19 -0.414  1.057
 #&gt; Item.20  1.254  4.567
-#&gt; Item.21  1.959  3.169
-#&gt; Item.22  1.965  9.066
+#&gt; Item.21  1.959  3.170
+#&gt; Item.22  1.966  9.067
 #&gt; Item.23 -1.633 -0.393
-#&gt; Item.24  0.271  2.349
-#&gt; Item.25 -1.224  0.328
-#&gt; Item.26 -0.973  1.197
+#&gt; Item.24  0.271  2.351
+#&gt; Item.25 -1.224  0.329
+#&gt; Item.26 -0.973  1.198
 #&gt; Item.27  1.152  9.559
-#&gt; Item.28 -0.478  1.177
+#&gt; Item.28 -0.477  1.177
 #&gt; Item.29 -1.235  0.072
 #&gt; Item.30 -0.514  0.150
-#&gt; Item.31  0.761  9.564
-#&gt; Item.32 -1.380 -1.742
+#&gt; Item.31  0.762  9.564
+#&gt; Item.32 -1.381 -1.742
 #&gt; 
 #&gt; $group.intercepts
 #&gt;        c1
@@ -2248,36 +2248,36 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;             a1     a2
 #&gt; Item.1  -1.384 -0.425
 #&gt; Item.2  -0.489  1.722
-#&gt; Item.3  -1.885 -0.061
+#&gt; Item.3  -1.884 -0.060
 #&gt; Item.4  -0.826  0.229
 #&gt; Item.5   0.002  1.268
-#&gt; Item.6  -2.386 -0.600
-#&gt; Item.7   0.857  2.669
-#&gt; Item.8  -1.887 -0.941
-#&gt; Item.9   1.628  2.611
-#&gt; Item.10 -1.046  0.943
-#&gt; Item.11  3.082  9.694
-#&gt; Item.12 -0.487 -0.109
-#&gt; Item.13  0.251  1.768
-#&gt; Item.14  0.381  2.385
-#&gt; Item.15  1.233  2.787
-#&gt; Item.16 -0.740  0.607
-#&gt; Item.17  2.959  9.640
-#&gt; Item.18 -1.967  0.784
-#&gt; Item.19 -0.234  1.066
-#&gt; Item.20  1.455  5.443
-#&gt; Item.21  2.272  2.769
-#&gt; Item.22  2.281  6.740
-#&gt; Item.23 -1.107  0.203
-#&gt; Item.24  0.554  2.566
-#&gt; Item.25 -0.869  0.045
-#&gt; Item.26 -1.272  1.391
-#&gt; Item.27  1.382  3.527
-#&gt; Item.28 -0.606  1.314
-#&gt; Item.29 -1.391  0.202
-#&gt; Item.30 -0.476  0.113
-#&gt; Item.31  1.209  4.736
-#&gt; Item.32 -2.028 -1.481
+#&gt; Item.6  -2.386 -0.599
+#&gt; Item.7   0.857  2.671
+#&gt; Item.8  -1.887 -0.940
+#&gt; Item.9   1.628  2.612
+#&gt; Item.10 -1.045  0.944
+#&gt; Item.11  3.083  9.694
+#&gt; Item.12 -0.487 -0.108
+#&gt; Item.13  0.251  1.769
+#&gt; Item.14  0.381  2.386
+#&gt; Item.15  1.234  2.787
+#&gt; Item.16 -0.739  0.608
+#&gt; Item.17  2.960  9.640
+#&gt; Item.18 -1.967  0.785
+#&gt; Item.19 -0.234  1.067
+#&gt; Item.20  1.455  5.449
+#&gt; Item.21  2.272  2.768
+#&gt; Item.22  2.282  6.735
+#&gt; Item.23 -1.106  0.203
+#&gt; Item.24  0.554  2.569
+#&gt; Item.25 -0.868  0.045
+#&gt; Item.26 -1.271  1.391
+#&gt; Item.27  1.382  3.530
+#&gt; Item.28 -0.605  1.314
+#&gt; Item.29 -1.390  0.202
+#&gt; Item.30 -0.475  0.113
+#&gt; Item.31  1.209  4.735
+#&gt; Item.32 -2.028 -1.480
 #&gt; 
 #&gt; $group.intercepts
 #&gt;        c1
@@ -2292,7 +2292,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item.2
 #&gt;        category_1 category_2
-#&gt; P[1 0]      0.628      0.372
+#&gt; P[1 0]      0.627      0.373
 #&gt; P[0 1]      0.129      0.871
 #&gt; 
 #&gt; $Item.3
@@ -2469,18 +2469,18 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item.4
 #&gt;        category_1 category_2
-#&gt; P[1 0]      0.696      0.304
+#&gt; P[1 0]      0.695      0.305
 #&gt; P[0 1]      0.443      0.557
 #&gt; 
 #&gt; $Item.5
 #&gt;        category_1 category_2
-#&gt; P[1 0]       0.50       0.50
-#&gt; P[0 1]       0.22       0.78
+#&gt; P[1 0]      0.499      0.501
+#&gt; P[0 1]      0.220      0.780
 #&gt; 
 #&gt; $Item.6
 #&gt;        category_1 category_2
 #&gt; P[1 0]      0.916      0.084
-#&gt; P[0 1]      0.646      0.354
+#&gt; P[0 1]      0.645      0.355
 #&gt; 
 #&gt; $Item.7
 #&gt;        category_1 category_2
@@ -2514,7 +2514,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item.13
 #&gt;        category_1 category_2
-#&gt; P[1 0]      0.438      0.562
+#&gt; P[1 0]      0.437      0.563
 #&gt; P[0 1]      0.146      0.854
 #&gt; 
 #&gt; $Item.14
@@ -2564,8 +2564,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; $Item.23
 #&gt;        category_1 category_2
-#&gt; P[1 0]      0.752      0.248
-#&gt; P[0 1]      0.450      0.550
+#&gt; P[1 0]      0.751      0.249
+#&gt; P[0 1]      0.449      0.551
 #&gt; 
 #&gt; $Item.24
 #&gt;        category_1 category_2
@@ -2585,7 +2585,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; $Item.27
 #&gt;        category_1 category_2
 #&gt; P[1 0]      0.201      0.799
-#&gt; P[0 1]      0.029      0.971
+#&gt; P[0 1]      0.028      0.972
 #&gt; 
 #&gt; $Item.28
 #&gt;        category_1 category_2

@@ -77,7 +77,7 @@ using parallel estimation via mirtCluster." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -347,7 +347,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;     group + items)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
 #&gt; 1 8799.543 8799.901 8815.435 8819.126 8850.364 -4388.772     NaN NaN NaN
-#&gt; 2 8109.921 8110.416 8128.702 8133.064 8169.982 -4041.961 693.622   2   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
+#&gt; 2 8109.703 8110.197 8128.483 8132.845 8169.764 -4041.851 693.841   2   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; mixedmirt(data = data, covdata = covdata, model = model, fixed = ~0 + 
@@ -437,27 +437,11 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='co'>#same model as above in lme4</span>
 <span class='va'>wide</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>id<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>,<span class='va'>data</span>,<span class='va'>covdata</span><span class='op'>)</span>
 <span class='va'>long</span> <span class='op'>&lt;-</span> <span class='fu'>reshape2</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/reshape2/man/melt.html'>melt</a></span><span class='op'>(</span><span class='va'>wide</span>, id.vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'id'</span>, <span class='st'>'group'</span>, <span class='st'>'pseudoIQ'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/lme4/lme4/'>lme4</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: Matrix</span></div><div class='output co'>#&gt; <span class='message'>Registered S3 methods overwritten by 'lme4':</span>
-#&gt; <span class='message'>  method                          from</span>
-#&gt; <span class='message'>  cooks.distance.influence.merMod car </span>
-#&gt; <span class='message'>  influence.merMod                car </span>
-#&gt; <span class='message'>  dfbeta.influence.merMod         car </span>
-#&gt; <span class='message'>  dfbetas.influence.merMod        car </span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: 'lme4'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:mirt':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    fixef</span></div><div class='input'><span class='va'>lmod0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lme4/man/glmer.html'>glmer</a></span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>variable</span> <span class='op'>+</span> <span class='op'>(</span><span class='fl'>1</span><span class='op'>|</span><span class='va'>id</span><span class='op'>)</span>, <span class='va'>long</span>, family <span class='op'>=</span> <span class='va'>binomial</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Model failed to converge with max|grad| = 0.0292334 (tol = 0.002, component 1)</span></div><div class='input'><span class='va'>lmod1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lme4/man/glmer.html'>glmer</a></span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>group</span> <span class='op'>+</span> <span class='va'>variable</span> <span class='op'>+</span> <span class='op'>(</span><span class='fl'>1</span><span class='op'>|</span><span class='va'>id</span><span class='op'>)</span>, <span class='va'>long</span>, family <span class='op'>=</span> <span class='va'>binomial</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Model failed to converge with max|grad| = 0.00649322 (tol = 0.002, component 1)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>lmod0</span>, <span class='va'>lmod1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Data: long
-#&gt; Models:
-#&gt; lmod0: value ~ 0 + variable + (1 | id)
-#&gt; lmod1: value ~ 0 + group + variable + (1 | id)
-#&gt;       npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)    
-#&gt; lmod0   11 8813.5 8889.6 -4395.7   8791.5                         
-#&gt; lmod1   13 8109.5 8199.5 -4041.8   8083.5 707.93  2  &lt; 2.2e-16 ***
-#&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>lme4</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in library(lme4): there is no package called ‘lme4’</span></div><div class='input'><span class='va'>lmod0</span> <span class='op'>&lt;-</span> <span class='fu'>glmer</span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>variable</span> <span class='op'>+</span> <span class='op'>(</span><span class='fl'>1</span><span class='op'>|</span><span class='va'>id</span><span class='op'>)</span>, <span class='va'>long</span>, family <span class='op'>=</span> <span class='va'>binomial</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in glmer(value ~ 0 + variable + (1 | id), long, family = binomial): could not find function "glmer"</span></div><div class='input'><span class='va'>lmod1</span> <span class='op'>&lt;-</span> <span class='fu'>glmer</span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>group</span> <span class='op'>+</span> <span class='va'>variable</span> <span class='op'>+</span> <span class='op'>(</span><span class='fl'>1</span><span class='op'>|</span><span class='va'>id</span><span class='op'>)</span>, <span class='va'>long</span>, family <span class='op'>=</span> <span class='va'>binomial</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in glmer(value ~ 0 + group + variable + (1 | id), long, family = binomial): could not find function "glmer"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>lmod0</span>, <span class='va'>lmod1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in anova(lmod0, lmod1): object 'lmod0' not found</span></div><div class='input'>
 <span class='co'>#model using 2PL items instead of Rasch</span>
 <span class='va'>mod1b</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>covdata</span>, <span class='va'>model</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>group</span> <span class='op'>+</span> <span class='va'>items</span>, itemtype <span class='op'>=</span> <span class='st'>'2PL'</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>mod1</span>, <span class='va'>mod1b</span><span class='op'>)</span> <span class='co'>#better with 2PL models using all criteria (as expected, given simdata pars)</span>
@@ -467,8 +451,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 2: mixedmirt(data = data, covdata = covdata, model = model, fixed = ~0 + 
 #&gt;     group + items, itemtype = "2PL")
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
-#&gt; 1 8109.921 8110.416 8128.702 8133.064 8169.982 -4041.961     NaN NaN NaN
-#&gt; 2 7974.140 7975.532 8005.923 8013.304 8075.781 -3965.070 153.781   9   0</div><div class='input'>
+#&gt; 1 8109.703 8110.197 8128.483 8132.845 8169.764 -4041.851     NaN NaN NaN
+#&gt; 2 7975.534 7976.926 8007.317 8014.699 8077.176 -3965.767 152.168   9   0</div><div class='input'>
 <span class='co'>#continuous predictor with group</span>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>covdata</span>, <span class='va'>model</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>group</span> <span class='op'>+</span> <span class='va'>items</span> <span class='op'>+</span> <span class='va'>pseudoIQ</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
@@ -498,9 +482,9 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;     group + items + pseudoIQ)
 #&gt; Model 2: mixedmirt(data = data, covdata = covdata, model = model, fixed = ~0 + 
 #&gt;     group + items, itemtype = "2PL")
-#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC   logLik      X2  df   p
-#&gt; 1 8088.161 8088.732 8108.386 8113.084 8152.842 -4030.08     NaN NaN NaN
-#&gt; 2 7974.140 7975.532 8005.923 8013.304 8075.781 -3965.07 130.021   8   0</div><div class='input'>
+#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+#&gt; 1 8088.793 8089.364 8109.018 8113.716 8153.474 -4030.396     NaN NaN NaN
+#&gt; 2 7975.534 7976.926 8007.317 8014.699 8077.176 -3965.767 129.258   8   0</div><div class='input'>
 <span class='co'>#view fixed design matrix with and without unique item level intercepts</span>
 <span class='va'>withint</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>covdata</span>, <span class='va'>model</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>items</span> <span class='op'>+</span> <span class='va'>group</span>, return.design <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>withoutint</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>covdata</span>, <span class='va'>model</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>group</span>, return.design <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -701,11 +685,11 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; </div><div class='input'><span class='va'>eff</span> <span class='op'>&lt;-</span> <span class='fu'><a href='randef.html'>randef</a></span><span class='op'>(</span><span class='va'>rmod3</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>eff</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 2
-#&gt;  $ Theta: num [1:750, 1] -0.02702 0.04535 0.06833 0.00115 -0.04312 ...
+#&gt;  $ Theta: num [1:750, 1] -0.0731 0.0602 0.0576 0.0701 -0.0401 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr "F1"
-#&gt;  $ group: num [1:50, 1:2] -1.63 -1.26 -1.41 -1.62 -1.51 ...
+#&gt;  $ group: num [1:50, 1:2] -1.52 -1.14 -1.31 -1.57 -1.53 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : chr [1:50] "G1" "G2" "G3" "G4" ...
 #&gt;   .. ..$ : chr [1:2] "group" "pseudoIQ"</div><div class='input'>
@@ -964,8 +948,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 2: mixedmirt(data = data, model = model, fixed = ~0 + itemorder, 
 #&gt;     itemtype = "2PL", itemdesign = itemdesign, technical = list(MHcand = 0.8))
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik       X2  df   p
-#&gt; 1 25465.32 25465.36 25468.99 25470.46 25478.51 -12729.66      NaN NaN NaN
-#&gt; 2 20479.72 20483.93 20521.27 20537.91 20629.21 -10205.86 5047.606  31   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>twoPL</span><span class='op'>)</span>
+#&gt; 1 25466.04 25466.08 25469.71 25471.18 25479.23 -12730.02      NaN NaN NaN
+#&gt; 2 20490.15 20494.36 20531.70 20548.35 20639.65 -10211.08 5037.892  31   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>twoPL</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; mixedmirt(data = data, model = model, fixed = ~0 + itemorder, 
@@ -1555,9 +1539,9 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt;     group)
 #&gt; Model 2: mixedmirt(data = Science, covdata = covdat, model = 1, fixed = ~0 + 
 #&gt;     group, itemtype = "gpcm")
-#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
-#&gt; 1 3267.713 3268.827 3278.889 3289.747 3323.310 -1619.856   NaN NaN   NaN
-#&gt; 2 3257.892 3259.529 3271.463 3284.649 3325.404 -1611.946 15.82   3 0.001</div><div class='input'>
+#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df     p
+#&gt; 1 3266.200 3267.314 3277.377 3288.235 3321.798 -1619.100    NaN NaN   NaN
+#&gt; 2 3258.675 3260.312 3272.246 3285.432 3326.187 -1612.338 13.525   3 0.004</div><div class='input'>
 <span class='co'>#graded model</span>
 <span class='va'>mod3</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>Science</span>, <span class='va'>covdat</span>, model<span class='op'>=</span><span class='fl'>1</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>group</span>,
                  itemtype <span class='op'>=</span> <span class='st'>'graded'</span><span class='op'>)</span>
@@ -1620,7 +1604,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; covdata$groupg2  0.93468    0.08443  11.071   &lt;2e-16 ***
 #&gt; covdata$groupg3  1.88134    0.08443  22.284   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
 #&gt; Residual standard error: 1.034 on 897 degrees of freedom
 #&gt; Multiple R-squared:  0.3563,	Adjusted R-squared:  0.3549 
@@ -1638,9 +1622,9 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 1: mirt(data = dat, model = 1, itemtype = "Rasch")
 #&gt; Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
 #&gt;     items + group)
-#&gt; </div><div class='output co'>#&gt;        AIC    AICc    SABIC       HQ     BIC    logLik      X2  df   p
-#&gt; 1 9698.483 9698.78 9716.375 9718.663 9751.31 -4838.242     NaN NaN NaN
-#&gt; 2 9472.239 9472.65 9493.384 9496.088 9534.67 -4723.120 230.244   2   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>rmod1a</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
+#&gt; 1 9698.483 9698.780 9716.375 9718.663 9751.310 -4838.242     NaN NaN NaN
+#&gt; 2 9472.202 9472.613 9493.348 9496.051 9534.633 -4723.101 230.281   2   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>rmod1a</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
 #&gt;         a1      d g u
 #&gt; Item_1   1 -0.466 0 1
@@ -1696,9 +1680,9 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 1: mirt(data = dat, model = 1)
 #&gt; Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
 #&gt;     items, itemtype = "2PL", lr.fixed = ~group)
-#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
-#&gt; 1 9706.089 9707.044 9738.620 9742.780 9802.136 -4833.044     NaN NaN NaN
-#&gt; 2 9478.495 9479.649 9514.279 9518.855 9584.148 -4717.247 231.594   2   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod1a</span><span class='op'>)</span><span class='op'>$</span><span class='va'>lr.betas</span>
+#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df   p
+#&gt; 1 9706.089 9707.044 9738.620 9742.780 9802.136 -4833.044    NaN NaN NaN
+#&gt; 2 9478.899 9480.052 9514.683 9519.259 9584.551 -4717.449 231.19   2   0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod1a</span><span class='op'>)</span><span class='op'>$</span><span class='va'>lr.betas</span>
 </div><div class='output co'>#&gt;                    F1
 #&gt; (Intercept) 0.0000000
 #&gt; groupg2     0.7910307
@@ -1738,14 +1722,14 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>11</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>]</span>
 </div><div class='output co'>#&gt; $GroupPars
 #&gt;     MEAN_1 MEAN_2   COV_11 COV_21   COV_22
-#&gt; par      0      0 1.040485      0 1.104951
+#&gt; par      0      0 1.041757      0 1.103558
 #&gt; 
 #&gt; $lr.betas
-#&gt;                    F1        F2
-#&gt; (Intercept) 0.0000000 0.0000000
-#&gt; groupg2     0.7291631 0.9087269
-#&gt; groupg3     1.7514218 1.7002700
-#&gt; contvar     0.0380173 0.0000000
+#&gt;                     F1        F2
+#&gt; (Intercept) 0.00000000 0.0000000
+#&gt; groupg2     0.72268710 0.9031256
+#&gt; groupg3     1.74973412 1.6947199
+#&gt; contvar     0.02423498 0.0000000
 #&gt; </div><div class='input'><span class='va'>mod2b</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>covdata</span>, <span class='va'>model</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>items</span>,
         lr.fixed <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>F1 <span class='op'>=</span> <span class='op'>~</span> <span class='va'>group</span> <span class='op'>+</span> <span class='va'>contvar</span>, F2 <span class='op'>=</span> <span class='op'>~</span> <span class='va'>group</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod2b</span><span class='op'>)</span>
@@ -1760,24 +1744,24 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Correlations on upper diagonal
 #&gt; 
 #&gt; $Theta
-#&gt;      F1   F2
-#&gt; F1 1.06 0.00
-#&gt; F2 0.00 1.09
+#&gt;      F1  F2
+#&gt; F1 1.03 0.0
+#&gt; F2 0.00 1.1
 #&gt; 
 #&gt; --------------
 #&gt; LATENT REGRESSION FIXED EFFECTS:
 #&gt; 
 #&gt;                F1    F2
 #&gt; (Intercept) 0.000 0.000
-#&gt; groupg2     0.699 0.850
-#&gt; groupg3     1.745 1.632
-#&gt; contvar     0.042 0.000
+#&gt; groupg2     0.718 0.813
+#&gt; groupg3     1.766 1.630
+#&gt; contvar     0.019 0.000
 #&gt; 
-#&gt;             Std.Error_F1 Std.Error_F2  z_F1   z_F2
-#&gt; (Intercept)           NA           NA    NA     NA
-#&gt; groupg2              NaN        0.107   NaN  7.958
-#&gt; groupg3              NaN        0.108   NaN 15.167
-#&gt; contvar            0.053           NA 0.788     NA</div><div class='input'>
+#&gt;             Std.Error_F1 Std.Error_F2 z_F1   z_F2
+#&gt; (Intercept)           NA           NA   NA     NA
+#&gt; groupg2              NaN        0.098  NaN  8.324
+#&gt; groupg3              NaN        0.102  NaN 16.021
+#&gt; contvar            0.059           NA 0.32     NA</div><div class='input'>
 <span class='co'>####################################################</span>
 <span class='co'>## Simulated Multilevel Rasch Model</span>
 
@@ -1850,8 +1834,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
 #&gt;     items + group_pred, random = ~1 | group)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
-#&gt; 1 23537.88 23538.03 23566.96 23562.55 23605.08 -11756.94     NaN NaN NaN
-#&gt; 2 22749.34 22749.52 22780.85 22776.07 22822.15 -11361.67 790.538   1   0</div><div class='input'>
+#&gt; 1 23547.44 23547.60 23576.53 23572.12 23614.65 -11761.72     NaN NaN NaN
+#&gt; 2 22744.69 22744.88 22776.20 22771.43 22817.51 -11359.35 804.749   1   0</div><div class='input'>
 <span class='co'># can also be fit for Rasch/non-Rasch models with the lr.random input</span>
 <span class='va'>mod1b</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>covdata</span>, <span class='fl'>1</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>items</span>, lr.random <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>1</span><span class='op'>|</span><span class='va'>group</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod1b</span><span class='op'>)</span>
@@ -1913,8 +1897,8 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
 #&gt;     items + group_pred, lr.random = ~1 | group)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
-#&gt; 1 23635.89 23636.02 23662.55 23658.51 23697.50 -11806.94     NaN NaN NaN
-#&gt; 2 22748.74 22748.90 22777.83 22773.42 22815.95 -11362.37 889.145   1   0</div><div class='input'>
+#&gt; 1 23630.90 23631.03 23657.56 23653.52 23692.51 -11804.45     NaN NaN NaN
+#&gt; 2 22749.48 22749.64 22778.56 22774.16 22816.69 -11362.74 883.421   1   0</div><div class='input'>
 <span class='va'>mod3</span> <span class='op'>&lt;-</span> <span class='fu'>mixedmirt</span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>covdata</span>, <span class='fl'>1</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>items</span>, lr.random <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>1</span><span class='op'>|</span><span class='va'>group</span>, itemtype <span class='op'>=</span> <span class='st'>'2PL'</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
@@ -1946,16 +1930,16 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; Model 2: mixedmirt(data = dat, covdata = covdata, model = 1, fixed = ~0 + 
 #&gt;     items, itemtype = "2PL", lr.random = ~1 | group)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df   p
-#&gt; 1 23635.89 23636.02 23662.55 23658.51 23697.50 -11806.94    NaN NaN NaN
-#&gt; 2 23568.90 23569.33 23617.38 23610.04 23680.92 -11764.45 84.981   9   0</div><div class='input'>
+#&gt; 1 23630.90 23631.03 23657.56 23653.52 23692.51 -11804.45    NaN NaN NaN
+#&gt; 2 23563.37 23563.79 23611.84 23604.50 23675.38 -11761.68 85.535   9   0</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='randef.html'>randef</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span><span class='op'>$</span><span class='va'>group</span>, <span class='va'>random_intercept</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;         group random_intercept
-#&gt; G1  1.0828727       1.51178117
-#&gt; G2 -0.6514025       0.38984324
-#&gt; G3 -0.4689840      -0.62124058
-#&gt; G4 -2.4381772      -2.21469989
-#&gt; G5  0.5171833       1.12493092
-#&gt; G6 -0.5327774      -0.04493361</div><div class='input'>
+#&gt; G1  1.1458717       1.51178117
+#&gt; G2 -0.4738656       0.38984324
+#&gt; G3 -0.4653329      -0.62124058
+#&gt; G4 -2.2871773      -2.21469989
+#&gt; G5  0.5830420       1.12493092
+#&gt; G6 -0.6951027      -0.04493361</div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

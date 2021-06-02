@@ -77,7 +77,7 @@ a set of 'anchor' items and have freely estimated hyper-parameters in the focal 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -250,9 +250,9 @@ searches. The default is to perform search until no further DIF is found</p></td
     </tr>
     <tr>
       <th>type</th>
-      <td><p>the <code>type</code> of plot argument passed to <code><a href='https://rdrr.io/r/graphics/plot.default.html'>plot()</a></code>. Default is 'trace', though
+      <td><p>the <code>type</code> of plot argument passed to <code><a href='https://rdrr.io/r/graphics/plot.html'>plot()</a></code>. Default is 'trace', though
 another good option is 'infotrace'. For ease of viewing, the <code>facet_item</code> argument to
-mirt's <code><a href='https://rdrr.io/r/graphics/plot.default.html'>plot()</a></code> function is set to <code>TRUE</code></p></td>
+mirt's <code><a href='https://rdrr.io/r/graphics/plot.html'>plot()</a></code> function is set to <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>simplify</th>
@@ -321,7 +321,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='co'>#### no anchors, all items tested for DIF by adding item constrains one item at a time.</span>
 <span class='co'># define a parallel cluster (optional) to help speed up internal functions</span>
 <span class='fu'><a href='mirtCluster.html'>mirtCluster</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>mirtCluster() has already been defined</span></div><div class='input'>
+
 <span class='co'># Information matrix with Oakes' identity (not controlling for latent group differences)</span>
 <span class='co'># NOTE: Without properly equating the groups the following example code is not testing for DIF,</span>
      <span class='co'># but instead reflects a combination of DIF + latent-trait distribution effects</span>
@@ -526,7 +526,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>updated_mod</span> <span class='op'>&lt;-</span> <span class='fu'>DIF</span><span class='op'>(</span><span class='va'>model</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'a1'</span>, <span class='st'>'d'</span><span class='op'>)</span>, scheme <span class='op'>=</span> <span class='st'>'add_sequential'</span>,
                return_seq_model<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Checking for DIF in 3 more items
-#&gt; Computing final DIF estimates...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>updated_mod</span>, type<span class='op'>=</span><span class='st'>'trace'</span><span class='op'>)</span>
+#&gt; Computing final DIF estimates...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>updated_mod</span>, type<span class='op'>=</span><span class='st'>'trace'</span><span class='op'>)</span>
 </div><div class='img'><img src='DIF-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># }</span>
 </div></pre>

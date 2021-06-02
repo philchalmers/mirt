@@ -74,7 +74,7 @@ a user input matrix of \(\theta\)'s." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -253,7 +253,9 @@ latent trait matrix <code>Theta</code>? Default is FALSE</p></td>
       <th>model</th>
       <td><p>a single group object, typically returned by functions such as <code><a href='mirt.html'>mirt</a></code> or
 <code><a href='bfactor.html'>bfactor</a></code>. Supplying this will render all other parameter elements (excluding the
-<code>Theta</code>, <code>N</code>, <code>mu</code>, and <code>sigma</code> inputs) redundant (unless explicitly provided)</p></td>
+<code>Theta</code>, <code>N</code>, <code>mu</code>, and <code>sigma</code> inputs) redundant (unless explicitly provided).
+This input can therefore be used to create parametric bootstrap data whereby plausible data implied by the
+estimated model can be generated and evaluated</p></td>
     </tr>
     <tr>
       <th>equal.K</th>

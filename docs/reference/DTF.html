@@ -80,7 +80,7 @@ hyper-parameters in the focal groups. See DIF for details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -248,24 +248,24 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dat1</span>, <span class='va'>dat2</span><span class='op'>)</span>
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, group<span class='op'>=</span><span class='va'>group</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span>,
                      invariance<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'free_means'</span>, <span class='st'>'free_var'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='img'><img src='DTF-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#&gt;     0.1744380     0.5814601     0.1771452     0.5904838 </div><div class='input'><span class='fu'><a href='mirtCluster.html'>mirtCluster</a></span><span class='op'>(</span><span class='op'>)</span>
+#&gt;     0.1744653     0.5815508     0.1771799     0.5905996 </div><div class='input'><span class='fu'><a href='mirtCluster.html'>mirtCluster</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>mirtCluster() has already been defined</span></div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span> <span class='co'>#95% C.I. for sDTF containing 0. uDTF is very small</span>
 </div><div class='output co'>#&gt; $observed
 #&gt;    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#&gt;     0.1744380     0.5814601     0.1771452     0.5904838 
+#&gt;     0.1744653     0.5815508     0.1771799     0.5905996 
 #&gt; 
 #&gt; $CIs
 #&gt;         sDTF.score sDTF(%).score uDTF.score uDTF(%).score
-#&gt; CI_97.5  0.5166910     1.7223033 0.72814224     2.4271408
-#&gt; CI_2.5  -0.1271139    -0.4237131 0.09005032     0.3001677
+#&gt; CI_97.5  0.5417047     1.8056823 0.79223330     2.6407777
+#&gt; CI_2.5  -0.1207351    -0.4024504 0.09760814     0.3253605
 #&gt; 
 #&gt; $tests
 #&gt; P(sDTF.score = 0) 
-#&gt;         0.2823987 
+#&gt;         0.2975252 
 #&gt; </div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>1000</span>, plot<span class='op'>=</span><span class='st'>'sDTF'</span><span class='op'>)</span> <span class='co'>#sDTF 95% C.I.'s across Theta always include 0</span>
 </div><div class='img'><img src='DTF-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## -------------</span>
@@ -277,29 +277,29 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
                 <span class='va'>d</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>numeric</a></span><span class='op'>(</span><span class='fl'>15</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>-</span><span class='fl'>15</span>, <span class='op'>-</span><span class='fl'>.5</span>, <span class='fl'>.5</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>N</span>, itemtype <span class='op'>=</span> <span class='st'>'2PL'</span><span class='op'>)</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dat1</span>, <span class='va'>dat2</span><span class='op'>)</span>
 <span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fl'>1</span>, group<span class='op'>=</span><span class='va'>group</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span> <span class='co'>#does not account for group differences! Need anchors</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span> <span class='co'>#does not account for group differences! Need anchors</span>
 </div><div class='img'><img src='DTF-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, group<span class='op'>=</span><span class='va'>group</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span>,
                       invariance<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'free_means'</span>, <span class='st'>'free_var'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
 </div><div class='img'><img src='DTF-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#significant DIF in multiple items....</span>
 <span class='co'># DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)</span>
 <span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#&gt;     0.1945211     0.6484036     0.1951631     0.6505438 </div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod2</span>, draws<span class='op'>=</span><span class='fl'>1000</span><span class='op'>)</span> <span class='co'>#non-sig DTF due to item cancellation</span>
+#&gt;     0.1945029     0.6483428     0.1951426     0.6504754 </div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod2</span>, draws<span class='op'>=</span><span class='fl'>1000</span><span class='op'>)</span> <span class='co'>#non-sig DTF due to item cancellation</span>
 </div><div class='output co'>#&gt; $observed
 #&gt;    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#&gt;     0.1945211     0.6484036     0.1951631     0.6505438 
+#&gt;     0.1945029     0.6483428     0.1951426     0.6504754 
 #&gt; 
 #&gt; $CIs
 #&gt;          sDTF.score sDTF(%).score uDTF.score uDTF(%).score
-#&gt; CI_97.5  0.51237565     1.7079188 0.67936423     2.2645474
-#&gt; CI_2.5  -0.04610744    -0.1536915 0.08164672     0.2721557
+#&gt; CI_97.5  0.50485276    1.68284253 0.65812141     2.1937380
+#&gt; CI_2.5  -0.02485931   -0.08286436 0.07855001     0.2618334
 #&gt; 
 #&gt; $tests
 #&gt; P(sDTF.score = 0) 
-#&gt;         0.1789316 
+#&gt;         0.1528799 
 #&gt; </div><div class='input'>
 <span class='co'>## -------------</span>
 <span class='co'>## systematic differing slopes and intercepts (clear DTF)</span>
@@ -309,24 +309,24 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dat1</span>, <span class='va'>dat2</span><span class='op'>)</span>
 <span class='va'>mod3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, group<span class='op'>=</span><span class='va'>group</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span>,
                       invariance<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'free_means'</span>, <span class='st'>'free_var'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span> <span class='co'>#visable DTF happening</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span> <span class='co'>#visable DTF happening</span>
 </div><div class='img'><img src='DTF-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># DIF(mod3, c('a1', 'd'), items2test=16:30)</span>
 <span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span> <span class='co'>#unsigned bias. Signed bias indicates group 2 scores generally higher on average</span>
 </div><div class='output co'>#&gt;    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#&gt;    -0.8275548    -2.7585162     0.8539087     2.8463625 </div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>1000</span><span class='op'>)</span>
+#&gt;    -0.8275464    -2.7584881     0.8539061     2.8463537 </div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>1000</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $observed
 #&gt;    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#&gt;    -0.8275548    -2.7585162     0.8539087     2.8463625 
+#&gt;    -0.8275464    -2.7584881     0.8539061     2.8463537 
 #&gt; 
 #&gt; $CIs
 #&gt;         sDTF.score sDTF(%).score uDTF.score uDTF(%).score
-#&gt; CI_97.5 -0.5143194     -1.714398  1.2048795      4.016265
-#&gt; CI_2.5  -1.1857215     -3.952405  0.6458733      2.152911
+#&gt; CI_97.5 -0.4926439     -1.642146  1.2037261      4.012420
+#&gt; CI_2.5  -1.1898181     -3.966060  0.6667132      2.222377
 #&gt; 
 #&gt; $tests
 #&gt; P(sDTF.score = 0) 
-#&gt;      2.179277e-06 
+#&gt;      2.196509e-06 
 #&gt; </div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>1000</span>, plot<span class='op'>=</span><span class='st'>'func'</span><span class='op'>)</span>
 </div><div class='img'><img src='DTF-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>1000</span>, plot<span class='op'>=</span><span class='st'>'sDTF'</span><span class='op'>)</span> <span class='co'>#multiple DTF areas along Theta</span>
 </div><div class='img'><img src='DTF-7.png' alt='' width='700' height='433' /></div><div class='input'>
@@ -335,20 +335,20 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDTF</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             Theta       sDTF
-#&gt; score.1 -6.000000 0.01507837
-#&gt; score.2 -5.878788 0.01673983
-#&gt; score.3 -5.757576 0.01852505
-#&gt; score.4 -5.636364 0.02042860
-#&gt; score.5 -5.515152 0.02244047
-#&gt; score.6 -5.393939 0.02454506</div><div class='input'><span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, draws<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span>
+#&gt; score.1 -6.000000 0.01507921
+#&gt; score.2 -5.878788 0.01674080
+#&gt; score.3 -5.757576 0.01852616
+#&gt; score.4 -5.636364 0.02042988
+#&gt; score.5 -5.515152 0.02244193
+#&gt; score.6 -5.393939 0.02454674</div><div class='input'><span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DTF</span><span class='op'>(</span><span class='va'>mod3</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, draws<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDTF</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;             Theta       sDTF    CI_97.5     CI_2.5
-#&gt; score.1 -6.000000 0.01507837 0.06613657 -0.2428218
-#&gt; score.2 -5.878788 0.01673983 0.07380208 -0.2625681
-#&gt; score.3 -5.757576 0.01852505 0.08226730 -0.2833711
-#&gt; score.4 -5.636364 0.02042860 0.09159270 -0.3051988
-#&gt; score.5 -5.515152 0.02244047 0.10183710 -0.3280034
-#&gt; score.6 -5.393939 0.02454506 0.11305556 -0.3517209</div><div class='input'>
+</div><div class='output co'>#&gt;             Theta       sDTF   CI_97.5     CI_2.5
+#&gt; score.1 -6.000000 0.01507921 0.1340745 -0.1946602
+#&gt; score.2 -5.878788 0.01674080 0.1447991 -0.2083035
+#&gt; score.3 -5.757576 0.01852616 0.1561439 -0.2223684
+#&gt; score.4 -5.636364 0.02042988 0.1681125 -0.2367743
+#&gt; score.5 -5.515152 0.02244193 0.1807064 -0.2514242
+#&gt; score.6 -5.393939 0.02454674 0.1939258 -0.2662038</div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

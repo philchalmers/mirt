@@ -85,7 +85,7 @@ also available using the multipleGroup function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -966,7 +966,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 28 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1015,8 +1015,8 @@ IL: Scientific Software International.</p>
 #&gt; Factor correlations: 
 #&gt; 
 #&gt;    F1
-#&gt; F1  1</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+#&gt; F1  1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># \donttest{</span>
 <span class='op'>(</span><span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span>, SE <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'>#standard errors via the Oakes method</span>
@@ -1026,7 +1026,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 28 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1048,7 +1048,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-05 tolerance after 74 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: none 
 #&gt; Number of rectangular quadrature: 61
@@ -1106,7 +1106,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 28 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1129,10 +1129,10 @@ IL: Scientific Software International.</p>
 #&gt; Item.2  0.453     NA  0.033 -0.016 -0.037
 #&gt; Item.3  0.854  1.060     NA -0.012 -0.002
 #&gt; Item.4  2.572  0.267  0.153     NA  0.000
-#&gt; Item.5  2.389  1.384  0.003  0.000     NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span> <span class='co'>#test score function</span>
-</div><div class='img'><img src='mirt-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span> <span class='co'>#trace lines</span>
-</div><div class='img'><img src='mirt-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, type <span class='op'>=</span> <span class='st'>'info'</span><span class='op'>)</span> <span class='co'>#test information</span>
-</div><div class='img'><img src='mirt-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, MI<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span> <span class='co'>#expected total score with 95% confidence intervals</span>
+#&gt; Item.5  2.389  1.384  0.003  0.000     NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span> <span class='co'>#test score function</span>
+</div><div class='img'><img src='mirt-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span> <span class='co'>#trace lines</span>
+</div><div class='img'><img src='mirt-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, type <span class='op'>=</span> <span class='st'>'info'</span><span class='op'>)</span> <span class='co'>#test information</span>
+</div><div class='img'><img src='mirt-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, MI<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span> <span class='co'>#expected total score with 95% confidence intervals</span>
 </div><div class='img'><img src='mirt-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#estimated 3PL model for item 5 only</span>
 <span class='op'>(</span><span class='va'>mod1.3PL</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span>, itemtype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'2PL'</span>, <span class='st'>'2PL'</span>, <span class='st'>'2PL'</span>, <span class='st'>'2PL'</span>, <span class='st'>'3PL'</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
@@ -1143,7 +1143,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 43 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1217,15 +1217,15 @@ IL: Scientific Software International.</p>
 #&gt; stats 0.9781825</div><div class='input'>
 <span class='co'>#unidimensional ideal point model</span>
 <span class='va'>idealpt</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span>, itemtype <span class='op'>=</span> <span class='st'>'ideal'</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>idealpt</span>, type <span class='op'>=</span> <span class='st'>'trace'</span>, facet_items <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>idealpt</span>, type <span class='op'>=</span> <span class='st'>'trace'</span>, facet_items <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>idealpt</span>, type <span class='op'>=</span> <span class='st'>'trace'</span>, facet_items <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>idealpt</span>, type <span class='op'>=</span> <span class='st'>'trace'</span>, facet_items <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-8.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#two factors (exploratory)</span>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item.1
 #&gt;         a1   a2     d g u
-#&gt; par -2.006 0.87 2.647 0 1
+#&gt; par -2.007 0.87 2.648 0 1
 #&gt; 
 #&gt; $Item.2
 #&gt;         a1     a2     d g u
@@ -1233,7 +1233,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; $Item.3
 #&gt;         a1     a2     d g u
-#&gt; par -2.152 -1.836 2.482 0 1
+#&gt; par -2.153 -1.836 2.483 0 1
 #&gt; 
 #&gt; $Item.4
 #&gt;         a1     a2     d g u
@@ -1253,11 +1253,11 @@ IL: Scientific Software International.</p>
 #&gt; Rotated factor loadings: 
 #&gt; 
 #&gt;             F1      F2    h2
-#&gt; Item.1 -0.7942  0.0111 0.623
-#&gt; Item.2 -0.0803 -0.4631 0.255
+#&gt; Item.1 -0.7943  0.0111 0.623
+#&gt; Item.2 -0.0804 -0.4630 0.255
 #&gt; Item.3  0.0129 -0.8628 0.734
 #&gt; Item.4 -0.2794 -0.1925 0.165
-#&gt; Item.5 -0.2930 -0.1771 0.165
+#&gt; Item.5 -0.2930 -0.1772 0.165
 #&gt; 
 #&gt; Rotated SS loadings:  0.801 1.027 
 #&gt; 
@@ -1273,8 +1273,8 @@ IL: Scientific Software International.</p>
 #&gt; Item.2  0.001     NA  0.000  0.011 -0.018
 #&gt; Item.3  0.001  0.000     NA -0.002  0.006
 #&gt; Item.4  0.002  0.111  0.004     NA -0.001
-#&gt; Item.5  0.008  0.325  0.041  0.002     NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-9.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, rotate <span class='op'>=</span> <span class='st'>'oblimin'</span><span class='op'>)</span>
+#&gt; Item.5  0.008  0.325  0.041  0.001     NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-9.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, rotate <span class='op'>=</span> <span class='st'>'oblimin'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-10.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>mod1</span>, <span class='va'>mod2</span><span class='op'>)</span> <span class='co'>#compare the two models</span>
 </div><div class='output co'>#&gt; 
@@ -1282,15 +1282,15 @@ IL: Scientific Software International.</p>
 #&gt; Model 2: mirt(data = data, model = 2)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df     p
 #&gt; 1 5337.610 5337.833 5354.927 5356.263 5386.688 -2658.805    NaN NaN   NaN
-#&gt; 2 5335.039 5335.466 5359.283 5361.154 5403.748 -2653.520 10.571   4 0.032</div><div class='input'><span class='va'>scoresfull</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span> <span class='co'>#factor scores for each response pattern</span>
+#&gt; 2 5335.039 5335.466 5359.283 5361.153 5403.748 -2653.520 10.571   4 0.032</div><div class='input'><span class='va'>scoresfull</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span> <span class='co'>#factor scores for each response pattern</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>scoresfull</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;           F1       F2
-#&gt; [1,] 1.70043 1.711691
-#&gt; [2,] 1.70043 1.711691
-#&gt; [3,] 1.70043 1.711691
-#&gt; [4,] 1.70043 1.711691
-#&gt; [5,] 1.70043 1.711691
-#&gt; [6,] 1.70043 1.711691</div><div class='input'><span class='va'>scorestable</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod2</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'>#save factor score table</span>
+</div><div class='output co'>#&gt;            F1       F2
+#&gt; [1,] 1.700489 1.711744
+#&gt; [2,] 1.700489 1.711744
+#&gt; [3,] 1.700489 1.711744
+#&gt; [4,] 1.700489 1.711744
+#&gt; [5,] 1.700489 1.711744
+#&gt; [6,] 1.700489 1.711744</div><div class='input'><span class='va'>scorestable</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod2</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'>#save factor score table</span>
 </div><div class='output co'>#&gt; 
 #&gt; Method:  EAP
 #&gt; Rotate:  oblimin
@@ -1298,14 +1298,14 @@ IL: Scientific Software International.</p>
 #&gt; Empirical Reliability:
 #&gt; 
 #&gt;     F1     F2 
-#&gt; 0.2716 0.3564 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>scorestable</span><span class='op'>)</span>
+#&gt; 0.2717 0.3565 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>scorestable</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      Item.1 Item.2 Item.3 Item.4 Item.5       F1        F2     SE_F1     SE_F2
-#&gt; [1,]      0      0      0      0      0 1.700430 1.7116913 0.8234086 0.7706404
-#&gt; [2,]      0      0      0      0      1 1.442040 1.5314159 0.8292185 0.7692191
-#&gt; [3,]      0      0      0      1      0 1.448821 1.5245199 0.8290260 0.7691811
-#&gt; [4,]      0      0      0      1      1 1.186019 1.3430939 0.8376715 0.7712038
-#&gt; [5,]      0      0      1      0      0 1.369288 0.7082182 0.8345257 0.7963411
-#&gt; [6,]      0      0      1      0      1 1.099082 0.5103874 0.8455860 0.8101728</div><div class='input'>
+#&gt; [1,]      0      0      0      0      0 1.700489 1.7117442 0.8233675 0.7705973
+#&gt; [2,]      0      0      0      0      1 1.442162 1.5314978 0.8291769 0.7691720
+#&gt; [3,]      0      0      0      1      0 1.448947 1.5246145 0.8289843 0.7691340
+#&gt; [4,]      0      0      0      1      1 1.186209 1.3432197 0.8376304 0.7711533
+#&gt; [5,]      0      0      1      0      0 1.369423 0.7081262 0.8344842 0.7963088
+#&gt; [6,]      0      0      1      0      1 1.099281 0.5103192 0.8455456 0.8101448</div><div class='input'>
 <span class='co'>#confirmatory (as an example, model is not identified since you need 3 items per factor)</span>
 <span class='co'># Two ways to define a confirmatory model: with mirt.model, or with a string</span>
 
@@ -1348,7 +1348,7 @@ IL: Scientific Software International.</p>
 #&gt; Model 2: mirt(data = data, model = 2)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df   p
 #&gt; 1 5392.596 5392.819 5409.913 5411.249 5441.674 -2686.298    NaN NaN NaN
-#&gt; 2 5335.039 5335.466 5359.283 5361.154 5403.748 -2653.520 65.557   4   0</div><div class='input'><span class='co'>#check if identified by computing information matrix</span>
+#&gt; 2 5335.039 5335.466 5359.283 5361.153 5403.748 -2653.520 65.557   4   0</div><div class='input'><span class='co'>#check if identified by computing information matrix</span>
 <span class='op'>(</span><span class='va'>cmod</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cmodel</span>, SE <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Could not invert information matrix; model likely is not empirically identified.</span></div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -1356,7 +1356,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 2 factor(s).
 #&gt; Converged within 1e-04 tolerance after 125 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 31
@@ -1374,9 +1374,9 @@ IL: Scientific Software International.</p>
 <span class='co'>###########</span>
 <span class='co'>#data from the 'ltm' package in numeric format</span>
 <span class='va'>pmod1</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod1</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod1</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod1</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod1</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-13.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>pmod1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            F1    h2
 #&gt; Comfort 0.522 0.273
@@ -1439,7 +1439,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 15 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1481,7 +1481,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 15 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1559,7 +1559,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt;        F1     F2
 #&gt; F1  1.000 -0.511
-#&gt; F2 -0.511  1.000</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod2</span>, rotate <span class='op'>=</span> <span class='st'>'oblimin'</span><span class='op'>)</span>
+#&gt; F2 -0.511  1.000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>pmod2</span>, rotate <span class='op'>=</span> <span class='st'>'oblimin'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-14.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='itemplot.html'>itemplot</a></span><span class='op'>(</span><span class='va'>pmod2</span>, <span class='fl'>1</span>, rotate <span class='op'>=</span> <span class='st'>'oblimin'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-15.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>pmod1</span>, <span class='va'>pmod2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
@@ -1576,7 +1576,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 50 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1617,7 +1617,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 71 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -1664,24 +1664,24 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: nlminb 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
 #&gt; Latent density type: Gaussian 
 #&gt; 
-#&gt; Log-likelihood = -1624.053
+#&gt; Log-likelihood = -1624.054
 #&gt; Estimated parameters: 20 
-#&gt; AIC = 3288.107; AICc = 3290.371
-#&gt; BIC = 3367.532; SABIC = 3304.073
+#&gt; AIC = 3288.107; AICc = 3290.372
+#&gt; BIC = 3367.533; SABIC = 3304.073
 #&gt; G2 (235) = 243.93, p = 0.3309
 #&gt; RMSEA = 0.01, CFI = NaN, TLI = NaN</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>ggum</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
 #&gt;            a1     b1    t1    t2     t3
-#&gt; Comfort 1.488 -0.485 3.190 2.634 -0.167
-#&gt; Work    1.190  0.041 2.171 1.427 -0.720
-#&gt; Future  4.165 -0.042 2.167 1.346  0.261
-#&gt; Benefit 1.227 -0.475 2.776 1.497 -0.274
+#&gt; Comfort 1.489 -0.484 3.190 2.634 -0.167
+#&gt; Work    1.190  0.042 2.171 1.427 -0.720
+#&gt; Future  4.164 -0.041 2.167 1.346  0.261
+#&gt; Benefit 1.227 -0.475 2.775 1.497 -0.274
 #&gt; 
 #&gt; $means
 #&gt; F1 
@@ -1690,9 +1690,9 @@ IL: Scientific Software International.</p>
 #&gt; $cov
 #&gt;    F1
 #&gt; F1  1
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>ggum</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-17.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>ggum</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-18.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>ggum</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>ggum</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-17.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>ggum</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-18.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>ggum</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-19.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#monotonic polyomial models</span>
 <span class='op'>(</span><span class='va'>monopoly</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span>, <span class='st'>'monopoly'</span><span class='op'>)</span><span class='op'>)</span>
@@ -1701,25 +1701,25 @@ IL: Scientific Software International.</p>
 #&gt; mirt(data = Science, model = 1, itemtype = "monopoly")
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
-#&gt; Converged within 1e-04 tolerance after 53 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; Converged within 1e-04 tolerance after 47 EM iterations.
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
 #&gt; Latent density type: Gaussian 
 #&gt; 
-#&gt; Log-likelihood = -1601.169
+#&gt; Log-likelihood = -1601.175
 #&gt; Estimated parameters: 24 
-#&gt; AIC = 3250.337; AICc = 3253.607
-#&gt; BIC = 3345.647; SABIC = 3269.496
-#&gt; G2 (231) = 198.16, p = 0.9424
+#&gt; AIC = 3250.349; AICc = 3253.619
+#&gt; BIC = 3345.66; SABIC = 3269.509
+#&gt; G2 (231) = 198.17, p = 0.9424
 #&gt; RMSEA = 0, CFI = NaN, TLI = NaN</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>monopoly</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
 #&gt;          omega   xi1   xi2    xi3 alpha1   tau2
-#&gt; Comfort -1.401 2.893 2.217 -1.471 -0.911  0.691
-#&gt; Work    -0.422 1.377 0.697 -2.153 -0.505 -1.112
-#&gt; Future   0.842 5.057 2.279 -1.915  0.024 -8.479
-#&gt; Benefit -1.681 1.877 0.617 -1.388 -1.376  0.689
+#&gt; Comfort -1.437 2.916 2.218 -1.469 -0.937  0.739
+#&gt; Work    -0.411 1.378 0.698 -2.152 -0.498 -1.155
+#&gt; Future   0.832 4.975 2.256 -1.911  0.017 -8.475
+#&gt; Benefit -1.718 1.885 0.618 -1.388 -1.425  0.727
 #&gt; 
 #&gt; $means
 #&gt; F1 
@@ -1728,9 +1728,9 @@ IL: Scientific Software International.</p>
 #&gt; $cov
 #&gt;    F1
 #&gt; F1  1
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>monopoly</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-20.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>monopoly</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-21.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>monopoly</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>monopoly</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-20.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>monopoly</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-21.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>monopoly</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-22.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## example applying survey weights.</span>
 <span class='co'># weight the first half of the cases to be more representative of population</span>
@@ -1749,12 +1749,12 @@ IL: Scientific Software International.</p>
 <span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='extract.mirt.html'>extract.mirt</a></span><span class='op'>(</span><span class='va'>mod1</span>, <span class='st'>'time'</span><span class='op'>)</span> <span class='co'>#time elapsed for each estimation component</span>
 </div><div class='output co'>#&gt; TOTAL:   Data  Estep  Mstep     SE   Post 
-#&gt;   1.30   0.08   0.71   0.48   0.00   0.00 </div><div class='input'>
+#&gt;  0.339  0.052  0.088  0.191  0.000  0.001 </div><div class='input'>
 <span class='co'>#optionally use Newton-Raphson for (generally) faster convergence in the M-step's</span>
 <span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span>, optimizer <span class='op'>=</span> <span class='st'>'NR'</span><span class='op'>)</span>
 <span class='fu'><a href='extract.mirt.html'>extract.mirt</a></span><span class='op'>(</span><span class='va'>mod1</span>, <span class='st'>'time'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; TOTAL:   Data  Estep  Mstep     SE   Post 
-#&gt;   0.80   0.07   0.50   0.18   0.00   0.00 </div><div class='input'>
+#&gt;  0.174  0.045  0.053  0.067  0.000  0.001 </div><div class='input'>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>2</span>, optimizer <span class='op'>=</span> <span class='st'>'NR'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>EM cycles terminated after 500 iterations.</span></div><div class='input'><span class='co'>#difficulty converging with reduced quadpts, reduce TOL</span>
 <span class='va'>mod3</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>3</span>, TOL <span class='op'>=</span> <span class='fl'>.001</span>, optimizer <span class='op'>=</span> <span class='st'>'NR'</span><span class='op'>)</span>
@@ -2027,10 +2027,10 @@ IL: Scientific Software International.</p>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod0</span><span class='op'>)</span><span class='op'>$</span><span class='va'>Item.1</span>
 </div><div class='output co'>#&gt;            a1         d g u
 #&gt; par 0.8107167 -1.042366 0 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span><span class='op'>$</span><span class='va'>Item.1</span>
-</div><div class='output co'>#&gt;             a1 ak0       ak1      ak2      ak3 ak4 d0         d1        d2
-#&gt; par -0.8742715   0 0.5296048 1.117215 1.130719   4  0 -0.1912705 0.0195897
+</div><div class='output co'>#&gt;          a1 ak0       ak1      ak2      ak3 ak4 d0         d1         d2
+#&gt; par -0.8773   0 0.5285937 1.116549 1.129355   4  0 -0.1909842 0.01877757
 #&gt;             d3        d4
-#&gt; par -0.1251181 -5.630359</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>Item.1</span>
+#&gt; par -0.1258587 -5.652548</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>Item.1</span>
 </div><div class='output co'>#&gt;            a1        d g u ak0        ak1        ak2       ak3 d0        d1
 #&gt; par 0.8102548 -1.04233 0 1   0 -0.5653287 -0.5712706 -3.025613  0 0.2117761
 #&gt;             d2        d3
@@ -2044,13 +2044,13 @@ IL: Scientific Software International.</p>
 <span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>{</span>
     <span class='va'>info</span> <span class='op'>&lt;-</span> <span class='fu'><a href='iteminfo.html'>iteminfo</a></span><span class='op'>(</span><span class='fu'><a href='extract.item.html'>extract.item</a></span><span class='op'>(</span><span class='va'>mod0</span>,<span class='va'>i</span><span class='op'>)</span>, <span class='va'>Theta</span><span class='op'>)</span>
     <span class='va'>info2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='iteminfo.html'>iteminfo</a></span><span class='op'>(</span><span class='fu'><a href='extract.item.html'>extract.item</a></span><span class='op'>(</span><span class='va'>mod2</span>,<span class='va'>i</span><span class='op'>)</span>, <span class='va'>Theta</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>info2</span>, type <span class='op'>=</span> <span class='st'>'l'</span>, main <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>'Information for item'</span>, <span class='va'>i</span><span class='op'>)</span>, ylab <span class='op'>=</span> <span class='st'>'Information'</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>info2</span>, type <span class='op'>=</span> <span class='st'>'l'</span>, main <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>'Information for item'</span>, <span class='va'>i</span><span class='op'>)</span>, ylab <span class='op'>=</span> <span class='st'>'Information'</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>info</span>, col <span class='op'>=</span> <span class='st'>'red'</span><span class='op'>)</span>
 <span class='op'>}</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-29.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#test information</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='testinfo.html'>testinfo</a></span><span class='op'>(</span><span class='va'>mod2</span>, <span class='va'>Theta</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>'l'</span>, main <span class='op'>=</span> <span class='st'>'Test information'</span>, ylab <span class='op'>=</span> <span class='st'>'Information'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='testinfo.html'>testinfo</a></span><span class='op'>(</span><span class='va'>mod2</span>, <span class='va'>Theta</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>'l'</span>, main <span class='op'>=</span> <span class='st'>'Test information'</span>, ylab <span class='op'>=</span> <span class='st'>'Information'</span><span class='op'>)</span>
 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='fu'><a href='testinfo.html'>testinfo</a></span><span class='op'>(</span><span class='va'>mod0</span>, <span class='va'>Theta</span><span class='op'>)</span>, col <span class='op'>=</span> <span class='st'>'red'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-30.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>###########</span>
@@ -2064,17 +2064,17 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 0.001 tolerance after 73 MHRM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: NR1 
 #&gt; Latent density type: Gaussian 
 #&gt; Average MH acceptance ratio(s): 0.4 
 #&gt; 
-#&gt; Log-likelihood = -2658.873, SE = 0.018
+#&gt; Log-likelihood = -2658.365, SE = 0.018
 #&gt; Estimated parameters: 10 
-#&gt; AIC = 5337.746; AICc = 5337.969
-#&gt; BIC = 5386.824; SABIC = 5355.063
-#&gt; G2 (21) = 31.7, p = 0.0628
-#&gt; RMSEA = 0.023, CFI = NaN, TLI = NaN</div><div class='input'>
+#&gt; AIC = 5336.729; AICc = 5336.952
+#&gt; BIC = 5385.807; SABIC = 5354.046
+#&gt; G2 (21) = 30.67, p = 0.0793
+#&gt; RMSEA = 0.021, CFI = NaN, TLI = NaN</div><div class='input'>
 <span class='co'>#Confirmatory models</span>
 
 <span class='co'>#simulate data</span>
@@ -2117,69 +2117,69 @@ IL: Scientific Software International.</p>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item_1
 #&gt;        a1 a2      d g u
-#&gt; par 1.508  0 -0.995 0 1
+#&gt; par 1.419  0 -0.983 0 1
 #&gt; 
 #&gt; $Item_2
 #&gt;        a1 a2      d g u
-#&gt; par 0.352  0 -1.406 0 1
+#&gt; par 0.494  0 -1.556 0 1
 #&gt; 
 #&gt; $Item_3
-#&gt;        a1 a2     d g u
-#&gt; par 1.202  0 1.537 0 1
+#&gt;       a1 a2     d g u
+#&gt; par 1.11  0 1.537 0 1
 #&gt; 
 #&gt; $Item_4
-#&gt;        a1    a2     d g u
-#&gt; par 1.141 0.543 0.049 0 1
+#&gt;        a1    a2      d g u
+#&gt; par 1.259 0.473 -0.013 0 1
 #&gt; 
 #&gt; $Item_5
 #&gt;     a1    a2    d1    d2     d3
-#&gt; par  0 1.525 2.894 1.939 -0.539
+#&gt; par  0 1.494 2.953 2.007 -0.518
 #&gt; 
 #&gt; $Item_6
-#&gt;     a1    a2    d1    d2    d3
-#&gt; par  0 0.483 2.422 0.948 -0.95
+#&gt;     a1    a2    d1    d2     d3
+#&gt; par  0 0.409 2.436 1.026 -0.906
 #&gt; 
 #&gt; $Item_7
 #&gt;     a1    a2    d1     d2
-#&gt; par  0 1.076 1.999 -0.061
+#&gt; par  0 1.076 1.924 -0.099
 #&gt; 
 #&gt; $Item_8
 #&gt;     a1    a2     d g u
-#&gt; par  0 1.101 0.989 0 1
+#&gt; par  0 1.107 1.202 0 1
 #&gt; 
 #&gt; $GroupPars
 #&gt;     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#&gt; par      0      0      1  0.344      1
+#&gt; par      0      0      1   0.46      1
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           F1    F2     h2
-#&gt; Item_1 0.663 0.000 0.4399
-#&gt; Item_2 0.203 0.000 0.0411
-#&gt; Item_3 0.577 0.000 0.3328
-#&gt; Item_4 0.538 0.256 0.3552
-#&gt; Item_5 0.000 0.667 0.4454
-#&gt; Item_6 0.000 0.273 0.0746
-#&gt; Item_7 0.000 0.534 0.2857
-#&gt; Item_8 0.000 0.543 0.2952
+#&gt; Item_1 0.640 0.000 0.4102
+#&gt; Item_2 0.279 0.000 0.0776
+#&gt; Item_3 0.546 0.000 0.2986
+#&gt; Item_4 0.580 0.218 0.3844
+#&gt; Item_5 0.000 0.660 0.4353
+#&gt; Item_6 0.000 0.234 0.0546
+#&gt; Item_7 0.000 0.534 0.2856
+#&gt; Item_8 0.000 0.545 0.2971
 #&gt; 
-#&gt; SS loadings:  1.103 1.167 
-#&gt; Proportion Var:  0.138 0.146 
+#&gt; SS loadings:  1.123 1.12 
+#&gt; Proportion Var:  0.14 0.14 
 #&gt; 
 #&gt; Factor correlations: 
 #&gt; 
-#&gt;       F1    F2
-#&gt; F1 1.000 0.344
-#&gt; F2 0.344 1.000</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
+#&gt;      F1   F2
+#&gt; F1 1.00 0.46
+#&gt; F2 0.46 1.00</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; LD matrix (lower triangle) and standardized values:
 #&gt; 
 #&gt;        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#&gt; Item_1     NA  0.007 -0.006 -0.005  0.030 -0.018  0.031 -0.016
-#&gt; Item_2  0.104     NA  0.034 -0.011 -0.023 -0.065 -0.031  0.001
-#&gt; Item_3  0.071  2.317     NA  0.003 -0.050  0.041 -0.016 -0.013
-#&gt; Item_4  0.054  0.261  0.015     NA  0.057 -0.022  0.040 -0.019
-#&gt; Item_5  1.743  1.056  5.025  6.418     NA -0.031 -0.038  0.027
-#&gt; Item_6  0.678  8.336  3.422  0.937  5.902     NA -0.016  0.047
-#&gt; Item_7  1.940  1.865  0.487  3.138  5.790  1.051     NA -0.018
-#&gt; Item_8  0.498  0.004  0.326  0.756  1.431  4.414  0.620     NA</div><div class='input'>
+#&gt; Item_1     NA -0.015  0.002 -0.005  0.042 -0.053 -0.026  0.013
+#&gt; Item_2  0.477     NA -0.016  0.011  0.070 -0.028  0.013  0.009
+#&gt; Item_3  0.008  0.539     NA -0.003 -0.034  0.036  0.015 -0.007
+#&gt; Item_4  0.052  0.231  0.023     NA -0.055  0.052  0.048 -0.012
+#&gt; Item_5  3.510  9.916  2.274  6.015     NA -0.050 -0.029 -0.022
+#&gt; Item_6  5.705  1.535  2.578  5.439 15.052     NA -0.043  0.042
+#&gt; Item_7  1.380  0.318  0.440  4.698  3.414  7.440     NA  0.028
+#&gt; Item_8  0.339  0.148  0.091  0.294  0.939  3.598  1.588     NA</div><div class='input'>
 <span class='co'>#####</span>
 <span class='co'>#bifactor</span>
 <span class='va'>model.3</span> <span class='op'>&lt;-</span> <span class='st'>'
@@ -2191,52 +2191,52 @@ IL: Scientific Software International.</p>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Item_1
 #&gt;        a1    a2 a3      d g u
-#&gt; par 0.782 1.091  0 -0.943 0 1
+#&gt; par 0.789 1.108  0 -0.967 0 1
 #&gt; 
 #&gt; $Item_2
-#&gt;         a1    a2 a3      d g u
-#&gt; par -0.009 0.547  0 -1.456 0 1
+#&gt;        a1    a2 a3      d g u
+#&gt; par 0.433 0.218  0 -1.553 0 1
 #&gt; 
 #&gt; $Item_3
-#&gt;        a1    a2 a3    d g u
-#&gt; par 0.543 1.204  0 1.59 0 1
+#&gt;        a1    a2 a3     d g u
+#&gt; par 0.626 1.001  0 1.575 0 1
 #&gt; 
 #&gt; $Item_4
-#&gt;       a1    a2 a3     d g u
-#&gt; par 1.39 0.862  0 0.053 0 1
+#&gt;        a1    a2 a3      d g u
+#&gt; par 1.365 0.885  0 -0.011 0 1
 #&gt; 
 #&gt; $Item_5
 #&gt;        a1 a2    a3    d1    d2     d3
-#&gt; par 1.106  0 0.979 2.869 1.925 -0.514
+#&gt; par 1.162  0 1.226 3.145 2.146 -0.541
 #&gt; 
 #&gt; $Item_6
-#&gt;        a1 a2    a3    d1    d2    d3
-#&gt; par 0.279  0 0.436 2.442 0.963 -0.95
+#&gt;        a1 a2    a3    d1    d2     d3
+#&gt; par 0.361  0 0.183 2.438 1.028 -0.903
 #&gt; 
 #&gt; $Item_7
-#&gt;        a1 a2    a3    d1    d2
-#&gt; par 0.864  0 0.558 1.982 -0.05
+#&gt;        a1 a2    a3    d1     d2
+#&gt; par 0.908  0 0.496 1.911 -0.092
 #&gt; 
 #&gt; $Item_8
-#&gt;        a1 a2    a3   d g u
-#&gt; par 0.667  0 1.236 1.1 0 1
+#&gt;        a1 a2    a3     d g u
+#&gt; par 0.867  0 0.605 1.193 0 1
 #&gt; 
 #&gt; $GroupPars
 #&gt;     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
 #&gt; par      0      0      0      1      0      0      1      0      1
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;               G    F1    F2     h2
-#&gt; Item_1  0.36093 0.503 0.000 0.3834
-#&gt; Item_2 -0.00487 0.306 0.000 0.0937
-#&gt; Item_3  0.25185 0.559 0.000 0.3757
-#&gt; Item_4  0.58889 0.365 0.000 0.4801
-#&gt; Item_5  0.49078 0.000 0.434 0.4296
-#&gt; Item_6  0.15666 0.000 0.245 0.0847
-#&gt; Item_7  0.43451 0.000 0.281 0.2676
-#&gt; Item_8  0.30220 0.000 0.560 0.4050
+</div><div class='output co'>#&gt;            G    F1    F2     h2
+#&gt; Item_1 0.362 0.508 0.000 0.3898
+#&gt; Item_2 0.245 0.123 0.000 0.0751
+#&gt; Item_3 0.302 0.483 0.000 0.3248
+#&gt; Item_4 0.580 0.376 0.000 0.4775
+#&gt; Item_5 0.484 0.000 0.511 0.4962
+#&gt; Item_6 0.206 0.000 0.104 0.0534
+#&gt; Item_7 0.456 0.000 0.249 0.2700
+#&gt; Item_8 0.433 0.000 0.302 0.2784
 #&gt; 
-#&gt; SS loadings:  1.086 0.792 0.641 
-#&gt; Proportion Var:  0.136 0.099 0.08 
+#&gt; SS loadings:  1.291 0.649 0.426 
+#&gt; Proportion Var:  0.161 0.081 0.053 
 #&gt; 
 #&gt; Factor correlations: 
 #&gt; 
@@ -2247,20 +2247,20 @@ IL: Scientific Software International.</p>
 </div><div class='output co'>#&gt; LD matrix (lower triangle) and standardized values:
 #&gt; 
 #&gt;        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#&gt; Item_1     NA -0.003 -0.002 -0.004  0.016 -0.017  0.018 -0.008
-#&gt; Item_2  0.022     NA  0.010 -0.005  0.026 -0.055 -0.008  0.021
-#&gt; Item_3  0.005  0.194     NA -0.002 -0.049  0.045 -0.018  0.006
-#&gt; Item_4  0.040  0.045  0.012     NA -0.057  0.018 -0.038  0.015
-#&gt; Item_5  0.537  1.355  4.734  6.511     NA -0.032  0.039 -0.029
-#&gt; Item_6  0.566  6.094  3.986  0.638  6.047     NA -0.014  0.024
-#&gt; Item_7  0.676  0.130  0.632  2.865  6.118  0.831     NA -0.017
-#&gt; Item_8  0.122  0.917  0.083  0.449  1.641  1.141  0.546     NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>mod1</span>,<span class='va'>mod3</span><span class='op'>)</span>
+#&gt; Item_1     NA -0.001 -0.003  0.004  0.048 -0.057 -0.029  0.015
+#&gt; Item_2  0.003     NA -0.008  0.007  0.064 -0.035 -0.016 -0.009
+#&gt; Item_3  0.019  0.138     NA -0.006 -0.029  0.036  0.013 -0.005
+#&gt; Item_4  0.034  0.087  0.084     NA  0.051  0.050  0.044 -0.013
+#&gt; Item_5  4.569  8.226  1.731  5.294     NA -0.050  0.028 -0.020
+#&gt; Item_6  6.527  2.399  2.541  5.093 14.979     NA -0.043  0.045
+#&gt; Item_7  1.634  0.520  0.354  3.948  3.193  7.261     NA  0.031
+#&gt; Item_8  0.464  0.170  0.046  0.322  0.837  3.994  1.962     NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>mod1</span>,<span class='va'>mod3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Model 1: mirt(data = dataset, model = model.1, method = "MHRM")
 #&gt; Model 2: mirt(data = dataset, model = model.3, method = "MHRM")
-#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
-#&gt; 1 25036.80 25037.36 25092.55 25084.10 25165.62 -12495.40   NaN NaN   NaN
-#&gt; 2 25039.13 25040.02 25109.42 25098.77 25201.56 -12490.57 9.672   6 0.139</div><div class='input'>
+#&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik   X2  df     p
+#&gt; 1 24679.46 24680.02 24735.21 24726.76 24808.28 -12316.73  NaN NaN   NaN
+#&gt; 2 24689.08 24689.97 24759.37 24748.72 24851.51 -12315.54 2.38   6 0.882</div><div class='input'>
 <span class='co'>#####</span>
 <span class='co'>#polynomial/combinations</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SAT12</span><span class='op'>)</span>
@@ -2284,51 +2284,51 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
 #&gt; Latent density type: Gaussian 
 #&gt; 
-#&gt; Log-likelihood = -9424.247
+#&gt; Log-likelihood = -9424.24
 #&gt; Estimated parameters: 96 
-#&gt; AIC = 19040.49; AICc = 19077.52
-#&gt; BIC = 19462.6; SABIC = 19157.83</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod.quad</span><span class='op'>)</span>
+#&gt; AIC = 19040.48; AICc = 19077.51
+#&gt; BIC = 19462.59; SABIC = 19157.81</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>mod.quad</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;               F1 (F1*F1)     h2
-#&gt; Item.1   0.24744  0.3207 0.1641
-#&gt; Item.2   0.31748  0.6619 0.5389
-#&gt; Item.3   0.18940  0.4630 0.2503
-#&gt; Item.4   0.22581  0.2803 0.1296
-#&gt; Item.5   0.26945  0.4766 0.2998
-#&gt; Item.6   0.23076  0.4341 0.2417
-#&gt; Item.7  -0.23387  0.6834 0.5217
-#&gt; Item.8   0.07106  0.3230 0.1094
-#&gt; Item.9   0.07084  0.2449 0.0650
-#&gt; Item.10  0.12923  0.4484 0.2178
-#&gt; Item.11  0.00265  0.9832 0.9667
-#&gt; Item.12  0.13123  0.0666 0.0217
-#&gt; Item.13 -0.12322  0.6411 0.4262
-#&gt; Item.14  0.42204  0.5439 0.4739
-#&gt; Item.15 -0.26011  0.8072 0.7192
-#&gt; Item.16  0.15737  0.3584 0.1532
-#&gt; Item.17 -0.30764  0.8833 0.8749
-#&gt; Item.18  0.22519  0.6544 0.4789
-#&gt; Item.19  0.17227  0.4038 0.1927
-#&gt; Item.20  0.36986  0.7928 0.7654
-#&gt; Item.21 -0.36634  0.5737 0.4633
-#&gt; Item.22 -0.27491  0.9326 0.9454
-#&gt; Item.23  0.41410  0.2194 0.2196
-#&gt; Item.24 -0.13496  0.7634 0.6010
-#&gt; Item.25  0.60701  0.2558 0.4339
-#&gt; Item.26  0.35343  0.6295 0.5212
-#&gt; Item.27 -0.05371  0.9284 0.8648
-#&gt; Item.28  0.08990  0.5131 0.2713
-#&gt; Item.29  0.26577  0.3617 0.2014
-#&gt; Item.30  0.05520  0.1697 0.0318
-#&gt; Item.31  0.25592  0.9262 0.9233
-#&gt; Item.32  0.01313  0.1086 0.0120
+#&gt; Item.1   0.24639  0.3210 0.1638
+#&gt; Item.2   0.31551  0.6626 0.5386
+#&gt; Item.3   0.18783  0.4634 0.2500
+#&gt; Item.4   0.22489  0.2807 0.1293
+#&gt; Item.5   0.26772  0.4771 0.2993
+#&gt; Item.6   0.22930  0.4345 0.2414
+#&gt; Item.7  -0.23637  0.6830 0.5223
+#&gt; Item.8   0.07004  0.3232 0.1093
+#&gt; Item.9   0.06983  0.2450 0.0649
+#&gt; Item.10  0.12753  0.4487 0.2176
+#&gt; Item.11 -0.00382  0.9833 0.9668
+#&gt; Item.12  0.13103  0.0672 0.0217
+#&gt; Item.13 -0.12537  0.6408 0.4264
+#&gt; Item.14  0.42062  0.5447 0.4736
+#&gt; Item.15 -0.26307  0.8066 0.7198
+#&gt; Item.16  0.15642  0.3586 0.1531
+#&gt; Item.17 -0.31132  0.8823 0.8755
+#&gt; Item.18  0.22303  0.6549 0.4786
+#&gt; Item.19  0.17093  0.4041 0.1925
+#&gt; Item.20  0.36711  0.7939 0.7650
+#&gt; Item.21 -0.36793  0.5730 0.4637
+#&gt; Item.22 -0.27857  0.9316 0.9455
+#&gt; Item.23  0.41381  0.2199 0.2196
+#&gt; Item.24 -0.13666  0.7627 0.6004
+#&gt; Item.25  0.60613  0.2569 0.4334
+#&gt; Item.26  0.35150  0.6302 0.5208
+#&gt; Item.27 -0.05752  0.9283 0.8651
+#&gt; Item.28  0.08801  0.5133 0.2712
+#&gt; Item.29  0.26467  0.3621 0.2011
+#&gt; Item.30  0.05432  0.1697 0.0318
+#&gt; Item.31  0.25271  0.9270 0.9231
+#&gt; Item.32  0.01288  0.1086 0.0120
 #&gt; 
-#&gt; SS loadings:  2.114 10.986 
+#&gt; SS loadings:  2.108 10.989 
 #&gt; Proportion Var:  0.066 0.343 
 #&gt; 
 #&gt; Factor correlations: 
@@ -2341,7 +2341,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 2 factor(s).
 #&gt; Converged within 1e-04 tolerance after 22 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 31
@@ -2356,10 +2356,10 @@ IL: Scientific Software International.</p>
 #&gt; Model 2: mirt(data = data, model = model.quad)
 #&gt; </div><div class='output co'>#&gt;        AIC     AICc    SABIC       HQ      BIC    logLik      X2  df   p
 #&gt; 1 19383.74 19403.69 19471.74 19506.98 19700.32 -9619.871     NaN NaN NaN
-#&gt; 2 19040.49 19077.52 19157.83 19204.81 19462.60 -9424.247 391.247  24   0</div><div class='input'>
+#&gt; 2 19040.48 19077.51 19157.81 19204.80 19462.58 -9424.240 391.261  24   0</div><div class='input'>
 <span class='co'>#non-linear item and test plots</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod.quad</span><span class='op'>)</span>
-</div><div class='img'><img src='mirt-31.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod.combo</span>, type <span class='op'>=</span> <span class='st'>'SE'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod.quad</span><span class='op'>)</span>
+</div><div class='img'><img src='mirt-31.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod.combo</span>, type <span class='op'>=</span> <span class='st'>'SE'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-32.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='itemplot.html'>itemplot</a></span><span class='op'>(</span><span class='va'>mod.quad</span>, <span class='fl'>1</span>, type <span class='op'>=</span> <span class='st'>'score'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-33.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='itemplot.html'>itemplot</a></span><span class='op'>(</span><span class='va'>mod.combo</span>, <span class='fl'>2</span>, type <span class='op'>=</span> <span class='st'>'score'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-34.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='itemplot.html'>itemplot</a></span><span class='op'>(</span><span class='va'>mod.combo</span>, <span class='fl'>2</span>, type <span class='op'>=</span> <span class='st'>'infocontour'</span><span class='op'>)</span>
@@ -2377,15 +2377,15 @@ IL: Scientific Software International.</p>
 <span class='va'>datSkew</span> <span class='op'>&lt;-</span> <span class='fu'><a href='simdata.html'>simdata</a></span><span class='op'>(</span><span class='va'>a</span>, <span class='va'>d</span>, <span class='fl'>2000</span>, itemtype <span class='op'>=</span> <span class='st'>'2PL'</span>, Theta<span class='op'>=</span><span class='va'>ThetaSkew</span><span class='op'>)</span>
 
 <span class='va'>normal</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>datNormal</span>, <span class='fl'>1</span>, dentype <span class='op'>=</span> <span class='st'>"empiricalhist"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>normal</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>normal</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-36.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>histogram</span><span class='op'>(</span><span class='va'>ThetaNormal</span>, breaks<span class='op'>=</span><span class='fl'>30</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-37.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>bimodal</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>datBimodal</span>, <span class='fl'>1</span>, dentype <span class='op'>=</span> <span class='st'>"empiricalhist"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>bimodal</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>bimodal</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-38.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>histogram</span><span class='op'>(</span><span class='va'>ThetaBimodal</span>, breaks<span class='op'>=</span><span class='fl'>30</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-39.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>skew</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>datSkew</span>, <span class='fl'>1</span>, dentype <span class='op'>=</span> <span class='st'>"empiricalhist"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>skew</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>skew</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-40.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>histogram</span><span class='op'>(</span><span class='va'>ThetaSkew</span>, breaks<span class='op'>=</span><span class='fl'>30</span><span class='op'>)</span>
 </div><div class='img'><img src='mirt-41.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#####</span>
@@ -2432,7 +2432,7 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 34 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: solnp 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -2554,30 +2554,30 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original       bias    std. error
-#&gt; t1*  -0.4088935  0.017069427  0.10757337
-#&gt; t2*   0.4909602  0.021740115  0.02500831
-#&gt; t3*   0.3126453  0.023643904  0.05634432
-#&gt; t4*   1.9648152  0.019369702  0.13606931
-#&gt; t5*   1.7526095 -0.045546652  0.11423211
-#&gt; t6*  -0.2460954 -0.021914076  0.07868422
-#&gt; t7*  -1.0765375  0.047730109  0.07798853
-#&gt; t8*   0.5334069  0.069327878  0.06221752
-#&gt; t9*  -1.2316565  0.022817562  0.10240418
-#&gt; t10*  0.6028882  0.026492979  0.04916482
-#&gt; t11* -0.4035989 -0.023937546  0.07740528
-#&gt; t12*  1.2376720  0.016656847  0.09645309
-#&gt; t13*  1.0329278  0.015788897  0.14719616
-#&gt; t14*  1.5237230  0.038774966  0.08280950
-#&gt; t15* -0.5478477  0.000565795  0.03783074
-#&gt; t16*  2.0750234  0.077129919  0.09568097
-#&gt; t17* -0.6953782 -0.001652719  0.09420847
-#&gt; t18* -1.2000348 -0.024602419  0.06462918
-#&gt; t19*  0.1210597 -0.005146245  0.09276811
-#&gt; t20*  0.5227743  0.007555491  0.12633965
-#&gt; t21*  0.2154909 -0.017825956  0.02888707
-#&gt; t22*  0.5265503 -0.011531166  0.01713401
-#&gt; t23* -1.0357962  0.002602405  0.03127737</div><div class='input'>
+#&gt;        original        bias    std. error
+#&gt; t1*  -0.4088935  0.0170682073  0.10757209
+#&gt; t2*   0.4909630  0.0217407330  0.02500522
+#&gt; t3*   0.3126422  0.0236496011  0.05634312
+#&gt; t4*   1.9648322  0.0193659421  0.13606204
+#&gt; t5*   1.7526211 -0.0455520674  0.11423101
+#&gt; t6*  -0.2460967 -0.0219137511  0.07868434
+#&gt; t7*  -1.0765218  0.0477122607  0.07798492
+#&gt; t8*   0.5334115  0.0693270024  0.06221565
+#&gt; t9*  -1.2316515  0.0228112980  0.10239703
+#&gt; t10*  0.6028956  0.0264900614  0.04916922
+#&gt; t11* -0.4035988 -0.0239383377  0.07740224
+#&gt; t12*  1.2376800  0.0166537013  0.09645754
+#&gt; t13*  1.0329335  0.0157872957  0.14718882
+#&gt; t14*  1.5237334  0.0387684021  0.08281241
+#&gt; t15* -0.5478457  0.0005616874  0.03783416
+#&gt; t16*  2.0750930  0.0770826881  0.09570574
+#&gt; t17* -0.6953709 -0.0016625127  0.09420901
+#&gt; t18* -1.2000275 -0.0246110382  0.06462390
+#&gt; t19*  0.1210549 -0.0051398610  0.09276760
+#&gt; t20*  0.5227785  0.0075559929  0.12634653
+#&gt; t21*  0.2154905 -0.0178079178  0.02886265
+#&gt; t22*  0.5265560 -0.0115324844  0.01713000
+#&gt; t23* -1.0358089  0.0026048128  0.03126855</div><div class='input'>
 <span class='co'>#draw plausible values for secondary analyses</span>
 <span class='va'>pv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod1</span>, plausible.draws <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 <span class='va'>pvmods</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>pv</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>covdata</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>covdata</span><span class='op'>$</span><span class='va'>X1</span> <span class='op'>+</span> <span class='va'>covdata</span><span class='op'>$</span><span class='va'>X2</span><span class='op'>)</span>,
@@ -2592,19 +2592,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.39480 -0.32457  0.00024  0.29847  1.39298 
+#&gt; -1.55335 -0.31351  0.00153  0.31412  1.40121 
 #&gt; 
 #&gt; Coefficients:
 #&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)  0.01226    0.01472   0.833    0.405    
-#&gt; covdata$X1   0.52557    0.01479  35.544   &lt;2e-16 ***
-#&gt; covdata$X2  -1.04108    0.01503 -69.267   &lt;2e-16 ***
+#&gt; (Intercept)  0.01344    0.01459   0.921    0.357    
+#&gt; covdata$X1   0.53670    0.01466  36.618   &lt;2e-16 ***
+#&gt; covdata$X2  -1.03742    0.01490 -69.635   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4654 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8533,	Adjusted R-squared:  0.853 
-#&gt; F-statistic:  2901 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4613 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8559,	Adjusted R-squared:  0.8556 
+#&gt; F-statistic:  2960 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[2]]
@@ -2614,19 +2614,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.75498 -0.32025 -0.00183  0.30641  1.41850 
+#&gt; -1.40281 -0.28958  0.01383  0.29804  1.34118 
 #&gt; 
 #&gt; Coefficients:
-#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept) -0.005499   0.014696  -0.374    0.708    
-#&gt; covdata$X1   0.534418   0.014759  36.209   &lt;2e-16 ***
-#&gt; covdata$X2  -1.033074   0.015002 -68.862   &lt;2e-16 ***
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  0.01643    0.01436   1.145    0.253    
+#&gt; covdata$X1   0.54419    0.01442  37.747   &lt;2e-16 ***
+#&gt; covdata$X2  -1.02376    0.01465 -69.862   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4645 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8531,	Adjusted R-squared:  0.8528 
-#&gt; F-statistic:  2895 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4537 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.858,	Adjusted R-squared:  0.8578 
+#&gt; F-statistic:  3013 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[3]]
@@ -2636,19 +2636,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.60605 -0.31733  0.00547  0.32084  1.43265 
+#&gt; -1.49884 -0.31659  0.00939  0.32164  1.49575 
 #&gt; 
 #&gt; Coefficients:
 #&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept) -0.002597   0.014787  -0.176    0.861    
-#&gt; covdata$X1   0.521085   0.014850  35.089   &lt;2e-16 ***
-#&gt; covdata$X2  -1.045940   0.015095 -69.292   &lt;2e-16 ***
+#&gt; (Intercept)  0.004283   0.014618   0.293     0.77    
+#&gt; covdata$X1   0.521671   0.014681  35.534   &lt;2e-16 ***
+#&gt; covdata$X2  -1.010499   0.014922 -67.717   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4674 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8528,	Adjusted R-squared:  0.8525 
-#&gt; F-statistic:  2888 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.462 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8487,	Adjusted R-squared:  0.8484 
+#&gt; F-statistic:  2797 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[4]]
@@ -2658,19 +2658,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.35183 -0.32217  0.01341  0.31694  1.57379 
+#&gt; -1.58993 -0.30663  0.00431  0.31172  1.42833 
 #&gt; 
 #&gt; Coefficients:
 #&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept) -0.004346   0.014861  -0.292     0.77    
-#&gt; covdata$X1   0.519950   0.014924  34.839   &lt;2e-16 ***
-#&gt; covdata$X2  -1.045424   0.015170 -68.914   &lt;2e-16 ***
+#&gt; (Intercept)  0.005246   0.015083   0.348    0.728    
+#&gt; covdata$X1   0.543182   0.015147  35.860   &lt;2e-16 ***
+#&gt; covdata$X2  -1.014039   0.015397 -65.861   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4697 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8513,	Adjusted R-squared:  0.851 
-#&gt; F-statistic:  2855 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4767 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8435,	Adjusted R-squared:  0.8432 
+#&gt; F-statistic:  2687 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[5]]
@@ -2680,19 +2680,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.52725 -0.30846  0.00107  0.29372  1.30014 
+#&gt; -1.48723 -0.32594 -0.02549  0.31936  1.29974 
 #&gt; 
 #&gt; Coefficients:
 #&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)  0.01295    0.01478   0.877    0.381    
-#&gt; covdata$X1   0.52357    0.01484  35.274   &lt;2e-16 ***
-#&gt; covdata$X2  -1.02120    0.01509 -67.686   &lt;2e-16 ***
+#&gt; (Intercept)  0.00960    0.01464   0.656    0.512    
+#&gt; covdata$X1   0.53506    0.01470  36.403   &lt;2e-16 ***
+#&gt; covdata$X2  -1.02890    0.01494 -68.870   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4671 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8483,	Adjusted R-squared:  0.8479 
-#&gt; F-statistic:  2787 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4626 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8534,	Adjusted R-squared:  0.8531 
+#&gt; F-statistic:  2901 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[6]]
@@ -2702,19 +2702,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.99748 -0.31262 -0.02415  0.31777  1.30866 
+#&gt; -1.46701 -0.31462 -0.01786  0.32589  1.34387 
 #&gt; 
 #&gt; Coefficients:
-#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept) -0.01617    0.01482   -1.09    0.276    
-#&gt; covdata$X1   0.51786    0.01489   34.78   &lt;2e-16 ***
-#&gt; covdata$X2  -1.02109    0.01513  -67.47   &lt;2e-16 ***
+#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept) -0.001477   0.014987  -0.099    0.922    
+#&gt; covdata$X1   0.539769   0.015052  35.861   &lt;2e-16 ***
+#&gt; covdata$X2  -1.043863   0.015299 -68.229   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4686 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8469,	Adjusted R-squared:  0.8466 
-#&gt; F-statistic:  2757 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4737 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8507,	Adjusted R-squared:  0.8504 
+#&gt; F-statistic:  2841 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[7]]
@@ -2724,19 +2724,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.33819 -0.31665 -0.00481  0.30892  1.42523 
+#&gt; -1.64824 -0.34148  0.00462  0.33439  1.44220 
 #&gt; 
 #&gt; Coefficients:
-#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept) -0.01248    0.01492  -0.836    0.403    
-#&gt; covdata$X1   0.53818    0.01498  35.920   &lt;2e-16 ***
-#&gt; covdata$X2  -1.02727    0.01523 -67.453   &lt;2e-16 ***
+#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  0.001745   0.015077   0.116    0.908    
+#&gt; covdata$X1   0.518947   0.015142  34.272   &lt;2e-16 ***
+#&gt; covdata$X2  -1.037296   0.015391 -67.396   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4715 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8485,	Adjusted R-squared:  0.8482 
-#&gt; F-statistic:  2792 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4766 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8459,	Adjusted R-squared:  0.8456 
+#&gt; F-statistic:  2736 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[8]]
@@ -2746,19 +2746,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.53804 -0.29669 -0.00774  0.32205  1.45812 
+#&gt; -1.78225 -0.32736  0.00528  0.31398  1.43622 
 #&gt; 
 #&gt; Coefficients:
-#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept) -0.01610    0.01468  -1.097    0.273    
-#&gt; covdata$X1   0.53848    0.01474  36.533   &lt;2e-16 ***
-#&gt; covdata$X2  -1.03877    0.01498 -69.334   &lt;2e-16 ***
+#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  0.007118   0.014580   0.488    0.625    
+#&gt; covdata$X1   0.525745   0.014642  35.906   &lt;2e-16 ***
+#&gt; covdata$X2  -1.023258   0.014883 -68.753   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4639 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8549,	Adjusted R-squared:  0.8546 
-#&gt; F-statistic:  2937 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4608 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8523,	Adjusted R-squared:  0.852 
+#&gt; F-statistic:  2878 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[9]]
@@ -2768,19 +2768,19 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.63806 -0.29229 -0.01021  0.29821  1.54654 
+#&gt; -1.44868 -0.32360  0.00211  0.32589  1.39129 
 #&gt; 
 #&gt; Coefficients:
 #&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)  0.009776   0.014691   0.665    0.506    
-#&gt; covdata$X1   0.537428   0.014754  36.426   &lt;2e-16 ***
-#&gt; covdata$X2  -1.045220   0.014997 -69.696   &lt;2e-16 ***
+#&gt; (Intercept)  0.001826   0.015177    0.12    0.904    
+#&gt; covdata$X1   0.534700   0.015242   35.08   &lt;2e-16 ***
+#&gt; covdata$X2  -1.030107   0.015492  -66.49   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4643 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8558,	Adjusted R-squared:  0.8555 
-#&gt; F-statistic:  2958 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.4797 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8443,	Adjusted R-squared:  0.844 
+#&gt; F-statistic:  2702 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; 
 #&gt; [[10]]
@@ -2790,39 +2790,39 @@ IL: Scientific Software International.</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;      Min       1Q   Median       3Q      Max 
-#&gt; -1.54340 -0.30290  0.02149  0.31246  1.36898 
+#&gt; -1.83663 -0.30430  0.00499  0.31339  1.49169 
 #&gt; 
 #&gt; Coefficients:
-#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)  0.006031   0.014897   0.405    0.686    
-#&gt; covdata$X1   0.506480   0.014961  33.853   &lt;2e-16 ***
-#&gt; covdata$X2  -1.039415   0.015207 -68.351   &lt;2e-16 ***
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept) -0.01226    0.01481  -0.828    0.408    
+#&gt; covdata$X1   0.52046    0.01487  35.001   &lt;2e-16 ***
+#&gt; covdata$X2  -1.04819    0.01511 -69.351   &lt;2e-16 ***
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 0.4709 on 997 degrees of freedom
-#&gt; Multiple R-squared:  0.8483,	Adjusted R-squared:  0.848 
-#&gt; F-statistic:  2787 on 2 and 997 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 0.468 on 997 degrees of freedom
+#&gt; Multiple R-squared:  0.8528,	Adjusted R-squared:  0.8526 
+#&gt; F-statistic:  2889 on 2 and 997 DF,  p-value: &lt; 2.2e-16
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'># compute Rubin's multiple imputation average</span>
 <span class='va'>par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>so</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>coefficients</span><span class='op'>[</span>, <span class='st'>'Estimate'</span><span class='op'>]</span><span class='op'>)</span>
 <span class='va'>SEpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>so</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>coefficients</span><span class='op'>[</span>, <span class='st'>'Std. Error'</span><span class='op'>]</span><span class='op'>)</span>
 <span class='fu'><a href='averageMI.html'>averageMI</a></span><span class='op'>(</span><span class='va'>par</span>, <span class='va'>SEpar</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                par SEpar       t     df     p
-#&gt; (Intercept) -0.002 0.019  -0.085 58.394 0.233
-#&gt; covdata$X1   0.526 0.019  28.335 69.100 0.000
-#&gt; covdata$X2  -1.036 0.018 -56.940 92.673 0.000</div><div class='input'>
+</div><div class='output co'>#&gt;                par SEpar       t      df     p
+#&gt; (Intercept)  0.005 0.017   0.270 147.603 0.197
+#&gt; covdata$X1   0.532 0.018  29.686  91.971 0.000
+#&gt; covdata$X2  -1.030 0.020 -51.929  51.015 0.000</div><div class='input'>
 <span class='co'>############</span>
 <span class='co'># Example using Gauss-Hermite quadrature with custom input functions</span>
 
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/awblocker/fastGHQuad'>fastGHQuad</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: Rcpp</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SAT12</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>fastGHQuad</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in library(fastGHQuad): there is no package called ‘fastGHQuad’</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SAT12</span><span class='op'>)</span>
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='key2binary.html'>key2binary</a></span><span class='op'>(</span><span class='va'>SAT12</span>,
                    key <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>4</span>,<span class='fl'>5</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>1</span>,<span class='fl'>4</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>GH</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/fastGHQuad/man/gaussHermiteData.html'>gaussHermiteData</a></span><span class='op'>(</span><span class='fl'>50</span><span class='op'>)</span>
-<span class='va'>Theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>GH</span><span class='op'>$</span><span class='va'>x</span><span class='op'>)</span>
-
+<span class='va'>GH</span> <span class='op'>&lt;-</span> <span class='fu'>gaussHermiteData</span><span class='op'>(</span><span class='fl'>50</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in gaussHermiteData(50): could not find function "gaussHermiteData"</span></div><div class='input'><span class='va'>Theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>GH</span><span class='op'>$</span><span class='va'>x</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in matrix(GH$x): object 'GH' not found</span></div><div class='input'>
 <span class='co'># This prior works for uni- and multi-dimensional models</span>
 <span class='va'>prior</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>Etable</span><span class='op'>)</span><span class='op'>{</span>
     <span class='va'>P</span> <span class='op'>&lt;-</span> <span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='va'>GH</span><span class='op'>$</span><span class='va'>w</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>pi</span><span class='op'>)</span>
@@ -2835,107 +2835,20 @@ IL: Scientific Software International.</p>
 
 <span class='va'>GHmod1</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span>, optimizer <span class='op'>=</span> <span class='st'>'NR'</span>,
               technical <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>customTheta <span class='op'>=</span> <span class='va'>Theta</span>, customPriorFun <span class='op'>=</span> <span class='va'>prior</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>GHmod1</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $items
-#&gt;            a1      d g u
-#&gt; Item.1  1.147 -1.042 0 1
-#&gt; Item.2  2.114  0.442 0 1
-#&gt; Item.3  1.523 -1.120 0 1
-#&gt; Item.4  0.815 -0.517 0 1
-#&gt; Item.5  1.392  0.610 0 1
-#&gt; Item.6  1.627 -2.051 0 1
-#&gt; Item.7  1.418  1.389 0 1
-#&gt; Item.8  0.967 -1.501 0 1
-#&gt; Item.9  0.753  2.143 0 1
-#&gt; Item.10 1.410 -0.355 0 1
-#&gt; Item.11 2.494  5.283 0 1
-#&gt; Item.12 0.223 -0.331 0 1
-#&gt; Item.13 1.569  0.853 0 1
-#&gt; Item.14 1.457  1.184 0 1
-#&gt; Item.15 1.792  1.917 0 1
-#&gt; Item.16 1.016 -0.379 0 1
-#&gt; Item.17 2.211  4.176 0 1
-#&gt; Item.18 2.420 -0.849 0 1
-#&gt; Item.19 1.195  0.238 0 1
-#&gt; Item.20 2.182  2.631 0 1
-#&gt; Item.21 0.919  2.559 0 1
-#&gt; Item.22 2.183  3.481 0 1
-#&gt; Item.23 0.900 -0.843 0 1
-#&gt; Item.24 1.681  1.266 0 1
-#&gt; Item.25 1.082 -0.552 0 1
-#&gt; Item.26 2.158 -0.170 0 1
-#&gt; Item.27 2.743  2.813 0 1
-#&gt; Item.28 1.492  0.183 0 1
-#&gt; Item.29 1.176 -0.738 0 1
-#&gt; Item.30 0.535 -0.231 0 1
-#&gt; Item.31 3.307  2.792 0 1
-#&gt; Item.32 0.163 -1.638 0 1
-#&gt; 
-#&gt; $means
-#&gt; F1 
-#&gt;  0 
-#&gt; 
-#&gt; $cov
-#&gt;    F1
-#&gt; F1  1
-#&gt; </div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in list$customPriorFun(gTheta[[g]], Etable = rlist[[g]][[1L]]): object 'GH' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>GHmod1</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in coef(GHmod1, simplify = TRUE): object 'GHmod1' not found</span></div><div class='input'>
 <span class='va'>Theta2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>Theta</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>GHmod2</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>2</span>, optimizer <span class='op'>=</span> <span class='st'>'NR'</span>, TOL <span class='op'>=</span> <span class='fl'>.0002</span>,
               technical <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>customTheta <span class='op'>=</span> <span class='va'>Theta2</span>, customPriorFun <span class='op'>=</span> <span class='va'>prior</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>GHmod2</span>, suppress<span class='op'>=</span><span class='fl'>.2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; Rotation:  oblimin 
-#&gt; 
-#&gt; Rotated factor loadings: 
-#&gt; 
-#&gt;             F1     F2      h2
-#&gt; Item.1      NA -0.585 0.34969
-#&gt; Item.2  -0.328 -0.543 0.60987
-#&gt; Item.3  -0.366 -0.387 0.44761
-#&gt; Item.4      NA -0.583 0.26862
-#&gt; Item.5  -0.235 -0.472 0.40648
-#&gt; Item.6      NA -0.619 0.49035
-#&gt; Item.7  -0.865     NA 0.60276
-#&gt; Item.8      NA -0.390 0.24233
-#&gt; Item.9  -0.627     NA 0.29129
-#&gt; Item.10 -0.533     NA 0.44344
-#&gt; Item.11 -0.702     NA 0.68751
-#&gt; Item.12  0.233 -0.355 0.08425
-#&gt; Item.13 -0.602     NA 0.49900
-#&gt; Item.14     NA -0.719 0.51672
-#&gt; Item.15 -0.800     NA 0.62384
-#&gt; Item.16     NA -0.554 0.30530
-#&gt; Item.17 -0.589 -0.290 0.62909
-#&gt; Item.18 -0.459 -0.462 0.67035
-#&gt; Item.19 -0.229 -0.413 0.33189
-#&gt; Item.20 -0.361 -0.526 0.62724
-#&gt; Item.21 -0.690     NA 0.35960
-#&gt; Item.22 -0.572 -0.301 0.61706
-#&gt; Item.23  0.216 -0.691 0.35086
-#&gt; Item.24 -0.614     NA 0.52605
-#&gt; Item.25     NA -0.721 0.40698
-#&gt; Item.26     NA -0.691 0.64288
-#&gt; Item.27 -0.644 -0.299 0.72800
-#&gt; Item.28 -0.300 -0.439 0.43595
-#&gt; Item.29     NA -0.632 0.37855
-#&gt; Item.30 -0.267     NA 0.10193
-#&gt; Item.31 -0.391 -0.608 0.79738
-#&gt; Item.32     NA     NA 0.00983
-#&gt; 
-#&gt; Rotated SS loadings:  6.085 6.436 
-#&gt; 
-#&gt; Factor correlations: 
-#&gt; 
-#&gt;       F1    F2
-#&gt; F1 1.000 0.581
-#&gt; F2 0.581 1.000</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in list$customPriorFun(gTheta[[g]], Etable = rlist[[g]][[1L]]): object 'GH' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>GHmod2</span>, suppress<span class='op'>=</span><span class='fl'>.2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in summary(GHmod2, suppress = 0.2): object 'GHmod2' not found</span></div><div class='input'>
 <span class='co'>############</span>
 <span class='co'># Davidian curve example</span>
 
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='key2binary.html'>key2binary</a></span><span class='op'>(</span><span class='va'>SAT12</span>,
                    key <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>4</span>,<span class='fl'>5</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>4</span>,<span class='fl'>1</span>,<span class='fl'>4</span>,<span class='fl'>3</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>5</span>,<span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>dav</span> <span class='op'>&lt;-</span> <span class='fu'>mirt</span><span class='op'>(</span><span class='va'>dat</span>, <span class='fl'>1</span>, dentype <span class='op'>=</span> <span class='st'>'Davidian-4'</span><span class='op'>)</span> <span class='co'># use four smoothing parameters</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>dav</span>, type <span class='op'>=</span> <span class='st'>'Davidian'</span><span class='op'>)</span> <span class='co'># shape of latent trait distribution</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>dav</span>, type <span class='op'>=</span> <span class='st'>'Davidian'</span><span class='op'>)</span> <span class='co'># shape of latent trait distribution</span>
 </div><div class='img'><img src='mirt-42.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>dav</span>, simplify<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $items
 #&gt;            a1      d g u
@@ -2987,12 +2900,12 @@ IL: Scientific Software International.</p>
 <span class='va'>fs2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>dav</span>, use_dentype_estimate<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># use Davidian estimated prior shape</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>fs</span>, <span class='va'>fs2</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;               F1           F1
-#&gt; [1,]  2.66817176  3.601346713
-#&gt; [2,]  0.14641081  0.070234387
-#&gt; [3,]  0.06785452  0.003735114
-#&gt; [4,] -0.41587164 -0.426827339
-#&gt; [5,]  0.67017369  0.559205567
-#&gt; [6,]  0.45470259  0.353387126</div><div class='input'>
+#&gt; [1,]  2.66817175  3.601346705
+#&gt; [2,]  0.14641080  0.070234382
+#&gt; [3,]  0.06785452  0.003735108
+#&gt; [4,] -0.41587164 -0.426827343
+#&gt; [5,]  0.67017368  0.559205557
+#&gt; [6,]  0.45470258  0.353387119</div><div class='input'>
 <span class='fu'><a href='itemfit.html'>itemfit</a></span><span class='op'>(</span><span class='va'>dav</span><span class='op'>)</span> <span class='co'># assume normal prior</span>
 </div><div class='output co'>#&gt; <span class='error'>Error: Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.</span>
 #&gt; <span class='error'>             Pass na.rm=TRUE to remove missing data row-wise</span></div><div class='input'><span class='fu'><a href='itemfit.html'>itemfit</a></span><span class='op'>(</span><span class='va'>dav</span>, use_dentype_estimate<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># use Davidian estimated prior shape</span>

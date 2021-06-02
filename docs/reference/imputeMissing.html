@@ -75,7 +75,7 @@ list of complete datasets is returned instead." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -181,7 +181,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 28 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -203,16 +203,16 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 25 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
 #&gt; Latent density type: Gaussian 
 #&gt; 
-#&gt; Log-likelihood = -2643.005
+#&gt; Log-likelihood = -2647.45
 #&gt; Estimated parameters: 10 
-#&gt; AIC = 5306.009; AICc = 5306.232
-#&gt; BIC = 5355.087; SABIC = 5323.326</div><div class='input'><span class='va'>scores</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod</span>, method <span class='op'>=</span> <span class='st'>'MAP'</span><span class='op'>)</span>
+#&gt; AIC = 5314.899; AICc = 5315.122
+#&gt; BIC = 5363.977; SABIC = 5332.216</div><div class='input'><span class='va'>scores</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fscores.html'>fscores</a></span><span class='op'>(</span><span class='va'>mod</span>, method <span class='op'>=</span> <span class='st'>'MAP'</span><span class='op'>)</span>
 
 <span class='co'>#re-estimate imputed dataset (good to do this multiple times and average over)</span>
 <span class='va'>fulldata</span> <span class='op'>&lt;-</span> <span class='fu'>imputeMissing</span><span class='op'>(</span><span class='va'>mod</span>, <span class='va'>scores</span><span class='op'>)</span>
@@ -222,19 +222,19 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; mirt(data = fulldata, model = 1)
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
-#&gt; Converged within 1e-04 tolerance after 37 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; Converged within 1e-04 tolerance after 25 EM iterations.
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
 #&gt; Latent density type: Gaussian 
 #&gt; 
-#&gt; Log-likelihood = -2650.818
+#&gt; Log-likelihood = -2660.804
 #&gt; Estimated parameters: 10 
-#&gt; AIC = 5321.636; AICc = 5321.858
-#&gt; BIC = 5370.714; SABIC = 5338.953
-#&gt; G2 (21) = 34.03, p = 0.036
-#&gt; RMSEA = 0.025, CFI = NaN, TLI = NaN</div><div class='input'>
+#&gt; AIC = 5341.608; AICc = 5341.83
+#&gt; BIC = 5390.686; SABIC = 5358.925
+#&gt; G2 (21) = 32.32, p = 0.0544
+#&gt; RMSEA = 0.023, CFI = NaN, TLI = NaN</div><div class='input'>
 <span class='co'>#with multipleGroup</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>group</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'group1'</span>, <span class='st'>'group2'</span><span class='op'>)</span>, <span class='fl'>1000</span>, <span class='cn'>TRUE</span><span class='op'>)</span>

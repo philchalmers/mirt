@@ -83,7 +83,7 @@ for latent regression predictor effects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -434,16 +434,16 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class='co'>#calculate MAP for a given response vector</span>
 <span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, method<span class='op'>=</span><span class='st'>'MAP'</span>, response.pattern <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      Comfort Work Future Benefit         F1     SE_F1
-#&gt; [1,]       1    2      3       4 -0.3704194 0.6054171</div><div class='input'><span class='co'>#or matrix</span>
+#&gt; [1,]       1    2      3       4 -0.3704194 0.6054169</div><div class='input'><span class='co'>#or matrix</span>
 <span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, method<span class='op'>=</span><span class='st'>'MAP'</span>, response.pattern <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      Comfort Work Future Benefit         F1     SE_F1
-#&gt; [1,]       1    2      3       4 -0.3704194 0.6054171
+#&gt; [1,]       1    2      3       4 -0.3704194 0.6054169
 #&gt; [2,]       2    2      1       3 -1.6937559 0.5773972</div><div class='input'>
 <span class='co'># return only the scores and their SEs</span>
 <span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, method<span class='op'>=</span><span class='st'>'MAP'</span>, response.pattern <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span><span class='op'>)</span>,
   append_response.pattern<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;              F1     SE_F1
-#&gt; [1,] -0.3704194 0.6054171</div><div class='input'>
+#&gt; [1,] -0.3704194 0.6054169</div><div class='input'>
 <span class='co'>#use custom latent variable properties (diffuse prior for MAP is very close to ML)</span>
 <span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, method<span class='op'>=</span><span class='st'>'MAP'</span>, cov <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
@@ -453,96 +453,96 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 #&gt; 
 #&gt;     F1 
 #&gt; 0.4207 </div><div class='output co'>#&gt;       Comfort Work Future Benefit          F1      SE_F1
-#&gt;  [1,]       1    1      1       1 -9.33951652  9.6355958
-#&gt;  [2,]       1    3      2       1 -2.10399819  0.6892497
-#&gt;  [3,]       1    4      2       3 -1.15079772  0.7050201
-#&gt;  [4,]       1    4      3       1 -0.78096400  0.8072693
-#&gt;  [5,]       2    1      1       1 -4.39410045  1.1794940
-#&gt;  [6,]       2    1      2       4 -1.86282369  0.6679188
+#&gt;  [1,]       1    1      1       1 -9.33951652  9.6355561
+#&gt;  [2,]       1    3      2       1 -2.10399820  0.6892497
+#&gt;  [3,]       1    4      2       3 -1.15079772  0.7050200
+#&gt;  [4,]       1    4      3       1 -0.78096400  0.8072694
+#&gt;  [5,]       2    1      1       1 -4.39410045  1.1794941
+#&gt;  [6,]       2    1      2       4 -1.86282369  0.6679187
 #&gt;  [7,]       2    2      1       1 -3.24765372  0.8121324
-#&gt;  [8,]       2    2      2       2 -1.91138883  0.5875057
-#&gt;  [9,]       2    2      2       3 -1.60556797  0.6084688
+#&gt;  [8,]       2    2      2       2 -1.91138883  0.5875056
+#&gt;  [9,]       2    2      2       3 -1.60556797  0.6084689
 #&gt; [10,]       2    2      3       1 -1.46798831  0.7136838
-#&gt; [11,]       2    2      3       2 -1.16829291  0.6346995
-#&gt; [12,]       2    2      3       3 -0.79657516  0.6390081
-#&gt; [13,]       2    2      4       3  0.24025765  0.7886564
-#&gt; [14,]       2    3      1       3 -2.14238696  0.7017129
+#&gt; [11,]       2    2      3       2 -1.16829291  0.6346994
+#&gt; [12,]       2    2      3       3 -0.79657516  0.6390082
+#&gt; [13,]       2    2      4       3  0.24025764  0.7886564
+#&gt; [14,]       2    3      1       3 -2.14238696  0.7017130
 #&gt; [15,]       2    3      2       2 -1.60857831  0.6258231
 #&gt; [16,]       2    3      2       3 -1.25398200  0.6302088
-#&gt; [17,]       2    3      3       2 -0.75571789  0.6558529
+#&gt; [17,]       2    3      3       2 -0.75571789  0.6558530
 #&gt; [18,]       2    3      3       3 -0.33161734  0.6981086
-#&gt; [19,]       2    3      3       4  0.08303458  0.7613507
-#&gt; [20,]       2    3      4       1  0.18902646  0.8780413
-#&gt; [21,]       2    3      4       3  0.76269417  0.6806578
+#&gt; [19,]       2    3      3       4  0.08303458  0.7613508
+#&gt; [20,]       2    3      4       1  0.18902647  0.8780412
+#&gt; [21,]       2    3      4       3  0.76269417  0.6806576
 #&gt; [22,]       2    4      2       1 -1.82212924  0.6941785
-#&gt; [23,]       2    4      4       3  1.30730680  0.7534849
-#&gt; [24,]       2    4      4       4  2.09457766  1.0392358
-#&gt; [25,]       3    1      1       1 -3.53814277  1.0014202
+#&gt; [23,]       2    4      4       3  1.30730680  0.7534851
+#&gt; [24,]       2    4      4       4  2.09457768  1.0392353
+#&gt; [25,]       3    1      1       1 -3.53814277  1.0014201
 #&gt; [26,]       3    1      1       3 -2.50975652  0.6971827
 #&gt; [27,]       3    1      2       2 -1.92551599  0.6147422
 #&gt; [28,]       3    1      2       3 -1.58688138  0.6433970
 #&gt; [29,]       3    1      3       2 -1.08753431  0.6741187
 #&gt; [30,]       3    1      3       3 -0.65801199  0.6955365
-#&gt; [31,]       3    1      3       4 -0.28080385  0.8073109
-#&gt; [32,]       3    1      4       3  0.54246941  0.7338745
-#&gt; [33,]       3    1      4       4  1.03787099  0.7358265
+#&gt; [31,]       3    1      3       4 -0.28080385  0.8073110
+#&gt; [32,]       3    1      4       3  0.54246942  0.7338744
+#&gt; [33,]       3    1      4       4  1.03787099  0.7358268
 #&gt; [34,]       3    2      1       2 -2.34808003  0.6246704
-#&gt; [35,]       3    2      1       4 -1.91303987  0.7094594
+#&gt; [35,]       3    2      1       4 -1.91303987  0.7094593
 #&gt; [36,]       3    2      2       1 -1.86127492  0.6158454
 #&gt; [37,]       3    2      2       2 -1.57674751  0.5939631
 #&gt; [38,]       3    2      2       3 -1.25489834  0.6022571
 #&gt; [39,]       3    2      3       1 -1.02517060  0.6627051
-#&gt; [40,]       3    2      3       2 -0.79779682  0.6290336
+#&gt; [40,]       3    2      3       2 -0.79779682  0.6290335
 #&gt; [41,]       3    2      3       3 -0.40891429  0.6676663
 #&gt; [42,]       3    2      3       4 -0.03738214  0.7437682
-#&gt; [43,]       3    2      4       1  0.01467552  0.9004289
-#&gt; [44,]       3    2      4       2  0.20538260  0.7886295
+#&gt; [43,]       3    2      4       1  0.01467552  0.9004291
+#&gt; [44,]       3    2      4       2  0.20538260  0.7886293
 #&gt; [45,]       3    2      4       3  0.64303231  0.6840798
 #&gt; [46,]       3    2      4       4  1.10168772  0.7183789
 #&gt; [47,]       3    3      1       3 -1.62932695  0.7802080
-#&gt; [48,]       3    3      2       1 -1.51761901  0.6591229
-#&gt; [49,]       3    3      2       2 -1.23910216  0.6168898
+#&gt; [48,]       3    3      2       1 -1.51761901  0.6591228
+#&gt; [49,]       3    3      2       2 -1.23910216  0.6168897
 #&gt; [50,]       3    3      2       3 -0.88245744  0.6300829
 #&gt; [51,]       3    3      2       4 -0.62079890  0.7080556
 #&gt; [52,]       3    3      3       1 -0.54910678  0.7107281
-#&gt; [53,]       3    3      3       2 -0.34739935  0.6874562
+#&gt; [53,]       3    3      3       2 -0.34739935  0.6874561
 #&gt; [54,]       3    3      3       3  0.08637281  0.6868696
-#&gt; [55,]       3    3      3       4  0.49018549  0.6761530
-#&gt; [56,]       3    3      4       2  0.73237004  0.6812076
+#&gt; [55,]       3    3      3       4  0.49018549  0.6761531
+#&gt; [56,]       3    3      4       2  0.73237004  0.6812077
 #&gt; [57,]       3    3      4       3  1.04777614  0.6499124
-#&gt; [58,]       3    3      4       4  1.52472344  0.7455911
-#&gt; [59,]       3    4      1       3 -1.38148971  0.9427080
-#&gt; [60,]       3    4      2       3 -0.60836892  0.7256021
-#&gt; [61,]       3    4      3       2  0.09927069  0.7675853
+#&gt; [58,]       3    3      4       4  1.52472344  0.7455910
+#&gt; [59,]       3    4      1       3 -1.38148971  0.9427079
+#&gt; [60,]       3    4      2       3 -0.60836892  0.7256019
+#&gt; [61,]       3    4      3       2  0.09927069  0.7675852
 #&gt; [62,]       3    4      3       3  0.53785991  0.6774054
-#&gt; [63,]       3    4      3       4  0.96115397  0.6745447
+#&gt; [63,]       3    4      3       4  0.96115397  0.6745446
 #&gt; [64,]       3    4      4       1  1.21807122  0.7584567
 #&gt; [65,]       3    4      4       2  1.27195710  0.7490778
 #&gt; [66,]       3    4      4       3  1.59934323  0.7662279
-#&gt; [67,]       3    4      4       4  2.42236673  1.0401224
-#&gt; [68,]       4    1      1       4 -2.10558080  0.7724117
+#&gt; [67,]       3    4      4       4  2.42236673  1.0401223
+#&gt; [68,]       4    1      1       4 -2.10558080  0.7724116
 #&gt; [69,]       4    1      2       2 -1.63796061  0.6540725
 #&gt; [70,]       4    1      2       4 -1.01407917  0.7239107
-#&gt; [71,]       4    1      3       4  0.36120593  0.7777452
+#&gt; [71,]       4    1      3       4  0.36120593  0.7777451
 #&gt; [72,]       4    2      2       1 -1.56782447  0.6512224
 #&gt; [73,]       4    2      2       3 -0.93515695  0.6275737
 #&gt; [74,]       4    2      3       3  0.05367208  0.7107570
 #&gt; [75,]       4    2      3       4  0.49170860  0.7095398
-#&gt; [76,]       4    2      4       2  0.76227140  0.7229545
-#&gt; [77,]       4    2      4       4  1.75983974  0.9306370
+#&gt; [76,]       4    2      4       2  0.76227140  0.7229547
+#&gt; [77,]       4    2      4       4  1.75983975  0.9306370
 #&gt; [78,]       4    3      2       3 -0.48507197  0.7037542
-#&gt; [79,]       4    3      3       2  0.13911259  0.7180796
+#&gt; [79,]       4    3      3       2  0.13911259  0.7180795
 #&gt; [80,]       4    3      3       3  0.53266734  0.6522718
 #&gt; [81,]       4    3      3       4  0.92904321  0.6554712
 #&gt; [82,]       4    3      4       2  1.21563093  0.7193802
 #&gt; [83,]       4    3      4       3  1.52654526  0.7343333
 #&gt; [84,]       4    3      4       4  2.25842250  0.9678449
-#&gt; [85,]       4    4      3       2  0.63968593  0.7069824
+#&gt; [85,]       4    4      3       2  0.63968593  0.7069825
 #&gt; [86,]       4    4      3       3  0.98114245  0.6613476
 #&gt; [87,]       4    4      3       4  1.46456801  0.7487625
-#&gt; [88,]       4    4      4       2  2.02777164  1.0101182
+#&gt; [88,]       4    4      4       2  2.02777164  1.0101184
 #&gt; [89,]       4    4      4       3  2.38986103  1.0150510
-#&gt; [90,]       4    4      4       4  7.11188114 10.6159250</div><div class='input'><span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, method<span class='op'>=</span><span class='st'>'ML'</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+#&gt; [90,]       4    4      4       4  7.11188116 10.6159261</div><div class='input'><span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, method<span class='op'>=</span><span class='st'>'ML'</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Method:  ML
 #&gt; 
@@ -552,52 +552,52 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 #&gt; 0.716 </div><div class='output co'>#&gt;       Comfort Work Future Benefit          F1     SE_F1
 #&gt;  [1,]       1    1      1       1        -Inf        NA
 #&gt;  [2,]       1    3      2       1 -2.10499828 0.6894269
-#&gt;  [3,]       1    4      2       3 -1.15136436 0.7052000
-#&gt;  [4,]       1    4      3       1 -0.78147320 0.8074823
+#&gt;  [3,]       1    4      2       3 -1.15136437 0.7052004
+#&gt;  [4,]       1    4      3       1 -0.78147320 0.8074821
 #&gt;  [5,]       2    1      1       1 -4.40023233 1.1822486
 #&gt;  [6,]       2    1      2       4 -1.86365477 0.6680213
 #&gt;  [7,]       2    2      1       1 -3.24979940 0.8130422
 #&gt;  [8,]       2    2      2       2 -1.91204974 0.5875929
 #&gt;  [9,]       2    2      2       3 -1.60616322 0.6085831
-#&gt; [10,]       2    2      3       1 -1.46873658 0.7139921
-#&gt; [11,]       2    2      3       2 -1.16876387 0.6348581
+#&gt; [10,]       2    2      3       1 -1.46873658 0.7139920
+#&gt; [11,]       2    2      3       2 -1.16876387 0.6348582
 #&gt; [12,]       2    2      3       3 -0.79690047 0.6391173
-#&gt; [13,]       2    2      4       3  0.24040721 0.7888701
+#&gt; [13,]       2    2      4       3  0.24040721 0.7888702
 #&gt; [14,]       2    3      1       3 -2.14344342 0.7018391
 #&gt; [15,]       2    3      2       2 -1.60920919 0.6259497
 #&gt; [16,]       2    3      2       3 -1.25448025 0.6303475
 #&gt; [17,]       2    3      3       2 -0.75604300 0.6559689
 #&gt; [18,]       2    3      3       3 -0.33177894 0.6982616
-#&gt; [19,]       2    3      3       4  0.08308250 0.7615679
-#&gt; [20,]       2    3      4       1  0.18917228 0.8783295
-#&gt; [21,]       2    3      4       3  0.76304767 0.6807990
+#&gt; [19,]       2    3      3       4  0.08308250 0.7615680
+#&gt; [20,]       2    3      4       1  0.18917228 0.8783298
+#&gt; [21,]       2    3      4       3  0.76304766 0.6807989
 #&gt; [22,]       2    4      2       1 -1.82300735 0.6942902
-#&gt; [23,]       2    4      4       3  1.30804998 0.7538646
-#&gt; [24,]       2    4      4       4  2.09684236 1.0407196
+#&gt; [23,]       2    4      4       3  1.30804997 0.7538642
+#&gt; [24,]       2    4      4       4  2.09684241 1.0407200
 #&gt; [25,]       3    1      1       1 -3.54170079 1.0035497
 #&gt; [26,]       3    1      1       3 -2.51097738 0.6975388
 #&gt; [27,]       3    1      2       2 -1.92624519 0.6148335
 #&gt; [28,]       3    1      2       3 -1.58753955 0.6435255
 #&gt; [29,]       3    1      3       2 -1.08802880 0.6742920
-#&gt; [30,]       3    1      3       3 -0.65833030 0.6956684
-#&gt; [31,]       3    1      3       4 -0.28098699 0.8075532
-#&gt; [32,]       3    1      4       3  0.54276315 0.7340180
-#&gt; [33,]       3    1      4       4  1.03843250 0.7360829
+#&gt; [30,]       3    1      3       3 -0.65833030 0.6956683
+#&gt; [31,]       3    1      3       4 -0.28098699 0.8075531
+#&gt; [32,]       3    1      4       3  0.54276314 0.7340180
+#&gt; [33,]       3    1      4       4  1.03843251 0.7360830
 #&gt; [34,]       3    2      1       2 -2.34899690 0.6248345
-#&gt; [35,]       3    2      1       4 -1.91400269 0.7094699
+#&gt; [35,]       3    2      1       4 -1.91400269 0.7094700
 #&gt; [36,]       3    2      2       1 -1.86198198 0.6159398
 #&gt; [37,]       3    2      2       2 -1.57730475 0.5940658
 #&gt; [38,]       3    2      2       3 -1.25535368 0.6023707
-#&gt; [39,]       3    2      3       1 -1.02562104 0.6628597
+#&gt; [39,]       3    2      3       1 -1.02562104 0.6628596
 #&gt; [40,]       3    2      3       2 -0.79811247 0.6291362
 #&gt; [41,]       3    2      3       3 -0.40909616 0.6677936
-#&gt; [42,]       3    2      3       4 -0.03740134 0.7439738
-#&gt; [43,]       3    2      4       1  0.01469412 0.9007890
+#&gt; [42,]       3    2      3       4 -0.03740134 0.7439739
+#&gt; [43,]       3    2      4       1  0.01469413 0.9007890
 #&gt; [44,]       3    2      4       2  0.20551043 0.7888495
 #&gt; [45,]       3    2      4       3  0.64333323 0.6842145
-#&gt; [46,]       3    2      4       4  1.10225664 0.7186514
+#&gt; [46,]       3    2      4       4  1.10225664 0.7186515
 #&gt; [47,]       3    3      1       3 -1.63031901 0.7802420
-#&gt; [48,]       3    3      2       1 -1.51827905 0.6592757
+#&gt; [48,]       3    3      2       1 -1.51827905 0.6592758
 #&gt; [49,]       3    3      2       2 -1.23957389 0.6170141
 #&gt; [50,]       3    3      2       3 -0.88280650 0.6301834
 #&gt; [51,]       3    3      2       4 -0.62111017 0.7081726
@@ -606,38 +606,38 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 #&gt; [54,]       3    3      3       3  0.08641366 0.6870296
 #&gt; [55,]       3    3      3       4  0.49040925 0.6762795
 #&gt; [56,]       3    3      4       2  0.73271002 0.6813470
-#&gt; [57,]       3    3      4       3  1.04821971 0.6500851
+#&gt; [57,]       3    3      4       3  1.04821971 0.6500852
 #&gt; [58,]       3    3      4       4  1.52557212 0.7460043
 #&gt; [59,]       3    4      1       3 -1.38271827 0.9426967
 #&gt; [60,]       3    4      2       3 -0.60868923 0.7257241
 #&gt; [61,]       3    4      3       2  0.09932876 0.7678067
 #&gt; [62,]       3    4      3       3  0.53810625 0.6775295
 #&gt; [63,]       3    4      3       4  0.96159153 0.6747114
-#&gt; [64,]       3    4      4       1  1.21877250 0.7588072
+#&gt; [64,]       3    4      4       1  1.21877250 0.7588065
 #&gt; [65,]       3    4      4       2  1.27267168 0.7494432
 #&gt; [66,]       3    4      4       3  1.60028348 0.7666937
 #&gt; [67,]       3    4      4       4  2.42499221 1.0416690
 #&gt; [68,]       4    1      1       4 -2.10683745 0.7724672
 #&gt; [69,]       4    1      2       2 -1.63866162 0.6541976
-#&gt; [70,]       4    1      2       4 -1.01461152 0.7240601
-#&gt; [71,]       4    1      3       4  0.36142674 0.7779366
-#&gt; [72,]       4    2      2       1 -1.56848943 0.6513581
+#&gt; [70,]       4    1      2       4 -1.01461152 0.7240600
+#&gt; [71,]       4    1      3       4  0.36142674 0.7779367
+#&gt; [72,]       4    2      2       1 -1.56848943 0.6513580
 #&gt; [73,]       4    2      2       3 -0.93552371 0.6276734
 #&gt; [74,]       4    2      3       3  0.05369990 0.7109361
 #&gt; [75,]       4    2      3       4  0.49195637 0.7096903
-#&gt; [76,]       4    2      4       2  0.76267000 0.7231380
-#&gt; [77,]       4    2      4       4  1.76136607 0.9317186
+#&gt; [76,]       4    2      4       2  0.76267000 0.7231379
+#&gt; [77,]       4    2      4       4  1.76136607 0.9317187
 #&gt; [78,]       4    3      2       3 -0.48531220 0.7038789
-#&gt; [79,]       4    3      3       2  0.13918630 0.7182603
+#&gt; [79,]       4    3      3       2  0.13918630 0.7182604
 #&gt; [80,]       4    3      3       3  0.53289398 0.6523889
 #&gt; [81,]       4    3      3       4  0.92944258 0.6556238
-#&gt; [82,]       4    3      4       2  1.21626054 0.7196885
+#&gt; [82,]       4    3      4       2  1.21626054 0.7196884
 #&gt; [83,]       4    3      4       3  1.52736964 0.7347313
 #&gt; [84,]       4    3      4       4  2.26054125 0.9690341
-#&gt; [85,]       4    4      3       2  0.64000595 0.7071285
+#&gt; [85,]       4    4      3       2  0.64000595 0.7071286
 #&gt; [86,]       4    4      3       3  0.98157196 0.6615132
 #&gt; [87,]       4    4      3       4  1.46539075 0.7491620
-#&gt; [88,]       4    4      4       2  2.02984265 1.0114974
+#&gt; [88,]       4    4      4       2  2.02984488 1.0114985
 #&gt; [89,]       4    4      4       3  2.39232715 1.0164811
 #&gt; [90,]       4    4      4       4         Inf        NA</div><div class='input'>
 <span class='co'># EAPsum table of values based on total scores</span>
@@ -668,45 +668,45 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 #&gt; 
 #&gt;     F1 
 #&gt; 0.7513 </div><div class='output co'>#&gt;      Comfort Work Future Benefit         F1     SE_F1
-#&gt; [1,]       1    1      1       1 -5.6980733 1.5782657
+#&gt; [1,]       1    1      1       1 -5.6980733 1.5782656
 #&gt; [2,]       1    3      2       1 -2.1191038 0.6332802
-#&gt; [3,]       1    4      2       3 -1.1387624 0.6557001
-#&gt; [4,]       1    4      3       1 -0.8489387 0.7000117
-#&gt; [5,]       2    1      1       1 -4.0112458 1.1423934
+#&gt; [3,]       1    4      2       3 -1.1387624 0.6557002
+#&gt; [4,]       1    4      3       1 -0.8489387 0.7000115
+#&gt; [5,]       2    1      1       1 -4.0112458 1.1423935
 #&gt; [6,]       2    1      2       4 -1.8957020 0.6698434</div><div class='input'>
 <span class='co'>#multiple imputation using 30 draws for EAP scores. Requires information matrix</span>
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>fs</span> <span class='op'>&lt;-</span> <span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, MI <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>fs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;               F1
-#&gt; [1,]  0.38666640
-#&gt; [2,]  0.04786678
-#&gt; [3,] -0.87432018
-#&gt; [4,] -0.87432018
-#&gt; [5,]  0.73108004
-#&gt; [6,]  0.65624418</div><div class='input'>
+#&gt; [1,]  0.40797422
+#&gt; [2,]  0.03677095
+#&gt; [3,] -0.89622654
+#&gt; [4,] -0.89622654
+#&gt; [5,]  0.74916372
+#&gt; [6,]  0.66769600</div><div class='input'>
 <span class='co'># plausible values for future work</span>
 <span class='va'>pv</span> <span class='op'>&lt;-</span> <span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, plausible.draws <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>pv</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>mean<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, var<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>var</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, min<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, max<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt;        mean         var         min         max 
-#&gt;  0.06352634  1.00420604 -3.43908153  3.24692065 
+#&gt;  0.01879158  1.02560651 -3.18083996  3.04179713 
 #&gt; 
 #&gt; [[2]]
-#&gt;        mean         var         min         max 
-#&gt; -0.01580385  0.98807802 -3.07290029  2.97948168 
+#&gt;       mean        var        min        max 
+#&gt; -0.0298637  1.0311903 -3.7932765  2.8635437 
 #&gt; 
 #&gt; [[3]]
 #&gt;        mean         var         min         max 
-#&gt; -0.01167841  1.03950965 -3.29193668  2.63987918 
+#&gt;  0.00374964  1.01285130 -3.05922459  3.29830312 
 #&gt; 
 #&gt; [[4]]
-#&gt;         mean          var          min          max 
-#&gt;  0.008015234  1.022390268 -3.199697013  2.632259618 
+#&gt;       mean        var        min        max 
+#&gt;  0.0120314  1.0011140 -3.8553957  2.7213822 
 #&gt; 
 #&gt; [[5]]
-#&gt;       mean        var        min        max 
-#&gt;  0.0363761  1.1442633 -3.6522945  2.7963235 
+#&gt;        mean         var         min         max 
+#&gt; -0.03109173  0.94487520 -3.11421746  2.58403499 
 #&gt; </div><div class='input'>
 <span class='co'>## define a custom_den function. EAP with a uniform prior between -3 and 3</span>
 <span class='va'>fun</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>...</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>dunif</a></span><span class='op'>(</span><span class='va'>Theta</span>, min <span class='op'>=</span> <span class='op'>-</span><span class='fl'>3</span>, max <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
@@ -719,23 +719,11 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 #&gt; [5,]  1.25827841
 #&gt; [6,]  1.00860231</div><div class='input'>
 <span class='co'># custom MAP prior: standard truncated normal between 5 and -2</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/chjackson/msm'>msm</a></span><span class='op'>)</span>
-<span class='co'># need the :: scope for parallel to see the function (not require if no mirtCluster() defined)</span>
-<span class='va'>fun</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>...</span><span class='op'>)</span> <span class='fu'>msm</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/msm/man/tnorm.html'>dtnorm</a></span><span class='op'>(</span><span class='va'>Theta</span>, mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>1</span>, lower <span class='op'>=</span> <span class='op'>-</span><span class='fl'>2</span>, upper <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>msm</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in library(msm): there is no package called ‘msm’</span></div><div class='input'><span class='co'># need the :: scope for parallel to see the function (not require if no mirtCluster() defined)</span>
+<span class='va'>fun</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>Theta</span>, <span class='va'>...</span><span class='op'>)</span> <span class='fu'>msm</span><span class='fu'>::</span><span class='fu'>dtnorm</span><span class='op'>(</span><span class='va'>Theta</span>, mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>1</span>, lower <span class='op'>=</span> <span class='op'>-</span><span class='fl'>2</span>, upper <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>fscores</span><span class='op'>(</span><span class='va'>mod</span>, custom_den <span class='op'>=</span> <span class='va'>fun</span>, method <span class='op'>=</span> <span class='st'>'MAP'</span>, full.scores <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; Method:  MAP
-#&gt; 
-#&gt; Empirical Reliability:
-#&gt; 
-#&gt;     F1 
-#&gt; 0.6637 </div><div class='output co'>#&gt;      Comfort Work Future Benefit         F1     SE_F1
-#&gt; [1,]       1    1      1       1 -1.9999997 0.5955534
-#&gt; [2,]       1    3      2       1 -1.4234806 0.5680859
-#&gt; [3,]       1    4      2       3 -0.7627999 0.5920502
-#&gt; [4,]       1    4      3       1 -0.4621219 0.6529192
-#&gt; [5,]       2    1      1       1 -1.9999972 0.5706602
-#&gt; [6,]       2    1      2       4 -1.2729394 0.5680222</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘msm’</span></div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

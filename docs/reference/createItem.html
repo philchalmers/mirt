@@ -79,7 +79,7 @@ fitting unfolding-type models see Liu and Chalmers (2018)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -419,7 +419,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; [29,]      1      1      1      0      0 -0.13150552 0.7152007
 #&gt; [30,]      1      1      1      0      1  0.26515650 0.7536331
 #&gt; [31,]      1      1      1      1      0  0.28153206 0.7553020
-#&gt; [32,]      1      1      1      1      1  0.72728504 0.8009587</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
+#&gt; [32,]      1      1      1      1      1  0.72728504 0.8009587</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='img'><img src='createItem-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># fit the same model, but specify gradient function explicitly (use of a browser() may be helpful)</span>
 <span class='va'>gr</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>Theta</span><span class='op'>)</span><span class='op'>{</span>
@@ -523,35 +523,35 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>nommod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span>, <span class='st'>'nom1'</span>, customItems<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>nom1<span class='op'>=</span><span class='va'>nom1</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>nommod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Comfort
-#&gt;       alp1   alp2   alp3   gam1   gam2   gam3
-#&gt; par -1.554 -2.016 -3.027 -3.642 -5.908 -4.535
+#&gt;       alp1   alp2   alp3  gam1   gam2   gam3
+#&gt; par -1.553 -2.015 -3.025 -3.64 -5.906 -4.533
 #&gt; 
 #&gt; $Work
-#&gt;       alp1  alp2   alp3   gam1   gam2   gam3
-#&gt; par -0.578 -1.26 -2.522 -1.463 -2.325 -0.324
+#&gt;       alp1   alp2   alp3   gam1   gam2   gam3
+#&gt; par -0.579 -1.262 -2.523 -1.464 -2.326 -0.326
 #&gt; 
 #&gt; $Future
-#&gt;       alp1   alp2   alp3   gam1   gam2   gam3
-#&gt; par -1.539 -3.763 -6.076 -3.645 -5.832 -3.921
+#&gt;       alp1  alp2   alp3   gam1   gam2   gam3
+#&gt; par -1.553 -3.79 -6.107 -3.667 -5.863 -3.949
 #&gt; 
 #&gt; $Benefit
 #&gt;       alp1   alp2   alp3   gam1   gam2   gam3
-#&gt; par -0.809 -1.361 -2.342 -2.147 -2.914 -1.623
+#&gt; par -0.808 -1.359 -2.339 -2.146 -2.913 -1.622
 #&gt; 
 #&gt; $GroupPars
 #&gt;     MEAN_1 COV_11
 #&gt; par      0      1
 #&gt; </div><div class='input'><span class='fu'>Tnom.dev</span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>nommod</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span> <span class='co'>#a</span>
 </div><div class='output co'>#&gt;             [,1]
-#&gt; [1,] -1.64933825
-#&gt; [2,] -0.09546626
-#&gt; [3,]  0.36682569
-#&gt; [4,]  1.37797882</div><div class='input'><span class='fu'>Tnom.dev</span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>nommod</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span> <span class='co'>#d</span>
+#&gt; [1,] -1.64818625
+#&gt; [2,] -0.09535348
+#&gt; [3,]  0.36680800
+#&gt; [4,]  1.37673173</div><div class='input'><span class='fu'>Tnom.dev</span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>nommod</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span> <span class='co'>#d</span>
 </div><div class='output co'>#&gt;            [,1]
-#&gt; [1,] -3.5211137
-#&gt; [2,]  0.1204555
-#&gt; [3,]  2.3871031
-#&gt; [4,]  1.0135552</div><div class='input'>
+#&gt; [1,] -3.5197343
+#&gt; [2,]  0.1197875
+#&gt; [3,]  2.3864365
+#&gt; [4,]  1.0135103</div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

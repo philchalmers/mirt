@@ -78,7 +78,7 @@ required)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -289,54 +289,54 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dat1</span>, <span class='va'>dat2</span><span class='op'>)</span>
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, group<span class='op'>=</span><span class='va'>group</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span>,
                      invariance<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'free_means'</span>, <span class='st'>'free_var'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
-</div><div class='img'><img src='DRF-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, which.items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span> <span class='co'>#DBF</span>
-</div><div class='img'><img src='DRF-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
-</div><div class='img'><img src='DRF-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span>, which.items <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
+</div><div class='img'><img src='DRF-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, which.items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span> <span class='co'>#DBF</span>
+</div><div class='img'><img src='DRF-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span><span class='op'>)</span>
+</div><div class='img'><img src='DRF-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, type <span class='op'>=</span> <span class='st'>'itemscore'</span>, which.items <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   n_focal_items      sDRF      uDRF
-#&gt; 1            30 0.3259068 0.3259072</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span> <span class='co'>#DBF</span>
+#&gt; 1            30 0.3259428 0.3259431</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span> <span class='co'>#DBF</span>
 </div><div class='output co'>#&gt;   n_focal_items       sDRF       uDRF
-#&gt; 1             5 0.06949048 0.07136551</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; 1             5 0.06949846 0.07137772</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             sDIF        uDIF
 #&gt; 1   0.000000e+00 0.000000000
 #&gt; 2   0.000000e+00 0.000000000
 #&gt; 3   0.000000e+00 0.000000000
 #&gt; 4   0.000000e+00 0.000000000
 #&gt; 5   0.000000e+00 0.000000000
-#&gt; 6   6.438132e-05 0.015749408
-#&gt; 7   2.610643e-02 0.026159781
-#&gt; 8   7.678371e-03 0.007678372
-#&gt; 9   2.583815e-02 0.026275361
-#&gt; 10  9.803141e-03 0.035753335
-#&gt; 11  5.558443e-02 0.058810878
-#&gt; 12  1.599366e-02 0.016005343
-#&gt; 13  1.485693e-02 0.022427623
-#&gt; 14  3.337543e-02 0.046160533
-#&gt; 15  4.546167e-02 0.045463284
-#&gt; 16  3.046381e-02 0.030463813
-#&gt; 17 -1.767682e-02 0.019055697
-#&gt; 18 -1.086906e-02 0.012956165
-#&gt; 19  4.512152e-02 0.093761482
-#&gt; 20  7.803226e-03 0.009532902
-#&gt; 21  6.958597e-02 0.069601295
-#&gt; 22 -1.738086e-02 0.019757391
-#&gt; 23 -3.606043e-02 0.063774220
-#&gt; 24 -4.004255e-02 0.040082054
-#&gt; 25 -2.106582e-03 0.018483788
-#&gt; 26  1.872518e-02 0.047067547
-#&gt; 27  4.883397e-02 0.048833972
-#&gt; 28 -2.656416e-02 0.028764762
-#&gt; 29 -7.358206e-03 0.025327769
-#&gt; 30  2.866925e-02 0.030823229</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span><span class='op'>)</span>
+#&gt; 6   6.516844e-05 0.015752828
+#&gt; 7   2.610811e-02 0.026161268
+#&gt; 8   7.680169e-03 0.007680170
+#&gt; 9   2.583983e-02 0.026276119
+#&gt; 10  9.805183e-03 0.035756505
+#&gt; 11  5.558645e-02 0.058811733
+#&gt; 12  1.599577e-02 0.016007379
+#&gt; 13  1.485875e-02 0.022426151
+#&gt; 14  3.337662e-02 0.046158499
+#&gt; 15  4.546204e-02 0.045463652
+#&gt; 16  3.046520e-02 0.030465208
+#&gt; 17 -1.767540e-02 0.019053124
+#&gt; 18 -1.086644e-02 0.012956473
+#&gt; 19  4.512319e-02 0.093764868
+#&gt; 20  7.801600e-03 0.009532481
+#&gt; 21  6.958687e-02 0.069602240
+#&gt; 22 -1.737925e-02 0.019754273
+#&gt; 23 -3.605848e-02 0.063770870
+#&gt; 24 -4.004188e-02 0.040081256
+#&gt; 25 -2.105065e-03 0.018486808
+#&gt; 26  1.872758e-02 0.047070361
+#&gt; 27  4.883445e-02 0.048834450
+#&gt; 28 -2.656203e-02 0.028764229
+#&gt; 29 -7.356801e-03 0.025324258
+#&gt; 30  2.867113e-02 0.030823663</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           sDIF       uDIF
-#&gt; 10 0.009803141 0.03575334
-#&gt; 11 0.055584431 0.05881088
-#&gt; 12 0.015993661 0.01600534
-#&gt; 13 0.014856926 0.02242762
-#&gt; 14 0.033375426 0.04616053
-#&gt; 15 0.045461673 0.04546328</div><div class='input'>
+#&gt; 10 0.009805183 0.03575651
+#&gt; 11 0.055586448 0.05881173
+#&gt; 12 0.015995774 0.01600738
+#&gt; 13 0.014858750 0.02242615
+#&gt; 14 0.033376618 0.04615850
+#&gt; 15 0.045462035 0.04546365</div><div class='input'>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, plot <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span>, plot <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'>#DBF</span>
 </div><div class='img'><img src='DRF-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, plot <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -344,19 +344,19 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 </div><div class='img'><img src='DRF-8.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'><a href='mirtCluster.html'>mirtCluster</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>mirtCluster() has already been defined</span></div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      n_focal_items      stat      CI_2.5   CI_97.5        X2 df         p
-#&gt; sDRF            30 0.3259068 -0.30899180 0.9688795 0.9623051  1 0.3266068
-#&gt; uDRF            30 0.3259072  0.08150238 0.9916118 0.9623647  2 0.6180522</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      n_focal_items      stat      CI_2.5  CI_97.5        X2 df         p
+#&gt; sDRF            30 0.3259428 -0.34805034 1.008269 0.9147496  1 0.3388573
+#&gt; uDRF            30 0.3259431  0.09609852 1.008770 0.9148069  2 0.6329249</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-9.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># pre-draw parameter set to save computations</span>
 <span class='va'>param_set</span> <span class='op'>&lt;-</span> <span class='fu'><a href='draw_parameters.html'>draw_parameters</a></span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span>, param_set<span class='op'>=</span><span class='va'>param_set</span><span class='op'>)</span> <span class='co'>#DIF</span>
 </div><div class='output co'>#&gt;      n_focal_items         stat       CI_2.5    CI_97.5           X2 df
-#&gt; sDRF             1 6.438132e-05 -0.058453572 0.06313558 4.322731e-06  1
-#&gt; uDRF             1 1.574941e-02  0.005530459 0.08165227 2.964557e-01  2
+#&gt; sDRF             1 6.516844e-05 -0.066526017 0.05881497 4.143309e-06  1
+#&gt; uDRF             1 1.575283e-02  0.006443179 0.07961061 2.839950e-01  2
 #&gt;              p
-#&gt; sDRF 0.9983411
-#&gt; uDRF 0.8622346</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, param_set<span class='op'>=</span><span class='va'>param_set</span><span class='op'>)</span> <span class='co'>#DIF</span>
+#&gt; sDRF 0.9983759
+#&gt; uDRF 0.8676234</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, param_set<span class='op'>=</span><span class='va'>param_set</span><span class='op'>)</span> <span class='co'>#DIF</span>
 </div><div class='output co'>#&gt; $sDIF
 #&gt;             sDIF       CI_2.5    CI_97.5           X2 df          p
 #&gt; 1   0.000000e+00  0.000000000 0.00000000           NA NA         NA
@@ -364,78 +364,78 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; 3   0.000000e+00  0.000000000 0.00000000           NA NA         NA
 #&gt; 4   0.000000e+00  0.000000000 0.00000000           NA NA         NA
 #&gt; 5   0.000000e+00  0.000000000 0.00000000           NA NA         NA
-#&gt; 6   6.438132e-05 -0.058453572 0.06313558 4.322731e-06  1 0.99834111
-#&gt; 7   2.610643e-02 -0.038579504 0.08411752 6.985720e-01  1 0.40326395
-#&gt; 8   7.678371e-03 -0.054227671 0.06797779 5.925556e-02  1 0.80767645
-#&gt; 9   2.583815e-02 -0.041168943 0.08931998 6.242390e-01  1 0.42947641
-#&gt; 10  9.803141e-03 -0.050514524 0.06196940 1.099324e-01  1 0.74022109
-#&gt; 11  5.558443e-02 -0.006735119 0.12094141 2.784714e+00  1 0.09516767
-#&gt; 12  1.599366e-02 -0.047022781 0.07509292 2.765161e-01  1 0.59899384
-#&gt; 13  1.485693e-02 -0.040069963 0.06968603 2.844329e-01  1 0.59381032
-#&gt; 14  3.337543e-02 -0.025588186 0.09358734 1.158378e+00  1 0.28180228
-#&gt; 15  4.546167e-02 -0.020091223 0.10557304 2.125874e+00  1 0.14483018
-#&gt; 16  3.046381e-02 -0.034165635 0.09583173 8.527729e-01  1 0.35576908
-#&gt; 17 -1.767682e-02 -0.074082180 0.03720417 3.802018e-01  1 0.53749527
-#&gt; 18 -1.086906e-02 -0.071717057 0.04865136 1.307235e-01  1 0.71768306
-#&gt; 19  4.512152e-02 -0.021421752 0.10561520 1.995953e+00  1 0.15771986
-#&gt; 20  7.803226e-03 -0.034314416 0.04627994 1.518706e-01  1 0.69675412
-#&gt; 21  6.958597e-02  0.013356150 0.12935851 5.251379e+00  1 0.02192938
-#&gt; 22 -1.738086e-02 -0.071252138 0.04589003 3.287646e-01  1 0.56638746
-#&gt; 23 -3.606043e-02 -0.100752464 0.02481763 1.288549e+00  1 0.25631561
-#&gt; 24 -4.004255e-02 -0.102106258 0.02464356 1.557956e+00  1 0.21196474
-#&gt; 25 -2.106582e-03 -0.063417410 0.06006986 4.712443e-03  1 0.94527042
-#&gt; 26  1.872518e-02 -0.041398467 0.06738003 4.675927e-01  1 0.49409673
-#&gt; 27  4.883397e-02 -0.020014739 0.10839306 2.431363e+00  1 0.11892948
-#&gt; 28 -2.656416e-02 -0.077532895 0.03480302 8.736937e-01  1 0.34993476
-#&gt; 29 -7.358206e-03 -0.072101888 0.05801669 5.378160e-02  1 0.81660900
-#&gt; 30  2.866925e-02 -0.024396941 0.08422854 1.028129e+00  1 0.31059854
+#&gt; 6   6.516844e-05 -0.066526017 0.05881497 4.143309e-06  1 0.99837590
+#&gt; 7   2.610811e-02 -0.040903267 0.08467953 7.430021e-01  1 0.38870090
+#&gt; 8   7.680169e-03 -0.055911702 0.06043355 6.595365e-02  1 0.79732203
+#&gt; 9   2.583983e-02 -0.040475500 0.08888255 7.236064e-01  1 0.39496349
+#&gt; 10  9.805183e-03 -0.054328738 0.06625445 1.051181e-01  1 0.74577205
+#&gt; 11  5.558645e-02 -0.004756617 0.11688809 2.967359e+00  1 0.08496047
+#&gt; 12  1.599577e-02 -0.035451169 0.07140027 3.289515e-01  1 0.56627715
+#&gt; 13  1.485875e-02 -0.042787010 0.06704555 2.830559e-01  1 0.59470521
+#&gt; 14  3.337662e-02 -0.028886127 0.09807542 1.071541e+00  1 0.30059771
+#&gt; 15  4.546204e-02 -0.024811750 0.09852804 2.324749e+00  1 0.12733078
+#&gt; 16  3.046520e-02 -0.031796608 0.08463850 1.030683e+00  1 0.30999822
+#&gt; 17 -1.767540e-02 -0.078237743 0.03788278 3.669166e-01  1 0.54468982
+#&gt; 18 -1.086644e-02 -0.073666156 0.04913118 1.229107e-01  1 0.72589884
+#&gt; 19  4.512319e-02 -0.015957348 0.10163146 2.288045e+00  1 0.13037405
+#&gt; 20  7.801600e-03 -0.038175382 0.04238504 1.429749e-01  1 0.70534127
+#&gt; 21  6.958687e-02  0.009275968 0.12431540 5.038773e+00  1 0.02478604
+#&gt; 22 -1.737925e-02 -0.084946501 0.04406918 3.129787e-01  1 0.57585805
+#&gt; 23 -3.605848e-02 -0.099256630 0.01708025 1.493266e+00  1 0.22171043
+#&gt; 24 -4.004188e-02 -0.106049065 0.01885383 1.561230e+00  1 0.21148518
+#&gt; 25 -2.105065e-03 -0.060941221 0.04777705 5.267571e-03  1 0.94214191
+#&gt; 26  1.872758e-02 -0.036031284 0.06877310 5.269862e-01  1 0.46787667
+#&gt; 27  4.883445e-02 -0.015911757 0.10933166 2.385107e+00  1 0.12249654
+#&gt; 28 -2.656203e-02 -0.091296893 0.03510847 8.121140e-01  1 0.36749598
+#&gt; 29 -7.356801e-03 -0.070727283 0.04985160 5.506267e-02  1 0.81447701
+#&gt; 30  2.867113e-02 -0.026494068 0.08706740 8.894970e-01  1 0.34561366
 #&gt; 
 #&gt; $uDIF
-#&gt;           uDIF      CI_2.5    CI_97.5         X2 df           p
-#&gt; 1  0.000000000 0.000000000 0.00000000         NA NA          NA
-#&gt; 2  0.000000000 0.000000000 0.00000000         NA NA          NA
-#&gt; 3  0.000000000 0.000000000 0.00000000         NA NA          NA
-#&gt; 4  0.000000000 0.000000000 0.00000000         NA NA          NA
-#&gt; 5  0.000000000 0.000000000 0.00000000         NA NA          NA
-#&gt; 6  0.015749408 0.005530459 0.08165227 0.29645572  2 0.862234625
-#&gt; 7  0.026159781 0.008093708 0.08697359 0.71272050  2 0.700220321
-#&gt; 8  0.007678372 0.004520219 0.08256682 0.05925628  2 0.970806470
-#&gt; 9  0.026275361 0.008565099 0.09456472 0.69303237  2 0.707147375
-#&gt; 10 0.035753335 0.008965804 0.09365099 1.64827991  2 0.438612057
-#&gt; 11 0.058810878 0.017480388 0.12425095 3.43873823  2 0.179179153
-#&gt; 12 0.016005343 0.006220820 0.08416318 0.27946646  2 0.869590186
-#&gt; 13 0.022427623 0.007220475 0.07986987 0.73994277  2 0.690754098
-#&gt; 14 0.046160533 0.012781077 0.10692571 2.65533580  2 0.265094768
-#&gt; 15 0.045463284 0.010353713 0.10598746 2.12841323  2 0.345001464
-#&gt; 16 0.030463813 0.008137477 0.10155719 0.85279292  2 0.652857458
-#&gt; 17 0.019055697 0.006826064 0.08209515 0.48781622  2 0.783559634
-#&gt; 18 0.012956165 0.006365371 0.07826069 0.22325577  2 0.894377008
-#&gt; 19 0.093761482 0.046184197 0.15163863 9.86533034  2 0.007207269
-#&gt; 20 0.009532902 0.003581211 0.05338815 0.27162852  2 0.873004767
-#&gt; 21 0.069601295 0.025193366 0.13043737 5.27283848  2 0.071617255
-#&gt; 22 0.019757391 0.007199267 0.07862866 0.49679845  2 0.780048468
-#&gt; 23 0.063774220 0.021771716 0.12229951 4.63965169  2 0.098290702
-#&gt; 24 0.040082054 0.009483747 0.10321645 1.58046954  2 0.453738260
-#&gt; 25 0.018483788 0.005462973 0.08420776 0.41681352  2 0.811876730
-#&gt; 26 0.047067547 0.012587370 0.09724191 3.23246741  2 0.198645449
-#&gt; 27 0.048833972 0.011436588 0.10845617 2.43136314  2 0.296507855
-#&gt; 28 0.028764762 0.006617923 0.08429786 1.14275148  2 0.564747957
-#&gt; 29 0.025327769 0.007858227 0.08834417 0.71739119  2 0.698586973
-#&gt; 30 0.030823229 0.011208325 0.08929620 1.34754734  2 0.509781198
+#&gt;           uDIF      CI_2.5    CI_97.5          X2 df           p
+#&gt; 1  0.000000000 0.000000000 0.00000000          NA NA          NA
+#&gt; 2  0.000000000 0.000000000 0.00000000          NA NA          NA
+#&gt; 3  0.000000000 0.000000000 0.00000000          NA NA          NA
+#&gt; 4  0.000000000 0.000000000 0.00000000          NA NA          NA
+#&gt; 5  0.000000000 0.000000000 0.00000000          NA NA          NA
+#&gt; 6  0.015752828 0.006443179 0.07961061  0.28399500  2 0.867623427
+#&gt; 7  0.026161268 0.006357086 0.08689480  0.76180195  2 0.683245544
+#&gt; 8  0.007680170 0.007022988 0.07579723  0.06595402  2 0.967560805
+#&gt; 9  0.026276119 0.006696075 0.09173717  0.81440750  2 0.665508578
+#&gt; 10 0.035756505 0.010609424 0.09256819  1.61925384  2 0.445024064
+#&gt; 11 0.058811733 0.020089587 0.12183155  3.65654294  2 0.160691087
+#&gt; 12 0.016007379 0.007243424 0.07344761  0.33244000  2 0.846859906
+#&gt; 13 0.022426151 0.007398369 0.07794165  0.73946634  2 0.690918662
+#&gt; 14 0.046158499 0.014308076 0.10748688  2.51236560  2 0.284738859
+#&gt; 15 0.045463652 0.012739224 0.09994936  2.32751132  2 0.312311042
+#&gt; 16 0.030465208 0.008259155 0.08750383  1.03070960  2 0.597288640
+#&gt; 17 0.019053124 0.007852521 0.08012132  0.48410465  2 0.785015100
+#&gt; 18 0.012956473 0.007010871 0.08053155  0.22471970  2 0.893722596
+#&gt; 19 0.093764868 0.044123868 0.15301629 10.86433483  2 0.004373606
+#&gt; 20 0.009532481 0.003896371 0.05393983  0.26546655  2 0.875698634
+#&gt; 21 0.069602240 0.016330032 0.12854014  5.05245715  2 0.079960016
+#&gt; 22 0.019754273 0.005721742 0.08959497  0.46346932  2 0.793156550
+#&gt; 23 0.063770870 0.019530772 0.11889585  5.20119562  2 0.074229190
+#&gt; 24 0.040081256 0.009256739 0.10592976  1.58683337  2 0.452296798
+#&gt; 25 0.018486808 0.005381137 0.08083999  0.45324407  2 0.797222046
+#&gt; 26 0.047070361 0.012782542 0.09931857  3.51911282  2 0.172121198
+#&gt; 27 0.048834450 0.008767655 0.11033833  2.38510674  2 0.303445465
+#&gt; 28 0.028764229 0.007177135 0.09172590  1.10624213  2 0.575151920
+#&gt; 29 0.025324258 0.006565868 0.08963333  0.74542056  2 0.688864781
+#&gt; 30 0.030823663 0.007359624 0.08822766  1.16040751  2 0.559784297
 #&gt; </div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span>, param_set<span class='op'>=</span><span class='va'>param_set</span><span class='op'>)</span> <span class='co'>#DBF</span>
-</div><div class='output co'>#&gt;      n_focal_items       stat     CI_2.5   CI_97.5        X2 df         p
-#&gt; sDRF             5 0.06949048 -0.1214734 0.2327058 0.5632852  1 0.4529396
-#&gt; uDRF             5 0.07136551  0.0232153 0.2663033 0.6522604  2 0.7217112</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, param_set<span class='op'>=</span><span class='va'>param_set</span><span class='op'>)</span> <span class='co'>#DTF</span>
-</div><div class='output co'>#&gt;      n_focal_items      stat      CI_2.5   CI_97.5        X2 df         p
-#&gt; sDRF            30 0.3259068 -0.37546745 0.9469391 0.8682655  1 0.3514359
-#&gt; uDRF            30 0.3259072  0.08663966 0.9720209 0.8683147  2 0.6478103</div><div class='input'>
+</div><div class='output co'>#&gt;      n_focal_items       stat      CI_2.5   CI_97.5        X2 df         p
+#&gt; sDRF             5 0.06949846 -0.13126014 0.2325719 0.6059571  1 0.4363141
+#&gt; uDRF             5 0.07137772  0.02231416 0.2579826 0.6813937  2 0.7112745</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, param_set<span class='op'>=</span><span class='va'>param_set</span><span class='op'>)</span> <span class='co'>#DTF</span>
+</div><div class='output co'>#&gt;      n_focal_items      stat     CI_2.5   CI_97.5        X2 df         p
+#&gt; sDRF            30 0.3259428 -0.3738418 0.9679777 0.9670682  1 0.3254125
+#&gt; uDRF            30 0.3259431  0.1053743 0.9855846 0.9671020  2 0.6165900</div><div class='input'>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span> <span class='co'>#DBF</span>
 </div><div class='output co'>#&gt;      n_focal_items       stat      CI_2.5   CI_97.5        X2 df         p
-#&gt; sDRF             5 0.06949048 -0.09438015 0.2439824 0.6209404  1 0.4306981
-#&gt; uDRF             5 0.07136551  0.02456375 0.2694312 0.7164917  2 0.6989012</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span> <span class='co'>#DBF</span>
+#&gt; sDRF             5 0.06949846 -0.09518597 0.2332676 0.6654528  1 0.4146415
+#&gt; uDRF             5 0.07137772  0.02288099 0.2590270 0.7757219  2 0.6785067</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, focal_items <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span> <span class='co'>#DBF</span>
 </div><div class='output co'>#&gt;      n_focal_items      stat      CI_2.5   CI_97.5       X2 df          p
-#&gt; sDRF             6 0.1750753 -0.02433989 0.3528574 3.146044  1 0.07611129
-#&gt; uDRF             6 0.1750789  0.03986196 0.3647100 3.148272  2 0.20718652</div><div class='input'>
+#&gt; sDRF             6 0.1750848 -0.03214532 0.3480857 2.982093  1 0.08419034
+#&gt; uDRF             6 0.1750884  0.04989955 0.3543376 2.985565  2 0.22474640</div><div class='input'>
 <span class='va'>DIFs</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>DIFs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $sDIF
@@ -445,31 +445,31 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; 3   0.000000e+00  0.000000000 0.00000000           NA NA         NA
 #&gt; 4   0.000000e+00  0.000000000 0.00000000           NA NA         NA
 #&gt; 5   0.000000e+00  0.000000000 0.00000000           NA NA         NA
-#&gt; 6   6.438132e-05 -0.065294588 0.05731113 4.260421e-06  1 0.99835310
-#&gt; 7   2.610643e-02 -0.031254432 0.08505672 7.259543e-01  1 0.39419771
-#&gt; 8   7.678371e-03 -0.053238860 0.07383808 5.551644e-02  1 0.81372812
-#&gt; 9   2.583815e-02 -0.041131743 0.08640406 5.970596e-01  1 0.43970211
-#&gt; 10  9.803141e-03 -0.048727852 0.07524566 1.039073e-01  1 0.74719022
-#&gt; 11  5.558443e-02 -0.009647363 0.11295444 3.085319e+00  1 0.07900178
-#&gt; 12  1.599366e-02 -0.040588498 0.06958481 3.350900e-01  1 0.56267718
-#&gt; 13  1.485693e-02 -0.040239621 0.07030548 2.525557e-01  1 0.61528127
-#&gt; 14  3.337543e-02 -0.035253113 0.09233170 1.053262e+00  1 0.30475694
-#&gt; 15  4.546167e-02 -0.017058167 0.10905947 2.077586e+00  1 0.14947641
-#&gt; 16  3.046381e-02 -0.029304330 0.09303213 9.287100e-01  1 0.33519835
-#&gt; 17 -1.767682e-02 -0.078780263 0.04362091 3.244048e-01  1 0.56897249
-#&gt; 18 -1.086906e-02 -0.067078922 0.04422147 1.473941e-01  1 0.70103818
-#&gt; 19  4.512152e-02 -0.012424703 0.10185924 2.383523e+00  1 0.12262072
-#&gt; 20  7.803226e-03 -0.029860702 0.04810700 1.617674e-01  1 0.68753452
-#&gt; 21  6.958597e-02  0.013024953 0.13598497 4.925245e+00  1 0.02646705
-#&gt; 22 -1.738086e-02 -0.076711279 0.04657324 3.215659e-01  1 0.57066814
-#&gt; 23 -3.606043e-02 -0.098285683 0.02742548 1.346504e+00  1 0.24589019
-#&gt; 24 -4.004255e-02 -0.105114112 0.02447221 1.517003e+00  1 0.21807358
-#&gt; 25 -2.106582e-03 -0.064340305 0.05672747 4.709993e-03  1 0.94528463
-#&gt; 26  1.872518e-02 -0.039104291 0.07237604 4.011177e-01  1 0.52651257
-#&gt; 27  4.883397e-02 -0.018492832 0.10955917 2.225609e+00  1 0.13573913
-#&gt; 28 -2.656416e-02 -0.081940977 0.03058326 8.296572e-01  1 0.36237166
-#&gt; 29 -7.358206e-03 -0.078536212 0.05885229 4.857118e-02  1 0.82556845
-#&gt; 30  2.866925e-02 -0.030801827 0.09873731 8.548676e-01  1 0.35517896
+#&gt; 6   6.516844e-05 -0.061358116 0.06067400 4.607295e-06  1 0.99828737
+#&gt; 7   2.610811e-02 -0.038164136 0.08627898 6.937113e-01  1 0.40490491
+#&gt; 8   7.680169e-03 -0.050140194 0.06762367 6.376554e-02  1 0.80064040
+#&gt; 9   2.583983e-02 -0.032447704 0.08939602 6.472814e-01  1 0.42108632
+#&gt; 10  9.805183e-03 -0.046350685 0.07142599 1.122453e-01  1 0.73760222
+#&gt; 11  5.558645e-02 -0.007601165 0.11999244 3.289943e+00  1 0.06970544
+#&gt; 12  1.599577e-02 -0.043398108 0.07523877 2.761323e-01  1 0.59924751
+#&gt; 13  1.485875e-02 -0.045105342 0.07767513 2.391984e-01  1 0.62478566
+#&gt; 14  3.337662e-02 -0.032775756 0.09112171 1.107379e+00  1 0.29265249
+#&gt; 15  4.546204e-02 -0.015373104 0.09947633 2.526918e+00  1 0.11191863
+#&gt; 16  3.046520e-02 -0.029936591 0.09015820 1.031594e+00  1 0.30978462
+#&gt; 17 -1.767540e-02 -0.084406588 0.04486068 3.355798e-01  1 0.56239184
+#&gt; 18 -1.086644e-02 -0.070996052 0.04622418 1.251129e-01  1 0.72355398
+#&gt; 19  4.512319e-02 -0.011511537 0.10146044 2.221882e+00  1 0.13606710
+#&gt; 20  7.801600e-03 -0.029852011 0.04620531 1.625398e-01  1 0.68682888
+#&gt; 21  6.958687e-02  0.004457783 0.13511826 4.496648e+00  1 0.03396136
+#&gt; 22 -1.737925e-02 -0.075977201 0.05249454 3.064149e-01  1 0.57988853
+#&gt; 23 -3.605848e-02 -0.098690287 0.02441233 1.489384e+00  1 0.22231199
+#&gt; 24 -4.004188e-02 -0.100057998 0.02053587 1.693991e+00  1 0.19307572
+#&gt; 25 -2.105065e-03 -0.061025535 0.06487776 4.471157e-03  1 0.94668781
+#&gt; 26  1.872758e-02 -0.030776161 0.07367704 4.638422e-01  1 0.49583377
+#&gt; 27  4.883445e-02 -0.017625617 0.10623022 2.596369e+00  1 0.10710882
+#&gt; 28 -2.656203e-02 -0.080231157 0.03725924 7.957900e-01  1 0.37235509
+#&gt; 29 -7.356801e-03 -0.073290691 0.06110902 4.780190e-02  1 0.82693325
+#&gt; 30  2.867113e-02 -0.027652402 0.08547531 1.009827e+00  1 0.31494419
 #&gt; 
 #&gt; $uDIF
 #&gt;           uDIF      CI_2.5    CI_97.5          X2 df           p
@@ -478,62 +478,62 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; 3  0.000000000 0.000000000 0.00000000          NA NA          NA
 #&gt; 4  0.000000000 0.000000000 0.00000000          NA NA          NA
 #&gt; 5  0.000000000 0.000000000 0.00000000          NA NA          NA
-#&gt; 6  0.015749408 0.004499297 0.08155617  0.29660002  2 0.862172415
-#&gt; 7  0.026159781 0.008532276 0.08789674  0.74156260  2 0.690194871
-#&gt; 8  0.007678372 0.005187238 0.08029275  0.05551676  2 0.972623342
-#&gt; 9  0.026275361 0.007687238 0.09088521  0.65701308  2 0.719998218
-#&gt; 10 0.035753335 0.008858159 0.09709827  1.54347323  2 0.462209691
-#&gt; 11 0.058810878 0.017869850 0.11854087  3.75705100  2 0.152815266
-#&gt; 12 0.016005343 0.006509202 0.07459391  0.33942861  2 0.843905883
-#&gt; 13 0.022427623 0.006438118 0.07837381  0.68705619  2 0.709263555
-#&gt; 14 0.046160533 0.010012576 0.09761907  2.47112496  2 0.290671220
-#&gt; 15 0.045463284 0.010098121 0.10936722  2.07927187  2 0.353583386
-#&gt; 16 0.030463813 0.007837194 0.09571846  0.92872850  2 0.628534570
-#&gt; 17 0.019055697 0.006416781 0.08220880  0.44164835  2 0.801857656
-#&gt; 18 0.012956165 0.007532701 0.07835877  0.25219257  2 0.881529963
-#&gt; 19 0.093761482 0.046246970 0.14811480 11.20341523  2 0.003691555
-#&gt; 20 0.009532902 0.003983347 0.05315847  0.28671874  2 0.866442640
-#&gt; 21 0.069601295 0.023650641 0.13598740  4.94622568  2 0.084321969
-#&gt; 22 0.019757391 0.006801603 0.08203920  0.47510331  2 0.788556159
-#&gt; 23 0.063774220 0.019875601 0.11921586  4.87944194  2 0.087185175
-#&gt; 24 0.040082054 0.009743323 0.10583934  1.54449705  2 0.461973142
-#&gt; 25 0.018483788 0.006654440 0.08814216  0.38858683  2 0.823416267
-#&gt; 26 0.047067547 0.010325657 0.10102008  2.89875949  2 0.234715826
-#&gt; 27 0.048833972 0.011215057 0.11033625  2.22560898  2 0.328636011
-#&gt; 28 0.028764762 0.007553182 0.09068419  1.08630634  2 0.580913641
-#&gt; 29 0.025327769 0.006842801 0.09308736  0.66892859  2 0.715721398
-#&gt; 30 0.030823229 0.008425256 0.09874081  1.16101093  2 0.559615430
+#&gt; 6  0.015752828 0.005947299 0.08387513  0.28661383  2 0.866488091
+#&gt; 7  0.026161268 0.008044214 0.08627898  0.71083902  2 0.700879357
+#&gt; 8  0.007680170 0.005135618 0.08043492  0.06376613  2 0.968619841
+#&gt; 9  0.026276119 0.007006796 0.09081962  0.72501716  2 0.695928342
+#&gt; 10 0.035756505 0.007942590 0.09806364  1.61977556  2 0.444907991
+#&gt; 11 0.058811733 0.019379788 0.11999244  4.04885411  2 0.132069490
+#&gt; 12 0.016007379 0.005511912 0.08401741  0.27912108  2 0.869740367
+#&gt; 13 0.022426151 0.007938474 0.08330261  0.63594058  2 0.727624406
+#&gt; 14 0.046158499 0.009581574 0.10443116  2.42431115  2 0.297555185
+#&gt; 15 0.045463652 0.014312242 0.10309359  2.52936025  2 0.282329592
+#&gt; 16 0.030465208 0.007495439 0.09441625  1.03161811  2 0.597017378
+#&gt; 17 0.019053124 0.005352149 0.08548684  0.44011378  2 0.802473143
+#&gt; 18 0.012956473 0.005362469 0.08480348  0.21899613  2 0.896283898
+#&gt; 19 0.093764868 0.045039319 0.14899663 11.07001684  2 0.003946175
+#&gt; 20 0.009532481 0.003218922 0.05347813  0.27915820  2 0.869724225
+#&gt; 21 0.069602240 0.020973111 0.13532789  4.52089333  2 0.104303885
+#&gt; 22 0.019754273 0.008065975 0.08314140  0.46158023  2 0.793906077
+#&gt; 23 0.063770870 0.018061258 0.11889540  4.97717820  2 0.083027027
+#&gt; 24 0.040081256 0.009769174 0.10005800  1.72342953  2 0.422437080
+#&gt; 25 0.018486808 0.007505339 0.08319682  0.39173258  2 0.822122153
+#&gt; 26 0.047070361 0.011803375 0.10084023  3.30595929  2 0.191478519
+#&gt; 27 0.048834450 0.011436825 0.10701477  2.59636976  2 0.273026920
+#&gt; 28 0.028764229 0.005844632 0.09129259  1.04735593  2 0.592337937
+#&gt; 29 0.025324258 0.005137283 0.08895154  0.67156536  2 0.714778426
+#&gt; 30 0.030823663 0.008823658 0.08584128  1.34351193  2 0.510810824
 #&gt; </div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-10.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>DIFs</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>DIFs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $sDIF
 #&gt;            sDIF      CI_2.5    CI_97.5           X2 df         p
-#&gt; 6  6.438132e-05 -0.06752147 0.06090674 4.014969e-06  1 0.9984012
-#&gt; 7  2.610643e-02 -0.03495229 0.08463758 6.661601e-01  1 0.4143936
-#&gt; 8  7.678371e-03 -0.05133638 0.06945888 6.007071e-02  1 0.8063842
-#&gt; 9  2.583815e-02 -0.03161356 0.09049732 7.317465e-01  1 0.3923177
-#&gt; 10 9.803141e-03 -0.05094609 0.07215565 9.579574e-02  1 0.7569345
+#&gt; 6  6.516844e-05 -0.06432678 0.05789425 4.261831e-06  1 0.9983528
+#&gt; 7  2.610811e-02 -0.03675945 0.07986975 7.863122e-01  1 0.3752176
+#&gt; 8  7.680169e-03 -0.05298979 0.06769568 5.934269e-02  1 0.8075379
+#&gt; 9  2.583983e-02 -0.03793560 0.09484126 6.266787e-01  1 0.4285762
+#&gt; 10 9.805183e-03 -0.05010616 0.06663994 1.119862e-01  1 0.7378941
 #&gt; 
 #&gt; $uDIF
-#&gt;           uDIF      CI_2.5    CI_97.5         X2 df         p
-#&gt; 6  0.015749408 0.008508353 0.08121427 0.28827932  2 0.8657668
-#&gt; 7  0.026159781 0.007791079 0.09087971 0.67870377  2 0.7122318
-#&gt; 8  0.007678372 0.006797147 0.07735370 0.06007135  2 0.9704109
-#&gt; 9  0.026275361 0.008412816 0.09234613 0.80922598  2 0.6672350
-#&gt; 10 0.035753335 0.011483639 0.09319771 1.50317180  2 0.4716180
+#&gt;          uDIF      CI_2.5    CI_97.5         X2 df         p
+#&gt; 6  0.01575283 0.005235868 0.07932363 0.29418128  2 0.8632157
+#&gt; 7  0.02616127 0.008610392 0.08279455 0.80358450  2 0.6691197
+#&gt; 8  0.00768017 0.005356720 0.07602432 0.05934327  2 0.9707642
+#&gt; 9  0.02627612 0.007439077 0.09510864 0.69385220  2 0.7068576
+#&gt; 10 0.03575651 0.010192239 0.08964033 1.70297943  2 0.4267787
 #&gt; </div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span>, plot <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-11.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           sDIF       uDIF
-#&gt; 6 6.438132e-05 0.01574941</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws<span class='op'>=</span><span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
+#&gt; 6 6.516844e-05 0.01575283</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws<span class='op'>=</span><span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $sDIF
 #&gt;           sDIF      CI_2.5    CI_97.5           X2 df         p
-#&gt; 6 6.438132e-05 -0.06097947 0.05882269 4.070173e-06  1 0.9983903
+#&gt; 6 6.516844e-05 -0.06665796 0.06731792 4.080465e-06  1 0.9983883
 #&gt; 
 #&gt; $uDIF
 #&gt;         uDIF      CI_2.5    CI_97.5        X2 df         p
-#&gt; 6 0.01574941 0.006040111 0.08144644 0.2763606  2 0.8709416
+#&gt; 6 0.01575283 0.005403191 0.09553818 0.2504128  2 0.8823148
 #&gt; </div><div class='input'>
 <span class='co'># evaluate specific values for sDRF</span>
 <span class='va'>Theta_nodes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>6</span>,<span class='fl'>6</span>,length.out <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
@@ -541,38 +541,38 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 <span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDTF</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            Theta         sDRF
-#&gt; sDRF.1 -6.000000 -0.005776586
-#&gt; sDRF.2 -5.878788 -0.006152846
-#&gt; sDRF.3 -5.757576 -0.006538671
-#&gt; sDRF.4 -5.636364 -0.006930010
-#&gt; sDRF.5 -5.515152 -0.007321376
-#&gt; sDRF.6 -5.393939 -0.007705492</div><div class='input'><span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, draws<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span>
+#&gt; sDRF.1 -6.000000 -0.005783998
+#&gt; sDRF.2 -5.878788 -0.006161014
+#&gt; sDRF.3 -5.757576 -0.006547670
+#&gt; sDRF.4 -5.636364 -0.006939921
+#&gt; sDRF.5 -5.515152 -0.007332289
+#&gt; sDRF.6 -5.393939 -0.007717503</div><div class='input'><span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, draws<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDTF</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            Theta         sDRF     CI_2.5    CI_97.5
-#&gt; sDRF.1 -6.000000 -0.005776586 -0.2044718 0.07225588
-#&gt; sDRF.2 -5.878788 -0.006152846 -0.2171697 0.07845840
-#&gt; sDRF.3 -5.757576 -0.006538671 -0.2300578 0.08516987
-#&gt; sDRF.4 -5.636364 -0.006930010 -0.2428113 0.09242874
-#&gt; sDRF.5 -5.515152 -0.007321376 -0.2597278 0.10081222
-#&gt; sDRF.6 -5.393939 -0.007705492 -0.2754785 0.11256754</div><div class='input'>
+#&gt; sDRF.1 -6.000000 -0.005783998 -0.2355893 0.06842995
+#&gt; sDRF.2 -5.878788 -0.006161014 -0.2515197 0.07412373
+#&gt; sDRF.3 -5.757576 -0.006547670 -0.2683347 0.08028320
+#&gt; sDRF.4 -5.636364 -0.006939921 -0.2858448 0.08694392
+#&gt; sDRF.5 -5.515152 -0.007332289 -0.3046702 0.09414362
+#&gt; sDRF.6 -5.393939 -0.007717503 -0.3244866 0.10192218</div><div class='input'>
 <span class='co'># sDIF (isolate single item)</span>
 <span class='va'>sDIF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, focal_items<span class='op'>=</span><span class='fl'>6</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDIF</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            Theta         sDRF
-#&gt; sDRF.1 -6.000000 -0.001155176
-#&gt; sDRF.2 -5.878788 -0.001302176
-#&gt; sDRF.3 -5.757576 -0.001467153
-#&gt; sDRF.4 -5.636364 -0.001652160
-#&gt; sDRF.5 -5.515152 -0.001859454
-#&gt; sDRF.6 -5.393939 -0.002091510</div><div class='input'><span class='va'>sDIF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span>, draws<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span>
+#&gt; sDRF.1 -6.000000 -0.001155538
+#&gt; sDRF.2 -5.878788 -0.001302580
+#&gt; sDRF.3 -5.757576 -0.001467603
+#&gt; sDRF.4 -5.636364 -0.001652662
+#&gt; sDRF.5 -5.515152 -0.001860015
+#&gt; sDRF.6 -5.393939 -0.002092135</div><div class='input'><span class='va'>sDIF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, focal_items <span class='op'>=</span> <span class='fl'>6</span>, draws<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDIF</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;            Theta         sDRF      CI_2.5     CI_97.5
-#&gt; sDRF.1 -6.000000 -0.001155176 -0.01963416 0.005018858
-#&gt; sDRF.2 -5.878788 -0.001302176 -0.02114750 0.005491261
-#&gt; sDRF.3 -5.757576 -0.001467153 -0.02276410 0.006003684
-#&gt; sDRF.4 -5.636364 -0.001652160 -0.02448883 0.006642257
-#&gt; sDRF.5 -5.515152 -0.001859454 -0.02632646 0.007407769
-#&gt; sDRF.6 -5.393939 -0.002091510 -0.02828149 0.008257209</div><div class='input'>
+#&gt; sDRF.1 -6.000000 -0.001155538 -0.02195929 0.003036562
+#&gt; sDRF.2 -5.878788 -0.001302580 -0.02372318 0.003386642
+#&gt; sDRF.3 -5.757576 -0.001467603 -0.02561740 0.003775014
+#&gt; sDRF.4 -5.636364 -0.001652662 -0.02764963 0.004205453
+#&gt; sDRF.5 -5.515152 -0.001860015 -0.02982771 0.004682021
+#&gt; sDRF.6 -5.393939 -0.002092135 -0.03215947 0.005209065</div><div class='input'>
 <span class='co'>## -------------</span>
 <span class='co'>## random slopes and intercepts for 15 items, and latent mean difference</span>
 <span class='co'>##    (no systematic DTF should exist, but DIF will be present)</span>
@@ -582,23 +582,23 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
                 <span class='va'>d</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>numeric</a></span><span class='op'>(</span><span class='fl'>15</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>-</span><span class='fl'>15</span>, <span class='fl'>0</span>, <span class='fl'>.5</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>N</span>, itemtype <span class='op'>=</span> <span class='st'>'dich'</span><span class='op'>)</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dat1</span>, <span class='va'>dat2</span><span class='op'>)</span>
 <span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='fl'>1</span>, group<span class='op'>=</span><span class='va'>group</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span> <span class='co'>#does not account for group differences! Need anchors</span>
 </div><div class='output co'>#&gt; <span class='message'>No hyper-parameters were estimated in the DIF model. For effective</span>
 #&gt; <span class='message'>                	DRF testing freeing the focal group hyper-parameters is recommended.</span></div><div class='output co'>#&gt;   n_focal_items     sDRF     uDRF
 #&gt; 1            30 3.249892 3.267577</div><div class='input'>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, group<span class='op'>=</span><span class='va'>group</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span>,
                       invariance<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'free_means'</span>, <span class='st'>'free_var'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-13.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#significant DIF in multiple items....</span>
 <span class='co'># DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)</span>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   n_focal_items      sDRF     uDRF
-#&gt; 1            30 0.4236706 0.423671</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod2</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span> <span class='co'>#non-sig DTF due to item cancellation</span>
+</div><div class='output co'>#&gt;   n_focal_items      sDRF      uDRF
+#&gt; 1            30 0.4235601 0.4235605</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod2</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span> <span class='co'>#non-sig DTF due to item cancellation</span>
 </div><div class='output co'>#&gt;      n_focal_items      stat     CI_2.5  CI_97.5       X2 df         p
-#&gt; sDRF            30 0.4236706 -0.3225258 1.022851 1.569794  1 0.2102369
-#&gt; uDRF            30 0.4236710  0.1463710 1.140907 1.569854  2 0.4561530</div><div class='input'>
+#&gt; sDRF            30 0.4235601 -0.2474228 1.078280 1.603211  1 0.2054488
+#&gt; uDRF            30 0.4235605  0.1650901 1.127414 1.603367  2 0.4485733</div><div class='input'>
 <span class='co'>## -------------</span>
 <span class='co'>## systematic differing slopes and intercepts (clear DTF)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1234</span><span class='op'>)</span>
@@ -608,15 +608,15 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dat1</span>, <span class='va'>dat2</span><span class='op'>)</span>
 <span class='va'>mod3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='multipleGroup.html'>multipleGroup</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>model</span>, group<span class='op'>=</span><span class='va'>group</span>, SE<span class='op'>=</span><span class='cn'>TRUE</span>,
                       invariance<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'free_means'</span>, <span class='st'>'free_var'</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span> <span class='co'>#visable DTF happening</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span> <span class='co'>#visable DTF happening</span>
 </div><div class='img'><img src='DRF-14.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># DIF(mod3, c('a1', 'd'), items2test=16:30)</span>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span> <span class='co'>#unsigned bias. Signed bias indicates group 2 scores generally higher on average</span>
-</div><div class='output co'>#&gt;   n_focal_items     sDRF     uDRF
-#&gt; 1            30 -1.98022 2.190883</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   n_focal_items      sDRF     uDRF
+#&gt; 1            30 -1.980246 2.190947</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      n_focal_items      stat    CI_2.5   CI_97.5       X2 df            p
-#&gt; sDRF            30 -1.980220 -2.708741 -1.249580 29.38496  1 5.933646e-08
-#&gt; uDRF            30  2.190883  1.613357  2.783593 42.01197  2 7.537299e-10</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>500</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'>#multiple DRF areas along Theta</span>
+#&gt; sDRF            30 -1.980246 -2.660694 -1.154279 28.90593  1 7.597989e-08
+#&gt; uDRF            30  2.190947  1.519614  2.778101 40.77308  2 1.400354e-09</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>500</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'>#multiple DRF areas along Theta</span>
 </div><div class='img'><img src='DRF-15.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># plot the DIF</span>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, draws<span class='op'>=</span><span class='fl'>500</span>, DIF<span class='op'>=</span><span class='cn'>TRUE</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
@@ -625,27 +625,17 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 <span class='va'>Theta_nodes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>6</span>,<span class='fl'>6</span>,length.out <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>sDTF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, draws<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sDTF</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;            Theta       sDRF      CI_2.5    CI_97.5
-#&gt; sDRF.1 -6.000000 0.01165886 -0.01552299 0.07784484
-#&gt; sDRF.2 -5.878788 0.01372653 -0.01500127 0.08766108
-#&gt; sDRF.3 -5.757576 0.01616425 -0.01413027 0.09865836
-#&gt; sDRF.4 -5.636364 0.01903831 -0.01419153 0.11096369
-#&gt; sDRF.5 -5.515152 0.02242663 -0.01419422 0.12471399
-#&gt; sDRF.6 -5.393939 0.02642073 -0.01400217 0.14005594</div><div class='input'>
+</div><div class='output co'>#&gt;            Theta       sDRF      CI_2.5   CI_97.5
+#&gt; sDRF.1 -6.000000 0.01165940 -0.02367022 0.1023228
+#&gt; sDRF.2 -5.878788 0.01372714 -0.02425510 0.1135148
+#&gt; sDRF.3 -5.757576 0.01616495 -0.02464453 0.1258754
+#&gt; sDRF.4 -5.636364 0.01903910 -0.02478217 0.1395150
+#&gt; sDRF.5 -5.515152 0.02242752 -0.02460105 0.1545521
+#&gt; sDRF.6 -5.393939 0.02642174 -0.02402207 0.1711138</div><div class='input'>
 <span class='co'># DIF</span>
 <span class='va'>sDIF</span> <span class='op'>&lt;-</span> <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod3</span>, Theta_nodes<span class='op'>=</span><span class='va'>Theta_nodes</span>, focal_items <span class='op'>=</span> <span class='fl'>30</span>, draws<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span>
-<span class='fu'>car</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/car/man/some.html'>some</a></span><span class='op'>(</span><span class='va'>sDIF</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;              Theta         sDRF        CI_2.5      CI_97.5
-#&gt; sDRF.5  -5.5151515  0.000430581 -4.448691e-05  0.002535833
-#&gt; sDRF.25 -3.0909091  0.008429818 -5.036804e-03  0.027651274
-#&gt; sDRF.40 -1.2727273 -0.014770028 -1.170415e-01  0.053457168
-#&gt; sDRF.45 -0.6666667 -0.134295934 -2.489299e-01 -0.045577480
-#&gt; sDRF.64  1.6363636 -0.128901263 -4.265657e-04  0.007424417
-#&gt; sDRF.67  2.0000000 -0.086162768 -8.792029e-04  0.010680584
-#&gt; sDRF.81  3.6969697 -0.010231937 -1.686965e-02  0.050268074
-#&gt; sDRF.87  4.4242424 -0.003928347 -6.533574e-02  0.063278257
-#&gt; sDRF.91  4.9090909 -0.002066809 -1.376504e-01  0.039571593
-#&gt; sDRF.92  5.0303030 -0.001759730 -1.649933e-01  0.028218417</div><div class='input'>
+<span class='fu'>car</span><span class='fu'>::</span><span class='fu'>some</span><span class='op'>(</span><span class='va'>sDIF</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘car’</span></div><div class='input'>
 <span class='co'>## ----------------------------------------------------------------</span>
 <span class='co'>### multidimensional DTF</span>
 
@@ -692,7 +682,7 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; Item_15 1.122 0.000  0.896 0 1
 #&gt; Item_16 1.094 0.000 -0.203 0 1
 #&gt; Item_17 1.041 0.000 -0.479 0 1
-#&gt; Item_18 1.011 0.000 -0.849 0 1
+#&gt; Item_18 1.011 0.000 -0.848 0 1
 #&gt; Item_19 0.962 0.000 -0.768 0 1
 #&gt; Item_20 0.937 0.000  2.372 0 1
 #&gt; Item_21 0.935 0.000  0.082 0 1
@@ -745,7 +735,7 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; Item_4  0.977 0.000 -2.342 0 1
 #&gt; Item_5  1.006 0.000  0.410 0 1
 #&gt; Item_6  0.886 0.000  0.558 0 1
-#&gt; Item_7  0.967 0.000 -0.583 0 1
+#&gt; Item_7  0.967 0.000 -0.582 0 1
 #&gt; Item_8  0.988 0.000 -0.613 0 1
 #&gt; Item_9  0.962 0.000 -0.467 0 1
 #&gt; Item_10 0.866 0.000 -0.999 0 1
@@ -779,9 +769,9 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; Item_38 0.000 1.146 -1.450 0 1
 #&gt; Item_39 0.000 1.130 -0.441 0 1
 #&gt; Item_40 0.000 0.978 -0.632 0 1
-#&gt; Item_41 0.000 1.202  1.439 0 1
+#&gt; Item_41 0.000 1.203  1.439 0 1
 #&gt; Item_42 0.000 0.942 -0.943 0 1
-#&gt; Item_43 0.000 1.033 -0.899 0 1
+#&gt; Item_43 0.000 1.033 -0.898 0 1
 #&gt; Item_44 0.000 1.145 -0.339 0 1
 #&gt; Item_45 0.000 0.844 -0.728 0 1
 #&gt; Item_46 0.000 1.068 -1.045 0 1
@@ -799,10 +789,10 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; F1 1.067 0.518
 #&gt; F2 0.518 1.415
 #&gt; 
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, degrees <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>45</span>,<span class='fl'>45</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, degrees <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>45</span>,<span class='fl'>45</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-17.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   n_focal_items      sDRF      uDRF
-#&gt; 1            50 0.3468044 0.3468044</div><div class='input'>
+#&gt; 1            50 0.3467313 0.3467314</div><div class='input'>
 <span class='co'># some intercepts slightly higher in Group 2</span>
 <span class='va'>d2</span> <span class='op'>&lt;-</span> <span class='va'>d</span>
 <span class='va'>d2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span>, <span class='fl'>31</span><span class='op'>:</span><span class='fl'>35</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>d2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span>, <span class='fl'>31</span><span class='op'>:</span><span class='fl'>35</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>+</span> <span class='fl'>1</span>
@@ -939,14 +929,14 @@ Adjustments are located in the <code>adj_pvals</code> element in the returned li
 #&gt; F1 1.164 0.458
 #&gt; F2 0.458 1.341
 #&gt; 
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, degrees <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>45</span>,<span class='fl'>45</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod</span>, degrees <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>45</span>,<span class='fl'>45</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='DRF-18.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   n_focal_items      sDRF     uDRF
-#&gt; 1            50 -1.803178 1.803178</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      n_focal_items      stat    CI_2.5   CI_97.5      X2 df            p
-#&gt; sDRF            50 -1.803178 -2.376726 -1.254129 39.8186  1 2.786787e-10
-#&gt; uDRF            50  1.803178  1.250615  2.368902 39.8186  2 2.256842e-09</div><div class='input'>
+</div><div class='output co'>#&gt;   n_focal_items     sDRF    uDRF
+#&gt; 1            50 -1.80324 1.80324</div><div class='input'><span class='fu'>DRF</span><span class='op'>(</span><span class='va'>mod</span>, draws <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      n_focal_items     stat    CI_2.5   CI_97.5      X2 df            p
+#&gt; sDRF            50 -1.80324 -2.404906 -1.267602 40.0343  1 2.495426e-10
+#&gt; uDRF            50  1.80324  1.251209  2.404188 40.0343  2 2.026108e-09</div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

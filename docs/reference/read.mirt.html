@@ -73,7 +73,7 @@ plink package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -163,7 +163,7 @@ plink package." />
 
 <span class='co'>## unidimensional</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>plink</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='error'>Error in library(plink): there is no package called ‘plink’</span></div><div class='input'>
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='expand.table.html'>expand.table</a></span><span class='op'>(</span><span class='va'>LSAT7</span><span class='op'>)</span>
 <span class='op'>(</span><span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
@@ -172,7 +172,7 @@ plink package." />
 #&gt; 
 #&gt; Full-information item factor analysis with 1 factor(s).
 #&gt; Converged within 1e-04 tolerance after 28 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 61
@@ -184,27 +184,27 @@ plink package." />
 #&gt; BIC = 5386.688; SABIC = 5354.927
 #&gt; G2 (21) = 31.7, p = 0.0628
 #&gt; RMSEA = 0.023, CFI = NaN, TLI = NaN</div><div class='input'><span class='va'>plinkpars</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-2.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(plinkpars): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#graded</span>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>plinkpars</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-4.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(plinkpars): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#gpcm</span>
 <span class='va'>mod3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span>, itemtype <span class='op'>=</span> <span class='st'>'gpcm'</span><span class='op'>)</span>
 <span class='va'>plinkpars</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod3</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod3</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-6.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(plinkpars): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod3</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#nominal</span>
 <span class='va'>mod4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span>, itemtype <span class='op'>=</span> <span class='st'>'nominal'</span><span class='op'>)</span>
 <span class='va'>plinkpars</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod4</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod4</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-8.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(plinkpars): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod4</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## multidimensional</span>
 
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='expand.table.html'>expand.table</a></span><span class='op'>(</span><span class='va'>LSAT7</span><span class='op'>)</span>
@@ -214,8 +214,8 @@ plink package." />
 #&gt; mirt(data = data, model = 2)
 #&gt; 
 #&gt; Full-information item factor analysis with 2 factor(s).
-#&gt; Converged within 1e-04 tolerance after 430 EM iterations.
-#&gt; mirt version: 1.32.9 
+#&gt; Converged within 1e-04 tolerance after 436 EM iterations.
+#&gt; mirt version: 1.32.10 
 #&gt; M-step optimizer: BFGS 
 #&gt; EM acceleration: Ramsay 
 #&gt; Number of rectangular quadrature: 31
@@ -227,91 +227,24 @@ plink package." />
 #&gt; BIC = 5403.748; SABIC = 5359.283
 #&gt; G2 (17) = 21.13, p = 0.2205
 #&gt; RMSEA = 0.016, CFI = NaN, TLI = NaN</div><div class='input'><span class='va'>plinkpars</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
-<span class='va'>plinkpars</span>
-</div><div class='output co'>#&gt; An object of class "irt.pars"
-#&gt; Slot "pars":
-#&gt;              a1          a2            
-#&gt; [1,] -2.0064913  0.86960770 2.6472239 0
-#&gt; [2,] -0.8488500 -0.52229065 0.7876874 0
-#&gt; [3,] -2.1521138 -1.83590899 2.4822977 0
-#&gt; [4,] -0.7559849 -0.02807002 0.4846660 0
-#&gt; [5,] -0.7573323  0.00000000 1.8641272 0
-#&gt; 
-#&gt; Slot "cat":
-#&gt; [1] 2 2 2 2 2
-#&gt; 
-#&gt; Slot "poly.mod":
-#&gt; An object of class "poly.mod"
-#&gt; Slot "model":
-#&gt; [1] "drm"
-#&gt; 
-#&gt; Slot "items":
-#&gt; $drm
-#&gt; [1] 1 2 3 4 5
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; Slot "common":
-#&gt; NULL
-#&gt; 
-#&gt; Slot "location":
-#&gt; [1] FALSE
-#&gt; 
-#&gt; Slot "groups":
-#&gt; [1] 1
-#&gt; 
-#&gt; Slot "dimensions":
-#&gt; [1] 2
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-9.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-10.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='va'>plinkpars</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(plinkpars): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>cmod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.model.html'>mirt.model</a></span><span class='op'>(</span><span class='st'>'
    F1 = 1,4,5
    F2 = 2-4'</span><span class='op'>)</span>
 <span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cmod</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='itemplot.html'>itemplot</a></span><span class='op'>(</span><span class='va'>model</span>, <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-12.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='fu'><a href='itemplot.html'>itemplot</a></span><span class='op'>(</span><span class='va'>model</span>, <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#graded</span>
 <span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>2</span><span class='op'>)</span>
 <span class='va'>plinkpars</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod2</span><span class='op'>)</span>
-<span class='va'>plinkpars</span>
-</div><div class='output co'>#&gt; An object of class "irt.pars"
-#&gt; Slot "pars":
-#&gt;              a1         a2       b1       b2        b3
-#&gt; [1,] -1.3350281 0.09676376 5.210669 2.865549 -1.602826
-#&gt; [2,] -0.8789508 1.85253465 3.703802 1.153176 -2.904255
-#&gt; [3,] -1.4696076 1.16485648 4.663467 1.956626 -1.735796
-#&gt; [4,] -1.7220434 0.00000000 3.988789 1.195247 -2.043998
-#&gt; 
-#&gt; Slot "cat":
-#&gt; [1] 4 4 4 4
-#&gt; 
-#&gt; Slot "poly.mod":
-#&gt; An object of class "poly.mod"
-#&gt; Slot "model":
-#&gt; [1] "grm"
-#&gt; 
-#&gt; Slot "items":
-#&gt; $grm
-#&gt; [1] 1 2 3 4
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; Slot "common":
-#&gt; NULL
-#&gt; 
-#&gt; Slot "location":
-#&gt; [1] FALSE
-#&gt; 
-#&gt; Slot "groups":
-#&gt; [1] 1
-#&gt; 
-#&gt; Slot "dimensions":
-#&gt; [1] 2
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-13.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/KernSmoothIRT/man/plot.ksIRT.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
-</div><div class='img'><img src='read.mirt-14.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='va'>plinkpars</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>plinkpars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(plinkpars): object 'plinkpars' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>mod2</span>, type <span class='op'>=</span> <span class='st'>'trace'</span><span class='op'>)</span>
+</div><div class='img'><img src='read.mirt-7.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>### multiple group equating example</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1234</span><span class='op'>)</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='expand.table.html'>expand.table</a></span><span class='op'>(</span><span class='va'>LSAT7</span><span class='op'>)</span>
@@ -320,79 +253,12 @@ plink package." />
 
 <span class='co'># convert, and combine pars</span>
 <span class='va'>plinkMG</span> <span class='op'>&lt;-</span> <span class='fu'>read.mirt</span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
-<span class='va'>combine</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>5</span>, <span class='fl'>2</span><span class='op'>)</span>
-<span class='va'>comb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plink/man/combine.pars.html'>combine.pars</a></span><span class='op'>(</span><span class='va'>plinkMG</span>, <span class='va'>combine</span>, grp.names<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>group</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/plink/man/plink-methods.html'>plink</a></span><span class='op'>(</span><span class='va'>comb</span>, rescale<span class='op'>=</span><span class='st'>"SL"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/plink/man/equate-methods.html'>equate</a></span><span class='op'>(</span><span class='va'>out</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Maximum iterations reached for true score: 0 </div><div class='output co'>#&gt; $tse
-#&gt;         theta g2       g1
-#&gt; 1 -160.728133  0 0.000000
-#&gt; 2   -3.233708  1 0.973592
-#&gt; 3   -1.910206  2 2.023228
-#&gt; 4   -0.999055  3 3.021854
-#&gt; 5    0.048370  4 3.973790
-#&gt; 6   57.447823  5 5.000000
-#&gt; 
-#&gt; $ose
-#&gt; $ose$scores
-#&gt;   eap.theta.g2 eap.sd.g2 g2        g1
-#&gt; 1    -1.896452  0.698848  0 0.0000000
-#&gt; 2    -1.474468  0.697615  1 0.9893206
-#&gt; 3    -1.002946  0.716008  2 1.9956880
-#&gt; 4    -0.455591  0.747728  3 2.9913088
-#&gt; 5     0.123379  0.782773  4 3.9902285
-#&gt; 6     0.678751  0.812795  5 4.9949629
-#&gt; 
-#&gt; $ose$dist
-#&gt; $ose$dist$g2
-#&gt;      score       pop1       pop2        syn
-#&gt; [1,]     0 0.03273179 0.03273179 0.03273179
-#&gt; [2,]     1 0.17343628 0.17343628 0.17343628
-#&gt; [3,]     2 0.48733115 0.48733115 0.48733115
-#&gt; [4,]     3 0.99873881 0.99873881 0.99873881
-#&gt; [5,]     4 1.61799362 1.61799362 1.61799362
-#&gt; [6,]     5 1.56457525 1.56457525 1.56457525
-#&gt; 
-#&gt; $ose$dist$g1
-#&gt;      score       pop1       pop2        syn
-#&gt; [1,]     0 0.03387582 0.03387582 0.03387582
-#&gt; [2,]     1 0.17488353 0.17488353 0.17488353
-#&gt; [3,]     2 0.48634282 0.48634282 0.48634282
-#&gt; [4,]     3 1.01314372 1.01314372 1.01314372
-#&gt; [5,]     4 1.61759044 1.61759044 1.61759044
-#&gt; [6,]     5 1.54897057 1.54897057 1.54897057
-#&gt; 
-#&gt; 
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/plink/man/equate-methods.html'>equate</a></span><span class='op'>(</span><span class='va'>out</span>, method <span class='op'>=</span> <span class='st'>'OSE'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $scores
-#&gt;   eap.theta.g2 eap.sd.g2 g2        g1
-#&gt; 1    -1.896452  0.698848  0 0.0000000
-#&gt; 2    -1.474468  0.697615  1 0.9893206
-#&gt; 3    -1.002946  0.716008  2 1.9956880
-#&gt; 4    -0.455591  0.747728  3 2.9913088
-#&gt; 5     0.123379  0.782773  4 3.9902285
-#&gt; 6     0.678751  0.812795  5 4.9949629
-#&gt; 
-#&gt; $dist
-#&gt; $dist$g2
-#&gt;      score       pop1       pop2        syn
-#&gt; [1,]     0 0.03273179 0.03273179 0.03273179
-#&gt; [2,]     1 0.17343628 0.17343628 0.17343628
-#&gt; [3,]     2 0.48733115 0.48733115 0.48733115
-#&gt; [4,]     3 0.99873881 0.99873881 0.99873881
-#&gt; [5,]     4 1.61799362 1.61799362 1.61799362
-#&gt; [6,]     5 1.56457525 1.56457525 1.56457525
-#&gt; 
-#&gt; $dist$g1
-#&gt;      score       pop1       pop2        syn
-#&gt; [1,]     0 0.03387582 0.03387582 0.03387582
-#&gt; [2,]     1 0.17488353 0.17488353 0.17488353
-#&gt; [3,]     2 0.48634282 0.48634282 0.48634282
-#&gt; [4,]     3 1.01314372 1.01314372 1.01314372
-#&gt; [5,]     4 1.61759044 1.61759044 1.61759044
-#&gt; [6,]     5 1.54897057 1.54897057 1.54897057
-#&gt; 
-#&gt; </div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘plink’</span></div><div class='input'><span class='va'>combine</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>, <span class='fl'>5</span>, <span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>comb</span> <span class='op'>&lt;-</span> <span class='fu'>combine.pars</span><span class='op'>(</span><span class='va'>plinkMG</span>, <span class='va'>combine</span>, grp.names<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>group</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in combine.pars(plinkMG, combine, grp.names = unique(group)): could not find function "combine.pars"</span></div><div class='input'><span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'>plink</span><span class='op'>(</span><span class='va'>comb</span>, rescale<span class='op'>=</span><span class='st'>"SL"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plink(comb, rescale = "SL"): could not find function "plink"</span></div><div class='input'><span class='fu'>equate</span><span class='op'>(</span><span class='va'>out</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in equate(out): could not find function "equate"</span></div><div class='input'><span class='fu'>equate</span><span class='op'>(</span><span class='va'>out</span>, method <span class='op'>=</span> <span class='st'>'OSE'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in equate(out, method = "OSE"): could not find function "equate"</span></div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

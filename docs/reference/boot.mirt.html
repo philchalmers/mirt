@@ -75,7 +75,7 @@ package). Parameters are organized from the freely estimated values in mod2value
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -178,7 +178,7 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='co'>#standard</span>
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>booted</span> <span class='op'>&lt;-</span> <span class='fu'>boot.mirt</span><span class='op'>(</span><span class='va'>mod</span>, R<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>EM cycles terminated after 500 iterations.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>booted</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>EM cycles terminated after 500 iterations.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>booted</span><span class='op'>)</span>
 </div><div class='img'><img src='boot.mirt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>booted</span>
 </div><div class='output co'>#&gt; 
 #&gt; ORDINARY NONPARAMETRIC BOOTSTRAP
@@ -193,22 +193,22 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;        original        bias    std. error
-#&gt; t1*   1.0417547  0.0355060929   0.2099059
-#&gt; t2*   4.8641542  0.1612561750   0.5913162
-#&gt; t3*   2.6399417  0.0775287149   0.2391553
-#&gt; t4*  -1.4660135 -0.0006612758   0.1234474
-#&gt; t5*   1.2259618 -0.0009277301   0.2076028
-#&gt; t6*   2.9240027  0.0478506169   0.2283785
-#&gt; t7*   0.9011651  0.0120842505   0.1596257
-#&gt; t8*  -2.2665647  0.0436910112   0.1516159
-#&gt; t9*   2.2933717  0.4154588839   1.4106988
-#&gt; t10*  5.2339928  0.7852499563   2.3420290
-#&gt; t11*  2.2137728  0.2652036167   0.9232359
-#&gt; t12* -1.9637062 -0.2112222729   0.7294146
-#&gt; t13*  1.0949151  0.0852784718   0.1981272
-#&gt; t14*  3.3479196  0.1413658094   0.2913317
-#&gt; t15*  0.9916289  0.0092598281   0.1485727
-#&gt; t16* -1.6882599 -0.0963337319   0.1629736</div><div class='input'>
+#&gt; t1*   1.0417547  0.0355101045   0.2099052
+#&gt; t2*   4.8641542  0.1612680327   0.5913028
+#&gt; t3*   2.6399417  0.0775378535   0.2391408
+#&gt; t4*  -1.4660135 -0.0006674101   0.1234596
+#&gt; t5*   1.2259618 -0.0009218152   0.2076051
+#&gt; t6*   2.9240027  0.0478686692   0.2283829
+#&gt; t7*   0.9011651  0.0120826787   0.1596245
+#&gt; t8*  -2.2665647  0.0436802454   0.1516194
+#&gt; t9*   2.2933717  0.4134821391   1.4028693
+#&gt; t10*  5.2339928  0.7818173505   2.3281466
+#&gt; t11*  2.2137728  0.2639025848   0.9186697
+#&gt; t12* -1.9637062 -0.2100883392   0.7250567
+#&gt; t13*  1.0949151  0.0852968852   0.1981174
+#&gt; t14*  3.3479196  0.1413785536   0.2913223
+#&gt; t15*  0.9916289  0.0092701225   0.1485587
+#&gt; t16* -1.6882599 -0.0963397811   0.1629658</div><div class='input'>
 <span class='co'>#run in parallel using snow back-end using all available cores</span>
 <span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mirt.html'>mirt</a></span><span class='op'>(</span><span class='va'>Science</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>booted</span> <span class='op'>&lt;-</span> <span class='fu'>boot.mirt</span><span class='op'>(</span><span class='va'>mod</span>, parallel <span class='op'>=</span> <span class='st'>'snow'</span>, ncpus <span class='op'>=</span> <span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
@@ -226,22 +226,22 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;        original       bias    std. error
-#&gt; t1*   1.0417547  0.006205232   0.2635966
-#&gt; t2*   4.8641542  0.152826065   0.5174078
-#&gt; t3*   2.6399417  0.036045372   0.2744291
-#&gt; t4*  -1.4660135 -0.021361650   0.1752548
-#&gt; t5*   1.2259618 -0.007298467   0.2142849
-#&gt; t6*   2.9240027  0.016502740   0.2765110
-#&gt; t7*   0.9011651  0.017902454   0.1530316
-#&gt; t8*  -2.2665647 -0.030657484   0.2076719
-#&gt; t9*   2.2933717  0.225714881   0.9072168
-#&gt; t10*  5.2339928  0.382479229   1.4004327
-#&gt; t11*  2.2137728  0.140800157   0.6270481
-#&gt; t12* -1.9637062 -0.171814056   0.6677365
-#&gt; t13*  1.0949151 -0.004097568   0.2339211
-#&gt; t14*  3.3479196  0.021008340   0.3081699
-#&gt; t15*  0.9916289 -0.003184771   0.1613692
-#&gt; t16* -1.6882599 -0.025442350   0.1833344</div><div class='input'>
+#&gt; t1*   1.0417547  0.006210796   0.2636124
+#&gt; t2*   4.8641542  0.152836129   0.5173938
+#&gt; t3*   2.6399417  0.036055631   0.2744260
+#&gt; t4*  -1.4660135 -0.021369592   0.1752470
+#&gt; t5*   1.2259618 -0.007298250   0.2142740
+#&gt; t6*   2.9240027  0.016508282   0.2764981
+#&gt; t7*   0.9011651  0.017898678   0.1530311
+#&gt; t8*  -2.2665647 -0.030660337   0.2076536
+#&gt; t9*   2.2933717  0.224639238   0.9019147
+#&gt; t10*  5.2339928  0.380643598   1.3912198
+#&gt; t11*  2.2137728  0.140016210   0.6232373
+#&gt; t12* -1.9637062 -0.170885282   0.6620727
+#&gt; t13*  1.0949151 -0.004085642   0.2339171
+#&gt; t14*  3.3479196  0.021017540   0.3081722
+#&gt; t15*  0.9916289 -0.003180110   0.1613711
+#&gt; t16* -1.6882599 -0.025447410   0.1833278</div><div class='input'>
 
 <span class='co'># }</span>
 </div></pre>

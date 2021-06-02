@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -181,12 +181,12 @@ doi: <a href='https://doi.org/10.18637/jss.v048.i06'>10.18637/jss.v048.i06</a></
 <span class='va'>fe</span> <span class='op'>&lt;-</span> <span class='fu'>fixef</span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>fe</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;           F1
-#&gt; 1  0.6128989
-#&gt; 2 -0.1661776
-#&gt; 3  2.1652535
-#&gt; 4 -1.8932424
-#&gt; 5 -0.5021590
-#&gt; 6  2.2405700</div><div class='input'>
+#&gt; 1  0.6129074
+#&gt; 2 -0.1661799
+#&gt; 3  2.1652793
+#&gt; 4 -1.8932638
+#&gt; 5 -0.5021655
+#&gt; 6  2.2405972</div><div class='input'>
 <span class='co'># with mixedmirt()</span>
 <span class='va'>mod1b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mixedmirt.html'>mixedmirt</a></span><span class='op'>(</span><span class='va'>dat</span>, <span class='va'>covdata</span>, <span class='fl'>1</span>, lr.fixed <span class='op'>=</span> <span class='op'>~</span> <span class='va'>X1</span> <span class='op'>+</span> <span class='va'>X2</span>, fixed <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>0</span> <span class='op'>+</span> <span class='va'>items</span><span class='op'>)</span>
 <span class='va'>fe2</span> <span class='op'>&lt;-</span> <span class='fu'>fixef</span><span class='op'>(</span><span class='va'>mod1b</span><span class='op'>)</span>

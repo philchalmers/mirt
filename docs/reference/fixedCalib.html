@@ -77,7 +77,7 @@ anchor items for equating, see multipleGroup." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
       </span>
     </div>
 
@@ -454,7 +454,7 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></td>
 #&gt; Item_47 0.5949594  1.00064808 0.5760704 -0.35353046
 #&gt; Item_48 1.1100250  3.66839647 1.1702210  1.51040387
 #&gt; Item_49 0.9637967  1.58296721 1.1749563 -0.41985829
-#&gt; Item_50 0.6861672  0.97139592 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>NWU_OEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+#&gt; Item_50 0.6861672  0.97139592 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>NWU_OEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='fixedCalib-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># No Prior Weights Updating and Multiple EM Cycles (NWU-MEM)</span>
 <span class='va'>NWU_MEM</span> <span class='op'>&lt;-</span> <span class='fu'>fixedCalib</span><span class='op'>(</span><span class='va'>dataset2</span>, model <span class='op'>=</span> <span class='fl'>1</span>, old_mod <span class='op'>=</span> <span class='va'>mod</span>, PAU <span class='op'>=</span> <span class='st'>'NWU'</span><span class='op'>)</span>
@@ -570,7 +570,7 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></td>
 #&gt; Item_47 0.5439919 -0.33644377 0.5760704 -0.35353046
 #&gt; Item_48 1.1276274  1.57415184 1.1702210  1.51040387
 #&gt; Item_49 1.2292892 -0.35728146 1.1749563 -0.41985829
-#&gt; Item_50 0.6165578 -0.46814962 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>NWU_MEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+#&gt; Item_50 0.6165578 -0.46814962 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>NWU_MEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='fixedCalib-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># One Prior Weights Updating and One EM Cycle (OWU-OEM)</span>
 <span class='va'>OWU_OEM</span> <span class='op'>&lt;-</span> <span class='fu'>fixedCalib</span><span class='op'>(</span><span class='va'>dataset2</span>, model <span class='op'>=</span> <span class='fl'>1</span>, old_mod <span class='op'>=</span> <span class='va'>mod</span>, PAU <span class='op'>=</span> <span class='st'>'OWU'</span>, NEMC <span class='op'>=</span> <span class='st'>"OEM"</span><span class='op'>)</span>
@@ -686,7 +686,7 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></td>
 #&gt; Item_47 0.6349614  1.03260996 0.5760704 -0.35353046
 #&gt; Item_48 1.1882545  3.74846375 1.1702210  1.51040387
 #&gt; Item_49 0.9799520  1.61080124 1.1749563 -0.41985829
-#&gt; Item_50 0.7175641  1.05773442 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>OWU_OEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+#&gt; Item_50 0.7175641  1.05773442 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>OWU_OEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='fixedCalib-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># One Prior Weights Updating and Multiple EM Cycles (OWU-MEM)</span>
 <span class='va'>OWU_MEM</span> <span class='op'>&lt;-</span> <span class='fu'>fixedCalib</span><span class='op'>(</span><span class='va'>dataset2</span>, model <span class='op'>=</span> <span class='fl'>1</span>, old_mod <span class='op'>=</span> <span class='va'>mod</span>, PAU <span class='op'>=</span> <span class='st'>'OWU'</span><span class='op'>)</span>
@@ -802,7 +802,7 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></td>
 #&gt; Item_47 0.5431081 -0.33673549 0.5760704 -0.35353046
 #&gt; Item_48 1.1236076  1.57293821 1.1702210  1.51040387
 #&gt; Item_49 1.2263527 -0.35894388 1.1749563 -0.41985829
-#&gt; Item_50 0.6163437 -0.46859664 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>OWU_MEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+#&gt; Item_50 0.6163437 -0.46859664 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>OWU_MEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='fixedCalib-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)</span>
 <span class='va'>MWU_MEM</span> <span class='op'>&lt;-</span> <span class='fu'>fixedCalib</span><span class='op'>(</span><span class='va'>dataset2</span>, model <span class='op'>=</span> <span class='fl'>1</span>, old_mod <span class='op'>=</span> <span class='va'>mod</span><span class='op'>)</span>
@@ -918,7 +918,7 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></td>
 #&gt; Item_47 0.5424373 -0.33618466 0.5760704 -0.35353046
 #&gt; Item_48 1.1223822  1.57269891 1.1702210  1.51040387
 #&gt; Item_49 1.2239650 -0.35979971 1.1749563 -0.41985829
-#&gt; Item_50 0.6185551 -0.46832163 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>MWU_MEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
+#&gt; Item_50 0.6185551 -0.46832163 0.6079603 -0.48618269</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>MWU_MEM</span>, type <span class='op'>=</span> <span class='st'>'empiricalhist'</span><span class='op'>)</span>
 </div><div class='img'><img src='fixedCalib-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
