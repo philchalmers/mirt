@@ -84,6 +84,9 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
     factorNames <- setdiff(model$x[,1L],keywords)
     nfactNames <- length(factorNames)
     nfact <- sum(!grepl('\\(',factorNames))
+    if(nfact > 1L && any(itemtype %in% 'rsm', 'gpcmIRT', 'grsmIRT'))
+        stop(c('Rating scale models based on classical IRT parametrization ',
+             'are not generalizable to multidimensional models'), call. = FALSE)
     index <- 1L:J
     Names <- NULL
     for(i in 1L:J)
