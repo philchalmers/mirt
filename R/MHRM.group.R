@@ -270,22 +270,22 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
 
         #Step 3. Update R-M step
         Tau <- Tau + gamma*(ave.h - Tau)
-        longpars0 <- longpars
         if(list$Moptim == 'NR1'){
             correction <- try(solve(Tau, grad), TRUE)
             if(is(correction, 'try-error')){
                 Tau.inv <- MPinv(Tau)
                 correction <- as.vector(grad %*% Tau.inv)
             }
-            longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
-            if(any(longpars < LBOUND))
-                longpars[longpars < LBOUND] <- (longpars0[longpars < LBOUND] + LBOUND[longpars < LBOUND])/2
-            if(any(longpars > UBOUND))
-                longpars[longpars > UBOUND] <- (longpars0[longpars > UBOUND] + UBOUND[longpars > UBOUND])/2
-            if(length(constrain))
-                for(i in seq_len(length(constrain)))
-                    longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
-        }
+        } else correction <- tmp$correction
+        longpars[estindex_unique] <- longpars0[estindex_unique] + gamma*correction
+        if(any(longpars < LBOUND))
+            longpars[longpars < LBOUND] <- (longpars0[longpars < LBOUND] + LBOUND[longpars < LBOUND])/2
+        if(any(longpars > UBOUND))
+            longpars[longpars > UBOUND] <- (longpars0[longpars > UBOUND] + UBOUND[longpars > UBOUND])/2
+        if(length(constrain))
+            for(i in seq_len(length(constrain)))
+                longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
+
         if(verbose)
             cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f",
                                   gamma, max(abs(gamma*correction))), sep='')
