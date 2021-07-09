@@ -70,7 +70,9 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
     }
     if(length(constrain)){
         grad <- as.numeric(updateGrad(g, L))
-        ave.h <- updateHess(-h, L)
+        ave.h <- -h
+        if(length(h))
+            ave.h <- updateHess(-h, L)
     } else {
         grad <- g
         ave.h <- -h
