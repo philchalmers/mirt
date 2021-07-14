@@ -174,6 +174,8 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         x@ParObjects$pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
     }
     P <- ProbTrace(x=x@ParObjects$pars[[item]], Theta=ThetaFull)
+    if(type == 'threshold')
+        P <- 1 - t(apply(P, 1, cumsum))
     K <- x@ParObjects$pars[[item]]@ncat
     info <- numeric(nrow(ThetaFull))
     if(K == 2L) auto.key <- FALSE
@@ -229,7 +231,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
     score <- expected.item(x@ParObjects$pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
-    if(ncol(P) == 2){
+    if(ncol(P) == 2 && type != 'threshold'){
         P <- P[ ,-1, drop = FALSE]
         CEprobupper <- CEprobupper[ ,-1, drop = FALSE]
         CEproblower <- CEproblower[ ,-1, drop = FALSE]
@@ -254,6 +256,12 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             plt2$upper <- as.numeric(CEprobupper)
             plt2$lower <- as.numeric(CEproblower)
         }
+        if(type == 'threshold'){
+            plt2 <- plt2[plt2$time != paste0('P', K), ]
+            plt2$time <- factor(plt2$time)
+            levels(plt2$time) <- paste0("P(x > ", (1L:(K-1L) - 1L) +
+                                            extract.mirt(mod, what = 'mins')[item], ")")
+        }
         if(type == 'trace'){
             if(is.null(main))
                 main <- paste('Trace lines for item', item)
@@ -274,7 +282,18 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                                 main = main, ylim = c(-0.1,1.1),
                                 ylab = expression(P(theta)), xlab = expression(theta), ... ))
             }
-        } else if(type == 'info'){
+        } else if(type == 'threshold'){
+            if(is.null(main))
+                main <- paste('Threshold lines for item', item)
+            if(CE){
+                stop('Confidence envelope option not currently supported for type = \"threshold\"')
+            } else {
+                return(xyplot(P ~ Theta, plt2, groups = time, type = 'l', auto.key = auto.key,
+                              main = main, ylim = c(-0.1,1.1),
+                              ylab = expression(P(theta)), xlab = expression(theta), ... ))
+            }
+        }
+        else if(type == 'info'){
             if(is.null(main))
                 main <- paste('Information for item', item)
             if(CE){
@@ -369,6 +388,12 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         plt$CEinfolower <- CEinfolower
         plt2$upper <- as.numeric(CEprobupper)
         plt2$lower <- as.numeric(CEproblower)
+        if(type == 'threshold'){
+            plt2 <- plt2[plt2$time != paste0('P', K), ]
+            plt2$time <- factor(plt2$time)
+            levels(plt2$time) <- paste0("P(x > ", (1L:(K-1L) - 1L) +
+                                            extract.mirt(mod, what = 'mins')[item], ")")
+        }
         if(type == 'infocontour'){
             if(is.null(main))
                 main <- paste("Item", item, "Information Contour")
@@ -408,6 +433,15 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                              main = main, zlim = c(-0.1,1.1),
                              zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                              scales = list(arrows = FALSE), colorkey = colorkey, drape = drape, screen=rot, ...))
+        } else if(type == 'threshold'){
+            if(is.null(main))
+                main <- paste('Threshold surfaces for item', item)
+            if(CE){
+                stop('Confidence envelope option not currently supported for type = \"threshold\"')
+            } else return(wireframe(P ~ Theta1 + Theta2, data = plt2, group = time,
+                                 main = main, zlim = c(-0.1,1.1),
+                                 zlab=expression(P(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 scales = list(arrows = FALSE), colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'score'){
             if(is.null(main))
                 main <- paste("Item", item, "Expected Scores")

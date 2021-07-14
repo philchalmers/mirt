@@ -32,7 +32,8 @@ or \code{MultipleGroupClass}. Input may also be a \code{list} for comparing simi
 \item{item}{a single numeric value, or the item name, indicating which item to plot}
 
 \item{type}{plot type to use, information (\code{'info'}), standard errors (\code{'SE'}),
-item trace lines (\code{'trace'}), information and standard errors (\code{'infoSE'}) or
+item trace lines (\code{'trace'}), cumulative probability plots to indicate thresholds
+(\code{'threshold'}), information and standard errors (\code{'infoSE'}) or
 information and trace lines (\code{'infotrace'}), relative efficiency lines (\code{'RE'}),
 expected score \code{'score'}, or information and trace line contours (\code{'infocontour'} and
 \code{'tracecontour'}; not supported for \code{MultipleGroupClass} objects)}
@@ -101,6 +102,7 @@ itemplot(mod3, 4, type = 'tracecontour')
 #polytomous items
 pmod <- mirt(Science, 1, SE=TRUE)
 itemplot(pmod, 3)
+itemplot(pmod, 3, type = 'threshold')
 itemplot(pmod, 3, CE = TRUE)
 itemplot(pmod, 3, type = 'score')
 itemplot(pmod, 3, type = 'infotrace')

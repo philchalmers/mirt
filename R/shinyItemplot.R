@@ -26,7 +26,7 @@ shinyItemplot <- function(){
 
                 shiny::selectInput(inputId = "plottype",
                             label = "Type of plot to display:",
-                            choices = c('trace', 'info', 'score', 'infocontour', 'SE', 'infoSE', 'tracecontour'),
+                            choices = c('trace', 'threshold', 'info', 'score', 'infocontour', 'SE', 'infoSE', 'tracecontour'),
                             selected = 'trace'),
 
                 shiny::numericInput("theta_lim_low", "Theta lower range:", -4,

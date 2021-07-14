@@ -1,3 +1,8 @@
+# Changes in mirt 1.35
+
+- Added `type = 'threshold'` to `itemplot()` to plot cumulative probability information (requested 
+  by Azman Sami)
+
 # Changes in mirt 1.34
 
 - Previous `technical = list(removeEmptyRows = TRUE)` input now deprecated. Response patterns
