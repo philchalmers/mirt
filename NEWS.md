@@ -2,6 +2,9 @@
 
 - Added `type = 'threshold'` to `itemplot()` to plot cumulative probability information (requested 
   by Azman Sami)
+  
+- Fixed Bug `Error in if (any(SEtmp < 0))` that appeared due new R 4.0+ behaviour (reported by 
+  Ziying Li and Caroline Böhm)
 
 # Changes in mirt 1.34
 

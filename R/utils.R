@@ -1681,7 +1681,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
         return(ESTIMATE)
     } else ESTIMATE$fail_invert_info <- FALSE
     SEtmp <- diag(solve(info))
-    if(any(SEtmp < 0)){
+    if(any(is.na(SEtmp) | is.nan(SEtmp)) || any(SEtmp < 0)){
         if(warn)
             warning('Could not invert information matrix; model likely is not empirically identified.',
                     call.=FALSE)
