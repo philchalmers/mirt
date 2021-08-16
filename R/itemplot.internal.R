@@ -260,7 +260,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             plt2 <- plt2[plt2$time != paste0('P', K), ]
             plt2$time <- factor(plt2$time)
             levels(plt2$time) <- paste0("P(x > ", (1L:(K-1L) - 1L) +
-                                            extract.mirt(mod, what = 'mins')[item], ")")
+                                            extract.mirt(x, what = 'mins')[item], ")")
         }
         if(type == 'trace'){
             if(is.null(main))
@@ -392,7 +392,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             plt2 <- plt2[plt2$time != paste0('P', K), ]
             plt2$time <- factor(plt2$time)
             levels(plt2$time) <- paste0("P(x > ", (1L:(K-1L) - 1L) +
-                                            extract.mirt(mod, what = 'mins')[item], ")")
+                                            extract.mirt(x, what = 'mins')[item], ")")
         }
         if(type == 'infocontour'){
             if(is.null(main))
