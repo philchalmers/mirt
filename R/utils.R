@@ -2043,8 +2043,10 @@ mirt_dmvnorm <- function(x, mean, sigma, log = FALSE, quad = FALSE, stable = TRU
             distval <- mahalanobis(x, center = mean, cov = sigma)
         }
     }
-    logdet <- sum(log(eigen(sigma, symmetric=TRUE,
-                            only.values=TRUE)$values))
+    eigs <- eigen(sigma, symmetric=TRUE, only.values=TRUE)$values
+    if(any(eigs < 0))
+        stop('sigma matrix contains negative eigenvalues', call. = FALSE)
+    logdet <- sum(log(eigs))
     logretval <- -(ncol(x)*log(2*pi) + logdet + distval)/2
     if(stable)
         logretval <- ifelse(logretval < -690.7755, -690.7755, logretval)
