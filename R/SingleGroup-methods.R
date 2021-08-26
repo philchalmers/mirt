@@ -429,10 +429,13 @@ setMethod(
 #' Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
 #' sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
 #' Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
+#' When given a sequence of objects, \code{anova} tests the models against one another
+#' in the order specified.
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
 #' @param object2 a second model estimated from any of the mirt package estimation methods
+#' @param ... additional model objects to be sequentially compared
 #' @param bounded logical; are the two models comparing a bounded parameter (e.g., comparing a single
 #'   2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
 #'   is used to obtain the p-value
@@ -458,6 +461,11 @@ setMethod(
 #' x <- mirt(Science, 1)
 #' x2 <- mirt(Science, 2)
 #' anova(x, x2)
+#'
+#' # compare three models sequentially
+#' x2 <- mirt(Science, 1, 'gpcm')
+#' x3 <- mirt(Science, 1, 'nominal')
+#' anova(x, x2, x3)
 #'
 #' # in isolation
 #' anova(x)
@@ -491,7 +499,22 @@ setMethod(
 setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
-    definition = function(object, object2, bounded = FALSE, mix = 0.5, verbose = TRUE){
+    definition = function(object, object2, ...,
+                          bounded = FALSE, mix = 0.5, verbose = TRUE){
+        dots <- list(...)
+        if(length(dots)){
+            dots <- c(object, object2, dots)
+            ret <- vector('list', length(dots)-1L)
+            for(i in 1L:length(ret)){
+                ret[[i]] <- anova(dots[[i]], dots[[i+1L]], bounded=bounded,
+                                  mix=mix, verbose=FALSE)
+                if(i > 1L)
+                    ret[[i]] <- ret[[i]][2L, ]
+            }
+            ret <- do.call(rbind, ret)
+            rownames(ret) <- 1L:nrow(ret)
+            return(ret)
+        }
         if(missing(object2)){
             hasPriors <- object@Fit$logPrior != 0
             ret <- data.frame(AIC = object@Fit$AIC,

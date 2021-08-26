@@ -10,13 +10,15 @@
 \alias{anova,MixtureClass-method}
 \title{Compare nested models with likelihood-based statistics}
 \usage{
-\S4method{anova}{SingleGroupClass}(object, object2, bounded = FALSE, mix = 0.5, verbose = TRUE)
+\S4method{anova}{SingleGroupClass}(object, object2, ..., bounded = FALSE, mix = 0.5, verbose = TRUE)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{MixedClass}}
 
 \item{object2}{a second model estimated from any of the mirt package estimation methods}
+
+\item{...}{additional model objects to be sequentially compared}
 
 \item{bounded}{logical; are the two models comparing a bounded parameter (e.g., comparing a single
 2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
@@ -33,6 +35,8 @@ a \code{data.frame}/\code{mirt_df} object
 Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
 sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
 Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
+When given a sequence of objects, \code{anova} tests the models against one another
+in the order specified.
 }
 \examples{
 
@@ -40,6 +44,11 @@ Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 x <- mirt(Science, 1)
 x2 <- mirt(Science, 2)
 anova(x, x2)
+
+# compare three models sequentially
+x2 <- mirt(Science, 1, 'gpcm')
+x3 <- mirt(Science, 1, 'nominal')
+anova(x, x2, x3)
 
 # in isolation
 anova(x)

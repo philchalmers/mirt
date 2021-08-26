@@ -1,5 +1,7 @@
 # Changes in mirt 1.35
 
+- `anova()` generic now supports a `...` input to compare many nested models, compared in sequence
+
 - Added `type = 'threshold'` to `itemplot()` to plot cumulative probability information (requested 
   by Azman Sami)
   
