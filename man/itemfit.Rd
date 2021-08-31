@@ -9,6 +9,7 @@ itemfit(
   fit_stats = "S_X2",
   which.items = 1:extract.mirt(x, "nitems"),
   na.rm = FALSE,
+  p.adjust = "none",
   group.bins = 10,
   group.size = NA,
   group.fun = mean,
@@ -70,6 +71,9 @@ Default tests all possible items}
 
 \item{na.rm}{logical; remove rows with any missing values? This is required for methods such
 as S-X2 because they require the "EAPsum" method from \code{\link{fscores}}}
+
+\item{p.adjust}{method to use for adjusting all p-values for each respective item fit
+statistic (see \code{\link{p.adjust}} for available options). Default is \code{'none'}}
 
 \item{group.bins}{the number of bins to use for X2 and G2. For example,
 setting \code{group.bins = 10} will will compute Yen's (1981) Q1 statistic when \code{'X2'} is
@@ -169,10 +173,15 @@ raschfit <- mirt(data, 1, itemtype='Rasch')
 fit <- itemfit(x)
 fit
 
-itemfit(x)
+# p-value adjustment
+itemfit(x, p.adjust='fdr')
+
+# two different fit stats (with/without p-value adjustment)
+itemfit(x, c('S_X2' ,'X2'), p.adjust='fdr')
+itemfit(x, c('S_X2' ,'X2'))
+
 itemfit(x, 'X2') # just X2
 itemfit(x, 'X2', method = 'ML') # X2 with maximum-likelihood estimates for traits
-itemfit(x, c('S_X2', 'X2')) #both S_X2 and X2
 itemfit(x, group.bins=15, empirical.plot = 1, method = 'ML') #empirical item plot with 15 points
 itemfit(x, group.bins=15, empirical.plot = 21, method = 'ML')
 

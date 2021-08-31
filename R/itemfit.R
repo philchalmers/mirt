@@ -45,6 +45,8 @@
 #'
 #' @param which.items an integer vector indicating which items to test for fit.
 #'   Default tests all possible items
+#' @param p.adjust method to use for adjusting all p-values for each respective item fit
+#'   statistic (see \code{\link{p.adjust}} for available options). Default is \code{'none'}
 #' @param mincell the minimum expected cell size to be used in the S-X2 computations. Tables will be
 #'   collapsed across items first if polytomous, and then across scores if necessary
 #' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
@@ -161,10 +163,15 @@
 #' fit <- itemfit(x)
 #' fit
 #'
-#' itemfit(x)
+#' # p-value adjustment
+#' itemfit(x, p.adjust='fdr')
+#'
+#' # two different fit stats (with/without p-value adjustment)
+#' itemfit(x, c('S_X2' ,'X2'), p.adjust='fdr')
+#' itemfit(x, c('S_X2' ,'X2'))
+#'
 #' itemfit(x, 'X2') # just X2
 #' itemfit(x, 'X2', method = 'ML') # X2 with maximum-likelihood estimates for traits
-#' itemfit(x, c('S_X2', 'X2')) #both S_X2 and X2
 #' itemfit(x, group.bins=15, empirical.plot = 1, method = 'ML') #empirical item plot with 15 points
 #' itemfit(x, group.bins=15, empirical.plot = 21, method = 'ML')
 #'
@@ -239,7 +246,8 @@
 #'}
 #'
 itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nitems'),
-                    na.rm = FALSE, group.bins = 10, group.size = NA, group.fun = mean,
+                    na.rm = FALSE, p.adjust = 'none',
+                    group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
                     ETrange = c(-2,2), ETpoints = 11,
@@ -260,7 +268,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     #     return(itemfit(tmpobj, Theta=Theta[[sample(whc[-ind], 1L)]], ...))
     # }
     PV_itemfit <- function(mod, which.items = 1:extract.mirt(mod, 'nitems'),
-                           draws = 100, ...){
+                           draws = 100, p.adjust, ...){
         pv <- fscores(mod, plausible.draws = draws, ...)
         draws <- length(pv)
         df.X2 <- Q1 <- matrix(NA, length(which.items), draws)
@@ -275,11 +283,12 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         RMSEA.X2_m <- rmsea(Q1_m, df.X2_m, N=nrow(pv[[1L]]))
         p.Q1 <- pchisq(Q1_m, df.X2_m, lower.tail = FALSE)
         p.Q1 <- ifelse(df.X2_m == 0, NaN, p.Q1)
-        ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, RMSEA.PV_Q1=RMSEA.X2_m, p.PV_Q1=p.Q1)
+        ret <- data.frame(PV_Q1=Q1_m, df.PV_Q1=df.X2_m, RMSEA.PV_Q1=RMSEA.X2_m,
+                          p.PV_Q1=p.adjust(p.Q1, method=p.adjust))
         ret
     }
     boot_PV <- function(mod, org, is_NA, which.items = 1:extract.mirt(mod, 'nitems'),
-                        itemtype, boot = 1000, draws = 30, verbose = FALSE, ...){
+                        itemtype, boot = 1000, draws = 30, verbose = FALSE, p.adjust, ...){
         pb_fun <- function(ind, mod, N, sv, which.items, draws, itemtype, model, ...){
             count <- 0L
             K <- extract.mirt(mod, 'K')
@@ -309,12 +318,12 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                           which.items=which.items, draws=draws, model=model, ...)
         if(nrow(retQ1) == 1L) retQ1 <- t(retQ1)
         Q1 <- (1 + rowSums(org$p.PV_Q1 > t(retQ1), na.rm = TRUE)) / (1 + boot)
-        ret <- data.frame("p.PV_Q1_star"=Q1)
+        ret <- data.frame("p.PV_Q1_star"=p.adjust(Q1, method=p.adjust))
         ret
     }
     StoneFit <- function(mod, is_NA, which.items = 1:extract.mirt(mod, 'nitems'), itemtype,
                          dfapprox = FALSE, boot = 1000, ETrange = c(-2,2), ETpoints = 11,
-                         verbose = FALSE, ...){
+                         verbose = FALSE, p.adjust, ...){
         X2star <- function(mod, which.items, ETrange, ETpoints, itemtype, ...){
             sv <- mod2values(mod)
             sv$est <- FALSE
@@ -382,10 +391,11 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             }
             ret <- data.frame(X2_star_scaled=org/gamma, df.X2_star_scaled=df,
                               RMSEA.X2_star_scaled=rmsea(org/gamma, df, N=N),
-                              p.X2_star_scaled=pchisq(org/gamma, df, lower.tail=FALSE))
+                              p.X2_star_scaled=p.adjust(pchisq(org/gamma, df, lower.tail=FALSE),
+                                                        method=p.adjust))
         } else {
             p <- apply(t(X2bs) > org, 1, mean)
-            ret <- data.frame(X2_star=org, p.X2_star=p)
+            ret <- data.frame(X2_star=org, p.X2_star=p.adjust(p, method=p.adjust))
         }
         ret
     }
@@ -452,7 +462,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
                                 empirical.table=empirical.table,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
-                                impute=impute, discrete=discrete, ...)
+                                impute=impute, discrete=discrete, p.adjust=p.adjust, ...)
         }
         names(ret) <- x@Data$groupNames
         if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
@@ -703,6 +713,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             ret$p.X2 <- suppressWarnings(pchisq(ret$X2, ret$df.X2, lower.tail=FALSE))
             ret$df.X2[ret$df.X2 <= 0] <- 0
             ret$p.X2[ret$df.X2 <= 0] <- NaN
+            ret$p.X2 <- p.adjust(ret$p.X2, method=p.adjust)
         }
         if(G2){
             ret$G2 <- G2.value[which.items]
@@ -711,6 +722,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             ret$p.G2 <- suppressWarnings(pchisq(ret$G2, ret$df.G2, lower.tail=FALSE))
             ret$df.G2[ret$df.G2 <= 0] <- 0
             ret$p.G2[ret$df.G2 <= 0] <- NaN
+            ret$p.G2 <- p.adjust(ret$p.G2, method=p.adjust)
         }
     }
     if(S_X2){
@@ -767,26 +779,28 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret$df.S_X2 <- df.S_X2[which.items]
         ret$RMSEA.S_X2 <- rmsea(ret$S_X2, ret$df.S_X2, N=nrow(dat))
         ret$p.S_X2 <- suppressWarnings(pchisq(ret$S_X2, ret$df.S_X2, lower.tail=FALSE))
+        ret$p.S_X2 <- p.adjust(ret$p.S_X2, method=p.adjust)
     }
     itemtype <- extract.mirt(x, 'itemtype')
     if(any(c('PV_Q1', 'PV_Q1*') %in% fit_stats)){
-        tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, itemtype=itemtype, ...)
+        tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, itemtype=itemtype,
+                          p.adjust=p.adjust, ...)
         ret <- cbind(ret, tmp)
     }
     is_NA <- is.na(x@Data$data)
     if('PV_Q1*' %in% fit_stats){
         tmp <- boot_PV(x, is_NA=is_NA, org=tmp, which.items=which.items,
-                       itemtype=itemtype, boot=boot, draws=pv_draws, ...)
+                       itemtype=itemtype, boot=boot, draws=pv_draws, p.adjust=p.adjust, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*' %in% fit_stats){
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot, dfapprox=FALSE,
-                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, ...)
+                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, p.adjust=p.adjust, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*_df' %in% fit_stats){
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot_dfapprox, dfapprox=TRUE,
-                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, ...)
+                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, p.adjust=p.adjust, ...)
         ret <- cbind(ret, tmp)
     }
     class(ret) <- c('mirt_df', 'data.frame')

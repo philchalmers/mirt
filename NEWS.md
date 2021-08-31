@@ -1,5 +1,8 @@
 # Changes in mirt 1.35
 
+- `itemfit()` gains a `p.adjust` argument to allow for p-value adjustments in the 
+  output for all methods
+
 - `anova()` generic now supports a `...` input to compare many nested models, compared in sequence
 
 - Added `type = 'threshold'` to `itemplot()` to plot cumulative probability information (requested 
