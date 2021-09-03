@@ -984,7 +984,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     N <- sum(r)
     tmp <- dfsubtr
     AIC <- (-2) * logLik + 2 * tmp
-    AICc <- AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L)
+    AICc <- ifelse(N < tmp, AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L), NaN)
     BIC <- (-2) * logLik + tmp*log(N)
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     HQ <- (-2) * logLik + 2*tmp*log(log(N))
