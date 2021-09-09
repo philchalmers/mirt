@@ -61,7 +61,7 @@ this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
 when using sequential schemes)}
 
 \item{seq_stat}{select a statistic to test for in the sequential schemes. Potential values are
-(in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
+(in descending order of power) \code{'AIC'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
 If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
 (e.g., \code{seq_stat = .05} will test for the difference of p < .05 in the add scheme,
 or p > .05 in the drop scheme), along with the specified \code{p.adjust} input}

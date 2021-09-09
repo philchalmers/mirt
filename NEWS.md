@@ -1503,7 +1503,7 @@
   "Generalized" rating scale models can also be estimated, though this requires manipulating the
   starting values directly
 
-- added AICc and sample size adjusted BIC (SABIC) information statistics
+- added sample size adjusted BIC (SABIC) information statistics
 
 - new mixedmirt() function for estimating IRT models with person and item level (e.g., LLTM) covariates.
   Currently only supports fixed effect predictors, but random effect predictors are being developed

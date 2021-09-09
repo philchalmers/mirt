@@ -80,7 +80,7 @@ setMethod(
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
                 cat('Estimated parameters:', extract.mirt(x, 'nestpars'), '\n')
-                cat("AIC = ", x@Fit$AIC, "; AICc = ", x@Fit$AICc, "\n", sep='')
+                cat("AIC = ", x@Fit$AIC, "\n", sep='')
                 cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             }
             if(!is.nan(x@Fit$p)){
@@ -427,7 +427,7 @@ setMethod(
 #' Compare nested models with likelihood-based statistics
 #'
 #' Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
-#' sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
+#' Bayesian Information Criterion (BIC),
 #' Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 #' When given a sequence of objects, \code{anova} tests the models against one another
 #' in the order specified.
@@ -518,13 +518,12 @@ setMethod(
         if(missing(object2)){
             hasPriors <- object@Fit$logPrior != 0
             ret <- data.frame(AIC = object@Fit$AIC,
-                              AICc = object@Fit$AICc,
                               SABIC = object@Fit$SABIC,
                               HQ = object@Fit$HQ,
                               BIC = object@Fit$BIC,
                               logLik = object@Fit$logLik)
             if(hasPriors){
-                ret <- ret[!(colnames(ret) %in% c('AIC', 'AICc'))]
+                ret <- ret[!(colnames(ret) %in% c('AIC'))]
                 ret$logPost = object@Fit$logPrior + object@Fit$logLik
             }
             class(ret) <- c('mirt_df', 'data.frame')
@@ -560,7 +559,6 @@ setMethod(
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
             ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
-                              AICc = c(object@Fit$AICc, object2@Fit$AICc),
                               SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
                               HQ = c(object@Fit$HQ, object2@Fit$HQ),
                               BIC = c(object@Fit$BIC, object2@Fit$BIC),

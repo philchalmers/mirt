@@ -14,7 +14,6 @@
 #'   \item{CFI}{CFI fit statistic}
 #'   \item{TLI}{TLI fit statistic}
 #'   \item{AIC}{AIC}
-#'   \item{AICc}{corrected AIC}
 #'   \item{BIC}{BIC}
 #'   \item{SABIC}{sample size adjusted BIC}
 #'   \item{HQ}{HQ}
@@ -106,7 +105,6 @@ extract.mirt <- function(x, what){
                   df = x@Fit$df,
                   AIC = x@Fit$AIC,
                   HQ = x@Fit$HQ,
-                  AICc = x@Fit$AICc,
                   BIC = x@Fit$BIC,
                   SABIC = x@Fit$SABIC,
                   method = x@Options$method,

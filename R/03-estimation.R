@@ -984,8 +984,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     N <- sum(r)
     tmp <- dfsubtr
     AIC <- (-2) * logLik + 2 * tmp
-    AICc <- ifelse((N - tmp - 1) > 0,
-                   AIC + 2 * tmp * (tmp + 1) / (N - tmp - 1L), NaN)
     BIC <- (-2) * logLik + tmp*log(N)
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
     HQ <- (-2) * logLik + 2*tmp*log(log(N))
@@ -1019,7 +1017,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Options <- opts
     Options$exploratory <- PrepList[[1L]]$exploratory
     Fit <- list(G2=G2, p=p.G2, TLI=TLI.G2, CFI=CFI.G2, RMSEA=RMSEA.G2, df=df,
-                AIC=AIC, AICc=AICc, BIC=BIC, SABIC=SABIC, HQ=HQ, logLik=logLik,
+                AIC=AIC, BIC=BIC, SABIC=SABIC, HQ=HQ, logLik=logLik,
                 logPrior=logPrior, SElogLik=SElogLik, F=F, h2=h2)
     pis <- if(opts$dentype == 'mixture')
         ExtractMixtures(lapply(cmods, function(x) x@ParObjects$pars)) else NULL

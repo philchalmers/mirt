@@ -28,7 +28,6 @@ Objects which can be extracted from mirt objects include:
   \item{CFI}{CFI fit statistic}
   \item{TLI}{TLI fit statistic}
   \item{AIC}{AIC}
-  \item{AICc}{corrected AIC}
   \item{BIC}{BIC}
   \item{SABIC}{sample size adjusted BIC}
   \item{HQ}{HQ}

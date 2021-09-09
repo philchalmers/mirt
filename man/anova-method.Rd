@@ -33,7 +33,7 @@ a \code{data.frame}/\code{mirt_df} object
 }
 \description{
 Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
-sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
+Bayesian Information Criterion (BIC),
 Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 When given a sequence of objects, \code{anova} tests the models against one another
 in the order specified.

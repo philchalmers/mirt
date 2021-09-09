@@ -59,7 +59,7 @@
 #'     less constrained model which includes the DIF effects}
 #' }
 #' @param seq_stat select a statistic to test for in the sequential schemes. Potential values are
-#'   (in descending order of power) \code{'AIC'}, \code{'AICc'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
+#'   (in descending order of power) \code{'AIC'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
 #'   If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
 #'   (e.g., \code{seq_stat = .05} will test for the difference of p < .05 in the add scheme,
 #'   or p > .05 in the drop scheme), along with the specified \code{p.adjust} input
@@ -258,7 +258,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     if(is.numeric(seq_stat)){
         pval <- seq_stat
         seq_stat <- 'p'
-    } else if(!any(seq_stat %in% c('p', 'AIC', 'AICc', 'SABIC', 'BIC', 'DIC', 'HQ'))){
+    } else if(!any(seq_stat %in% c('p', 'AIC', 'SABIC', 'BIC', 'DIC', 'HQ'))){
         stop('Invalid seq_stat input', call.=FALSE)
     }
     if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
