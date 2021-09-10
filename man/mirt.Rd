@@ -64,9 +64,8 @@ of factors to extract is also supported}
       where \code{3PL} estimates the lower asymptote only while \code{3PLu} estimates the upper asymptote only
       (Lord and Novick, 1968; Lord, 1980)
     \item \code{'graded'} - graded response model (Samejima, 1969)
-    \item \code{'grsm'} and \code{'grsmIRT'} - graded ratings scale model in the
-      slope-intercept and classical IRT parameterization.
-      \code{'grsmIRT'} is restricted to unidimensional models (Muraki, 1992)
+    \item \code{'grsm'} - graded ratings scale model in the
+      classical IRT parameterization (restricted to unidimensional models; Muraki, 1992)
     \item \code{'gpcm'} and \code{'gpcmIRT'} - generalized partial credit model in the slope-intercept
       and classical parameterization. \code{'gpcmIRT'} is restricted to unidimensional models. Note that
       optional scoring matrices for \code{'gpcm'} are available with the \code{gpcm_mats} input (Muraki, 1992)
@@ -582,18 +581,11 @@ number of categories (using \eqn{k} for specific category instances).
     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
     Note that \eqn{P(x \ge 1 | \theta, \phi) = 1} while \eqn{P(x \ge K + 1 | \theta, \phi) = 0}
   }
-  \item{grsm and grsmIRT}{
+  \item{grsm}{
     A more constrained version of the graded model where graded spacing is equal across item
     blocks and only adjusted by a single 'difficulty' parameter (c) while the latent variance
-    of \eqn{\theta} is freely estimated. Again,
-    \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
-    but now
-    \deqn{P = \frac{1}{1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d_k + c))}}
-
-    The grsmIRT model is similar to the \code{grsm} item type, but uses the IRT parameterization instead (see
-    Muraki, 1990 for this exact form). This is restricted to unidimensional models only, whereas
-    \code{grsm} may be used for unidimensional or multidimensional models and is more consistent
-    with the form of other IRT models in \code{mirt}
+    of \eqn{\theta} is freely estimated (see Muraki, 1990 for this exact form).
+    This is restricted to unidimensional models only.
   }
   \item{gpcm/nominal}{For the gpcm the \eqn{d} values are treated as fixed and ordered values
     from \eqn{0:(K-1)} (in the nominal model \eqn{d_0} is also set to 0). Additionally, for

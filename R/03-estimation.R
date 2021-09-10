@@ -9,6 +9,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
 {
     start.time <- proc.time()[3L]
     dots <- list(...)
+    if(!is.null(itemtype))
+        itemtype <- ifelse(itemtype == 'grsm', 'grsmIRT', itemtype)
     if(missing(data)) missingMsg('data')
     if(length(unique(colnames(data))) != ncol(data))
         stop('items must have unique names in data input', call.=FALSE)
