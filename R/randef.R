@@ -162,6 +162,6 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     ret <- lapply(ret, function(x){attr(x, 'log.lik_full') <- NULL; x} )
     names(ret) <- retnames
     completely_missing <- extract.mirt(x, 'completely_missing')
-    ret$Theta <- addMissing(ret$Theta, whc=completely_missing)
+    ret$Theta <- add_completely.missing_back(ret$Theta, completely_missing)
     ret
 }

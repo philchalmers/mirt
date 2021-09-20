@@ -48,13 +48,14 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not yet supported.', call.=FALSE)
     data <- extract.mirt(x, 'data')
+    completely_missing <- extract.mirt(x, 'completely_missing')
+    data <- add_completely.missing_back(data, completely_missing)
     if(warn && sum(is.na(data))/length(data) > .1)
         warning('Imputing too much data can lead to very conservative results. Use with caution.',
                 call.=FALSE)
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){
         pars <- extract.mirt(x, 'pars')
         group <- extract.mirt(x, 'group')
-        data <- extract.mirt(x, 'data')
         groupNames <- extract.mirt(x, 'groupNames')
         uniq_rows <- apply(data, 2L, function(x) list(sort(na.omit(unique(x)))))
         for(g in seq_len(length(pars))){
@@ -89,6 +90,7 @@ imputeMissing <- function(x, Theta, warn = TRUE, ...){
         if(!any(is.na(data[,i,drop=FALSE]))) next
         P <- ProbTrace(x=pars[[i]], Theta=Theta)
         NAind <- Nind[is.na(data[,i])]
+        NAind <- NAind[!(NAind %in% completely_missing)]
         for(j in seq_len(length(NAind))){
             data[NAind[j], i] <- sample(1L:K[i]-1L+mins[i], 1L,
                                         prob = P[NAind[j], , drop = FALSE])

@@ -2542,6 +2542,16 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
     r
 }
 
+add_completely.missing_back <- function(data, completely_missing){
+    if(length(completely_missing)){
+        tmp <- matrix(0L, nrow(data) + length(completely_missing), ncol(data))
+        tmp[completely_missing, ] <- NA
+        tmp[!(1:nrow(tmp) %in% completely_missing), ] <- data
+        data <- tmp
+    }
+    data
+}
+
 hasConverged <- function(p0, p1, TOL){
     pick <- names(p0) %in% c('g', 'u')
     if(any(pick)){
@@ -2564,17 +2574,6 @@ MC_quad <- function(npts, nfact, lim)
     qnorm(matrix(runif(n=npts * nfact, min = lim[1L], max = lim[2]), npts, nfact))
 
 respSample <- function(P) .Call("respSample", P)
-
-addMissing <- function(mat, whc){
-    if(length(whc)){
-        tmp <- mat
-        mat <- rbind(mat, tmp[1L:length(whc), , drop=FALSE])
-        id <- 1L:nrow(mat)
-        mat[whc, ] <- NA
-        mat[!(id %in% whc), ] <- tmp
-    }
-    mat
-}
 
 makeSymMat <- function(mat){
     if(ncol(mat) > 1L){

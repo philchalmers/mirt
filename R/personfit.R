@@ -165,7 +165,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(stats.only)
         ret <- ret[, !(colnames(ret) %in% colnames(x@Data$data)), drop=FALSE]
     completely_missing <- extract.mirt(x, 'completely_missing')
-    ret <- addMissing(ret, whc=completely_missing)
+    ret <- add_completely.missing_back(ret, completely_missing)
     return(ret)
 }
 

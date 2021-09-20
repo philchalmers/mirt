@@ -167,7 +167,7 @@ setMethod(
                             method='MHRM',
                             technical=technical)
                 completely_missing <- extract.mirt(object, 'completely_missing')
-                ret <- lapply(ret, function(x) addMissing(x, whc=completely_missing))
+                ret <- lapply(ret, function(x) add_completely.missing_back(x, completely_missing))
                 if(plausible.draws == 1L) return(ret[[1L]])
                 else return(ret)
             } else if(plausible.type == 'normal'){
@@ -192,7 +192,7 @@ setMethod(
                 for(i in seq_len(plausible.draws)){
                     ret[[i]] <- matrix(NA, nrow(fs), ncol(fs))
                     for(j in seq_len(nrow(fs))) ret[[i]][j,] <- jit[[j]][i,]
-                    ret[[i]] <- addMissing(ret[[i]], whc=completely_missing)
+                    ret[[i]] <- add_completely.missing_back(ret[[i]], completely_missing)
                 }
                 if(plausible.draws == 1L) return(ret[[1L]])
                 else return(ret)
@@ -509,7 +509,7 @@ setMethod(
                 colnames(scoremat) <- paste0("CLASS_", 1L:ncol(scoremat))
             if(full.scores && !leave_missing){
                 completely_missing <- extract.mirt(object, 'completely_missing')
-                scoremat <- addMissing(scoremat, whc=completely_missing)
+                scoremat <- add_completely.missing_back(scoremat, completely_missing)
             }
             return(scoremat)
 		} else {
@@ -909,7 +909,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         rownames(ret) <- NULL
         if(!leave_missing){
             completely_missing <- extract.mirt(x, 'completely_missing')
-            ret <- addMissing(ret, whc=completely_missing)
+            ret <- add_completely.missing_back(ret, completely_missing)
         }
     } else {
         dat <- x@Data$data
