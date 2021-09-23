@@ -211,8 +211,14 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
         hss <- symbolicHessian_par
     }
     if(bytecompile && !is.null(hss)) hss <- compiler::cmpfun(hss)
+    P_bound <- function(...){
+        ret <- P(...)
+        ret <- ifelse(ret > 1 - 1e-32, 1 - 1e-32, ret)
+        ret <- ifelse(ret < 1e-32, 1e-32, ret)
+        ret
+    }
     ret <- new('custom', name=name, par=par, est=est, parnames=names(par), lbound=lbound,
-               ubound=ubound, P=P, dps=dps, dps2=dps2, gr=gr, hss=hss, gen=gen, userdata=NULL,
+               ubound=ubound, P=P_bound, dps=dps, dps2=dps2, gr=gr, hss=hss, gen=gen, userdata=NULL,
                derivType=derivType, derivType.hss=derivType.hss)
     ret@useuserdata <- if(length(nms_args) == 3L) FALSE else TRUE
     ret
