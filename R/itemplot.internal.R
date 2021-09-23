@@ -75,19 +75,19 @@ setMethod(
         if(nfact == 1){
             if(type == 'info'){
                 if(is.null(main))
-                    main <- paste('Information for item', item)
+                    main <- paste('Information for Item', item)
                 return(xyplot(info ~ Theta, dat, groups=dat$group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(I(theta)), xlab = expression(theta), ...))
             } else if(type == 'trace'){
                 if(is.null(main))
-                    main <- paste("Item", item, "Trace")
+                    main <- paste("Item", item, "Probability")
                 return(xyplot(P  ~ Theta | cat, dat2, groups=dat2$group, type = 'l',
                             auto.key = auto.key, main = main, ylim = c(-0.1,1.1),
                             ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else if(type == 'score'){
                 if(is.null(main))
-                    main <- paste("Expected score for item", item)
+                    main <- paste("Expected Score for Item", item)
                 dat$score <- do.call(c, score)
                 return(xyplot(score ~ Theta, dat, groups=dat$group, type = 'l',
                               ylim=c(ymin_score-ybump, ymax_score+ybump),
@@ -95,7 +95,7 @@ setMethod(
                               ylab = expression(S(theta)), xlab = expression(theta), ...))
             } else if(type == 'RE'){
                 if(is.null(main))
-                    main <- paste('Relative efficiency for item', item)
+                    main <- paste('Relative Efficiency for Item', item)
                 return(xyplot(info ~ Theta, dat, groups=dat$group, type = 'l',
                                        auto.key = auto.key, main = main,
                                        ylab = expression(RE(theta)), xlab = expression(theta), ...))
@@ -120,7 +120,7 @@ setMethod(
                                           auto.key = auto.key, ...))
             } else if(type == 'trace'){
                 if(is.null(main))
-                    main <- paste("Item", item, "Trace")
+                    main <- paste("Item", item, "Probability")
                 return(wireframe(P ~ Theta1 + Theta2|cat, data = dat2, group = dat2$group, main = main,
                                           zlab=expression(P(theta)),
                                           xlab=expression(theta[1]),
@@ -129,7 +129,7 @@ setMethod(
                                           auto.key = auto.key, ...))
             } else if(type == 'score'){
                 if(is.null(main))
-                    main <- paste("Expected score for item", item)
+                    main <- paste("Expected Score for Item", item)
                 dat$score <- do.call(c, score)
                 return(wireframe(score ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
                                  ylim=c(ymin_score-ybump, ymax_score+ybump),
@@ -139,7 +139,7 @@ setMethod(
                                  auto.key = auto.key, ...))
             } else if(type == 'RE'){
                 if(is.null(main))
-                    main <- paste("Relative efficiency for item", item)
+                    main <- paste("Relative Efficiency for Item", item)
                 return(wireframe(info ~ Theta1 + Theta2, data = dat, group=dat$group, main=main,
                                           zlab=expression(RE(theta)), xlab=expression(theta[1]),
                                           ylab=expression(theta[2]),
@@ -284,7 +284,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'threshold'){
             if(is.null(main))
-                main <- paste('Threshold lines for item', item)
+                main <- paste('Threshold Lines for Item', item)
             if(CE){
                 stop('Confidence envelope option not currently supported for type = \"threshold\"')
             } else {
@@ -295,7 +295,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         }
         else if(type == 'info'){
             if(is.null(main))
-                main <- paste('Information for item', item)
+                main <- paste('Information for Item', item)
             if(CE){
                 return(xyplot(info ~ Theta, data=plt, auto.key = auto.key,
                               upper=plt$CEinfoupper, lower=plt$CEinfolower,
@@ -313,7 +313,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'score'){
             if(is.null(main))
-                main <- paste('Expected score for item', item)
+                main <- paste('Expected Score for Item', item)
             if(CE){
                 return(xyplot(score ~ Theta, data=plt, auto.key = auto.key,
                               ylim=c(ymin_score-ybump, ymax_score+ybump),
@@ -333,7 +333,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'SE'){
             if(is.null(main))
-                main <- paste('Standard error plot for item', item)
+                main <- paste('Standard Error for Item', item)
             if(CE){
                 plt$CESEupper <- 1/sqrt(CEinfolower)
                 plt$CESElower <- 1/sqrt(CEinfoupper)
@@ -353,7 +353,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'infoSE'){
             if(is.null(main))
-                main <- paste('Item information and standard errors for item', item)
+                main <- paste('Item Information and Standard Errors for Item', item)
             obj1 <- xyplot(info~Theta, plt, type='l',
                            main = main, xlab = expression(theta), ylab=expression(I(theta)),...)
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)), ...)
@@ -364,7 +364,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'infotrace'){
             if(is.null(main))
-                main <- paste('Trace lines and information for item', item)
+                main <- paste('Probability and Information Functions for Item', item)
             obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), groups=time, main = main,
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
             obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
@@ -420,7 +420,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                              scales = list(arrows = FALSE), colorkey=colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'trace'){
             if(is.null(main))
-                main <- paste("Item", item, "Trace")
+                main <- paste("Item", item, "Probability")
             if(CE)
                 return(wireframe(P + upper + lower ~ Theta1 + Theta2 | time, data = plt2,
                                           main = main, zlim = c(-0.1,1.1),
@@ -435,7 +435,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                              scales = list(arrows = FALSE), colorkey = colorkey, drape = drape, screen=rot, ...))
         } else if(type == 'threshold'){
             if(is.null(main))
-                main <- paste('Threshold surfaces for item', item)
+                main <- paste('Threshold Surfaces for Item', item)
             if(CE){
                 stop('Confidence envelope option not currently supported for type = \"threshold\"')
             } else return(wireframe(P ~ Theta1 + Theta2, data = plt2, group = time,

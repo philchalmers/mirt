@@ -1255,7 +1255,7 @@ setMethod(
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'trace'){
                 if(is.null(main))
-                    main <- 'Item trace lines'
+                    main <- 'Item Probability Functions'
                 P <- vector('list', length(which.items))
                 names(P) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
@@ -1280,7 +1280,7 @@ setMethod(
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'infotrace'){
                 if(is.null(main))
-                    main <- 'Item information trace lines'
+                    main <- 'Item Information'
                 I <- matrix(NA, nrow(Theta), J)
                 for(i in which.items)
                     I[,i] <- iteminfo(extract.item(x, i), ThetaFull, degrees=degrees)
@@ -1294,7 +1294,7 @@ setMethod(
                                  par.strip.text=par.strip.text, par.settings=par.settings, ...))
             } else if(type == 'itemscore'){
                 if(is.null(main))
-                    main <- 'Expected item scoring function'
+                    main <- 'Expected Item Score'
                 S <- vector('list', length(which.items))
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
@@ -1448,7 +1448,7 @@ setMethod(
                 }
             } else if(type == 'trace'){
                 if(is.null(main))
-                    main <- 'Item trace lines'
+                    main <- 'Item Probability Functions'
                 P <- vector('list', length(which.items))
                 names(P) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
@@ -1482,7 +1482,7 @@ setMethod(
                 }
             } else if(type == 'itemscore'){
                 if(is.null(main))
-                    main <- 'Expected item scoring function'
+                    main <- 'Expected Item Score'
                 S <- vector('list', length(which.items))
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
@@ -1507,7 +1507,7 @@ setMethod(
                 }
             } else if(type == 'infotrace'){
                 if(is.null(main))
-                    main <- 'Item information trace lines'
+                    main <- 'Item Information'
                 I <- matrix(NA, nrow(Theta), J)
                 for(i in which.items)
                     I[,i] <- iteminfo(extract.item(x, i), ThetaFull)

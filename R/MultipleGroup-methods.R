@@ -244,12 +244,12 @@ setMethod(
                 if(facet_items){
                     return(xyplot(P ~ Theta|item, plt, groups = plt$cat:factor(plt$group), ylim = c(-0.1,1.1),
                            xlab = expression(theta), ylab = expression(P(theta)),
-                           auto.key = auto.key, type = 'l', main = 'Item trace lines',
+                           auto.key = auto.key, type = 'l', main = 'Item Probability Functions',
                            par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(P ~ Theta|group, plt, groups = plt$cat:plt$item, ylim = c(-0.1,1.1),
                                   xlab = expression(theta), ylab = expression(P(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item trace lines',
+                                  auto.key = auto.key, type = 'l', main = 'Item Probability Functions',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }
@@ -275,12 +275,12 @@ setMethod(
                 if(facet_items){
                     return(xyplot(S ~ Theta|item, plt, groups = plt$group, ylim=c(min(mins)-ybump, max(maxs)+ybump),
                                   xlab = expression(theta), ylab = expression(S(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Expected item scoring function',
+                                  auto.key = auto.key, type = 'l', main = 'Expected Item Score',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(S ~ Theta|group, plt, groups = plt$item, ylim=c(min(mins)-ybump, max(maxs)+ybump),
                                   xlab = expression(theta), ylab = expression(S(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Expected item scoring function',
+                                  auto.key = auto.key, type = 'l', main = 'Expected Item Score',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }
@@ -301,12 +301,12 @@ setMethod(
                 if(facet_items){
                     return(xyplot(I ~ Theta | item, plt, groups = plt$group,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines',
+                                  auto.key = auto.key, type = 'l', main = 'Item Information',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 } else {
                     return(xyplot(I ~ Theta | group, plt, groups = plt$item,
                                   xlab = expression(theta), ylab = expression(I(theta)),
-                                  auto.key = auto.key, type = 'l', main = 'Item information trace lines',
+                                  auto.key = auto.key, type = 'l', main = 'Item Information',
                                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
                 }
             }
