@@ -12,7 +12,9 @@
 #' @param type plot type to use, information (\code{'info'}), standard errors (\code{'SE'}),
 #'   item trace lines (\code{'trace'}), cumulative probability plots to indicate thresholds
 #'   (\code{'threshold'}), information and standard errors (\code{'infoSE'}) or
-#'   information and trace lines (\code{'infotrace'}), relative efficiency lines (\code{'RE'}),
+#'   information and trace lines (\code{'infotrace'}),
+#'   category and total information (\code{'infocat'}),
+#'   relative efficiency lines (\code{'RE'}),
 #'   expected score \code{'score'}, or information and trace line contours (\code{'infocontour'} and
 #'   \code{'tracecontour'}; not supported for \code{MultipleGroupClass} objects)
 #' @param degrees the degrees argument to be used if there are two or three factors.
@@ -73,8 +75,10 @@
 #' itemplot(pmod, 3, type = 'threshold')
 #' itemplot(pmod, 3, CE = TRUE)
 #' itemplot(pmod, 3, type = 'score')
+#' itemplot(pmod, 3, type = 'score', CE = TRUE)
 #' itemplot(pmod, 3, type = 'infotrace')
-
+#' itemplot(pmod, 3, type = 'infocat')
+#'
 #'
 #' # use the directlabels package to put labels on tracelines
 #' library(directlabels)

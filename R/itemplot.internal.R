@@ -179,13 +179,19 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     K <- x@ParObjects$pars[[item]]@ncat
     info <- numeric(nrow(ThetaFull))
     if(K == 2L) auto.key <- FALSE
-    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'RETURN')){
+    if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'infocat', 'RETURN')){
         if(nfact == 1){
-            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0, total.info = )
         } else {
             info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
         }
     }
+    if(type == 'infocat'){
+        stopifnot(nfact == 1L && K > 2L)
+        type <- 'info'
+        infocat <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull,
+                            degrees=0, total.info = FALSE)
+    } else infocat <- NULL
     CEinfoupper <- CEinfolower <- info
     CEprobupper <- CEproblower <- P
     if(CE && nfact != 3){
@@ -294,6 +300,18 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         }
         else if(type == 'info'){
+            if(!is.null(infocat)){
+                if(is.null(main))
+                    main <- paste('Category and Total Information for Item', item)
+                plt2$infocat <- as.numeric(infocat)
+                return(xyplot(infocat ~ Theta, plt2,
+                               auto.key = auto.key, main = main,
+                               panel = function(x, y,  ...){
+                                   panel.xyplot(x, y, type='l', lty=3,...)
+                                   panel.xyplot(x, plt$info, type='l', lty=1, ...)
+                               }, info=plt2$info,  group=plt2$time, ylim=c(0, max(plt$info))*1.05,
+                              ylab = expression(I(theta)), xlab = expression(theta), ...))
+            }
             if(is.null(main))
                 main <- paste('Information for Item', item)
             if(CE){
@@ -322,8 +340,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                                   panel.polygon(c(x, rev(x)), c(upper, rev(lower)),
                                                 col="#E6E6E6", border = FALSE, ...)
                                   panel.xyplot(x, y, type='l', lty=1,...)
-                              },
-                              main = main, ylim=c(min(plt$CEscorelower), max(plt$CEscoreupper)),
+                              }, main = main,
                               ylab = expression(S(theta)), xlab = expression(theta), ...))
             } else {
                 return(xyplot(score ~ Theta, plt, type = 'l',
