@@ -264,7 +264,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         }
         if(type == 'trace'){
             if(is.null(main))
-                main <- paste('Trace lines for item', item)
+                main <- paste('Probability Function for Item', item)
             if(CE){
                 return(xyplot(P ~ Theta|time, data=plt2,
                        upper=plt2$upper, lower=plt2$lower,
@@ -284,7 +284,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'threshold'){
             if(is.null(main))
-                main <- paste('Threshold Lines for Item', item)
+                main <- paste('Probability Thresholds for Item', item)
             if(CE){
                 stop('Confidence envelope option not currently supported for type = \"threshold\"')
             } else {
@@ -353,7 +353,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
             }
         } else if(type == 'infoSE'){
             if(is.null(main))
-                main <- paste('Item Information and Standard Errors for Item', item)
+                main <- paste('Information and Standard Errors for Item', item)
             obj1 <- xyplot(info~Theta, plt, type='l',
                            main = main, xlab = expression(theta), ylab=expression(I(theta)),...)
             obj2 <- xyplot(SE~Theta, plt, type='l', ylab=expression(SE(theta)), ...)
