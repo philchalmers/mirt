@@ -384,8 +384,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                 main <- paste('Probability and Information Functions for Item', item)
             obj1 <- xyplot(P ~ Theta, plt2, type = 'l', lty = c(1:K), groups=time, main = main,
                            ylim = c(-0.1,1.1), ylab = expression(P(theta)), xlab = expression(theta), ... )
-            obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)),
-                           ylim = c(-0.1,max(plt$info) + .5))
+            obj2 <- xyplot(info~Theta, plt, type='l', xlab = expression(theta), ylab=expression(I(theta)))
             if(requireNamespace("latticeExtra", quietly = TRUE)){
                 return(latticeExtra::doubleYScale(obj1, obj2, add.ylab2 = add.ylab2))
             } else {
