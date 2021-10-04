@@ -937,6 +937,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         fit <- cbind(fit, t(as.data.frame(rxx)))
         rownames(fit) <- 'stats'
         attr(ret, 'fit') <- fit
+        ret$std.res <- with(ret, sqrt( (observed - expected)^2 / expected))
         if(verbose && !discrete){
             print(attr(ret, 'fit'))
             cat('\n')

@@ -833,7 +833,7 @@ setMethod(
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,object@Data$Freq[[1L]],expected,res)
-            colnames(tabdata) <- c(colnames(object@Data$tabdata),"freq","exp","res")
+            colnames(tabdata) <- c(colnames(object@Data$tabdata),"freq","exp","std.res")
             if(full.scores){
                 tabdata[, 'exp'] <- object@Internals$Pl / r * N
                 tabdata2 <- object@Data$tabdata
@@ -841,9 +841,9 @@ setMethod(
                 sfulldata <- apply(object@Data$data, 1, paste, sep='', collapse = '/')
                 scoremat <- tabdata[match(sfulldata, stabdata2), 'exp', drop = FALSE]
                 res <- (1-scoremat) / sqrt(scoremat)
-                colnames(res) <- 'res'
+                colnames(res) <- 'std.res'
                 ret <- cbind(object@Data$data, scoremat, res)
-                ret[is.na(rowSums(ret)), c('exp', 'res')] <- NA
+                ret[is.na(rowSums(ret)), c('exp', 'std.res')] <- NA
                 rownames(ret) <- NULL
                 class(ret) <- c('mirt_df', 'data.frame')
                 return(ret)
