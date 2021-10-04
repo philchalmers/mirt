@@ -25,7 +25,7 @@ test_that('discrete', {
                  tolerance=1e-2)
 
     resid <- residuals(mod, type = 'exp')
-    expect_equal(resid$res[1:3], c(1.0380029, 0.1373462, -0.3478477), tolerance = 1e-2)
+    expect_equal(resid$std.res[1:3], c(1.0380029, 0.1373462, -0.3478477), tolerance = 1e-2)
     residLD <- residuals(mod, type = 'LD')
     expect_equal(as.numeric(residLD[2:4, 1]), c(0.1092414, 0.4115837, 0.1316043), tolerance=1e-2)
     ifit <- itemfit(mod)
