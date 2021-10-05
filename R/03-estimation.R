@@ -895,10 +895,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                    DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         } else if(any(opts$SE.type %in% c('crossprod', 'Louis', 'sandwich.Louis', 'sandwich')) &&
                   !(opts$method %in% c('MHRM', 'SEM', 'MIXED'))){
-            ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
-                                  constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
-                                  CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
-                                  message=opts$message, complete=ESTIMATE$hess)
+            if(opts$method %in% c('QMCEM', 'MCEM')){
+                if(opts$warn)
+                    warning(sprintf('SE.type not supported when using method = \"%s\"', opts$method),
+                            call. = FALSE)
+            } else {
+                ESTIMATE <- SE.simple(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
+                                      constrain=constrain, Ls=Ls, N=nrow(data), type=opts$SE.type,
+                                      CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
+                                      message=opts$message, complete=ESTIMATE$hess)
+            }
         } else if(opts$SE.type == 'Fisher' && !(opts$method %in% c('MHRM', 'SEM', 'MIXED'))){
             if(logPrior != 0 && opts$warn)
                 warning('Information matrix with the Fisher method does not
