@@ -772,13 +772,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             Osub <- O[[S_X2.plot]]
             Osub <- Osub / rowSums(Osub)
             Esub <- E[[S_X2.plot]]
+            Esub[is.na(Esub)] <- 0
             Esub <- Esub / rowSums(Esub)
             if(!S_X2.plot_raw.score){
                 stopifnot(extract.mirt(x, 'nfact') == 1L)
                 fs <- fscores(x, method = 'EAPsum', full.scores=FALSE, verbose=FALSE)
                 scores <- fs[,'F1']
                 scores <- scores[-c(1, length(scores))]
-            } else scores <- as.integer(rownames(Osub))
+            } else scores <- 1L:nrow(Osub) + sum(extract.mirt(x, 'mins'))
             df <- data.frame(Scores=scores,
                              y=c(as.numeric(Osub), as.numeric(Esub)),
                              type = rep(c('observed', 'expected'), each = prod(dim(Osub))),
