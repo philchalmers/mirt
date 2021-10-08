@@ -20,6 +20,7 @@ itemfit(
   boot = 1000,
   boot_dfapprox = 200,
   S_X2.plot = NULL,
+  S_X2.plot_raw.score = TRUE,
   ETrange = c(-2, 2),
   ETpoints = 11,
   empirical.plot = NULL,
@@ -109,6 +110,9 @@ to approximate the scaling factor for X2* as well as the scaled degrees of freed
 
 \item{S_X2.plot}{argument input is the same as \code{empirical.plot}, however the resulting image
 is constructed according to the S-X2 statistic's conditional sum-score information}
+
+\item{S_X2.plot_raw.score}{logical; use the raw-score information in the plot in stead of the latent
+trait scale score? Default is \code{FALSE}}
 
 \item{ETrange}{rangone of integration nodes for Stone's X2* statistic}
 

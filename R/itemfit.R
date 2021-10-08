@@ -70,6 +70,8 @@
 #'   \code{'G2'} method
 #' @param S_X2.plot argument input is the same as \code{empirical.plot}, however the resulting image
 #'   is constructed according to the S-X2 statistic's conditional sum-score information
+#' @param S_X2.plot_raw.score logical; use the raw-score information in the plot in stead of the latent
+#'   trait scale score? Default is \code{FALSE}
 #' @param empirical.table a single numeric value or character of the item name indicating which
 #'   item table of expected values should be returned. Useful for visualizing the
 #'   expected bins based on the \code{'X2'} or \code{'G2'} method
@@ -258,7 +260,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
-                    S_X2.plot = NULL, ETrange = c(-2,2), ETpoints = 11,
+                    S_X2.plot = NULL, S_X2.plot_raw.score = TRUE,
+                    ETrange = c(-2,2), ETpoints = 11,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
                     empirical.poly.collapse = FALSE, method = 'EAP', Theta = NULL, #impute = 0,
                     par.strip.text = list(cex = 0.7),
@@ -770,13 +773,19 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             Osub <- Osub / rowSums(Osub)
             Esub <- E[[S_X2.plot]]
             Esub <- Esub / rowSums(Esub)
-            df <- data.frame(Scores=as.integer(rownames(Osub)),
+            if(!S_X2.plot_raw.score){
+                stopifnot(extract.mirt(x, 'nfact') == 1L)
+                fs <- fscores(x, method = 'EAPsum', full.scores=FALSE, verbose=FALSE)
+                scores <- fs[,'F1']
+                scores <- scores[-c(1, length(scores))]
+            } else scores <- as.integer(rownames(Osub))
+            df <- data.frame(Scores=scores,
                              y=c(as.numeric(Osub), as.numeric(Esub)),
                              type = rep(c('observed', 'expected'), each = prod(dim(Osub))),
                              category=rep(paste0('cat', 1L:ncol(Osub)), each=nrow(Osub)))
             return(xyplot(y~Scores|category, df, type='l', group=df$type,
-                   xlab = expression(Sum-Score), ylab=expression(n),
-                   auto.key=auto.key, par.strip.text=par.strip.text,
+                   xlab = ifelse(S_X2.plot_raw.score, expression(Sum-Score), expression(theta)),
+                   ylab=expression(P(theta)), auto.key=auto.key, par.strip.text=par.strip.text,
                    main = paste0("Observed vs Expected Values for Item ", S_X2.plot),
                    par.settings=par.settings, ...))
         }
