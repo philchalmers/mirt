@@ -19,6 +19,7 @@ itemfit(
   pv_draws = 30,
   boot = 1000,
   boot_dfapprox = 200,
+  S_X2.plot = NULL,
   ETrange = c(-2, 2),
   ETpoints = 11,
   empirical.plot = NULL,
@@ -30,6 +31,7 @@ itemfit(
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
     = "black")),
+  auto.key = list(space = "right", points = FALSE, lines = TRUE),
   ...
 )
 }
@@ -105,6 +107,9 @@ be omitted in the computations}
 \item{boot_dfapprox}{number of parametric bootstrap samples to create for the X2*_df statistic
 to approximate the scaling factor for X2* as well as the scaled degrees of freedom estimates}
 
+\item{S_X2.plot}{argument input is the same as \code{empirical.plot}, however the resulting image
+is constructed according to the S-X2 statistic's conditional sum-score information}
+
 \item{ETrange}{rangone of integration nodes for Stone's X2* statistic}
 
 \item{ETpoints}{number of integration nodes to use for Stone's X2* statistic}
@@ -135,6 +140,8 @@ with missing data via imputation}
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
 
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+
+\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
 
 \item{...}{additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}}
 }
@@ -179,6 +186,11 @@ itemfit(x, p.adjust='fdr')
 # two different fit stats (with/without p-value adjustment)
 itemfit(x, c('S_X2' ,'X2'), p.adjust='fdr')
 itemfit(x, c('S_X2' ,'X2'))
+
+# Conditional sum-score plot from S-X2 information
+itemfit(x, S_X2.plot = 1) # good fit
+itemfit(x, S_X2.plot = 2) # good fit
+itemfit(x, S_X2.plot = 21) # bad fit
 
 itemfit(x, 'X2') # just X2
 itemfit(x, 'X2', method = 'ML') # X2 with maximum-likelihood estimates for traits

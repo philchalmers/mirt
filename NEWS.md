@@ -1,5 +1,8 @@
 # Changes in mirt 1.35
 
+- `itemfit()` gains a `S_X2.plot` argument to visualize the expected-observed probability 
+  differences based on the S-X2 conditional sum-score strategy
+
 - Added `type = 'EAPsum'` to `plot()` generic to view an expected vs observed sum-scores plot
 
 - `itemfit()` gains a `p.adjust` argument to allow for p-value adjustments in the 

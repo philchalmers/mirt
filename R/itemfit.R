@@ -68,6 +68,8 @@
 #'   item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} groupings (see
 #'   \code{empirical.CI}). Useful for plotting the expected bins based on the \code{'X2'} or
 #'   \code{'G2'} method
+#' @param S_X2.plot argument input is the same as \code{empirical.plot}, however the resulting image
+#'   is constructed according to the S-X2 statistic's conditional sum-score information
 #' @param empirical.table a single numeric value or character of the item name indicating which
 #'   item table of expected values should be returned. Useful for visualizing the
 #'   expected bins based on the \code{'X2'} or \code{'G2'} method
@@ -95,6 +97,7 @@
 #   of the stats and their imputed standard deviations
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param auto.key plotting argument passed to \code{\link{lattice}}
 #' @param ... additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
@@ -169,6 +172,11 @@
 #' # two different fit stats (with/without p-value adjustment)
 #' itemfit(x, c('S_X2' ,'X2'), p.adjust='fdr')
 #' itemfit(x, c('S_X2' ,'X2'))
+#'
+#' # Conditional sum-score plot from S-X2 information
+#' itemfit(x, S_X2.plot = 1) # good fit
+#' itemfit(x, S_X2.plot = 2) # good fit
+#' itemfit(x, S_X2.plot = 21) # bad fit
 #'
 #' itemfit(x, 'X2') # just X2
 #' itemfit(x, 'X2', method = 'ML') # X2 with maximum-likelihood estimates for traits
@@ -250,12 +258,13 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     group.bins = 10, group.size = NA, group.fun = mean,
                     mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
-                    ETrange = c(-2,2), ETpoints = 11,
+                    S_X2.plot = NULL, ETrange = c(-2,2), ETpoints = 11,
                     empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
                     empirical.poly.collapse = FALSE, method = 'EAP', Theta = NULL, #impute = 0,
                     par.strip.text = list(cex = 0.7),
                     par.settings = list(strip.background = list(col = '#9ECAE1'),
-                                        strip.border = list(col = "black")), ...){
+                                        strip.border = list(col = "black")),
+                    auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
 
     impute <- 0
     # fn <- function(ind, Theta, obj, vals, ...){
@@ -725,7 +734,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             ret$p.G2 <- p.adjust(ret$p.G2, method=p.adjust)
         }
     }
-    if(S_X2){
+    if(S_X2 || !is.null(S_X2.plot)){
         dat <- x@Data$data
         adj <- x@Data$mins
         dat <- t(t(dat) - adj)
@@ -756,6 +765,21 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     pis=pis, which.items=which.items, use_dentype_estimate=use_dentype_estimate)
         for(i in which.items)
             E[[i]] <- E[[i]] * Nk
+        if(!is.null(S_X2.plot)){
+            Osub <- O[[S_X2.plot]]
+            Osub <- Osub / rowSums(Osub)
+            Esub <- E[[S_X2.plot]]
+            Esub <- Esub / rowSums(Esub)
+            df <- data.frame(Scores=as.integer(rownames(Osub)),
+                             y=c(as.numeric(Osub), as.numeric(Esub)),
+                             type = rep(c('observed', 'expected'), each = prod(dim(Osub))),
+                             category=rep(paste0('cat', 1L:ncol(Osub)), each=nrow(Osub)))
+            return(xyplot(y~Scores|category, df, type='l', group=df$type,
+                   xlab = expression(Sum-Score), ylab=expression(n),
+                   auto.key=auto.key, par.strip.text=par.strip.text,
+                   main = paste0("Observed vs Expected Values for Item ", S_X2.plot),
+                   par.settings=par.settings, ...))
+        }
         coll <- collapseCells(O, E, mincell=mincell)
         if(S_X2.tables) return(list(O.org=O, E.org=E, O=coll$O, E=coll$E))
         O <- coll$O
