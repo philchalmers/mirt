@@ -76,7 +76,7 @@ setMethod(
                           auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace',
-                         'itemscore', 'infotrace', 'Davidian'))
+                         'itemscore', 'infotrace', 'Davidian', 'EAPsum'))
             stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
@@ -120,6 +120,20 @@ setMethod(
         maxs <- maxs[which.items]
         ybump <- (max(maxs) - min(mins))/15
         ybump_full <- (sum(maxs) - sum(mins))/15
+        if(type == 'EAPsum'){
+            main <- "Expected vs Observed Sum-Scores"
+            fs <- fscores(x, method = 'EAPsum', full.scores=FALSE, verbose=FALSE, ...)
+            scores <- unname(do.call(c, lapply(fs, function(x) x$Sum.Scores)))
+            observed <- unname(do.call(c, lapply(fs, function(x) x$observed)))
+            expected <- unname(do.call(c, lapply(fs, function(x) x$expected)))
+
+            plt <- data.frame(Scores=scores, y=c(observed, expected),
+                              type = rep(c('observed', 'expected'), each=length(observed)),
+                              group = factor(rep(names(fs), each = nrow(fs[[1]]))))
+            return(xyplot(y~Scores|group, plt, type='l', main = main, group=plt$type,
+                          auto.key=auto.key, xlab = expression(Sum-Score), ylab=expression(n),
+                          par.strip.text=par.strip.text, par.settings=par.settings, ...))
+        }
         if(nfact == 2){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2", "group")
             plt$SE <- 1 / sqrt(plt$info)

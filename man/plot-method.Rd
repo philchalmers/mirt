@@ -74,6 +74,7 @@
     \item{\code{'itemscore'}}{item scoring traceline plots}
     \item{\code{'score'}}{expected total score surface}
     \item{\code{'scorecontour'}}{expected total score contour plot}
+    \item{\code{'EAPsum'}}{compares sum-scores to the expected values based on the EAP for sum-scores method (see \code{\link{fscores}})}
   }
 
   Note that if \code{dentype = 'empiricalhist'} was used in estimation then

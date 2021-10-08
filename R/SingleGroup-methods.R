@@ -975,6 +975,7 @@ setMethod(
 #'     \item{\code{'itemscore'}}{item scoring traceline plots}
 #'     \item{\code{'score'}}{expected total score surface}
 #'     \item{\code{'scorecontour'}}{expected total score contour plot}
+#'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based on the EAP for sum-scores method (see \code{\link{fscores}})}
 #'   }
 #'
 #'   Note that if \code{dentype = 'empiricalhist'} was used in estimation then
@@ -1082,7 +1083,8 @@ setMethod(
     {
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
-                       'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian')))
+                       'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian',
+                       'EAPsum')))
             stop('type supplied is not supported')
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
@@ -1159,6 +1161,16 @@ setMethod(
         maxs <- maxs[which.items]
         ybump <- (max(maxs) - min(mins))/15
         ybump_full <- (sum(maxs) - sum(mins))/15
+        if(type == 'EAPsum'){
+            if(is.null(main))
+                main <- "Expected vs Observed Sum-Scores"
+            fs <- fscores(x, method = 'EAPsum', full.scores=FALSE, verbose=FALSE, ...)
+            plt <- with(fs, data.frame(Scores=Sum.Scores, y=c(observed, expected),
+                                       group = rep(c('observed', 'expected'), each=nrow(fs))))
+            return(xyplot(y~Scores, plt, type='l', main = main, group=plt$group,
+                   auto.key=auto.key, xlab = expression(Sum-Score), ylab=expression(n),
+                   par.strip.text=par.strip.text, par.settings=par.settings, ...))
+        }
         if(nfact == 3){
             colnames(plt) <- c("info", "score", "Theta1", "Theta2", "Theta3")
             plt$SE <- 1 / sqrt(plt$info)

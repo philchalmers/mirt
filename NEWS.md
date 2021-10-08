@@ -1,5 +1,7 @@
 # Changes in mirt 1.35
 
+- Added `type = 'EAPsum'` to `plot()` generic to view an expected vs observed sum-scores plot
+
 - `itemfit()` gains a `p.adjust` argument to allow for p-value adjustments in the 
   output for all methods
 
