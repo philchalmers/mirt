@@ -28,6 +28,7 @@
 #' @useDynLib mirt
 #' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan dcurver
 #' @importFrom utils write.table flush.console packageVersion capture.output head
+#' @importFrom gridExtra grid.arrange
 #' @importFrom graphics symbols
 #' @importFrom Deriv Deriv
 #' @exportMethod anova residuals summary logLik vcov

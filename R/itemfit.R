@@ -472,11 +472,17 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             ret[[g]] <- itemfit(tmp_obj, fit_stats=fit_stats, group.size=group.size, group.bins=group.bins,
                                 group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2,
                                 S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                                empirical.table=empirical.table,
+                                empirical.table=empirical.table, S_X2.plot=S_X2.plot,
+                                S_X2.plot_raw.score = S_X2.plot_raw.score,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
                                 impute=impute, discrete=discrete, p.adjust=p.adjust, ...)
         }
         names(ret) <- x@Data$groupNames
+        if(!is.null(empirical.plot) || !is.null(S_X2.plot)){
+            for(g in 1L:length(ret))
+                ret[[g]]$main <- sprintf("%s (%s)", ret[[g]]$main, names(ret)[g])
+            return(do.call(gridExtra::grid.arrange, ret))
+        }
         if(extract.mirt(x, 'ngroups') == 1L) return(ret[[1L]])
         return(ret)
     }

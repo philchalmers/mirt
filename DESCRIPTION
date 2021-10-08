@@ -36,6 +36,7 @@ Depends:
     methods
 Imports:
     GPArotation,
+    gridExtra,
     Matrix,
     Rcpp,
     mgcv,

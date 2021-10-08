@@ -15,6 +15,8 @@
   
 - Fixed Bug `Error in if (any(SEtmp < 0))` that appeared due new R 4.0+ behaviour (reported by 
   Ziying Li and Caroline Böhm)
+  
+- Fix bug in `itemfit()` when plotting multiple-group objects
 
 # Changes in mirt 1.34
 
