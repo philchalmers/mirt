@@ -7,7 +7,8 @@
 read.mirt(x, as.irt.pars = TRUE, ...)
 }
 \arguments{
-\item{x}{an object returned from \code{mirt, bfactor}, or \code{multipleGroup}}
+\item{x}{a single object (or list of objects) returned from \code{mirt, bfactor}, or a
+single object returned by \code{multipleGroup}}
 
 \item{as.irt.pars}{if \code{TRUE}, the parameters will be output as an \code{irt.pars} object}
 
@@ -75,10 +76,18 @@ plot(mod2, type = 'trace')
 set.seed(1234)
 dat <- expand.table(LSAT7)
 group <- sample(c('g1', 'g2'), nrow(dat), TRUE)
-mod <- multipleGroup(dat, 1, group)
+dat1 <- dat[group == 'g1', ]
+dat2 <- dat[group == 'g2', ]
+mod1 <- mirt(dat1, 1)
+mod2 <- mirt(dat2, 1)
 
-# convert, and combine pars
-plinkMG <- read.mirt(mod)
+# convert and combine pars
+plinkMG <- read.mirt(list(g1=mod1, g2=mod2))
+
+# equivalently:
+# mod <- multipleGroup(dat, 1, group)
+# plinkMG <- read.mirt(mod)
+
 combine <- matrix(1:5, 5, 2)
 comb <- combine.pars(plinkMG, combine, grp.names=unique(group))
 out <- plink(comb, rescale="SL")

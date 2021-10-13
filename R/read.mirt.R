@@ -4,7 +4,8 @@
 #' \code{plink} package.
 #'
 #' @aliases read.mirt
-#' @param x an object returned from \code{mirt, bfactor}, or \code{multipleGroup}
+#' @param x a single object (or list of objects) returned from \code{mirt, bfactor}, or a
+#'   single object returned by \code{multipleGroup}
 #' @param as.irt.pars if \code{TRUE}, the parameters will be output as an \code{irt.pars} object
 #' @param ... additional arguments to be passed to \code{coef()}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -68,10 +69,18 @@
 #' set.seed(1234)
 #' dat <- expand.table(LSAT7)
 #' group <- sample(c('g1', 'g2'), nrow(dat), TRUE)
-#' mod <- multipleGroup(dat, 1, group)
+#' dat1 <- dat[group == 'g1', ]
+#' dat2 <- dat[group == 'g2', ]
+#' mod1 <- mirt(dat1, 1)
+#' mod2 <- mirt(dat2, 1)
 #'
-#' # convert, and combine pars
-#' plinkMG <- read.mirt(mod)
+#' # convert and combine pars
+#' plinkMG <- read.mirt(list(g1=mod1, g2=mod2))
+#'
+#' # equivalently:
+#' # mod <- multipleGroup(dat, 1, group)
+#' # plinkMG <- read.mirt(mod)
+#'
 #' combine <- matrix(1:5, 5, 2)
 #' comb <- combine.pars(plinkMG, combine, grp.names=unique(group))
 #' out <- plink(comb, rescale="SL")
@@ -92,8 +101,7 @@
 #' }
 read.mirt <- function (x, as.irt.pars = TRUE, ...)
 {
-    if(requireNamespace("Rsolnp", quietly = TRUE)){
-        cls <- class(x)
+    if(requireNamespace("plink", quietly = TRUE)){
         if(class(x) == 'MultipleGroupClass'){
             pars <- vector('list', length(extract.mirt(x, 'pars')))
             for(i in 1:length(pars)){
@@ -101,6 +109,12 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
                 pars[[i]] <- read.mirt(tmp, as.irt.pars=as.irt.pars, ...)
             }
             names(pars) <- extract.mirt(x, 'groupNames')
+            return(pars)
+        } else if(is.list(x)){
+            pars <- vector('list', length(x))
+            names(pars) <- names(x)
+            for(i in 1:length(pars))
+                pars[[i]] <- read.mirt(x[[i]], as.irt.pars=as.irt.pars, ...)
             return(pars)
         }
         if(class(x) == 'MixedClass')
