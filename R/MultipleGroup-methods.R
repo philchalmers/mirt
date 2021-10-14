@@ -164,7 +164,7 @@ setMethod(
                 return(wireframe(score ~ Theta1 + Theta2|group, data = plt,
                                  zlim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                                  main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
-                                 zlab=expression(Total(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
+                                 zlab=expression(T(theta)), xlab=expression(theta[1]), ylab=expression(theta[2]),
                                  scales = list(arrows = FALSE), screen = rot, colorkey = TRUE, drape = TRUE,
                                  auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
                                  ...))
@@ -190,7 +190,7 @@ setMethod(
                 return(xyplot(score~Theta, plt, type='l', groups=plt$group,
                               ylim=c(sum(mins)-ybump_full, sum(maxs)+ybump_full),
                               main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
-                              xlab = expression(theta), ylab=expression(Total(theta)), auto.key = auto.key,
+                              xlab = expression(theta), ylab=expression(T(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             if(type == 'empiricalhist'){
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
