@@ -45,6 +45,9 @@
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 #'   Adjustments are located in the \code{adj_pvals} element in the returned list. Only applicable when
 #'   \code{DIF = TRUE}
+#' @param den.type character specifying how the density of the latent traits is computed.
+#'   Default is \code{'both'} to include the information from both groups,
+#'   \code{'focal'} for just the focal group, and \code{'reference'} for the reference group
 #' @param auto.key plotting argument passed to \code{\link{lattice}}
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
@@ -252,7 +255,8 @@
 #
 #' }
 DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'), param_set = NULL,
-                CI = .95, npts = 1000, quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
+                den.type = 'both', CI = .95, npts = 1000,
+                quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
                 plot = FALSE, DIF = FALSE, p.adjust = 'none',
                 par.strip.text = list(cex = 0.7),
                 par.settings = list(strip.background = list(col = '#9ECAE1'),
@@ -290,7 +294,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     }
 
     fn <- function(x, omod, Theta, max_score, Theta_nodes = NULL,
-                   plot, DIF, focal_items, details, signs=NULL, rs=NULL){
+                   plot, DIF, focal_items, details, signs=NULL, rs=NULL, den.type){
         mod <- omod
         if(!is.null(Theta_nodes)){
             T1 <- expected.test(mod, Theta_nodes, group=1L, mins=FALSE, individual=DIF,
@@ -301,7 +305,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             if(!DIF) ret <- c("sDRF." = ret)
             return(ret)
         }
-        calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF,
+        calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF,  den.type=den.type,
                   focal_items=focal_items, details=details, signs=signs, rs=rs)
     }
     fn2 <- function(ind, pars, MGmod, param_set, rslist, ...){
@@ -314,6 +318,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     }
 
     if(missing(mod)) missingMsg('mod')
+    stopifnot(den.type %in% c('both', 'focal', 'reference'))
     stopifnot(is.logical(plot))
     if(DIF && !is.null(Theta_nodes))
         stop('DIF must be FALSE when using Theta_nodes', call.=FALSE)
@@ -382,7 +387,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                     quadpts=quadpts, large=large, TOL = NaN)
     if(plot) Theta_nodes <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=1000))
     oCM <- lapply(1L, fn, omod=mod, Theta_nodes=Theta_nodes,
-                  max_score=max_score, Theta=Theta, plot=plot,
+                  max_score=max_score, Theta=Theta, plot=plot, den.type=den.type,
                   DIF=DIF, focal_items=focal_items, details=details)[[1L]]
     signs <- attr(oCM, 'signs')
     if(plot && !impute) return(plot.DRF(Theta_nodes, oCM, DIF=DIF,
@@ -400,7 +405,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         list_scores <- myLapply(1L:nrow(param_set), fn2, pars=pars, MGmod=mod, param_set=param_set,
                                 max_score=max_score, Theta=Theta, rslist=rslist,
                                 Theta_nodes=Theta_nodes, plot=plot, details=details,
-                                DIF=DIF, focal_items=focal_items, signs=signs)
+                                DIF=DIF, focal_items=focal_items, signs=signs, den.type=den.type)
         scores <- do.call(rbind, list_scores)
         pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars, mod@ParObjects$pars[[2L]]@ParObjects$pars)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
@@ -448,7 +453,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     ret
 }
 
-calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, rs=NULL, signs=NULL){
+calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, den.type,
+                      rs=NULL, signs=NULL){
     if(DIF){
         T1 <- expected.test(mod, Theta, group=1L, mins=FALSE, individual = TRUE,
                             which.items=focal_items)
@@ -471,7 +477,11 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, rs
         r1 <- rs[,1L]
         r2 <- rs[,2L]
     }
-    p <- (r1 + r2) / sum(r1 + r2)
+    p <- if(den.type == 'both')
+        (r1 + r2) / sum(r1 + r2)
+    else if(den.type == 'focal')
+        r2 / sum(r2)
+    else r1/ sum(r1)
     D <- T1 - T2
     uDRF <- colSums(abs(D) * p)
     sDRF <- colSums(D * p)

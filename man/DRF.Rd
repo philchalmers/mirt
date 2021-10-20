@@ -9,6 +9,7 @@ DRF(
   draws = NULL,
   focal_items = 1L:extract.mirt(mod, "nitems"),
   param_set = NULL,
+  den.type = "both",
   CI = 0.95,
   npts = 1000,
   quadpts = NULL,
@@ -42,6 +43,10 @@ parametric sampling approach, bootstrap, of MCMC). If supplied, then these will 
 the DRF measures. Can be much more efficient to pre-compute these values if DIF, DBF, or DTF are
 being evaluated within the same model (especially when using the bootstrap method).
 See \code{\link{draw_parameters}}}
+
+\item{den.type}{character specifying how the density of the latent traits is computed.
+Default is \code{'both'} to include the information from both groups,
+\code{'focal'} for just the focal group, and \code{'reference'} for the reference group}
 
 \item{CI}{range of confidence interval when using draws input}
 
