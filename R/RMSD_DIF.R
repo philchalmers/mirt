@@ -149,7 +149,7 @@ RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
         # standard normal dist for theta
         if(dentype %in% c('norm', 'snorm')){
             mu <- sv$value[sv$name == "MEAN_1"]
-            sigma2 <- mu <- sv$value[sv$name == "COV_11"]
+            sigma2 <- sv$value[sv$name == "COV_11"]
             if(dentype == 'snorm'){
                 mu <- 0
                 sigma2 <- 1
