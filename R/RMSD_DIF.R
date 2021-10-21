@@ -32,6 +32,7 @@
 #'
 #' Buchholz, J., and Hartig, J. (2019). Comparing Attitudes Across Groups: An IRT-Based Item-Fit Statistic
 #'   for the Analysis of Measurement Invariance. \emph{Applied Psychological Measurement, 43}(3), 241-250.
+#'   \doi{https://doi.org/10.1177/0146621617748323}
 #'
 #' Lee, S. S., and von Davier, M. (2020). Improving measurement properties of the PISA home
 #'   possessions scale through partial invariance modeling.
