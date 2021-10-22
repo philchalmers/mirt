@@ -2575,6 +2575,11 @@ MC_quad <- function(npts, nfact, lim)
 
 respSample <- function(P) .Call("respSample", P)
 
+as.mirt_df <- function(df){
+    class(df) <- c('mirt_df', class(df))
+    df
+}
+
 makeSymMat <- function(mat){
     if(ncol(mat) > 1L){
         mat[is.na(mat)] <- 0

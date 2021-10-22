@@ -84,7 +84,7 @@ averageMI <- function(par, SEpar, as.data.frame = TRUE){
         if(n == 1)
             colnames(ret) <- c('par', 'SEpar', 't', 'df', 'p')
         else colnames(ret) <- paste(c('par', 'SEpar', 't', 'df', 'p'), 1:n, sep='_')
-        class(ret) <- c('mirt_df', 'data.frame')
+        ret <- as.mirt_df(ret)
     }
     return(ret)
 }

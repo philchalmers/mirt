@@ -161,7 +161,8 @@
 #' ## systematic differing slopes and intercepts (clear DTF)
 #' set.seed(1234)
 #' dat1 <- simdata(a, d, N, itemtype = 'dich', mu=.50, sigma=matrix(1.5))
-#' dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, .5)),
+#' dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)),
+#'                 d + c(numeric(15), rnorm(n-15, 1, .5)),
 #'                 N, itemtype = 'dich')
 #' dat <- rbind(dat1, dat2)
 #' mod3 <- multipleGroup(dat, model, group=group, SE=TRUE,
@@ -169,7 +170,7 @@
 #' plot(mod3) #visable DTF happening
 #'
 #' # DIF(mod3, c('a1', 'd'), items2test=16:30)
-#' DRF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally higher on average
+#' DRF(mod3) #unsigned bias. Signed bias (group 2 scores higher on average)
 #' DRF(mod3, draws=500)
 #' DRF(mod3, draws=500, plot=TRUE) #multiple DRF areas along Theta
 #'
@@ -393,7 +394,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     if(plot && !impute) return(plot.DRF(Theta_nodes, oCM, DIF=DIF,
                                  itemnames = extract.mirt(mod, 'itemnames')[focal_items], ...))
     if(!is.null(Theta_nodes) && !impute)
-        return(data.frame(Theta=Theta_nodes, sDRF=oCM))
+        return(as.mirt_df(data.frame(Theta=Theta_nodes, sDRF=oCM)))
     if(impute){
         pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars,
                      mod@ParObjects$pars[[2L]]@ParObjects$pars)
@@ -416,18 +417,18 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         rownames(CIs) <- c(paste0('CI_', round((1-CI)/2, 3L)*100),
                            paste0('CI_', round(CI + (1-CI)/2, 3L)*100))
         if(!is.null(Theta_nodes))
-            return(data.frame(Theta=Theta_nodes, sDRF=oCM, t(CIs)))
+            return(as.mirt_df(data.frame(Theta=Theta_nodes, sDRF=oCM, t(CIs))))
         if(DIF){
             oCM <- matrix(oCM, length(focal_items))
             t1 <- compute_ps(oCM[,1L], scores[,1L:length(focal_items), drop=FALSE])
             t2 <- compute_ps(oCM[,3L:4L], scores[,1L:(length(focal_items)*2L) + length(focal_items)*2L, drop=FALSE],
                              X2=TRUE)
-            ret <- list(sDIF = data.frame(sDIF = oCM[,1L],
+            ret <- list(sDIF = as.mirt_df(data.frame(sDIF = oCM[,1L],
                                           t(CIs[,1L:length(focal_items)]),
-                                          t1, row.names = focal_items),
-                        uDIF = data.frame(uDIF = oCM[,2L],
+                                          t1, row.names = focal_items)),
+                        uDIF = as.mirt_df(data.frame(uDIF = oCM[,2L],
                                           t(CIs[,1L:length(focal_items) + length(focal_items)]),
-                                          t2, row.names=focal_items))
+                                          t2, row.names=focal_items)))
             if(p.adjust != 'none'){
                 ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method=p.adjust)
                 ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method=p.adjust)
@@ -438,6 +439,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             tests <- rbind(t1, t2)
             ret <- data.frame(n_focal_items=length(focal_items),
                               stat = oCM[1L:2L], t(CIs), tests, check.names = FALSE)
+            ret <- as.mirt_df(ret)
         }
     } else {
         # no imputations
@@ -445,9 +447,11 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             ret <- data.frame(matrix(oCM, length(oCM)/4L), row.names = focal_items)
             ret <- ret[,-c(3L:4L)]
             colnames(ret) <- c('sDIF', 'uDIF')
+            ret <- as.mirt_df(ret)
         } else {
             ret <- data.frame(n_focal_items=length(focal_items), sDRF=oCM[1L], uDRF=oCM[2L],
                               row.names=NULL)
+            ret <- as.mirt_df(ret)
         }
     }
     ret

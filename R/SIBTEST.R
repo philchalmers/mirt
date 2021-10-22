@@ -368,22 +368,22 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                                      df=NA, p = p_cross2))
         rownames(ret) <- c('SIBTEST', 'CSIBTEST', 'CSIBTEST_randomized')
     }
-    class(ret) <- c('mirt_df', 'data.frame')
+    ret <- as.mirt_df(ret)
     if(details){
-        ret <- data.frame(pkstar=unname(as.numeric(pkstar)),
+        ret <- as.mirt_df(data.frame(pkstar=unname(as.numeric(pkstar)),
                           sigma_focal=sigma_focal, sigma_ref=sigma_ref,
                           Y_focal=Ybar_focal, Y_ref=Ybar_ref,
                           Ystar_focal=ystar_focal_vec, Ystar_ref=ystar_ref_vec,
-                          row.names = names(pkstar))
+                          row.names = names(pkstar)))
         if(LiStout1996) attr(ret, "B_vec") <- B_vec
     }
     if(plot != 'none'){
-        ret <- data.frame(total_score = 1:length(pkstar) - 1,
+        ret <- as.mirt_df(data.frame(total_score = 1:length(pkstar) - 1,
                           pkstar=unname(as.numeric(pkstar)),
                           Ystar=c(ystar_focal_vec, ystar_ref_vec),
                           Ystar_diff =ystar_focal_vec - ystar_ref_vec,
                           Ystar_diff_pkstar =unname((ystar_focal_vec - ystar_ref_vec)*as.numeric(pkstar)),
-                          group = rep(c('focal', 'reference'), each=length(pkstar)))
+                          group = rep(c('focal', 'reference'), each=length(pkstar))))
         if(plot != "freq")
             for(i in 1L:nrow(ret))
                 if(ret$pkstar[i] == 0) ret[i, ] <- NA

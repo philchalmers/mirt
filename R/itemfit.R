@@ -843,6 +843,6 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                         itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, p.adjust=p.adjust, ...)
         ret <- cbind(ret, tmp)
     }
-    class(ret) <- c('mirt_df', 'data.frame')
+    ret <- as.mirt_df(ret)
     return(ret)
 }

@@ -235,7 +235,7 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     UIDN <- colSums(weighted.dif.abs.nrm)
     df.item.output <- data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,mat.item.max.d,mean.ES.foc,mean.ES.ref)
     row.names(df.item.output)<-paste0("item.",1:nrow(df.item.output))
-    class(df.item.output) <- c('mirt_df', 'data.frame')
+    df.item.output <- as.mirt_df(df.item.output)
     if(!plot && DIF) return(df.item.output[focal_items, ])
 
     ##################DTF####################
@@ -266,7 +266,7 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     out.test.names <- c("STDS","UTDS","UETSDS","ETSSD","Starks.DTFR","UDTFR","UETSDN","theta.of.max.test.D","Test.Dmax")
     df.test.output <- data.frame(out.test.names,out.test.stats)
     names(df.test.output) <- c("Effect Size","Value")
-    class(df.item.output) <- c('mirt_df', 'data.frame')
+    df.item.output <- as.mirt_df(df.item.output)
     if(!plot && !DIF) return(df.test.output)
 
     # plots

@@ -526,7 +526,7 @@ setMethod(
                 ret <- ret[!(colnames(ret) %in% c('AIC'))]
                 ret$logPost = object@Fit$logPrior + object@Fit$logLik
             }
-            class(ret) <- c('mirt_df', 'data.frame')
+            ret <- as.mirt_df(ret)
             return(ret)
         }
         df <- object@Fit$df - object2@Fit$df
@@ -569,7 +569,7 @@ setMethod(
             if(bounded)
                 ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
         }
-        class(ret) <- c('mirt_df', 'data.frame')
+        ret <- as.mirt_df(ret)
         ret
     }
 )
@@ -845,7 +845,7 @@ setMethod(
                 ret <- cbind(object@Data$data, scoremat, res)
                 ret[is.na(rowSums(ret)), c('exp', 'std.res')] <- NA
                 rownames(ret) <- NULL
-                class(ret) <- c('mirt_df', 'data.frame')
+                ret <- as.mirt_df(ret)
                 return(ret)
             } else {
                 tabdata <- tabdata[do.call(order, as.data.frame(tabdata[,1:J])),]
@@ -853,7 +853,7 @@ setMethod(
                     if(!is.numeric(printvalue)) stop('printvalue is not a number.', call.=FALSE)
                     tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
                 }
-                class(tabdata) <- c('mirt_df', 'data.frame')
+                tabdata <- as.mirt_df(tabdata)
                 return(tabdata)
             }
         } else if(type == 'expfull'){
@@ -895,7 +895,7 @@ setMethod(
                 if(!is.numeric(printvalue)) stop('printvalue is not a number.', call.=FALSE)
                 tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
             }
-            class(tabdata) <- c('mirt_df', 'data.frame')
+            tabdata <- as.mirt_df(tabdata)
             return(tabdata)
         } else if(type == 'Q3'){
             if(discrete && !use_dentype_estimate)

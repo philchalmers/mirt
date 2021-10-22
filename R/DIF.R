@@ -302,7 +302,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                     if(all(!keep)) break
                 }
                 ret <- data.frame()
-                class(ret) <- c('mirt_df', 'data.frame')
+                ret <- as.mirt_df(ret)
                 return(ret)
             }
             if(all(keep == lastkeep)) break
@@ -418,7 +418,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         adj_pvals <- res$adj_pvals
         res <- do.call(rbind, res[pick])
         res$adj_pvals <- adj_pvals
-        class(res) <- c('mirt_df', 'data.frame')
+        res <- as.mirt_df(res)
         return(res)
     }
     if(simplify && !return_models){
@@ -433,7 +433,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
          })
          res <- cbind(converged, do.call(rbind, out))
          if(!has_priors) res$adj_pvals <- adj_pvals
-         class(res) <- c('mirt_df', 'data.frame')
+         res <- as.mirt_df(res)
     }
     return(res)
 }

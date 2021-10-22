@@ -195,7 +195,8 @@ DRF(mod2, draws=500) #non-sig DTF due to item cancellation
 ## systematic differing slopes and intercepts (clear DTF)
 set.seed(1234)
 dat1 <- simdata(a, d, N, itemtype = 'dich', mu=.50, sigma=matrix(1.5))
-dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)), d + c(numeric(15), rnorm(n-15, 1, .5)),
+dat2 <- simdata(a + c(numeric(15), rnorm(n-15, 1, .25)),
+                d + c(numeric(15), rnorm(n-15, 1, .5)),
                 N, itemtype = 'dich')
 dat <- rbind(dat1, dat2)
 mod3 <- multipleGroup(dat, model, group=group, SE=TRUE,
@@ -203,7 +204,7 @@ mod3 <- multipleGroup(dat, model, group=group, SE=TRUE,
 plot(mod3) #visable DTF happening
 
 # DIF(mod3, c('a1', 'd'), items2test=16:30)
-DRF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally higher on average
+DRF(mod3) #unsigned bias. Signed bias (group 2 scores higher on average)
 DRF(mod3, draws=500)
 DRF(mod3, draws=500, plot=TRUE) #multiple DRF areas along Theta
 

@@ -188,7 +188,7 @@ RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
         if(flag > 0)
             items[items < flag] <- NA
         items <- as.data.frame(items)
-        class(items) <- c('mirt_df', 'data.frame')
+        items <- as.mirt_df(items)
 
         ret[[which.group]] <- items
 
