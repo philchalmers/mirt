@@ -138,7 +138,7 @@ For dichotomous response models, \code{mixedmirt} follows the general form
 
  where V and W are fixed and random effects design matrices for the associated coefficients.
 
- To simulate maximum a posteriori estimates for the random effect terms
+ To simulate expected a posteriori predictions for the random effect terms
  use the \code{\link{randef}} function.
 }
 \examples{

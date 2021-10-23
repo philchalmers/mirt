@@ -17,7 +17,8 @@ randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 }
 \description{
 Stochastically compute random effects for \code{MixedClass} objects with Metropolis-Hastings
-samplers and averaging over the draws. Returns a list of the estimated effects.
+samplers and averaging over the draws to obtain expected a posteriori predictions.
+Returns a list of the estimated effects.
 }
 \examples{
 \dontrun{

@@ -1,7 +1,8 @@
 #' Compute posterior estimates of random effect
 #'
 #' Stochastically compute random effects for \code{MixedClass} objects with Metropolis-Hastings
-#' samplers and averaging over the draws. Returns a list of the estimated effects.
+#' samplers and averaging over the draws to obtain expected a posteriori predictions.
+#' Returns a list of the estimated effects.
 #'
 #' @aliases randef
 #' @param x an estimated model object from the \code{\link{mixedmirt}} function
