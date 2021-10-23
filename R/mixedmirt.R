@@ -351,6 +351,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
 {
     Call <- match.call()
     dots <- list(...)
+    opars <- pars
     if(!is.null(dots$method))
         stop('method cannot be changed in mixedmirt() function', call.=FALSE)
     svinput <- pars
@@ -481,6 +482,7 @@ mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, i
     attr(mixed.design, 'itemdesign') <- itemdesignold
     attr(mixed.design, 'formula') <- list(fixed=fixed, random=random, lr.fixed=lr.fixed,
                                           lr.random=lr.random)
+    if(!is.null(opars)) pars <- opars
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)), itemtype=itemtype,
                       mixed.design=mixed.design, method='MIXED', constrain=constrain, pars=pars,
                       SE=SE, latent.regression=latent.regression, technical=technical, ...)

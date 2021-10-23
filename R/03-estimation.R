@@ -396,8 +396,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                        lrPars=lrPars, lr.random=latent.regression$lr.random,
                                        MG = TRUE)
             mixed.design$random <- attr(PrepList, 'random')
+            latent.regression$lr.random <- attr(PrepList, 'lr.random')
             if(any(pars$class == 'lrPars')) lrPars <- update.lrPars(pars, lrPars)
             attr(PrepList, 'random') <- NULL
+            attr(PrepList, 'lr.random') <- NULL
         }
         if(!is.null(attr(pars, 'values')) || (is.character(pars) && pars == 'values'))
             RETURNVALUES <- TRUE

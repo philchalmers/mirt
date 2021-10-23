@@ -1154,6 +1154,15 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), M
         }
         attr(PrepList, 'random') <- random
     }
+    if(length(lrPars)){
+        for(j in seq_len(length(lrPars@par))){
+            lrPars@par[j] <- pars[ind,'value']
+            lrPars@est[j] <- as.logical(pars[ind,'est'])
+            lrPars@lbound[j] <- pars[ind,'lbound']
+            lrPars@ubound[j] <- pars[ind,'ubound']
+            ind <- ind + 1L
+        }
+    }
     if(length(lr.random)){
         for(i in seq_len(length(lr.random))){
             for(j in seq_len(length(lr.random[[i]]@par))){
