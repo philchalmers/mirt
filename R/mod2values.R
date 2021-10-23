@@ -93,6 +93,24 @@ mod2values <- function(x){
         class <- c(class, rep('lrPars', length(lrPars@parnum)))
         item <- c(item, rep('BETA', length(lrPars@parnum)))
     }
+    if(is(x, 'MixedClass')){
+        tmpgroup <- x@ParObjects$lr.random
+        if(length(tmpgroup)){
+            for(i in 1L:length(tmpgroup)){
+                parname <- c(parname, tmpgroup[[i]]@parnames)
+                parnum <- c(parnum, tmpgroup[[i]]@parnum)
+                par <- c(par, tmpgroup[[i]]@par)
+                est <- c(est, tmpgroup[[i]]@est)
+                lbound <- c(lbound, tmpgroup[[i]]@lbound)
+                ubound <- c(ubound, tmpgroup[[i]]@ubound)
+                prior.type <- c(prior.type, tmpgroup[[i]]@prior.type)
+                prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
+                prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
+                item <- c(item, rep('LRRANDOM', length(tmpgroup[[i]]@est)))
+                class <- c(class, rep('LRRandomPars', length(tmpgroup[[i]]@parnum)))
+            }
+        }
+    }
     gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
     par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
     lbound[parname %in% c('g', 'u')] <- antilogit(lbound[parname %in% c('g', 'u')])
