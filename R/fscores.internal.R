@@ -11,7 +11,7 @@ setMethod(
 	                      use_dentype_estimate, leave_missing = FALSE, ...)
 	{
         den_fun <- mirt_dmvnorm
-        if(extract.mirt(object, 'ngroups') == 1L){
+        if(extract.mirt(object, 'ngroups') == 1L && !mixture){
             if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom'){
                 den_fun <- function(Theta, ...){
                     obj <- object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]
@@ -220,12 +220,20 @@ setMethod(
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
                                    tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,
                                    K=extract.mirt(object, 'K'), mins=rep(0L, ncol(response.pattern)))
-                ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE,
+                if(mixture){
+                    newmod@ParObjects$pars <- object@ParObjects$pars
+                    class(object) <- "MixtureClass"
+                    pis <- do.call(c, lapply(coef(object, simplify=TRUE), function(x) as.numeric(x$class_proportion)))
+                } else {
+                    pis <- NULL
+                    newmod@ParObjects$pars <- newmod@ParObjects$pars[c(pick, length(newmod@ParObjects$pars))]
+                }
+                ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
                                custom_theta=custom_theta, plausible.draws=plausible.draws,
-                               plausible.type=plausible.type, start=start,
+                               plausible.type=plausible.type, start=start, pis=pis,
                                use_dentype_estimate=use_dentype_estimate, ...)
                 if(plausible.draws > 0) return(ret)
                 if(return.acov) return(ret)
@@ -249,6 +257,7 @@ setMethod(
                 newmod@Model$itemloc <- c(1L, 1L + cumsum(object@Data$K[pick]))
                 if(newmod@Options$exploratory)
                     stop('exploratory models not supported for single response pattern inputs', call.=FALSE)
+                browser()
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
