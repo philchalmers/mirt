@@ -18,6 +18,9 @@
   
 - Fix bug in `itemfit()` when plotting multiple-group objects
 
+- Bugfix in `fscores()` report on which row failed to converge when datsets contain response 
+  patterns that were completely missing
+
 # Changes in mirt 1.34
 
 - Previous `technical = list(removeEmptyRows = TRUE)` input now deprecated. Response patterns

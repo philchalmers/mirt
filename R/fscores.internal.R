@@ -507,17 +507,20 @@ setMethod(
 		        colnames(scoremat) <- paste0("Class_", 1:ncol(scoremat))
             if(full.scores.SE)
                 scoremat <- cbind(scoremat, SEscoremat)
-            if(any(na.omit(converge_info_mat) != 1)){
-                attr(scoremat, 'converge_info_code') <- converge_info_mat
-                whc <- which(converge_info_mat != 1)
-                warning(paste0("The following factor score estimates failed to converge successfully:\n    ",
-                               paste0(whc, collapse=',')), call.=FALSE)
-            }
             if(method == 'classify')
                 colnames(scoremat) <- paste0("CLASS_", 1L:ncol(scoremat))
             if(full.scores && !leave_missing){
                 completely_missing <- extract.mirt(object, 'completely_missing')
                 scoremat <- add_completely.missing_back(scoremat, completely_missing)
+            }
+            if(any(na.omit(converge_info_mat) != 1)){
+                completely_missing <- extract.mirt(object, 'completely_missing')
+                converge_info_mat <- as.vector(add_completely.missing_back(matrix(converge_info_mat),
+                                                                           completely_missing))
+                attr(scoremat, 'converge_info_code') <- converge_info_mat
+                whc <- which(converge_info_mat != 1)
+                warning(paste0("The following factor score estimates failed to converge successfully:\n    ",
+                               paste0(whc, collapse=',')), call.=FALSE)
             }
             return(scoremat)
 		} else {
