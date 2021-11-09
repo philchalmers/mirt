@@ -1704,9 +1704,45 @@ mirt2traditional <- function(x, vcov){
         par <- c(as, ds)
         names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
         x@est <- rep(TRUE, ncat*2)
-        x@SEpar <- rep(0, ncat*2)
+        x@SEpar <- rep(as.numeric(NA), ncat*2)
     } else if(cls == 'nestlogit'){
-        # browser()
+        fns <- vector('list', ncat*2 + 4)
+        fns[[2]] <- function(par, index, opar){
+            if(index == 2L){
+                opar[1L:2L] <- par
+                ret <- -opar[2L]/opar[1L]
+            }
+            ret
+        }
+        fns[[3]] <- function(par, index, opar){
+            if(index == 3L)
+                ret <- plogis(par)
+            ret
+        }
+        fns[[4]] <- function(par, index, opar){
+            if(index == 4L)
+                ret <- plogis(par)
+            ret
+        }
+        for(i in (2L:length(par)-1L) + 4){
+            fns[[i]] <- function(par, index, opar){
+                if(index <= (5 + ncat-2)){
+                    as <- par
+                    as <- as - mean(as)
+                    ret <- as[index-4]
+                } else {
+                    ds <- par
+                    ds <- ds - mean(ds)
+                    ret <- ds[index-4-(ncat-1)]
+                }
+                ret
+            }
+        }
+
+        delta_index <- vector('list', (ncat-1)*2)
+        for(i in 1L:(ncat-1)) delta_index[[i]] <- 1L:(ncat-1) + 4
+        for(i in ncat:((ncat-1)*2)) delta_index[[i]] <- 1L:(ncat-1) + 4 + ncat - 1L
+        delta_index <- c(list(NA, 1L:2L, 3L, 4L), delta_index)
         par1 <- par[1:4]
         par1[2] <- -par1[2]/par1[1]
         par1[3] <- plogis(par1[3])
@@ -1720,12 +1756,14 @@ mirt2traditional <- function(x, vcov){
         names(as) <- paste0('a', 1:(ncat-1))
         names(ds) <- paste0('c', 1:(ncat-1))
         par <- c(par1, as, ds)
+        x@est <- c(x@est[1:4], rep(TRUE, (ncat-1)*2))
+        x@SEpar <- c(x@SEpar[1], as.numeric(rep(NA, (ncat-1)*2 + 3)))
     }
     x@par <- par
     names(x@est) <- names(par)
     x@parnames <- names(x@par)
     if(length(vcov) == 0L || (is.na(vcov[1L,1L]) || !(cls %in%
-                                                      c('dich', 'graded', 'gpcm', 'nominal')))){
+                                                      c('dich', 'graded', 'gpcm', 'nominal', 'nestlogit')))){
         x@SEpar <- numeric()
     } else {
         nms <- colnames(vcov)
