@@ -1679,14 +1679,34 @@ mirt2traditional <- function(x, vcov){
         names(par) <- c('a', paste0('b', 1:length(newd)))
         x@est <- x@est[c(1, (ncat+3L):length(x@est))]
     } else if(cls == 'nominal'){
+        fns <- vector('list', ncat*2)
+        for(i in 2L:length(par)-1L){
+            fns[[i]] <- function(par, index, opar){
+                if(index <= floor(length(opar)/2)){
+                    as <- par[2:(ncat+1)] * par[1]
+                    as <- as - mean(as)
+                    ret <- as[index]
+                } else {
+                    ds <- par
+                    ds <- ds - mean(ds)
+                    ret <- ds[index-ncat]
+                }
+                ret
+            }
+        }
+        delta_index <- vector('list', ncat*2)
+        for(i in 1L:(ncat)) delta_index[[i]] <- 1L:(ncat+1L)
+        for(i in (ncat+1L):(ncat*2)) delta_index[[i]] <- (ncat+2L):length(par)
         as <- par[2:(ncat+1)] * par[1]
         as <- as - mean(as)
         ds <- par[(ncat+2):length(par)]
         ds <- ds - mean(ds)
         par <- c(as, ds)
         names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
-        x@est <- x@est[-2]
+        x@est <- rep(TRUE, ncat*2)
+        x@SEpar <- rep(0, ncat*2)
     } else if(cls == 'nestlogit'){
+        # browser()
         par1 <- par[1:4]
         par1[2] <- -par1[2]/par1[1]
         par1[3] <- plogis(par1[3])
@@ -1704,7 +1724,8 @@ mirt2traditional <- function(x, vcov){
     x@par <- par
     names(x@est) <- names(par)
     x@parnames <- names(x@par)
-    if(length(vcov) == 0L || (is.na(vcov[1L,1L]) || !(cls %in% c('dich', 'graded', 'gpcm')))){
+    if(length(vcov) == 0L || (is.na(vcov[1L,1L]) || !(cls %in%
+                                                      c('dich', 'graded', 'gpcm', 'nominal')))){
         x@SEpar <- numeric()
     } else {
         nms <- colnames(vcov)
