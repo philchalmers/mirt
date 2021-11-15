@@ -194,7 +194,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if (itemtype[i] == 'ggum'){
             val <- ggum.start.values[[i]]
             val[!estLambdas[i,]] <- 0
-            fp <- c(estLambdas[i,], rep(TRUE,length(val)-ncol(estLambdas)))
+            fp <- c(estLambdas[i,], estLambdas[i,], rep(TRUE,length(val)-(ncol(estLambdas)*2)))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('b', 1L:nfact, sep=''),
                 paste('t', 1L:(max(K[i]) - 1), sep=''))
             names(fp) <- names(val)
