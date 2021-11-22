@@ -89,6 +89,7 @@ setMethod(
                     ", TLI = ", round(x@Fit$TLI,3), sep='')
             }
         }
+        cat("\n")
     }
 )
 
