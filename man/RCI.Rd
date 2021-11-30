@@ -16,10 +16,10 @@ included in exactly one row}
 \item{postdat}{same as \code{predat}, but with respect to the post/follow-up
 measurement}
 
-\item{...}{additional arguments passed to \code{\link{fscores}}}
-
-\item{cutoff}{optional vector of length 2 indicating the type of cut-offs to
+\item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95% z-score type cut-off)}
+
+\item{...}{additional arguments passed to \code{\link{fscores}}}
 }
 \description{
 Computes an IRT version of the "reliable change index" (RCI) proposed by

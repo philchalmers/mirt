@@ -12,7 +12,7 @@
 #'   included in exactly one row
 #' @param postdat same as \code{predat}, but with respect to the post/follow-up
 #'   measurement
-#' @param cutoff optional vector of length 2 indicating the type of cut-offs to
+#' @param cutoffs optional vector of length 2 indicating the type of cut-offs to
 #'   report (e.g., \code{c(-1.96, 1.96)} reflects the 95% z-score type cut-off)
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
