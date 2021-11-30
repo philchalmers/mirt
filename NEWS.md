@@ -1,5 +1,7 @@
 # Changes in mirt 1.35
 
+- Added `RCI()` function to compute reliable change index via IRT modelling
+
 - Added delta method SE in `coef(., IRTpars = TRUE)` for the nominal and nested-logit models
 
 - `itemfit()` gains a `S_X2.plot` argument to visualize the expected-observed probability 

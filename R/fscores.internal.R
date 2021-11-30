@@ -220,13 +220,11 @@ setMethod(
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
                                    tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,
                                    K=extract.mirt(object, 'K'), mins=rep(0L, ncol(response.pattern)))
+                pis <- NULL
                 if(mixture){
                     newmod@ParObjects$pars <- object@ParObjects$pars
                     class(object) <- "MixtureClass"
                     pis <- do.call(c, lapply(coef(object, simplify=TRUE), function(x) as.numeric(x$class_proportion)))
-                } else {
-                    pis <- NULL
-                    newmod@ParObjects$pars <- newmod@ParObjects$pars[c(pick, length(newmod@ParObjects$pars))]
                 }
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
