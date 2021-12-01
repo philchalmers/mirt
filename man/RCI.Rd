@@ -17,7 +17,7 @@ included in exactly one row}
 measurement}
 
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
-report (e.g., \code{c(-1.96, 1.96)} reflects the 95% z-score type cut-off)}
+report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
 
 \item{...}{additional arguments passed to \code{\link{fscores}}}
 }

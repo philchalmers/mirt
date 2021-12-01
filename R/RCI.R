@@ -13,7 +13,7 @@
 #' @param postdat same as \code{predat}, but with respect to the post/follow-up
 #'   measurement
 #' @param cutoffs optional vector of length 2 indicating the type of cut-offs to
-#'   report (e.g., \code{c(-1.96, 1.96)} reflects the 95% z-score type cut-off)
+#'   report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
