@@ -72,7 +72,7 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 
 Jacobson, N. S., & Truax, P. (1991). Clinical significance: A statistical approach
 to defining meaningful change in psychotherapy research. Journal
-of Consulting and Clinical Psychology, 59, 12–19.
+of Consulting and Clinical Psychology, 59, 12-19.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

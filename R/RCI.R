@@ -24,7 +24,7 @@
 #'
 #' Jacobson, N. S., & Truax, P. (1991). Clinical significance: A statistical approach
 #' to defining meaningful change in psychotherapy research. Journal
-#' of Consulting and Clinical Psychology, 59, 12–19.
+#' of Consulting and Clinical Psychology, 59, 12-19.
 #' @keywords reliable change index
 #' @export
 #' @examples
