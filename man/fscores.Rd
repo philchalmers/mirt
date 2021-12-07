@@ -20,6 +20,7 @@ fscores(
   return.acov = FALSE,
   mean = NULL,
   cov = NULL,
+  covdata = NULL,
   verbose = TRUE,
   full.scores.SE = FALSE,
   theta_lim = c(-6, 6),
@@ -99,6 +100,10 @@ from the computed mirt object will be used}
 
 \item{cov}{a custom matrix of the latent variable covariance matrix. If NULL, the default for
 'group' values from the computed mirt object will be used}
+
+\item{covdata}{when latent regression model has been fitted, and the \code{response.pattern}
+input is used to score individuals, then this argument is used to include the latent regression
+covariate terms for each row vector supplied to \code{response.pattern}}
 
 \item{verbose}{logical; print verbose output messages?}
 
@@ -227,6 +232,37 @@ library(msm)
 # need the :: scope for parallel to see the function (not require if no mirtCluster() defined)
 fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
 head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
+
+
+####################
+# scoring via response.pattern input (with latent regression structure)
+#simulate data
+set.seed(1234)
+N <- 1000
+
+# covariates
+X1 <- rnorm(N); X2 <- rnorm(N)
+covdata <- data.frame(X1, X2)
+Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+
+#items and response data
+a <- matrix(1, 20); d <- matrix(rnorm(20))
+dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
+
+#conditional model using X1 and X2 as predictors of Theta
+mod <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+coef(mod, simplify=TRUE)
+
+# all EAP estimates that include latent regression information
+fs <- fscores(mod, full.scores.SE=TRUE)
+head(fs)
+
+# score only two response patterns
+rp <- dat[1:2, ]
+cd <- covdata[1:2, ]
+
+fscores(mod, response.pattern=rp, covdata=cd)
+fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
 
 }
 }

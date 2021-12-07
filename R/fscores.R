@@ -71,6 +71,9 @@
 #'   from the computed mirt object will be used
 #' @param cov a custom matrix of the latent variable covariance matrix. If NULL, the default for
 #'   'group' values from the computed mirt object will be used
+#' @param covdata when latent regression model has been fitted, and the \code{response.pattern}
+#'   input is used to score individuals, then this argument is used to include the latent regression
+#'   covariate terms for each row vector supplied to \code{response.pattern}
 #' @param MI a number indicating how many multiple imputation draws to perform. Default is 0,
 #'   indicating that no MI draws will be performed
 #' @param use_dentype_estimate logical; if the density of the latent trait was estimated in the model
@@ -189,14 +192,45 @@
 #' fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
 #' head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 #'
+#'
+#' ####################
+#' # scoring via response.pattern input (with latent regression structure)
+#' #simulate data
+#' set.seed(1234)
+#' N <- 1000
+#'
+#' # covariates
+#' X1 <- rnorm(N); X2 <- rnorm(N)
+#' covdata <- data.frame(X1, X2)
+#' Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+#'
+#' #items and response data
+#' a <- matrix(1, 20); d <- matrix(rnorm(20))
+#' dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
+#'
+#' #conditional model using X1 and X2 as predictors of Theta
+#' mod <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+#' coef(mod, simplify=TRUE)
+#'
+#' # all EAP estimates that include latent regression information
+#' fs <- fscores(mod, full.scores.SE=TRUE)
+#' head(fs)
+#'
+#' # score only two response patterns
+#' rp <- dat[1:2, ]
+#' cd <- covdata[1:2, ]
+#'
+#' fscores(mod, response.pattern=rp, covdata=cd)
+#' fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
+#'
 #'}
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
                     response.pattern = NULL, append_response.pattern = FALSE, na.rm = FALSE,
                     plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
-                    returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, verbose = TRUE,
-                    full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0, use_dentype_estimate=FALSE,
-                    QMC = FALSE, custom_den = NULL, custom_theta = NULL, min_expected = 1,
-                    max_theta = 20, start = NULL, ...)
+                    returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, covdata = NULL,
+                    verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
+                    use_dentype_estimate=FALSE, QMC = FALSE, custom_den = NULL,
+                    custom_theta = NULL, min_expected = 1, max_theta = 20, start = NULL, ...)
 {
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 5000
@@ -239,7 +273,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
-                            theta_lim=theta_lim, MI=MI,
+                            theta_lim=theta_lim, MI=MI, covdata=covdata,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,

@@ -1825,7 +1825,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
                nfact=nfact,
                nfixed=ncol(X),
                df=df,
-               X=X,
+               X=as.matrix(X),
                tXX=tXX,
                qr_XX=list(qr = qr_XX),
                lbound=rep(-Inf,length(par)),
@@ -2587,6 +2587,10 @@ respSample <- function(P) .Call("respSample", P)
 as.mirt_df <- function(df){
     class(df) <- c('mirt_df', class(df))
     df
+}
+
+is.latent_regression <- function(mod){
+    !is.null(mod@Data$covdata)
 }
 
 makeSymMat <- function(mat){

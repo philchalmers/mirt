@@ -1,5 +1,8 @@
 # Changes in mirt 1.35
 
+- Added `covdata` argument to `fscores()` to allow latent regression covariate information as well. 
+  Example added to `fscores()` documentation to demonstrate this addition
+
 - Added `RCI()` function to compute reliable change index via IRT modelling
 
 - Added delta method SE in `coef(., IRTpars = TRUE)` for the nominal and nested-logit models
