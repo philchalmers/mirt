@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.com/philchalmers/mirt.svg?branch=master)](https://travis-ci.com/philchalmers/mirt) [![](http://www.r-pkg.org/badges/version/mirt)](https://www.r-pkg.org:443/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
+[![](http://www.r-pkg.org/badges/version/mirt)](https://www.r-pkg.org:443/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
 
 # mirt
 
