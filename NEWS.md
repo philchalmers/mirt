@@ -1,4 +1,4 @@
-# Changes in mirt 1.35
+# Changes in mirt 1.35.1
 
 - Added `covdata` argument to `fscores()` to allow latent regression covariate information as well. 
   Example added to `fscores()` documentation to demonstrate this addition
