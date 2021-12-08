@@ -164,7 +164,7 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 \doi{10.18637/jss.v048.i06}
 
 Meade, A. W. (2010). A taxonomy of effect size measures for the differential functioning
-of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743. \doi{10.1037/a0018966}
+of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 }
 \author{
 Adam Meade, with contributions by Phil Chalmers \email{rphilip.chalmers@gmail.com}

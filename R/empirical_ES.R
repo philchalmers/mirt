@@ -81,7 +81,7 @@
 #' \doi{10.18637/jss.v048.i06}
 #'
 #' Meade, A. W. (2010). A taxonomy of effect size measures for the differential functioning
-#' of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743. \doi{10.1037/a0018966}
+#' of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 #' @export empirical_ES
 #' @examples
 #' \dontrun{
