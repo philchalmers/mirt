@@ -99,7 +99,7 @@ setMethod(
                     lrPars <- newmod@ParObjects$lrPars
                     newmod@ParObjects$lrPars <-
                         make.lrdesign(covdata, attr(object@Model$lrPars, 'formula')[[1L]],
-                                  factorNames = colnames(covdata), TOL=1e-4)
+                                  factorNames = colnames(covdata), TOL=NA)
                     newmod@ParObjects$lrPars@beta <- lrPars@beta
                 }
                 pis <- NULL
@@ -131,7 +131,7 @@ setMethod(
                     lrPars <- newmod@ParObjects$lrPars
                     newmod@ParObjects$lrPars <-
                         make.lrdesign(covdata, attr(object@Model$lrPars, 'formula')[[1L]],
-                                      factorNames = colnames(covdata), TOL=1e-4)
+                                      factorNames = colnames(covdata), TOL=NA)
                     newmod@ParObjects$lrPars@beta <- lrPars@beta
                 }
                 if(mixture){

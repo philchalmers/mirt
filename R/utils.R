@@ -1792,11 +1792,14 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
         X <- model.matrix(formula, df)
     }
     tXX <- t(X) %*% X
-    qr_XX <- try(qr(tXX), silent = TRUE)
-    if(!is.nan(TOL)){
-        if(is(qr_XX, 'try-error'))
-            stop('Latent regression design matrix contains problematic terms.', call. = FALSE)
-    } else qr_XX <- qr(0)
+    qr_XX <- qr(0)
+    if(!is.na(TOL)){
+        qr_XX <- try(qr(tXX), silent = TRUE)
+        if(!is.nan(TOL)){
+            if(is(qr_XX, 'try-error'))
+                stop('Latent regression design matrix contains problematic terms.', call. = FALSE)
+        }
+    }
     beta <- matrix(0, ncol(X), nfact)
     sigma <- matrix(0, nfact, nfact)
     diag(sigma) <- 1
