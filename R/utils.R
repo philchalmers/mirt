@@ -2557,6 +2557,7 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
 add_completely.missing_back <- function(data, completely_missing){
     if(length(completely_missing)){
         tmp <- matrix(0L, nrow(data) + length(completely_missing), ncol(data))
+        colnames(tmp) <- colnames(data)
         tmp[completely_missing, ] <- NA
         tmp[!(1:nrow(tmp) %in% completely_missing), ] <- data
         data <- tmp
