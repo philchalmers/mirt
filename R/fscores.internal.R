@@ -278,14 +278,17 @@ setMethod(
                 log_itemtrace <- log(itemtrace)
                 if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
                 if(method == 'classify')
-                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP_classify, log_itemtrace=log_itemtrace,
+                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L,
+                                   FUN=EAP_classify, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, W=W, nclass=length(pis))
                 else if(method == 'EAP' && return.acov){
-                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
+                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP,
+                                   log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
                                    scores=scores, hessian=TRUE)
                 } else {
-            	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, log_itemtrace=log_itemtrace,
+            	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP,
+            	                   log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
@@ -957,8 +960,6 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores, retu
 }
 
 EAP_classify <- function(ID, log_itemtrace, tabdata, W, nclass){
-    if(any(is.na(scores[ID, ])))
-        return(c(scores[ID, ], rep(NA, ncol(scores))))
     L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
     expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
     LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
