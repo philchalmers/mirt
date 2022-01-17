@@ -89,6 +89,12 @@ setMethod(
             colnames(response.pattern) <- colnames(object@Data$data)
             newmod <- object
             if(nrow(response.pattern) > 1L){
+                obs_K <- apply(response.pattern, 2L,
+                               function(x) length(na.omit(unique(x))))
+                if(any(object@Data$K < obs_K))
+                    stop(c("response.pattern input contains more response categories than defined by the model. ",
+                           "The following column(s) in response.pattern have more observed values than expected by the model: ",
+                           which(object@Data$K < obs_K)), call.=FALSE)
                 large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@Data$K),
                               large='return'))
                 newmod@Data <- list(data=response.pattern, tabdata=large$tabdata2,
