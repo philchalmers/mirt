@@ -80,9 +80,9 @@ setMethod(
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
                 cat('Estimated parameters:', extract.mirt(x, 'nestpars'), '\n')
-                cat("AIC = ", x@Fit$AIC, "\n", sep='')
-                cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             }
+            cat("AIC = ", x@Fit$AIC, "\n", sep='')
+            cat("BIC = ", x@Fit$BIC, "; SABIC = ", x@Fit$SABIC, "\n", sep='')
             if(!is.nan(x@Fit$p)){
                 cat("G2 (", x@Fit$df,") = ", round(x@Fit$G2,2), ", p = ", round(x@Fit$p,4), sep='')
                 cat("\nRMSEA = ", round(x@Fit$RMSEA,3), ", CFI = ", round(x@Fit$CFI,3),
@@ -523,10 +523,8 @@ setMethod(
                               HQ = object@Fit$HQ,
                               BIC = object@Fit$BIC,
                               logLik = object@Fit$logLik)
-            if(hasPriors){
-                ret <- ret[!(colnames(ret) %in% c('AIC'))]
+            if(hasPriors)
                 ret$logPost = object@Fit$logPrior + object@Fit$logLik
-            }
             ret <- as.mirt_df(ret)
             return(ret)
         }
@@ -549,24 +547,20 @@ setMethod(
             print(object2@Call)
             cat('\n')
         }
+        ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
+                          SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
+                          HQ = c(object@Fit$HQ, object2@Fit$HQ),
+                          BIC = c(object@Fit$BIC, object2@Fit$BIC),
+                          logLik = c(object@Fit$logLik, object2@Fit$logLik))
         if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
-            ret <- data.frame(SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
-                              HQ = c(object@Fit$HQ, object2@Fit$HQ),
-                              BIC = c(object@Fit$BIC, object2@Fit$BIC),
-                              df = c(NaN, abs(df)),
-                              logLik = c(object@Fit$logLik, object2@Fit$logLik),
-                              logPost = c(object@Fit$logLik + object@Fit$logPrior,
-                                          object2@Fit$logLik + object2@Fit$logPrior))
+            ret$logPost = c(object@Fit$logLik + object@Fit$logPrior,
+                            object2@Fit$logLik + object2@Fit$logPrior)
+            ret$df <- c(NaN, abs(df))
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
-            ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
-                              SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
-                              HQ = c(object@Fit$HQ, object2@Fit$HQ),
-                              BIC = c(object@Fit$BIC, object2@Fit$BIC),
-                              logLik = c(object@Fit$logLik, object2@Fit$logLik),
-                              X2 = c(NaN, X2),
-                              df = c(NaN, abs(df)),
-                              p = c(NaN, 1 - pchisq(X2,abs(df))))
+            ret$X2 <- c(NaN, X2)
+            ret$df <- c(NaN, abs(df))
+            ret$p <- c(NaN, 1 - pchisq(X2,abs(df)))
             if(bounded)
                 ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
         }

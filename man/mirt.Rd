@@ -675,14 +675,14 @@ number of categories (using \eqn{k} for specific category instances).
   }
   \item{ggum}{The (multidimensional) generalized graded unfolding model is a
     class of ideal point models useful for ordinal response data. The form is
-    \deqn{P(z=k|\theta,\psi)=\frac{exp\left[\left(z\sqrt{\sum_{d=1}^{D}
+    \scriptsize{\deqn{P(z=k|\theta,\psi)=\frac{exp\left[\left(z\sqrt{\sum_{d=1}^{D}
     a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+\sum_{k=0}^{z}\psi_{ik}\right]+
     exp\left[\left((M-z)\sqrt{\sum_{d=1}^{D}a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+
     \sum_{k=0}^{z}\psi_{ik}\right]}{\sum_{w=0}^{C}\left(exp\left[\left(w
     \sqrt{\sum_{d=1}^{D}a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+
     \sum_{k=0}^{z}\psi_{ik}\right]+exp\left[\left((M-w)
     \sqrt{\sum_{d=1}^{D}a_{id}^{2}(\theta_{jd}-b_{id})^{2}}\right)+
-    \sum_{k=0}^{z}\psi_{ik}\right]\right)}}
+    \sum_{k=0}^{z}\psi_{ik}\right]\right)}}}
     where \eqn{\theta_{jd}} is the location of the \eqn{j}th individual on the \eqn{d}th dimension,
     \eqn{b_{id}} is the difficulty location of the \eqn{i}th item on the \eqn{d}th dimension,
     \eqn{a_{id}} is the discrimination of the \eqn{j}th individual on the \eqn{d}th dimension
