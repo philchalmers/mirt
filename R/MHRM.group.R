@@ -373,6 +373,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         info <- matrix(0, 1L, 1L)
         cycles <- BURNIN + SEMCYCLES
     }
+    if(no_stage_3)
+        aveAR <- list(NA)
     ret <- list(pars=pars, cycles = cycles-BURNIN-SEMCYCLES, info=if(list$expl) matrix(0) else as.matrix(info),
                 correction=correction, longpars=longpars, converge=converge, SElogLik=0, cand.t.var=cand.t.var,
                 L=L, random=random, lrPars=lrPars, lr.random=lr.random, aveAR=colMeans(do.call(rbind, aveAR)),

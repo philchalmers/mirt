@@ -18,6 +18,11 @@ test_that('exploratory mods', {
     W2 <- wald(onefact, L2)
     expect_true(mirt:::closeEnough(W1$W - 178.6441, -1e-2, 1e-2))
     expect_true(mirt:::closeEnough(W2$W - 4.228611, -1e-2, 1e-2))
+    onefactSEM <- mirt(fulldata, 1, verbose = FALSE, method='SEM')
+    cfs <- as.numeric(do.call(c, coef(onefactSEM, verbose = FALSE)))
+    expect_equal(cfs, c(0.97,1.843,0,1,1.08,0.805,0,1,1.741,1.819,0,1,
+                        0.766,0.484,0,1,0.726,1.848,0,1,0,1), tolerance = 1e-2)
+
 
     fitonefact <- M2(onefact)
     expect_is(fitonefact, 'data.frame')
