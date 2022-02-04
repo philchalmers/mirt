@@ -335,9 +335,10 @@ Lambdas <- function(pars, Names){
         tmp <- pars[[i]]
         lambdas[i,] <- ExtractLambdas(tmp) /1.702
     }
-    norm <- sqrt(1 + rowSums(lambdas^2))
     dcov <- if(ncol(gcov) > 1L) diag(sqrt(diag(gcov))) else matrix(sqrt(diag(gcov)))
-    F <- as.matrix(lambdas/norm) %*% dcov
+    lambdas <- lambdas %*% dcov
+    norm <- sqrt(1 + rowSums(lambdas^2))
+    F <- as.matrix(lambdas/norm)
     F
 }
 
