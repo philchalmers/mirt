@@ -790,7 +790,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                              y=c(as.numeric(Osub), as.numeric(Esub)),
                              type = rep(c('observed', 'expected'), each = prod(dim(Osub))),
                              category=rep(paste0('cat', 1L:ncol(Osub)), each=nrow(Osub)))
-            return(xyplot(y~Scores|category, df, type='l', group=df$type,
+            return(xyplot(y~Scores|category, df, type='b', group=df$type,
                    xlab = ifelse(S_X2.plot_raw.score, expression(Sum-Score), expression(theta)),
                    ylab=expression(P(theta)), auto.key=auto.key, par.strip.text=par.strip.text,
                    main = paste0("Observed vs Expected Values for Item ", S_X2.plot),
