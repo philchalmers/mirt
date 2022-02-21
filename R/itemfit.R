@@ -327,7 +327,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         model <- extract.mirt(mod, 'model')
         sv <- mod2values(mod)
         retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv, itemtype=itemtype,
-                          which.items=which.items, draws=draws, model=model, ...)
+                          which.items=which.items, draws=draws, model=model,
+                          p.adjust=p.adjust, ...)
         if(nrow(retQ1) == 1L) retQ1 <- t(retQ1)
         Q1 <- (1 + rowSums(org$p.PV_Q1 > t(retQ1), na.rm = TRUE)) / (1 + boot)
         ret <- data.frame("p.PV_Q1_star"=p.adjust(Q1, method=p.adjust))
