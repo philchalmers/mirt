@@ -7,7 +7,7 @@ Theory)}
 \usage{
 mirt(
   data,
-  model,
+  model = 1,
   itemtype = NULL,
   guess = 0,
   upper = 1,
@@ -51,7 +51,8 @@ numerically ordered data, with missing data coded as \code{NA} (to convert from 
 \item{model}{a string to be passed (or an object returned from) \code{\link{mirt.model}},
 declaring how the IRT model is to be estimated (loadings, constraints, priors, etc).
 For exploratory IRT models, a single numeric value indicating the number
-of factors to extract is also supported}
+of factors to extract is also supported. Default is 1, indicating that a unidimensional
+model will be fit unless otherwise specified}
 
 \item{itemtype}{type of items to be modeled, declared as a vector for each item or a single value
   which will be recycled for each item. The \code{NULL} default assumes that the items follow a graded or

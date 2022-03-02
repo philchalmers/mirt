@@ -6,7 +6,7 @@
 \usage{
 multipleGroup(
   data,
-  model,
+  model = 1,
   group,
   itemtype = NULL,
   invariance = "",

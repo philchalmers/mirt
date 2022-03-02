@@ -47,8 +47,8 @@
 #'   then the observations from \code{covdata} and \code{data} will be removed row-wise
 #'   via the \code{rowSums(is.na(covdata)) > 0}
 #' @param model an object returned from, or a string to be passed to, \code{mirt.model()}
-#'   to declare how the IRT model is to be estimated. See \code{\link{mirt.model}} for
-#'   more details
+#'   to declare how the IRT model is to be estimated. See \code{\link{mirt.model}} and
+#'   \code{\link{mirt}} for more detail
 #' @param fixed a right sided R formula for specifying the fixed effect (aka 'explanatory')
 #'   predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for
 #'   each item the keyword \code{items} is reserved and automatically added to the \code{itemdesign}
@@ -344,7 +344,7 @@
 #' head(cbind(randef(mod3)$group, random_intercept))
 #'
 #' }
-mixedmirt <- function(data, covdata = NULL, model, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
+mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NULL, itemtype = 'Rasch',
                       lr.fixed = ~ 1, lr.random = NULL, itemdesign = NULL, constrain = NULL,
                       pars = NULL, return.design = FALSE, SE = TRUE, internal_constraints = TRUE,
                       technical = list(SEtol = 1e-4), ...)

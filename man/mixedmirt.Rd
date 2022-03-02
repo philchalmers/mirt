@@ -7,7 +7,7 @@
 mixedmirt(
   data,
   covdata = NULL,
-  model,
+  model = 1,
   fixed = ~1,
   random = NULL,
   itemtype = "Rasch",
@@ -33,8 +33,8 @@ then the observations from \code{covdata} and \code{data} will be removed row-wi
 via the \code{rowSums(is.na(covdata)) > 0}}
 
 \item{model}{an object returned from, or a string to be passed to, \code{mirt.model()}
-to declare how the IRT model is to be estimated. See \code{\link{mirt.model}} for
-more details}
+to declare how the IRT model is to be estimated. See \code{\link{mirt.model}} and
+\code{\link{mirt}} for more detail}
 
 \item{fixed}{a right sided R formula for specifying the fixed effect (aka 'explanatory')
 predictors from \code{covdata} and \code{itemdesign}. To estimate the intercepts for

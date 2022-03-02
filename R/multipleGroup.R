@@ -363,7 +363,7 @@
 #' coef(zip, simplify=TRUE)
 #'
 #' }
-multipleGroup <- function(data, model, group, itemtype = NULL,
+multipleGroup <- function(data, model = 1, group, itemtype = NULL,
                           invariance = '', method = 'EM',
                           dentype = 'Gaussian', ...)
 {

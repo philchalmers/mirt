@@ -1,3 +1,8 @@
+# Changes in mirt 1.36
+
+- `mirt()`, `mixedmirt()`, and `multipleGroup()` now have `model = 1` to 
+  fit a unidimensional IRT model by default
+
 # Changes in mirt 1.35.1
 
 - Added `covdata` argument to `fscores()` to allow latent regression covariate information as well. 
