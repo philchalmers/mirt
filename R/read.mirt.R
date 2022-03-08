@@ -102,7 +102,7 @@
 read.mirt <- function (x, as.irt.pars = TRUE, ...)
 {
     if(requireNamespace("plink", quietly = TRUE)){
-        if(class(x) == 'MultipleGroupClass'){
+        if(is(x, 'MultipleGroupClass')){
             pars <- vector('list', length(extract.mirt(x, 'pars')))
             for(i in 1:length(pars)){
                 tmp <- extract.group(x, group=i)
@@ -117,7 +117,7 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
                 pars[[i]] <- read.mirt(x[[i]], as.irt.pars=as.irt.pars, ...)
             return(pars)
         }
-        if(class(x) == 'MixedClass')
+        if(is(x, 'MixedClass'))
             stop('Mixed effect models not supported.', call.=FALSE)
         if(length(extract.mirt(x, 'prodlist')))
             stop('Polynomial factor models not supported in plink', call.=FALSE)

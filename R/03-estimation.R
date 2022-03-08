@@ -548,17 +548,17 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     wmsg <- 'Lower and upper bound parameters (g and u) should use \'norm\' (i.e., logit) prior'
     for(g in seq_len(length(pars))){
         for(i in seq_len(length(pars[[1L]]))){
-            if(class(pars[[g]][[i]]) == 'dich'){
+            if(is(pars[[g]][[i]], 'dich')){
                 pt <- pars[[g]][[i]]@prior.type
                 if(!(pt[length(pt)-1L] %in% c(0L, 1L, 4L))) warning(wmsg, call.=FALSE)
                 if(!(pt[length(pt)] %in% c(0L, 1L, 4L))) warning(wmsg, call.=FALSE)
                 next
-            } else if(class(pars[[g]][[i]]) == 'partcomp'){
+            } else if(is(pars[[g]][[i]], 'partcomp')){
                 pt <- pars[[g]][[i]]@prior.type
                 if(!(pt[length(pt)-1L] %in% c(0L, 1L))) warning(wmsg, call.=FALSE)
                 if(!(pt[length(pt)] %in% c(0L, 1L))) warning(wmsg, call.=FALSE)
                 next
-            } else if(class(pars[[g]][[i]]) == 'nestlogit'){
+            } else if(is(pars[[g]][[i]], 'nestlogit')){
                 pt <- pars[[g]][[i]]@prior.type
                 if(!(pt[nfact + 2L] %in% c(0L, 1L))) warning(wmsg, call.=FALSE)
                 if(!(pt[nfact + 3L] %in% c(0L, 1L))) warning(wmsg, call.=FALSE)
@@ -782,7 +782,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     for(g in seq_len(length(pars))){
         for(i in seq_len(length(pars[[1L]]))){
-            if(class(pars[[g]][[i]]) == 'dich'){
+            if(is(pars[[g]][[i]], 'dich')){
                 tmp <- ESTIMATE$pars[[g]][[i]]@par
                 nms <- ESTIMATE$pars[[g]][[i]]@parnames
                 if(tmp[nms == 'g'] > tmp[nms == 'u']){

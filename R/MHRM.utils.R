@@ -197,7 +197,7 @@ MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_gr
     if(has_graded){
         for(g in seq_len(length(pars))){
             pars[[g]][seq_len(J)] <- lapply(pars[[g]][seq_len(J)], function(x){
-                if(class(x) == 'graded'){
+                if(is(x, 'graded')){
                     ds <- x@par[-seq_len(x@nfact)]
                     x@par[-seq_len(x@nfact)] <- sort(ds, decreasing = TRUE)
                     names(x@par) <- x@parnames
