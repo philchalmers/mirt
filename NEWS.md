@@ -1,5 +1,8 @@
 # Changes in mirt 1.36
 
+- `residuals()` gains a `approx.z` logical to transform LD values into 
+  approximate z-ratios
+
 - `mirt()`, `mixedmirt()`, and `multipleGroup()` now have `model = 1` to 
   fit a unidimensional IRT model by default
 

@@ -590,6 +590,8 @@ setMethod(
 #' @param tables logical; for LD type, return the observed, expected, and standardized residual
 #'   tables for each item combination?
 #' @param df.p logical; print the degrees of freedom and p-values?
+#' @param approx.z logical; transform \eqn{\chi^2(df)} information from LD tests into approximate
+#'   z-ratios instead using the transformation \eqn{z=\sqrt{2 * \chi^2} - \sqrt{2 * df - 1}}?
 #' @param full.scores logical; compute relevant statistics
 #'  for each subject in the original data?
 #' @param printvalue a numeric value to be specified when using the \code{res='exp'}
@@ -697,7 +699,8 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'SingleGroupClass'),
-    definition = function(object, type = 'LD', df.p = FALSE, full.scores = FALSE, QMC = FALSE,
+    definition = function(object, type = 'LD', df.p = FALSE, approx.z = FALSE,
+                          full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
                           suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
                           technical = list(), ...)
@@ -793,6 +796,8 @@ setMethod(
                             tmp <- paste0(itemnames[i], '_', itemnames[j])
                             listtabs[[tmp]] <- list(Obs=tab, Exp=Etab, std_res=(tab-Etab)/sqrt(Etab))
                         }
+                        if(approx.z)
+                            res[j,i] <- sign(res[i,j]) * (sqrt(2 * res[j,i]) - sqrt(2 * df[j,i] - 1))
                     }
                 }
             }

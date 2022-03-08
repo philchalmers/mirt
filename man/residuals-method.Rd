@@ -13,6 +13,7 @@
   object,
   type = "LD",
   df.p = FALSE,
+  approx.z = FALSE,
   full.scores = FALSE,
   QMC = FALSE,
   printvalue = NULL,
@@ -42,6 +43,9 @@ For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standar
 residuals in the form of signed Cramers V coefficients}
 
 \item{df.p}{logical; print the degrees of freedom and p-values?}
+
+\item{approx.z}{logical; transform \eqn{\chi^2(df)} information from LD tests into approximate
+z-ratios instead using the transformation \eqn{z=\sqrt{2 * \chi^2} - \sqrt{2 * df - 1}}?}
 
 \item{full.scores}{logical; compute relevant statistics
 for each subject in the original data?}
