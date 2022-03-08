@@ -374,13 +374,17 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
     invariance[invariance %in% c("free_mean")] <- 'free_means'
     invariance[invariance %in% c("free_vars", 'free_variance', 'free_variances')] <- 'free_var'
     constrain <- dots$constrain
-    invariance.check <- invariance %in% c('free_means', 'free_var')
+    invariance.check <- sum(invariance %in% c('free_means', 'free_var'))
+    if(any(invariance == 'intercepts')) invariance.check <- invariance.check - 1L
+    if(any(invariance == 'slopes')) invariance.check <- invariance.check - 1L
+    if(any(invariance %in% colnames(data)))
+        invariance.check <- invariance.check - 2L
     if(missing(model)) missingMsg('model')
     if(!is.null(dots$dentype))
         if(dots$dentype == "empiricalhist" && any(invariance.check))
             stop('freeing group parameters not meaningful when estimating empirical histograms',
                  call.=FALSE)
-    if(invariance.check == 2L && length(constrain) == 0){
+    if(invariance.check > 0L && length(constrain) == 0){
         warn <- TRUE
         if(is(model, 'mirt.model')){
             if(any(model$x[,1L] == 'CONSTRAINB'))
