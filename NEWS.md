@@ -1,5 +1,7 @@
 # Changes in mirt 1.36
 
+- `response.pattern` deals with completely missing vectors now (issue #220)
+
 - `residuals()` gains a `approx.z` logical to transform LD values into 
   approximate z-ratios
 

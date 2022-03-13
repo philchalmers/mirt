@@ -81,6 +81,9 @@ setMethod(
                 response.pattern <- as.matrix(response.pattern)
             if(!is.matrix(response.pattern))
                 response.pattern <- matrix(response.pattern, 1L)
+            completely_missing <- which(rowSums(is.na(response.pattern)) == ncol(response.pattern))
+            if(any(completely_missing))
+                response.pattern <- response.pattern[-completely_missing, , drop=FALSE]
             nfact <- object@Model$nfact
             mins <- extract.mirt(object, 'mins')
             if(!all(mins == 0L))
@@ -93,7 +96,8 @@ setMethod(
                                function(x) length(na.omit(unique(x))))
                 if(any(object@Data$K < obs_K))
                     stop(c("response.pattern input contains more response categories than defined by the model. ",
-                           "The following column(s) in response.pattern have more observed values than expected by the model: ",
+                           "The following column(s) in response.pattern have more observed values ",
+                           "than expected by the model: ",
                            which(object@Data$K < obs_K)), call.=FALSE)
                 large <- suppressWarnings(mirt(response.pattern, nfact, technical=list(customK=object@Data$K),
                               large='return'))
@@ -164,6 +168,7 @@ setMethod(
             if(!all(mins == 0L) && append_response.pattern)
                 ret[,seq_len(ncol(response.pattern))] <- ret[,seq_len(ncol(response.pattern))] +
                     matrix(mins, nrow(ret), ncol(response.pattern), byrow=TRUE)
+            ret <- add_completely.missing_back(ret, completely_missing)
             return(ret)
         }
         dots <- list(...)
