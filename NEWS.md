@@ -1,5 +1,9 @@
 # Changes in mirt 1.36
 
+- Item-EFA models now autmatically flip negative signs in rotate solutions
+  (e.g., via `summary()`) according to the sign of the largest observed 
+  loading (allows easier interpretation of the resulting correlation matrix)
+
 - `response.pattern` deals with completely missing vectors now (issue #220)
 
 - `residuals()` gains a `approx.z` logical to transform LD values into 

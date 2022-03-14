@@ -226,6 +226,10 @@ Rotate <- function(F, rotate, Target = NULL, par.strip.text = NULL, par.settings
 	if(rotate == 'mccammon') rotF <- GPArotation::mccammon(F, ...)
 	if(rotate == 'bifactorT') rotF <- GPArotation::bifactorT(F, ...)
 	if(rotate == 'bifactorQ') rotF <- GPArotation::bifactorQ(F, ...)
+	s <- apply(rotF$loadings, 2L, function(x)
+	    sign(x[which.max(abs(x))]))
+	rotF$loadings <- t(s * t(rotF$loadings))
+	rotF$Phi <- diag(s) %*% rotF$Phi %*% diag(s)
 	return(unclass(rotF))
 }
 
