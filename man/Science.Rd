@@ -11,6 +11,8 @@ of the \code{grm()} function. See more complete documentation therein.
 \examples{
 
 \dontrun{
+itemstats(Science)
+
 mod <- mirt(Science, 1)
 plot(mod, type = 'trace')
 }

@@ -12,6 +12,8 @@ Mathematics data from de Ayala (2009; pg. 14); 5 item dataset in table format.
 \dontrun{
 dat <- expand.table(deAyala)
 head(dat)
+itemstats(dat)
+
 }
 }
 \references{

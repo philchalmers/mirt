@@ -12,6 +12,8 @@ A 3-item tabulated data set extracted from Table 3 in Chapter Two.
 \dontrun{
 dat <- expand.table(Bock1997)
 head(dat)
+itemstats(dat, use_ts=FALSE)
+
 mod <- mirt(dat, 1, 'nominal')
 
 #reproduce table 3 in Bock (1997)

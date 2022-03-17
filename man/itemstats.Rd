@@ -4,7 +4,7 @@
 \alias{itemstats}
 \title{Generic item summary statistics}
 \usage{
-itemstats(data, group, proportions = TRUE, ts.tables = FALSE)
+itemstats(data, group, use_ts = TRUE, proportions = TRUE, ts.tables = FALSE)
 }
 \arguments{
 \item{data}{An object of class \code{data.frame} or \code{matrix}
@@ -12,6 +12,9 @@ with the response patterns}
 
 \item{group}{optional grouping variable to condition on when computing
 summary information}
+
+\item{use_ts}{logical; include information that is conditional on a
+meaningful total score?}
 
 \item{proportions}{logical; include response proportion information for
 each item?}
@@ -40,8 +43,11 @@ itemstats(LSAT7full)
 LSAT7full[1:5,1] <- NA
 itemstats(LSAT7full)
 
-# total.scores input
+# data with no meaningful total score
 head(SAT12)
+itemstats(SAT12, use_ts=FALSE)
+
+# extra total scores tables
 dat <- key2binary(SAT12,
                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,
                            5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))

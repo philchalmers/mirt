@@ -13,6 +13,8 @@ items obtained from the Law School Admissions Test, section 6.
 \dontrun{
 dat <- expand.table(LSAT6)
 head(dat)
+itemstats(dat)
+
 model <- 'F = 1-5
          CONSTRAIN = (1-5, a1)'
 (mod <- mirt(dat, model))

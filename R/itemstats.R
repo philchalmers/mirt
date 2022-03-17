@@ -12,6 +12,8 @@
 #'   summary information
 #' @param proportions logical; include response proportion information for
 #'   each item?
+#' @param use_ts logical; include information that is conditional on a
+#'   meaningful total score?
 #' @param ts.tables logical; include mean/sd summary information
 #'   pertaining to the unweighted total score?
 #' @return Returns a list containing the summary statistics
@@ -34,8 +36,11 @@
 #' LSAT7full[1:5,1] <- NA
 #' itemstats(LSAT7full)
 #'
-#' # total.scores input
+#' # data with no meaningful total score
 #' head(SAT12)
+#' itemstats(SAT12, use_ts=FALSE)
+#'
+#' # extra total scores tables
 #' dat <- key2binary(SAT12,
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,
 #'                            5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -62,36 +67,50 @@
 #' merged <- data.frame(LSAT7full[1:392,], Science)
 #' itemstats(merged)
 #'
-itemstats <- function(data, group, proportions = TRUE, ts.tables = FALSE){
+itemstats <- function(data, group,
+                      use_ts=TRUE,
+                      proportions=TRUE,
+                      ts.tables=FALSE){
+    data <- as.matrix(data)
     if(!missing(group) && !is.null(group)){
         groups <- unique(group)
         out <- lapply(groups, function(g){
             itemstats(data=data[group == g, , drop=FALSE], group=NULL,
-                      proportions=proportions, ts.tables=ts.tables)
+                      use_ts=use_ts, proportions=proportions,
+                      ts.tables=ts.tables)
         })
         names(out) <- groups
         return(out)
     }
     TS <- rowSums(data)
-    itemcor <- apply(data, 2, function(x, drop){
-        tsx <- if(drop) TS-x else TS
-        cor(x, tsx, use = 'complete.obs')
-    }, drop=TRUE)
-    itemalpha <- sapply(1:ncol(data), function(x){
-        tmpdat <- na.omit(data[,-x, drop=FALSE])
-        CA(tmpdat)
-    })
-    overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data),
-                          mean_total.score=mean(TS, na.rm=TRUE),
-                          sd_total.score=sd(TS, na.rm=TRUE),
-                          alpha = CA(na.omit(data)))
+    if(use_ts){
+        itemcor <- apply(data, 2, function(x, drop){
+            tsx <- if(drop) TS-x else TS
+            cor(x, tsx, use = 'complete.obs')
+        }, drop=TRUE)
+        itemalpha <- sapply(1:ncol(data), function(x){
+            tmpdat <- na.omit(data[,-x, drop=FALSE])
+            CA(tmpdat)
+        })
+        overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data),
+                              mean_total.score=mean(TS, na.rm=TRUE),
+                              sd_total.score=sd(TS, na.rm=TRUE),
+                              alpha = CA(na.omit(data)))
+        rownames(overall) <- ""
+        df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
+                         mean=colMeans(data, na.rm = TRUE),
+                         sd=apply(data, 2, sd, na.rm = TRUE),
+                         item.total_cor=itemcor,
+                         alpha_if_deleted=itemalpha)
+    } else {
+        overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data))
+        df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
+                         mean=colMeans(data, na.rm = TRUE),
+                         sd=apply(data, 2, sd, na.rm = TRUE))
+    }
+
     if(overall$N == overall$N.complete) overall$N.complete <- NULL
-    df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
-                     mean=colMeans(data, na.rm = TRUE),
-                     sd=apply(data, 2, sd, na.rm = TRUE),
-                     item.total_cor=itemcor,
-                     alpha_if_deleted=itemalpha
-    )
+
     ret <- list(overall=as.mirt_df(overall),
                 itemstats=as.mirt_df(df))
     if(proportions){
@@ -103,7 +122,7 @@ itemstats <- function(data, group, proportions = TRUE, ts.tables = FALSE){
             out
         })
         if(is.list(props)){
-            vals <- sort(unique(unlist(data)), na.last=TRUE)
+            vals <- sort(unique(as.numeric(data)), na.last=TRUE)
             proportions <- matrix(NA, ncol(data), length(vals))
             colnames(proportions) <- vals
             rownames(proportions) <- colnames(data)
@@ -117,7 +136,8 @@ itemstats <- function(data, group, proportions = TRUE, ts.tables = FALSE){
         }
     }
     if(ts.tables){
-        ret$total.score_frequency = as.data.frame(t(as.matrix(table(TS))))
+        ret$total.score_frequency <- as.data.frame(t(as.matrix(table(TS))))
+        rownames(ret$total.score_frequency) <- "Freq"
         ret$total.score_means <- t(apply(data, 2, function(x){
             tapply(TS, x, mean, na.rm=TRUE)
         }))

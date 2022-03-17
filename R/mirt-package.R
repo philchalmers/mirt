@@ -56,6 +56,8 @@ NULL
 #' @examples
 #'
 #' \dontrun{
+#' itemstats(Science)
+#'
 #' mod <- mirt(Science, 1)
 #' plot(mod, type = 'trace')
 #' }
@@ -87,11 +89,15 @@ NULL
 #' @examples
 #'
 #' \dontrun{
+#'
+#' itemstats(SAT12, use_ts = FALSE)
+#'
 #' #score the data (missing scored as 0)
 #' head(SAT12)
 #' data <- key2binary(SAT12,
 #'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' head(data)
+#' itemstats(data)
 #'
 #' #score the data, missing (value of 8) treated as NA
 #' SAT12missing <- SAT12
@@ -129,6 +135,8 @@ NULL
 #' \dontrun{
 #' dat <- expand.table(LSAT7)
 #' head(dat)
+#' itemstats(dat)
+#'
 #' (mod <- mirt(dat, 1))
 #' coef(mod)
 #' }
@@ -157,6 +165,8 @@ NULL
 #' \dontrun{
 #' dat <- expand.table(LSAT6)
 #' head(dat)
+#' itemstats(dat)
+#'
 #' model <- 'F = 1-5
 #'          CONSTRAIN = (1-5, a1)'
 #' (mod <- mirt(dat, model))
@@ -196,6 +206,8 @@ NULL
 #' \dontrun{
 #' dat <- expand.table(deAyala)
 #' head(dat)
+#' itemstats(dat)
+#'
 #' }
 NULL
 
@@ -220,6 +232,8 @@ NULL
 #' \dontrun{
 #' dat <- expand.table(Bock1997)
 #' head(dat)
+#' itemstats(dat, use_ts=FALSE)
+#'
 #' mod <- mirt(dat, 1, 'nominal')
 #'
 #' #reproduce table 3 in Bock (1997)

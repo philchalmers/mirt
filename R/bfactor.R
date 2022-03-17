@@ -157,6 +157,7 @@
 #'
 #' sigma <- diag(3)
 #' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+#' itemstats(dataset)
 #'
 #' specific <- c(rep(1,7),rep(2,7))
 #' simmod <- bfactor(dataset, specific)
@@ -178,6 +179,7 @@
 #' d <- rnorm(12, 0, .5)
 #' sigma <- diag(c(1, .5, 1, .5))
 #' dataset <- simdata(a,d,2000,itemtype=rep('2PL', 12),sigma=sigma)
+#' itemstats(dataset)
 #'
 #' # estimate by applying constraints and freeing the latent variances
 #' specific <- c(rep(1,4),rep(2,4), rep(3,4))
@@ -232,6 +234,7 @@
 #' sigma <- diag(5)
 #' sigma[1,2] <- sigma[2,1] <- .4
 #' dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+#' itemstats(dataset)
 #'
 #' specific <- c(rep(1,5),rep(2,6),rep(3,5))
 #' model <- '
@@ -247,7 +250,7 @@
 #' M2(simmod, QMC=TRUE)
 #' residuals(simmod, QMC=TRUE)
 #'
-#'     }
+#' }
 #'
 bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
                     group = NULL, quadpts = NULL, invariance = '', ...)

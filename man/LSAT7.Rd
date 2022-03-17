@@ -13,6 +13,8 @@ items obtained from the Law School Admissions Test, section 7.
 \dontrun{
 dat <- expand.table(LSAT7)
 head(dat)
+itemstats(dat)
+
 (mod <- mirt(dat, 1))
 coef(mod)
 }
