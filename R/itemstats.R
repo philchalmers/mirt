@@ -1,7 +1,10 @@
 #' Generic item summary statistics
 #'
 #' Function to compute generic item summary statistics that do not require
-#' prior fitting of IRT models.
+#' prior fitting of IRT models. Contains information about coefficient alpha
+#' (and alpha if an item is deleted), mean/SD and frequency of total scores,
+#' reduced item-total correlations, response frequencies, and conditional
+#' mean/sd information given the unweighted sum scores.
 #'
 #' @param data An object of class \code{data.frame} or \code{matrix}
 #'   with the response patterns
@@ -9,8 +12,7 @@
 #'   each item?
 #' @param ts.tables logical; include mean/sd summary information
 #'   pertaining to the unweighted total score?
-#' @return Returns a list containing the summary statistics + proportions, or
-#'   a data.frame object if \code{proportions} and \code{ts.tables} are FALSE
+#' @return Returns a list containing the summary statistics
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -18,7 +20,7 @@
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords data
-#' @export expand.table
+#' @export
 #' @examples
 #'
 #' # dichotomous data example
@@ -62,15 +64,20 @@ itemstats <- function(data, proportions = TRUE, ts.tables = FALSE){
         tmpdat <- na.omit(data[,-x, drop=FALSE])
         CA(tmpdat)
     })
+    overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data),
+                          mean_total.score=mean(TS, na.rm=TRUE),
+                          sd_total.score=sd(TS, na.rm=TRUE),
+                          alpha = CA(na.omit(data)))
+    if(overall$N == overall$N.complete) overall$N.complete <- NULL
     df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
                      mean=colMeans(data, na.rm = TRUE),
                      sd=apply(data, 2, sd, na.rm = TRUE),
                      item.total_cor=itemcor,
                      alpha_deleted=itemalpha
     )
-    ret <- as.mirt_df(df)
-    if(proportions || ts.tables)
-        ret <- list(itemstats=ret)
+    ret <- list(overall=as.mirt_df(overall),
+                total.score_frequency = as.data.frame(t(as.matrix(table(TS)))),
+                itemstats=as.mirt_df(df))
     if(proportions){
         useNA <- ifelse(any(is.na(data)), 'always', 'ifany')
         props <- apply(data, 2, function(x){
@@ -94,10 +101,10 @@ itemstats <- function(data, proportions = TRUE, ts.tables = FALSE){
         }
     }
     if(ts.tables){
-        ret$total.score.means <- t(apply(data, 2, function(x){
+        ret$total.score_means <- t(apply(data, 2, function(x){
             tapply(TS, x, mean, na.rm=TRUE)
         }))
-        ret$total.score.sds <- t(apply(data, 2, function(x){
+        ret$total.score_sds <- t(apply(data, 2, function(x){
             tapply(TS, x, sd, na.rm=TRUE)
         }))
     }

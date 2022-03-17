@@ -17,12 +17,14 @@ each item?}
 pertaining to the unweighted total score?}
 }
 \value{
-Returns a list containing the summary statistics + proportions, or
-  a data.frame object if \code{proportions} and \code{ts.tables} are FALSE
+Returns a list containing the summary statistics
 }
 \description{
 Function to compute generic item summary statistics that do not require
-prior fitting of IRT models.
+prior fitting of IRT models. Contains information about coefficient alpha
+(and alpha if an item is deleted), mean/SD and frequency of total scores,
+reduced item-total correlations, response frequencies, and conditional
+mean/sd information given the unweighted sum scores.
 }
 \examples{
 
