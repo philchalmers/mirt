@@ -19,7 +19,7 @@ test_that('GGUM', {
     expect_equal(cfs, c(-1.618017,-0.9619207,-1.670646,1.04929,-0.2230827,1.414658,1.191751,1e-04,5.601737,3.359375,4.890594,NA,3.118574,1.04238,2.061643,NA,-1.756586,-2.625442,-1.828546,NA,NA,NA,NA,-3.295782,NA,NA,NA,-0.8652751,NA,NA,NA,5.7103,NA,NA,NA,4.16543,NA,NA,NA,1.901035), tolerance = 1e-1)
     expect_equal(logLik(mod2), -1602.618, tolerance = 1e-4)
     fs <- fscores(mod2)
-    expect_equal(as.vector(fs[1:6]), c(-0.3550502,-0.06854047,0.4902862,0.4902862,0.118368,-0.7548484), tolerance = 1e-1)
+    expect_equal(as.vector(fs[1:6]), c(0.3068925, -1.0081743, -1.6638898, -1.6638898,  0.6702061, -0.1884406), tolerance = 1e-1)
 
     # mod3 <- mirt(Science, 1, 'ggum', optimizer='NR', pars=mod2values(mod), verbose=FALSE)
     # cfs <- as.vector(coef(mod3, simplify=TRUE)$items)
