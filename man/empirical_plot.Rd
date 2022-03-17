@@ -7,11 +7,11 @@
 empirical_plot(
   data,
   which.items = NULL,
+  type = "prop",
   smooth = FALSE,
   formula = resp ~ s(TS, k = 5),
   main = NULL,
   par.strip.text = list(cex = 0.7),
-  boxplot = FALSE,
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
     = "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
@@ -23,7 +23,10 @@ empirical_plot(
 for typical input)}
 
 \item{which.items}{a numeric vector indicating which items to plot in a faceted image plot.
-If NULL then a empirical test  plot will be constructed instead}
+If NULL then empirical test plots will be constructed instead}
+
+\item{type}{character vector specifying type of plot to draw. When \code{which.item} is NULL
+can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'}
 
 \item{smooth}{logical; include a GAM smoother instead of the raw proportions? Default is FALSE}
 
@@ -32,9 +35,6 @@ If NULL then a empirical test  plot will be constructed instead}
 \item{main}{the main title for the plot. If NULL an internal default will be used}
 
 \item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
-
-\item{boxplot}{logical; use a boxplot to display the marginal total score differences instead of
-scatter plots of proportions? Default is FALSE}
 
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
 
@@ -51,7 +51,7 @@ item plots are requested then the total score will be formed without the item of
 \details{
 Note that these types of plots should only be used for unidimensional
 tests with monotonically increasing item
-response functions. If monotonicity should be true for all items, however, then these plots may
+response functions. If monotonicity is not true for all items, however, then these plots may
 serve as a visual diagnostic tool so long as the majority of items are indeed monotonic.
 }
 \examples{
@@ -64,11 +64,13 @@ data <- key2binary(SAT12,
 
 #test plot
 empirical_plot(data)
+empirical_plot(data, type = 'hist')
+empirical_plot(data, type = 'hist', breaks=20)
 
 #items 1, 2 and 5
 empirical_plot(data, c(1, 2, 5))
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
-empirical_plot(data, c(1, 2, 5), boxplot = TRUE)
+empirical_plot(data, c(1, 2, 5), type = 'boxplot')
 
 # replace weird looking items with unscored versions for diagnostics
 empirical_plot(data, 32)
