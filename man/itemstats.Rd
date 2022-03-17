@@ -4,11 +4,14 @@
 \alias{itemstats}
 \title{Generic item summary statistics}
 \usage{
-itemstats(data, proportions = TRUE, ts.tables = FALSE)
+itemstats(data, group, proportions = TRUE, ts.tables = FALSE)
 }
 \arguments{
 \item{data}{An object of class \code{data.frame} or \code{matrix}
 with the response patterns}
+
+\item{group}{optional grouping variable to condition on when computing
+summary information}
 
 \item{proportions}{logical; include response proportion information for
 each item?}
@@ -44,6 +47,12 @@ dat <- key2binary(SAT12,
                            5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 itemstats(dat, ts.tables=TRUE)
 
+# grouping information
+group <- gl(2, 300, labels=c('G1', 'G2'))
+itemstats(dat, group=group)
+
+
+#####
 # polytomous data example
 itemstats(Science)
 

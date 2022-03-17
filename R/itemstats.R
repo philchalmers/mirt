@@ -8,6 +8,8 @@
 #'
 #' @param data An object of class \code{data.frame} or \code{matrix}
 #'   with the response patterns
+#' @param group optional grouping variable to condition on when computing
+#'   summary information
 #' @param proportions logical; include response proportion information for
 #'   each item?
 #' @param ts.tables logical; include mean/sd summary information
@@ -39,6 +41,12 @@
 #'                            5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' itemstats(dat, ts.tables=TRUE)
 #'
+#' # grouping information
+#' group <- gl(2, 300, labels=c('G1', 'G2'))
+#' itemstats(dat, group=group)
+#'
+#'
+#' #####
 #' # polytomous data example
 #' itemstats(Science)
 #'
@@ -54,7 +62,16 @@
 #' merged <- data.frame(LSAT7full[1:392,], Science)
 #' itemstats(merged)
 #'
-itemstats <- function(data, proportions = TRUE, ts.tables = FALSE){
+itemstats <- function(data, group, proportions = TRUE, ts.tables = FALSE){
+    if(!missing(group) && !is.null(group)){
+        groups <- unique(group)
+        out <- lapply(groups, function(g){
+            itemstats(data=data[group == g, , drop=FALSE], group=NULL,
+                      proportions=proportions, ts.tables=ts.tables)
+        })
+        names(out) <- groups
+        return(out)
+    }
     TS <- rowSums(data)
     itemcor <- apply(data, 2, function(x, drop){
         tsx <- if(drop) TS-x else TS
