@@ -90,10 +90,9 @@ itemstats <- function(data, group, proportions = TRUE, ts.tables = FALSE){
                      mean=colMeans(data, na.rm = TRUE),
                      sd=apply(data, 2, sd, na.rm = TRUE),
                      item.total_cor=itemcor,
-                     alpha_deleted=itemalpha
+                     alpha_if_deleted=itemalpha
     )
     ret <- list(overall=as.mirt_df(overall),
-                total.score_frequency = as.data.frame(t(as.matrix(table(TS)))),
                 itemstats=as.mirt_df(df))
     if(proportions){
         useNA <- ifelse(any(is.na(data)), 'always', 'ifany')
@@ -118,6 +117,7 @@ itemstats <- function(data, group, proportions = TRUE, ts.tables = FALSE){
         }
     }
     if(ts.tables){
+        ret$total.score_frequency = as.data.frame(t(as.matrix(table(TS))))
         ret$total.score_means <- t(apply(data, 2, function(x){
             tapply(TS, x, mean, na.rm=TRUE)
         }))

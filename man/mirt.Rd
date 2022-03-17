@@ -720,6 +720,7 @@ visit \url{https://github.com/philchalmers/mirt/wiki}.
 
 #load LSAT section 7 data and compute 1 and 2 factor models
 data <- expand.table(LSAT7)
+itemstats(data)
 
 (mod1 <- mirt(data, 1))
 coef(mod1)
@@ -790,6 +791,8 @@ anova(cmod, mod2)
 
 ###########
 #data from the 'ltm' package in numeric format
+itemstats(Science)
+
 pmod1 <- mirt(Science, 1)
 plot(pmod1)
 plot(pmod1, type = 'trace')
@@ -856,6 +859,7 @@ weighted <- mirt(Science, 1, survey.weights=survey.weights)
 data(SAT12)
 data <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+itemstats(data)
 
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
@@ -887,6 +891,7 @@ a <- matrix(rep(1, 10))
 d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
 c <- seq(-1, 1, length.out=10)
 data <- simdata(a, d + c, 2000, itemtype = rep('graded',10))
+itemstats(data)
 
 mod1 <- mirt(data, 1)
 mod2 <- mirt(data, 1, itemtype = 'grsm')
@@ -1052,6 +1057,7 @@ histogram(ThetaSkew, breaks=30)
 # Find Rasch model subject to the constraint that the intercepts sum to 0
 
 dat <- expand.table(LSAT6)
+itemstats(dat)
 
 #free latent mean and variance terms
 model <- 'Theta = 1-5

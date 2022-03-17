@@ -104,6 +104,12 @@ dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 
+# marginal information
+itemstats(dat)
+
+# conditional information
+itemstats(dat, group=group)
+
 mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
 #limited information fit statistics
 M2(mod_configural)
@@ -228,6 +234,13 @@ dataset2 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dataset3 <- simdata(a, d, N, itemtype, mu = .1, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2, dataset3)
 group <- rep(c('D1', 'D2', 'D3'), each=N)
+
+# marginal information
+itemstats(dat)
+
+# conditional information
+itemstats(dat, group=group)
+
 model <- 'F1 = 1-15
           FREE[D2, D3] = (GROUP, MEAN_1), (GROUP, COV_11)
           CONSTRAINB[D2,D3] = (GROUP, MEAN_1), (GROUP, COV_11)'
