@@ -1,5 +1,7 @@
 # Changes in mirt 1.36
 
+- Added `itemstats()` function to give basic item information statistics
+
 - Item-EFA models now autmatically flip negative signs in rotate solutions
   (e.g., via `summary()`) according to the sign of the largest observed 
   loading (allows easier interpretation of the resulting correlation matrix)
