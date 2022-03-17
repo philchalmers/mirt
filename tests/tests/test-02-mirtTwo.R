@@ -130,7 +130,7 @@ test_that('poly', {
     expect_is(IP1, 'trellis')
     expect_is(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2, c('S_X2', 'Zh')))
-    expect_equal(fit$Zh, c(1.413226, 2.455924, 4.125340, 3.887814), tolerance=1e-4)
+    expect_equal(fit$Zh, c(1.287093, 4.581860, 3.934030, 3.989205), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.941804,10.58528,6.913239,10.11068), tolerance=1e-4)
     fs <- fscores(modp1, method = 'WLE', verbose=FALSE, full.scores=FALSE)
     expect_equal(as.numeric(fs[1:3, 5:6]), c(-5.7024116, -2.1162737, -1.1386969,  1.5797286,
@@ -181,5 +181,5 @@ test_that('poly', {
     ER <- fscores(modp2, returnER = TRUE)
     expect_equal(as.numeric(ER), c(0.4882546, 0.5099054), tolerance=1e-4)
     suppressWarnings(ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2)))
-    expect_equal(as.numeric(ER2), c(0.3905138, 0.4797115), tolerance=1e-4)
+    expect_equal(as.numeric(ER2), c(0.5434572, 0.5930109 ), tolerance=1e-4)
 })

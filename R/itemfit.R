@@ -462,7 +462,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
             Theta <- fscores(x, method=method, full.scores=TRUE, plausible.draws=impute,
-                             leave_missing=TRUE, ...)
+                             rotate = 'none', leave_missing=TRUE, ...)
         for(g in seq_len(x@Data$ngroups)){
             if(impute > 0L){
                 tmpTheta <- vector('list', impute)
@@ -505,7 +505,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     if(Zh || infit){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method,
-                             leave_missing=TRUE, ...)
+                             leave_missing=TRUE, rotate = 'none', ...)
         prodlist <- attr(pars, 'prodlist')
         nfact <- x@Model$nfact + length(prodlist)
         fulldata <- x@Data$fulldata[[1L]]
@@ -558,7 +558,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     if(( (X2 || G2) || !is.null(empirical.plot) || !is.null(empirical.table)) && x@Model$nfact == 1L){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method,
-                             leave_missing=TRUE, ...)
+                             rotate = 'none', leave_missing=TRUE, ...)
         nfact <- ncol(Theta)
         prodlist <- attr(pars, 'prodlist')
         fulldata <- x@Data$fulldata[[1L]]
