@@ -382,6 +382,7 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
 {
     Call <- match.call()
     dots <- list(...)
+    if(is.character(model)) model <- mirt.model(model)
     if(!is.null(dots$formula))
         stop('latent regression models not supported for multiple group yet', call.=FALSE) #TODO
     invariance[invariance %in% c("free_mean")] <- 'free_means'

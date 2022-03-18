@@ -229,6 +229,7 @@ Rotate <- function(F, rotate, Target = NULL, par.strip.text = NULL, par.settings
 	s <- apply(rotF$loadings, 2L, function(x)
 	    sign(x[which.max(abs(x))]))
 	rotF$loadings <- t(s * t(rotF$loadings))
+	if(is.null(rotF$Phi)) rotF$Phi <- diag(ncol(rotF$loadings))
 	rotF$Phi <- diag(s) %*% rotF$Phi %*% diag(s)
 	return(unclass(rotF))
 }
