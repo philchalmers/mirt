@@ -3,8 +3,9 @@
 #' Function to compute generic item summary statistics that do not require
 #' prior fitting of IRT models. Contains information about coefficient alpha
 #' (and alpha if an item is deleted), mean/SD and frequency of total scores,
-#' reduced item-total correlations, response frequencies, and conditional
-#' mean/sd information given the unweighted sum scores.
+#' reduced item-total correlations, average/sd of the correlation between items,
+#' response frequencies, and conditional mean/sd information given the
+#' unweighted sum scores.
 #'
 #' @param data An object of class \code{data.frame} or \code{matrix}
 #'   with the response patterns
@@ -83,11 +84,16 @@ itemstats <- function(data, group,
         return(out)
     }
     TS <- rowSums(data)
+    rs <- cor(dat, use = "complete.obs")
     if(use_ts){
-        itemcor <- apply(data, 2, function(x, drop){
+        itemcor_drop <- apply(data, 2, function(x, drop){
             tsx <- if(drop) TS-x else TS
             cor(x, tsx, use = 'complete.obs')
         }, drop=TRUE)
+        itemcor <- apply(data, 2, function(x, drop){
+            tsx <- if(drop) TS-x else TS
+            cor(x, tsx, use = 'complete.obs')
+        }, drop=FALSE)
         itemalpha <- sapply(1:ncol(data), function(x){
             tmpdat <- na.omit(data[,-x, drop=FALSE])
             CA(tmpdat)
@@ -95,13 +101,16 @@ itemstats <- function(data, group,
         overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data),
                               mean_total.score=mean(TS, na.rm=TRUE),
                               sd_total.score=sd(TS, na.rm=TRUE),
+                              ave.r=mean(rs[lower.tri(rs)]),
+                              sd.r=sd(rs[lower.tri(rs)]),
                               alpha = CA(na.omit(data)))
         rownames(overall) <- ""
         df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
                          mean=colMeans(data, na.rm = TRUE),
                          sd=apply(data, 2, sd, na.rm = TRUE),
-                         item.total_cor=itemcor,
-                         alpha_if_deleted=itemalpha)
+                         total.r=itemcor,
+                         total.r_if_rm=itemcor_drop,
+                         alpha_if_rm=itemalpha)
     } else {
         overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data))
         df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),

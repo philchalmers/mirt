@@ -29,8 +29,9 @@ Returns a list containing the summary statistics
 Function to compute generic item summary statistics that do not require
 prior fitting of IRT models. Contains information about coefficient alpha
 (and alpha if an item is deleted), mean/SD and frequency of total scores,
-reduced item-total correlations, response frequencies, and conditional
-mean/sd information given the unweighted sum scores.
+reduced item-total correlations, average/sd of the correlation between items,
+response frequencies, and conditional mean/sd information given the
+unweighted sum scores.
 }
 \examples{
 
