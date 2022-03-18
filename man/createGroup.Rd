@@ -64,7 +64,7 @@ obtain them numerically. Default is 'Richardson'}
 \description{
 Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for defining
 customized group-level functions. To use the defined objects pass to the
-\code{mirt(..., customGroup = OBJECT)} command, and ensure that the class parameters are properly labeled.
+\code{mirt(..., customGroup = OBJECT)} command, and ensure that the class parameters are properly labelled.
 }
 \examples{
 

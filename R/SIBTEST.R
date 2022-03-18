@@ -49,7 +49,7 @@
 #'   scores, \code{'weights'} for the proportion weights used (i.e., the proportion of observations at
 #'   each matched score), \code{'difference'} for the difference between the scaled focal subtest scores
 #'   against the matched subtest scores, and \code{'wdifference'} for the conditional differences multiplied
-#'   by each respective weight. Note that the last plot reflects the compnents used in SIBTEST, and therefore
+#'   by each respective weight. Note that the last plot reflects the components used in SIBTEST, and therefore
 #'   the sum of these plotted observations will equal the beta coefficient for SIBTEST
 #' @param ... additional plotting arguments to be passed
 #'

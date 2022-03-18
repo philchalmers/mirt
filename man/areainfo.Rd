@@ -32,7 +32,7 @@ a \code{data.frame} with the lower and upper integration range, the information 
   of total information given the integration range (Info.Proportion), and the number of items included (nitems)
 }
 \description{
-Compute the area within test or item information over a definite integral range.
+Compute the area of a test or item information function over a definite integral range.
 }
 \examples{
 

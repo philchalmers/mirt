@@ -1,6 +1,6 @@
 #' Function to calculate the area under a selection of information curves
 #'
-#' Compute the area within test or item information over a definite integral range.
+#' Compute the area of a test or item information function over a definite integral range.
 #'
 #' @aliases areainfo
 #' @param x an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
