@@ -84,7 +84,7 @@ itemstats <- function(data, group,
         return(out)
     }
     TS <- rowSums(data)
-    rs <- cor(dat, use = "complete.obs")
+    rs <- cor(data, use = "complete.obs")
     if(use_ts){
         itemcor_drop <- apply(data, 2, function(x, drop){
             tsx <- if(drop) TS-x else TS
