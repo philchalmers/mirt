@@ -402,7 +402,9 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         try(with(details, multipleGroup(data=data, model=model, group=group, itemtype=itemtype, large=large,
                                     quadpts=quadpts, TOL=TOL, pars=mod2values(mod), technical=technical)), TRUE)
         rslist <- .mirtClusterEnv$rslist
-        on.exit(.mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL)
+        on.exit({.mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
+            reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
+        })
         list_scores <- myLapply(1L:nrow(param_set), fn2, pars=pars, MGmod=mod, param_set=param_set,
                                 max_score=max_score, Theta=Theta, rslist=rslist,
                                 Theta_nodes=Theta_nodes, plot=plot, details=details,
@@ -592,6 +594,8 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
     if(method == 'parametric'){
         if(!mod@OptimInfo$secondordertest)
             stop('ACOV matrix is not positive definite')
+        on.exit(reloadPars(longpars=longpars, pars=pars,
+                           ngroups=ngroups, J=extract.mirt(mod, 'nitems')))
         covB <- vcov(mod)
         names <- colnames(covB)
         imputenums <- sapply(strsplit(names, '\\.'), function(x) as.integer(x[2L]))
@@ -602,7 +606,6 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
         ret <- do.call(rbind, ret)
         if(any(logits))
             ret[,logits] <- antilogit(ret[,logits])
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=extract.mirt(mod, 'nitems'))
         return(ret)
     } else stop('bootstrap not supported yet') #TODO
 
