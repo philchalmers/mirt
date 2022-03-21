@@ -519,6 +519,7 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, de
 #' @param redraws number of redraws to perform when the given parameteric sample does not satisfy the
 #'   upper and lower parameter bounds. If a valid set cannot be found within this number of draws then
 #'   an error will be thrown
+#' @param verbose logical; include additional information in the console?
 #' @param ... additional arguments to be passed
 #' @return returns a draws x p matrix of plausible parameters, where each row correspeonds to a single
 #'   set
@@ -552,7 +553,7 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, de
 #' }
 #'
 draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
-                            redraws = 20, ...){
+                            redraws = 20, verbose = FALSE, ...){
     fn_param <- function(ind, shortpars, longpars, lbound, ubound, est,
                          pre.ev, constrain, imputenums, MGmod, redraws, pars){
         count <- 0L

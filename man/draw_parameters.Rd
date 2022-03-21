@@ -9,6 +9,7 @@ draw_parameters(
   draws,
   method = c("parametric", "boostrap"),
   redraws = 20,
+  verbose = FALSE,
   ...
 )
 }
@@ -24,6 +25,8 @@ function. Default is 'parametric'}
 \item{redraws}{number of redraws to perform when the given parameteric sample does not satisfy the
 upper and lower parameter bounds. If a valid set cannot be found within this number of draws then
 an error will be thrown}
+
+\item{verbose}{logical; include additional information in the console?}
 
 \item{...}{additional arguments to be passed}
 }
