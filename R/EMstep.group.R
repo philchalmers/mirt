@@ -420,7 +420,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                " likely indicates a problem in the M-step. \nCheck with the more stable ",
                                "optimizer = \'nlminb\', or supply better starting values"), call.=FALSE)
         }
-        if(cycles > 1L && list$warn && !ANY.PRIOR && list$method != 'MCEM' && !dentype %in% c('EHW', 'Davidian')){
+        if(cycles > 1L && list$warn && !any(ANY.PRIOR) &&
+           list$method != 'MCEM' && !dentype %in% c('EHW', 'Davidian')){
             diff <- c(-Inf, na.omit(collectLL)) - c(na.omit(collectLL), Inf)
             if(any(diff[length(diff):ceiling(length(diff)*.9)] > .001))
                 warning('Log-likelihood was decreasing near the ML solution. EM method may be unstable',
