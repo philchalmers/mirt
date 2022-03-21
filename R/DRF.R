@@ -52,6 +52,7 @@
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
 #' @param ... additional arguments to be passed to \code{lattice}
+#' @param verbose logical; include additional information in the console?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -255,14 +256,15 @@
 # DRF(simmod, draws = 500)
 #
 #' }
-DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'), param_set = NULL,
-                den.type = 'both', CI = .95, npts = 1000,
+DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
+                param_set = NULL, den.type = 'both', CI = .95, npts = 1000,
                 quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
                 plot = FALSE, DIF = FALSE, p.adjust = 'none',
                 par.strip.text = list(cex = 0.7),
                 par.settings = list(strip.background = list(col = '#9ECAE1'),
                                  strip.border = list(col = "black")),
-                auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
+                auto.key = list(space = 'right', points=FALSE, lines=TRUE),
+                verbose = TRUE, ...){
 
     compute_ps <- function(x, xs, X2=FALSE){
         if(X2){
@@ -405,7 +407,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         on.exit({.mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
             reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
         })
-        list_scores <- myLapply(1L:nrow(param_set), fn2, pars=pars, MGmod=mod, param_set=param_set,
+        list_scores <- myLapply(1L:nrow(param_set), fn2, progress=verbose,
+                                pars=pars, MGmod=mod, param_set=param_set,
                                 max_score=max_score, Theta=Theta, rslist=rslist,
                                 Theta_nodes=Theta_nodes, plot=plot, details=details,
                                 DIF=DIF, focal_items=focal_items, signs=signs, den.type=den.type)
@@ -600,7 +603,8 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
         names <- colnames(covB)
         imputenums <- sapply(strsplit(names, '\\.'), function(x) as.integer(x[2L]))
         pre.ev <- eigen(covB)
-        ret <- myLapply(1L:draws, fn_param, shortpars=shortpars, longpars=longpars, lbound=lbound,
+        ret <- myLapply(1L:draws, fn_param, progress=verbose,
+                        shortpars=shortpars, longpars=longpars, lbound=lbound,
                         ubound=ubound, pre.ev=pre.ev, constrain=constrain, est=est,
                         imputenums=imputenums, MGmod=mod, redraws=redraws, pars=pars)
         ret <- do.call(rbind, ret)

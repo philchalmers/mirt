@@ -10,6 +10,7 @@
 #' @param mod an estimated model object
 #' @param mod2 an estimated model object
 #' @param R number of parametric bootstraps to use.
+#' @param verbose logical; include additional information in the console?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @return a p-value evaluating whether the more restrictive model fits significantly worse
@@ -37,7 +38,7 @@
 #' boot.LR(mod1, mod2, R=200)
 #'
 #' }
-boot.LR <- function(mod, mod2, R = 1000){
+boot.LR <- function(mod, mod2, R = 1000, verbose=TRUE){
     stopifnot(is(mod, 'SingleGroupClass'))
     df1 <- extract.mirt(mod, 'df')
     df2 <- extract.mirt(mod2, 'df')
@@ -63,7 +64,7 @@ boot.LR <- function(mod, mod2, R = 1000){
             break
         }
         lr0
-    }, mod=mod, mod2=mod2)
+    }, progress=verbose, mod=mod, mod2=mod2)
     p <- (1 + sum(LR < results, na.rm = TRUE)) / (1 + R)
     p
 }

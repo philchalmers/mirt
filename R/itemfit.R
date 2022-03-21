@@ -326,7 +326,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         stopifnot(nrow(org) == length(which.items))
         model <- extract.mirt(mod, 'model')
         sv <- mod2values(mod)
-        retQ1 <- mySapply(1L:boot, pb_fun, mod=mod, N=N, sv=sv, itemtype=itemtype,
+        retQ1 <- mySapply(1L:boot, pb_fun, progress=verbose,
+                          mod=mod, N=N, sv=sv, itemtype=itemtype,
                           which.items=which.items, draws=draws, model=model,
                           p.adjust=p.adjust, ...)
         if(nrow(retQ1) == 1L) retQ1 <- t(retQ1)
@@ -388,7 +389,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         stopifnot(length(org) == length(which.items))
         sv <- mod2values(mod)
         model <- extract.mirt(mod, 'model')
-        X2bs <- mySapply(1L:boot, pb_fun, mod=mod, N=N, model=model, is_NA=is_NA,
+        X2bs <- mySapply(1L:boot, pb_fun, progress=verbose,
+                         mod=mod, N=N, model=model, is_NA=is_NA,
                          itemtype=itemtype, sv=sv, which.items=which.items,
                          ETrange=ETrange, ETpoints=ETpoints, ...)
         if(nrow(X2bs) == 1L) X2bs <- t(X2bs)

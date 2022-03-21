@@ -268,7 +268,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     invariance <- MGmodel@Model$invariance[MGmodel@Model$invariance %in%
                                          c('free_means', 'free_var')]
     if(!length(invariance)) invariance <- ''
-    res <- myLapply(X=items2test, FUN=loop_test, model=MGmodel, which.par=which.par, values=values,
+    res <- myLapply(X=items2test, FUN=loop_test, progress=verbose,
+                    model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
                     return_models=return_models, ...)
     names(res) <- itemnames[items2test]
@@ -339,7 +340,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                                           verbose = FALSE, ...)
             pick <- !keep
             if(drop) pick <- !pick
-            tmp <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
+            tmp <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
                             itemnames=itemnames, invariance=invariance, return_models=FALSE, ...)
             names(tmp) <- itemnames[items2test][pick]
@@ -354,7 +355,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         pick <- !lastkeep
         if(return_seq_model) return(updatedModel)
         if(!(scheme %in% c('add', 'drop'))){ # will equal 'add/drop' if all items on first loop have DIF
-            res <- myLapply(X=items2test[pick], FUN=loop_test, model=updatedModel,
+            res <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                             itemnames=itemnames, invariance=invariance, return_models=return_models,
                             ...)

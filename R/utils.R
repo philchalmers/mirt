@@ -2617,7 +2617,10 @@ missingMsg <- function(string)
 .mirtClusterEnv$ncores <- 1L
 .mirtClusterEnv$omp_threads <- 1L
 
-myApply <- function(X, MARGIN, FUN, ...){
+myApply <- function(X, MARGIN, FUN, progress = FALSE, ...){
+    if(progress)
+        return(t(pbapply::pbapply(X, MARGIN, FUN, ...,
+                         cl=.mirtClusterEnv$MIRTCLUSTER)))
     if(.mirtClusterEnv$ncores > 1L){
         return(t(parallel::parApply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, MARGIN=MARGIN, FUN=FUN, ...)))
     } else {
@@ -2625,7 +2628,10 @@ myApply <- function(X, MARGIN, FUN, ...){
     }
 }
 
-myLapply <- function(X, FUN, ...){
+myLapply <- function(X, FUN, progress = FALSE, ...){
+    if(progress)
+        return(t(pbapply::pblapply(X, FUN, ...,
+                                  cl=.mirtClusterEnv$MIRTCLUSTER)))
     if(.mirtClusterEnv$ncores > 1L){
         return(parallel::parLapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, fun=FUN, ...))
     } else {
@@ -2633,7 +2639,10 @@ myLapply <- function(X, FUN, ...){
     }
 }
 
-mySapply <- function(X, FUN, ...){
+mySapply <- function(X, FUN, progress = FALSE, ...){
+    if(progress)
+        return(t(pbapply::pbsapply(X, FUN, ...,
+                                   cl=.mirtClusterEnv$MIRTCLUSTER)))
     if(.mirtClusterEnv$ncores > 1L){
         return(t(parallel::parSapply(cl=.mirtClusterEnv$MIRTCLUSTER, X=X, FUN=FUN, ...)))
     } else {

@@ -26,7 +26,7 @@
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
-#' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan dcurver
+#' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan dcurver pbapply
 #' @importFrom utils write.table flush.console packageVersion capture.output head
 #' @importFrom gridExtra grid.arrange
 #' @importFrom graphics symbols

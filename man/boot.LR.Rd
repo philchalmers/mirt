@@ -4,7 +4,7 @@
 \alias{boot.LR}
 \title{Parametric bootstrap likelihood-ratio test}
 \usage{
-boot.LR(mod, mod2, R = 1000)
+boot.LR(mod, mod2, R = 1000, verbose = TRUE)
 }
 \arguments{
 \item{mod}{an estimated model object}
@@ -12,6 +12,8 @@ boot.LR(mod, mod2, R = 1000)
 \item{mod2}{an estimated model object}
 
 \item{R}{number of parametric bootstraps to use.}
+
+\item{verbose}{logical; include additional information in the console?}
 }
 \value{
 a p-value evaluating whether the more restrictive model fits significantly worse

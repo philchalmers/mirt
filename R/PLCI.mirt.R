@@ -22,6 +22,7 @@
 #' @param lower logical; search for the lower CI?
 #' @param upper logical; search for the upper CI?
 #' @param NealeMiller logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}
+#' @param verbose logical; include additional information in the console?
 #' @param ... additional arguments to pass to the estimation functions
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -73,7 +74,7 @@
 PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
                       search_bound = TRUE, step = .5,
                       lower = TRUE, upper = TRUE, inf2val = 30,
-                      NealeMiller = FALSE, ...){
+                      NealeMiller = FALSE, verbose = TRUE, ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
@@ -285,7 +286,8 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
     if(lower && upper)
         parnums <- rep(parnums, each = 2)
     X <- 1L:length(parnums)
-    result <- mySapply(X=X, FUN=LLpar, parnums=parnums, asigns=asigns,
+    result <- mySapply(X=X, FUN=LLpar, progress=verbose,
+                       parnums=parnums, asigns=asigns,
                        dat=dat, constrain=constraints, itemtype=itemtype,
                        model=model, large=large, sv=sv, get.LL=get.LL, parprior=parprior,
                        PrepList=PrepList, inf2val=inf2val, maxLL=LL,

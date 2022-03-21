@@ -22,6 +22,7 @@ DRF(
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
     = "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
+  verbose = TRUE,
   ...
 )
 }
@@ -82,6 +83,8 @@ Adjustments are located in the \code{adj_pvals} element in the returned list. On
 \item{par.settings}{plotting argument passed to \code{\link{lattice}}}
 
 \item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+
+\item{verbose}{logical; include additional information in the console?}
 
 \item{...}{additional arguments to be passed to \code{lattice}}
 }

@@ -1,5 +1,9 @@
 # Changes in mirt 1.36
 
+- Progress bar added automatically (controlled via the `verbose` argument) 
+  when using several of the package's secondary functions (e.g., `fscores()`, 
+  `DIF()`, `'DRF()`, `mdirt()`, etc)
+
 - Added `itemstats()` function to give basic item information statistics
 
 - Item-EFA models now automatically flips negative signs in rotate solutions

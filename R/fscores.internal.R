@@ -289,16 +289,16 @@ setMethod(
                 log_itemtrace <- log(itemtrace)
                 if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
                 if(method == 'classify')
-                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L,
+                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, progress=verbose,
                                    FUN=EAP_classify, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, W=W, nclass=length(pis))
                 else if(method == 'EAP' && return.acov){
-                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP,
+                    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=verbose,
                                    log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
                                    scores=scores, hessian=TRUE)
                 } else {
-            	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP,
+            	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=FALSE,
             	                   log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
@@ -316,7 +316,8 @@ setMethod(
     		if(method %in% c("EAP", 'classify')){
                 #do nothing
     		} else if(method == "MAP"){
-                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=MAP, scores=scores, pars=pars,
+                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=MAP, progress=verbose,
+                               scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, den_fun=den_fun,
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
@@ -329,7 +330,8 @@ setMethod(
                 SEscores[allmcat,] <- NA
                 scores[allzero,] <- -Inf
                 SEscores[allzero,] <- NA
-                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=ML, scores=scores, pars=pars,
+                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=ML, progress=verbose,
+                               scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, den_fun=NULL,
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
@@ -338,7 +340,8 @@ setMethod(
     		    cls <- sapply(object@ParObjects$pars, class)
     		    for(i in seq_len(length(cls)-1L))
     		        DERIV[[i]] <- selectMethod(DerivTheta, c(cls[i], 'matrix'))
-                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=WLE, scores=scores, pars=pars,
+                tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=WLE, progress=verbose,
+                               scores=scores, pars=pars,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, DERIV=DERIV,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
