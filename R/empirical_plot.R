@@ -30,7 +30,7 @@
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
-#' @seealso \code{\link{itemplot}}, \code{\link{itemGAM}}
+#' @seealso \code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}
 #' @examples
 #'
 #' \dontrun{
@@ -140,11 +140,12 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
                                    auto.key=auto.key, ...)
         } else if(type == 'prop'){
-            plt <- lattice::xyplot(props ~ TS|item, df, groups = cat, type = 'b',
-                               main = if(is.null(main)) "Empirical Item Plot" else main,
-                               xlab = 'Reduced Total Score', ylab = 'Proportion',
-                               par.strip.text=par.strip.text, par.settings=par.settings,
-                               auto.key=auto.key, ylim = c(-.1, 1.1), ...)
+            plt <- lattice::xyplot(props ~ TS|item, df, groups = cat,
+                                   type = ifelse(smooth, 'l', 'b'),
+                                   main = if(is.null(main)) "Empirical Item Plot" else main,
+                                   xlab = 'Reduced Total Score', ylab = 'Proportion',
+                                   par.strip.text=par.strip.text, par.settings=par.settings,
+                                   auto.key=auto.key, ylim = c(-.1, 1.1), ...)
         }
     }
     plt

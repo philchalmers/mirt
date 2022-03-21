@@ -86,7 +86,7 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 \doi{10.18637/jss.v048.i06}
 }
 \seealso{
-\code{\link{itemplot}}, \code{\link{itemGAM}}
+\code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}
 }
 \keyword{empirical}
 \keyword{plots}

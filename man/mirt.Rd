@@ -1271,7 +1271,7 @@ Woods, C. M., and Lin, N. (2009). Item Response Theory With Estimation of the La
   \code{\link{expand.table}}, \code{\link{key2binary}}, \code{\link{mod2values}},
   \code{\link{extract.item}}, \code{\link{iteminfo}}, \code{\link{testinfo}},
   \code{\link{probtrace}}, \code{\link{simdata}}, \code{\link{averageMI}},
-  \code{\link{fixef}}, \code{\link{extract.mirt}}
+  \code{\link{fixef}}, \code{\link{extract.mirt}}, \code{\link{itemstats}}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
