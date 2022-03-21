@@ -56,6 +56,20 @@ test_that('DIF', {
     expect_is(out, 'data.frame')
     expect_equal(out$BIC, c(10.609,9.038,11.424,10.739,14.448), tolerance = 1e-4)
 
+    drf <- DRF(model2)
+    expect_equal(as.numeric(drf), c(10.0000000,  0.0403703,  0.1863619),
+                 tolerance = 1e-4)
+    dif <- DRF(model2, DIF = TRUE)
+    expect_equal(as.numeric(dif[-c(1:5), 1]),
+                 c(0.04435560, -0.02738697,  0.02307566,  0.01429807, -0.01397205),
+                 tolerance = 1e-4)
+    expect_equal(as.numeric(dif[-c(1:5), 2]),
+                 c(0.04448119, 0.06111498, 0.04441609, 0.04817261, 0.01960173),
+                 tolerance = 1e-4)
+
+    set.seed(1234)
+    drf <- DRF(model2, draws = 100)
+    expect_equal(drf$X2, c(0.4536206, 9.1492445), tolerance=1e-4)
 
 })
 
