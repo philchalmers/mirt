@@ -69,13 +69,14 @@
 #' merged <- data.frame(LSAT7full[1:392,], Science)
 #' itemstats(merged)
 #'
-itemstats <- function(data, group,
+itemstats <- function(data, group = NULL,
                       use_ts=TRUE,
                       proportions=TRUE,
                       ts.tables=FALSE){
     data <- as.matrix(data)
-    if(!missing(group) && !is.null(group)){
-        groups <- unique(group)
+    if(!is.null(group) && !is.factor(group)) group <- factor(group)
+    if(!is.null(group) && !is.null(group)){
+        groups <- levels(group)
         out <- lapply(groups, function(g){
             itemstats(data=data[group == g, , drop=FALSE], group=NULL,
                       use_ts=use_ts, proportions=proportions,
@@ -85,15 +86,17 @@ itemstats <- function(data, group,
         return(out)
     }
     TS <- rowSums(data)
-    rs <- cor(data, use = "complete.obs")
+    rs <- try(cor(data, use = "pairwise.complete.obs"), silent = TRUE)
+    if(is(rs, 'try-err')) rs <- NaN
     if(use_ts){
         itemcor_drop <- apply(data, 2, function(x, drop){
             tsx <- if(drop) TS-x else TS
-            cor(x, tsx, use = 'complete.obs')
+            ret <- cor(x, tsx, use = 'pairwise.complete.obs')
+            ret
         }, drop=TRUE)
         itemcor <- apply(data, 2, function(x, drop){
             tsx <- if(drop) TS-x else TS
-            cor(x, tsx, use = 'complete.obs')
+            cor(x, tsx, use = 'pairwise.complete.obs')
         }, drop=FALSE)
         itemalpha <- sapply(1:ncol(data), function(x){
             tmpdat <- na.omit(data[,-x, drop=FALSE])

@@ -4,7 +4,13 @@
 \alias{itemstats}
 \title{Generic item summary statistics}
 \usage{
-itemstats(data, group, use_ts = TRUE, proportions = TRUE, ts.tables = FALSE)
+itemstats(
+  data,
+  group = NULL,
+  use_ts = TRUE,
+  proportions = TRUE,
+  ts.tables = FALSE
+)
 }
 \arguments{
 \item{data}{An object of class \code{data.frame} or \code{matrix}
