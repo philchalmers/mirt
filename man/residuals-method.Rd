@@ -20,10 +20,11 @@
   tables = FALSE,
   verbose = TRUE,
   Theta = NULL,
-  suppress = 1,
+  suppress = NA,
   theta_lim = c(-6, 6),
   quadpts = NULL,
   fold = TRUE,
+  upper = TRUE,
   technical = list(),
   ...
 )
@@ -76,6 +77,9 @@ this value will be returned, while all values less than this value will be set t
 or generated automatically if not available}
 
 \item{fold}{logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?}
+
+\item{upper}{logical; which portion of the matrix (upper versus lower triangle)
+should the \code{suppress} argument be applied to?}
 
 \item{technical}{list of technical arguments when models are re-estimated (see \code{\link{mirt}}
 for details)}

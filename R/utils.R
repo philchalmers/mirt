@@ -2610,6 +2610,21 @@ makeSymMat <- function(mat){
     }
     mat
 }
+
+suppressMat <- function(res, suppress, upper = TRUE){
+    if(!is.na(suppress)){
+        if(upper){
+            pick <- abs(res[upper.tri(res)]) < suppress
+            res[upper.tri(res)][pick] <- NA
+        } else {
+            pick <- abs(res[lower.tri(res)]) < suppress
+            res[lower.tri(res)][pick] <- NA
+        }
+        res[is.na(t(res) * res)] <- NA
+    }
+    res
+}
+
 missingMsg <- function(string)
     stop(paste0('\'', string, '\' argument is missing.'), call.=FALSE)
 
