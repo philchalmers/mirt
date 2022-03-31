@@ -610,6 +610,8 @@ setMethod(
 #' @param suppress a numeric value indicating which parameter local dependency combinations
 #'   to flag as being too high. Absolute values for the standardized estimates greater than
 #'   this value will be returned, while all values less than this value will be set to NA
+#' @param upper logical; which portion of the matrix (upper versus lower triangle)
+#'   should the \code{suppress} argument be applied to?
 #' @param technical list of technical arguments when models are re-estimated (see \code{\link{mirt}}
 #'   for details)
 #' @param ... additional arguments to be passed to \code{fscores()}
@@ -702,8 +704,8 @@ setMethod(
     definition = function(object, type = 'LD', df.p = FALSE, approx.z = FALSE,
                           full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
-                          suppress = 1, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
-                          technical = list(), ...)
+                          suppress = NA, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
+                          upper = TRUE, technical = list(), ...)
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
@@ -811,11 +813,8 @@ setMethod(
                 }
             }
             if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
+            res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
-            if(suppress < 1){
-                pick <- abs(res[upper.tri(res)]) < suppress
-                res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
-            }
             if(verbose) print(res, ...)
             if(df.p){
                 ret <- list(df, res)
@@ -917,10 +916,7 @@ setMethod(
                 }
             }
             if(verbose) cat("Q3 matrix:\n\n")
-            if(suppress < 1){
-                pick <- abs(res[upper.tri(res)]) < suppress
-                res[lower.tri(res)] <- res[upper.tri(res)][pick] <- NA
-            }
+            res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
             if(verbose) print(res, ...)
             return(invisible(res))
