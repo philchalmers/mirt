@@ -32,7 +32,7 @@ knitdocs:
 	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R
 	sed -i s/dontrun/donttest/g man/*.Rd
 	make install
-	Rscript -e "library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
+	Rscript -e "library('mirt');mirtCluster(2);library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
 	mkdir html
 	mv *.html html/
 	rm R.css
