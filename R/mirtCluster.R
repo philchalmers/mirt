@@ -32,7 +32,7 @@
 #' #stop and remove cores
 #' mirtCluster(remove = TRUE)
 #'
-#' # create 3 core achitecture in R, and 4 thread architecture with OpenMP
+#' # create 3 core architecture in R, and 4 thread architecture with OpenMP
 #' mirtCluster(spec = 3, omp_threads = 4)
 #'
 #' }
@@ -45,21 +45,23 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
         if(remove){
             if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
                 message('There is no visible mirtCluster() definition')
-                return(invisible())
+                return(invisible(NULL))
             }
             parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
             .mirtClusterEnv$MIRTCLUSTER <- NULL
             .mirtClusterEnv$ncores <- 1L
             .mirtClusterEnv$omp_threads <- 1L
-            return(invisible())
+            return(invisible(NULL))
         }
         if(!is.null(.mirtClusterEnv$MIRTCLUSTER)){
-            message('mirtCluster() has already been defined')
-            return(invisible())
+            message(
+                sprintf('mirtCluster() previously defined for %i clusters',
+                        .mirtClusterEnv$ncores))
+            return(invisible(NULL))
         }
         .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
         .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
-        mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible())
+        mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible(NULL))
     }
     return(invisible())
 }

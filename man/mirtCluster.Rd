@@ -35,7 +35,7 @@ mirtCluster(4)
 #stop and remove cores
 mirtCluster(remove = TRUE)
 
-# create 3 core achitecture in R, and 4 thread architecture with OpenMP
+# create 3 core architecture in R, and 4 thread architecture with OpenMP
 mirtCluster(spec = 3, omp_threads = 4)
 
 }
