@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute the M2 model fit statistic</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for M2 {mirt}"><tr><td>M2 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -30,9 +31,19 @@ density components (where applicable).
 <h3>Usage</h3>
 
 <pre>
-M2(obj, type = "M2*", calcNull = TRUE, na.rm = FALSE, quadpts = NULL,
-  theta_lim = c(-6, 6), impute = 0, CI = 0.9, residmat = FALSE,
-  QMC = FALSE, suppress = 1, ...)
+M2(
+  obj,
+  type = "M2*",
+  calcNull = TRUE,
+  na.rm = FALSE,
+  quadpts = NULL,
+  theta_lim = c(-6, 6),
+  CI = 0.9,
+  residmat = FALSE,
+  QMC = FALSE,
+  suppress = 1,
+  ...
+)
 </pre>
 
 
@@ -54,7 +65,7 @@ M2 and M2* where only the bivariate moments are collapsed</p>
 <td>
 <p>logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
-have a suitable null model (e.g., those created via <code><a href="createItem.html">createItem</a></code> will not)</p>
+have a suitable null model (e.g., those created via <code><a href="../../mirt/help/createItem.html">createItem</a></code> will not)</p>
 </td></tr>
 <tr valign="top"><td><code>na.rm</code></td>
 <td>
@@ -65,18 +76,11 @@ requires a complete dataset in order to be well defined</p>
 <td>
 <p>number of quadrature points to use during estimation. If <code>NULL</code>,
 a suitable value will be chosen based
-on the rubric found in <code><a href="fscores.html">fscores</a></code></p>
+on the rubric found in <code><a href="../../mirt/help/fscores.html">fscores</a></code></p>
 </td></tr>
 <tr valign="top"><td><code>theta_lim</code></td>
 <td>
 <p>lower and upper range to evaluate latent trait integral for each dimension</p>
-</td></tr>
-<tr valign="top"><td><code>impute</code></td>
-<td>
-<p>a number indicating how many imputations to perform
-(passed to <code><a href="imputeMissing.html">imputeMissing</a></code>) when there are missing data present. This requires
-a precomputed <code>Theta</code> input. Will return a data.frame object with the mean estimates
-of the stats and their imputed standard deviations</p>
 </td></tr>
 <tr valign="top"><td><code>CI</code></td>
 <td>
@@ -125,8 +129,8 @@ and optionally the TLI and CFI model fit statistics if <code>calcNull = TRUE</co
 <h3>References</h3>
 
 <p>Cai, L. &amp; Hansen, M. (2013). Limited-information goodness-of-fit testing of
-hierarchical item factor models. British Journal of Mathematical and Statistical
-Psychology, 66, 245-276.
+hierarchical item factor models. <em>British Journal of Mathematical and Statistical
+Psychology, 66</em>, 245-276.
 </p>
 <p>Cai, L. &amp; Monro, S. (2014). <em>A new statistic for evaluating item response theory
 models for ordinal data</em>. National Center for Research on Evaluation, Standards,
@@ -134,10 +138,10 @@ models for ordinal data</em>. National Center for Research on Evaluation, Standa
 </p>
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Maydeu-Olivares, A. &amp; Joe, H. (2006). Limited information goodness-of-fit testing in
-multidimensional contingency tables Psychometrika, 71, 713-732.
+multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.
 </p>
 
 
@@ -154,7 +158,7 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.28 
+## mirt version: 1.36.2 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -162,7 +166,7 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## 
 ## Log-likelihood = -2658.805
 ## Estimated parameters: 10 
-## AIC = 5337.61; AICc = 5337.833
+## AIC = 5337.61
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
 ## RMSEA = 0.023, CFI = NaN, TLI = NaN
@@ -188,36 +192,20 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## Item.5  0.05443241 -0.03867705 -0.001860395 7.235426e-05     NA
 </code></pre>
 
-<pre><code class="r">#M2 imputed with missing data present (run in parallel)
+<pre><code class="r">#M2 with missing data present
 dat[sample(1:prod(dim(dat)), 250)] &lt;- NA
 mod2 &lt;- mirt(dat, 1)
-
-# compute stats using conservative model imputations
-mirtCluster()
-</code></pre>
-
-<pre><code>## mirtCluster() has already been defined
-</code></pre>
-
-<pre><code class="r">M2(mod2, impute = 10)
-</code></pre>
-
-<pre><code>##                M2 df         p       RMSEA      RMSEA_5    RMSEA_95
-## stats    8.682796  5 0.1517414 0.025651897 0.0007141727 0.056130692
-## SD_stats 1.928360  0 0.1124348 0.008903752 0.0021425182 0.005900186
-##                SRMSR        TLI         CFI
-## stats    0.027558117 0.96491450 0.982457250
-## SD_stats 0.003274231 0.01814907 0.009074533
-</code></pre>
-
-<pre><code class="r"># or compute stats by removing missing data row-wise
+# Compute stats by removing missing data row-wise
 M2(mod2, na.rm = TRUE)
 </code></pre>
 
-<pre><code>##             M2 df         p      RMSEA RMSEA_5   RMSEA_95      SRMSR
-## stats 6.730394  5 0.2414757 0.02125559       0 0.05767896 0.02829988
-##             TLI       CFI
-## stats 0.9785447 0.9892724
+<pre><code>## Sample size after row-wise response data removal: 773
+</code></pre>
+
+<pre><code>##             M2 df          p      RMSEA RMSEA_5  RMSEA_95      SRMSR       TLI
+## stats 10.11077  5 0.07215684 0.03638727       0 0.0687938 0.03390482 0.9396013
+##             CFI
+## stats 0.9698006
 </code></pre>
 
 <pre><code class="r"># C2 statistic (useful when polytomous IRT models have too few df)
@@ -228,15 +216,15 @@ pmod &lt;- mirt(Science, 1)
 M2(pmod, type = &#39;C2&#39;)
 </code></pre>
 
-<pre><code>##              M2 df         p RMSEA RMSEA_5  RMSEA_95      SRMSR      TLI
-## stats 0.2891394  2 0.8653946     0       0 0.0521116 0.07257313 10.50367
-##       CFI
-## stats   1
+<pre><code>##             M2 df           p     RMSEA    RMSEA_5  RMSEA_95      SRMSR
+## stats 19.17929  2 6.84337e-05 0.1482174 0.09234204 0.2116368 0.07257313
+##             TLI       CFI
+## stats 0.7300952 0.9100317
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

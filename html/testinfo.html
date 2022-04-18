@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate test information</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for testinfo {mirt}"><tr><td>testinfo {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -21,8 +22,14 @@
 <h3>Usage</h3>
 
 <pre>
-testinfo(x, Theta, degrees = NULL, group = NULL, individual = FALSE,
-  which.items = 1:extract.mirt(x, "nitems"))
+testinfo(
+  x,
+  Theta,
+  degrees = NULL,
+  group = NULL,
+  individual = FALSE,
+  which.items = 1:extract.mirt(x, "nitems")
+)
 </pre>
 
 
@@ -31,7 +38,8 @@ testinfo(x, Theta, degrees = NULL, group = NULL, individual = FALSE,
 <table summary="R argblock">
 <tr valign="top"><td><code>x</code></td>
 <td>
-<p>an estimated mirt object</p>
+<p>an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
+<code>group</code> input were supplied</p>
 </td></tr>
 <tr valign="top"><td><code>Theta</code></td>
 <td>
@@ -44,8 +52,8 @@ Only applicable when the input object is multidimensional</p>
 </td></tr>
 <tr valign="top"><td><code>group</code></td>
 <td>
-<p>a number signifying which group the item should be extracted from (applies to
-'MultipleGroupClass' objects only)</p>
+<p>group argument to pass to <code><a href="../../mirt/help/extract.group.html">extract.group</a></code> function. Required when the input object is
+a multiple-group model</p>
 </td></tr>
 <tr valign="top"><td><code>individual</code></td>
 <td>
@@ -69,7 +77,7 @@ Default uses all possible items</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -162,5 +170,5 @@ plot(Theta, tinfo_smaller - tinfo, type = &#39;l&#39;)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

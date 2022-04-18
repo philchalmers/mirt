@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Imputing plausible data for missing values</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for imputeMissing {mirt}"><tr><td>imputeMissing {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -38,7 +39,7 @@ imputeMissing(x, Theta, warn = TRUE, ...)
 <tr valign="top"><td><code>Theta</code></td>
 <td>
 <p>a matrix containing the estimates of the latent trait scores
-(e.g., via <code><a href="fscores.html">fscores</a></code>)</p>
+(e.g., via <code><a href="../../mirt/help/fscores.html">fscores</a></code>)</p>
 </td></tr>
 <tr valign="top"><td><code>warn</code></td>
 <td>
@@ -61,7 +62,7 @@ imputeMissing(x, Theta, warn = TRUE, ...)
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -78,7 +79,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.28 
+## mirt version: 1.36.2 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -86,7 +87,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Log-likelihood = -2658.805
 ## Estimated parameters: 10 
-## AIC = 5337.61; AICc = 5337.833
+## AIC = 5337.61
 ## BIC = 5386.688; SABIC = 5354.927
 ## G2 (21) = 31.7, p = 0.0628
 ## RMSEA = 0.023, CFI = NaN, TLI = NaN
@@ -104,17 +105,17 @@ for(i in 1:20)
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 34 EM iterations.
-## mirt version: 1.28 
+## Converged within 1e-04 tolerance after 24 EM iterations.
+## mirt version: 1.36.2 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## Latent density type: Gaussian 
 ## 
-## Log-likelihood = -2647.335
+## Log-likelihood = -2647.798
 ## Estimated parameters: 10 
-## AIC = 5314.671; AICc = 5314.893
-## BIC = 5363.748; SABIC = 5331.988
+## AIC = 5315.596
+## BIC = 5364.674; SABIC = 5332.913
 </code></pre>
 
 <pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
@@ -130,17 +131,17 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 25 EM iterations.
-## mirt version: 1.28 
+## mirt version: 1.36.2 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## Latent density type: Gaussian 
 ## 
-## Log-likelihood = -2659.193
+## Log-likelihood = -2654.296
 ## Estimated parameters: 10 
-## AIC = 5338.385; AICc = 5338.608
-## BIC = 5387.463; SABIC = 5355.702
-## G2 (21) = 31.61, p = 0.064
+## AIC = 5328.593
+## BIC = 5377.67; SABIC = 5345.91
+## G2 (21) = 31.58, p = 0.0645
 ## RMSEA = 0.022, CFI = NaN, TLI = NaN
 </code></pre>
 
@@ -155,5 +156,5 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

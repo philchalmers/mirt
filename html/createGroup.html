@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a user defined group-level object with correct generic...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for createGroup {mirt}"><tr><td>createGroup {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -16,15 +17,26 @@
 
 <p>Initializes the proper S4 class and methods necessary for mirt functions to use in estimation for defining
 customized group-level functions. To use the defined objects pass to the
-<code>mirt(..., customGroup = OBJECT)</code> command, and ensure that the class parameters are properly labeled.
+<code>mirt(..., customGroup = OBJECT)</code> command, and ensure that the class parameters are properly labelled.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-createGroup(par, est, den, nfact, gr = NULL, hss = NULL, gen = NULL,
-  lbound = NULL, ubound = NULL, derivType = "Richardson")
+createGroup(
+  par,
+  est,
+  den,
+  nfact,
+  standardize = FALSE,
+  gr = NULL,
+  hss = NULL,
+  gen = NULL,
+  lbound = NULL,
+  ubound = NULL,
+  derivType = "Richardson"
+)
 </pre>
 
 
@@ -51,6 +63,15 @@ each row in the <code>Theta</code> input</p>
 <td>
 <p>number of factors required for the model. E.g., for unidimensional models with only one
 dimension of integration <code>nfact = 1</code></p>
+</td></tr>
+<tr valign="top"><td><code>standardize</code></td>
+<td>
+<p>logical; use standardization of the quadrature table method proposed by
+Woods and Thissen (2006)? If TRUE, the logical elements named <code>'MEAN_1'</code> and <code>'COV_11'</code>
+can be included in the parameter vector, and when these values are set to FALSE in the <code>est</code>
+input the E-table will be standardized to these fixed values (e.g.,
+<code>par &lt;- c(a1=1, d=0, MEAN_1=0, COV_11=1)</code> with <code>est &lt;- c(TRUE, TRUE, FALSE, FALSE)</code> will
+standardize the E-table to have a 0 mean and unit variance)</p>
 </td></tr>
 <tr valign="top"><td><code>gr</code></td>
 <td>
@@ -99,7 +120,7 @@ obtain them numerically. Default is 'Richardson'</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -173,5 +194,5 @@ coef(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,16 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Specify model loadings</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Specify model information</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for mirt.model {mirt}"><tr><td>mirt.model {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Specify model loadings</h2>
+<h2>Specify model information</h2>
 
 <h3>Description</h3>
 
@@ -24,8 +25,14 @@ when a string is passed to the <code>model</code> argument.
 <h3>Usage</h3>
 
 <pre>
-mirt.model(input = NULL, itemnames = NULL, file = "", COV = NULL,
-  quiet = TRUE, ...)
+mirt.model(
+  input = NULL,
+  itemnames = NULL,
+  file = "",
+  COV = NULL,
+  quiet = TRUE,
+  ...
+)
 </pre>
 
 
@@ -73,6 +80,20 @@ item locations</p>
 by enclosing the left hand term within brackets. To finish the declaration of
 a model simply enter a blank line with only a carriage return (i.e., the
 'enter' or 'return' key), or instead read in an input version of the model syntax.
+The associated slopes throughout the package label these coefficients as
+<code>a1, a2, ..., ak</code>, where the associated number is assigned according to the
+respective order of the defined factors.
+</p>
+<p>For example, if the syntax were
+</p>
+<p><code>"G = 1-10
+       F = 1-5
+       A = 6-10"</code>
+</p>
+<p>then the <code>G</code> factor would be assigned the slopes <code>a1</code> for each item, <code>F</code> assigned
+the slopes <code>a2</code>, and <code>A</code> assigned the slopes <code>a3</code>. The same principle applies to the
+<code><a href="../../mirt/help/bfactor.html">bfactor</a></code> function whereby the slopes are automatically included for the specific factors
+after the general factor structure has been assigned.
 </p>
 <p>There is an optional keyword for specifying the correlation between relationships between factors
 called <code>COV</code>, and non-linear factor products can be included by enclosing the product
@@ -191,8 +212,8 @@ priors, lower and upper bounds, etc, are desired then this input can be used</p>
 <h3>Value</h3>
 
 <p>Returns a model specification object to be used in
-<code><a href="mirt.html">mirt</a></code>, <code><a href="bfactor.html">bfactor</a></code>, <code><a href="multipleGroup.html">multipleGroup</a></code>, or
-<code><a href="mixedmirt.html">mixedmirt</a></code>
+<code><a href="../../mirt/help/mirt.html">mirt</a></code>, <code><a href="../../mirt/help/bfactor.html">bfactor</a></code>, <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code>, or
+<code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code>
 </p>
 
 
@@ -206,7 +227,7 @@ priors, lower and upper bounds, etc, are desired then this input can be used</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -279,5 +300,5 @@ mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Wald statistics for mirt models</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for wald {mirt}"><tr><td>wald {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -15,7 +16,7 @@
 <h3>Description</h3>
 
 <p>Compute a Wald test given an <code>L</code> vector or matrix of numeric contrasts. Requires that the
-model information matrix be computed (including <code>SE = TRUE</code> when using the EM method). Use
+model information matrix be computed (by passing <code>SE = TRUE</code> when estimating the model). Use
 <code>wald(model)</code> to observe how the information matrix columns are named, especially if
 the estimated model contains constrained parameters (e.g., 1PL).
 </p>
@@ -24,7 +25,7 @@ the estimated model contains constrained parameters (e.g., 1PL).
 <h3>Usage</h3>
 
 <pre>
-wald(object, L, C = 0)
+wald(object, L, C = NULL)
 </pre>
 
 
@@ -38,14 +39,29 @@ wald(object, L, C = 0)
 </td></tr>
 <tr valign="top"><td><code>L</code></td>
 <td>
-<p>a coefficient matrix with dimensions nconstrasts x npars.
+<p>a coefficient matrix with dimensions <code>nconstrasts x npars.estimated</code>,
+or a character vector giving the hypothesis in symbolic form
+(syntax format borrowed from the <code>car</code> package; see <code>Details</code> below).
 Omitting this value will return the column names of the
 information matrix used to identify the (potentially constrained) parameters</p>
 </td></tr>
 <tr valign="top"><td><code>C</code></td>
 <td>
 <p>a constant vector of population parameters to be compared along side L, where
-<code>length(C) == ncol(L)</code>. By default a vector of 0's is constructed</p>
+<code>length(C) == row(L)</code>. By default a vector of 0's is constructed. Note that when using
+the syntax input for <code>L</code> this argument is ignored
+</p>
+<p>The following description is borrowed from <code>car</code> package documentation pertaining to the character vector
+input to the argument <code>L</code>: &quot;The hypothesis matrix can be supplied as a numeric matrix (or vector), the rows of which
+specify linear combinations of the model
+coefficients, which are tested equal to the corresponding entries in the right-hand-side vector, which defaults to a vector of zeroes.
+</p>
+<p>Alternatively, the hypothesis can be specified symbolically as a character vector with one or more elements, each of which gives either
+a linear combination of coefficients, or a linear equation in the coefficients (i.e., with both a left and right side separated by an
+equals sign). Components of a linear expression or linear equation can consist of numeric constants, or numeric constants multiplying
+coefficient names (in which case the number precedes the coefficient, and may be separated from it by spaces or an asterisk);
+constants of 1 or -1 may be omitted. Spaces are always optional. Components are separated by plus or minus signs. Newlines or tabs
+in hypotheses will be treated as spaces. See the examples below.&quot;</p>
 </td></tr>
 </table>
 
@@ -60,13 +76,14 @@ information matrix used to identify the (potentially constrained) parameters</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
 <pre><code class="r">## No test: 
+
 #View parnumber index
 data(LSAT7)
 data &lt;- expand.table(LSAT7)
@@ -158,6 +175,21 @@ wald(mod, L)
 ## 1 41.0005  1 1.521906e-10
 </code></pre>
 
+<pre><code class="r"># same as above using character syntax input
+infonames
+</code></pre>
+
+<pre><code>##  a1.1   d.2  a1.5   d.6  a1.9  d.10 a1.13  d.14 a1.17  d.18 
+## 0.988 1.856 1.081 0.808 1.706 1.804 0.765 0.486 0.736 1.855
+</code></pre>
+
+<pre><code class="r">wald(mod, &quot;a1.5 = 0&quot;)
+</code></pre>
+
+<pre><code>##         W df            p
+## 1 41.0005  1 1.521906e-10
+</code></pre>
+
 <pre><code class="r">#simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
 L &lt;- matrix(0, 2, 10)
 L[1,1] &lt;- L[2, 7] &lt;- 1
@@ -177,11 +209,26 @@ L
 ## 1 0.1528867  2 0.9264054
 </code></pre>
 
-<pre><code class="r">#logLiklihood tests (requires estimating a new model)
+<pre><code class="r"># Again, using more efficient syntax
+infonames
+</code></pre>
+
+<pre><code>##  a1.1   d.2  a1.5   d.6  a1.9  d.10 a1.13  d.14 a1.17  d.18 
+## 0.988 1.856 1.081 0.808 1.706 1.804 0.765 0.486 0.736 1.855
+</code></pre>
+
+<pre><code class="r">wald(mod, c(&quot;a1.1 = a1.5&quot;, &quot;a1.13 = a1.17&quot;))
+</code></pre>
+
+<pre><code>##           W df         p
+## 1 0.1528867  2 0.9264054
+</code></pre>
+
+<pre><code class="r">#log-Liklihood tests (requires estimating a new model)
 cmodel &lt;- &#39;theta = 1-5
            CONSTRAIN = (1,2, a1), (4,5, a1)&#39;
 mod2 &lt;- mirt(data, cmodel)
-#or, eqivalently
+#or, equivalently
 #mod2 &lt;- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
 anova(mod2, mod)
 </code></pre>
@@ -191,14 +238,73 @@ anova(mod2, mod)
 ## Model 2: mirt(data = data, model = 1, SE = TRUE)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df     p
-## 1 5333.763 5333.908 5347.616 5348.685 5373.025 -2658.881   NaN NaN   NaN
-## 2 5337.610 5337.833 5354.927 5356.263 5386.688 -2658.805 0.152   2 0.927
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df     p
+## 1 5333.763 5347.616 5348.685 5373.025 -2658.881   NaN NaN   NaN
+## 2 5337.610 5354.927 5356.263 5386.688 -2658.805 0.152   2 0.927
+</code></pre>
+
+<pre><code class="r">#####
+# test equality of means in multi-group model:
+#    H0: (mu1 - mu2) = (mu3 - mu4)
+
+set.seed(12345)
+a &lt;- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d &lt;- matrix(rnorm(15,0,.7),ncol=1)
+itemtype &lt;- rep(&#39;2PL&#39;, nrow(a))
+N &lt;- 500
+dataset1 &lt;- simdata(a, d, N, itemtype)
+dataset2 &lt;- simdata(a, d, N, itemtype, mu = .5)
+dataset3 &lt;- simdata(a, d, N, itemtype, mu = -1)
+dataset4 &lt;- simdata(a, d, N, itemtype, mu = -.5)
+dat &lt;- rbind(dataset1, dataset2, dataset3, dataset4)
+group &lt;- factor(rep(paste0(&#39;D&#39;, 1:4), each=N))
+levels(group)
+</code></pre>
+
+<pre><code>## [1] &quot;D1&quot; &quot;D2&quot; &quot;D3&quot; &quot;D4&quot;
+</code></pre>
+
+<pre><code class="r">models &lt;- &#39;F1 = 1-15&#39;
+
+# 3 means estimated
+mod_free &lt;- multipleGroup(dat, models, group = group, SE=TRUE,
+                          invariance=c(&#39;slopes&#39;, &#39;intercepts&#39;, &#39;free_var&#39;,&#39;free_means&#39;))
+wald(mod_free) # obtain parameter names
+</code></pre>
+
+<pre><code>##   a1.1.63.125.187    d.2.64.126.188   a1.5.67.129.191    d.6.68.130.192 
+##             1.235             0.643             1.190            -0.573 
+##   a1.9.71.133.195   d.10.72.134.196  a1.13.75.137.199   d.14.76.138.200 
+##             0.982            -0.140             1.059             0.865 
+##  a1.17.79.141.203   d.18.80.142.204  a1.21.83.145.207   d.22.84.146.208 
+##             1.147             0.248             0.499             0.538 
+##  a1.25.87.149.211   d.26.88.150.212  a1.29.91.153.215   d.30.92.154.216 
+##             1.275             1.204             0.998            -0.368 
+##  a1.33.95.157.219   d.34.96.158.220  a1.37.99.161.223  d.38.100.162.224 
+##             0.900            -1.031             0.736            -1.087 
+## a1.41.103.165.227  d.42.104.166.228 a1.45.107.169.231  d.46.108.170.232 
+##             1.032             1.346             1.604            -0.159 
+## a1.49.111.173.235  d.50.112.174.236 a1.53.115.177.239  d.54.116.178.240 
+##             1.273             0.578             1.229             0.502 
+## a1.57.119.181.243  d.58.120.182.244        MEAN_1.123        COV_11.124 
+##             0.850            -0.079             0.382             0.863 
+##        MEAN_1.185        COV_11.186        MEAN_1.247        COV_11.248 
+##            -1.061             0.862            -0.594             0.935
+</code></pre>
+
+<pre><code class="r"># View(mod2values(mod_free))
+
+# reference group mean = 0 by default
+wald(mod_free, c(&quot;0 - MEAN_1.123 = MEAN_1.185 - MEAN_1.247&quot;))
+</code></pre>
+
+<pre><code>##           W df         p
+## 1 0.7199774  1 0.3961513
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

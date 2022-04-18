@@ -1,0 +1,913 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: RMSD effect size statistic to quantify category-level DIF</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body><div class="container">
+
+<table width="100%" summary="page for RMSD_DIF {mirt}"><tr><td>RMSD_DIF {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>RMSD effect size statistic to quantify category-level DIF</h2>
+
+<h3>Description</h3>
+
+<p>This function computes a set of RMSD &quot;badness-of-fit&quot; statistics when investing
+DIF across a set of grouping variables. In a first step, a (potentially highly constrained)
+multiple group model is fitted, while in a second step the item (and person) parameters
+are estimated based on all examines across all groups. Category level DIF is assessed
+based on how well the pseudo-table of counts match the (constrained) probability functions
+implied by the original multiple group model (while also weighing across the implied density
+function of the latent traits). If the RSMD fit is poor, indicating non-ignorable DIF,
+then the multiple-group model should be adjusted to better account for the large response bias
+due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hartig (2019) for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+RMSD_DIF(pooled_mod, flag = 0, probfun = TRUE, dentype = "norm")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>pooled_mod</code></td>
+<td>
+<p>a multiple-group model (used to compute the model-implied
+probability in the goodness-of-fit test)</p>
+</td></tr>
+<tr valign="top"><td><code>flag</code></td>
+<td>
+<p>a numeric value used as a cut-off to help flag larger RMSD values
+(e.g., <code>flag = .03</code> will highlight only categories with RMSD values greater than
+.03)</p>
+</td></tr>
+<tr valign="top"><td><code>probfun</code></td>
+<td>
+<p>logical; use probability functions to compute RMSD? If FALSE, the expected score
+functions will be integrated instead, which may be useful for collapsing across the
+categories in polytomous items</p>
+</td></tr>
+<tr valign="top"><td><code>dentype</code></td>
+<td>
+<p>density to use for the latent trait.
+Can be <code>'norm'</code> to use a normal Gaussian density where the mean/variance are extracted
+from the model object(default), <code>'snorm'</code> for a standard normal distribution,
+or <code>'empirical'</code> to use the density estimate obtained via the E-table</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Buchholz, J., and Hartig, J. (2019). Comparing Attitudes Across Groups: An IRT-Based Item-Fit Statistic
+for the Analysis of Measurement Invariance. <em>Applied Psychological Measurement, 43</em>(3), 241-250.
+doi: <a href="https://doi.org/10.1177/0146621617748323">10.1177/0146621617748323</a>
+</p>
+<p>Lee, S. S., and von Davier, M. (2020). Improving measurement properties of the PISA home
+possessions scale through partial invariance modeling.
+<em>Psychological test and assessment modeling</em>, 62(1):55-83.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mirt/help/DIF.html">DIF</a></code>, <code><a href="../../mirt/help/DRF.html">DRF</a></code>, <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code>, <code><a href="../../mirt/help/empirical_ES.html">empirical_ES</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+#----- generate some data
+set.seed(12345)
+a &lt;- a2 &lt;- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d &lt;- d2 &lt;- matrix(rnorm(15,0,.7),ncol=1)
+
+# item 1 has DIF
+d2[1] &lt;- d[1] - .5
+a2[1] &lt;- a[1] + 1
+
+itemtype &lt;- rep(&#39;2PL&#39;, nrow(a))
+N &lt;- 1000
+dataset1 &lt;- simdata(a, d, N, itemtype)
+dataset2 &lt;- simdata(a2, d2, N, itemtype)
+dat &lt;- rbind(dataset1, dataset2)
+group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
+
+#-----
+
+# fully pooled model
+pooled_mod &lt;- multipleGroup(dat, 1, group=group,
+   invariance = c(colnames(dat), &#39;free_mean&#39;, &#39;free_var&#39;))
+coef(pooled_mod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $D1
+## $items
+##            a1      d g u
+## Item_1  1.441  0.358 0 1
+## Item_2  1.136 -0.590 0 1
+## Item_3  0.996 -0.237 0 1
+## Item_4  0.902  0.921 0 1
+## Item_5  1.060  0.153 0 1
+## Item_6  0.440  0.637 0 1
+## Item_7  1.170  1.023 0 1
+## Item_8  0.904 -0.353 0 1
+## Item_9  0.875 -0.978 0 1
+## Item_10 0.665 -1.120 0 1
+## Item_11 0.939  1.243 0 1
+## Item_12 1.336 -0.194 0 1
+## Item_13 1.250  0.481 0 1
+## Item_14 1.050  0.444 0 1
+## Item_15 0.778 -0.064 0 1
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
+## 
+## 
+## $D2
+## $items
+##            a1      d g u
+## Item_1  1.441  0.358 0 1
+## Item_2  1.136 -0.590 0 1
+## Item_3  0.996 -0.237 0 1
+## Item_4  0.902  0.921 0 1
+## Item_5  1.060  0.153 0 1
+## Item_6  0.440  0.637 0 1
+## Item_7  1.170  1.023 0 1
+## Item_8  0.904 -0.353 0 1
+## Item_9  0.875 -0.978 0 1
+## Item_10 0.665 -1.120 0 1
+## Item_11 0.939  1.243 0 1
+## Item_12 1.336 -0.194 0 1
+## Item_13 1.250  0.481 0 1
+## Item_14 1.050  0.444 0 1
+## Item_15 0.778 -0.064 0 1
+## 
+## $means
+##    F1 
+## -0.08 
+## 
+## $cov
+##       F1
+## F1 1.167
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(pooled_mod)
+</code></pre>
+
+<pre><code>## $D1
+##           P.0   P.1
+## Item_1  0.056 0.056
+## Item_2  0.018 0.018
+## Item_3  0.014 0.014
+## Item_4  0.019 0.019
+## Item_5  0.010 0.010
+## Item_6  0.021 0.021
+## Item_7  0.016 0.016
+## Item_8  0.017 0.017
+## Item_9  0.019 0.019
+## Item_10 0.018 0.018
+## Item_11 0.013 0.013
+## Item_12 0.014 0.014
+## Item_13 0.018 0.018
+## Item_14 0.009 0.009
+## Item_15 0.011 0.011
+## 
+## $D2
+##           P.0   P.1
+## Item_1  0.053 0.053
+## Item_2  0.021 0.021
+## Item_3  0.013 0.013
+## Item_4  0.016 0.016
+## Item_5  0.008 0.008
+## Item_6  0.022 0.022
+## Item_7  0.017 0.017
+## Item_8  0.016 0.016
+## Item_9  0.017 0.017
+## Item_10 0.014 0.014
+## Item_11 0.021 0.021
+## Item_12 0.013 0.013
+## Item_13 0.011 0.011
+## Item_14 0.004 0.004
+## Item_15 0.014 0.014
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(pooled_mod, dentype = &#39;empirical&#39;)
+</code></pre>
+
+<pre><code>## $D1
+##           P.0   P.1
+## Item_1  0.056 0.056
+## Item_2  0.018 0.018
+## Item_3  0.014 0.014
+## Item_4  0.019 0.019
+## Item_5  0.010 0.010
+## Item_6  0.021 0.021
+## Item_7  0.016 0.016
+## Item_8  0.017 0.017
+## Item_9  0.019 0.019
+## Item_10 0.018 0.018
+## Item_11 0.013 0.013
+## Item_12 0.014 0.014
+## Item_13 0.018 0.018
+## Item_14 0.009 0.009
+## Item_15 0.011 0.011
+## 
+## $D2
+##           P.0   P.1
+## Item_1  0.052 0.052
+## Item_2  0.021 0.021
+## Item_3  0.013 0.013
+## Item_4  0.016 0.016
+## Item_5  0.009 0.009
+## Item_6  0.022 0.022
+## Item_7  0.017 0.017
+## Item_8  0.016 0.016
+## Item_9  0.017 0.017
+## Item_10 0.014 0.014
+## Item_11 0.021 0.021
+## Item_12 0.013 0.013
+## Item_13 0.011 0.011
+## Item_14 0.004 0.004
+## Item_15 0.014 0.014
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(pooled_mod, flag = .03)
+</code></pre>
+
+<pre><code>## $D1
+##           P.0   P.1
+## Item_1  0.056 0.056
+## Item_2     NA    NA
+## Item_3     NA    NA
+## Item_4     NA    NA
+## Item_5     NA    NA
+## Item_6     NA    NA
+## Item_7     NA    NA
+## Item_8     NA    NA
+## Item_9     NA    NA
+## Item_10    NA    NA
+## Item_11    NA    NA
+## Item_12    NA    NA
+## Item_13    NA    NA
+## Item_14    NA    NA
+## Item_15    NA    NA
+## 
+## $D2
+##           P.0   P.1
+## Item_1  0.053 0.053
+## Item_2     NA    NA
+## Item_3     NA    NA
+## Item_4     NA    NA
+## Item_5     NA    NA
+## Item_6     NA    NA
+## Item_7     NA    NA
+## Item_8     NA    NA
+## Item_9     NA    NA
+## Item_10    NA    NA
+## Item_11    NA    NA
+## Item_12    NA    NA
+## Item_13    NA    NA
+## Item_14    NA    NA
+## Item_15    NA    NA
+</code></pre>
+
+<pre><code class="r"># more freely estimated model (item 1 has 2 parameters estimated)
+MGmod &lt;- multipleGroup(dat, 1, group=group,
+                       invariance = c(colnames(dat)[-1], &#39;free_mean&#39;, &#39;free_var&#39;))
+coef(MGmod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $D1
+## $items
+##            a1      d g u
+## Item_1  1.071  0.525 0 1
+## Item_2  1.178 -0.615 0 1
+## Item_3  1.031 -0.258 0 1
+## Item_4  0.933  0.902 0 1
+## Item_5  1.099  0.130 0 1
+## Item_6  0.455  0.627 0 1
+## Item_7  1.217  1.001 0 1
+## Item_8  0.926 -0.372 0 1
+## Item_9  0.905 -0.997 0 1
+## Item_10 0.692 -1.136 0 1
+## Item_11 0.967  1.222 0 1
+## Item_12 1.373 -0.222 0 1
+## Item_13 1.302  0.456 0 1
+## Item_14 1.079  0.421 0 1
+## Item_15 0.804 -0.080 0 1
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
+## 
+## 
+## $D2
+## $items
+##            a1      d g u
+## Item_1  2.100  0.083 0 1
+## Item_2  1.178 -0.615 0 1
+## Item_3  1.031 -0.258 0 1
+## Item_4  0.933  0.902 0 1
+## Item_5  1.099  0.130 0 1
+## Item_6  0.455  0.627 0 1
+## Item_7  1.217  1.001 0 1
+## Item_8  0.926 -0.372 0 1
+## Item_9  0.905 -0.997 0 1
+## Item_10 0.692 -1.136 0 1
+## Item_11 0.967  1.222 0 1
+## Item_12 1.373 -0.222 0 1
+## Item_13 1.302  0.456 0 1
+## Item_14 1.079  0.421 0 1
+## Item_15 0.804 -0.080 0 1
+## 
+## $means
+##     F1 
+## -0.036 
+## 
+## $cov
+##       F1
+## F1 1.033
+</code></pre>
+
+<pre><code class="r"># RMSD in item.1 now reduced (MG model accounts for DIF)
+RMSD_DIF(MGmod)
+</code></pre>
+
+<pre><code>## $D1
+##           P.0   P.1
+## Item_1  0.007 0.007
+## Item_2  0.015 0.015
+## Item_3  0.017 0.017
+## Item_4  0.015 0.015
+## Item_5  0.009 0.009
+## Item_6  0.020 0.020
+## Item_7  0.010 0.010
+## Item_8  0.020 0.020
+## Item_9  0.017 0.017
+## Item_10 0.018 0.018
+## Item_11 0.017 0.017
+## Item_12 0.010 0.010
+## Item_13 0.017 0.017
+## Item_14 0.013 0.013
+## Item_15 0.011 0.011
+## 
+## $D2
+##           P.0   P.1
+## Item_1  0.005 0.005
+## Item_2  0.020 0.020
+## Item_3  0.018 0.018
+## Item_4  0.011 0.011
+## Item_5  0.007 0.007
+## Item_6  0.022 0.022
+## Item_7  0.011 0.011
+## Item_8  0.017 0.017
+## Item_9  0.016 0.016
+## Item_10 0.016 0.016
+## Item_11 0.022 0.022
+## Item_12 0.008 0.008
+## Item_13 0.006 0.006
+## Item_14 0.009 0.009
+## Item_15 0.014 0.014
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(MGmod, flag = .03)
+</code></pre>
+
+<pre><code>## $D1
+##         P.0 P.1
+## Item_1   NA  NA
+## Item_2   NA  NA
+## Item_3   NA  NA
+## Item_4   NA  NA
+## Item_5   NA  NA
+## Item_6   NA  NA
+## Item_7   NA  NA
+## Item_8   NA  NA
+## Item_9   NA  NA
+## Item_10  NA  NA
+## Item_11  NA  NA
+## Item_12  NA  NA
+## Item_13  NA  NA
+## Item_14  NA  NA
+## Item_15  NA  NA
+## 
+## $D2
+##         P.0 P.1
+## Item_1   NA  NA
+## Item_2   NA  NA
+## Item_3   NA  NA
+## Item_4   NA  NA
+## Item_5   NA  NA
+## Item_6   NA  NA
+## Item_7   NA  NA
+## Item_8   NA  NA
+## Item_9   NA  NA
+## Item_10  NA  NA
+## Item_11  NA  NA
+## Item_12  NA  NA
+## Item_13  NA  NA
+## Item_14  NA  NA
+## Item_15  NA  NA
+</code></pre>
+
+<pre><code class="r">#################
+# polytomous example
+set.seed(12345)
+a &lt;- a2 &lt;- matrix(rlnorm(20,.2,.3))
+
+# for the graded model, ensure that there is enough space between the intercepts,
+# otherwise closer categories will not be selected often (minimum distance of 0.3 here)
+diffs &lt;- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+diffs &lt;- -(diffs - rowMeans(diffs))
+d &lt;- d2 &lt;- diffs + rnorm(20)
+
+# item 1 has slope + dif for first intercept parameter
+d2[1] &lt;- d[1] - .5
+a2[1] &lt;- a[1] + 1
+
+itemtype &lt;- rep(&#39;graded&#39;, nrow(a))
+N &lt;- 1000
+dataset1 &lt;- simdata(a, d, N, itemtype)
+dataset2 &lt;- simdata(a2, d2, N, itemtype)
+dat &lt;- rbind(dataset1, dataset2)
+group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
+
+#-----
+
+# fully pooled model
+pooled_mod &lt;- multipleGroup(dat, 1, group=group,
+         invariance = c(colnames(dat), &#39;free_mean&#39;, &#39;free_var&#39;))
+coef(pooled_mod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $D1
+## $items
+##            a1     d1     d2     d3     d4
+## Item_1  1.708  1.205  0.527 -0.453 -0.948
+## Item_2  1.517 -0.518 -0.992 -1.653 -2.434
+## Item_3  1.187  1.757  0.681  0.375 -0.638
+## Item_4  1.167  2.719  1.868  1.539  0.808
+## Item_5  1.410  0.485 -0.466 -0.867 -1.581
+## Item_6  0.683 -0.984 -1.396 -1.940 -2.910
+## Item_7  1.387  2.128  1.234  0.341 -0.386
+## Item_8  0.985  2.332  1.994  1.374  0.440
+## Item_9  1.043  1.597  0.850  0.024 -0.373
+## Item_10 0.906 -0.284 -1.281 -1.573 -2.038
+## Item_11 1.128  1.269  0.470 -0.460 -1.184
+## Item_12 2.016  0.268 -0.318 -1.128 -1.716
+## Item_13 1.356 -0.202 -0.835 -1.233 -2.016
+## Item_14 1.261  3.169  2.581  1.916  1.334
+## Item_15 0.928  2.307  1.956  1.151  0.268
+## Item_16 1.479  2.080  1.345  0.682 -0.305
+## Item_17 0.815  2.163  1.208  0.410 -0.557
+## Item_18 1.113  0.333 -0.481 -1.357 -2.072
+## Item_19 1.604  1.256  0.584  0.240 -0.145
+## Item_20 1.333  1.876  1.439  0.858  0.241
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
+## 
+## 
+## $D2
+## $items
+##            a1     d1     d2     d3     d4
+## Item_1  1.708  1.205  0.527 -0.453 -0.948
+## Item_2  1.517 -0.518 -0.992 -1.653 -2.434
+## Item_3  1.187  1.757  0.681  0.375 -0.638
+## Item_4  1.167  2.719  1.868  1.539  0.808
+## Item_5  1.410  0.485 -0.466 -0.867 -1.581
+## Item_6  0.683 -0.984 -1.396 -1.940 -2.910
+## Item_7  1.387  2.128  1.234  0.341 -0.386
+## Item_8  0.985  2.332  1.994  1.374  0.440
+## Item_9  1.043  1.597  0.850  0.024 -0.373
+## Item_10 0.906 -0.284 -1.281 -1.573 -2.038
+## Item_11 1.128  1.269  0.470 -0.460 -1.184
+## Item_12 2.016  0.268 -0.318 -1.128 -1.716
+## Item_13 1.356 -0.202 -0.835 -1.233 -2.016
+## Item_14 1.261  3.169  2.581  1.916  1.334
+## Item_15 0.928  2.307  1.956  1.151  0.268
+## Item_16 1.479  2.080  1.345  0.682 -0.305
+## Item_17 0.815  2.163  1.208  0.410 -0.557
+## Item_18 1.113  0.333 -0.481 -1.357 -2.072
+## Item_19 1.604  1.256  0.584  0.240 -0.145
+## Item_20 1.333  1.876  1.439  0.858  0.241
+## 
+## $means
+##     F1 
+## -0.022 
+## 
+## $cov
+##       F1
+## F1 1.182
+</code></pre>
+
+<pre><code class="r"># Item_1 fits poorly in several categories (RMSD &gt; .05)
+RMSD_DIF(pooled_mod)
+</code></pre>
+
+<pre><code>## $D1
+##           P.1   P.2   P.3   P.4   P.5
+## Item_1  0.088 0.057 0.024 0.023 0.037
+## Item_2  0.014 0.008 0.010 0.011 0.012
+## Item_3  0.019 0.019 0.015 0.017 0.027
+## Item_4  0.024 0.010 0.010 0.014 0.028
+## Item_5  0.030 0.017 0.006 0.023 0.021
+## Item_6  0.010 0.015 0.015 0.019 0.016
+## Item_7  0.016 0.015 0.020 0.015 0.019
+## Item_8  0.014 0.008 0.012 0.021 0.022
+## Item_9  0.019 0.031 0.022 0.014 0.028
+## Item_10 0.025 0.015 0.010 0.011 0.032
+## Item_11 0.012 0.017 0.015 0.011 0.015
+## Item_12 0.013 0.011 0.021 0.013 0.018
+## Item_13 0.023 0.013 0.018 0.021 0.014
+## Item_14 0.009 0.011 0.005 0.022 0.029
+## Item_15 0.015 0.011 0.016 0.010 0.028
+## Item_16 0.016 0.025 0.020 0.022 0.012
+## Item_17 0.025 0.015 0.020 0.023 0.031
+## Item_18 0.016 0.015 0.017 0.016 0.023
+## Item_19 0.019 0.022 0.016 0.013 0.013
+## Item_20 0.033 0.011 0.012 0.012 0.025
+## 
+## $D2
+##           P.1   P.2   P.3   P.4   P.5
+## Item_1  0.101 0.059 0.036 0.018 0.040
+## Item_2  0.007 0.013 0.005 0.012 0.011
+## Item_3  0.035 0.028 0.017 0.030 0.016
+## Item_4  0.011 0.020 0.012 0.011 0.027
+## Item_5  0.017 0.017 0.010 0.013 0.016
+## Item_6  0.026 0.011 0.007 0.016 0.014
+## Item_7  0.017 0.013 0.017 0.019 0.020
+## Item_8  0.021 0.016 0.016 0.017 0.030
+## Item_9  0.019 0.016 0.014 0.015 0.020
+## Item_10 0.020 0.014 0.014 0.018 0.028
+## Item_11 0.018 0.021 0.017 0.013 0.019
+## Item_12 0.013 0.010 0.022 0.007 0.015
+## Item_13 0.018 0.013 0.013 0.012 0.017
+## Item_14 0.026 0.007 0.023 0.012 0.008
+## Item_15 0.019 0.010 0.014 0.017 0.023
+## Item_16 0.015 0.019 0.019 0.018 0.013
+## Item_17 0.017 0.018 0.028 0.024 0.012
+## Item_18 0.024 0.022 0.025 0.017 0.028
+## Item_19 0.027 0.017 0.014 0.009 0.024
+## Item_20 0.025 0.013 0.014 0.011 0.018
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(pooled_mod, flag = .05)
+</code></pre>
+
+<pre><code>## $D1
+##           P.1   P.2 P.3 P.4 P.5
+## Item_1  0.088 0.057  NA  NA  NA
+## Item_2     NA    NA  NA  NA  NA
+## Item_3     NA    NA  NA  NA  NA
+## Item_4     NA    NA  NA  NA  NA
+## Item_5     NA    NA  NA  NA  NA
+## Item_6     NA    NA  NA  NA  NA
+## Item_7     NA    NA  NA  NA  NA
+## Item_8     NA    NA  NA  NA  NA
+## Item_9     NA    NA  NA  NA  NA
+## Item_10    NA    NA  NA  NA  NA
+## Item_11    NA    NA  NA  NA  NA
+## Item_12    NA    NA  NA  NA  NA
+## Item_13    NA    NA  NA  NA  NA
+## Item_14    NA    NA  NA  NA  NA
+## Item_15    NA    NA  NA  NA  NA
+## Item_16    NA    NA  NA  NA  NA
+## Item_17    NA    NA  NA  NA  NA
+## Item_18    NA    NA  NA  NA  NA
+## Item_19    NA    NA  NA  NA  NA
+## Item_20    NA    NA  NA  NA  NA
+## 
+## $D2
+##           P.1   P.2 P.3 P.4 P.5
+## Item_1  0.101 0.059  NA  NA  NA
+## Item_2     NA    NA  NA  NA  NA
+## Item_3     NA    NA  NA  NA  NA
+## Item_4     NA    NA  NA  NA  NA
+## Item_5     NA    NA  NA  NA  NA
+## Item_6     NA    NA  NA  NA  NA
+## Item_7     NA    NA  NA  NA  NA
+## Item_8     NA    NA  NA  NA  NA
+## Item_9     NA    NA  NA  NA  NA
+## Item_10    NA    NA  NA  NA  NA
+## Item_11    NA    NA  NA  NA  NA
+## Item_12    NA    NA  NA  NA  NA
+## Item_13    NA    NA  NA  NA  NA
+## Item_14    NA    NA  NA  NA  NA
+## Item_15    NA    NA  NA  NA  NA
+## Item_16    NA    NA  NA  NA  NA
+## Item_17    NA    NA  NA  NA  NA
+## Item_18    NA    NA  NA  NA  NA
+## Item_19    NA    NA  NA  NA  NA
+## Item_20    NA    NA  NA  NA  NA
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(pooled_mod, flag = .1, probfun = FALSE) # use expected score function
+</code></pre>
+
+<pre><code>## $D1
+##         S(theta)
+## Item_1     0.184
+## Item_2        NA
+## Item_3        NA
+## Item_4     0.106
+## Item_5        NA
+## Item_6        NA
+## Item_7        NA
+## Item_8        NA
+## Item_9        NA
+## Item_10       NA
+## Item_11       NA
+## Item_12       NA
+## Item_13       NA
+## Item_14       NA
+## Item_15       NA
+## Item_16       NA
+## Item_17    0.101
+## Item_18       NA
+## Item_19       NA
+## Item_20    0.102
+## 
+## $D2
+##         S(theta)
+## Item_1     0.211
+## Item_2        NA
+## Item_3        NA
+## Item_4        NA
+## Item_5        NA
+## Item_6        NA
+## Item_7        NA
+## Item_8        NA
+## Item_9        NA
+## Item_10       NA
+## Item_11       NA
+## Item_12       NA
+## Item_13       NA
+## Item_14       NA
+## Item_15       NA
+## Item_16       NA
+## Item_17       NA
+## Item_18       NA
+## Item_19       NA
+## Item_20       NA
+</code></pre>
+
+<pre><code class="r"># more freely estimated model (item 1 has more parameters estimated)
+MGmod &lt;- multipleGroup(dat, 1, group=group,
+                       invariance = c(colnames(dat)[-1], &#39;free_mean&#39;, &#39;free_var&#39;))
+coef(MGmod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $D1
+## $items
+##            a1     d1     d2     d3     d4
+## Item_1  1.293  1.471  0.527 -0.408 -0.925
+## Item_2  1.553 -0.527 -1.000 -1.659 -2.439
+## Item_3  1.226  1.753  0.675  0.368 -0.648
+## Item_4  1.201  2.716  1.864  1.534  0.802
+## Item_5  1.447  0.476 -0.475 -0.876 -1.590
+## Item_6  0.702 -0.989 -1.400 -1.944 -2.915
+## Item_7  1.426  2.122  1.227  0.333 -0.395
+## Item_8  1.009  2.325  1.987  1.368  0.433
+## Item_9  1.076  1.593  0.846  0.017 -0.380
+## Item_10 0.936 -0.290 -1.289 -1.581 -2.047
+## Item_11 1.157  1.261  0.463 -0.468 -1.191
+## Item_12 2.070  0.255 -0.331 -1.141 -1.728
+## Item_13 1.392 -0.211 -0.844 -1.242 -2.025
+## Item_14 1.290  3.158  2.571  1.905  1.324
+## Item_15 0.952  2.301  1.951  1.145  0.262
+## Item_16 1.516  2.070  1.334  0.671 -0.315
+## Item_17 0.835  2.158  1.202  0.405 -0.562
+## Item_18 1.141  0.326 -0.487 -1.363 -2.078
+## Item_19 1.643  1.245  0.573  0.230 -0.155
+## Item_20 1.371  1.869  1.432  0.851  0.234
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
+## 
+## 
+## $D2
+## $items
+##            a1     d1     d2     d3     d4
+## Item_1  2.523  0.906  0.519 -0.587 -1.079
+## Item_2  1.553 -0.527 -1.000 -1.659 -2.439
+## Item_3  1.226  1.753  0.675  0.368 -0.648
+## Item_4  1.201  2.716  1.864  1.534  0.802
+## Item_5  1.447  0.476 -0.475 -0.876 -1.590
+## Item_6  0.702 -0.989 -1.400 -1.944 -2.915
+## Item_7  1.426  2.122  1.227  0.333 -0.395
+## Item_8  1.009  2.325  1.987  1.368  0.433
+## Item_9  1.076  1.593  0.846  0.017 -0.380
+## Item_10 0.936 -0.290 -1.289 -1.581 -2.047
+## Item_11 1.157  1.261  0.463 -0.468 -1.191
+## Item_12 2.070  0.255 -0.331 -1.141 -1.728
+## Item_13 1.392 -0.211 -0.844 -1.242 -2.025
+## Item_14 1.290  3.158  2.571  1.905  1.324
+## Item_15 0.952  2.301  1.951  1.145  0.262
+## Item_16 1.516  2.070  1.334  0.671 -0.315
+## Item_17 0.835  2.158  1.202  0.405 -0.562
+## Item_18 1.141  0.326 -0.487 -1.363 -2.078
+## Item_19 1.643  1.245  0.573  0.230 -0.155
+## Item_20 1.371  1.869  1.432  0.851  0.234
+## 
+## $means
+##     F1 
+## -0.009 
+## 
+## $cov
+##       F1
+## F1 1.071
+</code></pre>
+
+<pre><code class="r"># RMSDs in Item_1 now reduced (MG model better accounts for DIF)
+RMSD_DIF(MGmod)
+</code></pre>
+
+<pre><code>## $D1
+##           P.1   P.2   P.3   P.4   P.5
+## Item_1  0.007 0.019 0.017 0.016 0.010
+## Item_2  0.016 0.009 0.009 0.011 0.015
+## Item_3  0.016 0.018 0.014 0.018 0.025
+## Item_4  0.021 0.010 0.010 0.014 0.022
+## Item_5  0.028 0.017 0.007 0.022 0.022
+## Item_6  0.009 0.016 0.015 0.018 0.015
+## Item_7  0.016 0.013 0.021 0.015 0.018
+## Item_8  0.012 0.008 0.012 0.022 0.021
+## Item_9  0.016 0.029 0.023 0.014 0.025
+## Item_10 0.023 0.015 0.010 0.011 0.031
+## Item_11 0.016 0.018 0.015 0.011 0.015
+## Item_12 0.010 0.010 0.022 0.012 0.020
+## Item_13 0.019 0.011 0.017 0.021 0.016
+## Item_14 0.012 0.010 0.005 0.023 0.032
+## Item_15 0.015 0.011 0.016 0.011 0.028
+## Item_16 0.013 0.024 0.020 0.022 0.015
+## Item_17 0.024 0.015 0.019 0.024 0.030
+## Item_18 0.019 0.016 0.017 0.016 0.020
+## Item_19 0.021 0.022 0.016 0.013 0.013
+## Item_20 0.029 0.011 0.012 0.012 0.022
+## 
+## $D2
+##           P.1   P.2   P.3   P.4   P.5
+## Item_1  0.026 0.003 0.019 0.007 0.010
+## Item_2  0.008 0.013 0.004 0.012 0.014
+## Item_3  0.032 0.027 0.016 0.031 0.014
+## Item_4  0.009 0.019 0.011 0.011 0.023
+## Item_5  0.021 0.017 0.010 0.014 0.017
+## Item_6  0.026 0.012 0.007 0.016 0.014
+## Item_7  0.020 0.013 0.019 0.018 0.018
+## Item_8  0.021 0.015 0.017 0.017 0.026
+## Item_9  0.017 0.015 0.015 0.015 0.019
+## Item_10 0.018 0.014 0.014 0.018 0.027
+## Item_11 0.020 0.021 0.017 0.013 0.017
+## Item_12 0.010 0.010 0.022 0.007 0.017
+## Item_13 0.015 0.012 0.013 0.013 0.014
+## Item_14 0.028 0.007 0.022 0.013 0.009
+## Item_15 0.018 0.010 0.015 0.017 0.024
+## Item_16 0.014 0.019 0.018 0.017 0.016
+## Item_17 0.017 0.017 0.028 0.025 0.013
+## Item_18 0.029 0.022 0.025 0.019 0.025
+## Item_19 0.027 0.016 0.015 0.010 0.024
+## Item_20 0.019 0.013 0.014 0.012 0.014
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(MGmod, flag = .05)
+</code></pre>
+
+<pre><code>## $D1
+##         P.1 P.2 P.3 P.4 P.5
+## Item_1   NA  NA  NA  NA  NA
+## Item_2   NA  NA  NA  NA  NA
+## Item_3   NA  NA  NA  NA  NA
+## Item_4   NA  NA  NA  NA  NA
+## Item_5   NA  NA  NA  NA  NA
+## Item_6   NA  NA  NA  NA  NA
+## Item_7   NA  NA  NA  NA  NA
+## Item_8   NA  NA  NA  NA  NA
+## Item_9   NA  NA  NA  NA  NA
+## Item_10  NA  NA  NA  NA  NA
+## Item_11  NA  NA  NA  NA  NA
+## Item_12  NA  NA  NA  NA  NA
+## Item_13  NA  NA  NA  NA  NA
+## Item_14  NA  NA  NA  NA  NA
+## Item_15  NA  NA  NA  NA  NA
+## Item_16  NA  NA  NA  NA  NA
+## Item_17  NA  NA  NA  NA  NA
+## Item_18  NA  NA  NA  NA  NA
+## Item_19  NA  NA  NA  NA  NA
+## Item_20  NA  NA  NA  NA  NA
+## 
+## $D2
+##         P.1 P.2 P.3 P.4 P.5
+## Item_1   NA  NA  NA  NA  NA
+## Item_2   NA  NA  NA  NA  NA
+## Item_3   NA  NA  NA  NA  NA
+## Item_4   NA  NA  NA  NA  NA
+## Item_5   NA  NA  NA  NA  NA
+## Item_6   NA  NA  NA  NA  NA
+## Item_7   NA  NA  NA  NA  NA
+## Item_8   NA  NA  NA  NA  NA
+## Item_9   NA  NA  NA  NA  NA
+## Item_10  NA  NA  NA  NA  NA
+## Item_11  NA  NA  NA  NA  NA
+## Item_12  NA  NA  NA  NA  NA
+## Item_13  NA  NA  NA  NA  NA
+## Item_14  NA  NA  NA  NA  NA
+## Item_15  NA  NA  NA  NA  NA
+## Item_16  NA  NA  NA  NA  NA
+## Item_17  NA  NA  NA  NA  NA
+## Item_18  NA  NA  NA  NA  NA
+## Item_19  NA  NA  NA  NA  NA
+## Item_20  NA  NA  NA  NA  NA
+</code></pre>
+
+<pre><code class="r">RMSD_DIF(MGmod, probfun = FALSE, flag = .1) # use expected score function
+</code></pre>
+
+<pre><code>## $D1
+##         S(theta)
+## Item_1        NA
+## Item_2        NA
+## Item_3        NA
+## Item_4        NA
+## Item_5        NA
+## Item_6        NA
+## Item_7        NA
+## Item_8        NA
+## Item_9        NA
+## Item_10       NA
+## Item_11       NA
+## Item_12       NA
+## Item_13       NA
+## Item_14       NA
+## Item_15       NA
+## Item_16       NA
+## Item_17    0.104
+## Item_18       NA
+## Item_19       NA
+## Item_20       NA
+## 
+## $D2
+##         S(theta)
+## Item_1        NA
+## Item_2        NA
+## Item_3        NA
+## Item_4        NA
+## Item_5        NA
+## Item_6        NA
+## Item_7        NA
+## Item_8        NA
+## Item_9        NA
+## Item_10       NA
+## Item_11       NA
+## Item_12       NA
+## Item_13       NA
+## Item_14       NA
+## Item_15       NA
+## Item_16       NA
+## Item_17       NA
+## Item_18       NA
+## Item_19       NA
+## Item_20       NA
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

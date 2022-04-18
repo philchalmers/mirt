@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute factor score estimates (a.k.a, ability estimates,...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for fscores {mirt}"><tr><td>fscores {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -32,14 +33,36 @@ for latent regression predictor effects.
 <h3>Usage</h3>
 
 <pre>
-fscores(object, method = "EAP", full.scores = TRUE, rotate = "oblimin",
-  Target = NULL, response.pattern = NULL, append_response.pattern = TRUE,
-  na.rm = FALSE, plausible.draws = 0, plausible.type = "normal",
-  quadpts = NULL, returnER = FALSE, return.acov = FALSE, mean = NULL,
-  cov = NULL, verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,
-  6), MI = 0, use_dentype_estimate = FALSE, QMC = FALSE,
-  custom_den = NULL, custom_theta = NULL, min_expected = 1,
-  converge_info = FALSE, max_theta = 20, start = NULL, ...)
+fscores(
+  object,
+  method = "EAP",
+  full.scores = TRUE,
+  rotate = "oblimin",
+  Target = NULL,
+  response.pattern = NULL,
+  append_response.pattern = FALSE,
+  na.rm = FALSE,
+  plausible.draws = 0,
+  plausible.type = "normal",
+  quadpts = NULL,
+  returnER = FALSE,
+  return.acov = FALSE,
+  mean = NULL,
+  cov = NULL,
+  covdata = NULL,
+  verbose = TRUE,
+  full.scores.SE = FALSE,
+  theta_lim = c(-6, 6),
+  MI = 0,
+  use_dentype_estimate = FALSE,
+  QMC = FALSE,
+  custom_den = NULL,
+  custom_theta = NULL,
+  min_expected = 1,
+  max_theta = 20,
+  start = NULL,
+  ...
+)
 </pre>
 
 
@@ -90,12 +113,12 @@ for each response pattern in the data is returned (default)</p>
 <tr valign="top"><td><code>rotate</code></td>
 <td>
 <p>prior rotation to be used when estimating the factor scores. See
-<code><a href="summary-method.html">summary-method</a></code> for details. If the object is not an exploratory model
+<code><a href="../../mirt/help/summary-method.html">summary-method</a></code> for details. If the object is not an exploratory model
 then this argument is ignored</p>
 </td></tr>
 <tr valign="top"><td><code>Target</code></td>
 <td>
-<p>target rotation; see <code><a href="summary-method.html">summary-method</a></code> for details</p>
+<p>target rotation; see <code><a href="../../mirt/help/summary-method.html">summary-method</a></code> for details</p>
 </td></tr>
 <tr valign="top"><td><code>response.pattern</code></td>
 <td>
@@ -117,7 +140,7 @@ to ensure that the sum-scores correspond to the same composite score</p>
 <td>
 <p>number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
-with latent regression predictors (see <code><a href="mirt.html">mirt</a></code> for details), but can
+with latent regression predictors (see <code><a href="../../mirt/help/mirt.html">mirt</a></code> for details), but can
 also be generated when no predictor variables were modeled. If <code>plausible.draws</code>
 is greater than 0 a list of plausible values will be returned</p>
 </td></tr>
@@ -125,7 +148,7 @@ is greater than 0 a list of plausible values will be returned</p>
 <td>
 <p>type of plausible values to obtain. Can be either <code>'normal'</code> (default)
 to use a normal approximation based on the ACOV matrix, or <code>'MH'</code> to obtain Metropolis-Hastings
-samples from the posterior (silently passes object to <code><a href="mirt.html">mirt</a></code>, therefore arguments like
+samples from the posterior (silently passes object to <code><a href="../../mirt/help/mirt.html">mirt</a></code>, therefore arguments like
 <code>technical</code> can be supplied to increase the number of burn-in draws and discarded samples)</p>
 </td></tr>
 <tr valign="top"><td><code>quadpts</code></td>
@@ -155,6 +178,12 @@ from the computed mirt object will be used</p>
 <td>
 <p>a custom matrix of the latent variable covariance matrix. If NULL, the default for
 'group' values from the computed mirt object will be used</p>
+</td></tr>
+<tr valign="top"><td><code>covdata</code></td>
+<td>
+<p>when latent regression model has been fitted, and the <code>response.pattern</code>
+input is used to score individuals, then this argument is used to include the latent regression
+covariate terms for each row vector supplied to <code>response.pattern</code></p>
 </td></tr>
 <tr valign="top"><td><code>verbose</code></td>
 <td>
@@ -210,13 +239,6 @@ each column corresponds to the respective dimension in the model</p>
 to collapse across the conditioned total scores until the expected values are greater than this value. Note
 that this only affect the goodness of fit tests and not the returned EAP for sum scores table</p>
 </td></tr>
-<tr valign="top"><td><code>converge_info</code></td>
-<td>
-<p>logical; include a column in the return objects containing a logical for each
-response pattern indicating whether a maximum value was found (not relevant non-iterative methods,
-such as EAP and EAPsum). Value is a reflection of the <code>code</code> element from <code><a href="../../stats/html/nlm.html">nlm</a></code>
-(e.g., 1 indicates convergence)</p>
-</td></tr>
 <tr valign="top"><td><code>max_theta</code></td>
 <td>
 <p>the maximum/minimum value any given factor score estimate will achieve using
@@ -242,9 +264,9 @@ estimates (unidimensional models only). Must be in the form that matches
 the original data matrix with scores appended to the rightmost column, or the scores only. By
 default the latent means and covariances are determined from the estimated object,
 though these can be overwritten. Iterative estimation methods can be estimated
-in parallel to decrease estimation times if a <code><a href="mirtCluster.html">mirtCluster</a></code> object is available.
+in parallel to decrease estimation times if a <code><a href="../../mirt/help/mirtCluster.html">mirtCluster</a></code> object is available.
 </p>
-<p>If the input object is a discrete latent class object estimated from <code><a href="mdirt.html">mdirt</a></code>
+<p>If the input object is a discrete latent class object estimated from <code><a href="../../mirt/help/mdirt.html">mdirt</a></code>
 then the returned results will be with respect to the posterior classification for each
 individual. The method inputs for <code>'DiscreteClass'</code> objects may only be <code>'EAP'</code>,
 for posterior classification of each response pattern, or <code>'EAPsum'</code> for posterior
@@ -263,11 +285,11 @@ the <code>mirtCAT</code> package and the associated JSS paper (Chalmers, 2016).
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Chalmers, R. P. (2016). Generating Adaptive and Non-Adaptive Test Interfaces for
 Multidimensional Item Response Theory Applications. <em>Journal of Statistical Software, 71</em>(5),
-1-39. doi: <a href="http://doi.org/10.18637/jss.v071.i05">10.18637/jss.v071.i05</a>
+1-39. doi: <a href="https://doi.org/10.18637/jss.v071.i05">10.18637/jss.v071.i05</a>
 </p>
 <p>Embretson, S. E. &amp; Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
 </p>
@@ -282,7 +304,7 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 
 <h3>See Also</h3>
 
-<p><code><a href="averageMI.html">averageMI</a></code>
+<p><code><a href="../../mirt/help/averageMI.html">averageMI</a></code>
 </p>
 
 
@@ -358,22 +380,21 @@ head(fullscores)
 fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4))
 </code></pre>
 
-<pre><code>##      Comfort Work Future Benefit         F1     SE_F1
-## [1,]       1    2      3       4 -0.3704194 0.6054169
+<pre><code>##              F1     SE_F1
+## [1,] -0.3704194 0.6054169
 </code></pre>
 
 <pre><code class="r">#or matrix
 fscores(mod, method=&#39;MAP&#39;, response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 </code></pre>
 
-<pre><code>##      Comfort Work Future Benefit         F1     SE_F1
-## [1,]       1    2      3       4 -0.3704194 0.6054169
-## [2,]       2    2      1       3 -1.6937559 0.5773972
+<pre><code>##              F1     SE_F1
+## [1,] -0.3704194 0.6054169
+## [2,] -1.6937559 0.5773972
 </code></pre>
 
 <pre><code class="r"># return only the scores and their SEs
-fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4),
-  append_response.pattern=FALSE)
+fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4))
 </code></pre>
 
 <pre><code>##              F1     SE_F1
@@ -595,31 +616,31 @@ fscores(mod, method=&#39;MAP&#39;, cov = matrix(1000), full.scores = FALSE)
 fscores(mod, method = &#39;EAPsum&#39;, full.scores = FALSE)
 </code></pre>
 
-<pre><code>##       df       X2       p.X2 rxx_Theta.1
-## stats 10 16.31202 0.09104204   0.6241528
+<pre><code>##       df       X2       p.X2    rxx_F1
+## stats 10 16.31202 0.09104204 0.6241528
 </code></pre>
 
-<pre><code>##    Sum.Scores       Theta  SE.Theta observed   expected
-## 4           4 -2.74926868 0.6293569        2  0.1241449
-## 5           5 -2.43096708 0.6167669        1  0.7902670
-## 6           6 -2.08095804 0.6101826        2  2.7598787
-## 7           7 -1.71797996 0.6019326        1  7.2515944
-## 8           8 -1.36354348 0.5979810       11 15.8925644
-## 9           9 -1.01186764 0.6038596       32 29.6740255
-## 10         10 -0.64926712 0.6101301       58 48.3632492
-## 11         11 -0.28688279 0.6048405       70 68.4845962
-## 12         12  0.08240446 0.5996636       91 80.5530280
-## 13         13  0.48709473 0.6133534       56 65.6680929
-## 14         14  0.93406958 0.6170256       36 42.6372130
-## 15         15  1.38421709 0.6218261       20 22.3313442
-## 16         16  1.85351394 0.6544099       12  7.4700016
+<pre><code>##    Sum.Scores          F1     SE_F1 observed   expected   std.res
+## 4           4 -2.74926868 0.6293569        2  0.1241449 5.3239609
+## 5           5 -2.43096708 0.6167669        1  0.7902670 0.2359282
+## 6           6 -2.08095804 0.6101826        2  2.7598787 0.4574033
+## 7           7 -1.71797996 0.6019326        1  7.2515944 2.3215286
+## 8           8 -1.36354348 0.5979810       11 15.8925644 1.2272684
+## 9           9 -1.01186764 0.6038596       32 29.6740255 0.4269890
+## 10         10 -0.64926712 0.6101301       58 48.3632492 1.3857117
+## 11         11 -0.28688279 0.6048405       70 68.4845962 0.1831184
+## 12         12  0.08240446 0.5996636       91 80.5530280 1.1639907
+## 13         13  0.48709473 0.6133534       56 65.6680929 1.1930636
+## 14         14  0.93406958 0.6170256       36 42.6372130 1.0164625
+## 15         15  1.38421709 0.6218261       20 22.3313442 0.4933430
+## 16         16  1.85351394 0.6544099       12  7.4700016 1.6574396
 </code></pre>
 
 <pre><code class="r">#WLE estimation, run in parallel using available cores
 mirtCluster()
 </code></pre>
 
-<pre><code>## mirtCluster() has already been defined
+<pre><code>## mirtCluster() previously defined for 2 clusters
 </code></pre>
 
 <pre><code class="r">head(fscores(mod, method=&#39;WLE&#39;, full.scores = FALSE))
@@ -650,12 +671,12 @@ head(fs)
 </code></pre>
 
 <pre><code>##               F1
-## [1,]  0.38298525
-## [2,]  0.04023723
-## [3,] -0.88098449
-## [4,] -0.88098449
-## [5,]  0.70264182
-## [6,]  0.66007674
+## [1,]  0.40518253
+## [2,]  0.04747888
+## [3,] -0.86784582
+## [4,] -0.86784582
+## [5,]  0.71817742
+## [6,]  0.67175531
 </code></pre>
 
 <pre><code class="r"># plausible values for future work
@@ -664,24 +685,24 @@ lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 
 <pre><code>## [[1]]
-##         mean          var          min          max 
-## -0.007522653  1.002499808 -3.328861557  2.812620339 
+##        mean         var         min         max 
+##  0.01395285  1.00596682 -3.37892778  2.93185752 
 ## 
 ## [[2]]
 ##        mean         var         min         max 
-##  0.01507731  1.01055758 -3.63042910  3.24854454 
+##  0.04761363  0.98738823 -2.95798606  3.42276637 
 ## 
 ## [[3]]
-##        mean         var         min         max 
-##  0.04019166  1.04806862 -4.06894078  2.81924633 
+##         mean          var          min          max 
+##  0.007217975  0.910389431 -3.812503706  2.554637190 
 ## 
 ## [[4]]
-##         mean          var          min          max 
-##  0.007133171  0.935667264 -3.769091279  2.820258490 
+##        mean         var         min         max 
+## -0.03503203  0.98809100 -3.82689154  2.47504011 
 ## 
 ## [[5]]
-##       mean        var        min        max 
-## -0.0618064  0.9496245 -2.9523143  2.9582835
+##        mean         var         min         max 
+## -0.02258803  0.97464777 -3.72917079  2.90917841
 </code></pre>
 
 <pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
@@ -723,9 +744,100 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 ## [6,]       2    1      2       4 -1.2729394 0.5680222
 </code></pre>
 
+<pre><code class="r">####################
+# scoring via response.pattern input (with latent regression structure)
+#simulate data
+set.seed(1234)
+N &lt;- 1000
+
+# covariates
+X1 &lt;- rnorm(N); X2 &lt;- rnorm(N)
+covdata &lt;- data.frame(X1, X2)
+Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+
+#items and response data
+a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
+dat &lt;- simdata(a, d, 1000, itemtype = &#39;2PL&#39;, Theta=Theta)
+
+#conditional model using X1 and X2 as predictors of Theta
+mod &lt;- mirt(dat, 1, &#39;Rasch&#39;, covdata=covdata, formula = ~ X1 + X2)
+coef(mod, simplify=TRUE)
+</code></pre>
+
+<pre><code>## $items
+##         a1      d g u
+## Item_1   1 -0.409 0 1
+## Item_2   1  0.491 0 1
+## Item_3   1  0.313 0 1
+## Item_4   1  1.965 0 1
+## Item_5   1  1.753 0 1
+## Item_6   1 -0.246 0 1
+## Item_7   1 -1.077 0 1
+## Item_8   1  0.533 0 1
+## Item_9   1 -1.232 0 1
+## Item_10  1  0.603 0 1
+## Item_11  1 -0.404 0 1
+## Item_12  1  1.238 0 1
+## Item_13  1  1.033 0 1
+## Item_14  1  1.524 0 1
+## Item_15  1 -0.548 0 1
+## Item_16  1  2.075 0 1
+## Item_17  1 -0.695 0 1
+## Item_18  1 -1.200 0 1
+## Item_19  1  0.121 0 1
+## Item_20  1  0.523 0 1
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##       F1
+## F1 0.215
+## 
+## $lr.betas
+##                 F1
+## (Intercept)  0.000
+## X1           0.527
+## X2          -1.036
+</code></pre>
+
+<pre><code class="r"># all EAP estimates that include latent regression information
+fs &lt;- fscores(mod, full.scores.SE=TRUE)
+head(fs)
+</code></pre>
+
+<pre><code>##              F1     SE_F1
+## [1,]  0.3085525 0.3442170
+## [2,] -0.3474238 0.3408507
+## [3,]  2.0484681 0.3903336
+## [4,] -1.9418770 0.3670519
+## [5,] -0.7631629 0.3432706
+## [6,]  2.1019773 0.3922135
+</code></pre>
+
+<pre><code class="r"># score only two response patterns
+rp &lt;- dat[1:2, ]
+cd &lt;- covdata[1:2, ]
+
+fscores(mod, response.pattern=rp, covdata=cd)
+</code></pre>
+
+<pre><code>##              F1     SE_F1
+## [1,]  0.3085525 0.3442170
+## [2,] -0.3474238 0.3408507
+</code></pre>
+
+<pre><code class="r">fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
+</code></pre>
+
+<pre><code>##              F1     SE_F1
+## [1,] -0.3474238 0.3408507
+</code></pre>
+
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

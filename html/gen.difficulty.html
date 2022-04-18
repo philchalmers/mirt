@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Generalized item difficulty summaries</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body><div class="container">
+
+<table width="100%" summary="page for gen.difficulty {mirt}"><tr><td>gen.difficulty {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Generalized item difficulty summaries</h2>
+
+<h3>Description</h3>
+
+<p>Function provides the four generalized item difficulty representations
+for polytomous response models described by Ali, Chang, and Anderson (2015).
+These estimates are used to gauge how difficult a polytomous item may be.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gen.difficulty(mod, type = "IRF", interval = c(-30, 30), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>mod</code></td>
+<td>
+<p>a single factor model estimated by <code><a href="../../mirt/help/mirt.html">mirt</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of generalized difficulty parameter to report.
+Can be <code>'IRF'</code> to use the item response function (default),
+<code>'mean'</code> to find the average of the difficulty estimates,
+<code>'median'</code> the median of the difficulty estimates, and
+<code>'trimmed'</code> to find the trimmed mean after removing the first
+and last difficulty estimates</p>
+</td></tr>
+<tr valign="top"><td><code>interval</code></td>
+<td>
+<p>interval range to search for <code>'IRF'</code> type</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to pass to <code><a href="../../stats/html/uniroot.html">uniroot</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Ali, U. S., Chang, H.-H., &amp; Anderson, C. J. (2015). <em>Location indices for ordinal
+polytomous items based on item response theory</em> (Research Report No. RR-15-20).
+Princeton, NJ: Educational Testing Service. http://dx.doi.org/10.1002/ets2.12065
+</p>
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="r">## No test: 
+
+mod &lt;- mirt(Science, 1)
+coef(mod, simplify=TRUE, IRTpars = TRUE)$items
+</code></pre>
+
+<pre><code>##                a        b1         b2        b3
+## Comfort 1.041755 -4.669193 -2.5341299 1.4072541
+## Work    1.225962 -2.385068 -0.7350678 1.8488053
+## Future  2.293372 -2.282226 -0.9652918 0.8562529
+## Benefit 1.094915 -3.057698 -0.9056673 1.5419094
+</code></pre>
+
+<pre><code class="r">gen.difficulty(mod)
+</code></pre>
+
+<pre><code>##    Comfort       Work     Future    Benefit 
+## -2.3089094 -0.5741303 -0.9207845 -0.8530161
+</code></pre>
+
+<pre><code class="r">gen.difficulty(mod, type = &#39;mean&#39;)
+</code></pre>
+
+<pre><code>##    Comfort       Work     Future    Benefit 
+## -1.9320231 -0.4237770 -0.7970883 -0.8071519
+</code></pre>
+
+<pre><code class="r"># also works for dichotomous items (though this is unnecessary)
+dat &lt;- expand.table(LSAT7)
+mod &lt;- mirt(dat, 1)
+coef(mod, simplify=TRUE, IRTpars = TRUE)$items
+</code></pre>
+
+<pre><code>##                a          b g u
+## Item.1 0.9879254 -1.8787456 0 1
+## Item.2 1.0808847 -0.7475160 0 1
+## Item.3 1.7058006 -1.0576962 0 1
+## Item.4 0.7651853 -0.6351358 0 1
+## Item.5 0.7357980 -2.5204102 0 1
+</code></pre>
+
+<pre><code class="r">gen.difficulty(mod)
+</code></pre>
+
+<pre><code>##     Item.1     Item.2     Item.3     Item.4     Item.5 
+## -1.8787448 -0.7475182 -1.0576961 -0.6351601 -2.5204127
+</code></pre>
+
+<pre><code class="r">gen.difficulty(mod, type = &#39;mean&#39;)
+</code></pre>
+
+<pre><code>##     Item.1     Item.2     Item.3     Item.4     Item.5 
+## -1.8787456 -0.7475160 -1.0576962 -0.6351358 -2.5204102
+</code></pre>
+
+<pre><code class="r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Person fit statistics</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for personfit {mirt}"><tr><td>personfit {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -15,8 +16,8 @@
 <h3>Description</h3>
 
 <p><code>personfit</code> calculates the Zh values from Drasgow, Levine and Williams (1985) for
-unidimensional and multidimensional models. For Rasch models infit and outfit statistics are
-also produced. The returned object is a <code>data.frame</code>
+unidimensional and multidimensional models, as well as the infit and outfit statistics.
+The returned object is a <code>data.frame</code>
 consisting either of the tabulated data or full data with the statistics appended to the
 rightmost columns.
 </p>
@@ -38,7 +39,7 @@ personfit(x, method = "EAP", Theta = NULL, stats.only = TRUE, ...)
 </td></tr>
 <tr valign="top"><td><code>method</code></td>
 <td>
-<p>type of factor score estimation method. See <code><a href="fscores.html">fscores</a></code> for more detail</p>
+<p>type of factor score estimation method. See <code><a href="../../mirt/help/fscores.html">fscores</a></code> for more detail</p>
 </td></tr>
 <tr valign="top"><td><code>Theta</code></td>
 <td>
@@ -68,7 +69,7 @@ response pattern?</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Drasgow, F., Levine, M. V., &amp; Williams, E. A. (1985). Appropriateness measurement with
 polychotomous item response models and standardized indices.
@@ -83,7 +84,7 @@ in IRT. <em>Applied Psychological Measurement, 14</em>, 127-137.
 
 <h3>See Also</h3>
 
-<p><code><a href="itemfit.html">itemfit</a></code>
+<p><code><a href="../../mirt/help/itemfit.html">itemfit</a></code>
 </p>
 
 
@@ -103,13 +104,13 @@ fit &lt;- personfit(x)
 head(fit)
 </code></pre>
 
-<pre><code>##           Zh
-## 1  0.9931930
-## 2  0.1018533
-## 3 -0.5419248
-## 4 -0.2966258
-## 5  0.4062379
-## 6  1.4271776
+<pre><code>##      outfit    z.outfit     infit     z.infit         Zh
+## 1 0.7835734 -0.94768390 0.8462921 -0.99312370  0.9931930
+## 2 0.9315817 -0.19338124 0.9969412  0.03053164  0.1018533
+## 3 1.0439329  0.29243223 1.1359864  0.69698266 -0.5419248
+## 4 0.9787472  0.05365473 1.0683997  0.49215980 -0.2966258
+## 5 0.6709576 -0.13511027 0.9337690 -0.21541734  0.4062379
+## 6 0.6963001 -0.98278892 0.7745815 -1.62208454  1.4271776
 </code></pre>
 
 <pre><code class="r">#using precomputed Theta
@@ -117,13 +118,13 @@ Theta &lt;- fscores(x, method = &#39;MAP&#39;, full.scores = TRUE)
 head(personfit(x, Theta=Theta))
 </code></pre>
 
-<pre><code>##           Zh
-## 1  0.9942162
-## 2  0.1051419
-## 3 -0.4409453
-## 4 -0.2828724
-## 5  0.6001267
-## 6  1.4404214
+<pre><code>##      outfit    z.outfit     infit     z.infit         Zh
+## 1 0.7835072 -0.95313963 0.8461085 -0.99335508  0.9942162
+## 2 0.9317866 -0.19591803 0.9963089  0.02651792  0.1051419
+## 3 1.0135711  0.22658344 1.1089397  0.60318146 -0.4409453
+## 4 0.9764707  0.04248488 1.0661954  0.47983508 -0.2828724
+## 5 0.6542654 -0.13120882 0.8871427 -0.46729625  0.6001267
+## 6 0.6959692 -1.01558405 0.7724884 -1.63461432  1.4404214
 </code></pre>
 
 <pre><code class="r">#multiple group Rasch model example
@@ -145,8 +146,8 @@ coef(mod_Rasch, simplify=TRUE)
 ## $items
 ##         a1      d g u
 ## Item_1   1  0.392 0 1
-## Item_2   1  0.421 0 1
-## Item_3   1 -0.035 0 1
+## Item_2   1  0.422 0 1
+## Item_3   1 -0.034 0 1
 ## Item_4   1 -0.220 0 1
 ## Item_5   1  0.392 0 1
 ## Item_6   1 -1.198 0 1
@@ -172,21 +173,21 @@ coef(mod_Rasch, simplify=TRUE)
 ## $D2
 ## $items
 ##         a1      d g u
-## Item_1   1  0.471 0 1
-## Item_2   1  0.413 0 1
-## Item_3   1 -0.123 0 1
-## Item_4   1 -0.399 0 1
-## Item_5   1  0.413 0 1
-## Item_6   1 -1.067 0 1
-## Item_7   1  0.413 0 1
-## Item_8   1 -0.247 0 1
-## Item_9   1 -0.174 0 1
-## Item_10  1 -0.640 0 1
-## Item_11  1 -0.009 0 1
-## Item_12  1  1.123 0 1
-## Item_13  1  0.261 0 1
-## Item_14  1  0.360 0 1
-## Item_15  1 -0.537 0 1
+## Item_1   1  0.317 0 1
+## Item_2   1  0.584 0 1
+## Item_3   1 -0.198 0 1
+## Item_4   1 -0.214 0 1
+## Item_5   1  0.402 0 1
+## Item_6   1 -1.347 0 1
+## Item_7   1  0.381 0 1
+## Item_8   1 -0.329 0 1
+## Item_9   1 -0.235 0 1
+## Item_10  1 -0.761 0 1
+## Item_11  1 -0.282 0 1
+## Item_12  1  1.208 0 1
+## Item_13  1  0.233 0 1
+## Item_14  1  0.291 0 1
+## Item_15  1 -0.483 0 1
 ## 
 ## $means
 ## F1 
@@ -194,7 +195,7 @@ coef(mod_Rasch, simplify=TRUE)
 ## 
 ## $cov
 ##       F1
-## F1 1.464
+## F1 1.501
 </code></pre>
 
 <pre><code class="r">pf &lt;- personfit(mod_Rasch, method=&#39;MAP&#39;)
@@ -202,17 +203,17 @@ head(pf)
 </code></pre>
 
 <pre><code>##      outfit    z.outfit     infit     z.infit         Zh
-## 1 1.1366820  0.88135170 1.0779259  0.62077020 -0.6799647
-## 2 0.9338326 -0.07995345 0.9711313 -0.01293448  0.1247230
-## 3 0.7476346 -0.68481894 0.8478365 -0.48758078  0.6198994
-## 4 1.0974680  0.42845303 1.1108062  0.54327414 -0.4527551
-## 5 0.9951124  0.05173539 1.0384492  0.27241674 -0.1407463
-## 6 0.6611781 -1.27330009 0.7182209 -1.29180661  1.2367474
+## 1 1.1366866  0.88137265 1.0779273  0.62077743 -0.6799768
+## 2 0.9338309 -0.07996171 0.9711302 -0.01294034  0.1247288
+## 3 0.7476339 -0.68483021 0.8478349 -0.48759381  0.6199101
+## 4 1.0974700  0.42845794 1.1108081  0.54327990 -0.4527610
+## 5 0.9951134  0.05173920 1.0384491  0.27241728 -0.1407484
+## 6 0.6611782 -1.27328763 0.7182219 -1.29179396  1.2367374
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

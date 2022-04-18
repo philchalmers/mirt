@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert ordered Likert-scale responses (character or factors)...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for likert2int {mirt}"><tr><td>likert2int {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -59,7 +60,7 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>See Also</h3>
 
-<p><code><a href="key2binary.html">key2binary</a></code>, <code><a href="poly2dich.html">poly2dich</a></code>
+<p><code><a href="../../mirt/help/key2binary.html">key2binary</a></code>, <code><a href="../../mirt/help/poly2dich.html">poly2dich</a></code>
 </p>
 
 
@@ -83,31 +84,31 @@ head(dat1)
 </code></pre>
 
 <pre><code>##      [,1]                [,2]                [,3]               
-## [1,] &quot;Neutral&quot;           &quot;Agree&quot;             NA                 
-## [2,] &quot;Disagree&quot;          NA                  &quot;Agree&quot;            
-## [3,] &quot;Disagree&quot;          &quot;Strongly Agree&quot;    NA                 
-## [4,] &quot;Strongly Agree&quot;    &quot;Neutral&quot;           &quot;Strongly Disagree&quot;
-## [5,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot;
-## [6,] &quot;Strongly Disagree&quot; &quot;Neutral&quot;           &quot;Strongly Agree&quot;   
-##      [,4]                [,5]            
-## [1,] &quot;Strongly Agree&quot;    &quot;Agree&quot;         
-## [2,] &quot;Disagree&quot;          &quot;Neutral&quot;       
-## [3,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
-## [4,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
-## [5,] &quot;Agree&quot;             &quot;Strongly Agree&quot;
-## [6,] &quot;Neutral&quot;           &quot;Agree&quot;
+## [1,] &quot;Agree&quot;             &quot;Strongly Agree&quot;    NA                 
+## [2,] &quot;Neutral&quot;           NA                  &quot;Neutral&quot;          
+## [3,] &quot;Strongly Agree&quot;    &quot;Disagree&quot;          NA                 
+## [4,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Agree&quot;            
+## [5,] &quot;Strongly Disagree&quot; &quot;Agree&quot;             &quot;Strongly Disagree&quot;
+## [6,] &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot; &quot;Neutral&quot;          
+##      [,4]             [,5]               
+## [1,] &quot;Disagree&quot;       &quot;Agree&quot;            
+## [2,] &quot;Strongly Agree&quot; &quot;Strongly Disagree&quot;
+## [3,] &quot;Strongly Agree&quot; &quot;Neutral&quot;          
+## [4,] &quot;Disagree&quot;       &quot;Strongly Agree&quot;   
+## [5,] &quot;Disagree&quot;       &quot;Strongly Agree&quot;   
+## [6,] &quot;Agree&quot;          &quot;Disagree&quot;
 </code></pre>
 
 <pre><code class="r">head(intdat1)
 </code></pre>
 
 <pre><code>##   V1 V2 V3 V4 V5
-## 1  3  1 NA  4  1
-## 2  2 NA  1  2  3
-## 3  2  4 NA  5  1
-## 4  4  3  5  5  1
-## 5  2  5  5  1  4
-## 6  5  3  4  3  1
+## 1 NA NA NA NA NA
+## 2 NA NA NA NA NA
+## 3 NA NA NA NA NA
+## 4 NA NA NA NA NA
+## 5 NA NA NA NA NA
+## 6 NA NA NA NA NA
 </code></pre>
 
 <pre><code class="r"># more useful with explicit levels
@@ -118,31 +119,31 @@ head(dat1)
 </code></pre>
 
 <pre><code>##      [,1]                [,2]                [,3]               
-## [1,] &quot;Neutral&quot;           &quot;Agree&quot;             NA                 
-## [2,] &quot;Disagree&quot;          NA                  &quot;Agree&quot;            
-## [3,] &quot;Disagree&quot;          &quot;Strongly Agree&quot;    NA                 
-## [4,] &quot;Strongly Agree&quot;    &quot;Neutral&quot;           &quot;Strongly Disagree&quot;
-## [5,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot;
-## [6,] &quot;Strongly Disagree&quot; &quot;Neutral&quot;           &quot;Strongly Agree&quot;   
-##      [,4]                [,5]            
-## [1,] &quot;Strongly Agree&quot;    &quot;Agree&quot;         
-## [2,] &quot;Disagree&quot;          &quot;Neutral&quot;       
-## [3,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
-## [4,] &quot;Strongly Disagree&quot; &quot;Agree&quot;         
-## [5,] &quot;Agree&quot;             &quot;Strongly Agree&quot;
-## [6,] &quot;Neutral&quot;           &quot;Agree&quot;
+## [1,] &quot;Agree&quot;             &quot;Strongly Agree&quot;    NA                 
+## [2,] &quot;Neutral&quot;           NA                  &quot;Neutral&quot;          
+## [3,] &quot;Strongly Agree&quot;    &quot;Disagree&quot;          NA                 
+## [4,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Agree&quot;            
+## [5,] &quot;Strongly Disagree&quot; &quot;Agree&quot;             &quot;Strongly Disagree&quot;
+## [6,] &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot; &quot;Neutral&quot;          
+##      [,4]             [,5]               
+## [1,] &quot;Disagree&quot;       &quot;Agree&quot;            
+## [2,] &quot;Strongly Agree&quot; &quot;Strongly Disagree&quot;
+## [3,] &quot;Strongly Agree&quot; &quot;Neutral&quot;          
+## [4,] &quot;Disagree&quot;       &quot;Strongly Agree&quot;   
+## [5,] &quot;Disagree&quot;       &quot;Strongly Agree&quot;   
+## [6,] &quot;Agree&quot;          &quot;Disagree&quot;
 </code></pre>
 
 <pre><code class="r">head(intdat1)
 </code></pre>
 
 <pre><code>##   V1 V2 V3 V4 V5
-## 1  3  4 NA  5  4
-## 2  2 NA  4  2  3
-## 3  2  5 NA  1  4
-## 4  5  3  1  1  4
-## 5  2  1  1  4  5
-## 6  1  3  5  3  4
+## 1  4  5 NA  2  4
+## 2  3 NA  3  5  1
+## 3  5  2 NA  5  3
+## 4  2  1  4  2  5
+## 5  1  4  1  2  5
+## 6  1  1  3  4  2
 </code></pre>
 
 <pre><code class="r"># second data
@@ -152,24 +153,24 @@ head(dat2)
 </code></pre>
 
 <pre><code>##      [,1] [,2] [,3] [,4] [,5]
-## [1,] &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; &quot;SA&quot; &quot;SA&quot;
-## [2,] &quot;N&quot;  &quot;D&quot;  &quot;A&quot;  &quot;SD&quot; &quot;SD&quot;
-## [3,] &quot;SA&quot; &quot;N&quot;  &quot;A&quot;  &quot;N&quot;  &quot;A&quot; 
-## [4,] &quot;D&quot;  &quot;N&quot;  &quot;A&quot;  &quot;A&quot;  &quot;SD&quot;
-## [5,] &quot;SA&quot; &quot;N&quot;  &quot;D&quot;  &quot;SD&quot; &quot;SA&quot;
-## [6,] &quot;A&quot;  &quot;SD&quot; &quot;D&quot;  &quot;A&quot;  &quot;SD&quot;
+## [1,] &quot;N&quot;  &quot;SD&quot; &quot;SA&quot; &quot;N&quot;  &quot;N&quot; 
+## [2,] &quot;SA&quot; &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; &quot;SD&quot;
+## [3,] &quot;N&quot;  &quot;N&quot;  &quot;A&quot;  &quot;D&quot;  &quot;A&quot; 
+## [4,] &quot;SA&quot; &quot;D&quot;  &quot;D&quot;  &quot;N&quot;  &quot;SD&quot;
+## [5,] &quot;N&quot;  &quot;SA&quot; &quot;A&quot;  &quot;A&quot;  &quot;SA&quot;
+## [6,] &quot;SD&quot; &quot;N&quot;  &quot;SD&quot; &quot;N&quot;  &quot;A&quot;
 </code></pre>
 
 <pre><code class="r">head(intdat2)
 </code></pre>
 
 <pre><code>##   V1 V2 V3 V4 V5
-## 1  1  1  1  5  5
-## 2  3  2  4  1  1
-## 3  5  3  4  3  4
-## 4  2  3  4  4  1
-## 5  5  3  2  1  5
-## 6  4  1  2  4  1
+## 1  3  1  5  3  3
+## 2  5  1  1  1  1
+## 3  3  3  4  2  4
+## 4  5  2  2  3  1
+## 5  3  5  4  4  5
+## 6  1  3  1  3  4
 </code></pre>
 
 <pre><code class="r"># full dataset (using both mapping schemes)
@@ -178,31 +179,31 @@ head(dat)
 </code></pre>
 
 <pre><code>##      [,1]                [,2]                [,3]               
-## [1,] &quot;Neutral&quot;           &quot;Agree&quot;             NA                 
-## [2,] &quot;Disagree&quot;          NA                  &quot;Agree&quot;            
-## [3,] &quot;Disagree&quot;          &quot;Strongly Agree&quot;    NA                 
-## [4,] &quot;Strongly Agree&quot;    &quot;Neutral&quot;           &quot;Strongly Disagree&quot;
-## [5,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot;
-## [6,] &quot;Strongly Disagree&quot; &quot;Neutral&quot;           &quot;Strongly Agree&quot;   
-##      [,4]                [,5]             [,6] [,7] [,8] [,9] [,10]
-## [1,] &quot;Strongly Agree&quot;    &quot;Agree&quot;          &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; &quot;SA&quot; &quot;SA&quot; 
-## [2,] &quot;Disagree&quot;          &quot;Neutral&quot;        &quot;N&quot;  &quot;D&quot;  &quot;A&quot;  &quot;SD&quot; &quot;SD&quot; 
-## [3,] &quot;Strongly Disagree&quot; &quot;Agree&quot;          &quot;SA&quot; &quot;N&quot;  &quot;A&quot;  &quot;N&quot;  &quot;A&quot;  
-## [4,] &quot;Strongly Disagree&quot; &quot;Agree&quot;          &quot;D&quot;  &quot;N&quot;  &quot;A&quot;  &quot;A&quot;  &quot;SD&quot; 
-## [5,] &quot;Agree&quot;             &quot;Strongly Agree&quot; &quot;SA&quot; &quot;N&quot;  &quot;D&quot;  &quot;SD&quot; &quot;SA&quot; 
-## [6,] &quot;Neutral&quot;           &quot;Agree&quot;          &quot;A&quot;  &quot;SD&quot; &quot;D&quot;  &quot;A&quot;  &quot;SD&quot;
+## [1,] &quot;Agree&quot;             &quot;Strongly Agree&quot;    NA                 
+## [2,] &quot;Neutral&quot;           NA                  &quot;Neutral&quot;          
+## [3,] &quot;Strongly Agree&quot;    &quot;Disagree&quot;          NA                 
+## [4,] &quot;Disagree&quot;          &quot;Strongly Disagree&quot; &quot;Agree&quot;            
+## [5,] &quot;Strongly Disagree&quot; &quot;Agree&quot;             &quot;Strongly Disagree&quot;
+## [6,] &quot;Strongly Disagree&quot; &quot;Strongly Disagree&quot; &quot;Neutral&quot;          
+##      [,4]             [,5]                [,6] [,7] [,8] [,9] [,10]
+## [1,] &quot;Disagree&quot;       &quot;Agree&quot;             &quot;N&quot;  &quot;SD&quot; &quot;SA&quot; &quot;N&quot;  &quot;N&quot;  
+## [2,] &quot;Strongly Agree&quot; &quot;Strongly Disagree&quot; &quot;SA&quot; &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; &quot;SD&quot; 
+## [3,] &quot;Strongly Agree&quot; &quot;Neutral&quot;           &quot;N&quot;  &quot;N&quot;  &quot;A&quot;  &quot;D&quot;  &quot;A&quot;  
+## [4,] &quot;Disagree&quot;       &quot;Strongly Agree&quot;    &quot;SA&quot; &quot;D&quot;  &quot;D&quot;  &quot;N&quot;  &quot;SD&quot; 
+## [5,] &quot;Disagree&quot;       &quot;Strongly Agree&quot;    &quot;N&quot;  &quot;SA&quot; &quot;A&quot;  &quot;A&quot;  &quot;SA&quot; 
+## [6,] &quot;Agree&quot;          &quot;Disagree&quot;          &quot;SD&quot; &quot;N&quot;  &quot;SD&quot; &quot;N&quot;  &quot;A&quot;
 </code></pre>
 
 <pre><code class="r">head(intdat)
 </code></pre>
 
 <pre><code>##   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10
-## 1  3  4 NA  5  4  1  1  1  5   5
-## 2  2 NA  4  2  3  3  2  4  1   1
-## 3  2  5 NA  1  4  5  3  4  3   4
-## 4  5  3  1  1  4  2  3  4  4   1
-## 5  2  1  1  4  5  5  3  2  1   5
-## 6  1  3  5  3  4  4  1  2  4   1
+## 1  4  5 NA  2  4  3  1  5  3   3
+## 2  3 NA  3  5  1  5  1  1  1   1
+## 3  5  2 NA  5  3  3  3  4  2   4
+## 4  2  1  4  2  5  5  2  2  3   1
+## 5  1  4  1  2  5  3  5  4  4   5
+## 6  1  1  3  4  2  1  3  1  3   4
 </code></pre>
 
 <pre><code class="r">#####
@@ -216,16 +217,16 @@ str(dat.old) # factors are leveled alphabetically by default
 </code></pre>
 
 <pre><code>## &#39;data.frame&#39;:    1000 obs. of  10 variables:
-##  $ Item_1 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 3 2 2 4 2 5 1 1 1 4 ...
-##  $ Item_2 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 1 NA 4 3 5 3 1 3 1 2 ...
-##  $ Item_3 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: NA 1 NA 5 5 4 5 1 1 2 ...
-##  $ Item_4 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 4 2 5 5 1 3 5 5 5 1 ...
-##  $ Item_5 : Factor w/ 5 levels &quot;Agree&quot;,&quot;Disagree&quot;,..: 1 3 1 1 4 1 4 1 2 5 ...
-##  $ Item_6 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 5 3 4 2 4 1 4 5 3 4 ...
-##  $ Item_7 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 5 2 3 3 3 5 5 4 5 3 ...
-##  $ Item_8 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 5 1 1 1 2 2 4 3 4 2 ...
-##  $ Item_9 : Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 4 5 3 1 5 1 2 3 5 5 ...
-##  $ Item_10: Factor w/ 5 levels &quot;A&quot;,&quot;D&quot;,&quot;N&quot;,&quot;SA&quot;,..: 4 5 1 5 4 5 3 1 5 4 ...
+##  $ Item_1 : chr  &quot;Agree&quot; &quot;Neutral&quot; &quot;Strongly Agree&quot; &quot;Disagree&quot; ...
+##  $ Item_2 : chr  &quot;Strongly Agree&quot; NA &quot;Disagree&quot; &quot;Strongly Disagree&quot; ...
+##  $ Item_3 : chr  NA &quot;Neutral&quot; NA &quot;Agree&quot; ...
+##  $ Item_4 : chr  &quot;Disagree&quot; &quot;Strongly Agree&quot; &quot;Strongly Agree&quot; &quot;Disagree&quot; ...
+##  $ Item_5 : chr  &quot;Agree&quot; &quot;Strongly Disagree&quot; &quot;Neutral&quot; &quot;Strongly Agree&quot; ...
+##  $ Item_6 : chr  &quot;N&quot; &quot;SA&quot; &quot;N&quot; &quot;SA&quot; ...
+##  $ Item_7 : chr  &quot;SD&quot; &quot;SD&quot; &quot;N&quot; &quot;D&quot; ...
+##  $ Item_8 : chr  &quot;SA&quot; &quot;SD&quot; &quot;A&quot; &quot;D&quot; ...
+##  $ Item_9 : chr  &quot;N&quot; &quot;SD&quot; &quot;D&quot; &quot;N&quot; ...
+##  $ Item_10: chr  &quot;N&quot; &quot;SD&quot; &quot;A&quot; &quot;SD&quot; ...
 </code></pre>
 
 <pre><code class="r"># create explicit ordering in factor variables
@@ -242,53 +243,63 @@ str(dat) # note ordering
 </code></pre>
 
 <pre><code>## &#39;data.frame&#39;:    1000 obs. of  10 variables:
-##  $ Item_1 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 3 2 2 4 2 5 1 1 1 4 ...
-##  $ Item_2 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 1 NA 4 3 5 3 1 3 1 2 ...
-##  $ Item_3 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: NA 1 NA 5 5 4 5 1 1 2 ...
-##  $ Item_4 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 4 2 5 5 1 3 5 5 5 1 ...
-##  $ Item_5 : Factor w/ 5 levels &quot;Strongly Disagree&quot;,..: 1 3 1 1 4 1 4 1 2 5 ...
-##  $ Item_6 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 5 3 4 2 4 1 4 5 3 4 ...
-##  $ Item_7 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 5 2 3 3 3 5 5 4 5 3 ...
-##  $ Item_8 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 5 1 1 1 2 2 4 3 4 2 ...
-##  $ Item_9 : Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 4 5 3 1 5 1 2 3 5 5 ...
-##  $ Item_10: Factor w/ 5 levels &quot;SD&quot;,&quot;D&quot;,&quot;N&quot;,&quot;A&quot;,..: 4 5 1 5 4 5 3 1 5 4 ...
+##  $ Item_1 : chr  &quot;Agree&quot; &quot;Neutral&quot; &quot;Strongly Agree&quot; &quot;Disagree&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;Strongly Disagree&quot; &quot;Disagree&quot; &quot;Neutral&quot; &quot;Agree&quot; ...
+##  $ Item_2 : chr  &quot;Strongly Agree&quot; NA &quot;Disagree&quot; &quot;Strongly Disagree&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;Strongly Disagree&quot; &quot;Disagree&quot; &quot;Neutral&quot; &quot;Agree&quot; ...
+##  $ Item_3 : chr  NA &quot;Neutral&quot; NA &quot;Agree&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;Strongly Disagree&quot; &quot;Disagree&quot; &quot;Neutral&quot; &quot;Agree&quot; ...
+##  $ Item_4 : chr  &quot;Disagree&quot; &quot;Strongly Agree&quot; &quot;Strongly Agree&quot; &quot;Disagree&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;Strongly Disagree&quot; &quot;Disagree&quot; &quot;Neutral&quot; &quot;Agree&quot; ...
+##  $ Item_5 : chr  &quot;Agree&quot; &quot;Strongly Disagree&quot; &quot;Neutral&quot; &quot;Strongly Agree&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;Strongly Disagree&quot; &quot;Disagree&quot; &quot;Neutral&quot; &quot;Agree&quot; ...
+##  $ Item_6 : chr  &quot;N&quot; &quot;SA&quot; &quot;N&quot; &quot;SA&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;SD&quot; &quot;D&quot; &quot;N&quot; &quot;A&quot; ...
+##  $ Item_7 : chr  &quot;SD&quot; &quot;SD&quot; &quot;N&quot; &quot;D&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;SD&quot; &quot;D&quot; &quot;N&quot; &quot;A&quot; ...
+##  $ Item_8 : chr  &quot;SA&quot; &quot;SD&quot; &quot;A&quot; &quot;D&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;SD&quot; &quot;D&quot; &quot;N&quot; &quot;A&quot; ...
+##  $ Item_9 : chr  &quot;N&quot; &quot;SD&quot; &quot;D&quot; &quot;N&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;SD&quot; &quot;D&quot; &quot;N&quot; &quot;A&quot; ...
+##  $ Item_10: chr  &quot;N&quot; &quot;SD&quot; &quot;A&quot; &quot;SD&quot; ...
+##   ..- attr(*, &quot;levels&quot;)= chr [1:5] &quot;SD&quot; &quot;D&quot; &quot;N&quot; &quot;A&quot; ...
 </code></pre>
 
 <pre><code class="r">intdat &lt;- likert2int(dat)
 head(dat)
 </code></pre>
 
-<pre><code>##           Item_1            Item_2            Item_3            Item_4
-## 1        Neutral Strongly Disagree              &lt;NA&gt;             Agree
-## 2       Disagree              &lt;NA&gt; Strongly Disagree          Disagree
-## 3       Disagree             Agree              &lt;NA&gt;    Strongly Agree
-## 4          Agree           Neutral    Strongly Agree    Strongly Agree
-## 5       Disagree    Strongly Agree    Strongly Agree Strongly Disagree
-## 6 Strongly Agree           Neutral             Agree           Neutral
+<pre><code>##              Item_1            Item_2            Item_3         Item_4
+## 1             Agree    Strongly Agree              &lt;NA&gt;       Disagree
+## 2           Neutral              &lt;NA&gt;           Neutral Strongly Agree
+## 3    Strongly Agree          Disagree              &lt;NA&gt; Strongly Agree
+## 4          Disagree Strongly Disagree             Agree       Disagree
+## 5 Strongly Disagree             Agree Strongly Disagree       Disagree
+## 6 Strongly Disagree Strongly Disagree           Neutral          Agree
 ##              Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-## 1 Strongly Disagree     SA     SA     SA      A       A
-## 2           Neutral      N      D     SD     SA      SA
-## 3 Strongly Disagree      A      N     SD      N      SD
-## 4 Strongly Disagree      D      N     SD     SD      SA
-## 5             Agree      A      N      D     SA       A
-## 6 Strongly Disagree     SD     SA      D     SD      SA
+## 1             Agree      N     SD     SA      N       N
+## 2 Strongly Disagree     SA     SD     SD     SD      SD
+## 3           Neutral      N      N      A      D       A
+## 4    Strongly Agree     SA      D      D      N      SD
+## 5    Strongly Agree      N     SA      A      A      SA
+## 6          Disagree     SD      N     SD      N       A
 </code></pre>
 
 <pre><code class="r">head(intdat)
 </code></pre>
 
 <pre><code>##   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-## 1      3      1     NA      4      1      5      5      5      4       4
-## 2      2     NA      1      2      3      3      2      1      5       5
-## 3      2      4     NA      5      1      4      3      1      3       1
-## 4      4      3      5      5      1      2      3      1      1       5
-## 5      2      5      5      1      4      4      3      2      5       4
-## 6      5      3      4      3      1      1      5      2      1       5
+## 1      4      5     NA      2      4      3      1      5      3       3
+## 2      3     NA      3      5      1      5      1      1      1       1
+## 3      5      2     NA      5      3      3      3      4      2       4
+## 4      2      1      4      2      5      5      2      2      3       1
+## 5      1      4      1      2      5      3      5      4      4       5
+## 6      1      1      3      4      2      1      3      1      3       4
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.31.9 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

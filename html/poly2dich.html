@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Change polytomous items to dichotomous item format</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for poly2dich {mirt}"><tr><td>poly2dich {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -22,7 +23,7 @@ converted into comparable dichotomous items with the same information.
 <h3>Usage</h3>
 
 <pre>
-poly2dich(data, which.items = 1:ncol(data))
+poly2dich(data, which.items = 1:ncol(data), sep = "_cat.")
 </pre>
 
 
@@ -37,6 +38,10 @@ poly2dich(data, which.items = 1:ncol(data))
 <td>
 <p>a vector indicating which items should be transformed into the
 dichotomous form. Default uses all input items</p>
+</td></tr>
+<tr valign="top"><td><code>sep</code></td>
+<td>
+<p>character vector pattern to append to each item name in <code>data</code></p>
 </td></tr>
 </table>
 
@@ -57,7 +62,7 @@ dichotomous form. Default uses all input items</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -82,45 +87,45 @@ head(Science)
 head(newScience)
 </code></pre>
 
-<pre><code>##      Comfort.1 Comfort.2 Comfort.3 Comfort.4 Work.1 Work.2 Work.3 Work.4
-## [1,]         0         0         0         1      0      0      0      1
-## [2,]         0         0         1         0      0      0      1      0
-## [3,]         0         0         1         0      0      1      0      0
-## [4,]         0         0         1         0      0      1      0      0
-## [5,]         0         0         1         0      0      0      0      1
-## [6,]         0         0         0         1      0      0      0      1
-##      Future.1 Future.2 Future.3 Future.4 Benefit.1 Benefit.2 Benefit.3
-## [1,]        0        0        1        0         0         1         0
-## [2,]        0        0        1        0         0         0         1
-## [3,]        0        1        0        0         0         0         1
-## [4,]        0        1        0        0         0         0         1
-## [5,]        0        0        0        1         1         0         0
-## [6,]        0        0        1        0         0         0         1
-##      Benefit.4
-## [1,]         0
-## [2,]         0
-## [3,]         0
-## [4,]         0
-## [5,]         0
-## [6,]         0
+<pre><code>##      Comfort_cat.1 Comfort_cat.2 Comfort_cat.3 Comfort_cat.4 Work_cat.1
+## [1,]             0             0             0             1          0
+## [2,]             0             0             1             0          0
+## [3,]             0             0             1             0          0
+## [4,]             0             0             1             0          0
+## [5,]             0             0             1             0          0
+## [6,]             0             0             0             1          0
+##      Work_cat.2 Work_cat.3 Work_cat.4 Future_cat.1 Future_cat.2 Future_cat.3
+## [1,]          0          0          1            0            0            1
+## [2,]          0          1          0            0            0            1
+## [3,]          1          0          0            0            1            0
+## [4,]          1          0          0            0            1            0
+## [5,]          0          0          1            0            0            0
+## [6,]          0          0          1            0            0            1
+##      Future_cat.4 Benefit_cat.1 Benefit_cat.2 Benefit_cat.3 Benefit_cat.4
+## [1,]            0             0             1             0             0
+## [2,]            0             0             0             1             0
+## [3,]            0             0             0             1             0
+## [4,]            0             0             0             1             0
+## [5,]            1             1             0             0             0
+## [6,]            0             0             0             1             0
 </code></pre>
 
 <pre><code class="r">newScience2 &lt;- poly2dich(Science, which.items = 2)
 head(newScience2)
 </code></pre>
 
-<pre><code>##   Comfort Work.1 Work.2 Work.3 Work.4 Future Benefit
-## 1       4      0      0      0      1      3       2
-## 2       3      0      0      1      0      3       3
-## 3       3      0      1      0      0      2       3
-## 4       3      0      1      0      0      2       3
-## 5       3      0      0      0      1      4       1
-## 6       4      0      0      0      1      3       3
+<pre><code>##   Comfort Work_cat.1 Work_cat.2 Work_cat.3 Work_cat.4 Future Benefit
+## 1       4          0          0          0          1      3       2
+## 2       3          0          0          1          0      3       3
+## 3       3          0          1          0          0      2       3
+## 4       3          0          1          0          0      2       3
+## 5       3          0          0          0          1      4       1
+## 6       4          0          0          0          1      3       3
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

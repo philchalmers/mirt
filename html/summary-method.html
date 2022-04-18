@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Summary of model object</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for summary-method {mirt}"><tr><td>summary-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -25,8 +26,14 @@ to three digits, the returned list of objects is not. For simulations, use
 
 <pre>
 ## S4 method for signature 'SingleGroupClass'
-summary(object, rotate = "oblimin",
-  Target = NULL, suppress = 0, verbose = TRUE, ...)
+summary(
+  object,
+  rotate = "oblimin",
+  Target = NULL,
+  suppress = 0,
+  verbose = TRUE,
+  ...
+)
 </pre>
 
 
@@ -78,13 +85,13 @@ statistical software. Default is 0 for no suppression</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>See Also</h3>
 
-<p><code><a href="coef-method.html">coef-method</a></code>
+<p><code><a href="../../mirt/help/coef-method.html">coef-method</a></code>
 </p>
 
 
@@ -101,18 +108,18 @@ summary(x)
 ## Rotated factor loadings: 
 ## 
 ##              F1      F2    h2
-## Comfort -0.6016  0.0312 0.382
-## Work     0.0573  0.7971 0.592
-## Future  -0.3302  0.5153 0.548
-## Benefit -0.7231 -0.0239 0.506
+## Comfort  0.6016  0.0312 0.382
+## Work    -0.0573  0.7971 0.592
+## Future   0.3302  0.5153 0.548
+## Benefit  0.7231 -0.0239 0.506
 ## 
 ## Rotated SS loadings:  0.997 0.902 
 ## 
 ## Factor correlations: 
 ## 
-##        F1     F2
-## F1  1.000 -0.511
-## F2 -0.511  1.000
+##       F1    F2
+## F1 1.000 0.511
+## F2 0.511 1.000
 </code></pre>
 
 <pre><code class="r">summary(x, rotate = &#39;varimax&#39;)
@@ -123,11 +130,11 @@ summary(x)
 ## 
 ## Rotated factor loadings: 
 ## 
-##             F1    F2    h2
-## Comfort -0.579 0.216 0.382
-## Work    -0.121 0.760 0.592
-## Future  -0.428 0.605 0.548
-## Benefit -0.683 0.200 0.506
+##            F1    F2    h2
+## Comfort 0.579 0.216 0.382
+## Work    0.121 0.760 0.592
+## Future  0.428 0.605 0.548
+## Benefit 0.683 0.200 0.506
 ## 
 ## Rotated SS loadings:  0.999 1.03 
 ## 
@@ -142,5 +149,5 @@ summary(x)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

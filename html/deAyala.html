@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Description of deAyala data</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for deAyala {mirt}"><tr><td>deAyala {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -28,7 +29,7 @@
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>de Ayala, R. J. (2009). <em>The theory and practice of item response theory</em>. Guilford Press.
 </p>
@@ -50,9 +51,33 @@ head(dat)
 ## 6      0      0      0      0      0
 </code></pre>
 
+<pre><code class="r">itemstats(dat)
+</code></pre>
+
+<pre><code>## $overall
+##      N mean_total.score sd_total.score ave.r  sd.r alpha
+##  19601            2.912          1.434 0.233 0.074 0.608
+## 
+## $itemstats
+##            N  mean    sd total.r total.r_if_rm alpha_if_rm
+## Item.1 19601 0.887 0.316   0.447         0.246       0.605
+## Item.2 19601 0.644 0.479   0.688         0.439       0.510
+## Item.3 19601 0.566 0.496   0.680         0.416       0.523
+## Item.4 19601 0.427 0.495   0.673         0.405       0.529
+## Item.5 19601 0.387 0.487   0.602         0.312       0.581
+## 
+## $proportions
+##            0     1
+## Item.1 0.113 0.887
+## Item.2 0.356 0.644
+## Item.3 0.434 0.566
+## Item.4 0.573 0.427
+## Item.5 0.613 0.387
+</code></pre>
+
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

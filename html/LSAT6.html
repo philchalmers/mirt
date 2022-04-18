@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Description of LSAT6 data</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for LSAT6 {mirt}"><tr><td>LSAT6 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -29,7 +30,7 @@ items obtained from the Law School Admissions Test, section 6.
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 <em>Psychometrika, 47</em>, 175-186.
@@ -52,6 +53,30 @@ head(dat)
 ## 6      0      0      0      0      1
 </code></pre>
 
+<pre><code class="r">itemstats(dat)
+</code></pre>
+
+<pre><code>## $overall
+##     N mean_total.score sd_total.score ave.r sd.r alpha
+##  1000            3.819          1.035 0.077 0.03 0.295
+## 
+## $itemstats
+##           N  mean    sd total.r total.r_if_rm alpha_if_rm
+## Item_1 1000 0.924 0.265   0.362         0.113       0.275
+## Item_2 1000 0.709 0.454   0.567         0.153       0.238
+## Item_3 1000 0.553 0.497   0.618         0.173       0.217
+## Item_4 1000 0.763 0.425   0.534         0.144       0.246
+## Item_5 1000 0.870 0.336   0.435         0.122       0.266
+## 
+## $proportions
+##            0     1
+## Item_1 0.076 0.924
+## Item_2 0.291 0.709
+## Item_3 0.447 0.553
+## Item_4 0.237 0.763
+## Item_5 0.130 0.870
+</code></pre>
+
 <pre><code class="r">model &lt;- &#39;F = 1-5
          CONSTRAIN = (1-5, a1)&#39;
 (mod &lt;- mirt(dat, model))
@@ -63,15 +88,15 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.28 
+## mirt version: 1.36.2 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## Latent density type: Gaussian 
 ## 
 ## Log-likelihood = -2466.938
-## Estimated parameters: 6 
-## AIC = 4945.875; AICc = 4945.96
+## Estimated parameters: 10 
+## AIC = 4945.875
 ## BIC = 4975.322; SABIC = 4956.265
 ## G2 (25) = 21.8, p = 0.6474
 ## RMSEA = 0, CFI = NaN, TLI = NaN
@@ -80,21 +105,19 @@ head(dat)
 <pre><code class="r">M2(mod)
 </code></pre>
 
-<pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI
-## stats 5.292566  9 0.8080952     0       0 0.02254275 0.02242068 1.072511
-##       CFI
-## stats   1
+<pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI CFI
+## stats 5.292566  9 0.8080952     0       0 0.02254275 0.02242068 1.072511   1
 </code></pre>
 
 <pre><code class="r">itemfit(mod)
 </code></pre>
 
-<pre><code>##     item  S_X2 df.S_X2 p.S_X2
-## 1 Item_1 0.436       2  0.804
-## 2 Item_2 1.576       2  0.455
-## 3 Item_3 0.871       1  0.351
-## 4 Item_4 0.190       2  0.909
-## 5 Item_5 0.190       2  0.909
+<pre><code>##     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
+## 1 Item_1 0.436       2          0  0.804
+## 2 Item_2 1.576       2          0  0.455
+## 3 Item_3 0.871       1          0  0.351
+## 4 Item_4 0.190       2          0  0.909
+## 5 Item_5 0.190       2          0  0.909
 </code></pre>
 
 <pre><code class="r">coef(mod, simplify=TRUE)
@@ -127,29 +150,27 @@ anova(mod, mod2) #equal
 ## Model 2: mirt(data = dat, model = model)
 </code></pre>
 
-<pre><code>##        AIC    AICc    SABIC       HQ      BIC    logLik  X2  df   p
-## 1 4945.875 4945.96 4956.266 4957.067 4975.322 -2466.938 NaN NaN NaN
-## 2 4945.875 4945.96 4956.265 4957.067 4975.322 -2466.938   0   0   0
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik  X2  df   p
+## 1 4945.875 4956.266 4957.067 4975.322 -2466.938 NaN NaN NaN
+## 2 4945.875 4956.265 4957.067 4975.322 -2466.938   0   0   0
 </code></pre>
 
 <pre><code class="r">M2(mod2)
 </code></pre>
 
-<pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI
-## stats 5.293241  9 0.8080333     0       0 0.02254617 0.02242571 1.072498
-##       CFI
-## stats   1
+<pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI CFI
+## stats 5.292778  9 0.8080758     0       0 0.02254382 0.02242585 1.072507   1
 </code></pre>
 
 <pre><code class="r">itemfit(mod2)
 </code></pre>
 
-<pre><code>##     item  S_X2 df.S_X2 p.S_X2
-## 1 Item_1 0.436       2  0.804
-## 2 Item_2 1.576       2  0.455
-## 3 Item_3 0.871       1  0.351
-## 4 Item_4 0.190       2  0.909
-## 5 Item_5 0.190       2  0.909
+<pre><code>##     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
+## 1 Item_1 0.436       2          0  0.804
+## 2 Item_2 1.576       2          0  0.455
+## 3 Item_3 0.872       1          0  0.351
+## 4 Item_4 0.190       2          0  0.909
+## 5 Item_5 0.190       2          0  0.909
 </code></pre>
 
 <pre><code class="r">coef(mod2, simplify=TRUE)
@@ -175,12 +196,12 @@ anova(mod, mod2) #equal
 <pre><code class="r">sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 </code></pre>
 
-<pre><code>## [1] 0.7561782
+<pre><code>## [1] 0.7561839
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

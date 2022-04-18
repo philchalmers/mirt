@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute posterior estimates of random effect</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for randef {mirt}"><tr><td>randef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -15,7 +16,8 @@
 <h3>Description</h3>
 
 <p>Stochastically compute random effects for <code>MixedClass</code> objects with Metropolis-Hastings
-samplers and averaging over the draws. Returns a list of the estimated effects.
+samplers and averaging over the draws to obtain expected a posteriori predictions.
+Returns a list of the estimated effects.
 </p>
 
 
@@ -31,7 +33,7 @@ randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 <table summary="R argblock">
 <tr valign="top"><td><code>x</code></td>
 <td>
-<p>an estimated model object from the <code><a href="mixedmirt.html">mixedmirt</a></code> function</p>
+<p>an estimated model object from the <code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code> function</p>
 </td></tr>
 <tr valign="top"><td><code>ndraws</code></td>
 <td>
@@ -60,8 +62,8 @@ randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
 </p>
 <p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
-<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="http://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="https://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -88,11 +90,11 @@ summary(mod)
 ## 
 ## $Theta
 ##      F1
-## F1 1.01
+## F1 0.95
 ## 
 ## $group
 ##           COV_group
-## COV_group    0.0398
+## COV_group    0.0185
 </code></pre>
 
 <pre><code class="r">effects &lt;- randef(mod, ndraws = 2000, thin = 20)
@@ -100,29 +102,29 @@ head(effects$Theta)
 </code></pre>
 
 <pre><code>##              F1
-## [1,]  0.5219398
-## [2,]  0.1880938
-## [3,] -0.7477116
-## [4,] -0.6417511
-## [5,]  0.1015158
-## [6,]  1.0140940
+## [1,]  0.4920514
+## [2,]  0.1908224
+## [3,] -0.5948538
+## [4,] -0.6581340
+## [5,]  0.2088847
+## [6,]  0.7958461
 </code></pre>
 
 <pre><code class="r">head(effects$group)
 </code></pre>
 
 <pre><code>##               group
-## group1  0.007810225
-## group2  0.035884910
-## group3 -0.001805834
-## group4  0.008003555
-## group5  0.005031962
-## group6  0.020417236
+## group1 -0.007030129
+## group2 -0.008104770
+## group3  0.049454736
+## group4 -0.010112441
+## group5  0.040085372
+## group6  0.043368333
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

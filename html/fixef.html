@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute latent regression fixed effect expected values</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for fixef {mirt}"><tr><td>fixef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -30,7 +31,7 @@ fixef(x)
 <table summary="R argblock">
 <tr valign="top"><td><code>x</code></td>
 <td>
-<p>an estimated model object from the <code><a href="mixedmirt.html">mixedmirt</a></code> or <code><a href="mirt.html">mirt</a></code>
+<p>an estimated model object from the <code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code> or <code><a href="../../mirt/help/mirt.html">mirt</a></code>
 function</p>
 </td></tr>
 </table>
@@ -46,16 +47,16 @@ function</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
-<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="http://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
+<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="https://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
 </p>
 
 
 <h3>See Also</h3>
 
-<p><code><a href="mirt.html">mirt</a></code>, <code><a href="mixedmirt.html">mixedmirt</a></code>
+<p><code><a href="../../mirt/help/mirt.html">mirt</a></code>, <code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code>
 </p>
 
 
@@ -84,13 +85,13 @@ fe &lt;- fixef(mod1)
 head(fe)
 </code></pre>
 
-<pre><code>##           F1
-## 1  0.6128910
-## 2 -0.1661755
-## 3  2.1652275
-## 4 -1.8932202
-## 5 -0.5021527
-## 6  2.2405429
+<pre><code>##              F1
+## [1,]  0.6129074
+## [2,] -0.1661799
+## [3,]  2.1652793
+## [4,] -1.8932638
+## [5,] -0.5021655
+## [6,]  2.2405972
 </code></pre>
 
 <pre><code class="r"># with mixedmirt()
@@ -99,18 +100,18 @@ fe2 &lt;- fixef(mod1b)
 head(fe2)
 </code></pre>
 
-<pre><code>##           F1
-## 1  0.6080836
-## 2 -0.1649397
-## 3  2.1555053
-## 4 -1.8866165
-## 5 -0.4989740
-## 6  2.2296461
+<pre><code>##              F1
+## [1,]  0.6165760
+## [2,] -0.1671332
+## [3,]  2.1737979
+## [4,] -1.8995517
+## [5,] -0.5047064
+## [6,]  2.2499237
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

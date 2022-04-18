@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Collapse values from multiple imputation draws</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for averageMI {mirt}"><tr><td>averageMI {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -63,7 +64,7 @@ standard errors, and t-values with the associated degrees of freedom and two tai
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Rubin, D.B. (1987) Multiple Imputation for Nonresponse in Surveys. Wiley &amp; Sons, New York.
 </p>
@@ -140,15 +141,15 @@ SEpar &lt;- lapply(so, function(x) x$coefficients[, &#39;Std. Error&#39;])
 averageMI(par, SEpar)
 </code></pre>
 
-<pre><code>##                par SEpar       t     df     p
-## (Intercept) -0.007 0.019  -0.345 57.950 0.183
-## covdata$X1   0.522 0.018  29.344 91.830 0.000
-## covdata$X2  -1.034 0.021 -50.386 41.275 0.000
+<pre><code>##                par SEpar       t      df     p
+## (Intercept) -0.001 0.017  -0.055 114.518 0.239
+## covdata$X1   0.523 0.017  30.369 130.872 0.000
+## covdata$X2  -1.032 0.022 -46.505  30.805 0.000
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

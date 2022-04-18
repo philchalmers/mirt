@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract various elements from estimated model objects</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for extract.mirt {mirt}"><tr><td>extract.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -64,13 +65,9 @@ extract.mirt(x, what)
 </dd>
 <dt>AIC</dt><dd><p>AIC</p>
 </dd>
-<dt>AICc</dt><dd><p>corrected AIC</p>
-</dd>
 <dt>BIC</dt><dd><p>BIC</p>
 </dd>
 <dt>SABIC</dt><dd><p>sample size adjusted BIC</p>
-</dd>
-<dt>DIC</dt><dd><p>DIC</p>
 </dd>
 <dt>HQ</dt><dd><p>HQ</p>
 </dd>
@@ -97,6 +94,11 @@ in <code>freq</code></p>
 </dd>
 <dt>itemnames</dt><dd><p>a vector of item names from the input data</p>
 </dd>
+<dt>factorNames</dt><dd><p>a vector of factor names from the model definition</p>
+</dd>
+<dt>rowID</dt><dd><p>an integer vector indicating all valid row numbers used in the model estimation
+(when all cases are used this will be <code>1:nrow(data)</code>)</p>
+</dd>
 <dt>data</dt><dd><p>raw input data of item responses</p>
 </dd>
 <dt>covdata</dt><dd><p>raw input data of data used as covariates</p>
@@ -108,6 +110,8 @@ dummy coded variables</p>
 tabulated frequencies</p>
 </dd>
 <dt>exp_resp</dt><dd><p>expected probability of the unique response patterns</p>
+</dd>
+<dt>survey.weights</dt><dd><p>if supplied, the vector of survey weights used during estimation (NULL if missing)</p>
 </dd>
 <dt>converged</dt><dd><p>a logical value indicating whether the model terminated within
 the convergence criteria</p>
@@ -161,13 +165,13 @@ if not applicable</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>See Also</h3>
 
-<p><code><a href="extract.group.html">extract.group</a></code>, <code><a href="extract.item.html">extract.item</a></code>, <code><a href="mod2values.html">mod2values</a></code>
+<p><code><a href="../../mirt/help/extract.group.html">extract.group</a></code>, <code><a href="../../mirt/help/extract.item.html">extract.item</a></code>, <code><a href="../../mirt/help/mod2values.html">mod2values</a></code>
 </p>
 
 
@@ -220,5 +224,5 @@ extract.mirt(mod2, &#39;parvec&#39;)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

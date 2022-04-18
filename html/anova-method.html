@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compare nested models with likelihood-based statistics</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for anova-method {mirt}"><tr><td>anova-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -15,8 +16,10 @@
 <h3>Description</h3>
 
 <p>Compare nested models using likelihood ratio test (X2), Akaike Information Criterion (AIC),
-sample size adjusted AIC (AICc), Bayesian Information Criterion (BIC),
+Bayesian Information Criterion (BIC),
 Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
+When given a sequence of objects, <code>anova</code> tests the models against one another
+in the order specified.
 </p>
 
 
@@ -24,8 +27,7 @@ Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 
 <pre>
 ## S4 method for signature 'SingleGroupClass'
-anova(object, object2, bounded = FALSE,
-  mix = 0.5, verbose = TRUE)
+anova(object, object2, ..., bounded = FALSE, mix = 0.5, verbose = TRUE)
 </pre>
 
 
@@ -40,6 +42,10 @@ anova(object, object2, bounded = FALSE,
 <tr valign="top"><td><code>object2</code></td>
 <td>
 <p>a second model estimated from any of the mirt package estimation methods</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional model objects to be sequentially compared</p>
 </td></tr>
 <tr valign="top"><td><code>bounded</code></td>
 <td>
@@ -68,7 +74,7 @@ is used to obtain the p-value</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -85,17 +91,53 @@ anova(x, x2)
 ## Model 2: mirt(data = Science, model = 2)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik     X2  df     p
-## 1 3249.739 3251.190 3262.512 3274.922 3313.279 -1608.870    NaN NaN   NaN
-## 2 3241.938 3243.981 3257.106 3271.843 3317.392 -1601.969 13.801   3 0.003
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik     X2  df     p
+## 1 3249.739 3262.512 3274.922 3313.279 -1608.870    NaN NaN   NaN
+## 2 3241.938 3257.106 3271.843 3317.392 -1601.969 13.801   3 0.003
+</code></pre>
+
+<pre><code class="r"># compare three models sequentially
+x2 &lt;- mirt(Science, 1, &#39;gpcm&#39;)
+x3 &lt;- mirt(Science, 1, &#39;nominal&#39;)
+anova(x, x2, x3)
+</code></pre>
+
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df    p
+## 1 3257.366 3270.139 3282.549 3320.906 -1612.683   NaN NaN  NaN
+## 2 3249.739 3262.512 3274.922 3313.279 -1608.870 7.627   0 0.00
+## 3 3264.910 3284.069 3302.684 3360.220 -1608.455 8.456   8 0.39
 </code></pre>
 
 <pre><code class="r"># in isolation
 anova(x)
 </code></pre>
 
-<pre><code>##        AIC    AICc    SABIC       HQ      BIC   logLik
-## 1 3249.739 3251.19 3262.512 3274.922 3313.279 -1608.87
+<pre><code>##        AIC    SABIC       HQ      BIC   logLik
+## 1 3249.739 3262.512 3274.922 3313.279 -1608.87
+</code></pre>
+
+<pre><code class="r"># with priors on first model
+model &lt;- &quot;Theta = 1-4
+          PRIOR = (1-4, a1, lnorm, 0, 10)&quot;
+xp &lt;- mirt(Science, model)
+anova(xp, x2)
+</code></pre>
+
+<pre><code>## 
+## Model 1: mirt(data = Science, model = model)
+## Model 2: mirt(data = Science, model = 1, itemtype = &quot;gpcm&quot;)
+</code></pre>
+
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik   logPost  df
+## 1 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881 NaN
+## 2 3257.366 3270.139 3282.549 3320.906 -1612.683 -1612.683   0
+</code></pre>
+
+<pre><code class="r">anova(xp)
+</code></pre>
+
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik   logPost
+## 1 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881
 </code></pre>
 
 <pre><code class="r"># bounded parameter
@@ -110,9 +152,9 @@ anova(mod, mod2) #unbounded test
 ## Model 2: mirt(data = dat, model = 1, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df    p
-## 1 5337.610 5337.833 5354.927 5356.263 5386.688 -2658.805   NaN NaN  NaN
-## 2 5339.587 5339.855 5358.636 5360.106 5393.573 -2658.794 0.023   1 0.88
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df    p
+## 1 5337.610 5354.927 5356.263 5386.688 -2658.805   NaN NaN  NaN
+## 2 5339.587 5358.636 5360.106 5393.573 -2658.794 0.023   1 0.88
 </code></pre>
 
 <pre><code class="r">anova(mod, mod2, bounded = TRUE) #bounded
@@ -123,9 +165,9 @@ anova(mod, mod2) #unbounded test
 ## Model 2: mirt(data = dat, model = 1, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC       HQ      BIC    logLik    X2  df    p
-## 1 5337.610 5337.833 5354.927 5356.263 5386.688 -2658.805   NaN NaN  NaN
-## 2 5339.587 5339.855 5358.636 5360.106 5393.573 -2658.794 0.023   1 0.44
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df    p
+## 1 5337.610 5354.927 5356.263 5386.688 -2658.805   NaN NaN  NaN
+## 2 5339.587 5358.636 5360.106 5393.573 -2658.794 0.023   1 0.44
 </code></pre>
 
 <pre><code class="r"># priors
@@ -135,8 +177,8 @@ mod1b &lt;- mirt(dat, model, itemtype = c(rep(&#39;2PL&#39;, 4), &#39;3PL&#39;))
 anova(mod1b)
 </code></pre>
 
-<pre><code>##        AIC     AICc   SABIC       HQ      BIC    logLik      DIC   logPost
-## 1 5339.571 5339.838 5358.62 5360.089 5393.557 -2658.786 5341.409 -2659.705
+<pre><code>##        AIC   SABIC       HQ      BIC    logLik   logPost
+## 1 5339.571 5358.62 5360.089 5393.557 -2658.786 -2659.705
 </code></pre>
 
 <pre><code class="r">model2 &lt;- &#39;F = 1-5
@@ -150,17 +192,14 @@ anova(mod1b, mod2b)
 ## Model 2: mirt(data = dat, model = model2, itemtype = &quot;3PL&quot;)
 </code></pre>
 
-<pre><code>##        AIC     AICc    SABIC       HQ      BIC      DIC    logLik
-## 1 5339.571 5339.838 5358.620 5360.089 5393.557 5341.409 -2658.786
-## 2 5348.306 5348.794 5374.282 5376.286 5421.923 5358.015 -2659.153
-##     logPost Bayes_Factor
-## 1 -2659.705           NA
-## 2 -2664.008       73.928
+<pre><code>##        AIC    SABIC       HQ      BIC    logLik   logPost  df
+## 1 5339.571 5358.620 5360.089 5393.557 -2658.786 -2659.705 NaN
+## 2 5348.306 5374.282 5376.286 5421.923 -2659.153 -2664.008   4
 </code></pre>
 
 <pre><code class="r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

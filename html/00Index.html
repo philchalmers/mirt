@@ -2,8 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><title>R: Multidimensional Item Response Theory</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
-</head><body>
+</head><body><div class="container">
 <h1> Multidimensional Item Response Theory
 <img class="toplogo" src="http://stat.ethz.ch/R-manual/R-devel/doc/html/Rlogo.svg" alt="[R logo]" />
 </h1>
@@ -11,7 +12,7 @@
 <div style="text-align: center;">
 <a href="http://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html"><img class="arrow" src="http://stat.ethz.ch/R-manual/R-devel/doc/html/left.jpg" alt="[Up]" /></a>
 <a href="http://stat.ethz.ch/R-manual/R-devel/doc/html/index.html"><img class="arrow" src="http://stat.ethz.ch/R-manual/R-devel/doc/html/up.jpg" alt="[Top]" /></a>
-</div><h2>Documentation for package &lsquo;mirt&rsquo; version 1.28</h2>
+</div><h2>Documentation for package &lsquo;mirt&rsquo; version 1.36.2</h2>
 
 <ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
 </ul>
@@ -48,6 +49,10 @@
 <td>Differential item functioning statistics</td></tr>
 <tr><td style="width: 25%;"><a href="DiscreteClass-class.html">DiscreteClass-class</a></td>
 <td>Class "DiscreteClass"</td></tr>
+<tr><td style="width: 25%;"><a href="draw_parameters.html">draw_parameters</a></td>
+<td>Draw plausible parameter instantiations from a given model</td></tr>
+<tr><td style="width: 25%;"><a href="DRF.html">DRF</a></td>
+<td>Differential Response Functioning statistics</td></tr>
 <tr><td style="width: 25%;"><a href="DTF.html">DTF</a></td>
 <td>Differential test functioning statistics</td></tr>
 <tr><td style="width: 25%;"><a href="empirical_ES.html">empirical_ES</a></td>
@@ -70,10 +75,14 @@
 <td>Extract an item object from mirt objects</td></tr>
 <tr><td style="width: 25%;"><a href="extract.mirt.html">extract.mirt</a></td>
 <td>Extract various elements from estimated model objects</td></tr>
+<tr><td style="width: 25%;"><a href="fixedCalib.html">fixedCalib</a></td>
+<td>Fixed-item calibration method</td></tr>
 <tr><td style="width: 25%;"><a href="fixef.html">fixef</a></td>
 <td>Compute latent regression fixed effect expected values</td></tr>
 <tr><td style="width: 25%;"><a href="fscores.html">fscores</a></td>
 <td>Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)</td></tr>
+<tr><td style="width: 25%;"><a href="gen.difficulty.html">gen.difficulty</a></td>
+<td>Generalized item difficulty summaries</td></tr>
 <tr><td style="width: 25%;"><a href="imputeMissing.html">imputeMissing</a></td>
 <td>Imputing plausible data for missing values</td></tr>
 <tr><td style="width: 25%;"><a href="itemfit.html">itemfit</a></td>
@@ -84,10 +93,14 @@
 <td>Function to calculate item information</td></tr>
 <tr><td style="width: 25%;"><a href="itemplot.html">itemplot</a></td>
 <td>Displays item surface and information plots</td></tr>
+<tr><td style="width: 25%;"><a href="itemstats.html">itemstats</a></td>
+<td>Generic item summary statistics</td></tr>
 <tr><td style="width: 25%;"><a href="key2binary.html">key2binary</a></td>
 <td>Score a test by converting response patterns to binary data</td></tr>
 <tr><td style="width: 25%;"><a href="lagrange.html">lagrange</a></td>
 <td>Lagrange test for freeing parameters</td></tr>
+<tr><td style="width: 25%;"><a href="likert2int.html">likert2int</a></td>
+<td>Convert ordered Likert-scale responses (character or factors) to integers</td></tr>
 <tr><td style="width: 25%;"><a href="logLik-method.html">logLik-method</a></td>
 <td>Extract log-likelihood</td></tr>
 <tr><td style="width: 25%;"><a href="LSAT6.html">LSAT6</a></td>
@@ -107,7 +120,7 @@
 <tr><td style="width: 25%;"><a href="mirt.html">mirt</a></td>
 <td>Full-Information Item Factor Analysis (Multidimensional Item Response Theory)</td></tr>
 <tr><td style="width: 25%;"><a href="mirt.model.html">mirt.model</a></td>
-<td>Specify model loadings</td></tr>
+<td>Specify model information</td></tr>
 <tr><td style="width: 25%;"><a href="mirtCluster.html">mirtCluster</a></td>
 <td>Define a parallel cluster object to be used in internal functions</td></tr>
 <tr><td style="width: 25%;"><a href="MixedClass-class.html">MixedClass-class</a></td>
@@ -146,8 +159,16 @@
 <td>Function to calculate probability trace lines</td></tr>
 <tr><td style="width: 25%;"><a href="randef.html">randef</a></td>
 <td>Compute posterior estimates of random effect</td></tr>
+<tr><td style="width: 25%;"><a href="RCI.html">RCI</a></td>
+<td>Model-based Reliable Change Index</td></tr>
+<tr><td style="width: 25%;"><a href="read.mirt.html">read.mirt</a></td>
+<td>Translate mirt parameters into suitable structure for plink package</td></tr>
+<tr><td style="width: 25%;"><a href="remap.distance.html">remap.distance</a></td>
+<td>Remap item categories to have integer distances of 1</td></tr>
 <tr><td style="width: 25%;"><a href="residuals-method.html">residuals-method</a></td>
 <td>Compute model residuals</td></tr>
+<tr><td style="width: 25%;"><a href="RMSD_DIF.html">RMSD_DIF</a></td>
+<td>RMSD effect size statistic to quantify category-level DIF</td></tr>
 <tr><td style="width: 25%;"><a href="SAT12.html">SAT12</a></td>
 <td>Description of SAT12 data</td></tr>
 <tr><td style="width: 25%;"><a href="Science.html">Science</a></td>
@@ -164,9 +185,13 @@
 <td>Summary of model object</td></tr>
 <tr><td style="width: 25%;"><a href="testinfo.html">testinfo</a></td>
 <td>Function to calculate test information</td></tr>
+<tr><td style="width: 25%;"><a href="thetaComb.html">thetaComb</a></td>
+<td>Create all possible combinations of vector input</td></tr>
+<tr><td style="width: 25%;"><a href="traditional2mirt.html">traditional2mirt</a></td>
+<td>Convert traditional IRT metric into slope-intercept form used in mirt</td></tr>
 <tr><td style="width: 25%;"><a href="vcov-method.html">vcov-method</a></td>
 <td>Extract parameter variance covariance matrix</td></tr>
 <tr><td style="width: 25%;"><a href="wald.html">wald</a></td>
 <td>Wald statistics for mirt models</td></tr>
 </table>
-</body></html>
+</div></body></html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute profiled-likelihood (or posterior) confidence...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-</head><body>
+</head><body><div class="container">
 
 <table width="100%" summary="page for PLCI.mirt {mirt}"><tr><td>PLCI.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
@@ -23,9 +24,19 @@ and whether the respective interval could be found.
 <h3>Usage</h3>
 
 <pre>
-PLCI.mirt(mod, parnum = NULL, alpha = 0.05, search_bound = TRUE,
-  step = 0.5, lower = TRUE, upper = TRUE, inf2val = 30,
-  NealeMiller = FALSE, ...)
+PLCI.mirt(
+  mod,
+  parnum = NULL,
+  alpha = 0.05,
+  search_bound = TRUE,
+  step = 0.5,
+  lower = TRUE,
+  upper = TRUE,
+  inf2val = 30,
+  NealeMiller = FALSE,
+  verbose = TRUE,
+  ...
+)
 </pre>
 
 
@@ -39,7 +50,7 @@ PLCI.mirt(mod, parnum = NULL, alpha = 0.05, search_bound = TRUE,
 <tr valign="top"><td><code>parnum</code></td>
 <td>
 <p>a numeric vector indicating which parameters to estimate.
-Use <code><a href="mod2values.html">mod2values</a></code> to determine parameter numbers. If <code>NULL</code>, all possible
+Use <code><a href="../../mirt/help/mod2values.html">mod2values</a></code> to determine parameter numbers. If <code>NULL</code>, all possible
 parameters are used</p>
 </td></tr>
 <tr valign="top"><td><code>alpha</code></td>
@@ -56,7 +67,7 @@ than setting fixed upper/lower bound values and searching from more extreme ends
 <td>
 <p>magnitude of steps used when <code>search_bound</code> is <code>TRUE</code>.
 Smaller values create more points to search a suitable bound for (up to the
-lower bound value visible with <code><a href="mod2values.html">mod2values</a></code>). When upper/lower bounds are detected
+lower bound value visible with <code><a href="../../mirt/help/mod2values.html">mod2values</a></code>). When upper/lower bounds are detected
 this value will be adjusted accordingly</p>
 </td></tr>
 <tr valign="top"><td><code>lower</code></td>
@@ -76,6 +87,10 @@ Decreasing this too much may not allow a suitable bound to be located. Default i
 <td>
 <p>logical; use the Neale and Miller 1997 approximation? Default is <code>FALSE</code></p>
 </td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical; include additional information in the console?</p>
+</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
 <p>additional arguments to pass to the estimation functions</p>
@@ -93,11 +108,11 @@ Decreasing this too much may not allow a suitable bound to be located. Default i
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="http://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 </p>
 <p>Chalmers, R. P., Pek, J., &amp; Liu, Y. (2017). Profile-likelihood Confidence
 Intervals in Item Response Theory Models. <em>Multivariate Behavioral Research, 52</em>, 533-550.
-doi: <a href="http://doi.org/10.1080/00273171.2017.1329082">10.1080/00273171.2017.1329082</a>
+doi: <a href="https://doi.org/10.1080/00273171.2017.1329082">10.1080/00273171.2017.1329082</a>
 </p>
 <p>Neale, M. C. &amp; Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
 models. <em>Behavior Genetics, 27</em>, 113-120.
@@ -106,7 +121,7 @@ models. <em>Behavior Genetics, 27</em>, 113-120.
 
 <h3>See Also</h3>
 
-<p><code><a href="boot.mirt.html">boot.mirt</a></code>
+<p><code><a href="../../mirt/help/boot.mirt.html">boot.mirt</a></code>
 </p>
 
 
@@ -116,7 +131,7 @@ models. <em>Behavior Genetics, 27</em>, 113-120.
 mirtCluster() #use all available cores to estimate CI&#39;s in parallel
 </code></pre>
 
-<pre><code>## mirtCluster() has already been defined
+<pre><code>## mirtCluster() previously defined for 2 clusters
 </code></pre>
 
 <pre><code class="r">dat &lt;- expand.table(LSAT7)
@@ -128,13 +143,13 @@ result
 
 <pre><code>##      Item class parnam parnum     value lower_2.5 upper_97.5 lower_conv
 ## 1  Item.1  dich     a1      1 0.9879254 0.6705382  1.3819761       TRUE
-## 2  Item.1  dich      d      2 1.8560605 1.6203324  2.1474212       TRUE
-## 3  Item.2  dich     a1      5 1.0808847 0.7816287  1.4614715       TRUE
-## 4  Item.2  dich      d      6 0.8079786 0.6373153  0.9994391       TRUE
-## 5  Item.3  dich     a1      9 1.7058006 1.1965700  2.6063139       TRUE
-## 6  Item.3  dich      d     10 1.8042187 1.4754051  2.3765518       TRUE
+## 2  Item.1  dich      d      2 1.8560605 1.6203325  2.1474211       TRUE
+## 3  Item.2  dich     a1      5 1.0808847 0.7816287  1.4614714       TRUE
+## 4  Item.2  dich      d      6 0.8079786 0.6373152  0.9994390       TRUE
+## 5  Item.3  dich     a1      9 1.7058006 1.1965700  2.6063138       TRUE
+## 6  Item.3  dich      d     10 1.8042187 1.4754050  2.3765517       TRUE
 ## 7  Item.4  dich     a1     13 0.7651853 0.5211915  1.0554405       TRUE
-## 8  Item.4  dich      d     14 0.4859966 0.3417040  0.6365806       TRUE
+## 8  Item.4  dich      d     14 0.4859966 0.3417041  0.6365806       TRUE
 ## 9  Item.5  dich     a1     17 0.7357980 0.4551545  1.0555079       TRUE
 ## 10 Item.5  dich      d     18 1.8545127 1.6438380  2.0976038       TRUE
 ##    upper_conv
@@ -159,12 +174,12 @@ result
 </code></pre>
 
 <pre><code>##     Item class parnam parnum     value lower_2.5 upper_97.5 lower_conv
-## 1 Item.1  dich     a1      1 1.0111403 0.8863986  1.1416332       TRUE
-## 2 Item.1  dich      d      2 1.8681305 1.6751813  2.0690618       TRUE
-## 3 Item.2  dich      d      6 0.7909392 0.6334651  0.9518291       TRUE
-## 4 Item.3  dich      d     10 1.4608781 1.2848561  1.6429949       TRUE
-## 5 Item.4  dich      d     14 0.5214695 0.3681970  0.6770357       TRUE
-## 6 Item.5  dich      d     18 1.9928267 1.7937790  2.2005130       TRUE
+## 1 Item.1  dich     a1      1 1.0111403 0.8863986  1.1416331       TRUE
+## 2 Item.1  dich      d      2 1.8681305 1.6751813  2.0690619       TRUE
+## 3 Item.2  dich      d      6 0.7909392 0.6334650  0.9518291       TRUE
+## 4 Item.3  dich      d     10 1.4608781 1.2848562  1.6429949       TRUE
+## 5 Item.4  dich      d     14 0.5214695 0.3681968  0.6770358       TRUE
+## 6 Item.5  dich      d     18 1.9928267 1.7937789  2.2005130       TRUE
 ##   upper_conv
 ## 1       TRUE
 ## 2       TRUE
@@ -179,40 +194,40 @@ result2 &lt;- PLCI.mirt(mod2)
 result2
 </code></pre>
 
-<pre><code>##       Item  class parnam parnum      value  lower_2.5 upper_97.5
-## 1  Comfort graded     a1      1  1.0417547  0.7008507   1.453043
-## 2  Comfort graded     d1      2  4.8641542  4.0112192   5.966783
-## 3  Comfort graded     d2      3  2.6399417  2.2332765   3.115799
-## 4  Comfort graded     d3      4 -1.4660135 -1.7996419  -1.171326
-## 5     Work graded     a1      5  1.2259618  0.8942260   1.620994
-## 6     Work graded     d1      6  2.9240027  2.4851417   3.430756
-## 7     Work graded     d2      7  0.9011651  0.6307976   1.195238
-## 8     Work graded     d3      8 -2.2665647 -2.6975968  -1.893557
-## 9   Future graded     a1      9  2.2933717  1.5687253   3.986968
-## 10  Future graded     d1     10  5.2339928  4.1279873   7.822344
-## 11  Future graded     d2     11  2.2137728  1.6589418   3.416497
-## 12  Future graded     d3     12 -1.9637062 -3.0256940  -1.453916
-## 13 Benefit graded     a1     13  1.0949151  0.7659051   1.501997
-## 14 Benefit graded     d1     14  3.3479196  2.8453839   3.940600
-## 15 Benefit graded     d2     15  0.9916289  0.7267310   1.282509
-## 16 Benefit graded     d3     16 -1.6882599 -2.0443919  -1.375841
-##    lower_conv upper_conv
-## 1        TRUE       TRUE
-## 2        TRUE       TRUE
-## 3        TRUE       TRUE
-## 4        TRUE       TRUE
-## 5        TRUE       TRUE
-## 6        TRUE       TRUE
-## 7        TRUE       TRUE
-## 8        TRUE       TRUE
-## 9        TRUE       TRUE
-## 10       TRUE       TRUE
-## 11       TRUE       TRUE
-## 12       TRUE       TRUE
-## 13       TRUE       TRUE
-## 14       TRUE       TRUE
-## 15       TRUE       TRUE
-## 16       TRUE       TRUE
+<pre><code>##       Item  class parnam parnum      value  lower_2.5 upper_97.5 lower_conv
+## 1  Comfort graded     a1      1  1.0417547  0.7008509   1.453043       TRUE
+## 2  Comfort graded     d1      2  4.8641542  4.0112194   5.966782       TRUE
+## 3  Comfort graded     d2      3  2.6399417  2.2332766   3.115799       TRUE
+## 4  Comfort graded     d3      4 -1.4660135 -1.7996417  -1.171326       TRUE
+## 5     Work graded     a1      5  1.2259618  0.8942261   1.620993       TRUE
+## 6     Work graded     d1      6  2.9240027  2.4851419   3.430756       TRUE
+## 7     Work graded     d2      7  0.9011651  0.6307977   1.195238       TRUE
+## 8     Work graded     d3      8 -2.2665647 -2.6975967  -1.893557       TRUE
+## 9   Future graded     a1      9  2.2933717  1.5687257   3.986967       TRUE
+## 10  Future graded     d1     10  5.2339928  4.1279881   7.822343       TRUE
+## 11  Future graded     d2     11  2.2137728  1.6589420   3.416513       TRUE
+## 12  Future graded     d3     12 -1.9637062 -3.0256934  -1.453916       TRUE
+## 13 Benefit graded     a1     13  1.0949151  0.7659052   1.501997       TRUE
+## 14 Benefit graded     d1     14  3.3479196  2.8453841   3.940600       TRUE
+## 15 Benefit graded     d2     15  0.9916289  0.7267311   1.282508       TRUE
+## 16 Benefit graded     d3     16 -1.6882599 -2.0443917  -1.375841       TRUE
+##    upper_conv
+## 1        TRUE
+## 2        TRUE
+## 3        TRUE
+## 4        TRUE
+## 5        TRUE
+## 6        TRUE
+## 7        TRUE
+## 8        TRUE
+## 9        TRUE
+## 10       TRUE
+## 11       TRUE
+## 12       TRUE
+## 13       TRUE
+## 14       TRUE
+## 15       TRUE
+## 16       TRUE
 </code></pre>
 
 <pre><code class="r">#only estimate CI&#39;s slopes
@@ -223,10 +238,10 @@ result3
 </code></pre>
 
 <pre><code>##      Item  class parnam parnum    value lower_2.5 upper_97.5 lower_conv
-## 1 Comfort graded     a1      1 1.041755 0.7008507   1.453043       TRUE
-## 2    Work graded     a1      5 1.225962 0.8942260   1.620994       TRUE
-## 3  Future graded     a1      9 2.293372 1.5687253   3.986968       TRUE
-## 4 Benefit graded     a1     13 1.094915 0.7659051   1.501997       TRUE
+## 1 Comfort graded     a1      1 1.041755 0.7008509   1.453043       TRUE
+## 2    Work graded     a1      5 1.225962 0.8942261   1.620993       TRUE
+## 3  Future graded     a1      9 2.293372 1.5687257   3.986967       TRUE
+## 4 Benefit graded     a1     13 1.094915 0.7659052   1.501997       TRUE
 ##   upper_conv
 ## 1       TRUE
 ## 2       TRUE
@@ -238,5 +253,5 @@ result3
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.28 <a href="00Index.html">Index</a>]</div>
-</body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>
