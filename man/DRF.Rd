@@ -93,9 +93,22 @@ Function performs various omnibus differential item (DIF), bundle (DBF), and tes
 functioning procedures on an object
 estimated with \code{multipleGroup()}. The compensatory and non-compensatory statistics provided
 are described in Chalmers (2018), which generally can be interpreted as IRT generalizations
-of the SIBTEST and CSIBTEST statistics. These require the ACOV matrix to be computed in the
+of the SIBTEST and CSIBTEST statistics. For hypothesis tests, these measures
+require the ACOV matrix to be computed in the
 fitted multiple-group model (otherwise, sets of plausible draws from the posterior are explicitly
 required).
+}
+\details{
+The effect sizes estimates by the DRF function are
+\deqn{sDRF = \int [S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)] f(\theta)d\theta}
+and
+\deqn{uDRF = \int |S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)| f(\theta)d\theta}
+where \eqn{S(.)} are the scoring equations used to evaluate the model-implied difference between
+the focal and reference group.
+Note that, in comparison to Chalmers (2018), the focal group is the leftmost scoring
+function while the reference group is the rightmost scoring function. This is largely to
+keep consistent with similar effect size statistics, such as SIBTEST, DFIT, Wainer's measures
+of impact, etc.
 }
 \examples{
 \dontrun{
