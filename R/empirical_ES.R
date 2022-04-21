@@ -134,17 +134,22 @@
 #' empirical_ES(mod, plot=TRUE, DIF=FALSE)
 #'
 #' }
-empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
-                 DIF = TRUE, npts = 61, theta_lim=c(-6,6), plot=FALSE, type = 'b',
-                 par.strip.text = list(cex = 0.7),
-                 par.settings = list(strip.background = list(col = '#9ECAE1'),
-                                     strip.border = list(col = "black")), ...){
+empirical_ES <- function(mod, Theta.focal = NULL,
+                         focal_items = 1L:extract.mirt(mod, 'nitems'),
+                         DIF = TRUE, npts = 61, theta_lim=c(-6,6),
+                         plot=FALSE, type = 'b',
+                         par.strip.text = list(cex = 0.7),
+                         par.settings = list(strip.background =
+                                               list(col = '#9ECAE1'),
+                                             strip.border =
+                                               list(col = "black")), ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(extract.mirt(mod, 'ngroups') == 2L)
     ref.group <- 1
     ref <- extract.group(mod, ref.group)
     focal <- extract.group(mod, ifelse(ref.group == 1, 2, 1))
-    focal_select <- extract.mirt(mod, 'group') != extract.mirt(mod, 'groupNames')[ref.group]
+    focal_select <- extract.mirt(mod, 'group') !=
+      extract.mirt(mod, 'groupNames')[ref.group]
     if(is.null(Theta.focal)){
         Theta <- fscores(mod, full.scores = TRUE, full.scores.SE = FALSE,
                          leave_missing=TRUE, ...)
@@ -233,7 +238,8 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     df.abs.dif.nrm <- abs(df.dif.nrm)            # abs(DF in ES at each level of theta)
     weighted.dif.abs.nrm <- apply(df.abs.dif.nrm,2, function(x) x*theta.density)
     UIDN <- colSums(weighted.dif.abs.nrm)
-    df.item.output <- data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,mat.item.max.d,mean.ES.foc,mean.ES.ref)
+    df.item.output <- data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,
+                                 mat.item.max.d,mean.ES.foc,mean.ES.ref)
     row.names(df.item.output)<-paste0("item.",1:nrow(df.item.output))
     df.item.output <- as.mirt_df(df.item.output)
     if(!plot && DIF) return(df.item.output[focal_items, ])
@@ -251,7 +257,8 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     ETSSD <- f.cohen.d(ETS.foc.obs, ETS.ref.obs) # cohen's D
     test.Dmax <- get.max.D(ETS.dif.obs)
     ############# test level
-    ETS.abs.dif.nrm <- rowSums(df.abs.dif.nrm) # [abs(DF in ES at each level of theta)] summed across items
+    # [abs(DF in ES at each level of theta)] summed across items
+    ETS.abs.dif.nrm <- rowSums(df.abs.dif.nrm)
     UDTFR <- sum(ETS.abs.dif.nrm*theta.density)
     UDTFR.b <- sum(UIDN)
     ETS.dif.nrm <- rowSums(df.dif.nrm)  ### ETS dif at each theta, summed across items
@@ -263,7 +270,9 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
     ETS.abs.dif.nrm <- abs(ETS.dif.nrm)
     UETSDN <- sum(ETS.abs.dif.nrm*theta.density)
     out.test.stats <- c(STDS,UTDS,UETSDS,ETSSD,Starks.DTFR,UDTFR,UETSDN,test.Dmax)
-    out.test.names <- c("STDS","UTDS","UETSDS","ETSSD","Starks.DTFR","UDTFR","UETSDN","theta.of.max.test.D","Test.Dmax")
+    out.test.names <- c("STDS","UTDS","UETSDS","ETSSD",
+                        "Starks.DTFR","UDTFR","UETSDN",
+                        "theta.of.max.test.D","Test.Dmax")
     df.test.output <- data.frame(out.test.names,out.test.stats)
     names(df.test.output) <- c("Effect Size","Value")
     df.item.output <- as.mirt_df(df.item.output)
@@ -283,16 +292,19 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
       mykey$points$col <- c("red", "black")
     }
     if(DIF){
-        nms <- rep(extract.mirt(mod, 'itemnames')[focal_items], each = nrow(Theta.focal)*2)
+        nms <- rep(extract.mirt(mod, 'itemnames')[focal_items],
+                   each = nrow(Theta.focal)*2)
         nms <- factor(nms, levels = extract.mirt(mod, 'itemnames')[focal_items])
         plt <- data.frame(S=c(df.ref.obs[order,1],df.foc.obs[order,1]),
                              Theta=c(Theta.focal[order,1], Theta.focal[order,1]),
-                             group=c(rep(extract.mirt(mod, 'groupNames'), each = nrow(Theta.focal))))
+                             group=c(rep(extract.mirt(mod, 'groupNames'),
+                                         each = nrow(Theta.focal))))
         if(ncol(df.foc.obs)>1){
           for(i in 2:ncol(df.foc.obs)){
             plt.df <- data.frame(S=c(df.ref.obs[order,i],df.foc.obs[order,i]),
                                  Theta=c(Theta.focal[order,1],Theta.focal[order,1]),
-                                 group=rep(extract.mirt(mod, 'groupNames'), each = nrow(Theta.focal)))
+                                 group=rep(extract.mirt(mod, 'groupNames'),
+                                           each = nrow(Theta.focal)))
             plt <- rbind(plt, plt.df)
           }
         }
@@ -307,8 +319,10 @@ empirical_ES <- function(mod, Theta.focal = NULL, focal_items = 1L:extract.mirt(
                       par.settings=par.settings,
                       par.strip.text=par.strip.text, ...))
       } else {
-          plot.df1 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.foc.obs[order],group=as.character(grps[2]))
-          plot.df2 <- data.frame(Theta=Theta.focal[order,1],ETS=ETS.ref.obs[order],group=as.character(grps[1]))
+          plot.df1 <- data.frame(Theta=Theta.focal[order,1],
+                                 ETS=ETS.foc.obs[order],group=as.character(grps[2]))
+          plot.df2 <- data.frame(Theta=Theta.focal[order,1],
+                                 ETS=ETS.ref.obs[order],group=as.character(grps[1]))
           plot.df <- rbind(plot.df1,plot.df2)
           main <- if(extract.mirt(mod, 'nitems') == length(focal_items))
               "Expected Test Scores" else "Expected Bundle Scores"
