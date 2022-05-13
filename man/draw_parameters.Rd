@@ -36,7 +36,7 @@ returns a draws x p matrix of plausible parameters, where each row correspeonds 
 }
 \description{
 Draws plausible parameters from a model using parametric sampling (if the information matrix
-was computed) or via boostrap sampling. Primarily for use with the \code{\link{DRF}} function.
+was computed) or via bootstrap sampling. Primarily for use with the \code{\link{DRF}} function.
 }
 \examples{
 

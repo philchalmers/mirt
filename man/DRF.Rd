@@ -9,7 +9,7 @@ DRF(
   draws = NULL,
   focal_items = 1L:extract.mirt(mod, "nitems"),
   param_set = NULL,
-  den.type = "both",
+  den.type = "marginal",
   CI = 0.95,
   npts = 1000,
   quadpts = NULL,
@@ -46,7 +46,7 @@ being evaluated within the same model (especially when using the bootstrap metho
 See \code{\link{draw_parameters}}}
 
 \item{den.type}{character specifying how the density of the latent traits is computed.
-Default is \code{'both'} to include the information from both groups,
+Default is \code{'marginal'} to include the proportional information from both groups,
 \code{'focal'} for just the focal group, and \code{'reference'} for the reference group}
 
 \item{CI}{range of confidence interval when using draws input}
@@ -100,15 +100,16 @@ required).
 }
 \details{
 The effect sizes estimates by the DRF function are
-\deqn{sDRF = \int [S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)] f(\theta)d\theta}
+\deqn{sDRF = \int [S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)] f(\theta)d\theta,}
+\deqn{uDRF = \int |S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)| f(\theta)d\theta,}
 and
-\deqn{uDRF = \int |S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)| f(\theta)d\theta}
+\deqn{dDRF = \sqrt{\int [S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)]^2 f(\theta)d\theta}}
 where \eqn{S(.)} are the scoring equations used to evaluate the model-implied difference between
 the focal and reference group.
 Note that, in comparison to Chalmers (2018), the focal group is the leftmost scoring
 function while the reference group is the rightmost scoring function. This is largely to
 keep consistent with similar effect size statistics, such as SIBTEST, DFIT, Wainer's measures
-of impact, etc.
+of impact, etc, which in general can be seen as special-case estimators of this family.
 }
 \examples{
 \dontrun{
