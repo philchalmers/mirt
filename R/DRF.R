@@ -14,12 +14,16 @@
 #' \deqn{uDRF = \int |S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)| f(\theta)d\theta,}
 #' and
 #' \deqn{dDRF = \sqrt{\int [S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)]^2 f(\theta)d\theta}}
-#' where \eqn{S(.)} are the scoring equations used to evaluate the model-implied difference between
-#' the focal and reference group.
-#' Note that, in comparison to Chalmers (2018), the focal group is the leftmost scoring
-#' function while the reference group is the rightmost scoring function. This is largely to
-#' keep consistent with similar effect size statistics, such as SIBTEST, DFIT, Wainer's measures
-#' of impact, etc, which in general can be seen as special-case estimators of this family.
+#' where \eqn{S(.)} are the scoring equations used to evaluate the model-implied
+#' difference between the focal and reference group. The \eqn{f(\theta)}
+#' terms can either be estimated from the posterior via an empirical
+#' histogram approach (default), or can use the best
+#' fitting prior distribution that is obtain post-convergence (default is a Guassian
+#' distribution). Note that, in comparison to Chalmers (2018), the focal group is
+#' the leftmost scoring function while the reference group is the rightmost
+#' scoring function. This is largely to keep consistent with similar effect
+#' size statistics, such as SIBTEST, DFIT, Wainer's measures of impact, etc,
+#' which in general can be seen as special-case estimators of this family.
 #'
 #' @aliases DRF
 #' @param mod a multipleGroup object which estimated only 2 groups
@@ -55,6 +59,10 @@
 #' @param DIF logical; return a list of item-level imputation properties using the DRF statistics?
 #'   These can generally be used as a DIF detection method and as a graphical display for
 #'   understanding DIF within each item
+#' @param best_fitting logical; use the best fitting parametric distribution (Gaussian by default)
+#'  that was used at the time of model estimation? This will result in much fast computations, however
+#'  the results are more dependent upon the underlying modelling assumptions. Default is FALSE, which
+#'  uses the empirical histogram approach
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 #'   Adjustments are located in the \code{adj_pvals} element in the returned list. Only applicable when
 #'   \code{DIF = TRUE}
@@ -101,10 +109,17 @@
 #' plot(mod, type = 'itemscore')
 #' plot(mod, type = 'itemscore', which.items = 10:15)
 #'
+#' # empirical histogram approach
 #' DRF(mod)
 #' DRF(mod, focal_items = 6:10) #DBF
 #' DRF(mod, DIF=TRUE)
 #' DRF(mod, DIF=TRUE, focal_items = 10:15)
+#'
+#' # Best-fitting Gaussian distributions
+#' DRF(mod, best_fitting=TRUE)
+#' DRF(mod, focal_items = 6:10, best_fitting=TRUE) #DBF
+#' DRF(mod, DIF=TRUE, best_fitting=TRUE)
+#' DRF(mod, DIF=TRUE, focal_items = 10:15, best_fitting=TRUE)
 #'
 #' DRF(mod, plot = TRUE)
 #' DRF(mod, focal_items = 6:10, plot = TRUE) #DBF
@@ -113,6 +128,7 @@
 #'
 #' mirtCluster()
 #' DRF(mod, draws = 500)
+#' DRF(mod, draws = 500, best_fitting=TRUE)
 #' DRF(mod, draws = 500, plot=TRUE)
 #'
 #' # pre-draw parameter set to save computations
@@ -271,7 +287,8 @@
 #
 #' }
 DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
-                param_set = NULL, den.type = 'marginal', CI = .95, npts = 1000,
+                param_set = NULL, den.type = 'marginal', best_fitting=FALSE,
+                CI = .95, npts = 1000,
                 quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
                 plot = FALSE, DIF = FALSE, p.adjust = 'none',
                 par.strip.text = list(cex = 0.7),
@@ -310,7 +327,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         ret
     }
 
-    fn <- function(x, omod, Theta, max_score, Theta_nodes = NULL,
+    fn <- function(x, omod, Theta, max_score, Theta_nodes = NULL, best_fitting,
                    plot, DIF, focal_items, details, signs=NULL, rs=NULL, den.type){
         mod <- omod
         if(!is.null(Theta_nodes)){
@@ -322,8 +339,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             if(!DIF) ret <- c("sDRF." = ret)
             return(ret)
         }
-        calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF,  den.type=den.type,
-                  focal_items=focal_items, details=details, signs=signs, rs=rs)
+        calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF, den.type=den.type,
+                  focal_items=focal_items, details=details, signs=signs, rs=rs, best_fitting=best_fitting)
     }
     fn2 <- function(ind, pars, MGmod, param_set, rslist, ...){
         pars <- reloadPars(longpars=param_set[ind,],
@@ -403,7 +420,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                     technical = list(storeEtable=TRUE, theta_lim=theta_lim, omp=FALSE),
                     quadpts=quadpts, large=large, TOL = NaN)
     if(plot) Theta_nodes <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=1000))
-    oCM <- lapply(1L, fn, omod=mod, Theta_nodes=Theta_nodes,
+    oCM <- lapply(1L, fn, omod=mod, Theta_nodes=Theta_nodes, best_fitting=best_fitting,
                   max_score=max_score, Theta=Theta, plot=plot, den.type=den.type,
                   DIF=DIF, focal_items=focal_items, details=details)[[1L]]
     signs <- attr(oCM, 'signs')
@@ -422,7 +439,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
         })
         list_scores <- myLapply(1L:nrow(param_set), fn2, progress=verbose,
-                                pars=pars, MGmod=mod, param_set=param_set,
+                                pars=pars, MGmod=mod, param_set=param_set, best_fitting=best_fitting,
                                 max_score=max_score, Theta=Theta, rslist=rslist,
                                 Theta_nodes=Theta_nodes, plot=plot, details=details,
                                 DIF=DIF, focal_items=focal_items, signs=signs, den.type=den.type)
@@ -482,7 +499,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
 }
 
 calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, den.type,
-                      rs=NULL, signs=NULL){
+                      best_fitting, rs=NULL, signs=NULL){
     if(DIF){
         T1 <- expected.test(mod, Theta, group=1L, mins=FALSE, individual = TRUE,
                             which.items=focal_items)
@@ -495,21 +512,38 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, de
                             mins=FALSE, which.items=focal_items))
     }
     if(plot) return(c(T1, T2))
-    if(is.null(rs)){
-        mod2 <- with(details, multipleGroup(data=data, model=model, group=group, itemtype=itemtype, large=large,
-                                            constrain=constrain, quadpts=quadpts, TOL=TOL,
-                                            pars=mod2values(mod), technical=technical))
-        r1 <- rowSums(mod2@Internals$Etable[[1L]]$r1)
-        r2 <- rowSums(mod2@Internals$Etable[[2L]]$r1)
+    if(best_fitting){
+        pars <- extract.mirt(mod, 'pars')
+        nitems <- extract.mirt(mod, 'nitems')
+        den1 <- pars[[1]]@ParObjects$pars[[nitems + 1L]]@den(
+            pars[[1]]@ParObjects$pars[[nitems + 1L]], Theta)
+        den1 <- den1 / sum(den1)
+        den2 <- pars[[2]]@ParObjects$pars[[nitems + 1L]]@den(
+            pars[[2]]@ParObjects$pars[[nitems + 1L]], Theta)
+        den2 <- den2 / sum(den2)
+        p <- if(den.type == 'marginal'){
+            Ns <- table(extract.mirt(mod, 'group'))
+            (Ns[1] * den1 + Ns[2] * den2) / sum(Ns)
+        } else if(den.type == 'focal') den2
+          else den1
     } else {
-        r1 <- rs[,1L]
-        r2 <- rs[,2L]
+        if(is.null(rs)){
+            mod2 <- with(details, multipleGroup(data=data, model=model, group=group,
+                                                itemtype=itemtype, large=large,
+                                                constrain=constrain, quadpts=quadpts, TOL=TOL,
+                                                pars=mod2values(mod), technical=technical))
+            r1 <- rowSums(mod2@Internals$Etable[[1L]]$r1)
+            r2 <- rowSums(mod2@Internals$Etable[[2L]]$r1)
+        } else {
+            r1 <- rs[,1L]
+            r2 <- rs[,2L]
+        }
+        p <- if(den.type == 'marginal')
+            (r1 + r2) / sum(r1 + r2)
+        else if(den.type == 'focal')
+            r2 / sum(r2)
+        else r1/ sum(r1)
     }
-    p <- if(den.type == 'marginal')
-        (r1 + r2) / sum(r1 + r2)
-    else if(den.type == 'focal')
-        r2 / sum(r2)
-    else r1/ sum(r1)
     D <- T2 - T1
     uDRF <- colSums(abs(D) * p)
     sDRF <- colSums(D * p)
@@ -629,6 +663,7 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
                         shortpars=shortpars, longpars=longpars, lbound=lbound,
                         ubound=ubound, pre.ev=pre.ev, constrain=constrain, est=est,
                         imputenums=imputenums, MGmod=mod, redraws=redraws, pars=pars)
+        if(verbose) cat("\n")
         ret <- do.call(rbind, ret)
         if(any(logits))
             ret[,logits] <- antilogit(ret[,logits])

@@ -10,6 +10,7 @@ DRF(
   focal_items = 1L:extract.mirt(mod, "nitems"),
   param_set = NULL,
   den.type = "marginal",
+  best_fitting = FALSE,
   CI = 0.95,
   npts = 1000,
   quadpts = NULL,
@@ -48,6 +49,11 @@ See \code{\link{draw_parameters}}}
 \item{den.type}{character specifying how the density of the latent traits is computed.
 Default is \code{'marginal'} to include the proportional information from both groups,
 \code{'focal'} for just the focal group, and \code{'reference'} for the reference group}
+
+\item{best_fitting}{logical; use the best fitting parametric distribution (Gaussian by default)
+that was used at the time of model estimation? This will result in much fast computations, however
+the results are more dependent upon the underlying modelling assumptions. Default is FALSE, which
+uses the empirical histogram approach}
 
 \item{CI}{range of confidence interval when using draws input}
 
@@ -104,12 +110,16 @@ The effect sizes estimates by the DRF function are
 \deqn{uDRF = \int |S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)| f(\theta)d\theta,}
 and
 \deqn{dDRF = \sqrt{\int [S(C|\bm{\Psi}^{(R)},\theta) S(C|\bm{\Psi}^{(F)},\theta)]^2 f(\theta)d\theta}}
-where \eqn{S(.)} are the scoring equations used to evaluate the model-implied difference between
-the focal and reference group.
-Note that, in comparison to Chalmers (2018), the focal group is the leftmost scoring
-function while the reference group is the rightmost scoring function. This is largely to
-keep consistent with similar effect size statistics, such as SIBTEST, DFIT, Wainer's measures
-of impact, etc, which in general can be seen as special-case estimators of this family.
+where \eqn{S(.)} are the scoring equations used to evaluate the model-implied
+difference between the focal and reference group. The \eqn{f(\theta)}
+terms can either be estimated from the posterior via an empirical
+histogram approach (default), or can use the best
+fitting prior distribution that is obtain post-convergence (default is a Guassian
+distribution). Note that, in comparison to Chalmers (2018), the focal group is
+the leftmost scoring function while the reference group is the rightmost
+scoring function. This is largely to keep consistent with similar effect
+size statistics, such as SIBTEST, DFIT, Wainer's measures of impact, etc,
+which in general can be seen as special-case estimators of this family.
 }
 \examples{
 \dontrun{
@@ -138,10 +148,17 @@ plot(mod, which.items = 6:10) #DBF
 plot(mod, type = 'itemscore')
 plot(mod, type = 'itemscore', which.items = 10:15)
 
+# empirical histogram approach
 DRF(mod)
 DRF(mod, focal_items = 6:10) #DBF
 DRF(mod, DIF=TRUE)
 DRF(mod, DIF=TRUE, focal_items = 10:15)
+
+# Best-fitting Gaussian distributions
+DRF(mod, best_fitting=TRUE)
+DRF(mod, focal_items = 6:10, best_fitting=TRUE) #DBF
+DRF(mod, DIF=TRUE, best_fitting=TRUE)
+DRF(mod, DIF=TRUE, focal_items = 10:15, best_fitting=TRUE)
 
 DRF(mod, plot = TRUE)
 DRF(mod, focal_items = 6:10, plot = TRUE) #DBF
@@ -150,9 +167,11 @@ DRF(mod, DIF=TRUE, focal_items = 10:15, plot = TRUE)
 
 mirtCluster()
 DRF(mod, draws = 500)
+DRF(mod, draws = 500, best_fitting=TRUE)
 DRF(mod, draws = 500, plot=TRUE)
 
 # pre-draw parameter set to save computations
+#  (more useful when using non-parametric bootstrap)
 param_set <- draw_parameters(mod, draws = 500)
 DRF(mod, focal_items = 6, param_set=param_set) #DIF
 DRF(mod, DIF=TRUE, param_set=param_set) #DIF
