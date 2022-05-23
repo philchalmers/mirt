@@ -4,7 +4,7 @@
 #' \code{mirt} fits a maximum likelihood (or maximum a posteriori) factor analysis model
 #' to any mixture of dichotomous and polytomous data under the item response theory paradigm
 #' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm, with
-#' an EM algorithm approach outlined by Bock and Aiken (1981) using rectangular or
+#' an EM algorithm approach outlined by Bock and Aitkin (1981) using rectangular or
 #' quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
 #' of the MH-RM algorithm). Models containing 'explanatory' person or item level predictors
 #' can only be included by using the \code{\link{mixedmirt}} function, though latent
