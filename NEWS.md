@@ -1,3 +1,9 @@
+# Changes in mirt 1.37
+
+- `DRF()` gains best-fitting prior support (currently limited to Gaussian distributions)
+
+- Correct index subset caused by tmp row removals in MG objects (fixes #227)
+
 # Changes in mirt 1.36
 
 - Progress bar added automatically (controlled via the `verbose` argument) 

@@ -2475,14 +2475,13 @@ removeMissing <- function(obj){
         message('Data does not contain missing values. Continuing normally')
         return(obj)
     }
-    obj@Data$group <- obj@Data$group[-pick]
-    ind1 <- 0L
     for(g in seq_len(length(obj@Data$groupNames))){
-        ind2 <- 1L:nrow(obj@Data$fulldata[[g]]) + ind1
+        whc <- obj@Data$group == obj@Data$groupNames[g]
+        ind2 <- obj@Data$rowID[whc]
         pick2 <- ind2 %in% pick
-        ind1 <- nrow(obj@Data$fulldata[[g]]) + ind1
         obj@Data$fulldata[[g]] <- obj@Data$fulldata[[g]][!pick2, , drop=FALSE]
     }
+    obj@Data$group <- obj@Data$group[-pick]
     if(is(obj, 'MultipleGroupClass')){
         for(g in seq_len(length(obj@Data$groupNames))){
             obj@ParObjects$pars[[g]]@Data$data <- dat[obj@Data$groupNames[g] == obj@Data$group,
