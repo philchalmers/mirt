@@ -555,9 +555,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     estindex_unique=estindex_unique, correction=correction, hess=hess, random=list(),
                     Prior=Prior, time=c(Estep=as.numeric(Estep.time), Mstep=as.numeric(Mstep.time)),
                     prior=prior, Priorbetween=Priorbetween, sitems=sitems, collectLL=collectLL,
-                    shortpars=longpars[estpars & !redun_constr], lrPars=lrPars,
+                    shortpars=longpars[estpars & !redun_constr], lrPars=lrPars, EMhistory=na.omit(EMhistory),
                     logPrior=LP, fail_invert_info=FALSE, Etable=Elist$rlist, Theta=gTheta[[1L]])
     }
+    attr(ret$EMhistory, "na.action") <- NULL
     for(g in seq_len(ngroups))
         for(i in seq_len(J))
             ret$pars[[g]][[i]]@dat <- matrix(0)

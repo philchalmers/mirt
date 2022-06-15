@@ -1073,6 +1073,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                       survey.weights=survey.weights)
     if(opts$storeEtable)
         Internals$Etable <- ESTIMATE$Etable
+    if(opts$storeEMhistory)
+        Internals$EMhistory <- ESTIMATE$EMhistory
     if(opts$method == 'SEM') Options$TOL <- NA
     if(opts$odentype == "discrete"){
         Fit$F <- Fit$h2 <- NULL

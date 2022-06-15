@@ -1470,7 +1470,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
                 'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
                 "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged', 'omp', 'nconstrain',
-                'standardize_ref')
+                'standardize_ref', "storeEMhistory")
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1515,6 +1515,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$SE.type = SE.type
     opts$verbose = verbose
     opts$SEtol = ifelse(is.null(technical$SEtol), .001, technical$SEtol)
+    opts$storeEMhistory = ifelse(is.null(technical$storeEMhistory), FALSE, technical$storeEMhistory)
     opts$grsm.block = grsm.block
     opts$rsm.block = rsm.block
     opts$calcNull = calcNull

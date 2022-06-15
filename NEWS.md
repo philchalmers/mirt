@@ -1,5 +1,8 @@
 # Changes in mirt 1.37
 
+- `technical` list gains a `storeEMhistory` flag to store the EM history
+  (requested by @netique)
+
 - `DRF()` gains best-fitting prior support (currently limited to Gaussian distributions)
 
 - Correct index subset caused by tmp row removals in MG objects (fixes #227)
