@@ -2306,8 +2306,9 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
 
 latentRegression_obj <- function(data, covdata, formula, dentype, method){
     if(!is.null(covdata) && !is.null(formula)){
-        if(dentype == "empiricalhist")
-            stop('Empirical histogram method not supported with covariates', call.=FALSE)
+        if(dentype != "Gaussian")
+            stop('Only Guassian dentype currently supported for latent regression models',
+                 call.=FALSE)
         if(!is.data.frame(covdata))
             stop('covdata must be a data.frame object', call.=FALSE)
         if(nrow(covdata) != nrow(data))
