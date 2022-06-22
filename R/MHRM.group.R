@@ -372,6 +372,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     } else {
         info <- matrix(0, 1L, 1L)
         cycles <- BURNIN + SEMCYCLES
+        aveAR <- list(NA)
     }
     if(no_stage_3)
         aveAR <- list(NA)
