@@ -8,7 +8,7 @@ mirtCluster(spec, omp_threads, remove = FALSE, ...)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
-maximum number of available local cores will be used}
+maximum number of available local cores will be used. Setting this to NULL will skip a new definition (allows \code{omp_threads} to be used independently)}
 
 \item{omp_threads}{number of OpenMP threads to use (currently applies to E-step computations only).
 Not used when argument input is missing}
@@ -29,14 +29,19 @@ it is not recommended to define a mirtCluster.
 
 \dontrun{
 
+# use all available cores
+mirtCluster()
+mirtCluster(remove = TRUE)
+
 #make 4 cores available for parallel computing
 mirtCluster(4)
-
-#stop and remove cores
 mirtCluster(remove = TRUE)
 
 # create 3 core architecture in R, and 4 thread architecture with OpenMP
 mirtCluster(spec = 3, omp_threads = 4)
+
+# leave previous multicore objects, but change omp_threads
+mirtCluster(spec = NULL, omp_threads = 2)
 
 }
 }

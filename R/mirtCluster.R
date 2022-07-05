@@ -9,7 +9,7 @@
 #'
 #' @aliases mirtCluster
 #' @param spec input that is passed to \code{parallel::makeCluster()}. If no input is given the
-#'   maximum number of available local cores will be used
+#'   maximum number of available local cores will be used. Setting this to NULL will skip a new definition (allows \code{omp_threads} to be used independently)
 #' @param omp_threads number of OpenMP threads to use (currently applies to E-step computations only).
 #'   Not used when argument input is missing
 #' @param ... additional arguments to pass to \code{parallel::makeCluster}
@@ -26,22 +26,31 @@
 #'
 #' \dontrun{
 #'
+#' # use all available cores
+#' mirtCluster()
+#' mirtCluster(remove = TRUE)
+#'
 #' #make 4 cores available for parallel computing
 #' mirtCluster(4)
-#'
-#' #stop and remove cores
 #' mirtCluster(remove = TRUE)
 #'
 #' # create 3 core architecture in R, and 4 thread architecture with OpenMP
 #' mirtCluster(spec = 3, omp_threads = 4)
 #'
+#' # leave previous multicore objects, but change omp_threads
+#' mirtCluster(spec = NULL, omp_threads = 2)
+#'
 #' }
 mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
+    if(!missing(omp_threads)){
+        stopifnot(is.numeric(omp_threads))
+        .mirtClusterEnv$omp_threads <- omp_threads
+    }
+    if(!missing(spec) && is.null(spec))
+        return(invisible(NULL))
     if(requireNamespace("parallel", quietly = TRUE)){
         if(missing(spec))
             spec <- parallel::detectCores()
-        if(missing(omp_threads))
-            .mirtClusterEnv$omp_threads <- 1L
         if(remove){
             if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
                 message('There is no visible mirtCluster() definition')
@@ -63,5 +72,5 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
         .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
         mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible(NULL))
     }
-    return(invisible())
+    return(invisible(NULL))
 }
