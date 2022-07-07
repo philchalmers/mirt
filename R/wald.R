@@ -139,7 +139,7 @@ wald <- function(object, L, C = NULL){
         stop('C must be a vector of constant population parameters', call.=FALSE)
     if(length(C) != nrow(L))
         stop('length(C) must be the same as nrow(L)', call.=FALSE)
-    W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
+    W <- t((L %*% B) - C) %*% solve(L %*% covB %*% t(L)) %*% ((L %*% B) - C)
     W <- ifelse(W < 0, 0, W)
     ret <- list(W=W, df = nrow(L))
     p <- 1 - pchisq(ret$W, ret$df)
