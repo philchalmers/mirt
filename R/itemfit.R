@@ -580,21 +580,6 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         den <- dnorm(Theta, 0, .5)
         den <- den / sum(den)
         cumTheta <- cumsum(den)
-        if(!is.na(group.size)){
-            Groups <- rep(20, length(ord))
-            ngroups <- ceiling(nrow(fulldata) / group.size)
-            weight <- 1/ngroups
-            for(i in seq_len(length(Groups)))
-                Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
-        } else {
-            ngroups <- group.bins
-            Groups <- rep(1:group.bins, each = floor(length(ord) / ngroups))
-            if(length(ord) %% ngroups > 0L){
-                c1 <- length(ord) %% ngroups
-                Groups <- c(rep(1, floor(c1/2)), Groups)
-                Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
-            }
-        }
         X2.value <- G2.value <- df.G2 <- df.X2 <- numeric(J)
         if(!is.null(empirical.plot)){
             if(nfact > 1L) stop('Cannot make empirical plot for multidimensional models', call.=FALSE)
@@ -610,13 +595,31 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             mtheta_nms <- numeric(ngroups)
         }
         for (i in which.items){
+            if(!is.na(group.size)){
+                browser()
+                Groups <- rep(20, length(ord))
+                ngroups <- ceiling(nrow(fulldata) / group.size)
+                weight <- 1/ngroups
+                for(i in seq_len(length(Groups)))
+                    Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
+            } else {
+                ngroups <- group.bins
+                Groups <- rep(1:group.bins, each = floor(sum(pick[,i]) / ngroups))
+                if(sum(pick[,i]) %% ngroups > 0L){
+                    c1 <- sum(pick[,i]) %% ngroups
+                    Groups <- c(rep(1, floor(c1/2)), Groups)
+                    Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
+                }
+            }
             for(j in unique(Groups)){
-                dat <- fulldata[Groups == j & pick[,i], itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
+                tmpdat <- fulldata[pick[,i], , drop=FALSE]
+                dat <- tmpdat[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
                 if(nrow(dat) <= 1L) next
                 colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
                 r <- colSums(dat)
                 N <- nrow(dat)
-                mtheta <- matrix(group.fun(Theta[Groups == j & pick[,i],]), nrow=1)
+                tmpTheta <- Theta[pick[,i], , drop=FALSE]
+                mtheta <- matrix(group.fun(tmpTheta[Groups == j,]), nrow=1)
                 if(!is.null(empirical.plot)){
                     tmp <- r/N
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
@@ -649,7 +652,9 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     X2.value[i] <- X2.value[i] + sum((r - E)^2 / E)
                     df.X2[i] <- df.X2[i] + length(r) - 1L
                     tmp <- r * log(r/E)
-                    tmp <- tmp[is.finite(tmp)]
+                    # replace with 0 is fine:
+                    #   https://stats.stackexchange.com/questions/107718/goodness-of-fit-likelihood-ratio-test-with-zero-values
+                    tmp[!is.finite(tmp)] <- 0
                     if(length(tmp) > 1L){
                         G2.value[i] <- G2.value[i] + 2*sum(tmp)
                         df.G2[i] <- df.G2[i] + length(tmp) - 1L

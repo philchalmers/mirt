@@ -1,5 +1,8 @@
 # Changes in mirt 1.37
 
+- `X2` and `G2` classes of item-fit statistics now better deal with large 
+  missing value vectors on a per-item basis for better consistency
+
 - `technical` list gains a `storeEMhistory` flag to store the EM history
   (requested by @netique)
 
