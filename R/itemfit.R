@@ -596,12 +596,12 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         }
         for (i in which.items){
             if(!is.na(group.size)){
-                browser()
-                Groups <- rep(20, length(ord))
-                ngroups <- ceiling(nrow(fulldata) / group.size)
+                Groups <- rep(20, sum(pick[,i]))
+                ngroups <- ceiling(sum(pick[,i]) / group.size)
                 weight <- 1/ngroups
-                for(i in seq_len(length(Groups)))
-                    Groups[round(cumTheta,2) >= weight*(i-1) & round(cumTheta,2) < weight*i] <- i
+                for(q in seq_len(length(Groups)))
+                    Groups[round(cumTheta[pick[,i]],2) >= weight*(q-1) &
+                               round(cumTheta[pick[,i]],2) < weight*q] <- q
             } else {
                 ngroups <- group.bins
                 Groups <- rep(1:group.bins, each = floor(sum(pick[,i]) / ngroups))
