@@ -654,10 +654,11 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     tmp <- r * log(r/E)
                     # replace with 0 is fine:
                     #   https://stats.stackexchange.com/questions/107718/goodness-of-fit-likelihood-ratio-test-with-zero-values
+                    count_nonzero <- sum(is.finite(tmp))
                     tmp[!is.finite(tmp)] <- 0
                     if(length(tmp) > 1L){
                         G2.value[i] <- G2.value[i] + 2*sum(tmp)
-                        df.G2[i] <- df.G2[i] + length(tmp) - 1L
+                        df.G2[i] <- df.G2[i] + count_nonzero - 1L
                     }
                 }
             }
