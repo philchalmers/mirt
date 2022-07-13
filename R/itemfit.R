@@ -832,18 +832,20 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     itemtype <- extract.mirt(x, 'itemtype')
     if(any(c('PV_Q1', 'PV_Q1*') %in% fit_stats)){
         tmp <- PV_itemfit(x, which.items=which.items, draws=pv_draws, itemtype=itemtype,
-                          p.adjust=p.adjust, ...)
+                          p.adjust=p.adjust, mincell.X2=mincell.X2, ...)
         ret <- cbind(ret, tmp)
     }
     is_NA <- is.na(x@Data$data)
     if('PV_Q1*' %in% fit_stats){
         tmp <- boot_PV(x, is_NA=is_NA, org=tmp, which.items=which.items,
-                       itemtype=itemtype, boot=boot, draws=pv_draws, p.adjust=p.adjust, ...)
+                       itemtype=itemtype, boot=boot, draws=pv_draws, p.adjust=p.adjust,
+                       mincell.X2=mincell.X2, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*' %in% fit_stats){
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot, dfapprox=FALSE,
-                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints, p.adjust=p.adjust, ...)
+                        itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints,
+                        p.adjust=p.adjust, ...)
         ret <- cbind(ret, tmp)
     }
     if('X2*_df' %in% fit_stats){
