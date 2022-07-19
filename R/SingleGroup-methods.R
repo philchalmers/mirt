@@ -348,8 +348,10 @@ setMethod(
             } else {
                 for(i in seq_len(J+1L)){
                     allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
-                                                   object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
-                                                   object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
+                                                   object@ParObjects$pars[[i]]@par -
+                                                 z*object@ParObjects$pars[[i]]@SEpar,
+                                                   object@ParObjects$pars[[i]]@par +
+                                                 z*object@ParObjects$pars[[i]]@SEpar),
                                                  3, byrow = TRUE)
                     rownames(allPars[[i]]) <- c('par', SEnames)
                     colnames(allPars[[i]]) <- object@ParObjects$pars[[i]]@parnames
@@ -364,7 +366,8 @@ setMethod(
         }
         if(!rawug && !IRTpars){
             allPars <- lapply(allPars, function(x, digits){
-                x[ , colnames(x) %in% c('g', 'u')] <- antilogit(x[ , colnames(x) %in% c('g', 'u')])
+                x[ , colnames(x) %in% c('g', 'u')] <-
+                    antilogit(x[ , colnames(x) %in% c('g', 'u')])
                 x
             })
         }
@@ -382,27 +385,30 @@ setMethod(
             for(i in seq_len(nrow(items)))
                 items[i, nms[[i]]] <- items.old[[i]]
             nfact <- object@Model$nfact
-            means <- allPars$GroupPars[seq_len(nfact)]
             if(discrete){
                 allPars <- list(items=items, group.intercepts=allPars$GroupPars)
-            } else {
+            } else if(object@ParObjects$pars[[J+1L]]@dentype != "custom"){
+                means <- allPars$GroupPars[seq_len(nfact)]
                 if(object@ParObjects$pars[[J+1L]]@dentype == "Davidian"){
                     covs <- matrix(NA, nfact, nfact)
                     covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[2L]
                     covs[upper.tri(covs, FALSE)] <- covs[lower.tri(covs, FALSE)]
-                    colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
+                    colnames(covs) <- rownames(covs) <- names(means) <-
+                        object@Model$factorNames[seq_len(nfact)]
                     allPars <- list(items=items, means=means, cov=covs,
                                     Davidian_phis=allPars$GroupPars[-c(1:2)])
                 } else {
                     covs <- matrix(NA, nfact, nfact)
                     if(object@ParObjects$pars[[J+1L]]@dentype == "mixture")
-                        covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(seq_len(nfact), length(allPars$GroupPars))]
+                        covs[lower.tri(covs, TRUE)] <-
+                            allPars$GroupPars[-c(seq_len(nfact), length(allPars$GroupPars))]
                     else covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
                     covs <- makeSymMat(covs)
-                    colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
+                    colnames(covs) <- rownames(covs) <- names(means) <-
+                        object@Model$factorNames[seq_len(nfact)]
                     allPars <- list(items=items, means=means, cov=covs)
                 }
-            }
+            } else allPars <- list(items=items, GroupPars=allPars$GroupPars)
         }
         if(.hasSlot(object@Model$lrPars, 'beta')){
             allPars$lr.betas <- object@Model$lrPars@beta
