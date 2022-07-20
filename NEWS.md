@@ -1,5 +1,8 @@
 # Changes in mirt 1.37
 
+- `anova()` loses the `verbose` flag and instead labels the rows of the resulting
+  output to identify the models
+
 - `X2` and `G2` classes of item-fit statistics now better deal with large 
   missing value vectors on a per-item basis for better consistency
 

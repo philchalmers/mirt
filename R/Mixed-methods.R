@@ -251,10 +251,10 @@ setMethod(
 setMethod(
     f = "anova",
     signature = signature(object = 'MixedClass'),
-    definition = function(object, object2, verbose = TRUE)
+    definition = function(object, object2)
     {
         class(object) <- 'SingleGroupClass'
-        anova(object, object2, verbose=verbose)
+        anova(object, object2)
     }
 )
 

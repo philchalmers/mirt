@@ -47,7 +47,7 @@ boot.LR <- function(mod, mod2, R = 1000, verbose=TRUE){
         mod <- mod2
         mod2 <- tmp
     }
-    LR <- anova(mod, mod2, verbose=FALSE)$X2[2L]
+    LR <- anova(mod, mod2)$X2[2L]
     results <- mySapply(1L:R, function(r, mod, mod2){
         while(TRUE){
             dat <- simdata(model=mod)
@@ -59,7 +59,7 @@ boot.LR <- function(mod, mod2, R = 1000, verbose=TRUE){
                        itemtype=extract.mirt(mod2, 'itemtype'),
                        verbose=FALSE, technical=list(warn=FALSE, message=FALSE, omp=FALSE))
             if(!extract.mirt(m1, 'converged')) next
-            lr0 <- anova(m0, m1, verbose=FALSE)$X2[2L]
+            lr0 <- anova(m0, m1)$X2[2L]
             if(lr0 <= 0) next
             break
         }

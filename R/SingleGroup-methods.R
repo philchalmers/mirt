@@ -447,7 +447,6 @@ setMethod(
 #'   2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
 #'   is used to obtain the p-value
 #' @param mix proportion of chi-squared mixtures. Default is 0.5
-#' @param verbose logical; print additional information to console?
 #'
 #' @return a \code{data.frame}/\code{mirt_df} object
 #'
@@ -507,19 +506,22 @@ setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, ...,
-                          bounded = FALSE, mix = 0.5, verbose = TRUE){
+                          bounded = FALSE, mix = 0.5){
+        nms1 <- deparse(substitute(object, env = parent.frame()))
+        nms2 <- deparse(substitute(object2, env = environment()))
+        nms3 <- deparse(substitute(...))
         dots <- list(...)
         if(length(dots)){
             dots <- c(object, object2, dots)
             ret <- vector('list', length(dots)-1L)
             for(i in 1L:length(ret)){
                 ret[[i]] <- anova(dots[[i]], dots[[i+1L]], bounded=bounded,
-                                  mix=mix, verbose=FALSE)
+                                  mix=mix)
                 if(i > 1L)
                     ret[[i]] <- ret[[i]][2L, ]
             }
             ret <- do.call(rbind, ret)
-            rownames(ret) <- 1L:nrow(ret)
+            rownames(ret) <- c(nms1, nms2, nms3)
             return(ret)
         }
         if(missing(object2)){
@@ -532,6 +534,7 @@ setMethod(
             if(hasPriors)
                 ret$logPost = object@Fit$logPrior + object@Fit$logLik
             ret <- as.mirt_df(ret)
+            rownames(ret) <- nms1
             return(ret)
         }
         df <- object@Fit$df - object2@Fit$df
@@ -539,19 +542,18 @@ setMethod(
             temp <- object
             object <- object2
             object2 <- temp
+            temp <- nms2
+            nms2 <- nms1
+            nms1 <- temp
         } else if(df == 0 && !any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
             if((2*object2@Fit$logLik - 2*object@Fit$logLik) < 0){
                 temp <- object
                 object <- object2
                 object2 <- temp
+                temp <- nms2
+                nms2 <- nms1
+                nms1 <- temp
             }
-        }
-        if(verbose){
-            cat('\nModel 1: ')
-            print(object@Call)
-            cat('Model 2: ')
-            print(object2@Call)
-            cat('\n')
         }
         ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                           SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
@@ -570,6 +572,7 @@ setMethod(
             if(bounded)
                 ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
         }
+        rownames(ret) <- c(nms1, nms2)
         ret <- as.mirt_df(ret)
         ret
     }
