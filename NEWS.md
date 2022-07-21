@@ -1,5 +1,9 @@
 # Changes in mirt 1.37
 
+- `itemfit()` arguments changed to accommodate outputting tables more
+  consistently. Now a single `return.tables` argument is used to specify
+  which tables to return
+
 - `anova()` loses the `verbose` flag and instead labels the rows of the resulting
   output to identify the models
 

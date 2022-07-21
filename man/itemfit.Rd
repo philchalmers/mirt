@@ -15,7 +15,7 @@ itemfit(
   group.fun = mean,
   mincell = 1,
   mincell.X2 = 2,
-  S_X2.tables = FALSE,
+  return.tables = FALSE,
   pv_draws = 30,
   boot = 1000,
   boot_dfapprox = 200,
@@ -25,13 +25,12 @@ itemfit(
   ETpoints = 11,
   empirical.plot = NULL,
   empirical.CI = 0.95,
-  empirical.table = NULL,
   empirical.poly.collapse = FALSE,
   method = "EAP",
   Theta = NULL,
   par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
-    = "black")),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
+    "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
   ...
 )
@@ -99,7 +98,8 @@ collapsed across items first if polytomous, and then across scores if necessary}
 collapsed if polytomous, however if this condition can not be met then the group block will
 be omitted in the computations}
 
-\item{S_X2.tables}{logical; return the tables in a list format used to compute the S-X2 stats?}
+\item{return.tables}{logical; return tables when investigating \code{'X2'}, \code{'S_X2'},
+and \code{'X2*'}?}
 
 \item{pv_draws}{number of plausible-value draws to obtain for PV_Q1 and PV_Q1*}
 
@@ -126,10 +126,6 @@ item to plot (via \code{itemplot}) and overlay with the empirical \eqn{\theta} g
 \item{empirical.CI}{a numeric value indicating the width of the empirical confidence interval
 ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items}
-
-\item{empirical.table}{a single numeric value or character of the item name indicating which
-item table of expected values should be returned. Useful for visualizing the
-expected bins based on the \code{'X2'} or \code{'G2'} method}
 
 \item{empirical.poly.collapse}{logical; collapse polytomous item categories to for expected scoring
 functions for empirical plots? Default is \code{FALSE}}
@@ -209,9 +205,9 @@ itemfit(x, 'PV_Q1')
 # itemfit(x, 'X2*') # Stone's 1993 statistic
 # itemfit(x, 'X2*_df') # Stone's 2000 scaled statistic with df estimate
 
-#empirical tables for X2 statistic
-itemfit(x, empirical.table=1)
-itemfit(x, empirical.table=21)
+# empirical tables for X2 statistic
+tabs <- itemfit(x, 'X2', return.tables=TRUE, which.items = 1)
+tabs
 
 #infit/outfit statistics. method='ML' agrees better with eRm package
 itemfit(raschfit, 'infit', method = 'ML') #infit and outfit stats
@@ -220,7 +216,7 @@ itemfit(raschfit, 'infit', method = 'ML') #infit and outfit stats
 Theta <- fscores(raschfit, method = 'ML')
 itemfit(raschfit, 'infit', Theta=Theta)
 itemfit(raschfit, empirical.plot=1, Theta=Theta)
-itemfit(raschfit, empirical.table=1, Theta=Theta)
+itemfit(raschfit, 'X2', return.tables=TRUE, Theta=Theta, which.items=1)
 
 # fit a new more flexible model for the mis-fitting item
 itemtype <- c(rep('2PL', 20), 'spline')
@@ -239,35 +235,38 @@ head(dat)
 
 mod <- mirt(dat, 1)
 itemfit(mod)
-itemfit(mod, 'X2') #pretty much useless given inflated Type I error rates
+itemfit(mod, 'X2') # less useful given inflated Type I error rates
 itemfit(mod, empirical.plot = 1)
 itemfit(mod, empirical.plot = 1, empirical.poly.collapse=TRUE)
 
 # collapsed tables (see mincell.X2) for X2 and G2
-itemfit(mod, empirical.table = 1)
+itemfit(mod, 'X2', return.tables = TRUE, which.items = 1)
 
 mod2 <- mirt(dat, 1, 'Rasch')
 itemfit(mod2, 'infit', method = 'ML')
 
-#massive list of tables for S-X2
-tables <- itemfit(mod, S_X2.tables = TRUE)
+# massive list of tables for S-X2
+tables <- itemfit(mod, return.tables = TRUE)
 
 #observed and expected total score patterns for item 1 (post collapsing)
 tables$O[[1]]
 tables$E[[1]]
 
+# can also select specific items
+# itemfit(mod, return.tables = TRUE, which.items=1)
+
 # fit stats with missing data (run in parallel using all cores)
 dat[sample(1:prod(dim(dat)), 100)] <- NA
 raschfit <- mirt(dat, 1, itemtype='Rasch')
 
-#use only valid data by removing rows with missing terms
+# use only valid data by removing rows with missing terms
 itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 
 # note that X2, G2, PV-Q1, and X2* do not require complete datasets
-thetas <- fscores(raschfit, method = 'ML') # save scores for faster computations
+thetas <- fscores(raschfit, method = 'ML') # save for faster computations
 itemfit(raschfit, c('X2', 'G2'), Theta=thetas)
 itemfit(raschfit, empirical.plot=1, Theta=thetas)
-itemfit(raschfit, empirical.table=1, Theta=thetas)
+itemfit(raschfit, 'X2', return.tables=TRUE, which.items=1, Theta=thetas)
 
 }
 

@@ -12,8 +12,8 @@ empirical_plot(
   formula = resp ~ s(TS, k = 5),
   main = NULL,
   par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
-    = "black")),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
+    "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
   ...
 )

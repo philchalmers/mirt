@@ -52,7 +52,8 @@
 #' @param mincell.X2 the minimum expected cell size to be used in the X2 computations. Tables will be
 #'   collapsed if polytomous, however if this condition can not be met then the group block will
 #'   be omitted in the computations
-#' @param S_X2.tables logical; return the tables in a list format used to compute the S-X2 stats?
+#' @param return.tables logical; return tables when investigating \code{'X2'}, \code{'S_X2'},
+#'   and \code{'X2*'}?
 #' @param group.size approximate size of each group to be used in calculating the \eqn{\chi^2}
 #'   statistic. The default \code{NA}
 #'   disables this command and instead uses the \code{group.bins} input to try and construct
@@ -72,9 +73,6 @@
 #'   is constructed according to the S-X2 statistic's conditional sum-score information
 #' @param S_X2.plot_raw.score logical; use the raw-score information in the plot in stead of the latent
 #'   trait scale score? Default is \code{FALSE}
-#' @param empirical.table a single numeric value or character of the item name indicating which
-#'   item table of expected values should be returned. Useful for visualizing the
-#'   expected bins based on the \code{'X2'} or \code{'G2'} method
 #' @param empirical.CI a numeric value indicating the width of the empirical confidence interval
 #'   ranging between 0 and 1 (default of 0 plots not interval). For example, a 95% confidence
 #'   interval would be plotted when \code{empirical.CI = .95}. Only applicable to dichotomous items
@@ -193,9 +191,9 @@
 #' # itemfit(x, 'X2*') # Stone's 1993 statistic
 #' # itemfit(x, 'X2*_df') # Stone's 2000 scaled statistic with df estimate
 #'
-#' #empirical tables for X2 statistic
-#' itemfit(x, empirical.table=1)
-#' itemfit(x, empirical.table=21)
+#' # empirical tables for X2 statistic
+#' tabs <- itemfit(x, 'X2', return.tables=TRUE, which.items = 1)
+#' tabs
 #'
 #' #infit/outfit statistics. method='ML' agrees better with eRm package
 #' itemfit(raschfit, 'infit', method = 'ML') #infit and outfit stats
@@ -204,7 +202,7 @@
 #' Theta <- fscores(raschfit, method = 'ML')
 #' itemfit(raschfit, 'infit', Theta=Theta)
 #' itemfit(raschfit, empirical.plot=1, Theta=Theta)
-#' itemfit(raschfit, empirical.table=1, Theta=Theta)
+#' itemfit(raschfit, 'X2', return.tables=TRUE, Theta=Theta, which.items=1)
 #'
 #' # fit a new more flexible model for the mis-fitting item
 #' itemtype <- c(rep('2PL', 20), 'spline')
@@ -223,46 +221,50 @@
 #'
 #' mod <- mirt(dat, 1)
 #' itemfit(mod)
-#' itemfit(mod, 'X2') #pretty much useless given inflated Type I error rates
+#' itemfit(mod, 'X2') # less useful given inflated Type I error rates
 #' itemfit(mod, empirical.plot = 1)
 #' itemfit(mod, empirical.plot = 1, empirical.poly.collapse=TRUE)
 #'
 #' # collapsed tables (see mincell.X2) for X2 and G2
-#' itemfit(mod, empirical.table = 1)
+#' itemfit(mod, 'X2', return.tables = TRUE, which.items = 1)
 #'
 #' mod2 <- mirt(dat, 1, 'Rasch')
 #' itemfit(mod2, 'infit', method = 'ML')
 #'
-#' #massive list of tables for S-X2
-#' tables <- itemfit(mod, S_X2.tables = TRUE)
+#' # massive list of tables for S-X2
+#' tables <- itemfit(mod, return.tables = TRUE)
 #'
 #' #observed and expected total score patterns for item 1 (post collapsing)
 #' tables$O[[1]]
 #' tables$E[[1]]
 #'
+#' # can also select specific items
+#' # itemfit(mod, return.tables = TRUE, which.items=1)
+#'
 #' # fit stats with missing data (run in parallel using all cores)
 #' dat[sample(1:prod(dim(dat)), 100)] <- NA
 #' raschfit <- mirt(dat, 1, itemtype='Rasch')
 #'
-#' #use only valid data by removing rows with missing terms
+#' # use only valid data by removing rows with missing terms
 #' itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
 #'
 #' # note that X2, G2, PV-Q1, and X2* do not require complete datasets
-#' thetas <- fscores(raschfit, method = 'ML') # save scores for faster computations
+#' thetas <- fscores(raschfit, method = 'ML') # save for faster computations
 #' itemfit(raschfit, c('X2', 'G2'), Theta=thetas)
 #' itemfit(raschfit, empirical.plot=1, Theta=thetas)
-#' itemfit(raschfit, empirical.table=1, Theta=thetas)
+#' itemfit(raschfit, 'X2', return.tables=TRUE, which.items=1, Theta=thetas)
 #'
 #'}
 #'
-itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nitems'),
+itemfit <- function(x, fit_stats = 'S_X2',
+                    which.items = 1:extract.mirt(x, 'nitems'),
                     na.rm = FALSE, p.adjust = 'none',
                     group.bins = 10, group.size = NA, group.fun = mean,
-                    mincell = 1, mincell.X2 = 2, S_X2.tables = FALSE,
+                    mincell = 1, mincell.X2 = 2, return.tables = FALSE,
                     pv_draws = 30, boot = 1000, boot_dfapprox = 200,
                     S_X2.plot = NULL, S_X2.plot_raw.score = TRUE,
                     ETrange = c(-2,2), ETpoints = 11,
-                    empirical.plot = NULL, empirical.CI = .95, empirical.table = NULL,
+                    empirical.plot = NULL, empirical.CI = .95,
                     empirical.poly.collapse = FALSE, method = 'EAP', Theta = NULL, #impute = 0,
                     par.strip.text = list(cex = 0.7),
                     par.settings = list(strip.background = list(col = '#9ECAE1'),
@@ -337,7 +339,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
     StoneFit <- function(mod, is_NA, which.items = 1:extract.mirt(mod, 'nitems'), itemtype,
                          dfapprox = FALSE, boot = 1000, ETrange = c(-2,2), ETpoints = 11,
-                         verbose = FALSE, p.adjust, ...){
+                         verbose = FALSE, p.adjust, return.tables, ...){
         X2star <- function(mod, which.items, ETrange, ETpoints, itemtype, ...){
             sv <- mod2values(mod)
             sv$est <- FALSE
@@ -351,12 +353,20 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
             X2 <- rep(NA, ncol(dat))
+            if(return.tables == 'X2*')
+                ret <- vector('list', length(which.items))
             for(i in seq_len(length(which.items))){
                 pick <- itemloc[which.items[i]]:(itemloc[which.items[i]+1L] - 1L)
                 O <- Etable[ ,pick]
                 item <- extract.item(mod, which.items[i])
                 E <- probtrace(item, Theta) * rowSums(O)
                 X2[which.items[i]] <- sum((O - E)^2 / E, na.rm = TRUE)
+                if(return.tables == 'X2*')
+                    ret[[i]] <- list(O=O, E=E, Theta=Theta)
+            }
+            if(return.tables == 'X2*'){
+                names(ret) <- which.items
+                return(ret)
             }
             X2[which.items]
         }
@@ -385,8 +395,10 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         N <- nrow(extract.mirt(mod, 'data'))
         X2bs <- matrix(NA, boot, length(which.items))
         org <- X2star(mod, which.items=which.items, itemtype=itemtype,
-                      ETrange=ETrange, ETpoints=ETpoints, ...)
+                      ETrange=ETrange, ETpoints=ETpoints,
+                      return.tables=return.tables, ...)
         stopifnot(length(org) == length(which.items))
+        if(return.tables) return(org)
         sv <- mod2values(mod)
         model <- extract.mirt(mod, 'model')
         X2bs <- mySapply(1L:boot, pb_fun, progress=verbose,
@@ -416,10 +428,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     }
 
     if(missing(x)) missingMsg('x')
+    if(return.tables){
+        stopifnot(length(fit_stats) == 1L)
+        stopifnot(fit_stats %in% c('X2', 'S_X2', 'X2*'))
+    }
     if(is(x, 'MixedClass'))
         stop('MixedClass objects are not supported', call.=FALSE)
-    if(!is.null(empirical.plot) && !is.null(empirical.table))
-        stop('Please select empirical.plot or empirical.table, not both', call.=FALSE)
+    if(!is.null(empirical.plot) && return.tables && fit_stats == 'X2')
+        stop('Please select empirical.plot or return.table, not both', call.=FALSE)
     if(!all(fit_stats %in% c('S_X2', 'Zh', 'X2', 'G2', 'infit', 'PV_Q1', 'PV_Q1*', 'X2*', 'X2*_df')))
         stop('Unsupported fit_stats element requested', call.=FALSE)
     if(any(c('X2', 'G2', 'PV_Q1', 'PV_Q1*') %in% fit_stats) && extract.mirt(x, 'nfact') > 1L)
@@ -431,16 +447,14 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     infit <- 'infit' %in% fit_stats
     if(!is.null(empirical.plot))
         which.items <- empirical.plot
-    if(!is.null(empirical.table))
-        which.items <- empirical.table
     which.items <- sort(which.items)
-    if(!is.null(empirical.plot) || !is.null(empirical.table)){
+    if(!is.null(empirical.plot) || (return.tables && fit_stats == 'X2')){
         Zh <- FALSE
         if(length(which.items) > 1L)
             stop('Plots and tables only supported for 1 item at a time', call.=FALSE)
     }
     stopifnot(is.numeric(empirical.CI))
-    if(!is.null(empirical.table) || !is.null(empirical.plot)){
+    if( (return.tables && fit_stats == 'X2') || !is.null(empirical.plot)){
         X2 <- TRUE
         S_X2 <- Zh <- infit <- G2 <- FALSE
     }
@@ -474,8 +488,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             tmp_obj <- MGC2SC(x, g)
             ret[[g]] <- itemfit(tmp_obj, fit_stats=fit_stats, group.size=group.size, group.bins=group.bins,
                                 group.fun=group.fun, mincell=mincell, mincell.X2=mincell.X2,
-                                S_X2.tables=S_X2.tables, empirical.plot=empirical.plot,
-                                empirical.table=empirical.table, S_X2.plot=S_X2.plot,
+                                empirical.plot=empirical.plot,
+                                S_X2.plot=S_X2.plot, return.tables=return.tables,
                                 S_X2.plot_raw.score = S_X2.plot_raw.score,
                                 Theta=tmpTheta, empirical.CI=empirical.CI, method=method,
                                 impute=impute, discrete=discrete, p.adjust=p.adjust, ...)
@@ -500,7 +514,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
         discrete <- TRUE
         pis <- extract.mirt(x, 'pis')
     }
-    if(S_X2.tables || discrete) Zh <- X2 <- FALSE
+    if((return.tables && fit_stats == 'S_X2') || discrete) Zh <- X2 <- FALSE
     ret <- data.frame(item=colnames(x@Data$data)[which.items])
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
@@ -557,7 +571,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
             ret$z.infit <- z.infit[which.items]
         }
     }
-    if(( (X2 || G2) || !is.null(empirical.plot) || !is.null(empirical.table)) && x@Model$nfact == 1L){
+    if(( (X2 || G2) || !is.null(empirical.plot) ||
+         (return.tables && fit_stats == 'X2')) && x@Model$nfact == 1L){
         if(is.null(Theta))
             Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method,
                              rotate = 'none', leave_missing=TRUE, ...)
@@ -588,11 +603,6 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                 ind <- 1L:length(inames)
                 empirical.plot <- ind[inames == empirical.plot]
             }
-            empirical.plot_points <- matrix(NA, length(unique(Groups)), x@Data$K[empirical.plot] + 2L)
-        }
-        if(!is.null(empirical.table)){
-            Etable <- vector('list', ngroups)
-            mtheta_nms <- numeric(ngroups)
         }
         for (i in which.items){
             if(!is.na(group.size)){
@@ -611,6 +621,12 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     Groups <- c(Groups, rep(ngroups, c1 - floor(c1/2)))
                 }
             }
+            if(return.tables){
+                Etable <- vector('list', ngroups)
+                mtheta_nms <- numeric(ngroups)
+            }
+            if(!is.null(empirical.plot))
+                empirical.plot_points <- matrix(NA, length(unique(Groups)), x@Data$K[empirical.plot] + 2L)
             for(j in unique(Groups)){
                 tmpdat <- fulldata[pick[,i], , drop=FALSE]
                 dat <- tmpdat[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
@@ -625,7 +641,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     empirical.plot_points[j, ] <- c(mtheta, N, tmp)
                 }
                 P <- ProbTrace(x=pars[[i]], Theta=mtheta)
-                if(is.null(empirical.table) && any(N * P < mincell.X2)){
+                if(return.tables && any(N * P < mincell.X2)){
                     while(TRUE){
                         wch <- which(N * P < mincell.X2)
                         if(!length(wch) || length(r) == 1L) break
@@ -644,7 +660,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     if(length(r) == 1L) next
                 }
                 E <- N*P
-                if(!is.null(empirical.table)){
+                if(return.tables){
                     Etable[[j]] <- data.frame(Observed=r, Expected=as.vector(E),
                                               z.Residual=as.vector(sqrt((r - E)^2 / E) * sign(r-E)))
                     mtheta_nms[j] <- mtheta
@@ -662,7 +678,7 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                     }
                 }
             }
-            if(!is.null(empirical.table)){
+            if(return.tables){
                 names(Etable) <- paste0('theta = ', round(mtheta_nms, 4))
                 return(Etable)
             }
@@ -806,7 +822,9 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
                    par.settings=par.settings, ...))
         }
         coll <- collapseCells(O, E, mincell=mincell)
-        if(S_X2.tables) return(list(O.org=O, E.org=E, O=coll$O, E=coll$E))
+        if(return.tables)
+            return(list(O.org=O[which.items], E.org=E[which.items],
+                        O=coll$O[which.items], E=coll$E[which.items]))
         O <- coll$O
         E <- coll$E
         for(i in seq_len(J)){
@@ -846,7 +864,8 @@ itemfit <- function(x, fit_stats = 'S_X2', which.items = 1:extract.mirt(x, 'nite
     if('X2*' %in% fit_stats){
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot, dfapprox=FALSE,
                         itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints,
-                        p.adjust=p.adjust, ...)
+                        p.adjust=p.adjust, return.tables=return.tables, ...)
+        if(return.tables) return(tmp)
         ret <- cbind(ret, tmp)
     }
     if('X2*_df' %in% fit_stats){

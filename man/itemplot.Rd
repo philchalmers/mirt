@@ -18,8 +18,8 @@ itemplot(
   rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
   par.strip.text = list(cex = 0.7),
   npts = 200,
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
-    = "black")),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
+    "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
   ...
 )
