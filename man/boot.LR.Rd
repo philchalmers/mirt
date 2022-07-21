@@ -7,7 +7,7 @@
 boot.LR(mod, mod2, R = 1000, verbose = TRUE)
 }
 \arguments{
-\item{mod}{an estimated model object}
+\item{mod}{an estimated model object, more constrained than \code{mod2}}
 
 \item{mod2}{an estimated model object}
 

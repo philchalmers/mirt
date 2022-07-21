@@ -108,7 +108,7 @@
 #' ## don't estimate specific factor for item 32
 #' specific[32] <- NA
 #' mod3 <- bfactor(data, specific)
-#' anova(mod1, mod3)
+#' anova(mod3, mod1)
 #'
 #' # same, but declared manually (not run)
 #' #sv <- mod2values(mod1)
@@ -202,7 +202,7 @@
 #'
 #' simmod2 <- bfactor(dataset, specific, model2)
 #' coef(simmod2, simplify=TRUE)
-#' anova(simmod, simmod2)
+#' anova(simmod2, simmod)
 #'
 #'
 #' #########

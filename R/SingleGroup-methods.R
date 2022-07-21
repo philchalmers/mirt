@@ -437,12 +437,14 @@ setMethod(
 #' Bayesian Information Criterion (BIC),
 #' Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 #' When given a sequence of objects, \code{anova} tests the models against one another
-#' in the order specified.
+#' in the order specified. Note that the \code{object} inputs should be ordered in terms
+#' of most constrained model to least constrained.
 #'
 #' @param object an object of class \code{SingleGroupClass},
-#'   \code{MultipleGroupClass}, or \code{MixedClass}
+#'   \code{MultipleGroupClass}, or \code{MixedClass}, reflecting the most constrained model fitted
 #' @param object2 a second model estimated from any of the mirt package estimation methods
-#' @param ... additional model objects to be sequentially compared
+#' @param ... additional less constrained model objects to be compared
+#'   sequentially to the previous model
 #' @param bounded logical; are the two models comparing a bounded parameter (e.g., comparing a single
 #'   2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
 #'   is used to obtain the p-value
@@ -469,7 +471,7 @@ setMethod(
 #' x2 <- mirt(Science, 2)
 #' anova(x, x2)
 #'
-#' # compare three models sequentially
+#' # compare three models sequentially (X2 not always meaningful)
 #' x3 <- mirt(Science, 1, 'gpcm')
 #' x4 <- mirt(Science, 1, 'nominal')
 #' anova(x, x2, x3, x4)

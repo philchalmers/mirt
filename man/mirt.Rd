@@ -1021,7 +1021,7 @@ model.combo <- '
 (mod.quad <- mirt(data, model.quad))
 summary(mod.quad)
 (mod.combo <- mirt(data, model.combo))
-anova(mod.quad, mod.combo)
+anova(mod.combo, mod.quad)
 
 #non-linear item and test plots
 plot(mod.quad)

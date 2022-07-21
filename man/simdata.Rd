@@ -241,7 +241,7 @@ summary(mod)
 mod2 <- mirt(dat, 'F1 = 1-10
                    CONSTRAIN = (1-5, a1), (6-10, a1)')
 summary(mod2)
-anova(mod, mod2)
+anova(mod2, mod)
 
 #### Convert classical 3PL paramerization into slope-intercept form
 nitems <- 50

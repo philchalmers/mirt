@@ -227,7 +227,7 @@ itemtype <- c(rep('2PL', 20), 'spline')
 x2 <- mirt(data, 1, itemtype=itemtype)
 itemfit(x2)
 itemplot(x2, 21)
-anova(x2, x)
+anova(x, x2)
 
 #------------------------------------------------------------
 

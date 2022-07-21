@@ -7,7 +7,7 @@
 #' definition.
 #'
 #' @aliases boot.LR
-#' @param mod an estimated model object
+#' @param mod an estimated model object, more constrained than \code{mod2}
 #' @param mod2 an estimated model object
 #' @param R number of parametric bootstraps to use.
 #' @param verbose logical; include additional information in the console?

@@ -183,8 +183,9 @@
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
 #'                              invariance=c('free_means', 'free_var', itemnames[-i]))
-#'
-#' (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
+#' anova(refmodel, estmodels[[1]])
+#' (anovas <- lapply(estmodels, function(x, refmodel) anova(refmodel, x),
+#'    refmodel=refmodel))
 #'
 #' #family-wise error control
 #' p <- do.call(rbind, lapply(anovas, function(x) x[2, 'p']))
@@ -198,7 +199,8 @@
 #'                              invariance=c('free_means', 'free_var', 'intercepts',
 #'                              itemnames[-i]))
 #'
-#' (anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
+#' (anovas <- lapply(estmodels, function(x, refmodel) anova(refmodel, x),
+#'    refmodel=refmodel))
 #'
 #' #quickly test with Wald test using DIF()
 #' mod_configural2 <- multipleGroup(dat, 1, group = group, SE=TRUE)
@@ -365,7 +367,7 @@
 #'
 #' # Mixture 2PL model
 #' mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', GenRandomPars = TRUE)
-#' anova(mod_mix2, mod_mix)
+#' anova(mod_mix, mod_mix2)
 #' coef(mod_mix2, simplify=TRUE)
 #' itemfit(mod_mix2)
 #'
