@@ -388,13 +388,13 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         ARprint <- paste0(sapply(AR, function(x) sprintf('%.2f', x)), collapse='; ')
         CTV <- paste0(sapply(CTV, function(x) sprintf('%.2f', x)), collapse='; ')
         if(cycles <= BURNIN)
-            printmsg <- sprintf("\rStage 1 = %i, LL = %.1f, AR(%s) = [%s]",
+            printmsg <- sprintf("\rStage 1 = %i, CDLL = %.1f, AR(%s) = [%s]",
                                 cycles, LL, CTV, ARprint)
         if(cycles > BURNIN && cycles <= BURNIN + SEMCYCLES)
-            printmsg <- sprintf("\rStage 2 = %i, LL = %.1f, AR(%s) = [%s]",
+            printmsg <- sprintf("\rStage 2 = %i, CDLL = %.1f, AR(%s) = [%s]",
                                 cycles-BURNIN, LL, CTV, ARprint)
         if(cycles > BURNIN + SEMCYCLES)
-            printmsg <- sprintf("\rStage 3 = %i, LL = %.1f, AR(%s) = [%s]",
+            printmsg <- sprintf("\rStage 3 = %i, CDLL = %.1f, AR(%s) = [%s]",
                                 cycles-BURNIN-SEMCYCLES, LL, CTV, ARprint)
     }
     list(pars=pars, gstructgrouppars=gstructgrouppars, lr.random=lr.random, random=random, AR=AR,
