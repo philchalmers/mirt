@@ -353,7 +353,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
             X2 <- rep(NA, ncol(dat))
-            if(return.tables == 'X2*')
+            if(return.tables)
                 ret <- vector('list', length(which.items))
             for(i in seq_len(length(which.items))){
                 pick <- itemloc[which.items[i]]:(itemloc[which.items[i]+1L] - 1L)
@@ -361,10 +361,10 @@ itemfit <- function(x, fit_stats = 'S_X2',
                 item <- extract.item(mod, which.items[i])
                 E <- probtrace(item, Theta) * rowSums(O)
                 X2[which.items[i]] <- sum((O - E)^2 / E, na.rm = TRUE)
-                if(return.tables == 'X2*')
+                if(return.tables)
                     ret[[i]] <- list(O=O, E=E, Theta=Theta)
             }
-            if(return.tables == 'X2*'){
+            if(return.tables){
                 names(ret) <- which.items
                 return(ret)
             }
@@ -865,7 +865,10 @@ itemfit <- function(x, fit_stats = 'S_X2',
         tmp <- StoneFit(x, is_NA=is_NA, which.items=which.items, boot=boot, dfapprox=FALSE,
                         itemtype=itemtype, ETrange=ETrange, ETpoints=ETpoints,
                         p.adjust=p.adjust, return.tables=return.tables, ...)
-        if(return.tables) return(tmp)
+        if(return.tables){
+            if(length(which.items) == 1L) tmp <- tmp[[1]]
+            return(tmp)
+        }
         ret <- cbind(ret, tmp)
     }
     if('X2*_df' %in% fit_stats){
