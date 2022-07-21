@@ -509,9 +509,12 @@ setMethod(
                           bounded = FALSE, mix = 0.5){
         nms1 <- deparse(substitute(object, env = parent.frame()))
         nms2 <- deparse(substitute(object2, env = environment()))
-        nms3 <- deparse(substitute(...))
         dots <- list(...)
         if(length(dots)){
+            nms3 <- deparse(substitute(list(...)))
+            nms3 <- gsub("list\\(", "", nms3)
+            nms3 <- gsub(")", "", nms3)
+            nms3 <- strsplit(nms3, ", ")[[1]]
             dots <- c(object, object2, dots)
             ret <- vector('list', length(dots)-1L)
             for(i in 1L:length(ret)){
