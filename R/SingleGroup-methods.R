@@ -541,23 +541,6 @@ setMethod(
             return(ret)
         }
         df <- object@Fit$df - object2@Fit$df
-        if(df < 0){
-            temp <- object
-            object <- object2
-            object2 <- temp
-            temp <- nms2
-            nms2 <- nms1
-            nms1 <- temp
-        } else if(df == 0 && !any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
-            if((2*object2@Fit$logLik - 2*object@Fit$logLik) < 0){
-                temp <- object
-                object <- object2
-                object2 <- temp
-                temp <- nms2
-                nms2 <- nms1
-                nms1 <- temp
-            }
-        }
         ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                           SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
                           HQ = c(object@Fit$HQ, object2@Fit$HQ),
@@ -571,9 +554,9 @@ setMethod(
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
             ret$X2 <- c(NaN, X2)
             ret$df <- c(NaN, abs(df))
-            ret$p <- c(NaN, 1 - pchisq(X2,abs(df)))
+            ret$p <- c(NaN, 1 - pchisq(abs(X2),abs(df)))
             if(bounded)
-                ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
+                ret$p[2L] <- 1 - mixX2(abs(X2), df=abs(df), mix=mix)
         }
         rownames(ret) <- c(nms1, nms2)
         ret <- as.mirt_df(ret)
