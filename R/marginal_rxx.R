@@ -7,6 +7,8 @@
 #' @param mod an object of class \code{'SingleGroupClass'}
 #' @param density a density function to use for integration. Default assumes the latent traits are from a
 #'   normal (Gaussian) distribution
+#' @param var_theta variance of the Theta distribution (typically 1 for many fitted
+#'   IRT models)
 #' @param ... additional arguments passed to the density function
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -40,12 +42,12 @@
 #' empirical_rxx(fs)
 #'
 #' }
-marginal_rxx <- function(mod, density = dnorm, ...){
+marginal_rxx <- function(mod, density = dnorm, var_theta = 1, ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(is(mod, 'SingleGroupClass'))
     fn <- function(theta, mod, den, ...){
         TI <- testinfo(mod, matrix(theta))
-        TI / (TI + 1) * den(theta, ...)
+        TI / (TI + var_theta) * den(theta, ...)
     }
     integrate(fn, lower = -Inf, upper=Inf, mod=mod, den=density, ...)$value
 }
