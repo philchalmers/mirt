@@ -215,7 +215,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                                   invariance = invariance, constrain=constrain, pars=sv,
                                   itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
                                   ...)
-        aov <- anova(newmodel, model)
+        aov <- if(drop) anova(model, newmodel) else anova(newmodel, model)
         attr(aov, 'parnum') <- parnum
         attr(aov, 'converged') <- extract.mirt(newmodel, 'converged')
         if(return_models) aov <- newmodel
