@@ -447,6 +447,7 @@ setMethod(
 #'   2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
 #'   is used to obtain the p-value
 #' @param mix proportion of chi-squared mixtures. Default is 0.5
+#' @param frame (internal parameter not for standard use)
 #'
 #' @return a \code{data.frame}/\code{mirt_df} object
 #'
@@ -469,9 +470,9 @@ setMethod(
 #' anova(x, x2)
 #'
 #' # compare three models sequentially
-#' x2 <- mirt(Science, 1, 'gpcm')
-#' x3 <- mirt(Science, 1, 'nominal')
-#' anova(x, x2, x3)
+#' x3 <- mirt(Science, 1, 'gpcm')
+#' x4 <- mirt(Science, 1, 'nominal')
+#' anova(x, x2, x3, x4)
 #'
 #' # in isolation
 #' anova(x)
@@ -506,12 +507,19 @@ setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, ...,
-                          bounded = FALSE, mix = 0.5){
-        nms1 <- deparse(substitute(object, env = parent.frame()))
-        nms2 <- deparse(substitute(object2, env = environment()))
+                          bounded = FALSE, mix = 0.5, frame = 1){
+        if(frame > 1){
+            nms1 <- deparse(substitute(object, env = parent.frame(frame+1)))
+            nms2 <- deparse(substitute(object2, env = parent.frame(frame)))
+        } else {
+            nms1 <- deparse(substitute(object, env = parent.frame()))
+            nms2 <- deparse(substitute(object2, env = environment()))
+        }
         dots <- list(...)
         if(length(dots)){
-            nms3 <- deparse(substitute(list(...), env = environment()))
+            nms3 <- if(frame > 1)
+                deparse(substitute(list(...), env = parent.frame(frame)))
+            else deparse(substitute(list(...), env = environment()))
             nms3 <- gsub("list\\(", "", nms3)
             nms3 <- gsub(")", "", nms3)
             nms3 <- strsplit(nms3, ", ")[[1]]

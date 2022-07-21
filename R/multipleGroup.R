@@ -127,6 +127,9 @@
 #' anova(mod_scalar1, mod_scalar2) #fix mean
 #' anova(mod_fullconstrain, mod_scalar1) #fix variance
 #'
+#' # compared all at once (in order of most constrained to least)
+#' anova(mod_fullconstrain, mod_scalar2, mod_configural)
+#'
 #'
 #' #test whether first 6 slopes should be equal across groups
 #' values <- multipleGroup(dat, 1, group = group, pars = 'values')

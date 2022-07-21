@@ -57,7 +57,7 @@ setMethod(
     definition = function(object, object2, ...)
     {
         class(object) <- 'SingleGroupClass'
-        anova(object, object2, ...)
+        anova(object, object2, ..., frame = 2)
     }
 )
 
