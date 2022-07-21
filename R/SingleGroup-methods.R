@@ -511,7 +511,7 @@ setMethod(
         nms2 <- deparse(substitute(object2, env = environment()))
         dots <- list(...)
         if(length(dots)){
-            nms3 <- deparse(substitute(list(...)))
+            nms3 <- deparse(substitute(list(...), env = environment()))
             nms3 <- gsub("list\\(", "", nms3)
             nms3 <- gsub(")", "", nms3)
             nms3 <- strsplit(nms3, ", ")[[1]]
