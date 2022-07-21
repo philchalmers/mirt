@@ -393,7 +393,6 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
     if(any(invariance == 'slopes')) invariance.check <- invariance.check - 1L
     if(any(invariance %in% colnames(data)))
         invariance.check <- invariance.check - 2L
-    if(missing(model)) missingMsg('model')
     if(!is.null(dots$dentype))
         if(dots$dentype == "empiricalhist" && any(invariance.check))
             stop('freeing group parameters not meaningful when estimating empirical histograms',
