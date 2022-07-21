@@ -553,10 +553,12 @@ setMethod(
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
             ret$X2 <- c(NaN, X2)
-            ret$df <- c(NaN, abs(df))
-            ret$p <- c(NaN, 1 - pchisq(abs(X2),abs(df)))
+            ret$df <- c(NaN, df)
+            ret$p <- c(NaN, 1 - pchisq(X2,abs(df)))
             if(bounded)
-                ret$p[2L] <- 1 - mixX2(abs(X2), df=abs(df), mix=mix)
+                ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
+            ret$p[ret$X2 < 0] <- NaN
+            ret$p[ret$df <= 0] <- NaN
         }
         rownames(ret) <- c(nms1, nms2)
         ret <- as.mirt_df(ret)
