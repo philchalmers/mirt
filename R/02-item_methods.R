@@ -116,8 +116,9 @@ numDeriv_dP2 <- function(item, Theta){
     ret <- lapply(2L:item@ncat - 1L, function(x) tmpmat)
     for(i in seq_len(nrow(Theta))){
         for(j in 2L:item@ncat)
-            ret[[j-1L]][i, item@est] <- numerical_deriv(par, P, Theta=Theta[i, , drop=FALSE],
-                                                     item=item, cat=j)
+            ret[[j-1L]][i, item@est] <-
+                numerical_deriv(par, P, Theta=Theta[i, , drop=FALSE],
+                                item=item, cat=j)
     }
     ret
 }
@@ -159,7 +160,8 @@ symbolicHessian_par <- function(x, Theta, dp1 = NULL, dp2 = NULL, P = NULL){
 
 #' Print generic for customized data.frame console output
 #'
-#' Provides a nicer output for most printed \code{data.frame} objects defined by functions in \code{mirt}.
+#' Provides a nicer output for most printed \code{data.frame} objects
+#' defined by functions in \code{mirt}.
 #'
 #' @method print mirt_df
 #' @param x object of class \code{'mirt_df'}
@@ -187,7 +189,8 @@ print.mirt_df <- function(x, digits = 3, ...){
 
 #' Print generic for customized matrix console output
 #'
-#' Provides a nicer output for most printed \code{matrix} objects defined by functions in \code{mirt}.
+#' Provides a nicer output for most printed \code{matrix}
+#' objects defined by functions in \code{mirt}.
 #'
 #' @method print mirt_matrix
 #' @param x object of class \code{'mirt_matrix'}
@@ -203,7 +206,8 @@ print.mirt_matrix <- function(x, digits = 3, ...){
 
 #' Print generic for customized list console output
 #'
-#' Provides a nicer output for most printed \code{list} objects defined by functions in \code{mirt}.
+#' Provides a nicer output for most printed \code{list} objects
+#' defined by functions in \code{mirt}.
 #'
 #' @method print mirt_list
 #' @param x object of class \code{'mirt_list'}
@@ -301,7 +305,8 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'GroupPars', Theta = 'matrix'),
     definition = function(x, Theta, CUSTOM.IND, EM = FALSE, pars = NULL, itemloc = NULL,
-                          tabdata = NULL, freq = NULL, estHess=FALSE, prior = NULL, bfactor_info=NULL){
+                          tabdata = NULL, freq = NULL,
+                          estHess=FALSE, prior = NULL, bfactor_info=NULL){
         if(x@itemclass < 0L){
             LLfun <- function(par, obj, Theta){
                 obj@par[obj@est] <- par
@@ -313,8 +318,8 @@ setMethod(
             hess <- matrix(0, length(x@par), length(x@par))
             if(any(x@est)){
                 if(x@usegr) grad <- x@gr(x, Theta)
-                else grad[x@est] <- numerical_deriv(x@par[x@est], LLfun, obj=x, Theta=Theta,
-                                                    type=x@derivType)
+                else grad[x@est] <- numerical_deriv(x@par[x@est], LLfun, obj=x,
+                                                    Theta=Theta, type=x@derivType)
                 if(estHess){
                     if(x@usehss) hess <- x@hss(x, Theta)
                     else hess[x@est, x@est] <-
@@ -333,8 +338,8 @@ setMethod(
                                                              pars=pars, tabdata=tabdata, freq=freq,
                                                              itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                                              bfactor_info=bfactor_info,
-                                                             type = if(pars[[length(pars)]]@dentype == 'bfactor') "central"
-                                                                             else "Richardson",
+                                                             type = if(pars[[length(pars)]]@dentype == 'bfactor')
+                                                                 "central" else "Richardson",
                                                              gradient=FALSE)
                     }
                 }
@@ -390,9 +395,10 @@ setMethod(
         prior.t.var[lower.tri(prior.t.var, diag=TRUE)] <- x@par
         d <- if(ncol(theta0) == 1) matrix(prior.t.var) else diag(diag(prior.t.var))
         prior.t.var <- prior.t.var + t(prior.t.var) - d
-        sigma <- if(ncol(theta0) == 1L) matrix(x@cand.t.var) else diag(rep(x@cand.t.var,ncol(theta0)))
+        sigma <- if(ncol(theta0) == 1L) matrix(x@cand.t.var)
+           else diag(rep(x@cand.t.var,ncol(theta0)))
         theta1 <- theta0 + mirt_rmvnorm(N, prior.mu, sigma)
-        if(is.null(total_0)) theta1 <- theta0 #for intial draw
+        if(is.null(total_0)) theta1 <- theta0 #for initial draw
         log_den1 <- mirt_dmvnorm(theta1,prior.mu,prior.t.var,log=TRUE)
         itemtrace1 <- matrix(0, ncol=ncol(fulldata), nrow=nrow(fulldata))
         if(LR){
@@ -1154,7 +1160,8 @@ setMethod(
             Theta <- cbind(x@fixed.design, Theta)
         # P <- ProbTrace(x=x, Theta=Theta, useDesign = FALSE, ot=offterm)
         tmp <- .Call("dparsNominal", x, Theta, offterm, TRUE, estHess)
-        # num <- P.nominal(c(a, ak, dshift), ncat=length(ak), Theta=Theta, returnNum=TRUE, ot=offterm)
+        # num <- P.nominal(c(a, ak, dshift), ncat=length(ak),
+        #   Theta=Theta, returnNum=TRUE, ot=offterm)
         grad <- tmp$grad
         hess <- tmp$hess
 
@@ -1231,7 +1238,8 @@ setMethod(
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
         for(j in seq_len(x@nfact)){
             for(i in seq_len(x@ncat)){
-                grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (ak * a[j])) / Den
+                grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] *
+                    (Num %*% (ak * a[j])) / Den
                 hess[[i]][ ,j] <- ak[i]^2 * a[j]^2 * P[ ,i] -
                     2 * ak[i] * a[j] * P[,i] * (Num %*% (ak * a[j])) / Den +
                     2 * P[,i] * ((Num %*% (ak * a[j])) / Den)^2 -
@@ -1375,7 +1383,8 @@ setMethod(
             grad[[i]] <- hess[[i]] <- matrix(0, nrow(Theta), x@nfact)
         for(j in seq_len(x@nfact)){
             for(i in seq_len(x@ncat)){
-                grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] * (Num %*% (ak * a[j])) / Den
+                grad[[i]][ ,j] <- ak[i] * a[j] * P[ ,i] - P[ ,i] *
+                    (Num %*% (ak * a[j])) / Den
                 hess[[i]][ ,j] <- ak[i]^2 * a[j]^2 * P[ ,i] -
                     2 * ak[i] * a[j] * P[,i] * (Num %*% (ak * a[j])) / Den +
                     2 * P[,i] * ((Num %*% (ak * a[j])) / Den)^2 -
@@ -1404,10 +1413,12 @@ setMethod(
         eak <- e*ak
         for(i in seq_len(nfact)){
             for(j in 2L:ncat)
-                dp[,i] <- dp[,i] + eak[j]*Theta[,i]*P[,j] - e[j]*P[,j]*rowSums(Theta[,i] * aknum)
+                dp[,i] <- dp[,i] + eak[j]*Theta[,i]*P[,j] -
+                    e[j]*P[,j]*rowSums(Theta[,i] * aknum)
         }
         for(j in seq_len(x@ncat)){
-            dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 - as.numeric(e[-j] %*% t(P[,-j]*P[,j]))
+            dp[,nfact + ncat + j] <- e[j] * P[,j] - e[j] * P[,j]^2 -
+                as.numeric(e[-j] %*% t(P[,-j]*P[,j]))
             dp[,nfact + j] <- dp[,nfact + ncat + j] * aTheta
         }
         return(dp)
@@ -1785,7 +1796,8 @@ setMethod(
         Qd <- 1 - Pd
         Pstar <- P.mirt(c(a, d, -999, 999), Theta=Theta)[,2L]
         Qstar <- 1 - Pstar
-        num <- P.nominal(c(rep(1, nfact), ak, dk), ncat=length(dk), Theta=Theta, returnNum=TRUE)
+        num <- P.nominal(c(rep(1, nfact), ak, dk), ncat=length(dk),
+                         Theta=Theta, returnNum=TRUE)
         den <- rowSums(num)
         Pn <- num/den
         cdat <- dat[,correct]
@@ -1825,7 +1837,8 @@ setMethod(
         ak <- x@par[(x@nfact+4L):(x@nfact+4L+x@ncat-2L)]
         dk <- x@par[(length(x@par)-length(ak)+1):length(x@par)]
         Pn <- P.nominal(c(rep(1,ncol(Theta)), ak, dk), ncat=length(dk), Theta=Theta)
-        Num <- P.nominal(c(rep(1,ncol(Theta)), ak, dk), ncat=length(dk), Theta=Theta, returnNum = TRUE)
+        Num <- P.nominal(c(rep(1,ncol(Theta)), ak, dk), ncat=length(dk),
+                         Theta=Theta, returnNum = TRUE)
         Den <- rowSums(Num)
         Pstar <- P.mirt(c(a, d, -999, 999), Theta)[,2L]
         Q <- P.mirt(c(a, d, g, u), Theta)[,1]
@@ -2472,7 +2485,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'custom'),
     definition = function(x){
-        stop('calculating null models for custom item types is ambiguous.', call. = FALSE)
+        stop('calculating null models for custom item types is ambiguous.',
+             call. = FALSE)
     }
 )
 
@@ -2533,11 +2547,13 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(x@usegr) grad <- x@gr(x, Theta)
-        else grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta, type=x@derivType)
+        else grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                            Theta=Theta, type=x@derivType)
         if(estHess){
             if(x@usehss) hess <- x@hss(x, Theta)
             else hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
-                                                       Theta=Theta, type=x@derivType.hss, gradient=FALSE)
+                                                       Theta=Theta, type=x@derivType.hss,
+                                                       gradient=FALSE)
         }
         return(list(grad = grad, hess=hess))
     }
@@ -2755,7 +2771,8 @@ setMethod(
 
     if (sum(Nest)>0) {
       grad <- rep(0, length(x@par))
-      grad[x@est & Nest] <- numerical_deriv(x@par[x@est & Nest], EML, obj=x, Theta=Theta)
+      grad[x@est & Nest] <- numerical_deriv(x@par[x@est & Nest], EML, obj=x,
+                                            Theta=Theta)
     }
 
     if(estHess && any(x@est))
