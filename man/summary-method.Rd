@@ -15,6 +15,7 @@
   rotate = "oblimin",
   Target = NULL,
   suppress = 0,
+  suppress.cor = 0,
   verbose = TRUE,
   ...
 )
@@ -41,6 +42,9 @@ rotations such as \code{'targetT'}, \code{'targetQ'}, \code{'pstT'}, and \code{'
 \item{suppress}{a numeric value indicating which (possibly rotated) factor
 loadings should be suppressed. Typical values are around .3 in most
 statistical software. Default is 0 for no suppression}
+
+\item{suppress.cor}{same as \code{suppress}, but for the correlation matrix
+output}
 
 \item{verbose}{logical; allow information to be printed to the console?}
 

@@ -149,6 +149,8 @@ setMethod(
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
+#' @param suppress.cor same as \code{suppress}, but for the correlation matrix
+#'   output
 #' @param verbose logical; allow information to be printed to the console?
 #' @param ... additional arguments to be passed
 #'
@@ -175,7 +177,8 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
-    definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0,
+    definition = function(object, rotate = 'oblimin', Target = NULL,
+                          suppress = 0, suppress.cor = 0,
                           verbose = TRUE, ...){
         if (!object@Options$exploratory || rotate == 'none') {
             F <- object@Fit$F
@@ -195,7 +198,9 @@ setMethod(
                 cat("\nSS loadings: ", round(SS, 3), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F), 3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, 3), na.print=" ")
+                Phiprint <- Phi
+                Phiprint[abs(Phi) < suppress.cor] <- NA
+                print(round(Phiprint, 3), na.print = " ")
             }
             invisible(list(rotF=F,h2=h2,fcor=Phi))
         } else {
@@ -218,7 +223,9 @@ setMethod(
                 print(loads, 3, na.print = " ")
                 cat("\nRotated SS loadings: ",round(SS,3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, 3))
+                Phiprint <- Phi
+                Phiprint[abs(Phi) < suppress.cor] <- NA
+                print(round(Phiprint, 3), na.print = " ")
             }
             if(any(h2 > 1))
                 warning("Solution has Heywood cases. Interpret with caution.",
