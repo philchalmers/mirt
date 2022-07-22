@@ -570,12 +570,12 @@ setMethod(
         if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
             ret$logPost = c(object@Fit$logLik + object@Fit$logPrior,
                             object2@Fit$logLik + object2@Fit$logPrior)
-            ret$df <- c(NaN, abs(df))
+            ret$df <- c(NA, abs(df))
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
-            ret$X2 <- c(NaN, X2)
-            ret$df <- c(NaN, df)
-            ret$p <- c(NaN, 1 - pchisq(X2,abs(df)))
+            ret$X2 <- c(NA, X2)
+            ret$df <- c(NA, df)
+            ret$p <- c(NA, 1 - pchisq(X2,abs(df)))
             if(bounded)
                 ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
             ret$p[ret$X2 < 0] <- NaN

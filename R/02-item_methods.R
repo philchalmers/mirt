@@ -175,7 +175,14 @@ print.mirt_df <- function(x, digits = 3, ...){
             if(clsss[i] == 'numeric')
                 x[,i] <- round(x[,i], digits=digits)
     }
-    print(x, ...)
+    if(!is.null(x$p)){
+        x$X2 <- as.character(x$X2)
+        x$df <- as.character(x$df)
+        x$p <- as.character(x$p)
+        print(x, na.print = " ", ...)
+    } else {
+        print(x, ...)
+    }
 }
 
 #' Print generic for customized matrix console output
