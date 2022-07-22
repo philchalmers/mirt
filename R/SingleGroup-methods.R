@@ -185,16 +185,17 @@ setMethod(
             gp <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
             Phi <- cov2cor(gp$gcov)
             colnames(h2) <- "h2"
-            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[seq_len(object@Model$nfact)]
+            rownames(Phi) <- colnames(Phi) <- names(SS) <-
+                colnames(F)[seq_len(object@Model$nfact)]
             loads <- cbind(F,h2)
             if(verbose){
                 if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
-                print(loads, 3)
+                print(loads, 3, na.print = " ")
                 cat("\nSS loadings: ", round(SS, 3), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F), 3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, 3))
+                print(round(Phi, 3), na.print=" ")
             }
             invisible(list(rotF=F,h2=h2,fcor=Phi))
         } else {
@@ -214,13 +215,14 @@ setMethod(
             if(verbose){
                 cat("\nRotation: ", rotate, "\n")
                 cat("\nRotated factor loadings: \n\n")
-                print(loads, 3)
+                print(loads, 3, na.print = " ")
                 cat("\nRotated SS loadings: ",round(SS,3), "\n")
                 cat("\nFactor correlations: \n\n")
                 print(round(Phi, 3))
             }
             if(any(h2 > 1))
-                warning("Solution has Heywood cases. Interpret with caution.", call.=FALSE)
+                warning("Solution has Heywood cases. Interpret with caution.",
+                        call.=FALSE)
             invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))
         }
     }
@@ -925,7 +927,7 @@ setMethod(
             if(verbose) cat("Q3 matrix:\n\n")
             res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
-            if(verbose) print(res, ...)
+            if(verbose) print(res, ..., na.print = " ")
             return(invisible(res))
         } else if(type == 'JSI'){
             nfact <- extract.mirt(object, 'nfact')
