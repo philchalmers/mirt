@@ -200,6 +200,7 @@ setMethod(
                 cat("\nFactor correlations: \n\n")
                 Phiprint <- Phi
                 Phiprint[abs(Phi) < suppress.cor] <- NA
+                Phiprint[upper.tri(Phiprint, diag = FALSE)] <- NA
                 print(round(Phiprint, 3), na.print = " ")
             }
             invisible(list(rotF=F,h2=h2,fcor=Phi))
@@ -225,6 +226,7 @@ setMethod(
                 cat("\nFactor correlations: \n\n")
                 Phiprint <- Phi
                 Phiprint[abs(Phi) < suppress.cor] <- NA
+                Phiprint[upper.tri(Phiprint, diag = FALSE)] <- NA
                 print(round(Phiprint, 3), na.print = " ")
             }
             if(any(h2 > 1))
