@@ -96,6 +96,8 @@
 #'
 #' }
 extract.mirt <- function(x, what){
+    if(what == 'DIF_coefficients')
+        return(attr(x, 'DIF_coefficients'))
     ret <- switch(what,
                   G2 = x@Fit$G2,
                   logLik = x@Fit$logLik,

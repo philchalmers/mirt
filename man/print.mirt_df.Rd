@@ -14,5 +14,6 @@
 \item{...}{additional arguments passed to \code{print(...)}}
 }
 \description{
-Provides a nicer output for most printed \code{data.frame} objects defined by functions in \code{mirt}.
+Provides a nicer output for most printed \code{data.frame} objects
+defined by functions in \code{mirt}.
 }

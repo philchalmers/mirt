@@ -75,6 +75,11 @@
 #' @param verbose logical print extra information to the console?
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #'
+#' @return a \code{mirt_df} object with the information-based criteria for DIF, though this may be changed
+#'   to a list output when \code{return_models} or \code{simplify} are modified. As well, a silent
+#'   \code{'DIF_coefficeints'} attribute is included to view the item parameter differences
+#'   between the groups
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
@@ -116,8 +121,12 @@
 #' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
 #' # Likelihood-ratio test for DIF (as well as model information)
-#' DIF(model, c('a1', 'd'))
-#' DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
+#' dif <- DIF(model, c('a1', 'd'))
+#' dif
+#'
+#' # function silently includes "DIF_coefficients" attribute to view
+#' # the IRT parameters post-completion
+#' extract.mirt(dif, "DIF_coefficients")
 #'
 #' # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 #' DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
@@ -144,6 +153,9 @@
 #'   invariance = c(colnames(dat), 'free_means', 'free_var'))
 #' dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 #' dropdown
+#'
+#' # View silent "DIF_coefficients" attribute
+#' extract.mirt(dropdown, "DIF_coefficients")
 #'
 #' ### sequential schemes (add constraints)
 #'
@@ -218,6 +230,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         aov <- if(drop) anova(model, newmodel) else anova(newmodel, model)
         attr(aov, 'parnum') <- parnum
         attr(aov, 'converged') <- extract.mirt(newmodel, 'converged')
+        cfs <- coef(newmodel)
+        attr(aov, 'coefs') <- rbind(cfs[[1]][[item]], cfs[[2]][[item]])
+        rownames(attr(aov, 'coefs')) <- names(cfs)
         if(return_models) aov <- newmodel
         return(aov)
     }
@@ -424,6 +439,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     }
     if(simplify && !return_models){
         adj_pvals <- res$adj_pvals
+        DIF_coefs <- lapply(res, function(x) attr(x, 'coefs'))
         out <- lapply(res[pick], function(x){
              r <- x[2L, ] - x[1L, ]
              if(!has_priors)
@@ -435,6 +451,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
          res <- cbind(converged, do.call(rbind, out))
          if(!has_priors) res$adj_pvals <- adj_pvals
          res <- as.mirt_df(res)
+         attr(res, 'DIF_coefficients') <- DIF_coefs
     }
     return(res)
 }

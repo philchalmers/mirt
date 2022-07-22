@@ -96,6 +96,12 @@ df and p-values}
 
 \item{...}{additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}}
 }
+\value{
+a \code{mirt_df} object with the information-based criteria for DIF, though this may be changed
+  to a list output when \code{return_models} or \code{simplify} are modified. As well, a silent
+  \code{'DIF_coefficeints'} attribute is included to view the item parameter differences
+  between the groups
+}
 \description{
 This function runs the Wald and likelihood-ratio approaches for testing differential
 item functioning (DIF). This is primarily a convenience wrapper to the
@@ -140,8 +146,12 @@ mirtCluster()
 model <- multipleGroup(dat, 1, group, SE = TRUE)
 
 # Likelihood-ratio test for DIF (as well as model information)
-DIF(model, c('a1', 'd'))
-DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
+dif <- DIF(model, c('a1', 'd'))
+dif
+
+# function silently includes "DIF_coefficients" attribute to view
+# the IRT parameters post-completion
+extract.mirt(dif, "DIF_coefficients")
 
 # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
@@ -168,6 +178,9 @@ model_constrained <- multipleGroup(dat, 1, group,
   invariance = c(colnames(dat), 'free_means', 'free_var'))
 dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 dropdown
+
+# View silent "DIF_coefficients" attribute
+extract.mirt((dropdown, "DIF_coefficients")
 
 ### sequential schemes (add constraints)
 
