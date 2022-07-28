@@ -449,7 +449,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         if(plot) return(plot.DRF(Theta_nodes, oCM, CIs=scores, DIF=DIF, CI=CI,
                                  itemnames = extract.mirt(mod, 'itemnames')[focal_items], ...))
         CIs <- apply(scores, 2, bs_range, CI=CI)
-        CIs <- CIs[,1L:(ncol(CIs) * 3/5)]
+        if(is.null(Theta_nodes))
+            CIs <- CIs[,1L:(ncol(CIs) * 3/5)]
         rownames(CIs) <- c(paste0('CI_', round((1-CI)/2, 3L)*100),
                            paste0('CI_', round(CI + (1-CI)/2, 3L)*100))
         if(!is.null(Theta_nodes))
