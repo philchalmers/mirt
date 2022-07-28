@@ -830,7 +830,12 @@ setMethod(
                     cat("\n")
                 }
             }
-            if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
+            if(verbose){
+                cat("LD matrix (lower triangle) and standardized values.\n")
+                cat("\nUpper triangle summary:\n")
+                print(round(summary(res[upper.tri(res)]), 3))
+                cat("\n")
+            }
             res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
             if(verbose) print(res, ...)
@@ -846,7 +851,6 @@ setMethod(
                              sqrt(object@Internals$Pl * nrow(object@Data$data))
             expected <- N * object@Internals$Pl
             tabdata <- object@Data$tabdata
-            rownames(tabdata) <- NULL
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,object@Data$Freq[[1L]],expected,res)
@@ -871,6 +875,7 @@ setMethod(
                     tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
                 }
                 tabdata <- as.mirt_df(tabdata)
+                rownames(tabdata) <- NULL
                 return(tabdata)
             }
         } else if(type == 'expfull'){
@@ -933,7 +938,11 @@ setMethod(
                     }
                 }
             }
-            if(verbose) cat("Q3 matrix:\n\n")
+            if(verbose){
+                cat("Q3 summary statistics:\n")
+                print(round(summary(res[upper.tri(res)]), 3))
+                cat("\n")
+            }
             res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
             if(verbose) print(res, ..., na.print = " ")
@@ -962,8 +971,12 @@ setMethod(
             }
             if(fold) retmat <- retmat + t(retmat)
             class(retmat) <- c('mirt_matrix', 'matrix')
+            if(verbose){
+                cat("JSI summary statistics:\n")
+                print(round(summary(na.omit(as.vector(retmat))), 3))
+                cat("\n")
+            }
             retmat
-
         } else {
             stop('specified type does not exist', call.=FALSE)
         }
@@ -989,7 +1002,8 @@ setMethod(
 #'     \item{\code{'itemscore'}}{item scoring traceline plots}
 #'     \item{\code{'score'}}{expected total score surface}
 #'     \item{\code{'scorecontour'}}{expected total score contour plot}
-#'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based on the EAP for sum-scores method (see \code{\link{fscores}})}
+#'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
+#'       on the EAP for sum-scores method (see \code{\link{fscores}})}
 #'   }
 #'
 #'   Note that if \code{dentype = 'empiricalhist'} was used in estimation then
@@ -1002,8 +1016,8 @@ setMethod(
 #'   and provide information pertaining only to the second response option?
 #' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 #'   for information-based plots with respect to the first dimension.
-#'   If a vector is used then a bubble plot is created with the summed information across the angles specified
-#'   (e.g., \code{degrees = seq(0, 90, by=10)})
+#'   If a vector is used then a bubble plot is created with the summed information
+#'   across the angles specified (e.g., \code{degrees = seq(0, 90, by=10)})
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.

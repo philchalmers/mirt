@@ -74,7 +74,8 @@
     \item{\code{'itemscore'}}{item scoring traceline plots}
     \item{\code{'score'}}{expected total score surface}
     \item{\code{'scorecontour'}}{expected total score contour plot}
-    \item{\code{'EAPsum'}}{compares sum-scores to the expected values based on the EAP for sum-scores method (see \code{\link{fscores}})}
+    \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
+      on the EAP for sum-scores method (see \code{\link{fscores}})}
   }
 
   Note that if \code{dentype = 'empiricalhist'} was used in estimation then
@@ -92,8 +93,8 @@ and provide information pertaining only to the second response option?}
 
 \item{degrees}{numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 for information-based plots with respect to the first dimension.
-If a vector is used then a bubble plot is created with the summed information across the angles specified
-(e.g., \code{degrees = seq(0, 90, by=10)})}
+If a vector is used then a bubble plot is created with the summed information
+across the angles specified (e.g., \code{degrees = seq(0, 90, by=10)})}
 
 \item{which.items}{numeric vector indicating which items to be used when plotting. Default is
 to use all available items}

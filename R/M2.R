@@ -70,7 +70,9 @@
 #' dat <- as.matrix(expand.table(LSAT7))
 #' (mod1 <- mirt(dat, 1))
 #' M2(mod1)
-#' M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+#' resids <- M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+#' resids
+#' summary(resids[lower.tri(resids)])
 #'
 #' #M2 with missing data present
 #' dat[sample(1:prod(dim(dat)), 250)] <- NA

@@ -180,7 +180,7 @@ dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 dropdown
 
 # View silent "DIF_coefficients" attribute
-extract.mirt((dropdown, "DIF_coefficients")
+extract.mirt(dropdown, "DIF_coefficients")
 
 ### sequential schemes (add constraints)
 

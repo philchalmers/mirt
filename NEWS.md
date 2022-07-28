@@ -1,5 +1,8 @@
 # Changes in mirt 1.37
 
+- When `verbose = TRUE` in `residuals()` a set of summary statistics is reported
+  for easier flagging 
+
 - `itemfit()` arguments changed to accommodate outputting tables more
   consistently. Now a single `return.tables` argument is used to specify
   which tables to return
