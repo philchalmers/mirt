@@ -357,7 +357,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     if(DIF && !is.null(Theta_nodes))
         stop('DIF must be FALSE when using Theta_nodes', call.=FALSE)
     type <- 'score'
-    if(class(mod) != 'MultipleGroupClass')
+    if(!is(mod, 'MultipleGroupClass'))
         stop('mod input was not estimated by multipleGroup()', call.=FALSE)
     if(mod@Data$ngroups != 2L)
         stop('DTF only supports two group models at a time', call.=FALSE)

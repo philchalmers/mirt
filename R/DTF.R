@@ -168,7 +168,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
         if(plot != 'none') message('plots are not drawn when Theta_nodes is included')
         plot <- 'none'
     }
-    if(class(mod) != 'MultipleGroupClass')
+    if(!is(mod, 'MultipleGroupClass'))
         stop('mod input was not estimated by multipleGroup()', call.=FALSE)
     if(length(mod@ParObjects$pars) != 2L)
         stop('DTF only supports two group models at a time', call.=FALSE)
