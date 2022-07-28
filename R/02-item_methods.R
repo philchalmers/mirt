@@ -177,10 +177,10 @@ print.mirt_df <- function(x, digits = 3, ...){
             if(clsss[i] == 'numeric')
                 x[,i] <- round(x[,i], digits=digits)
     }
-    if(!is.null(x$p)){
-        x$X2 <- as.character(x$X2)
-        x$df <- as.character(x$df)
-        x$p <- as.character(x$p)
+    if(!is.null(x[['p']])){
+        if(!is.null(x$X2)) x$X2 <- as.character(x$X2)
+        if(!is.null(x$df)) x$df <- as.character(x$df)
+        if(!is.null(x$p)) x$p <- as.character(x$p)
         print(x, na.print = " ", ...)
     } else {
         print(x, ...)
