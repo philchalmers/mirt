@@ -2306,7 +2306,7 @@ loadSplinePars <- function(pars, Theta, MG = TRUE){
 
 latentRegression_obj <- function(data, covdata, formula, dentype, method){
     if(!is.null(covdata) && !is.null(formula)){
-        if(dentype != "Gaussian")
+        if(!dentype %in% c("Gaussian", 'discrete'))
             stop('Only Guassian dentype currently supported for latent regression models',
                  call.=FALSE)
         if(!is.data.frame(covdata))
