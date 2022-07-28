@@ -1,5 +1,8 @@
 # Changes in mirt 1.37
 
+- `boot.mirt()` gains a `boot.fun` argument to accept user-defined functions for 
+  extracting the associated statistics to bootstrap 
+
 - When `verbose = TRUE` in `residuals()` a set of summary statistics is reported
   for easier flagging 
 

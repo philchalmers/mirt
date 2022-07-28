@@ -4,17 +4,25 @@
 \alias{boot.mirt}
 \title{Calculate bootstrapped standard errors for estimated models}
 \usage{
-boot.mirt(x, R = 100, technical = NULL, ...)
+boot.mirt(x, R = 100, boot.fun = NULL, technical = NULL, ...)
 }
 \arguments{
 \item{x}{an estimated model object}
 
 \item{R}{number of draws to use (passed to the \code{boot()} function)}
 
+\item{boot.fun}{a user-defined function used to extract the information from the bootstrap
+fitted models. Must be of the form \code{boot.fun(mod)}, where \code{mod} is the
+bootstrap fitted model under investigation, and the return must be a numeric vector. If
+omitted a default function will be defined internally that returns the estimated
+parameters from the \code{mod} object, resulting in bootstrapped parameter estimate
+results}
+
 \item{technical}{technical arguments passed to estimation engine. See \code{\link{mirt}}
 for details}
 
-\item{...}{additional arguments to be passed on to \code{boot(...)} and estimation engine}
+\item{...}{additional arguments to be passed on to \code{boot(...)} and mirt's
+estimation engine}
 }
 \description{
 Given an internal mirt object estimate the bootstrapped standard errors. It may
@@ -26,7 +34,7 @@ package). Parameters are organized from the freely estimated values in \code{mod
 
 \dontrun{
 
-#standard
+# standard
 mod <- mirt(Science, 1)
 booted <- boot.mirt(mod, R=20)
 plot(booted)
@@ -37,6 +45,19 @@ mod <- mirt(Science, 1)
 booted <- boot.mirt(mod, parallel = 'snow', ncpus = parallel::detectCores())
 booted
 
+####
+# bootstrapped CIs for standardized factor loadings
+boot.fun <- function(mod){
+  so <- summary(mod, verbose=FALSE)
+  as.vector(so$rotF)
+}
+
+# test to see if it works before running
+boot.fun(mod)
+
+# run
+booted.loads <- boot.mirt(mod, boot.fun=boot.fun)
+booted.loads
 
 }
 }

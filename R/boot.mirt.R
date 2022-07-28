@@ -10,7 +10,14 @@
 #' @param R number of draws to use (passed to the \code{boot()} function)
 #' @param technical technical arguments passed to estimation engine. See \code{\link{mirt}}
 #'   for details
-#' @param ... additional arguments to be passed on to \code{boot(...)} and estimation engine
+#' @param boot.fun a user-defined function used to extract the information from the bootstrap
+#'   fitted models. Must be of the form \code{boot.fun(mod)}, where \code{mod} is the
+#'   bootstrap fitted model under investigation, and the return must be a numeric vector. If
+#'   omitted a default function will be defined internally that returns the estimated
+#'   parameters from the \code{mod} object, resulting in bootstrapped parameter estimate
+#'   results
+#' @param ... additional arguments to be passed on to \code{boot(...)} and mirt's
+#'   estimation engine
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -23,7 +30,7 @@
 #'
 #' \dontrun{
 #'
-#' #standard
+#' # standard
 #' mod <- mirt(Science, 1)
 #' booted <- boot.mirt(mod, R=20)
 #' plot(booted)
@@ -34,10 +41,24 @@
 #' booted <- boot.mirt(mod, parallel = 'snow', ncpus = parallel::detectCores())
 #' booted
 #'
+#' ####
+#' # bootstrapped CIs for standardized factor loadings
+#' boot.fun <- function(mod){
+#'   so <- summary(mod, verbose=FALSE)
+#'   as.vector(so$rotF)
+#' }
+#'
+#' # test to see if it works before running
+#' boot.fun(mod)
+#'
+#' # run
+#' booted.loads <- boot.mirt(mod, boot.fun=boot.fun)
+#' booted.loads
 #'
 #' }
-boot.mirt <- function(x, R = 100, technical = NULL, ...){
-    boot.draws <- function(orgdat, ind, npars, constrain, parprior, model, itemtype, group,
+boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
+    boot.draws <- function(orgdat, ind, boot.fun,
+                           npars, constrain, parprior, model, itemtype, group,
                            class, LR, obj, DTF = NULL, technical, ...) {
         ngroup <- length(unique(group))
         dat <- orgdat[ind, ]
@@ -86,13 +107,19 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
                              type=DTF$type))
         }
         if(is(mod, 'try-error')) return(rep(NA, npars))
-        structure <- mod2values(mod)
-        longpars <- structure$value[structure$est]
-        if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
-        return(longpars)
+        ret <- boot.fun(mod)
+        ret
     }
 
     if(missing(x)) missingMsg('x')
+    if(is.null(boot.fun)){
+        boot.fun <- function(mod){
+            structure <- mod2values(mod)
+            longpars <- structure$value[structure$est]
+            if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
+            longpars
+        }
+    }
     if(x@Options$exploratory)
         message('Note: bootstrapped standard errors for slope parameters in exploratory
                        models are not meaningful.')
@@ -108,13 +135,15 @@ boot.mirt <- function(x, R = 100, technical = NULL, ...){
     if(length(constrain) == 0L) constrain <- NULL
     structure <- mod2values(x)
     longpars <- structure$value
-    npars <- sum(structure$est)
+    npars <- length(boot.fun(mod))
     if(is.null(technical)) technical <- list(parallel=FALSE)
     else technical$parallel <- FALSE
     if(requireNamespace("boot", quietly = TRUE)){
-      boots <- boot::boot(dat, boot.draws, R=R, npars=npars, constrain=constrain, class=class,
-                    parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
-                    obj=x, technical=technical, ...)
+      boots <- boot::boot(dat, boot.draws,
+                          R=R, npars=npars, constrain=constrain, class=class,
+                          parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
+                          obj=x, technical=technical, boot.fun=boot.fun, ...)
+      boots$call <- match.call()
     }
     if(!is.null(DTF)) return(boots)
     names(boots$t0) <- paste(paste(structure$item[structure$est],
