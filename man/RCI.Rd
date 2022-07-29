@@ -56,10 +56,13 @@ dat <- key2binary(SAT12,
 
 mod <- mirt(dat, 1)
 
-# with N=5 individual under investigation
+# with N=5 individuals under investigation
 predat <- postdat <- dat[1:5,]
 predat[, 17:32] <- NA
 postdat[, 1:16] <- NA
+
+head(predat)
+head(postdat)
 
 RCI(mod, predat, postdat)
 

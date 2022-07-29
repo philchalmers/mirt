@@ -55,10 +55,13 @@
 #'
 #' mod <- mirt(dat, 1)
 #'
-#' # with N=5 individual under investigation
+#' # with N=5 individuals under investigation
 #' predat <- postdat <- dat[1:5,]
 #' predat[, 17:32] <- NA
 #' postdat[, 1:16] <- NA
+#'
+#' head(predat)
+#' head(postdat)
 #'
 #' RCI(mod, predat, postdat)
 #'
@@ -77,8 +80,8 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL, ...){
     rownames(ret) <- NULL
     if(!is.null(cutoffs)){
         ret$cut_decision <- 'unchanged'
-        ret$cut_decision[ret$z > max(cutoffs)] <- 'reliably increased'
-        ret$cut_decision[ret$z < min(cutoffs)] <- 'reliably decreased'
+        ret$cut_decision[ret$z > max(cutoffs)] <- 'increased'
+        ret$cut_decision[ret$z < min(cutoffs)] <- 'decreased'
     }
     ret <- as.mirt_df(ret)
     ret
