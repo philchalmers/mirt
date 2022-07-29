@@ -136,7 +136,7 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
             if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
             longpars
         }
-    } else npars <- length(boot.fun(mod))
+    } else npars <- length(boot.fun(x))
     if(is.null(technical)) technical <- list(parallel=FALSE)
     else technical$parallel <- FALSE
     if(requireNamespace("boot", quietly = TRUE)){
