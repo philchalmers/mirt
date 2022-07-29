@@ -107,7 +107,8 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
             return(calc_DTFs(mod=mod, Theta = DTF$Theta, max_score = DTF$max_score, plot='none',
                              type=DTF$type))
         }
-        if(is(mod, 'try-error')) return(rep(NA, npars))
+        if(is(mod, 'try-error') || !extract.mirt(mod, 'converged'))
+            return(rep(NA, npars))
         ret <- boot.fun(mod)
         ret
     }
