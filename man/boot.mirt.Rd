@@ -12,7 +12,7 @@ boot.mirt(x, R = 100, boot.fun = NULL, technical = NULL, ...)
 \item{R}{number of draws to use (passed to the \code{boot()} function)}
 
 \item{boot.fun}{a user-defined function used to extract the information from the bootstrap
-fitted models. Must be of the form \code{boot.fun(mod)}, where \code{mod} is the
+fitted models. Must be of the form \code{boot.fun(x)}, where \code{x} is the
 bootstrap fitted model under investigation, and the return must be a numeric vector. If
 omitted a default function will be defined internally that returns the estimated
 parameters from the \code{mod} object, resulting in bootstrapped parameter estimate

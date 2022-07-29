@@ -11,7 +11,7 @@
 #' @param technical technical arguments passed to estimation engine. See \code{\link{mirt}}
 #'   for details
 #' @param boot.fun a user-defined function used to extract the information from the bootstrap
-#'   fitted models. Must be of the form \code{boot.fun(mod)}, where \code{mod} is the
+#'   fitted models. Must be of the form \code{boot.fun(x)}, where \code{x} is the
 #'   bootstrap fitted model under investigation, and the return must be a numeric vector. If
 #'   omitted a default function will be defined internally that returns the estimated
 #'   parameters from the \code{mod} object, resulting in bootstrapped parameter estimate
@@ -65,6 +65,7 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
         rownames(dat) <- NULL
         g <- group[ind]
         if(length(unique(g)) != ngroup) return(rep(NA, npars))
+        mod <- NULL
         if(class == 'MixedClass'){
             fm <- obj@Model$formulas
             itemdesign <- if(length(obj@Data$itemdesign)) obj@Data$itemdesign else NULL
@@ -112,14 +113,6 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
     }
 
     if(missing(x)) missingMsg('x')
-    if(is.null(boot.fun)){
-        boot.fun <- function(mod){
-            structure <- mod2values(mod)
-            longpars <- structure$value[structure$est]
-            if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
-            longpars
-        }
-    }
     if(x@Options$exploratory)
         message('Note: bootstrapped standard errors for slope parameters in exploratory
                        models are not meaningful.')
@@ -135,7 +128,15 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
     if(length(constrain) == 0L) constrain <- NULL
     structure <- mod2values(x)
     longpars <- structure$value
-    npars <- length(boot.fun(mod))
+    npars <- sum(structure$est)
+    if(is.null(boot.fun)){
+        boot.fun <- function(x){
+            structure <- mod2values(x)
+            longpars <- structure$value[structure$est]
+            if(length(longpars) != npars) return(rep(NA, npars)) #in case intercepts dropped
+            longpars
+        }
+    } else npars <- length(boot.fun(mod))
     if(is.null(technical)) technical <- list(parallel=FALSE)
     else technical$parallel <- FALSE
     if(requireNamespace("boot", quietly = TRUE)){
