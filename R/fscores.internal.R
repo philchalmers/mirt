@@ -1,7 +1,7 @@
 setMethod(
 	f = "fscores.internal",
 	signature = 'SingleGroupClass',
-	definition = function(object, rotate, Target, item_weights,
+	definition = function(object, rotate, Target, item_weights, item_weights_long,
 	                      full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL,
 	                      append_response.pattern = TRUE,
@@ -210,7 +210,8 @@ setMethod(
         if(!is.null(gmean)) gp$gmeans <- gmean
         if(!is.null(gcov)) gp$gcov <- gcov
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
-                                             quadpts=quadpts, gp=gp, verbose=verbose, item_weights=item_weights,
+                                             quadpts=quadpts, gp=gp, verbose=verbose,
+                                             item_weights=item_weights_long,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
                                              min_expected=min_expected, pis=pis, mixture=mixture,
@@ -292,7 +293,7 @@ setMethod(
                 }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                               CUSTOM.IND=CUSTOM.IND, pis=pis)
-                itemtrace <- t(t(itemtrace)^item_weights)
+                itemtrace <- t(t(itemtrace)^item_weights_long)
                 log_itemtrace <- log(itemtrace)
                 if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
                 if(method == 'classify')
@@ -324,7 +325,7 @@ setMethod(
                 #do nothing
     		} else if(method == "MAP"){
                 tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=MAP, progress=verbose,
-                               scores=scores, pars=pars, item_weights=item_weights,
+                               scores=scores, pars=pars, item_weights=item_weights_long,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, den_fun=den_fun,
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
@@ -338,7 +339,7 @@ setMethod(
                 scores[allzero,] <- -Inf
                 SEscores[allzero,] <- NA
                 tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=ML, progress=verbose,
-                               scores=scores, pars=pars, item_weights=item_weights,
+                               scores=scores, pars=pars, item_weights=item_weights_long,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, den_fun=NULL,
                                CUSTOM.IND=CUSTOM.IND, return.acov=return.acov, hessian=estHess,
                                ...)
@@ -348,7 +349,7 @@ setMethod(
     		    for(i in seq_len(length(cls)-1L))
     		        DERIV[[i]] <- selectMethod(DerivTheta, c(cls[i], 'matrix'))
                 tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=WLE, progress=verbose,
-                               scores=scores, pars=pars, item_weights=item_weights,
+                               scores=scores, pars=pars, item_weights=item_weights_long,
                                tabdata=tabdata, itemloc=itemloc, gp=gp, prodlist=prodlist, DERIV=DERIV,
                                CUSTOM.IND=CUSTOM.IND, hessian=estHess, data=object@Data$tabdata, ...)
             } else {
