@@ -40,12 +40,15 @@
 #' @param plausible.draws number of plausible values to draw for future researchers
 #'   to perform secondary analyses of the latent trait scores. Typically used in conjunction
 #'   with latent regression predictors (see \code{\link{mirt}} for details), but can
-#'   also be generated when no predictor variables were modeled. If \code{plausible.draws}
+#'   also be generated when no predictor variables were modelled. If \code{plausible.draws}
 #'   is greater than 0 a list of plausible values will be returned
 #' @param plausible.type type of plausible values to obtain. Can be either \code{'normal'} (default)
 #'   to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain Metropolis-Hastings
 #'   samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguments like
 #'   \code{technical} can be supplied to increase the number of burn-in draws and discarded samples)
+#' @param item_weights a user-defined weight vector used in the likelihood expressions
+#'   to add more/less weight for a given observed response. Default is a vector of 1's,
+#'   indicating that all the items receive the same weight
 #' @param method type of factor score estimation method. Can be:
 #' \itemize{
 #'     \item \code{"EAP"} for the expected a-posteriori (default)
@@ -227,6 +230,7 @@
 fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimin', Target = NULL,
                     response.pattern = NULL, append_response.pattern = FALSE, na.rm = FALSE,
                     plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
+                    item_weights = rep(1, extract.mirt(object, 'nitems')),
                     returnER = FALSE, return.acov = FALSE, mean = NULL, cov = NULL, covdata = NULL,
                     verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     use_dentype_estimate=FALSE, QMC = FALSE, custom_den = NULL,
@@ -253,7 +257,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     if(theta_lim[1L] < -max_theta) theta_lim[1L] <- -max_theta
     if(theta_lim[2L] > max_theta) theta_lim[2L] <- max_theta
     if(is(object, 'DiscreteClass') && plausible.draws > 0L){
-        fs <- fscores(object)
+        fs <- fscores(object, item_weights=item_weights)
         ret <- lapply(seq_len(plausible.draws), function(ind, fs){
             mat <- matrix(0L, nrow(fs), ncol(fs))
             for(i in seq_len(ncol(fs))){
@@ -270,10 +274,11 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         }, fs=fs)
         return(ret)
     }
+    stopifnot(is.numeric(item_weights) || length(item_weights) != extract.mirt(object, 'nitems'))
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
-                            theta_lim=theta_lim, MI=MI, covdata=covdata,
+                            theta_lim=theta_lim, MI=MI, covdata=covdata, item_weights=item_weights,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,

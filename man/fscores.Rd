@@ -16,6 +16,7 @@ fscores(
   plausible.draws = 0,
   plausible.type = "normal",
   quadpts = NULL,
+  item_weights = rep(1, extract.mirt(object, "nitems")),
   returnER = FALSE,
   return.acov = FALSE,
   mean = NULL,
@@ -75,7 +76,7 @@ to ensure that the sum-scores correspond to the same composite score}
 \item{plausible.draws}{number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
 with latent regression predictors (see \code{\link{mirt}} for details), but can
-also be generated when no predictor variables were modeled. If \code{plausible.draws}
+also be generated when no predictor variables were modelled. If \code{plausible.draws}
 is greater than 0 a list of plausible values will be returned}
 
 \item{plausible.type}{type of plausible values to obtain. Can be either \code{'normal'} (default)
@@ -88,6 +89,10 @@ one will be created which decreases as the number of dimensions increases
 (and therefore for estimates such as EAP, will be less accurate). This is determined from
 the switch statement
 \code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}}
+
+\item{item_weights}{a user-defined weight vector used in the likelihood expressions
+to add more/less weight for a given observed response. Default is a vector of 1's,
+indicating that all the items receive the same weight}
 
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}
