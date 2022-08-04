@@ -274,7 +274,10 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         }, fs=fs)
         return(ret)
     }
-    stopifnot(is.numeric(item_weights) || length(item_weights) != extract.mirt(object, 'nitems'))
+    stopifnot(is.numeric(item_weights) ||
+                  length(item_weights) != extract.mirt(object, 'nitems') ||
+                  any(item_weights < 0))
+    item_weights <- rep(item_weights, extract.mirt(object, "K"))
     ret <- fscores.internal(object=object, rotate=rotate, full.scores=full.scores, method=method,
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,

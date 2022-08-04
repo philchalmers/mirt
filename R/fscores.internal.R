@@ -292,20 +292,21 @@ setMethod(
                 }
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                               CUSTOM.IND=CUSTOM.IND, pis=pis)
+                itemtrace <- t(t(itemtrace)^item_weights)
                 log_itemtrace <- log(itemtrace)
                 if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
                 if(method == 'classify')
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, progress=verbose,
-                                   FUN=EAP_classify, log_itemtrace=log_itemtrace, item_weights=item_weights,
+                                   FUN=EAP_classify, log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, W=W, nclass=length(pis))
                 else if(method == 'EAP' && return.acov){
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=verbose,
-                                   log_itemtrace=log_itemtrace, item_weights=item_weights,
+                                   log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
                                    scores=scores, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=FALSE,
-            	                   log_itemtrace=log_itemtrace, item_weights=item_weights,
+            	                   log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
@@ -610,6 +611,7 @@ MAP.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
         Theta <- prodterms(Theta,prodlist)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
+    itemtrace <- itemtrace^item_weights
     L <- sum(log(itemtrace)[as.logical(patdata)])
     mu <- if(is.matrix(gp$gmeans)) gp$gmeans[ID, ] else gp$gmeans
     if(!ML){
@@ -630,6 +632,7 @@ WLE.mirt <- function(Theta, pars, patdata, itemloc, gp, prodlist, CUSTOM.IND, ID
         Theta <- prodterms(Theta,prodlist)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
+    itemtrace <- itemtrace^item_weights
     L <- sum(log(itemtrace)[as.logical(patdata)])
     if(ncol(ThetaShort) == 1L){
         infos <- numeric(length(data))
@@ -668,6 +671,7 @@ gradnorm.WLE <- function(Theta, pars, patdata, itemloc, gp, prodlist,
     dW <- dL <- numeric(nfact)
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND)
+    itemtrace <- itemtrace^item_weights
     for (i in seq_len(length(itemloc)-1L)){
         deriv <- DerivTheta(x=pars[[i]], Theta=Theta)
         for(k in seq_len(nfact)){
@@ -774,7 +778,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     itemloc <- x@Model$itemloc
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND, pis=pis)
-    itemtrace <- t(itemtrace)
+    itemtrace <- t(itemtrace)^item_weights
     tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1
     Sum.Scores <- tmp$Sum.Scores
@@ -945,7 +949,7 @@ WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 }
 
 EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
-                return.acov = FALSE, item_weights, return_zeros = FALSE){
+                return.acov = FALSE, return_zeros = FALSE){
     if(any(is.na(scores[ID, ])))
         return(c(scores[ID, ], rep(NA, ncol(scores))))
     nfact <- ncol(ThetaShort)
@@ -986,7 +990,7 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
     return(c(thetas, SE, 1))
 }
 
-EAP_classify <- function(ID, log_itemtrace, tabdata, W, nclass, item_weights){
+EAP_classify <- function(ID, log_itemtrace, tabdata, W, nclass){
     L <- rowSums(log_itemtrace[ ,as.logical(tabdata[ID,]), drop = FALSE])
     expLW <- if(is.matrix(W)) exp(L) * W[ID, ] else exp(L) * W
     LW <- if(is.matrix(W)) L + log(W[ID, ]) else L + log(W)
