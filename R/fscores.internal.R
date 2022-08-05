@@ -868,7 +868,11 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         rownames(fit) <- 'stats'
         attr(ret, 'fit') <- fit
         ret$std.res <- with(ret, sqrt( (observed - expected)^2 / expected))
-        if(verbose && !discrete){
+        if(!all(item_weights == 1)){ # TODO can this be fixed?
+            ret$expected <- NULL
+            ret$std.res <- NULL
+        }
+        if(verbose && !discrete && all(item_weights == 1)){
             print(attr(ret, 'fit'))
             cat('\n')
         }
