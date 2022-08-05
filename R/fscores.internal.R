@@ -700,7 +700,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    theta_lim, discrete, mixture, QMC, den_fun, min_expected,
                    which.items = 2:length(x@ParObjects$pars)-1,
                    use_dentype_estimate = FALSE, pis, leave_missing,
-                   item_weights, ...){
+                   item_weights = rep(1, extract.mirt(x, 'nitems')), ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -779,7 +779,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     itemloc <- x@Model$itemloc
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND, pis=pis)
-    itemtrace <- t(itemtrace)^item_weights
+    item_weights_long <- rep(item_weights, extract.mirt(x, "K"))
+    itemtrace <- t(itemtrace)^item_weights_long
     tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1
     Sum.Scores <- tmp$Sum.Scores
