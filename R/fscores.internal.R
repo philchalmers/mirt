@@ -1,7 +1,7 @@
 setMethod(
 	f = "fscores.internal",
 	signature = 'SingleGroupClass',
-	definition = function(object, rotate, Target, item_weights, item_weights_long,
+	definition = function(object, rotate, Target, item_weights,
 	                      full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL,
 	                      append_response.pattern = TRUE,
@@ -13,6 +13,7 @@ setMethod(
 	                      use_dentype_estimate, leave_missing = FALSE, ...)
 	{
         den_fun <- mirt_dmvnorm
+        item_weights_long <- rep(item_weights, extract.mirt(object, "K"))
         if(extract.mirt(object, 'ngroups') == 1L && !mixture){
             if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom'){
                 den_fun <- function(Theta, ...){
