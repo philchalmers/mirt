@@ -212,7 +212,7 @@ setMethod(
         if(!is.null(gcov)) gp$gcov <- gcov
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
                                              quadpts=quadpts, gp=gp, verbose=verbose,
-                                             item_weights=item_weights_long,
+                                             item_weights=item_weights,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
                                              min_expected=min_expected, pis=pis, mixture=mixture,
