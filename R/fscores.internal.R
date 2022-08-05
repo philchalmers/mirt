@@ -479,7 +479,7 @@ setMethod(
 setMethod(
     f = "fscores.internal",
     signature = 'DiscreteClass',
-    definition = function(object, rotate, item_weights, full.scores = FALSE, method = "EAP",
+    definition = function(object, rotate, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov,
                           full.scores.SE, return.acov = FALSE, ...)
@@ -490,7 +490,7 @@ setMethod(
         method <- ifelse(method == 'EAP', 'Discrete', 'DiscreteSum')
         ret <- fscores(object, full.scores=full.scores, method=method, quadpts=quadpts,
                        response.pattern=response.pattern, returnER=FALSE, verbose=verbose,
-                       mean=gmean, cov=gcov, theta_lim=theta_lim, MI=MI, item_weights=item_weights,
+                       mean=gmean, cov=gcov, theta_lim=theta_lim, MI=MI,
                        full.scores.SE=FALSE, return.acov = FALSE, rotate='none', ...)
         if(!full.scores){
             if(method == 'Discrete'){
@@ -518,7 +518,7 @@ setMethod(
 setMethod(
     f = "fscores.internal",
     signature = 'MultipleGroupClass',
-    definition = function(object, rotate, item_weights, full.scores = FALSE, method = "EAP",
+    definition = function(object, rotate, full.scores = FALSE, method = "EAP",
                           quadpts = NULL, response.pattern = NULL, theta_lim, MI,
                           returnER = FALSE, verbose = TRUE, gmean, gcov,
                           full.scores.SE, return.acov = FALSE, QMC, plausible.draws, ...)
@@ -533,8 +533,7 @@ setMethod(
             ret[[g]] <- fscores(tmp_obj, rotate = rotate, full.scores=full.scores, method=method,
                            quadpts=quadpts, returnER=returnER, verbose=verbose, theta_lim=theta_lim,
                            mean=gmean[[g]], cov=gcov[[g]], MI=MI, plausible.draws=plausible.draws,
-                           full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC,
-                           item_weights=item_weights, ...)
+                           full.scores.SE=full.scores.SE, return.acov=return.acov, QMC=QMC, ...)
             if(plausible.draws == 1L) ret[[g]] <- list(ret[[g]])
         }
         names(ret) <- object@Data$groupNames
