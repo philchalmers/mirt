@@ -45,24 +45,25 @@ test_that('DCIRT', {
     res_bm <- mirt(dat_bm, model = 1, dentype='Davidian-6', verbose=FALSE)
     expect_equal(extract.mirt(res_bm, 'logLik'), -12769.95, tolerance=1e-4)
     cfs <- coef(res_bm)$GroupPars
-    expect_equal(as.vector(cfs), c(0,1,1.331314,0.1005421,-0.397783,0.3760957,-0.7119315,-0.8868246), tolerance=1e-4)
+    expect_equal(as.vector(cfs), c(0,1,1.33128,0.1023312,-0.3941024,0.3781146,-0.7092191,-0.8694338),
+                 tolerance=1e-4)
 
     cfs2 <- coef(res_bm, simplify=TRUE)
     expect_equal(c(0, 1, cfs2$Davidian_phis), as.vector(cfs))
 
     fs1 <- fscores(res_bm)
     fs2 <- fscores(res_bm, use_dentype_estimate = TRUE)
-    expect_equal(fs1[1:3], c(-1.5086792, -0.8190973, -1.2681388), tolerance=1e-4)
-    expect_equal(fs2[1:3], c(-1.3837530, -0.8473187, -1.2122867), tolerance=1e-4)
+    expect_equal(fs1[1:3], c(-1.5100162, -0.8200184, -1.2694016), tolerance=1e-4)
+    expect_equal(fs2[1:3], c(-1.3850570, -0.8488029, -1.2137467), tolerance=1e-4)
     fs1 <- fscores(res_bm, method = 'EAPsum')
     fs2 <- fscores(res_bm, method = 'EAPsum', use_dentype_estimate = TRUE)
-    expect_equal(fs1[1:2], c(-1.4400090, -0.8319593), tolerance=1e-4)
-    expect_equal(fs2[1:2], c(-1.3283695, -0.8591202), tolerance=1e-4)
+    expect_equal(fs1[1:2], c(-1.4412462, -0.8328496), tolerance=1e-4)
+    expect_equal(fs2[1:2], c(-1.3296857, -0.8606043), tolerance=1e-4)
 
     out <- itemfit(res_bm)
     out2 <- itemfit(res_bm, use_dentype_estimate=TRUE)
-    expect_equal(out$S_X2[1:3], c(25.04989, 14.21401, 14.81014), tolerance=1e-4)
-    expect_equal(out2$S_X2[1:3], c(25.44769, 14.06283, 13.88460), tolerance=1e-4)
+    expect_equal(out$S_X2[1:3], c(25.04979, 14.21541, 14.81132), tolerance=1e-4)
+    expect_equal(out2$S_X2[1:3], c(25.44905, 14.05654, 13.88228), tolerance=1e-4)
 
     pp <- plot(res_bm, type = 'Davidian')
     expect_is(pp, 'trellis')

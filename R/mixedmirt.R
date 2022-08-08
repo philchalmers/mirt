@@ -412,7 +412,7 @@ mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NUL
     }
     pick <- sapply(covdata, is.numeric)
     if(any(pick)){
-        if(any(covdata[,pick] > 10 || covdata[,pick] < -10))
+        if(any(covdata[,pick] > 10 | covdata[,pick] < -10))
             warning('Continuous variables in covdata should be rescaled to fall
                      between -10 and 10 for better numerical stability', call.=FALSE)
     }
