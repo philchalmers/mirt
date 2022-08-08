@@ -659,7 +659,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     #priors
     for(i in seq_len(J)){
         names(pars[[i]]@parnum) <- names(pars[[i]]@par)
-        if(!is.null(parprior) && parprior[[1L]] != 'index'){
+        if(!is.null(parprior)){
             for(j in seq_len(length(parprior))){
                 tmp <- pars[[i]]@parnum %in% as.numeric(parprior[[j]][1L:(length(parprior[[j]])-3L)])
                 if(any(tmp)){
