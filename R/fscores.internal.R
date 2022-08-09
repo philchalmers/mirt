@@ -131,7 +131,8 @@ setMethod(
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
                                custom_theta=custom_theta, plausible.draws=plausible.draws,
                                plausible.type=plausible.type, start=start, pis=pis,
-                               use_dentype_estimate=use_dentype_estimate, item_weights=item_weights, ...)
+                               use_dentype_estimate=use_dentype_estimate,
+                               item_weights=item_weights[pick], ...)
                 if(plausible.draws > 0) return(ret)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
@@ -166,7 +167,7 @@ setMethod(
                                method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
-                               custom_theta=custom_theta, pis=pis, item_weights=item_weights,
+                               custom_theta=custom_theta, pis=pis, item_weights=item_weights[pick],
                                start=start, use_dentype_estimate=use_dentype_estimate, ...)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
