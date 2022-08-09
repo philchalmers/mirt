@@ -132,7 +132,7 @@ setMethod(
                                custom_theta=custom_theta, plausible.draws=plausible.draws,
                                plausible.type=plausible.type, start=start, pis=pis,
                                use_dentype_estimate=use_dentype_estimate,
-                               item_weights=item_weights[pick], ...)
+                               item_weights=item_weights, ...)
                 if(plausible.draws > 0) return(ret)
                 if(return.acov) return(ret)
                 if(append_response.pattern) ret <- cbind(response.pattern, ret)
