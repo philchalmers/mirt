@@ -10,7 +10,15 @@
 \alias{anova,MixtureClass-method}
 \title{Compare nested models with likelihood-based statistics}
 \usage{
-\S4method{anova}{SingleGroupClass}(object, object2, ..., bounded = FALSE, mix = 0.5, frame = 1)
+\S4method{anova}{SingleGroupClass}(
+  object,
+  object2,
+  ...,
+  bounded = FALSE,
+  mix = 0.5,
+  frame = 1,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
@@ -28,6 +36,8 @@ is used to obtain the p-value}
 \item{mix}{proportion of chi-squared mixtures. Default is 0.5}
 
 \item{frame}{(internal parameter not for standard use)}
+
+\item{verbose}{(deprecated argument)}
 }
 \value{
 a \code{data.frame}/\code{mirt_df} object

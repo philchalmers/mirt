@@ -1,4 +1,4 @@
-# Changes in mirt 1.37
+# Changes in mirt 1.37.1
 
 - `boot.mirt()` gains a `boot.fun` argument to accept user-defined functions for 
   extracting the associated statistics to bootstrap 
@@ -10,8 +10,8 @@
   consistently. Now a single `return.tables` argument is used to specify
   which tables to return
 
-- `anova()` loses the `verbose` flag and instead labels the rows of the resulting
-  output to identify the models
+- `anova()` removes support for the `verbose` flag, and instead labels 
+  the rows of the resulting output to identify the models
 
 - `X2` and `G2` classes of item-fit statistics now better deal with large 
   missing value vectors on a per-item basis for better consistency

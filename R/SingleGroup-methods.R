@@ -461,6 +461,7 @@ setMethod(
 #'   is used to obtain the p-value
 #' @param mix proportion of chi-squared mixtures. Default is 0.5
 #' @param frame (internal parameter not for standard use)
+#' @param verbose (deprecated argument)
 #'
 #' @return a \code{data.frame}/\code{mirt_df} object
 #'
@@ -520,7 +521,7 @@ setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, ...,
-                          bounded = FALSE, mix = 0.5, frame = 1){
+                          bounded = FALSE, mix = 0.5, frame = 1, verbose = FALSE){
         if(frame > 1){
             nms1 <- deparse(substitute(object, env = parent.frame(frame+1)))
             nms2 <- deparse(substitute(object2, env = parent.frame(frame)))
