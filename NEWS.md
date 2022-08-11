@@ -1,3 +1,9 @@
+# Changes in mirt 1.38
+
+- Implicit argument 'invariance' stored in multiple-group objects
+  now automatically used in `boot.mirt()` (previously had to be 
+  manually passed)
+
 # Changes in mirt 1.37.1
 
 - `boot.mirt()` gains a `boot.fun` argument to accept user-defined functions for 

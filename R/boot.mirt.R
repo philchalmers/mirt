@@ -57,7 +57,7 @@
 #'
 #' }
 boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
-    boot.draws <- function(orgdat, ind, boot.fun,
+    boot.draws <- function(orgdat, ind, boot.fun, invariance,
                            npars, constrain, parprior, model, itemtype, group,
                            class, LR, obj, DTF = NULL, technical, ...) {
         ngroup <- length(unique(group))
@@ -84,7 +84,7 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
         } else {
             if(class == 'MultipleGroupClass'){
                 mod <- try(multipleGroup(data=dat, model=model, itemtype=itemtype, group=g,
-                                     constrain=constrain, parprior=parprior,
+                                     constrain=constrain, parprior=parprior, invariance=invariance,
                                      calcNull=FALSE, verbose=FALSE, technical=technical,
                                      method=x@Options$method, draws=1, SE=FALSE, ...))
             } else {
@@ -130,6 +130,7 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
     structure <- mod2values(x)
     longpars <- structure$value
     npars <- sum(structure$est)
+    invariance <- extract.mirt(x, 'invariance')
     if(is.null(boot.fun)){
         boot.fun <- function(x){
             structure <- mod2values(x)
@@ -142,7 +143,7 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
     else technical$parallel <- FALSE
     if(requireNamespace("boot", quietly = TRUE)){
       boots <- boot::boot(dat, boot.draws,
-                          R=R, npars=npars, constrain=constrain, class=class,
+                          R=R, npars=npars, constrain=constrain, class=class, invariance=invariance,
                           parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
                           obj=x, technical=technical, boot.fun=boot.fun, ...)
       boots$call <- match.call()

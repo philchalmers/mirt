@@ -71,6 +71,7 @@ Objects which can be extracted from mirt objects include:
   \item{ngroups}{number of groups}
   \item{groupNames}{character vector of unique group names}
   \item{group}{a character vector indicating the group membership}
+  \item{invariance}{a character vector indicating \code{invariance} input from \code{\link{multipleGroup}}}
   \item{secondordertest}{a logical indicating whether the model passed the second-order test
     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
   \item{SEMconv}{logical; check whether the supplemented EM information matrix converged. Will be \code{NA}
