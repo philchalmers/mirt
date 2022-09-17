@@ -276,7 +276,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     } else if(!any(seq_stat %in% c('p', 'AIC', 'SABIC', 'BIC', 'DIC', 'HQ'))){
         stop('Invalid seq_stat input', call.=FALSE)
     }
-    if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
+    if(is.character(items2test))
+        items2test <- which(itemnames %in% items2test)
     invariance <- MGmodel@Model$invariance
     values <- mod2values(MGmodel)
     drop <- scheme == 'drop' || scheme == 'drop_sequential'

@@ -3,6 +3,9 @@
 - Implicit argument 'invariance' stored in multiple-group objects
   now automatically used in `boot.mirt()` (previously had to be 
   manually passed)
+  
+- Bugfix when using `items2test` in DIF when input is a character vector
+  (reported by @jbuncher)
 
 # Changes in mirt 1.37.1
 
