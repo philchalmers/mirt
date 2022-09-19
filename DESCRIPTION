@@ -37,7 +37,7 @@ Depends:
 Imports:
     GPArotation,
     gridExtra,
-    Matrix,
+    Matrix (>= 1.5-0),
     Rcpp,
     mgcv,
     vegan,
