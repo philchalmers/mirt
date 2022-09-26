@@ -428,6 +428,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
     }
 
     if(missing(x)) missingMsg('x')
+    stopifnot(length(p.adjust) == 1L)
     if(return.tables){
         stopifnot(length(fit_stats) == 1L)
         stopifnot(fit_stats %in% c('X2', 'S_X2', 'X2*'))
