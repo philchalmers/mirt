@@ -352,6 +352,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     }
 
     if(missing(mod)) missingMsg('mod')
+    stopifnot(length(p.adjust) == 1L)
     stopifnot(den.type %in% c('marginal', 'focal', 'reference'))
     stopifnot(is.logical(plot))
     if(DIF && !is.null(Theta_nodes))
