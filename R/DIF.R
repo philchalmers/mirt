@@ -1,7 +1,7 @@
 #' Differential item functioning statistics
 #'
 #' This function runs the Wald and likelihood-ratio approaches for testing differential
-#' item functioning (DIF). This is primarily a convenience wrapper to the
+#' item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
 #' \code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
 #' models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
 #' which will help to decrease the runtime. For best results, the baseline model should contain
@@ -28,7 +28,9 @@
 #'   when using sequential schemes)
 #' @param groups2test a character vector indicating which groups to use in the DIF testing
 #'   investigations. Default is \code{'all'}, which uses all group information to perform
-#'   joint hypothesis tests of DIF (for a two group setup these result in pair-wise tests)
+#'   joint hypothesis tests of DIF (for a two group setup these result in pair-wise tests).
+#'   For example, if the group names were 'g1', 'g2' and 'g3', and DIF was only to be investigated
+#'   between group 'g1' and 'g3' then pass \code{groups2test = c('g1', 'g3')}
 #' @param return_models logical; return estimated model objects for further analysis?
 #'   Default is FALSE
 #' @param return_seq_model logical; on the last iteration of the sequential schemes, return
@@ -186,7 +188,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                 simplify = TRUE, verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, technical = list(), ...)
+                          return_models, groups2test, technical = list(), ...)
     {
         constrain <- model@Model$constrain
         mirt_model <- model@Model$model
@@ -194,10 +196,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             mirt_model$x <- mirt_model$x[mirt_model$x[,"Type"] != 'CONSTRAINB',
                                          , drop=FALSE]
         technical$omp <- FALSE
+        whcgroup <- which(extract.mirt(model, 'groupNames') %in% groups2test)
         parnum <- list()
-        for(i in seq_len(length(which.par)))
-            parnum[[i]] <- values$parnum[values$name == which.par[i] &
+        for(i in seq_len(length(which.par))){
+            tmp <- values$parnum[values$name == which.par[i] &
                                              values$item == itemnames[item]]
+            parnum[[i]] <- tmp[whcgroup]
+        }
         for(i in length(parnum):1L)
             if(!length(parnum[[i]])) parnum[[i]] <- NULL
         if(!length(parnum))
@@ -212,6 +217,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             ind <- 1L
             for(i in seq_len(length(parnum))){
                 for(j in 2L:length(parnum[[i]])){
+                    # FIXME this won't work with more complex constraints (e.g., a1.15.51)
                     L[ind, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
                     L[ind, paste0(which.par[i], '.', parnum[[i]][j]) == infoname] <- -1
                     ind <- ind + 1L
@@ -248,7 +254,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     }
 
     if(missing(MGmodel)) missingMsg('MGmodel')
-    stopifnot(groups2test == 'all') # TODO
+    if(Wald) verbose <- FALSE
+    if(length(groups2test) == 1L && groups2test == 'all'){
+        groups2test <- extract.mirt(MGmodel, 'groupNames')
+    }
+    stopifnot(all(groups2test %in% extract.mirt(MGmodel, 'groupNames')))
     if(missing(which.par)) missingMsg('which.par')
     stopifnot(length(p.adjust) == 1L)
     if(!is(MGmodel, 'MultipleGroupClass'))
@@ -256,8 +266,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     aov <- anova(MGmodel)
     has_priors <- !is.null(aov$logPost)
     if(has_priors && is.numeric(seq_stat))
-        stop('p-value seq_stat for models fitted with Bayesian priors in not meaningful. Please select alternative',
-             call.=FALSE)
+        stop(c('p-value seq_stat for models fitted with Bayesian priors',
+               ' is not meaningful. Please select alternative'), call.=FALSE)
 
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
@@ -296,7 +306,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     invariance <- MGmodel@Model$invariance[MGmodel@Model$invariance %in%
                                          c('free_means', 'free_var')]
     if(!length(invariance)) invariance <- ''
-    res <- myLapply(X=items2test, FUN=loop_test, progress=verbose,
+    res <- myLapply(X=items2test, FUN=loop_test, progress=verbose, groups2test=groups2test,
                     model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
                     return_models=return_models, ...)

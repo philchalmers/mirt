@@ -73,4 +73,61 @@ test_that('DIF', {
 
 })
 
+test_that('MG_DIF', {
+
+    set.seed(1234)
+    nitem = 10
+
+    n.g1 = 2000
+    n.g2 = 1000
+    n.g3 = 1000
+    n.g4 = 1000
+
+    groups = c(rep('g1', n.g1), rep('g2', n.g2), rep('g3', n.g3), rep('g4', n.g4))
+
+    a <- rep(1, nitem)
+    d <- matrix(rnorm(nitem,0,.7),ncol=1)
+    item.type <- rep('dich', nitem)
+
+    # Generate data
+    dat1 <- simdata(a, d, n.g1, item.type)
+    dat2 <- simdata(a, d, n.g2, item.type)
+    dat3 <- simdata(a, d, n.g3, item.type)
+    dat4 <- simdata(a, d, n.g4, item.type)
+
+    dat <- rbind(dat1,dat2,dat3,dat4)
+
+    anchor.set <- colnames(dat)[1:5]
+
+    res.model <- multipleGroup(dat, 1,
+                               group = groups,
+                               invariance = c("free_var", "free_mean", anchor.set),
+                               SE = TRUE, verbose=FALSE)
+
+
+    # joint test
+    out <- DIF(res.model, c('a1', 'd'), items2test=6)
+    expect_equal(out$p, 0.2584821, tolerance = 1e-2)
+    out2 <- DIF(res.model, c('a1', 'd'), Wald = TRUE, items2test=6:10)
+    expect_equal(out2$p[1:2], c(0.3162816, 0.5118902), tolerance = 1e-2)
+
+    # group subsets
+    out3 <- DIF(res.model, c('d'), Wald = F, items2test = 6:7,
+                groups2test = c('g1', 'g2'), verbose=FALSE)
+    expect_equal(out3$p[1:2], c(0.5264586, 0.2571904), tolerance = 1e-2)
+    out4 <- DIF(res.model, c('d'), Wald = T, items2test = 6:7, groups2test = c('g1', 'g2'))
+    expect_equal(out4$p[1:2], c(0.5261373, 0.2604559), tolerance = 1e-2)
+
+    out5 <- DIF(res.model, c('a1', 'd'), Wald = T, items2test = 6, groups2test = c('g1', 'g3'))
+    expect_equal(out5$p, c(0.1533536), tolerance = 1e-2)
+
+    out6 <- DIF(res.model, c('d'), Wald = F, items2test = 6, groups2test = c('g1', 'g2', 'g3'))
+    expect_equal(out6$p, c(.369), tolerance = 1e-2)
+    out7 <- DIF(res.model, c('d'), Wald = T, items2test = 6, groups2test = c('g1', 'g2', 'g3'))
+    expect_equal(out7$p, c(.371), tolerance = 1e-2)
+
+
+
+})
+
 

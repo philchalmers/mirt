@@ -1,11 +1,17 @@
 # Changes in mirt 1.38
 
+- Added a `groups2test` argument to `DIF()` to isolate individual grouping
+  variable specification when using more than 2 groups
+
 - Implicit argument 'invariance' stored in multiple-group objects
   now automatically used in `boot.mirt()` (previously had to be 
   manually passed)
   
 - Bugfix when using `items2test` in DIF when input is a character vector
   (reported by @jbuncher)
+  
+- Bugfixes for multiple-group DIF testing with `DIF()` when using more 
+  than two groups (reported by Ruben Neda and Davin Díaz García)
 
 # Changes in mirt 1.37.1
 

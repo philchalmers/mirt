@@ -9,6 +9,7 @@ DIF(
   which.par,
   scheme = "add",
   items2test = 1:extract.mirt(MGmodel, "nitems"),
+  groups2test = "all",
   seq_stat = "SABIC",
   Wald = FALSE,
   p.adjust = "none",
@@ -60,6 +61,12 @@ this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
 \code{items2test = 3:10} would work for testing the remaining items (important to remember
 when using sequential schemes)}
 
+\item{groups2test}{a character vector indicating which groups to use in the DIF testing
+investigations. Default is \code{'all'}, which uses all group information to perform
+joint hypothesis tests of DIF (for a two group setup these result in pair-wise tests).
+For example, if the group names were 'g1', 'g2' and 'g3', and DIF was only to be investigated
+between group 'g1' and 'g3' then pass \code{groups2test = c('g1', 'g3')}}
+
 \item{seq_stat}{select a statistic to test for in the sequential schemes. Potential values are
 (in descending order of power) \code{'AIC'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
 If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
@@ -104,7 +111,7 @@ a \code{mirt_df} object with the information-based criteria for DIF, though this
 }
 \description{
 This function runs the Wald and likelihood-ratio approaches for testing differential
-item functioning (DIF). This is primarily a convenience wrapper to the
+item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
 \code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
 models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
 which will help to decrease the runtime. For best results, the baseline model should contain
