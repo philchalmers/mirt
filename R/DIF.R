@@ -26,6 +26,9 @@
 #'   this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
 #'   \code{items2test = 3:10} would work for testing the remaining items (important to remember
 #'   when using sequential schemes)
+#' @param groups2test a character vector indicating which groups to use in the DIF testing
+#'   investigations. Default is \code{'all'}, which uses all group information to perform
+#'   joint hypothesis tests of DIF (for a two group setup these result in pair-wise tests)
 #' @param return_models logical; return estimated model objects for further analysis?
 #'   Default is FALSE
 #' @param return_seq_model logical; on the last iteration of the sequential schemes, return
@@ -175,8 +178,10 @@
 #' plot(updated_mod, type='trace')
 #'
 #' }
-DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
-                seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
+DIF <- function(MGmodel, which.par, scheme = 'add',
+                items2test = 1:extract.mirt(MGmodel, 'nitems'),
+                groups2test = 'all', seq_stat = 'SABIC', Wald = FALSE,
+                p.adjust = 'none', return_models = FALSE,
                 return_seq_model = FALSE, max_run = Inf, plotdif = FALSE, type = 'trace',
                 simplify = TRUE, verbose = TRUE, ...){
 
@@ -202,10 +207,15 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         if(Wald){
             wv <- wald(model)
             infoname <- names(wv)
-            L <- matrix(0, length(parnum), length(infoname))
+            each_set <- sapply(parnum, length) - 1L
+            L <- matrix(0, sum(each_set), length(infoname))
+            ind <- 1L
             for(i in seq_len(length(parnum))){
-                L[i, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
-                L[i, paste0(which.par[i], '.', parnum[[i]][2L]) == infoname] <- -1
+                for(j in 2L:length(parnum[[i]])){
+                    L[ind, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
+                    L[ind, paste0(which.par[i], '.', parnum[[i]][j]) == infoname] <- -1
+                    ind <- ind + 1L
+                }
             }
             res <- wald(model, L)
             return(res)
@@ -238,6 +248,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     }
 
     if(missing(MGmodel)) missingMsg('MGmodel')
+    stopifnot(groups2test == 'all') # TODO
     if(missing(which.par)) missingMsg('which.par')
     stopifnot(length(p.adjust) == 1L)
     if(!is(MGmodel, 'MultipleGroupClass'))
