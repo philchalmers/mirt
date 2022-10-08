@@ -199,13 +199,13 @@
 #'
 #'      E.g., for a K = 4 category response model,
 #'
-#'      \deqn{P(x = 0 | \theta, \psi) = exp(1) / G}
-#'      \deqn{P(x = 1 | \theta, \psi) = exp(1 + a(\theta - b1) + c) / G}
-#'      \deqn{P(x = 2 | \theta, \psi) = exp(1 + a(2\theta - b1 - b2) + 2c) / G}
-#'      \deqn{P(x = 3 | \theta, \psi) = exp(1 + a(3\theta - b1 - b2 - b3) + 3c) / G}
+#'      \deqn{P(x = 0 | \theta, \psi) = exp(0) / G}
+#'      \deqn{P(x = 1 | \theta, \psi) = exp(a(\theta - b1) + c) / G}
+#'      \deqn{P(x = 2 | \theta, \psi) = exp(a(2\theta - b1 - b2) + 2c) / G}
+#'      \deqn{P(x = 3 | \theta, \psi) = exp(a(3\theta - b1 - b2 - b3) + 3c) / G}
 #'      where
-#'      \deqn{G = exp(1) + exp(1 + a(\theta - b1) + c) + exp(1 + a(2\theta - b1 - b2) + 2c) +
-#'        exp(1 + a(3\theta - b1 - b2 - b3) + 3c)}
+#'      \deqn{G = exp(0) + exp(a(\theta - b1) + c) + exp(a(2\theta - b1 - b2) + 2c) +
+#'        exp(a(3\theta - b1 - b2 - b3) + 3c)}
 #'      Here \eqn{a} is the slope parameter, the \eqn{b} parameters are the threshold
 #'      values for each adjacent category, and \eqn{c} is the so-called difficulty parameter when
 #'      a rating scale model is fitted (otherwise, \eqn{c = 0} and it drops out of the computations).
