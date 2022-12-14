@@ -20,7 +20,6 @@ mirt(
   dentype = "Gaussian",
   pars = NULL,
   constrain = NULL,
-  parprior = NULL,
   calcNull = FALSE,
   draws = 5000,
   survey.weights = NULL,
@@ -222,20 +221,6 @@ vectors signifying which parameters to constrain. For example, to set parameters
 equal, and also set parameters 2, 6, and 10 equal use
 \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the
 \code{\link{mirt.model}} syntax (recommended)}
-
-\item{parprior}{a list of user declared prior item probabilities. To see how to define the
-parameters correctly use \code{pars = 'values'} initially to see how the parameters are
-labeled. Can define either normal (e.g., intercepts, lower/guessing and upper bounds),
-log-normal (e.g., for univariate slopes), or beta prior probabilities.
-To specify a prior the form is c('priortype', ...), where normal priors
-are \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
-\code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
-\code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta, and
-\code{parprior = list(c(parnumbers, 'expbeta', alpha, beta))} for the beta distribution
-after applying the function \code{\link{plogis}} to the input value
-(note, this is specifically for applying a beta
-prior to the lower/upper-bound parameters in 3/4PL models). Priors can also be
-specified using \code{\link{mirt.model}} syntax (recommended)}
 
 \item{calcNull}{logical; calculate the Null model for additional fit statistics (e.g., TLI)?
 Only applicable if the data contains no NA's and the data is not overly sparse}
