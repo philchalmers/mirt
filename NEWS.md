@@ -1,3 +1,11 @@
+# Changes in mirt 1.39
+
+- Combining priors with equality constraints no longer uses multiple prior 
+  definitions in the likelihood computations. Hence, constrained parameters
+  are now treated as though they are a single parameter with only one prior 
+  distribution (reported by Matthias von Davier in the context of 
+  multiple-group models with between group item priors)
+
 # Changes in mirt 1.38
 
 - Added a `groups2test` argument to `DIF()` to isolate individual grouping

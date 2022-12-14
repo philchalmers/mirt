@@ -464,6 +464,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
                                  method=opts$method, itemnames=PrepList[[1L]]$itemnames, model=model,
                                  groupNames=Data$groupNames)
+    pars <- resetPriorConstrain(pars=pars, constrain=constrain)
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()

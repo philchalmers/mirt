@@ -1016,6 +1016,22 @@ buildModelSyntax <- function(model, J, groupNames, itemtype){
     model
 }
 
+resetPriorConstrain <- function(pars, constrain){
+    nitems <- length(pars[[1]])
+    if(length(constrain)){
+        for(g in seq_len(length(pars))){
+            for(i in seq_len(nitems)){
+                for(ci in seq_len(length(constrain))){
+                    pick <- pars[[g]][[i]]@parnum %in% constrain[[ci]][-1L]
+                    pars[[g]][[i]]@prior.type[pick] <- 0L
+                    pars[[g]][[i]]@any.prior <- any(pars[[g]][[i]]@prior.type > 0L)
+                }
+            }
+        }
+    }
+    pars
+}
+
 ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
