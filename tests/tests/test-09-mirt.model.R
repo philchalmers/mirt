@@ -56,7 +56,7 @@ test_that('syntax', {
     expect_equal(mod2values(mod2)$value, c(1.01114,1.86813,0,1,1.01114,0.7909392,0,1,1.01114,1.460878,0,1,1.01114,0.5214695,0,1,1.01114,1.992827,0,1,0,1),
                  tolerance = 1e-2)
     mod3 <- mirt(data, model3, verbose=FALSE, calcNull=FALSE)
-    expect_equal(mod2values(mod3)$value, c(1.108067,1.912278,0,1,1.046681,0.7965584,0,1,1.046681,1.472833,0,1,1.046681,0.5258648,0,1,1.046681,2.008483,0,1,0,1),
+    expect_equal(mod2values(mod3)$value, c(1.1227,1.9228,0,1,1.0065,0.7878,0,1,1.0065,1.4575,0,1,1.0065,0.5199,0,1,1.0065,1.9884,0,1,0,1),
                  tolerance = 1e-2)
     mod4 <- multipleGroup(data, model4, group=group, verbose = FALSE)
     expect_equal(mod2values(mod4)$value, c(0.6407961,1.630026,0,1,2.96864,1.630026,0,1,1.189039,1.572577,0,1,0.558073,0.4682583,0,1,0.5097135,1.804266,0,1,0,1,0.6407961,1.621704,0,1,2.96864,1.621704,0,1,1.189039,1.578345,0,1,0.558073,0.4883855,0,1,0.5097135,1.759616,0,1,0,1),
@@ -117,7 +117,7 @@ test_that('syntax', {
     mod <- mirt(dat, mirtsyn2, TOL = NaN)
     sv <- mod2values(mod)
     expect_true(all(sv$est == c(TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE)))
-    expect_true(all(as.character(sv$prior.type) == c("none","none","none","none","none","none","lnorm","none","none","none","none","lnorm","none","none","none","none","lnorm","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","norm","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","lnorm","none","none","none","none","none","none","none","none","none","none","none","none","none")))
+    expect_true(all(as.character(sv$prior.type) == c("none","none","none","none","none","none","lnorm","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","norm","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","lnorm","none","none","none","none","none","none","none","none","none","none","none","none","none")))
 
 })
 
