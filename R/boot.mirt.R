@@ -124,6 +124,8 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
     model <- x@Model$model
     parprior <- x@Model$parprior
     constrain <- x@Model$constrain
+    customGroup <- extract.mirt(x, 'customGroup')
+    customItems <- extract.mirt(x, 'customItems')
     LR <- x@Model$lrPars
     if(length(parprior) == 0L) parprior <- NULL
     if(length(constrain) == 0L) constrain <- NULL
@@ -142,8 +144,9 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
     if(is.null(technical)) technical <- list(parallel=FALSE)
     else technical$parallel <- FALSE
     if(requireNamespace("boot", quietly = TRUE)){
-      boots <- boot::boot(dat, boot.draws,
-                          R=R, npars=npars, constrain=constrain, class=class, invariance=invariance,
+      boots <- boot::boot(dat, boot.draws, R=R, npars=npars,
+                          constrain=constrain, class=class, invariance=invariance,
+                          customGroup=customGroup, customItems=customItems,
                           parprior=parprior, model=model, itemtype=itemtype, group=group, LR=LR,
                           obj=x, technical=technical, boot.fun=boot.fun, ...)
       boots$call <- match.call()

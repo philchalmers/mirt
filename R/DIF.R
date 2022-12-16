@@ -241,6 +241,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         }
         newmodel <- multipleGroup(model@Data$data, mirt_model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain, pars=sv,
+                                  customItems = extract.mirt(model, 'customItems'),
+                                  customGroup = extract.mirt(model, 'customGroup'),
                                   itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
                                   ...)
         aov <- if(drop) anova(model, newmodel) else anova(newmodel, model)
@@ -375,6 +377,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model,
                                           group=MGmodel@Data$group, itemtype=MGmodel@Model$itemtype,
                                           invariance = invariance, constrain=constrain,
+                                          customItems = extract.mirt(MGmodel, 'customItems'),
+                                          customGroup = extract.mirt(MGmodel, 'customGroup'),
                                           verbose = FALSE, ...)
             pick <- !keep
             if(drop) pick <- !pick

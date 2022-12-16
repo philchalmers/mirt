@@ -1071,7 +1071,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Internals <- list(collectLL=ESTIMATE$collectLL, Prior=ESTIMATE$Prior, Pl=Pl,
                       shortpars=as.numeric(ESTIMATE$shortpars), key=key,
                       bfactor=list(), CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                      survey.weights=survey.weights)
+                      survey.weights=survey.weights,
+                      customGroup=customGroup, customItems=customItems)
     if(opts$storeEtable)
         Internals$Etable <- ESTIMATE$Etable
     if(opts$storeEMhistory)

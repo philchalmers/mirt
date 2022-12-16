@@ -166,6 +166,8 @@ extract.mirt <- function(x, what){
                   nestpars=x@Model$nestpars,
                   prodlist=x@Model$prodlist,
                   completely_missing=x@Data$completely_missing,
+                  customGroup=x@Internals$customGroup,
+                  customItems=x@Internals$customItems,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }

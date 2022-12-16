@@ -1,5 +1,9 @@
 # Changes in mirt 1.39
 
+- Store previously defined `customItems` and `customGroup` lists for use in
+  secondary functions (e.g., `DIF()`, `boot.mirt()`, etc). 
+  Reported by Nataly Beribisky
+
 - Combining priors with equality constraints no longer uses multiple prior 
   definitions in the likelihood computations. Hence, constrained parameters
   are now treated as though they are a single parameter with only one prior 

@@ -53,10 +53,14 @@ boot.LR <- function(mod, mod2, R = 1000, verbose=TRUE){
             dat <- simdata(model=mod)
             m0 <- mirt(dat, extract.mirt(mod, 'model'),
                        itemtype=extract.mirt(mod, 'itemtype'),
+                       customItems = extract.mirt(mod, 'customItems'),
+                       customGroup = extract.mirt(mod, 'customGroup'),
                        verbose=FALSE, technical=list(warn=FALSE, message=FALSE, omp=FALSE))
             if(!extract.mirt(m0, 'converged')) next
             m1 <- mirt(dat, extract.mirt(mod2, 'model'),
                        itemtype=extract.mirt(mod2, 'itemtype'),
+                       customItems = extract.mirt(mod, 'customItems'),
+                       customGroup = extract.mirt(mod, 'customGroup'),
                        verbose=FALSE, technical=list(warn=FALSE, message=FALSE, omp=FALSE))
             if(!extract.mirt(m1, 'converged')) next
             lr0 <- anova(m0, m1)$X2[2L]
