@@ -54,7 +54,7 @@ test_that('DIF', {
                                                                                      'free_means', 'free_var'))
     out <- DIF(model2, which.par = c('a1', 'd'), items2test = 6:10, seq_stat = 'BIC')
     expect_is(out, 'data.frame')
-    expect_equal(out$BIC, c(10.609,9.038,11.424,10.739,14.448), tolerance = 1e-4)
+    expect_equal(out$BIC, c(11.449,9.038,11.424,10.739,14.448), tolerance = 1e-4)
 
     drf <- DRF(model2)
     expect_equal(as.numeric(drf), c(10.0000000,  -0.0403703,  0.1863619, 0.2107826),
