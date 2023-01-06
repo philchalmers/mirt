@@ -24,8 +24,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         opts$dentype <- 'default'
         if(!is.null(dots$technical$zeroExtreme)) opts$zeroExtreme <- dots$technical$zeroExtreme
         data <- as.matrix(data)
-        if(is.numeric(data))
-            data <- matrix(as.integer(data), nrow(data), dimnames=list(rownames(data), colnames(data)))
+        # if(is.numeric(data))
+        #     data <- matrix(as.integer(data), nrow(data), dimnames=list(rownames(data), colnames(data)))
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
@@ -154,13 +154,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         data <- as.matrix(data)
         if(!all(apply(data, 2L, class) %in% c('integer', 'numeric')))
             stop('Input data must be integer or numeric values only', call.=FALSE)
-        if(is.numeric(data))
-            data <- matrix(as.integer(data), nrow(data),
-                           dimnames=list(rownames(data), colnames(data)))
+        # if(is.numeric(data))
+        #     data <- matrix(as.integer(data), nrow(data),
+        #                    dimnames=list(rownames(data), colnames(data)))
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
-        if(nrow(data) > 1L && is.null(opts$technical$customK)){
+        not_continuous <- which(!(itemtype %in% Continuous_itemtypes()))
+        if(nrow(data) > 1L && is.null(opts$technical$customK) && length(not_continuous)){
             if(!is.null(key)){
                 key <- sapply(1L:length(key), function(ind, data, key){
                     if(is.na(key[ind])) return(NA)
@@ -171,7 +172,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ret
                 }, data=data, key=key)
             }
-            data <- remap.distance(data, message = opts$message)
+            data[,not_continuous,drop=FALSE] <-
+                remap.distance(data[,not_continuous,drop=FALSE], message=opts$message)
         }
         Data$rowID <- 1L:nrow(data)
         Data$completely_missing <- which(rowSums(is.na(data)) == ncol(data))
@@ -238,7 +240,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
                          grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                          mixed.design=mixed.design, customItems=customItems,
-                         customItemsData=customItemsData,
+                         customItemsData=customItemsData, not_continuous=not_continuous,
                          customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
@@ -252,7 +254,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                  technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
                                  grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
                                  mixed.design=mixed.design, customItems=customItems,
-                                 customItemsData=customItemsData,
+                                 customItemsData=customItemsData,not_continuous=not_continuous,
                                  customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
                                  fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                                  gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
@@ -317,6 +319,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
+    browser() # TODO continuous model edit for tabdata
     if(!is.null(opts$PrepList)){
         PrepList <- opts$PrepList
     } else {

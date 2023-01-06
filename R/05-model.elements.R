@@ -137,7 +137,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K, customItemsData=customItemsData,
                     nfact=nfact+length(prodlist), parprior=parprior, monopoly.k=monopoly.k,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, item.Q=item.Q,
-                    mixed.design=mixed.design, customItems=customItems, key=key,
+                    mixed.design=mixed.design, customItems=customItems, key=key, data=data,
                     gpcm_mats=gpcm_mats, spline_args=spline_args, itemnames=itemnames)
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                              estgcov=estgcov, parnumber=attr(ret, 'parnumber'),

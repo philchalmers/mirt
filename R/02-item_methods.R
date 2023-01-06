@@ -1,7 +1,7 @@
 # valid itemtype inputs
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
-Experimental_itemtypes <- function() c('experimental', 'grsmIRT')
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'crm')
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
@@ -15,6 +15,8 @@ Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', Experi
 
 Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'sequential', 'Tutz',
                             Experimental_itemtypes())
+
+Continuous_itemtypes <- function() c('crm')
 
 # ----------------------------------------------------------------
 # helper functions
@@ -269,6 +271,7 @@ setClass("GroupPars",
                         gr='function',
                         usegr='logical',
                         hss='function',
+                        discrete='logical',
                         usehss='logical')
 )
 
@@ -2536,6 +2539,7 @@ setMethod("initialize",
               .Object@useuserdata <- useuserdata
               .Object@lbound <- if(!is.null(lbound)) lbound else rep(-Inf, length(par))
               .Object@ubound <- if(!is.null(ubound)) ubound else rep(Inf, length(par))
+              .Object@discrete <- TRUE
               .Object
           }
 )
@@ -3210,6 +3214,125 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'sequential', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# ----------------------------------------------------------------
+
+# continuous response model (requires original data to be extracted)
+
+setClass("crm", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'crm'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'crm'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'crm'),
+    definition = function(x){
+        browser()
+        x@par[seq_len(x@nfact)] #slopes
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'crm'),
+    definition = function(x){
+        browser()
+        x@par[length(x@par)] #intercepts
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'crm'),
+    definition = function(x){
+        browser()
+        par <- c(rlnorm(1, .2, .2), rnorm(1))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'crm'),
+    definition = function(x){
+        browser()
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
+        x
+    }
+)
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'crm', Theta = 'matrix'),
+    definition = function(x, Theta){
+        a <- psi[1]
+        b <- psi[2]
+        alpha <- psi[3]
+        z <- x@orgdat
+        p <- (a/(alpha*sqrt(2*pi)))*exp(-((a*(X - b - z/alpha ))^2) / 2)
+        p <- ifelse(p < 1e-10, 1e-10, p) #numerical constraints to avoid log() problems
+        p <- ifelse(p > 1 - 1e-10, 1 - 1e-10, p)
+        p
+    }
+)
+
+# complete-data derivative used in parameter estimation (here it is done numerically)
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'crm', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(any(x@est)){
+            grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+            if(estHess){
+                hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                                      Theta=Theta, gradient=FALSE)
+            }
+        }
+        return(list(grad=grad, hess=hess)) #TODO replace with analytic derivatives
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'crm', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'crm', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }

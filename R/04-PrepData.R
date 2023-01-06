@@ -1,7 +1,7 @@
 PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
-                     customGroup, customItemsData, fulldata = NULL, key,
+                     customGroup, customItemsData, fulldata = NULL, key, not_continuous,
                      spline_args, internal_constraints, monopoly.k, dentype, dcIRT_nphi, item.Q)
 {
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
@@ -42,7 +42,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
     }
     K <- rep(0L,J)
     for(i in 1L:J) K[i] <- length(uniques[[i]])
-    if(any(K > 30L) && opts$warn)
+    if(any(K > 30L & not_continuous) && opts$warn)
         warning(paste0('The following items have a large number of categories which may cause estimation issues: ',
                        paste0(as.character(which(K > 30L)), collapse = " ")), call. = FALSE)
     if(any(itemtype %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM') & K < 3))

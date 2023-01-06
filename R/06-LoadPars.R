@@ -1,4 +1,4 @@
-LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
+LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact, data,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
                      key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData, item.Q)
 {
@@ -200,6 +200,12 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(fp) <- names(val)
             startvalues[[i]] <- val
             freepars[[i]] <- fp
+        } else if (itemtype[i] == 'crm'){
+            val <- c(a=1, b=0, alpha=1)
+            fp <- rep(TRUE, 3)
+            names(fp) <- names(val)
+            startvalues[[i]] <- val
+            freepars[[i]] <- fp
         } else if (itemtype[i] == 'spline') next
         if(all(itemtype[i] != valid.items) || itemtype[i] %in% Experimental_itemtypes()) next
         names(fp) <- names(val)
@@ -360,6 +366,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              itemclass=2L,
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             est=freepars[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(itemtype[i] == 'crm'){
+            browser()
+            pars[[i]] <- new('crm',
+                             par=startvalues[[i]],
+                             parnames=names(freepars[[i]]),
+                             nfact=nfact,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             orgdat=data[,i,drop=FALSE],
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              est=freepars[[i]],
@@ -655,6 +683,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             parnumber <- parnumber + length(pars[[i]]@est)
             next
         }
+
+        # continuous or discrete
+        .object@discrete <- if(Continuous_itemtypes() %in% itemtype[i]) TRUE else FALSE
+
     }
     #priors
     for(i in seq_len(J)){
