@@ -160,7 +160,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
-        not_continuous <- which(!(itemtype %in% Continuous_itemtypes()))
+        not_continuous <- 1L:ncol(data)
+        if(!is.null(itemtype))
+            not_continuous <- which(!(itemtype %in% Continuous_itemtypes()))
         if(nrow(data) > 1L && is.null(opts$technical$customK) && length(not_continuous)){
             if(!is.null(key)){
                 key <- sapply(1L:length(key), function(ind, data, key){
@@ -172,7 +174,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ret
                 }, data=data, key=key)
             }
-            data[,not_continuous,drop=FALSE] <-
+            data[,not_continuous] <-
                 remap.distance(data[,not_continuous,drop=FALSE], message=opts$message)
         }
         Data$rowID <- 1L:nrow(data)
@@ -319,7 +321,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
-    browser() # TODO continuous model edit for tabdata
     if(!is.null(opts$PrepList)){
         PrepList <- opts$PrepList
     } else {
@@ -337,13 +338,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                  groupNames=if(opts$dentype != 'mixture') Data$groupNames else 'full',
                                  nitem=Data$nitems, K=PrepListFull$K, itemloc=PrepListFull$itemloc,
                                  Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
-                                 survey.weights=survey.weights)
+                                 survey.weights=survey.weights, not_continuous=not_continuous)
             } else {
                 maketabData(tmpdata=tmpdata, group=Data$group,
                             groupNames=if(opts$dentype != 'mixture') Data$groupNames else 'full',
                             nitem=Data$nitems, K=PrepListFull$K, itemloc=PrepListFull$itemloc,
                             Names=PrepListFull$Names, itemnames=PrepListFull$itemnames,
-                            survey.weights=survey.weights)
+                            survey.weights=survey.weights, not_continuous=not_continuous)
             }
             if(is.character(large) && large == 'return'){
                 return(tmptabdata)

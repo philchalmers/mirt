@@ -1347,44 +1347,62 @@ nameInfoMatrix <- function(info, correction, L, npars){
 }
 
 maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
-                        Names, itemnames, survey.weights){
-    tmpdata[is.na(tmpdata)] <- 99999L
-    stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
-    stringtabdata <- unique(stringfulldata)
-    tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
-    tabdata2 <- do.call(rbind, tabdata2)
-    tabdata2[tabdata2 == 99999L] <- NA
-    tabdata <- matrix(0L, nrow(tabdata2), sum(K))
-    for(i in seq_len(nitem)){
-        uniq <- sort(na.omit(unique(tabdata2[,i])))
-        if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
-        for(j in seq_len(length(uniq)))
-            tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
+                        Names, itemnames, survey.weights, not_continuous){
+    disc_cont <- c(FALSE, FALSE)
+    tmpdata_discrete <- tmpdata[,not_continuous, drop=FALSE]
+    tmpdata_discrete[is.na(tmpdata_discrete)] <- 99999L
+    Knc <- K[not_continuous]
+    if(length(K) > length(not_continuous)){
+        disc_cont[2] <- TRUE
+        browser()
+
     }
-    tabdata[is.na(tabdata)] <- 0L
-    colnames(tabdata) <- Names
-    colnames(tabdata2) <- itemnames
-    groupFreq <- vector('list', length(groupNames))
-    names(groupFreq) <- groupNames
-    for(g in seq_len(length(groupNames))){
-        Freq <- integer(length(stringtabdata))
-        tmpstringdata <- stringfulldata[group == groupNames[g]]
-        if(!is.null(survey.weights)){
-            Freq <- mySapply(seq_len(nrow(tabdata)), function(x, std, tstd, w)
-                sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata,
-                w=survey.weights[group == groupNames[g]])
-        } else {
-            Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
-                match(tmpstringdata, stringtabdata)))
+    if(length(not_continuous)){
+        disc_cont[1] <- TRUE
+        stringfulldata <- apply(tmpdata_discrete, 1L, paste, sep='', collapse = '/')
+        stringtabdata <- unique(stringfulldata)
+        tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
+        tabdata2 <- do.call(rbind, tabdata2)
+        tabdata2[tabdata2 == 99999L] <- NA
+        tabdata <- matrix(0L, nrow(tabdata2), sum(Knc))
+        for(i in seq_len(nitem)){
+            uniq <- sort(na.omit(unique(tabdata2[,i])))
+            if(length(uniq) < Knc[i]) uniq <- 0L:(Knc[i]-1L)
+            for(j in seq_len(length(uniq)))
+                tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
         }
-        groupFreq[[g]] <- Freq
+        tabdata[is.na(tabdata)] <- 0L
+        colnames(tabdata) <- Names
+        colnames(tabdata2) <- itemnames
+        groupFreq <- vector('list', length(groupNames))
+        names(groupFreq) <- groupNames
+        for(g in seq_len(length(groupNames))){
+            Freq <- integer(length(stringtabdata))
+            tmpstringdata <- stringfulldata[group == groupNames[g]]
+            if(!is.null(survey.weights)){
+                Freq <- mySapply(seq_len(nrow(tabdata)), function(x, std, tstd, w)
+                    sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata,
+                    w=survey.weights[group == groupNames[g]])
+            } else {
+                Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
+                    match(tmpstringdata, stringtabdata)))
+            }
+            groupFreq[[g]] <- Freq
+        }
+    }
+    if(all(disc_cont)){
+        browser()
+        # join
+    } else {
+        # set homogenous case
+        browser()
     }
     ret <- list(tabdata=tabdata, tabdata2=tabdata2, Freq=groupFreq)
     ret
 }
 
 maketabDataLarge <- function(tmpdata, group, groupNames, nitem, K, itemloc,
-                             Names, itemnames, survey.weights){
+                             Names, itemnames, survey.weights, not_continuous){
     tabdata2 <- tmpdata
     tabdata <- matrix(0L, nrow(tabdata2), sum(K))
     for(i in seq_len(nitem)){
