@@ -1349,29 +1349,33 @@ nameInfoMatrix <- function(info, correction, L, npars){
 maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
                         Names, itemnames, survey.weights, not_continuous){
     disc_cont <- c(FALSE, FALSE)
-    tmpdata_discrete <- tmpdata[,not_continuous, drop=FALSE]
-    tmpdata_discrete[is.na(tmpdata_discrete)] <- 99999L
+    tmpdataorg <- tmpdata
+    tmpdata[is.na(tmpdata)] <- 99999L
     Knc <- K[not_continuous]
-    if(length(K) > length(not_continuous)){
+    if(sum(!not_continuous) > 0)
         disc_cont[2] <- TRUE
-        browser()
-
-    }
-    if(length(not_continuous)){
+    if(any(not_continuous)){
         disc_cont[1] <- TRUE
-        stringfulldata <- apply(tmpdata_discrete, 1L, paste, sep='', collapse = '/')
-        stringtabdata <- unique(stringfulldata)
+        stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
+        stringtabdata <- if(!disc_cont[2L]) unique(stringfulldata) else stringfulldata
         tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
         tabdata2 <- do.call(rbind, tabdata2)
         tabdata2[tabdata2 == 99999L] <- NA
-        tabdata <- matrix(0L, nrow(tabdata2), sum(Knc))
+        tabdata2[,!not_continuous] <- tmpdataorg[,!not_continuous]
+        tabdata <- matrix(0L, nrow(tabdata2), sum(K))
         for(i in seq_len(nitem)){
+            if(!not_continuous[i]){
+                tabdata[,itemloc[i]] <- tmpdata[,i]
+                next
+            }
             uniq <- sort(na.omit(unique(tabdata2[,i])))
-            if(length(uniq) < Knc[i]) uniq <- 0L:(Knc[i]-1L)
-            for(j in seq_len(length(uniq)))
-                tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
+            if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
+            for(j in seq_len(length(uniq))){
+                tmp <- as.integer(tabdata2[,i] == uniq[j])
+                tmp[is.na(tmp)] <- 0
+                tabdata[,itemloc[i] + j - 1L] <- tmp
+            }
         }
-        tabdata[is.na(tabdata)] <- 0L
         colnames(tabdata) <- Names
         colnames(tabdata2) <- itemnames
         groupFreq <- vector('list', length(groupNames))
@@ -1390,13 +1394,6 @@ maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
             groupFreq[[g]] <- Freq
         }
     }
-    if(all(disc_cont)){
-        browser()
-        # join
-    } else {
-        # set homogenous case
-        browser()
-    }
     ret <- list(tabdata=tabdata, tabdata2=tabdata2, Freq=groupFreq)
     ret
 }
@@ -1405,6 +1402,10 @@ maketabDataLarge <- function(tmpdata, group, groupNames, nitem, K, itemloc,
                              Names, itemnames, survey.weights, not_continuous){
     tabdata2 <- tmpdata
     tabdata <- matrix(0L, nrow(tabdata2), sum(K))
+    if(any(!not_continuous)){
+        stop('large not supported for continuous data')
+        browser() #TODO
+    }
     for(i in seq_len(nitem)){
         uniq <- sort(na.omit(unique(tabdata2[,i])))
         if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)

@@ -160,10 +160,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rownames(data) <- 1L:nrow(data)
         if(is.null(colnames(data)))
             colnames(data) <- paste0('Item.', 1L:ncol(data))
-        not_continuous <- 1L:ncol(data)
-        if(!is.null(itemtype))
-            not_continuous <- which(!(itemtype %in% Continuous_itemtypes()))
-        if(nrow(data) > 1L && is.null(opts$technical$customK) && length(not_continuous)){
+        not_continuous <- rep(TRUE, ncol(data))
+        if(!is.null(itemtype)){
+            if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
+            not_continuous <- !(itemtype %in% Continuous_itemtypes())
+        }
+        if(nrow(data) > 1L && is.null(opts$technical$customK) && sum(not_continuous)){
             if(!is.null(key)){
                 key <- sapply(1L:length(key), function(ind, data, key){
                     if(is.na(key[ind])) return(NA)

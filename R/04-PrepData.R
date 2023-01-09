@@ -41,8 +41,9 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
             key[i] <- which(key[i] == uniques[[i]])
     }
     K <- rep(0L,J)
-    for(i in 1L:J) K[i] <- length(uniques[[i]])
-    if(any(K > 30L & not_continuous) && opts$warn)
+    for(i in 1L:J)
+        K[i] <- if(not_continuous[i]) length(uniques[[i]]) else 1
+    if(any(K > 30L) && opts$warn)
         warning(paste0('The following items have a large number of categories which may cause estimation issues: ',
                        paste0(as.character(which(K > 30L)), collapse = " ")), call. = FALSE)
     if(any(itemtype %in% c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM') & K < 3))
@@ -52,9 +53,9 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         for(i in 1L:J)
             uniques[[i]] <- 0L:(K[i]-1L)
     }
-    if(any(K < 2L))
+    if(any(K < 2L & not_continuous))
         stop('The following items have only one response category and cannot be estimated: ',
-             paste(itemnames[K < 2L], ''), call.=FALSE)
+             paste(itemnames[K < 2L & not_continuous], ''), call.=FALSE)
     if(is.null(itemtype)) {
         itemtype <- rep('', J)
         for(i in 1L:J){
