@@ -3289,16 +3289,15 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'crm', Theta = 'matrix'),
     definition = function(x, Theta){
-        browser()
         a <- x@par[1]
         b <- x@par[2]
         alpha <- x@par[3]
-        X <- x@orgdat
-        if(nrow(Theta) == 1L || nrow(Theta) == nrow(X)){
-            p <- (a/(alpha*sqrt(2*pi)))*exp(-((a*(Theta - b - X/alpha ))^2) / 2)
+        Z <- x@orgdat
+        if(nrow(Theta) == 1L || nrow(Theta) == nrow(Z)){
+            p <- a/(alpha*sqrt(2*pi))*exp(-(a*(Theta - b - Z/alpha ))^2 / 2)
         } else {
             p <- t(apply(Theta, 1L, function(theta)
-                (a/(alpha*sqrt(2*pi)))*exp(-((a*(theta - b - X/alpha ))^2) / 2)))
+                a/(alpha*sqrt(2*pi))*exp(-(a*(theta - b - Z/alpha ))^2 / 2)))
         }
         p <- ifelse(p < 1e-10, 1e-10, p) #numerical constraints to avoid log() problems
         p <- ifelse(p > 1 - 1e-10, 1 - 1e-10, p)
@@ -3317,11 +3316,11 @@ setMethod(
             a <- x@par[1]
             b <- x@par[2]
             alpha <- x@par[3]
-            X <- x@orgdat
-            grad[1L] <- sum(1/a - a * (Theta - b - X/alpha)^2)
-            grad[2L] <- sum(a^2 * (Theta - b - X/alpha) )
-            grad[3L] <- sum(-a^2 * (Theta - b - X/alpha) * (X/alpha^2) - 1/alpha )
-            # grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+            Z <- x@orgdat
+            grad[1L] <- sum(1/a - a * (Theta - b - Z/alpha)^2)
+            grad[2L] <- sum(a^2 * (Theta - b - Z/alpha) )
+            grad[3L] <- sum(-a^2 * (Theta - b - Z/alpha) * (Z/alpha^2) - 1/alpha )
+            #grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
             if(estHess){
                 hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                       Theta=Theta, gradient=FALSE)
