@@ -97,6 +97,10 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
         colnames(fulldata) <- Names
         for(i in 1L:J){
             ind <- index[i]
+            if(!not_continuous[i]){
+                fulldata[,ind] <- 1L
+                next
+            }
             dummy <- matrix(0L,N,K[ind])
             for (j in 0L:(K[ind]-1L))
                 dummy[,j+1L] <- as.integer(data[,ind] == uniques[[ind]][j+1L])

@@ -10,13 +10,15 @@ Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', 'graded',
 ordinal_itemtypes <- function() c('dich', 'graded', 'gpcm', 'sequential', 'ggum', 'rating', 'spline', 'monopoly',
                                   'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT')
 
+Continuous_itemtypes <- function() c('crm')
+
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'sequential', 'Tutz',
                             Experimental_itemtypes())
 
-Continuous_itemtypes <- function() c('crm')
+
 
 # ----------------------------------------------------------------
 # helper functions
@@ -3247,7 +3249,6 @@ setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'crm'),
     definition = function(x){
-        browser()
         x@par[seq_len(x@nfact)] #slopes
     }
 )
@@ -3257,8 +3258,7 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'crm'),
     definition = function(x){
-        browser()
-        x@par[length(x@par)] #intercepts
+        x@par[2L] #intercepts
     }
 )
 
@@ -3267,8 +3267,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'crm'),
     definition = function(x){
-        browser()
-        par <- c(rlnorm(1, .2, .2), rnorm(1))
+        par <- c(rlnorm(1, .2, .2), rnorm(1), 1)
         x@par[x@est] <- par[x@est]
         x
     }
@@ -3279,9 +3278,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'crm'),
     definition = function(x){
-        browser()
-        x@par[seq_len(x@nfact)] <- 0
-        x@est[seq_len(x@nfact)] <- FALSE
+        x@par[x@nfact] <- 0
+        x@est[x@nfact] <- FALSE
         x
     }
 )
@@ -3291,11 +3289,17 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'crm', Theta = 'matrix'),
     definition = function(x, Theta){
-        a <- psi[1]
-        b <- psi[2]
-        alpha <- psi[3]
-        z <- x@orgdat
-        p <- (a/(alpha*sqrt(2*pi)))*exp(-((a*(X - b - z/alpha ))^2) / 2)
+        browser()
+        a <- x@par[1]
+        b <- x@par[2]
+        alpha <- x@par[3]
+        X <- x@orgdat
+        if(nrow(Theta) == 1L || nrow(Theta) == nrow(X)){
+            p <- (a/(alpha*sqrt(2*pi)))*exp(-((a*(Theta - b - X/alpha ))^2) / 2)
+        } else {
+            p <- t(apply(Theta, 1L, function(theta)
+                (a/(alpha*sqrt(2*pi)))*exp(-((a*(theta - b - X/alpha ))^2) / 2)))
+        }
         p <- ifelse(p < 1e-10, 1e-10, p) #numerical constraints to avoid log() problems
         p <- ifelse(p > 1 - 1e-10, 1 - 1e-10, p)
         p
@@ -3310,13 +3314,22 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(any(x@est)){
-            grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+            a <- x@par[1]
+            b <- x@par[2]
+            alpha <- x@par[3]
+            X <- x@orgdat
+            grad[1L] <- sum(1/a - a * (Theta - b - X/alpha)^2)
+            grad[2L] <- sum(a^2 * (Theta - b - X/alpha) )
+            grad[3L] <- sum(-a^2 * (Theta - b - X/alpha) * (X/alpha^2) - 1/alpha )
+            # grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
             if(estHess){
                 hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                       Theta=Theta, gradient=FALSE)
             }
         }
-        return(list(grad=grad, hess=hess)) #TODO replace with analytic derivatives
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        ret
     }
 )
 

@@ -172,7 +172,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             list$Moptim <- 'L-BFGS-B'
     for(g in seq_len(ngroups))
         for(i in seq_len(J))
-            pars[[g]][[i]]@dat <- Data$fulldata[[g]][, c(itemloc[i]:(itemloc[i+1L] - 1L))]
+            pars[[g]][[i]]@dat <- Data$fulldata[[g]][, c(itemloc[i]:(itemloc[i+1L] - 1L)), drop=FALSE]
     Draws.time <- Mstep.time <- 0
 
     ####Big MHRM loop

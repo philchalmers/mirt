@@ -487,7 +487,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         rr <- rr + r
     }
     df <- Data$ngroups * (prod(PrepList[[1L]]$K) - 1)
-    if(df > 1e10) df <- 1e10
+    if(df > 1e10 || sum(!not_continuous) > 0) df <- 1e10 ## TODO this is a hack
     nestpars <- nconstr <- 0L
     for(g in seq_len(Data$ngroups))
         for(i in seq_len(nitems+1L))

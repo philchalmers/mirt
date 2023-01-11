@@ -58,6 +58,7 @@ pkgdown:
 clean:
 	$(RM) src/*.o
 	$(RM) src/*.so
+	$(RM) src/*.dll
 	$(RM) ../$(PKGNAME)_$(PKGVERS).tar.gz
 	$(RM) -r ../$(PKGNAME).Rcheck/
 

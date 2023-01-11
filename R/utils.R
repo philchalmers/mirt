@@ -1351,7 +1351,7 @@ maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
     tmpdataorg <- tmpdata
     tmpdata[is.na(tmpdata)] <- 99999L
     stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
-    stringtabdata <- if(sum(!not_continuous) > 0) unique(stringfulldata)
+    stringtabdata <- if(sum(!not_continuous) == 0) unique(stringfulldata)
         else stringfulldata
     tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
     tabdata2 <- do.call(rbind, tabdata2)
@@ -1360,17 +1360,16 @@ maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
     tabdata <- matrix(0L, nrow(tabdata2), sum(K))
     for(i in seq_len(nitem)){
         if(!not_continuous[i]){
-            tabdata[,itemloc[i]] <- tmpdata[,i]
-            next
-        }
-        uniq <- sort(na.omit(unique(tabdata2[,i])))
-        if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
-        for(j in seq_len(length(uniq))){
-            tmp <- as.integer(tabdata2[,i] == uniq[j])
-            tmp[is.na(tmp)] <- 0
-            tabdata[,itemloc[i] + j - 1L] <- tmp
+            tabdata[,itemloc[i]] <- 1L
+            tabdata[,itemloc[i]][is.na(tmpdataorg[,i])] <- NA
+        } else {
+            uniq <- sort(na.omit(unique(tabdata2[,i])))
+            if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
+            for(j in seq_len(length(uniq)))
+                tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
         }
     }
+    tabdata[is.na(tabdata)] <- 0L
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
     groupFreq <- vector('list', length(groupNames))
@@ -1396,17 +1395,17 @@ maketabDataLarge <- function(tmpdata, group, groupNames, nitem, K, itemloc,
                              Names, itemnames, survey.weights, not_continuous){
     tabdata2 <- tmpdata
     tabdata <- matrix(0L, nrow(tabdata2), sum(K))
-    if(any(!not_continuous)){
-        stop('large not supported for continuous data')
-        browser() #TODO
-    }
     for(i in seq_len(nitem)){
-        uniq <- sort(na.omit(unique(tabdata2[,i])))
-        if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
-        for(j in seq_len(length(uniq)))
-            tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
+        if(!not_continuous[i]){
+            tabdata[,itemloc[i]] <- 1L
+            tabdata[,itemloc[i]][is.na(tmpdata[,i])] <- NA
+        } else {
+            uniq <- sort(na.omit(unique(tabdata2[,i])))
+            if(length(uniq) < K[i]) uniq <- 0L:(K[i]-1L)
+            for(j in seq_len(length(uniq)))
+                tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
+        }
     }
-    tabdata[is.na(tabdata)] <- 0L
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
     groupFreq <- vector('list', length(groupNames))
@@ -1678,10 +1677,13 @@ reloadPars <- function(longpars, pars, ngroups, J){
     .Call('reloadPars', longpars, pars, ngroups, J, nclasspars)
 }
 
-computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
+computeItemtrace <- function(pars, Theta, itemloc,
+                             offterm = matrix(0L, 1L, length(itemloc)-1L),
                              CUSTOM.IND, pis = NULL){
     if(is.null(pis)){
         itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+        # itemtrace <- matrix(0L, nrow(Theta), 5*1000) # FIXME
+        # browser()
         if(length(CUSTOM.IND)){
             for(i in CUSTOM.IND)
                 itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
@@ -1689,10 +1691,12 @@ computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, leng
     } else {
         tmp_itemtrace <- vector('list', length(pis))
         for(g in seq_len(length(pis))){
-            tmp_itemtrace[[g]] <- .Call('computeItemTrace', pars[[g]]@ParObjects$pars, Theta, itemloc, offterm)
+            tmp_itemtrace[[g]] <- .Call('computeItemTrace',
+                                        pars[[g]]@ParObjects$pars, Theta, itemloc, offterm)
             if(length(CUSTOM.IND)){
                 for(i in CUSTOM.IND)
-                    tmp_itemtrace[[g]][,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[g]]@ParObjects$pars[[i]], Theta=Theta)
+                    tmp_itemtrace[[g]][,itemloc[i]:(itemloc[i+1L] - 1L)] <-
+                        ProbTrace(pars[[g]]@ParObjects$pars[[i]], Theta=Theta)
             }
         }
         itemtrace <- do.call(rbind, tmp_itemtrace)

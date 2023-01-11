@@ -804,6 +804,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         10 = lca
         11 = ggum
         12 = monopoly
+        13 = crm
     */
 
     if(USEFIXED){
