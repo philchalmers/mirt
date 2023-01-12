@@ -1202,7 +1202,10 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), M
 }
 
 #new gradient and hessian with priors
-DerivativePriors <- function(x, grad, hess){
+DerivativePriors <- function(x, grad, hess,
+                             fill.grad = TRUE, fill.hess = TRUE){
+    if(!fill.grad && !fill.hess)
+        return(list(grad=grad, hess=hess))
     if(any(x@prior.type %in% 1L)){ #norm
         ind <- x@prior.type %in% 1L
         val <- x@par[ind]
@@ -1210,9 +1213,11 @@ DerivativePriors <- function(x, grad, hess){
         s <- x@prior_2[ind]
         g <- -(val - mu)/(s^2)
         h <- -1/(s^2)
-        grad[ind] <- grad[ind] + g
-        if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
-        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+        if(fill.grad) grad[ind] <- grad[ind] + g
+        if(fill.hess){
+            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+        }
     }
     if(any(x@prior.type %in% 2L)){ #lnorm
         ind <- x@prior.type %in% 2L
@@ -1223,9 +1228,11 @@ DerivativePriors <- function(x, grad, hess){
         s <- x@prior_2[ind]
         g <- -(lval - mu)/(val * s^2) - 1/val
         h <- 1/(val^2) - 1/(val^2 * s^2) - (lval - mu)/(val^2 * s^2)
-        grad[ind] <- grad[ind] + g
-        if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
-        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+        if(fill.grad) grad[ind] <- grad[ind] + g
+        if(fill.hess){
+            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+        }
     }
     if(any(x@prior.type %in% c(3L, 4L))){ #beta
         tmp <- x@par
@@ -1239,9 +1246,11 @@ DerivativePriors <- function(x, grad, hess){
         b <- x@prior_2[ind]
         g <- (a - 1)/val - (b-1)/(1-val)
         h <- -(a - 1)/(val^2) - (b-1) / (1-val)^2
-        grad[ind] <- grad[ind] + g
-        if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
-        else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+        if(fill.grad) grad[ind] <- grad[ind] + g
+        if(fill.hess){
+            if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
+            else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h
+        }
     }
     return(list(grad=grad, hess=hess))
 }
