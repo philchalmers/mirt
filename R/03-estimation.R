@@ -919,6 +919,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         ESTIMATE$cycles <- tmp$cycles
         ESTIMATE$Prior <- tmp$Prior
+        ESTIMATE$Etable <- tmp$Etable
         rm(tmp)
     }
     opts$times$end.time.SE <- proc.time()[3L]
