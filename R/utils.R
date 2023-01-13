@@ -2707,3 +2707,74 @@ mySapply <- function(X, FUN, progress = FALSE, ...){
         return(t(sapply(X=X, FUN=FUN, ...)))
     }
 }
+
+# ----------------------------------------------------------------
+# global S3 methods
+
+
+#' Print generic for customized data.frame console output
+#'
+#' Provides a nicer output for most printed \code{data.frame} objects
+#' defined by functions in \code{mirt}.
+#'
+#' @method print mirt_df
+#' @param x object of class \code{'mirt_df'}
+#' @param digits number of digits to round
+#' @param ... additional arguments passed to \code{print(...)}
+#' @export
+print.mirt_df <- function(x, digits = 3, ...){
+    cls <- class(x)[2L]
+    class(x) <- cls
+    if(nrow(x) > 0){
+        clsss <- sapply(x, class)
+        for(i in 1:length(clsss))
+            if(clsss[i] == 'numeric')
+                x[,i] <- round(x[,i], digits=digits)
+    }
+    if(!is.null(x[['p']])){
+        if(!is.null(x$X2)) x$X2 <- as.character(x$X2)
+        if(!is.null(x$df)) x$df <- as.character(x$df)
+        if(!is.null(x$p)) x$p <- as.character(x$p)
+        print(x, na.print = " ", ...)
+    } else {
+        print(x, ...)
+    }
+}
+
+#' Print generic for customized matrix console output
+#'
+#' Provides a nicer output for most printed \code{matrix}
+#' objects defined by functions in \code{mirt}.
+#'
+#' @method print mirt_matrix
+#' @param x object of class \code{'mirt_matrix'}
+#' @param digits number of digits to round
+#' @param ... additional arguments passed to \code{print(...)}
+#' @export
+print.mirt_matrix <- function(x, digits = 3, ...){
+    cls <- class(x)[2L]
+    class(x) <- cls
+    x <- round(x, digits=digits)
+    print(x, ...)
+}
+
+#' Print generic for customized list console output
+#'
+#' Provides a nicer output for most printed \code{list} objects
+#' defined by functions in \code{mirt}.
+#'
+#' @method print mirt_list
+#' @param x object of class \code{'mirt_list'}
+#' @param digits number of digits to round
+#' @param ... additional arguments passed to \code{print(...)}
+#' @export
+print.mirt_list <- function(x, digits = 3, ...){
+    cls <- class(x)[2L]
+    class(x) <- cls
+    x <- lapply(x, function(x, digits){
+        if(is.list(x) && !is.data.frame(x))
+            lapply(x, function(y) round(y, digits=digits))
+        else round(x, digits=digits)
+    }, digits=digits)
+    print(x, ...)
+}
