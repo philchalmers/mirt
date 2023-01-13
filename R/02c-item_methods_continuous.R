@@ -66,7 +66,7 @@ setMethod(
     f = "ProbTrace",
     signature = signature(x = 'crm', Theta = 'matrix'),
     definition = function(x, Theta){
-        as <- x@par[1L:x@nfact]
+        a <- x@par[1L:x@nfact]
         b <- x@par[length(x@par)-1L]
         alpha <- x@par[length(x@par)]
         Z <- x@orgdat

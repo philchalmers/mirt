@@ -164,6 +164,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(!is.null(itemtype)){
             if(length(itemtype) == 1L) itemtype <- rep(itemtype, ncol(data))
             not_continuous <- !(itemtype %in% Continuous_itemtypes())
+            if(any(!not_continuous) && !(opts$method %in% c('MHRM', 'SEM')))
+                stop('Continuous IRT models not yet supported for supplied estimation method',
+                     call.=FALSE)
         }
         if(nrow(data) > 1L && is.null(opts$technical$customK) && sum(not_continuous)){
             if(!is.null(key)){
