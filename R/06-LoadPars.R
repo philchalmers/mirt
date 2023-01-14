@@ -201,7 +201,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             startvalues[[i]] <- val
             freepars[[i]] <- fp
         } else if (itemtype[i] == 'crm'){
-            val <- c(lambdas[i,], -qlogis(mean(data[,i], na.rm=TRUE)), 1)
+            val <- c(lambdas[i,], -mean(qlogis(data[,i]), na.rm=TRUE), 1)
             names(val) <- c(paste0('a', 1L:nfact), 'b', 'alpha')
             fp <- c(estLambdas[i,], rep(TRUE, 2))
             names(fp) <- names(val)

@@ -1691,8 +1691,6 @@ computeItemtrace <- function(pars, Theta, itemloc,
                              CUSTOM.IND, pis = NULL){
     if(is.null(pis)){
         itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
-        # itemtrace <- matrix(0L, nrow(Theta), 5*1000) # FIXME
-        # browser()
         if(length(CUSTOM.IND)){
             for(i in CUSTOM.IND)
                 itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
@@ -1710,7 +1708,6 @@ computeItemtrace <- function(pars, Theta, itemloc,
         }
         itemtrace <- do.call(rbind, tmp_itemtrace)
     }
-    browser()
     return(itemtrace)
 }
 

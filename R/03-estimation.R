@@ -167,13 +167,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(any(!not_continuous) && !(opts$method %in% c('MHRM', 'SEM')))
                 stop('Continuous IRT models not yet supported for supplied estimation method',
                      call.=FALSE)
-            # if(any(!not_continuous)){
-            #     sapply(which(not_continuous), function(ind){
-            #         if(data[,ind] < 0 | data[,ind] > 1)
-            #             stop(sprintf('\"%s" is not within the range [0,1]. Please fix.'),
-            #                  colnames(data)[ind], call.=FALSE)
-            #     })
-            # }
+            if(any(!not_continuous)){
+                sapply(which(not_continuous), function(ind){
+                    if(data[,ind] < 0 | data[,ind] > 1)
+                        stop(sprintf('\"%s" is not within the range [0,1]. Please fix.'),
+                             colnames(data)[ind], call.=FALSE)
+                })
+            }
         }
         if(nrow(data) > 1L && is.null(opts$technical$customK) && sum(not_continuous)){
             if(!is.null(key)){
