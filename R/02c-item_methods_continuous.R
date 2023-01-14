@@ -3,7 +3,7 @@
 # continuous response model (requires original data to be extracted)
 
 setClass("crm", contains = 'AllItemsClass',
-         representation = representation())
+         representation = representation(transdat='matrix'))
 
 setMethod(
     f = "print",
@@ -69,7 +69,7 @@ setMethod(
         a <- x@par[1L:x@nfact]
         b <- x@par[length(x@par)-1L]
         alpha <- x@par[length(x@par)]
-        Z <- x@orgdat
+        Z <- x@transdat
         if(nrow(Theta) == 1L || nrow(Theta) == nrow(Z)){
             p <- a/(alpha*sqrt(2*pi))*exp(-(a*(Theta - b - Z/alpha ))^2 / 2)
         } else {
@@ -89,10 +89,10 @@ setMethod(
         grad <- rep(0, length(x@par))
         hess <- matrix(0, length(x@par), length(x@par))
         if(any(x@est)){
-            as <- x@par[1L:x@nfact]
+            a <- x@par[1L:x@nfact]
             b <- x@par[length(x@par)-1L]
             alpha <- x@par[length(x@par)]
-            Z <- x@orgdat
+            Z <- x@transdat
             # grad[1L] <- sum(1/a - a * (Theta - b - Z/alpha)^2)
             # grad[2L] <- sum(a^2 * (Theta - b - Z/alpha) )
             # grad[3L] <- sum(-a^2 * (Theta - b - Z/alpha) * (Z/alpha^2) - 1/alpha )

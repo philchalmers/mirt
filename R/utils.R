@@ -1710,6 +1710,7 @@ computeItemtrace <- function(pars, Theta, itemloc,
         }
         itemtrace <- do.call(rbind, tmp_itemtrace)
     }
+    browser()
     return(itemtrace)
 }
 
