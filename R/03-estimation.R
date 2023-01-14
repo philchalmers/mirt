@@ -170,7 +170,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             if(any(!not_continuous)){
                 sapply(which(not_continuous), function(ind){
                     if(data[,ind] < 0 | data[,ind] > 1)
-                        stop(sprintf('\"%s" is not within the range [0,1]. Please fix.'),
+                        stop(sprintf('\"%s" not within the range [0,1].
+                                       Please fix using rescaleContinuous() or alternative.'),
                              colnames(data)[ind], call.=FALSE)
                 })
             }
