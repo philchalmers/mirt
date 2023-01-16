@@ -74,6 +74,7 @@
     \item{\code{'itemscore'}}{item scoring traceline plots}
     \item{\code{'score'}}{expected total score surface}
     \item{\code{'scorecontour'}}{expected total score contour plot}
+    \item{\code{'posteriorTheta'}}{posterior for the latent trait distribution}
     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
       on the EAP for sum-scores method (see \code{\link{fscores}})}
   }
@@ -150,6 +151,7 @@ plot(x, type = 'infotrace')
 plot(x, type = 'infotrace', facet_items = FALSE)
 plot(x, type = 'infoSE')
 plot(x, type = 'rxx')
+plot(x, type = 'posteriorTheta')
 
 # confidence interval plots when information matrix computed
 plot(x)

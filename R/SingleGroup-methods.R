@@ -1003,6 +1003,7 @@ setMethod(
 #'     \item{\code{'itemscore'}}{item scoring traceline plots}
 #'     \item{\code{'score'}}{expected total score surface}
 #'     \item{\code{'scorecontour'}}{expected total score contour plot}
+#'     \item{\code{'posteriorTheta'}}{posterior for the latent trait distribution}
 #'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
 #'       on the EAP for sum-scores method (see \code{\link{fscores}})}
 #'   }
@@ -1068,6 +1069,7 @@ setMethod(
 #' plot(x, type = 'infotrace', facet_items = FALSE)
 #' plot(x, type = 'infoSE')
 #' plot(x, type = 'rxx')
+#' plot(x, type = 'posteriorTheta')
 #'
 #' # confidence interval plots when information matrix computed
 #' plot(x)
@@ -1113,7 +1115,7 @@ setMethod(
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian',
-                       'EAPsum')))
+                       'EAPsum', 'posteriorTheta')))
             stop('type supplied is not supported')
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
@@ -1620,7 +1622,16 @@ setMethod(
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = main,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
-            } else {
+            } else if(type == 'posteriorTheta'){
+                if(is.null(main))
+                    main <- 'Posterior Distribution of Latent Trait'
+                plt <- extract.mirt(x, 'thetaPosterior')[[1]]
+                return(xyplot(posterior ~ Theta, plt,
+                              xlab = expression(theta), ylab = 'Density',
+                              type = 'b', main = main,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
+
+            }else {
                 stop('plot not supported for unidimensional models', call.=FALSE)
             }
         }
