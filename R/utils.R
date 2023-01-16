@@ -2334,13 +2334,13 @@ latentRegression_obj <- function(data, covdata, formula, dentype, method){
         tmp <- apply(covdata, 1, function(x) sum(is.na(x)) > 0)
         if(any(tmp)){
             message('removing rows with NAs in covdata')
-            covdata <- covdata[-tmp, ]
-            data <- data[-tmp, ]
+            covdata <- covdata[!tmp, ]
+            data <- data[!tmp, ]
         }
         completely_missing <- which(rowSums(is.na(data)) == ncol(data))
         if(length(completely_missing))
             covdata <- covdata[-completely_missing, , drop=FALSE]
-        latent.regression <- list(df=covdata, formula=formula, EM=TRUE)
+        latent.regression <- list(df=covdata, formula=formula, data=data, EM=TRUE)
     } else latent.regression <- NULL
     latent.regression
 }

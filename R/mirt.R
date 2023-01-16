@@ -1201,6 +1201,8 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
     Call <- match.call()
     latent.regression <- latentRegression_obj(data=data, covdata=covdata,
                                               dentype=dentype, formula=formula, method=method)
+    if(!is.null(latent.regression$data))
+        data <- latent.regression$data
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,
