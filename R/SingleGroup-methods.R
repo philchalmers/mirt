@@ -1083,6 +1083,12 @@ setMethod(
 #' plt <- plot(x, type = 'trace')
 #' direct.label(plt, 'top.points')
 #'
+#' # additional modifications can be made via update().
+#' # See ?update.trellis for further documentation
+#' plt
+#' update(plt, ylab = expression(Prob(theta)),
+#'             main = "Item Traceline Functions") # ylab/main changed
+#'
 #' set.seed(1234)
 #' group <- sample(c('g1','g2'), nrow(Science), TRUE)
 #' x2 <- multipleGroup(Science, 1, group)

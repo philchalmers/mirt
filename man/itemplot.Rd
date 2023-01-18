@@ -122,6 +122,11 @@ bwtheme <- standard.theme("pdf", color=FALSE)
 plot(pmod, type='trace', par.settings=bwtheme)
 itemplot(pmod, 1, type = 'trace', par.settings=bwtheme)
 
+# additional modifications can be made via update().
+# See ?update.trellis for further documentation
+(plt <- itemplot(pmod, 1))
+update(plt, ylab = expression(Prob(theta))) # ylab changed
+
 # infoSE plot
 itemplot(pmod, 1, type = 'infoSE')
 
