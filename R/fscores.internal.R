@@ -213,7 +213,7 @@ setMethod(
         if(!is.null(gcov)) gp$gcov <- gcov
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
                                              quadpts=quadpts, gp=gp, verbose=verbose,
-                                             item_weights=item_weights,
+                                             item_weights=item_weights, return.acov=return.acov,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
                                              min_expected=min_expected, pis=pis, mixture=mixture,
@@ -701,7 +701,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    theta_lim, discrete, mixture, QMC, den_fun, min_expected,
                    which.items = 2:length(x@ParObjects$pars)-1,
                    use_dentype_estimate = FALSE, pis, leave_missing,
-                   item_weights = rep(1, extract.mirt(x, 'nitems')), ...){
+                   item_weights = rep(1, extract.mirt(x, 'nitems')),
+                   return.acov, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -807,6 +808,10 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     }
     if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
     thetas <- SEthetas <- matrix(0, nrow(L1), x@Model$nfact)
+    if(return.acov){
+        vcovs <- vector('list', nrow(thetas))
+        names(vcovs) <- Sum.Scores
+    }
     for(i in seq_len(nrow(thetas))){
         expLW <- L1[i,] * prior
         LW <- log(L1[i,]) + log(prior)
@@ -818,7 +823,22 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             thetas[i, ] <- SEthetas[i, ] <- NaN
         } else {
             thetas[i, ] <- colSums(ThetaShort * expLW / nc)
-            SEthetas[i, ] <- sqrt(colSums((t(t(ThetaShort) - thetas[i,]))^2 * expLW / nc))
+            thetadif <- t((t(ThetaShort) - thetas[i,]))
+            Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+            ind <- 1L
+            for(k in seq_len(nfact)){
+                for(j in seq_len(nfact)){
+                    if(k <= j){
+                        Thetaprod[,ind] <- thetadif[,k] * thetadif[,j]
+                        ind <- ind + 1L
+                    }
+                }
+            }
+            vcov <- matrix(0, nfact, nfact)
+            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+            if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+            if(return.acov) vcovs[[i]] <- vcov
+            SEthetas[i,] <- sqrt(diag(vcov))
         }
     }
     factorNames <- extract.mirt(x, 'factorNames')
@@ -832,6 +852,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         dat <- t(t(dat) - adj)
         scores <- rowSums(dat)
         EAPscores <- ret[match(scores, Sum.Scores), -1L, drop=FALSE]
+        if(return.acov)
+            return(vcovs[match(scores, Sum.Scores)])
         if(discrete)
             colnames(EAPscores) <- gsub('Theta.', 'Class_', colnames(EAPscores))
         pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
@@ -842,6 +864,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             ret <- add_completely.missing_back(ret, completely_missing)
         }
     } else {
+        if(return.acov) return(vcovs)
         dat <- x@Data$data
         if(any(is.na(dat)))
             stop('EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE',

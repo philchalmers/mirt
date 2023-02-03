@@ -1,5 +1,8 @@
 # Changes in mirt 1.38
 
+- `fscores(..., method ='EAPsum')` now supports returning the ACOV matrices, 
+  matching the behaviour of the other estimators
+
 - Store previously defined `customItems` and `customGroup` lists for use in
   secondary functions (e.g., `DIF()`, `boot.mirt()`, etc). 
   Reported by Nataly Beribisky

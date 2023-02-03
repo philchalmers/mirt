@@ -196,11 +196,11 @@ fullscores_with_SE <- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)
 head(fullscores_with_SE)
 
-#change method argument to use MAP estimates
+# change method argument to use MAP estimates
 fullscores <- fscores(mod, method='MAP')
 head(fullscores)
 
-#calculate MAP for a given response vector
+# calculate MAP for a given response vector
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 #or matrix
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
@@ -208,18 +208,26 @@ fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 # return only the scores and their SEs
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 
-#use custom latent variable properties (diffuse prior for MAP is very close to ML)
+# use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
 fscores(mod, method='ML', full.scores = FALSE)
 
 # EAPsum table of values based on total scores
-fscores(mod, method = 'EAPsum', full.scores = FALSE)
+(fs <- fscores(mod, method = 'EAPsum', full.scores = FALSE))
 
-#WLE estimation, run in parallel using available cores
+# convert expected counts back into marginal probability distribution
+within(fs,
+   `P(y)` <- expected / sum(observed))
+
+# list of error VCOV matrices for EAPsum (works for other estimators as well)
+acovs <- fscores(mod, method = 'EAPsum', full.scores = FALSE, return.acov = TRUE)
+acovs
+
+# WLE estimation, run in parallel using available cores
 mirtCluster()
 head(fscores(mod, method='WLE', full.scores = FALSE))
 
-#multiple imputation using 30 draws for EAP scores. Requires information matrix
+# multiple imputation using 30 draws for EAP scores. Requires information matrix
 mod <- mirt(Science, 1, SE=TRUE)
 fs <- fscores(mod, MI = 30)
 head(fs)
@@ -241,7 +249,7 @@ head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 
 ####################
 # scoring via response.pattern input (with latent regression structure)
-#simulate data
+# simulate data
 set.seed(1234)
 N <- 1000
 
@@ -250,11 +258,11 @@ X1 <- rnorm(N); X2 <- rnorm(N)
 covdata <- data.frame(X1, X2)
 Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
-#items and response data
+# items and response data
 a <- matrix(1, 20); d <- matrix(rnorm(20))
 dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
-#conditional model using X1 and X2 as predictors of Theta
+# conditional model using X1 and X2 as predictors of Theta
 mod <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 coef(mod, simplify=TRUE)
 
