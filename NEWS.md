@@ -1,5 +1,8 @@
 # Changes in mirt 1.38
 
+- Fixed `match()` bug in `SIBTEST()` when total score is missing
+  (reported by Ziying Li)
+
 - `fscores(..., method ='EAPsum')` now supports returning the ACOV matrices, 
   matching the behaviour of the other estimators
 
