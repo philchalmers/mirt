@@ -264,7 +264,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
     if(pk_focal){
         tmp <- table(rowSums(focal_dat[ ,match_set, drop=FALSE]))
         tmp <- tmp / sum(tmp)
-        match <- match(names(II), names(tmp), nomatch=0)
+        match <- names(II) %in% names(tmp)
         pkstar[] <- 0
         pkstar[match] <- tmp
     }
