@@ -472,6 +472,7 @@ setMethod(
 		        colnames(scores) <- paste0('Class_', 1L:ncol(scores))
 		        ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores)
 		    }
+		    ret <- as.mirt_df(as.data.frame(ret))
 			return(ret)
 		}
 	}
@@ -876,8 +877,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
         O <- matrix(0, nrow(E), 1)
         O[got, 1] <- Otmp
-        ret$observed <- O
-        ret$expected <- E
+        ret$observed <- as.numeric(O)
+        ret$expected <- as.numeric(E)
         tmp <- collapseTotals(ret, min_expected)
         df <- tmp$df
         X2 <- tmp$X2
@@ -896,6 +897,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             ret$expected <- NULL
             ret$std.res <- NULL
         }
+        ret <- as.mirt_df(ret)
         if(verbose && !discrete && all(item_weights == 1)){
             print(attr(ret, 'fit'))
             cat('\n')

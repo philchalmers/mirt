@@ -53,9 +53,10 @@ fscores(
       applicable when the input model was of class \code{MixtureClass})
  }}
 
-\item{full.scores}{if \code{FALSE} then a summary table with
-factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
-for each response pattern in the data is returned (default)}
+\item{full.scores}{if \code{FALSE} then a summary table with factor scores
+for each unique pattern is displayed as a formatted \code{data.frame} object.
+Otherwise, a matrix of factor scores for each response pattern in the data
+is returned (default)}
 
 \item{rotate}{prior rotation to be used when estimating the factor scores. See
 \code{\link{summary-method}} for details. If the object is not an exploratory model
