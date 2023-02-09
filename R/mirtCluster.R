@@ -25,20 +25,21 @@
 #' @examples
 #'
 #' \dontrun{
+#' if(interactive()){
+#'   # use all available cores
+#'   mirtCluster()
+#'   mirtCluster(remove = TRUE)
 #'
-#' # use all available cores
-#' mirtCluster()
-#' mirtCluster(remove = TRUE)
+#'   # make 4 cores available for parallel computing
+#'   mirtCluster(4)
+#'   mirtCluster(remove = TRUE)
 #'
-#' #make 4 cores available for parallel computing
-#' mirtCluster(4)
-#' mirtCluster(remove = TRUE)
+#'   # create 3 core architecture in R, and 4 thread architecture with OpenMP
+#'   mirtCluster(spec = 3, omp_threads = 4)
 #'
-#' # create 3 core architecture in R, and 4 thread architecture with OpenMP
-#' mirtCluster(spec = 3, omp_threads = 4)
-#'
-#' # leave previous multicore objects, but change omp_threads
-#' mirtCluster(spec = NULL, omp_threads = 2)
+#'   # leave previous multicore objects, but change omp_threads
+#'   mirtCluster(spec = NULL, omp_threads = 2)
+#' }
 #'
 #' }
 mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){

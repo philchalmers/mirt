@@ -57,7 +57,7 @@ and whether the respective interval could be found.
 \examples{
 
 \dontrun{
-mirtCluster() #use all available cores to estimate CI's in parallel
+if(interactive()) mirtCluster() #use all available cores to estimate CI's in parallel
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)
 

@@ -200,7 +200,7 @@ itemfit(x, group.bins=15, empirical.plot = 21, method = 'ML')
 # PV and X2* statistics (parametric bootstrap stats not run to save time)
 itemfit(x, 'PV_Q1')
 
-# mirtCluster() # improve speed of bootstrap samples by running in parallel
+if(interactive()) mirtCluster() # improve speed of bootstrap samples by running in parallel
 # itemfit(x, 'PV_Q1*')
 # itemfit(x, 'X2*') # Stone's 1993 statistic
 # itemfit(x, 'X2*_df') # Stone's 2000 scaled statistic with df estimate

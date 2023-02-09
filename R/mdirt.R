@@ -150,7 +150,7 @@
 #'
 #'
 #' # fit with random starting points (run in parallel to save time)
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' mod <- mdirt(dat, 2, nruns=10)
 #'
 #' #--------------------------

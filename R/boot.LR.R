@@ -34,7 +34,7 @@
 #' anova(mod1, mod2)
 #'
 #' # bootstrap LR test (run in parallel to save time)
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' boot.LR(mod1, mod2, R=200)
 #'
 #' }

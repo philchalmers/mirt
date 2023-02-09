@@ -1000,7 +1000,7 @@
 #'   COV = F1*F2'
 #'
 #' #compute model, and use parallel computation of the log-likelihood
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' mod1 <- mirt(dataset, model.1, method = 'MHRM')
 #' coef(mod1)
 #' summary(mod1)

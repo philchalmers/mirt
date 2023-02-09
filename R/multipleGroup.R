@@ -260,7 +260,7 @@
 #'    F3 = 11-15'
 #'
 #' #define mirt cluster to use parallel architecture
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #'
 #' #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 #' mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses

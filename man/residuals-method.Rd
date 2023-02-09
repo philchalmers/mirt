@@ -151,7 +151,7 @@ dat <- simdata(a2, d, N=250, itemtype = '2PL')
 mod <- mirt(dat, 1)
 
 # JSI executed in parallel over multiple cores
-mirtCluster()
+if(interactive()) mirtCluster()
 residuals(mod, type = 'JSI')
 
 }

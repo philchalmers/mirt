@@ -182,7 +182,7 @@
 #' acovs
 #'
 #' # WLE estimation, run in parallel using available cores
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' head(fscores(mod, method='WLE', full.scores = FALSE))
 #'
 #' # multiple imputation using 30 draws for EAP scores. Requires information matrix

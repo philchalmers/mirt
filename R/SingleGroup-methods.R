@@ -713,7 +713,7 @@ setMethod(
 #' mod <- mirt(dat, 1)
 #'
 #' # JSI executed in parallel over multiple cores
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' residuals(mod, type = 'JSI')
 #'
 #' }

@@ -156,11 +156,11 @@ pseudoIQ <- (pseudoIQ - mean(pseudoIQ))/10  #rescale variable for numerical stab
 group <- factor(rep(c('G1','G2','G3'), each = N/3))
 data <- simdata(a,d,N, itemtype = rep('2PL',10), Theta=Theta)
 covdata <- data.frame(group, pseudoIQ)
-#use parallel computing
-mirtCluster()
 
 itemstats(data)
 
+#use parallel computing
+if(interactive()) mirtCluster()
 
 #specify IRT model
 model <- 'Theta = 1-10'

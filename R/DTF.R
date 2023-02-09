@@ -69,7 +69,7 @@
 #' plot(mod)
 #'
 #' DTF(mod)
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' DTF(mod, draws = 1000) #95% C.I. for sDTF containing 0. uDTF is very small
 #' DTF(mod, draws = 1000, plot='sDTF') #sDTF 95% C.I.'s across Theta always include 0
 #'

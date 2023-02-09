@@ -165,7 +165,7 @@ DRF(mod, focal_items = 6:10, plot = TRUE) #DBF
 DRF(mod, DIF=TRUE, plot = TRUE)
 DRF(mod, DIF=TRUE, focal_items = 10:15, plot = TRUE)
 
-mirtCluster()
+if(interactive()) mirtCluster()
 DRF(mod, draws = 500)
 DRF(mod, draws = 500, best_fitting=TRUE)
 DRF(mod, draws = 500, plot=TRUE)

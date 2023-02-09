@@ -145,7 +145,7 @@ group <- c(rep('D1', N), rep('D2', N))
 
 #### no anchors, all items tested for DIF by adding item constrains one item at a time.
 # define a parallel cluster (optional) to help speed up internal functions
-mirtCluster()
+if(interactive()) mirtCluster()
 
 # Information matrix with Oakes' identity (not controlling for latent group differences)
 # NOTE: Without properly equating the groups the following example code is not testing for DIF,

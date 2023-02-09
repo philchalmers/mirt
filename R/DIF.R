@@ -118,7 +118,7 @@
 #'
 #' #### no anchors, all items tested for DIF by adding item constrains one item at a time.
 #' # define a parallel cluster (optional) to help speed up internal functions
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #'
 #' # Information matrix with Oakes' identity (not controlling for latent group differences)
 #' # NOTE: Without properly equating the groups the following example code is not testing for DIF,
@@ -273,7 +273,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
 
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
-        message(paste('No hyper-parameters were estimated in the DIF model. For effective',
+        message(paste('NOTE: No hyper-parameters were estimated in the DIF model. \n      For effective',
                 'DIF testing, freeing the focal group hyper-parameters is recommended.'))
     bfactorlist <- MGmodel@Internals$bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
@@ -384,7 +384,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             if(drop) pick <- !pick
             tmp <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
-                            itemnames=itemnames, invariance=invariance, return_models=FALSE, ...)
+                            itemnames=itemnames, invariance=invariance, return_models=FALSE,
+                            groups2test=groups2test, ...)
             names(tmp) <- itemnames[items2test][pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
@@ -400,7 +401,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             res <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                             itemnames=itemnames, invariance=invariance, return_models=return_models,
-                            ...)
+                            groups2test=groups2test, ...)
             names(res) <- itemnames[items2test][pick]
         }
     }
