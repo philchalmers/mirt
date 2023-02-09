@@ -446,7 +446,7 @@ mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NUL
                                        N=nrow(covdata), LR=TRUE)
     } else lr.random <-
     if(is.null(constrain)) constrain <- list()
-    if((lr.fixed != ~ 1) || length(lr.random) > 0L){
+    if(is.list(lr.fixed) || (lr.fixed != ~ 1) || length(lr.random) > 0L){
         latent.regression <- list(df=covdata, formula=lr.fixed,
                                   EM=FALSE, lr.random=lr.random)
     } else latent.regression <- NULL

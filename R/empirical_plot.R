@@ -92,7 +92,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                       xlab = 'Total Score', ylab = 'Frequency', ...)
         }
     } else {
-        stopifnot(all(which.items >= 1L && which.items <= ncol(data)))
+        stopifnot(all(which.items >= 1L & which.items <= ncol(data)))
         pltdat <- vector('list', length(which.items))
         nms <- colnames(data)
         for(i in 1:length(which.items)){

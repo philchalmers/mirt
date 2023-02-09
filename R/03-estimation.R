@@ -1077,8 +1077,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method == 'EM'){
         tmp <- lapply(ESTIMATE$Etable, function(tab)
             data.frame(Theta, posterior=rowSums(tab$r1)))
-        names(tmp) <- Data$groupNames
-        Internals$thetaPosterior <- tmp
+        if(length(tmp)){
+            names(tmp) <- Data$groupNames
+            Internals$thetaPosterior <- tmp
+        }
     }
     if(opts$storeEtable)
         Internals$Etable <- ESTIMATE$Etable
