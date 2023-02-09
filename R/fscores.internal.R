@@ -218,7 +218,7 @@ setMethod(
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
                                              min_expected=min_expected, pis=pis, mixture=mixture,
                                              use_dentype_estimate=use_dentype_estimate,
-                                             leave_missing=leave_missing, ...))
+                                             leave_missing=leave_missing, nfact=nfact, ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		LR <- .hasSlot(object@Model$lrPars, 'beta')
 		USETABDATA <- TRUE
@@ -702,7 +702,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    which.items = 2:length(x@ParObjects$pars)-1,
                    use_dentype_estimate = FALSE, pis, leave_missing,
                    item_weights = rep(1, extract.mirt(x, 'nitems')),
-                   return.acov, ...){
+                   return.acov, nfact, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
