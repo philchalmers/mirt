@@ -472,7 +472,7 @@ setMethod(
 		        colnames(scores) <- paste0('Class_', 1L:ncol(scores))
 		        ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores)
 		    }
-		    ret <- as.mirt_df(as.data.frame(ret))
+		    ret <- as.mirt_matrix(as.data.frame(ret))
 			return(ret)
 		}
 	}
@@ -897,7 +897,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             ret$expected <- NULL
             ret$std.res <- NULL
         }
-        ret <- as.mirt_df(ret)
+        ret <- as.mirt_matrix(ret)
         if(verbose && !discrete && all(item_weights == 1)){
             print(attr(ret, 'fit'))
             cat('\n')

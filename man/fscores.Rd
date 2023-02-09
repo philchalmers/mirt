@@ -54,7 +54,7 @@ fscores(
  }}
 
 \item{full.scores}{if \code{FALSE} then a summary table with factor scores
-for each unique pattern is displayed as a formatted \code{data.frame} object.
+for each unique pattern is displayed as a formatted \code{matrix} object.
 Otherwise, a matrix of factor scores for each response pattern in the data
 is returned (default)}
 

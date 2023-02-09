@@ -2616,6 +2616,11 @@ as.mirt_df <- function(df){
     df
 }
 
+as.mirt_matrix <- function(df){
+    class(df) <- c('mirt_matrix', class(df))
+    df
+}
+
 is.latent_regression <- function(mod){
     !is.null(mod@Data$covdata)
 }
