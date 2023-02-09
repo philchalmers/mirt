@@ -472,7 +472,7 @@ setMethod(
 		        colnames(scores) <- paste0('Class_', 1L:ncol(scores))
 		        ret <- cbind(object@Data$tabdata[keep, ,drop=FALSE],scores)
 		    }
-		    ret <- as.mirt_matrix(as.data.frame(ret))
+		    ret <- as.mirt_matrix(ret)
 			return(ret)
 		}
 	}
