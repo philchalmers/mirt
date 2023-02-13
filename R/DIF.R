@@ -188,7 +188,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                 simplify = TRUE, verbose = TRUE, ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, groups2test, technical = list(), ...)
+                          return_models, groups2test, large, technical = list(), ...)
     {
         constrain <- model@Model$constrain
         mirt_model <- model@Model$model
@@ -242,7 +242,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         newmodel <- multipleGroup(model@Data$data, mirt_model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain, pars=sv,
                                   customItems = extract.mirt(model, 'customItems'),
-                                  customGroup = extract.mirt(model, 'customGroup'),
+                                  customGroup = extract.mirt(model, 'customGroup'), large=large,
                                   itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
                                   ...)
         aov <- if(drop) anova(model, newmodel) else anova(newmodel, model)
@@ -308,10 +308,12 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     invariance <- MGmodel@Model$invariance[MGmodel@Model$invariance %in%
                                          c('free_means', 'free_var')]
     if(!length(invariance)) invariance <- ''
+    large <- multipleGroup(extract.mirt(MGmodel, 'data'), 1,
+                           group=extract.mirt(MGmodel, 'group'), large='return')
     res <- myLapply(X=items2test, FUN=loop_test, progress=verbose, groups2test=groups2test,
                     model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
-                    return_models=return_models, ...)
+                    return_models=return_models, large=large, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -385,7 +387,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             tmp <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
                             itemnames=itemnames, invariance=invariance, return_models=FALSE,
-                            groups2test=groups2test, ...)
+                            groups2test=groups2test, large=large, ...)
             names(tmp) <- itemnames[items2test][pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
@@ -401,7 +403,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             res <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                             itemnames=itemnames, invariance=invariance, return_models=return_models,
-                            groups2test=groups2test, ...)
+                            groups2test=groups2test, large=large, ...)
             names(res) <- itemnames[items2test][pick]
         }
     }
