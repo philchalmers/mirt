@@ -41,7 +41,8 @@ from mirt's default slope-intercept form}
 \item{Target}{a dummy variable matrix indicting a target rotation pattern}
 
 \item{IRTpars}{logical; convert slope intercept parameters into traditional IRT parameters?
-Only applicable to unidimensional models. If a suitable ACOV estimate was computed in the fitted
+Only applicable to unidimensional models or models with simple structure (i.e., only one non-zero slope).
+If a suitable ACOV estimate was computed in the fitted
 model, and \code{printSE = FALSE}, then suitable CIs will be included based on the delta
 method (where applicable)}
 
@@ -63,7 +64,7 @@ containing a matrix of item parameters and group-level estimates}
 \description{
 Return a list (or data.frame) of raw item and group level coefficients. Note that while
 the output to the console is rounded to three digits, the returned list of objects is not.
-Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the unrounded results (useful
+Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the non-rounded results (useful
 for simulations).
 }
 \examples{

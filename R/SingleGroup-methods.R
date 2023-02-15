@@ -241,7 +241,7 @@ setMethod(
 #'
 #' Return a list (or data.frame) of raw item and group level coefficients. Note that while
 #' the output to the console is rounded to three digits, the returned list of objects is not.
-#' Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the unrounded results (useful
+#' Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the non-rounded results (useful
 #' for simulations).
 #'
 #' @param object an object of class \code{SingleGroupClass},
@@ -249,7 +249,8 @@ setMethod(
 #' @param CI the amount of converged used to compute confidence intervals; default is
 #'   95 percent confidence intervals
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
-#'   Only applicable to unidimensional models. If a suitable ACOV estimate was computed in the fitted
+#'   Only applicable to unidimensional models or models with simple structure (i.e., only one non-zero slope).
+#'   If a suitable ACOV estimate was computed in the fitted
 #'   model, and \code{printSE = FALSE}, then suitable CIs will be included based on the delta
 #'   method (where applicable)
 #' @param rotate see \code{summary} method for details. The default rotation is \code{'none'}
@@ -331,13 +332,19 @@ setMethod(
             object@ParObjects$pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         if(IRTpars){
-            if(object@Model$nfact > 1L)
-                stop('traditional parameterization is only available for unidimensional models',
-                     call.=FALSE)
+            if(object@Model$nfact > 1L){
+                apars <- lapply(object@ParObjects$pars[-(extract.mirt(object, 'nitems') + 1L)],
+                                function(x) x@par[1L:object@Model$nfact])
+                is_ss <- sapply(apars, function(x) sum(x != 0) == 1L)
+                if(!any(is_ss))
+                    stop(c('traditional parameterization is only available for unidimensional ',
+                           'models or models with simple structure patterns'), call.=FALSE)
+            }
             vcov <- vcov(object)
             for(i in 1L:J){
                 if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
-                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]], vcov=vcov)
+                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]],
+                                                                vcov=vcov, nfact=object@Model$nfact)
 
             }
         }
@@ -1644,36 +1651,41 @@ setMethod(
     }
 )
 
-mirt2traditional <- function(x, vcov){
+mirt2traditional <- function(x, vcov, nfact){
     cls <- class(x)
     opar <- par <- x@par
+    which.a <- which(x@par[1L:nfact] != 0)
+    if(length(which.a) != 1L) return(x)
     if(cls != 'GroupPars')
         ncat <- x@ncat
     if(cls == 'dich'){
-        fns <- vector('list', 4L)
-        fns[[2]] <- function(par, index, opar){
-            if(index == 2L){
-                opar[1L:2L] <- par
-                ret <- -opar[2L]/opar[1L]
+        fns <- vector('list', nfact + 3L)
+        fns[[nfact+1L]] <- function(par, index, opar){
+            if(index == (nfact + 1L)){
+                opar[c(which.a, nfact + 1L)] <- par
+                ret <- -opar[nfact + 1L]/opar[which.a]
             }
             ret
         }
-        fns[[3]] <- function(par, index, opar){
-            if(index == 3L)
+        fns[[nfact+2L]] <- function(par, index, opar){
+            if(index == nfact + 2L)
                 ret <- plogis(par)
             ret
         }
-        fns[[4]] <- function(par, index, opar){
-            if(index == 4L)
+        fns[[nfact+3L]] <- function(par, index, opar){
+            if(index == nfact + 3L)
                 ret <- plogis(par)
             ret
         }
-        delta_index <- list(NA, 1L:2L, 3L, 4L)
-        par[2] <- -par[2]/par[1]
-        par[3] <- plogis(par[3])
-        par[4] <- plogis(par[4])
-        names(par) <- c('a', 'b', 'g', 'u')
+        delta_index <- c(as.list(rep(NA, nfact)),
+                         list(c(which.a, nfact + 1L),
+                              nfact + 2L, nfact+3L))
+        par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
+        par[nfact + 2L] <- plogis(par[nfact + 2L])
+        par[nfact + 3L] <- plogis(par[nfact + 3L])
+        names(par) <- c(paste0('a', 1L:nfact), 'b', 'g', 'u')
     } else if(cls == 'graded'){
+        browser()
         fns <- vector('list', ncat+1L)
         for(i in 2L:ncat){
             fns[[i]] <- function(par, index, opar){
@@ -1692,6 +1704,7 @@ mirt2traditional <- function(x, vcov){
         }
         names(par) <- c('a', paste0('b', 1:(length(par)-1)))
     } else if(cls == 'gpcm'){
+        browser()
         fns <- vector('list', ncat+1L)
         for(i in 2L:ncat){
             fns[[i]] <- function(par, index, opar){
@@ -1725,6 +1738,7 @@ mirt2traditional <- function(x, vcov){
         names(par) <- c('a', paste0('b', 1:length(newd)))
         x@est <- x@est[c(1, (ncat+3L):length(x@est))]
     } else if(cls == 'nominal'){
+        browser()
         fns <- vector('list', ncat*2)
         for(i in 2L:length(par)-1L){
             fns[[i]] <- function(par, index, opar){
@@ -1752,6 +1766,7 @@ mirt2traditional <- function(x, vcov){
         x@est <- rep(TRUE, ncat*2)
         x@SEpar <- rep(as.numeric(NA), ncat*2)
     } else if(cls == 'nestlogit'){
+        browser()
         fns <- vector('list', ncat*2 + 4)
         fns[[2]] <- function(par, index, opar){
             if(index == 2L){
@@ -1838,7 +1853,7 @@ mirt2traditional <- function(x, vcov){
 #' This is a helper function for users who have previously available traditional/classical
 #' IRT parameters and want to know the equivalent slope-intercept translation used in \code{mirt}.
 #' Note that this function assumes that the supplied models are unidimensional by definition (i.e.,
-#' will have only one slope/discrimination). If there is no supported slope-interecept transformation
+#' will have only one slope/discrimination). If there is no supported slope-intercept transformation
 #' available then the original vector of parameters will be returned by default.
 #'
 #' Supported class transformations for the \code{cls} input are:

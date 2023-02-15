@@ -20,7 +20,7 @@ a named vector of slope-intercept parameters (if supported)
 This is a helper function for users who have previously available traditional/classical
 IRT parameters and want to know the equivalent slope-intercept translation used in \code{mirt}.
 Note that this function assumes that the supplied models are unidimensional by definition (i.e.,
-will have only one slope/discrimination). If there is no supported slope-interecept transformation
+will have only one slope/discrimination). If there is no supported slope-intercept transformation
 available then the original vector of parameters will be returned by default.
 }
 \details{
