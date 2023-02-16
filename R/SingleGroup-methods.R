@@ -1685,58 +1685,62 @@ mirt2traditional <- function(x, vcov, nfact){
         par[nfact + 3L] <- plogis(par[nfact + 3L])
         names(par) <- c(paste0('a', 1L:nfact), 'b', 'g', 'u')
     } else if(cls == 'graded'){
-        browser()
-        fns <- vector('list', ncat+1L)
-        for(i in 2L:ncat){
-            fns[[i]] <- function(par, index, opar){
-                if(index > 1L){
-                    opar[c(1L, index)] <- par
-                    ret <- -opar[index]/opar[1L]
+        fns <- vector('list', ncat + nfact-1L)
+        for(i in 2L:ncat - 1L){
+            fns[[i + nfact]] <- function(par, index, opar){
+                if(index > nfact){
+                    opar[c(which.a, index)] <- par
+                    ret <- -opar[index]/opar[which.a]
                 }
                 ret
             }
         }
-        delta_index <- vector('list', ncat)
-        delta_index[[1L]] <- NA
-        for(i in 2:ncat){
-            par[i] <- -par[i]/par[1]
-            delta_index[[i]] <- c(1L, i)
+        delta_index <- vector('list', ncat + nfact - 1L)
+        for(i in 1:nfact)
+            delta_index[[i]] <- NA
+        for(i in 2:ncat-1L){
+            par[i+nfact] <- -par[i+nfact]/par[which.a]
+            delta_index[[i+nfact]] <- c(which.a, i+nfact)
         }
-        names(par) <- c('a', paste0('b', 1:(length(par)-1)))
+        names(par) <- c(paste0('a', 1L:nfact), paste0('b', 2:ncat-1L))
     } else if(cls == 'gpcm'){
-        browser()
-        fns <- vector('list', ncat+1L)
-        for(i in 2L:ncat){
-            fns[[i]] <- function(par, index, opar){
-                if(index > 1L){
-                    if(index == 2L) opar[c(1, ncat + 3)] <- par
-                    else opar[c(1, ncat + index, ncat + index + 1)] <- par
+        fns <- vector('list', ncat+nfact)
+        for(i in 2L:ncat-1L){
+            fns[[i+nfact]] <- function(par, index, opar){
+                if(index > nfact){
+                    if(index == (nfact+1))
+                        opar[c(which.a, ncat + nfact + 2L)] <- par
+                    else opar[c(which.a, ncat + index + nfact - 1L,
+                                ncat + index + nfact)] <- par
                     par <- opar
-                    ds <- par[-1]/par[1]
+                    ds <- par[(nfact+1):length(par)]/par[which.a]
                     ds <- ds[-seq_len(ncat)]
                     newd <- numeric(length(ds)-1L)
                     for(i in 2:length(ds))
                         newd[i-1L] <- -(ds[i] - ds[i-1L])
-                    ret <- c(par[1], newd)
+                    ret <- c(par[1:nfact], newd)
                     ret <- ret[index]
                 }
                 ret
             }
         }
-        delta_index <- vector('list', ncat)
-        delta_index[[1L]] <- NA
-        ds <- par[-1]/par[1]
+        delta_index <- vector('list', ncat+nfact-1L)
+        for(i in 1:nfact)
+            delta_index[[i]] <- NA
+        ds <- par[(nfact+1):length(par)]/par[which.a]
         ds <- ds[-seq_len(ncat)]
         newd <- numeric(length(ds)-1L)
+        for(i in 2:length(ds))
+            newd[i-1L] <- -(ds[i] - ds[i-1L])
         tmp <- rbind(1:(ncat-1), 2:ncat)
         for(i in 2:length(ds)){
             newd[i-1L] <- -(ds[i] - ds[i-1L])
-            delta_index[[i]] <- c(1L, tmp[,i-1L] + ncat + 1L)
+            delta_index[[i+nfact-1L]] <- c(which.a, tmp[,i-1L] + ncat + nfact)
         }
-        delta_index[[2L]] <- c(1L, ncat + 3L)
-        par <- c(par[1], newd)
-        names(par) <- c('a', paste0('b', 1:length(newd)))
-        x@est <- x@est[c(1, (ncat+3L):length(x@est))]
+        delta_index[[nfact+1L]] <- c(which.a, ncat + nfact + 2L)
+        par <- c(x@par[1:nfact], newd)
+        names(par) <- c(paste0('a', 1:nfact), paste0('b', 1:length(newd)))
+        x@est <- x@est[c(1:nfact, (ncat+nfact+2L):length(x@est))]
     } else if(cls == 'nominal'){
         browser()
         fns <- vector('list', ncat*2)
