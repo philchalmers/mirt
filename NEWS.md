@@ -1,6 +1,6 @@
 # Changes in mirt 1.38
 
-- `coef(..., IRTpars=TRUE)` is now applied to multidimensional IRT models 
+- `coef(..., IRTpars=TRUE)` is now applied to multidimensional IRT models, 
   provided that the item contains simple structure (suggested by Sverre Ofstad)
 
 - Fixed `match()` bug in `SIBTEST()` when total score is missing

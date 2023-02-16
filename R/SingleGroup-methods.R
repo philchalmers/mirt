@@ -1742,7 +1742,7 @@ mirt2traditional <- function(x, vcov, nfact){
         names(par) <- c(paste0('a', 1:nfact), paste0('b', 1:length(newd)))
         x@est <- x@est[c(1:nfact, (ncat+nfact+2L):length(x@est))]
     } else if(cls == 'nominal'){
-        browser()
+        if(nfact > 1L) return(x)
         fns <- vector('list', ncat*2)
         for(i in 2L:length(par)-1L){
             fns[[i]] <- function(par, index, opar){
@@ -1770,7 +1770,7 @@ mirt2traditional <- function(x, vcov, nfact){
         x@est <- rep(TRUE, ncat*2)
         x@SEpar <- rep(as.numeric(NA), ncat*2)
     } else if(cls == 'nestlogit'){
-        browser()
+        if(nfact > 1L) return(x)
         fns <- vector('list', ncat*2 + 4)
         fns[[2]] <- function(par, index, opar){
             if(index == 2L){
