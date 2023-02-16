@@ -65,7 +65,7 @@ itemfit(
   \item \code{'infit'} : Compute the infit and outfit statistics
 }
 
-Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing response data
+Note that 'S_X2' and 'Zh' cannot be computed when there are missing response data
 (i.e., will require multiple-imputation/row-removal techniques).}
 
 \item{which.items}{an integer vector indicating which items to test for fit.

@@ -1,5 +1,9 @@
 # Changes in mirt 1.38
 
+- infit and outfit statistics can now be computed in `itemfit()` when missing 
+  data are present (requested by Hanif on the mirt-package forum: 
+  https://groups.google.com/g/mirt-package/c/_mA3YbMmbzM/m/CydOl-F4BQAJ?utm_medium=email&utm_source=footer)
+
 - `coef(..., IRTpars=TRUE)` is now applied to multidimensional IRT models, 
   provided that the item contains simple structure (suggested by Sverre Ofstad)
 

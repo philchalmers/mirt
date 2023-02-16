@@ -40,7 +40,7 @@
 #'   \item \code{'infit'} : Compute the infit and outfit statistics
 #' }
 #'
-#' Note that 'infit', 'S_X2', and 'Zh' cannot be computed when there are missing response data
+#' Note that 'S_X2' and 'Zh' cannot be computed when there are missing response data
 #' (i.e., will require multiple-imputation/row-removal techniques).
 #'
 #' @param which.items an integer vector indicating which items to test for fit.
@@ -462,8 +462,8 @@ itemfit <- function(x, fit_stats = 'S_X2',
     J <- ncol(x@Data$data)
     if(na.rm) x <- removeMissing(x)
     if(na.rm) message('Sample size after row-wise response data removal: ', nrow(extract.mirt(x, 'data')))
-    if(any(is.na(x@Data$data)) && (Zh || S_X2 || infit) && impute == 0)
-        stop('Only X2, G2, PV_Q1, PV_Q1*, X2*, and X2*_df can be computed with missing data.
+    if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
+        stop('Only X2, G2, PV_Q1, PV_Q1*, infit, X2*, and X2*_df can be computed with missing data.
              Pass na.rm=TRUE to remove missing data row-wise', call.=FALSE)
     if(!is.null(Theta)){
         if(!is.matrix(Theta)) Theta <- matrix(Theta)
@@ -534,29 +534,35 @@ itemfit <- function(x, fit_stats = 'S_X2',
                 Theta[Theta[,i] == -Inf, i] <- min(tmp, na.rm=TRUE) - .1
             }
         }
-        N <- nrow(Theta)
-        itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-        for (i in which.items)
-            itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
-        log_itemtrace <- log(itemtrace)
-        LL <- log_itemtrace * fulldata
-        Lmatrix <- matrix(LL[as.logical(fulldata)], N, J)
-        mu <- sigma2 <- rep(0, J)
-        for(item in which.items){
-            P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
-            log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
-            mu[item] <- sum(P * log_P)
-            for(i in seq_len(ncol(P)))
-                for(j in seq_len(ncol(P)))
-                    if(i != j)
-                        sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] *
-                                                               log_P[,i] * log(P[,i]/P[,j]))
+        if(Zh){
+            N <- nrow(Theta)
+            itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
+            for (i in which.items)
+                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+            log_itemtrace <- log(itemtrace)
+            LL <- log_itemtrace * fulldata
+            Lmatrix <- matrix(LL[as.logical(fulldata)], N, J)
+            mu <- sigma2 <- rep(0, J)
+            for(item in which.items){
+                P <- itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
+                log_P <- log_itemtrace[ ,itemloc[item]:(itemloc[item+1L]-1L)]
+                mu[item] <- sum(P * log_P)
+                for(i in seq_len(ncol(P)))
+                    for(j in seq_len(ncol(P)))
+                        if(i != j)
+                            sigma2[item] <- sigma2[item] + sum(P[,i] * P[,j] *
+                                                                   log_P[,i] * log(P[,i]/P[,j]))
+            }
+            tmp <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
+            ret$Zh <- tmp[which.items]
         }
-        tmp <- (colSums(Lmatrix) - mu) / sqrt(sigma2)
-        if(Zh) ret$Zh <- tmp[which.items]
         if(infit){
+            dat_is_na <- apply(extract.mirt(x, 'data'), 2L, is.na)
+            N <- colSums(!dat_is_na)
             attr(x, 'inoutfitreturn') <- TRUE
             pf <- personfit(x, method=method, Theta=Theta)
+            pf$resid[dat_is_na] <- 0
+            pf$C[dat_is_na] <- 0
             z2 <- pf$resid^2 / pf$W
             outfit <- colSums(z2) / N
             q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
