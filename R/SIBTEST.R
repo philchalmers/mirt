@@ -374,7 +374,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                 if(ret$pkstar[i] == 0) ret[i, ] <- NA
         if(plot == "observed")
             return(lattice::xyplot(Ystar ~ total_score, data=ret, groups = group, xlab='Matched subtest',
-                                   ylab = 'Scaled focal subtest', auto.key=list(space='right'), ...))
+                                   ylab = 'Scaled focal subtest', auto.key=list(space='right'), type = 'b', ...))
         if(plot == "weights")
             return(lattice::xyplot(pkstar~total_score, data=subset(ret, group=='focal'),
                                    xlab='Matched subtest', ylab = 'Proportion', type = 'b', ...))
