@@ -1,6 +1,6 @@
 bibentry(
   header = "To cite mirt in publications use:",
-  entry = "Article",
+  bibtype = "Article",
   title        = "{mirt}: A Multidimensional Item Response Theory Package for the {R} Environment",
   author       = as.person("R. Philip Chalmers"),
   journal      = "Journal of Statistical Software",
