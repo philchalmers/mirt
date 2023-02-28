@@ -1,4 +1,4 @@
-# Changes in mirt 1.38
+# Changes in mirt 1.38.1
 
 - infit and outfit statistics can now be computed in `itemfit()` when missing 
   data are present (requested by Hanif on the mirt-package forum: 

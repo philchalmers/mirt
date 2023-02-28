@@ -1656,6 +1656,7 @@ mirt2traditional <- function(x, vcov, nfact){
     opar <- par <- x@par
     which.a <- which(x@par[1L:nfact] != 0)
     if(length(which.a) != 1L) return(x)
+    a.nms <- if(nfact == 1L) 'a' else paste0('a', 1L:nfact)
     if(cls != 'GroupPars')
         ncat <- x@ncat
     if(cls == 'dich'){
@@ -1683,7 +1684,7 @@ mirt2traditional <- function(x, vcov, nfact){
         par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
         par[nfact + 2L] <- plogis(par[nfact + 2L])
         par[nfact + 3L] <- plogis(par[nfact + 3L])
-        names(par) <- c(paste0('a', 1L:nfact), 'b', 'g', 'u')
+        names(par) <- c(a.nms, 'b', 'g', 'u')
     } else if(cls == 'graded'){
         fns <- vector('list', ncat + nfact-1L)
         for(i in 2L:ncat - 1L){
@@ -1702,7 +1703,7 @@ mirt2traditional <- function(x, vcov, nfact){
             par[i+nfact] <- -par[i+nfact]/par[which.a]
             delta_index[[i+nfact]] <- c(which.a, i+nfact)
         }
-        names(par) <- c(paste0('a', 1L:nfact), paste0('b', 2:ncat-1L))
+        names(par) <- c(a.nms, paste0('b', 2:ncat-1L))
     } else if(cls == 'gpcm'){
         fns <- vector('list', ncat+nfact)
         for(i in 2L:ncat-1L){
@@ -1739,7 +1740,7 @@ mirt2traditional <- function(x, vcov, nfact){
         }
         delta_index[[nfact+1L]] <- c(which.a, ncat + nfact + 2L)
         par <- c(x@par[1:nfact], newd)
-        names(par) <- c(paste0('a', 1:nfact), paste0('b', 1:length(newd)))
+        names(par) <- c(a.nms, paste0('b', 1:length(newd)))
         x@est <- x@est[c(1:nfact, (ncat+nfact+2L):length(x@est))]
     } else if(cls == 'nominal'){
         if(nfact > 1L) return(x)
@@ -1766,7 +1767,7 @@ mirt2traditional <- function(x, vcov, nfact){
         ds <- par[(ncat+2):length(par)]
         ds <- ds - mean(ds)
         par <- c(as, ds)
-        names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
+        names(par) <- c(a.nms, paste0('c', 1:ncat))
         x@est <- rep(TRUE, ncat*2)
         x@SEpar <- rep(as.numeric(NA), ncat*2)
     } else if(cls == 'nestlogit'){
@@ -1812,7 +1813,7 @@ mirt2traditional <- function(x, vcov, nfact){
         par1[2] <- -par1[2]/par1[1]
         par1[3] <- plogis(par1[3])
         par1[4] <- plogis(par1[4])
-        names(par1) <- c('a', 'b', 'g', 'u')
+        names(par1) <- c(a.nms, 'b', 'g', 'u')
         par2 <- par[5:length(par)]
         as <- par2[1:(ncat-1)]
         as <- as - mean(as)
