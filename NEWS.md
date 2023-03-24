@@ -1,7 +1,8 @@
 # Changes in mirt 1.39
 
-- For models fit using `mdirt()` the `fscores()` EAP method now always returns classification
-  probabilities as the default (reported by Matthew Madison)
+- For models fit using `mdirt()` the `fscores()` EAP and EAPsum methods now 
+  always returns classification probabilities as the default (reported 
+  by Matthew Madison)
 
 # Changes in mirt 1.38.1
 

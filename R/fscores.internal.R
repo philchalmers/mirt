@@ -823,25 +823,25 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                      call.=FALSE)
             thetas[i, ] <- SEthetas[i, ] <- NaN
         } else {
-            if(discrete) stop('EAPsum not currently support for discrete IRT models',
-                              call.=FALSE)
-            thetas[i, ] <- colSums(ThetaShort * expLW / nc)
-            thetadif <- t((t(ThetaShort) - thetas[i,]))
-            Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
-            ind <- 1L
-            for(k in seq_len(nfact)){
-                for(j in seq_len(nfact)){
-                    if(k <= j){
-                        Thetaprod[,ind] <- thetadif[,k] * thetadif[,j]
-                        ind <- ind + 1L
+            if(!discrete){
+                thetas[i, ] <- colSums(ThetaShort * expLW / nc)
+                thetadif <- t((t(ThetaShort) - thetas[i,]))
+                Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+                ind <- 1L
+                for(k in seq_len(nfact)){
+                    for(j in seq_len(nfact)){
+                        if(k <= j){
+                            Thetaprod[,ind] <- thetadif[,k] * thetadif[,j]
+                            ind <- ind + 1L
+                        }
                     }
                 }
-            }
-            vcov <- matrix(0, nfact, nfact)
-            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
-            if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
-            if(return.acov) vcovs[[i]] <- vcov
-            SEthetas[i,] <- sqrt(diag(vcov))
+                vcov <- matrix(0, nfact, nfact)
+                vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+                if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+                if(return.acov) vcovs[[i]] <- vcov
+                SEthetas[i,] <- sqrt(diag(vcov))
+            } else thetas[i, ] <- expLW / nc
         }
     }
     factorNames <- extract.mirt(x, 'factorNames')
