@@ -1021,8 +1021,6 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
         if(!discrete){
             vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
             if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
-        } else {
-            browser()
         }
         if(return.acov) return(vcov)
         SE <- sqrt(diag(vcov))
