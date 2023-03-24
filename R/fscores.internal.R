@@ -306,10 +306,10 @@ setMethod(
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=verbose,
                                    log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
-                                   scores=scores, discrete=discrete, hessian=TRUE)
+                                   scores=scores, classify=discrete, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=FALSE,
-            	                   log_itemtrace=log_itemtrace, discrete=discrete,
+            	                   log_itemtrace=log_itemtrace, classify=discrete,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
@@ -983,7 +983,7 @@ WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 }
 
 EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
-                return.acov = FALSE, return_zeros = FALSE, discrete = FALSE){
+                return.acov = FALSE, return_zeros = FALSE, classify = FALSE){
     if(any(is.na(scores[ID, ])))
         return(c(scores[ID, ], rep(NA, ncol(scores))))
     nfact <- ncol(ThetaShort)
@@ -1002,10 +1002,10 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
                 call.=FALSE)
         return(c(rep(NaN, nfact*2), 0))
     }
-    thetas <- if(!discrete)
+    thetas <- if(!classify)
         colSums(ThetaShort * expLW / nc)
-    else rowSums(ThetaShort * expLW / nc)
-    if(hessian){
+    else expLW / nc
+    if(hessian && !classify){
         thetadif <- t((t(ThetaShort) - thetas))
         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
         ind <- 1L
