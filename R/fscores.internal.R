@@ -306,10 +306,10 @@ setMethod(
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=verbose,
                                    log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
-                                   scores=scores, hessian=TRUE)
+                                   scores=scores, discrete=discrete, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=FALSE,
-            	                   log_itemtrace=log_itemtrace,
+            	                   log_itemtrace=log_itemtrace, discrete=discrete,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
@@ -823,6 +823,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                      call.=FALSE)
             thetas[i, ] <- SEthetas[i, ] <- NaN
         } else {
+            if(discrete) stop('EAPsum not currently support for discrete IRT models',
+                              call.=FALSE)
             thetas[i, ] <- colSums(ThetaShort * expLW / nc)
             thetadif <- t((t(ThetaShort) - thetas[i,]))
             Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
@@ -981,7 +983,7 @@ WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 }
 
 EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
-                return.acov = FALSE, return_zeros = FALSE){
+                return.acov = FALSE, return_zeros = FALSE, discrete = FALSE){
     if(any(is.na(scores[ID, ])))
         return(c(scores[ID, ], rep(NA, ncol(scores))))
     nfact <- ncol(ThetaShort)
@@ -1000,7 +1002,9 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
                 call.=FALSE)
         return(c(rep(NaN, nfact*2), 0))
     }
-    thetas <- colSums(ThetaShort * expLW / nc)
+    thetas <- if(!discrete)
+        colSums(ThetaShort * expLW / nc)
+    else rowSums(ThetaShort * expLW / nc)
     if(hessian){
         thetadif <- t((t(ThetaShort) - thetas))
         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
@@ -1014,8 +1018,12 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
             }
         }
         vcov <- matrix(0, nfact, nfact)
-        vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
-        if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+        if(!discrete){
+            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+            if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+        } else {
+            browser()
+        }
         if(return.acov) return(vcov)
         SE <- sqrt(diag(vcov))
     } else SE <- rep(NA, nfact)

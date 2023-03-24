@@ -42,7 +42,8 @@ fscores(
 
 \item{method}{type of factor score estimation method. Can be:
 \itemize{
-    \item \code{"EAP"} for the expected a-posteriori (default)
+    \item \code{"EAP"} for the expected a-posteriori (default). For models fit using
+      \code{\link{mdirt}} this will return the posterior classification probabilities
     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
     \item \code{"ML"} for maximum likelihood
     \item \code{"WLE"} for weighted likelihood estimation
@@ -85,7 +86,7 @@ to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain
 samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguments like
 \code{technical} can be supplied to increase the number of burn-in draws and discarded samples)}
 
-\item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
+\item{quadpts}{number of quadrature to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases
 (and therefore for estimates such as EAP, will be less accurate). This is determined from
 the switch statement
