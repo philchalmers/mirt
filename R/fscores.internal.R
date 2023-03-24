@@ -1018,7 +1018,7 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
             }
         }
         vcov <- matrix(0, nfact, nfact)
-        if(!discrete){
+        if(!classify){
             vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
             if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
         }
