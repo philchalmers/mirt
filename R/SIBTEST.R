@@ -301,7 +301,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
     }
     if(any(is.na(dat)))
         stop(c('SIBTEST does not support datasets with missing values. \n  ',
-               'Pass na.rm=TRUE to remove missing rows list-wise'), call.=FALSE)
+               'Pass na.rm=TRUE to remove missing rows'), call.=FALSE)
     ngroups <- length(unique(group))
     N <- nrow(dat)
     stopifnot(ngroups >= 2L)
