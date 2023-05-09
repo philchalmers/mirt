@@ -256,10 +256,14 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     }
 
     if(missing(MGmodel)) missingMsg('MGmodel')
+    cfs <- coef(MGmodel, simplify=TRUE)[[1]]$items
+    oparnames <- colnames(cfs)
+    if(!all(which.par %in% oparnames))
+        stop('which.par contains parameter names that were not in the fitted model',
+             call.=FALSE)
     if(Wald) verbose <- FALSE
-    if(length(groups2test) == 1L && groups2test == 'all'){
+    if(length(groups2test) == 1L && groups2test == 'all')
         groups2test <- extract.mirt(MGmodel, 'groupNames')
-    }
     stopifnot(all(groups2test %in% extract.mirt(MGmodel, 'groupNames')))
     if(missing(which.par)) missingMsg('which.par')
     stopifnot(length(p.adjust) == 1L)
