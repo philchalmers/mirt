@@ -52,7 +52,8 @@
 #'   indicating that all the items receive the same weight
 #' @param method type of factor score estimation method. Can be:
 #' \itemize{
-#'     \item \code{"EAP"} for the expected a-posteriori (default)
+#'     \item \code{"EAP"} for the expected a-posteriori (default). For models fit using
+#'       \code{\link{mdirt}} this will return the posterior classification probabilities
 #'     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
 #'     \item \code{"ML"} for maximum likelihood
 #'     \item \code{"WLE"} for weighted likelihood estimation
@@ -62,7 +63,7 @@
 #'     \item \code{"classify"} for the posteriori classification probabilities (only
 #'       applicable when the input model was of class \code{MixtureClass})
 #'  }
-#' @param quadpts number of quadratures to use per dimension. If not specified, a suitable
+#' @param quadpts number of quadrature to use per dimension. If not specified, a suitable
 #'   one will be created which decreases as the number of dimensions increases
 #'   (and therefore for estimates such as EAP, will be less accurate). This is determined from
 #'   the switch statement

@@ -306,10 +306,10 @@ setMethod(
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=verbose,
                                    log_itemtrace=log_itemtrace,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, return.acov=TRUE,
-                                   scores=scores, hessian=TRUE)
+                                   scores=scores, classify=discrete, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=FALSE,
-            	                   log_itemtrace=log_itemtrace,
+            	                   log_itemtrace=log_itemtrace, classify=discrete,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }
@@ -823,23 +823,25 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                      call.=FALSE)
             thetas[i, ] <- SEthetas[i, ] <- NaN
         } else {
-            thetas[i, ] <- colSums(ThetaShort * expLW / nc)
-            thetadif <- t((t(ThetaShort) - thetas[i,]))
-            Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
-            ind <- 1L
-            for(k in seq_len(nfact)){
-                for(j in seq_len(nfact)){
-                    if(k <= j){
-                        Thetaprod[,ind] <- thetadif[,k] * thetadif[,j]
-                        ind <- ind + 1L
+            if(!discrete){
+                thetas[i, ] <- colSums(ThetaShort * expLW / nc)
+                thetadif <- t((t(ThetaShort) - thetas[i,]))
+                Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+                ind <- 1L
+                for(k in seq_len(nfact)){
+                    for(j in seq_len(nfact)){
+                        if(k <= j){
+                            Thetaprod[,ind] <- thetadif[,k] * thetadif[,j]
+                            ind <- ind + 1L
+                        }
                     }
                 }
-            }
-            vcov <- matrix(0, nfact, nfact)
-            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
-            if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
-            if(return.acov) vcovs[[i]] <- vcov
-            SEthetas[i,] <- sqrt(diag(vcov))
+                vcov <- matrix(0, nfact, nfact)
+                vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+                if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+                if(return.acov) vcovs[[i]] <- vcov
+                SEthetas[i,] <- sqrt(diag(vcov))
+            } else thetas[i, ] <- expLW / nc
         }
     }
     factorNames <- extract.mirt(x, 'factorNames')
@@ -981,7 +983,7 @@ WLE <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
 }
 
 EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
-                return.acov = FALSE, return_zeros = FALSE){
+                return.acov = FALSE, return_zeros = FALSE, classify = FALSE){
     if(any(is.na(scores[ID, ])))
         return(c(scores[ID, ], rep(NA, ncol(scores))))
     nfact <- ncol(ThetaShort)
@@ -1000,8 +1002,10 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
                 call.=FALSE)
         return(c(rep(NaN, nfact*2), 0))
     }
-    thetas <- colSums(ThetaShort * expLW / nc)
-    if(hessian){
+    thetas <- if(!classify)
+        colSums(ThetaShort * expLW / nc)
+    else expLW / nc
+    if(hessian && !classify){
         thetadif <- t((t(ThetaShort) - thetas))
         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
         ind <- 1L
@@ -1014,8 +1018,10 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
             }
         }
         vcov <- matrix(0, nfact, nfact)
-        vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
-        if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+        if(!classify){
+            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
+            if(nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+        }
         if(return.acov) return(vcov)
         SE <- sqrt(diag(vcov))
     } else SE <- rep(NA, nfact)

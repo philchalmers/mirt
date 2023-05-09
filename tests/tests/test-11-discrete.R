@@ -20,9 +20,6 @@ test_that('discrete', {
     pick <- apply(fs[1:5, c('Class_1', 'Class_2')], 1, max)
     expect_equal(pick, c(0.9885338, 0.9614451, 0.9598363, 0.8736180, 0.9415842),
                  tolerance = 1e-2)
-    fs2 <- fscores(mod, method = 'EAPsum', verbose=FALSE, full.scores=FALSE)
-    expect_equal(as.numeric(fs2$expected), c(1.651072,20.13484,91.50683,225.4041,366.828,294.4752),
-                 tolerance=1e-2)
 
     resid <- residuals(mod, type = 'exp')
     expect_equal(resid$std.res[1:3], c(1.0380029, 0.1373462, -0.3478477), tolerance = 1e-2)

@@ -96,12 +96,14 @@ itemplot(mod1, 2, type = 'info', CE = TRUE)
 mods <- list(twoPL = mod1, onePL = mod2)
 itemplot(mods, 1, type = 'RE')
 
-#multidimensional
+# multidimensional
 itemplot(mod3, 4, type = 'info')
+itemplot(mod3, 4, type = 'info',
+  col.regions = colorRampPalette(c("white", "red"))(100))
 itemplot(mod3, 4, type = 'infocontour')
 itemplot(mod3, 4, type = 'tracecontour')
 
-#polytomous items
+# polytomous items
 pmod <- mirt(Science, 1, SE=TRUE)
 itemplot(pmod, 3)
 itemplot(pmod, 3, type = 'threshold')
