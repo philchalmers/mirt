@@ -468,6 +468,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         adj_p <- res$adj_p
         res <- do.call(rbind, res[pick])
         res$adj_p <- adj_p
+        res <- data.frame(groups=paste0(groups2test,collapse=','), res)
         res <- as.mirt_df(res)
         return(res)
     }
@@ -482,7 +483,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
              r$logLik <- NULL
              r
          })
-         res <- cbind(converged, do.call(rbind, out))
+         res <- data.frame(groups=paste0(groups2test,collapse=','),
+                           converged, do.call(rbind, out))
          if(!has_priors) res$adj_p <- adj_p
          res <- as.mirt_df(res)
          attr(res, 'DIF_coefficients') <- DIF_coefs
