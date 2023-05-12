@@ -76,7 +76,7 @@
 #'   another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
 #'   mirt's \code{plot()} function is set to \code{TRUE}
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
-#'   Adjustments are located in the \code{adj_pvals} element in the returned list
+#'   Adjustments are located in the \code{adj_p} element in the returned list
 #' @param verbose logical print extra information to the console?
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #'
@@ -427,7 +427,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             }, stat = 'p'))
         }
         ps <- p.adjust(ps, p.adjust)
-        res$adj_pvals <- ps
+        res$adj_p <- ps
     }
     if(plotdif && any(scheme %in% c('add', 'add_sequential'))){
         if(seq_stat != 'p'){
@@ -437,7 +437,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             }, stat = seq_stat))
             keep <- statdiff <= 0
         } else {
-            statdiff <- res$adj_pvals
+            statdiff <- res$adj_p
             if(is.null(statdiff)){
                 if(Wald){
                     statdiff <- do.call(c, lapply(res, function(x) x$p))
@@ -463,16 +463,16 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         }
     }
     pick <- names(res)
-    pick <- pick[pick != 'adj_pvals']
+    pick <- pick[pick != 'adj_p']
     if(Wald && !return_models){
-        adj_pvals <- res$adj_pvals
+        adj_p <- res$adj_p
         res <- do.call(rbind, res[pick])
-        res$adj_pvals <- adj_pvals
+        res$adj_p <- adj_p
         res <- as.mirt_df(res)
         return(res)
     }
     if(simplify && !return_models){
-        adj_pvals <- res$adj_pvals
+        adj_p <- res$adj_p
         DIF_coefs <- lapply(res, function(x) attr(x, 'coefs'))
         out <- lapply(res[pick], function(x){
              r <- x[2L, ] - x[1L, ]
@@ -483,7 +483,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
              r
          })
          res <- cbind(converged, do.call(rbind, out))
-         if(!has_priors) res$adj_pvals <- adj_pvals
+         if(!has_priors) res$adj_p <- adj_p
          res <- as.mirt_df(res)
          attr(res, 'DIF_coefficients') <- DIF_coefs
     }
