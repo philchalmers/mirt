@@ -221,20 +221,6 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                     p.adjust.method = 'none', permute = 1000, pk_focal = FALSE,
                     correction = TRUE, remove_cross = FALSE, details = FALSE, plot = 'none', ...){
 
-    CA <- function(dat, guess_correction = rep(0, ncol(dat))){
-        n <- ncol(dat)
-        C <- cov(dat)
-        d <- diag(C)
-        dich <- apply(dat, 2, function(x) length(unique(x)) == 2L)
-        for(i in seq_len(ncol(dat))){
-            if(dich[i] & guess_correction[i] > 0){
-                U <- mean(dat[,i]) - min(dat[,i])
-                v <- max((U - guess_correction[i]) / (1 - guess_correction[i]), 0)
-                d[i] <- v * (1 - v)
-            }
-        }
-        (n/(n - 1)) * (1 - sum(d)/sum(C))
-    }
     find_intersection <- function(diff, weight, use, scores, remove_cross,
                                   tab_match = NULL, C = NULL){
         if(is.matrix(diff)){
