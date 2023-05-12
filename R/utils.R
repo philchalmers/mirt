@@ -2577,6 +2577,21 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
     r
 }
 
+CA <- function(dat, guess_correction = rep(0, ncol(dat))){
+    n <- ncol(dat)
+    C <- cov(dat)
+    d <- diag(C)
+    dich <- apply(dat, 2, function(x) length(unique(x)) == 2L)
+    for(i in seq_len(ncol(dat))){
+        if(dich[i] & guess_correction[i] > 0){
+            U <- mean(dat[,i]) - min(dat[,i])
+            v <- max((U - guess_correction[i]) / (1 - guess_correction[i]), 0)
+            d[i] <- v * (1 - v)
+        }
+    }
+    (n/(n - 1)) * (1 - sum(d)/sum(C))
+}
+
 add_completely.missing_back <- function(data, completely_missing){
     if(length(completely_missing)){
         tmp <- matrix(0L, nrow(data) + length(completely_missing), ncol(data))
