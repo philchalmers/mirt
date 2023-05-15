@@ -18,8 +18,8 @@ expected.test(
 
 \item{Theta}{a matrix of latent trait values}
 
-\item{group}{a number signifying which group the item should be extracted from (applies to
-'MultipleGroupClass' objects only)}
+\item{group}{a number or character signifying which group the item should be extracted from
+(applies to 'MultipleGroupClass' objects only)}
 
 \item{mins}{logical; include the minimum value constants in the dataset. If FALSE, the
 expected values for each item are determined from the scoring 0:(ncat-1)}

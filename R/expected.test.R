@@ -6,8 +6,8 @@
 #' @aliases expected.test
 #' @param x an estimated mirt object
 #' @param Theta a matrix of latent trait values
-#' @param group a number signifying which group the item should be extracted from (applies to
-#'   'MultipleGroupClass' objects only)
+#' @param group a number or character signifying which group the item should be extracted from
+#'   (applies to 'MultipleGroupClass' objects only)
 #' @param mins logical; include the minimum value constants in the dataset. If FALSE, the
 #'   expected values for each item are determined from the scoring 0:(ncat-1)
 #' @param individual logical; return tracelines for individual items?
@@ -40,6 +40,8 @@
 expected.test <- function(x, Theta, group = NULL, mins = TRUE, individual = FALSE, which.items = NULL){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
+    if(is.character(group))
+        group <- which(group %in% extract.mirt(x, 'groupNames'))
     pars <- if(is(x, 'MultipleGroupClass')) x@ParObjects$pars[[group]]@ParObjects$pars else x@ParObjects$pars
     K <- extract.mirt(x, 'K')
     if(is.null(which.items) || length(x@Internals$CUSTOM.IND)){
