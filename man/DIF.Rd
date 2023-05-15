@@ -227,7 +227,7 @@ group <- gl(3, N, labels = c('g1', 'g2', 'g3'))
 
 # equate the groups by assuming the last 5 items have no DIF
 itemnames <- colnames(dat)
-model <- multipleGroup(dat, group=group,
+model <- multipleGroup(dat, group=group, SE=TRUE,
    invariance = c(itemnames[11:ncol(dat)], 'free_means', 'free_var'))
 coef(model, simplify=TRUE)
 
@@ -240,6 +240,11 @@ dif.posthoc <- DIF(model, which.par = c('a1', 'd'), items2test=1:2,
                    pairwise = TRUE)
 dif.posthoc
 
+# further probing for df = 1 tests, this time with Wald tests
+DIF(model, which.par = c('a1'), items2test=1:2, pairwise = TRUE,
+    Wald=TRUE)
+DIF(model, which.par = c('d'), items2test=1:2, pairwise = TRUE,
+    Wald=TRUE)
 
 }
 }
