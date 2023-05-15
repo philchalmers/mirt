@@ -312,7 +312,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         }
         if(simplify && is(compare[[1L]], 'mirt_df')){
             row_names <- rownames(compare[[1L]])
-            compare <- data.frame(Item=row_names, do.call(rbind, compare))
+            compare <- data.frame(item=row_names, do.call(rbind, compare))
             rownames(compare) <- NULL
             compare <- as.mirt_df(compare)
         }
