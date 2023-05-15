@@ -6,6 +6,8 @@
   
 - `DIF()` gains a `pairwise` logical input to perform pairwise 
   post-hoc comparisons for multi-group applications
+  
+- `DRF()` gains `groups2test` argument and friends for multi-group models
 
 # Changes in mirt 1.38.1
 

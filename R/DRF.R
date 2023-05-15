@@ -69,6 +69,10 @@
 #' @param den.type character specifying how the density of the latent traits is computed.
 #'   Default is \code{'marginal'} to include the proportional information from both groups,
 #'   \code{'focal'} for just the focal group, and \code{'reference'} for the reference group
+#' @param groups2test when more than 2 groups are being investigated which two groups
+#'   should be used in the effect size comparisons?
+#' @param pairwise logical; perform pairwise computations when the applying to multi-group settings
+#' @param simplify logical; attempt to simplify the output rather than returning larger lists?
 #' @param auto.key plotting argument passed to \code{\link{lattice}}
 #' @param par.strip.text plotting argument passed to \code{\link{lattice}}
 #' @param par.settings plotting argument passed to \code{\link{lattice}}
@@ -134,13 +138,13 @@
 #' # pre-draw parameter set to save computations
 #' #  (more useful when using non-parametric bootstrap)
 #' param_set <- draw_parameters(mod, draws = 500)
-#' DRF(mod, focal_items = 6, param_set=param_set) #DIF
-#' DRF(mod, DIF=TRUE, param_set=param_set) #DIF
-#' DRF(mod, focal_items = 6:10, param_set=param_set) #DBF
-#' DRF(mod, param_set=param_set) #DTF
+#' DRF(mod, focal_items = 6, param_set=param_set) #DIF test
+#' DRF(mod, DIF=TRUE, param_set=param_set) #DIF test
+#' DRF(mod, focal_items = 6:10, param_set=param_set) #DBF test
+#' DRF(mod, param_set=param_set) #DTF test
 #'
-#' DRF(mod, focal_items = 6:10, draws=500) #DBF
-#' DRF(mod, focal_items = 10:15, draws=500) #DBF
+#' DRF(mod, focal_items = 6:10, draws=500) #DBF test
+#' DRF(mod, focal_items = 10:15, draws=500) #DBF test
 #'
 #' DIFs <- DRF(mod, draws = 500, DIF=TRUE)
 #' print(DIFs)
@@ -290,7 +294,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                 param_set = NULL, den.type = 'marginal', best_fitting=FALSE,
                 CI = .95, npts = 1000,
                 quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
-                plot = FALSE, DIF = FALSE, p.adjust = 'none',
+                plot = FALSE, DIF = FALSE, groups2test = 'all',
+                pairwise = FALSE, simplify = TRUE, p.adjust = 'none',
                 par.strip.text = list(cex = 0.7),
                 par.settings = list(strip.background = list(col = '#9ECAE1'),
                                  strip.border = list(col = "black")),
@@ -328,31 +333,66 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     }
 
     fn <- function(x, omod, Theta, max_score, Theta_nodes = NULL, best_fitting,
-                   plot, DIF, focal_items, details, signs=NULL, rs=NULL, den.type){
+                   plot, DIF, focal_items, details, whc_grp,
+                   signs=NULL, rs=NULL, den.type){
         mod <- omod
         if(!is.null(Theta_nodes)){
-            T1 <- expected.test(mod, Theta_nodes, group=1L, mins=FALSE, individual=DIF,
+            T1 <- expected.test(mod, Theta_nodes, group=whc_grp[1L], mins=FALSE, individual=DIF,
                                 which.items=focal_items)
-            T2 <- expected.test(mod, Theta_nodes, group=2L, mins=FALSE, individual=DIF,
+            T2 <- expected.test(mod, Theta_nodes, group=whc_grp[2L], mins=FALSE, individual=DIF,
                                 which.items=focal_items)
             ret <- T2 - T1
             if(!DIF) ret <- c("sDRF." = ret)
             return(ret)
         }
         calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF, den.type=den.type,
-                  focal_items=focal_items, details=details, signs=signs, rs=rs, best_fitting=best_fitting)
+                  focal_items=focal_items, details=details, signs=signs, rs=rs,
+                  best_fitting=best_fitting, whc_grp=whc_grp)
     }
-    fn2 <- function(ind, pars, MGmod, param_set, rslist, ...){
+    fn2 <- function(ind, pars, MGmod, param_set, rslist, whc_grp, ...){
         pars <- reloadPars(longpars=param_set[ind,],
-                           pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
+                           pars=pars, ngroups=length(pars), J=length(pars[[1L]])-1L)
         rs <- rslist[[ind]]
-        MGmod@ParObjects$pars[[1L]]@ParObjects$pars <- pars[[1L]]
-        MGmod@ParObjects$pars[[2L]]@ParObjects$pars <- pars[[2L]]
-        fn(NA, omod=MGmod, rs=rs, ...)
+        MGmod@ParObjects$pars[[whc_grp[1L]]]@ParObjects$pars <- pars[[whc_grp[1L]]]
+        MGmod@ParObjects$pars[[whc_grp[2L]]]@ParObjects$pars <- pars[[whc_grp[2L]]]
+        fn(NA, omod=MGmod, rs=rs, whc_grp=whc_grp, ...)
     }
 
     if(missing(mod)) missingMsg('mod')
+    if(pairwise){
+        if(length(groups2test) == 1L && groups2test == 'all')
+            groups2test <- extract.mirt(mod, 'groupNames')
+        ngroups <- length(groups2test)
+        compare <- vector('list', ngroups*(ngroups-1L)/2L)
+        ind <- 1L
+        for(i in 1L:ngroups){
+            for(j in 1L:ngroups){
+                if(i < j){
+                    compare[[ind]] <- DRF(mod=mod, draws=draws, focal_items=focal_items,
+                                          groups2test = groups2test[c(i,j)],
+                                          param_set=param_set, den.type=den.type, best_fitting=best_fitting,
+                                          CI=CI, npts=npts, quadpts=quadpts, theta_lim=theta_lim,
+                                          Theta_nodes=Theta_nodes, plot = FALSE, DIF=DIF, pairwise=FALSE,
+                                          p.adjust=p.adjust, par.strip.text=par.strip.text,
+                                          par.settings=par.settings, auto.key=auto.key,
+                                          verbose=verbose, ...)
+                    ind <- ind + 1L
+                }
+            }
+        }
+        if(simplify && is(compare[[1L]], 'mirt_df')){
+            compare <- data.frame(item=extract.mirt(mod, 'itemnames'),
+                                  do.call(rbind, compare))
+            rownames(compare) <- NULL
+            compare <- as.mirt_df(compare)
+        }
+        else names(compare) <- sapply(compare, function(x) x$groups[1L])
+        return(compare)
+    }
     stopifnot(length(p.adjust) == 1L)
+    groupNames <- extract.mirt(mod, 'groupNames')
+    if(length(groups2test) == 1L && groups2test == 'all')
+        groups2test <- groupNames
     stopifnot(den.type %in% c('marginal', 'focal', 'reference'))
     stopifnot(is.logical(plot))
     if(DIF && !is.null(Theta_nodes))
@@ -360,8 +400,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     type <- 'score'
     if(!is(mod, 'MultipleGroupClass'))
         stop('mod input was not estimated by multipleGroup()', call.=FALSE)
-    if(mod@Data$ngroups != 2L)
-        stop('DTF only supports two group models at a time', call.=FALSE)
+    if(length(groups2test) > 2L)
+        stop('DRF only supports two group models at a time', call.=FALSE)
     if(!any(sapply(mod@ParObjects$pars, function(x) x@ParObjects$pars[[length(x@ParObjects$pars)]]@est)))
         message('No hyper-parameters were estimated in the DIF model. For effective
                 \tDRF testing freeing the focal group hyper-parameters is recommended.')
@@ -373,14 +413,15 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         colnames(Theta_nodes) <- if(ncol(Theta_nodes) > 1L)
             paste0('Theta.', 1L:ncol(Theta_nodes)) else 'Theta'
     }
-    if(mod@Model$nfact != 1L && plot)
+    if(extract.mirt(mod, 'nfact') != 1L && plot)
         stop('plot arguments only supported for unidimensional models')
     if(length(type) > 1L && (plot || !is.null(Theta_nodes)))
         stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')
     m2v <- mod2values(mod)
     is_logit <- m2v$name %in% c('g', 'u')
-    longpars <- c(do.call(c, lapply(mod@ParObjects$pars[[1L]]@ParObjects$pars, function(x) x@par)),
-                  do.call(c, lapply(mod@ParObjects$pars[[2L]]@ParObjects$pars, function(x) x@par)))
+    longpars <- do.call(c, lapply(1L:length(groupNames), function(ind)
+        do.call(c, lapply(mod@ParObjects$pars[[ind]]@ParObjects$pars, function(x) x@par))))
+    whc_grp <- which(groupNames %in% groups2test)
     if(!is.null(param_set)){
         draws <- nrow(param_set)
         param_set[,is_logit] <- logit(param_set[,is_logit])
@@ -397,10 +438,12 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         impute <- TRUE
         covB <- mod@vcov
         names <- colnames(covB)
-        pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars, mod@ParObjects$pars[[2L]]@ParObjects$pars)
+        pars <- lapply(1L:length(groupNames), function(ind)
+            mod@ParObjects$pars[[ind]]@ParObjects$pars)
         param_set <- draw_parameters(mod, draws=draws, ...)
         param_set[,is_logit] <- logit(param_set[,is_logit])
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=length(groupNames),
+                           J=length(pars[[1L]])-1L)
     }
     shortpars <- mod@Internals$shortpars
     names <- names(shortpars)
@@ -424,16 +467,17 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                     quadpts=quadpts, large=large, TOL = NaN)
     if(plot) Theta_nodes <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=1000))
     oCM <- lapply(1L, fn, omod=mod, Theta_nodes=Theta_nodes, best_fitting=best_fitting,
-                  max_score=max_score, Theta=Theta, plot=plot, den.type=den.type,
+                  max_score=max_score, Theta=Theta, plot=plot, den.type=den.type, whc_grp=whc_grp,
                   DIF=DIF, focal_items=focal_items, details=details)[[1L]]
     signs <- attr(oCM, 'signs')
     if(plot && !impute) return(plot.DRF(Theta_nodes, oCM, DIF=DIF,
                                  itemnames = extract.mirt(mod, 'itemnames')[focal_items], ...))
     if(!is.null(Theta_nodes) && !impute)
         return(as.mirt_df(data.frame(Theta=Theta_nodes, sDRF=oCM)))
+    groups_tested <- paste0(groups2test,collapse=',')
     if(impute){
-        pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars,
-                     mod@ParObjects$pars[[2L]]@ParObjects$pars)
+        pars <- lapply(1L:length(groupNames), function(ind)
+            mod@ParObjects$pars[[ind]]@ParObjects$pars)
         .mirtClusterEnv$param_set <- param_set
         try(with(details, multipleGroup(data=data, model=model, group=group, itemtype=itemtype, large=large,
                                     quadpts=quadpts, TOL=TOL,
@@ -442,16 +486,19 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                                     pars=mod2values(mod), technical=technical)), TRUE)
         rslist <- .mirtClusterEnv$rslist
         on.exit({.mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
-            reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
-        })
-        list_scores <- myLapply(1L:nrow(param_set), fn2, progress=verbose,
+            reloadPars(longpars=longpars, pars=pars, ngroups=length(groupNames),
+                       J=length(pars[[1L]])-1L)
+        }, add=TRUE)
+        list_scores <- myLapply(1L:nrow(param_set), fn2, whc_grp=whc_grp,
                                 pars=pars, MGmod=mod, param_set=param_set, best_fitting=best_fitting,
                                 max_score=max_score, Theta=Theta, rslist=rslist,
-                                Theta_nodes=Theta_nodes, plot=plot, details=details,
+                                Theta_nodes=Theta_nodes, plot=plot, details=details, progress=verbose,
                                 DIF=DIF, focal_items=focal_items, signs=signs, den.type=den.type)
         scores <- do.call(rbind, list_scores)
-        pars <- list(mod@ParObjects$pars[[1L]]@ParObjects$pars, mod@ParObjects$pars[[2L]]@ParObjects$pars)
-        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=2L, J=length(pars[[1L]])-1L)
+        pars <- lapply(1L:length(groupNames), function(ind)
+            mod@ParObjects$pars[[ind]]@ParObjects$pars)
+        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=length(groupNames),
+                           J=length(pars[[1L]])-1L)
         if(plot) return(plot.DRF(Theta_nodes, oCM, CIs=scores, DIF=DIF, CI=CI,
                                  itemnames = extract.mirt(mod, 'itemnames')[focal_items], ...))
         CIs <- apply(scores, 2, bs_range, CI=CI)
@@ -467,15 +514,22 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             t2 <- compute_ps(oCM[,3L:4L], scores[,1L:(length(focal_items)*2L) +
                                                      length(focal_items)*2L, drop=FALSE],
                              X2=TRUE)
-            ret <- list(sDIF = as.mirt_df(data.frame(sDIF = oCM[,1L],
-                                          t(CIs[,1L:length(focal_items)]),
-                                          t1, row.names = focal_items)),
-                        uDIF = as.mirt_df(data.frame(uDIF = oCM[,2L],
-                                          t(CIs[,1L:length(focal_items) + length(focal_items)]),
-                                          t2, row.names=focal_items)),
-                        dDIF = as.mirt_df(data.frame(dDIF = oCM[,3L],
-                                                     t(CIs[,1L:length(focal_items) + length(focal_items)*2]),
-                                                     row.names=focal_items)))
+            ret <- list(sDIF = as.mirt_df(data.frame(
+                                groups=groups_tested,
+                                item=extract.mirt(mod, 'itemnames')[focal_items],
+                                sDIF = oCM[,1L], t(CIs[,1L:length(focal_items)]), t1,
+                                row.names=NULL)),
+                uDIF = as.mirt_df(data.frame(
+                            groups=groups_tested,
+                            item=extract.mirt(mod, 'itemnames')[focal_items],
+                            uDIF = oCM[,2L],
+                            t(CIs[,1L:length(focal_items) + length(focal_items)]),
+                            t2, row.names=NULL)),
+                dDIF = as.mirt_df(data.frame(
+                            groups=groups_tested,
+                            item=extract.mirt(mod, 'itemnames')[focal_items],
+                            dDIF=oCM[,3L], t(CIs[,1L:length(focal_items) + length(focal_items)*2]),
+                            row.names=NULL)))
             if(p.adjust != 'none'){
                 ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method=p.adjust)
                 ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method=p.adjust)
@@ -484,19 +538,23 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             t1 <- compute_ps(oCM[1L], scores[,1L])
             t2 <- compute_ps(oCM[3L:4L], scores[,3L:4L], X2=TRUE)
             tests <- rbind(t1, t2, NA)
-            ret <- data.frame(n_focal_items=length(focal_items),
+            ret <- data.frame(groups=groups_tested,
+                              n_focal_items=length(focal_items),
                               stat = oCM[1L:3L], t(CIs), tests, check.names = FALSE)
             ret <- as.mirt_df(ret)
         }
     } else {
         # no imputations
         if(DIF){
-            ret <- data.frame(matrix(oCM, length(oCM)/5L), row.names = focal_items)
-            ret <- ret[,-c(4L:5L)]
-            colnames(ret) <- c('sDIF', 'uDIF', 'dDIF')
+            ret <- data.frame(groups=groups_tested,
+                              item=extract.mirt(mod, 'itemnames')[focal_items],
+                              matrix(oCM, length(oCM)/5L), row.names=NULL)
+            ret <- ret[,-c(6L:7L)]
+            colnames(ret) <- c('groups', 'item', 'sDIF', 'uDIF', 'dDIF')
             ret <- as.mirt_df(ret)
         } else {
-            ret <- data.frame(n_focal_items=length(focal_items),
+            ret <- data.frame(groups=groups_tested,
+                              n_focal_items=length(focal_items),
                               sDRF=oCM[1L], uDRF=oCM[2L], dDRF=oCM[3L],
                               row.names=NULL)
             ret <- as.mirt_df(ret)
@@ -506,31 +564,31 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
 }
 
 calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, den.type,
-                      best_fitting, rs=NULL, signs=NULL){
+                      best_fitting, whc_grp, rs=NULL, signs=NULL){
     if(DIF){
-        T1 <- expected.test(mod, Theta, group=1L, mins=FALSE, individual = TRUE,
+        T1 <- expected.test(mod, Theta, group=whc_grp[1L], mins=FALSE, individual = TRUE,
                             which.items=focal_items)
-        T2 <- expected.test(mod, Theta, group=2L, mins=FALSE, individual = TRUE,
+        T2 <- expected.test(mod, Theta, group=whc_grp[2L], mins=FALSE, individual = TRUE,
                             which.items=focal_items)
     } else {
-        T1 <- matrix(expected.test(mod, Theta, group=1L,
+        T1 <- matrix(expected.test(mod, Theta, group=whc_grp[1L],
                             mins=FALSE, which.items=focal_items))
-        T2 <- matrix(expected.test(mod, Theta, group=2L,
+        T2 <- matrix(expected.test(mod, Theta, group=whc_grp[2L],
                             mins=FALSE, which.items=focal_items))
     }
     if(plot) return(c(T1, T2))
     if(best_fitting){
         pars <- extract.mirt(mod, 'pars')
         nitems <- extract.mirt(mod, 'nitems')
-        den1 <- pars[[1]]@ParObjects$pars[[nitems + 1L]]@den(
-            pars[[1]]@ParObjects$pars[[nitems + 1L]], Theta)
+        den1 <- pars[[whc_grp[1L]]]@ParObjects$pars[[nitems + 1L]]@den(
+            pars[[whc_grp[1L]]]@ParObjects$pars[[nitems + 1L]], Theta)
         den1 <- den1 / sum(den1)
-        den2 <- pars[[2]]@ParObjects$pars[[nitems + 1L]]@den(
-            pars[[2]]@ParObjects$pars[[nitems + 1L]], Theta)
+        den2 <- pars[[whc_grp[2L]]]@ParObjects$pars[[nitems + 1L]]@den(
+            pars[[whc_grp[2L]]]@ParObjects$pars[[nitems + 1L]], Theta)
         den2 <- den2 / sum(den2)
         p <- if(den.type == 'marginal'){
             Ns <- table(extract.mirt(mod, 'group'))
-            (Ns[1] * den1 + Ns[2] * den2) / sum(Ns)
+            (Ns[whc_grp[1L]] * den1 + Ns[whc_grp[2L]] * den2) / sum(Ns[whc_grp])
         } else if(den.type == 'focal') den2
           else den1
     } else {
@@ -541,11 +599,11 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, de
                                                 customItems = customItems,
                                                 customGroup = customGroup,
                                                 pars=mod2values(mod), technical=technical))
-            r1 <- rowSums(mod2@Internals$Etable[[1L]]$r1)
-            r2 <- rowSums(mod2@Internals$Etable[[2L]]$r1)
+            r1 <- rowSums(mod2@Internals$Etable[[whc_grp[1L]]]$r1)
+            r2 <- rowSums(mod2@Internals$Etable[[whc_grp[2L]]]$r1)
         } else {
-            r1 <- rs[,1L]
-            r2 <- rs[,2L]
+            r1 <- rs[,whc_grp[1L]]
+            r2 <- rs[,whc_grp[2L]]
         }
         p <- if(den.type == 'marginal')
             (r1 + r2) / sum(r1 + r2)
@@ -663,7 +721,7 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
         if(!mod@OptimInfo$secondordertest)
             stop('ACOV matrix is not positive definite')
         on.exit(reloadPars(longpars=longpars, pars=pars,
-                           ngroups=ngroups, J=extract.mirt(mod, 'nitems')))
+                           ngroups=ngroups, J=extract.mirt(mod, 'nitems')), add=TRUE)
         covB <- vcov(mod)
         names <- colnames(covB)
         imputenums <- sapply(strsplit(names, '\\.'), function(x) as.integer(x[2L]))
