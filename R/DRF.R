@@ -381,12 +381,13 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             }
         }
         if(simplify && is(compare[[1L]], 'mirt_df')){
-            compare <- data.frame(item=extract.mirt(mod, 'itemnames'),
-                                  do.call(rbind, compare))
+            compare <- do.call(rbind, compare)
             rownames(compare) <- NULL
-            compare <- as.mirt_df(compare)
         }
-        else names(compare) <- sapply(compare, function(x) x$groups[1L])
+        if(DIF && !is.null(draws) && !is.null(compare[[1L]]$sDIF)){
+            nms <- sapply(compare, function(x) x$sDIF$groups[1L])
+            names(compare) <- nms
+        }
         return(compare)
     }
     stopifnot(length(p.adjust) == 1L)
