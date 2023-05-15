@@ -3,6 +3,9 @@
 - For models fit using `mdirt()` the `fscores()` EAP and EAPsum methods now 
   always returns classification probabilities as the default (reported 
   by Matthew Madison)
+  
+- `DIF()` gains a `pairwise` logical input to perform pairwise 
+  post-hoc comparisons for multi-group applications
 
 # Changes in mirt 1.38.1
 

@@ -82,8 +82,9 @@
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
-#' Chalmers, R. P. and Zheng, G. (accepted). Multi-group Generalizations of
-#' SIBTEST and Crossing-SIBTEST. \emph{Applied Measurement in Education}.
+#' Chalmers, R. P. & Zheng, G. (2023). Multi-group Generalizations of
+#' SIBTEST and Crossing-SIBTEST. \emph{Applied Measurement in Education, 36}(2), 171-191,
+#' \doi{10.1080/08957347.2023.2201703}.
 #'
 #' Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
 #'   SIBTEST Procedure. \emph{Journal of Educational Measurement, 33}, 333-353.

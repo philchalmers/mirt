@@ -179,11 +179,45 @@
 #'                return_seq_model=TRUE)
 #' plot(updated_mod, type='trace')
 #'
+#'
+#' ###################################
+#' # Multi-group example
+#'
+#' a1 <- a2 <- a3 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+#' d1 <- d2 <- d3 <- matrix(rnorm(15,0,.7),ncol=1)
+#' a2[1:2, ] <- a1[1:2, ]/3
+#' d3[c(1,3), ] <- d2[c(1,3), ]/4
+#' head(data.frame(a.group1 = a1, a.group2 = a2, a.group3 = a3,
+#'                 d.group1 = d1, d.group2 = d2, d.group3 = d3))
+#' itemtype <- rep('2PL', nrow(a1))
+#' N <- 1000
+#' dataset1 <- simdata(a1, d1, N, itemtype)
+#' dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
+#' dataset3 <- simdata(a3, d3, N, itemtype, mu = .2)
+#' dat <- rbind(dataset1, dataset2, dataset3)
+#' group <- gl(3, N, labels = c('g1', 'g2', 'g3'))
+#'
+#' # equate the groups by assuming the last 5 items have no DIF
+#' itemnames <- colnames(dat)
+#' model <- multipleGroup(dat, group=group,
+#'    invariance = c(itemnames[11:ncol(dat)], 'free_means', 'free_var'))
+#' coef(model, simplify=TRUE)
+#'
+#' # omnibus tests
+#' dif <- DIF(model, which.par = c('a1', 'd'), items2test=1:9)
+#' dif
+#'
+#' # pairwise post-hoc tests for items flagged via omnibus tests
+#' dif.posthoc <- DIF(model, which.par = c('a1', 'd'), items2test=1:2,
+#'                    pairwise = TRUE)
+#' dif.posthoc
+#'
+#'
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add',
                 items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 groups2test = 'all', seq_stat = 'SABIC', Wald = FALSE,
-                p.adjust = 'none', return_models = FALSE,
+                p.adjust = 'none', pairwise = FALSE, return_models = FALSE,
                 return_seq_model = FALSE, max_run = Inf, plotdif = FALSE, type = 'trace',
                 simplify = TRUE, verbose = TRUE, ...){
 
@@ -255,6 +289,36 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         return(aov)
     }
 
+    if(pairwise){
+        if(length(groups2test) == 1L && groups2test == 'all')
+            groups2test <- extract.mirt(MGmodel, 'groupNames')
+        ngroups <- length(groups2test)
+        compare <- vector('list', ngroups*(ngroups-1L)/2L)
+        ind <- 1L
+        for(i in 1L:ngroups){
+            for(j in 1L:ngroups){
+                if(i < j){
+                    compare[[ind]] <- DIF(MGmodel=MGmodel, which.par=which.par,
+                                          groups2test = groups2test[c(i,j)],
+                                          scheme=scheme, items2test=items2test,
+                                          seq_stat=seq_stat, Wald=Wald, p.adjust=p.adjust,
+                                          pairwise=FALSE, return_models=return_models,
+                                          return_seq_model=return_seq_model, max_run=max_run,
+                                          plotdif=FALSE, type=type, simplify=simplify,
+                                          verbose=verbose, ...)
+                    ind <- ind + 1L
+                }
+            }
+        }
+        if(simplify && is(compare[[1L]], 'mirt_df')){
+            row_names <- rownames(compare[[1L]])
+            compare <- data.frame(Item=row_names, do.call(rbind, compare))
+            rownames(compare) <- NULL
+            compare <- as.mirt_df(compare)
+        }
+        else names(compare) <- sapply(compare, function(x) x$groups[1L])
+        return(compare)
+    }
     if(missing(MGmodel)) missingMsg('MGmodel')
     cfs <- coef(MGmodel, simplify=TRUE)[[1]]$items
     oparnames <- colnames(cfs)
