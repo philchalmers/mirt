@@ -15,6 +15,7 @@ SIBTEST(
   na.rm = FALSE,
   randomize = FALSE,
   C = cbind(1, -diag(length(unique(group)) - 1L)),
+  DIF = FALSE,
   p.adjust.method = "none",
   permute = 1000,
   pk_focal = FALSE,
@@ -64,6 +65,10 @@ group, and each column is associated with the respective name via \code{unique(g
 column is the coefficient for \code{unique(group)[1]}, second column for \code{unique(group)[2]}, and
 so on)}
 
+\item{DIF}{logical; should the elements in \code{suspect_set} be treated one at a time
+to test for DIF? Use of this logical will treat all other items as part of the \code{match_set}
+unless this input is provided explicitly. Default is \code{FALSE} to allow DBF and DTF tests}
+
 \item{p.adjust.method}{a character input dictating which \code{method} to use in \code{\link{p.adjust}}.
 when studying more than two groups. Default does not present any p-value adjustments}
 
@@ -88,8 +93,8 @@ in two-group settings (in multi-group this is fixed to FALSE)}
 scores, \code{'weights'} for the proportion weights used (i.e., the proportion of observations at
 each matched score), \code{'difference'} for the difference between the scaled focal subtest scores
 against the matched subtest scores, and \code{'wdifference'} for the conditional differences multiplied
-by each respective weight. Note that the last plot reflects the components used in SIBTEST, and therefore
-the sum of these plotted observations will equal the beta coefficient for SIBTEST}
+by each respective weight. Note that the last plot reflects the components used in SIBTEST,
+and therefore the sum of these plotted observations will equal the beta coefficient for SIBTEST}
 
 \item{...}{additional plotting arguments to be passed}
 }
@@ -192,6 +197,12 @@ SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
 SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
 SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 
+# test DIF using specific match_set
+SIBTEST(dat, group, suspect_set = 6:30, match_set = 1:5, DIF=TRUE)
+
+# test DIF using all-other-as-anchors method (not typically recommended)
+SIBTEST(dat, group, suspect_set = 1:30, DIF=TRUE)
+
 # randomization method is fairly poor when smaller matched-set used
 SIBTEST(dat, group, suspect_set = 30, match_set = 1:5, randomize=TRUE)
 SIBTEST(dat, group, suspect_set = 30, randomize=TRUE)
@@ -218,6 +229,15 @@ SIBTEST(dat, group, suspect_set = 6, randomize=TRUE)
 # explicit contrasts
 SIBTEST(dat, group, suspect_set = 6, randomize=TRUE,
         C = matrix(c(1,-1,0), 1))
+
+# test all items for DIF
+SIBTEST(dat, group, suspect_set = 1:ncol(dat), DIF=TRUE)
+SIBTEST(dat, group, suspect_set = 16:ncol(dat), DIF=TRUE,
+        match_set = 1:15) # specific anchors
+
+# post-hoc between two groups only
+pick <- group \%in\% c('group1', 'group2')
+SIBTEST(subset(dat, pick), group[pick], suspect_set = 1:ncol(dat), DIF=TRUE)
 
 ## systematic differing slopes and intercepts
 dat2 <- simdata(a + c(numeric(15), .5,.5,.5,.5,.5, numeric(10)),

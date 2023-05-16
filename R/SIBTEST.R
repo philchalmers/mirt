@@ -54,6 +54,9 @@
 #' @param correction logical; apply the composite correction for the difference between focal
 #'   composite scores using the true-score regression technique? Default is \code{TRUE},
 #'   reflecting Shealy and Stout's linear extrapolation method
+#' @param DIF logical; should the elements in \code{suspect_set} be treated one at a time
+#'   to test for DIF? Use of this logical will treat all other items as part of the \code{match_set}
+#'   unless this input is provided explicitly. Default is \code{FALSE} to allow DBF and DTF tests
 #' @param remove_cross logical; remove the subtest information associated with the approximate
 #'   crossing location? If TRUE this reflects the CSIBTEST definition of Li and Stout (1996);
 #'   if FALSE, this reflects the version of CSIBTEST utilized by Chalmers (2018). Only applicable
@@ -64,8 +67,8 @@
 #'   scores, \code{'weights'} for the proportion weights used (i.e., the proportion of observations at
 #'   each matched score), \code{'difference'} for the difference between the scaled focal subtest scores
 #'   against the matched subtest scores, and \code{'wdifference'} for the conditional differences multiplied
-#'   by each respective weight. Note that the last plot reflects the components used in SIBTEST, and therefore
-#'   the sum of these plotted observations will equal the beta coefficient for SIBTEST
+#'   by each respective weight. Note that the last plot reflects the components used in SIBTEST,
+#'   and therefore the sum of these plotted observations will equal the beta coefficient for SIBTEST
 #' @param ... additional plotting arguments to be passed
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -175,6 +178,12 @@
 #' SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
 #' SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 #'
+#' # test DIF using specific match_set
+#' SIBTEST(dat, group, suspect_set = 6:30, match_set = 1:5, DIF=TRUE)
+#'
+#' # test DIF using all-other-as-anchors method (not typically recommended)
+#' SIBTEST(dat, group, suspect_set = 1:30, DIF=TRUE)
+#'
 #' # randomization method is fairly poor when smaller matched-set used
 #' SIBTEST(dat, group, suspect_set = 30, match_set = 1:5, randomize=TRUE)
 #' SIBTEST(dat, group, suspect_set = 30, randomize=TRUE)
@@ -202,6 +211,15 @@
 #' SIBTEST(dat, group, suspect_set = 6, randomize=TRUE,
 #'         C = matrix(c(1,-1,0), 1))
 #'
+#' # test all items for DIF
+#' SIBTEST(dat, group, suspect_set = 1:ncol(dat), DIF=TRUE)
+#' SIBTEST(dat, group, suspect_set = 16:ncol(dat), DIF=TRUE,
+#'         match_set = 1:15) # specific anchors
+#'
+#' # post-hoc between two groups only
+#' pick <- group %in% c('group1', 'group2')
+#' SIBTEST(subset(dat, pick), group[pick], suspect_set = 1:ncol(dat), DIF=TRUE)
+#'
 #' ## systematic differing slopes and intercepts
 #' dat2 <- simdata(a + c(numeric(15), .5,.5,.5,.5,.5, numeric(10)),
 #'         d + c(numeric(15), 0,.6,.7,.8,.9, numeric(10)),
@@ -219,7 +237,7 @@
 SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
                     guess_correction = 0, Jmin = 5, na.rm = FALSE, randomize = FALSE,
                     C = cbind(1, -diag(length(unique(group)) - 1L)),
-                    p.adjust.method = 'none', permute = 1000, pk_focal = FALSE,
+                    DIF = FALSE, p.adjust.method = 'none', permute = 1000, pk_focal = FALSE,
                     correction = TRUE, remove_cross = FALSE, details = FALSE, plot = 'none', ...){
 
     find_intersection <- function(diff, weight, use, scores, remove_cross,
@@ -279,6 +297,25 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
             }
         }
         ret
+    }
+
+    if(DIF){
+        if(missing(suspect_set))
+            stop('DIF input requires suspect_set', call.=FALSE)
+        if(missing(match_set))
+            match_set <- 1L:ncol(dat)
+        diftest <- vector('list', length(suspect_set))
+        names(diftest) <- colnames(dat)[suspect_set]
+        for(i in 1L:length(suspect_set)){
+            diftest[[i]] <- SIBTEST(dat=dat, group=group, suspect_set=suspect_set[i],
+                                    match_set=match_set[!(match_set %in% suspect_set[i])],
+                                    focal_name=focal_name, guess_correction=guess_correction,
+                                    Jmin=Jmin, na.rm=na.rm, randomize=randomize,
+                                    C=C, DIF = FALSE, p.adjust.method=p.adjust.method,
+                                    permute=permute, pk_focal=pk_focal, correction=correction,
+                                    remove_cross=remove_cross, details=details, plot=plot, ...)
+        }
+        return(diftest)
     }
 
     if(na.rm){

@@ -5,7 +5,8 @@
   by Matthew Madison)
   
 - `DIF()` gains a `pairwise` logical input to perform pairwise 
-  post-hoc comparisons for multi-group applications
+  post-hoc comparisons for multi-group applications, while 
+  `SIBTEST()` gains a `DIF` logical to perform DIF tests across `suspect_set`
   
 - `DRF()` gains `groups2test` argument and friends for multi-group models
 
