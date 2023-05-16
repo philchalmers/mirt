@@ -2270,6 +2270,8 @@ MGC2SC <- function(x, which){
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
+    tmp@Data$ngroups <- 1L
+    tmp@Model$model <- x@Model$model
     tmp
 }
 
