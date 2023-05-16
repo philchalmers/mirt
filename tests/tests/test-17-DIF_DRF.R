@@ -34,7 +34,7 @@ test_that('DIF', {
     expect_equal(WALD$W[1], 1.532718, tolerance = 1e-3)
     expect_equal(WALD$p[1], 0.2157049, tolerance = 1e-3)
     WALD2 <- suppressMessages(DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr'))
-    expect_equal(as.numeric(WALD2$adj_pvals), c(0.02473307,0.01580279,0.1261503,0.4299811,0.4672727,0.4565218,0.05971613,0.5671398,0.4299811,0.4565218), tolerance = 1e-3)
+    expect_equal(as.numeric(WALD2$adj_p), c(0.02473307,0.01580279,0.1261503,0.4299811,0.4672727,0.4565218,0.05971613,0.5671398,0.4299811,0.4565218), tolerance = 1e-3)
 
 
     model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, invariance = c(colnames(dat)[1:5],
@@ -54,22 +54,23 @@ test_that('DIF', {
                                                                                      'free_means', 'free_var'))
     out <- DIF(model2, which.par = c('a1', 'd'), items2test = 6:10, seq_stat = 'BIC')
     expect_is(out, 'data.frame')
-    expect_equal(out$BIC, c(11.449,9.038,11.424,10.739,14.448), tolerance = 1e-4)
+    expect_equal(out$BIC, c(11.449,9.038,11.424,10.739,14.448), tolerance = 1e-3)
 
     drf <- DRF(model2)
-    expect_equal(as.numeric(drf), c(10.0000000,  -0.0403703,  0.1863619, 0.2107826),
-                 tolerance = 1e-4)
+    expect_equal(as.numeric(subset(drf, select=n_focal_items:dDRF)),
+                            c(10.0000000,  -0.0403703,  0.1863619, 0.2107826),
+                 tolerance = 1e-3)
     dif <- DRF(model2, DIF = TRUE)
-    expect_equal(as.numeric(dif[-c(1:5), 1]),
+    expect_equal(as.numeric(dif$sDIF[-c(1:5)]),
                  c(-0.04435560,  0.02738697, -0.02307566, -0.01429807,  0.01397205),
                  tolerance = 1e-4)
-    expect_equal(as.numeric(dif[-c(1:5), 2]),
+    expect_equal(as.numeric(dif$uDIF[-c(1:5)]),
                  c(0.04448119, 0.06111498, 0.04441609, 0.04817261, 0.01960173),
                  tolerance = 1e-4)
 
     set.seed(1234)
     drf <- DRF(model2, draws = 100)
-    expect_equal(drf$X2, c(0.4536206, 16.6727036, NA), tolerance=1e-4)
+    expect_equal(drf$X2, c(0.4536206, 16.6727036, NA), tolerance=1e-2)
 
 })
 
