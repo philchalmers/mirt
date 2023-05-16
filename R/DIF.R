@@ -39,6 +39,8 @@
 #' @param simplify logical; simplify the output by returning a data.frame object with
 #'   the differences between AIC, BIC, etc, as well as the chi-squared test (X2) and associated
 #'   df and p-values
+#' @param pairwise logical; perform pairwise tests between groups when the number of groups
+#'   is greater than 2? Useful as quickly specified post-hoc tests
 #' @param scheme type of DIF analysis to perform, either by adding or dropping constraints across
 #'   groups. These can be:
 #' \describe{
