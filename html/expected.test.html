@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate expected test score</title>
+<!DOCTYPE html><html><head><title>R: Function to calculate expected test score</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for expected.test {mirt}"><tr><td>expected.test {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>expected.test {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Function to calculate expected test score</h2>
 
@@ -22,8 +32,7 @@ same form as the data used to estimate the model.
 
 <h3>Usage</h3>
 
-<pre>
-expected.test(
+<pre><code class='language-R'>expected.test(
   x,
   Theta,
   group = NULL,
@@ -31,35 +40,35 @@ expected.test(
   individual = FALSE,
   which.items = NULL
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>an estimated mirt object</p>
 </td></tr>
-<tr valign="top"><td><code>Theta</code></td>
+<tr style="vertical-align: top;"><td><code>Theta</code></td>
 <td>
 <p>a matrix of latent trait values</p>
 </td></tr>
-<tr valign="top"><td><code>group</code></td>
+<tr style="vertical-align: top;"><td><code>group</code></td>
 <td>
-<p>a number signifying which group the item should be extracted from (applies to
-'MultipleGroupClass' objects only)</p>
+<p>a number or character signifying which group the item should be extracted from
+(applies to 'MultipleGroupClass' objects only)</p>
 </td></tr>
-<tr valign="top"><td><code>mins</code></td>
+<tr style="vertical-align: top;"><td><code>mins</code></td>
 <td>
 <p>logical; include the minimum value constants in the dataset. If FALSE, the
 expected values for each item are determined from the scoring 0:(ncat-1)</p>
 </td></tr>
-<tr valign="top"><td><code>individual</code></td>
+<tr style="vertical-align: top;"><td><code>individual</code></td>
 <td>
 <p>logical; return tracelines for individual items?</p>
 </td></tr>
-<tr valign="top"><td><code>which.items</code></td>
+<tr style="vertical-align: top;"><td><code>which.items</code></td>
 <td>
 <p>an integer vector indicating which items to include in the expected test score. Default
 uses all possible items</p>
@@ -71,7 +80,7 @@ uses all possible items</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -83,17 +92,16 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 dat &lt;- expand.table(deAyala)
-model &lt;- &#39;F = 1-5
-          CONSTRAIN = (1-5, a1)&#39;
+model &lt;- 'F = 1-5
+          CONSTRAIN = (1-5, a1)'
 mod &lt;- mirt(dat, model)
 
 Theta &lt;- matrix(seq(-6,6,.01))
 tscore &lt;- expected.test(mod, Theta)
 tail(cbind(Theta, tscore))
 </code></pre>
-
 <pre><code>##                tscore
 ## [1196,] 5.95 4.999138
 ## [1197,] 5.96 4.999150
@@ -102,12 +110,10 @@ tail(cbind(Theta, tscore))
 ## [1200,] 5.99 4.999186
 ## [1201,] 6.00 4.999198
 </code></pre>
-
-<pre><code class="r"># use only first two items (i.e., a bundle)
+<pre><code class="language-r"># use only first two items (i.e., a bundle)
 bscore &lt;- expected.test(mod, Theta, which.items = 1:2)
 tail(cbind(Theta, bscore))
 </code></pre>
-
 <pre><code>##                bscore
 ## [1196,] 5.95 1.999905
 ## [1197,] 5.96 1.999906
@@ -116,10 +122,10 @@ tail(cbind(Theta, bscore))
 ## [1200,] 5.99 1.999910
 ## [1201,] 6.00 1.999912
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

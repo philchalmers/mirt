@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Parametric bootstrap likelihood-ratio test</title>
+<!DOCTYPE html><html><head><title>R: Parametric bootstrap likelihood-ratio test</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for boot.LR {mirt}"><tr><td>boot.LR {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>boot.LR {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Parametric bootstrap likelihood-ratio test</h2>
 
@@ -25,27 +35,26 @@ definition.
 
 <h3>Usage</h3>
 
-<pre>
-boot.LR(mod, mod2, R = 1000, verbose = TRUE)
-</pre>
+<pre><code class='language-R'>boot.LR(mod, mod2, R = 1000, verbose = TRUE)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>mod</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>mod</code></td>
+<td>
+<p>an estimated model object, more constrained than <code>mod2</code></p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>mod2</code></td>
 <td>
 <p>an estimated model object</p>
 </td></tr>
-<tr valign="top"><td><code>mod2</code></td>
-<td>
-<p>an estimated model object</p>
-</td></tr>
-<tr valign="top"><td><code>R</code></td>
+<tr style="vertical-align: top;"><td><code>R</code></td>
 <td>
 <p>number of parametric bootstraps to use.</p>
 </td></tr>
-<tr valign="top"><td><code>verbose</code></td>
+<tr style="vertical-align: top;"><td><code>verbose</code></td>
 <td>
 <p>logical; include additional information in the console?</p>
 </td></tr>
@@ -69,49 +78,36 @@ than the less restrictive model
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 
 #standard
 dat &lt;- expand.table(LSAT7)
 mod1 &lt;- mirt(dat, 1)
-mod2 &lt;- mirt(dat, 1, &#39;3PL&#39;)
+mod2 &lt;- mirt(dat, 1, '3PL')
 
 # standard LR test
 anova(mod1, mod2)
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = dat, model = 1)
-## Model 2: mirt(data = dat, model = 1, itemtype = &quot;3PL&quot;)
+<pre><code>##          AIC    SABIC       HQ      BIC    logLik  X2 df     p
+## mod1 5337.61 5354.927 5356.263 5386.688 -2658.805             
+## mod2 5346.11 5372.085 5374.089 5419.726 -2658.055 1.5  5 0.913
 </code></pre>
-
-<pre><code>##       AIC    SABIC       HQ      BIC    logLik  X2  df     p
-## 1 5337.61 5354.927 5356.263 5386.688 -2658.805 NaN NaN   NaN
-## 2 5346.11 5372.085 5374.089 5419.726 -2658.055 1.5   5 0.913
+<pre><code class="language-r"># bootstrap LR test (run in parallel to save time)
+if(interactive()) mirtCluster()
+boot.LR(mod1, mod2, R=200)
 </code></pre>
-
-<pre><code class="r"># bootstrap LR test (run in parallel to save time)
-mirtCluster()
+<pre><code>## [1] 0.3283582
 </code></pre>
-
-<pre><code>## mirtCluster() previously defined for 2 clusters
-</code></pre>
-
-<pre><code class="r">boot.LR(mod1, mod2, R=200)
-</code></pre>
-
-<pre><code>## [1] 0.358209
-</code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

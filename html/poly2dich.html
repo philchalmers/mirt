@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Change polytomous items to dichotomous item format</title>
+<!DOCTYPE html><html><head><title>R: Change polytomous items to dichotomous item format</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for poly2dich {mirt}"><tr><td>poly2dich {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>poly2dich {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Change polytomous items to dichotomous item format</h2>
 
@@ -22,24 +32,23 @@ converted into comparable dichotomous items with the same information.
 
 <h3>Usage</h3>
 
-<pre>
-poly2dich(data, which.items = 1:ncol(data), sep = "_cat.")
-</pre>
+<pre><code class='language-R'>poly2dich(data, which.items = 1:ncol(data), sep = "_cat.")
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>data</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>data</code></td>
 <td>
 <p>an object of class <code>data.frame</code> or <code>matrix</code></p>
 </td></tr>
-<tr valign="top"><td><code>which.items</code></td>
+<tr style="vertical-align: top;"><td><code>which.items</code></td>
 <td>
 <p>a vector indicating which items should be transformed into the
 dichotomous form. Default uses all input items</p>
 </td></tr>
-<tr valign="top"><td><code>sep</code></td>
+<tr style="vertical-align: top;"><td><code>sep</code></td>
 <td>
 <p>character vector pattern to append to each item name in <code>data</code></p>
 </td></tr>
@@ -62,18 +71,17 @@ dichotomous form. Default uses all input items</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 data(Science)
 
 head(Science)
 </code></pre>
-
 <pre><code>##   Comfort Work Future Benefit
 ## 1       4    4      3       2
 ## 2       3    3      3       3
@@ -82,11 +90,9 @@ head(Science)
 ## 5       3    4      4       1
 ## 6       4    4      3       3
 </code></pre>
-
-<pre><code class="r">newScience &lt;- poly2dich(Science)
+<pre><code class="language-r">newScience &lt;- poly2dich(Science)
 head(newScience)
 </code></pre>
-
 <pre><code>##      Comfort_cat.1 Comfort_cat.2 Comfort_cat.3 Comfort_cat.4 Work_cat.1
 ## [1,]             0             0             0             1          0
 ## [2,]             0             0             1             0          0
@@ -109,11 +115,9 @@ head(newScience)
 ## [5,]            1             1             0             0             0
 ## [6,]            0             0             0             1             0
 </code></pre>
-
-<pre><code class="r">newScience2 &lt;- poly2dich(Science, which.items = 2)
+<pre><code class="language-r">newScience2 &lt;- poly2dich(Science, which.items = 2)
 head(newScience2)
 </code></pre>
-
 <pre><code>##   Comfort Work_cat.1 Work_cat.2 Work_cat.3 Work_cat.4 Future Benefit
 ## 1       4          0          0          0          1      3       2
 ## 2       3          0          0          1          0      3       3
@@ -122,10 +126,10 @@ head(newScience2)
 ## 5       3          0          0          0          1      4       1
 ## 6       4          0          0          0          1      3       3
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

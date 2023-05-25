@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate expected value of item</title>
+<!DOCTYPE html><html><head><title>R: Function to calculate expected value of item</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for expected.item {mirt}"><tr><td>expected.item {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>expected.item {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Function to calculate expected value of item</h2>
 
@@ -22,23 +32,22 @@ compute the expected value for an item given the ability parameter(s).
 
 <h3>Usage</h3>
 
-<pre>
-expected.item(x, Theta, min = 0)
-</pre>
+<pre><code class='language-R'>expected.item(x, Theta, min = 0)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>an extracted internal mirt object containing item information (see <code><a href="../../mirt/help/extract.item.html">extract.item</a></code>)</p>
 </td></tr>
-<tr valign="top"><td><code>Theta</code></td>
+<tr style="vertical-align: top;"><td><code>Theta</code></td>
 <td>
 <p>a vector (unidimensional) or matrix (multidimensional) of latent trait values</p>
 </td></tr>
-<tr valign="top"><td><code>min</code></td>
+<tr style="vertical-align: top;"><td><code>min</code></td>
 <td>
 <p>a constant value added to the expected values indicating the lowest theoretical
 category. Default is 0</p>
@@ -56,7 +65,7 @@ category. Default is 0</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -68,13 +77,12 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">mod &lt;- mirt(Science, 1)
+<pre><code class="language-r">mod &lt;- mirt(Science, 1)
 extr.2 &lt;- extract.item(mod, 2)
 Theta &lt;- matrix(seq(-6,6, length.out=200))
 expected &lt;- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
 head(data.frame(expected, Theta=Theta))
 </code></pre>
-
 <pre><code>##   expected     Theta
 ## 1 1.013391 -6.000000
 ## 2 1.014407 -5.939698
@@ -85,5 +93,6 @@ head(data.frame(expected, Theta=Theta))
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create all possible combinations of vector input</title>
+<!DOCTYPE html><html><head><title>R: Create all possible combinations of vector input</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for thetaComb {mirt}"><tr><td>thetaComb {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>thetaComb {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Create all possible combinations of vector input</h2>
 
@@ -24,24 +34,23 @@ flexible combination formats.
 
 <h3>Usage</h3>
 
-<pre>
-thetaComb(theta, nfact, intercept = FALSE)
-</pre>
+<pre><code class='language-R'>thetaComb(theta, nfact, intercept = FALSE)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>theta</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>theta</code></td>
 <td>
 <p>the vector from which all possible combinations should be obtained</p>
 </td></tr>
-<tr valign="top"><td><code>nfact</code></td>
+<tr style="vertical-align: top;"><td><code>nfact</code></td>
 <td>
 <p>the number of observations (and therefore the number of columns to return in
 the matrix of combinations)</p>
 </td></tr>
-<tr valign="top"><td><code>intercept</code></td>
+<tr style="vertical-align: top;"><td><code>intercept</code></td>
 <td>
 <p>logical; should a vector of 1's be appended to the first column of the
 result to include an intercept design component? Default is <code>FALSE</code></p>
@@ -65,16 +74,15 @@ result to include an intercept design component? Default is <code>FALSE</code></
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r"># all possible joint combinations for the vector -4 to 4
+<pre><code class="language-r"># all possible joint combinations for the vector -4 to 4
 thetaComb(-4:4, 2)
 </code></pre>
-
 <pre><code>##       [,1] [,2]
 ##  [1,]   -4   -4
 ##  [2,]   -3   -4
@@ -158,11 +166,9 @@ thetaComb(-4:4, 2)
 ## [80,]    3    4
 ## [81,]    4    4
 </code></pre>
-
-<pre><code class="r"># all possible binary combinations for four observations
+<pre><code class="language-r"># all possible binary combinations for four observations
 thetaComb(c(0,1), 4)
 </code></pre>
-
 <pre><code>##       [,1] [,2] [,3] [,4]
 ##  [1,]    0    0    0    0
 ##  [2,]    1    0    0    0
@@ -181,11 +187,9 @@ thetaComb(c(0,1), 4)
 ## [15,]    0    1    1    1
 ## [16,]    1    1    1    1
 </code></pre>
-
-<pre><code class="r"># all possible binary combinations for four observations (with intercept)
+<pre><code class="language-r"># all possible binary combinations for four observations (with intercept)
 thetaComb(c(0,1), 4, intercept=TRUE)
 </code></pre>
-
 <pre><code>##       [,1] [,2] [,3] [,4] [,5]
 ##  [1,]    1    0    0    0    0
 ##  [2,]    1    1    0    0    0
@@ -206,5 +210,6 @@ thetaComb(c(0,1), 4, intercept=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Description of LSAT7 data</title>
+<!DOCTYPE html><html><head><title>R: Description of LSAT7 data</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for LSAT7 {mirt}"><tr><td>LSAT7 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>LSAT7 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Description of LSAT7 data</h2>
 
@@ -33,17 +43,16 @@ dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.
 </p>
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 dat &lt;- expand.table(LSAT7)
 head(dat)
 </code></pre>
-
 <pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5
 ## 1      0      0      0      0      0
 ## 2      0      0      0      0      0
@@ -52,10 +61,8 @@ head(dat)
 ## 5      0      0      0      0      0
 ## 6      0      0      0      0      0
 </code></pre>
-
-<pre><code class="r">itemstats(dat)
+<pre><code class="language-r">itemstats(dat)
 </code></pre>
-
 <pre><code>## $overall
 ##     N mean_total.score sd_total.score ave.r  sd.r alpha
 ##  1000            3.707          1.199 0.143 0.052 0.453
@@ -76,17 +83,15 @@ head(dat)
 ## Item.4 0.394 0.606
 ## Item.5 0.157 0.843
 </code></pre>
-
-<pre><code class="r">(mod &lt;- mirt(dat, 1))
+<pre><code class="language-r">(mod &lt;- mirt(dat, 1))
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.36.2 
+## mirt version: 1.38.3 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -99,10 +104,8 @@ head(dat)
 ## G2 (21) = 31.7, p = 0.0628
 ## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
-
-<pre><code class="r">coef(mod)
+<pre><code class="language-r">coef(mod)
 </code></pre>
-
 <pre><code>## $Item.1
 ##        a1     d g u
 ## par 0.988 1.856 0 1
@@ -127,10 +130,10 @@ head(dat)
 ##     MEAN_1 COV_11
 ## par      0      1
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

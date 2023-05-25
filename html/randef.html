@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute posterior estimates of random effect</title>
+<!DOCTYPE html><html><head><title>R: Compute posterior estimates of random effect</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for randef {mirt}"><tr><td>randef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>randef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compute posterior estimates of random effect</h2>
 
@@ -23,27 +33,26 @@ Returns a list of the estimated effects.
 
 <h3>Usage</h3>
 
-<pre>
-randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
-</pre>
+<pre><code class='language-R'>randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>an estimated model object from the <code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code> function</p>
 </td></tr>
-<tr valign="top"><td><code>ndraws</code></td>
+<tr style="vertical-align: top;"><td><code>ndraws</code></td>
 <td>
 <p>total number of draws to perform. Default is 1000</p>
 </td></tr>
-<tr valign="top"><td><code>thin</code></td>
+<tr style="vertical-align: top;"><td><code>thin</code></td>
 <td>
 <p>amount of thinning to apply. Default is to use every 10th draw</p>
 </td></tr>
-<tr valign="top"><td><code>return.draws</code></td>
+<tr style="vertical-align: top;"><td><code>return.draws</code></td>
 <td>
 <p>logical; return a list containing the thinned draws of the posterior?</p>
 </td></tr>
@@ -62,22 +71,21 @@ randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
 </p>
 <p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
-<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="https://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<em>Journal of Educational Measurement, 52</em>, 200-222. <a href="https://doi.org/10.1111/jedm.12072">doi:10.1111/jedm.12072</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 #make an arbitrary groups
-covdat &lt;- data.frame(group = rep(paste0(&#39;group&#39;, 1:49), each=nrow(Science)/49))
+covdat &lt;- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
 
 #partial credit model
 mod &lt;- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
 summary(mod)
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mixedmirt(data = Science, covdata = covdat, model = 1, random = ~1 | 
@@ -96,35 +104,31 @@ summary(mod)
 ##           COV_group
 ## COV_group    0.0185
 </code></pre>
-
-<pre><code class="r">effects &lt;- randef(mod, ndraws = 2000, thin = 20)
+<pre><code class="language-r">effects &lt;- randef(mod, ndraws = 2000, thin = 20)
 head(effects$Theta)
 </code></pre>
-
-<pre><code>##              F1
-## [1,]  0.4920514
-## [2,]  0.1908224
-## [3,] -0.5948538
-## [4,] -0.6581340
-## [5,]  0.2088847
-## [6,]  0.7958461
+<pre><code>##               F1
+## [1,]  0.47280820
+## [2,]  0.12389341
+## [3,] -0.62815399
+## [4,] -0.70790166
+## [5,]  0.06678399
+## [6,]  0.92860028
 </code></pre>
-
-<pre><code class="r">head(effects$group)
+<pre><code class="language-r">head(effects$group)
 </code></pre>
-
-<pre><code>##               group
-## group1 -0.007030129
-## group2 -0.008104770
-## group3  0.049454736
-## group4 -0.010112441
-## group5  0.040085372
-## group6  0.043368333
+<pre><code>##              group
+## group1 -0.00610677
+## group2  0.01315147
+## group3  0.01110892
+## group4 -0.03436429
+## group5 -0.01024680
+## group6 -0.01770682
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

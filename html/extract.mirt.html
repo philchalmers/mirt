@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract various elements from estimated model objects</title>
+<!DOCTYPE html><html><head><title>R: Extract various elements from estimated model objects</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for extract.mirt {mirt}"><tr><td>extract.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>extract.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Extract various elements from estimated model objects</h2>
 
@@ -21,20 +31,19 @@
 
 <h3>Usage</h3>
 
-<pre>
-extract.mirt(x, what)
-</pre>
+<pre><code class='language-R'>extract.mirt(x, what)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 'DiscreteGroupClass'</p>
 </td></tr>
-<tr valign="top"><td><code>what</code></td>
+<tr style="vertical-align: top;"><td><code>what</code></td>
 <td>
 <p>a string indicating what to extract</p>
 </td></tr>
@@ -109,6 +118,8 @@ dummy coded variables</p>
 <dt>fulldatalong</dt><dd><p>analogous to <code>tabdatafull</code>, but for the raw input data instead of the
 tabulated frequencies</p>
 </dd>
+<dt>EMhistory</dt><dd><p>if saved, extract the EM iteration history</p>
+</dd>
 <dt>exp_resp</dt><dd><p>expected probability of the unique response patterns</p>
 </dd>
 <dt>survey.weights</dt><dd><p>if supplied, the vector of survey weights used during estimation (NULL if missing)</p>
@@ -131,6 +142,8 @@ during estimation</p>
 </dd>
 <dt>Prior</dt><dd><p>prior density distribution for the latent traits</p>
 </dd>
+<dt>thetaPosterior</dt><dd><p>posterior distribution for latent traits when using EM algorithm</p>
+</dd>
 <dt>key</dt><dd><p>if supplied, the data scoring key</p>
 </dd>
 <dt>nfact</dt><dd><p>number of latent traits/factors</p>
@@ -142,6 +155,8 @@ during estimation</p>
 <dt>groupNames</dt><dd><p>character vector of unique group names</p>
 </dd>
 <dt>group</dt><dd><p>a character vector indicating the group membership</p>
+</dd>
+<dt>invariance</dt><dd><p>a character vector indicating <code>invariance</code> input from <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code></p>
 </dd>
 <dt>secondordertest</dt><dd><p>a logical indicating whether the model passed the second-order test
 based on the Hessian matrix. Indicates whether model is a potential local maximum solution</p>
@@ -165,7 +180,7 @@ if not applicable</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -177,33 +192,28 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 mod &lt;- mirt(Science, 1)
 
-extract.mirt(mod, &#39;logLik&#39;)
+extract.mirt(mod, 'logLik')
 </code></pre>
-
 <pre><code>## [1] -1608.87
 </code></pre>
-
-<pre><code class="r">extract.mirt(mod, &#39;F&#39;)
+<pre><code class="language-r">extract.mirt(mod, 'F')
 </code></pre>
-
 <pre><code>##                F1
 ## Comfort 0.5220496
 ## Work    0.5844686
 ## Future  0.8030199
 ## Benefit 0.5410276
 </code></pre>
-
-<pre><code class="r">#multiple group model
-grp &lt;- rep(c(&#39;G1&#39;, &#39;G2&#39;), each = nrow(Science)/2)
+<pre><code class="language-r">#multiple group model
+grp &lt;- rep(c('G1', 'G2'), each = nrow(Science)/2)
 mod2 &lt;- multipleGroup(Science, 1, grp)
 
 grp1 &lt;- extract.group(mod2, 1) #extract single group model
-extract.mirt(mod2, &#39;parvec&#39;)
+extract.mirt(mod2, 'parvec')
 </code></pre>
-
 <pre><code>##  [1]  0.8316800  4.8913029  2.5597789 -1.3592138  0.8289135  2.4772334
 ##  [7]  0.7025447 -2.1135580  2.8809926  5.4820292  2.2126281 -2.5451325
 ## [13]  0.6920437  3.0133748  0.8608953 -1.5516666  1.1955161  4.8900152
@@ -211,18 +221,16 @@ extract.mirt(mod2, &#39;parvec&#39;)
 ## [25]  2.4324588  6.4188352  2.6336468 -1.8297283  1.4875546  3.8081350
 ## [31]  1.1473714 -1.8343958
 </code></pre>
-
-<pre><code class="r">extract.mirt(grp1, &#39;parvec&#39;)
+<pre><code class="language-r">extract.mirt(grp1, 'parvec')
 </code></pre>
-
 <pre><code>##  [1]  0.8316800  4.8913029  2.5597789 -1.3592138  0.8289135  2.4772334
 ##  [7]  0.7025447 -2.1135580  2.8809926  5.4820292  2.2126281 -2.5451325
 ## [13]  0.6920437  3.0133748  0.8608953 -1.5516666
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

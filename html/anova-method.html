@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compare nested models with likelihood-based statistics</title>
+<!DOCTYPE html><html><head><title>R: Compare nested models with likelihood-based statistics</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for anova-method {mirt}"><tr><td>anova-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>anova-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compare nested models with likelihood-based statistics</h2>
 
@@ -19,47 +29,60 @@
 Bayesian Information Criterion (BIC),
 Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 When given a sequence of objects, <code>anova</code> tests the models against one another
-in the order specified.
+in the order specified. Note that the <code>object</code> inputs should be ordered in terms
+of most constrained model to least constrained.
 </p>
 
 
 <h3>Usage</h3>
 
-<pre>
-## S4 method for signature 'SingleGroupClass'
-anova(object, object2, ..., bounded = FALSE, mix = 0.5, verbose = TRUE)
-</pre>
+<pre><code class='language-R'>## S4 method for signature 'SingleGroupClass'
+anova(
+  object,
+  object2,
+  ...,
+  bounded = FALSE,
+  mix = 0.5,
+  frame = 1,
+  verbose = FALSE
+)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>object</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>object</code></td>
 <td>
 <p>an object of class <code>SingleGroupClass</code>,
-<code>MultipleGroupClass</code>, or <code>MixedClass</code></p>
+<code>MultipleGroupClass</code>, or <code>MixedClass</code>, reflecting the most constrained model fitted</p>
 </td></tr>
-<tr valign="top"><td><code>object2</code></td>
+<tr style="vertical-align: top;"><td><code>object2</code></td>
 <td>
 <p>a second model estimated from any of the mirt package estimation methods</p>
 </td></tr>
-<tr valign="top"><td><code>...</code></td>
+<tr style="vertical-align: top;"><td><code>...</code></td>
 <td>
-<p>additional model objects to be sequentially compared</p>
+<p>additional less constrained model objects to be compared
+sequentially to the previous model</p>
 </td></tr>
-<tr valign="top"><td><code>bounded</code></td>
+<tr style="vertical-align: top;"><td><code>bounded</code></td>
 <td>
 <p>logical; are the two models comparing a bounded parameter (e.g., comparing a single
 2PL and 3PL model with 1 df)? If <code>TRUE</code> then a 50:50 mix of chi-squared distributions
 is used to obtain the p-value</p>
 </td></tr>
-<tr valign="top"><td><code>mix</code></td>
+<tr style="vertical-align: top;"><td><code>mix</code></td>
 <td>
 <p>proportion of chi-squared mixtures. Default is 0.5</p>
 </td></tr>
-<tr valign="top"><td><code>verbose</code></td>
+<tr style="vertical-align: top;"><td><code>frame</code></td>
 <td>
-<p>logical; print additional information to console?</p>
+<p>(internal parameter not for standard use)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>verbose</code></td>
+<td>
+<p>(deprecated argument)</p>
 </td></tr>
 </table>
 
@@ -74,132 +97,91 @@ is used to obtain the p-value</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 x &lt;- mirt(Science, 1)
 x2 &lt;- mirt(Science, 2)
 anova(x, x2)
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = Science, model = 1)
-## Model 2: mirt(data = Science, model = 2)
+<pre><code>##         AIC    SABIC       HQ      BIC    logLik     X2 df     p
+## x  3249.739 3262.512 3274.922 3313.279 -1608.870                
+## x2 3241.938 3257.106 3271.843 3317.392 -1601.969 13.801  3 0.003
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik     X2  df     p
-## 1 3249.739 3262.512 3274.922 3313.279 -1608.870    NaN NaN   NaN
-## 2 3241.938 3257.106 3271.843 3317.392 -1601.969 13.801   3 0.003
+<pre><code class="language-r"># compare three models sequentially (X2 not always meaningful)
+x3 &lt;- mirt(Science, 1, 'gpcm')
+x4 &lt;- mirt(Science, 1, 'nominal')
+anova(x, x2, x3, x4)
 </code></pre>
-
-<pre><code class="r"># compare three models sequentially
-x2 &lt;- mirt(Science, 1, &#39;gpcm&#39;)
-x3 &lt;- mirt(Science, 1, &#39;nominal&#39;)
-anova(x, x2, x3)
+<pre><code>##         AIC    SABIC       HQ      BIC    logLik      X2 df     p
+## x  3249.739 3262.512 3274.922 3313.279 -1608.870                 
+## x2 3241.938 3257.106 3271.843 3317.392 -1601.969  13.801  3 0.003
+## x3 3257.366 3270.139 3282.549 3320.906 -1612.683 -21.428 -3   NaN
+## x4 3264.910 3284.069 3302.684 3360.220 -1608.455   8.456  8  0.39
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df    p
-## 1 3257.366 3270.139 3282.549 3320.906 -1612.683   NaN NaN  NaN
-## 2 3249.739 3262.512 3274.922 3313.279 -1608.870 7.627   0 0.00
-## 3 3264.910 3284.069 3302.684 3360.220 -1608.455 8.456   8 0.39
-</code></pre>
-
-<pre><code class="r"># in isolation
+<pre><code class="language-r"># in isolation
 anova(x)
 </code></pre>
-
 <pre><code>##        AIC    SABIC       HQ      BIC   logLik
-## 1 3249.739 3262.512 3274.922 3313.279 -1608.87
+## x 3249.739 3262.512 3274.922 3313.279 -1608.87
 </code></pre>
-
-<pre><code class="r"># with priors on first model
+<pre><code class="language-r"># with priors on first model
 model &lt;- &quot;Theta = 1-4
           PRIOR = (1-4, a1, lnorm, 0, 10)&quot;
 xp &lt;- mirt(Science, model)
 anova(xp, x2)
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = Science, model = model)
-## Model 2: mirt(data = Science, model = 1, itemtype = &quot;gpcm&quot;)
+<pre><code>##         AIC    SABIC       HQ      BIC    logLik   logPost df
+## xp 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881 NA
+## x2 3241.938 3257.106 3271.843 3317.392 -1601.969 -1601.969  3
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik   logPost  df
-## 1 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881 NaN
-## 2 3257.366 3270.139 3282.549 3320.906 -1612.683 -1612.683   0
+<pre><code class="language-r">anova(xp)
 </code></pre>
-
-<pre><code class="r">anova(xp)
+<pre><code>##         AIC    SABIC       HQ      BIC    logLik   logPost
+## xp 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik   logPost
-## 1 3249.829 3262.602 3275.012 3313.369 -1608.915 -1622.881
-</code></pre>
-
-<pre><code class="r"># bounded parameter
+<pre><code class="language-r"># bounded parameter
 dat &lt;- expand.table(LSAT7)
 mod &lt;- mirt(dat, 1)
-mod2 &lt;- mirt(dat, 1, itemtype = c(rep(&#39;2PL&#39;, 4), &#39;3PL&#39;))
+mod2 &lt;- mirt(dat, 1, itemtype = c(rep('2PL', 4), '3PL'))
 anova(mod, mod2) #unbounded test
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = dat, model = 1)
-## Model 2: mirt(data = dat, model = 1, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
+<pre><code>##           AIC    SABIC       HQ      BIC    logLik    X2 df    p
+## mod  5337.610 5354.927 5356.263 5386.688 -2658.805              
+## mod2 5339.587 5358.636 5360.106 5393.573 -2658.794 0.023  1 0.88
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df    p
-## 1 5337.610 5354.927 5356.263 5386.688 -2658.805   NaN NaN  NaN
-## 2 5339.587 5358.636 5360.106 5393.573 -2658.794 0.023   1 0.88
+<pre><code class="language-r">anova(mod, mod2, bounded = TRUE) #bounded
 </code></pre>
-
-<pre><code class="r">anova(mod, mod2, bounded = TRUE) #bounded
+<pre><code>##           AIC    SABIC       HQ      BIC    logLik    X2 df    p
+## mod  5337.610 5354.927 5356.263 5386.688 -2658.805              
+## mod2 5339.587 5358.636 5360.106 5393.573 -2658.794 0.023  1 0.44
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = dat, model = 1)
-## Model 2: mirt(data = dat, model = 1, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
-</code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df    p
-## 1 5337.610 5354.927 5356.263 5386.688 -2658.805   NaN NaN  NaN
-## 2 5339.587 5358.636 5360.106 5393.573 -2658.794 0.023   1 0.44
-</code></pre>
-
-<pre><code class="r"># priors
-model &lt;- &#39;F = 1-5
-          PRIOR = (5, g, norm, -1, 1)&#39;
-mod1b &lt;- mirt(dat, model, itemtype = c(rep(&#39;2PL&#39;, 4), &#39;3PL&#39;))
+<pre><code class="language-r"># priors
+model &lt;- 'F = 1-5
+          PRIOR = (5, g, norm, -1, 1)'
+mod1b &lt;- mirt(dat, model, itemtype = c(rep('2PL', 4), '3PL'))
 anova(mod1b)
 </code></pre>
-
-<pre><code>##        AIC   SABIC       HQ      BIC    logLik   logPost
-## 1 5339.571 5358.62 5360.089 5393.557 -2658.786 -2659.705
+<pre><code>##            AIC   SABIC       HQ      BIC    logLik   logPost
+## mod1b 5339.571 5358.62 5360.089 5393.557 -2658.786 -2659.705
 </code></pre>
-
-<pre><code class="r">model2 &lt;- &#39;F = 1-5
-          PRIOR = (1-5, g, norm, -1, 1)&#39;
-mod2b &lt;- mirt(dat, model2, itemtype = &#39;3PL&#39;)
+<pre><code class="language-r">model2 &lt;- 'F = 1-5
+          PRIOR = (1-5, g, norm, -1, 1)'
+mod2b &lt;- mirt(dat, model2, itemtype = '3PL')
 anova(mod1b, mod2b)
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = dat, model = model, itemtype = c(rep(&quot;2PL&quot;, 4), &quot;3PL&quot;))
-## Model 2: mirt(data = dat, model = model2, itemtype = &quot;3PL&quot;)
+<pre><code>##            AIC    SABIC       HQ      BIC    logLik   logPost df
+## mod1b 5339.571 5358.620 5360.089 5393.557 -2658.786 -2659.705 NA
+## mod2b 5348.306 5374.282 5376.286 5421.923 -2659.153 -2664.008  4
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik   logPost  df
-## 1 5339.571 5358.620 5360.089 5393.557 -2658.786 -2659.705 NaN
-## 2 5348.306 5374.282 5376.286 5421.923 -2659.153 -2664.008   4
-</code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

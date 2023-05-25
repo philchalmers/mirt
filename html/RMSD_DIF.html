@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: RMSD effect size statistic to quantify category-level DIF</title>
+<!DOCTYPE html><html><head><title>R: RMSD effect size statistic to quantify category-level DIF</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for RMSD_DIF {mirt}"><tr><td>RMSD_DIF {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>RMSD_DIF {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>RMSD effect size statistic to quantify category-level DIF</h2>
 
@@ -29,32 +39,31 @@ due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hart
 
 <h3>Usage</h3>
 
-<pre>
-RMSD_DIF(pooled_mod, flag = 0, probfun = TRUE, dentype = "norm")
-</pre>
+<pre><code class='language-R'>RMSD_DIF(pooled_mod, flag = 0, probfun = TRUE, dentype = "norm")
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>pooled_mod</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>pooled_mod</code></td>
 <td>
 <p>a multiple-group model (used to compute the model-implied
 probability in the goodness-of-fit test)</p>
 </td></tr>
-<tr valign="top"><td><code>flag</code></td>
+<tr style="vertical-align: top;"><td><code>flag</code></td>
 <td>
 <p>a numeric value used as a cut-off to help flag larger RMSD values
 (e.g., <code>flag = .03</code> will highlight only categories with RMSD values greater than
 .03)</p>
 </td></tr>
-<tr valign="top"><td><code>probfun</code></td>
+<tr style="vertical-align: top;"><td><code>probfun</code></td>
 <td>
 <p>logical; use probability functions to compute RMSD? If FALSE, the expected score
 functions will be integrated instead, which may be useful for collapsing across the
 categories in polytomous items</p>
 </td></tr>
-<tr valign="top"><td><code>dentype</code></td>
+<tr style="vertical-align: top;"><td><code>dentype</code></td>
 <td>
 <p>density to use for the latent trait.
 Can be <code>'norm'</code> to use a normal Gaussian density where the mean/variance are extracted
@@ -74,7 +83,7 @@ or <code>'empirical'</code> to use the density estimate obtained via the E-table
 
 <p>Buchholz, J., and Hartig, J. (2019). Comparing Attitudes Across Groups: An IRT-Based Item-Fit Statistic
 for the Analysis of Measurement Invariance. <em>Applied Psychological Measurement, 43</em>(3), 241-250.
-doi: <a href="https://doi.org/10.1177/0146621617748323">10.1177/0146621617748323</a>
+<a href="https://doi.org/10.1177/0146621617748323">doi:10.1177/0146621617748323</a>
 </p>
 <p>Lee, S. S., and von Davier, M. (2020). Improving measurement properties of the PISA home
 possessions scale through partial invariance modeling.
@@ -90,7 +99,7 @@ possessions scale through partial invariance modeling.
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 
 #----- generate some data
 set.seed(12345)
@@ -101,21 +110,20 @@ d &lt;- d2 &lt;- matrix(rnorm(15,0,.7),ncol=1)
 d2[1] &lt;- d[1] - .5
 a2[1] &lt;- a[1] + 1
 
-itemtype &lt;- rep(&#39;2PL&#39;, nrow(a))
+itemtype &lt;- rep('2PL', nrow(a))
 N &lt;- 1000
 dataset1 &lt;- simdata(a, d, N, itemtype)
 dataset2 &lt;- simdata(a2, d2, N, itemtype)
 dat &lt;- rbind(dataset1, dataset2)
-group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
+group &lt;- c(rep('D1', N), rep('D2', N))
 
 #-----
 
 # fully pooled model
 pooled_mod &lt;- multipleGroup(dat, 1, group=group,
-   invariance = c(colnames(dat), &#39;free_mean&#39;, &#39;free_var&#39;))
+   invariance = c(colnames(dat), 'free_mean', 'free_var'))
 coef(pooled_mod, simplify=TRUE)
 </code></pre>
-
 <pre><code>## $D1
 ## $items
 ##            a1      d g u
@@ -171,10 +179,8 @@ coef(pooled_mod, simplify=TRUE)
 ##       F1
 ## F1 1.167
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(pooled_mod)
+<pre><code class="language-r">RMSD_DIF(pooled_mod)
 </code></pre>
-
 <pre><code>## $D1
 ##           P.0   P.1
 ## Item_1  0.056 0.056
@@ -211,10 +217,8 @@ coef(pooled_mod, simplify=TRUE)
 ## Item_14 0.004 0.004
 ## Item_15 0.014 0.014
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(pooled_mod, dentype = &#39;empirical&#39;)
+<pre><code class="language-r">RMSD_DIF(pooled_mod, dentype = 'empirical')
 </code></pre>
-
 <pre><code>## $D1
 ##           P.0   P.1
 ## Item_1  0.056 0.056
@@ -251,10 +255,8 @@ coef(pooled_mod, simplify=TRUE)
 ## Item_14 0.004 0.004
 ## Item_15 0.014 0.014
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(pooled_mod, flag = .03)
+<pre><code class="language-r">RMSD_DIF(pooled_mod, flag = .03)
 </code></pre>
-
 <pre><code>## $D1
 ##           P.0   P.1
 ## Item_1  0.056 0.056
@@ -291,13 +293,11 @@ coef(pooled_mod, simplify=TRUE)
 ## Item_14    NA    NA
 ## Item_15    NA    NA
 </code></pre>
-
-<pre><code class="r"># more freely estimated model (item 1 has 2 parameters estimated)
+<pre><code class="language-r"># more freely estimated model (item 1 has 2 parameters estimated)
 MGmod &lt;- multipleGroup(dat, 1, group=group,
-                       invariance = c(colnames(dat)[-1], &#39;free_mean&#39;, &#39;free_var&#39;))
+                       invariance = c(colnames(dat)[-1], 'free_mean', 'free_var'))
 coef(MGmod, simplify=TRUE)
 </code></pre>
-
 <pre><code>## $D1
 ## $items
 ##            a1      d g u
@@ -353,11 +353,9 @@ coef(MGmod, simplify=TRUE)
 ##       F1
 ## F1 1.033
 </code></pre>
-
-<pre><code class="r"># RMSD in item.1 now reduced (MG model accounts for DIF)
+<pre><code class="language-r"># RMSD in item.1 now reduced (MG model accounts for DIF)
 RMSD_DIF(MGmod)
 </code></pre>
-
 <pre><code>## $D1
 ##           P.0   P.1
 ## Item_1  0.007 0.007
@@ -394,10 +392,8 @@ RMSD_DIF(MGmod)
 ## Item_14 0.009 0.009
 ## Item_15 0.014 0.014
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(MGmod, flag = .03)
+<pre><code class="language-r">RMSD_DIF(MGmod, flag = .03)
 </code></pre>
-
 <pre><code>## $D1
 ##         P.0 P.1
 ## Item_1   NA  NA
@@ -434,8 +430,7 @@ RMSD_DIF(MGmod)
 ## Item_14  NA  NA
 ## Item_15  NA  NA
 </code></pre>
-
-<pre><code class="r">#################
+<pre><code class="language-r">#################
 # polytomous example
 set.seed(12345)
 a &lt;- a2 &lt;- matrix(rlnorm(20,.2,.3))
@@ -450,21 +445,20 @@ d &lt;- d2 &lt;- diffs + rnorm(20)
 d2[1] &lt;- d[1] - .5
 a2[1] &lt;- a[1] + 1
 
-itemtype &lt;- rep(&#39;graded&#39;, nrow(a))
+itemtype &lt;- rep('graded', nrow(a))
 N &lt;- 1000
 dataset1 &lt;- simdata(a, d, N, itemtype)
 dataset2 &lt;- simdata(a2, d2, N, itemtype)
 dat &lt;- rbind(dataset1, dataset2)
-group &lt;- c(rep(&#39;D1&#39;, N), rep(&#39;D2&#39;, N))
+group &lt;- c(rep('D1', N), rep('D2', N))
 
 #-----
 
 # fully pooled model
 pooled_mod &lt;- multipleGroup(dat, 1, group=group,
-         invariance = c(colnames(dat), &#39;free_mean&#39;, &#39;free_var&#39;))
+         invariance = c(colnames(dat), 'free_mean', 'free_var'))
 coef(pooled_mod, simplify=TRUE)
 </code></pre>
-
 <pre><code>## $D1
 ## $items
 ##            a1     d1     d2     d3     d4
@@ -530,11 +524,9 @@ coef(pooled_mod, simplify=TRUE)
 ##       F1
 ## F1 1.182
 </code></pre>
-
-<pre><code class="r"># Item_1 fits poorly in several categories (RMSD &gt; .05)
+<pre><code class="language-r"># Item_1 fits poorly in several categories (RMSD &gt; .05)
 RMSD_DIF(pooled_mod)
 </code></pre>
-
 <pre><code>## $D1
 ##           P.1   P.2   P.3   P.4   P.5
 ## Item_1  0.088 0.057 0.024 0.023 0.037
@@ -581,10 +573,8 @@ RMSD_DIF(pooled_mod)
 ## Item_19 0.027 0.017 0.014 0.009 0.024
 ## Item_20 0.025 0.013 0.014 0.011 0.018
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(pooled_mod, flag = .05)
+<pre><code class="language-r">RMSD_DIF(pooled_mod, flag = .05)
 </code></pre>
-
 <pre><code>## $D1
 ##           P.1   P.2 P.3 P.4 P.5
 ## Item_1  0.088 0.057  NA  NA  NA
@@ -631,10 +621,8 @@ RMSD_DIF(pooled_mod)
 ## Item_19    NA    NA  NA  NA  NA
 ## Item_20    NA    NA  NA  NA  NA
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(pooled_mod, flag = .1, probfun = FALSE) # use expected score function
+<pre><code class="language-r">RMSD_DIF(pooled_mod, flag = .1, probfun = FALSE) # use expected score function
 </code></pre>
-
 <pre><code>## $D1
 ##         S(theta)
 ## Item_1     0.184
@@ -681,13 +669,11 @@ RMSD_DIF(pooled_mod)
 ## Item_19       NA
 ## Item_20       NA
 </code></pre>
-
-<pre><code class="r"># more freely estimated model (item 1 has more parameters estimated)
+<pre><code class="language-r"># more freely estimated model (item 1 has more parameters estimated)
 MGmod &lt;- multipleGroup(dat, 1, group=group,
-                       invariance = c(colnames(dat)[-1], &#39;free_mean&#39;, &#39;free_var&#39;))
+                       invariance = c(colnames(dat)[-1], 'free_mean', 'free_var'))
 coef(MGmod, simplify=TRUE)
 </code></pre>
-
 <pre><code>## $D1
 ## $items
 ##            a1     d1     d2     d3     d4
@@ -753,11 +739,9 @@ coef(MGmod, simplify=TRUE)
 ##       F1
 ## F1 1.071
 </code></pre>
-
-<pre><code class="r"># RMSDs in Item_1 now reduced (MG model better accounts for DIF)
+<pre><code class="language-r"># RMSDs in Item_1 now reduced (MG model better accounts for DIF)
 RMSD_DIF(MGmod)
 </code></pre>
-
 <pre><code>## $D1
 ##           P.1   P.2   P.3   P.4   P.5
 ## Item_1  0.007 0.019 0.017 0.016 0.010
@@ -804,10 +788,8 @@ RMSD_DIF(MGmod)
 ## Item_19 0.027 0.016 0.015 0.010 0.024
 ## Item_20 0.019 0.013 0.014 0.012 0.014
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(MGmod, flag = .05)
+<pre><code class="language-r">RMSD_DIF(MGmod, flag = .05)
 </code></pre>
-
 <pre><code>## $D1
 ##         P.1 P.2 P.3 P.4 P.5
 ## Item_1   NA  NA  NA  NA  NA
@@ -854,10 +836,8 @@ RMSD_DIF(MGmod)
 ## Item_19  NA  NA  NA  NA  NA
 ## Item_20  NA  NA  NA  NA  NA
 </code></pre>
-
-<pre><code class="r">RMSD_DIF(MGmod, probfun = FALSE, flag = .1) # use expected score function
+<pre><code class="language-r">RMSD_DIF(MGmod, probfun = FALSE, flag = .1) # use expected score function
 </code></pre>
-
 <pre><code>## $D1
 ##         S(theta)
 ## Item_1        NA
@@ -904,10 +884,10 @@ RMSD_DIF(MGmod)
 ## Item_19       NA
 ## Item_20       NA
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

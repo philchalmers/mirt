@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a user defined group-level object with correct generic...</title>
+<!DOCTYPE html><html><head><title>R: Create a user defined group-level object with correct generic...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for createGroup {mirt}"><tr><td>createGroup {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>createGroup {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Create a user defined group-level object with correct generic functions</h2>
 
@@ -23,8 +33,7 @@ customized group-level functions. To use the defined objects pass to the
 
 <h3>Usage</h3>
 
-<pre>
-createGroup(
+<pre><code class='language-R'>createGroup(
   par,
   est,
   den,
@@ -37,21 +46,21 @@ createGroup(
   ubound = NULL,
   derivType = "Richardson"
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>par</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>par</code></td>
 <td>
 <p>a named vector of the starting values for the parameters</p>
 </td></tr>
-<tr valign="top"><td><code>est</code></td>
+<tr style="vertical-align: top;"><td><code>est</code></td>
 <td>
 <p>a logical vector indicating which parameters should be freely estimated by default</p>
 </td></tr>
-<tr valign="top"><td><code>den</code></td>
+<tr style="vertical-align: top;"><td><code>den</code></td>
 <td>
 <p>the probability density function given the Theta/ability values.
 First input contains a vector of all the defined parameters and the second input
@@ -59,12 +68,12 @@ must be a matrix called <code>Theta</code>.
 Function also must return a <code>numeric</code> vector object corresponding to the associated densities for
 each row in the <code>Theta</code> input</p>
 </td></tr>
-<tr valign="top"><td><code>nfact</code></td>
+<tr style="vertical-align: top;"><td><code>nfact</code></td>
 <td>
 <p>number of factors required for the model. E.g., for unidimensional models with only one
 dimension of integration <code>nfact = 1</code></p>
 </td></tr>
-<tr valign="top"><td><code>standardize</code></td>
+<tr style="vertical-align: top;"><td><code>standardize</code></td>
 <td>
 <p>logical; use standardization of the quadrature table method proposed by
 Woods and Thissen (2006)? If TRUE, the logical elements named <code>'MEAN_1'</code> and <code>'COV_11'</code>
@@ -73,36 +82,36 @@ input the E-table will be standardized to these fixed values (e.g.,
 <code>par &lt;- c(a1=1, d=0, MEAN_1=0, COV_11=1)</code> with <code>est &lt;- c(TRUE, TRUE, FALSE, FALSE)</code> will
 standardize the E-table to have a 0 mean and unit variance)</p>
 </td></tr>
-<tr valign="top"><td><code>gr</code></td>
+<tr style="vertical-align: top;"><td><code>gr</code></td>
 <td>
 <p>gradient function (vector of first derivatives) of the log-likelihood used in
 estimation. The function must be of the form <code>gr(x, Theta)</code>, where <code>x</code> is the object
 defined by <code>createGroup()</code> and <code>Theta</code> is a matrix of latent trait parameters</p>
 </td></tr>
-<tr valign="top"><td><code>hss</code></td>
+<tr style="vertical-align: top;"><td><code>hss</code></td>
 <td>
 <p>Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used.
 The input is identical to the <code>gr</code> argument</p>
 </td></tr>
-<tr valign="top"><td><code>gen</code></td>
+<tr style="vertical-align: top;"><td><code>gen</code></td>
 <td>
 <p>a function used when <code>GenRandomPars = TRUE</code> is passed to the estimation function
 to generate random starting values. Function must be of the form <code>function(object) ...</code>
 and must return a vector with properties equivalent to the <code>par</code> object. If NULL,
 parameters will remain at the defined starting values by default</p>
 </td></tr>
-<tr valign="top"><td><code>lbound</code></td>
+<tr style="vertical-align: top;"><td><code>lbound</code></td>
 <td>
 <p>optional vector indicating the lower bounds of the parameters. If not specified
 then the bounds will be set to -Inf</p>
 </td></tr>
-<tr valign="top"><td><code>ubound</code></td>
+<tr style="vertical-align: top;"><td><code>ubound</code></td>
 <td>
 <p>optional vector indicating the lower bounds of the parameters. If not specified
 then the bounds will be set to Inf</p>
 </td></tr>
-<tr valign="top"><td><code>derivType</code></td>
+<tr style="vertical-align: top;"><td><code>derivType</code></td>
 <td>
 <p>if the <code>gr</code> or <code>hss</code> terms are not specified this type will be used to
 obtain them numerically. Default is 'Richardson'</p>
@@ -120,13 +129,13 @@ obtain them numerically. Default is 'Richardson'</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r"># normal density example, N(mu, sigma^2)
+<pre><code class="language-r"># normal density example, N(mu, sigma^2)
 den &lt;- function(obj, Theta) dnorm(Theta, obj@par[1], sqrt(obj@par[2]))
 par &lt;- c(mu = 0, sigma2 = .5)
 est &lt;- c(FALSE, TRUE)
@@ -134,12 +143,11 @@ lbound &lt;- c(-Inf, 0)
 grp &lt;- createGroup(par, est, den, nfact = 1, lbound=lbound)
 
 dat &lt;- expand.table(LSAT6)
-mod &lt;- mirt(dat, 1, &#39;Rasch&#39;)
-modcustom &lt;- mirt(dat, 1, &#39;Rasch&#39;, customGroup=grp)
+mod &lt;- mirt(dat, 1, 'Rasch')
+modcustom &lt;- mirt(dat, 1, 'Rasch', customGroup=grp)
 
 coef(mod)
 </code></pre>
-
 <pre><code>## $Item_1
 ##     a1     d g u
 ## par  1 2.731 0 1
@@ -164,10 +172,8 @@ coef(mod)
 ##     MEAN_1 COV_11
 ## par      0  0.572
 </code></pre>
-
-<pre><code class="r">coef(modcustom)
+<pre><code class="language-r">coef(modcustom)
 </code></pre>
-
 <pre><code>## $Item_1
 ##     a1     d g u
 ## par  1 2.729 0 1
@@ -194,5 +200,6 @@ coef(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

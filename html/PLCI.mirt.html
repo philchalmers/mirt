@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute profiled-likelihood (or posterior) confidence...</title>
+<!DOCTYPE html><html><head><title>R: Compute profiled-likelihood (or posterior) confidence...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for PLCI.mirt {mirt}"><tr><td>PLCI.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>PLCI.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compute profiled-likelihood (or posterior) confidence intervals</h2>
 
@@ -23,8 +33,7 @@ and whether the respective interval could be found.
 
 <h3>Usage</h3>
 
-<pre>
-PLCI.mirt(
+<pre><code class='language-R'>PLCI.mirt(
   mod,
   parnum = NULL,
   alpha = 0.05,
@@ -37,61 +46,61 @@ PLCI.mirt(
   verbose = TRUE,
   ...
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>mod</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>mod</code></td>
 <td>
 <p>a converged mirt model</p>
 </td></tr>
-<tr valign="top"><td><code>parnum</code></td>
+<tr style="vertical-align: top;"><td><code>parnum</code></td>
 <td>
 <p>a numeric vector indicating which parameters to estimate.
 Use <code><a href="../../mirt/help/mod2values.html">mod2values</a></code> to determine parameter numbers. If <code>NULL</code>, all possible
 parameters are used</p>
 </td></tr>
-<tr valign="top"><td><code>alpha</code></td>
+<tr style="vertical-align: top;"><td><code>alpha</code></td>
 <td>
 <p>two-tailed alpha critical level</p>
 </td></tr>
-<tr valign="top"><td><code>search_bound</code></td>
+<tr style="vertical-align: top;"><td><code>search_bound</code></td>
 <td>
 <p>logical; use a fixed grid of values around the ML estimate to
 determine more suitable optimization bounds? Using this has much better behaviour
 than setting fixed upper/lower bound values and searching from more extreme ends</p>
 </td></tr>
-<tr valign="top"><td><code>step</code></td>
+<tr style="vertical-align: top;"><td><code>step</code></td>
 <td>
 <p>magnitude of steps used when <code>search_bound</code> is <code>TRUE</code>.
 Smaller values create more points to search a suitable bound for (up to the
 lower bound value visible with <code><a href="../../mirt/help/mod2values.html">mod2values</a></code>). When upper/lower bounds are detected
 this value will be adjusted accordingly</p>
 </td></tr>
-<tr valign="top"><td><code>lower</code></td>
+<tr style="vertical-align: top;"><td><code>lower</code></td>
 <td>
 <p>logical; search for the lower CI?</p>
 </td></tr>
-<tr valign="top"><td><code>upper</code></td>
+<tr style="vertical-align: top;"><td><code>upper</code></td>
 <td>
 <p>logical; search for the upper CI?</p>
 </td></tr>
-<tr valign="top"><td><code>inf2val</code></td>
+<tr style="vertical-align: top;"><td><code>inf2val</code></td>
 <td>
 <p>a numeric used to change parameter bounds which are infinity to a finite number.
 Decreasing this too much may not allow a suitable bound to be located. Default is 30</p>
 </td></tr>
-<tr valign="top"><td><code>NealeMiller</code></td>
+<tr style="vertical-align: top;"><td><code>NealeMiller</code></td>
 <td>
 <p>logical; use the Neale and Miller 1997 approximation? Default is <code>FALSE</code></p>
 </td></tr>
-<tr valign="top"><td><code>verbose</code></td>
+<tr style="vertical-align: top;"><td><code>verbose</code></td>
 <td>
 <p>logical; include additional information in the console?</p>
 </td></tr>
-<tr valign="top"><td><code>...</code></td>
+<tr style="vertical-align: top;"><td><code>...</code></td>
 <td>
 <p>additional arguments to pass to the estimation functions</p>
 </td></tr>
@@ -108,11 +117,11 @@ Decreasing this too much may not allow a suitable bound to be located. Default i
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 <p>Chalmers, R. P., Pek, J., &amp; Liu, Y. (2017). Profile-likelihood Confidence
 Intervals in Item Response Theory Models. <em>Multivariate Behavioral Research, 52</em>, 533-550.
-doi: <a href="https://doi.org/10.1080/00273171.2017.1329082">10.1080/00273171.2017.1329082</a>
+<a href="https://doi.org/10.1080/00273171.2017.1329082">doi:10.1080/00273171.2017.1329082</a>
 </p>
 <p>Neale, M. C. &amp; Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic
 models. <em>Behavior Genetics, 27</em>, 113-120.
@@ -127,20 +136,14 @@ models. <em>Behavior Genetics, 27</em>, 113-120.
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
-mirtCluster() #use all available cores to estimate CI&#39;s in parallel
-</code></pre>
-
-<pre><code>## mirtCluster() previously defined for 2 clusters
-</code></pre>
-
-<pre><code class="r">dat &lt;- expand.table(LSAT7)
+<pre><code class="language-r">## No test: 
+if(interactive()) mirtCluster() #use all available cores to estimate CI's in parallel
+dat &lt;- expand.table(LSAT7)
 mod &lt;- mirt(dat, 1)
 
 result &lt;- PLCI.mirt(mod)
 result
 </code></pre>
-
 <pre><code>##      Item class parnam parnum     value lower_2.5 upper_97.5 lower_conv
 ## 1  Item.1  dich     a1      1 0.9879254 0.6705382  1.3819761       TRUE
 ## 2  Item.1  dich      d      2 1.8560605 1.6203325  2.1474211       TRUE
@@ -164,15 +167,13 @@ result
 ## 9        TRUE
 ## 10       TRUE
 </code></pre>
-
-<pre><code class="r"># model with constraints
-mod &lt;- mirt(dat, &#39;F = 1-5
-                  CONSTRAIN = (1-5, a1)&#39;)
+<pre><code class="language-r"># model with constraints
+mod &lt;- mirt(dat, 'F = 1-5
+                  CONSTRAIN = (1-5, a1)')
 
 result &lt;- PLCI.mirt(mod)
 result
 </code></pre>
-
 <pre><code>##     Item class parnam parnum     value lower_2.5 upper_97.5 lower_conv
 ## 1 Item.1  dich     a1      1 1.0111403 0.8863986  1.1416331       TRUE
 ## 2 Item.1  dich      d      2 1.8681305 1.6751813  2.0690619       TRUE
@@ -188,12 +189,10 @@ result
 ## 5       TRUE
 ## 6       TRUE
 </code></pre>
-
-<pre><code class="r">mod2 &lt;- mirt(Science, 1)
+<pre><code class="language-r">mod2 &lt;- mirt(Science, 1)
 result2 &lt;- PLCI.mirt(mod2)
 result2
 </code></pre>
-
 <pre><code>##       Item  class parnam parnum      value  lower_2.5 upper_97.5 lower_conv
 ## 1  Comfort graded     a1      1  1.0417547  0.7008509   1.453043       TRUE
 ## 2  Comfort graded     d1      2  4.8641542  4.0112194   5.966782       TRUE
@@ -229,14 +228,12 @@ result2
 ## 15       TRUE
 ## 16       TRUE
 </code></pre>
-
-<pre><code class="r">#only estimate CI&#39;s slopes
+<pre><code class="language-r">#only estimate CI's slopes
 sv &lt;- mod2values(mod2)
-parnum &lt;- sv$parnum[sv$name == &#39;a1&#39;]
+parnum &lt;- sv$parnum[sv$name == 'a1']
 result3 &lt;- PLCI.mirt(mod2, parnum)
 result3
 </code></pre>
-
 <pre><code>##      Item  class parnam parnum    value lower_2.5 upper_97.5 lower_conv
 ## 1 Comfort graded     a1      1 1.041755 0.7008509   1.453043       TRUE
 ## 2    Work graded     a1      5 1.225962 0.8942261   1.620993       TRUE
@@ -248,10 +245,10 @@ result3
 ## 3       TRUE
 ## 4       TRUE
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

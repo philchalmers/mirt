@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute the M2 model fit statistic</title>
+<!DOCTYPE html><html><head><title>R: Compute the M2 model fit statistic</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for M2 {mirt}"><tr><td>M2 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>M2 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compute the M2 model fit statistic</h2>
 
@@ -30,8 +40,7 @@ density components (where applicable).
 
 <h3>Usage</h3>
 
-<pre>
-M2(
+<pre><code class='language-R'>M2(
   obj,
   type = "M2*",
   calcNull = TRUE,
@@ -44,68 +53,68 @@ M2(
   suppress = 1,
   ...
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>obj</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>obj</code></td>
 <td>
 <p>an estimated model object from the mirt package</p>
 </td></tr>
-<tr valign="top"><td><code>type</code></td>
+<tr style="vertical-align: top;"><td><code>type</code></td>
 <td>
 <p>type of fit statistic to compute. Options are &quot;M2&quot;, &quot;M2*&quot; for the univariate and
 bivariate collapsed version of the M2 statistic (&quot;M2&quot; currently limited to dichotomous
 response data only), and &quot;C2&quot; for a hybrid between
 M2 and M2* where only the bivariate moments are collapsed</p>
 </td></tr>
-<tr valign="top"><td><code>calcNull</code></td>
+<tr style="vertical-align: top;"><td><code>calcNull</code></td>
 <td>
 <p>logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via <code><a href="../../mirt/help/createItem.html">createItem</a></code> will not)</p>
 </td></tr>
-<tr valign="top"><td><code>na.rm</code></td>
+<tr style="vertical-align: top;"><td><code>na.rm</code></td>
 <td>
 <p>logical; remove rows with any missing values? The M2 family of statistics
 requires a complete dataset in order to be well defined</p>
 </td></tr>
-<tr valign="top"><td><code>quadpts</code></td>
+<tr style="vertical-align: top;"><td><code>quadpts</code></td>
 <td>
 <p>number of quadrature points to use during estimation. If <code>NULL</code>,
 a suitable value will be chosen based
 on the rubric found in <code><a href="../../mirt/help/fscores.html">fscores</a></code></p>
 </td></tr>
-<tr valign="top"><td><code>theta_lim</code></td>
+<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
 <td>
 <p>lower and upper range to evaluate latent trait integral for each dimension</p>
 </td></tr>
-<tr valign="top"><td><code>CI</code></td>
+<tr style="vertical-align: top;"><td><code>CI</code></td>
 <td>
 <p>numeric value from 0 to 1 indicating the range of the confidence interval for
 RMSEA. Default returns the 90% interval</p>
 </td></tr>
-<tr valign="top"><td><code>residmat</code></td>
+<tr style="vertical-align: top;"><td><code>residmat</code></td>
 <td>
 <p>logical; return the residual matrix used to compute the SRMSR statistic?
 Only the lower triangle of the residual correlation matrix will be returned
 (the upper triangle is filled with NA's)</p>
 </td></tr>
-<tr valign="top"><td><code>QMC</code></td>
+<tr style="vertical-align: top;"><td><code>QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 If <code>quadpts</code> not specified, 5000 nodes are used by default</p>
 </td></tr>
-<tr valign="top"><td><code>suppress</code></td>
+<tr style="vertical-align: top;"><td><code>suppress</code></td>
 <td>
 <p>a numeric value indicating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than
 this value will be returned, while all values less than this value will be set to NA.
 Must be used in conjunction with the argument <code>residmat = TRUE</code></p>
 </td></tr>
-<tr valign="top"><td><code>...</code></td>
+<tr style="vertical-align: top;"><td><code>...</code></td>
 <td>
 <p>additional arguments to pass</p>
 </td></tr>
@@ -138,7 +147,7 @@ models for ordinal data</em>. National Center for Research on Evaluation, Standa
 </p>
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 <p>Maydeu-Olivares, A. &amp; Joe, H. (2006). Limited information goodness-of-fit testing in
 multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.
@@ -147,18 +156,17 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 dat &lt;- as.matrix(expand.table(LSAT7))
 (mod1 &lt;- mirt(dat, 1))
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.36.2 
+## mirt version: 1.38.3 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -171,19 +179,16 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## G2 (21) = 31.7, p = 0.0628
 ## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
-
-<pre><code class="r">M2(mod1)
+<pre><code class="language-r">M2(mod1)
 </code></pre>
-
 <pre><code>##             M2 df          p     RMSEA     RMSEA_5   RMSEA_95      SRMSR
 ## stats 11.93769  5 0.03565165 0.0372683 0.008950922 0.06496573 0.03195919
 ##             TLI       CFI
 ## stats 0.9369332 0.9684666
 </code></pre>
-
-<pre><code class="r">M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+<pre><code class="language-r">resids &lt;- M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+resids
 </code></pre>
-
 <pre><code>##             Item.1      Item.2       Item.3       Item.4 Item.5
 ## Item.1          NA          NA           NA           NA     NA
 ## Item.2 -0.02212010          NA           NA           NA     NA
@@ -191,40 +196,40 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## Item.4  0.05155184 -0.01642572 -0.012476892           NA     NA
 ## Item.5  0.05443241 -0.03867705 -0.001860395 7.235426e-05     NA
 </code></pre>
-
-<pre><code class="r">#M2 with missing data present
+<pre><code class="language-r">summary(resids[lower.tri(resids)])
+</code></pre>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## -0.038677 -0.020697 -0.007169  0.001519  0.025035  0.054432
+</code></pre>
+<pre><code class="language-r">#M2 with missing data present
 dat[sample(1:prod(dim(dat)), 250)] &lt;- NA
 mod2 &lt;- mirt(dat, 1)
 # Compute stats by removing missing data row-wise
 M2(mod2, na.rm = TRUE)
 </code></pre>
-
 <pre><code>## Sample size after row-wise response data removal: 773
 </code></pre>
-
-<pre><code>##             M2 df          p      RMSEA RMSEA_5  RMSEA_95      SRMSR       TLI
-## stats 10.11077  5 0.07215684 0.03638727       0 0.0687938 0.03390482 0.9396013
-##             CFI
-## stats 0.9698006
+<pre><code>##             M2 df          p      RMSEA     RMSEA_5   RMSEA_95      SRMSR
+## stats 11.56846  5 0.04120402 0.04125134 0.007678306 0.07290326 0.03626799
+##             TLI       CFI
+## stats 0.9245064 0.9622532
 </code></pre>
-
-<pre><code class="r"># C2 statistic (useful when polytomous IRT models have too few df)
+<pre><code class="language-r"># C2 statistic (useful when polytomous IRT models have too few df)
 pmod &lt;- mirt(Science, 1)
 # This fails with too few df:
 # M2(pmod)
 # This, however, works:
-M2(pmod, type = &#39;C2&#39;)
+M2(pmod, type = 'C2')
 </code></pre>
-
 <pre><code>##             M2 df           p     RMSEA    RMSEA_5  RMSEA_95      SRMSR
 ## stats 19.17929  2 6.84337e-05 0.1482174 0.09234204 0.2116368 0.07257313
 ##             TLI       CFI
 ## stats 0.7300952 0.9100317
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

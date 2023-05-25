@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute factor score estimates (a.k.a, ability estimates,...</title>
+<!DOCTYPE html><html><head><title>R: Compute factor score estimates (a.k.a, ability estimates,...</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for fscores {mirt}"><tr><td>fscores {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>fscores {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)</h2>
 
@@ -32,8 +42,7 @@ for latent regression predictor effects.
 
 <h3>Usage</h3>
 
-<pre>
-fscores(
+<pre><code class='language-R'>fscores(
   object,
   method = "EAP",
   full.scores = TRUE,
@@ -45,6 +54,7 @@ fscores(
   plausible.draws = 0,
   plausible.type = "normal",
   quadpts = NULL,
+  item_weights = rep(1, extract.mirt(object, "nitems")),
   returnER = FALSE,
   return.acov = FALSE,
   mean = NULL,
@@ -63,24 +73,25 @@ fscores(
   start = NULL,
   ...
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>object</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>object</code></td>
 <td>
 <p>a computed model object of class <code>SingleGroupClass</code>,
 <code>MultipleGroupClass</code>, or <code>DiscreteClass</code></p>
 </td></tr>
-<tr valign="top"><td><code>method</code></td>
+<tr style="vertical-align: top;"><td><code>method</code></td>
 <td>
 <p>type of factor score estimation method. Can be:
 </p>
 
 <ul>
-<li> <p><code>"EAP"</code> for the expected a-posteriori (default)
+<li> <p><code>"EAP"</code> for the expected a-posteriori (default). For models fit using
+<code><a href="../../mirt/help/mdirt.html">mdirt</a></code> this will return the posterior classification probabilities
 </p>
 </li>
 <li> <p><code>"MAP"</code> for the maximum a-posteriori (i.e, Bayes modal)
@@ -104,118 +115,125 @@ applicable when the input model was of class <code>MixtureClass</code>)
 </p>
 </li></ul>
 </td></tr>
-<tr valign="top"><td><code>full.scores</code></td>
+<tr style="vertical-align: top;"><td><code>full.scores</code></td>
 <td>
-<p>if <code>FALSE</code> then a summary table with
-factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
-for each response pattern in the data is returned (default)</p>
+<p>if <code>FALSE</code> then a summary table with factor scores
+for each unique pattern is displayed as a formatted <code>matrix</code> object.
+Otherwise, a matrix of factor scores for each response pattern in the data
+is returned (default)</p>
 </td></tr>
-<tr valign="top"><td><code>rotate</code></td>
+<tr style="vertical-align: top;"><td><code>rotate</code></td>
 <td>
 <p>prior rotation to be used when estimating the factor scores. See
 <code><a href="../../mirt/help/summary-method.html">summary-method</a></code> for details. If the object is not an exploratory model
 then this argument is ignored</p>
 </td></tr>
-<tr valign="top"><td><code>Target</code></td>
+<tr style="vertical-align: top;"><td><code>Target</code></td>
 <td>
 <p>target rotation; see <code><a href="../../mirt/help/summary-method.html">summary-method</a></code> for details</p>
 </td></tr>
-<tr valign="top"><td><code>response.pattern</code></td>
+<tr style="vertical-align: top;"><td><code>response.pattern</code></td>
 <td>
 <p>an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame</p>
 </td></tr>
-<tr valign="top"><td><code>append_response.pattern</code></td>
+<tr style="vertical-align: top;"><td><code>append_response.pattern</code></td>
 <td>
 <p>logical; should the inputs from <code>response.pattern</code> also be
 appended to the factor score output?</p>
 </td></tr>
-<tr valign="top"><td><code>na.rm</code></td>
+<tr style="vertical-align: top;"><td><code>na.rm</code></td>
 <td>
 <p>logical; remove rows with any missing values? This is generally not required due to
 the nature of computing factors scores, however for the &quot;EAPsum&quot; method this may be necessary
 to ensure that the sum-scores correspond to the same composite score</p>
 </td></tr>
-<tr valign="top"><td><code>plausible.draws</code></td>
+<tr style="vertical-align: top;"><td><code>plausible.draws</code></td>
 <td>
 <p>number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
 with latent regression predictors (see <code><a href="../../mirt/help/mirt.html">mirt</a></code> for details), but can
-also be generated when no predictor variables were modeled. If <code>plausible.draws</code>
+also be generated when no predictor variables were modelled. If <code>plausible.draws</code>
 is greater than 0 a list of plausible values will be returned</p>
 </td></tr>
-<tr valign="top"><td><code>plausible.type</code></td>
+<tr style="vertical-align: top;"><td><code>plausible.type</code></td>
 <td>
 <p>type of plausible values to obtain. Can be either <code>'normal'</code> (default)
 to use a normal approximation based on the ACOV matrix, or <code>'MH'</code> to obtain Metropolis-Hastings
 samples from the posterior (silently passes object to <code><a href="../../mirt/help/mirt.html">mirt</a></code>, therefore arguments like
 <code>technical</code> can be supplied to increase the number of burn-in draws and discarded samples)</p>
 </td></tr>
-<tr valign="top"><td><code>quadpts</code></td>
+<tr style="vertical-align: top;"><td><code>quadpts</code></td>
 <td>
-<p>number of quadratures to use per dimension. If not specified, a suitable
+<p>number of quadrature to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases
 (and therefore for estimates such as EAP, will be less accurate). This is determined from
 the switch statement
 <code>quadpts &lt;- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)</code></p>
 </td></tr>
-<tr valign="top"><td><code>returnER</code></td>
+<tr style="vertical-align: top;"><td><code>item_weights</code></td>
+<td>
+<p>a user-defined weight vector used in the likelihood expressions
+to add more/less weight for a given observed response. Default is a vector of 1's,
+indicating that all the items receive the same weight</p>
+</td></tr>
+<tr style="vertical-align: top;"><td><code>returnER</code></td>
 <td>
 <p>logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?</p>
 </td></tr>
-<tr valign="top"><td><code>return.acov</code></td>
+<tr style="vertical-align: top;"><td><code>return.acov</code></td>
 <td>
 <p>logical; return a list containing covariance matrices instead of factors
 scores? <code>impute = TRUE</code> not supported with this option</p>
 </td></tr>
-<tr valign="top"><td><code>mean</code></td>
+<tr style="vertical-align: top;"><td><code>mean</code></td>
 <td>
 <p>a vector for custom latent variable means. If NULL, the default for 'group' values
 from the computed mirt object will be used</p>
 </td></tr>
-<tr valign="top"><td><code>cov</code></td>
+<tr style="vertical-align: top;"><td><code>cov</code></td>
 <td>
 <p>a custom matrix of the latent variable covariance matrix. If NULL, the default for
 'group' values from the computed mirt object will be used</p>
 </td></tr>
-<tr valign="top"><td><code>covdata</code></td>
+<tr style="vertical-align: top;"><td><code>covdata</code></td>
 <td>
 <p>when latent regression model has been fitted, and the <code>response.pattern</code>
 input is used to score individuals, then this argument is used to include the latent regression
 covariate terms for each row vector supplied to <code>response.pattern</code></p>
 </td></tr>
-<tr valign="top"><td><code>verbose</code></td>
+<tr style="vertical-align: top;"><td><code>verbose</code></td>
 <td>
 <p>logical; print verbose output messages?</p>
 </td></tr>
-<tr valign="top"><td><code>full.scores.SE</code></td>
+<tr style="vertical-align: top;"><td><code>full.scores.SE</code></td>
 <td>
 <p>logical; when <code>full.scores == TRUE</code>, also return the
 standard errors associated with each respondent? Default is <code>FALSE</code></p>
 </td></tr>
-<tr valign="top"><td><code>theta_lim</code></td>
+<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
 <td>
 <p>lower and upper range to evaluate latent trait integral for each dimension. If
 omitted, a range will be generated automatically based on the number of dimensions</p>
 </td></tr>
-<tr valign="top"><td><code>MI</code></td>
+<tr style="vertical-align: top;"><td><code>MI</code></td>
 <td>
 <p>a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed</p>
 </td></tr>
-<tr valign="top"><td><code>use_dentype_estimate</code></td>
+<tr style="vertical-align: top;"><td><code>use_dentype_estimate</code></td>
 <td>
 <p>logical; if the density of the latent trait was estimated in the model
 (e.g., via Davidian curves or empirical histograms), should this information be used to compute
 the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum, and plausible)</p>
 </td></tr>
-<tr valign="top"><td><code>QMC</code></td>
+<tr style="vertical-align: top;"><td><code>QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? If <code>quadpts</code> is omitted the
 default number of nodes is 5000</p>
 </td></tr>
-<tr valign="top"><td><code>custom_den</code></td>
+<tr style="vertical-align: top;"><td><code>custom_den</code></td>
 <td>
 <p>a function used to define the integration density (if required). The NULL default
 assumes that the multivariate normal distribution with the 'GroupPars' hyper-parameters are
@@ -228,30 +246,30 @@ if <code>method == 'EAPsum'</code> or <code>method == 'EAP'</code>, otherwise Th
 Additional arguments may included and are caught through the <code>fscores(...)</code> input. The
 function <em>must</em> return a numeric vector of density weights (one for each row in Theta)</p>
 </td></tr>
-<tr valign="top"><td><code>custom_theta</code></td>
+<tr style="vertical-align: top;"><td><code>custom_theta</code></td>
 <td>
 <p>a matrix of custom integration nodes to use instead of the default, where
 each column corresponds to the respective dimension in the model</p>
 </td></tr>
-<tr valign="top"><td><code>min_expected</code></td>
+<tr style="vertical-align: top;"><td><code>min_expected</code></td>
 <td>
 <p>when computing goodness of fit tests when <code>method = 'EAPsum'</code>, this value is used
 to collapse across the conditioned total scores until the expected values are greater than this value. Note
 that this only affect the goodness of fit tests and not the returned EAP for sum scores table</p>
 </td></tr>
-<tr valign="top"><td><code>max_theta</code></td>
+<tr style="vertical-align: top;"><td><code>max_theta</code></td>
 <td>
 <p>the maximum/minimum value any given factor score estimate will achieve using
 any modal estimator method (e.g., MAP, WLE, ML)</p>
 </td></tr>
-<tr valign="top"><td><code>start</code></td>
+<tr style="vertical-align: top;"><td><code>start</code></td>
 <td>
 <p>a matrix of starting values to use for iterative estimation methods. Default
 will start at a vector of 0's for each response pattern, or will start at the EAP
 estimates (unidimensional models only). Must be in the form that matches
 <code>full.scores = FALSE</code> (mostly used in the <code>mirtCAT</code> package)</p>
 </td></tr>
-<tr valign="top"><td><code>...</code></td>
+<tr style="vertical-align: top;"><td><code>...</code></td>
 <td>
 <p>additional arguments to be passed to <code>nlm</code></p>
 </td></tr>
@@ -285,11 +303,11 @@ the <code>mirtCAT</code> package and the associated JSS paper (Chalmers, 2016).
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 <p>Chalmers, R. P. (2016). Generating Adaptive and Non-Adaptive Test Interfaces for
 Multidimensional Item Response Theory Applications. <em>Journal of Statistical Software, 71</em>(5),
-1-39. doi: <a href="https://doi.org/10.18637/jss.v071.i05">10.18637/jss.v071.i05</a>
+1-39. <a href="https://doi.org/10.18637/jss.v071.i05">doi:10.18637/jss.v071.i05</a>
 </p>
 <p>Embretson, S. E. &amp; Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
 </p>
@@ -310,10 +328,9 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 
 <h3>Examples</h3>
 
-<pre><code class="r">mod &lt;- mirt(Science, 1)
+<pre><code class="language-r">mod &lt;- mirt(Science, 1)
 tabscores &lt;- fscores(mod, full.scores = FALSE)
 </code></pre>
-
 <pre><code>## 
 ## Method:  EAP
 ## 
@@ -322,10 +339,8 @@ tabscores &lt;- fscores(mod, full.scores = FALSE)
 ##     F1 
 ## 0.6666
 </code></pre>
-
-<pre><code class="r">head(tabscores)
+<pre><code class="language-r">head(tabscores)
 </code></pre>
-
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
 ## [1,]       1    1      1       1 -2.7492687 0.6293569
 ## [2,]       1    3      2       1 -1.4198318 0.5772364
@@ -334,13 +349,11 @@ tabscores &lt;- fscores(mod, full.scores = FALSE)
 ## [5,]       2    1      1       1 -2.5437808 0.5909117
 ## [6,]       2    1      2       4 -1.2478570 0.5840105
 </code></pre>
-
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 fullscores &lt;- fscores(mod)
 fullscores_with_SE &lt;- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)
 </code></pre>
-
 <pre><code>##              F1
 ## [1,]  0.4015613
 ## [2,]  0.0520324
@@ -349,10 +362,8 @@ head(fullscores)
 ## [5,]  0.7653806
 ## [6,]  0.6695350
 </code></pre>
-
-<pre><code class="r">head(fullscores_with_SE)
+<pre><code class="language-r">head(fullscores_with_SE)
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,]  0.4015613 0.5978747
 ## [2,]  0.0520324 0.5549554
@@ -361,12 +372,10 @@ head(fullscores)
 ## [5,]  0.7653806 0.6385998
 ## [6,]  0.6695350 0.5761860
 </code></pre>
-
-<pre><code class="r">#change method argument to use MAP estimates
-fullscores &lt;- fscores(mod, method=&#39;MAP&#39;)
+<pre><code class="language-r"># change method argument to use MAP estimates
+fullscores &lt;- fscores(mod, method='MAP')
 head(fullscores)
 </code></pre>
-
 <pre><code>##               F1
 ## [1,]  0.42140793
 ## [2,]  0.05866659
@@ -375,36 +384,28 @@ head(fullscores)
 ## [5,]  0.79013883
 ## [6,]  0.68302194
 </code></pre>
-
-<pre><code class="r">#calculate MAP for a given response vector
-fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4))
+<pre><code class="language-r"># calculate MAP for a given response vector
+fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,] -0.3704194 0.6054169
 </code></pre>
-
-<pre><code class="r">#or matrix
-fscores(mod, method=&#39;MAP&#39;, response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
+<pre><code class="language-r">#or matrix
+fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,] -0.3704194 0.6054169
 ## [2,] -1.6937559 0.5773972
 </code></pre>
-
-<pre><code class="r"># return only the scores and their SEs
-fscores(mod, method=&#39;MAP&#39;, response.pattern = c(1,2,3,4))
+<pre><code class="language-r"># return only the scores and their SEs
+fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,] -0.3704194 0.6054169
 </code></pre>
-
-<pre><code class="r">#use custom latent variable properties (diffuse prior for MAP is very close to ML)
-fscores(mod, method=&#39;MAP&#39;, cov = matrix(1000), full.scores = FALSE)
+<pre><code class="language-r"># use custom latent variable properties (diffuse prior for MAP is very close to ML)
+fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
 </code></pre>
-
 <pre><code>## 
 ## Method:  MAP
 ## 
@@ -413,103 +414,100 @@ fscores(mod, method=&#39;MAP&#39;, cov = matrix(1000), full.scores = FALSE)
 ##     F1 
 ## 0.4207
 </code></pre>
-
-<pre><code>##       Comfort Work Future Benefit          F1      SE_F1
-##  [1,]       1    1      1       1 -9.33951652  9.6355561
-##  [2,]       1    3      2       1 -2.10399820  0.6892497
-##  [3,]       1    4      2       3 -1.15079772  0.7050200
-##  [4,]       1    4      3       1 -0.78096400  0.8072694
-##  [5,]       2    1      1       1 -4.39410045  1.1794941
-##  [6,]       2    1      2       4 -1.86282369  0.6679187
-##  [7,]       2    2      1       1 -3.24765372  0.8121324
-##  [8,]       2    2      2       2 -1.91138883  0.5875056
-##  [9,]       2    2      2       3 -1.60556797  0.6084689
-## [10,]       2    2      3       1 -1.46798831  0.7136838
-## [11,]       2    2      3       2 -1.16829291  0.6346994
-## [12,]       2    2      3       3 -0.79657516  0.6390082
-## [13,]       2    2      4       3  0.24025764  0.7886564
-## [14,]       2    3      1       3 -2.14238696  0.7017130
-## [15,]       2    3      2       2 -1.60857831  0.6258231
-## [16,]       2    3      2       3 -1.25398200  0.6302088
-## [17,]       2    3      3       2 -0.75571789  0.6558530
-## [18,]       2    3      3       3 -0.33161734  0.6981086
-## [19,]       2    3      3       4  0.08303458  0.7613508
-## [20,]       2    3      4       1  0.18902647  0.8780412
-## [21,]       2    3      4       3  0.76269417  0.6806576
-## [22,]       2    4      2       1 -1.82212924  0.6941785
-## [23,]       2    4      4       3  1.30730680  0.7534851
-## [24,]       2    4      4       4  2.09457768  1.0392353
-## [25,]       3    1      1       1 -3.53814277  1.0014201
-## [26,]       3    1      1       3 -2.50975652  0.6971827
-## [27,]       3    1      2       2 -1.92551599  0.6147422
-## [28,]       3    1      2       3 -1.58688138  0.6433970
-## [29,]       3    1      3       2 -1.08753431  0.6741187
-## [30,]       3    1      3       3 -0.65801199  0.6955365
-## [31,]       3    1      3       4 -0.28080385  0.8073110
-## [32,]       3    1      4       3  0.54246942  0.7338744
-## [33,]       3    1      4       4  1.03787099  0.7358268
-## [34,]       3    2      1       2 -2.34808003  0.6246704
-## [35,]       3    2      1       4 -1.91303987  0.7094593
-## [36,]       3    2      2       1 -1.86127492  0.6158454
-## [37,]       3    2      2       2 -1.57674751  0.5939631
-## [38,]       3    2      2       3 -1.25489834  0.6022571
-## [39,]       3    2      3       1 -1.02517060  0.6627051
-## [40,]       3    2      3       2 -0.79779682  0.6290335
-## [41,]       3    2      3       3 -0.40891429  0.6676663
-## [42,]       3    2      3       4 -0.03738214  0.7437682
-## [43,]       3    2      4       1  0.01467552  0.9004291
-## [44,]       3    2      4       2  0.20538260  0.7886293
-## [45,]       3    2      4       3  0.64303231  0.6840798
-## [46,]       3    2      4       4  1.10168772  0.7183789
-## [47,]       3    3      1       3 -1.62932695  0.7802080
-## [48,]       3    3      2       1 -1.51761901  0.6591228
-## [49,]       3    3      2       2 -1.23910216  0.6168897
-## [50,]       3    3      2       3 -0.88245744  0.6300829
-## [51,]       3    3      2       4 -0.62079890  0.7080556
-## [52,]       3    3      3       1 -0.54910678  0.7107281
-## [53,]       3    3      3       2 -0.34739935  0.6874561
-## [54,]       3    3      3       3  0.08637281  0.6868696
-## [55,]       3    3      3       4  0.49018549  0.6761531
-## [56,]       3    3      4       2  0.73237004  0.6812077
-## [57,]       3    3      4       3  1.04777614  0.6499124
-## [58,]       3    3      4       4  1.52472344  0.7455910
-## [59,]       3    4      1       3 -1.38148971  0.9427079
-## [60,]       3    4      2       3 -0.60836892  0.7256019
-## [61,]       3    4      3       2  0.09927069  0.7675852
-## [62,]       3    4      3       3  0.53785991  0.6774054
-## [63,]       3    4      3       4  0.96115397  0.6745446
-## [64,]       3    4      4       1  1.21807122  0.7584567
-## [65,]       3    4      4       2  1.27195710  0.7490778
-## [66,]       3    4      4       3  1.59934323  0.7662279
-## [67,]       3    4      4       4  2.42236673  1.0401223
-## [68,]       4    1      1       4 -2.10558080  0.7724116
-## [69,]       4    1      2       2 -1.63796061  0.6540725
-## [70,]       4    1      2       4 -1.01407917  0.7239107
-## [71,]       4    1      3       4  0.36120593  0.7777451
-## [72,]       4    2      2       1 -1.56782447  0.6512224
-## [73,]       4    2      2       3 -0.93515695  0.6275737
-## [74,]       4    2      3       3  0.05367208  0.7107570
-## [75,]       4    2      3       4  0.49170860  0.7095398
-## [76,]       4    2      4       2  0.76227140  0.7229547
-## [77,]       4    2      4       4  1.75983975  0.9306370
-## [78,]       4    3      2       3 -0.48507197  0.7037542
-## [79,]       4    3      3       2  0.13911259  0.7180795
-## [80,]       4    3      3       3  0.53266734  0.6522718
-## [81,]       4    3      3       4  0.92904321  0.6554712
-## [82,]       4    3      4       2  1.21563093  0.7193802
-## [83,]       4    3      4       3  1.52654526  0.7343333
-## [84,]       4    3      4       4  2.25842250  0.9678449
-## [85,]       4    4      3       2  0.63968593  0.7069825
-## [86,]       4    4      3       3  0.98114245  0.6613476
-## [87,]       4    4      3       4  1.46456801  0.7487625
-## [88,]       4    4      4       2  2.02777164  1.0101184
-## [89,]       4    4      4       3  2.38986103  1.0150510
-## [90,]       4    4      4       4  7.11188116 10.6159261
+<pre><code>##       Comfort Work Future Benefit     F1  SE_F1
+##  [1,]       1    1      1       1 -9.340  9.636
+##  [2,]       1    3      2       1 -2.104  0.689
+##  [3,]       1    4      2       3 -1.151  0.705
+##  [4,]       1    4      3       1 -0.781  0.807
+##  [5,]       2    1      1       1 -4.394  1.179
+##  [6,]       2    1      2       4 -1.863  0.668
+##  [7,]       2    2      1       1 -3.248  0.812
+##  [8,]       2    2      2       2 -1.911  0.588
+##  [9,]       2    2      2       3 -1.606  0.608
+## [10,]       2    2      3       1 -1.468  0.714
+## [11,]       2    2      3       2 -1.168  0.635
+## [12,]       2    2      3       3 -0.797  0.639
+## [13,]       2    2      4       3  0.240  0.789
+## [14,]       2    3      1       3 -2.142  0.702
+## [15,]       2    3      2       2 -1.609  0.626
+## [16,]       2    3      2       3 -1.254  0.630
+## [17,]       2    3      3       2 -0.756  0.656
+## [18,]       2    3      3       3 -0.332  0.698
+## [19,]       2    3      3       4  0.083  0.761
+## [20,]       2    3      4       1  0.189  0.878
+## [21,]       2    3      4       3  0.763  0.681
+## [22,]       2    4      2       1 -1.822  0.694
+## [23,]       2    4      4       3  1.307  0.753
+## [24,]       2    4      4       4  2.095  1.039
+## [25,]       3    1      1       1 -3.538  1.001
+## [26,]       3    1      1       3 -2.510  0.697
+## [27,]       3    1      2       2 -1.926  0.615
+## [28,]       3    1      2       3 -1.587  0.643
+## [29,]       3    1      3       2 -1.088  0.674
+## [30,]       3    1      3       3 -0.658  0.696
+## [31,]       3    1      3       4 -0.281  0.807
+## [32,]       3    1      4       3  0.542  0.734
+## [33,]       3    1      4       4  1.038  0.736
+## [34,]       3    2      1       2 -2.348  0.625
+## [35,]       3    2      1       4 -1.913  0.709
+## [36,]       3    2      2       1 -1.861  0.616
+## [37,]       3    2      2       2 -1.577  0.594
+## [38,]       3    2      2       3 -1.255  0.602
+## [39,]       3    2      3       1 -1.025  0.663
+## [40,]       3    2      3       2 -0.798  0.629
+## [41,]       3    2      3       3 -0.409  0.668
+## [42,]       3    2      3       4 -0.037  0.744
+## [43,]       3    2      4       1  0.015  0.900
+## [44,]       3    2      4       2  0.205  0.789
+## [45,]       3    2      4       3  0.643  0.684
+## [46,]       3    2      4       4  1.102  0.718
+## [47,]       3    3      1       3 -1.629  0.780
+## [48,]       3    3      2       1 -1.518  0.659
+## [49,]       3    3      2       2 -1.239  0.617
+## [50,]       3    3      2       3 -0.882  0.630
+## [51,]       3    3      2       4 -0.621  0.708
+## [52,]       3    3      3       1 -0.549  0.711
+## [53,]       3    3      3       2 -0.347  0.687
+## [54,]       3    3      3       3  0.086  0.687
+## [55,]       3    3      3       4  0.490  0.676
+## [56,]       3    3      4       2  0.732  0.681
+## [57,]       3    3      4       3  1.048  0.650
+## [58,]       3    3      4       4  1.525  0.746
+## [59,]       3    4      1       3 -1.381  0.943
+## [60,]       3    4      2       3 -0.608  0.726
+## [61,]       3    4      3       2  0.099  0.768
+## [62,]       3    4      3       3  0.538  0.677
+## [63,]       3    4      3       4  0.961  0.675
+## [64,]       3    4      4       1  1.218  0.758
+## [65,]       3    4      4       2  1.272  0.749
+## [66,]       3    4      4       3  1.599  0.766
+## [67,]       3    4      4       4  2.422  1.040
+## [68,]       4    1      1       4 -2.106  0.772
+## [69,]       4    1      2       2 -1.638  0.654
+## [70,]       4    1      2       4 -1.014  0.724
+## [71,]       4    1      3       4  0.361  0.778
+## [72,]       4    2      2       1 -1.568  0.651
+## [73,]       4    2      2       3 -0.935  0.628
+## [74,]       4    2      3       3  0.054  0.711
+## [75,]       4    2      3       4  0.492  0.710
+## [76,]       4    2      4       2  0.762  0.723
+## [77,]       4    2      4       4  1.760  0.931
+## [78,]       4    3      2       3 -0.485  0.704
+## [79,]       4    3      3       2  0.139  0.718
+## [80,]       4    3      3       3  0.533  0.652
+## [81,]       4    3      3       4  0.929  0.655
+## [82,]       4    3      4       2  1.216  0.719
+## [83,]       4    3      4       3  1.527  0.734
+## [84,]       4    3      4       4  2.258  0.968
+## [85,]       4    4      3       2  0.640  0.707
+## [86,]       4    4      3       3  0.981  0.661
+## [87,]       4    4      3       4  1.465  0.749
+## [88,]       4    4      4       2  2.028  1.010
+## [89,]       4    4      4       3  2.390  1.015
+## [90,]       4    4      4       4  7.112 10.616
 </code></pre>
-
-<pre><code class="r">fscores(mod, method=&#39;ML&#39;, full.scores = FALSE)
+<pre><code class="language-r">fscores(mod, method='ML', full.scores = FALSE)
 </code></pre>
-
 <pre><code>## 
 ## Method:  ML
 ## 
@@ -518,134 +516,198 @@ fscores(mod, method=&#39;MAP&#39;, cov = matrix(1000), full.scores = FALSE)
 ##    F1 
 ## 0.716
 </code></pre>
-
-<pre><code>##       Comfort Work Future Benefit          F1     SE_F1
-##  [1,]       1    1      1       1        -Inf        NA
-##  [2,]       1    3      2       1 -2.10499828 0.6894269
-##  [3,]       1    4      2       3 -1.15136437 0.7052004
-##  [4,]       1    4      3       1 -0.78147320 0.8074821
-##  [5,]       2    1      1       1 -4.40023233 1.1822486
-##  [6,]       2    1      2       4 -1.86365477 0.6680213
-##  [7,]       2    2      1       1 -3.24979940 0.8130422
-##  [8,]       2    2      2       2 -1.91204974 0.5875929
-##  [9,]       2    2      2       3 -1.60616322 0.6085831
-## [10,]       2    2      3       1 -1.46873658 0.7139920
-## [11,]       2    2      3       2 -1.16876387 0.6348582
-## [12,]       2    2      3       3 -0.79690047 0.6391173
-## [13,]       2    2      4       3  0.24040721 0.7888702
-## [14,]       2    3      1       3 -2.14344342 0.7018391
-## [15,]       2    3      2       2 -1.60920919 0.6259497
-## [16,]       2    3      2       3 -1.25448025 0.6303475
-## [17,]       2    3      3       2 -0.75604300 0.6559689
-## [18,]       2    3      3       3 -0.33177894 0.6982616
-## [19,]       2    3      3       4  0.08308250 0.7615680
-## [20,]       2    3      4       1  0.18917228 0.8783298
-## [21,]       2    3      4       3  0.76304766 0.6807989
-## [22,]       2    4      2       1 -1.82300735 0.6942902
-## [23,]       2    4      4       3  1.30804997 0.7538642
-## [24,]       2    4      4       4  2.09684241 1.0407200
-## [25,]       3    1      1       1 -3.54170079 1.0035497
-## [26,]       3    1      1       3 -2.51097738 0.6975388
-## [27,]       3    1      2       2 -1.92624519 0.6148335
-## [28,]       3    1      2       3 -1.58753955 0.6435255
-## [29,]       3    1      3       2 -1.08802880 0.6742920
-## [30,]       3    1      3       3 -0.65833030 0.6956683
-## [31,]       3    1      3       4 -0.28098699 0.8075531
-## [32,]       3    1      4       3  0.54276314 0.7340180
-## [33,]       3    1      4       4  1.03843251 0.7360830
-## [34,]       3    2      1       2 -2.34899690 0.6248345
-## [35,]       3    2      1       4 -1.91400269 0.7094700
-## [36,]       3    2      2       1 -1.86198198 0.6159398
-## [37,]       3    2      2       2 -1.57730475 0.5940658
-## [38,]       3    2      2       3 -1.25535368 0.6023707
-## [39,]       3    2      3       1 -1.02562104 0.6628596
-## [40,]       3    2      3       2 -0.79811247 0.6291362
-## [41,]       3    2      3       3 -0.40909616 0.6677936
-## [42,]       3    2      3       4 -0.03740134 0.7439739
-## [43,]       3    2      4       1  0.01469413 0.9007890
-## [44,]       3    2      4       2  0.20551043 0.7888495
-## [45,]       3    2      4       3  0.64333323 0.6842145
-## [46,]       3    2      4       4  1.10225664 0.7186515
-## [47,]       3    3      1       3 -1.63031901 0.7802420
-## [48,]       3    3      2       1 -1.51827905 0.6592758
-## [49,]       3    3      2       2 -1.23957389 0.6170141
-## [50,]       3    3      2       3 -0.88280650 0.6301834
-## [51,]       3    3      2       4 -0.62111017 0.7081726
-## [52,]       3    3      3       1 -0.54938465 0.7108727
-## [53,]       3    3      3       2 -0.34756340 0.6876002
-## [54,]       3    3      3       3  0.08641366 0.6870296
-## [55,]       3    3      3       4  0.49040925 0.6762795
-## [56,]       3    3      4       2  0.73271002 0.6813470
-## [57,]       3    3      4       3  1.04821971 0.6500852
-## [58,]       3    3      4       4  1.52557212 0.7460043
-## [59,]       3    4      1       3 -1.38271827 0.9426967
-## [60,]       3    4      2       3 -0.60868923 0.7257241
-## [61,]       3    4      3       2  0.09932876 0.7678067
-## [62,]       3    4      3       3  0.53810625 0.6775295
-## [63,]       3    4      3       4  0.96159153 0.6747114
-## [64,]       3    4      4       1  1.21877250 0.7588065
-## [65,]       3    4      4       2  1.27267168 0.7494432
-## [66,]       3    4      4       3  1.60028348 0.7666937
-## [67,]       3    4      4       4  2.42499221 1.0416690
-## [68,]       4    1      1       4 -2.10683745 0.7724672
-## [69,]       4    1      2       2 -1.63866162 0.6541976
-## [70,]       4    1      2       4 -1.01461152 0.7240600
-## [71,]       4    1      3       4  0.36142674 0.7779367
-## [72,]       4    2      2       1 -1.56848943 0.6513580
-## [73,]       4    2      2       3 -0.93552371 0.6276734
-## [74,]       4    2      3       3  0.05369990 0.7109361
-## [75,]       4    2      3       4  0.49195637 0.7096903
-## [76,]       4    2      4       2  0.76267000 0.7231379
-## [77,]       4    2      4       4  1.76136607 0.9317187
-## [78,]       4    3      2       3 -0.48531220 0.7038789
-## [79,]       4    3      3       2  0.13918630 0.7182604
-## [80,]       4    3      3       3  0.53289398 0.6523889
-## [81,]       4    3      3       4  0.92944258 0.6556238
-## [82,]       4    3      4       2  1.21626054 0.7196884
-## [83,]       4    3      4       3  1.52736964 0.7347313
-## [84,]       4    3      4       4  2.26054125 0.9690341
-## [85,]       4    4      3       2  0.64000595 0.7071286
-## [86,]       4    4      3       3  0.98157196 0.6615132
-## [87,]       4    4      3       4  1.46539075 0.7491620
-## [88,]       4    4      4       2  2.02984488 1.0114985
-## [89,]       4    4      4       3  2.39232715 1.0164811
-## [90,]       4    4      4       4         Inf        NA
+<pre><code>##       Comfort Work Future Benefit     F1 SE_F1
+##  [1,]       1    1      1       1   -Inf    NA
+##  [2,]       1    3      2       1 -2.105 0.689
+##  [3,]       1    4      2       3 -1.151 0.705
+##  [4,]       1    4      3       1 -0.781 0.807
+##  [5,]       2    1      1       1 -4.400 1.182
+##  [6,]       2    1      2       4 -1.864 0.668
+##  [7,]       2    2      1       1 -3.250 0.813
+##  [8,]       2    2      2       2 -1.912 0.588
+##  [9,]       2    2      2       3 -1.606 0.609
+## [10,]       2    2      3       1 -1.469 0.714
+## [11,]       2    2      3       2 -1.169 0.635
+## [12,]       2    2      3       3 -0.797 0.639
+## [13,]       2    2      4       3  0.240 0.789
+## [14,]       2    3      1       3 -2.143 0.702
+## [15,]       2    3      2       2 -1.609 0.626
+## [16,]       2    3      2       3 -1.254 0.630
+## [17,]       2    3      3       2 -0.756 0.656
+## [18,]       2    3      3       3 -0.332 0.698
+## [19,]       2    3      3       4  0.083 0.762
+## [20,]       2    3      4       1  0.189 0.878
+## [21,]       2    3      4       3  0.763 0.681
+## [22,]       2    4      2       1 -1.823 0.694
+## [23,]       2    4      4       3  1.308 0.754
+## [24,]       2    4      4       4  2.097 1.041
+## [25,]       3    1      1       1 -3.542 1.004
+## [26,]       3    1      1       3 -2.511 0.698
+## [27,]       3    1      2       2 -1.926 0.615
+## [28,]       3    1      2       3 -1.588 0.644
+## [29,]       3    1      3       2 -1.088 0.674
+## [30,]       3    1      3       3 -0.658 0.696
+## [31,]       3    1      3       4 -0.281 0.808
+## [32,]       3    1      4       3  0.543 0.734
+## [33,]       3    1      4       4  1.038 0.736
+## [34,]       3    2      1       2 -2.349 0.625
+## [35,]       3    2      1       4 -1.914 0.709
+## [36,]       3    2      2       1 -1.862 0.616
+## [37,]       3    2      2       2 -1.577 0.594
+## [38,]       3    2      2       3 -1.255 0.602
+## [39,]       3    2      3       1 -1.026 0.663
+## [40,]       3    2      3       2 -0.798 0.629
+## [41,]       3    2      3       3 -0.409 0.668
+## [42,]       3    2      3       4 -0.037 0.744
+## [43,]       3    2      4       1  0.015 0.901
+## [44,]       3    2      4       2  0.206 0.789
+## [45,]       3    2      4       3  0.643 0.684
+## [46,]       3    2      4       4  1.102 0.719
+## [47,]       3    3      1       3 -1.630 0.780
+## [48,]       3    3      2       1 -1.518 0.659
+## [49,]       3    3      2       2 -1.240 0.617
+## [50,]       3    3      2       3 -0.883 0.630
+## [51,]       3    3      2       4 -0.621 0.708
+## [52,]       3    3      3       1 -0.549 0.711
+## [53,]       3    3      3       2 -0.348 0.688
+## [54,]       3    3      3       3  0.086 0.687
+## [55,]       3    3      3       4  0.490 0.676
+## [56,]       3    3      4       2  0.733 0.681
+## [57,]       3    3      4       3  1.048 0.650
+## [58,]       3    3      4       4  1.526 0.746
+## [59,]       3    4      1       3 -1.383 0.943
+## [60,]       3    4      2       3 -0.609 0.726
+## [61,]       3    4      3       2  0.099 0.768
+## [62,]       3    4      3       3  0.538 0.678
+## [63,]       3    4      3       4  0.962 0.675
+## [64,]       3    4      4       1  1.219 0.759
+## [65,]       3    4      4       2  1.273 0.749
+## [66,]       3    4      4       3  1.600 0.767
+## [67,]       3    4      4       4  2.425 1.042
+## [68,]       4    1      1       4 -2.107 0.772
+## [69,]       4    1      2       2 -1.639 0.654
+## [70,]       4    1      2       4 -1.015 0.724
+## [71,]       4    1      3       4  0.361 0.778
+## [72,]       4    2      2       1 -1.568 0.651
+## [73,]       4    2      2       3 -0.936 0.628
+## [74,]       4    2      3       3  0.054 0.711
+## [75,]       4    2      3       4  0.492 0.710
+## [76,]       4    2      4       2  0.763 0.723
+## [77,]       4    2      4       4  1.761 0.932
+## [78,]       4    3      2       3 -0.485 0.704
+## [79,]       4    3      3       2  0.139 0.718
+## [80,]       4    3      3       3  0.533 0.652
+## [81,]       4    3      3       4  0.929 0.656
+## [82,]       4    3      4       2  1.216 0.720
+## [83,]       4    3      4       3  1.527 0.735
+## [84,]       4    3      4       4  2.261 0.969
+## [85,]       4    4      3       2  0.640 0.707
+## [86,]       4    4      3       3  0.982 0.662
+## [87,]       4    4      3       4  1.465 0.749
+## [88,]       4    4      4       2  2.030 1.011
+## [89,]       4    4      4       3  2.392 1.016
+## [90,]       4    4      4       4    Inf    NA
 </code></pre>
-
-<pre><code class="r"># EAPsum table of values based on total scores
-fscores(mod, method = &#39;EAPsum&#39;, full.scores = FALSE)
+<pre><code class="language-r"># EAPsum table of values based on total scores
+(fs &lt;- fscores(mod, method = 'EAPsum', full.scores = FALSE))
 </code></pre>
-
 <pre><code>##       df       X2       p.X2    rxx_F1
 ## stats 10 16.31202 0.09104204 0.6241528
 </code></pre>
-
-<pre><code>##    Sum.Scores          F1     SE_F1 observed   expected   std.res
-## 4           4 -2.74926868 0.6293569        2  0.1241449 5.3239609
-## 5           5 -2.43096708 0.6167669        1  0.7902670 0.2359282
-## 6           6 -2.08095804 0.6101826        2  2.7598787 0.4574033
-## 7           7 -1.71797996 0.6019326        1  7.2515944 2.3215286
-## 8           8 -1.36354348 0.5979810       11 15.8925644 1.2272684
-## 9           9 -1.01186764 0.6038596       32 29.6740255 0.4269890
-## 10         10 -0.64926712 0.6101301       58 48.3632492 1.3857117
-## 11         11 -0.28688279 0.6048405       70 68.4845962 0.1831184
-## 12         12  0.08240446 0.5996636       91 80.5530280 1.1639907
-## 13         13  0.48709473 0.6133534       56 65.6680929 1.1930636
-## 14         14  0.93406958 0.6170256       36 42.6372130 1.0164625
-## 15         15  1.38421709 0.6218261       20 22.3313442 0.4933430
-## 16         16  1.85351394 0.6544099       12  7.4700016 1.6574396
+<pre><code>##    Sum.Scores     F1 SE_F1 observed expected std.res
+## 4           4 -2.749 0.629        2    0.124   5.324
+## 5           5 -2.431 0.617        1    0.790   0.236
+## 6           6 -2.081 0.610        2    2.760   0.457
+## 7           7 -1.718 0.602        1    7.252   2.322
+## 8           8 -1.364 0.598       11   15.893   1.227
+## 9           9 -1.012 0.604       32   29.674   0.427
+## 10         10 -0.649 0.610       58   48.363   1.386
+## 11         11 -0.287 0.605       70   68.485   0.183
+## 12         12  0.082 0.600       91   80.553   1.164
+## 13         13  0.487 0.613       56   65.668   1.193
+## 14         14  0.934 0.617       36   42.637   1.016
+## 15         15  1.384 0.622       20   22.331   0.493
+## 16         16  1.854 0.654       12    7.470   1.657
 </code></pre>
-
-<pre><code class="r">#WLE estimation, run in parallel using available cores
-mirtCluster()
+<pre><code class="language-r"># convert expected counts back into marginal probability distribution
+within(fs,
+   `P(y)` &lt;- expected / sum(observed))
 </code></pre>
-
-<pre><code>## mirtCluster() previously defined for 2 clusters
+<pre><code>##    Sum.Scores     F1 SE_F1 observed expected std.res  P(y)
+## 4           4 -2.749 0.629        2    0.124   5.324 0.000
+## 5           5 -2.431 0.617        1    0.790   0.236 0.002
+## 6           6 -2.081 0.610        2    2.760   0.457 0.007
+## 7           7 -1.718 0.602        1    7.252   2.322 0.018
+## 8           8 -1.364 0.598       11   15.893   1.227 0.041
+## 9           9 -1.012 0.604       32   29.674   0.427 0.076
+## 10         10 -0.649 0.610       58   48.363   1.386 0.123
+## 11         11 -0.287 0.605       70   68.485   0.183 0.175
+## 12         12  0.082 0.600       91   80.553   1.164 0.205
+## 13         13  0.487 0.613       56   65.668   1.193 0.168
+## 14         14  0.934 0.617       36   42.637   1.016 0.109
+## 15         15  1.384 0.622       20   22.331   0.493 0.057
+## 16         16  1.854 0.654       12    7.470   1.657 0.019
 </code></pre>
-
-<pre><code class="r">head(fscores(mod, method=&#39;WLE&#39;, full.scores = FALSE))
+<pre><code class="language-r"># list of error VCOV matrices for EAPsum (works for other estimators as well)
+acovs &lt;- fscores(mod, method = 'EAPsum', full.scores = FALSE, return.acov = TRUE)
+acovs
 </code></pre>
-
+<pre><code>## $`0`
+##           [,1]
+## [1,] 0.3960901
+## 
+## $`1`
+##           [,1]
+## [1,] 0.3804013
+## 
+## $`2`
+##           [,1]
+## [1,] 0.3723228
+## 
+## $`3`
+##           [,1]
+## [1,] 0.3623228
+## 
+## $`4`
+##           [,1]
+## [1,] 0.3575813
+## 
+## $`5`
+##           [,1]
+## [1,] 0.3646464
+## 
+## $`6`
+##           [,1]
+## [1,] 0.3722588
+## 
+## $`7`
+##          [,1]
+## [1,] 0.365832
+## 
+## $`8`
+##           [,1]
+## [1,] 0.3595964
+## 
+## $`9`
+##           [,1]
+## [1,] 0.3762024
+## 
+## $`10`
+##           [,1]
+## [1,] 0.3807206
+## 
+## $`11`
+##           [,1]
+## [1,] 0.3866677
+## 
+## $`12`
+##           [,1]
+## [1,] 0.4282523
+</code></pre>
+<pre><code class="language-r"># WLE estimation, run in parallel using available cores
+if(interactive()) mirtCluster()
+head(fscores(mod, method='WLE', full.scores = FALSE))
+</code></pre>
 <pre><code>## 
 ## Method:  WLE
 ## 
@@ -654,7 +716,6 @@ mirtCluster()
 ##     F1 
 ## 0.7513
 </code></pre>
-
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
 ## [1,]       1    1      1       1 -5.6980733 1.5782656
 ## [2,]       1    3      2       1 -2.1191038 0.6332802
@@ -663,53 +724,47 @@ mirtCluster()
 ## [5,]       2    1      1       1 -4.0112458 1.1423935
 ## [6,]       2    1      2       4 -1.8957020 0.6698434
 </code></pre>
-
-<pre><code class="r">#multiple imputation using 30 draws for EAP scores. Requires information matrix
+<pre><code class="language-r"># multiple imputation using 30 draws for EAP scores. Requires information matrix
 mod &lt;- mirt(Science, 1, SE=TRUE)
 fs &lt;- fscores(mod, MI = 30)
 head(fs)
 </code></pre>
-
 <pre><code>##               F1
-## [1,]  0.40518253
-## [2,]  0.04747888
-## [3,] -0.86784582
-## [4,] -0.86784582
-## [5,]  0.71817742
-## [6,]  0.67175531
+## [1,]  0.43105854
+## [2,]  0.04775123
+## [3,] -0.89449451
+## [4,] -0.89449451
+## [5,]  0.78286414
+## [6,]  0.68209467
 </code></pre>
-
-<pre><code class="r"># plausible values for future work
+<pre><code class="language-r"># plausible values for future work
 pv &lt;- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
-
 <pre><code>## [[1]]
 ##        mean         var         min         max 
-##  0.01395285  1.00596682 -3.37892778  2.93185752 
+##  0.04851964  0.99767321 -2.96319624  3.83130942 
 ## 
 ## [[2]]
 ##        mean         var         min         max 
-##  0.04761363  0.98738823 -2.95798606  3.42276637 
+##  0.01529424  1.03789782 -3.09457285  3.08215355 
 ## 
 ## [[3]]
-##         mean          var          min          max 
-##  0.007217975  0.910389431 -3.812503706  2.554637190 
+##       mean        var        min        max 
+## -0.0304288  0.9911608 -3.7321337  2.9325554 
 ## 
 ## [[4]]
-##        mean         var         min         max 
-## -0.03503203  0.98809100 -3.82689154  2.47504011 
+##         mean          var          min          max 
+## -0.006065926  0.960780649 -3.039823726  2.742190598 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-## -0.02258803  0.97464777 -3.72917079  2.90917841
+## -0.02939406  0.98765802 -2.88773226  2.86077248
 </code></pre>
-
-<pre><code class="r">## define a custom_den function. EAP with a uniform prior between -3 and 3
+<pre><code class="language-r">## define a custom_den function. EAP with a uniform prior between -3 and 3
 fun &lt;- function(Theta, ...) as.numeric(dunif(Theta, min = -3, max = 3))
 head(fscores(mod, custom_den = fun))
 </code></pre>
-
 <pre><code>##               F1
 ## [1,]  0.62811597
 ## [2,]  0.07362511
@@ -718,14 +773,12 @@ head(fscores(mod, custom_den = fun))
 ## [5,]  1.25827841
 ## [6,]  1.00860231
 </code></pre>
-
-<pre><code class="r"># custom MAP prior: standard truncated normal between 5 and -2
+<pre><code class="language-r"># custom MAP prior: standard truncated normal between 5 and -2
 library(msm)
 # need the :: scope for parallel to see the function (not require if no mirtCluster() defined)
 fun &lt;- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
-head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE))
+head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 </code></pre>
-
 <pre><code>## 
 ## Method:  MAP
 ## 
@@ -734,7 +787,6 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 ##     F1 
 ## 0.6637
 </code></pre>
-
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
 ## [1,]       1    1      1       1 -1.9999997 0.5955534
 ## [2,]       1    3      2       1 -1.4234806 0.5680859
@@ -743,10 +795,9 @@ head(fscores(mod, custom_den = fun, method = &#39;MAP&#39;, full.scores = FALSE)
 ## [5,]       2    1      1       1 -1.9999972 0.5706602
 ## [6,]       2    1      2       4 -1.2729394 0.5680222
 </code></pre>
-
-<pre><code class="r">####################
+<pre><code class="language-r">####################
 # scoring via response.pattern input (with latent regression structure)
-#simulate data
+# simulate data
 set.seed(1234)
 N &lt;- 1000
 
@@ -755,15 +806,14 @@ X1 &lt;- rnorm(N); X2 &lt;- rnorm(N)
 covdata &lt;- data.frame(X1, X2)
 Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
-#items and response data
+# items and response data
 a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
-dat &lt;- simdata(a, d, 1000, itemtype = &#39;2PL&#39;, Theta=Theta)
+dat &lt;- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
-#conditional model using X1 and X2 as predictors of Theta
-mod &lt;- mirt(dat, 1, &#39;Rasch&#39;, covdata=covdata, formula = ~ X1 + X2)
+# conditional model using X1 and X2 as predictors of Theta
+mod &lt;- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 coef(mod, simplify=TRUE)
 </code></pre>
-
 <pre><code>## $items
 ##         a1      d g u
 ## Item_1   1 -0.409 0 1
@@ -801,12 +851,10 @@ coef(mod, simplify=TRUE)
 ## X1           0.527
 ## X2          -1.036
 </code></pre>
-
-<pre><code class="r"># all EAP estimates that include latent regression information
+<pre><code class="language-r"># all EAP estimates that include latent regression information
 fs &lt;- fscores(mod, full.scores.SE=TRUE)
 head(fs)
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,]  0.3085525 0.3442170
 ## [2,] -0.3474238 0.3408507
@@ -815,29 +863,25 @@ head(fs)
 ## [5,] -0.7631629 0.3432706
 ## [6,]  2.1019773 0.3922135
 </code></pre>
-
-<pre><code class="r"># score only two response patterns
+<pre><code class="language-r"># score only two response patterns
 rp &lt;- dat[1:2, ]
 cd &lt;- covdata[1:2, ]
 
 fscores(mod, response.pattern=rp, covdata=cd)
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,]  0.3085525 0.3442170
 ## [2,] -0.3474238 0.3408507
 </code></pre>
-
-<pre><code class="r">fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
+<pre><code class="language-r">fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
 </code></pre>
-
 <pre><code>##              F1     SE_F1
 ## [1,] -0.3474238 0.3408507
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

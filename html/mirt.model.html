@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Specify model information</title>
+<!DOCTYPE html><html><head><title>R: Specify model information</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for mirt.model {mirt}"><tr><td>mirt.model {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>mirt.model {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Specify model information</h2>
 
@@ -24,8 +34,7 @@ when a string is passed to the <code>model</code> argument.
 
 <h3>Usage</h3>
 
-<pre>
-mirt.model(
+<pre><code class='language-R'>mirt.model(
   input = NULL,
   itemnames = NULL,
   file = "",
@@ -33,39 +42,39 @@ mirt.model(
   quiet = TRUE,
   ...
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>input</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>input</code></td>
 <td>
 <p>input for writing out the model syntax. Can either be a string declaration of
 class character or the so-called Q-matrix or class <code>matrix</code> that specifies the model
 either with integer or logical values. If the Q-matrix method
 is chosen covariances terms can be specified with the <code>COV</code> input</p>
 </td></tr>
-<tr valign="top"><td><code>itemnames</code></td>
+<tr style="vertical-align: top;"><td><code>itemnames</code></td>
 <td>
 <p>a character vector or factor indicating the item names. If a data.frame or
 matrix object is supplied the names will be extracted using <code>colnames(itemnames)</code>.
 Supplying this input allows the syntax to be specified with the raw item names rather than
 item locations</p>
 </td></tr>
-<tr valign="top"><td><code>file</code></td>
+<tr style="vertical-align: top;"><td><code>file</code></td>
 <td>
 <p>a input specifying an external file that declares the input.</p>
 </td></tr>
-<tr valign="top"><td><code>COV</code></td>
+<tr style="vertical-align: top;"><td><code>COV</code></td>
 <td>
 <p>a symmetric, logical matrix used to declare which covariance terms are estimated</p>
 </td></tr>
-<tr valign="top"><td><code>quiet</code></td>
+<tr style="vertical-align: top;"><td><code>quiet</code></td>
 <td>
 <p>logical argument passed to <code>scan()</code> to suppress console read message</p>
 </td></tr>
-<tr valign="top"><td><code>...</code></td>
+<tr style="vertical-align: top;"><td><code>...</code></td>
 <td>
 <p>additional arguments for <code>scan()</code></p>
 </td></tr>
@@ -227,13 +236,13 @@ priors, lower and upper bounds, etc, are desired then this input can be used</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 
 # interactively through the console (not run)
 #model &lt;- mirt.model()
@@ -244,10 +253,10 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 
 #Or alternatively with a string input
-s &lt;- &#39;F1 = 1,2,3,4-10
+s &lt;- 'F1 = 1,2,3,4-10
       F2 = 10-20
       (F1*F2) = 1,2,3,4-10
-      COV = F1*F2&#39;
+      COV = F1*F2'
 model &lt;- mirt.model(s)
 
 # strings can also be passed to the estimation functions directly,
@@ -256,28 +265,28 @@ model &lt;- mirt.model(s)
 
 
 #Q-matrix specification
-Q &lt;- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c(&#39;Factor1&#39;, &#39;Factor2&#39;)))
+Q &lt;- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1', 'Factor2')))
 COV &lt;- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
 model &lt;- mirt.model(Q, COV=COV)
 
 ## constrain various items slopes and all intercepts in single group model to be equal,
 #   and use a log-normal prior for all the slopes
-s &lt;- &#39;F = 1-10
+s &lt;- 'F = 1-10
       CONSTRAIN = (1-3, 5, 6, a1), (1-10, d)
-      PRIOR = (1-10, a1, lnorm, .2, .2)&#39;
+      PRIOR = (1-10, a1, lnorm, .2, .2)'
 model &lt;- mirt.model(s)
 
 
 ## constrain various items slopes and intercepts across groups for use in multipleGroup(),
-#  and constrain first two slopes within &#39;group1&#39; to be equal
-s &lt;- &#39;F = 1-10
+#  and constrain first two slopes within 'group1' to be equal
+s &lt;- 'F = 1-10
       CONSTRAIN = (1-2, a1)
-      CONSTRAINB = (1-3, 5, 6, a1), (1-10, d)&#39;
+      CONSTRAINB = (1-3, 5, 6, a1), (1-10, d)'
 model &lt;- mirt.model(s)
 
 
 ## specify model using raw item names
-data(data.read, package = &#39;sirt&#39;)
+data(data.read, package = 'sirt')
 dat &lt;- data.read
 
 # syntax with variable names
@@ -295,10 +304,11 @@ mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
 
 # mod &lt;- mirt(dat , mirtmodel)
 
-
+    
 ## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

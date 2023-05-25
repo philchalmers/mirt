@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to calculate probability trace lines</title>
+<!DOCTYPE html><html><head><title>R: Function to calculate probability trace lines</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for probtrace {mirt}"><tr><td>probtrace {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>probtrace {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Function to calculate probability trace lines</h2>
 
@@ -23,21 +33,20 @@ lines for all categories.
 
 <h3>Usage</h3>
 
-<pre>
-probtrace(x, Theta)
-</pre>
+<pre><code class='language-R'>probtrace(x, Theta)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>either an extracted internal mirt object containing item information
 (see <code><a href="../../mirt/help/extract.item.html">extract.item</a></code>) or a model of class <code>SingleGroupClass</code>
 typically returned by the function <code><a href="../../mirt/help/mirt.html">mirt</a></code> or <code><a href="../../mirt/help/bfactor.html">bfactor</a></code></p>
 </td></tr>
-<tr valign="top"><td><code>Theta</code></td>
+<tr style="vertical-align: top;"><td><code>Theta</code></td>
 <td>
 <p>a vector (unidimensional) or matrix (unidimensional/multidimensional) of
 latent trait values</p>
@@ -55,7 +64,7 @@ latent trait values</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -67,7 +76,7 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">mod &lt;- mirt(Science, 1)
+<pre><code class="language-r">mod &lt;- mirt(Science, 1)
 
 # single item probabilty tracelines for Item 2
 extr.2 &lt;- extract.item(mod, 2)
@@ -75,7 +84,6 @@ Theta &lt;- matrix(seq(-4,4, by = .1))
 traceline &lt;- probtrace(extr.2, Theta)
 head(data.frame(traceline, Theta=Theta))
 </code></pre>
-
 <pre><code>##         P.1       P.2        P.3          P.4 Theta
 ## 1 0.8786646 0.1033965 0.01717048 0.0007684150  -4.0
 ## 2 0.8649759 0.1147928 0.01936274 0.0008685506  -3.9
@@ -84,12 +92,10 @@ head(data.frame(traceline, Theta=Theta))
 ## 5 0.8159972 0.1550385 0.02771018 0.0012541689  -3.6
 ## 6 0.7968730 0.1705082 0.03120137 0.0014175155  -3.5
 </code></pre>
-
-<pre><code class="r"># probability tracelines for all items in test
+<pre><code class="language-r"># probability tracelines for all items in test
 tracelines &lt;- probtrace(mod, Theta)
 head(tracelines)
 </code></pre>
-
 <pre><code>##      Comfort.P.1 Comfort.P.2 Comfort.P.3 Comfort.P.4  Work.P.1  Work.P.2
 ## [1,]   0.3324476   0.4891306   0.1748568 0.003564956 0.8786646 0.1033965
 ## [2,]   0.3097452   0.4960477   0.1902523 0.003954823 0.8649759 0.1147928
@@ -114,5 +120,6 @@ head(tracelines)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

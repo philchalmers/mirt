@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute latent regression fixed effect expected values</title>
+<!DOCTYPE html><html><head><title>R: Compute latent regression fixed effect expected values</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for fixef {mirt}"><tr><td>fixef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>fixef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Compute latent regression fixed effect expected values</h2>
 
@@ -21,15 +31,14 @@
 
 <h3>Usage</h3>
 
-<pre>
-fixef(x)
-</pre>
+<pre><code class='language-R'>fixef(x)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>an estimated model object from the <code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code> or <code><a href="../../mirt/help/mirt.html">mirt</a></code>
 function</p>
@@ -47,10 +56,10 @@ function</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 <p>Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.
-<em>Journal of Educational Measurement, 52</em>, 200-222. doi: <a href="https://doi.org/10.1111/jedm.12072">10.1111/jedm.12072</a>
+<em>Journal of Educational Measurement, 52</em>, 200-222. <a href="https://doi.org/10.1111/jedm.12072">doi:10.1111/jedm.12072</a>
 </p>
 
 
@@ -62,7 +71,7 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 
 #simulate data
 set.seed(1234)
@@ -75,16 +84,15 @@ Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
 #items and response data
 a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
-dat &lt;- simdata(a, d, 1000, itemtype = &#39;2PL&#39;, Theta=Theta)
+dat &lt;- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
 #conditional model using X1 and X2 as predictors of Theta
-mod1 &lt;- mirt(dat, 1, &#39;Rasch&#39;, covdata=covdata, formula = ~ X1 + X2)
+mod1 &lt;- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 
 #latent regression fixed effects (i.e., expected values)
 fe &lt;- fixef(mod1)
 head(fe)
 </code></pre>
-
 <pre><code>##              F1
 ## [1,]  0.6129074
 ## [2,] -0.1661799
@@ -93,13 +101,11 @@ head(fe)
 ## [5,] -0.5021655
 ## [6,]  2.2405972
 </code></pre>
-
-<pre><code class="r"># with mixedmirt()
+<pre><code class="language-r"># with mixedmirt()
 mod1b &lt;- mixedmirt(dat, covdata, 1, lr.fixed = ~ X1 + X2, fixed = ~ 0 + items)
 fe2 &lt;- fixef(mod1b)
 head(fe2)
 </code></pre>
-
 <pre><code>##              F1
 ## [1,]  0.6165760
 ## [2,] -0.1671332
@@ -108,10 +114,10 @@ head(fe2)
 ## [5,] -0.5047064
 ## [6,]  2.2499237
 </code></pre>
-
-<pre><code class="r">## End(No test)
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

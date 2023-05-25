@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Score a test by converting response patterns to binary data</title>
+<!DOCTYPE html><html><head><title>R: Score a test by converting response patterns to binary data</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for key2binary {mirt}"><tr><td>key2binary {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>key2binary {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Score a test by converting response patterns to binary data</h2>
 
@@ -22,27 +32,26 @@ dichotomous format, given a response key.
 
 <h3>Usage</h3>
 
-<pre>
-key2binary(fulldata, key, score_missing = FALSE)
-</pre>
+<pre><code class='language-R'>key2binary(fulldata, key, score_missing = FALSE)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>fulldata</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>fulldata</code></td>
 <td>
 <p>an object of class <code>data.frame</code>, <code>matrix</code>, or
 <code>table</code> with the response patterns</p>
 </td></tr>
-<tr valign="top"><td><code>key</code></td>
+<tr style="vertical-align: top;"><td><code>key</code></td>
 <td>
 <p>a vector or matrix consisting of the 'correct' response to the items. Each
 value/row corresponds to each column in <code>fulldata</code>. If the input is a matrix, multiple
 scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
 in the case of a matrix input, no additional scoring keys)</p>
 </td></tr>
-<tr valign="top"><td><code>score_missing</code></td>
+<tr style="vertical-align: top;"><td><code>score_missing</code></td>
 <td>
 <p>logical; should missing data elements be returned as incorrect (i.e., 0)?
 If <code>FALSE</code>, all missing data terms will be kept as missing</p>
@@ -67,16 +76,15 @@ dichotomous format
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">data(SAT12)
+<pre><code class="language-r">data(SAT12)
 head(SAT12)
 </code></pre>
-
 <pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9 Item.10
 ## 1      1      4      5      2      3      1      2      1      3       1
 ## 2      3      4      2      8      3      3      2      8      3       1
@@ -106,13 +114,11 @@ head(SAT12)
 ## 5       1       2       4       1
 ## 6       2       3       4       3
 </code></pre>
-
-<pre><code class="r">key &lt;- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
+<pre><code class="language-r">key &lt;- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 
 dicho.SAT12 &lt;- key2binary(SAT12, key)
 head(dicho.SAT12)
 </code></pre>
-
 <pre><code>##      Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9 Item.10
 ## [1,]      1      1      1      1      1      1      1      1      1       1
 ## [2,]      0      1      0      0      1      0      1      0      1       1
@@ -142,8 +148,7 @@ head(dicho.SAT12)
 ## [5,]       1       0       1       0
 ## [6,]       0       0       1       0
 </code></pre>
-
-<pre><code class="r"># multiple scoring keys
+<pre><code class="language-r"># multiple scoring keys
 key2 &lt;- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5),
               c(2,3,NA,1,rep(NA, 28)))
 dicho.SAT12 &lt;- key2binary(SAT12, key2)
@@ -161,7 +166,6 @@ key &lt;- c(&quot;B&quot;, &quot;D&quot;, &quot;D&quot;, &quot;C&quot;, &quot;E&
 d01 &lt;- key2binary(resp, key)
 head(d01)
 </code></pre>
-
 <pre><code>##      V1 V2 V3 V4 V5
 ## [1,]  1  0  1  0  1
 ## [2,]  1  0  1  0  1
@@ -169,13 +173,11 @@ head(d01)
 ## [4,]  0  1  1  1  1
 ## [5,]  1  0  0  0  0
 </code></pre>
-
-<pre><code class="r"># score/don&#39;t score missing values
+<pre><code class="language-r"># score/don't score missing values
 resp[1,1] &lt;- NA
 d01NA &lt;- key2binary(resp, key) # without scoring
 d01NA
 </code></pre>
-
 <pre><code>##      V1 V2 V3 V4 V5
 ## [1,] NA  0  1  0  1
 ## [2,]  1  0  1  0  1
@@ -183,11 +185,9 @@ d01NA
 ## [4,]  0  1  1  1  1
 ## [5,]  1  0  0  0  0
 </code></pre>
-
-<pre><code class="r">d01 &lt;- key2binary(resp, key, score_missing = TRUE) # with scoring
+<pre><code class="language-r">d01 &lt;- key2binary(resp, key, score_missing = TRUE) # with scoring
 d01
 </code></pre>
-
 <pre><code>##      V1 V2 V3 V4 V5
 ## [1,]  0  0  1  0  1
 ## [2,]  1  0  1  0  1
@@ -197,5 +197,6 @@ d01
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

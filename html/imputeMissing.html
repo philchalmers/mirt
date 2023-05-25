@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Imputing plausible data for missing values</title>
+<!DOCTYPE html><html><head><title>R: Imputing plausible data for missing values</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for imputeMissing {mirt}"><tr><td>imputeMissing {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>imputeMissing {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Imputing plausible data for missing values</h2>
 
@@ -24,28 +34,27 @@ list of complete datasets is returned instead.
 
 <h3>Usage</h3>
 
-<pre>
-imputeMissing(x, Theta, warn = TRUE, ...)
-</pre>
+<pre><code class='language-R'>imputeMissing(x, Theta, warn = TRUE, ...)
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>x</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>x</code></td>
 <td>
 <p>an estimated model x from the mirt package</p>
 </td></tr>
-<tr valign="top"><td><code>Theta</code></td>
+<tr style="vertical-align: top;"><td><code>Theta</code></td>
 <td>
 <p>a matrix containing the estimates of the latent trait scores
 (e.g., via <code><a href="../../mirt/help/fscores.html">fscores</a></code>)</p>
 </td></tr>
-<tr valign="top"><td><code>warn</code></td>
+<tr style="vertical-align: top;"><td><code>warn</code></td>
 <td>
 <p>logical; print warning messages?</p>
 </td></tr>
-<tr valign="top"><td><code>...</code></td>
+<tr style="vertical-align: top;"><td><code>...</code></td>
 <td>
 <p>additional arguments to pass</p>
 </td></tr>
@@ -62,24 +71,23 @@ imputeMissing(x, Theta, warn = TRUE, ...)
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
 <h3>Examples</h3>
 
-<pre><code class="r">## No test: 
+<pre><code class="language-r">## No test: 
 dat &lt;- expand.table(LSAT7)
 (original &lt;- mirt(dat, 1))
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.36.2 
+## mirt version: 1.38.3 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -92,62 +100,57 @@ dat &lt;- expand.table(LSAT7)
 ## G2 (21) = 31.7, p = 0.0628
 ## RMSEA = 0.023, CFI = NaN, TLI = NaN
 </code></pre>
-
-<pre><code class="r">NAperson &lt;- sample(1:nrow(dat), 20, replace = TRUE)
+<pre><code class="language-r">NAperson &lt;- sample(1:nrow(dat), 20, replace = TRUE)
 NAitem &lt;- sample(1:ncol(dat), 20, replace = TRUE)
 for(i in 1:20)
     dat[NAperson[i], NAitem[i]] &lt;- NA
 (mod &lt;- mirt(dat, 1))
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mirt(data = dat, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 24 EM iterations.
-## mirt version: 1.36.2 
+## Converged within 1e-04 tolerance after 25 EM iterations.
+## mirt version: 1.38.3 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## Latent density type: Gaussian 
 ## 
-## Log-likelihood = -2647.798
+## Log-likelihood = -2649.125
 ## Estimated parameters: 10 
-## AIC = 5315.596
-## BIC = 5364.674; SABIC = 5332.913
+## AIC = 5318.25
+## BIC = 5367.327; SABIC = 5335.567
 </code></pre>
-
-<pre><code class="r">scores &lt;- fscores(mod, method = &#39;MAP&#39;)
+<pre><code class="language-r">scores &lt;- fscores(mod, method = 'MAP')
 
 #re-estimate imputed dataset (good to do this multiple times and average over)
 fulldata &lt;- imputeMissing(mod, scores)
 (fullmod &lt;- mirt(fulldata, 1))
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mirt(data = fulldata, model = 1)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
-## Converged within 1e-04 tolerance after 25 EM iterations.
-## mirt version: 1.36.2 
+## Converged within 1e-04 tolerance after 28 EM iterations.
+## mirt version: 1.38.3 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
 ## Latent density type: Gaussian 
 ## 
-## Log-likelihood = -2654.296
+## Log-likelihood = -2657.102
 ## Estimated parameters: 10 
-## AIC = 5328.593
-## BIC = 5377.67; SABIC = 5345.91
-## G2 (21) = 31.58, p = 0.0645
+## AIC = 5334.204
+## BIC = 5383.282; SABIC = 5351.521
+## G2 (21) = 31.22, p = 0.0702
 ## RMSEA = 0.022, CFI = NaN, TLI = NaN
 </code></pre>
-
-<pre><code class="r">#with multipleGroup
+<pre><code class="language-r">#with multipleGroup
 set.seed(1)
-group &lt;- sample(c(&#39;group1&#39;, &#39;group2&#39;), 1000, TRUE)
+group &lt;- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 &lt;- multipleGroup(dat, 1, group, TOL=1e-2)
 fs &lt;- fscores(mod2)
 fulldata2 &lt;- imputeMissing(mod2, fs)
@@ -156,5 +159,6 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Simulate response patterns</title>
+<!DOCTYPE html><html><head><title>R: Simulate response patterns</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,22 +19,21 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for simdata {mirt}"><tr><td>simdata {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>simdata {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Simulate response patterns</h2>
 
 <h3>Description</h3>
 
 <p>Simulates response patterns for compensatory and noncompensatory MIRT models
-from multivariate normally distributed factor (<i>&theta;</i>) scores, or from
-a user input matrix of <i>&theta;</i>'s.
+from multivariate normally distributed factor (<code class="reqn">\theta</code>) scores, or from
+a user input matrix of <code class="reqn">\theta</code>'s.
 </p>
 
 
 <h3>Usage</h3>
 
-<pre>
-simdata(
+<pre><code class='language-R'>simdata(
   a,
   d,
   N,
@@ -45,18 +54,18 @@ simdata(
   lca_cats = NULL,
   prob.list = NULL
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>a</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>a</code></td>
 <td>
 <p>a matrix/vector of slope parameters. If slopes are to be constrained to
 zero then use <code>NA</code> or simply set them equal to 0</p>
 </td></tr>
-<tr valign="top"><td><code>d</code></td>
+<tr style="vertical-align: top;"><td><code>d</code></td>
 <td>
 <p>a matrix/vector of intercepts. The matrix should have as many columns as
 the item with the largest number of categories, and filled empty locations
@@ -64,11 +73,11 @@ with <code>NA</code>. When a vector is used the test is assumed to consist only 
 (because only one intercept per item is provided). When <code>itemtype = 'lca'</code> intercepts will not
 be used</p>
 </td></tr>
-<tr valign="top"><td><code>N</code></td>
+<tr style="vertical-align: top;"><td><code>N</code></td>
 <td>
 <p>sample size</p>
 </td></tr>
-<tr valign="top"><td><code>itemtype</code></td>
+<tr style="vertical-align: top;"><td><code>itemtype</code></td>
 <td>
 <p>a character vector of length <code>nrow(a)</code> (or 1, if all the item types are
 the same) specifying the type of items to simulate. Inputs can either be the same as
@@ -90,27 +99,27 @@ correct item traceline). For nested logit models the 'correct' category is alway
 category (i.e., == 1). It may be helpful to use <code><a href="../../mirt/help/mod2values.html">mod2values</a></code> on data-sets that
 have already been estimated to understand the itemtypes more intimately</p>
 </td></tr>
-<tr valign="top"><td><code>sigma</code></td>
+<tr style="vertical-align: top;"><td><code>sigma</code></td>
 <td>
 <p>a covariance matrix of the underlying distribution. Default is
 the identity matrix. Used when <code>Theta</code> is not supplied</p>
 </td></tr>
-<tr valign="top"><td><code>mu</code></td>
+<tr style="vertical-align: top;"><td><code>mu</code></td>
 <td>
 <p>a mean vector of the underlying distribution. Default is a vector
 of zeros. Used when <code>Theta</code> is not supplied</p>
 </td></tr>
-<tr valign="top"><td><code>guess</code></td>
+<tr style="vertical-align: top;"><td><code>guess</code></td>
 <td>
 <p>a vector of guessing parameters for each item; only applicable
 for dichotomous items. Must be either a scalar value that will affect all of
 the dichotomous items, or a vector with as many values as to be simulated items</p>
 </td></tr>
-<tr valign="top"><td><code>upper</code></td>
+<tr style="vertical-align: top;"><td><code>upper</code></td>
 <td>
 <p>same as <code>guess</code>, but for upper bound parameters</p>
 </td></tr>
-<tr valign="top"><td><code>nominal</code></td>
+<tr style="vertical-align: top;"><td><code>nominal</code></td>
 <td>
 <p>a matrix of specific item category slopes for nominal models.
 Should be the dimensions as the intercept specification with one less column, with <code>NA</code>
@@ -118,29 +127,29 @@ in locations where not applicable. Note that during estimation the first slope w
 constrained to 0 and the last will be constrained to the number of categories minus 1,
 so it is best to set these as the values for the first and last categories as well</p>
 </td></tr>
-<tr valign="top"><td><code>t</code></td>
+<tr style="vertical-align: top;"><td><code>t</code></td>
 <td>
 <p>matrix of t-values for the 'ggum' itemtype, where each row corresponds to a given item.
 Also determines the number of categories, where <code>NA</code> can be used for non-applicable categories</p>
 </td></tr>
-<tr valign="top"><td><code>Theta</code></td>
+<tr style="vertical-align: top;"><td><code>Theta</code></td>
 <td>
 <p>a user specified matrix of the underlying ability parameters,
 where <code>nrow(Theta) == N</code> and <code>ncol(Theta) == ncol(a)</code>. When this is supplied the
 <code>N</code> input is not required</p>
 </td></tr>
-<tr valign="top"><td><code>gpcm_mats</code></td>
+<tr style="vertical-align: top;"><td><code>gpcm_mats</code></td>
 <td>
 <p>a list of matrices specifying the scoring scheme for generalized partial
 credit models (see <code><a href="../../mirt/help/mirt.html">mirt</a></code> for details)</p>
 </td></tr>
-<tr valign="top"><td><code>returnList</code></td>
+<tr style="vertical-align: top;"><td><code>returnList</code></td>
 <td>
 <p>logical; return a list containing the data, item objects defined
 by <code>mirt</code> containing the population parameters and item structure, and the
 latent trait matrix <code>Theta</code>? Default is FALSE</p>
 </td></tr>
-<tr valign="top"><td><code>model</code></td>
+<tr style="vertical-align: top;"><td><code>model</code></td>
 <td>
 <p>a single group object, typically returned by functions such as <code><a href="../../mirt/help/mirt.html">mirt</a></code> or
 <code><a href="../../mirt/help/bfactor.html">bfactor</a></code>. Supplying this will render all other parameter elements (excluding the
@@ -148,29 +157,29 @@ latent trait matrix <code>Theta</code>? Default is FALSE</p>
 This input can therefore be used to create parametric bootstrap data whereby plausible data implied by the
 estimated model can be generated and evaluated</p>
 </td></tr>
-<tr valign="top"><td><code>equal.K</code></td>
+<tr style="vertical-align: top;"><td><code>equal.K</code></td>
 <td>
 <p>logical; when a <code>model</code> input is supplied, should the generated data contain the same
 number of categories as the original data indicated by <code>extract.mirt(model, 'K')</code>? Default is TRUE,
 which will redrawn data until this condition is satisfied</p>
 </td></tr>
-<tr valign="top"><td><code>which.items</code></td>
+<tr style="vertical-align: top;"><td><code>which.items</code></td>
 <td>
 <p>an integer vector used to indicate which items to simulate when a
 <code>model</code> input is included. Default simulates all items</p>
 </td></tr>
-<tr valign="top"><td><code>mins</code></td>
+<tr style="vertical-align: top;"><td><code>mins</code></td>
 <td>
 <p>an integer vector (or single value to be used for each item) indicating what
 the lowest category should be. If <code>model</code> is supplied then this will be extracted from
 <code>slot(mod, 'Data')$mins</code>, otherwise the default is 0</p>
 </td></tr>
-<tr valign="top"><td><code>lca_cats</code></td>
+<tr style="vertical-align: top;"><td><code>lca_cats</code></td>
 <td>
 <p>a vector indicating how many categories each lca item should have. If not supplied
 then it is assumed that 2 categories should be generated for each item</p>
 </td></tr>
-<tr valign="top"><td><code>prob.list</code></td>
+<tr style="vertical-align: top;"><td><code>prob.list</code></td>
 <td>
 <p>an optional list containing matrix/data.frames of probabilities values for
 each category to be simulated. This is useful when creating customized probability functions
@@ -196,7 +205,7 @@ item objects, and Theta matrix.
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 <p>Reckase, M. D. (2009). <em>Multidimensional Item Response Theory</em>. New York: Springer.
 </p>
@@ -204,7 +213,7 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r">### Parameters from Reckase (2009), p. 153
+<pre><code class="language-r">### Parameters from Reckase (2009), p. 153
 
 set.seed(1234)
 
@@ -248,10 +257,10 @@ d &lt;- matrix(c(.1826,-.1924,-.4656,-.4336,-.4428,-.5845,-1.0403,
 mu &lt;- c(-.4, -.7, .1)
 sigma &lt;- matrix(c(1.21,.297,1.232,.297,.81,.252,1.232,.252,1.96),3,3)
 
-dataset1 &lt;- simdata(a, d, 2000, itemtype = &#39;2PL&#39;)
-dataset2 &lt;- simdata(a, d, 2000, itemtype = &#39;2PL&#39;, mu = mu, sigma = sigma)
+dataset1 &lt;- simdata(a, d, 2000, itemtype = '2PL')
+dataset2 &lt;- simdata(a, d, 2000, itemtype = '2PL', mu = mu, sigma = sigma)
 
-#mod &lt;- mirt(dataset1, 3, method = &#39;MHRM&#39;)
+#mod &lt;- mirt(dataset1, 3, method = 'MHRM')
 #coef(mod)
 
 ## No test: 
@@ -266,7 +275,7 @@ diffs &lt;- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
 diffs &lt;- -(diffs - rowMeans(diffs))
 d &lt;- diffs + rnorm(20)
 
-dat &lt;- simdata(a, d, 500, itemtype = &#39;graded&#39;)
+dat &lt;- simdata(a, d, 500, itemtype = 'graded')
 # mod &lt;- mirt(dat, 1)
 
 ### An example of a mixed item, bifactor loadings pattern with correlated specific factors
@@ -293,11 +302,11 @@ nominal[4, ] &lt;- c(0,1.2,2)
 
 sigma &lt;- diag(3)
 sigma[2,3] &lt;- sigma[3,2] &lt;- .25
-items &lt;- c(&#39;2PL&#39;,&#39;2PL&#39;,&#39;2PL&#39;,&#39;nominal&#39;,&#39;gpcm&#39;,&#39;graded&#39;)
+items &lt;- c('2PL','2PL','2PL','nominal','gpcm','graded')
 
 dataset &lt;- simdata(a,d,2000,items,sigma=sigma,nominal=nominal)
 
-#mod &lt;- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep(&#39;2PL&#39;, 3), &#39;nominal&#39;, &#39;gpcm&#39;,&#39;graded&#39;))
+#mod &lt;- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep('2PL', 3), 'nominal', 'gpcm','graded'))
 #coef(mod)
 
 #### Convert standardized factor loadings to slopes
@@ -310,7 +319,6 @@ F2a &lt;- function(F, D=1.702){
 
 (F &lt;- matrix(c(rep(.7, 5), rep(.5,5))))
 </code></pre>
-
 <pre><code>##       [,1]
 ##  [1,]  0.7
 ##  [2,]  0.7
@@ -323,10 +331,8 @@ F2a &lt;- function(F, D=1.702){
 ##  [9,]  0.5
 ## [10,]  0.5
 </code></pre>
-
-<pre><code class="r">(a &lt;- F2a(F))
+<pre><code class="language-r">(a &lt;- F2a(F))
 </code></pre>
-
 <pre><code>##            [,1]
 ##  [1,] 1.6682937
 ##  [2,] 1.6682937
@@ -339,14 +345,12 @@ F2a &lt;- function(F, D=1.702){
 ##  [9,] 0.9826502
 ## [10,] 0.9826502
 </code></pre>
+<pre><code class="language-r">d &lt;- rnorm(10)
 
-<pre><code class="r">d &lt;- rnorm(10)
-
-dat &lt;- simdata(a, d, 5000, itemtype = &#39;2PL&#39;)
+dat &lt;- simdata(a, d, 5000, itemtype = '2PL')
 mod &lt;- mirt(dat, 1)
 coef(mod, simplify=TRUE)$items
 </code></pre>
-
 <pre><code>##                a1           d g u
 ## Item_1  1.5912124  0.09329250 0 1
 ## Item_2  1.6611479  0.77704003 0 1
@@ -359,10 +363,8 @@ coef(mod, simplify=TRUE)$items
 ## Item_9  0.9999014  0.41687594 0 1
 ## Item_10 0.9416579 -1.00423353 0 1
 </code></pre>
-
-<pre><code class="r">summary(mod)
+<pre><code class="language-r">summary(mod)
 </code></pre>
-
 <pre><code>##            F1    h2
 ## Item_1  0.683 0.466
 ## Item_2  0.698 0.488
@@ -383,12 +385,10 @@ coef(mod, simplify=TRUE)$items
 ##    F1
 ## F1  1
 </code></pre>
-
-<pre><code class="r">mod2 &lt;- mirt(dat, &#39;F1 = 1-10
-                   CONSTRAIN = (1-5, a1), (6-10, a1)&#39;)
+<pre><code class="language-r">mod2 &lt;- mirt(dat, 'F1 = 1-10
+                   CONSTRAIN = (1-5, a1), (6-10, a1)')
 summary(mod2)
 </code></pre>
-
 <pre><code>##            F1    h2
 ## Item_1  0.689 0.475
 ## Item_2  0.689 0.475
@@ -409,45 +409,35 @@ summary(mod2)
 ##    F1
 ## F1  1
 </code></pre>
-
-<pre><code class="r">anova(mod, mod2)
+<pre><code class="language-r">anova(mod2, mod)
 </code></pre>
-
-<pre><code>## 
-## Model 1: mirt(data = dat, model = &quot;F1 = 1-10\n                   CONSTRAIN = (1-5, a1), (6-10, a1)&quot;)
-## Model 2: mirt(data = dat, model = 1)
+<pre><code>##           AIC    SABIC       HQ      BIC    logLik    X2 df   p
+## mod2 58058.43 58098.51 58085.85 58136.64 -29017.22             
+## mod  58068.01 58134.80 58113.69 58198.35 -29014.01 6.425  8 0.6
 </code></pre>
-
-<pre><code>##        AIC    SABIC       HQ      BIC    logLik    X2  df   p
-## 1 58058.43 58098.51 58085.85 58136.64 -29017.22   NaN NaN NaN
-## 2 58068.01 58134.80 58113.69 58198.35 -29014.01 6.425   8 0.6
-</code></pre>
-
-<pre><code class="r">#### Convert classical 3PL paramerization into slope-intercept form
+<pre><code class="language-r">#### Convert classical 3PL paramerization into slope-intercept form
 nitems &lt;- 50
 as &lt;- rlnorm(nitems, .2, .2)
 bs &lt;- rnorm(nitems, 0, 1)
 gs &lt;- rbeta(nitems, 5, 17)
 
 # convert first item (only intercepts differ in resulting transformation)
-traditional2mirt(c(&#39;a&#39;=as[1], &#39;b&#39;=bs[1], &#39;g&#39;=gs[1], &#39;u&#39;=1), cls=&#39;3PL&#39;)
+traditional2mirt(c('a'=as[1], 'b'=bs[1], 'g'=gs[1], 'u'=1), cls='3PL')
 </code></pre>
-
 <pre><code>##         a1          d          g          u 
 ##  1.2795115 -0.1107008  0.2525144  1.0000000
 </code></pre>
-
-<pre><code class="r"># convert all difficulties to intercepts
+<pre><code class="language-r"># convert all difficulties to intercepts
 ds &lt;- numeric(nitems)
 for(i in 1:nitems)
-   ds[i] &lt;- traditional2mirt(c(&#39;a&#39;=as[i], &#39;b&#39;=bs[i], &#39;g&#39;=gs[i], &#39;u&#39;=1),
-                             cls=&#39;3PL&#39;)[2]
+   ds[i] &lt;- traditional2mirt(c('a'=as[i], 'b'=bs[i], 'g'=gs[i], 'u'=1),
+                             cls='3PL')[2]
 
-dat &lt;- simdata(as, ds, N=5000, guess=gs, itemtype = &#39;3PL&#39;)
+dat &lt;- simdata(as, ds, N=5000, guess=gs, itemtype = '3PL')
 
 # estimate with beta prior for guessing parameters
 # mod &lt;- mirt(dat, model=&quot;Theta = 1-50
-#                         PRIOR = (1-50, g, expbeta, 5, 17)&quot;, itemtype = &#39;3PL&#39;)
+#                         PRIOR = (1-50, g, expbeta, 5, 17)&quot;, itemtype = '3PL')
 # coef(mod, simplify=TRUE, IRTpars=TRUE)$items
 # data.frame(as, bs, gs, us=1)
 
@@ -465,13 +455,13 @@ a &lt;- matrix(c(
 .4,NA,
 .7,NA),ncol=2,byrow=TRUE)
 d &lt;- matrix(rnorm(6))
-itemtype &lt;- rep(&#39;2PL&#39;,6)
+itemtype &lt;- rep('2PL',6)
 
 nonlindata &lt;- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 
-#model &lt;- &#39;
+#model &lt;- '
 #F1 = 1-6
-#(F1 * F1) = 1-3&#39;
+#(F1 * F1) = 1-3'
 #mod &lt;- mirt(nonlindata, model)
 #coef(mod)
 
@@ -490,11 +480,11 @@ d &lt;- matrix(c(
 nominal &lt;- matrix(NA, nrow(d), ncol(d))
 nominal[4, ] &lt;- c(NA,0,.5,.6)
 
-items &lt;- c(rep(&#39;2PL&#39;,3),&#39;nestlogit&#39;)
+items &lt;- c(rep('2PL',3),'nestlogit')
 
 dataset &lt;- simdata(a,d,2000,items,nominal=nominal)
 
-#mod &lt;- mirt(dataset, 1, itemtype = c(&#39;2PL&#39;, &#39;2PL&#39;, &#39;2PL&#39;, &#39;2PLNRM&#39;), key=c(NA,NA,NA,0))
+#mod &lt;- mirt(dataset, 1, itemtype = c('2PL', '2PL', '2PL', '2PLNRM'), key=c(NA,NA,NA,0))
 #coef(mod)
 #itemplot(mod,4)
 
@@ -502,12 +492,11 @@ dataset &lt;- simdata(a,d,2000,items,nominal=nominal)
 listobj &lt;- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 str(listobj)
 </code></pre>
-
 <pre><code>## List of 3
 ##  $ itemobjects:List of 4
-##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 23 slots
+##   ..$ :Formal class 'dich' [package &quot;mirt&quot;] with 23 slots
 ##   .. .. ..@ par          : num [1:4] 0.863 -1 -999 999
-##   .. .. .. ..- attr(*, &quot;na.action&quot;)= &#39;omit&#39; int [1:7] 2 3 4 5 7 8 9
+##   .. .. .. ..- attr(*, &quot;na.action&quot;)= 'omit' int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
@@ -530,9 +519,9 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 23 slots
+##   ..$ :Formal class 'dich' [package &quot;mirt&quot;] with 23 slots
 ##   .. .. ..@ par          : num [1:4] 1.25 1.5 -999 999
-##   .. .. .. ..- attr(*, &quot;na.action&quot;)= &#39;omit&#39; int [1:7] 2 3 4 5 7 8 9
+##   .. .. .. ..- attr(*, &quot;na.action&quot;)= 'omit' int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
@@ -555,9 +544,9 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##   ..$ :Formal class &#39;dich&#39; [package &quot;mirt&quot;] with 23 slots
+##   ..$ :Formal class 'dich' [package &quot;mirt&quot;] with 23 slots
 ##   .. .. ..@ par          : num [1:4] 1.02 0 -999 999
-##   .. .. .. ..- attr(*, &quot;na.action&quot;)= &#39;omit&#39; int [1:7] 2 3 4 5 7 8 9
+##   .. .. .. ..- attr(*, &quot;na.action&quot;)= 'omit' int [1:7] 2 3 4 5 7 8 9
 ##   .. .. ..@ SEpar        : num(0) 
 ##   .. .. ..@ parnames     : chr(0) 
 ##   .. .. ..@ est          : logi(0) 
@@ -580,7 +569,7 @@ str(listobj)
 ##   .. .. ..@ prior.type   : int(0) 
 ##   .. .. ..@ prior_1      : num(0) 
 ##   .. .. ..@ prior_2      : num(0) 
-##   ..$ :Formal class &#39;nestlogit&#39; [package &quot;mirt&quot;] with 24 slots
+##   ..$ :Formal class 'nestlogit' [package &quot;mirt&quot;] with 24 slots
 ##   .. .. ..@ correctcat   : int 1
 ##   .. .. ..@ par          : num [1:10] 0.771 1 -999 999 0 ...
 ##   .. .. ..@ SEpar        : num(0) 
@@ -611,13 +600,11 @@ str(listobj)
 ##   .. ..$ : chr [1:4] &quot;Item_1&quot; &quot;Item_2&quot; &quot;Item_3&quot; &quot;Item_4&quot;
 ##  $ Theta      : num [1:2000, 1] -0.399 1.931 1.621 -0.424 1.343 ...
 </code></pre>
-
-<pre><code class="r"># generate dataset from converged model
-mod &lt;- mirt(Science, 1, itemtype = c(rep(&#39;gpcm&#39;, 3), &#39;nominal&#39;))
+<pre><code class="language-r"># generate dataset from converged model
+mod &lt;- mirt(Science, 1, itemtype = c(rep('gpcm', 3), 'nominal'))
 sim &lt;- simdata(model=mod, N=1000)
 head(sim)
 </code></pre>
-
 <pre><code>##      Comfort Work Future Benefit
 ## [1,]       4    3      3       4
 ## [2,]       3    2      3       3
@@ -626,12 +613,10 @@ head(sim)
 ## [5,]       3    3      2       3
 ## [6,]       2    3      3       2
 </code></pre>
-
-<pre><code class="r">Theta &lt;- matrix(rnorm(100))
+<pre><code class="language-r">Theta &lt;- matrix(rnorm(100))
 sim &lt;- simdata(model=mod, Theta=Theta)
 head(sim)
 </code></pre>
-
 <pre><code>##      Comfort Work Future Benefit
 ## [1,]       3    3      4       4
 ## [2,]       4    2      3       2
@@ -640,23 +625,19 @@ head(sim)
 ## [5,]       3    3      3       3
 ## [6,]       3    3      4       3
 </code></pre>
-
-<pre><code class="r"># alternatively, define a suitable object with functions from the mirtCAT package
+<pre><code class="language-r"># alternatively, define a suitable object with functions from the mirtCAT package
 # help(generate.mirt_object)
 library(mirtCAT)
 </code></pre>
-
 <pre><code>## Loading required package: shiny
 </code></pre>
-
-<pre><code class="r">nitems &lt;- 50
+<pre><code class="language-r">nitems &lt;- 50
 a1 &lt;- rlnorm(nitems, .2,.2)
 d &lt;- rnorm(nitems)
 g &lt;- rbeta(nitems, 20, 80)
 pars &lt;- data.frame(a1=a1, d=d, g=g)
 head(pars)
 </code></pre>
-
 <pre><code>##          a1          d         g
 ## 1 1.1271598 -0.6479570 0.2637693
 ## 2 1.3539630 -1.4832170 0.1903528
@@ -665,8 +646,7 @@ head(pars)
 ## 5 1.0394247  0.3835373 0.2361323
 ## 6 1.1479152  1.3522255 0.1990177
 </code></pre>
-
-<pre><code class="r">obj &lt;- generate.mirt_object(pars, &#39;3PL&#39;)
+<pre><code class="language-r">obj &lt;- generate.mirt_object(pars, '3PL')
 dat &lt;- simdata(N=200, model=obj)
 
 #### 10 item GGUMs test with 4 categories each
@@ -675,18 +655,16 @@ b &lt;- rnorm(10) #passed to d= input, but used as the b parameters
 diffs &lt;- t(apply(matrix(runif(10*3, .3, 1), 10), 1, cumsum))
 t &lt;- -(diffs - rowMeans(diffs))
 
-dat &lt;- simdata(a, b, 1000, &#39;ggum&#39;, t=t)
+dat &lt;- simdata(a, b, 1000, 'ggum', t=t)
 apply(dat, 2, table)
 </code></pre>
-
 <pre><code>##   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
 ## 0    493    510    672    323    457    413    579    474    457     514
 ## 1    306    280    234    401    350    370    255    318    336     307
 ## 2    146    172     68    222    146    170    108    152    163     140
 ## 3     55     38     26     54     47     47     58     56     44      39
 </code></pre>
-
-<pre><code class="r"># mod &lt;- mirt(dat, 1, &#39;ggum&#39;)
+<pre><code class="language-r"># mod &lt;- mirt(dat, 1, 'ggum')
 # coef(mod)
 
 ######
@@ -706,7 +684,6 @@ a &lt;- rlnorm(nitems, .2, .2); b &lt;- rnorm(nitems, 0, 1/2)
 for(i in 1:nitems) prob.list[[i]] &lt;- fun(a[i], b[i], theta)
 str(prob.list)
 </code></pre>
-
 <pre><code>## List of 5
 ##  $ : num [1:100, 1:2] 0.836 0.68 0.865 0.317 0.645 ...
 ##  $ : num [1:100, 1:2] 0.771 0.554 0.813 0.179 0.509 ...
@@ -714,11 +691,9 @@ str(prob.list)
 ##  $ : num [1:100, 1:2] 0.737 0.503 0.785 0.146 0.457 ...
 ##  $ : num [1:100, 1:2] 0.828 0.669 0.858 0.308 0.634 ...
 </code></pre>
-
-<pre><code class="r">dat &lt;- simdata(prob.list=prob.list)
+<pre><code class="language-r">dat &lt;- simdata(prob.list=prob.list)
 head(dat)
 </code></pre>
-
 <pre><code>##      Item_1 Item_2 Item_3 Item_4 Item_5
 ## [1,]      0      0      0      1      1
 ## [2,]      0      0      0      1      0
@@ -727,9 +702,8 @@ head(dat)
 ## [5,]      1      1      0      0      0
 ## [6,]      0      1      0      1      0
 </code></pre>
-
-<pre><code class="r"># prob.list input is useful when defining custom items as well
-name &lt;- &#39;old2PL&#39;
+<pre><code class="language-r"># prob.list input is useful when defining custom items as well
+name &lt;- 'old2PL'
 par &lt;- c(a = .5, b = -2)
 est &lt;- c(TRUE, TRUE)
 P.old2PL &lt;- function(par,Theta, ncat){
@@ -748,5 +722,6 @@ prob.list[[1]] &lt;- x@P(x@par, theta)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>

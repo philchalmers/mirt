@@ -1,6 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Generic item summary statistics</title>
+<!DOCTYPE html><html><head><title>R: Generic item summary statistics</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
 <link rel="stylesheet" type="text/css" href="R.css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
@@ -9,7 +19,7 @@
 <script>hljs.initHighlightingOnLoad();</script>
 </head><body><div class="container">
 
-<table width="100%" summary="page for itemstats {mirt}"><tr><td>itemstats {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+<table style="width: 100%;"><tr><td>itemstats {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Generic item summary statistics</h2>
 
@@ -26,41 +36,40 @@ unweighted sum scores.
 
 <h3>Usage</h3>
 
-<pre>
-itemstats(
+<pre><code class='language-R'>itemstats(
   data,
   group = NULL,
   use_ts = TRUE,
   proportions = TRUE,
   ts.tables = FALSE
 )
-</pre>
+</code></pre>
 
 
 <h3>Arguments</h3>
 
-<table summary="R argblock">
-<tr valign="top"><td><code>data</code></td>
+<table>
+<tr style="vertical-align: top;"><td><code>data</code></td>
 <td>
 <p>An object of class <code>data.frame</code> or <code>matrix</code>
 with the response patterns</p>
 </td></tr>
-<tr valign="top"><td><code>group</code></td>
+<tr style="vertical-align: top;"><td><code>group</code></td>
 <td>
 <p>optional grouping variable to condition on when computing
 summary information</p>
 </td></tr>
-<tr valign="top"><td><code>use_ts</code></td>
+<tr style="vertical-align: top;"><td><code>use_ts</code></td>
 <td>
 <p>logical; include information that is conditional on a
 meaningful total score?</p>
 </td></tr>
-<tr valign="top"><td><code>proportions</code></td>
+<tr style="vertical-align: top;"><td><code>proportions</code></td>
 <td>
 <p>logical; include response proportion information for
 each item?</p>
 </td></tr>
-<tr valign="top"><td><code>ts.tables</code></td>
+<tr style="vertical-align: top;"><td><code>ts.tables</code></td>
 <td>
 <p>logical; include mean/sd summary information
 pertaining to the unweighted total score?</p>
@@ -84,7 +93,7 @@ pertaining to the unweighted total score?</p>
 
 <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
 </p>
 
 
@@ -96,11 +105,10 @@ doi: <a href="https://doi.org/10.18637/jss.v048.i06">10.18637/jss.v048.i06</a>
 
 <h3>Examples</h3>
 
-<pre><code class="r"># dichotomous data example
+<pre><code class="language-r"># dichotomous data example
 LSAT7full &lt;- expand.table(LSAT7)
 head(LSAT7full)
 </code></pre>
-
 <pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5
 ## 1      0      0      0      0      0
 ## 2      0      0      0      0      0
@@ -109,10 +117,8 @@ head(LSAT7full)
 ## 5      0      0      0      0      0
 ## 6      0      0      0      0      0
 </code></pre>
-
-<pre><code class="r">itemstats(LSAT7full)
+<pre><code class="language-r">itemstats(LSAT7full)
 </code></pre>
-
 <pre><code>## $overall
 ##     N mean_total.score sd_total.score ave.r  sd.r alpha
 ##  1000            3.707          1.199 0.143 0.052 0.453
@@ -133,12 +139,10 @@ head(LSAT7full)
 ## Item.4 0.394 0.606
 ## Item.5 0.157 0.843
 </code></pre>
-
-<pre><code class="r"># behaviour with missing data
+<pre><code class="language-r"># behaviour with missing data
 LSAT7full[1:5,1] &lt;- NA
 itemstats(LSAT7full)
 </code></pre>
-
 <pre><code>## $overall
 ##  N.complete    N mean_total.score sd_total.score ave.r  sd.r alpha
 ##         995 1000            3.726          1.172 0.137 0.052 0.426
@@ -159,11 +163,9 @@ itemstats(LSAT7full)
 ## Item.4 0.394 0.606    NA
 ## Item.5 0.157 0.843    NA
 </code></pre>
-
-<pre><code class="r"># data with no meaningful total score
+<pre><code class="language-r"># data with no meaningful total score
 head(SAT12)
 </code></pre>
-
 <pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9 Item.10
 ## 1      1      4      5      2      3      1      2      1      3       1
 ## 2      3      4      2     NA      3      3      2     NA      3       1
@@ -193,10 +195,8 @@ head(SAT12)
 ## 5       1       2       4       1
 ## 6       2       3       4       3
 </code></pre>
-
-<pre><code class="r">itemstats(SAT12, use_ts=FALSE)
+<pre><code class="language-r">itemstats(SAT12, use_ts=FALSE)
 </code></pre>
-
 <pre><code>## $overall
 ##   N.complete   N
 ## 1        572 600
@@ -271,14 +271,12 @@ head(SAT12)
 ## Item.31 0.075 0.020 0.012 0.833 0.058 0.002
 ## Item.32 0.125 0.183 0.443 0.075 0.162 0.012
 </code></pre>
-
-<pre><code class="r"># extra total scores tables
+<pre><code class="language-r"># extra total scores tables
 dat &lt;- key2binary(SAT12,
                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,
                            5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 itemstats(dat, ts.tables=TRUE)
 </code></pre>
-
 <pre><code>## $overall
 ##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha
 ##         572 600           18.367           4.93 0.107 0.075 0.787
@@ -429,12 +427,10 @@ itemstats(dat, ts.tables=TRUE)
 ## Item.31 3.081633 4.605576
 ## Item.32 4.744322 5.697405
 </code></pre>
-
-<pre><code class="r"># grouping information
-group &lt;- gl(2, 300, labels=c(&#39;G1&#39;, &#39;G2&#39;))
+<pre><code class="language-r"># grouping information
+group &lt;- gl(2, 300, labels=c('G1', 'G2'))
 itemstats(dat, group=group)
 </code></pre>
-
 <pre><code>## $G1
 ## $G1$overall
 ##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha
@@ -586,12 +582,10 @@ itemstats(dat, group=group)
 ## Item.31 0.143 0.857    NA
 ## Item.32 0.850 0.143 0.007
 </code></pre>
-
-<pre><code class="r">#####
+<pre><code class="language-r">#####
 # polytomous data example
 itemstats(Science)
 </code></pre>
-
 <pre><code>## $overall
 ##    N mean_total.score sd_total.score ave.r  sd.r alpha
 ##  392           11.668          2.003 0.275 0.098 0.598
@@ -610,13 +604,11 @@ itemstats(Science)
 ## Future  0.036 0.184 0.536 0.245
 ## Benefit 0.054 0.255 0.492 0.199
 </code></pre>
-
-<pre><code class="r"># polytomous data with missing
+<pre><code class="language-r"># polytomous data with missing
 newScience &lt;- Science
 newScience[1:5,1] &lt;- NA
 itemstats(newScience)
 </code></pre>
-
 <pre><code>## $overall
 ##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha
 ##         387 392           11.672          2.011 0.276  0.1 0.605
@@ -635,12 +627,10 @@ itemstats(newScience)
 ## Future  0.036 0.184 0.536 0.245    NA
 ## Benefit 0.054 0.255 0.492 0.199    NA
 </code></pre>
-
-<pre><code class="r"># unequal categories
+<pre><code class="language-r"># unequal categories
 newScience[,1] &lt;- ifelse(Science[,1] == 1, NA, Science[,1])
 itemstats(newScience)
 </code></pre>
-
 <pre><code>## $overall
 ##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha
 ##         387 392           11.731          1.917  0.26 0.092 0.572
@@ -659,11 +649,9 @@ itemstats(newScience)
 ## Future  0.036 0.184 0.536 0.245    NA
 ## Benefit 0.054 0.255 0.492 0.199    NA
 </code></pre>
-
-<pre><code class="r">merged &lt;- data.frame(LSAT7full[1:392,], Science)
+<pre><code class="language-r">merged &lt;- data.frame(LSAT7full[1:392,], Science)
 itemstats(merged)
 </code></pre>
-
 <pre><code>## $overall
 ##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha
 ##         387 392           14.331          2.231 0.037 0.167 0.379
@@ -694,5 +682,6 @@ itemstats(merged)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.36.2 <a href="00Index.html">Index</a>]</div>
-</div></body></html>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>
