@@ -30,8 +30,8 @@ SIBTEST(
 \arguments{
 \item{dat}{integer-based dataset to be tested, containing dichotomous or polytomous responses}
 
-\item{group}{a vector indicating group membership with the same length as the number of rows in
-\code{dat}}
+\item{group}{a (factor) vector indicating group membership
+with the same length as the number of rows in \code{dat}}
 
 \item{suspect_set}{an integer vector indicating which items to inspect with SIBTEST. Including only
 one value will perform a DIF test, while including more than one will perform a simultaneous

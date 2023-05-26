@@ -19,8 +19,8 @@
 #' perform joint hypothesis tests.
 #'
 #' @param dat integer-based dataset to be tested, containing dichotomous or polytomous responses
-#' @param group a vector indicating group membership with the same length as the number of rows in
-#'   \code{dat}
+#' @param group a (factor) vector indicating group membership
+#'   with the same length as the number of rows in \code{dat}
 #' @param match_set an integer vector indicating which items to use as the items which are matched
 #'   (i.e., contain no DIF). These are analogous to 'anchor' items in the likelihood method to locate
 #'   DIF. If missing, all items other than the items found in the \code{suspect_set} will be used
@@ -307,7 +307,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
     }
 
     if(pairwise){
-        gnms <- unique(group)
+        gnms <- if(is.factor(group)) levels(group) else unique(group)
         ngroups <- length(gnms)
         compare <- vector('list', ngroups*(ngroups-1L)/2L)
         nms <- ngroups*(ngroups-1L)/2L
