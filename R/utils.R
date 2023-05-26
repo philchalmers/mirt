@@ -2262,7 +2262,7 @@ MGC2SC <- function(x, which){
     tmp <- x@ParObjects$pars[[which]]
     tmp@Model$lrPars <- x@ParObjects$lrPars
     ind <- 1L
-    for(i in seq_len(x@Data$nitems)){
+    for(i in seq_len(x@Data$nitems + 1L)){
         tmp@ParObjects$pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@ParObjects$pars[[i]]@parnum) - 1L)
         ind <- ind + length(tmp@ParObjects$pars[[i]]@parnum)
     }
