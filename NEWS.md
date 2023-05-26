@@ -3,10 +3,11 @@
 - For models fit using `mdirt()` the `fscores()` EAP and EAPsum methods now 
   always returns classification probabilities as the default (reported 
   by Matthew Madison)
+
+- `SIBTEST()` gains a `DIF` logical to perform DIF tests across `suspect_set`
   
-- `DIF()` gains a `pairwise` logical input to perform pairwise 
-  post-hoc comparisons for multi-group applications, while 
-  `SIBTEST()` gains a `DIF` logical to perform DIF tests across `suspect_set`
+- `DIF()` and `SIBTEST()` gain a `pairwise` logical input to perform pairwise 
+  post-hoc comparisons for multi-group applications
   
 - `DRF()` gains `groups2test` argument and friends for multi-group models
 

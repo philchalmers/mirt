@@ -15,6 +15,7 @@ SIBTEST(
   na.rm = FALSE,
   randomize = FALSE,
   C = cbind(1, -diag(length(unique(group)) - 1L)),
+  pairwise = FALSE,
   DIF = FALSE,
   p.adjust.method = "none",
   permute = 1000,
@@ -64,6 +65,8 @@ effects coding approach, where the last group (last column of the matrix) is tre
 group, and each column is associated with the respective name via \code{unique(group)} (i.e., the first
 column is the coefficient for \code{unique(group)[1]}, second column for \code{unique(group)[2]}, and
 so on)}
+
+\item{pairwise}{logical; perform pairwise comparisons in multi-group applications?}
 
 \item{DIF}{logical; should the elements in \code{suspect_set} be treated one at a time
 to test for DIF? Use of this logical will treat all other items as part of the \code{match_set}
@@ -239,6 +242,9 @@ SIBTEST(dat, group, suspect_set = 16:ncol(dat), DIF=TRUE,
 pick <- group \%in\% c('group1', 'group2')
 SIBTEST(subset(dat, pick), group[pick], suspect_set = 1:ncol(dat), DIF=TRUE)
 
+# post-hoc pairwise comparison for all groups
+SIBTEST(dat, group, suspect_set = 1:ncol(dat), DIF=TRUE, pairwise = TRUE)
+
 ## systematic differing slopes and intercepts
 dat2 <- simdata(a + c(numeric(15), .5,.5,.5,.5,.5, numeric(10)),
         d + c(numeric(15), 0,.6,.7,.8,.9, numeric(10)),
@@ -250,6 +256,9 @@ SIBTEST(dat, group, suspect_set = 16, randomize=TRUE)
 
 SIBTEST(dat, group, suspect_set = 19)
 SIBTEST(dat, group, suspect_set = 19, randomize=TRUE)
+
+SIBTEST(dat, group, suspect_set = c(16, 19), DIF=TRUE)
+SIBTEST(dat, group, suspect_set = c(16, 19), DIF=TRUE, pairwise=TRUE)
 
 
 }

@@ -61,6 +61,7 @@
 #'   crossing location? If TRUE this reflects the CSIBTEST definition of Li and Stout (1996);
 #'   if FALSE, this reflects the version of CSIBTEST utilized by Chalmers (2018). Only applicable
 #'   in two-group settings (in multi-group this is fixed to FALSE)
+#' @param pairwise logical; perform pairwise comparisons in multi-group applications?
 #' @param details logical; return a data.frame containing the details required to compute SIBTEST?
 #' @param plot a character input indicating the type of plot to construct. Options are \code{'none'}
 #'   (default), \code{'observed'} for the scaled focal subtest scores against the matched subtest
@@ -220,6 +221,9 @@
 #' pick <- group %in% c('group1', 'group2')
 #' SIBTEST(subset(dat, pick), group[pick], suspect_set = 1:ncol(dat), DIF=TRUE)
 #'
+#' # post-hoc pairwise comparison for all groups
+#' SIBTEST(dat, group, suspect_set = 1:ncol(dat), DIF=TRUE, pairwise = TRUE)
+#'
 #' ## systematic differing slopes and intercepts
 #' dat2 <- simdata(a + c(numeric(15), .5,.5,.5,.5,.5, numeric(10)),
 #'         d + c(numeric(15), 0,.6,.7,.8,.9, numeric(10)),
@@ -232,11 +236,14 @@
 #' SIBTEST(dat, group, suspect_set = 19)
 #' SIBTEST(dat, group, suspect_set = 19, randomize=TRUE)
 #'
+#' SIBTEST(dat, group, suspect_set = c(16, 19), DIF=TRUE)
+#' SIBTEST(dat, group, suspect_set = c(16, 19), DIF=TRUE, pairwise=TRUE)
+#'
 #'
 #' }
 SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(group)[2],
                     guess_correction = 0, Jmin = 5, na.rm = FALSE, randomize = FALSE,
-                    C = cbind(1, -diag(length(unique(group)) - 1L)),
+                    C = cbind(1, -diag(length(unique(group)) - 1L)), pairwise = FALSE,
                     DIF = FALSE, p.adjust.method = 'none', permute = 1000, pk_focal = FALSE,
                     correction = TRUE, remove_cross = FALSE, details = FALSE, plot = 'none', ...){
 
@@ -297,6 +304,33 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
             }
         }
         ret
+    }
+
+    if(pairwise){
+        gnms <- unique(group)
+        ngroups <- length(gnms)
+        compare <- vector('list', ngroups*(ngroups-1L)/2L)
+        nms <- ngroups*(ngroups-1L)/2L
+        ind <- 1L
+        for(i in 1L:ngroups){
+            for(j in 1L:ngroups){
+                if(i < j){
+                    pick <- group == gnms[i] | group == gnms[j]
+                    compare[[ind]] <- SIBTEST(dat[pick,], group=group[pick],
+                                              suspect_set=suspect_set, match_set=match_set,
+                                              guess_correction=guess_correction, Jmin=Jmin,
+                                              na.rm=na.rm, randomize=randomize, pairwise = FALSE,
+                                              DIF=DIF, p.adjust.method=p.adjust.method,
+                                              permute=permute, pk_focal=pk_focal,
+                                              correction=correction, remove_cross=remove_cross,
+                                              details=FALSE, plot='none', ...)
+                    nms[ind] <- paste0(gnms[c(i, j)], collapse='_')
+                    ind <- ind + 1L
+                }
+            }
+        }
+        names(compare) <- nms
+        return(compare)
     }
 
     if(DIF){
