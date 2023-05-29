@@ -38,7 +38,7 @@ or bootstrap estimate of the expected test scores (100 or more). If \code{boot =
 requires an estimated parameter information matrix. Returns a list containing the
 bootstrap/imputation distribution and null hypothesis test for the sDRF statistics}
 
-\item{focal_items}{a numeric vector indicating which items to include in the DRF tests. The
+\item{focal_items}{a character/numeric vector indicating which items to include in the DRF tests. The
 default uses all of the items (note that including anchors in the focal items has no effect
 because they are exactly equal across groups). Selecting fewer items will result in tests of
 'differential bundle functioning'}

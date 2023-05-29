@@ -31,7 +31,7 @@
 #'   or bootstrap estimate of the expected test scores (100 or more). If \code{boot = FALSE},
 #'   requires an estimated parameter information matrix. Returns a list containing the
 #'   bootstrap/imputation distribution and null hypothesis test for the sDRF statistics
-#' @param focal_items a numeric vector indicating which items to include in the DRF tests. The
+#' @param focal_items a character/numeric vector indicating which items to include in the DRF tests. The
 #'   default uses all of the items (note that including anchors in the focal items has no effect
 #'   because they are exactly equal across groups). Selecting fewer items will result in tests of
 #'   'differential bundle functioning'
@@ -391,6 +391,9 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         return(compare)
     }
     stopifnot(length(p.adjust) == 1L)
+    itemnames <- extract.mirt(mod, 'itemnames')
+    if(is.character(focal_items))
+        focal_items <- which(itemnames %in% focal_items)
     groupNames <- extract.mirt(mod, 'groupNames')
     if(length(groups2test) == 1L && groups2test == 'all')
         groups2test <- groupNames

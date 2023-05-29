@@ -345,9 +345,17 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                                     match_set=match_set[!(match_set %in% suspect_set[i])],
                                     focal_name=focal_name, guess_correction=guess_correction,
                                     Jmin=Jmin, na.rm=na.rm, randomize=randomize,
-                                    C=C, DIF = FALSE, p.adjust.method=p.adjust.method,
+                                    C=C, DIF=FALSE, p.adjust.method='none',
                                     permute=permute, pk_focal=pk_focal, correction=correction,
                                     remove_cross=remove_cross, details=details, plot=plot, ...)
+        }
+        if(p.adjust.method != 'none'){
+            ps <- sapply(diftest, function(x) x$p)
+            psSIB <- p.adjust(ps[1L,], method = p.adjust.method)
+            psCSIB <- p.adjust(ps[2L,], method = p.adjust.method)
+            padj <- rbind(psSIB, psCSIB)
+            for(i in 1L:length(diftest))
+                diftest[[i]]$adj_p <- padj[,i]
         }
         return(diftest)
     }
