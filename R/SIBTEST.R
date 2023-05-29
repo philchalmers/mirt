@@ -73,7 +73,7 @@
 #' @param ... additional plotting arguments to be passed
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
-#' @keywords SIBTEST, crossing SIBTEST, generalized SIBTEST
+#' @keywords SIBTEST
 #' @aliases SIBTEST
 #' @export SIBTEST
 #'
