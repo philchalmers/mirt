@@ -512,7 +512,7 @@ static void _dgroupEMCD(vector<double> &grad, NumericMatrix &hess, S4 &obj,
             grad[j] += tmp;
         }
         if(estHess){
-            vector<double> hessvec(npars2*(npars2-1)/2);
+            vector<double> hessvec(npars2*npars2);
             for(int j = 0; j < npars2*(npars2+1)/2; ++j){
                 double tmp = 0.0;
                 for(int k = 0; k < nquad; ++k)
