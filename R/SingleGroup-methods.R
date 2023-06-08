@@ -336,16 +336,20 @@ setMethod(
                 apars <- lapply(object@ParObjects$pars[-(extract.mirt(object, 'nitems') + 1L)],
                                 function(x) x@par[1L:object@Model$nfact])
                 is_ss <- sapply(apars, function(x) sum(x != 0) == 1L)
-                if(!any(is_ss))
-                    stop(c('traditional parameterization is only available for unidimensional ',
-                           'models or models with simple structure patterns'), call.=FALSE)
+                if(!any(is_ss)){
+                    warning(c('Traditional parameterization only available for unidimensional ',
+                           'models or models with simple structure patterns (neither found)'), call.=FALSE)
+                    IRTpars <- FALSE
+                }
             }
-            vcov <- vcov(object)
-            for(i in 1L:J){
-                if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
-                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]],
-                                                                vcov=vcov, nfact=object@Model$nfact)
+            if(IRTpars){
+                vcov <- vcov(object)
+                for(i in 1L:J){
+                    if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
+                    object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]],
+                                                                    vcov=vcov, nfact=object@Model$nfact)
 
+                }
             }
         }
         allPars <- list()
