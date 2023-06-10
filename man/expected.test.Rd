@@ -10,7 +10,8 @@ expected.test(
   group = NULL,
   mins = TRUE,
   individual = FALSE,
-  which.items = NULL
+  which.items = NULL,
+  probs.only = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ expected values for each item are determined from the scoring 0:(ncat-1)}
 
 \item{which.items}{an integer vector indicating which items to include in the expected test score. Default
 uses all possible items}
+
+\item{probs.only}{logical; return the probability for each category instead of
+traceline score functions? Only useful when \code{individual=TRUE}}
 }
 \description{
 Given an estimated model compute the expected test score. Returns the expected values in the
@@ -48,6 +52,10 @@ tail(cbind(Theta, tscore))
 # use only first two items (i.e., a bundle)
 bscore <- expected.test(mod, Theta, which.items = 1:2)
 tail(cbind(Theta, bscore))
+
+# more low-level output (score and probabilty elements)
+expected.test(mod, Theta, individual=TRUE)
+expected.test(mod, Theta, individual=TRUE, probs.only=TRUE)
 
 }
 }

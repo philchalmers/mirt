@@ -11,6 +11,8 @@
 #' @param mins logical; include the minimum value constants in the dataset. If FALSE, the
 #'   expected values for each item are determined from the scoring 0:(ncat-1)
 #' @param individual logical; return tracelines for individual items?
+#' @param probs.only logical; return the probability for each category instead of
+#'    traceline score functions? Only useful when \code{individual=TRUE}
 #' @param which.items an integer vector indicating which items to include in the expected test score. Default
 #'   uses all possible items
 #' @references
@@ -36,8 +38,14 @@
 #' bscore <- expected.test(mod, Theta, which.items = 1:2)
 #' tail(cbind(Theta, bscore))
 #'
+#' # more low-level output (score and probabilty elements)
+#' expected.test(mod, Theta, individual=TRUE)
+#' expected.test(mod, Theta, individual=TRUE, probs.only=TRUE)
+#'
 #' }
-expected.test <- function(x, Theta, group = NULL, mins = TRUE, individual = FALSE, which.items = NULL){
+expected.test <- function(x, Theta, group = NULL, mins = TRUE,
+                          individual = FALSE, which.items = NULL,
+                          probs.only = FALSE){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is.character(group))
@@ -54,6 +62,7 @@ expected.test <- function(x, Theta, group = NULL, mins = TRUE, individual = FALS
     MINS <- x@Data$mins[which.items]
     trace <- computeItemtrace(pars, Theta, itemloc=itemloc, CUSTOM.IND=x@Internals$CUSTOM.IND)
     if(individual){
+        if(probs.only) return(trace)
         ret <- sapply(1L:length(MINS), function(item, trace, itemloc){
             index <- score <- itemloc[item]:(itemloc[item+1L]-1L)
             score <- score - min(score)

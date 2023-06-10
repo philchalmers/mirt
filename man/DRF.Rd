@@ -18,6 +18,7 @@ DRF(
   Theta_nodes = NULL,
   plot = FALSE,
   DIF = FALSE,
+  DIF.cats = FALSE,
   groups2test = "all",
   pairwise = FALSE,
   simplify = TRUE,
@@ -82,6 +83,10 @@ If plausible parameter sets were obtained/supplied then imputed confidence inter
 \item{DIF}{logical; return a list of item-level imputation properties using the DRF statistics?
 These can generally be used as a DIF detection method and as a graphical display for
 understanding DIF within each item}
+
+\item{DIF.cats}{logical; same as \code{DIF = TRUE}, however computations will
+be performed on each item category probability functions rather than the score functions.
+Only useful for understanding DIF in polytomous items}
 
 \item{groups2test}{when more than 2 groups are being investigated which two groups
 should be used in the effect size comparisons?}
@@ -265,6 +270,51 @@ head(sDTF)
 # DIF
 sDIF <- DRF(mod3, Theta_nodes=Theta_nodes, focal_items = 30, draws=200)
 car::some(sDIF)
+
+## ----------------------------------------------------------------
+# polytomous example
+# simulate data where group 2 has a different slopes/intercepts
+set.seed(4321)
+a1 <- a2 <- matrix(rlnorm(20,.2,.3))
+a2[c(16:17, 19:20),] <- a1[c(16:17, 19:20),] + c(-.5, -.25, .25, .5)
+
+# for the graded model, ensure that there is enough space between the intercepts,
+# otherwise closer categories will not be selected often
+diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+diffs <- -(diffs - rowMeans(diffs))
+d1 <- d2 <- diffs + rnorm(20)
+rownames(d1) <- rownames(d2) <- paste0('Item.', 1:20)
+d2[16:20,] <- d1[16:20,] + matrix(c(-.5, -.5, -.5, -.5,
+                                    1, 0, 0, -1,
+                                    .5, .5, -.5, -.5,
+                                    1, .5, 0, -1,
+                                    .5, .5, .5, .5), byrow=TRUE, nrow=5)
+
+tail(data.frame(a.group1 = a1, a.group2 = a2), 6)
+list(d.group1 = d1[15:20,], d.group2 = d2[15:20,])
+
+itemtype <- rep('graded', nrow(a1))
+N <- 600
+dataset1 <- simdata(a1, d1, N, itemtype)
+dataset2 <- simdata(a2, d2, N, itemtype, mu = -.25, sigma = matrix(1.25))
+dat <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+
+# item 1-10 as anchors
+mod <- multipleGroup(dat, group=group, SE=TRUE,
+                     invariance=c(colnames(dat)[1:10], 'free_means', 'free_var'))
+coef(mod, simplify=TRUE)
+plot(mod)
+plot(mod, type='itemscore')
+
+# DIF tests vis Wald method
+DIF(mod, items2test=11:20,
+   which.par=c('a1', paste0('d', 1:4)),
+   Wald=TRUE, p.adjust='holm')
+
+DRF(mod)
+DRF(mod, DIF=TRUE, focal_items=11:20)
+DRF(mod, DIF.cats=TRUE, focal_items=11:20)
 
 ## ----------------------------------------------------------------
 ### multidimensional DTF

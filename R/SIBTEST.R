@@ -14,7 +14,7 @@
 #' distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
 #' Chalmers (2018) and the permutation method described by Li and Stout (1996). This
 #' function also supports the multi-group generalizations (GSIBTEST and GCSIBTEST)
-#' proposed by Chalmers and Zheng (in press), where users may specify alternative
+#' proposed by Chalmers and Zheng (2023), where users may specify alternative
 #' contrast matrices to evaluate specific comparisons between groups as well as
 #' perform joint hypothesis tests.
 #'

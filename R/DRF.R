@@ -59,6 +59,9 @@
 #' @param DIF logical; return a list of item-level imputation properties using the DRF statistics?
 #'   These can generally be used as a DIF detection method and as a graphical display for
 #'   understanding DIF within each item
+#' @param DIF.cats logical; same as \code{DIF = TRUE}, however computations will
+#'   be performed on each item category probability functions rather than the score functions.
+#'   Only useful for understanding DIF in polytomous items
 #' @param best_fitting logical; use the best fitting parametric distribution (Gaussian by default)
 #'  that was used at the time of model estimation? This will result in much fast computations, however
 #'  the results are more dependent upon the underlying modelling assumptions. Default is FALSE, which
@@ -222,6 +225,51 @@
 #' car::some(sDIF)
 #'
 #' ## ----------------------------------------------------------------
+#' # polytomous example
+#' # simulate data where group 2 has a different slopes/intercepts
+#' set.seed(4321)
+#' a1 <- a2 <- matrix(rlnorm(20,.2,.3))
+#' a2[c(16:17, 19:20),] <- a1[c(16:17, 19:20),] + c(-.5, -.25, .25, .5)
+#'
+#' # for the graded model, ensure that there is enough space between the intercepts,
+#' # otherwise closer categories will not be selected often
+#' diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+#' diffs <- -(diffs - rowMeans(diffs))
+#' d1 <- d2 <- diffs + rnorm(20)
+#' rownames(d1) <- rownames(d2) <- paste0('Item.', 1:20)
+#' d2[16:20,] <- d1[16:20,] + matrix(c(-.5, -.5, -.5, -.5,
+#'                                     1, 0, 0, -1,
+#'                                     .5, .5, -.5, -.5,
+#'                                     1, .5, 0, -1,
+#'                                     .5, .5, .5, .5), byrow=TRUE, nrow=5)
+#'
+#' tail(data.frame(a.group1 = a1, a.group2 = a2), 6)
+#' list(d.group1 = d1[15:20,], d.group2 = d2[15:20,])
+#'
+#' itemtype <- rep('graded', nrow(a1))
+#' N <- 600
+#' dataset1 <- simdata(a1, d1, N, itemtype)
+#' dataset2 <- simdata(a2, d2, N, itemtype, mu = -.25, sigma = matrix(1.25))
+#' dat <- rbind(dataset1, dataset2)
+#' group <- c(rep('D1', N), rep('D2', N))
+#'
+#' # item 1-10 as anchors
+#' mod <- multipleGroup(dat, group=group, SE=TRUE,
+#'                      invariance=c(colnames(dat)[1:10], 'free_means', 'free_var'))
+#' coef(mod, simplify=TRUE)
+#' plot(mod)
+#' plot(mod, type='itemscore')
+#'
+#' # DIF tests vis Wald method
+#' DIF(mod, items2test=11:20,
+#'    which.par=c('a1', paste0('d', 1:4)),
+#'    Wald=TRUE, p.adjust='holm')
+#'
+#' DRF(mod)
+#' DRF(mod, DIF=TRUE, focal_items=11:20)
+#' DRF(mod, DIF.cats=TRUE, focal_items=11:20)
+#'
+#' ## ----------------------------------------------------------------
 #' ### multidimensional DTF
 #'
 #' set.seed(1234)
@@ -292,9 +340,9 @@
 #' }
 DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                 param_set = NULL, den.type = 'marginal', best_fitting=FALSE,
-                CI = .95, npts = 1000,
-                quadpts = NULL, theta_lim=c(-6,6), Theta_nodes = NULL,
-                plot = FALSE, DIF = FALSE, groups2test = 'all',
+                CI = .95, npts = 1000, quadpts = NULL,
+                theta_lim=c(-6,6), Theta_nodes = NULL, plot = FALSE,
+                DIF = FALSE, DIF.cats = FALSE, groups2test = 'all',
                 pairwise = FALSE, simplify = TRUE, p.adjust = 'none',
                 par.strip.text = list(cex = 0.7),
                 par.settings = list(strip.background = list(col = '#9ECAE1'),
@@ -333,7 +381,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     }
 
     fn <- function(x, omod, Theta, max_score, Theta_nodes = NULL, best_fitting,
-                   plot, DIF, focal_items, details, whc_grp,
+                   plot, DIF, DIF.cats, focal_items, details, whc_grp,
                    signs=NULL, rs=NULL, den.type){
         mod <- omod
         if(!is.null(Theta_nodes)){
@@ -345,7 +393,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             if(!DIF) ret <- c("sDRF." = ret)
             return(ret)
         }
-        calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF, den.type=den.type,
+        calc_DRFs(mod=mod, Theta=Theta, plot=plot, max_score=max_score, DIF=DIF,
+                  DIF.cats=DIF.cats, den.type=den.type,
                   focal_items=focal_items, details=details, signs=signs, rs=rs,
                   best_fitting=best_fitting, whc_grp=whc_grp)
     }
@@ -359,6 +408,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     }
 
     if(missing(mod)) missingMsg('mod')
+    if(DIF.cats) DIF <- TRUE
     if(pairwise){
         if(length(groups2test) == 1L && groups2test == 'all')
             groups2test <- extract.mirt(mod, 'groupNames')
@@ -372,7 +422,8 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                                           groups2test = groups2test[c(i,j)],
                                           param_set=param_set, den.type=den.type, best_fitting=best_fitting,
                                           CI=CI, npts=npts, quadpts=quadpts, theta_lim=theta_lim,
-                                          Theta_nodes=Theta_nodes, plot = FALSE, DIF=DIF, pairwise=FALSE,
+                                          Theta_nodes=Theta_nodes, plot = FALSE, DIF=DIF,
+                                          DIF.cats=DIF.cats, pairwise=FALSE,
                                           p.adjust=p.adjust, par.strip.text=par.strip.text,
                                           par.settings=par.settings, auto.key=auto.key,
                                           verbose=verbose, ...)
@@ -472,9 +523,9 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     if(plot) Theta_nodes <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=1000))
     oCM <- lapply(1L, fn, omod=mod, Theta_nodes=Theta_nodes, best_fitting=best_fitting,
                   max_score=max_score, Theta=Theta, plot=plot, den.type=den.type, whc_grp=whc_grp,
-                  DIF=DIF, focal_items=focal_items, details=details)[[1L]]
+                  DIF=DIF, DIF.cats=DIF.cats, focal_items=focal_items, details=details)[[1L]]
     signs <- attr(oCM, 'signs')
-    if(plot && !impute) return(plot.DRF(Theta_nodes, oCM, DIF=DIF,
+    if(plot && !impute) return(plot.DRF(Theta_nodes, oCM, DIF=DIF, DIF.cats=DIF.cats,
                                  itemnames = extract.mirt(mod, 'itemnames')[focal_items], ...))
     if(!is.null(Theta_nodes) && !impute)
         return(as.mirt_df(data.frame(Theta=Theta_nodes, sDRF=oCM)))
@@ -497,7 +548,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                                 pars=pars, MGmod=mod, param_set=param_set, best_fitting=best_fitting,
                                 max_score=max_score, Theta=Theta, rslist=rslist,
                                 Theta_nodes=Theta_nodes, plot=plot, details=details, progress=verbose,
-                                DIF=DIF, focal_items=focal_items, signs=signs, den.type=den.type)
+                                DIF=DIF, DIF.cats=DIF.cats, focal_items=focal_items, signs=signs, den.type=den.type)
         scores <- do.call(rbind, list_scores)
         pars <- lapply(1L:length(groupNames), function(ind)
             mod@ParObjects$pars[[ind]]@ParObjects$pars)
@@ -513,6 +564,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         if(!is.null(Theta_nodes))
             return(as.mirt_df(data.frame(Theta=Theta_nodes, sDRF=oCM, t(CIs))))
         if(DIF){
+            browser()
             oCM <- matrix(oCM, length(focal_items))
             t1 <- compute_ps(oCM[,1L], scores[,1L:length(focal_items), drop=FALSE])
             t2 <- compute_ps(oCM[,3L:4L], scores[,1L:(length(focal_items)*2L) +
@@ -550,12 +602,23 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     } else {
         # no imputations
         if(DIF){
-            ret <- data.frame(groups=groups_tested,
-                              item=extract.mirt(mod, 'itemnames')[focal_items],
-                              matrix(oCM, length(oCM)/5L), row.names=NULL)
-            ret <- ret[,-c(6L:7L)]
-            colnames(ret) <- c('groups', 'item', 'sDIF', 'uDIF', 'dDIF')
-            ret <- as.mirt_df(ret)
+            if(DIF.cats){
+                kk <- extract.mirt(mod, 'K')[focal_items]
+                ii <- rep(extract.mirt(mod, 'itemnames')[focal_items], times=kk)
+                cnms <- as.integer(sapply(kk, function(k) 1:k))
+                ret <- data.frame(groups=groups_tested, item=ii, cat=cnms,
+                                  matrix(oCM, length(oCM)/5L), row.names=NULL)
+                ret <- ret[,-c(7L:8L)]
+                colnames(ret) <- c('groups', 'item', 'cat', 'sDIF', 'uDIF', 'dDIF')
+                ret <- as.mirt_df(ret)
+            } else {
+                ret <- data.frame(groups=groups_tested,
+                                  item=extract.mirt(mod, 'itemnames')[focal_items],
+                                  matrix(oCM, length(oCM)/5L), row.names=NULL)
+                ret <- ret[,-c(6L:7L)]
+                colnames(ret) <- c('groups', 'item', 'sDIF', 'uDIF', 'dDIF')
+                ret <- as.mirt_df(ret)
+            }
         } else {
             ret <- data.frame(groups=groups_tested,
                               n_focal_items=length(focal_items),
@@ -567,13 +630,15 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
     ret
 }
 
-calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, den.type,
+calc_DRFs <- function(mod, Theta, DIF, DIF.cats, plot, max_score, focal_items, details, den.type,
                       best_fitting, whc_grp, rs=NULL, signs=NULL){
     if(DIF){
-        T1 <- expected.test(mod, Theta, group=whc_grp[1L], mins=FALSE, individual = TRUE,
-                            which.items=focal_items)
-        T2 <- expected.test(mod, Theta, group=whc_grp[2L], mins=FALSE, individual = TRUE,
-                            which.items=focal_items)
+        T1 <- expected.test(mod, Theta, group=whc_grp[1L],
+                            mins=FALSE, individual=TRUE,
+                            which.items=focal_items, probs.only=DIF.cats)
+        T2 <- expected.test(mod, Theta, group=whc_grp[2L],
+                            mins=FALSE, individual=TRUE,
+                            which.items=focal_items, probs.only=DIF.cats)
     } else {
         T1 <- matrix(expected.test(mod, Theta, group=whc_grp[1L],
                             mins=FALSE, which.items=focal_items))
@@ -620,7 +685,7 @@ calc_DRFs <- function(mod, Theta, DIF, plot, max_score, focal_items, details, de
     sDRF <- colSums(D * p)
     dDRF <- sqrt(colSums(D^2 * p))
     attach_signs <- FALSE
-    ret <- if(is.null(signs)){
+    ret <- if(is.null(signs)){ # TODO fix for DIF.cats
         signs <- D < 0
         attach_signs <- TRUE
     }
@@ -743,7 +808,8 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
 
 }
 
-plot.DRF <- function(Theta, DV, itemnames, CIs = NULL, DIF = FALSE, CI,
+plot.DRF <- function(Theta, DV, itemnames, CIs = NULL, DIF = FALSE,
+                     DIF.cats=FALSE, CI,
                      main = 'Signed DIF', par.strip.text = list(cex = 0.7),
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
