@@ -247,7 +247,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
                     DIF = FALSE, p.adjust.method = 'none', permute = 1000, pk_focal = FALSE,
                     correction = TRUE, remove_cross = FALSE, details = FALSE, plot = 'none', ...){
 
-    find_intersection <- function(diff, weight, use, scores, remove_cross,
+    find_intersection <- function(diff, weight = NULL, use, scores, remove_cross,
                                   tab_match = NULL, C = NULL){
         if(is.matrix(diff)){
             Ystar <- diff
