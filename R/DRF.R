@@ -564,7 +564,6 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         if(!is.null(Theta_nodes))
             return(as.mirt_df(data.frame(Theta=Theta_nodes, sDRF=oCM, t(CIs))))
         if(DIF){
-            browser()
             oCM <- matrix(oCM, length(focal_items))
             t1 <- compute_ps(oCM[,1L], scores[,1L:length(focal_items), drop=FALSE])
             t2 <- compute_ps(oCM[,3L:4L], scores[,1L:(length(focal_items)*2L) +
