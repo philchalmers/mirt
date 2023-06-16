@@ -70,7 +70,9 @@ mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
                         .mirtClusterEnv$ncores))
             return(invisible(NULL))
         }
-        .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
+        if(is.numeric(spec))
+            .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
+        else .mirtClusterEnv$MIRTCLUSTER <- spec
         .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
         mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible(NULL))
     }
