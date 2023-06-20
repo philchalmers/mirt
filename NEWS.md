@@ -1,3 +1,11 @@
+# Changes in mirt 1.40
+
+- Bugfix for `fscores()` when supplying mixture models 
+  that was introduced by changing previous classification default for 
+  latent class models (reported by Karel Veldkamp)
+  
+- `residuals()` gains a `p.adjust` argument for FWE control
+
 # Changes in mirt 1.39
 
 - For models fit using `mdirt()` the `fscores()` EAP and EAPsum methods now 

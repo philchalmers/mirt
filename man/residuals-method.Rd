@@ -12,6 +12,7 @@
 \S4method{residuals}{SingleGroupClass}(
   object,
   type = "LD",
+  p.adjust = "none",
   df.p = FALSE,
   approx.z = FALSE,
   full.scores = FALSE,
@@ -42,6 +43,9 @@ Yen (1984), \code{'JSI'} for the jack-knife statistic proposed Edwards et al. (2
 and \code{'expfull'} for the expected values for every theoretically observable response pattern.
 For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
 residuals in the form of signed Cramers V coefficients}
+
+\item{p.adjust}{method to use for adjusting all p-values (see \code{\link{p.adjust}}
+for available options). Default is \code{'none'}}
 
 \item{df.p}{logical; print the degrees of freedom and p-values?}
 
@@ -102,6 +106,7 @@ residuals(x, tables = TRUE)
 residuals(x, type = 'exp')
 residuals(x, suppress = .15)
 residuals(x, df.p = TRUE)
+residuals(x, df.p = TRUE, p.adjust = 'fdr') # apply FWE control
 
 # Pearson's X2 estimate for goodness-of-fit
 full_table <- residuals(x, type = 'expfull')

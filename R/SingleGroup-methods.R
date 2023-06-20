@@ -632,6 +632,8 @@ setMethod(
 #'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
 #' @param theta_lim range for the integration grid
+#' @param p.adjust method to use for adjusting all p-values (see \code{\link{p.adjust}}
+#'   for available options). Default is \code{'none'}
 #' @param fold logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?
 #' @param quadpts number of quadrature nodes to use. The default is extracted from model (if available)
 #'   or generated automatically if not available
@@ -675,6 +677,7 @@ setMethod(
 #' residuals(x, type = 'exp')
 #' residuals(x, suppress = .15)
 #' residuals(x, df.p = TRUE)
+#' residuals(x, df.p = TRUE, p.adjust = 'fdr') # apply FWE control
 #'
 #' # Pearson's X2 estimate for goodness-of-fit
 #' full_table <- residuals(x, type = 'expfull')
@@ -731,7 +734,8 @@ setMethod(
 setMethod(
     f = "residuals",
     signature = signature(object = 'SingleGroupClass'),
-    definition = function(object, type = 'LD', df.p = FALSE, approx.z = FALSE,
+    definition = function(object, type = 'LD', p.adjust = 'none',
+                          df.p = FALSE, approx.z = FALSE,
                           full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
                           suppress = NA, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
@@ -833,6 +837,8 @@ setMethod(
                     }
                 }
             }
+            if(df.p)
+                df[upper.tri(df)] <- p.adjust(df[upper.tri(df)], method=p.adjust)
             if(tables) return(listtabs)
             if(df.p){
                 class(df) <- c('mirt_matrix', 'matrix')
