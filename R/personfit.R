@@ -51,6 +51,12 @@
 #' items <- rep('2PL', 20)
 #' data <- simdata(a,d, 2000, items)
 #'
+#' # first observation responds 1 for most difficult, 0 for easiest
+#' data[1,] <- ifelse(d > 0, 0, 1)
+#'
+#' # second observations answers first half as 1 second half as 0
+#' data[2,] <- rep(1:0, each = 10)
+#'
 #' x <- mirt(data, 1)
 #' fit <- personfit(x)
 #' head(fit)
@@ -59,17 +65,21 @@
 #' Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 #' head(personfit(x, Theta=Theta))
 #'
-#' #multiple group Rasch model example
+#' # multiple group Rasch model example
 #' set.seed(12345)
-#' a <- matrix(rep(1, 15), ncol=1)
-#' d <- matrix(rnorm(15,0,.7),ncol=1)
+#' a <- matrix(rep(1, 16), ncol=1)
+#' d <- matrix(rnorm(16,0,.7),ncol=1)
 #' itemtype <- rep('dich', nrow(a))
 #' N <- 1000
 #' dataset1 <- simdata(a, d, N, itemtype)
 #' dataset2 <- simdata(a, d, N, itemtype, sigma = matrix(1.5))
 #' dat <- rbind(dataset1, dataset2)
+#'
+#' # first observation responds 1 for most difficult, 0 for easiest
+#' dat[1,] <- ifelse(d > 0, 0, 1)
+#'
 #' group <- c(rep('D1', N), rep('D2', N))
-#' models <- 'F1 = 1-15'
+#' models <- 'F1 = 1-16'
 #' mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
 #' coef(mod_Rasch, simplify=TRUE)
 #' pf <- personfit(mod_Rasch, method='MAP')
