@@ -309,7 +309,7 @@ setMethod(
                                    scores=scores, classify=discrete, hessian=TRUE)
                 } else {
             	    tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L, FUN=EAP, progress=FALSE,
-            	                   log_itemtrace=log_itemtrace, classify=discrete,
+            	                   log_itemtrace=log_itemtrace, classify=discrete & !mixture,
                                    tabdata=tabdata, ThetaShort=ThetaShort, W=W, scores=scores,
                                    hessian=estHess && method == 'EAP', return_zeros=method != 'EAP')
                 }

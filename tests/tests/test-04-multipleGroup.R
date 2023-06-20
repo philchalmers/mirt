@@ -72,6 +72,8 @@ test_that('one factor', {
     expect_equal(extract.mirt(mod_mixture, 'condnum'), 111.45, tolerance=1e-4)
     so <- summary(mod_mixture, verbose=FALSE)
     expect_equal(so[[1]]$class_proportion, .5104, tolerance=1e-4)
+    fs <- fscores(mod_mixture)
+    expect_equal(fs[1:3], c(-0.04600241,  0.48125920,  0.39123595), tolerance=1e-4)
 
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
