@@ -2267,7 +2267,7 @@ MGC2SC <- function(x, which){
     tmp <- x@ParObjects$pars[[which]]
     tmp@Model$lrPars <- x@ParObjects$lrPars
     ind <- 1L
-    for(i in seq_len(x@Data$nitems)){
+    for(i in seq_len(x@Data$nitems) + 1L){
         tmp@ParObjects$pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@ParObjects$pars[[i]]@parnum) - 1L)
         ind <- ind + length(tmp@ParObjects$pars[[i]]@parnum)
     }
@@ -2275,6 +2275,8 @@ MGC2SC <- function(x, which){
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
+    tmp@Data$ngroups <- 1L
+    tmp@Model$model <- x@Model$model
     tmp
 }
 
