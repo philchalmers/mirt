@@ -1036,6 +1036,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
+    gnames_count <- integer(length(PrepList))
     for(g in seq_len(length(PrepList))){
         tmpgroup <- PrepList[[g]]$pars
         for(i in seq_len(length(tmpgroup))){
@@ -1051,6 +1052,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
             tmp <- sapply(as.character(tmpgroup[[i]]@prior.type),
                                  function(x) switch(x, '1'='norm', '2'='lnorm',
                                                     '3'='beta', '4'='expbeta', 'none'))
+            gnames_count[g] <- gnames_count[g] + length(tmp)
             prior.type <- c(prior.type, tmp)
             prior_1 <- c(prior_1, tmpgroup[[i]]@prior_1)
             prior_2 <- c(prior_2, tmpgroup[[i]]@prior_2)
@@ -1072,6 +1074,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         prior_2 <- c(prior_2, random[[i]]@prior_2)
         class <- c(class, rep('RandomPars', length(random[[i]]@parnum)))
         item <- c(item, rep('RANDOM', length(random[[i]]@parnum)))
+        gnames_count[g] <- gnames_count[g] + length(tmp) # TODO this assumes one group
     }
     if(length(lrPars)){
         parname <- c(parname, lrPars@parnames)
@@ -1088,6 +1091,7 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         prior_2 <- c(prior_2, lrPars@prior_2)
         class <- c(class, rep('lrPars', length(lrPars@parnum)))
         item <- c(item, rep('BETA', length(lrPars@parnum)))
+        gnames_count[g] <- gnames_count[g] + length(tmp)
     }
     for(i in seq_len(length(lr.random))){
         parname <- c(parname, lr.random[[i]]@parnames)
@@ -1104,8 +1108,9 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
         prior_2 <- c(prior_2, lr.random[[i]]@prior_2)
         class <- c(class, rep('LRRandomPars', length(lr.random[[i]]@parnum)))
         item <- c(item, rep('LRRANDOM', length(lr.random[[i]]@parnum)))
+        gnames_count[g] <- gnames_count[g] + length(tmp)
     }
-    gnames <- rep(names(PrepList), each = length(est)/length(PrepList))
+    gnames <- rep(names(PrepList), times = gnames_count)
     par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
     lbound[parname %in% c('g', 'u')] <- antilogit(lbound[parname %in% c('g', 'u')])
     ubound[parname %in% c('g', 'u')] <- antilogit(ubound[parname %in% c('g', 'u')])
@@ -2262,7 +2267,7 @@ MGC2SC <- function(x, which){
     tmp <- x@ParObjects$pars[[which]]
     tmp@Model$lrPars <- x@ParObjects$lrPars
     ind <- 1L
-    for(i in seq_len(x@Data$nitems + 1L)){
+    for(i in seq_len(x@Data$nitems)){
         tmp@ParObjects$pars[[i]]@parnum[] <- seq(ind, ind + length(tmp@ParObjects$pars[[i]]@parnum) - 1L)
         ind <- ind + length(tmp@ParObjects$pars[[i]]@parnum)
     }
@@ -2270,8 +2275,6 @@ MGC2SC <- function(x, which){
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
-    tmp@Data$ngroups <- 1L
-    tmp@Model$model <- x@Model$model
     tmp
 }
 
