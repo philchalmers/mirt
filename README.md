@@ -1,6 +1,6 @@
 [![](http://www.r-pkg.org/badges/version/mirt)](https://www.r-pkg.org:443/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
 
-# mirt
+# mirt <img src="mirt-logo.png" align="right" height="200px" />
 
 Multidimensional item response theory in R.
 
