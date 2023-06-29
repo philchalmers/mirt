@@ -5,6 +5,7 @@ COPYING
 mirt.Rproj
 ^.*\.Rproj$
 ^Makefile$
+^mirt-logo\.png$
 .travis.yml
 _pkgdown.yml
 docs/
