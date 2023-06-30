@@ -791,6 +791,7 @@ setMethod(
             if(!discrete){
                 groupPars <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
                 if(QMC){
+                    Theta <- Theta_meanSigma_shift(Theta, groupPars$gmeans, groupPars$gcov)
                     prior <- rep(1/nrow(Theta), nrow(Theta))
                 } else {
                     prior <- mirt_dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)

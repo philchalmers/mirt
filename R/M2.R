@@ -145,6 +145,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
                 if(QMC){
                     Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim)
+                    Theta <- Theta_meanSigma_shift(Theta, gstructgrouppars$gmeans, gstructgrouppars$gcov)
                     Prior <- rep(1/nrow(Theta), nrow(Theta))
                 } else {
                     theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))

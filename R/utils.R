@@ -418,6 +418,10 @@ bfactor2mod <- function(model, J){
     return(model)
 }
 
+Theta_meanSigma_shift <- function(Theta, mean, sigma){
+    t(t(Theta) + mean) %*% t(chol(sigma))
+}
+
 updateTheta <- function(npts, nfact, pars, QMC = FALSE){
     ngroups <- length(pars)
     pick <- length(pars[[1L]])
@@ -429,7 +433,7 @@ updateTheta <- function(npts, nfact, pars, QMC = FALSE){
         } else {
             MC_quad(npts=npts, nfact=nfact, lim = c(0,1))
         }
-        Theta[[g]] <- t(t(theta) + gp$gmeans) %*% t(chol(gp$gcov))
+        Theta[[g]] <- Theta_meanSigma_shift(theta, gp$gmeans, gp$gcov)
     }
     Theta
 }

@@ -1,5 +1,9 @@
 # Changes in mirt 1.40
 
+- Methods using Quasi-Monte Carlo integration post-convergence were 
+  not respecting correlated latent variable structures 
+  (reported by George Kephart when using `M2()`)
+
 - Bugfix for `fscores()` when supplying mixture models 
   that was introduced by changing previous classification default for 
   latent class models (reported by Karel Veldkamp)
