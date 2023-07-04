@@ -505,6 +505,9 @@ itemfit <- function(x, fit_stats = 'S_X2',
         return(ret)
     }
     dots <- list(...)
+    if(x@Model$nfact > 3L && is.null(dots$QMC))
+        warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
+                call.=FALSE)
     discrete <- dots$discrete
     discrete <- ifelse(is.null(discrete), FALSE, discrete)
     mixture <- is(x, 'MixtureClass')
