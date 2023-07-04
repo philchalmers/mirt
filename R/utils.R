@@ -419,7 +419,7 @@ bfactor2mod <- function(model, J){
 }
 
 Theta_meanSigma_shift <- function(Theta, mean, sigma){
-    t(t(Theta) + mean) %*% t(chol(sigma))
+    t(t(Theta) + mean) %*% chol(sigma)
 }
 
 updateTheta <- function(npts, nfact, pars, QMC = FALSE){
