@@ -1,211 +1,155 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>mirt example for located latent class analysis</title>
-
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
-
-<!-- Styles for R syntax highlighter -->
 <style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
-
-
-
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
+/**
+ * Prism.s theme ported from highlight.js's xcode style
+ */
+pre code {
+  padding: 1em;
 }
-
+.token.comment {
+  color: #007400;
+}
+.token.punctuation {
+  color: #999;
+}
+.token.tag,
+.token.selector {
+  color: #aa0d91;
+}
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #1c00cf;
+}
+.token.property,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #c41a16;
+}
+.token.inserted {
+  background-color: #ccffd8;
+}
+.token.deleted {
+  background-color: #ffebe9;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #836c28;
+}
+.token.function,
+.token.class-name {
+  color: #DD4A68;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #5c2699;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+</style>
+<style type="text/css">
 body {
+  font-family: sans-serif;
   max-width: 800px;
   margin: auto;
   padding: 1em;
-  line-height: 20px;
+  line-height: 1.5;
+  box-sizing: border-box;
 }
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
+*, *:before, *:after {
+  box-sizing: inherit;
 }
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
+pre, img { max-width: 100%; }
+pre, pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 pre code {
-   display: block; padding: 0.5em;
+  display: block;
+  overflow-x: auto;
 }
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
+code.language-undefined, pre > code:not([class]) {
+  background-color: inherit;
+  border: 1px solid #eee;
 }
-
-code[class] {
-  background-color: #F8F8F8;
+table {
+  margin: auto;
+  border-top: 1px solid #666;
 }
-
-table, td, th {
-  border: none;
-}
-
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+thead, tfoot, tr:nth-child(even) { background: #eee; }
 blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
+  color: #666;
+  margin: 0;
+  padding-left: 1em;
+  border-left: 0.5em solid #eee;
 }
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered { padding-left: 0; }
+#TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
 }
 
 @media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  tr, img { page-break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
 }
 </style>
-
-
-
 </head>
-
 <body>
-<h1>mirt example for located latent class analysis</h1>
-
+<div class="include-before">
+</div>
+<div class="frontmatter">
+<div class="title"><h1>mirt example for located latent class analysis</h1></div>
+<div class="author"><h2></h2></div>
+<div class="date"><h3></h3></div>
+</div>
+<div class="body">
+<h1 id="mirt-example-for-located-latent-class-analysis">mirt example for located latent class analysis</h1>
 <p>Adapted from the <code>sirt</code> package  examples (<code>data.read</code>).</p>
-
-<pre><code class="r">library(mirt)
+<pre><code class="language-r">library(mirt)
 library(sirt)
 library(mvtnorm)
 
@@ -224,13 +168,12 @@ mod12a &lt;- sirt::rasch.mirtlc(dat , Nclasses=3, modeltype=&quot;MLC1&quot; , r
                              progress = FALSE )
 summary(mod12a)
 </code></pre>
-
 <pre><code>## ---------------------------------------------------------------------------------------------------------- 
-## sirt 3.9-4 (2020-02-17 12:57:09) 
+## sirt 3.12-66 (2022-05-16 12:27:54) 
 ## 
-## Date of Analysis: 2020-09-04 00:49:59 
-## Time difference of 0.3327951 secs
-## Computation time: 0.3327951 
+## Date of Analysis: 2023-07-05 16:11:56 
+## Time difference of 0.2820177 secs
+## Computation time: 0.2820177 
 ## 
 ## Multidimensional Item Response Latent Class Model 
 ## 
@@ -290,8 +233,7 @@ summary(mod12a)
 ## C3 -1.166 1 -1.166
 ## C4 -0.127 1 -0.127
 </code></pre>
-
-<pre><code class="r">#-- M12b: gdm (in CDM)
+<pre><code class="language-r">#-- M12b: gdm (in CDM)
 theta.k &lt;- seq(-1 , 1 , len=3)
 
 # initial matrix
@@ -301,1224 +243,1221 @@ b.constraint &lt;- matrix( c(10,1,0) , nrow=1,ncol=3)
 mod12b &lt;- CDM::gdm( dat , theta.k = theta.k , skillspace=&quot;est&quot; , irtmodel=&quot;1PL&quot;,
 b.constraint=b.constraint , maxiter=200)
 </code></pre>
-
 <pre><code>## ......................................................................
-## Iteration 1     2020-09-04 00:49:59 
+## Iteration 1     2023-07-05 16:11:56 
 ##    Deviance = 3975.4685
 ##     Maximum item intercept parameter change = 0.891647  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.055752  
 ## ......................................................................
-## Iteration 2     2020-09-04 00:49:59 
+## Iteration 2     2023-07-05 16:11:56 
 ##    Deviance = 4001.393 | Deviance change = -25.924515  Deviance increases!
 ##     Maximum item intercept parameter change = 0.167581  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.013919  
 ## ......................................................................
-## Iteration 3     2020-09-04 00:49:59 
+## Iteration 3     2023-07-05 16:11:56 
 ##    Deviance = 3988.1822 | Deviance change = 13.210775
 ##     Maximum item intercept parameter change = 0.113534  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002636  
 ## ......................................................................
-## Iteration 4     2020-09-04 00:49:59 
+## Iteration 4     2023-07-05 16:11:56 
 ##    Deviance = 3979.4418 | Deviance change = 8.740395
 ##     Maximum item intercept parameter change = 0.088862  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001584  
 ## ......................................................................
-## Iteration 5     2020-09-04 00:49:59 
+## Iteration 5     2023-07-05 16:11:56 
 ##    Deviance = 3972.6152 | Deviance change = 6.826611
 ##     Maximum item intercept parameter change = 0.076322  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002068  
 ## ......................................................................
-## Iteration 6     2020-09-04 00:49:59 
+## Iteration 6     2023-07-05 16:11:56 
 ##    Deviance = 3967.19 | Deviance change = 5.425235
 ##     Maximum item intercept parameter change = 0.068515  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002242  
 ## ......................................................................
-## Iteration 7     2020-09-04 00:49:59 
+## Iteration 7     2023-07-05 16:11:56 
 ##    Deviance = 3962.874 | Deviance change = 4.316009
 ##     Maximum item intercept parameter change = 0.061335  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00231  
 ## ......................................................................
-## Iteration 8     2020-09-04 00:49:59 
+## Iteration 8     2023-07-05 16:11:56 
 ##    Deviance = 3959.4385 | Deviance change = 3.435474
 ##     Maximum item intercept parameter change = 0.054841  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002341  
 ## ......................................................................
-## Iteration 9     2020-09-04 00:49:59 
+## Iteration 9     2023-07-05 16:11:56 
 ##    Deviance = 3956.7009 | Deviance change = 2.737591
 ##     Maximum item intercept parameter change = 0.049077  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002358  
 ## ......................................................................
-## Iteration 10     2020-09-04 00:49:59 
+## Iteration 10     2023-07-05 16:11:56 
 ##    Deviance = 3954.5161 | Deviance change = 2.184807
 ##     Maximum item intercept parameter change = 0.043998  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002373  
 ## ......................................................................
-## Iteration 11     2020-09-04 00:49:59 
+## Iteration 11     2023-07-05 16:11:56 
 ##    Deviance = 3952.7693 | Deviance change = 1.746833
 ##     Maximum item intercept parameter change = 0.039509  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002387  
 ## ......................................................................
-## Iteration 12     2020-09-04 00:49:59 
+## Iteration 12     2023-07-05 16:11:56 
 ##    Deviance = 3951.3697 | Deviance change = 1.399576
 ##     Maximum item intercept parameter change = 0.035536  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002405  
 ## ......................................................................
-## Iteration 13     2020-09-04 00:49:59 
+## Iteration 13     2023-07-05 16:11:56 
 ##    Deviance = 3950.2457 | Deviance change = 1.124021
 ##     Maximum item intercept parameter change = 0.032019  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002425  
 ## ......................................................................
-## Iteration 14     2020-09-04 00:49:59 
+## Iteration 14     2023-07-05 16:11:56 
 ##    Deviance = 3949.3405 | Deviance change = 0.905207
 ##     Maximum item intercept parameter change = 0.028888  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002447  
 ## ......................................................................
-## Iteration 15     2020-09-04 00:49:59 
+## Iteration 15     2023-07-05 16:11:56 
 ##    Deviance = 3948.6091 | Deviance change = 0.731375
 ##     Maximum item intercept parameter change = 0.026106  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002473  
 ## ......................................................................
-## Iteration 16     2020-09-04 00:49:59 
+## Iteration 16     2023-07-05 16:11:56 
 ##    Deviance = 3948.0158 | Deviance change = 0.593273
 ##     Maximum item intercept parameter change = 0.023627  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002502  
 ## ......................................................................
-## Iteration 17     2020-09-04 00:49:59 
+## Iteration 17     2023-07-05 16:11:56 
 ##    Deviance = 3947.5322 | Deviance change = 0.48361
 ##     Maximum item intercept parameter change = 0.021408  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002533  
 ## ......................................................................
-## Iteration 18     2020-09-04 00:49:59 
+## Iteration 18     2023-07-05 16:11:56 
 ##    Deviance = 3947.1356 | Deviance change = 0.396627
 ##     Maximum item intercept parameter change = 0.01942  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002567  
 ## ......................................................................
-## Iteration 19     2020-09-04 00:49:59 
+## Iteration 19     2023-07-05 16:11:56 
 ##    Deviance = 3946.8078 | Deviance change = 0.327767
 ##     Maximum item intercept parameter change = 0.017637  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002604  
 ## ......................................................................
-## Iteration 20     2020-09-04 00:49:59 
+## Iteration 20     2023-07-05 16:11:56 
 ##    Deviance = 3946.5344 | Deviance change = 0.273415
 ##     Maximum item intercept parameter change = 0.016039  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002642  
 ## ......................................................................
-## Iteration 21     2020-09-04 00:49:59 
+## Iteration 21     2023-07-05 16:11:56 
 ##    Deviance = 3946.3037 | Deviance change = 0.230697
 ##     Maximum item intercept parameter change = 0.014603  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002683  
 ## ......................................................................
-## Iteration 22     2020-09-04 00:49:59 
+## Iteration 22     2023-07-05 16:11:56 
 ##    Deviance = 3946.1064 | Deviance change = 0.197326
 ##     Maximum item intercept parameter change = 0.013314  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002726  
 ## ......................................................................
-## Iteration 23     2020-09-04 00:49:59 
+## Iteration 23     2023-07-05 16:11:56 
 ##    Deviance = 3945.9349 | Deviance change = 0.171477
 ##     Maximum item intercept parameter change = 0.012155  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002772  
 ## ......................................................................
-## Iteration 24     2020-09-04 00:49:59 
+## Iteration 24     2023-07-05 16:11:56 
 ##    Deviance = 3945.7832 | Deviance change = 0.151691
 ##     Maximum item intercept parameter change = 0.011115  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002818  
 ## ......................................................................
-## Iteration 25     2020-09-04 00:49:59 
+## Iteration 25     2023-07-05 16:11:56 
 ##    Deviance = 3945.6464 | Deviance change = 0.136802
 ##     Maximum item intercept parameter change = 0.010179  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002867  
 ## ......................................................................
-## Iteration 26     2020-09-04 00:49:59 
+## Iteration 26     2023-07-05 16:11:56 
 ##    Deviance = 3945.5205 | Deviance change = 0.125875
 ##     Maximum item intercept parameter change = 0.009337  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002917  
 ## ......................................................................
-## Iteration 27     2020-09-04 00:49:59 
+## Iteration 27     2023-07-05 16:11:56 
 ##    Deviance = 3945.4024 | Deviance change = 0.118162
 ##     Maximum item intercept parameter change = 0.00858  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002969  
 ## ......................................................................
-## Iteration 28     2020-09-04 00:49:59 
+## Iteration 28     2023-07-05 16:11:56 
 ##    Deviance = 3945.2893 | Deviance change = 0.113061
 ##     Maximum item intercept parameter change = 0.007898  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003022  
 ## ......................................................................
-## Iteration 29     2020-09-04 00:49:59 
+## Iteration 29     2023-07-05 16:11:56 
 ##    Deviance = 3945.1792 | Deviance change = 0.11009
 ##     Maximum item intercept parameter change = 0.007283  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003076  
 ## ......................................................................
-## Iteration 30     2020-09-04 00:49:59 
+## Iteration 30     2023-07-05 16:11:56 
 ##    Deviance = 3945.0704 | Deviance change = 0.108864
 ##     Maximum item intercept parameter change = 0.006728  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003131  
 ## ......................................................................
-## Iteration 31     2020-09-04 00:49:59 
+## Iteration 31     2023-07-05 16:11:56 
 ##    Deviance = 3944.9613 | Deviance change = 0.109072
 ##     Maximum item intercept parameter change = 0.006228  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003187  
 ## ......................................................................
-## Iteration 32     2020-09-04 00:49:59 
+## Iteration 32     2023-07-05 16:11:56 
 ##    Deviance = 3944.8508 | Deviance change = 0.110466
 ##     Maximum item intercept parameter change = 0.005775  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003244  
 ## ......................................................................
-## Iteration 33     2020-09-04 00:49:59 
+## Iteration 33     2023-07-05 16:11:56 
 ##    Deviance = 3944.738 | Deviance change = 0.112848
 ##     Maximum item intercept parameter change = 0.005367  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003301  
 ## ......................................................................
-## Iteration 34     2020-09-04 00:49:59 
+## Iteration 34     2023-07-05 16:11:56 
 ##    Deviance = 3944.6219 | Deviance change = 0.11606
 ##     Maximum item intercept parameter change = 0.004997  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003359  
 ## ......................................................................
-## Iteration 35     2020-09-04 00:49:59 
+## Iteration 35     2023-07-05 16:11:56 
 ##    Deviance = 3944.5019 | Deviance change = 0.119975
 ##     Maximum item intercept parameter change = 0.004662  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003416  
 ## ......................................................................
-## Iteration 36     2020-09-04 00:49:59 
+## Iteration 36     2023-07-05 16:11:56 
 ##    Deviance = 3944.3774 | Deviance change = 0.124495
 ##     Maximum item intercept parameter change = 0.004358  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003474  
 ## ......................................................................
-## Iteration 37     2020-09-04 00:49:59 
+## Iteration 37     2023-07-05 16:11:56 
 ##    Deviance = 3944.2479 | Deviance change = 0.129541
 ##     Maximum item intercept parameter change = 0.004083  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003531  
 ## ......................................................................
-## Iteration 38     2020-09-04 00:49:59 
+## Iteration 38     2023-07-05 16:11:56 
 ##    Deviance = 3944.1128 | Deviance change = 0.135051
 ##     Maximum item intercept parameter change = 0.003834  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003587  
 ## ......................................................................
-## Iteration 39     2020-09-04 00:49:59 
+## Iteration 39     2023-07-05 16:11:56 
 ##    Deviance = 3943.9719 | Deviance change = 0.140979
 ##     Maximum item intercept parameter change = 0.003606  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003643  
 ## ......................................................................
-## Iteration 40     2020-09-04 00:49:59 
+## Iteration 40     2023-07-05 16:11:56 
 ##    Deviance = 3943.8246 | Deviance change = 0.147286
 ##     Maximum item intercept parameter change = 0.003399  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003697  
 ## ......................................................................
-## Iteration 41     2020-09-04 00:49:59 
+## Iteration 41     2023-07-05 16:11:56 
 ##    Deviance = 3943.6706 | Deviance change = 0.153944
 ##     Maximum item intercept parameter change = 0.00321  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00375  
 ## ......................................................................
-## Iteration 42     2020-09-04 00:49:59 
+## Iteration 42     2023-07-05 16:11:56 
 ##    Deviance = 3943.5097 | Deviance change = 0.160932
 ##     Maximum item intercept parameter change = 0.003036  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003801  
 ## ......................................................................
-## Iteration 43     2020-09-04 00:49:59 
+## Iteration 43     2023-07-05 16:11:56 
 ##    Deviance = 3943.3415 | Deviance change = 0.168229
 ##     Maximum item intercept parameter change = 0.002877  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003849  
 ## ......................................................................
-## Iteration 44     2020-09-04 00:49:59 
+## Iteration 44     2023-07-05 16:11:56 
 ##    Deviance = 3943.1657 | Deviance change = 0.175821
 ##     Maximum item intercept parameter change = 0.00273  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003895  
 ## ......................................................................
-## Iteration 45     2020-09-04 00:49:59 
+## Iteration 45     2023-07-05 16:11:56 
 ##    Deviance = 3942.982 | Deviance change = 0.183692
 ##     Maximum item intercept parameter change = 0.002594  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003938  
 ## ......................................................................
-## Iteration 46     2020-09-04 00:49:59 
+## Iteration 46     2023-07-05 16:11:56 
 ##    Deviance = 3942.7901 | Deviance change = 0.191825
 ##     Maximum item intercept parameter change = 0.002468  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003977  
 ## ......................................................................
-## Iteration 47     2020-09-04 00:49:59 
+## Iteration 47     2023-07-05 16:11:56 
 ##    Deviance = 3942.5899 | Deviance change = 0.2002
 ##     Maximum item intercept parameter change = 0.00235  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004012  
 ## ......................................................................
-## Iteration 48     2020-09-04 00:49:59 
+## Iteration 48     2023-07-05 16:11:56 
 ##    Deviance = 3942.3811 | Deviance change = 0.208792
 ##     Maximum item intercept parameter change = 0.002239  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004042  
 ## ......................................................................
-## Iteration 49     2020-09-04 00:49:59 
+## Iteration 49     2023-07-05 16:11:56 
 ##    Deviance = 3942.1636 | Deviance change = 0.217566
 ##     Maximum item intercept parameter change = 0.002134  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004066  
 ## ......................................................................
-## Iteration 50     2020-09-04 00:49:59 
+## Iteration 50     2023-07-05 16:11:56 
 ##    Deviance = 3941.9371 | Deviance change = 0.226478
 ##     Maximum item intercept parameter change = 0.002033  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004085  
 ## ......................................................................
-## Iteration 51     2020-09-04 00:49:59 
+## Iteration 51     2023-07-05 16:11:56 
 ##    Deviance = 3941.7016 | Deviance change = 0.235469
 ##     Maximum item intercept parameter change = 0.001936  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004096  
 ## ......................................................................
-## Iteration 52     2020-09-04 00:49:59 
+## Iteration 52     2023-07-05 16:11:56 
 ##    Deviance = 3941.4572 | Deviance change = 0.244463
 ##     Maximum item intercept parameter change = 0.00184  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.0041  
 ## ......................................................................
-## Iteration 53     2020-09-04 00:49:59 
+## Iteration 53     2023-07-05 16:11:56 
 ##    Deviance = 3941.2038 | Deviance change = 0.253365
 ##     Maximum item intercept parameter change = 0.001745  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004095  
 ## ......................................................................
-## Iteration 54     2020-09-04 00:49:59 
+## Iteration 54     2023-07-05 16:11:56 
 ##    Deviance = 3940.9418 | Deviance change = 0.262053
 ##     Maximum item intercept parameter change = 0.00165  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004081  
 ## ......................................................................
-## Iteration 55     2020-09-04 00:49:59 
+## Iteration 55     2023-07-05 16:11:56 
 ##    Deviance = 3940.6714 | Deviance change = 0.27038
 ##     Maximum item intercept parameter change = 0.001551  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.004056  
 ## ......................................................................
-## Iteration 56     2020-09-04 00:49:59 
+## Iteration 56     2023-07-05 16:11:56 
 ##    Deviance = 3940.3932 | Deviance change = 0.278171
 ##     Maximum item intercept parameter change = 0.001449  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00402  
 ## ......................................................................
-## Iteration 57     2020-09-04 00:49:59 
+## Iteration 57     2023-07-05 16:11:56 
 ##    Deviance = 3940.108 | Deviance change = 0.285219
 ##     Maximum item intercept parameter change = 0.001341  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003971  
 ## ......................................................................
-## Iteration 58     2020-09-04 00:49:59 
+## Iteration 58     2023-07-05 16:11:56 
 ##    Deviance = 3939.8167 | Deviance change = 0.291292
 ##     Maximum item intercept parameter change = 0.001225  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00391  
 ## ......................................................................
-## Iteration 59     2020-09-04 00:49:59 
+## Iteration 59     2023-07-05 16:11:56 
 ##    Deviance = 3939.5206 | Deviance change = 0.296137
 ##     Maximum item intercept parameter change = 0.001099  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003834  
 ## ......................................................................
-## Iteration 60     2020-09-04 00:49:59 
+## Iteration 60     2023-07-05 16:11:56 
 ##    Deviance = 3939.2211 | Deviance change = 0.299488
 ##     Maximum item intercept parameter change = 0.000963  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003745  
 ## ......................................................................
-## Iteration 61     2020-09-04 00:49:59 
+## Iteration 61     2023-07-05 16:11:56 
 ##    Deviance = 3938.92 | Deviance change = 0.301081
 ##     Maximum item intercept parameter change = 0.000813  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003641  
 ## ......................................................................
-## Iteration 62     2020-09-04 00:49:59 
+## Iteration 62     2023-07-05 16:11:56 
 ##    Deviance = 3938.6193 | Deviance change = 0.300677
 ##     Maximum item intercept parameter change = 0.00065  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003523  
 ## ......................................................................
-## Iteration 63     2020-09-04 00:49:59 
+## Iteration 63     2023-07-05 16:11:56 
 ##    Deviance = 3938.3212 | Deviance change = 0.29808
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003392  
 ## ......................................................................
-## Iteration 64     2020-09-04 00:49:59 
+## Iteration 64     2023-07-05 16:11:56 
 ##    Deviance = 3938.0284 | Deviance change = 0.292863
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.003248  
 ## ......................................................................
-## Iteration 65     2020-09-04 00:49:59 
-##    Deviance = 3937.7429 | Deviance change = 0.28543
+## Iteration 65     2023-07-05 16:11:56 
+##    Deviance = 3937.7432 | Deviance change = 0.285183
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
-##     Maximum distribution parameter change = 0.003092  
+##     Maximum distribution parameter change = 0.003093  
 ## ......................................................................
-## Iteration 66     2020-09-04 00:49:59 
-##    Deviance = 3937.4674 | Deviance change = 0.275499
+## Iteration 66     2023-07-05 16:11:56 
+##    Deviance = 3937.4678 | Deviance change = 0.275345
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002928  
 ## ......................................................................
-## Iteration 67     2020-09-04 00:49:59 
-##    Deviance = 3937.2041 | Deviance change = 0.263312
+## Iteration 67     2023-07-05 16:11:56 
+##    Deviance = 3937.2046 | Deviance change = 0.263203
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002757  
 ## ......................................................................
-## Iteration 68     2020-09-04 00:49:59 
-##    Deviance = 3936.9551 | Deviance change = 0.249042
+## Iteration 68     2023-07-05 16:11:56 
+##    Deviance = 3936.9557 | Deviance change = 0.248965
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002582  
 ## ......................................................................
-## Iteration 69     2020-09-04 00:49:59 
-##    Deviance = 3936.722 | Deviance change = 0.233076
+## Iteration 69     2023-07-05 16:11:56 
+##    Deviance = 3936.7226 | Deviance change = 0.233044
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002405  
 ## ......................................................................
-## Iteration 70     2020-09-04 00:49:59 
-##    Deviance = 3936.5071 | Deviance change = 0.214922
+## Iteration 70     2023-07-05 16:11:56 
+##    Deviance = 3936.5077 | Deviance change = 0.214918
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002228  
 ## ......................................................................
-## Iteration 71     2020-09-04 00:49:59 
-##    Deviance = 3936.3108 | Deviance change = 0.196319
+## Iteration 71     2023-07-05 16:11:56 
+##    Deviance = 3936.3114 | Deviance change = 0.196316
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00212  
 ## ......................................................................
-## Iteration 72     2020-09-04 00:49:59 
-##    Deviance = 3936.133 | Deviance change = 0.177765
+## Iteration 72     2023-07-05 16:11:56 
+##    Deviance = 3936.1336 | Deviance change = 0.177762
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
-##     Maximum distribution parameter change = 0.002083  
+##     Maximum distribution parameter change = 0.002082  
 ## ......................................................................
-## Iteration 73     2020-09-04 00:49:59 
-##    Deviance = 3935.9733 | Deviance change = 0.159668
+## Iteration 73     2023-07-05 16:11:56 
+##    Deviance = 3935.974 | Deviance change = 0.159667
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.002037  
 ## ......................................................................
-## Iteration 74     2020-09-04 00:49:59 
-##    Deviance = 3935.831 | Deviance change = 0.142363
+## Iteration 74     2023-07-05 16:11:56 
+##    Deviance = 3935.8316 | Deviance change = 0.142363
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001983  
 ## ......................................................................
-## Iteration 75     2020-09-04 00:49:59 
-##    Deviance = 3935.7049 | Deviance change = 0.126098
+## Iteration 75     2023-07-05 16:11:56 
+##    Deviance = 3935.7055 | Deviance change = 0.126098
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001921  
 ## ......................................................................
-## Iteration 76     2020-09-04 00:49:59 
-##    Deviance = 3935.5938 | Deviance change = 0.111035
+## Iteration 76     2023-07-05 16:11:56 
+##    Deviance = 3935.5945 | Deviance change = 0.111036
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001853  
 ## ......................................................................
-## Iteration 77     2020-09-04 00:49:59 
-##    Deviance = 3935.4966 | Deviance change = 0.097265
+## Iteration 77     2023-07-05 16:11:56 
+##    Deviance = 3935.4972 | Deviance change = 0.097267
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001779  
 ## ......................................................................
-## Iteration 78     2020-09-04 00:49:59 
-##    Deviance = 3935.4118 | Deviance change = 0.084817
+## Iteration 78     2023-07-05 16:11:56 
+##    Deviance = 3935.4124 | Deviance change = 0.084819
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.0017  
 ## ......................................................................
-## Iteration 79     2020-09-04 00:49:59 
-##    Deviance = 3935.3381 | Deviance change = 0.073674
+## Iteration 79     2023-07-05 16:11:56 
+##    Deviance = 3935.3387 | Deviance change = 0.073677
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001617  
 ## ......................................................................
-## Iteration 80     2020-09-04 00:49:59 
-##    Deviance = 3935.2743 | Deviance change = 0.063787
+## Iteration 80     2023-07-05 16:11:56 
+##    Deviance = 3935.2749 | Deviance change = 0.063789
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001531  
 ## ......................................................................
-## Iteration 81     2020-09-04 00:49:59 
-##    Deviance = 3935.2192 | Deviance change = 0.055081
+## Iteration 81     2023-07-05 16:11:56 
+##    Deviance = 3935.2198 | Deviance change = 0.055084
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001445  
 ## ......................................................................
-## Iteration 82     2020-09-04 00:49:59 
-##    Deviance = 3935.1717 | Deviance change = 0.04747
+## Iteration 82     2023-07-05 16:11:56 
+##    Deviance = 3935.1724 | Deviance change = 0.047472
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001358  
 ## ......................................................................
-## Iteration 83     2020-09-04 00:49:59 
-##    Deviance = 3935.1309 | Deviance change = 0.040858
+## Iteration 83     2023-07-05 16:11:56 
+##    Deviance = 3935.1315 | Deviance change = 0.04086
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001271  
 ## ......................................................................
-## Iteration 84     2020-09-04 00:49:59 
-##    Deviance = 3935.0957 | Deviance change = 0.035148
+## Iteration 84     2023-07-05 16:11:56 
+##    Deviance = 3935.0963 | Deviance change = 0.035151
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001186  
 ## ......................................................................
-## Iteration 85     2020-09-04 00:49:59 
-##    Deviance = 3935.0655 | Deviance change = 0.030244
+## Iteration 85     2023-07-05 16:11:56 
+##    Deviance = 3935.0661 | Deviance change = 0.030247
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001104  
 ## ......................................................................
-## Iteration 86     2020-09-04 00:49:59 
-##    Deviance = 3935.0394 | Deviance change = 0.026053
+## Iteration 86     2023-07-05 16:11:56 
+##    Deviance = 3935.04 | Deviance change = 0.026056
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.001024  
 ## ......................................................................
-## Iteration 87     2020-09-04 00:49:59 
-##    Deviance = 3935.017 | Deviance change = 0.022488
+## Iteration 87     2023-07-05 16:11:56 
+##    Deviance = 3935.0176 | Deviance change = 0.02249
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000947  
 ## ......................................................................
-## Iteration 88     2020-09-04 00:49:59 
-##    Deviance = 3934.9975 | Deviance change = 0.019468
+## Iteration 88     2023-07-05 16:11:56 
+##    Deviance = 3934.9984 | Deviance change = 0.019162
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000874  
 ## ......................................................................
-## Iteration 89     2020-09-04 00:49:59 
-##    Deviance = 3934.9806 | Deviance change = 0.01692
+## Iteration 89     2023-07-05 16:11:56 
+##    Deviance = 3934.9815 | Deviance change = 0.016925
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000805  
 ## ......................................................................
-## Iteration 90     2020-09-04 00:49:59 
-##    Deviance = 3934.9658 | Deviance change = 0.014777
+## Iteration 90     2023-07-05 16:11:56 
+##    Deviance = 3934.9667 | Deviance change = 0.014782
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00074  
 ## ......................................................................
-## Iteration 91     2020-09-04 00:49:59 
-##    Deviance = 3934.9528 | Deviance change = 0.01298
+## Iteration 91     2023-07-05 16:11:56 
+##    Deviance = 3934.9537 | Deviance change = 0.012985
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000678  
 ## ......................................................................
-## Iteration 92     2020-09-04 00:49:59 
-##    Deviance = 3934.9413 | Deviance change = 0.011479
+## Iteration 92     2023-07-05 16:11:56 
+##    Deviance = 3934.9422 | Deviance change = 0.011483
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000621  
 ## ......................................................................
-## Iteration 93     2020-09-04 00:49:59 
-##    Deviance = 3934.9311 | Deviance change = 0.010226
+## Iteration 93     2023-07-05 16:11:56 
+##    Deviance = 3934.932 | Deviance change = 0.010231
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000567  
 ## ......................................................................
-## Iteration 94     2020-09-04 00:49:59 
-##    Deviance = 3934.9219 | Deviance change = 0.009184
+## Iteration 94     2023-07-05 16:11:56 
+##    Deviance = 3934.9228 | Deviance change = 0.009188
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000518  
 ## ......................................................................
-## Iteration 95     2020-09-04 00:49:59 
-##    Deviance = 3934.9136 | Deviance change = 0.008318
+## Iteration 95     2023-07-05 16:11:56 
+##    Deviance = 3934.9145 | Deviance change = 0.008322
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000472  
 ## ......................................................................
-## Iteration 96     2020-09-04 00:49:59 
-##    Deviance = 3934.906 | Deviance change = 0.007599
+## Iteration 96     2023-07-05 16:11:56 
+##    Deviance = 3934.9069 | Deviance change = 0.007603
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000429  
 ## ......................................................................
-## Iteration 97     2020-09-04 00:49:59 
-##    Deviance = 3934.899 | Deviance change = 0.007003
+## Iteration 97     2023-07-05 16:11:56 
+##    Deviance = 3934.8999 | Deviance change = 0.007007
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00039  
 ## ......................................................................
-## Iteration 98     2020-09-04 00:49:59 
-##    Deviance = 3934.8925 | Deviance change = 0.006509
+## Iteration 98     2023-07-05 16:11:56 
+##    Deviance = 3934.8934 | Deviance change = 0.006513
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000355  
 ## ......................................................................
-## Iteration 99     2020-09-04 00:49:59 
-##    Deviance = 3934.8864 | Deviance change = 0.006099
+## Iteration 99     2023-07-05 16:11:56 
+##    Deviance = 3934.8872 | Deviance change = 0.006104
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000322  
 ## ......................................................................
-## Iteration 100     2020-09-04 00:49:59 
-##    Deviance = 3934.8806 | Deviance change = 0.00576
+## Iteration 100     2023-07-05 16:11:56 
+##    Deviance = 3934.8815 | Deviance change = 0.005764
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000292  
 ## ......................................................................
-## Iteration 101     2020-09-04 00:49:59 
-##    Deviance = 3934.8752 | Deviance change = 0.005478
+## Iteration 101     2023-07-05 16:11:56 
+##    Deviance = 3934.876 | Deviance change = 0.005482
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000264  
 ## ......................................................................
-## Iteration 102     2020-09-04 00:49:59 
-##    Deviance = 3934.8699 | Deviance change = 0.005243
+## Iteration 102     2023-07-05 16:11:56 
+##    Deviance = 3934.8708 | Deviance change = 0.005248
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000239  
 ## ......................................................................
-## Iteration 103     2020-09-04 00:49:59 
-##    Deviance = 3934.8649 | Deviance change = 0.005048
+## Iteration 103     2023-07-05 16:11:56 
+##    Deviance = 3934.8657 | Deviance change = 0.005052
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000216  
 ## ......................................................................
-## Iteration 104     2020-09-04 00:49:59 
-##    Deviance = 3934.86 | Deviance change = 0.004884
+## Iteration 104     2023-07-05 16:11:56 
+##    Deviance = 3934.8608 | Deviance change = 0.004888
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000196  
 ## ......................................................................
-## Iteration 105     2020-09-04 00:49:59 
-##    Deviance = 3934.8552 | Deviance change = 0.004747
+## Iteration 105     2023-07-05 16:11:56 
+##    Deviance = 3934.8561 | Deviance change = 0.004751
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000177  
 ## ......................................................................
-## Iteration 106     2020-09-04 00:49:59 
-##    Deviance = 3934.8506 | Deviance change = 0.004631
+## Iteration 106     2023-07-05 16:11:56 
+##    Deviance = 3934.8514 | Deviance change = 0.004635
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00016  
 ## ......................................................................
-## Iteration 107     2020-09-04 00:49:59 
-##    Deviance = 3934.8461 | Deviance change = 0.004533
+## Iteration 107     2023-07-05 16:11:56 
+##    Deviance = 3934.8469 | Deviance change = 0.004537
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000144  
 ## ......................................................................
-## Iteration 108     2020-09-04 00:49:59 
-##    Deviance = 3934.8416 | Deviance change = 0.004448
+## Iteration 108     2023-07-05 16:11:56 
+##    Deviance = 3934.8424 | Deviance change = 0.004452
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.00013  
 ## ......................................................................
-## Iteration 109     2020-09-04 00:49:59 
-##    Deviance = 3934.8372 | Deviance change = 0.004376
+## Iteration 109     2023-07-05 16:11:56 
+##    Deviance = 3934.8381 | Deviance change = 0.00438
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000118  
 ## ......................................................................
-## Iteration 110     2020-09-04 00:49:59 
-##    Deviance = 3934.8329 | Deviance change = 0.004313
+## Iteration 110     2023-07-05 16:11:56 
+##    Deviance = 3934.8337 | Deviance change = 0.004317
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 0.000106  
 ## ......................................................................
-## Iteration 111     2020-09-04 00:49:59 
-##    Deviance = 3934.8287 | Deviance change = 0.004257
+## Iteration 111     2023-07-05 16:11:56 
+##    Deviance = 3934.8295 | Deviance change = 0.004261
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 9.6e-05  
 ## ......................................................................
-## Iteration 112     2020-09-04 00:49:59 
-##    Deviance = 3934.8245 | Deviance change = 0.004208
+## Iteration 112     2023-07-05 16:11:56 
+##    Deviance = 3934.8253 | Deviance change = 0.004212
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 8.6e-05  
 ## ......................................................................
-## Iteration 113     2020-09-04 00:49:59 
-##    Deviance = 3934.8203 | Deviance change = 0.004164
+## Iteration 113     2023-07-05 16:11:56 
+##    Deviance = 3934.8211 | Deviance change = 0.004168
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 7.8e-05  
 ## ......................................................................
-## Iteration 114     2020-09-04 00:49:59 
-##    Deviance = 3934.8162 | Deviance change = 0.004125
+## Iteration 114     2023-07-05 16:11:56 
+##    Deviance = 3934.8172 | Deviance change = 0.00387
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 7e-05  
 ## ......................................................................
-## Iteration 115     2020-09-04 00:49:59 
-##    Deviance = 3934.8121 | Deviance change = 0.004088
+## Iteration 115     2023-07-05 16:11:56 
+##    Deviance = 3934.8134 | Deviance change = 0.003825
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 6.3e-05  
 ## ......................................................................
-## Iteration 116     2020-09-04 00:49:59 
-##    Deviance = 3934.808 | Deviance change = 0.004054
+## Iteration 116     2023-07-05 16:11:56 
+##    Deviance = 3934.8093 | Deviance change = 0.004062
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 5.7e-05  
 ## ......................................................................
-## Iteration 117     2020-09-04 00:49:59 
-##    Deviance = 3934.804 | Deviance change = 0.004023
+## Iteration 117     2023-07-05 16:11:56 
+##    Deviance = 3934.8053 | Deviance change = 0.00403
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 5.1e-05  
 ## ......................................................................
-## Iteration 118     2020-09-04 00:49:59 
-##    Deviance = 3934.8 | Deviance change = 0.003993
+## Iteration 118     2023-07-05 16:11:56 
+##    Deviance = 3934.8013 | Deviance change = 0.004001
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 4.6e-05  
 ## ......................................................................
-## Iteration 119     2020-09-04 00:49:59 
-##    Deviance = 3934.7961 | Deviance change = 0.003965
+## Iteration 119     2023-07-05 16:11:56 
+##    Deviance = 3934.7973 | Deviance change = 0.003972
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 4.2e-05  
 ## ......................................................................
-## Iteration 120     2020-09-04 00:49:59 
-##    Deviance = 3934.7921 | Deviance change = 0.003938
+## Iteration 120     2023-07-05 16:11:56 
+##    Deviance = 3934.7934 | Deviance change = 0.003945
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3.8e-05  
 ## ......................................................................
-## Iteration 121     2020-09-04 00:49:59 
-##    Deviance = 3934.7882 | Deviance change = 0.003912
+## Iteration 121     2023-07-05 16:11:56 
+##    Deviance = 3934.7895 | Deviance change = 0.003919
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3.4e-05  
 ## ......................................................................
-## Iteration 122     2020-09-04 00:49:59 
-##    Deviance = 3934.7843 | Deviance change = 0.003886
+## Iteration 122     2023-07-05 16:11:56 
+##    Deviance = 3934.7856 | Deviance change = 0.003894
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3.1e-05  
 ## ......................................................................
-## Iteration 123     2020-09-04 00:49:59 
-##    Deviance = 3934.7805 | Deviance change = 0.003862
+## Iteration 123     2023-07-05 16:11:56 
+##    Deviance = 3934.7817 | Deviance change = 0.003869
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2.8e-05  
 ## ......................................................................
-## Iteration 124     2020-09-04 00:49:59 
-##    Deviance = 3934.7766 | Deviance change = 0.003837
+## Iteration 124     2023-07-05 16:11:56 
+##    Deviance = 3934.7779 | Deviance change = 0.003845
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2.5e-05  
 ## ......................................................................
-## Iteration 125     2020-09-04 00:49:59 
-##    Deviance = 3934.7728 | Deviance change = 0.003814
+## Iteration 125     2023-07-05 16:11:56 
+##    Deviance = 3934.774 | Deviance change = 0.003821
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2.2e-05  
 ## ......................................................................
-## Iteration 126     2020-09-04 00:49:59 
-##    Deviance = 3934.769 | Deviance change = 0.00379
+## Iteration 126     2023-07-05 16:11:56 
+##    Deviance = 3934.7702 | Deviance change = 0.003797
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-05  
 ## ......................................................................
-## Iteration 127     2020-09-04 00:49:59 
-##    Deviance = 3934.7652 | Deviance change = 0.003767
+## Iteration 127     2023-07-05 16:11:56 
+##    Deviance = 3934.7665 | Deviance change = 0.003774
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1.8e-05  
 ## ......................................................................
-## Iteration 128     2020-09-04 00:49:59 
-##    Deviance = 3934.7615 | Deviance change = 0.003744
+## Iteration 128     2023-07-05 16:11:56 
+##    Deviance = 3934.7627 | Deviance change = 0.003751
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1.7e-05  
 ## ......................................................................
-## Iteration 129     2020-09-04 00:49:59 
-##    Deviance = 3934.7578 | Deviance change = 0.003721
+## Iteration 129     2023-07-05 16:11:56 
+##    Deviance = 3934.759 | Deviance change = 0.003728
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1.5e-05  
 ## ......................................................................
-## Iteration 130     2020-09-04 00:49:59 
-##    Deviance = 3934.7541 | Deviance change = 0.003698
+## Iteration 130     2023-07-05 16:11:56 
+##    Deviance = 3934.7553 | Deviance change = 0.003706
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1.3e-05  
 ## ......................................................................
-## Iteration 131     2020-09-04 00:49:59 
-##    Deviance = 3934.7504 | Deviance change = 0.003676
+## Iteration 131     2023-07-05 16:11:56 
+##    Deviance = 3934.7516 | Deviance change = 0.003683
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1.2e-05  
 ## ......................................................................
-## Iteration 132     2020-09-04 00:49:59 
-##    Deviance = 3934.7468 | Deviance change = 0.003653
+## Iteration 132     2023-07-05 16:11:56 
+##    Deviance = 3934.7479 | Deviance change = 0.003661
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1.1e-05  
 ## ......................................................................
-## Iteration 133     2020-09-04 00:49:59 
-##    Deviance = 3934.7431 | Deviance change = 0.003631
+## Iteration 133     2023-07-05 16:11:56 
+##    Deviance = 3934.7443 | Deviance change = 0.003638
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-05  
 ## ......................................................................
-## Iteration 134     2020-09-04 00:49:59 
-##    Deviance = 3934.7395 | Deviance change = 0.003608
+## Iteration 134     2023-07-05 16:11:56 
+##    Deviance = 3934.7407 | Deviance change = 0.003616
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 9e-06  
 ## ......................................................................
-## Iteration 135     2020-09-04 00:49:59 
-##    Deviance = 3934.7359 | Deviance change = 0.003586
+## Iteration 135     2023-07-05 16:11:56 
+##    Deviance = 3934.7371 | Deviance change = 0.003594
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 8e-06  
 ## ......................................................................
-## Iteration 136     2020-09-04 00:49:59 
-##    Deviance = 3934.7324 | Deviance change = 0.003564
+## Iteration 136     2023-07-05 16:11:56 
+##    Deviance = 3934.7335 | Deviance change = 0.003571
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 7e-06  
 ## ......................................................................
-## Iteration 137     2020-09-04 00:49:59 
-##    Deviance = 3934.7288 | Deviance change = 0.003542
+## Iteration 137     2023-07-05 16:11:56 
+##    Deviance = 3934.73 | Deviance change = 0.003549
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 7e-06  
 ## ......................................................................
-## Iteration 138     2020-09-04 00:49:59 
-##    Deviance = 3934.7253 | Deviance change = 0.003519
+## Iteration 138     2023-07-05 16:11:56 
+##    Deviance = 3934.7264 | Deviance change = 0.003527
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 6e-06  
 ## ......................................................................
-## Iteration 139     2020-09-04 00:49:59 
-##    Deviance = 3934.7218 | Deviance change = 0.003497
+## Iteration 139     2023-07-05 16:11:56 
+##    Deviance = 3934.7229 | Deviance change = 0.003505
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 6e-06  
 ## ......................................................................
-## Iteration 140     2020-09-04 00:49:59 
-##    Deviance = 3934.7183 | Deviance change = 0.003475
+## Iteration 140     2023-07-05 16:11:56 
+##    Deviance = 3934.7195 | Deviance change = 0.003483
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 5e-06  
 ## ......................................................................
-## Iteration 141     2020-09-04 00:49:59 
-##    Deviance = 3934.7149 | Deviance change = 0.003453
+## Iteration 141     2023-07-05 16:11:56 
+##    Deviance = 3934.716 | Deviance change = 0.00346
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 5e-06  
 ## ......................................................................
-## Iteration 142     2020-09-04 00:49:59 
-##    Deviance = 3934.7115 | Deviance change = 0.003431
+## Iteration 142     2023-07-05 16:11:56 
+##    Deviance = 3934.7126 | Deviance change = 0.003438
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 4e-06  
 ## ......................................................................
-## Iteration 143     2020-09-04 00:49:59 
-##    Deviance = 3934.708 | Deviance change = 0.003409
+## Iteration 143     2023-07-05 16:11:56 
+##    Deviance = 3934.7091 | Deviance change = 0.003416
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 4e-06  
 ## ......................................................................
-## Iteration 144     2020-09-04 00:49:59 
-##    Deviance = 3934.7047 | Deviance change = 0.003386
+## Iteration 144     2023-07-05 16:11:56 
+##    Deviance = 3934.7058 | Deviance change = 0.003394
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 4e-06  
 ## ......................................................................
-## Iteration 145     2020-09-04 00:49:59 
-##    Deviance = 3934.7013 | Deviance change = 0.003364
+## Iteration 145     2023-07-05 16:11:56 
+##    Deviance = 3934.7024 | Deviance change = 0.003372
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3e-06  
 ## ......................................................................
-## Iteration 146     2020-09-04 00:49:59 
-##    Deviance = 3934.6979 | Deviance change = 0.003342
+## Iteration 146     2023-07-05 16:11:56 
+##    Deviance = 3934.699 | Deviance change = 0.00335
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3e-06  
 ## ......................................................................
-## Iteration 147     2020-09-04 00:49:59 
-##    Deviance = 3934.6946 | Deviance change = 0.00332
+## Iteration 147     2023-07-05 16:11:56 
+##    Deviance = 3934.6957 | Deviance change = 0.003327
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3e-06  
 ## ......................................................................
-## Iteration 148     2020-09-04 00:49:59 
-##    Deviance = 3934.6913 | Deviance change = 0.003298
+## Iteration 148     2023-07-05 16:11:56 
+##    Deviance = 3934.6924 | Deviance change = 0.003305
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 3e-06  
 ## ......................................................................
-## Iteration 149     2020-09-04 00:49:59 
-##    Deviance = 3934.6881 | Deviance change = 0.003276
+## Iteration 149     2023-07-05 16:11:56 
+##    Deviance = 3934.6891 | Deviance change = 0.003283
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 150     2020-09-04 00:49:59 
-##    Deviance = 3934.6848 | Deviance change = 0.003254
+## Iteration 150     2023-07-05 16:11:56 
+##    Deviance = 3934.6859 | Deviance change = 0.003261
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 151     2020-09-04 00:49:59 
-##    Deviance = 3934.6816 | Deviance change = 0.003231
+## Iteration 151     2023-07-05 16:11:56 
+##    Deviance = 3934.6826 | Deviance change = 0.003239
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 152     2020-09-04 00:49:59 
-##    Deviance = 3934.6784 | Deviance change = 0.003209
+## Iteration 152     2023-07-05 16:11:56 
+##    Deviance = 3934.6794 | Deviance change = 0.003217
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 153     2020-09-04 00:49:59 
-##    Deviance = 3934.6752 | Deviance change = 0.003187
+## Iteration 153     2023-07-05 16:11:56 
+##    Deviance = 3934.6762 | Deviance change = 0.003195
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 154     2020-09-04 00:49:59 
-##    Deviance = 3934.672 | Deviance change = 0.003165
+## Iteration 154     2023-07-05 16:11:56 
+##    Deviance = 3934.673 | Deviance change = 0.003172
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 155     2020-09-04 00:49:59 
-##    Deviance = 3934.6689 | Deviance change = 0.003143
+## Iteration 155     2023-07-05 16:11:56 
+##    Deviance = 3934.6699 | Deviance change = 0.00315
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 156     2020-09-04 00:49:59 
-##    Deviance = 3934.6657 | Deviance change = 0.003121
+## Iteration 156     2023-07-05 16:11:56 
+##    Deviance = 3934.6668 | Deviance change = 0.003128
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 2e-06  
 ## ......................................................................
-## Iteration 157     2020-09-04 00:49:59 
-##    Deviance = 3934.6626 | Deviance change = 0.003098
+## Iteration 157     2023-07-05 16:11:56 
+##    Deviance = 3934.6636 | Deviance change = 0.003106
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 158     2020-09-04 00:49:59 
-##    Deviance = 3934.6596 | Deviance change = 0.003076
+## Iteration 158     2023-07-05 16:11:56 
+##    Deviance = 3934.6606 | Deviance change = 0.003084
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 159     2020-09-04 00:49:59 
-##    Deviance = 3934.6565 | Deviance change = 0.003054
+## Iteration 159     2023-07-05 16:11:56 
+##    Deviance = 3934.6575 | Deviance change = 0.003062
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 160     2020-09-04 00:49:59 
-##    Deviance = 3934.6535 | Deviance change = 0.003032
+## Iteration 160     2023-07-05 16:11:56 
+##    Deviance = 3934.6545 | Deviance change = 0.003039
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 161     2020-09-04 00:49:59 
-##    Deviance = 3934.6505 | Deviance change = 0.00301
+## Iteration 161     2023-07-05 16:11:56 
+##    Deviance = 3934.6514 | Deviance change = 0.003017
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 162     2020-09-04 00:49:59 
-##    Deviance = 3934.6475 | Deviance change = 0.002988
+## Iteration 162     2023-07-05 16:11:56 
+##    Deviance = 3934.6485 | Deviance change = 0.002995
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 163     2020-09-04 00:49:59 
-##    Deviance = 3934.6445 | Deviance change = 0.002965
+## Iteration 163     2023-07-05 16:11:56 
+##    Deviance = 3934.6455 | Deviance change = 0.002973
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 164     2020-09-04 00:49:59 
-##    Deviance = 3934.6416 | Deviance change = 0.002943
+## Iteration 164     2023-07-05 16:11:56 
+##    Deviance = 3934.6425 | Deviance change = 0.002951
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 165     2020-09-04 00:49:59 
-##    Deviance = 3934.6387 | Deviance change = 0.002921
+## Iteration 165     2023-07-05 16:11:56 
+##    Deviance = 3934.6396 | Deviance change = 0.002929
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 166     2020-09-04 00:49:59 
-##    Deviance = 3934.6358 | Deviance change = 0.002899
+## Iteration 166     2023-07-05 16:11:56 
+##    Deviance = 3934.6367 | Deviance change = 0.002906
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 167     2020-09-04 00:49:59 
-##    Deviance = 3934.6329 | Deviance change = 0.002877
+## Iteration 167     2023-07-05 16:11:56 
+##    Deviance = 3934.6338 | Deviance change = 0.002884
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 168     2020-09-04 00:49:59 
-##    Deviance = 3934.63 | Deviance change = 0.002855
+## Iteration 168     2023-07-05 16:11:56 
+##    Deviance = 3934.6309 | Deviance change = 0.002862
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 169     2020-09-04 00:49:59 
-##    Deviance = 3934.6272 | Deviance change = 0.002832
+## Iteration 169     2023-07-05 16:11:56 
+##    Deviance = 3934.6281 | Deviance change = 0.00284
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 170     2020-09-04 00:49:59 
-##    Deviance = 3934.6244 | Deviance change = 0.00281
+## Iteration 170     2023-07-05 16:11:56 
+##    Deviance = 3934.6253 | Deviance change = 0.002818
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 171     2020-09-04 00:49:59 
-##    Deviance = 3934.6216 | Deviance change = 0.002788
+## Iteration 171     2023-07-05 16:11:56 
+##    Deviance = 3934.6225 | Deviance change = 0.002795
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 172     2020-09-04 00:49:59 
-##    Deviance = 3934.6188 | Deviance change = 0.002766
+## Iteration 172     2023-07-05 16:11:56 
+##    Deviance = 3934.6197 | Deviance change = 0.002773
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 173     2020-09-04 00:49:59 
-##    Deviance = 3934.6161 | Deviance change = 0.002744
+## Iteration 173     2023-07-05 16:11:56 
+##    Deviance = 3934.617 | Deviance change = 0.002751
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 174     2020-09-04 00:49:59 
-##    Deviance = 3934.6134 | Deviance change = 0.002721
+## Iteration 174     2023-07-05 16:11:56 
+##    Deviance = 3934.6142 | Deviance change = 0.002729
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 175     2020-09-04 00:49:59 
-##    Deviance = 3934.6107 | Deviance change = 0.002699
+## Iteration 175     2023-07-05 16:11:56 
+##    Deviance = 3934.6115 | Deviance change = 0.002707
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 176     2020-09-04 00:49:59 
-##    Deviance = 3934.608 | Deviance change = 0.002677
+## Iteration 176     2023-07-05 16:11:56 
+##    Deviance = 3934.6089 | Deviance change = 0.002684
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 177     2020-09-04 00:49:59 
-##    Deviance = 3934.6053 | Deviance change = 0.002655
+## Iteration 177     2023-07-05 16:11:56 
+##    Deviance = 3934.6062 | Deviance change = 0.002662
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 178     2020-09-04 00:49:59 
-##    Deviance = 3934.6027 | Deviance change = 0.002633
+## Iteration 178     2023-07-05 16:11:56 
+##    Deviance = 3934.6035 | Deviance change = 0.00264
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 179     2020-09-04 00:49:59 
-##    Deviance = 3934.6001 | Deviance change = 0.00261
+## Iteration 179     2023-07-05 16:11:56 
+##    Deviance = 3934.6009 | Deviance change = 0.002618
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 180     2020-09-04 00:49:59 
-##    Deviance = 3934.5975 | Deviance change = 0.002588
+## Iteration 180     2023-07-05 16:11:56 
+##    Deviance = 3934.5983 | Deviance change = 0.002596
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 181     2020-09-04 00:49:59 
-##    Deviance = 3934.5949 | Deviance change = 0.002566
+## Iteration 181     2023-07-05 16:11:56 
+##    Deviance = 3934.5958 | Deviance change = 0.002573
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 182     2020-09-04 00:49:59 
-##    Deviance = 3934.5924 | Deviance change = 0.002544
+## Iteration 182     2023-07-05 16:11:56 
+##    Deviance = 3934.5932 | Deviance change = 0.002551
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 183     2020-09-04 00:49:59 
-##    Deviance = 3934.5899 | Deviance change = 0.002521
+## Iteration 183     2023-07-05 16:11:56 
+##    Deviance = 3934.5907 | Deviance change = 0.002529
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 184     2020-09-04 00:49:59 
-##    Deviance = 3934.5874 | Deviance change = 0.002499
+## Iteration 184     2023-07-05 16:11:56 
+##    Deviance = 3934.5882 | Deviance change = 0.002507
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 185     2020-09-04 00:49:59 
-##    Deviance = 3934.5849 | Deviance change = 0.002477
+## Iteration 185     2023-07-05 16:11:56 
+##    Deviance = 3934.5857 | Deviance change = 0.002484
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 186     2020-09-04 00:49:59 
-##    Deviance = 3934.5824 | Deviance change = 0.002455
+## Iteration 186     2023-07-05 16:11:56 
+##    Deviance = 3934.5832 | Deviance change = 0.002462
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 187     2020-09-04 00:49:59 
-##    Deviance = 3934.58 | Deviance change = 0.002432
+## Iteration 187     2023-07-05 16:11:56 
+##    Deviance = 3934.5808 | Deviance change = 0.00244
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 188     2020-09-04 00:49:59 
-##    Deviance = 3934.5776 | Deviance change = 0.00241
+## Iteration 188     2023-07-05 16:11:56 
+##    Deviance = 3934.5784 | Deviance change = 0.002418
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 189     2020-09-04 00:49:59 
-##    Deviance = 3934.5752 | Deviance change = 0.002388
+## Iteration 189     2023-07-05 16:11:56 
+##    Deviance = 3934.576 | Deviance change = 0.002395
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 190     2020-09-04 00:49:59 
-##    Deviance = 3934.5728 | Deviance change = 0.002366
+## Iteration 190     2023-07-05 16:11:56 
+##    Deviance = 3934.5736 | Deviance change = 0.002373
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 191     2020-09-04 00:49:59 
-##    Deviance = 3934.5705 | Deviance change = 0.002343
+## Iteration 191     2023-07-05 16:11:56 
+##    Deviance = 3934.5713 | Deviance change = 0.002351
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 192     2020-09-04 00:49:59 
-##    Deviance = 3934.5682 | Deviance change = 0.002321
+## Iteration 192     2023-07-05 16:11:56 
+##    Deviance = 3934.5689 | Deviance change = 0.002329
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 193     2020-09-04 00:49:59 
-##    Deviance = 3934.5659 | Deviance change = 0.002299
+## Iteration 193     2023-07-05 16:11:56 
+##    Deviance = 3934.5666 | Deviance change = 0.002306
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 194     2020-09-04 00:49:59 
-##    Deviance = 3934.5636 | Deviance change = 0.002277
+## Iteration 194     2023-07-05 16:11:56 
+##    Deviance = 3934.5643 | Deviance change = 0.002284
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 195     2020-09-04 00:49:59 
-##    Deviance = 3934.5614 | Deviance change = 0.002254
+## Iteration 195     2023-07-05 16:11:56 
+##    Deviance = 3934.5621 | Deviance change = 0.002262
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 196     2020-09-04 00:49:59 
-##    Deviance = 3934.5591 | Deviance change = 0.002232
+## Iteration 196     2023-07-05 16:11:56 
+##    Deviance = 3934.5598 | Deviance change = 0.00224
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 197     2020-09-04 00:49:59 
-##    Deviance = 3934.5569 | Deviance change = 0.00221
+## Iteration 197     2023-07-05 16:11:56 
+##    Deviance = 3934.5576 | Deviance change = 0.002217
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 198     2020-09-04 00:49:59 
-##    Deviance = 3934.5547 | Deviance change = 0.002188
+## Iteration 198     2023-07-05 16:11:56 
+##    Deviance = 3934.5554 | Deviance change = 0.002195
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 199     2020-09-04 00:49:59 
-##    Deviance = 3934.5526 | Deviance change = 0.002165
+## Iteration 199     2023-07-05 16:11:56 
+##    Deviance = 3934.5532 | Deviance change = 0.002173
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ......................................................................
-## Iteration 200     2020-09-04 00:49:59 
-##    Deviance = 3934.5504 | Deviance change = 0.002143
+## Iteration 200     2023-07-05 16:11:56 
+##    Deviance = 3934.5511 | Deviance change = 0.002151
 ##     Maximum item intercept parameter change = 0.000473  
 ##     Maximum item slope parameter change = 0  
 ##     Maximum distribution parameter change = 1e-06  
 ## ----------------------------------- 
-## Start: 2020-09-04 00:49:59 
-## End: 2020-09-04 00:49:59 
-## Time difference of 0.302814 secs
-## Difference: 0.302814 
+## Start: 2023-07-05 16:11:56 
+## End: 2023-07-05 16:11:56 
+## Time difference of 0.2806468 secs
+## Difference: 0.2806468 
 ## -----------------------------------
 </code></pre>
-
-<pre><code class="r">summary(mod12b)
+<pre><code class="language-r">summary(mod12b)
 </code></pre>
-
 <pre><code>## -----------------------------------------------------------------------------
-## CDM 7.5-15 (2020-03-10 14:19:21) 
+## CDM 8.2-6 (2022-08-25 15:43:23) 
 ## 
-## Date of Analysis: 2020-09-04 00:49:59 
-## Time difference of 0.302814 secs
-## Computation Time: 0.302814 
+## Date of Analysis: 2023-07-05 16:11:56 
+## Time difference of 0.2806468 secs
+## Computation Time: 0.2806468 
 ## 
 ## General Diagnostic Model 
 ## 
@@ -1580,12 +1519,12 @@ b.constraint=b.constraint , maxiter=200)
 ## Item Parameters 
 ##    item   N     M b.Cat1 a.F1 itemfit.rmsea
 ## 1    A1 328 0.851  0.926    1         0.083
-## 2    A2 328 0.738  0.104    1         0.065
+## 2    A2 328 0.738  0.103    1         0.065
 ## 3    A3 328 0.567 -0.829    1         0.039
 ## 4    A4 328 0.460 -1.362    1         0.022
 ## 5    B1 328 0.713 -0.043    1         0.060
 ## 6    B2 328 0.506 -1.135    1         0.077
-## 7    B3 328 0.909  1.548    1         0.027
+## 7    B3 328 0.909  1.547    1         0.027
 ## 8    B4 328 0.683 -0.218    1         0.006
 ## 9    C1 328 0.933  1.913    1         0.053
 ## 10   C2 328 0.713  0.000    1         0.031
@@ -1594,8 +1533,7 @@ b.constraint=b.constraint , maxiter=200)
 ## 
 ## Mean of RMSEA item fit: 0.046
 </code></pre>
-
-<pre><code class="r">#-- M12c: mirt (in mirt)
+<pre><code class="language-r">#-- M12c: mirt (in mirt)
 items &lt;- colnames(dat)
 
 # define three latent classes
@@ -1626,7 +1564,6 @@ mod.pars[ ind ,&quot;est&quot; ] &lt;- FALSE
 mod.pars[ mod.pars$name %in% c(&quot;a1&quot;,&quot;a2&quot;,&quot;a3&quot;) ,&quot;value&quot; ] &lt;- c(-1,0,1)
 mod.pars
 </code></pre>
-
 <pre><code>##    group  item     class   name parnum       value lbound ubound   est
 ## 1    all    A1      dich     a1      1 -1.00000000   -Inf    Inf  TRUE
 ## 2    all    A1      dich     a2      2  0.00000000   -Inf    Inf  TRUE
@@ -1792,8 +1729,7 @@ mod.pars
 ## 80       none     NaN     NaN
 ## 81       none     NaN     NaN
 </code></pre>
-
-<pre><code class="r">#* define prior for latent class analysis
+<pre><code class="language-r">#* define prior for latent class analysis
 lca_prior &lt;- function(Theta,Etable){
     # number of latent Theta classes
     TP &lt;- nrow(Theta)
@@ -1816,15 +1752,14 @@ pars = mod.pars , verbose=FALSE )
 
 print(mod12c)
 </code></pre>
-
 <pre><code>## 
 ## Call:
 ## mirt(data = dat, model = mirtmodel, pars = mod.pars, verbose = FALSE, 
 ##     technical = list(customTheta = Theta, customPriorFun = lca_prior))
 ## 
 ## Full-information item factor analysis with 3 factor(s).
-## Converged within 1e-04 tolerance after 78 EM iterations.
-## mirt version: 1.32.7 
+## Converged within 1e-04 tolerance after 80 EM iterations.
+## mirt version: 1.39.4 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 3
@@ -1832,13 +1767,12 @@ print(mod12c)
 ## 
 ## Log-likelihood = -1967.22
 ## Estimated parameters: 47 
-## AIC = 3962.441; AICc = 3963.783
+## AIC = 3962.441
 ## BIC = 4015.543; SABIC = 3971.135
 ## G2 (4081) = 832.48, p = 1
 ## RMSEA = 0, CFI = NaN, TLI = NaN
 </code></pre>
-
-<pre><code class="r"># estimated parameters from the user customized prior distribution.
+<pre><code class="language-r"># estimated parameters from the user customized prior distribution.
 nest &lt;- as.integer(sum(mod.pars$est) + 2)
 
 #* extract item parameters
@@ -1847,65 +1781,69 @@ coef1 &lt;- coef(mod12c, simplify=TRUE)$items
 #* inspect estimated distribution
 coef1
 </code></pre>
-
-<pre><code>##           a1        a2       a3             d g u
-## A1 -1.706916 0.2463293 2.033414  0.9706524199 0 1
-## A2 -1.706916 0.2463293 2.033414  0.1460731178 0 1
-## A3 -1.706916 0.2463293 2.033414 -0.7879626369 0 1
-## A4 -1.706916 0.2463293 2.033414 -1.3198426268 0 1
-## B1 -1.706916 0.2463293 2.033414 -0.0009721916 0 1
-## B2 -1.706916 0.2463293 2.033414 -1.0929185890 0 1
-## B3 -1.706916 0.2463293 2.033414  1.6001742760 0 1
-## B4 -1.706916 0.2463293 2.033414 -0.1761216801 0 1
-## C1 -1.706916 0.2463293 2.033414  1.9728466200 0 1
-## C2 -1.706916 0.2463293 2.033414  0.0000000000 0 1
-## C3 -1.706916 0.2463293 2.033414  1.1749430483 0 1
-## C4 -1.706916 0.2463293 2.033414  0.1272991435 0 1
+<pre><code>##           a1        a2       a3            d g u
+## A1 -1.706573 0.2463275 2.033385  0.970432213 0 1
+## A2 -1.706573 0.2463275 2.033385  0.145888002 0 1
+## A3 -1.706573 0.2463275 2.033385 -0.788138229 0 1
+## A4 -1.706573 0.2463275 2.033385 -1.320002426 0 1
+## B1 -1.706573 0.2463275 2.033385 -0.001154736 0 1
+## B2 -1.706573 0.2463275 2.033385 -1.093086286 0 1
+## B3 -1.706573 0.2463275 2.033385  1.599935802 0 1
+## B4 -1.706573 0.2463275 2.033385 -0.176302606 0 1
+## C1 -1.706573 0.2463275 2.033385  1.972606241 0 1
+## C2 -1.706573 0.2463275 2.033385  0.000000000 0 1
+## C3 -1.706573 0.2463275 2.033385  1.174713959 0 1
+## C4 -1.706573 0.2463275 2.033385  0.127114430 0 1
 </code></pre>
-
-<pre><code class="r">extract.mirt(mod12c, &quot;Prior&quot;)[[1]]
+<pre><code class="language-r">extract.mirt(mod12c, &quot;Prior&quot;)[[1]]
 </code></pre>
-
-<pre><code>## [1] 0.02913194 0.46253187 0.50833619
+<pre><code>## [1] 0.02912642 0.46245139 0.50842219
 </code></pre>
-
-<pre><code class="r">sessionInfo()
+<pre><code class="language-r">sessionInfo()
 </code></pre>
-
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 18363)
+<pre><code>## R version 4.2.2 Patched (2022-11-10 r83330)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 18.04.6 LTS
 ## 
 ## Matrix products: default
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats4    stats     graphics  grDevices utils     datasets  methods  
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] mvtnorm_1.1-1   sirt_3.9-4      ltm_1.1-1       polycor_0.7-10 
-## [5] msm_1.6.8       MASS_7.3-51.6   mirt_1.32.7     lattice_0.20-41
-## [9] knitr_1.29     
+## [1] mvtnorm_1.2-2   sirt_3.12-66    ltm_1.2-0       polycor_0.8-1  
+## [5] msm_1.7         MASS_7.3-58.2   mirt_1.39.4     lattice_0.20-45
+## [9] knitr_1.43     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5            cluster_2.1.0         magrittr_1.5         
-##  [4] splines_4.0.2         Deriv_4.0.1           highr_0.8            
-##  [7] dcurver_0.9.1         stringr_1.4.0         tools_4.0.2          
-## [10] parallel_4.0.2        grid_4.0.2            nlme_3.1-148         
-## [13] mgcv_1.8-31           xfun_0.15             vegan_2.5-6          
-## [16] survival_3.1-12       TAM_3.5-19            permute_0.9-5        
-## [19] GPArotation_2014.11-1 Matrix_1.2-18         mime_0.9             
-## [22] evaluate_0.14         stringi_1.4.6         compiler_4.0.2       
-## [25] CDM_7.5-15            expm_0.999-4          markdown_1.1
+##  [1] Rcpp_1.0.10          highr_0.10           compiler_4.2.2      
+##  [4] dcurver_0.9.2        tools_4.2.2          evaluate_0.21       
+##  [7] lifecycle_1.0.3      gtable_0.3.3         nlme_3.1-162        
+## [10] mgcv_1.8-41          rlang_1.1.1          Matrix_1.5-3        
+## [13] cli_3.6.1            rstudioapi_0.14      commonmark_1.9.0    
+## [16] parallel_4.2.2       TAM_4.1-4            expm_0.999-7        
+## [19] xfun_0.39            gridExtra_2.3        cluster_2.1.4       
+## [22] admisc_0.32          grid_4.2.2           glue_1.6.2          
+## [25] pbapply_1.7-0        survival_3.4-0       CDM_8.2-6           
+## [28] GPArotation_2023.3-1 splines_4.2.2        mime_0.12           
+## [31] permute_0.9-7        Deriv_4.1.3          markdown_1.7        
+## [34] vegan_2.6-4
 </code></pre>
-
+</div>
+<div class="include-after">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
 </body>
-
 </html>
