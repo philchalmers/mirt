@@ -10,6 +10,11 @@
   
 - `residuals()` gains a `p.adjust` argument for FWE control
 
+- `DRF()` gains a `DIF.cat` argument to compute statistics on a per-category
+  basis when studying polytomous items
+  
+- Small bug fixes in C++ code that resulted in memory leaks
+
 # Changes in mirt 1.39
 
 - For models fit using `mdirt()` the `fscores()` EAP and EAPsum methods now 
