@@ -13,6 +13,9 @@
 - `DRF()` gains a `DIF.cat` argument to compute statistics on a per-category
   basis when studying polytomous items
   
+- `expected.test()` gains a `probs.only` logical to return probability 
+  functions for each category (only used when `individual = TRUE`)
+  
 - Small bug fixes in C++ code that resulted in memory leaks
 
 # Changes in mirt 1.39
