@@ -1696,6 +1696,38 @@ mirt2traditional <- function(x, vcov, nfact){
         par[nfact + 2L] <- plogis(par[nfact + 2L])
         par[nfact + 3L] <- plogis(par[nfact + 3L])
         names(par) <- c(a.nms, 'b', 'g', 'u')
+    } else if(cls == 'fivePL'){
+        fns <- vector('list', nfact + 4L)
+        fns[[nfact+1L]] <- function(par, index, opar){
+            if(index == (nfact + 1L)){
+                opar[c(which.a, nfact + 1L)] <- par
+                ret <- -opar[nfact + 1L]/opar[which.a]
+            }
+            ret
+        }
+        fns[[nfact+2L]] <- function(par, index, opar){
+            if(index == nfact + 2L)
+                ret <- plogis(par)
+            ret
+        }
+        fns[[nfact+3L]] <- function(par, index, opar){
+            if(index == nfact + 3L)
+                ret <- plogis(par)
+            ret
+        }
+        fns[[nfact+4L]] <- function(par, index, opar){
+            if(index == nfact + 4L)
+                ret <- exp(par)
+            ret
+        }
+        delta_index <- c(as.list(rep(NA, nfact)),
+                         list(c(which.a, nfact + 1L),
+                              nfact + 2L, nfact+3L, nfact+4L))
+        par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
+        par[nfact + 2L] <- plogis(par[nfact + 2L])
+        par[nfact + 3L] <- plogis(par[nfact + 3L])
+        par[nfact + 4L] <- exp(par[nfact + 4L])
+        names(par) <- c(a.nms, 'b', 'g', 'u', 'S')
     } else if(cls == 'graded'){
         fns <- vector('list', ncat + nfact-1L)
         for(i in 2L:ncat - 1L){

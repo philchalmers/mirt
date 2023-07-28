@@ -152,6 +152,13 @@
 #'     \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{
 #'       1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
 #'   }
+#'   \item{5PL}{
+#'     Currently restricted to unidimensional models
+#'     \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{
+#'       1 + exp(-(a_1 * \theta_1 + d))^S}}
+#'     where \eqn{S} allows for asymmetry in the response function and
+#'     is transformation constrained to be greater than 0 (i.e., \code{log(S)} is estimated rather than \code{S})
+#'   }
 #'   \item{graded}{
 #'     The graded model consists of sequential 2PL models,
 #'     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
@@ -307,6 +314,8 @@
 #'     \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 parameter logistic model,
 #'       where \code{3PL} estimates the lower asymptote only while \code{3PLu} estimates the upper asymptote only
 #'       (Lord and Novick, 1968; Lord, 1980)
+#'     \item \code{'5PL'} - 5 parameter logistic model to estimate asymmetric logistic
+#'      response curves. Currently restricted to unidimensional models
 #'     \item \code{'graded'} - graded response model (Samejima, 1969)
 #'     \item \code{'grsm'} - graded ratings scale model in the
 #'       classical IRT parameterization (restricted to unidimensional models; Muraki, 1992)
@@ -1185,6 +1194,31 @@
 #'
 #' itemfit(dav) # assume normal prior
 #' itemfit(dav, use_dentype_estimate=TRUE) # use Davidian estimated prior shape
+#'
+#' ###########
+#' # 5PL and restricted 5PL example
+#' dat <- expand.table(LSAT7)
+#'
+#' mod2PL <- mirt(dat)
+#' mod2PL
+#'
+#' # Following does not converge without including strong priors
+#' # mod5PL <- mirt(dat, itemtype = '5PL')
+#' # mod5PL
+#'
+#' # restricted version of 5PL (asymmetric 2PL)
+#' model <- 'Theta = 1-5
+#'           FIXED = (1-5, g), (1-5, u)'
+#'
+#' mod2PL_asym <- mirt(dat, model=model, itemtype = '5PL')
+#' mod2PL_asym
+#' coef(mod2PL_asym, simplify=TRUE)
+#' coef(mod2PL_asym, simplify=TRUE, IRTpars=TRUE)
+#'
+#' # no big difference statistically or visually
+#' anova(mod2PL, mod2PL_asym)
+#' plot(mod2PL, type = 'trace')
+#' plot(mod2PL_asym, type = 'trace')
 #'
 #' }
 mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
