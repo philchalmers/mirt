@@ -321,6 +321,8 @@
 #'       (Lord and Novick, 1968; Lord, 1980)
 #'     \item \code{'5PL'} - 5 parameter logistic model to estimate asymmetric logistic
 #'      response curves. Currently restricted to unidimensional models
+#'     \item \code{'CLL'} - complementary log-log link model.
+#'       Currently restricted to unidimensional models
 #'     \item \code{'graded'} - graded response model (Samejima, 1969)
 #'     \item \code{'grsm'} - graded ratings scale model in the
 #'       classical IRT parameterization (restricted to unidimensional models; Muraki, 1992)
