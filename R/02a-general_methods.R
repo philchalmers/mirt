@@ -109,6 +109,7 @@ symbolicGrad_par <- function(x, Theta, dp1 = NULL, P = NULL){
     if(is.null(P)) P <- ProbTrace(x, Theta)
     xLength <- length(x@par)
     r_P <- x@dat / P
+    r_P[is.nan(r_P)] <- 0
     if(is.null(dp1))
         dp1 <- array(x@dps(x@par, Theta, x@ncat), c(nrow(Theta),x@ncat,xLength))
     grad <- numeric(length(x@par))

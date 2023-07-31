@@ -159,6 +159,11 @@
 #'     where \eqn{S} allows for asymmetry in the response function and
 #'     is transformation constrained to be greater than 0 (i.e., \code{log(S)} is estimated rather than \code{S})
 #'   }
+#'   \item{CLL}{
+#'     Complementary log-log model (see Shim, Bonifay, and Wiedermann, 2022)
+#'     \deqn{P(x = 1|\theta, b) = 1 - exp(-exp(\theta - b))}
+#'     Currently restricted to unidimensional dichotomous data.
+#'   }
 #'   \item{graded}{
 #'     The graded model consists of sequential 2PL models,
 #'     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
@@ -699,6 +704,10 @@
 #' Roberts, J. S., Donoghue, J. R., & Laughlin, J. E. (2000).
 #' A General Item Response Theory Model for Unfolding Unidimensional Polytomous Responses.
 #' \emph{Applied Psychological Measurement, 24}, 3-32.
+#'
+#' Shim, H., Bonifay, W., & Wiedermann, W. (2022). Parsimonious asymmetric item response
+#' theory modeling with the complementary log-log link. \emph{Behavior Research Methods, 55},
+#' 200-219.
 #'
 #' Maydeu-Olivares, A., Hernandez, A. & McDonald, R. P. (2006).
 #' A Multidimensional Ideal Point Item Response Theory Model for Binary Data.

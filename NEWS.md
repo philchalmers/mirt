@@ -1,6 +1,9 @@
 # Changes in mirt 1.40
 
-- Added 5PL model for unidimensional dichotomous data to included 
+- Added complementary log‑log model Shim, Bonifay, and Wiedermann, 2022) 
+  itemtype, specified as `itemtype = 'CLL'`
+
+- Added `itemtype = '5PL'` model for unidimensional dichotomous data to included 
   asymmetric response functions. Example in `help(mirt)` also demonstrates 
   asymmetric 2PL model as the 5PL itself is very unstable and requires 
   strong priors

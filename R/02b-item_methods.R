@@ -1,14 +1,15 @@
 # valid itemtype inputs
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
-Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL')
+# note: cannot match Valid_iteminputs
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll')
 
-Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', '5PL',
+Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL',
                                  'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
 
-ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential',
+ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll',
                                   'ggum', 'rating', 'spline', 'monopoly',
                                   'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT')
 
@@ -2927,6 +2928,134 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'fivePL', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("cll", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'cll'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'cll'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'cll'),
+    definition = function(x){
+        NA
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'cll'),
+    definition = function(x){
+        x@par[length(x@par)] #intercepts
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'cll'),
+    definition = function(x){
+        par <- rnorm(1L)
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'cll'),
+    definition = function(x){
+        x
+    }
+)
+
+P.cll <- function(x, Theta, ncat = 2L){
+    b <- x@par[1L]
+    P <- 1 - exp(-1 * exp(Theta - b))
+    P <- ifelse(P > 1 - 1e-16, 1 - 1e-16, P)
+    cbind(1-P, P)
+}
+
+dP.cll <- function(x, Theta, ncat = 2L)
+{
+    .e1 <- exp(Theta - x@par[1L])
+    .e4 <- exp(-.e1) * .e1
+    cbind(.e4, -.e4)
+}
+
+d2P.cll <- function(x, Theta, ncat = 2L)
+{
+    .e1 <- exp(Theta - x@par[1L])
+    .e5 <- exp(-.e1) * .e1 * (.e1 - 1)
+    cbind(.e5, -.e5)
+}
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'cll', Theta = 'matrix'),
+    definition = function(x, Theta, itemexp = FALSE){
+        ret <- P.cll(x=x, Theta=Theta)
+        ret
+    }
+)
+
+# complete-data derivative used in parameter estimation
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'cll', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(any(x@est)){
+            dp1 <- array(dP.cll(x, Theta), c(nrow(Theta),x@ncat,length(x@par)))
+            grad <- symbolicGrad_par(x, Theta, dp1=dp1)
+            if(estHess){
+                dp2 <- array(d2P.cll(x, Theta), c(nrow(Theta),x@ncat,length(x@par), length(x@par)))
+                hess <- symbolicHessian_par(x, Theta, dp1=dp1, dp2=dp2)
+            }
+        }
+        return(list(grad=grad, hess=hess))
+
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'cll', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'cll', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }

@@ -97,6 +97,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 val <- c(val, logS=0)
                 fp <- c(fp, TRUE)
             }
+        } else if(itemtype[i] == 'CLL'){
+            if(K[i] != 2L)
+                stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
+            if(nfact != 1L) stop('CLL model currently limited to unidimensional structures',
+                                 call.=FALSE)
+            val <- c(b = -zetas[[i]])
+            fp <- TRUE
         } else if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i],
                      0, rep(.5, K[i] - 2L), rep(0, K[i]-1L))
@@ -314,6 +321,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
 
         if(any(itemtype[i] == '5PL')){
             pars[[i]] <- new('fivePL',
+                             par=startvalues[[i]],
+                             est=freepars[[i]],
+                             parnames=names(freepars[[i]]),
+                             nfact=nfact,
+                             itemclass=9L,
+                             nfixedeffects=nfixedeffects,
+                             ncat=2L,
+                             any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(any(itemtype[i] == 'CLL')){
+            pars[[i]] <- new('cll',
                              par=startvalues[[i]],
                              est=freepars[[i]],
                              parnames=names(freepars[[i]]),
