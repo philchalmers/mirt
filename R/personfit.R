@@ -89,8 +89,6 @@
 #'
 personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(missing(x)) missingMsg('x')
-    if(x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom')
-        stop('personfit() does not currently support custom group densities', call.=FALSE)
     if(is(x, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported', call.=FALSE)
     if(is(x, 'MixtureClass'))
@@ -116,6 +114,8 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         rownames(ret2) <- rownames(x@Data$data)
         return(as.data.frame(ret2))
     }
+    if(x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom')
+        stop('personfit() does not currently support custom group densities', call.=FALSE)
     if(is.null(Theta))
         Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, rotate = 'none', ...)
     J <- ncol(x@Data$data)
