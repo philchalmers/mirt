@@ -1257,7 +1257,7 @@ Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Ad
 
 Lucke, J. F. (2015). Unipolar item response models. In S. P. Reise & D. A. Revicki
 (Eds.), Handbook of item response theory modeling: Applications to
-typical performance assessment (pp. 272–284). New York, NY:  Routledge/Taylor & Francis Group.
+typical performance assessment (pp. 272-284). New York, NY:  Routledge/Taylor & Francis Group.
 
 Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis.
 \emph{Psychometrika, 40}, 337-360.
