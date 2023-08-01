@@ -801,8 +801,9 @@ itemfit <- function(x, fit_stats = 'S_X2',
         if(!mixture && x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom'){
             den_fun <- function(Theta, ...){
                 obj <- x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]
-                obj@den(obj, Theta=Theta)
+                as.vector(obj@den(obj, Theta=Theta))
             }
+            if(is.null(dots$theta_lim)) theta_lim <- x@Internals$theta_lim
         } else den_fun <- mirt_dmvnorm
         E <- EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND=x@Internals$CUSTOM.IND, den_fun=mirt_dmvnorm,
                     quadpts=quadpts, theta_lim=theta_lim, discrete=discrete, QMC=QMC, mixture=mixture,

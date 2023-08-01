@@ -18,8 +18,9 @@ setMethod(
             if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom'){
                 den_fun <- function(Theta, ...){
                     obj <- object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]
-                    obj@den(obj, Theta=Theta)
+                    as.vector(obj@den(obj, Theta=Theta))
                 }
+                theta_lim <- object@Internals$theta_lim
             }
         }
         if(!is.null(custom_den)) den_fun <- custom_den

@@ -89,6 +89,8 @@
 #'
 personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     if(missing(x)) missingMsg('x')
+    if(x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom')
+        stop('personfit() does not currently support custom group densities', call.=FALSE)
     if(is(x, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported', call.=FALSE)
     if(is(x, 'MixtureClass'))

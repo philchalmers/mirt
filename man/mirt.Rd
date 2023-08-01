@@ -67,6 +67,8 @@ model will be fit unless otherwise specified}
      response curves. Currently restricted to unidimensional models
     \item \code{'CLL'} - complementary log-log link model.
       Currently restricted to unidimensional models
+    \item \code{'ULL'} - unipolar log-logistic model (Lucke, 2015). Note the use of this itemtype
+      will automatically use a log-normal distribution for the latent traits
     \item \code{'graded'} - graded response model (Samejima, 1969)
     \item \code{'grsm'} - graded ratings scale model in the
       classical IRT parameterization (restricted to unidimensional models; Muraki, 1992)
@@ -211,7 +213,9 @@ will estimate the regression parameters for all latent traits by default}
       (e.g., \code{'Davidian-6'} will estimate 6 smoothing parameters). By default, the number of
       \code{quadpts} is increased to 121, and this method is only applicable for
       unidimensional models estimated with the EM algorithm
-   }}
+   }
+
+   Note that when \code{itemtype = 'ULL'} then a log-normal(0,1) density is used to support the unipolar scaling}
 
 \item{pars}{a data.frame with the structure of how the starting values, parameter numbers,
 estimation logical values, etc, are defined. The user may observe how the model defines the
@@ -335,7 +339,9 @@ control input)}
   \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
   \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
     4GB or RAM on your PC; default 20000}
-  \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
+  \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}. Note that
+    when \code{itemtype = 'ULL' a log-normal distribution is used and the range is change to
+    \code{c(.01, and 6^2)}, where the second term is the square of the \code{theta_lim} input instead}}
   \item{set.seed}{seed number used during estimation. Default is 12345}
   \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
     information matrix. Default is 1e-3}
@@ -584,6 +590,13 @@ number of categories (using \eqn{k} for specific category instances).
     The graded model consists of sequential 2PL models,
     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
     Note that \eqn{P(x \ge 1 | \theta, \phi) = 1} while \eqn{P(x \ge K + 1 | \theta, \phi) = 0}
+  }
+  \item{ULL}{
+    The unipolar log-logistic model (ULL; Lucke, 2015) is defined the same as
+    the graded response model, however
+    \deqn{P(x \le k | \theta, \psi) = \frac{\lambda_k\theta^\eta}{1 + \lambda_k\theta^\eta}}.
+    Internally the \code{\lambda} parameters are exponentiated to keep them positive, and should
+    therefore the reported estimates should be interpreted in log units
   }
   \item{grsm}{
     A more constrained version of the graded model where graded spacing is equal across item

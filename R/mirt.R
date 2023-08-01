@@ -169,6 +169,13 @@
 #'     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
 #'     Note that \eqn{P(x \ge 1 | \theta, \phi) = 1} while \eqn{P(x \ge K + 1 | \theta, \phi) = 0}
 #'   }
+#'   \item{ULL}{
+#'     The unipolar log-logistic model (ULL; Lucke, 2015) is defined the same as
+#'     the graded response model, however
+#'     \deqn{P(x \le k | \theta, \psi) = \frac{\lambda_k\theta^\eta}{1 + \lambda_k\theta^\eta}}.
+#'     Internally the \code{\lambda} parameters are exponentiated to keep them positive, and should
+#'     therefore the reported estimates should be interpreted in log units
+#'   }
 #'   \item{grsm}{
 #'     A more constrained version of the graded model where graded spacing is equal across item
 #'     blocks and only adjusted by a single 'difficulty' parameter (c) while the latent variance
@@ -323,6 +330,8 @@
 #'      response curves. Currently restricted to unidimensional models
 #'     \item \code{'CLL'} - complementary log-log link model.
 #'       Currently restricted to unidimensional models
+#'     \item \code{'ULL'} - unipolar log-logistic model (Lucke, 2015). Note the use of this itemtype
+#'       will automatically use a log-normal distribution for the latent traits
 #'     \item \code{'graded'} - graded response model (Samejima, 1969)
 #'     \item \code{'grsm'} - graded ratings scale model in the
 #'       classical IRT parameterization (restricted to unidimensional models; Muraki, 1992)
@@ -491,6 +500,8 @@
 #'       \code{quadpts} is increased to 121, and this method is only applicable for
 #'       unidimensional models estimated with the EM algorithm
 #'    }
+#'
+#'    Note that when \code{itemtype = 'ULL'} then a log-normal(0,1) density is used to support the unipolar scaling
 #' @param survey.weights a optional numeric vector of survey weights to apply for each case in the
 #'   data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT
 #'   approach). The sum of the \code{survey.weights} must equal the total sample size for proper
@@ -566,7 +577,9 @@
 #'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
 #'     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
 #'       4GB or RAM on your PC; default 20000}
-#'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
+#'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}. Note that
+#'       when \code{itemtype = 'ULL' a log-normal distribution is used and the range is change to
+#'       \code{c(.01, and 6^2)}, where the second term is the square of the \code{theta_lim} input instead}}
 #'     \item{set.seed}{seed number used during estimation. Default is 12345}
 #'     \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
 #'       information matrix. Default is 1e-3}

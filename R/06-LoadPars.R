@@ -104,6 +104,13 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                  call.=FALSE)
             val <- c(b = -zetas[[i]])
             fp <- TRUE
+        } else if(itemtype[i] == 'ULL'){
+            if(nfact != 1L) stop('ULL model currently limited to unidimensional structures',
+                                 call.=FALSE)
+            val <- c(lambdas[i,], zetas[[i]])
+            fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
+            names(val) <- c(paste('eta', 1L:nfact, sep=''),
+                            paste('log_lambda', 1L:(K[i]-1L), sep=''))
         } else if(any(itemtype[i] == c('2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM'))){
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i],
                      0, rep(.5, K[i] - 2L), rep(0, K[i]-1L))
@@ -415,6 +422,28 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=K[i],
                              itemclass=2L,
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             est=freepars[[i]],
+                             lbound=rep(-Inf, length(startvalues[[i]])),
+                             ubound=rep(Inf, length(startvalues[[i]])),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(itemtype[i] == 'ULL'){
+            pars[[i]] <- new('ull',
+                             par=startvalues[[i]],
+                             parnames=names(freepars[[i]]),
+                             nfact=nfact,
+                             ncat=K[i],
+                             itemclass=9L,
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              prior.type=rep(0L, length(startvalues[[i]])),

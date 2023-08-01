@@ -29,7 +29,7 @@
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
-#'   used in conjunction with \code{npts}
+#'   used in conjunction with \code{npts}. Default uses \code{c(-6,6)}
 #' @param npts number of quadrature points to be used for plotting features.
 #'   Larger values make plots look smoother
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
@@ -105,12 +105,17 @@
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
+                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = NULL, shiny = FALSE,
                      rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
                      auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
+    if(is.null(theta_lim)){
+        if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
+            theta_lim <- object@Internals$theta_lim
+        else theta_lim <- c(-6,6)
+    }
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)

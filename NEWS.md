@@ -1,6 +1,11 @@
 # Changes in mirt 1.40
 
-- Added complementary log‑log model Shim, Bonifay, and Wiedermann, 2022) 
+- Added unipolar log‑logistic model (Lucke, 2015)  itemtype, specified 
+  as `itemtype = 'ULL'`. Note that this automatically changes a number of 
+  internal defaults, such as using a log-normal(0,1) density for the latent
+  traits, and where the `theta_lim` is specified to be positive
+
+- Added complementary log‑log model (Shim, Bonifay, and Wiedermann, 2022) 
   itemtype, specified as `itemtype = 'CLL'`
 
 - Added `itemtype = '5PL'` model for unidimensional dichotomous data to included 

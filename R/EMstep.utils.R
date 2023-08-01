@@ -345,8 +345,8 @@ Mstep.mixture <- function(pars, Prior, gTheta, J, constrain){
 }
 
 LogLikMstep <- function(x, Theta, itemloc, rs, any.prior, CUSTOM.IND){
-    log_itemtrace <- log(computeItemtrace(pars=x, Theta=Theta,
-                                          itemloc=itemloc, CUSTOM.IND=CUSTOM.IND))
+    suppressWarnings(log_itemtrace <- log(computeItemtrace(pars=x, Theta=Theta,
+                                          itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)))
     LL <- sum(rs$r1 * log_itemtrace)
     if(any.prior){
         for(i in seq_len(length(x)-1L))

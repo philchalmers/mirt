@@ -2,14 +2,14 @@
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
 # note: cannot match Valid_iteminputs
-Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll')
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull')
 
-Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL',
+Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
                                  'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
 
-ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll',
+ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll', 'ull',
                                   'ggum', 'rating', 'spline', 'monopoly',
                                   'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT')
 
@@ -2910,8 +2910,9 @@ setMethod(
                 hess <- symbolicHessian_par(x, Theta, dp1=dp1, dp2=dp2)
             }
         }
-        return(list(grad=grad, hess=hess))
-
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        ret
     }
 )
 
@@ -3038,8 +3039,9 @@ setMethod(
                 hess <- symbolicHessian_par(x, Theta, dp1=dp1, dp2=dp2)
             }
         }
-        return(list(grad=grad, hess=hess))
-
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        ret
     }
 )
 
@@ -3056,6 +3058,169 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'cll', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("ull", contains = 'AllItemsClass',
+         representation = representation())
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'ull'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'ull'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'ull'),
+    definition = function(x){
+        NA
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'ull'),
+    definition = function(x){
+        x@par[length(x@par)] #intercepts
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'ull'),
+    definition = function(x){
+        par <- rnorm(1L)
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'ull'),
+    definition = function(x){
+        x
+    }
+)
+
+P.ull <- function(x, Theta, ncat){
+    eta <- x@par[1L]
+    lambdas <- exp(x@par[2L:length(x@par)])
+    TheEta <- Theta^eta
+    ret <- matrix(0, nrow(Theta), ncat)
+    PS <- matrix(0, nrow(Theta), ncat+1L)
+    PS[,1L] <- 1
+    for(i in 1L:(ncat-1L))
+        PS[,i+1L] <- lambdas[i] * TheEta / (1 + lambdas[i] * TheEta)
+    for(i in 1L:ncat)
+        ret[,i] <- PS[,i] - PS[,i+1L]
+    ret
+}
+
+dP.ull <- function(x, Theta, ncat)
+{
+    N <- nrow(Theta)
+    eta <- x@par[1L]
+    lambdas <- exp(x@par[2L:length(x@par)])
+    TheEta <- Theta^eta
+    Theta2Eta <- Theta^(2 * eta)
+    dlambdas <- vector('list', ncat-1L)
+    for(j in 2L:ncat - 1L){
+        mat <- matrix(0, N, ncat)
+        tmp <- (TheEta - Theta2Eta * lambdas[j] /
+                    (1 + TheEta * lambdas[j])) / (1 + TheEta * lambdas[j])
+        mat[,j] <- -tmp
+        mat[,j+1L] <- tmp
+        dlambdas[[j]] <- mat
+    }
+    dlambdas <- do.call(cbind, dlambdas)
+    .e9 <- log(Theta)
+    .e10_e14 <- 1 + as.vector(TheEta) * matrix(lambdas, N, ncat-1L, byrow=TRUE)
+    mat <- matrix(0, N, ncat)
+    mat[,1L] <-  -(.e9 * lambdas[1L] *
+                       (TheEta - Theta2Eta * lambdas[1L] / .e10_e14[,1L])/.e10_e14[,1L])
+    .e25 <- TheEta - Theta2Eta * lambdas[1L] / .e10_e14[,1L]
+    .e26 <- TheEta - Theta2Eta * lambdas[ncat-1L] / .e10_e14[,ncat-1L]
+    mat[,ncat] <- lambdas[ncat-1L] * .e9 * .e26 / .e10_e14[,ncat-1L]
+    if(ncat > 2L){
+        for(j in 2:(ncat - 2L)){
+            tmp <- lambdas[j] * (TheEta - Theta2Eta * lambdas[j] /
+                                     .e10_e14[,j])/.e10_e14[,j]
+            if(j == 2L)
+                mat[,2L] <- (lambdas[1L] * .e25 / .e10_e14[,1L] - tmp) * .e9
+            if(ncat == 3L) break
+            tmp2 <- lambdas[j+1L] * (TheEta - Theta2Eta * lambdas[j+1L] /
+                                         .e10_e14[,j+1L])/.e10_e14[,j+1L]
+            mat[,j+1L] <- (tmp - tmp2) * .e9
+        }
+    }
+    c(cbind(mat, dlambdas))
+}
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'ull', Theta = 'matrix'),
+    definition = function(x, Theta, itemexp = FALSE){
+        ret <- P.ull(x=x, Theta=Theta, ncat=x@ncat)
+        ret
+    }
+)
+
+# complete-data derivative used in parameter estimation
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'ull', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(any(x@est)){
+            dp1 <- array(dP.ull(x, Theta, ncat=x@ncat), c(nrow(Theta),x@ncat,length(x@par)))
+            grad <- symbolicGrad_par(x, Theta, dp1=dp1)
+            if(estHess){
+                hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,Theta=Theta,
+                                                      gradient=FALSE)
+            }
+        }
+        ret <- list(grad=grad, hess=hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        ret
+
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'ull', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'ull', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }

@@ -107,6 +107,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             customGroup@itemclass <- -1L
             rm(tmpnfact)
         }
+        if(any(itemtype == 'ULL')){
+            opts$dentype <- 'custom'
+            den <- function(obj, Theta){
+                par <- obj@par
+                dlnorm(Theta, meanlog = par[1L], sdlog = par[2L])
+            }
+            opts$theta_lim <- c(.01, opts$theta_lim[2L]^2)
+            par <- c(meanlog=0, sdlog=1)
+            est <- c(FALSE, FALSE)
+            customGroup <- createGroup(par=par, est=est, den=den, nfact=1L,
+                                       gen=function(object) rnorm(length(object@par), 0, 1/2))
+        }
         if(!is.null(survey.weights)){
             stopifnot(opts$method %in% c('EM', 'QMCEM', 'MCEM'))
             stopifnot(length(survey.weights) == nrow(data))
@@ -951,7 +963,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                           Fit = list(G2=G2group[g], F=F, h2=h2),
                           Internals = list(Pl = rlist[[g]]$expected, CUSTOM.IND=CUSTOM.IND,
                                            SLOW.IND=SLOW.IND))
-        if(opts$dentype %in% c("discrete", 'EH', 'EHW', 'Davidian')){
+        if(opts$dentype %in% c("discrete", 'EH', 'EHW', 'Davidian', 'custom')){
             cmods[[g]]@Model$Theta <- Theta
             cmods[[g]]@Internals$Prior <- list(ESTIMATE$Prior[[g]])
         }
@@ -1072,7 +1084,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Internals <- list(collectLL=ESTIMATE$collectLL, Prior=ESTIMATE$Prior, Pl=Pl,
                       shortpars=as.numeric(ESTIMATE$shortpars), key=key,
                       bfactor=list(), CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
-                      survey.weights=survey.weights,
+                      survey.weights=survey.weights, theta_lim = opts$theta_lim,
                       customGroup=customGroup, customItems=customItems)
     if(opts$method == 'EM'){
         tmp <- lapply(ESTIMATE$Etable, function(tab)
