@@ -173,7 +173,7 @@
 #'     The unipolar log-logistic model (ULL; Lucke, 2015) is defined the same as
 #'     the graded response model, however
 #'     \deqn{P(x \le k | \theta, \psi) = \frac{\lambda_k\theta^\eta}{1 + \lambda_k\theta^\eta}}.
-#'     Internally the \code{\lambda} parameters are exponentiated to keep them positive, and should
+#'     Internally the \eqn{\lambda} parameters are exponentiated to keep them positive, and should
 #'     therefore the reported estimates should be interpreted in log units
 #'   }
 #'   \item{grsm}{
