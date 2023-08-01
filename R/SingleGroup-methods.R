@@ -1147,7 +1147,7 @@ setMethod(
         nfact <- x@Model$nfact
         if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
         J <- x@Data$nitems
-        if(mod@ParObjects$pars[[J + 1L]]@dentype == 'custom')
+        if(x@ParObjects$pars[[J + 1L]]@dentype == 'custom')
             theta_lim <- x@Internals$theta_lim
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts/(nfact^2))
         ThetaFull <- Theta <- thetaComb(theta, nfact)
