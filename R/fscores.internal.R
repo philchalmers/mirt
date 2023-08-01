@@ -20,7 +20,8 @@ setMethod(
                     obj <- object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]
                     as.vector(obj@den(obj, Theta=Theta))
                 }
-                theta_lim <- object@Internals$theta_lim
+                if(!is.null(object@Internals$theta_lim))
+                    theta_lim <- object@Internals$theta_lim
             }
         }
         if(!is.null(custom_den)) den_fun <- custom_den

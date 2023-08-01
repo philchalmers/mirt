@@ -578,8 +578,8 @@
 #'     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
 #'       4GB or RAM on your PC; default 20000}
 #'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}. Note that
-#'       when \code{itemtype = 'ULL' a log-normal distribution is used and the range is change to
-#'       \code{c(.01, and 6^2)}, where the second term is the square of the \code{theta_lim} input instead}}
+#'       when \code{itemtype = 'ULL'} a log-normal distribution is used and the range is change to
+#'       \code{c(.01, and 6^2)}, where the second term is the square of the \code{theta_lim} input instead}
 #'     \item{set.seed}{seed number used during estimation. Default is 12345}
 #'     \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
 #'       information matrix. Default is 1e-3}

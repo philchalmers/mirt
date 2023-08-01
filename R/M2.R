@@ -138,7 +138,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         bfactorlist <- obj@Internals$bfactor
         if(.hasSlot(obj@Model$lrPars, 'beta'))
             stop('Latent regression models not yet supported')
-        if(obj@ParObjects$pars[[extract.mirt(obj, 'nitems')+1L]]@dentype == 'custom')
+        if(!discrete && obj@ParObjects$pars[[extract.mirt(obj, 'nitems')+1L]]@dentype == 'custom')
             stop('M2() does not currently support custom group densities', call.=FALSE)
         if(!discrete && !use_dentype_estimate){
             #         if(is.null(bfactorlist$Priorbetween[[1L]])){
