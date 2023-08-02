@@ -112,7 +112,9 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                                          strip.border = list(col = "black")),
                      auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     if(!missing(object) && is.null(theta_lim) && !is.list(object)){
-        if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
+        tmp <- if(is(object, 'MultipleGroupClass'))
+            object@ParObjects$pars[[1L]]@ParObjects$pars else object@ParObjects$pars
+        if(tmp[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
             theta_lim <- object@Internals$theta_lim
         else theta_lim <- c(-6,6)
     } else theta_lim <- c(-6,6)
