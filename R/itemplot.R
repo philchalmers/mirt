@@ -111,11 +111,11 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
                      auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
-    if(is.null(theta_lim)){
+    if(!missing(object) && is.null(theta_lim) && !is.list(object)){
         if(object@ParObjects$pars[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
             theta_lim <- object@Internals$theta_lim
         else theta_lim <- c(-6,6)
-    }
+    } else theta_lim <- c(-6,6)
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)
