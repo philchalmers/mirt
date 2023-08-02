@@ -906,6 +906,17 @@
 #' plot(monopoly, type = 'trace')
 #' plot(monopoly, type = 'itemscore')
 #'
+#' #unipolar IRT model
+#' unimod <- mirt(Science, itemtype = 'ULL')
+#' coef(unimod, simplify=TRUE)
+#' plot(unimod)
+#' plot(unimod, type = 'trace')
+#' itemplot(unimod, 1)
+#' itemfit(unimod)
+#' fs <- fscores(unimod)
+#' hist(fs, 20)
+#' fscores(unimod, method = 'EAPsum', full.scores = FALSE)
+#'
 #' ## example applying survey weights.
 #' # weight the first half of the cases to be more representative of population
 #' survey.weights <- c(rep(2, nrow(Science)/2), rep(1, nrow(Science)/2))
