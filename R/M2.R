@@ -138,22 +138,38 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         bfactorlist <- obj@Internals$bfactor
         if(.hasSlot(obj@Model$lrPars, 'beta'))
             stop('Latent regression models not yet supported')
-        if(!discrete && obj@ParObjects$pars[[extract.mirt(obj, 'nitems')+1L]]@dentype == 'custom')
-            stop('M2() does not currently support custom group densities', call.=FALSE)
+        # if(!discrete && obj@ParObjects$pars[[extract.mirt(obj, 'nitems')+1L]]@dentype == 'custom')
+        #     stop('M2() does not currently support custom group densities', call.=FALSE)
         if(!discrete && !use_dentype_estimate){
             #         if(is.null(bfactorlist$Priorbetween[[1L]])){
             if(TRUE){ #TODO bifactor reduction possibility? Not as effective at computing marginals
                 prior <- Priorbetween <- sitems <- specific <- NULL
                 gstructgrouppars <- ExtractGroupPars(pars[[nitems+1L]])
-                if(QMC){
-                    Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim)
-                    Theta <- Theta_meanSigma_shift(Theta, gstructgrouppars$gmeans, gstructgrouppars$gcov)
-                    Prior <- rep(1/nrow(Theta), nrow(Theta))
-                } else {
+                if(pars[[nitems+1L]]@dentype == 'custom'){
+                    if(any(pars[[nitems+1L]]@est))
+                        stop('custom group objects with estimated parameters not supported', call.=FALSE)
+                    den_fun <- function(Theta, ...){
+                        x <- obj@ParObjects$pars[[extract.mirt(obj, 'nitems')+1L]]
+                        as.vector(x@den(x, Theta=Theta))
+                    }
+                    if(!is.null(obj@Internals$theta_lim))
+                        theta_lim <- obj@Internals$theta_lim
                     theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
                     Theta <- thetaComb(theta, obj@Model$nfact)
-                    Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans, gstructgrouppars$gcov)
+                    Prior <- den_fun(Theta)
                     Prior <- Prior/sum(Prior)
+                } else {
+                    if(QMC){
+                        Theta <- QMC_quad(npts=quadpts, nfact=obj@Model$nfact, lim=theta_lim)
+                        Theta <- Theta_meanSigma_shift(Theta, gstructgrouppars$gmeans,
+                                                       gstructgrouppars$gcov)
+                        Prior <- rep(1/nrow(Theta), nrow(Theta))
+                    } else {
+                        theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out = quadpts))
+                        Theta <- thetaComb(theta, obj@Model$nfact)
+                        Prior <- mirt_dmvnorm(Theta,gstructgrouppars$gmeans, gstructgrouppars$gcov)
+                        Prior <- Prior/sum(Prior)
+                    }
                 }
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta, prodlist)

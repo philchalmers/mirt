@@ -3107,7 +3107,7 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'ull'),
     definition = function(x){
-        par <- rnorm(1L)
+        par <- c(rlnorm(1L, .2, .3), sort(rnorm(x@ncat-1L), decreasing = TRUE))
         x@par[x@est] <- par[x@est]
         x
     }
@@ -3118,6 +3118,8 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'ull'),
     definition = function(x){
+        x@par[1L] <- 0
+        x@est[1L] <- FALSE
         x
     }
 )
