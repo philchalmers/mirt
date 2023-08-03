@@ -63,6 +63,36 @@ NULL
 #' }
 NULL
 
+#' Social Life Feelings Data
+#'
+#' A 5-item data set analyzed by Bartholomew (1998). Data contains
+#' dichotomous responses (endorsement vs non-endorsement) from 1490 German
+#' respondents to five statements on perceptions of social life.
+#'
+#' @name SLF
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Bartholomew, D., J. (1998). Scaling unobservable constructs in social science. Journal of the Royal
+#' Statistical Society - Series C, 47, 1-13.
+#' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' # tabular format
+#' data(SLF)
+#' SLF
+#'
+#' # full dataset
+#' full <- expand.table(SLF)
+#' itemstats(full)
+#'
+#' mod <- mirt(full)
+#' plot(mod, type = 'trace')
+#'
+#' }
+NULL
+
 #' Description of SAT12 data
 #'
 #' Data obtained from the TESTFACT (Woods et al., 2003) manual, with 32 response pattern
