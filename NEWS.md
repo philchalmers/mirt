@@ -1,5 +1,9 @@
 # Changes in mirt 1.40
 
+- `technical` list gains a `nconstrain` argument for specifying equality 
+  constraints with negative relationships (e.g., `a12 = -a21`). Requested by 
+  Berend Terluin
+
 - Added unipolar log‑logistic model (Lucke, 2015)  itemtype, specified 
   as `itemtype = 'ULL'`. Note that this automatically changes a number of 
   internal defaults, such as using a log-normal(0,1) density for the latent

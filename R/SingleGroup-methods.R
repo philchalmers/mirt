@@ -1812,7 +1812,7 @@ mirt2traditional <- function(x, vcov, nfact){
         ds <- par[(ncat+2):length(par)]
         ds <- ds - mean(ds)
         par <- c(as, ds)
-        names(par) <- c(a.nms, paste0('c', 1:ncat))
+        names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
         x@est <- rep(TRUE, ncat*2)
         x@SEpar <- rep(as.numeric(NA), ncat*2)
     } else if(cls == 'nestlogit'){

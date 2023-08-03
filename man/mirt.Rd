@@ -374,6 +374,10 @@ control input)}
     positive or negative infinity. The default is \code{FALSE}}
   \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
     If not defined, the grid is determined internally based on the number of \code{quadpts}}
+  \item{nconstrain}{same specification as the \code{constrain} list argument,
+    however imposes a negative equality constraint instead (e.g., \eqn{a12 = -a21}, which
+    is specified as \code{nconstrain = list(c(12, 21))}). Note that each specification
+    in the list must be of length 2}
   \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
     with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
     Richardson extrapolation. Default is 1e-5}
@@ -861,6 +865,17 @@ coef(monopoly, simplify=TRUE)
 plot(monopoly)
 plot(monopoly, type = 'trace')
 plot(monopoly, type = 'itemscore')
+
+#unipolar IRT model
+unimod <- mirt(Science, itemtype = 'ULL')
+coef(unimod, simplify=TRUE)
+plot(unimod)
+plot(unimod, type = 'trace')
+itemplot(unimod, 1)
+itemfit(unimod)
+fs <- fscores(unimod)
+hist(fs, 20)
+fscores(unimod, method = 'EAPsum', full.scores = FALSE)
 
 ## example applying survey weights.
 # weight the first half of the cases to be more representative of population

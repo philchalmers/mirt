@@ -505,11 +505,11 @@ itemfit <- function(x, fit_stats = 'S_X2',
         return(ret)
     }
     dots <- list(...)
-    if(x@Model$nfact > 3L && is.null(dots$QMC))
-        warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
-                call.=FALSE)
     discrete <- dots$discrete
     discrete <- ifelse(is.null(discrete), FALSE, discrete)
+    if(x@Model$nfact > 3L && is.null(dots$QMC) && !discrete)
+        warning('High-dimensional models should use quasi-Monte Carlo integration. Pass QMC=TRUE',
+                call.=FALSE)
     mixture <- is(x, 'MixtureClass')
     if(mixture && !all(fit_stats == 'S_X2'))
         stop("Only S_X2 fit statistic supported for mixture models")
