@@ -28,7 +28,7 @@
 #' mod <- mirt(dat, 1, 'Rasch')
 #' (values <- mod2values(mod))
 #'
-#' #test all fixed slopes individually
+#' # test all fixed slopes individually
 #' parnum <- values$parnum[values$name == 'a1']
 #' lagrange(mod, parnum)
 #'

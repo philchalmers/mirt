@@ -171,7 +171,7 @@
 #' 2.0,0.0,NA),ncol=3,byrow=TRUE)
 #'
 #' nominal <- matrix(NA, nrow(d), ncol(d))
-#' #the first 0 and last (ncat - 1) = 2 values are the recommended constraints
+#' # the first 0 and last (ncat - 1) = 2 values are the recommended constraints
 #' nominal[4, ] <- c(0,1.2,2)
 #'
 #' sigma <- diag(3)
@@ -256,7 +256,7 @@
 #'
 #' a <- matrix(rlnorm(4,0,.2))
 #'
-#' #first column of item 4 is the intercept for the correct category of 2PL model,
+#' # first column of item 4 is the intercept for the correct category of 2PL model,
 #' #    otherwise nominal model configuration
 #' d <- matrix(c(
 #' -1.0,NA,NA,NA,
@@ -275,7 +275,7 @@
 #' #coef(mod)
 #' #itemplot(mod,4)
 #'
-#' #return list of simulation parameters
+#' # return list of simulation parameters
 #' listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 #' str(listobj)
 #'

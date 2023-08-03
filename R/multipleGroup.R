@@ -76,7 +76,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' #single factor
+#' # single factor
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 #' d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -94,11 +94,11 @@
 #' itemstats(dat, group=group)
 #'
 #' mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
-#' #limited information fit statistics
+#' # limited information fit statistics
 #' M2(mod_configural)
 #'
 #' mod_metric <- multipleGroup(dat, 1, group = group, invariance=c('slopes')) #equal slopes
-#' #equal intercepts, free variance and means
+#' # equal intercepts, free variance and means
 #' mod_scalar2 <- multipleGroup(dat, 1, group = group,
 #'                              invariance=c('slopes', 'intercepts', 'free_var','free_means'))
 #' mod_scalar1 <- multipleGroup(dat, 1, group = group,  #fixed means
@@ -107,7 +107,7 @@
 #'                              invariance=c('slopes', 'intercepts'))
 #' extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #'
-#' #optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+#' # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 #' mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
 #'                              invariance=c('slopes', 'intercepts'))
 #' extract.mirt(mod_fullconstrain, 'time') #time of estimation components
@@ -131,14 +131,14 @@
 #' anova(mod_fullconstrain, mod_scalar2, mod_configural)
 #'
 #'
-#' #test whether first 6 slopes should be equal across groups
+#' # test whether first 6 slopes should be equal across groups
 #' values <- multipleGroup(dat, 1, group = group, pars = 'values')
 #' values
 #' constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 #' equalslopes <- multipleGroup(dat, 1, group = group, constrain = constrain)
 #' anova(equalslopes, mod_configural)
 #'
-#' #same as above, but using mirt.model syntax
+#' # same as above, but using mirt.model syntax
 #' newmodel <- '
 #'     F = 1-15
 #'     CONSTRAINB = (1-6, a1)'
@@ -173,12 +173,12 @@
 #'
 #'
 #' #############
-#' #DIF test for each item (using all other items as anchors)
+#' # DIF test for each item (using all other items as anchors)
 #' itemnames <- colnames(dat)
 #' refmodel <- multipleGroup(dat, 1, group = group, SE=TRUE,
 #'                           invariance=c('free_means', 'free_var', itemnames))
 #'
-#' #loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
+#' # loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
@@ -187,12 +187,12 @@
 #' (anovas <- lapply(estmodels, function(x, refmodel) anova(refmodel, x),
 #'    refmodel=refmodel))
 #'
-#' #family-wise error control
+#' # family-wise error control
 #' p <- do.call(rbind, lapply(anovas, function(x) x[2, 'p']))
 #' p.adjust(p, method = 'BH')
 #'
-#' #same as above, except only test if slopes vary (1 df)
-#' #constrain all intercepts
+#' # same as above, except only test if slopes vary (1 df)
+#' # constrain all intercepts
 #' estmodels <- vector('list', ncol(dat))
 #' for(i in 1:ncol(dat))
 #'     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
@@ -202,7 +202,7 @@
 #' (anovas <- lapply(estmodels, function(x, refmodel) anova(refmodel, x),
 #'    refmodel=refmodel))
 #'
-#' #quickly test with Wald test using DIF()
+#' # quickly test with Wald test using DIF()
 #' mod_configural2 <- multipleGroup(dat, 1, group = group, SE=TRUE)
 #' DIF(mod_configural2, which.par = c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
 #'
@@ -239,7 +239,7 @@
 #'
 #'
 #' #############
-#' #multiple factors
+#' # multiple factors
 #'
 #' a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
 #'      rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
@@ -253,16 +253,16 @@
 #' dat <- rbind(dataset1, dataset2)
 #' group <- c(rep('D1', N), rep('D2', N))
 #'
-#' #group models
+#' # group models
 #' model <- '
 #'    F1 = 1-5
 #'    F2 = 6-10
 #'    F3 = 11-15'
 #'
-#' #define mirt cluster to use parallel architecture
+#' # define mirt cluster to use parallel architecture
 #' if(interactive()) mirtCluster()
 #'
-#' #EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
+#' # EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 #' mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses
 #' mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes')) #equal slopes
 #' mod_fullconstrain <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
@@ -271,7 +271,7 @@
 #' anova(mod_metric, mod_configural)
 #' anova(mod_fullconstrain, mod_metric)
 #'
-#' #same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
+#' # same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
 #' mod_configural <- multipleGroup(dat, model, group = group, method = 'MHRM')
 #' mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes'), method = 'MHRM')
 #' mod_fullconstrain <- multipleGroup(dat, model, group = group, method = 'MHRM',
@@ -281,7 +281,7 @@
 #' anova(mod_fullconstrain, mod_metric)
 #'
 #' ############
-#' #polytomous item example
+#' # polytomous item example
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 #' d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -329,7 +329,7 @@
 #' coef(EH, simplify=TRUE)
 #' plot(EH, type = 'empiricalhist', npts = 60)
 #'
-#' #DIF test for item 1
+#' # DIF test for item 1
 #' EH1 <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat)[-1])
 #' anova(EH, EH1)
 #'

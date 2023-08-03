@@ -62,12 +62,12 @@ SAT12[SAT12 == 8] <- NA
 data <- key2binary(SAT12,
    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
-#test plot
+# test plot
 empirical_plot(data)
 empirical_plot(data, type = 'hist')
 empirical_plot(data, type = 'hist', breaks=20)
 
-#items 1, 2 and 5
+# items 1, 2 and 5
 empirical_plot(data, c(1, 2, 5))
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
 empirical_plot(data, c(1, 2, 5), type = 'boxplot')

@@ -109,7 +109,7 @@ test scores.}
 \examples{
 \dontrun{
 
-#no DIF
+# no DIF
 set.seed(12345)
 a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d <- matrix(rnorm(15,0,.7),ncol=1)

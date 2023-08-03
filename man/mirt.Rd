@@ -738,7 +738,7 @@ visit \url{https://github.com/philchalmers/mirt/wiki}.
 
 \examples{
 
-#load LSAT section 7 data and compute 1 and 2 factor models
+# load LSAT section 7 data and compute 1 and 2 factor models
 data <- expand.table(LSAT7)
 itemstats(data)
 
@@ -759,11 +759,11 @@ plot(mod1, type = 'trace') #trace lines
 plot(mod2, type = 'info') #test information
 plot(mod2, MI=200) #expected total score with 95\% confidence intervals
 
-#estimated 3PL model for item 5 only
+# estimated 3PL model for item 5 only
 (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 coef(mod1.3PL)
 
-#internally g and u pars are stored as logits, so usually a good idea to include normal prior
+# internally g and u pars are stored as logits, so usually a good idea to include normal prior
 #  to help stabilize the parameters. For a value around .182 use a mean
 #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
 model <- 'F = 1-5
@@ -773,12 +773,12 @@ coef(mod1.3PL.norm)
 #limited information fit statistics
 M2(mod1.3PL.norm)
 
-#unidimensional ideal point model
+# unidimensional ideal point model
 idealpt <- mirt(data, 1, itemtype = 'ideal')
 plot(idealpt, type = 'trace', facet_items = TRUE)
 plot(idealpt, type = 'trace', facet_items = FALSE)
 
-#two factors (exploratory)
+# two factors (exploratory)
 mod2 <- mirt(data, 2)
 coef(mod2)
 summary(mod2, rotate = 'oblimin') #oblimin rotation
@@ -792,7 +792,7 @@ head(scoresfull)
 scorestable <- fscores(mod2, full.scores = FALSE) #save factor score table
 head(scorestable)
 
-#confirmatory (as an example, model is not identified since you need 3 items per factor)
+# confirmatory (as an example, model is not identified since you need 3 items per factor)
 # Two ways to define a confirmatory model: with mirt.model, or with a string
 
 # these model definitions are equivalent
@@ -806,11 +806,11 @@ cmod <- mirt(data, cmodel)
 # cmod <- mirt(data, cmodel2) # same as above
 coef(cmod)
 anova(cmod, mod2)
-#check if identified by computing information matrix
+# check if identified by computing information matrix
 (cmod <- mirt(data, cmodel, SE = TRUE))
 
 ###########
-#data from the 'ltm' package in numeric format
+# data from the 'ltm' package in numeric format
 itemstats(Science)
 
 pmod1 <- mirt(Science, 1)
@@ -819,8 +819,8 @@ plot(pmod1, type = 'trace')
 plot(pmod1, type = 'itemscore')
 summary(pmod1)
 
-#Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
-#first obtain parameter index
+# Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
+# first obtain parameter index
 values <- mirt(Science,1, pars = 'values')
 values #note that slopes are numbered 1,5,9,13, or index with values$parnum[values$name == 'a1']
 (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
@@ -841,38 +841,41 @@ plot(pmod2, rotate = 'oblimin')
 itemplot(pmod2, 1, rotate = 'oblimin')
 anova(pmod1, pmod2)
 
-#unidimensional fit with a generalized partial credit and nominal model
+# unidimensional fit with a generalized partial credit and nominal model
 (gpcmod <- mirt(Science, 1, 'gpcm'))
 coef(gpcmod)
 
-#for the nominal model the lowest and highest categories are assumed to be the
+# for the nominal model the lowest and highest categories are assumed to be the
 #  theoretically lowest and highest categories that related to the latent trait(s)
 (nomod <- mirt(Science, 1, 'nominal'))
 coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 anova(gpcmod, nomod)
 itemplot(nomod, 3)
 
-#generalized graded unfolding model
+# generalized graded unfolding model
 (ggum <- mirt(Science, 1, 'ggum'))
 coef(ggum, simplify=TRUE)
 plot(ggum)
 plot(ggum, type = 'trace')
 plot(ggum, type = 'itemscore')
 
-#monotonic polyomial models
+# monotonic polyomial models
 (monopoly <- mirt(Science, 1, 'monopoly'))
 coef(monopoly, simplify=TRUE)
 plot(monopoly)
 plot(monopoly, type = 'trace')
 plot(monopoly, type = 'itemscore')
 
-#unipolar IRT model
+# unipolar IRT model
 unimod <- mirt(Science, itemtype = 'ULL')
 coef(unimod, simplify=TRUE)
 plot(unimod)
 plot(unimod, type = 'trace')
 itemplot(unimod, 1)
+
+# following use the correct log-normal density for latent trait
 itemfit(unimod)
+M2(unimod, type = 'C2')
 fs <- fscores(unimod)
 hist(fs, 20)
 fscores(unimod, method = 'EAPsum', full.scores = FALSE)
@@ -885,7 +888,7 @@ unweighted <- mirt(Science, 1)
 weighted <- mirt(Science, 1, survey.weights=survey.weights)
 
 ###########
-#empirical dimensionality testing that includes 'guessing'
+# empirical dimensionality testing that includes 'guessing'
 
 data(SAT12)
 data <- key2binary(SAT12,
@@ -895,28 +898,28 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 
-#optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+# optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
-#difficulty converging with reduced quadpts, reduce TOL
+# difficulty converging with reduced quadpts, reduce TOL
 mod3 <- mirt(data, 3, TOL = .001, optimizer = 'NR')
 anova(mod1,mod2)
 anova(mod2, mod3) #negative AIC, 2 factors probably best
 
-#same as above, but using the QMCEM method for generally better accuracy in mod3
+# same as above, but using the QMCEM method for generally better accuracy in mod3
 mod3 <- mirt(data, 3, method = 'QMCEM', TOL = .001, optimizer = 'NR')
 anova(mod2, mod3)
 
-#with fixed guessing parameters
+# with fixed guessing parameters
 mod1g <- mirt(data, 1, guess = .1)
 coef(mod1g)
 
 ###########
-#graded rating scale example
+# graded rating scale example
 
-#make some data
+# make some data
 set.seed(1234)
 a <- matrix(rep(1, 10))
 d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
@@ -938,12 +941,12 @@ data(SAT12)
 SAT12[SAT12 == 8] <- NA #set 8 as a missing value
 head(SAT12)
 
-#correct answer key
+# correct answer key
 key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 scoredSAT12 <- key2binary(SAT12, key)
 mod0 <- mirt(scoredSAT12, 1)
 
-#for first 5 items use 2PLNRM and nominal
+# for first 5 items use 2PLNRM and nominal
 scoredSAT12[,1:5] <- as.matrix(SAT12[,1:5])
 mod1 <- mirt(scoredSAT12, 1, c(rep('nominal',5),rep('2PL', 27)))
 mod2 <- mirt(scoredSAT12, 1, c(rep('2PLNRM',5),rep('2PL', 27)), key=key)
@@ -954,7 +957,7 @@ itemplot(mod0, 1)
 itemplot(mod1, 1)
 itemplot(mod2, 1)
 
-#compare added information from distractors
+# compare added information from distractors
 Theta <- matrix(seq(-4,4,.01))
 par(mfrow = c(2,3))
 for(i in 1:5){
@@ -965,7 +968,7 @@ for(i in 1:5){
 }
 par(mfrow = c(1,1))
 
-#test information
+# test information
 plot(Theta, testinfo(mod2, Theta), type = 'l', main = 'Test information', ylab = 'Information')
 lines(Theta, testinfo(mod0, Theta), col = 'red')
 
@@ -975,9 +978,9 @@ data(LSAT7)
 fulldata <- expand.table(LSAT7)
 (mod1 <- mirt(fulldata, 1, method = 'MHRM'))
 
-#Confirmatory models
+# Confirmatory models
 
-#simulate data
+# simulate data
 a <- matrix(c(
 1.5,NA,
 0.5,NA,
@@ -1003,15 +1006,15 @@ sigma[1,2] <- sigma[2,1] <- .4
 items <- c(rep('2PL',4), rep('graded',3), '2PL')
 dataset <- simdata(a,d,2000,items,sigma)
 
-#analyses
-#CIFA for 2 factor crossed structure
+# analyses
+# CIFA for 2 factor crossed structure
 
 model.1 <- '
   F1 = 1-4
   F2 = 4-8
   COV = F1*F2'
 
-#compute model, and use parallel computation of the log-likelihood
+# compute model, and use parallel computation of the log-likelihood
 if(interactive()) mirtCluster()
 mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
@@ -1019,7 +1022,7 @@ summary(mod1)
 residuals(mod1)
 
 #####
-#bifactor
+# bifactor
 model.3 <- '
   G = 1-8
   F1 = 1-4
@@ -1032,7 +1035,7 @@ residuals(mod3)
 anova(mod1,mod3)
 
 #####
-#polynomial/combinations
+# polynomial/combinations
 data(SAT12)
 data <- key2binary(SAT12,
                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -1052,7 +1055,7 @@ summary(mod.quad)
 (mod.combo <- mirt(data, model.combo))
 anova(mod.combo, mod.quad)
 
-#non-linear item and test plots
+# non-linear item and test plots
 plot(mod.quad)
 plot(mod.combo, type = 'SE')
 itemplot(mod.quad, 1, type = 'score')
@@ -1060,7 +1063,7 @@ itemplot(mod.combo, 2, type = 'score')
 itemplot(mod.combo, 2, type = 'infocontour')
 
 ## empirical histogram examples (normal, skew and bimodality)
-#make some data
+# make some data
 set.seed(1234)
 a <- matrix(rlnorm(50, .2, .2))
 d <- matrix(rnorm(50))
@@ -1090,16 +1093,16 @@ histogram(ThetaSkew, breaks=30)
 dat <- expand.table(LSAT6)
 itemstats(dat)
 
-#free latent mean and variance terms
+# free latent mean and variance terms
 model <- 'Theta = 1-5
           MEAN = Theta
           COV = Theta*Theta'
 
-#view how vector of parameters is organized internally
+# view how vector of parameters is organized internally
 sv <- mirt(dat, model, itemtype = 'Rasch', pars = 'values')
 sv[sv$est, ]
 
-#constraint: create function for solnp to compute constraint, and declare value in eqB
+# constraint: create function for solnp to compute constraint, and declare value in eqB
 eqfun <- function(p, optim_args) sum(p[1:5]) #could use browser() here, if it helps
 LB <- c(rep(-15, 6), 1e-4) # more reasonable lower bound for variance term
 
@@ -1116,7 +1119,7 @@ sum(ds)
 #######
 # latent regression Rasch model
 
-#simulate data
+# simulate data
 set.seed(1234)
 N <- 1000
 
@@ -1125,26 +1128,26 @@ X1 <- rnorm(N); X2 <- rnorm(N)
 covdata <- data.frame(X1, X2)
 Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
-#items and response data
+# items and response data
 a <- matrix(1, 20); d <- matrix(rnorm(20))
 dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
-#unconditional Rasch model
+# unconditional Rasch model
 mod0 <- mirt(dat, 1, 'Rasch')
 
-#conditional model using X1 and X2 as predictors of Theta
+# conditional model using X1 and X2 as predictors of Theta
 mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 coef(mod1, simplify=TRUE)
 anova(mod0, mod1)
 
-#bootstrapped confidence intervals
+# bootstrapped confidence intervals
 boot.mirt(mod1, R=5)
 
-#draw plausible values for secondary analyses
+# draw plausible values for secondary analyses
 pv <- fscores(mod1, plausible.draws = 10)
 pvmods <- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
                  covdata=covdata)
-#population characteristics recovered well, and can be averaged over
+# population characteristics recovered well, and can be averaged over
 so <- lapply(pvmods, summary)
 so
 

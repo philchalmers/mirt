@@ -22,7 +22,7 @@ M2(mod)
 itemfit(mod)
 coef(mod, simplify=TRUE)
 
-#equivalentely, but with a different parameterization
+# equivalentely, but with a different parameterization
 mod2 <- mirt(dat, 1, itemtype = 'Rasch')
 anova(mod, mod2) #equal
 M2(mod2)

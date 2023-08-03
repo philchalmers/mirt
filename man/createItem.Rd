@@ -115,7 +115,7 @@ P.old2PL <- function(par,Theta, ncat){
 
 x <- createItem(name, par=par, est=est, P=P.old2PL)
 
-#So, let's estimate it!
+# So, let's estimate it!
 dat <- expand.table(LSAT7)
 sv <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x), pars = 'values')
 tail(sv) #looks good
@@ -130,7 +130,7 @@ xs <- createItem(name, par=par, est=est, P=P.old2PL, derivType = 'symbolic')
 mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=xs))
 coef(mod, simplify=TRUE)
 
-#several secondary functions supported
+# several secondary functions supported
 M2(mod, calcNull=FALSE)
 itemfit(mod)
 fscores(mod, full.scores=FALSE)
@@ -157,7 +157,7 @@ x <- createItem(name, par=par, est=est, P=P.old2PL, gr=gr)
 mod <- mirt(dat, 1, c(rep('2PL',4), 'old2PL'), customItems=list(old2PL=x))
 coef(mod, simplify=TRUE)
 
-###non-linear
+### non-linear
 name <- 'nonlin'
 par <- c(a1 = .5, a2 = .1, d = 0)
 est <- c(TRUE, TRUE, TRUE)
@@ -174,7 +174,7 @@ x2 <- createItem(name, par=par, est=est, P=P.nonlin)
 mod <- mirt(dat, 1, c(rep('2PL',4), 'nonlin'), customItems=list(nonlin=x2))
 coef(mod)
 
-###nominal response model (Bock 1972 version)
+### nominal response model (Bock 1972 version)
 Tnom.dev <- function(ncat) {
    T <- matrix(1/ncat, ncat, ncat - 1)
    diag(T[-1, ]) <-  diag(T[-1, ]) - 1

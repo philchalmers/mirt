@@ -130,7 +130,7 @@
 #' # check that all individuals had 30 items
 #' all(rowSums(!is.na(dataset2)) == 30)
 #'
-#' #' Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
+#' # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 #' MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
 #' coef(MWU_MEM, simplify=TRUE)
 #' data.frame(coef(MWU_MEM, simplify=TRUE)$items[,c('a1','d')],

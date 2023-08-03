@@ -145,7 +145,7 @@ For dichotomous response models, \code{mixedmirt} follows the general form
 
 \dontrun{
 
-#make some data
+# make some data
 set.seed(1234)
 N <- 750
 a <- matrix(rlnorm(10,.3,1),10,1)
@@ -159,22 +159,22 @@ covdata <- data.frame(group, pseudoIQ)
 
 itemstats(data)
 
-#use parallel computing
+# use parallel computing
 if(interactive()) mirtCluster()
 
-#specify IRT model
+# specify IRT model
 model <- 'Theta = 1-10'
 
-#model with no person predictors
+# model with no person predictors
 mod0 <- mirt(data, model, itemtype = 'Rasch')
 
-#group as a fixed effect predictor (aka, uniform dif)
+# group as a fixed effect predictor (aka, uniform dif)
 mod1 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items)
 anova(mod0, mod1)
 summary(mod1)
 coef(mod1)
 
-#same model as above in lme4
+# same model as above in lme4
 wide <- data.frame(id=1:nrow(data),data,covdata)
 long <- reshape2::melt(wide, id.vars = c('id', 'group', 'pseudoIQ'))
 library(lme4)
@@ -182,48 +182,48 @@ lmod0 <- glmer(value ~ 0 + variable + (1|id), long, family = binomial)
 lmod1 <- glmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
 anova(lmod0, lmod1)
 
-#model using 2PL items instead of Rasch
+# model using 2PL items instead of Rasch
 mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL')
 anova(mod1, mod1b) #better with 2PL models using all criteria (as expected, given simdata pars)
 
-#continuous predictor with group
+# continuous predictor with group
 mod2 <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items + pseudoIQ)
 summary(mod2)
 anova(mod1b, mod2)
 
-#view fixed design matrix with and without unique item level intercepts
+# view fixed design matrix with and without unique item level intercepts
 withint <- mixedmirt(data, covdata, model, fixed = ~ 0 + items + group, return.design = TRUE)
 withoutint <- mixedmirt(data, covdata, model, fixed = ~ 0 + group, return.design = TRUE)
 
-#notice that in result above, the intercepts 'items1 to items 10' were reassigned to 'd'
+# notice that in result above, the intercepts 'items1 to items 10' were reassigned to 'd'
 head(withint$X)
 tail(withint$X)
-head(withoutint$X) #no intercepts design here to be reassigned into item intercepts
+head(withoutint$X) # no intercepts design here to be reassigned into item intercepts
 tail(withoutint$X)
 
 ###################################################
 ### random effects
-#make the number of groups much larger
+# make the number of groups much larger
 covdata$group <- factor(rep(paste0('G',1:50), each = N/50))
 
-#random groups
+# random groups
 rmod1 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ 1|group)
 summary(rmod1)
 coef(rmod1)
 
-#random groups and random items
+# random groups and random items
 rmod2 <- mixedmirt(data, covdata, 1, random = list(~ 1|group, ~ 1|items))
 summary(rmod2)
 eff <- randef(rmod2) #estimate random effects
 
-#random slopes with fixed intercepts (suppressed correlation)
+# random slopes with fixed intercepts (suppressed correlation)
 rmod3 <- mixedmirt(data, covdata, 1, fixed = ~ 0 + items, random = ~ -1 + pseudoIQ|group)
 summary(rmod3)
 eff <- randef(rmod3)
 str(eff)
 
 ###################################################
-##LLTM, and 2PL version of LLTM
+## LLTM, and 2PL version of LLTM
 data(SAT12)
 data <- key2binary(SAT12,
                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -234,7 +234,7 @@ model <- 'Theta = 1-32'
 #   by including more columns).
 itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
 
-#notice that the 'fixed = ~ ... + items' argument is omitted
+# notice that the 'fixed = ~ ... + items' argument is omitted
 LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign,
    SE = TRUE) # SE argument ensures that the information matrix is computed accurately
 summary(LLTM)
@@ -243,10 +243,10 @@ wald(LLTM)
 L <- matrix(c(-1, 1, 0), 1)
 wald(LLTM, L) #first half different from second
 
-#compare to items with estimated slopes (2PL)
+# compare to items with estimated slopes (2PL)
 twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
                    itemdesign = itemdesign)
-#twoPL not mixing too well (AR should be between .2 and .5), decrease MHcand
+# twoPL not mixing too well (AR should be between .2 and .5), decrease MHcand
 twoPL <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemtype = '2PL',
                   itemdesign = itemdesign, technical = list(MHcand = 0.8))
 anova(twoPL, LLTM) #much better fit
@@ -257,32 +257,32 @@ wald(twoPL)
 L <- matrix(0, 1, 34)
 L[1, 1] <- 1
 L[1, 2] <- -1
-wald(twoPL, L) #n.s., which is the correct conclusion. Rasch approach gave wrong inference
+wald(twoPL, L) # n.s., which is the correct conclusion. Rasch approach gave wrong inference
 
-##LLTM with item error term
+## LLTM with item error term
 LLTMwithError <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, random = ~ 1|items,
     itemdesign = itemdesign)
 summary(LLTMwithError)
-#large item level variance after itemorder is regressed; not a great predictor of item difficulty
+# large item level variance after itemorder is regressed; not a great predictor of item difficulty
 coef(LLTMwithError)
 
 ###################################################
 ### Polytomous example
 
-#make an arbitrary group difference
+# make an arbitrary group difference
 covdat <- data.frame(group = rep(c('m', 'f'), nrow(Science)/2))
 
-#partial credit model
+# partial credit model
 mod <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group)
 coef(mod)
 
-#gpcm to estimate slopes
+# gpcm to estimate slopes
 mod2 <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group,
                  itemtype = 'gpcm')
 summary(mod2)
 anova(mod, mod2)
 
-#graded model
+# graded model
 mod3 <- mixedmirt(Science, covdat, model=1, fixed = ~ 0 + group,
                  itemtype = 'graded')
 coef(mod3)
@@ -300,11 +300,11 @@ covdata <- data.frame(group=rep(c('g1','g2','g3'), each=n))
 dat <- simdata(a, d, N=n*3, Theta=Theta, itemtype = '2PL')
 itemstats(dat)
 
-#had we known the latent abilities, we could have computed the regression coefs
+# had we known the latent abilities, we could have computed the regression coefs
 summary(lm(Theta ~ covdata$group))
 
-#but all we have is observed test data. Latent regression helps to recover these coefs
-#Rasch model approach (and mirt equivalent)
+# but all we have is observed test data. Latent regression helps to recover these coefs
+# Rasch model approach (and mirt equivalent)
 rmod0 <- mirt(dat, 1, 'Rasch') # unconditional
 
 # these two models are equivalent

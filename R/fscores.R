@@ -161,7 +161,7 @@
 #'
 #' # calculate MAP for a given response vector
 #' fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
-#' #or matrix
+#' # or matrix
 #' fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 #'
 #' # return only the scores and their SEs

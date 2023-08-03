@@ -83,7 +83,7 @@ item1 <- sapply(ps, function(x) sample(c(0,1), size = 1, prob = c(1-x, x)))
 ps2 <- exp(2 * Theta^2 + Theta + .5 * Theta^3) / (1 + exp(2 * Theta^2 + Theta + .5 * Theta^3))
 item2 <- sapply(ps2, function(x) sample(c(0,1), size = 1, prob = c(1-x, x)))
 
-#' # how the actual item looks in the population
+# how the actual item looks in the population
 plot(Theta, ps, ylim = c(0,1))
 plot(Theta, ps2, ylim = c(0,1))
 

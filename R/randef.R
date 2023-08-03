@@ -22,10 +22,10 @@
 #' @export randef
 #' @examples
 #' \dontrun{
-#' #make an arbitrary groups
+#' # make an arbitrary groups
 #' covdat <- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
 #'
-#' #partial credit model
+#' # partial credit model
 #' mod <- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
 #' summary(mod)
 #'

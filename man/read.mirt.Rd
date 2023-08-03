@@ -31,19 +31,19 @@ plinkpars <- read.mirt(mod1)
 plot(plinkpars)
 plot(mod1, type = 'trace')
 
-#graded
+# graded
 mod2 <- mirt(Science, 1)
 plinkpars <- read.mirt(mod2)
 plot(plinkpars)
 plot(mod2, type = 'trace')
 
-#gpcm
+# gpcm
 mod3 <- mirt(Science, 1, itemtype = 'gpcm')
 plinkpars <- read.mirt(mod3)
 plot(plinkpars)
 plot(mod3, type = 'trace')
 
-#nominal
+# nominal
 mod4 <- mirt(Science, 1, itemtype = 'nominal')
 plinkpars <- read.mirt(mod4)
 plot(plinkpars)
@@ -65,7 +65,7 @@ model <- mirt(data, cmod)
 plot(read.mirt(model))
 itemplot(model, 1)
 
-#graded
+# graded
 mod2 <- mirt(Science, 2)
 plinkpars <- read.mirt(mod2)
 plinkpars

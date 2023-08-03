@@ -90,7 +90,7 @@
 #'
 #' \dontrun{
 #'
-#' ###load SAT12 and compute bifactor model with 3 specific factors
+#' ### load SAT12 and compute bifactor model with 3 specific factors
 #' data(SAT12)
 #' data <- key2binary(SAT12,
 #'   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -99,7 +99,7 @@
 #' summary(mod1)
 #' itemplot(mod1, 18, drop.zeros = TRUE) #drop the zero slopes to allow plotting
 #'
-#' ###Try with fixed guessing parameters added
+#' ### Try with fixed guessing parameters added
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)
 #' coef(mod2)
@@ -120,7 +120,7 @@
 #' #########
 #' # mixed itemtype example
 #'
-#' #simulate data
+#' # simulate data
 #' a <- matrix(c(
 #' 1,0.5,NA,
 #' 1,0.5,NA,
@@ -166,7 +166,7 @@
 #' #########
 #' # General testlet response model (Wainer, 2007)
 #'
-#' #simulate data
+#' # simulate data
 #' set.seed(1234)
 #' a <- matrix(0, 12, 4)
 #' a[,1] <- rlnorm(12, .2, .3)
@@ -208,7 +208,7 @@
 #' #########
 #' # Two-tier model
 #'
-#' #simulate data
+#' # simulate data
 #' set.seed(1234)
 #' a <- matrix(c(
 #'   0,1,0.5,NA,NA,
@@ -242,7 +242,7 @@
 #'     G2 = 9-16
 #'     COV = G1*G2'
 #'
-#' #quadpts dropped for faster estimation, but not as precise
+#' # quadpts dropped for faster estimation, but not as precise
 #' simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
 #' coef(simmod, simplify=TRUE)
 #' summary(simmod)

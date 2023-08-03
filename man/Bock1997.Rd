@@ -16,7 +16,7 @@ itemstats(dat, use_ts=FALSE)
 
 mod <- mirt(dat, 1, 'nominal')
 
-#reproduce table 3 in Bock (1997)
+# reproduce table 3 in Bock (1997)
 fs <- round(fscores(mod, verbose = FALSE, full.scores = FALSE)[,c('F1','SE_F1')],2)
 fttd <- residuals(mod, type = 'exp')
 table <- data.frame(fttd[,-ncol(fttd)], fs)

@@ -104,7 +104,7 @@
 #' @export mdirt
 #' @examples
 #'
-#' #LSAT6 dataset
+#' # LSAT6 dataset
 #' dat <- expand.table(LSAT6)
 #'
 #' # fit with 2-3 latent classes
@@ -249,7 +249,7 @@
 #' M2(CRUM)
 #'
 #' #------------------
-#' #multidimensional latent class model
+#' # multidimensional latent class model
 #'
 #' dat <- key2binary(SAT12,
 #'      key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))

@@ -41,7 +41,7 @@ the estimated model contains constrained parameters (e.g., 1PL).
 \examples{
 \dontrun{
 
-#View parnumber index
+# View parnumber index
 data(LSAT7)
 data <- expand.table(LSAT7)
 mod <- mirt(data, 1, SE = TRUE)
@@ -53,7 +53,7 @@ coef(mod)
 index <- mod2values(mod)
 index[index$est, ]
 
-#second item slope equal to 0?
+# second item slope equal to 0?
 L <- matrix(0, 1, 10)
 L[1,3] <- 1
 wald(mod, L)
@@ -62,7 +62,7 @@ wald(mod, L)
 infonames
 wald(mod, "a1.5 = 0")
 
-#simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
+# simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
 L <- matrix(0, 2, 10)
 L[1,1] <- L[2, 7] <- 1
 L[1,3] <- L[2, 9] <- -1
@@ -73,11 +73,11 @@ wald(mod, L)
 infonames
 wald(mod, c("a1.1 = a1.5", "a1.13 = a1.17"))
 
-#log-Liklihood tests (requires estimating a new model)
+# log-Liklihood tests (requires estimating a new model)
 cmodel <- 'theta = 1-5
            CONSTRAIN = (1,2, a1), (4,5, a1)'
 mod2 <- mirt(data, cmodel)
-#or, equivalently
+# or, equivalently
 #mod2 <- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
 anova(mod2, mod)
 

@@ -33,14 +33,14 @@
 #'
 #' \dontrun{
 #'
-#' #compare information loss between two tests
+#' # compare information loss between two tests
 #' tinfo_smaller <- testinfo(mod, Theta, which.items = 3:5)
 #'
-#' #removed item informations
+#' # removed item informations
 #' plot(Theta, iteminfo(extract.item(mod, 1), Theta), type = 'l')
 #' plot(Theta, iteminfo(extract.item(mod, 2), Theta), type = 'l')
 #'
-#' #most loss of info around -1 when removing items 1 and 2; expected given item info functions
+#' # most loss of info around -1 when removing items 1 and 2; expected given item info functions
 #' plot(Theta, tinfo_smaller - tinfo, type = 'l')
 #'
 #'

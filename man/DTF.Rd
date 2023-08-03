@@ -99,7 +99,7 @@ mod2 <- multipleGroup(dat, model, group=group, SE=TRUE,
                       invariance=c('free_means', 'free_var'))
 plot(mod2)
 
-#significant DIF in multiple items....
+# significant DIF in multiple items....
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 DTF(mod2)
 DTF(mod2, draws=1000) #non-sig DTF due to item cancellation

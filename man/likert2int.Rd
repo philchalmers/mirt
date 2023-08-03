@@ -21,7 +21,7 @@ object of the same dimensions with integer values.
 \examples{
 \dontrun{
 
-#simulate data
+# simulate data
 
 dat1 <- matrix(sample(c('Disagree', 'Strongly Disagree', 'Agree',
                         'Neutral', 'Strongly Agree'), 1000*5, replace=TRUE),

@@ -33,11 +33,11 @@ for(i in 1:20)
 (mod <- mirt(dat, 1))
 scores <- fscores(mod, method = 'MAP')
 
-#re-estimate imputed dataset (good to do this multiple times and average over)
+# re-estimate imputed dataset (good to do this multiple times and average over)
 fulldata <- imputeMissing(mod, scores)
 (fullmod <- mirt(fulldata, 1))
 
-#with multipleGroup
+# with multipleGroup
 set.seed(1)
 group <- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)

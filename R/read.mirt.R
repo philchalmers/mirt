@@ -24,19 +24,19 @@
 #' plot(plinkpars)
 #' plot(mod1, type = 'trace')
 #'
-#' #graded
+#' # graded
 #' mod2 <- mirt(Science, 1)
 #' plinkpars <- read.mirt(mod2)
 #' plot(plinkpars)
 #' plot(mod2, type = 'trace')
 #'
-#' #gpcm
+#' # gpcm
 #' mod3 <- mirt(Science, 1, itemtype = 'gpcm')
 #' plinkpars <- read.mirt(mod3)
 #' plot(plinkpars)
 #' plot(mod3, type = 'trace')
 #'
-#' #nominal
+#' # nominal
 #' mod4 <- mirt(Science, 1, itemtype = 'nominal')
 #' plinkpars <- read.mirt(mod4)
 #' plot(plinkpars)
@@ -58,7 +58,7 @@
 #' plot(read.mirt(model))
 #' itemplot(model, 1)
 #'
-#' #graded
+#' # graded
 #' mod2 <- mirt(Science, 2)
 #' plinkpars <- read.mirt(mod2)
 #' plinkpars
@@ -87,13 +87,13 @@
 #' equate(out)
 #' equate(out, method = 'OSE')
 #'
-# #gpcm
+# # gpcm
 # mod3 <- mirt(Science, 2, itemtype = 'gpcm')
 # plinkpars <- read.mirt(mod3)
 # plot(plinkpars)
 # itemplot(mod3, 1)
 #
-# #nominal
+# # nominal
 # mod4 <- mirt(Science, 2, itemtype = 'nominal')
 # plinkpars <- read.mirt(mod4)
 # plot(plinkpars)

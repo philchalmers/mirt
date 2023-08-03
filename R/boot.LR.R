@@ -25,7 +25,7 @@
 #'
 #' \dontrun{
 #'
-#' #standard
+#' # standard
 #' dat <- expand.table(LSAT7)
 #' mod1 <- mirt(dat, 1)
 #' mod2 <- mirt(dat, 1, '3PL')

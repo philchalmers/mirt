@@ -188,7 +188,7 @@ parameter (\code{COV_11}) to 1.5:
 #  COV = F1*F2
 
 
-#Or alternatively with a string input
+# Or alternatively with a string input
 s <- 'F1 = 1,2,3,4-10
       F2 = 10-20
       (F1*F2) = 1,2,3,4-10
@@ -200,7 +200,7 @@ model <- mirt.model(s)
 # mod <- mirt(data, s)
 
 
-#Q-matrix specification
+# Q-matrix specification
 Q <- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1', 'Factor2')))
 COV <- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
 model <- mirt.model(Q, COV=COV)

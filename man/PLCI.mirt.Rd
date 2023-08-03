@@ -75,7 +75,7 @@ mod2 <- mirt(Science, 1)
 result2 <- PLCI.mirt(mod2)
 result2
 
-#only estimate CI's slopes
+# only estimate CI's slopes
 sv <- mod2values(mod2)
 parnum <- sv$parnum[sv$name == 'a1']
 result3 <- PLCI.mirt(mod2, parnum)

@@ -190,7 +190,7 @@
 #'                       invariance=c('free_means', 'free_var'))
 #' plot(mod2)
 #'
-#' #significant DIF in multiple items....
+#' # significant DIF in multiple items....
 #' # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 #' DRF(mod2)
 #' DRF(mod2, draws=500) #non-sig DTF due to item cancellation
@@ -315,7 +315,7 @@
 # ####
 # # bifactor model
 #
-# #simulate data
+# # simulate data
 # a <- matrix(c(rlnorm(30, .2, .2), rlnorm(15, .2, .2),
 #             numeric(30), rlnorm(15, .2, .2)), 30)
 # d <- matrix(rnorm(30))
