@@ -1,17 +1,19 @@
 #' Create a user defined item with correct generic functions
 #'
-#' Initializes the proper S4 class and methods necessary for mirt functions to use in estimation.
-#' To use the defined objects pass to the \code{mirt(..., customItems = list())} command, and
-#' ensure that the classes are properly labeled and unique in the list. Additionally,
-#' the input \code{mirt(..., customItemsData = list())} can also be included to specify additional
-#' item-level information to better recycle custom-item defintions (e.g., for supplying varying
-#' Q-matricies), where the \code{list} input must have the same length as the number of items.
-#' For further examples regarding how this function can be used for
-#' fitting unfolding-type models see Liu and Chalmers (2018).
+#' Initializes the proper S4 class and methods necessary for \code{\link{mirt}}
+#' functions to use in estimation. To use the defined objects pass to the
+#' \code{mirt(..., customItems = list())} command, and
+#' ensure that the classes are properly labeled and unique in the list.
+#' Additionally, the input \code{mirt(..., customItemsData = list())} can
+#' also be included to specify additional item-level information to better
+#' recycle custom-item definitions (e.g., for supplying varying
+#' Q-matrices), where the \code{list} input must have the same length as the
+#' number of items. For further examples regarding how this function can be
+#' used for fitting unfolding-type models see Liu and Chalmers (2018).
 #'
-#' The \code{summary()} function will not return proper standardized loadings since the function
-#' is not sure how to handle them (no slopes could be defined at all!). Instead loadings of .001
-#' are filled in as place-holders.
+#' The \code{summary()} function will not return proper standardized loadings
+#' since the function is not sure how to handle them (no slopes could be
+#' defined at all!). Instead loadings of .001 are filled in as place-holders.
 #'
 #' @aliases createItem
 #' @param name a character indicating the item class name to be defined
