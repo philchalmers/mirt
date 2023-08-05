@@ -1020,7 +1020,7 @@ buildModelSyntax <- function(model, J, groupNames, itemtype){
     model
 }
 
-resetPriorConstrain <- function(pars, constrain){
+resetPriorConstrain <- function(pars, constrain, nconstrain){
     nitems <- length(pars[[1]])
     if(length(constrain)){
         for(g in seq_len(length(pars))){
@@ -1029,6 +1029,25 @@ resetPriorConstrain <- function(pars, constrain){
                     pick <- pars[[g]][[i]]@parnum %in% constrain[[ci]][-1L]
                     pars[[g]][[i]]@prior.type[pick] <- 0L
                     pars[[g]][[i]]@any.prior <- any(pars[[g]][[i]]@prior.type > 0L)
+                }
+            }
+        }
+    }
+    if(length(nconstrain)){
+        for(ci in seq_len(length(nconstrain))){
+            pick <- c(NA, NA)
+            for(g in seq_len(length(pars))){
+                for(i in seq_len(nitems)){
+                    tmp <- pars[[g]][[i]]@parnum %in% nconstrain[[ci]][1L]
+                    if(any(tmp))
+                        pick[1L] <- pars[[g]][[i]]@par[tmp]
+                    tmp <- pars[[g]][[i]]@parnum %in% nconstrain[[ci]][2L]
+                    if(any(tmp))
+                        pick[2L] <- pars[[g]][[i]]@par[tmp]
+                    if(!all(is.na(pick))){
+                        if(sign(pick[1L]) == sign(pick[2L]))
+                            pars[[g]][[i]]@par[tmp] <- -pick[1L]
+                    }
                 }
             }
         }

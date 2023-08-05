@@ -466,17 +466,18 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             pars[[g]][[nitems + 1L]]@par[tmp] <- g - 1
         names(PrepList) <- Data$groupNames
     }
+    constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
+                                 nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
+                                 method=opts$method, itemnames=PrepList[[1L]]$itemnames, model=model,
+                                 groupNames=Data$groupNames)
+    pars <- resetPriorConstrain(pars=pars, constrain=constrain,
+                                nconstrain=opts$technical$nconstrain)
     if(RETURNVALUES){
         for(g in seq_len(Data$ngroups))
             PrepList[[g]]$pars <- pars[[g]]
         return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, lr.random=latent.regression$lr.random,
                           random=mixed.design$random, lrPars=lrPars, MG = TRUE))
     }
-    constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
-                                 nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
-                                 method=opts$method, itemnames=PrepList[[1L]]$itemnames, model=model,
-                                 groupNames=Data$groupNames)
-    pars <- resetPriorConstrain(pars=pars, constrain=constrain)
     startlongpars <- c()
     if(opts$NULL.MODEL){
         constrain <- list()
