@@ -377,7 +377,8 @@ control input)}
   \item{nconstrain}{same specification as the \code{constrain} list argument,
     however imposes a negative equality constraint instead (e.g., \eqn{a12 = -a21}, which
     is specified as \code{nconstrain = list(c(12, 21))}). Note that each specification
-    in the list must be of length 2}
+    in the list must be of length 2, where the second element is taken to be -1 times the
+    first element}
   \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
     with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
     Richardson extrapolation. Default is 1e-5}
