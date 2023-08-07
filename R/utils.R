@@ -1034,6 +1034,8 @@ resetPriorConstrain <- function(pars, constrain, nconstrain){
         }
     }
     if(length(nconstrain)){
+        if(!is.list(nconstrain))
+            stop('technical$nconstrain is not a list', call.=FALSE)
         for(ci in seq_len(length(nconstrain))){
             pick <- c(NA, NA)
             for(g in seq_len(length(pars))){
@@ -1044,7 +1046,7 @@ resetPriorConstrain <- function(pars, constrain, nconstrain){
                     tmp <- pars[[g]][[i]]@parnum %in% nconstrain[[ci]][2L]
                     if(any(tmp))
                         pick[2L] <- pars[[g]][[i]]@par[tmp]
-                    if(!all(is.na(pick))){
+                    if(all(!is.na(pick))){
                         if(sign(pick[1L]) == sign(pick[2L]))
                             pars[[g]][[i]]@par[tmp] <- -pick[1L]
                     }
@@ -1453,10 +1455,8 @@ sparseLmat <- function(L, constrain, nconstrain){
 
     # nconstrain
     for(i in seq_len(length(nconstrain))){
-        cexp <- expand.grid(nconstrain[[i]], nconstrain[[i]])
-        cexp <- cexp[cexp[,1] != cexp[,2], ]
-        full_loc <- rbind(full_loc, as.matrix(cexp))
-        vals <- c(vals, c(1,-1))
+        cexp <- nconstrain[[i]][2L]
+        vals[apply(full_loc, 1L, function(x) all(x == cexp))] <- -1
     }
 
     ret <- Matrix::sparseMatrix(i = full_loc[,1], j = full_loc[,2], x=vals,
