@@ -166,6 +166,9 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     hess <- matrix(0)
     Elist <- list()
     startMrate <- ifelse(Moptim == 'L-BFGS-B', 5L, 1L)
+    longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
+                                   nconstrain=nconstrain)
+    pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     if(list$method == 'BL'){
         start <- proc.time()[3L]
         lower <- LBOUND[est]; upper <- UBOUND[est]
@@ -186,7 +189,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                          lower=lower, upper=upper), silent=TRUE)
         cycles <- as.integer(opt$counts[1L])
         longpars[est] <- opt$par
-        longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
+        longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
+                                       nconstrain=nconstrain)
         converge <- opt$convergence == 0
         if(list$SE) hess <- opt$hessian
         tmp <- updatePrior(pars=pars, gTheta=gTheta, MC=MC,
