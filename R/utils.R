@@ -1437,7 +1437,7 @@ sparseLmat <- function(L, constrain, nconstrain){
         cexp <- expand.grid(nconstrain[[i]], nconstrain[[i]])
         cexp <- cexp[cexp[,1] != cexp[,2], ]
         full_loc <- rbind(full_loc, as.matrix(cexp))
-        vals <- c(vals, c(-1,-1))
+        vals <- c(vals, c(-2,-2))
     }
 
     ret <- Matrix::sparseMatrix(i = full_loc[,1], j = full_loc[,2], x=vals,
@@ -1467,8 +1467,7 @@ makeLmats <- function(pars, constrain, random = list(), lrPars = list(), lr.rand
     if(!is.null(nconstrain)){
         for(i in seq_len(length(nconstrain))){
             stopifnot(length(nconstrain[[i]]) == 2L)
-            for(j in 2L:length(nconstrain[[i]]))
-                redun_constr[nconstrain[[i]][j]] <- TRUE
+            redun_constr[nconstrain[[i]][2L]] <- TRUE
         }
     }
     L <- sparseLmat(LL, constrain=constrain, nconstrain=nconstrain)
