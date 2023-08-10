@@ -30,6 +30,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -42,23 +44,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">mirt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.32.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.40</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -75,8 +71,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/philchalmers/mirt/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/philchalmers/mirt/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -94,114 +90,121 @@
   <div class="contents col-md-9">
 
 
-<div id="mirt" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#mirt" class="anchor"></a>mirt</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="mirt-">mirt <img src="mirt-logo.png" align="right" height="200px"><a class="anchor" aria-label="anchor" href="#mirt-"></a>
+</h1></div>
 <p>Multidimensional item response theory in R.</p>
-<div id="description" class="section level2">
-<h2 class="hasAnchor">
-<a href="#description" class="anchor"></a>Description</h2>
+<div class="section level2">
+<h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
+</h2>
 <p>Analysis of dichotomous and polytomous response data using unidimensional and multidimensional latent trait models under the Item Response Theory paradigm. Exploratory and confirmatory models can be estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory bi-factor and two-tier analyses are available for modeling item testlets. Multiple group analysis and mixed effects designs also are available for detecting differential item functioning and modeling item and person covariates.</p>
 </div>
-<div id="examples-and-evaluated-help-files-are-available-on-the-wiki" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples-and-evaluated-help-files-are-available-on-the-wiki" class="anchor"></a>Examples and evaluated help files are available on the wiki</h2>
-<p>Various examples and worked help files have been compiled using the <code>knitr</code> package to generate HTML output, and are available on the package <a href="https://github.com/philchalmers/mirt/wiki">wiki</a>. User contributions are welcome!</p>
+<div class="section level2">
+<h2 id="examples-and-evaluated-help-files-are-available-on-the-wiki">Examples and evaluated help files are available on the wiki<a class="anchor" aria-label="anchor" href="#examples-and-evaluated-help-files-are-available-on-the-wiki"></a>
+</h2>
+<p>Various examples and worked help files have been compiled using the <code>knitr</code> package to generate HTML output, and are available on the package <a href="https://github.com/philchalmers/mirt/wiki" class="external-link">wiki</a>. User contributions are welcome!</p>
 </div>
-<div id="installing-from-source" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installing-from-source" class="anchor"></a>Installing from source</h2>
+<div class="section level2">
+<h2 id="installing-from-source">Installing from source<a class="anchor" aria-label="anchor" href="#installing-from-source"></a>
+</h2>
 <p>It’s recommended to use the development version of this package since it is more likely to be up to date than the version on CRAN. To install this package from source:</p>
-<p>1) Obtain recent gcc, g++, and gfortran compilers. Windows users can install the <a href="https://CRAN.R-project.org/bin/windows/Rtools/">Rtools</a> suite while Mac users will have to download the necessary tools from the <a href="https://apps.apple.com/ca/app/xcode/id497799835?mt=12">Xcode</a> suite and its related command line tools (found within Xcode’s Preference Pane under Downloads/Components); most Linux distributions should already have up to date compilers (or if not they can be updated easily). Windows users should include the checkbox option of installing Rtools to their path for easier command line usage.</p>
-<p>2) Install the <code>devtools</code> package (if necessary). In R, paste the following into the console:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'devtools'</span><span class="op">)</span></pre></div>
-<p>3) Load the <code>devtools</code> package (requires version 1.4+) and install from the Github source code.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/">'devtools'</a></span><span class="op">)</span>
-<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">'philchalmers/mirt'</span><span class="op">)</span></pre></div>
-<div id="installing-from-source-via-git" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installing-from-source-via-git" class="anchor"></a>Installing from source via git</h3>
+<ol style="list-style-type: decimal">
+<li><p>Obtain recent gcc, g++, and gfortran compilers. Windows users can install the <a href="https://CRAN.R-project.org/bin/windows/Rtools/" class="external-link">Rtools</a> suite while Mac users will have to download the necessary tools from the <code>Xcode</code> suite and its related command line tools (found within Xcode’s Preference Pane under Downloads/Components); most Linux distributions should already have up to date compilers (or if not they can be updated easily). Windows users should include the checkbox option of installing Rtools to their path for easier command line usage.</p></li>
+<li><p>Install the <code>devtools</code> package (if necessary). In R, paste the following into the console:</p></li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'devtools'</span><span class="op">)</span></span></code></pre></div>
+<ol start="3" style="list-style-type: decimal"><li>Load the <code>devtools</code> package (requires version 1.4+) and install from the Github source code.</li></ol>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">'devtools'</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'philchalmers/mirt'</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="installing-from-source-via-git">Installing from source via git<a class="anchor" aria-label="anchor" href="#installing-from-source-via-git"></a>
+</h3>
 <p>If the <code>devtools</code> approach does not work on your system, then you can download and install the repository directly.</p>
-<p>1) Obtain recent gcc, g++, and gfortran compilers (see above instructions).</p>
-<p>2) Install the <a href="https://git-scm.com/downloads">git command line tools</a>.</p>
-<p>3) Open a terminal/command-line tool. The following code will download the repository code to your computer, and install the package directly using R tools (Windows users may also have to add R and git to their <a href="https://www.computerhope.com/issues/ch000549.htm">path</a>)</p>
+<ol style="list-style-type: decimal">
+<li><p>Obtain recent gcc, g++, and gfortran compilers (see above instructions).</p></li>
+<li><p>Install the <a href="https://git-scm.com/downloads" class="external-link">git command line tools</a>.</p></li>
+<li><p>Open a terminal/command-line tool. The following code will download the repository code to your computer, and install the package directly using R tools (Windows users may also have to add R and git to their <a href="https://www.computerhope.com/issues/ch000549.htm" class="external-link">path</a>)</p></li>
+</ol>
 <pre><code>git clone https://github.com/philchalmers/mirt
 R CMD INSTALL mirt</code></pre>
 </div>
-<div id="special-mac-os-x-installation-instructions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#special-mac-os-x-installation-instructions" class="anchor"></a>Special Mac OS X Installation Instructions</h3>
+<div class="section level3">
+<h3 id="special-mac-os-x-installation-instructions">Special Mac OS X Installation Instructions<a class="anchor" aria-label="anchor" href="#special-mac-os-x-installation-instructions"></a>
+</h3>
 <p>In some reported cases <code>XCode</code> does not install the appropriate <code>gfortran</code> compilers in the correct location, therefore they have to be installed manually instead. This is accomplished by inputing the following instructions into the terminal:</p>
 <pre><code>curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
 sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre>
 </div>
 </div>
 </div>
-<div id="licence" class="section level1">
-<h1 class="hasAnchor">
-<a href="#licence" class="anchor"></a>Licence</h1>
-<p>This package is free and open source software, licensed under <a href="http://www.gnu.org/licenses/gpl-3.0.en.html">GPL (&gt;= 3)</a>.</p>
+<div class="section level1">
+<h1 id="licence">Licence<a class="anchor" aria-label="anchor" href="#licence"></a>
+</h1>
+<p>This package is free and open source software, licensed under <a href="http://www.gnu.org/licenses/gpl-3.0.en.html" class="external-link">GPL (&gt;= 3)</a>.</p>
 </div>
-<div id="bugs-and-questions" class="section level1">
-<h1 class="hasAnchor">
-<a href="#bugs-and-questions" class="anchor"></a>Bugs and Questions</h1>
-<p>Bug reports are always welcome and the preferred way to address these bugs is through the Github ‘issues’. Feel free to submit issues or feature requests on the site, and I’ll address them ASAP. Also, if you have any questions about the package, or IRT in general, then feel free to create a ‘New Topic’ in the <a href="https://groups.google.com/forum/#!forum/mirt-package">mirt-package</a> Google group. Cheers!</p>
+<div class="section level1">
+<h1 id="bugs-and-questions">Bugs and Questions<a class="anchor" aria-label="anchor" href="#bugs-and-questions"></a>
+</h1>
+<p>Bug reports are always welcome and the preferred way to address these bugs is through the Github ‘issues’. Feel free to submit issues or feature requests on the site, and I’ll address them ASAP. Also, if you have any questions about the package, or IRT in general, then feel free to create a ‘New Topic’ in the <a href="https://groups.google.com/forum/#!forum/mirt-package" class="external-link">mirt-package</a> Google group. Cheers!</p>
 </div>
 
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=mirt">https://​cloud.r-project.org/​package=mirt</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/philchalmers/mirt/">https://​github.com/​philchalmers/​mirt/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/philchalmers/mirt/issues?state=open">https://​github.com/​philchalmers/​mirt/​issues?state=open</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=mirt" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/philchalmers/mirt/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/philchalmers/mirt/issues?state=open" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 3)</li>
 </ul>
 </div>
+
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing mirt</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Phil Chalmers <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-5332-2810" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing mirt</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/philchalmers/mirt"><img src="https://travis-ci.org/philchalmers/mirt.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://www.r-pkg.org:443/pkg/mirt"><img src="http://www.r-pkg.org/badges/version/mirt"></a></li>
-<li><a href="https://CRAN.R-project.org/package=mirt"><img src="http://cranlogs.r-pkg.org/badges/grand-total/mirt"></a></li>
+<li>Phil Chalmers <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-5332-2810" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.r-pkg.org:443/pkg/mirt" class="external-link"><img src="http://www.r-pkg.org/badges/version/mirt"></a></li>
+<li><a href="https://CRAN.R-project.org/package=mirt" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/mirt"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Phil Chalmers.</p>
+  <p></p>
+<p>Developed by Phil Chalmers.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -209,6 +212,8 @@ sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre>
 
   
 
+
+  
 
   </body>
 </html>
