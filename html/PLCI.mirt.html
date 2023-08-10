@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>PLCI.mirt {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Compute profiled-likelihood (or posterior) confidence intervals</h2>
+<h2 id='PLCI.mirt'>Compute profiled-likelihood (or posterior) confidence intervals</h2>
 
 <h3>Description</h3>
 
@@ -52,55 +52,55 @@ and whether the respective interval could be found.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>mod</code></td>
+<tr><td><code id="PLCI.mirt_:_mod">mod</code></td>
 <td>
 <p>a converged mirt model</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>parnum</code></td>
+<tr><td><code id="PLCI.mirt_:_parnum">parnum</code></td>
 <td>
 <p>a numeric vector indicating which parameters to estimate.
 Use <code><a href="../../mirt/help/mod2values.html">mod2values</a></code> to determine parameter numbers. If <code>NULL</code>, all possible
 parameters are used</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>alpha</code></td>
+<tr><td><code id="PLCI.mirt_:_alpha">alpha</code></td>
 <td>
 <p>two-tailed alpha critical level</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>search_bound</code></td>
+<tr><td><code id="PLCI.mirt_:_search_bound">search_bound</code></td>
 <td>
 <p>logical; use a fixed grid of values around the ML estimate to
 determine more suitable optimization bounds? Using this has much better behaviour
 than setting fixed upper/lower bound values and searching from more extreme ends</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>step</code></td>
+<tr><td><code id="PLCI.mirt_:_step">step</code></td>
 <td>
 <p>magnitude of steps used when <code>search_bound</code> is <code>TRUE</code>.
 Smaller values create more points to search a suitable bound for (up to the
 lower bound value visible with <code><a href="../../mirt/help/mod2values.html">mod2values</a></code>). When upper/lower bounds are detected
 this value will be adjusted accordingly</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>lower</code></td>
+<tr><td><code id="PLCI.mirt_:_lower">lower</code></td>
 <td>
 <p>logical; search for the lower CI?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>upper</code></td>
+<tr><td><code id="PLCI.mirt_:_upper">upper</code></td>
 <td>
 <p>logical; search for the upper CI?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>inf2val</code></td>
+<tr><td><code id="PLCI.mirt_:_inf2val">inf2val</code></td>
 <td>
 <p>a numeric used to change parameter bounds which are infinity to a finite number.
 Decreasing this too much may not allow a suitable bound to be located. Default is 30</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>NealeMiller</code></td>
+<tr><td><code id="PLCI.mirt_:_NealeMiller">NealeMiller</code></td>
 <td>
 <p>logical; use the Neale and Miller 1997 approximation? Default is <code>FALSE</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>verbose</code></td>
+<tr><td><code id="PLCI.mirt_:_verbose">verbose</code></td>
 <td>
 <p>logical; include additional information in the console?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="PLCI.mirt_:_...">...</code></td>
 <td>
 <p>additional arguments to pass to the estimation functions</p>
 </td></tr>
@@ -228,7 +228,7 @@ result2
 ## 15       TRUE
 ## 16       TRUE
 </code></pre>
-<pre><code class="language-r">#only estimate CI's slopes
+<pre><code class="language-r"># only estimate CI's slopes
 sv &lt;- mod2values(mod2)
 parnum &lt;- sv$parnum[sv$name == 'a1']
 result3 &lt;- PLCI.mirt(mod2, parnum)
@@ -249,6 +249,6 @@ result3
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

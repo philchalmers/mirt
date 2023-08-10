@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>RCI {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Model-based Reliable Change Index</h2>
+<h2 id='RCI'>Model-based Reliable Change Index</h2>
 
 <h3>Description</h3>
 
@@ -42,27 +42,27 @@ as conditional standard error of measurement information.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>mod</code></td>
+<tr><td><code id="RCI_:_mod">mod</code></td>
 <td>
 <p>single-group model fitted by <code><a href="../../mirt/help/mirt.html">mirt</a></code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>predat</code></td>
+<tr><td><code id="RCI_:_predat">predat</code></td>
 <td>
 <p>a vector (if one individual) or matrix/data.frame
 of response data to be scored, where each individuals' responses are
 included in exactly one row</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>postdat</code></td>
+<tr><td><code id="RCI_:_postdat">postdat</code></td>
 <td>
 <p>same as <code>predat</code>, but with respect to the post/follow-up
 measurement</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>cutoffs</code></td>
+<tr><td><code id="RCI_:_cutoffs">cutoffs</code></td>
 <td>
 <p>optional vector of length 2 indicating the type of cut-offs to
 report (e.g., <code>c(-1.96, 1.96)</code> reflects the 95 percent z-score type cut-off)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="RCI_:_...">...</code></td>
 <td>
 <p>additional arguments passed to <code><a href="../../mirt/help/fscores.html">fscores</a></code></p>
 </td></tr>
@@ -207,6 +207,6 @@ head(predat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>RMSD_DIF {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>RMSD effect size statistic to quantify category-level DIF</h2>
+<h2 id='RMSD_DIF'>RMSD effect size statistic to quantify category-level DIF</h2>
 
 <h3>Description</h3>
 
@@ -46,24 +46,24 @@ due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hart
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>pooled_mod</code></td>
+<tr><td><code id="RMSD_DIF_:_pooled_mod">pooled_mod</code></td>
 <td>
 <p>a multiple-group model (used to compute the model-implied
 probability in the goodness-of-fit test)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>flag</code></td>
+<tr><td><code id="RMSD_DIF_:_flag">flag</code></td>
 <td>
 <p>a numeric value used as a cut-off to help flag larger RMSD values
 (e.g., <code>flag = .03</code> will highlight only categories with RMSD values greater than
 .03)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>probfun</code></td>
+<tr><td><code id="RMSD_DIF_:_probfun">probfun</code></td>
 <td>
 <p>logical; use probability functions to compute RMSD? If FALSE, the expected score
 functions will be integrated instead, which may be useful for collapsing across the
 categories in polytomous items</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>dentype</code></td>
+<tr><td><code id="RMSD_DIF_:_dentype">dentype</code></td>
 <td>
 <p>density to use for the latent trait.
 Can be <code>'norm'</code> to use a normal Gaussian density where the mean/variance are extracted
@@ -888,6 +888,6 @@ RMSD_DIF(MGmod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

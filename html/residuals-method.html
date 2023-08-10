@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>residuals-method {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Compute model residuals</h2>
+<h2 id='residuals-method'>Compute model residuals</h2>
 
 <h3>Description</h3>
 
@@ -38,6 +38,7 @@ density components (where applicable).
 residuals(
   object,
   type = "LD",
+  p.adjust = "none",
   df.p = FALSE,
   approx.z = FALSE,
   full.scores = FALSE,
@@ -60,13 +61,13 @@ residuals(
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>object</code></td>
+<tr><td><code id="residuals-method_:_object">object</code></td>
 <td>
 <p>an object of class <code>SingleGroupClass</code> or
 <code>MultipleGroupClass</code>. Bifactor models are automatically detected and utilized for
 better accuracy</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>type</code></td>
+<tr><td><code id="residuals-method_:_type">type</code></td>
 <td>
 <p>type of residuals to be displayed.
 Can be either <code>'LD'</code> or <code>'LDG2'</code> for a local dependence matrix based on the
@@ -77,76 +78,81 @@ and <code>'expfull'</code> for the expected values for every theoretically obser
 For the 'LD' and 'LDG2' types, the upper diagonal elements represent the standardized
 residuals in the form of signed Cramers V coefficients</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>df.p</code></td>
+<tr><td><code id="residuals-method_:_p.adjust">p.adjust</code></td>
+<td>
+<p>method to use for adjusting all p-values (see <code><a href="../../stats/html/p.adjust.html">p.adjust</a></code>
+for available options). Default is <code>'none'</code></p>
+</td></tr>
+<tr><td><code id="residuals-method_:_df.p">df.p</code></td>
 <td>
 <p>logical; print the degrees of freedom and p-values?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>approx.z</code></td>
+<tr><td><code id="residuals-method_:_approx.z">approx.z</code></td>
 <td>
 <p>logical; transform <code class="reqn">\chi^2(df)</code> information from LD tests into approximate
 z-ratios instead using the transformation <code class="reqn">z=\sqrt{2 * \chi^2} - \sqrt{2 * df - 1}</code>?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>full.scores</code></td>
+<tr><td><code id="residuals-method_:_full.scores">full.scores</code></td>
 <td>
 <p>logical; compute relevant statistics
 for each subject in the original data?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>QMC</code></td>
+<tr><td><code id="residuals-method_:_QMC">QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? If <code>quadpts</code> is omitted the
 default number of nodes is 5000</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>printvalue</code></td>
+<tr><td><code id="residuals-method_:_printvalue">printvalue</code></td>
 <td>
 <p>a numeric value to be specified when using the <code>res='exp'</code>
 option. Only prints patterns that have standardized residuals greater than
 <code>abs(printvalue)</code>. The default (NULL) prints all response patterns</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>tables</code></td>
+<tr><td><code id="residuals-method_:_tables">tables</code></td>
 <td>
 <p>logical; for LD type, return the observed, expected, and standardized residual
 tables for each item combination?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>verbose</code></td>
+<tr><td><code id="residuals-method_:_verbose">verbose</code></td>
 <td>
 <p>logical; allow information to be printed to the console?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>Theta</code></td>
+<tr><td><code id="residuals-method_:_Theta">Theta</code></td>
 <td>
 <p>a matrix of factor scores used for statistics that require empirical estimates (i.e., Q3).
 If supplied, arguments typically passed to <code>fscores()</code> will be ignored and these values will
 be used instead</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>suppress</code></td>
+<tr><td><code id="residuals-method_:_suppress">suppress</code></td>
 <td>
 <p>a numeric value indicating which parameter local dependency combinations
 to flag as being too high. Absolute values for the standardized estimates greater than
 this value will be returned, while all values less than this value will be set to NA</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
+<tr><td><code id="residuals-method_:_theta_lim">theta_lim</code></td>
 <td>
 <p>range for the integration grid</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>quadpts</code></td>
+<tr><td><code id="residuals-method_:_quadpts">quadpts</code></td>
 <td>
 <p>number of quadrature nodes to use. The default is extracted from model (if available)
 or generated automatically if not available</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>fold</code></td>
+<tr><td><code id="residuals-method_:_fold">fold</code></td>
 <td>
 <p>logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>upper</code></td>
+<tr><td><code id="residuals-method_:_upper">upper</code></td>
 <td>
 <p>logical; which portion of the matrix (upper versus lower triangle)
 should the <code>suppress</code> argument be applied to?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>technical</code></td>
+<tr><td><code id="residuals-method_:_technical">technical</code></td>
 <td>
 <p>list of technical arguments when models are re-estimated (see <code><a href="../../mirt/help/mirt.html">mirt</a></code>
 for details)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="residuals-method_:_...">...</code></td>
 <td>
 <p>additional arguments to be passed to <code>fscores()</code></p>
 </td></tr>
@@ -471,6 +477,28 @@ residuals(x)
 ## Future   12.002  9.208     NA  -0.122
 ## Benefit  27.321 23.235 17.461      NA
 </code></pre>
+<pre><code class="language-r">residuals(x, df.p = TRUE, p.adjust = 'fdr') # apply FWE control
+</code></pre>
+<pre><code>## Degrees of freedom (lower triangle) and p-values:
+## 
+##         Comfort  Work Future Benefit
+## Comfort      NA 0.007  0.256   0.007
+## Work          9    NA  0.418   0.011
+## Future        9 9.000     NA   0.063
+## Benefit       9 9.000  9.000      NA
+## 
+## LD matrix (lower triangle) and standardized values.
+## 
+## Upper triangle summary:
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -0.147  -0.136  -0.111  -0.045   0.041   0.152 
+## 
+##         Comfort   Work Future Benefit
+## Comfort      NA -0.147 -0.101   0.152
+## Work     25.512     NA  0.088  -0.141
+## Future   12.002  9.208     NA  -0.122
+## Benefit  27.321 23.235 17.461      NA
+</code></pre>
 <pre><code class="language-r"># Pearson's X2 estimate for goodness-of-fit
 full_table &lt;- residuals(x, type = 'expfull')
 head(full_table)
@@ -623,6 +651,6 @@ residuals(mod, type = 'JSI')
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

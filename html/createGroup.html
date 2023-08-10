@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>createGroup {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Create a user defined group-level object with correct generic functions</h2>
+<h2 id='createGroup'>Create a user defined group-level object with correct generic functions</h2>
 
 <h3>Description</h3>
 
@@ -52,15 +52,15 @@ customized group-level functions. To use the defined objects pass to the
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>par</code></td>
+<tr><td><code id="createGroup_:_par">par</code></td>
 <td>
 <p>a named vector of the starting values for the parameters</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>est</code></td>
+<tr><td><code id="createGroup_:_est">est</code></td>
 <td>
 <p>a logical vector indicating which parameters should be freely estimated by default</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>den</code></td>
+<tr><td><code id="createGroup_:_den">den</code></td>
 <td>
 <p>the probability density function given the Theta/ability values.
 First input contains a vector of all the defined parameters and the second input
@@ -68,12 +68,12 @@ must be a matrix called <code>Theta</code>.
 Function also must return a <code>numeric</code> vector object corresponding to the associated densities for
 each row in the <code>Theta</code> input</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>nfact</code></td>
+<tr><td><code id="createGroup_:_nfact">nfact</code></td>
 <td>
 <p>number of factors required for the model. E.g., for unidimensional models with only one
 dimension of integration <code>nfact = 1</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>standardize</code></td>
+<tr><td><code id="createGroup_:_standardize">standardize</code></td>
 <td>
 <p>logical; use standardization of the quadrature table method proposed by
 Woods and Thissen (2006)? If TRUE, the logical elements named <code>'MEAN_1'</code> and <code>'COV_11'</code>
@@ -82,36 +82,36 @@ input the E-table will be standardized to these fixed values (e.g.,
 <code>par &lt;- c(a1=1, d=0, MEAN_1=0, COV_11=1)</code> with <code>est &lt;- c(TRUE, TRUE, FALSE, FALSE)</code> will
 standardize the E-table to have a 0 mean and unit variance)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>gr</code></td>
+<tr><td><code id="createGroup_:_gr">gr</code></td>
 <td>
 <p>gradient function (vector of first derivatives) of the log-likelihood used in
 estimation. The function must be of the form <code>gr(x, Theta)</code>, where <code>x</code> is the object
 defined by <code>createGroup()</code> and <code>Theta</code> is a matrix of latent trait parameters</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>hss</code></td>
+<tr><td><code id="createGroup_:_hss">hss</code></td>
 <td>
 <p>Hessian function (matrix of second derivatives) of the log-likelihood used in
 estimation. If not specified a numeric approximation will be used.
 The input is identical to the <code>gr</code> argument</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>gen</code></td>
+<tr><td><code id="createGroup_:_gen">gen</code></td>
 <td>
 <p>a function used when <code>GenRandomPars = TRUE</code> is passed to the estimation function
 to generate random starting values. Function must be of the form <code>function(object) ...</code>
 and must return a vector with properties equivalent to the <code>par</code> object. If NULL,
 parameters will remain at the defined starting values by default</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>lbound</code></td>
+<tr><td><code id="createGroup_:_lbound">lbound</code></td>
 <td>
 <p>optional vector indicating the lower bounds of the parameters. If not specified
 then the bounds will be set to -Inf</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>ubound</code></td>
+<tr><td><code id="createGroup_:_ubound">ubound</code></td>
 <td>
 <p>optional vector indicating the lower bounds of the parameters. If not specified
 then the bounds will be set to Inf</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>derivType</code></td>
+<tr><td><code id="createGroup_:_derivType">derivType</code></td>
 <td>
 <p>if the <code>gr</code> or <code>hss</code> terms are not specified this type will be used to
 obtain them numerically. Default is 'Richardson'</p>
@@ -200,6 +200,6 @@ coef(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

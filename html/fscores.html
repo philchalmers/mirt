@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>fscores {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)</h2>
+<h2 id='fscores'>Compute factor score estimates (a.k.a, ability estimates, latent trait estimates, etc)</h2>
 
 <h3>Description</h3>
 
@@ -79,12 +79,12 @@ for latent regression predictor effects.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>object</code></td>
+<tr><td><code id="fscores_:_object">object</code></td>
 <td>
 <p>a computed model object of class <code>SingleGroupClass</code>,
 <code>MultipleGroupClass</code>, or <code>DiscreteClass</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>method</code></td>
+<tr><td><code id="fscores_:_method">method</code></td>
 <td>
 <p>type of factor score estimation method. Can be:
 </p>
@@ -115,40 +115,40 @@ applicable when the input model was of class <code>MixtureClass</code>)
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>full.scores</code></td>
+<tr><td><code id="fscores_:_full.scores">full.scores</code></td>
 <td>
 <p>if <code>FALSE</code> then a summary table with factor scores
 for each unique pattern is displayed as a formatted <code>matrix</code> object.
 Otherwise, a matrix of factor scores for each response pattern in the data
 is returned (default)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>rotate</code></td>
+<tr><td><code id="fscores_:_rotate">rotate</code></td>
 <td>
 <p>prior rotation to be used when estimating the factor scores. See
 <code><a href="../../mirt/help/summary-method.html">summary-method</a></code> for details. If the object is not an exploratory model
 then this argument is ignored</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>Target</code></td>
+<tr><td><code id="fscores_:_Target">Target</code></td>
 <td>
 <p>target rotation; see <code><a href="../../mirt/help/summary-method.html">summary-method</a></code> for details</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>response.pattern</code></td>
+<tr><td><code id="fscores_:_response.pattern">response.pattern</code></td>
 <td>
 <p>an optional argument used to calculate the factor scores and standard
 errors for a given response vector or matrix/data.frame</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>append_response.pattern</code></td>
+<tr><td><code id="fscores_:_append_response.pattern">append_response.pattern</code></td>
 <td>
 <p>logical; should the inputs from <code>response.pattern</code> also be
 appended to the factor score output?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>na.rm</code></td>
+<tr><td><code id="fscores_:_na.rm">na.rm</code></td>
 <td>
 <p>logical; remove rows with any missing values? This is generally not required due to
 the nature of computing factors scores, however for the &quot;EAPsum&quot; method this may be necessary
 to ensure that the sum-scores correspond to the same composite score</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>plausible.draws</code></td>
+<tr><td><code id="fscores_:_plausible.draws">plausible.draws</code></td>
 <td>
 <p>number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
@@ -156,14 +156,14 @@ with latent regression predictors (see <code><a href="../../mirt/help/mirt.html"
 also be generated when no predictor variables were modelled. If <code>plausible.draws</code>
 is greater than 0 a list of plausible values will be returned</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>plausible.type</code></td>
+<tr><td><code id="fscores_:_plausible.type">plausible.type</code></td>
 <td>
 <p>type of plausible values to obtain. Can be either <code>'normal'</code> (default)
 to use a normal approximation based on the ACOV matrix, or <code>'MH'</code> to obtain Metropolis-Hastings
 samples from the posterior (silently passes object to <code><a href="../../mirt/help/mirt.html">mirt</a></code>, therefore arguments like
 <code>technical</code> can be supplied to increase the number of burn-in draws and discarded samples)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>quadpts</code></td>
+<tr><td><code id="fscores_:_quadpts">quadpts</code></td>
 <td>
 <p>number of quadrature to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases
@@ -171,69 +171,69 @@ one will be created which decreases as the number of dimensions increases
 the switch statement
 <code>quadpts &lt;- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>item_weights</code></td>
+<tr><td><code id="fscores_:_item_weights">item_weights</code></td>
 <td>
 <p>a user-defined weight vector used in the likelihood expressions
 to add more/less weight for a given observed response. Default is a vector of 1's,
 indicating that all the items receive the same weight</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>returnER</code></td>
+<tr><td><code id="fscores_:_returnER">returnER</code></td>
 <td>
 <p>logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>return.acov</code></td>
+<tr><td><code id="fscores_:_return.acov">return.acov</code></td>
 <td>
 <p>logical; return a list containing covariance matrices instead of factors
 scores? <code>impute = TRUE</code> not supported with this option</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>mean</code></td>
+<tr><td><code id="fscores_:_mean">mean</code></td>
 <td>
 <p>a vector for custom latent variable means. If NULL, the default for 'group' values
 from the computed mirt object will be used</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>cov</code></td>
+<tr><td><code id="fscores_:_cov">cov</code></td>
 <td>
 <p>a custom matrix of the latent variable covariance matrix. If NULL, the default for
 'group' values from the computed mirt object will be used</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>covdata</code></td>
+<tr><td><code id="fscores_:_covdata">covdata</code></td>
 <td>
 <p>when latent regression model has been fitted, and the <code>response.pattern</code>
 input is used to score individuals, then this argument is used to include the latent regression
 covariate terms for each row vector supplied to <code>response.pattern</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>verbose</code></td>
+<tr><td><code id="fscores_:_verbose">verbose</code></td>
 <td>
 <p>logical; print verbose output messages?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>full.scores.SE</code></td>
+<tr><td><code id="fscores_:_full.scores.SE">full.scores.SE</code></td>
 <td>
 <p>logical; when <code>full.scores == TRUE</code>, also return the
 standard errors associated with each respondent? Default is <code>FALSE</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
+<tr><td><code id="fscores_:_theta_lim">theta_lim</code></td>
 <td>
 <p>lower and upper range to evaluate latent trait integral for each dimension. If
 omitted, a range will be generated automatically based on the number of dimensions</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>MI</code></td>
+<tr><td><code id="fscores_:_MI">MI</code></td>
 <td>
 <p>a number indicating how many multiple imputation draws to perform. Default is 0,
 indicating that no MI draws will be performed</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>use_dentype_estimate</code></td>
+<tr><td><code id="fscores_:_use_dentype_estimate">use_dentype_estimate</code></td>
 <td>
 <p>logical; if the density of the latent trait was estimated in the model
 (e.g., via Davidian curves or empirical histograms), should this information be used to compute
 the latent trait estimates? Only applicable for EAP-based estimates (EAP, EAPsum, and plausible)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>QMC</code></td>
+<tr><td><code id="fscores_:_QMC">QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? If <code>quadpts</code> is omitted the
 default number of nodes is 5000</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>custom_den</code></td>
+<tr><td><code id="fscores_:_custom_den">custom_den</code></td>
 <td>
 <p>a function used to define the integration density (if required). The NULL default
 assumes that the multivariate normal distribution with the 'GroupPars' hyper-parameters are
@@ -246,30 +246,30 @@ if <code>method == 'EAPsum'</code> or <code>method == 'EAP'</code>, otherwise Th
 Additional arguments may included and are caught through the <code>fscores(...)</code> input. The
 function <em>must</em> return a numeric vector of density weights (one for each row in Theta)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>custom_theta</code></td>
+<tr><td><code id="fscores_:_custom_theta">custom_theta</code></td>
 <td>
 <p>a matrix of custom integration nodes to use instead of the default, where
 each column corresponds to the respective dimension in the model</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>min_expected</code></td>
+<tr><td><code id="fscores_:_min_expected">min_expected</code></td>
 <td>
 <p>when computing goodness of fit tests when <code>method = 'EAPsum'</code>, this value is used
 to collapse across the conditioned total scores until the expected values are greater than this value. Note
 that this only affect the goodness of fit tests and not the returned EAP for sum scores table</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>max_theta</code></td>
+<tr><td><code id="fscores_:_max_theta">max_theta</code></td>
 <td>
 <p>the maximum/minimum value any given factor score estimate will achieve using
 any modal estimator method (e.g., MAP, WLE, ML)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>start</code></td>
+<tr><td><code id="fscores_:_start">start</code></td>
 <td>
 <p>a matrix of starting values to use for iterative estimation methods. Default
 will start at a vector of 0's for each response pattern, or will start at the EAP
 estimates (unidimensional models only). Must be in the form that matches
 <code>full.scores = FALSE</code> (mostly used in the <code>mirtCAT</code> package)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="fscores_:_...">...</code></td>
 <td>
 <p>additional arguments to be passed to <code>nlm</code></p>
 </td></tr>
@@ -390,7 +390,7 @@ fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 <pre><code>##              F1     SE_F1
 ## [1,] -0.3704194 0.6054169
 </code></pre>
-<pre><code class="language-r">#or matrix
+<pre><code class="language-r"># or matrix
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 </code></pre>
 <pre><code>##              F1     SE_F1
@@ -730,36 +730,36 @@ fs &lt;- fscores(mod, MI = 30)
 head(fs)
 </code></pre>
 <pre><code>##               F1
-## [1,]  0.43105854
-## [2,]  0.04775123
-## [3,] -0.89449451
-## [4,] -0.89449451
-## [5,]  0.78286414
-## [6,]  0.68209467
+## [1,]  0.41530174
+## [2,]  0.05990526
+## [3,] -0.86491131
+## [4,] -0.86491131
+## [5,]  0.76887690
+## [6,]  0.67506540
 </code></pre>
 <pre><code class="language-r"># plausible values for future work
 pv &lt;- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 <pre><code>## [[1]]
-##        mean         var         min         max 
-##  0.04851964  0.99767321 -2.96319624  3.83130942 
+##         mean          var          min          max 
+## -0.002620447  0.883637809 -3.069906630  2.801540736 
 ## 
 ## [[2]]
-##        mean         var         min         max 
-##  0.01529424  1.03789782 -3.09457285  3.08215355 
+##       mean        var        min        max 
+## -0.0188369  1.0430719 -3.0653506  2.9726543 
 ## 
 ## [[3]]
-##       mean        var        min        max 
-## -0.0304288  0.9911608 -3.7321337  2.9325554 
+##         mean          var          min          max 
+##  0.004021556  0.940139646 -2.952286568  2.539625741 
 ## 
 ## [[4]]
-##         mean          var          min          max 
-## -0.006065926  0.960780649 -3.039823726  2.742190598 
+##        mean         var         min         max 
+## -0.02485457  0.99213576 -2.98286183  2.97542549 
 ## 
 ## [[5]]
 ##        mean         var         min         max 
-## -0.02939406  0.98765802 -2.88773226  2.86077248
+##  0.02298123  1.01378345 -2.71442048  2.81063898
 </code></pre>
 <pre><code class="language-r">## define a custom_den function. EAP with a uniform prior between -3 and 3
 fun &lt;- function(Theta, ...) as.numeric(dunif(Theta, min = -3, max = 3))
@@ -882,6 +882,6 @@ fscores(mod, response.pattern=rp, covdata=cd)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

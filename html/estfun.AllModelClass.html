@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>estfun.AllModelClass {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Extract Empirical Estimating Functions</h2>
+<h2 id='estfun.AllModelClass'>Extract Empirical Estimating Functions</h2>
 
 <h3>Description</h3>
 
@@ -50,12 +50,12 @@ the model itself along with its matching normalized density.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>x</code></td>
+<tr><td><code id="estfun.AllModelClass_:_x">x</code></td>
 <td>
 <p>a fitted model object of class <code>SingleGroupClass</code> or
 <code>MultipleGroupClass</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>weights</code></td>
+<tr><td><code id="estfun.AllModelClass_:_weights">weights</code></td>
 <td>
 <p>by default, the <code>survey.weights</code> which were (optionally)
 specified when fitting the model are included to calculate the scores.
@@ -66,7 +66,7 @@ square root if the scores are being used to compute the outer product of
 gradients (OPG) estimate of the variance-covariance matrix (see examples
 below).</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>centering</code></td>
+<tr><td><code id="estfun.AllModelClass_:_centering">centering</code></td>
 <td>
 <p>a boolean variable that allows the centering of the case-wise
 scores (i.e., setting their expected values to 0). If the case-wise scores were
@@ -181,6 +181,6 @@ all.equal(crossprod(sc4_crp), chol2inv(chol(vc4)), check.attributes = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

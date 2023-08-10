@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>empirical_ES {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Empirical effect sizes based on latent trait estimates</h2>
+<h2 id='empirical_ES'>Empirical effect sizes based on latent trait estimates</h2>
 
 <h3>Description</h3>
 
@@ -55,56 +55,56 @@ to compute expected scores.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>mod</code></td>
+<tr><td><code id="empirical_ES_:_mod">mod</code></td>
 <td>
 <p>a multipleGroup object which estimated only 2 groups. The first group in this object
 is assumed to be the reference group by default (i.e., <code>ref.group = 1</code>), which conforms to the
 <code>invariance</code> arguments in <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>Theta.focal</code></td>
+<tr><td><code id="empirical_ES_:_Theta.focal">Theta.focal</code></td>
 <td>
 <p>an optional matrix of Theta values from the focal group to be evaluated. If not supplied
 the default values to <code><a href="../../mirt/help/fscores.html">fscores</a></code> will be used in conjunction with the <code>...</code>
 arguments passed</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>focal_items</code></td>
+<tr><td><code id="empirical_ES_:_focal_items">focal_items</code></td>
 <td>
 <p>a numeric vector indicating which items to include the tests. The
 default uses all of the items. Selecting fewer items will result in tests of
 'differential bundle functioning' when <code>DIF = FALSE</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>DIF</code></td>
+<tr><td><code id="empirical_ES_:_DIF">DIF</code></td>
 <td>
 <p>logical; return a data.frame of item-level imputation properties? If <code>FALSE</code>,
 only DBF and DTF statistics will be reported</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>npts</code></td>
+<tr><td><code id="empirical_ES_:_npts">npts</code></td>
 <td>
 <p>number of points to use in the integration. Default is 61</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
+<tr><td><code id="empirical_ES_:_theta_lim">theta_lim</code></td>
 <td>
 <p>lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with <code>npts</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>plot</code></td>
+<tr><td><code id="empirical_ES_:_plot">plot</code></td>
 <td>
 <p>logical; plot expected scores of items/test where expected scores are computed
 using focal group thetas and both focal and reference group item parameters</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>type</code></td>
+<tr><td><code id="empirical_ES_:_type">type</code></td>
 <td>
 <p>type of objects to draw in <code>lattice</code>; default plots both points and lines</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>par.strip.text</code></td>
+<tr><td><code id="empirical_ES_:_par.strip.text">par.strip.text</code></td>
 <td>
 <p>plotting argument passed to <code><a href="../../lattice/html/Lattice.html">lattice</a></code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>par.settings</code></td>
+<tr><td><code id="empirical_ES_:_par.settings">par.settings</code></td>
 <td>
 <p>plotting argument passed to <code><a href="../../lattice/html/Lattice.html">lattice</a></code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="empirical_ES_:_...">...</code></td>
 <td>
 <p>additional arguments to be passed to <code><a href="../../mirt/help/fscores.html">fscores</a></code> and <code><a href="../../lattice/html/xyplot.html">xyplot</a></code></p>
 </td></tr>
@@ -196,7 +196,7 @@ of items and scales. <em>Journal of Applied Psychology, 95</em>, 728-743.
 
 <pre><code class="language-r">## No test: 
 
-#no DIF
+# no DIF
 set.seed(12345)
 a &lt;- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d &lt;- matrix(rnorm(15,0,.7),ncol=1)
@@ -466,6 +466,6 @@ coef(mod, simplify=TRUE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

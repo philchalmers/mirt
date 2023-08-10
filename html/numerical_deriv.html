@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>numerical_deriv {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Compute numerical derivatives</h2>
+<h2 id='numerical_deriv'>Compute numerical derivatives</h2>
 
 <h3>Description</h3>
 
@@ -46,27 +46,27 @@ central difference, or Richardson extrapolation.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>par</code></td>
+<tr><td><code id="numerical_deriv_:_par">par</code></td>
 <td>
 <p>a vector of parameters to find partial derivative at</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>f</code></td>
+<tr><td><code id="numerical_deriv_:_f">f</code></td>
 <td>
 <p>the objective function being evaluated</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="numerical_deriv_:_...">...</code></td>
 <td>
 <p>additional arguments to be passed to <code>f</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>delta</code></td>
+<tr><td><code id="numerical_deriv_:_delta">delta</code></td>
 <td>
 <p>the term used to perturb the <code>f</code> function. Default is 1e-5</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>gradient</code></td>
+<tr><td><code id="numerical_deriv_:_gradient">gradient</code></td>
 <td>
 <p>logical; compute the gradient terms? If FALSE then the Hessian is computed instead</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>type</code></td>
+<tr><td><code id="numerical_deriv_:_type">type</code></td>
 <td>
 <p>type of difference to compute. Can be either <code>'forward'</code> for the forward difference,
 <code>'central'</code> for the central difference, or <code>'Richardson'</code> for the Richardson extrapolation (default).
@@ -136,6 +136,6 @@ par &lt;- c(3,8)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

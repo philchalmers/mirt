@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>boot.LR {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Parametric bootstrap likelihood-ratio test</h2>
+<h2 id='boot.LR'>Parametric bootstrap likelihood-ratio test</h2>
 
 <h3>Description</h3>
 
@@ -42,19 +42,19 @@ definition.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>mod</code></td>
+<tr><td><code id="boot.LR_:_mod">mod</code></td>
 <td>
 <p>an estimated model object, more constrained than <code>mod2</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>mod2</code></td>
+<tr><td><code id="boot.LR_:_mod2">mod2</code></td>
 <td>
 <p>an estimated model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>R</code></td>
+<tr><td><code id="boot.LR_:_R">R</code></td>
 <td>
 <p>number of parametric bootstraps to use.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>verbose</code></td>
+<tr><td><code id="boot.LR_:_verbose">verbose</code></td>
 <td>
 <p>logical; include additional information in the console?</p>
 </td></tr>
@@ -86,7 +86,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
 <pre><code class="language-r">## No test: 
 
-#standard
+# standard
 dat &lt;- expand.table(LSAT7)
 mod1 &lt;- mirt(dat, 1)
 mod2 &lt;- mirt(dat, 1, '3PL')
@@ -102,12 +102,12 @@ anova(mod1, mod2)
 if(interactive()) mirtCluster()
 boot.LR(mod1, mod2, R=200)
 </code></pre>
-<pre><code>## [1] 0.3283582
+<pre><code>## [1] 0.2686567
 </code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

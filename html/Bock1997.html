@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>Bock1997 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Description of Bock 1997 data</h2>
+<h2 id='Bock1997'>Description of Bock 1997 data</h2>
 
 <h3>Description</h3>
 
@@ -80,7 +80,7 @@ head(dat)
 </code></pre>
 <pre><code class="language-r">mod &lt;- mirt(dat, 1, 'nominal')
 
-#reproduce table 3 in Bock (1997)
+# reproduce table 3 in Bock (1997)
 fs &lt;- round(fscores(mod, verbose = FALSE, full.scores = FALSE)[,c('F1','SE_F1')],2)
 fttd &lt;- residuals(mod, type = 'exp')
 table &lt;- data.frame(fttd[,-ncol(fttd)], fs)
@@ -175,6 +175,6 @@ coef(mod)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

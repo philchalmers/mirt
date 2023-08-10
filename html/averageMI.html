@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>averageMI {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Collapse values from multiple imputation draws</h2>
+<h2 id='averageMI'>Collapse values from multiple imputation draws</h2>
 
 <h3>Description</h3>
 
@@ -41,15 +41,15 @@ variability due to the multiple imputations according to Rubin's (1987) methodol
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>par</code></td>
+<tr><td><code id="averageMI_:_par">par</code></td>
 <td>
 <p>a list containing parameter estimates which were computed the imputed datasets</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>SEpar</code></td>
+<tr><td><code id="averageMI_:_SEpar">SEpar</code></td>
 <td>
 <p>a list containing standard errors associated with <code>par</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>as.data.frame</code></td>
+<tr><td><code id="averageMI_:_as.data.frame">as.data.frame</code></td>
 <td>
 <p>logical; return a data.frame instead of a list? Default is TRUE</p>
 </td></tr>
@@ -83,7 +83,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
 <pre><code class="language-r">## No test: 
 
-#simulate data
+# simulate data
 set.seed(1234)
 N &lt;- 1000
 
@@ -92,7 +92,7 @@ X1 &lt;- rnorm(N); X2 &lt;- rnorm(N)
 covdata &lt;- data.frame(X1, X2)
 Theta &lt;- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
-#items and response data
+# items and response data
 a &lt;- matrix(1, 20); d &lt;- matrix(rnorm(20))
 dat &lt;- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
@@ -136,7 +136,7 @@ coef(mod1, simplify=TRUE)
 ## X1           0.527
 ## X2          -1.036
 </code></pre>
-<pre><code class="language-r">#draw plausible values for secondary analyses
+<pre><code class="language-r"># draw plausible values for secondary analyses
 pv &lt;- fscores(mod1, plausible.draws = 10)
 pvmods &lt;- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
                  covdata=covdata)
@@ -148,14 +148,14 @@ SEpar &lt;- lapply(so, function(x) x$coefficients[, 'Std. Error'])
 averageMI(par, SEpar)
 </code></pre>
 <pre><code>##                par SEpar       t      df     p
-## (Intercept)  0.000 0.017  -0.012 142.734 0.248
-## covdata$X1   0.525 0.022  24.259  30.427     0
-## covdata$X2  -1.032 0.020 -52.399  48.617     0
+## (Intercept)  0.001 0.017   0.057 126.225 0.239
+## covdata$X1   0.525 0.021  25.078  36.818     0
+## covdata$X2  -1.034 0.019 -53.308  58.854     0
 </code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

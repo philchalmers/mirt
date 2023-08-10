@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>areainfo {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Function to calculate the area under a selection of information curves</h2>
+<h2 id='areainfo'>Function to calculate the area under a selection of information curves</h2>
 
 <h3>Description</h3>
 
@@ -44,26 +44,26 @@ function processMathHTML() {
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>x</code></td>
+<tr><td><code id="areainfo_:_x">x</code></td>
 <td>
 <p>an object of class 'SingleGroupClass', or an object of class 'MultipleGroupClass' if a suitable
 <code>group</code> input were supplied</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
+<tr><td><code id="areainfo_:_theta_lim">theta_lim</code></td>
 <td>
 <p>range of integration to be computed</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>which.items</code></td>
+<tr><td><code id="areainfo_:_which.items">which.items</code></td>
 <td>
 <p>an integer vector indicating which items to include in the expected information function.
 Default uses all possible items</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>group</code></td>
+<tr><td><code id="areainfo_:_group">group</code></td>
 <td>
 <p>group argument to pass to <code><a href="../../mirt/help/extract.group.html">extract.group</a></code> function. Required when the input object is
 a multiple-group model</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="areainfo_:_...">...</code></td>
 <td>
 <p>additional arguments passed to <code><a href="../../stats/html/integrate.html">integrate</a></code></p>
 </td></tr>
@@ -130,6 +130,6 @@ text(x = 2, y = 0.5, labels = paste(&quot;Total Information:&quot;, round(area$T
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

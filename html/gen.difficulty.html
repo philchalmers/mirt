@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>gen.difficulty {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Generalized item difficulty summaries</h2>
+<h2 id='gen.difficulty'>Generalized item difficulty summaries</h2>
 
 <h3>Description</h3>
 
@@ -40,11 +40,11 @@ These estimates are used to gauge how difficult a polytomous item may be.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>mod</code></td>
+<tr><td><code id="gen.difficulty_:_mod">mod</code></td>
 <td>
 <p>a single factor model estimated by <code><a href="../../mirt/help/mirt.html">mirt</a></code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>type</code></td>
+<tr><td><code id="gen.difficulty_:_type">type</code></td>
 <td>
 <p>type of generalized difficulty parameter to report.
 Can be <code>'IRF'</code> to use the item response function (default),
@@ -53,11 +53,11 @@ Can be <code>'IRF'</code> to use the item response function (default),
 <code>'trimmed'</code> to find the trimmed mean after removing the first
 and last difficulty estimates</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>interval</code></td>
+<tr><td><code id="gen.difficulty_:_interval">interval</code></td>
 <td>
 <p>interval range to search for <code>'IRF'</code> type</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="gen.difficulty_:_...">...</code></td>
 <td>
 <p>additional arguments to pass to <code><a href="../../stats/html/uniroot.html">uniroot</a></code></p>
 </td></tr>
@@ -131,6 +131,6 @@ coef(mod, simplify=TRUE, IRTpars = TRUE)$items
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>SAT12 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Description of SAT12 data</h2>
+<h2 id='SAT12'>Description of SAT12 data</h2>
 
 <h3>Description</h3>
 
@@ -132,7 +132,7 @@ itemstats(SAT12, use_ts = FALSE)
 ## Item.31 0.075 0.020 0.012 0.833 0.058 0.002
 ## Item.32 0.125 0.183 0.443 0.075 0.162 0.012
 </code></pre>
-<pre><code class="language-r">#score the data (missing scored as 0)
+<pre><code class="language-r"># score the data (missing scored as 0)
 head(SAT12)
 </code></pre>
 <pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5 Item.6 Item.7 Item.8 Item.9 Item.10
@@ -273,7 +273,7 @@ head(dat)
 ## Item.31 0.167 0.833
 ## Item.32 0.838 0.162
 </code></pre>
-<pre><code class="language-r">#score the data, missing (value of 8) treated as NA
+<pre><code class="language-r"># score the data, missing (value of 8) treated as NA
 SAT12missing &lt;- SAT12
 SAT12missing[SAT12missing == 8] &lt;- NA
 dat &lt;- key2binary(SAT12missing,
@@ -309,13 +309,13 @@ head(dat)
 ## [5,]       1       0       1       0
 ## [6,]       0       0       1       0
 </code></pre>
-<pre><code class="language-r">#potentially better scoring for item 32 (based on nominal model finding)
+<pre><code class="language-r"># potentially better scoring for item 32 (based on nominal model finding)
 dat &lt;- key2binary(SAT12,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
 ## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

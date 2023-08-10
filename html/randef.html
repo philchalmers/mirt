@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>randef {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Compute posterior estimates of random effect</h2>
+<h2 id='randef'>Compute posterior estimates of random effect</h2>
 
 <h3>Description</h3>
 
@@ -40,19 +40,19 @@ Returns a list of the estimated effects.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>x</code></td>
+<tr><td><code id="randef_:_x">x</code></td>
 <td>
 <p>an estimated model object from the <code><a href="../../mirt/help/mixedmirt.html">mixedmirt</a></code> function</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>ndraws</code></td>
+<tr><td><code id="randef_:_ndraws">ndraws</code></td>
 <td>
 <p>total number of draws to perform. Default is 1000</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>thin</code></td>
+<tr><td><code id="randef_:_thin">thin</code></td>
 <td>
 <p>amount of thinning to apply. Default is to use every 10th draw</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>return.draws</code></td>
+<tr><td><code id="randef_:_return.draws">return.draws</code></td>
 <td>
 <p>logical; return a list containing the thinned draws of the posterior?</p>
 </td></tr>
@@ -79,10 +79,10 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <h3>Examples</h3>
 
 <pre><code class="language-r">## No test: 
-#make an arbitrary groups
+# make an arbitrary groups
 covdat &lt;- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
 
-#partial credit model
+# partial credit model
 mod &lt;- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
 summary(mod)
 </code></pre>
@@ -108,27 +108,27 @@ summary(mod)
 head(effects$Theta)
 </code></pre>
 <pre><code>##               F1
-## [1,]  0.47280820
-## [2,]  0.12389341
-## [3,] -0.62815399
-## [4,] -0.70790166
-## [5,]  0.06678399
-## [6,]  0.92860028
+## [1,]  0.55955004
+## [2,]  0.15150919
+## [3,] -0.62413884
+## [4,] -0.69891958
+## [5,]  0.09140273
+## [6,]  0.96833571
 </code></pre>
 <pre><code class="language-r">head(effects$group)
 </code></pre>
-<pre><code>##              group
-## group1 -0.00610677
-## group2  0.01315147
-## group3  0.01110892
-## group4 -0.03436429
-## group5 -0.01024680
-## group6 -0.01770682
+<pre><code>##               group
+## group1  0.009571204
+## group2 -0.014843903
+## group3  0.004352880
+## group4 -0.025240049
+## group5  0.037278689
+## group6  0.010729629
 </code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

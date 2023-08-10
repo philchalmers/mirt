@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>personfit {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Person fit statistics</h2>
+<h2 id='personfit'>Person fit statistics</h2>
 
 <h3>Description</h3>
 
@@ -42,26 +42,26 @@ rightmost columns.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>x</code></td>
+<tr><td><code id="personfit_:_x">x</code></td>
 <td>
 <p>a computed model object of class <code>SingleGroupClass</code> or <code>MultipleGroupClass</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>method</code></td>
+<tr><td><code id="personfit_:_method">method</code></td>
 <td>
 <p>type of factor score estimation method. See <code><a href="../../mirt/help/fscores.html">fscores</a></code> for more detail</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>Theta</code></td>
+<tr><td><code id="personfit_:_Theta">Theta</code></td>
 <td>
 <p>a matrix of factor scores used for statistics that require empirical estimates. If
 supplied, arguments typically passed to <code>fscores()</code> will be ignored and these values will
 be used instead</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>stats.only</code></td>
+<tr><td><code id="personfit_:_stats.only">stats.only</code></td>
 <td>
 <p>logical; return only the person fit statistics without their associated
 response pattern?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="personfit_:_...">...</code></td>
 <td>
 <p>additional arguments to be passed to <code>fscores()</code></p>
 </td></tr>
@@ -108,62 +108,73 @@ d &lt;- matrix(rnorm(20),ncol=1)
 items &lt;- rep('2PL', 20)
 data &lt;- simdata(a,d, 2000, items)
 
+# first observation responds 1 for most difficult, 0 for easiest
+data[1,] &lt;- ifelse(d &gt; 0, 0, 1)
+
+# second observations answers first half as 1 second half as 0
+data[2,] &lt;- rep(1:0, each = 10)
+
 x &lt;- mirt(data, 1)
 fit &lt;- personfit(x)
 head(fit)
 </code></pre>
-<pre><code>##      outfit    z.outfit     infit     z.infit         Zh
-## 1 0.7835734 -0.94768390 0.8462921 -0.99312370  0.9931930
-## 2 0.9315817 -0.19338124 0.9969412  0.03053164  0.1018533
-## 3 1.0439329  0.29243223 1.1359864  0.69698266 -0.5419248
-## 4 0.9787472  0.05365473 1.0683997  0.49215980 -0.2966258
-## 5 0.6709576 -0.13511027 0.9337690 -0.21541734  0.4062379
-## 6 0.6963001 -0.98278892 0.7745815 -1.62208454  1.4271776
+<pre><code>##      outfit    z.outfit     infit    z.infit         Zh
+## 1 2.6583642  4.49192881 1.8755634  4.7138592 -6.1443561
+## 2 1.7922743  2.88078449 1.4182142  2.4575860 -2.9692241
+## 3 1.0433747  0.28270415 1.1336178  0.6876459 -0.5328314
+## 4 0.9775579  0.04292907 1.0658716  0.4766072 -0.2816455
+## 5 0.6709186 -0.12413718 0.9331577 -0.2175710  0.4086525
+## 6 0.6974703 -0.99102234 0.7756842 -1.6170480  1.4234536
 </code></pre>
 <pre><code class="language-r">#using precomputed Theta
 Theta &lt;- fscores(x, method = 'MAP', full.scores = TRUE)
 head(personfit(x, Theta=Theta))
 </code></pre>
-<pre><code>##      outfit    z.outfit     infit     z.infit         Zh
-## 1 0.7835072 -0.95313963 0.8461085 -0.99335508  0.9942162
-## 2 0.9317866 -0.19591803 0.9963089  0.02651792  0.1051419
-## 3 1.0135711  0.22658344 1.1089397  0.60318146 -0.4409453
-## 4 0.9764707  0.04248488 1.0661954  0.47983508 -0.2828724
-## 5 0.6542654 -0.13120882 0.8871427 -0.46729625  0.6001267
-## 6 0.6959692 -1.01558405 0.7724884 -1.63461432  1.4404214
+<pre><code>##      outfit    z.outfit     infit    z.infit         Zh
+## 1 2.6491304  4.49038856 1.8764135  4.7156923 -6.1421671
+## 2 1.7828235  2.87132551 1.4191231  2.4587600 -2.9646541
+## 3 1.0131906  0.21667856 1.1069103  0.5942755 -0.4322618
+## 4 0.9752658  0.03144039 1.0636063  0.4637990 -0.2675431
+## 5 0.6543701 -0.11418271 0.8869011 -0.4671270  0.6007619
+## 6 0.6970385 -1.02752175 0.7732412 -1.6329080  1.4394591
 </code></pre>
-<pre><code class="language-r">#multiple group Rasch model example
+<pre><code class="language-r"># multiple group Rasch model example
 set.seed(12345)
-a &lt;- matrix(rep(1, 15), ncol=1)
-d &lt;- matrix(rnorm(15,0,.7),ncol=1)
+a &lt;- matrix(rep(1, 16), ncol=1)
+d &lt;- matrix(rnorm(16,0,.7),ncol=1)
 itemtype &lt;- rep('dich', nrow(a))
 N &lt;- 1000
 dataset1 &lt;- simdata(a, d, N, itemtype)
 dataset2 &lt;- simdata(a, d, N, itemtype, sigma = matrix(1.5))
 dat &lt;- rbind(dataset1, dataset2)
+
+# first observation responds 1 for most difficult, 0 for easiest
+dat[1,] &lt;- ifelse(d &gt; 0, 0, 1)
+
 group &lt;- c(rep('D1', N), rep('D2', N))
-models &lt;- 'F1 = 1-15'
+models &lt;- 'F1 = 1-16'
 mod_Rasch &lt;- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
 coef(mod_Rasch, simplify=TRUE)
 </code></pre>
 <pre><code>## $D1
 ## $items
 ##         a1      d g u
-## Item_1   1  0.392 0 1
-## Item_2   1  0.422 0 1
-## Item_3   1 -0.034 0 1
-## Item_4   1 -0.220 0 1
-## Item_5   1  0.392 0 1
-## Item_6   1 -1.198 0 1
-## Item_7   1  0.472 0 1
-## Item_8   1 -0.112 0 1
-## Item_9   1 -0.161 0 1
-## Item_10  1 -0.651 0 1
-## Item_11  1 -0.044 0 1
-## Item_12  1  1.333 0 1
-## Item_13  1  0.229 0 1
-## Item_14  1  0.392 0 1
-## Item_15  1 -0.508 0 1
+## Item_1   1  0.431 0 1
+## Item_2   1  0.446 0 1
+## Item_3   1 -0.039 0 1
+## Item_4   1 -0.217 0 1
+## Item_5   1  0.517 0 1
+## Item_6   1 -1.240 0 1
+## Item_7   1  0.492 0 1
+## Item_8   1 -0.138 0 1
+## Item_9   1 -0.113 0 1
+## Item_10  1 -0.709 0 1
+## Item_11  1  0.054 0 1
+## Item_12  1  1.346 0 1
+## Item_13  1  0.197 0 1
+## Item_14  1  0.436 0 1
+## Item_15  1 -0.456 0 1
+## Item_16  1  0.553 0 1
 ## 
 ## $means
 ## F1 
@@ -171,27 +182,28 @@ coef(mod_Rasch, simplify=TRUE)
 ## 
 ## $cov
 ##       F1
-## F1 1.029
+## F1 1.099
 ## 
 ## 
 ## $D2
 ## $items
 ##         a1      d g u
-## Item_1   1  0.317 0 1
-## Item_2   1  0.584 0 1
-## Item_3   1 -0.198 0 1
-## Item_4   1 -0.214 0 1
-## Item_5   1  0.402 0 1
-## Item_6   1 -1.347 0 1
-## Item_7   1  0.381 0 1
-## Item_8   1 -0.329 0 1
-## Item_9   1 -0.235 0 1
-## Item_10  1 -0.761 0 1
-## Item_11  1 -0.282 0 1
-## Item_12  1  1.208 0 1
-## Item_13  1  0.233 0 1
-## Item_14  1  0.291 0 1
-## Item_15  1 -0.483 0 1
+## Item_1   1  0.407 0 1
+## Item_2   1  0.547 0 1
+## Item_3   1 -0.057 0 1
+## Item_4   1 -0.240 0 1
+## Item_5   1  0.290 0 1
+## Item_6   1 -1.293 0 1
+## Item_7   1  0.455 0 1
+## Item_8   1 -0.277 0 1
+## Item_9   1 -0.209 0 1
+## Item_10  1 -0.660 0 1
+## Item_11  1 -0.219 0 1
+## Item_12  1  1.230 0 1
+## Item_13  1  0.332 0 1
+## Item_14  1  0.322 0 1
+## Item_15  1 -0.496 0 1
+## Item_16  1  0.449 0 1
 ## 
 ## $means
 ## F1 
@@ -199,23 +211,23 @@ coef(mod_Rasch, simplify=TRUE)
 ## 
 ## $cov
 ##       F1
-## F1 1.501
+## F1 1.563
 </code></pre>
 <pre><code class="language-r">pf &lt;- personfit(mod_Rasch, method='MAP')
 head(pf)
 </code></pre>
-<pre><code>##      outfit    z.outfit     infit     z.infit         Zh
-## 1 1.1366866  0.88137265 1.0779273  0.62077743 -0.6799768
-## 2 0.9338309 -0.07996171 0.9711302 -0.01294034  0.1247288
-## 3 0.7476339 -0.68483021 0.8478349 -0.48759381  0.6199101
-## 4 1.0974700  0.42845794 1.1108081  0.54327990 -0.4527610
-## 5 0.9951134  0.05173920 1.0384491  0.27241728 -0.1407484
-## 6 0.6611782 -1.27328763 0.7182219 -1.29179396  1.2367374
+<pre><code>##      outfit   z.outfit     infit    z.infit         Zh
+## 1 1.7020980  3.8601866 1.6168778  4.1292792 -4.7705221
+## 2 1.1927207  1.2391298 1.1583820  1.2242405 -1.2507554
+## 3 1.1600703  0.9795701 1.0933660  0.6952324 -0.7640134
+## 4 0.6421989 -1.2734374 0.7045519 -1.2639180  1.2138762
+## 5 1.0726731  0.3149889 1.0446560  0.2466146 -0.1792088
+## 6 0.8189958 -0.9216193 0.8518569 -0.8904853  0.9128865
 </code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

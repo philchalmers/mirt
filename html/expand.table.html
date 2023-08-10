@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>expand.table {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Expand summary table of patterns and frequencies</h2>
+<h2 id='expand.table'>Expand summary table of patterns and frequencies</h2>
 
 <h3>Description</h3>
 
@@ -40,14 +40,14 @@ assumed to be on rightmost column of the input data, though this can be modified
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>tabdata</code></td>
+<tr><td><code id="expand.table_:_tabdata">tabdata</code></td>
 <td>
 <p>An object of class <code>data.frame</code> or <code>matrix</code>
 with the unique response patterns and the number of frequencies
 in the rightmost column (though see <code>freq</code> for details on how to omit this
 column)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>freq</code></td>
+<tr><td><code id="expand.table_:_freq">freq</code></td>
 <td>
 <p>either a character vector specifying the column in <code>tabdata</code>
 to be used as the frequency count indicator for each response pattern (defaults to
@@ -56,7 +56,7 @@ the frequency counts. When using the latter approach the <code>tabdata</code> in
 include any information regarding the counts, and instead should only include the unique
 response patterns themselves</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>sample</code></td>
+<tr><td><code id="expand.table_:_sample">sample</code></td>
 <td>
 <p>logical; randomly switch the rows in the expanded table? This does not change the
 expanded data, only the row locations</p>
@@ -196,6 +196,6 @@ dim(table2.1)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>imputeMissing {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Imputing plausible data for missing values</h2>
+<h2 id='imputeMissing'>Imputing plausible data for missing values</h2>
 
 <h3>Description</h3>
 
@@ -41,20 +41,20 @@ list of complete datasets is returned instead.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>x</code></td>
+<tr><td><code id="imputeMissing_:_x">x</code></td>
 <td>
 <p>an estimated model x from the mirt package</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>Theta</code></td>
+<tr><td><code id="imputeMissing_:_Theta">Theta</code></td>
 <td>
 <p>a matrix containing the estimates of the latent trait scores
 (e.g., via <code><a href="../../mirt/help/fscores.html">fscores</a></code>)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>warn</code></td>
+<tr><td><code id="imputeMissing_:_warn">warn</code></td>
 <td>
 <p>logical; print warning messages?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="imputeMissing_:_...">...</code></td>
 <td>
 <p>additional arguments to pass</p>
 </td></tr>
@@ -87,7 +87,7 @@ dat &lt;- expand.table(LSAT7)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.38.3 
+## mirt version: 1.40 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -112,7 +112,7 @@ for(i in 1:20)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 25 EM iterations.
-## mirt version: 1.38.3 
+## mirt version: 1.40 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -125,7 +125,7 @@ for(i in 1:20)
 </code></pre>
 <pre><code class="language-r">scores &lt;- fscores(mod, method = 'MAP')
 
-#re-estimate imputed dataset (good to do this multiple times and average over)
+# re-estimate imputed dataset (good to do this multiple times and average over)
 fulldata &lt;- imputeMissing(mod, scores)
 (fullmod &lt;- mirt(fulldata, 1))
 </code></pre>
@@ -135,7 +135,7 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.38.3 
+## mirt version: 1.40 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -148,7 +148,7 @@ fulldata &lt;- imputeMissing(mod, scores)
 ## G2 (21) = 31.22, p = 0.0702
 ## RMSEA = 0.022, CFI = NaN, TLI = NaN
 </code></pre>
-<pre><code class="language-r">#with multipleGroup
+<pre><code class="language-r"># with multipleGroup
 set.seed(1)
 group &lt;- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 &lt;- multipleGroup(dat, 1, group, TOL=1e-2)
@@ -159,6 +159,6 @@ fulldata2 &lt;- imputeMissing(mod2, fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

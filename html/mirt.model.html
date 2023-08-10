@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>mirt.model {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Specify model information</h2>
+<h2 id='mirt.model'>Specify model information</h2>
 
 <h3>Description</h3>
 
@@ -48,33 +48,33 @@ when a string is passed to the <code>model</code> argument.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>input</code></td>
+<tr><td><code id="mirt.model_:_input">input</code></td>
 <td>
 <p>input for writing out the model syntax. Can either be a string declaration of
 class character or the so-called Q-matrix or class <code>matrix</code> that specifies the model
 either with integer or logical values. If the Q-matrix method
 is chosen covariances terms can be specified with the <code>COV</code> input</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>itemnames</code></td>
+<tr><td><code id="mirt.model_:_itemnames">itemnames</code></td>
 <td>
 <p>a character vector or factor indicating the item names. If a data.frame or
 matrix object is supplied the names will be extracted using <code>colnames(itemnames)</code>.
 Supplying this input allows the syntax to be specified with the raw item names rather than
 item locations</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>file</code></td>
+<tr><td><code id="mirt.model_:_file">file</code></td>
 <td>
 <p>a input specifying an external file that declares the input.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>COV</code></td>
+<tr><td><code id="mirt.model_:_COV">COV</code></td>
 <td>
 <p>a symmetric, logical matrix used to declare which covariance terms are estimated</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>quiet</code></td>
+<tr><td><code id="mirt.model_:_quiet">quiet</code></td>
 <td>
 <p>logical argument passed to <code>scan()</code> to suppress console read message</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="mirt.model_:_...">...</code></td>
 <td>
 <p>additional arguments for <code>scan()</code></p>
 </td></tr>
@@ -252,7 +252,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 #  COV = F1*F2
 
 
-#Or alternatively with a string input
+# Or alternatively with a string input
 s &lt;- 'F1 = 1,2,3,4-10
       F2 = 10-20
       (F1*F2) = 1,2,3,4-10
@@ -264,7 +264,7 @@ model &lt;- mirt.model(s)
 # mod &lt;- mirt(data, s)
 
 
-#Q-matrix specification
+# Q-matrix specification
 Q &lt;- matrix(c(1,1,1,0,0,0,0,0,0,1,1,1), ncol=2, dimnames = list(NULL, c('Factor1', 'Factor2')))
 COV &lt;- matrix(c(FALSE, TRUE, TRUE, FALSE), 2)
 model &lt;- mirt.model(Q, COV=COV)
@@ -309,6 +309,6 @@ mirtmodel &lt;- mirt.model(mirtsyn2, itemnames=dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

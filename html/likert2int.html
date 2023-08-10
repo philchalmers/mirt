@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>likert2int {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Convert ordered Likert-scale responses (character or factors) to integers</h2>
+<h2 id='likert2int'>Convert ordered Likert-scale responses (character or factors) to integers</h2>
 
 <h3>Description</h3>
 
@@ -39,11 +39,11 @@ object of the same dimensions with integer values.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>x</code></td>
+<tr><td><code id="likert2int_:_x">x</code></td>
 <td>
 <p>a matrix of character values or data.frame of character/factor vectors</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>levels</code></td>
+<tr><td><code id="likert2int_:_levels">levels</code></td>
 <td>
 <p>a named character vector indicating which integer values
 should be assigned to which elements. If omitted, the order of the elements
@@ -77,7 +77,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
 <pre><code class="language-r">## No test: 
 
-#simulate data
+# simulate data
 
 dat1 &lt;- matrix(sample(c('Disagree', 'Strongly Disagree', 'Agree',
                         'Neutral', 'Strongly Agree'), 1000*5, replace=TRUE),
@@ -286,6 +286,6 @@ head(dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

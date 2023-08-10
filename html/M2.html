@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>M2 {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Compute the M2 model fit statistic</h2>
+<h2 id='M2'>Compute the M2 model fit statistic</h2>
 
 <h3>Description</h3>
 
@@ -59,62 +59,62 @@ density components (where applicable).
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>obj</code></td>
+<tr><td><code id="M2_:_obj">obj</code></td>
 <td>
 <p>an estimated model object from the mirt package</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>type</code></td>
+<tr><td><code id="M2_:_type">type</code></td>
 <td>
 <p>type of fit statistic to compute. Options are &quot;M2&quot;, &quot;M2*&quot; for the univariate and
 bivariate collapsed version of the M2 statistic (&quot;M2&quot; currently limited to dichotomous
 response data only), and &quot;C2&quot; for a hybrid between
 M2 and M2* where only the bivariate moments are collapsed</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>calcNull</code></td>
+<tr><td><code id="M2_:_calcNull">calcNull</code></td>
 <td>
 <p>logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via <code><a href="../../mirt/help/createItem.html">createItem</a></code> will not)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>na.rm</code></td>
+<tr><td><code id="M2_:_na.rm">na.rm</code></td>
 <td>
 <p>logical; remove rows with any missing values? The M2 family of statistics
 requires a complete dataset in order to be well defined</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>quadpts</code></td>
+<tr><td><code id="M2_:_quadpts">quadpts</code></td>
 <td>
 <p>number of quadrature points to use during estimation. If <code>NULL</code>,
 a suitable value will be chosen based
 on the rubric found in <code><a href="../../mirt/help/fscores.html">fscores</a></code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>theta_lim</code></td>
+<tr><td><code id="M2_:_theta_lim">theta_lim</code></td>
 <td>
 <p>lower and upper range to evaluate latent trait integral for each dimension</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>CI</code></td>
+<tr><td><code id="M2_:_CI">CI</code></td>
 <td>
 <p>numeric value from 0 to 1 indicating the range of the confidence interval for
 RMSEA. Default returns the 90% interval</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>residmat</code></td>
+<tr><td><code id="M2_:_residmat">residmat</code></td>
 <td>
 <p>logical; return the residual matrix used to compute the SRMSR statistic?
 Only the lower triangle of the residual correlation matrix will be returned
 (the upper triangle is filled with NA's)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>QMC</code></td>
+<tr><td><code id="M2_:_QMC">QMC</code></td>
 <td>
 <p>logical; use quasi-Monte Carlo integration? Useful for higher dimensional models.
 If <code>quadpts</code> not specified, 5000 nodes are used by default</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>suppress</code></td>
+<tr><td><code id="M2_:_suppress">suppress</code></td>
 <td>
 <p>a numeric value indicating which parameter residual dependency combinations
 to flag as being too high. Absolute values for the standardized residuals greater than
 this value will be returned, while all values less than this value will be set to NA.
 Must be used in conjunction with the argument <code>residmat = TRUE</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="M2_:_...">...</code></td>
 <td>
 <p>additional arguments to pass</p>
 </td></tr>
@@ -166,7 +166,7 @@ dat &lt;- as.matrix(expand.table(LSAT7))
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.38.3 
+## mirt version: 1.40 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -201,7 +201,7 @@ resids
 <pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 ## -0.038677 -0.020697 -0.007169  0.001519  0.025035  0.054432
 </code></pre>
-<pre><code class="language-r">#M2 with missing data present
+<pre><code class="language-r"># M2 with missing data present
 dat[sample(1:prod(dim(dat)), 250)] &lt;- NA
 mod2 &lt;- mirt(dat, 1)
 # Compute stats by removing missing data row-wise
@@ -230,6 +230,6 @@ M2(pmod, type = 'C2')
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

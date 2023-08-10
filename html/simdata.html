@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>simdata {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Simulate response patterns</h2>
+<h2 id='simdata'>Simulate response patterns</h2>
 
 <h3>Description</h3>
 
@@ -60,12 +60,12 @@ a user input matrix of <code class="reqn">\theta</code>'s.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>a</code></td>
+<tr><td><code id="simdata_:_a">a</code></td>
 <td>
 <p>a matrix/vector of slope parameters. If slopes are to be constrained to
 zero then use <code>NA</code> or simply set them equal to 0</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>d</code></td>
+<tr><td><code id="simdata_:_d">d</code></td>
 <td>
 <p>a matrix/vector of intercepts. The matrix should have as many columns as
 the item with the largest number of categories, and filled empty locations
@@ -73,11 +73,11 @@ with <code>NA</code>. When a vector is used the test is assumed to consist only 
 (because only one intercept per item is provided). When <code>itemtype = 'lca'</code> intercepts will not
 be used</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>N</code></td>
+<tr><td><code id="simdata_:_N">N</code></td>
 <td>
 <p>sample size</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>itemtype</code></td>
+<tr><td><code id="simdata_:_itemtype">itemtype</code></td>
 <td>
 <p>a character vector of length <code>nrow(a)</code> (or 1, if all the item types are
 the same) specifying the type of items to simulate. Inputs can either be the same as
@@ -99,27 +99,27 @@ correct item traceline). For nested logit models the 'correct' category is alway
 category (i.e., == 1). It may be helpful to use <code><a href="../../mirt/help/mod2values.html">mod2values</a></code> on data-sets that
 have already been estimated to understand the itemtypes more intimately</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>sigma</code></td>
+<tr><td><code id="simdata_:_sigma">sigma</code></td>
 <td>
 <p>a covariance matrix of the underlying distribution. Default is
 the identity matrix. Used when <code>Theta</code> is not supplied</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>mu</code></td>
+<tr><td><code id="simdata_:_mu">mu</code></td>
 <td>
 <p>a mean vector of the underlying distribution. Default is a vector
 of zeros. Used when <code>Theta</code> is not supplied</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>guess</code></td>
+<tr><td><code id="simdata_:_guess">guess</code></td>
 <td>
 <p>a vector of guessing parameters for each item; only applicable
 for dichotomous items. Must be either a scalar value that will affect all of
 the dichotomous items, or a vector with as many values as to be simulated items</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>upper</code></td>
+<tr><td><code id="simdata_:_upper">upper</code></td>
 <td>
 <p>same as <code>guess</code>, but for upper bound parameters</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>nominal</code></td>
+<tr><td><code id="simdata_:_nominal">nominal</code></td>
 <td>
 <p>a matrix of specific item category slopes for nominal models.
 Should be the dimensions as the intercept specification with one less column, with <code>NA</code>
@@ -127,29 +127,29 @@ in locations where not applicable. Note that during estimation the first slope w
 constrained to 0 and the last will be constrained to the number of categories minus 1,
 so it is best to set these as the values for the first and last categories as well</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>t</code></td>
+<tr><td><code id="simdata_:_t">t</code></td>
 <td>
 <p>matrix of t-values for the 'ggum' itemtype, where each row corresponds to a given item.
 Also determines the number of categories, where <code>NA</code> can be used for non-applicable categories</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>Theta</code></td>
+<tr><td><code id="simdata_:_Theta">Theta</code></td>
 <td>
 <p>a user specified matrix of the underlying ability parameters,
 where <code>nrow(Theta) == N</code> and <code>ncol(Theta) == ncol(a)</code>. When this is supplied the
 <code>N</code> input is not required</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>gpcm_mats</code></td>
+<tr><td><code id="simdata_:_gpcm_mats">gpcm_mats</code></td>
 <td>
 <p>a list of matrices specifying the scoring scheme for generalized partial
 credit models (see <code><a href="../../mirt/help/mirt.html">mirt</a></code> for details)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>returnList</code></td>
+<tr><td><code id="simdata_:_returnList">returnList</code></td>
 <td>
 <p>logical; return a list containing the data, item objects defined
 by <code>mirt</code> containing the population parameters and item structure, and the
 latent trait matrix <code>Theta</code>? Default is FALSE</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>model</code></td>
+<tr><td><code id="simdata_:_model">model</code></td>
 <td>
 <p>a single group object, typically returned by functions such as <code><a href="../../mirt/help/mirt.html">mirt</a></code> or
 <code><a href="../../mirt/help/bfactor.html">bfactor</a></code>. Supplying this will render all other parameter elements (excluding the
@@ -157,29 +157,29 @@ latent trait matrix <code>Theta</code>? Default is FALSE</p>
 This input can therefore be used to create parametric bootstrap data whereby plausible data implied by the
 estimated model can be generated and evaluated</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>equal.K</code></td>
+<tr><td><code id="simdata_:_equal.K">equal.K</code></td>
 <td>
 <p>logical; when a <code>model</code> input is supplied, should the generated data contain the same
 number of categories as the original data indicated by <code>extract.mirt(model, 'K')</code>? Default is TRUE,
 which will redrawn data until this condition is satisfied</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>which.items</code></td>
+<tr><td><code id="simdata_:_which.items">which.items</code></td>
 <td>
 <p>an integer vector used to indicate which items to simulate when a
 <code>model</code> input is included. Default simulates all items</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>mins</code></td>
+<tr><td><code id="simdata_:_mins">mins</code></td>
 <td>
 <p>an integer vector (or single value to be used for each item) indicating what
 the lowest category should be. If <code>model</code> is supplied then this will be extracted from
 <code>slot(mod, 'Data')$mins</code>, otherwise the default is 0</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>lca_cats</code></td>
+<tr><td><code id="simdata_:_lca_cats">lca_cats</code></td>
 <td>
 <p>a vector indicating how many categories each lca item should have. If not supplied
 then it is assumed that 2 categories should be generated for each item</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>prob.list</code></td>
+<tr><td><code id="simdata_:_prob.list">prob.list</code></td>
 <td>
 <p>an optional list containing matrix/data.frames of probabilities values for
 each category to be simulated. This is useful when creating customized probability functions
@@ -297,7 +297,7 @@ d &lt;- matrix(c(
 2.0,0.0,NA),ncol=3,byrow=TRUE)
 
 nominal &lt;- matrix(NA, nrow(d), ncol(d))
-#the first 0 and last (ncat - 1) = 2 values are the recommended constraints
+# the first 0 and last (ncat - 1) = 2 values are the recommended constraints
 nominal[4, ] &lt;- c(0,1.2,2)
 
 sigma &lt;- diag(3)
@@ -469,7 +469,7 @@ nonlindata &lt;- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 
 a &lt;- matrix(rlnorm(4,0,.2))
 
-#first column of item 4 is the intercept for the correct category of 2PL model,
+# first column of item 4 is the intercept for the correct category of 2PL model,
 #    otherwise nominal model configuration
 d &lt;- matrix(c(
 -1.0,NA,NA,NA,
@@ -488,7 +488,7 @@ dataset &lt;- simdata(a,d,2000,items,nominal=nominal)
 #coef(mod)
 #itemplot(mod,4)
 
-#return list of simulation parameters
+# return list of simulation parameters
 listobj &lt;- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 str(listobj)
 </code></pre>
@@ -722,6 +722,6 @@ prob.list[[1]] &lt;- x@P(x@par, theta)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

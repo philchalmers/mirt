@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>mirtCluster {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Define a parallel cluster object to be used in internal functions</h2>
+<h2 id='mirtCluster'>Define a parallel cluster object to be used in internal functions</h2>
 
 <h3>Description</h3>
 
@@ -43,22 +43,22 @@ it is not recommended to define a mirtCluster.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>spec</code></td>
+<tr><td><code id="mirtCluster_:_spec">spec</code></td>
 <td>
 <p>input that is passed to <code>parallel::makeCluster()</code>. If no input is given the
 maximum number of available local cores minus 1 will be used.
 Setting this to NULL will skip a new definition (allows <code>omp_threads</code> to be used independently)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>omp_threads</code></td>
+<tr><td><code id="mirtCluster_:_omp_threads">omp_threads</code></td>
 <td>
 <p>number of OpenMP threads to use (currently applies to E-step computations only).
 Not used when argument input is missing</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>remove</code></td>
+<tr><td><code id="mirtCluster_:_remove">remove</code></td>
 <td>
 <p>logical; remove previously defined <code>mirtCluster()</code>?</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>...</code></td>
+<tr><td><code id="mirtCluster_:_...">...</code></td>
 <td>
 <p>additional arguments to pass to <code>parallel::makeCluster</code></p>
 </td></tr>
@@ -102,6 +102,6 @@ if(interactive()){
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

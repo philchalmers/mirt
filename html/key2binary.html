@@ -21,7 +21,7 @@ function processMathHTML() {
 
 <table style="width: 100%;"><tr><td>key2binary {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
 
-<h2>Score a test by converting response patterns to binary data</h2>
+<h2 id='key2binary'>Score a test by converting response patterns to binary data</h2>
 
 <h3>Description</h3>
 
@@ -39,19 +39,19 @@ dichotomous format, given a response key.
 <h3>Arguments</h3>
 
 <table>
-<tr style="vertical-align: top;"><td><code>fulldata</code></td>
+<tr><td><code id="key2binary_:_fulldata">fulldata</code></td>
 <td>
 <p>an object of class <code>data.frame</code>, <code>matrix</code>, or
 <code>table</code> with the response patterns</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>key</code></td>
+<tr><td><code id="key2binary_:_key">key</code></td>
 <td>
 <p>a vector or matrix consisting of the 'correct' response to the items. Each
 value/row corresponds to each column in <code>fulldata</code>. If the input is a matrix, multiple
 scoring keys can be supplied for each item. NA values are used to indicate no scoring key (or
 in the case of a matrix input, no additional scoring keys)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td><code>score_missing</code></td>
+<tr><td><code id="key2binary_:_score_missing">score_missing</code></td>
 <td>
 <p>logical; should missing data elements be returned as incorrect (i.e., 0)?
 If <code>FALSE</code>, all missing data terms will be kept as missing</p>
@@ -197,6 +197,6 @@ d01
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.38.3 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>
