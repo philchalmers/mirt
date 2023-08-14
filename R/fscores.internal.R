@@ -459,7 +459,10 @@ setMethod(
                 }
                 T <- na.omit(T)
                 E <- na.omit(E)
-                reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
+                if(method %in% c('ML', 'WLE'))
+                    reliability <- 1 -  colMeans(E^2) / (diag(var(T)))
+                else
+                    reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
                 names(reliability) <- colnames(scores)
                 if(returnER) return(reliability)
     			if(verbose && !discrete){

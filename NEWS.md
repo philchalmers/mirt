@@ -1,3 +1,9 @@
+# Changes in mirt 1.41
+
+- Empirical reliability estimates for ML/WLE modified to a form that 
+  is not in reference to the latent trait density function (reported by 
+  Hynek Cigler)
+
 # Changes in mirt 1.40
 
 - `technical` list gains a `nconstrain` argument for specifying equality 
