@@ -459,8 +459,8 @@ setMethod(
                 }
                 T <- na.omit(T)
                 E <- na.omit(E)
-                if(method %in% c('ML', 'WLE'))
-                    reliability <- 1 -  colMeans(E^2) / (diag(var(T)))
+                if(dots$T_as_X)
+                    reliability <- 1 - colMeans(E^2) / (diag(var(T)))
                 else
                     reliability <- diag(var(T)) / (diag(var(T)) + colMeans(E^2))
                 names(reliability) <- colnames(scores)

@@ -18,6 +18,7 @@ fscores(
   quadpts = NULL,
   item_weights = rep(1, extract.mirt(object, "nitems")),
   returnER = FALSE,
+  X_as_truescores = FALSE,
   return.acov = FALSE,
   mean = NULL,
   cov = NULL,
@@ -157,6 +158,10 @@ estimates (unidimensional models only). Must be in the form that matches
 \code{full.scores = FALSE} (mostly used in the \code{mirtCAT} package)}
 
 \item{...}{additional arguments to be passed to \code{nlm}}
+
+\item{T_as_X}{logical; should the observed variance be equal to
+\code{var(X) = var(T) + E(E^2)} or \code{var(X) = var(T)} when computing
+empirical reliability estimates? Default (\code{FALSE}) uses the former}
 }
 \description{
 Computes MAP, EAP, ML (Embretson & Reise, 2000), EAP for sum-scores (Thissen et al., 1995),

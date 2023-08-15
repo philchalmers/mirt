@@ -1,8 +1,8 @@
 # Changes in mirt 1.41
 
-- Empirical reliability estimates for ML/WLE modified to a form that 
-  is not in reference to the latent trait density function (reported by 
-  Hynek Cigler)
+- Empirical reliability estimates in `fscores()` and `empirical_rxx()` 
+  include option to use the true score variance as an estimate of 
+  the observed score variance (suggested by Hynek Cigler)
 
 # Changes in mirt 1.40
 
