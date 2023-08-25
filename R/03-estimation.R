@@ -402,8 +402,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             opts$technical$customTheta <- diag(PrepList[[1L]]$nfact)
     }
     RETURNVALUES <- FALSE
+    SUPPLIED_STARTS <- FALSE
     if(!is.null(pars)){
         if(is(pars, 'data.frame')){
+            SUPPLIED_STARTS <- TRUE
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
                                        lrPars=lrPars, lr.random=latent.regression$lr.random,
                                        MG = TRUE)
@@ -459,7 +461,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
-    if(opts$dentype == 'mixture'){
+    if(opts$dentype == 'mixture' && !SUPPLIED_STARTS){
         tmp <- length(pars[[1L]][[nitems + 1L]]@par)
         pars[[1L]][[nitems + 1L]]@est[tmp] <- FALSE
         for(g in 1L:Data$ngroups)
