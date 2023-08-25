@@ -1,5 +1,9 @@
 # Changes in mirt 1.41
 
+- Fix Zero-inflated model example in `multipleGroup()`, which required the 
+  discontinuous trait location to be populated explicitly with a
+  `customTheta` syntax (reported by Brooke Magnus)
+
 - Empirical reliability estimates in `fscores()` and `empirical_rxx()` 
   include option to use the true score variance as an estimate of 
   the observed score variance (suggested by Hynek Cigler)

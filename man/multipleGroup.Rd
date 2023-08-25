@@ -392,6 +392,36 @@ itemfit(mod_mix2)
 mod <- mirt(dat)
 anova(mod, mod_mix2)
 
+########################################
+# Zero-inflated 2PL IRT model
+
+n <- 5000
+nitems <- 20
+
+a <- rep(2, nitems)
+d <- rep(c(-2,-1,0,1,2), each=nitems/5)
+zi_p <- 0.2 # Proportion of people in zero class
+
+theta <- rnorm(n, 0, 1)
+zeros <- matrix(0, n*zi_p, nitems)
+nonzeros <- simdata(a, d, n*(1-zi_p), itemtype = '2PL',
+                   Theta = as.matrix(theta[1:(n*(1-zi_p))]))
+data <- rbind(nonzeros, zeros)
+
+# define class with extreme theta but fixed item parameters
+zigrm <- "F = 1-20
+          START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
+                              (1-20, a1, 1.0), (1-20, d, 0)
+          FIXED [MIXTURE_1] = (GROUP, MEAN_1), (GROUP, COV_11),
+                              (1-20, a1), (1-20, d)"
+
+# define custom Theta integration grid that contains extreme theta + normal grid
+technical <- list(customTheta = matrix(c(-100, seq(-6,6,length.out=61))))
+
+# fit ZIM-IRT
+zigrm.fit <- multipleGroup(data, zigrm, dentype = 'mixture-2', technical=technical)
+coef(zigrm.fit, simplify=TRUE)
+
 }
 }
 \references{
