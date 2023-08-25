@@ -87,8 +87,8 @@ void P_graded(vector<double> &P, const vector<double> &par,
             for(int i = (Pk.ncol()-2); i >= 0; --i){
                 for(int j = (N-1); j >= 0; --j){
                     P[which] = Pk(j,i) - Pk(j,i+1);
-                    if(P[which] < 1e-50) P[which] = 1e-50;
-                    else if((1.0 - P[which]) < 1e-50) P[which] = 1.0 - 1e-50;
+                    if(P[which] < 1e-20) P[which] = 1e-20;
+                    else if((1.0 - P[which]) < 1e-20) P[which] = 1.0 - 1e-20;
                     --which;
                 }
             }
