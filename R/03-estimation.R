@@ -495,7 +495,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         r <- Data$Freq[[g]]
         rr <- rr + r
     }
-    df <- Data$ngroups * (prod(PrepList[[1L]]$K) - 1)
+    df <- if(opts$dentype == 'mixture') prod(PrepList[[1L]]$K) - 1
+        else Data$ngroups * (prod(PrepList[[1L]]$K) - 1)
     if(df > 1e10) df <- 1e10
     nestpars <- nconstr <- 0L
     for(g in seq_len(Data$ngroups))

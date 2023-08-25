@@ -388,6 +388,10 @@ anova(mod_mix, mod_mix2)
 coef(mod_mix2, simplify=TRUE)
 itemfit(mod_mix2)
 
+# Compare to single group
+mod <- mirt(dat)
+anova(mod, mod_mix2)
+
 }
 }
 \references{

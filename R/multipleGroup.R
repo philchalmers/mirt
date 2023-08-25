@@ -371,6 +371,10 @@
 #' coef(mod_mix2, simplify=TRUE)
 #' itemfit(mod_mix2)
 #'
+#' # Compare to single group
+#' mod <- mirt(dat)
+#' anova(mod, mod_mix2)
+#'
 # # Zero-inflated 2PL IRT model
 # model <- "F = 1-20
 #           START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
