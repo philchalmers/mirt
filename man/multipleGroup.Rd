@@ -388,15 +388,6 @@ anova(mod_mix, mod_mix2)
 coef(mod_mix2, simplify=TRUE)
 itemfit(mod_mix2)
 
-# Zero-inflated 2PL IRT model
-model <- "F = 1-20
-          START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
-             (1-20, a1, 1.0), (1-20, d, 0.0)
-          FIXED [MIXTURE_1] = (GROUP, MEAN_1), (GROUP, COV_11),
-             (1-20, a1), (1-20, d)"
-zip <- multipleGroup(dat, model, dentype = 'mixture-2')
-coef(zip, simplify=TRUE)
-
 }
 }
 \references{
