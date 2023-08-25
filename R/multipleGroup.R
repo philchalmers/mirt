@@ -378,7 +378,7 @@
 #' ########################################
 #' # Zero-inflated 2PL IRT model
 #'
-#' n <- 5000
+#' n <- 1000
 #' nitems <- 20
 #'
 #' a <- rep(2, nitems)
@@ -392,7 +392,7 @@
 #' data <- rbind(nonzeros, zeros)
 #'
 #' # define class with extreme theta but fixed item parameters
-#' zigrm <- "F = 1-20
+#' zi2PL <- "F = 1-20
 #'           START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
 #'                               (1-20, a1, 1.0), (1-20, d, 0)
 #'           FIXED [MIXTURE_1] = (GROUP, MEAN_1), (GROUP, COV_11),
@@ -401,9 +401,9 @@
 #' # define custom Theta integration grid that contains extreme theta + normal grid
 #' technical <- list(customTheta = matrix(c(-100, seq(-6,6,length.out=61))))
 #'
-#'# fit ZIM-IRT
-#' zigrm.fit <- multipleGroup(data, zigrm, dentype = 'mixture-2', technical=technical)
-#' coef(zigrm.fit, simplify=TRUE)
+#' # fit ZIM-IRT
+#' zi2PL.fit <- multipleGroup(data, zi2PL, dentype = 'mixture-2', technical=technical)
+#' coef(zi2PL.fit, simplify=TRUE)
 #'
 #' }
 multipleGroup <- function(data, model = 1, group, itemtype = NULL,
