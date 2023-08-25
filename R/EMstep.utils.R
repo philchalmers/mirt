@@ -348,7 +348,10 @@ Mstep.mixture <- function(pars, Prior, gTheta, J, constrain){
     rrs <- sapply(1L:length(pars),
                   function(g) sum(pars[[g]][[J+1L]]@rr))
     total <- sum(rrs)
-    lps <- log(rrs/total)
+    prop <- rrs/total
+    prop <- ifelse(prop < .0001, .0001, prop)
+    prop <- ifelse(prop > 1 - .0001, 1 - .0001, prop)
+    lps <- log(prop)
     lps <- lps - lps[1L]
     lps
 }
