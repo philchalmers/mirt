@@ -442,6 +442,8 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
                         dentype, sitems, cycles, rlist, lrPars = list(), full=FALSE,
                         MC = FALSE){
     prior <- Prior <- Priorbetween <- vector('list', ngroups)
+    if(dentype == 'mixture')
+        pis <- ExtractMixtures(pars)
     if(dentype == 'custom'){
         for(g in seq_len(ngroups)){
             gp <- pars[[g]][[J+1L]]
@@ -529,7 +531,6 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
         }
     }
     if(dentype == 'mixture'){
-        pis <- ExtractMixtures(pars)
         for(g in seq_len(ngroups))
             Prior[[g]] <- pis[g] * Prior[[g]]
     }
