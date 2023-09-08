@@ -472,8 +472,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         newret$SRMSR <- SRMSR
     }
     if(calcNull){
-        null.mod <- try(computeNullModel(data=obj@Data$data, itemtype=obj@Model$itemtype,
-                                         group=obj@Data$group,
+        null.mod <- try(computeNullModel(data=obj@Data$data, group=obj@Data$group,
                                          key=obj@Internals$key))
         if(is(null.mod, 'try-error'))
             stop('Null model did not converge or is not supported', call.=FALSE)

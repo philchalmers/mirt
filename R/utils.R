@@ -2284,9 +2284,7 @@ MGC2SC <- function(x, which){
     tmp
 }
 
-computeNullModel <- function(data, itemtype, key, group=NULL){
-    if(is.null(itemtype)) itemtype <- rep('graded', ncol(data))
-    itemtype[itemtype == 'Rasch'] <- 'gpcm'
+computeNullModel <- function(data, key, group=NULL){
     if(!is.null(group) && !all(group == 'all')){
         null.mod <- suppressMessages(multipleGroup(data, 1L, group=group, verbose=FALSE,
                                   key=key, quadpts=3, technical=list(NULL.MODEL=TRUE)))
