@@ -2287,12 +2287,12 @@ MGC2SC <- function(x, which){
 computeNullModel <- function(data, itemtype, key, group=NULL){
     if(is.null(itemtype)) itemtype <- rep('graded', ncol(data))
     itemtype[itemtype == 'Rasch'] <- 'gpcm'
-    if(!is.null(group)){
-        null.mod <- multipleGroup(data, 1L, itemtype=itemtype, group=group, verbose=FALSE,
-                                  key=key, quadpts=3, technical=list(NULL.MODEL=TRUE))
+    if(!is.null(group) && !all(group == 'all')){
+        null.mod <- suppressMessages(multipleGroup(data, 1L, group=group, verbose=FALSE,
+                                  key=key, quadpts=3, technical=list(NULL.MODEL=TRUE)))
     } else {
-        null.mod <- mirt(data, 1L, itemtype=itemtype, verbose=FALSE, key=key, quadpts=3,
-                         technical=list(NULL.MODEL=TRUE))
+        null.mod <- suppressMessages(mirt(data, 1L, verbose=FALSE,
+                                          key=key, quadpts=3, technical=list(NULL.MODEL=TRUE)))
     }
     null.mod
 }
