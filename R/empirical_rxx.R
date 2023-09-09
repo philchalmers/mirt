@@ -35,7 +35,7 @@
 #' empirical_rxx(theta_se, T_as_X = TRUE)
 #'
 #' }
-empirical_rxx <- function(Theta_SE, X_as_truescore = FALSE){
+empirical_rxx <- function(Theta_SE, T_as_X = FALSE){
     stopifnot(is.matrix(Theta_SE))
     stopifnot(ncol(Theta_SE) %% 2 == 0)
     nms <- colnames(Theta_SE)
