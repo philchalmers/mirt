@@ -15,6 +15,7 @@
 #'   be used instead
 #' @param stats.only logical; return only the person fit statistics without their associated
 #'   response pattern?
+#' @param return.resids logical; return the N by J matrix of person and item residuals?
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -61,6 +62,16 @@
 #' fit <- personfit(x)
 #' head(fit)
 #'
+#' # raw residuals
+#' head(personfit(x, return.resids=TRUE))
+#'
+#' # with missing data
+#' data[3, c(1,3,5,7)] <- NA
+#' x.miss <- mirt(data, 1)
+#' fit.miss <- personfit(x.miss)
+#' head(fit.miss)
+#' head(personfit(x.miss, return.resids=TRUE))
+#'
 #' #using precomputed Theta
 #' Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 #' head(personfit(x, Theta=Theta))
@@ -87,14 +98,13 @@
 #'
 #'   }
 #'
-personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
+personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return.resids = FALSE,
+                      ...){
     if(missing(x)) missingMsg('x')
     if(is(x, 'DiscreteClass'))
         stop('Discrete latent structures not yet supported', call.=FALSE)
     if(is(x, 'MixtureClass'))
         stop('Mixture latent structures not yet supported', call.=FALSE)
-    if(any(is.na(x@Data$data)) && is.null(attr(x, 'inoutfitreturn')))
-        stop('Fit statistics cannot be computed when there are missing data.', call.=FALSE)
     if(is(x, 'MultipleGroupClass')){
         ret <- vector('list', x@Data$ngroups)
         if(is.null(Theta))
@@ -132,8 +142,11 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
     }
     N <- nrow(Theta)
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-    for (i in seq_len(J))
+    missing_loc <- is.na(extract.mirt(x, 'data'))
+    for (i in seq_len(J)){
         itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+        itemtrace[ missing_loc[,i],itemloc[i]:(itemloc[i+1L] - 1L)] <- 1
+    }
     LL <- itemtrace * fulldata
     LL[LL < .Machine$double.eps] <- 1
     LL <- rowSums(log(LL))
@@ -161,14 +174,20 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, ...){
         W[ ,i] <- rowSums((Emat - rowSums(Emat * P))^2 * P)
         C[ ,i] <- rowSums((Emat - rowSums(Emat * P))^4 * P)
     }
+    resid[missing_loc] <- W[missing_loc] <- C[missing_loc] <- NA
+    if(return.resids){
+        colnames(resid) <- extract.mirt(x, 'itemnames')
+        return(resid)
+    }
     W[W^2 < 1e-5] <- sqrt(1e-5)
     if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))
-    outfit <- rowSums(resid^2/W) / J
-    q.outfit <- sqrt(rowSums((C / W^2) / J^2) - 1 / J)
+    iJ <- rowSums(!missing_loc)
+    outfit <- rowSums(resid^2/W, na.rm = TRUE) / iJ
+    q.outfit <- sqrt(rowSums((C / W^2) / J^2, na.rm=TRUE) - 1 / iJ)
     q.outfit[q.outfit > 1.4142] <- 1.4142
     z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
-    infit <- rowSums(resid^2) / rowSums(W)
-    q.infit <- sqrt(rowSums(C - W^2) / rowSums(W)^2)
+    infit <- rowSums(resid^2, na.rm = TRUE) / rowSums(W, na.rm=TRUE)
+    q.infit <- sqrt(rowSums(C - W^2, na.rm=TRUE) / rowSums(W, na.rm=TRUE)^2)
     q.infit[q.infit > 1.4142] <- 1.4142
     z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
     ret <- data.frame(x@Data$data, outfit=outfit, z.outfit=z.outfit,

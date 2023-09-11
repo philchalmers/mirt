@@ -4,7 +4,14 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-personfit(x, method = "EAP", Theta = NULL, stats.only = TRUE, ...)
+personfit(
+  x,
+  method = "EAP",
+  Theta = NULL,
+  stats.only = TRUE,
+  return.resids = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass} or \code{MultipleGroupClass}}
@@ -17,6 +24,8 @@ be used instead}
 
 \item{stats.only}{logical; return only the person fit statistics without their associated
 response pattern?}
+
+\item{return.resids}{logical; return the N by J matrix of person and item residuals?}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
@@ -47,6 +56,16 @@ data[2,] <- rep(1:0, each = 10)
 x <- mirt(data, 1)
 fit <- personfit(x)
 head(fit)
+
+# raw residuals
+head(personfit(x, return.resids=TRUE))
+
+# with missing data
+data[3, c(1,3,5,7)] <- NA
+x.miss <- mirt(data, 1)
+fit.miss <- personfit(x.miss)
+head(fit.miss)
+head(personfit(x.miss, return.resids=TRUE))
 
 #using precomputed Theta
 Theta <- fscores(x, method = 'MAP', full.scores = TRUE)

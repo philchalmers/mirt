@@ -4,7 +4,7 @@
 \alias{empirical_rxx}
 \title{Function to calculate the empirical (marginal) reliability}
 \usage{
-empirical_rxx(Theta_SE, X_as_truescore = FALSE)
+empirical_rxx(Theta_SE, T_as_X = FALSE)
 }
 \arguments{
 \item{Theta_SE}{a matrix of latent trait estimates returned from \code{\link{fscores}} with the options

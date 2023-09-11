@@ -1,5 +1,8 @@
 # Changes in mirt 1.41
 
+- Allow missing data patterns in `personfit()`, as well as a new option 
+  to return all raw item by person residuals (requested by George Karabatsos)
+
 - Fix Zero-inflated model example in `multipleGroup()`, which required the 
   discontinuous trait location to be populated explicitly with a
   `customTheta` syntax (reported by Brooke Magnus)
