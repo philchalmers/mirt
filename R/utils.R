@@ -2505,7 +2505,7 @@ removeMissing <- function(obj){
     for(g in seq_len(length(obj@Data$groupNames))){
         whc <- obj@Data$group == obj@Data$groupNames[g]
         ind2 <- obj@Data$rowID[whc]
-        pick2 <- ind2 %in% pick
+        pick2 <- ind2 %in% names(pick)
         obj@Data$fulldata[[g]] <- obj@Data$fulldata[[g]][!pick2, , drop=FALSE]
     }
     obj@Data$group <- obj@Data$group[-pick]
