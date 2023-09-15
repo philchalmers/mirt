@@ -1,5 +1,8 @@
 # Changes in mirt 1.41
 
+- When computing category-level information curves include the negative Hessian
+  in computations (reported by Milica Kabic)
+
 - Allow missing data patterns in `personfit()`, as well as a new option 
   to return all raw item by person residuals (requested by George Karabatsos)
 

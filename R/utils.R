@@ -1326,7 +1326,8 @@ ItemInfo2 <- function(x, Theta, total.info = TRUE, MD = FALSE, DERIV = NULL, P =
             info <- info + outer(as.numeric(dx$grad[[i]]), as.numeric(dx$grad[[i]])) / P[ ,i]
     } else {
         grad <- do.call(cbind, dx$grad)
-        info <- grad^2 / P
+        hess <- do.call(cbind, dx$hess)
+        info <- grad^2 / P - hess
         if(total.info) info <- rowSums(info)
     }
     return(info)
