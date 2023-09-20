@@ -415,7 +415,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             attr(PrepList, 'random') <- NULL
             attr(PrepList, 'lr.random') <- NULL
         }
-        if(!is.null(attr(pars, 'values')) || (is.character(pars) && pars == 'values'))
+        if(!is.null(attr(pars, 'values')) || (is.character(pars)))
             RETURNVALUES <- TRUE
     }
     pars <- vector('list', Data$ngroups)
