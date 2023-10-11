@@ -25,8 +25,8 @@ test_that('basics', {
     expect_equal(as.vector(info), c(0.2031261,0.2118485,0.2069816,0.187747,0.1793368,0.1902587,0.1761818),
                  tolerance=1e-6)
     info2 <- iteminfo(item1, Theta, total.info = FALSE)
-    expect_equal(as.vector(info2[1:2, ]), c(0.09691134,0.1039888,0.02656885,0.0002719432,
-                 0.07306797,0.09274217,0.006577983,0.01484559), tolerance = 1e-4)
+    expect_equal(as.vector(info2[1:2, ]), c(0.08307,0.03806,0.10555,0.12753,0.01445,0.04593,6e-05,0.00032),
+                 tolerance = 1e-4)
     rxx <- marginal_rxx(mod)
     expect_equal(rxx, 0.4209159, tolerance=1e-6)
     MD <- unname(MDISC(mod)[1])
