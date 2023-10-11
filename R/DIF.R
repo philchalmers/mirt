@@ -260,12 +260,16 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             for(i in seq_len(length(parnum))){
                 for(j in 2L:length(parnum[[i]])){
                     # FIXME this won't work with more complex constraints (e.g., a1.15.51)
-                    L[ind, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
-                    L[ind, paste0(which.par[i], '.', parnum[[i]][j]) == infoname] <- -1
+                    L[ind, infoname %in% paste0(which.par, '.', parnum[[i]][1L])] <- 1
+                    L[ind, infoname %in% paste0(which.par, '.', parnum[[i]][j])] <- -1
                     ind <- ind + 1L
                 }
             }
-            res <- wald(model, L)
+            res <- try(wald(model, L), silent = TRUE)
+            if(is(res, 'try-error')){
+                warning(sprintf('Wald test for \'%s\' failed.', itemnames[item]))
+                res <- data.frame(W=NA, df=NA, p=NA)
+            }
             return(res)
         }
         if(drop){
