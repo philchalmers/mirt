@@ -242,6 +242,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         for(i in seq_len(length(which.par))){
             tmp <- values$parnum[values$name == which.par[i] &
                                              values$item == itemnames[item]]
+            if(all(is.na(tmp))) next
             parnum[[i]] <- tmp[whcgroup]
         }
         for(i in length(parnum):1L)

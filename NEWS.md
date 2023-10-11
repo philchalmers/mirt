@@ -1,5 +1,8 @@
 # Changes in mirt 1.41
 
+- Fix for `DIF()` when sparse data included with mixed item formats (reported by
+  Heather Leigh Kayton)
+
 - When computing category-level information curves include the negative Hessian
   in computations (reported by Milica Kabic)
 
