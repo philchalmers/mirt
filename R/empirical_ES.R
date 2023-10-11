@@ -189,12 +189,13 @@ empirical_ES <- function(mod, Theta.focal = NULL,
     theta.den   <- dnorm(theta.normal,mean=focal.theta.mean.obs, sd=1)
     theta.density <- theta.den / sum(theta.den)
     nitems <- length(focal_items)
+    itemnames <- extract.mirt(mod, 'itemnames')[focal_items]
     list.item_ES_foc.obs <- list()
     list.item_ES_ref.obs <- list()
     list.item_ES_foc.nrm <- list()
     list.item_ES_ref.nrm <- list()
     ###### compute the expected scores (ES)
-    for(i in 1:nitems){
+    for(i in focal_items){
       foc.extract<-extract.item(focal, i)
       ref.extract<-extract.item(ref, i)
       foc.ES.obs <- expected.item(foc.extract,Theta.focal)
@@ -240,9 +241,9 @@ empirical_ES <- function(mod, Theta.focal = NULL,
     UIDN <- colSums(weighted.dif.abs.nrm)
     df.item.output <- data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,
                                  mat.item.max.d,mean.ES.foc,mean.ES.ref)
-    row.names(df.item.output)<-paste0("item.",1:nrow(df.item.output))
+    row.names(df.item.output) <- itemnames
     df.item.output <- as.mirt_df(df.item.output)
-    if(!plot && DIF) return(df.item.output[focal_items, ])
+    if(!plot && DIF) return(df.item.output[itemnames, ])
 
     ##################DTF####################
     STDS <- sum(SIDS)
