@@ -91,7 +91,7 @@ samples from the posterior (silently passes object to \code{\link{mirt}}, theref
 one will be created which decreases as the number of dimensions increases
 (and therefore for estimates such as EAP, will be less accurate). This is determined from
 the switch statement
-\code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}}
+\code{quadpts <- switch(as.character(nfact), '1'=121, '2'=61, '3'=31, '4'=19, '5'=11, '6'=7, 5)}}
 
 \item{item_weights}{a user-defined weight vector used in the likelihood expressions
 to add more/less weight for a given observed response. Default is a vector of 1's,

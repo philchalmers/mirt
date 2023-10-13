@@ -67,7 +67,7 @@
 #'   one will be created which decreases as the number of dimensions increases
 #'   (and therefore for estimates such as EAP, will be less accurate). This is determined from
 #'   the switch statement
-#'   \code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}
+#'   \code{quadpts <- switch(as.character(nfact), '1'=121, '2'=61, '3'=31, '4'=19, '5'=11, '6'=7, 5)}
 #' @param theta_lim lower and upper range to evaluate latent trait integral for each dimension. If
 #'   omitted, a range will be generated automatically based on the number of dimensions
 #' @param max_theta the maximum/minimum value any given factor score estimate will achieve using
@@ -254,7 +254,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
         if(QMC && is.null(quadpts)) quadpts <- 5000
         if(is.null(quadpts))
             quadpts <- switch(as.character(object@Model$nfact),
-                              '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)
+                              '1'=121, '2'=61, '3'=31, '4'=19, '5'=11, '6'=7, 5)
     } else quadpts <- 1
     if(method == 'plausible'){
         plausible.draws <- 1
