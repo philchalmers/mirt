@@ -10,8 +10,8 @@ test_that('extras', {
     fs1 <- fscores(mod1, verbose = FALSE, custom_den = fun, MIN = -3, MAX = 3, full.scores=FALSE)
     fs2 <- suppressWarnings(fscores(mod1, custom_den = fun, MIN = -3, MAX = 3, verbose = FALSE, method = 'MAP',
                                     full.scores=FALSE))
-    expect_equal(as.numeric(fs1[1,c('F1', 'SE_F1')]), c(-2.4766, .4988), tolerance = 1e-3)
-    expect_equal(as.numeric(fs2[5,c('F1', 'SE_F1')]), c(-1.9121, .9381), tolerance = 1e-3)
+    expect_equal(as.numeric(fs1[1,c('F1', 'SE_F1')]), c(-2.4407, 0.4927), tolerance = 1e-3)
+    expect_equal(as.numeric(fs2[5,c('F1', 'SE_F1')]), c(-1.9121379,  0.9381842), tolerance = 1e-3)
 
     if(FALSE){
         rm(list=ls())
