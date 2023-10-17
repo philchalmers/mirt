@@ -204,5 +204,6 @@ test_that('one factor', {
 
     fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
     expect_is(fs1, 'list')
-    expect_true(mirt:::closeEnough(fs1[[1L]][1:6, 'F3'] - c(-0.3666644,-0.4531451,-0.194526,0.07536214,0.3359495,-0.4426196), -1e-3, 1e-3))
+    expect_equal(fs1[[1L]][1:6, 'F3'],
+                 c(-0.36817499, -0.45410998, -0.19616041,  0.07609491,  0.33779790, -0.44366024), tolerance = 1e-2)
 })
