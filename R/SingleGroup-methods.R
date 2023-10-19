@@ -912,8 +912,7 @@ setMethod(
             nfact <- extract.mirt(object, 'nfact')
             tmpdat <- matrix(0, nrow=2, ncol=nitems)
             colnames(tmpdat) <- colnames(tabdata)
-            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return',
-                                      technical = list(customK=K))
+            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return')
             large$tabdata <- poly2dich(tabdata)
             large$Freq$all <- rep(1L, nrow(tabdata))
             large$tabdata2 <- matrix(1L)
