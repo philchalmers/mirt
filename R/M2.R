@@ -12,7 +12,7 @@
 #' density components (where applicable).
 #'
 #' @return Returns a data.frame object with the M2-type statistic, along with the degrees of freedom,
-#'   p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
+#'   p-value, RMSEA (with 90\% confidence interval), SRMSR for each group,
 #'   and optionally the TLI and CFI model fit statistics if \code{calcNull = TRUE}.
 #'
 #' @aliases M2
@@ -215,22 +215,20 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 }
             }
             e <- c(E1, E2[lower.tri(E2)])
-            if(all(sapply(obj@ParObjects$pars, class) %in% c(ordinal_itemtypes(), 'GroupPars'))){
-                E2[is.na(E2)] <- 0
-                E2 <- E2 + t(E2)
-                diag(E2) <- E11
-                R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
-                Kr <- cov2cor(E2 - outer(E1, E1))
-                SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
-                if(residmat){
-                    ret <- matrix(NA, nrow(R), nrow(R))
-                    ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
-                    colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
-                    if(suppress < 1)
-                        ret[lower.tri(ret)][abs(ret[lower.tri(ret)]) < suppress] <- NA
-                    return(ret)
-                }
-            } else SRMSR <- NULL
+            E2[is.na(E2)] <- 0
+            E2 <- E2 + t(E2)
+            diag(E2) <- E11
+            R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+            Kr <- cov2cor(E2 - outer(E1, E1))
+            SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
+            if(residmat){
+                ret <- matrix(NA, nrow(R), nrow(R))
+                ret[lower.tri(ret)] <- R[lower.tri(R)] - Kr[lower.tri(Kr)]
+                colnames(ret) <- rownames(ret) <- colnames(obj@Data$dat)
+                if(suppress < 1)
+                    ret[lower.tri(ret)][abs(ret[lower.tri(ret)]) < suppress] <- NA
+                return(ret)
+            }
             delta1 <- matrix(0, nitems, length(estpars))
             delta2 <- matrix(0, length(p) - nitems, length(estpars))
             ind <- 1L
@@ -377,7 +375,6 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     if(is(obj, 'DiscreteClass')){
         discrete <- TRUE
         class(obj) <- 'MultipleGroupClass'
-        calcNull <- FALSE
     }
     alpha <- (1 - CI)/2
     pars <- obj@ParObjects$pars
