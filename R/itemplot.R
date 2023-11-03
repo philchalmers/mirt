@@ -111,7 +111,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
                      auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
-    if(!missing(object) && is.null(theta_lim) && !is.list(object)){
+    if(!missing(object) && !is.list(object)){
         tmp <- if(is(object, 'MultipleGroupClass') || is(object, 'MixtureClass'))
             object@ParObjects$pars[[1L]]@ParObjects$pars else object@ParObjects$pars
         if(tmp[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
