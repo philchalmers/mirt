@@ -181,7 +181,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     if(K == 2L) auto.key <- FALSE
     if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'infocat', 'RETURN')){
         if(nfact == 1){
-            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0, total.info = )
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
         } else {
             info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
         }

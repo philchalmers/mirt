@@ -1,3 +1,8 @@
+# Changes in mirt 1.42
+
+- `M2()` functions now compute null model and SRMR fall all models whenever
+  possible, including the latent class variance (reported by Hynek Cigler)
+
 # Changes in mirt 1.41
 
 - Fix for `DIF()` when sparse data included with mixed item formats (reported by

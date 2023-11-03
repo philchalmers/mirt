@@ -58,7 +58,7 @@ Must be used in conjunction with the argument \code{residmat = TRUE}}
 }
 \value{
 Returns a data.frame object with the M2-type statistic, along with the degrees of freedom,
-  p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
+  p-value, RMSEA (with 90\% confidence interval), SRMSR for each group,
   and optionally the TLI and CFI model fit statistics if \code{calcNull = TRUE}.
 }
 \description{

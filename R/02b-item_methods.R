@@ -2445,19 +2445,12 @@ setMethod(
 )
 
 
-# derivative of the model wft to the Theta values (done numerically here)
+# derivative of the model wrt to the Theta values (done numerically here)
 setMethod(
     f = "DerivTheta",
     signature = signature(x = 'gpcmIRT', Theta = 'matrix'),
     definition = function(x, Theta){
-        outpar <- traditional2mirt(x@par, cls = 'gpcmIRT', ncat = x@ncat)
-        xx <- new('gpcm',
-                  par=outpar,
-                  parnames=names(outpar),
-                  nfact=1L,
-                  ncat=x@ncat,
-                  itemclass=3L)
-        DerivTheta(xx, Theta=Theta)
+        numDeriv_DerivTheta(x, Theta)
     }
 )
 
