@@ -13,7 +13,7 @@ itemplot(
   CEalpha = 0.05,
   CEdraws = 1000,
   drop.zeros = FALSE,
-  theta_lim = NULL,
+  theta_lim = c(-6, 6),
   shiny = FALSE,
   rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
   par.strip.text = list(cex = 0.7),

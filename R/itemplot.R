@@ -105,7 +105,7 @@
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = NULL, shiny = FALSE,
+                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
                      rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
@@ -116,8 +116,7 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
             object@ParObjects$pars[[1L]]@ParObjects$pars else object@ParObjects$pars
         if(tmp[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
             theta_lim <- object@Internals$theta_lim
-        else theta_lim <- c(-6,6)
-    } else theta_lim <- c(-6,6)
+    }
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)
