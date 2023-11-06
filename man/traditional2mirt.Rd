@@ -7,7 +7,7 @@
 traditional2mirt(x, cls, ncat)
 }
 \arguments{
-\item{x}{a vector of parameters to tranform}
+\item{x}{a vector of parameters to transform}
 
 \item{cls}{the class or itemtype of the supplied model}
 
@@ -20,7 +20,8 @@ a named vector of slope-intercept parameters (if supported)
 This is a helper function for users who have previously available traditional/classical
 IRT parameters and want to know the equivalent slope-intercept translation used in \code{mirt}.
 Note that this function assumes that the supplied models are unidimensional by definition (i.e.,
-will have only one slope/discrimination). If there is no supported slope-intercept transformation
+will have only one slope/discrimination) and in the logistic metric (i.e., logistic-ogive
+scaling coefficient D=1). If there is no supported slope-intercept transformation
 available then the original vector of parameters will be returned by default.
 }
 \details{
