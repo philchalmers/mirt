@@ -72,8 +72,9 @@ If supplied, arguments typically passed to \code{fscores()} will be ignored and 
 be used instead}
 
 \item{suppress}{a numeric value indicating which parameter local dependency combinations
-to flag as being too high. Absolute values for the standardized estimates greater than
-this value will be returned, while all values less than this value will be set to NA}
+to flag as being too high (for LD, LDG2, and Q3 the standardize correlations are used; for
+JSI, the z-ratios are used). Absolute values for the standardized estimates greater than
+this value will be returned, while all values less than this value will be set to missing}
 
 \item{theta_lim}{range for the integration grid}
 

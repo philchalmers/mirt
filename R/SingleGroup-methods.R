@@ -640,8 +640,9 @@ setMethod(
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 5000
 #' @param suppress a numeric value indicating which parameter local dependency combinations
-#'   to flag as being too high. Absolute values for the standardized estimates greater than
-#'   this value will be returned, while all values less than this value will be set to NA
+#'   to flag as being too high (for LD, LDG2, and Q3 the standardize correlations are used; for
+#'   JSI, the z-ratios are used). Absolute values for the standardized estimates greater than
+#'   this value will be returned, while all values less than this value will be set to missing
 #' @param upper logical; which portion of the matrix (upper versus lower triangle)
 #'   should the \code{suppress} argument be applied to?
 #' @param technical list of technical arguments when models are re-estimated (see \code{\link{mirt}}
@@ -845,7 +846,7 @@ setMethod(
                 class(df) <- c('mirt_matrix', 'matrix')
                 if(verbose){
                     cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-                    print(df, ...)
+                    print(df, ..., na.print = " ")
                     cat("\n")
                 }
             }
@@ -857,7 +858,7 @@ setMethod(
             }
             res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
-            if(verbose) print(res, ...)
+            if(verbose) print(res, ..., na.print = " ")
             if(df.p){
                 ret <- list(df, res)
                 names(ret) <- c('df.p', type)
@@ -988,13 +989,15 @@ setMethod(
                 retmat[i, pick] <- zs
             }
             if(fold) retmat <- retmat + t(retmat)
+            retmat <- suppressMat(retmat, suppress=suppress, upper=upper)
             class(retmat) <- c('mirt_matrix', 'matrix')
             if(verbose){
                 cat("JSI summary statistics:\n")
                 print(round(summary(na.omit(as.vector(retmat))), 3))
                 cat("\n")
+                print(retmat, ..., na.print = " ")
             }
-            retmat
+            return(invisible(retmat))
         } else {
             stop('specified type does not exist', call.=FALSE)
         }
