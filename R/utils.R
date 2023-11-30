@@ -44,11 +44,58 @@ thetaComb <- function(theta, nfact, intercept = FALSE)
 	return(Theta)
 }
 
-thetaStack <- function(theta, nclass){
-    thetalist <- vector('list', nclass)
-    for(i in seq_len(nclass))
-        thetalist[[i]] <- theta
-    as.matrix(do.call(rbind, thetalist))
+#' Second-order test of convergence
+#'
+#' Test whether terminated estimation of a given model passes the second order test
+#' by checking the positive definiteness of the supplied Hessian matrix. Function
+#' returns \code{TRUE} if the matrix is positive definite and \code{FALSE} otherwise.
+#'
+#' @param mat matrix to test for positive definiteness (typically the Hessian at the
+#'   highest point of model estimator, such as MLE or MAP)
+#' @param ... arguments passed to either \code{\link{eigen}}, \code{\link{chol}}, or
+#'   \code{'det'} for the positiveness of the eigen values, positiveness of leading minors
+#'   via the Cholesky decomposition, or evaluation of whether the determinant
+#'   is greater than 0
+#' @param method method to use to test positive definiteness. Default is \code{'eigen'}
+#'
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @return a matrix with all possible combinations
+#' @references
+#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
+#' \doi{10.18637/jss.v048.i06}
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # PD matrix
+#' mod <- mirt(Science, 1, SE=TRUE)
+#' info <- solve(vcov(mod))   ## observed information
+#' secondOrderTest(info)
+#' secondOrderTest(info, method = 'chol')
+#' secondOrderTest(info, method = 'det')
+#'
+#' # non-PD matrix
+#' mat <- matrix(c(1,0,0,0,1,1,0,1,1), ncol=3)
+#' mat
+#' secondOrderTest(mat)
+#' secondOrderTest(mat, method = 'chol')
+#' secondOrderTest(mat, method = 'det')
+#'
+#' }
+secondOrderTest <- function(mat, ..., method = 'eigen'){
+    if(method == 'eigen'){
+        evs <- eigen(mat, ...)$value
+        ret <- all(!sapply(evs, function(x) isTRUE(all.equal(x, 0))) & evs > 0)
+    } else if(method == 'chol'){
+        chl <- try(chol(mat, ...), silent = TRUE)
+        ret <- if(is(chl, "try-error")) FALSE else TRUE
+    } else if(method == 'det'){
+        dt <- det(mat, ..)
+        ret <- !isTRUE(all.equal(dt, 0)) && dt > 0
+    }
+    ret
 }
 
 # Product terms

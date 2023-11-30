@@ -1078,7 +1078,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 vcov[!isna, !isna] <- vcov2
                 if(!is(vcov2, 'try-error')){
                     OptimInfo$condnum <- kappa(info, exact=TRUE)
-                    OptimInfo$secondordertest <- all(eigen(info)$values > 0)
+                    OptimInfo$secondordertest <- secondOrderTest(info)
                     } else OptimInfo$secondordertest <- FALSE
             } else {
                 OptimInfo$secondordertest <- FALSE
