@@ -46,11 +46,13 @@ thetaComb <- function(theta, nfact, intercept = FALSE)
 
 #' Second-order test of convergence
 #'
-#' Test whether terminated estimation of a given model passes the second order test
-#' by checking the positive definiteness of the supplied Hessian matrix. Function
-#' returns \code{TRUE} if the matrix is positive definite and \code{FALSE} otherwise.
+#' Test whether terminated estimation criteria for a given model passes
+#' the second order test by checking the positive definiteness of the resulting
+#' Hessian matrix. This function, which accepts the symmetric Hessian/information
+#' matrix as the input, returns \code{TRUE} if the matrix is positive definite
+#' and \code{FALSE} otherwise.
 #'
-#' @param mat matrix to test for positive definiteness (typically the Hessian at the
+#' @param mat symmetric matrix to test for positive definiteness (typically the Hessian at the
 #'   highest point of model estimator, such as MLE or MAP)
 #' @param ... arguments passed to either \code{\link{eigen}}, \code{\link{chol}}, or
 #'   \code{'det'} for the positiveness of the eigen values, positiveness of leading minors

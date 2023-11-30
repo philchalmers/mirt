@@ -7,7 +7,7 @@
 secondOrderTest(mat, ..., method = "eigen")
 }
 \arguments{
-\item{mat}{matrix to test for positive definiteness (typically the Hessian at the
+\item{mat}{symmetric matrix to test for positive definiteness (typically the Hessian at the
 highest point of model estimator, such as MLE or MAP)}
 
 \item{...}{arguments passed to either \code{\link{eigen}}, \code{\link{chol}}, or
@@ -21,9 +21,11 @@ is greater than 0}
 a matrix with all possible combinations
 }
 \description{
-Test whether terminated estimation of a given model passes the second order test
-by checking the positive definiteness of the supplied Hessian matrix. Function
-returns \code{TRUE} if the matrix is positive definite and \code{FALSE} otherwise.
+Test whether terminated estimation criteria for a given model passes
+the second order test by checking the positive definiteness of the resulting
+Hessian matrix. This function, which accepts the symmetric Hessian/information
+matrix as the input, returns \code{TRUE} if the matrix is positive definite
+and \code{FALSE} otherwise.
 }
 \examples{
 
