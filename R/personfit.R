@@ -128,12 +128,17 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
         stop('personfit() does not currently support custom group densities', call.=FALSE)
     if(is.null(Theta))
         Theta <- fscores(x, verbose=FALSE, full.scores=TRUE, method=method, rotate = 'none', ...)
+    stopifnot("Theta must be a matrix" = is.matrix(Theta))
     J <- ncol(x@Data$data)
     itemloc <- x@Model$itemloc
     pars <- x@ParObjects$pars
     fulldata <- x@Data$fulldata[[1L]]
-    if(nrow(fulldata) < nrow(Theta))
+    if(nrow(fulldata) < nrow(Theta)){
+        browser()
         Theta <- Theta[extract.mirt(x, 'rowID'), , drop=FALSE]
+    }
+    stopifnot("Theta does not have the correct number of rows" =
+                  nrow(fulldata) == nrow(Theta))
     for(i in seq_len(ncol(Theta))){
         tmp <- Theta[,i]
         tmp[tmp %in% c(-Inf, Inf)] <- NA

@@ -4,10 +4,10 @@
 #' item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
 #' \code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
 #' models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
-#' which will help to decrease the runtime. For best results, the baseline model should contain
+#' which will help to decrease the run time. For best results, the baseline model should contain
 #' a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.
 #'
-#' Generally, the precomputed baseline model should have been
+#' Generally, the pre-computed baseline model should have been
 #' configured with two estimation properties: 1) a set of 'anchor' items,
 #' where the anchor items have various parameters that have been constrained to be equal
 #' across the groups, and 2) contain freely estimated latent mean and variance terms in

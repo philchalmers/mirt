@@ -461,7 +461,8 @@ itemfit <- function(x, fit_stats = 'S_X2',
     }
     J <- ncol(x@Data$data)
     if(na.rm) x <- removeMissing(x)
-    if(na.rm) message('Sample size after row-wise response data removal: ', nrow(extract.mirt(x, 'data')))
+    if(na.rm) message('Sample size after row-wise response data removal: ',
+                      nrow(extract.mirt(x, 'data')))
     if(any(is.na(x@Data$data)) && (Zh || S_X2) && impute == 0)
         stop('Only X2, G2, PV_Q1, PV_Q1*, infit, X2*, and X2*_df can be computed with missing data.
              Pass na.rm=TRUE to remove missing data row-wise', call.=FALSE)
@@ -469,6 +470,8 @@ itemfit <- function(x, fit_stats = 'S_X2',
         if(!is.matrix(Theta)) Theta <- matrix(Theta)
         if(nrow(Theta) > nrow(x@Data$data))
             Theta <- Theta[-extract.mirt(x, 'completely_missing'), , drop=FALSE]
+        stopifnot("Theta does not have the correct number of rows" =
+                      nrow(Theta) == nrow(x@Data$data))
     }
 
     if(is(x, 'MultipleGroupClass') || is(x, 'DiscreteClass')){

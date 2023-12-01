@@ -761,6 +761,8 @@ setMethod(
             if(!is.matrix(Theta)) Theta <- matrix(Theta)
             if(nrow(Theta) > nrow(data))
                 Theta <- Theta[-extract.mirt(object, 'completely_missing'), , drop=FALSE]
+            stopifnot("Theta does not have the correct number of rows" =
+                          nrow(Theta) == nrow(object@Data$data))
         }
         if(!discrete){
             if(is.null(quadpts)){
