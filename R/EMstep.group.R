@@ -479,19 +479,17 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             }
         }
         if(dentype == 'mixture'){
-            mixtype <- new('lca', par=sapply(1L:length(pars),
-                    function(g) sum(pars[[g]][[J+1L]]@par[length(pars[[g]][[J+1L]]@par)])),
-                    est=as.logical(sapply(1L:length(pars),
-                                          function(g) sum(pars[[g]][[J+1L]]@est[length(pars[[g]][[J+1L]]@est)]))),
-                    parnum=sapply(1L:length(pars),
-                                  function(g) sum(pars[[g]][[J+1L]]@parnum[length(pars[[g]][[J+1L]]@parnum)])),
-                    nfact=length(pars), ncat=length(pars),
-                    any.prior=FALSE, itemclass=10L,
-                    dat=matrix(sapply(1L:length(pars),
-                                      function(g) sum(pars[[g]][[J+1L]]@rr)), 1L))
-            mixtype@item.Q <- matrix(1, nrow = mixtype@ncat, ncol = mixtype@nfact)
-            deriv <- Deriv(mixtype, Theta = matrix(1, 1L, length(pars)), estHess=TRUE)
-            h[mixtype@parnum, mixtype@parnum] <- deriv$hess
+            mixtype <- list(par=sapply(1L:length(pars),
+                                       function(g) sum(pars[[g]][[J+1L]]@par[length(pars[[g]][[J+1L]]@par)])),
+                            est=as.logical(sapply(1L:length(pars),
+                                                  function(g) sum(pars[[g]][[J+1L]]@est[length(pars[[g]][[J+1L]]@est)]))),
+                            parnum=sapply(1L:length(pars),
+                                          function(g) sum(pars[[g]][[J+1L]]@parnum[length(pars[[g]][[J+1L]]@parnum)])),
+                            any.prior=FALSE,
+                            dat=matrix(sapply(1L:length(pars),
+                                              function(g) sum(pars[[g]][[J+1L]]@rr)), 1L))
+            deriv <- Deriv.mix(mixtype, estHess=TRUE)
+            h[mixtype$parnum, mixtype$parnum] <- deriv$hess
         } else mixtype <- NULL
         hess <- updateHess(h=h, L=L)
         hess <- as.matrix(hess[estpars & !redun_constr, estpars & !redun_constr])
