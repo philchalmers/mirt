@@ -348,8 +348,8 @@ setMethod(
                     if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
                     object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]],
                                                                     vcov=vcov, nfact=object@Model$nfact)
-
                 }
+                browser()
             }
         }
         allPars <- list()

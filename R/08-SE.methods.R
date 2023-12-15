@@ -289,12 +289,12 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                 }
             }
             if(dentype == 'mixture'){
-                browser()
                 mixtype$par <- sapply(1L:length(pars),
                                       function(g) sum(pars[[g]][[J+1L]]@par[length(pars[[g]][[J+1L]]@par)]))
                 mixtype$dat <- matrix(sapply(1L:length(pars),
                                              function(g) sum(pars[[g]][[J+1L]]@rr)), 1L)
                 deriv <- Deriv.mix(mixtype)
+                g[mixtype$parnum] <- deriv$grad
             }
             tmp <- g %*% L
             if(pick == 0L) return(tmp[est])

@@ -2,6 +2,8 @@
 
 - `M2()` functions now compute null model and SRMR fall all models whenever
   possible, including the latent class variance (reported by Hynek Cigler)
+  
+- VCOV memory leak bugfix for mixture models (see Github issue #247)
 
 # Changes in mirt 1.41
 
