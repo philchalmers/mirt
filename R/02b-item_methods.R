@@ -1636,13 +1636,16 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'lca', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        ret <- .Call('dparslca', x@par, Theta, x@item.Q,
-                     estHess, x@dat, offterm) #TODO use estHess in Rcpp
+        # ret <- .Call('dparslca', x@par, Theta, x@item.Q,
+        #              estHess, x@dat, offterm) #TODO use estHess in Rcpp
+        ret <- list(grad=numeric(length(x@par)),
+                    hess=matrix(0, length(x@par), length(x@par)))
+        ret$grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
         if(estHess && any(x@est)){
             ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
                                                          Theta=Theta, gradient=FALSE)
         }
-        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        # if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
     }
 )
