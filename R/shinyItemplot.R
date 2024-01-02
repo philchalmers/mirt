@@ -30,10 +30,10 @@ shinyItemplot <- function(){
                             selected = 'trace'),
 
                 shiny::numericInput("theta_lim_low", "Theta lower range:", -4,
-                             min = -35, max = 35),
+                             min = -20, max = 20),
 
                 shiny::numericInput("theta_lim_high", "Theta upper range:", 4,
-                             min = -35, max = 35),
+                             min = -20, max = 20),
 
                 shiny::checkboxInput(inputId = "classical",
                               label = "Use traditional IRT parameterization inputs? \n
@@ -273,6 +273,7 @@ shinyItemplot <- function(){
                 mod <- mirt(dat, model, itemtype=itemtype, pars=sv, key=c(1, NA),
                             technical=list(message=FALSE, customK=K))
                 par <- mod@ParObjects$pars[[1]]@par
+                names(par) <- names(mod@ParObjects$pars[[1]]@parnum)
                 if(input$classical){
                     if(itemclass[1L] == 'dich'){
                         par <- c(input$a1parc, input$bpar, logit(input$gparc), logit(input$uparc))
@@ -312,7 +313,7 @@ shinyItemplot <- function(){
                 }
                 mod@ParObjects$pars[[1]]@par <- par
                 mod
-                }
+            }
 
             output$main_plot <- shiny::renderPlot({
                 mod <- genmod(input)
