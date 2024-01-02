@@ -134,7 +134,6 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
     pars <- x@ParObjects$pars
     fulldata <- x@Data$fulldata[[1L]]
     if(nrow(fulldata) < nrow(Theta)){
-        browser()
         Theta <- Theta[extract.mirt(x, 'rowID'), , drop=FALSE]
     }
     stopifnot("Theta does not have the correct number of rows" =

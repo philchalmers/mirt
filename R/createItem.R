@@ -199,7 +199,6 @@ createItem <- function(name, par, est, P, gr=NULL, hss = NULL, gen = NULL,
     if(bytecompile) P <- compiler::cmpfun(P)
     dps <- dps2 <- function() NULL
     if(derivType == 'symbolic' || derivType.hss == 'symbolic'){
-        browser()
         tmppars <- 1L:length(par)
         names(tmppars) <- rep("par", length(par))
         dps <- Deriv::Deriv(P, tmppars)
