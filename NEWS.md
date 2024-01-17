@@ -1,5 +1,9 @@
 # Changes in mirt 1.42
 
+- `RMSD_DIF()` now supports datasets that follow vertical scaling structures
+  (i.e., when groups answer some items but not others). 
+  Requested by Alexandre Jaloto
+
 - `M2()` functions now compute null model and SRMR fall all models whenever
   possible, including the latent class variance (reported by Hynek Cigler)
   
