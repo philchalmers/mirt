@@ -44,6 +44,13 @@ thetaComb <- function(theta, nfact, intercept = FALSE)
 	return(Theta)
 }
 
+thetaStack <- function(theta, nclass){
+    thetalist <- vector('list', nclass)
+    for(i in seq_len(nclass))
+        thetalist[[i]] <- theta
+    as.matrix(do.call(rbind, thetalist))
+}
+
 #' Second-order test of convergence
 #'
 #' Test whether terminated estimation criteria for a given model passes
