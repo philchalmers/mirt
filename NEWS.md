@@ -1,5 +1,10 @@
 # Changes in mirt 1.42
 
+- `mirt.model()` syntax gains a negation operator for omitting specific 
+  observed/latent groups from specifications. For example, the following will
+  omit "Group3" identifies from between groups equality constraint definitions
+  `CONSTRAINB[-Group3] = ...`
+
 - `RMSD_DIF()` now supports datasets that follow vertical scaling structures
   (i.e., when groups answer some items but not others). 
   Requested by Alexandre Jaloto

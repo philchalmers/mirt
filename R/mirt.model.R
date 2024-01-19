@@ -47,6 +47,12 @@
 #' bracketed group specifications are useful when modifying priors, starting values, between/within group equality constraints,
 #' and so on when the specifications for each sub-group may differ.
 #'
+#' Additionally, the use of negations can be used to omit specific groups in the constraint specifications
+#' by prefixing the string with a \code{-} operator, such as the following which applies between-group  constraints
+#' to all groups except "Group2" and "Group3":
+#'
+#' \code{CONSTRAINB [-Group2, -Group3] = (1-5, a1)}
+#'
 #' Finally, the keyword \code{GROUP} can be used to specify the group-level
 #' hyper-parameter terms, such as the means and variance of the default Gaussian
 #' distribution. For example, to set the starting value of the variance

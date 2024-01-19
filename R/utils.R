@@ -593,12 +593,30 @@ updatePrior <- function(pars, gTheta, list, ngroups, nfact, J,
     return(list(prior=prior, Prior=Prior, Priorbetween=Priorbetween))
 }
 
+fill_neg_groups_with_complement <- function(OptionalGroups, groupNames){
+    has_neg <- grepl("^-", OptionalGroups)
+    if(!any(has_neg)) return(OptionalGroups)
+    for(i in seq_len(length(has_neg))){
+        if(has_neg[i]){
+            split <- strsplit(OptionalGroups[i], ',')[[1L]]
+            if(!all(grepl("^-", split)))
+                stop('Use of negation group syntax (-) cannot be mixed with non-negated syntax',
+                     call.=FALSE)
+            split <- gsub("^-", "", split)
+            OptionalGroups[i] <- paste0(setdiff(groupNames, split), collapse=',')
+        }
+    }
+    OptionalGroups
+}
+
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
                             method, itemnames, model, groupNames)
 {
     if(!is.numeric(model)){
         groupNames <- as.character(groupNames)
         names(pars) <- groupNames
+        model$x[,'OptionalGroups'] <-
+            fill_neg_groups_with_complement(model$x[,'OptionalGroups'], groupNames)
         for(row in 1L:nrow(model$x)){
             groupsPicked <- strsplit(model$x[row,'OptionalGroups'], split=',')[[1L]]
             groupsPicked <- which(groupNames %in% groupsPicked)
