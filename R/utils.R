@@ -101,7 +101,7 @@ secondOrderTest <- function(mat, ..., method = 'eigen'){
         chl <- try(chol(mat, ...), silent = TRUE)
         ret <- if(is(chl, "try-error")) FALSE else TRUE
     } else if(method == 'det'){
-        dt <- det(mat, ..)
+        dt <- det(mat, ...)
         ret <- !isTRUE(all.equal(dt, 0)) && dt > 0
     }
     ret
@@ -291,7 +291,7 @@ Rotate <- function(F, rotate, Target = NULL, par.strip.text = NULL, par.settings
 }
 
 # Gamma correlation, mainly for obtaining a sign
-gamma.cor <- function(x)
+gamma_cor <- function(x)
 {
 	concordant <- function(x){
 			mat.lr <- function(r, c, r.x, c.x){

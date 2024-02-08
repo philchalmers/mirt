@@ -22,7 +22,6 @@
 #'
 #'
 #' @name mirt-package
-#' @docType package
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt

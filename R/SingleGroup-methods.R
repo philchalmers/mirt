@@ -13,7 +13,6 @@
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
-#' @docType methods
 #' @rdname print-method
 #' @examples
 #'
@@ -104,7 +103,6 @@ setMethod(
 #' @aliases show,SingleGroupClass-method
 #'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
 #'   show,MixtureClass-method
-#' @docType methods
 #' @rdname show-method
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
@@ -158,7 +156,6 @@ setMethod(
 #' @aliases summary,SingleGroupClass-method
 #'   summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
 #'   summary,MixtureClass-method
-#' @docType methods
 #' @export
 #' @rdname summary-method
 #' @references
@@ -272,7 +269,6 @@ setMethod(
 #' @aliases coef,SingleGroupClass-method
 #'   coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
 #'   coef,MixtureClass-method
-#' @docType methods
 #' @rdname coef-method
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
@@ -484,7 +480,6 @@ setMethod(
 #'   anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
 #'   anova,MixtureClass-method
 #' @export
-#' @docType methods
 #' @rdname anova-method
 #' @examples
 #'
@@ -651,7 +646,6 @@ setMethod(
 #' @name residuals-method
 #' @aliases residuals,SingleGroupClass-method residuals,MixtureClass-method
 #'   residuals,MultipleGroupClass-method residuals,DiscreteClass-method
-#' @docType methods
 #' @rdname residuals-method
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
@@ -816,7 +810,7 @@ setMethod(
                         for(k in seq_len(K[i]))
                             for(m in seq_len(K[j]))
                                 Etab[k,m] <- NN * sum(P1[,k] * P2[,m] * prior)
-                        s <- try(gamma.cor(tab) - gamma.cor(Etab), TRUE)
+                        s <- try(gamma_cor(tab) - gamma_cor(Etab), TRUE)
                         if(is.nan(s) || is(s, 'try-error')){
                             res[i,j] <- res[j,i] <- NaN
                             next
@@ -1078,7 +1072,6 @@ setMethod(
 #' @aliases plot,SingleGroupClass-method
 #'   plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
 #'   plot,DiscreteClass,missing-method plot,MixtureClass,missing-method
-#' @docType methods
 #' @rdname plot-method
 #' @examples
 #'
@@ -2018,7 +2011,6 @@ traditional2mirt <- function(x, cls, ncat){
 #' @export
 #' @aliases vcov,SingleGroupClass-method vcov,MixtureClass-method
 #'   vcov,MultipleGroupClass-method vcov,MixedClass-method vcov,DiscreteClass-method
-#' @docType methods
 #' @rdname vcov-method
 #' @examples
 #'
@@ -2045,7 +2037,6 @@ setMethod(
 #' @name logLik-method
 #' @aliases logLik,SingleGroupClass-method logLik,MixtureClass-method
 #'   logLik,MultipleGroupClass-method logLik,MixedClass-method logLik,DiscreteClass-method
-#' @docType methods
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.

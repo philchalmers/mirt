@@ -3,7 +3,7 @@
 #' Initializes the proper S4 class and methods necessary for \code{\link{mirt}}
 #' functions to use in estimation. To use the defined objects pass to the
 #' \code{mirt(..., customItems = list())} command, and
-#' ensure that the classes are properly labeled and unique in the list.
+#' ensure that the classes are properly labelled and unique in the list.
 #' Additionally, the input \code{mirt(..., customItemsData = list())} can
 #' also be included to specify additional item-level information to better
 #' recycle custom-item definitions (e.g., for supplying varying
