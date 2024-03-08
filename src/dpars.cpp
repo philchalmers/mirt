@@ -1774,7 +1774,7 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
 
 RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     SEXP RgPriorbetween, SEXP Rtabdata, SEXP Rrs, SEXP Rsitems, SEXP Ritemloc,
-    SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor, SEXP Riscross)
+    SEXP Rgitemtrace, SEXP Rnpars, SEXP Rwmiss, SEXP Risbifactor, SEXP Riscross)
 {
     BEGIN_RCPP
 
@@ -1787,6 +1787,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     const IntegerMatrix sitems(Rsitems);
     const vector<int> itemloc = as< vector<int> >(Ritemloc);
     const NumericMatrix rs(Rrs); //group stacked
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const NumericMatrix gPriorbetween(RgPriorbetween);
     const vector<double> vone(1.0, 1);
     const int nfact = Theta.ncol();
@@ -1813,37 +1814,32 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
             NumericMatrix itemtrace = gitemtrace[g];
             NumericVector tmpvec = gPrior(_,g);
             vector<double> Prior = as< vector<double> >(tmpvec);
-            vector<double> expected(1), r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
+            vector<double> expected(1), r1g(nquad), 
+                r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
             if(isbifactor){
                 NumericMatrix prior = gprior[g];
                 NumericVector tmpvec = gPriorbetween(g,_);
                 vector<double> Priorbetween = as< vector<double> >(tmpvec);
                _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, vone,
-                    dat, sitems, Etable);
+                    dat, sitems, wmiss, Etable);
             } else {
-                _Estep(expected, r1vec, Prior, vone, dat, itemtrace, Etable);
+                _Estep(expected, r1vec, r1g, Prior, vone, dat, itemtrace, wmiss, Etable);
             }
             NumericMatrix r1 = vec2mat(r1vec, nquad, J);
             List pars = gpars[g];
             if(iscross){
-            	vector<double> rr(nquad);
                 for(int i = 0; i < nitems; ++i){
                     S4 item = pars[i];
                     NumericMatrix tmpmat(nquad, itemloc[i+1] - itemloc[i]);
-                    for(int j = 0; j < tmpmat.ncol(); ++j){
-                        for(int n = 0; n < nquad; ++n){
+                    for(int j = 0; j < tmpmat.ncol(); ++j)
+                        for(int n = 0; n < nquad; ++n)
                             tmpmat(n,j) = r1(n, itemloc[i] + j - 1);
-                            rr[n] += tmpmat(n,j);
-                        }
-                    }
                     item.slot("dat") = tmpmat;
                     pars[i] = item;
                 }
-                for(int n = 0; n < nquad; ++n)
-                	rr[n] /= nitems;
                 S4 item = pars[nitems];
                 item.slot("dat") = dat;
-                item.slot("rr") = wrap(rr);
+                item.slot("rr") = r1g;
                 if(isbifactor){
                     NumericVector r2 = wrap(r2vec);
                     NumericMatrix r3 = vec2mat(r3vec, nsquad, nsfact);
@@ -1908,7 +1904,7 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
 
 RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior,
     SEXP Rgprior, SEXP RgPriorbetween, SEXP Rtabdata, SEXP Rsitems,
-    SEXP Ritemloc, SEXP Rgitemtrace, SEXP Rnpars, SEXP Risbifactor)
+    SEXP Ritemloc, SEXP Rgitemtrace, SEXP Rwmiss, SEXP Rnpars, SEXP Risbifactor)
 {
     BEGIN_RCPP
 
@@ -1921,6 +1917,7 @@ RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior,
     const IntegerMatrix sitems(Rsitems);
     const vector<int> itemloc = as< vector<int> >(Ritemloc);
     const NumericMatrix gPriorbetween(RgPriorbetween);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const vector<double> vone(1.0, 1);
     const int nquad = Theta.nrow();
     const int J = itemloc[itemloc.size()-1] - 1;
@@ -1944,36 +1941,31 @@ RcppExport SEXP computeGradient(SEXP Rpars, SEXP RTheta, SEXP RgPrior,
             NumericMatrix itemtrace = gitemtrace[g];
             NumericVector tmpvec = gPrior(_,g);
             vector<double> Prior = as< vector<double> >(tmpvec);
-            vector<double> expected(1), r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
+            vector<double> expected(1), r1g(nquad),
+                r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
             if(isbifactor){
                 NumericMatrix prior = gprior[g];
                 NumericVector tmpvec = gPriorbetween(g,_);
                 vector<double> Priorbetween = as< vector<double> >(tmpvec);
                _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, vone,
-                    dat, sitems, Etable);
+                    dat, sitems, wmiss, Etable);
             } else {
-                _Estep(expected, r1vec, Prior, vone, dat, itemtrace, Etable);
+                _Estep(expected, r1vec, r1g, Prior, vone, dat, itemtrace, wmiss, Etable);
             }
             NumericMatrix r1 = vec2mat(r1vec, nquad, J);
             List pars = gpars[g];
-            vector<double> rr(nquad);
             for(int i = 0; i < nitems; ++i){
                 S4 item = pars[i];
                 NumericMatrix tmpmat(nquad, itemloc[i+1] - itemloc[i]);
-                for(int j = 0; j < tmpmat.ncol(); ++j){
-                    for(int n = 0; n < nquad; ++n){
+                for(int j = 0; j < tmpmat.ncol(); ++j)
+                    for(int n = 0; n < nquad; ++n)
                         tmpmat(n,j) = r1(n, itemloc[i] + j - 1);
-                        rr[n] += tmpmat(n,j);
-                    }
-                }
                 item.slot("dat") = tmpmat;
                 pars[i] = item;
             }
-            for(int n = 0; n < nquad; ++n)
-            	rr[n] /= nitems;
             S4 item = pars[nitems];
             item.slot("dat") = dat;
-            item.slot("rr") = wrap(rr);
+            item.slot("rr") = r1g;
             if(isbifactor){
                 NumericVector r2 = wrap(r2vec);
                 NumericMatrix r3 = vec2mat(r3vec, nsquad, nsfact);

@@ -275,6 +275,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
                 } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
             }
+            browser()
             g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
             if(length(SLOW.IND)){
                 for(group in seq_len(ngroups)){
@@ -365,6 +366,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND,
         }
         for(pat in seq_len(nrow(tabdata))){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
+            browser()
             rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, freq=1L,
                                 CUSTOM.IND=CUSTOM.IND, full=full,
                                 Theta=Theta, prior=Prior[[g]], itemloc=itemloc,

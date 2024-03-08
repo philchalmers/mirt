@@ -18,13 +18,22 @@ void if_omp_set_num_threads(const int &omp_threads){
     #endif
 }
 
-void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double> &prior,
-    const vector<double> &r, const IntegerMatrix &data, const NumericMatrix &itemtrace,
-    const bool &Etable)
+void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
+    const vector<double> &prior, const vector<double> &r, 
+    const IntegerMatrix &data, const NumericMatrix &itemtrace,
+    const vector<double> &wmiss, const bool &Etable)
 {
     const int nquad = prior.size();
     const int nitems = data.ncol();
     const int npat = r.size();
+
+    vector<double> w(npat);
+    for (int pat = 0; pat < npat; ++pat){
+        int nobs = 0;
+        for (int item = 0; item < nitems; ++item)
+            nobs += data(pat,item);
+        w[pat] = nitems/nobs;
+    }
 
 #pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
@@ -48,22 +57,27 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
                 for(int q = 0; q < nquad; ++q)
                     posterior[q] = r[pat] * posterior[q] / expd;
             }
-            for (int item = 0; item < nitems; ++item)
-                if (data(pat,item))
-                    for(int q = 0; q < nquad; ++q)
+            for (int item = 0; item < nitems; ++item){
+                if (data(pat,item)){
+                    for(int q = 0; q < nquad; ++q){
                         r1vec[q + item*nquad] += posterior[q];
+                        r1g[q] += w[pat]*posterior[q];
+                    }
+                }
+            }
         }
     } //end main
 }
 
 //Estep for mirt
-RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtable,
-                      SEXP Romp_threads)
+RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, 
+                      SEXP Rwmiss, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
     const vector<double> prior = as< vector<double> >(Rprior);
     const vector<double> r = as< vector<double> >(Rr);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
     if_omp_set_num_threads(omp_threads);
@@ -74,19 +88,22 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtab
     const int npat = r.size();
     vector<double> expected(npat, 0.0);
     vector<double> r1vec(nquad*nitems, 0.0);
+    vector<double> r1g(nquad, 0.0);
     List ret;
 
-    _Estep(expected, r1vec, prior, r, data, itemtrace, Etable);
+    _Estep(expected, r1vec, r1g, prior, r, data, itemtrace, wmiss, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
+    ret["r1g"] = wrap(r1g);
     ret["expected"] = wrap(expected);
     return(ret);
 
     END_RCPP
 }
 
-void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatrix &prior,
-    const IntegerMatrix &data, const NumericMatrix &itemtrace, const bool &Etable)
+void _Estep2(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
+    const NumericMatrix &prior, const IntegerMatrix &data, 
+    const NumericMatrix &itemtrace, const vector<double> &wmiss, const bool &Etable)
 {
     const int nquad = prior.ncol();
     const int nitems = data.ncol();
@@ -106,29 +123,33 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatri
         for(int i = 0; i < nquad; ++i)
             expd += posterior[i]/maxp;
         expd *= maxp;
-         if(expd > ABSMIN){
-             for(int q = 0; q < nquad; ++q)
+        if(expd < ABSMIN) expd = ABSMIN;
+        expected[pat] = expd;
+        if(Etable){
+            for(int q = 0; q < nquad; ++q)
                  posterior[q] = posterior[q] / expd;
-         } else expd = ABSMIN;
-         expected[pat] = expd;
-         if(Etable){
-             for (int item = 0; item < nitems; ++item)
-                 if (data(pat,item))
-                     for(int q = 0; q < nquad; ++q)
+             for (int item = 0; item < nitems; ++item){
+                 if (data(pat,item)){
+                     for(int q = 0; q < nquad; ++q){
                          r1vec[q + item*nquad] += posterior[q];
-         }
+                         r1g[q] += posterior[q];
+                     }
+                 }
+             }
+        }
      } //end main
 }
 
 //Estep for mirt
-RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
-                       SEXP Romp_threads)
+RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, 
+                       SEXP Rwmiss, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
     const NumericMatrix prior(Rprior);
     const IntegerMatrix data(RX);
     const NumericMatrix itemtrace(Ritemtrace);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
     if_omp_set_num_threads(omp_threads);
@@ -137,11 +158,13 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
     const int npat = data.nrow();
     vector<double> expected(npat, 0.0);
     vector<double> r1vec(nquad*nitems, 0.0);
+    vector<double> r1g(nquad, 0.0);
     List ret;
 
-    _Estep2(expected, r1vec, prior, data, itemtrace, Etable);
+    _Estep2(expected, r1vec, r1g, prior, data, itemtrace, wmiss, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
+    ret["r1g"] = wrap(r1g);
     ret["expected"] = wrap(expected);
     return(ret);
 
@@ -151,7 +174,7 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
 void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> &ri, vector<double> &ris,
     const NumericMatrix &itemtrace, const NumericMatrix &prior, const vector<double> &Priorbetween,
     const vector<double> &r, const IntegerMatrix &data, const IntegerMatrix &sitems,
-    const bool &Etable)
+    const vector<double> &wmiss, const bool &Etable)
 {
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
@@ -247,7 +270,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
 
 //Estep for bfactor
 RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, SEXP RX,
-    SEXP Rr, SEXP Rsitems, SEXP REtable, SEXP Romp_threads)
+    SEXP Rr, SEXP Rsitems, SEXP Rwmiss, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
@@ -257,6 +280,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     const vector<double> Priorbetween = as< vector<double> >(RPriorbetween);
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const int omp_threads = as<int>(Romp_threads);
     if_omp_set_num_threads(omp_threads);
     const IntegerMatrix data(RX);
@@ -272,7 +296,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     vector<double> r3vec(npquad*prior.ncol(), 0.0);
 
     _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, r,
-        data, sitems, Etable);
+        data, sitems, wmiss, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);

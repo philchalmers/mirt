@@ -1,5 +1,9 @@
 # Changes in mirt 1.42
 
+- Fixed issue related to missing data patterns that resulted in bias 
+  when estimating the hyper-parameters in single and multi-group models 
+  (reported by Paul Jewsbury)
+
 - `mirt.model()` syntax gains a negation operator for omitting specific 
   observed/latent groups from specifications. For example, the following will
   omit "Group3" identifies from between groups equality constraint definitions
