@@ -41,12 +41,13 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double
         for(int i = 0; i < nquad; ++i)
             expd += posterior[i]/maxp;
         expd *= maxp;
-        if(expd > ABSMIN){
-            for(int q = 0; q < nquad; ++q)
-                posterior[q] = r[pat] * posterior[q] / expd;
-        } else expd = ABSMIN;
+        if(expd < ABSMIN) expd = ABSMIN;
         expected[pat] = expd;
         if(Etable){
+            if(expd > ABSMIN){
+                for(int q = 0; q < nquad; ++q)
+                    posterior[q] = r[pat] * posterior[q] / expd;
+            }
             for (int item = 0; item < nitems; ++item)
                 if (data(pat,item))
                     for(int q = 0; q < nquad; ++q)
