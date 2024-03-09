@@ -584,7 +584,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     SEMconv <- NA
-    Data$wmiss <- 1/(rowSums(!is.na(Data$tabdata)) / Data$nitems)
+    Data$wmiss <- with(Data, 1/rowMeans(!is.na(tabdata)) / nitems)
     opts$times$end.time.Data <- proc.time()[3L]
 
     #EM estimation
