@@ -74,7 +74,7 @@ Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND
     retlist <- vector('list', ngroups)
     nrows <- nrow(itemtrace[[1L]])
     for(g in seq_len(ngroups))
-        retlist[[g]] <- list(r1=tmp$r1[1L:nrows + (g-1)*nrows, ],
+        retlist[[g]] <- list(r1=tmp$r1[1L:nrows + (g-1)*nrows, ], r1g=tmp$r1g,
                              expected= if(g == 1) tmp$expected else NA)
     return(retlist)
 }
