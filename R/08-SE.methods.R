@@ -93,12 +93,12 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         for(g in seq_len(ngroups)){
             if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                            Theta=Theta, prior=prior[[g]],
+                                            Theta=Theta, prior=prior[[g]], wmiss=Data$wmiss,
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
                                             itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND, omp_threads=1L)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                         CUSTOM.IND=list$CUSTOM.IND, Theta=Theta,
+                                         CUSTOM.IND=list$CUSTOM.IND, Theta=Theta, wmiss=Data$wmiss,
                                          prior=Prior[[g]], itemloc=itemloc, full=full, omp_threads=1L)
             }
         }
@@ -109,7 +109,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
             if(dentype == 'bfactor'){
                 pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
                 pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
-            } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+            } else pars[[g]][[J+1L]]@rr <- rlist[[g]]$r1g
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
@@ -273,9 +273,8 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                 if(dentype == 'bfactor'){
                     pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
-                } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+                } else pars[[g]][[J+1L]]@rr <- rlist[[g]]$r1g
             }
-            browser()
             g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
             if(length(SLOW.IND)){
                 for(group in seq_len(ngroups)){
@@ -366,9 +365,8 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND,
         }
         for(pat in seq_len(nrow(tabdata))){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
-            browser()
             rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, freq=1L,
-                                CUSTOM.IND=CUSTOM.IND, full=full,
+                                CUSTOM.IND=CUSTOM.IND, full=full, wmiss=1,
                                 Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
                                 deriv=TRUE, omp_threads=omp_threads)
             for(i in seq_len(nitems)){
@@ -376,7 +374,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND,
                 pars[[g]][[i]]@dat <- rlist$r1[, tmp]
                 pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
             }
-            pars[[g]][[nitems + 1L]]@rr <- rowSums(rlist$r1)
+            pars[[g]][[nitems + 1L]]@rr <- rlist$r1g
             DX <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, nitems),
                         ncol(L), 0L, 0L, 1L, TRUE)$grad
             info <- info + DX %*% t(DX) * rlist$expected

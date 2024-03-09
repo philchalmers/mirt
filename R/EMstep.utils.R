@@ -381,7 +381,6 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
             pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
         }
     }
-    browser()
     g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
     if(length(SLOW.IND)){
         for(group in seq_len(ngroups)){
@@ -425,7 +424,6 @@ Mstep.NR <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, AN
         longpars <- longpars_constrain(longpars=longpars, constrain=constrain,
                                        nconstrain=nconstrain)
         pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
-        browser()
         dd <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 1L, 0L, 1L, TRUE)
         if(length(SLOW.IND)){
             for(group in seq_len(ngroups)){

@@ -27,14 +27,6 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g
     const int nitems = data.ncol();
     const int npat = r.size();
 
-    vector<double> w(npat);
-    for (int pat = 0; pat < npat; ++pat){
-        int nobs = 0;
-        for (int item = 0; item < nitems; ++item)
-            nobs += data(pat,item);
-        w[pat] = nitems/nobs;
-    }
-
 #pragma omp parallel for reduction(vec_double_plus : r1vec)
     for (int pat = 0; pat < npat; ++pat){
         if(r[pat] < ABSMIN) continue;
@@ -61,7 +53,7 @@ void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g
                 if (data(pat,item)){
                     for(int q = 0; q < nquad; ++q){
                         r1vec[q + item*nquad] += posterior[q];
-                        r1g[q] += w[pat]*posterior[q];
+                        r1g[q] += wmiss[pat]*posterior[q];
                     }
                 }
             }
@@ -132,7 +124,7 @@ void _Estep2(vector<double> &expected, vector<double> &r1vec, vector<double> &r1
                  if (data(pat,item)){
                      for(int q = 0; q < nquad; ++q){
                          r1vec[q + item*nquad] += posterior[q];
-                         r1g[q] += posterior[q];
+                         r1g[q] += wmiss[pat] * posterior[q];
                      }
                  }
              }

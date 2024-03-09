@@ -243,7 +243,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 for(g in seq_len(ngroups)) rlist[[g]]$expected <- 1
                 break
             }
-            browser()
             Elist <- Estep(pars=pars, Data=Data, gTheta=gTheta, prior=prior, Prior=Prior,
                            Priorbetween=Priorbetween, specific=specific, sitems=sitems,
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
