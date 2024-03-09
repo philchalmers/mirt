@@ -36,11 +36,11 @@ EML2 <- function(x, Theta, pars, tabdata, freq, itemloc, CUSTOM.IND, bfactor_inf
         Priorbetween <- pb / sum(pb)
         prior <- t(t(pp) / colSums(pp))
         rlist <- Estep.bfactor(pars=pars, tabdata=tabdata, freq=freq,
-                               Theta=Theta, prior=prior,
+                               Theta=Theta, prior=prior, wmiss=rep(1, nrow(tabdata)),
                                Priorbetween=Priorbetween, specific=bfactor_info$specific,
                                sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, omp_threads=1L)
     } else {
-        rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq,
+        rlist <- Estep.mirt(pars=pars, tabdata=tabdata, freq=freq, wmiss=rep(1, nrow(tabdata)),
                             Theta=Theta, prior=prior, itemloc=itemloc,
                             CUSTOM.IND=CUSTOM.IND, full=FALSE, omp_threads=1L)
     }

@@ -1810,20 +1810,23 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
     for(int pat = 0; pat < npat; ++pat){
         for(int i = 0; i < J; ++i)
             dat(0, i) = tabdata(pat, i);
+        vector<double> wm(1);
+        wm[0] = wmiss[pat];
         for(int g = 0; g < ngroups; ++g){
             NumericMatrix itemtrace = gitemtrace[g];
             NumericVector tmpvec = gPrior(_,g);
             vector<double> Prior = as< vector<double> >(tmpvec);
             vector<double> expected(1), r1g(nquad), 
                 r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
+            
             if(isbifactor){
                 NumericMatrix prior = gprior[g];
                 NumericVector tmpvec = gPriorbetween(g,_);
                 vector<double> Priorbetween = as< vector<double> >(tmpvec);
                _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, vone,
-                    dat, sitems, wmiss, Etable);
+                    dat, sitems, wm, Etable);
             } else {
-                _Estep(expected, r1vec, r1g, Prior, vone, dat, itemtrace, wmiss, Etable);
+                _Estep(expected, r1vec, r1g, Prior, vone, dat, itemtrace, wm, Etable);
             }
             NumericMatrix r1 = vec2mat(r1vec, nquad, J);
             List pars = gpars[g];

@@ -170,7 +170,8 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     rs <- do.call(rbind, Data$Freq)
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior, do.call(rbind, Priorbetween),
-                      Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
+                      Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, Data$wmiss,
+                      isbifactor, iscross)
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]
     if(length(whichitems)){
         warning('Internal information matrix computations currently not supported for at
