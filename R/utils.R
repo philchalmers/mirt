@@ -2106,7 +2106,7 @@ BL.LL <- function(p, est, longpars, pars, ngroups, J, Theta, PrepList, specific,
     LL <- 0
     for(g in seq_len(ngroups)){
         expected <- Estep.mirt(pars=pars2[[g]],
-                               tabdata=Data$tabdatalong,
+                               tabdata=Data$tabdatalong, wmiss=Data$wmiss,
                                freq=if(full) rep(1L, nrow(Prior[[1L]])) else Data$Freq[[g]],
                                Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
                                CUSTOM.IND=CUSTOM.IND, full=full, Etable=FALSE, omp_threads=omp_threads)$expected

@@ -6,21 +6,21 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
     if(dentype == 'mixture'){
         rlist <- Estep.mixture(pars=pars, tabdata=tabdata, freq=Data$Freq[[1L]],
                                CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[1L]],
-                               prior=Prior, itemloc=itemloc, full=full,
-                               Etable=Etable, omp_threads=omp_threads)
+                               wmiss=Data$wmiss, prior=Prior, itemloc=itemloc,
+                               full=full, Etable=Etable, omp_threads=omp_threads)
         LL <- sum(Data$Freq[[1L]] * log(rlist[[1L]]$expected))
     } else {
         for(g in seq_len(ngroups)){
             freq <- if(full) 1 else Data$Freq[[g]]
             if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                            Theta=gTheta[[g]], prior=prior[[g]],
+                                            Theta=gTheta[[g]], prior=prior[[g]], wmiss=Data$wmiss,
                                             Priorbetween=Priorbetween[[g]], specific=specific,
                                             sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                             Etable=Etable, omp_threads=omp_threads)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=tabdata, freq=Data$Freq[[g]],
-                                         CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[g]],
+                                         CUSTOM.IND=CUSTOM.IND, Theta=gTheta[[g]], wmiss=Data$wmiss,
                                          prior=Prior[[g]], itemloc=itemloc, full=full, Etable=Etable,
                                          omp_threads=omp_threads)
             }
@@ -32,34 +32,35 @@ Estep <- function(pars, Data, gTheta, prior, Prior, Priorbetween, specific, site
 }
 
 # Estep for mirt
-Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full = FALSE,
-                       omp_threads, itemtrace=NULL, deriv = FALSE, Etable = TRUE)
+Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, wmiss,
+                       full = FALSE, omp_threads, itemtrace=NULL, deriv=FALSE, Etable=TRUE)
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                       CUSTOM.IND=CUSTOM.IND)
-    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata, Etable, omp_threads)
-        else .Call("Estep", itemtrace, prior, tabdata, freq, Etable, omp_threads)
+    retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata,
+                              wmiss, Etable, omp_threads)
+        else .Call("Estep", itemtrace, prior, tabdata, freq,
+                   wmiss, Etable, omp_threads)
     if(deriv) retlist$itemtrace <- itemtrace
     return(retlist)
 }
 
 # Estep for bfactor
-Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Priorbetween, specific,
-                          CUSTOM.IND, sitems, itemloc, omp_threads, itemtrace=NULL,
-                          Etable = TRUE)
+Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Priorbetween, specific, wmiss,
+                          CUSTOM.IND, sitems, itemloc, omp_threads, itemtrace=NULL, Etable=TRUE)
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                       CUSTOM.IND=CUSTOM.IND)
     retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata,
-                     freq, sitems, Etable, omp_threads)
+                     freq, sitems, wmiss, Etable, omp_threads)
     return(retlist)
 }
 
 # Estep for mixture Gaussian
-Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, full = FALSE,
-                          omp_threads, itemtrace=NULL, deriv = FALSE, Etable = TRUE)
+Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, wmiss,
+                          full = FALSE, omp_threads, itemtrace=NULL, deriv = FALSE, Etable=TRUE)
 {
     ngroups <- length(pars)
     if(is.null(itemtrace)){
@@ -69,11 +70,12 @@ Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND
                                                itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
     }
     tmp <- .Call("Estep", do.call(rbind, itemtrace),
-                 do.call(c, prior), tabdata, freq, Etable, omp_threads)
+                 do.call(c, prior), tabdata, freq, wmiss, Etable, omp_threads)
     retlist <- vector('list', ngroups)
     nrows <- nrow(itemtrace[[1L]])
     for(g in seq_len(ngroups))
         retlist[[g]] <- list(r1=tmp$r1[1L:nrows + (g-1)*nrows, ],
+                             r1g=tmp$r1g[1L:nrows + (g-1)*nrows],
                              expected= if(g == 1) tmp$expected else NA)
     return(retlist)
 }
@@ -246,7 +248,7 @@ Mstep.LL.group <- function(pars, Theta, keep_vcov_PD){
         gp <- ExtractGroupPars(pars[[pick]])
         chl <- try(chol(gp$gcov), silent=TRUE)
         if(is(chl, 'try-error')){
-            if(keep_vcov_PD){
+            if(keep_vcov_PD && all(is.finite(gp$gcov))){
                 sds <- diag(sqrt(diag(gp$gcov)))
                 smoothed <- cov2cor(smooth.cov(gp$gcov))
                 gp$gcov <- sds %*% smoothed %*% sds

@@ -202,13 +202,13 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         for(g in seq_len(ngroups)){
             if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                            Theta=Theta, prior=prior[[g]],
+                                            Theta=Theta, prior=prior[[g]], wmiss=Data$wmiss,
                                             Priorbetween=Priorbetween[[g]], specific=specific,
                                             sitems=sitems, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                             omp_threads=list$omp_threads)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                         CUSTOM.IND=CUSTOM.IND, Theta=Theta,
+                                         CUSTOM.IND=CUSTOM.IND, Theta=Theta, wmiss=Data$wmiss,
                                          prior=Prior[[g]], itemloc=itemloc, omp_threads=list$omp_threads)
             }
             LL <- LL + sum(Data$Freq[[g]]*log(rlist[[g]]$expected))
@@ -282,7 +282,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
                 } else {
-                    pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+                    pars[[g]][[J+1L]]@rr <- rlist[[g]]$r1g
                     if(dentype == 'EHW' && g == 1L || dentype == "Davidian" ||
                        (dentype == 'custom' && pars[[g]][[J+1L]]@standardize))
                         pars[[g]][[J+1L]]@rr <- standardizeQuadrature(gTheta[[g]],

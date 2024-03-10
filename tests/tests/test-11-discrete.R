@@ -42,10 +42,10 @@ test_that('discrete', {
     # polytomous LCA
     mod2 <- mdirt(Science, 2, verbose=FALSE)
     so <- summary(mod2)
-    expect_equal(extract.mirt(mod2, 'logLik'), -1624.642, tolerance = 1e-4)
+    expect_equal(extract.mirt(mod2, 'logLik'), -1622.466, tolerance = 1e-4)
     expect_equal(extract.mirt(mod2, 'df'), 230)
-    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.3962724,0.6037276), tolerance = 1e-2)
-    expect_equal(as.numeric(sort(so$Comfort)), c(6.97863e-05,0.02113318,0.05856795,0.0967485,0.1089279,0.4070116,0.5343507,0.7731905),
+    expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.2995343, 0.7004657), tolerance = 1e-2)
+    expect_equal(as.numeric(sort(so$Comfort)), c(5.137347e-05,0.01823445,0.0511375,0.09465902,0.1209914,0.4738024,0.4750087,0.7661152),
                  tolerance = 1e-2)
 
     #----------

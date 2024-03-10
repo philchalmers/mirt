@@ -105,6 +105,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
   itemloc <- x@Model$itemloc
   nitems <- x@Data$nitems
   ngroups <- x@Data$ngroups
+  wmiss <- x@Data$wmiss
   Prior <- x@Internals$Prior
   prior <- x@Internals$bfactor$prior
   Priorbetween <- x@Internals$bfactor$Priorbetween
@@ -173,7 +174,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
   gPrior <- t(do.call(rbind, Prior))
   gradient <- .Call("computeGradient", pars, Theta, gPrior, prior,
     do.call(rbind, Priorbetween), Data$tabdatalong, sitems, itemloc,
-    gitemtrace, npars, isbifactor)
+    gitemtrace, wmiss, npars, isbifactor)
   ## select matching gradient
   scores <- gradient[datpats, ]
   ## apply constrain handling
