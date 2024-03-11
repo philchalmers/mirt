@@ -405,6 +405,16 @@
 #' zi2PL.fit <- multipleGroup(data, zi2PL, dentype = 'mixture-2', technical=technical)
 #' coef(zi2PL.fit, simplify=TRUE)
 #'
+#' # classification estimates
+#' pi_hat <- fscores(zi2PL.fit, method = 'classify')
+#' head(pi_hat)
+#' tail(pi_hat)
+#'
+#' # EAP estimates (not useful for zip class)
+#' fs <- fscores(zi2PL.fit)
+#' head(fs)
+#' tail(fs)
+#'
 #' }
 multipleGroup <- function(data, model = 1, group, itemtype = NULL,
                           invariance = '', method = 'EM',
