@@ -175,5 +175,23 @@ test_that('dich', {
     expect_equal(out1$M2, 11.76977, tolerance=1e-4)
     expect_equal(out2$S_X2[1], 4.8448539, tolerance=1e-4)
     expect_equal(out3$expected[1], 9.931098, tolerance=1e-4)
+
+    # missing data
+    set.seed(1234)
+    pick <- sample(1:5000, 500)
+    dat <- as.matrix(expand.table(LSAT7))
+    dat[pick] <- NA
+    mod <- mirt(dat, itemtype='Rasch', verbose=FALSE)
+    syntax <- "F = 1-5
+               START = (1, d, 0.0), (1, a1, 1.0)
+               FIXED = (1, d), (1, a1)
+               FREE = (GROUP, MEAN_1)"
+    mod2 <-  mirt(dat, syntax,
+                  itemtype='Rasch', verbose=FALSE)
+    syntax <- 'F = 1-5
+               CONSTRAIN = (1-5, a1)'
+    mod3 <- mirt(dat, syntax, verbose=FALSE)
+    expect_equal(2*logLik(mod) - logLik(mod2) - logLik(mod3),
+                 0, 1e-2)
 })
 

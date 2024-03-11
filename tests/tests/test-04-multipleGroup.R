@@ -122,7 +122,8 @@ test_that('one factor', {
     mod <- multipleGroup(dat, 1, group, invariance = c('slopes', 'intercepts', 'free_means',
                                                        'free_var'), verbose=FALSE)
     cfs <- coef(mod, simplify=TRUE)
-    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(1.139968,1.192491,1.093887,0.5647073,-0.5384472,-0.2615739),
+    expect_equal(as.vector(cfs$D1$items[1:3,1:2]), c(c(1.13997217,1.192487309,1.09388710,0.56470914,-0.538445,-0.26157010)
+),
                  tolerance=1e-4)
     expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7325525, 0.9279133, 0.5071795), tolerance=1e-4)
     expect_is(plot(mod, type = 'trace'), 'trellis')
