@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.41.7
+Version: 1.41.8
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -25,7 +25,7 @@ Description: Analysis of discrete response data using
 	mixed effects designs are included for detecting differential item, bundle, 
 	and test functioning, and for modeling item and person covariates. 
 	Finally, latent class models such as the DINA, DINO, multidimensional latent class, 
-	mixture, and zero-inflated response models are supported.
+	mixture IRT models, and zero-inflated response models are supported.
 VignetteBuilder: knitr
 Depends:
     stats,

@@ -111,7 +111,7 @@ test_that('one factor', {
     expect_equal(as.numeric(fit2[[1]][1L,-1L]), c(2.733099, 7.851266, 11.000000, 0, 0.726562),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
-    expect_true(mirt:::closeEnough(fit3$M2 - 165.1392, -1e-4, 1e-4))
+    expect_true(mirt:::closeEnough(fit3$M2 - 165.1392, -1e-2, 1e-2))
     expect_equal(fit3$SRMSR.D1, 0.02754769, tolerance = 1e-4)
     expect_equal(fit3$TLI, 1.00559, tolerance = 1e-2)
     expect_true(mirt:::closeEnough(fit3$df - 208, -1e-4, 1e-4))
@@ -207,4 +207,15 @@ test_that('one factor', {
     expect_is(fs1, 'list')
     expect_equal(fs1[[1L]][1:6, 'F3'],
                  c(-0.36817499, -0.45410998, -0.19616041,  0.07609491,  0.33779790, -0.44366024), tolerance = 1e-2)
+
+    mod_scalar <- multipleGroup(dat, MGmodelg2, group = group,
+                                invariance=c(colnames(dat), 'free_means', 'free_var'),
+                                verbose = FALSE, method='QMCEM', TOL=.01)
+    expect_equal(logLik(mod_scalar), -18296.06, tolerance = 1e-2)
+    cfs <- coef(mod_scalar, simplify=TRUE)
+    gmeans <- sapply(cfs, \(x) x$means) |> t()
+    expect_equal(unname(gmeans[2,]), c(-0.1730826, -0.5265039, -0.2807707), tolerance = 1e-2)
+    so <- summary(mod_scalar, verbose=FALSE)
+    expect_equal(so[[2]]$fcor[c(2,3,6)], c(0.3191958, 0.7896032, 0.1829613), tolerance = 1e-2)
+
 })

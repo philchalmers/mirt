@@ -107,7 +107,7 @@
 #'                              invariance=c('slopes', 'intercepts'))
 #' extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #'
-#' # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+#' # optionally use Newton-Raphson for (generally) faster convergence in the M-step's, though less stable
 #' mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
 #'                              invariance=c('slopes', 'intercepts'))
 #' extract.mirt(mod_fullconstrain, 'time') #time of estimation components

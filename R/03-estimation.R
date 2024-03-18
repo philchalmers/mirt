@@ -440,6 +440,22 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
+    if(any('free_means' %in% invariance)){ #Free means
+        if(all(sapply(PrepList[[1]]$pars, function(x) class(x)) %in%
+               c(ordinal_itemtypes(), 'GroupPars'))){
+            TS <- rowMeans(Data$data, na.rm=TRUE)
+            gmus <- tapply(TS, Data$group, mean, na.rm=TRUE)
+            gsd <- sd(TS[Data$group == Data$groupNames[1L]], na.rm=TRUE)
+            gmuscaled <- (gmus - gmus[Data$groupNames[1L]]) / gsd
+            if(all(is.finite(gmuscaled))){
+                for(i in 1L:Data$ngroups){
+                    tmp <- pars[[i]][[Data$nitems+1L]]
+                    tmp@par[tmp@est & grepl('MEAN_', names(tmp@est))] <- gmuscaled[i]
+                    pars[[i]][[Data$nitems+1L]] <- tmp
+                }
+            }
+        }
+    }
     if(any('free_var' %in% invariance)){ #Free factor vars (vars 1 for ref)
         if(opts$dentype == 'bfactor'){
             tmp <- dummymat[1L:(nfact-nspec),1L:(nfact-nspec), drop=FALSE]
