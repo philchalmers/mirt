@@ -228,6 +228,18 @@
 #'
 #' # mod <- mirt(dat , mirtmodel)
 #'
+#' # using sprintf() to functionally fill in information (useful for long tests
+#' # or more complex specifications)
+#' nitems <- 100
+#' s <- sprintf('F = 1-%i
+#'       CONSTRAIN = (%s, a1)
+#'       CONSTRAINB = (%s, a1), (1-%i, d)',
+#'       nitems, "1,2,4,50,100",
+#'       paste0(1:45, collapse=','),
+#'       nitems)
+#' cat(s)
+#' model <- mirt.model(s)
+#'
 #'     }
 mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, quiet = TRUE, ...)
 {
