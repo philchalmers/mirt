@@ -122,6 +122,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
         }
         colnames(ret2) <- colnames(ret[[1L]])
         rownames(ret2) <- rownames(x@Data$data)
+        ret2 <- add_completely.missing_back(ret2, x@Data$completely_missing)
         return(as.data.frame(ret2))
     }
     if(x@ParObjects$pars[[extract.mirt(x, 'nitems')+1L]]@dentype == 'custom')
@@ -187,7 +188,7 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
     if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))
     iJ <- rowSums(!missing_loc)
     outfit <- rowSums(resid^2/W, na.rm = TRUE) / iJ
-    q.outfit <- sqrt(rowSums((C / W^2) / J^2, na.rm=TRUE) - 1 / iJ)
+    q.outfit <- sqrt(abs(rowSums((C / W^2) / J^2, na.rm=TRUE) - 1 / iJ))
     q.outfit[q.outfit > 1.4142] <- 1.4142
     z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
     infit <- rowSums(resid^2, na.rm = TRUE) / rowSums(W, na.rm=TRUE)

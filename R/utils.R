@@ -2351,7 +2351,9 @@ MGC2SC <- function(x, which){
         ind <- ind + length(tmp@ParObjects$pars[[i]]@parnum)
     }
     tmp@Data <- x@Data
+    tmp@Data$completely_missing <- integer(0L)
     tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
+    tmp@Data$rowID <- 1L:nrow(tmp@Data$data)
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]
     tmp@Data$ngroups <- 1L
