@@ -350,6 +350,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     if(na.rm) obj <- removeMissing(obj)
     if(na.rm) message('Sample size after row-wise response data removal: ',
                       nrow(extract.mirt(obj, 'data')))
+    if(nrow(extract.mirt(obj, 'data')) == 0L) stop('No data!', call.=FALSE)
     if(any(is.na(obj@Data$data))){
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data.
