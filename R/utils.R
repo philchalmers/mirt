@@ -1890,13 +1890,13 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
             stop('List of fixed effect names do not match factor names', call.=FALSE)
         estnames <- X <- vector('list', length(formula))
         for(i in 1L:length(formula)){
-            X[[i]] <- model.matrix(formula[[i]], df)
+            X[[i]] <- model.matrix(as.formula(formula[[i]]), df)
             estnames[[i]] <- colnames(X[[i]])
         }
         X <- do.call(cbind, X)
         X <- X[,unique(colnames(X))]
     } else {
-        X <- model.matrix(formula, df)
+        X <- model.matrix(as.formula(formula), df)
     }
     tXX <- t(X) %*% X
     qr_XX <- qr(0)
