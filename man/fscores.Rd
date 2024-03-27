@@ -197,11 +197,31 @@ mod <- mirt(Science, 1)
 tabscores <- fscores(mod, full.scores = FALSE)
 head(tabscores)
 
+# convert scores into expected total score information with 95\% CIs
+E.total <- expected.test(mod, Theta=tabscores[,'F1'])
+E.total_2.5 <- expected.test(mod, Theta=tabscores[,'F1'] +
+                                       tabscores[,'SE_F1'] * qnorm(.05/2))
+E.total_97.5 <- expected.test(mod, Theta=tabscores[,'F1'] +
+                                       tabscores[,'SE_F1'] * qnorm(1-.05/2))
+
+data.frame(Total_score=rowSums(tabscores[,1:4]),
+           E.total, E.total_2.5, E.total_97.5) |> head()
+
 \dontrun{
 fullscores <- fscores(mod)
 fullscores_with_SE <- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)
 head(fullscores_with_SE)
+
+# convert scores into expected total score information with 95\% CIs
+E.total <- expected.test(mod, Theta=fullscores[,'F1'])
+E.total_2.5 <- expected.test(mod, Theta=fullscores_with_SE[,'F1'] +
+                                 fullscores_with_SE[,'SE_F1'] * qnorm(.05/2))
+E.total_97.5 <- expected.test(mod, Theta=fullscores_with_SE[,'F1'] +
+                               fullscores_with_SE[,'SE_F1'] * qnorm(1-.05/2))
+
+data.frame(Total_score=rowSums(Science),
+           E.total, E.total_2.5, E.total_97.5) |> head()
 
 # change method argument to use MAP estimates
 fullscores <- fscores(mod, method='MAP')

@@ -17,7 +17,7 @@ expected.test(
 \arguments{
 \item{x}{an estimated mirt object}
 
-\item{Theta}{a matrix of latent trait values}
+\item{Theta}{a matrix of latent trait values (if a vector is supplied, will be coerced to a matrix with one column)}
 
 \item{group}{a number or character signifying which group the item should be extracted from
 (applies to 'MultipleGroupClass' objects only)}

@@ -5,7 +5,7 @@
 #'
 #' @aliases expected.test
 #' @param x an estimated mirt object
-#' @param Theta a matrix of latent trait values
+#' @param Theta a matrix of latent trait values (if a vector is supplied, will be coerced to a matrix with one column)
 #' @param group a number or character signifying which group the item should be extracted from
 #'   (applies to 'MultipleGroupClass' objects only)
 #' @param mins logical; include the minimum value constants in the dataset. If FALSE, the
@@ -50,6 +50,7 @@ expected.test <- function(x, Theta, group = NULL, mins = TRUE,
     if(missing(Theta)) missingMsg('Theta')
     if(is.character(group))
         group <- which(group %in% extract.mirt(x, 'groupNames'))
+    if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
     pars <- if(is(x, 'MultipleGroupClass')) x@ParObjects$pars[[group]]@ParObjects$pars else x@ParObjects$pars
     K <- extract.mirt(x, 'K')
     if(is.null(which.items) || length(x@Internals$CUSTOM.IND)){
