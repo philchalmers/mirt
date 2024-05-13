@@ -487,12 +487,13 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             names(res) <- itemnames[items2test][pick]
         }
     }
+    if(return_models) return(res)
     converged <- logical(length(res))
     for(i in seq_len(length(res))){
         if(!Wald) converged[i] <- attr(res[[i]], 'converged')
         attr(res[[i]], 'converged') <- attr(res[[i]], 'parnum') <- NULL
     }
-    if(return_models) return(res)
+
     if(p.adjust != 'none'){
         if(Wald){
             ps <- do.call(c, lapply(res, function(x) x$p))
