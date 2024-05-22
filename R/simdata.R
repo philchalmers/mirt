@@ -501,7 +501,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	    if(itemtype[i] == 'ggum'){
 	        if(length(na.omit(a[i,])) != length(na.omit(d[i,])))
 	            stop('ggums must have the same number of a and d values per item', call.=FALSE)
-	        par <- c(na.omit(a[i, ]), -d[i,], t[i,])
+	        par <- c(na.omit(a[i, ]), d[i,], t[i,])
 	        obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
 	    }
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit', 'ggum')))
