@@ -64,7 +64,8 @@
 #'   \item{COV}{Specify the relationship between the latent factors.
 #'   Estimating a correlation between factors is declared by joining the two
 #'   factors with an asterisk (e.g., F1*F2), or with an asterisk between three or more factors
-#'   to estimate all the possible correlations (e.g., F1*F2*F3)}
+#'   to estimate all the possible correlations (e.g., F1*F2*F3). Specifications with the same factor
+#'   (e.g., F1*F1) will free the variance of said factor instead}
 #'
 #'  \item{MEAN}{A comma separated list specifying which latent factor means to freely estimate.
 #'   E.g., \code{MEAN = F1, F2} will free the latent means for factors F1 and F2}
