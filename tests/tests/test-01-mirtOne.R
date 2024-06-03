@@ -59,7 +59,7 @@ test_that('dich', {
     svalues[22, 'value'] <- 2
     modm5 <- mirt(data, 1, pars = svalues, verbose=FALSE)
     expect_is(modm5, 'SingleGroupClass')
-    expect_message(modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, .1),
+    expect_warning(modm7 <- mirt(data, 1, '4PL', verbose=FALSE, parprior = list(c(3,7,11,15,19,'norm', -1.7, .1),
                                                                  c(4,8,12,16,20,'norm', 1.7, .1))),
                    "EM cycles terminated after 500 iterations.")
     expect_equal(extract.mirt(modm7, 'df'), 11)
