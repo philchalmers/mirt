@@ -857,8 +857,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             is.latent <- lengthsplit > 2L
             if(!dontrun){
                 if(ESTIMATE$cycles <= 10L)
-                    if(opts$message)
-                        message('Very few EM cycles performed. Consider decreasing TOL further to
+                    if(opts$warn)
+                        warning('Very few EM cycles performed. Consider decreasing TOL further to
                             increase EM iteration count or starting farther away from ML estimates by
                             passing the \'GenRandomPars = TRUE\' argument')
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))

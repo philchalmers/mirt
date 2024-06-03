@@ -115,7 +115,7 @@ boot.mirt <- function(x, R = 100, boot.fun = NULL, technical = NULL, ...){
 
     if(missing(x)) missingMsg('x')
     if(x@Options$exploratory)
-        message('Note: bootstrapped standard errors for slope parameters in exploratory
+        warning('Note: bootstrapped standard errors for slope parameters in exploratory
                        models are not meaningful.')
     dat <- x@Data$data
     itemtype <- x@Model$itemtype
