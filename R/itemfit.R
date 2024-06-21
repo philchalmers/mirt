@@ -571,12 +571,13 @@ itemfit <- function(x, fit_stats = 'S_X2',
             pf$resid[dat_is_na] <- 0
             pf$C[dat_is_na] <- 0
             z2 <- pf$resid^2 / pf$W
-            outfit <- colSums(z2) / N
-            q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2) - 1 / N)
+            outfit <- colSums(z2, na.rm = TRUE) / N
+            q.outfit <- sqrt(colSums((pf$C / pf$W^2) / N^2, na.rm=TRUE) - 1 / N)
             q.outfit[q.outfit > 1.4142] <- 1.4142
             z.outfit <- (outfit^(1/3) - 1) * (3/q.outfit) + (q.outfit/3)
-            infit <- colSums(pf$W * z2) / colSums(pf$W)
-            q.infit <- sqrt(colSums(pf$C - pf$W^2) / colSums(pf$W)^2)
+            infit <- colSums(pf$W * z2, na.rm=TRUE) / colSums(pf$W, na.rm=TRUE)
+            q.infit <- sqrt(colSums(pf$C - pf$W^2, na.rm=TRUE) /
+                                colSums(pf$W, na.rm=TRUE)^2)
             q.infit[q.infit > 1.4142] <- 1.4142
             z.infit <- (infit^(1/3) - 1) * (3/q.infit) + (q.infit/3)
             ret$outfit <- outfit[which.items]
