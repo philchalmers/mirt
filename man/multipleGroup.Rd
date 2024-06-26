@@ -394,7 +394,7 @@ mod <- mirt(dat)
 anova(mod, mod_mix2)
 
 ########################################
-# Zero-inflated 2PL IRT model
+# Zero-inflated 2PL IRT model (Wall, Park, and Moustaki, 2015)
 
 n <- 1000
 nitems <- 20
@@ -433,12 +433,77 @@ fs <- fscores(zi2PL.fit)
 head(fs)
 tail(fs)
 
+########################################
+# Zero-inflated graded response model (Magnus and Garnier-Villarreal, 2022)
+
+n <- 1000
+nitems <- 20
+
+a <- matrix(rlnorm(20,.2,.3))
+
+# for the graded model, ensure that there is enough space between the intercepts,
+# otherwise closer categories will not be selected often (minimum distance of 0.3 here)
+diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+diffs <- -(diffs - rowMeans(diffs))
+d <- diffs + rnorm(20)
+
+zi_p <- 0.2 # Proportion of people in zero/lowest category class
+
+theta <- rnorm(n, 0, 1)
+zeros <- matrix(0, n*zi_p, nitems)
+nonzeros <- simdata(a, d, n*(1-zi_p), itemtype = 'graded',
+                    Theta = as.matrix(theta[1:(n*(1-zi_p))]))
+data <- rbind(nonzeros, zeros)
+
+# intercepts will be labelled as d1 through d4
+apply(data, 2, table)
+
+# ignoring zero inflation
+modGRM <- mirt(data)
+coef(modGRM, simplify=TRUE)
+
+# Define class with extreme theta but fixed item parameters
+#   For GRM in zero-inflated class the intercept values are arbitrary
+#   as the model forces the responses all into the first category (hence,
+#   spacing arbitrarily set to 1)
+ziGRM <- "F = 1-20
+          START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
+                              (1-20, a1, 1.0),
+                              (1-20, d1, 2), (1-20, d2, 1), (1-20, d3, 0), (1-20, d4, -1)
+          FIXED [MIXTURE_1] = (GROUP, MEAN_1), (GROUP, COV_11),
+                              (1-20, a1),
+                              (1-20, d1), (1-20, d2), (1-20, d3), (1-20, d4)"
+
+# define custom Theta integration grid that contains extreme theta + normal grid
+technical <- list(customTheta = matrix(c(-100, seq(-6,6,length.out=61))))
+
+# fit zero-inflated GRM
+ziGRM.fit <- multipleGroup(data, ziGRM, dentype = 'mixture-2', technical=technical)
+coef(ziGRM.fit, simplify=TRUE)
+
+# classification estimates
+pi_hat <- fscores(ziGRM.fit, method = 'classify')
+head(pi_hat)
+tail(pi_hat)
+
+# EAP estimates (not useful for zip class)
+fs <- fscores(ziGRM.fit)
+head(fs)
+tail(fs)
+
 }
 }
 \references{
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
+
+Magnus, B. E. and  Garnier-Villarreal (2022). A multidimensional zero-inflated
+graded response model for ordinal symptom data. \emph{Psychological Methods}, 27, 261-279.
+
+Wall, M., M., Park, J., Y., and Moustaki I. (2015). IRT modeling in the presence of
+zero-inflation with application to psychiatric disorder severity.
+\emph{Applied Psychological Measurement} 39: 583-597.
 }
 \seealso{
 \code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}, \code{\link{DRF}}
