@@ -458,7 +458,7 @@ data <- rbind(nonzeros, zeros)
 # intercepts will be labelled as d1 through d4
 apply(data, 2, table)
 
-# ignoring zero inflation
+# ignoring zero inflation (bad idea)
 modGRM <- mirt(data)
 coef(modGRM, simplify=TRUE)
 

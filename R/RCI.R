@@ -73,7 +73,7 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL, ...){
     fs_pre <- fscores(mod, response.pattern = predat, ...)
     fs_post <- fscores(mod, response.pattern = postdat, ...)
 
-    diff <- fs_pre[,1] - fs_post[,1]
+    diff <- fs_post[,1] - fs_pre[,1]
     pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
     ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
                       pooled_SEM=pse, z=diff/pse)
