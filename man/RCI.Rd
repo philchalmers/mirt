@@ -4,10 +4,23 @@
 \alias{RCI}
 \title{Model-based Reliable Change Index}
 \usage{
-RCI(mod, predat, postdat, cutoffs = NULL, ...)
+RCI(
+  mod,
+  predat,
+  postdat,
+  cutoffs = NULL,
+  rxx.method = "pooled",
+  rxx.pre = NULL,
+  rxx.post = NULL,
+  SD.pre = NULL,
+  SD.post = NULL,
+  ...
+)
 }
 \arguments{
-\item{mod}{single-group model fitted by \code{\link{mirt}}}
+\item{mod}{single-group model fitted by \code{\link{mirt}}. If not supplied the
+information will be extracted from the data input objects to compute the classical
+test theory version of the RCI statistics}
 
 \item{predat}{a vector (if one individual) or matrix/data.frame
 of response data to be scored, where each individuals' responses are
@@ -18,6 +31,19 @@ measurement}
 
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
+
+\item{rxx.method}{for CTT version of RCI, which method to use for pooling the reliability
+information. Currently supports \code{'pooled'} to pool the pre-post
+reliability estimates (default) or \code{'pre'} for using just the pre-test}
+
+\item{rxx.pre}{CTT reliability of pretest. If not supplied will be computed using coefficient
+alpha from \code{predat}}
+
+\item{rxx.post}{same as \code{rxx.pre}, but for post-test data}
+
+\item{SD.pre}{standard deviation of pretest. If not supplied will be computed from \code{predat}}
+
+\item{SD.post}{same as \code{SD.pre}, but for the post-test data}
 
 \item{...}{additional arguments passed to \code{\link{fscores}}}
 }
@@ -32,20 +58,49 @@ as conditional standard error of measurement information.
 
 \dontrun{
 
-mod <- mirt(Science, 1)
+# simulate some data
+N <- 1000
+J <- 20     # number of items
+a <- matrix(rlnorm(J,.2,.3))
+d <- rnorm(J)
+
+theta <- matrix(rnorm(N))
+dat_pre <- simdata(a, d, itemtype = '2PL', Theta = theta)
+
+# first 3 cases decrease by 1/2
+theta2 <- theta - c(1/2, 1/2, 1/2, numeric(N-3))
+dat_post <- simdata(a, d, itemtype = '2PL', Theta = theta2)
+
+mod <- mirt(dat_pre)
+
+# all changes using fitted model from pre data
+RCI(mod, predat=dat_pre, postdat=dat_post)
 
 # single response pattern change using EAP information
-RCI(mod, predat = c(1,2,3,2), postdat = c(1,2,2,1))
+RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
 
 # WLE estimator
-RCI(mod, predat = c(1,2,3,2), postdat = c(1,2,2,1), method = 'WLE')
+RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,], method = 'WLE')
 
 # multiple respondents
-RCI(mod, predat = Science[1:5,], postdat = Science[2:6,])
+RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,])
 
 # include large-sample z-type cutoffs
-RCI(mod, predat = Science[1:5,], postdat = Science[2:6,],
+RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,],
     cutoffs = c(-1.96, 1.96))
+
+######
+# CTT version by omitting IRT model (easiest to use complete dataset)
+RCI(predat = dat_pre, postdat = dat_post)
+
+# CTT version with pre-computed information
+RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
+    rxx.pre=.6, rxx.post=.6, SD.pre=2, SD.post=3,
+    cutoffs = c(-1.96, 1.96))
+
+# just pre-test rxx
+RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
+    rxx.pre=.6, SD.pre=2, rxx.method = 'pre')
 
 ############################
 # Example where individuals take completely different item set pre-post
