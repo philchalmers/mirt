@@ -113,6 +113,7 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL,
                 SD.pre = NULL, SD.post = NULL, ...){
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
+    nfact <- 1L
     if(missing(mod)){
         stopifnot(rxx.method %in% c('pooled', 'pre'))
         if(is.vector(predat))
@@ -139,23 +140,33 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL,
         diff <- TS_post - TS_pre
         z_JCI <- diff / SEM
         ret <- data.frame(pre.score=TS_pre, post.score=TS_post, diff,
-                          SEM=SEM, z=z_JCI)
+                          SEM=SEM, z=z_JCI,
+                          p=pnorm(abs(z_JCI), lower.tail = FALSE)*2)
     } else {
-        if(extract.mirt(mod, 'nfact') == 1L){
+        nfact <- extract.mirt(mod, 'nfact')
+        if(nfact == 1L){
             fs_pre <- fscores(mod, response.pattern = predat, ...)
             fs_post <- fscores(mod, response.pattern = postdat, ...)
-
             diff <- fs_post[,1] - fs_pre[,1]
             pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
+            z <- diff/pse
             ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
-                              pooled_SEM=pse, z=diff/pse)
+                              pooled_SEM=pse, z=z,
+                              p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
-            stop('not yet supported')
-            browser()
+            fs_pre <- fscores(mod, response.pattern = predat, ...)
+            fs_post <- fscores(mod, response.pattern = postdat, ...)
+            diff <- fs_post[,1L:nfact] - fs_pre[,1L:nfact]
+            SEs <- sqrt(fs_pre[,1L:nfact + nfact]^2 +
+                            fs_post[,1L:nfact + nfact]^2)
+            z <- diff/SEs
+            ret <- data.frame(diff=diff, pooled_SEM=SEs, z=z,
+                              p=pnorm(abs(z), lower.tail = FALSE)*2)
         }
     }
+
     rownames(ret) <- NULL
-    if(!is.null(cutoffs) && ncol(ret) == 5L){ # only for unidim
+    if(!is.null(cutoffs) && nfact == 1L){
         ret$cut_decision <- 'unchanged'
         ret$cut_decision[ret$z > max(cutoffs)] <- 'increased'
         ret$cut_decision[ret$z < min(cutoffs)] <- 'decreased'
