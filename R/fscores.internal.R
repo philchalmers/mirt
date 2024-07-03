@@ -128,7 +128,7 @@ setMethod(
                     pis <- do.call(c, lapply(coef(object, simplify=TRUE), function(x) as.numeric(x$class_proportion)))
                 }
                 ret <- fscores(newmod, rotate=rotate, Target=Target, full.scores=TRUE, mixture=mixture,
-                               method=method, quadpts=quadpts, verbose=FALSE, full.scores.SE=TRUE,
+                               method=method, quadpts=quadpts, verbose=verbose, full.scores.SE=TRUE,
                                response.pattern=NULL, return.acov=return.acov, theta_lim=theta_lim,
                                MI=MI, mean=gmean, cov=gcov, custom_den=custom_den, QMC=QMC,
                                custom_theta=custom_theta, plausible.draws=plausible.draws,
