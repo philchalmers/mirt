@@ -123,8 +123,15 @@ wald <- function(object, L, C = NULL){
         names(ret) <- Names
         return(ret)
     }
+    ret <- wald.test(B=B, covB=covB, L=L, C=C)
+    ret
+}
+
+wald.test <- function(B, covB, L, C = NULL){
+    Names <- names(B)
     if(is.character(L)){
-        tmp <- makeHypothesis(names(B), L)
+        stopifnot(length(Names) > 0)
+        tmp <- makeHypothesis(Names, L)
         C <- tmp[, NCOL(tmp)]
         L <- tmp[, -NCOL(tmp), drop = FALSE]
         # rownames(L) <- L
@@ -141,7 +148,7 @@ wald <- function(object, L, C = NULL){
         stop('length(C) must be the same as nrow(L)', call.=FALSE)
     W <- t((L %*% B) - C) %*% solve(L %*% covB %*% t(L)) %*% ((L %*% B) - C)
     W <- ifelse(W < 0, 0, W)
-    ret <- list(W=W, df = nrow(L))
+    ret <- list(W=W, df = qr(L)$rank)
     p <- 1 - pchisq(ret$W, ret$df)
     ret$p <- p
     as.data.frame(ret)

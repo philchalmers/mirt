@@ -22,7 +22,7 @@
 #' @param rxx.post same as \code{rxx.pre}, but for post-test data
 #' @param SD.pre standard deviation of pretest. If not supplied will be computed from \code{predat}
 #' @param SD.post same as \code{SD.pre}, but for the post-test data
-#' @param rxx.method for CTT version of RCI, which method to use for pooling the reliability
+#' @param rxx.method which method to use for pooling the reliability
 #'   information. Currently supports \code{'pooled'} to pool the pre-post
 #'   reliability estimates (default) or \code{'pre'} for using just the pre-test
 #'
@@ -148,19 +148,33 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL,
             fs_pre <- fscores(mod, response.pattern = predat, ...)
             fs_post <- fscores(mod, response.pattern = postdat, ...)
             diff <- fs_post[,1] - fs_pre[,1]
-            pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
+            pse <- if(rxx.method == 'pooled')
+                sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
+            else sqrt(2*fs_pre[,2]^2)
             z <- diff/pse
             ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
-                              pooled_SEM=pse, z=z,
+                              SEM=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
             fs_pre <- fscores(mod, response.pattern = predat, ...)
             fs_post <- fscores(mod, response.pattern = postdat, ...)
+            fs_acov <- fs_pre_acov <- fscores(mod, response.pattern = predat,
+                                              return.acov=TRUE, ...)
+            if(rxx.method == 'pooled'){
+                fs_post_acov <- fscores(mod, response.pattern = postdat,
+                                        return.acov=TRUE, ...)
+                for(i in 1L:length(fs_acov))
+                    fs_acov[[i]] <- fs_pre_acov[[i]] + fs_post_acov[[i]]
+            } else fs_acov <- lapply(fs_acov, \(x) 2*x)
             diff <- fs_post[,1L:nfact] - fs_pre[,1L:nfact]
-            SEs <- sqrt(fs_pre[,1L:nfact + nfact]^2 +
-                            fs_post[,1L:nfact + nfact]^2)
+            joint <- vector('list', nrow(diff))
+            for(i in 1:nrow(diff))
+                joint[[i]] <- wald.test(diff[i,], covB = fs_acov[[i]],
+                                        L = diag(ncol(diff)))
+            joint <- do.call(rbind, joint)
+            SEs <- do.call(rbind, lapply(fs_acov, \(x) sqrt(diag(x))))
             z <- diff/SEs
-            ret <- data.frame(diff=diff, pooled_SEM=SEs, z=z,
+            ret <- data.frame(diff=diff, joint, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         }
     }

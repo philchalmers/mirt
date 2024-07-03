@@ -32,7 +32,7 @@ measurement}
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
 
-\item{rxx.method}{for CTT version of RCI, which method to use for pooling the reliability
+\item{rxx.method}{which method to use for pooling the reliability
 information. Currently supports \code{'pooled'} to pool the pre-post
 reliability estimates (default) or \code{'pre'} for using just the pre-test}
 
