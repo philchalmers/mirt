@@ -6,9 +6,11 @@
 #' of response pattern information in the pre/post data score estimates, as well
 #' as conditional standard error of measurement information.
 #'
-#' @param mod single-group model fitted by \code{\link{mirt}}. If not supplied the
+#' @param mod_pre single-group model fitted by \code{\link{mirt}}. If not supplied the
 #'  information will be extracted from the data input objects to compute the classical
 #'  test theory version of the RCI statistics
+#' @param mod_post (optional) IRT model for post-test if different from pre-test;
+#'  otherwise, the pre-test model will be used
 #' @param predat a vector (if one individual) or matrix/data.frame
 #'   of response data to be scored, where each individuals' responses are
 #'   included in exactly one row
@@ -94,7 +96,7 @@
 #' dat <- key2binary(SAT12,
 #'   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
-#' mod <- mirt(dat, 1)
+#' mod <- mirt(dat)
 #'
 #' # with N=5 individuals under investigation
 #' predat <- postdat <- dat[1:5,]
@@ -107,14 +109,15 @@
 #' RCI(mod, predat, postdat)
 #'
 #' }
-RCI <- function(mod, predat, postdat, cutoffs = NULL,
+RCI <- function(mod_pre, predat, postdat,
+                mod_post = mod_pre, cutoffs = NULL,
                 rxx.method = 'pooled',
                 rxx.pre = NULL, rxx.post = NULL,
                 SD.pre = NULL, SD.post = NULL, ...){
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
     nfact <- 1L
-    if(missing(mod)){
+    if(missing(mod_pre)){
         stopifnot(rxx.method %in% c('pooled', 'pre'))
         if(is.vector(predat))
             predat <- matrix(predat, 1L)
@@ -124,12 +127,10 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL,
         TS_post <- rowSums(postdat)
         if(is.null(SD.pre)) SD.pre <- sd(TS_pre)
         if(is.null(SD.post)) SD.post <- sd(TS_post)
-        if(is.null(rxx.pre))
-            rxx.pre <- itemstats(predat)$overall$alpha
-        if(rxx.method == 'pre')
-            rxx.post <- rxx.pre
+        if(is.null(rxx.pre)) rxx.pre <- CA(predat)
+        if(rxx.method == 'pre') rxx.post <- rxx.pre
         if(is.null(rxx.post) && rxx.method == 'pooled')
-            rxx.post <- itemstats(postdat)$overall$alpha
+            rxx.post <- CA(postdat)
         SEM_pre <- as.numeric(SD.pre * sqrt(1 - rxx.pre))
         SEM_post <- as.numeric(SD.post * sqrt(1 - rxx.post))
         if(rxx.method == 'pooled'){
@@ -143,10 +144,11 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL,
                           SEM=SEM, z=z_JCI,
                           p=pnorm(abs(z_JCI), lower.tail = FALSE)*2)
     } else {
-        nfact <- extract.mirt(mod, 'nfact')
+        if(is.null(mod_post)) mod_post <- mod_pre
+        nfact <- extract.mirt(mod_pre, 'nfact')
         if(nfact == 1L){
-            fs_pre <- fscores(mod, response.pattern = predat, ...)
-            fs_post <- fscores(mod, response.pattern = postdat, ...)
+            fs_pre <- fscores(mod_pre, response.pattern = predat, ...)
+            fs_post <- fscores(mod_post, response.pattern = postdat, ...)
             diff <- fs_post[,1] - fs_pre[,1]
             pse <- if(rxx.method == 'pooled')
                 sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
@@ -156,12 +158,12 @@ RCI <- function(mod, predat, postdat, cutoffs = NULL,
                               SEM=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
-            fs_pre <- fscores(mod, response.pattern = predat, ...)
-            fs_post <- fscores(mod, response.pattern = postdat, ...)
-            fs_acov <- fs_pre_acov <- fscores(mod, response.pattern = predat,
+            fs_pre <- fscores(mod_pre, response.pattern=predat, ...)
+            fs_post <- fscores(mod_post, response.pattern=postdat, ...)
+            fs_acov <- fs_pre_acov <- fscores(mod_pre, response.pattern = predat,
                                               return.acov=TRUE, ...)
             if(rxx.method == 'pooled'){
-                fs_post_acov <- fscores(mod, response.pattern = postdat,
+                fs_post_acov <- fscores(mod_post, response.pattern=postdat,
                                         return.acov=TRUE, ...)
                 for(i in 1L:length(fs_acov))
                     fs_acov[[i]] <- fs_pre_acov[[i]] + fs_post_acov[[i]]

@@ -5,9 +5,10 @@
 \title{Model-based Reliable Change Index}
 \usage{
 RCI(
-  mod,
+  mod_pre,
   predat,
   postdat,
+  mod_post = mod_pre,
   cutoffs = NULL,
   rxx.method = "pooled",
   rxx.pre = NULL,
@@ -18,7 +19,7 @@ RCI(
 )
 }
 \arguments{
-\item{mod}{single-group model fitted by \code{\link{mirt}}. If not supplied the
+\item{mod_pre}{single-group model fitted by \code{\link{mirt}}. If not supplied the
 information will be extracted from the data input objects to compute the classical
 test theory version of the RCI statistics}
 
@@ -28,6 +29,9 @@ included in exactly one row}
 
 \item{postdat}{same as \code{predat}, but with respect to the post/follow-up
 measurement}
+
+\item{mod_post}{(optional) IRT model for post-test if different from pre-test;
+otherwise, the pre-test model will be used}
 
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
@@ -109,7 +113,7 @@ RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
 dat <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
-mod <- mirt(dat, 1)
+mod <- mirt(dat)
 
 # with N=5 individuals under investigation
 predat <- postdat <- dat[1:5,]
