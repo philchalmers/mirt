@@ -38,10 +38,6 @@ dat <- key2binary(SAT12,
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
-
 Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003).
 TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
 [Computer software]. Lincolnwood, IL: Scientific Software International.

@@ -33,10 +33,6 @@ sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
-
 Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 \emph{Psychometrika, 47}, 175-186.
 }

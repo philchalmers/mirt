@@ -17,10 +17,6 @@ itemstats(dat)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
-
 de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
 }
 \author{

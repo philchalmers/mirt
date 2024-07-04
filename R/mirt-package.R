@@ -41,16 +41,19 @@ NULL
 #' Description of Science data
 #'
 #' A 4-item data set borrowed from \code{ltm} package in R, first example
-#' of the \code{grm()} function. See more complete documentation therein.
+#' of the \code{grm()} function. See more complete documentation therein, as
+#' well as Karlheinz and Melich (1992).
 #'
 #'
 #' @name Science
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
+#'
+#' Karlheinz, R. and Melich, A. (1992). Euro-Barometer 38.1:
+#' \emph{Consumer Protection and Perceptions of Science and Technology}.
+#' INRA (Europe), Brussels. [computer file]
+#'
 #' @keywords data
 #' @examples
 #'
@@ -106,9 +109,6 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #'
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003).
 #' TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
@@ -154,10 +154,6 @@ NULL
 #' Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
 #' dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 #'
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
-#'
 #' @keywords data
 #' @examples
 #'
@@ -181,9 +177,6 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #'
 #' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 #' \emph{Psychometrika, 47}, 175-186.
@@ -214,6 +207,31 @@ NULL
 #' }
 NULL
 
+#' Description of ASVAB data
+#'
+#' Data from
+#'
+#'
+#' @name LSAT7
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
+#' dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
+#'
+#' @keywords data
+#' @examples
+#'
+#' \dontrun{
+#' dat <- expand.table(LSAT7)
+#' head(dat)
+#' itemstats(dat)
+#'
+#' (mod <- mirt(dat, 1))
+#' coef(mod)
+#' }
+NULL
+
 #' Description of deAyala data
 #'
 #' Mathematics data from de Ayala (2009; pg. 14); 5 item dataset in table format.
@@ -223,9 +241,6 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #'
 #' de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
 #'
@@ -253,9 +268,6 @@ NULL
 #' Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K.
 #' \emph{Handbook of modern item response theory}. New York: Springer.
 #'
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #' @examples
 #'
 #' \dontrun{
@@ -277,3 +289,37 @@ NULL
 #'  }
 NULL
 
+#' Description of ASVAB data
+#'
+#' Table of counts extracted from Mislvey (1985). Data the 16 possible
+#' response patterns observed for four items from the arithmetic reasoning
+#' test of the Armed Services Vocational Aptitude Battery (ASVAB), Form 8A,
+#' from samples of white males and females and black males and females.
+#'
+#' @name ASVAB
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#'
+#' Mislevy, R. J. (1985). Estimation of latent group effects.
+#' \emph{Journal of the American Statistical Association, 80}, 993-997.
+#'
+#' @keywords data
+#' @examples
+#'
+#' data(ASVAB)
+#' datWM <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, White_Male)))
+#' datWF <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, White_Female)))
+#' datBM <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, Black_Male)))
+#' datBF <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, Black_Female)))
+#'
+#' dat <- rbind(datWM, datWF, datBM, datBF)
+#' sex <- rep(c("Male", "Female", "Male", "Female"),
+#'   times=c(nrow(datWM), nrow(datWF), nrow(datBM), nrow(datBF))) |> factor()
+#' color <- rep(c("White", "Black"),
+#'   times=c(nrow(datWM) + nrow(datWF), nrow(datBM) + nrow(datBF))) |> factor()
+#' group <- sex:color
+#'
+#' itemstats(dat, group=group)
+#'
+NULL

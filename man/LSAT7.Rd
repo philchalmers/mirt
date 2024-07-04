@@ -7,8 +7,19 @@
 \description{
 Data from Bock & Lieberman (1970); contains 5 dichotomously scored
 items obtained from the Law School Admissions Test, section 7.
+
+Data from
 }
 \examples{
+
+\dontrun{
+dat <- expand.table(LSAT7)
+head(dat)
+itemstats(dat)
+
+(mod <- mirt(dat, 1))
+coef(mod)
+}
 
 \dontrun{
 dat <- expand.table(LSAT7)
@@ -23,9 +34,8 @@ coef(mod)
 Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
 dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
+Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
+dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

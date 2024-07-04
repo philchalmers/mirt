@@ -6,7 +6,8 @@
 \title{Description of Science data}
 \description{
 A 4-item data set borrowed from \code{ltm} package in R, first example
-of the \code{grm()} function. See more complete documentation therein.
+of the \code{grm()} function. See more complete documentation therein, as
+well as Karlheinz and Melich (1992).
 }
 \examples{
 
@@ -18,9 +19,9 @@ plot(mod, type = 'trace')
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
+Karlheinz, R. and Melich, A. (1992). Euro-Barometer 38.1:
+\emph{Consumer Protection and Perceptions of Science and Technology}.
+INRA (Europe), Brussels. [computer file]
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
