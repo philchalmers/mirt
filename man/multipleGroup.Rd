@@ -254,6 +254,54 @@ model <- 'F1 = 1-15
 mod <- multipleGroup(dat, model, group = group, invariance = colnames(dat))
 coef(mod, simplify=TRUE)
 
+#############
+# Testing main effects in multiple independent grouping variables
+set.seed(1234)
+a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+itemtype <- rep('2PL', nrow(a))
+N <- 500
+
+# generated data have interaction effect for latent means, as well as a
+# main effect across D but no main effect across G
+d11 <- simdata(a, d, N, itemtype, mu = 0)
+d12 <- simdata(a, d, N, itemtype, mu = 0)
+d13 <- simdata(a, d, N, itemtype, mu = 0)
+d21 <- simdata(a, d, N, itemtype, mu = 1/2)
+d22 <- simdata(a, d, N, itemtype, mu = 1/2)
+d23 <- simdata(a, d, N, itemtype, mu = -1)
+dat <- do.call(rbind, list(d11, d12, d13, d21, d22, d23))
+group <- rep(c('G1.D1', 'G1.D2', 'G1.D3', 'G2.D1', 'G2.D2', 'G2.D3'), each=N)
+table(group)
+
+# in practice, group would be organized in a data.frame as follows
+df <- data.frame(group)
+dfw <- tidyr::separate_wider_delim(df, group, delim='.', names = c('G', 'D'))
+head(dfw)
+
+# for use with multipleGroup() combine into a single long group
+group <- with(dfw, factor(G):factor(D))
+
+# conditional information
+itemstats(dat, group=group)
+
+mod <- multipleGroup(dat, group = group, SE=TRUE,
+                     invariance = c(colnames(dat), 'free_mean', 'free_var'))
+coef(mod, simplify=TRUE)
+sapply(coef(mod, simplify=TRUE), \(x) unname(x$means)) # mean estimates
+wald(mod) # view parameter names for later testing
+
+# test for main effect over G group (manually compute marginal mean)
+wald(mod, "0 + MEAN_1.123 + MEAN_1.185 = MEAN_1.247 + MEAN_1.309 + MEAN_1.371")
+
+# test for main effect over D group  (manually compute marginal means)
+wald(mod, c("0 + MEAN_1.247 = MEAN_1.123 + MEAN_1.309",
+            "0 + MEAN_1.247 = MEAN_1.185 + MEAN_1.371"))
+
+# post-hoc tests (better practice would include p.adjust() )
+wald(mod, "0 + MEAN_1.247 = MEAN_1.123 + MEAN_1.309") # D1 vs D2
+wald(mod, "0 + MEAN_1.247 = MEAN_1.185 + MEAN_1.371") # D1 vs D3
+wald(mod, "MEAN_1.123 + MEAN_1.309 = MEAN_1.185 + MEAN_1.371") # D2 vs D3
 
 
 #############
