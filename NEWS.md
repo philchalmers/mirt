@@ -1,5 +1,8 @@
 # Changes in mirt 1.42
 
+- Add `reverse.score()` function for reverse scoring specific items within
+  a `matrix` or `data.frame` 
+
 - Fixed issue related to missing data patterns that resulted in bias 
   when estimating the hyper-parameters in single and multi-group models 
   (reported by Paul Jewsbury)
