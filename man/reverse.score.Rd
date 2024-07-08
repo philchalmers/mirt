@@ -47,8 +47,9 @@ plot(mod, type = 'itemscore')
 revdat <- reverse.score(dat, c('Item_1', 'Item_5', 'Item_10'))
 head(revdat)
 
-head(dat[,c(1,5,10)]) # compare
-head(revdat[,c(1,5,10)])
+# compare
+apply(dat[,c(1,5,10)], 2, table)
+apply(revdat[,c(1,5,10)], 2, table)
 
 \dontrun{
 # slopes all positive now
@@ -60,13 +61,20 @@ plot(mod2, type = 'itemscore')
 # use different empirical scoring information due to options not used
   # 0 score not observed for item 1, though should have been rescored to a 4
 dat[dat[,1] == 0, 1] <- 1
-table(dat[,1])
+
+
+# 4 score not observed for item 5, though should have been rescored to a 0
+dat[dat[,5] == 4, 5] <- 3
+table(dat[,5])
 
 # specify theoretical scoring values in the range list
 revdat2 <- reverse.score(dat, c('Item_1', 'Item_5', 'Item_10'),
-                              range = list('Item_1' = c(0,4)))
-head(revdat2[,1:3])
+                              range = list(Item_1 = c(0,4), Item_5 = c(0,4)))
+table(dat[,1])
 table(revdat2[,1])
+
+table(dat[,5])
+table(revdat2[,5])
 
 
 }
