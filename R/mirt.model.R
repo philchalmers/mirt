@@ -380,3 +380,6 @@ mirt.model <- function(input = NULL, itemnames = NULL, file = "", COV = NULL, qu
       	return(mod)
     }
 }
+
+mirt.model_keywords <- function() c('COV', 'MEAN', 'CONSTRAIN', 'CONSTRAINB', 'NEXPLORE',
+                                    'PRIOR', 'LBOUND', 'UBOUND', 'START', 'FIXED', 'FREE')

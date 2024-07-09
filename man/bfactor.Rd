@@ -19,13 +19,17 @@ bfactor(
 numerically ordered data, with missing data coded as \code{NA}}
 
 \item{model}{a numeric vector specifying which factor loads on which
-item. For example, if for a 4 item test with two specific factors, the first
-specific factor loads on the first two items and the second specific factor
-on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load
-on the second-tier factors (have no specific component) \code{NA} values may
-be used as place-holders. These numbers will be translated into a format suitable for
-\code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S'
-added to the respective factor number}
+  item. For example, if for a 4 item test with two specific factors, the first
+  specific factor loads on the first two items and the second specific factor
+  on the last two, then the vector is \code{c(1,1,2,2)}. For items that should only load
+  on the second-tier factors (have no specific component) \code{NA} values may
+  be used as place-holders. These numbers will be translated into a format suitable for
+  \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S'
+  added to the respective factor number
+
+  Alternatively, input can be specified using the \code{\link{mirt.model}} syntax with the
+  restriction that each item must load on exactly one specific factor (or no specific factors,
+  if it is only predicted by the general factor specified in \code{model2})}
 
 \item{model2}{a two-tier model specification object defined by \code{mirt.model()} or
 a string to be passed to \code{\link{mirt.model}}. By default
@@ -96,6 +100,13 @@ mod1 <- bfactor(data, specific)
 summary(mod1)
 itemplot(mod1, 18, drop.zeros = TRUE) #drop the zero slopes to allow plotting
 
+# alternative model definition via ?mirt.model syntax
+specific2 <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
+              S2 = 1,3,6,8,16,29,32
+              S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
+mod2 <- bfactor(data, specific2)
+anova(mod1, mod2) # same
+
 ### Try with fixed guessing parameters added
 guess <- rep(.1,32)
 mod2 <- bfactor(data, specific, guess = guess)
@@ -107,11 +118,12 @@ specific[32] <- NA
 mod3 <- bfactor(data, specific)
 anova(mod3, mod1)
 
-# same, but declared manually (not run)
-#sv <- mod2values(mod1)
-#sv$value[220] <- 0 #parameter 220 is the 32 items specific slope
-#sv$est[220] <- FALSE
-#mod3 <- bfactor(data, specific, pars = sv) #with excellent starting values
+# same, but with syntax (not run)
+specific3 <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
+              S2 = 1,3,6,8,16,29
+              S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
+# mod3b <- bfactor(data, specific3)
+# anova(mod3b)
 
 
 #########

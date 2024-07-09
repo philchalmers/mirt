@@ -1,5 +1,9 @@
 # Changes in mirt 1.42
 
+- The `model` argument in `bfactor()` can now be specified using the `mirt.model()`
+  syntax to include more cognitively friendly tracking of item names and
+  respective locations (requested by Afshin Khosravi)
+
 - Add `reverse.score()` function for reverse scoring specific items within
   a `matrix` or `data.frame` 
 

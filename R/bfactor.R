@@ -47,6 +47,10 @@
 #'   be used as place-holders. These numbers will be translated into a format suitable for
 #'   \code{mirt.model()}, combined with the definition in \code{model2}, with the letter 'S'
 #'   added to the respective factor number
+#'
+#'   Alternatively, input can be specified using the \code{\link{mirt.model}} syntax with the
+#'   restriction that each item must load on exactly one specific factor (or no specific factors,
+#'   if it is only predicted by the general factor specified in \code{model2})
 #' @param model2 a two-tier model specification object defined by \code{mirt.model()} or
 #'   a string to be passed to \code{\link{mirt.model}}. By default
 #'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
@@ -99,6 +103,13 @@
 #' summary(mod1)
 #' itemplot(mod1, 18, drop.zeros = TRUE) #drop the zero slopes to allow plotting
 #'
+#' # alternative model definition via ?mirt.model syntax
+#' specific2 <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
+#'               S2 = 1,3,6,8,16,29,32
+#'               S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
+#' mod2 <- bfactor(data, specific2)
+#' anova(mod1, mod2) # same
+#'
 #' ### Try with fixed guessing parameters added
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)
@@ -110,11 +121,12 @@
 #' mod3 <- bfactor(data, specific)
 #' anova(mod3, mod1)
 #'
-#' # same, but declared manually (not run)
-#' #sv <- mod2values(mod1)
-#' #sv$value[220] <- 0 #parameter 220 is the 32 items specific slope
-#' #sv$est[220] <- FALSE
-#' #mod3 <- bfactor(data, specific, pars = sv) #with excellent starting values
+#' # same, but with syntax (not run)
+#' specific3 <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
+#'               S2 = 1,3,6,8,16,29
+#'               S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
+#' # mod3b <- bfactor(data, specific3)
+#' # anova(mod3b)
 #'
 #'
 #' #########
@@ -264,6 +276,18 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
     if(!is.null(dots$formula))
         stop('bfactor does not currently support latent regression models', call.=FALSE) #TODO
     if(missing(model)) missingMsg('model')
+    if(is.character(model))
+        model <- mirt.model(model, itemnames=colnames(data))
+    if(is(model, 'mirt.model')){
+        tmp <- rep(NA, ncol(data))
+        toparse <- model$x
+        toparse <- toparse[!(toparse[,1] %in% mirt.model_keywords()), 2]
+        loads <- lapply(toparse, \(x) as.integer(strsplit(x, split=',')[[1L]]))
+        stopifnot("bifactor model specific loadings not unique; please fix" =
+                      all(table(do.call(c, loads)) == 1L))
+        for(i in 1L:length(loads)) tmp[loads[[i]]] <- i
+        model <- tmp
+    }
     if(!is.numeric(model))
         stop('model must be a numeric vector', call.=FALSE)
     if(is.numeric(model))
