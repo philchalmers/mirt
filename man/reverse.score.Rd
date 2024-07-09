@@ -4,19 +4,23 @@
 \alias{reverse.score}
 \title{Reverse score one or more items from a response matrix}
 \usage{
-reverse.score(data, which, range = NULL)
+reverse.score(data, which, range = NULL, append = ".RS")
 }
 \arguments{
 \item{data}{an object of class \code{data.frame}, \code{matrix}, or
 \code{table} with the response patterns}
 
-\item{which}{names of items in \code{data} that should be rescored}
+\item{which}{names of items in \code{data} that should be rescored. If missing
+the all columns in \code{data} will be reverse scored}
 
 \item{range}{(optional) a named \code{list} to specify the low and high
 score ranges. Specified names must match the names found in
 \code{data}, and each element of this list should contain only two values.
-If items specified in \code{which} are omitted
+If items specified in \code{which} are omitted from this list
 then the empirical min/max information will be used instead}
+
+\item{append}{character vector indicating what to append to the item names
+that have been rescored}
 }
 \value{
 returns the original \code{data} object with the specified
@@ -61,7 +65,7 @@ plot(mod2, type = 'itemscore')
 # use different empirical scoring information due to options not used
   # 0 score not observed for item 1, though should have been rescored to a 4
 dat[dat[,1] == 0, 1] <- 1
-
+table(dat[,1])
 
 # 4 score not observed for item 5, though should have been rescored to a 0
 dat[dat[,5] == 4, 5] <- 3
@@ -70,6 +74,7 @@ table(dat[,5])
 # specify theoretical scoring values in the range list
 revdat2 <- reverse.score(dat, c('Item_1', 'Item_5', 'Item_10'),
                               range = list(Item_1 = c(0,4), Item_5 = c(0,4)))
+head(revdat2)
 table(dat[,1])
 table(revdat2[,1])
 

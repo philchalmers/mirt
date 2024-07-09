@@ -5,12 +5,15 @@
 #'
 #' @param data an object of class \code{data.frame}, \code{matrix}, or
 #'   \code{table} with the response patterns
-#' @param which names of items in \code{data} that should be rescored
+#' @param which names of items in \code{data} that should be rescored. If missing
+#'   the all columns in \code{data} will be reverse scored
 #' @param range (optional) a named \code{list} to specify the low and high
 #'   score ranges. Specified names must match the names found in
 #'   \code{data}, and each element of this list should contain only two values.
-#'   If items specified in \code{which} are omitted
+#'   If items specified in \code{which} are omitted from this list
 #'   then the empirical min/max information will be used instead
+#' @param append character vector indicating what to append to the item names
+#'   that have been rescored
 #'
 #' @return returns the original \code{data} object with the specified
 #'   items reverse scored replacing the original scoring scheme
@@ -56,7 +59,7 @@
 #' # use different empirical scoring information due to options not used
 #'   # 0 score not observed for item 1, though should have been rescored to a 4
 #' dat[dat[,1] == 0, 1] <- 1
-#'
+#' table(dat[,1])
 #'
 #' # 4 score not observed for item 5, though should have been rescored to a 0
 #' dat[dat[,5] == 4, 5] <- 3
@@ -65,6 +68,7 @@
 #' # specify theoretical scoring values in the range list
 #' revdat2 <- reverse.score(dat, c('Item_1', 'Item_5', 'Item_10'),
 #'                               range = list(Item_1 = c(0,4), Item_5 = c(0,4)))
+#' head(revdat2)
 #' table(dat[,1])
 #' table(revdat2[,1])
 #'
@@ -72,15 +76,16 @@
 #' table(revdat2[,5])
 #'
 #'
-reverse.score <- function (data, which, range = NULL){
+reverse.score <- function(data, which, range = NULL, append = ".RS"){
     if(missing(data)) missingMsg('data')
     if(length(colnames(data)) != ncol(data))
         stop('data must contain suitable column names')
+    if(missing(which)) which <- colnames(data)
     subdat <- data[,which, drop=FALSE]
     min <- apply(subdat, 2L, min, na.rm=TRUE)
     max <- apply(subdat, 2L, max, na.rm=TRUE)
     if(!is.null(range)){
-        stopifnot(length(names(range))>0)
+        stopifnot(length(names(range)) > 0)
         stopifnot("range contains names that do not match data" =
                       all(names(range) %in% colnames(subdat)))
         for(i in length(range)){
@@ -91,5 +96,8 @@ reverse.score <- function (data, which, range = NULL){
     }
     subdat <- t((max - min) - t(subdat) + min)
     data[,which] <- subdat
+    nms <- colnames(data)
+    nms[nms %in% which] <- paste0(nms[nms %in% which], append)
+    colnames(data) <- nms
     data
 }
