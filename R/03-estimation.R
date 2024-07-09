@@ -456,7 +456,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
-    if(any('free_var' %in% invariance)){ #Free factor vars (vars 1 for ref)
+    if(any(c('free_var', 'free_vars') %in% invariance)){ #Free factor vars (vars 1 for ref)
         if(opts$dentype == 'bfactor'){
             tmp <- dummymat[1L:(nfact-nspec),1L:(nfact-nspec), drop=FALSE]
             diag(tmp) <- TRUE
