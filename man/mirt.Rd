@@ -44,7 +44,8 @@ mirt(
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
-numerically ordered data, with missing data coded as \code{NA} (to convert from an ordered factor
+numerically ordered data, organized in the form of integers,
+ with missing data coded as \code{NA} (to convert from an ordered factor
 \code{data.frame} see \code{\link{data.matrix}})}
 
 \item{model}{a string to be passed (or an object returned from) \code{\link{mirt.model}},

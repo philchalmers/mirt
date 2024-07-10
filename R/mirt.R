@@ -309,7 +309,8 @@
 #'
 #' @aliases mirt
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#'   numerically ordered data, with missing data coded as \code{NA} (to convert from an ordered factor
+#'   numerically ordered data, organized in the form of integers,
+#'    with missing data coded as \code{NA} (to convert from an ordered factor
 #'   \code{data.frame} see \code{\link{data.matrix}})
 #' @param model a string to be passed (or an object returned from) \code{\link{mirt.model}},
 #'   declaring how the IRT model is to be estimated (loadings, constraints, priors, etc).

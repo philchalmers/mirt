@@ -16,7 +16,8 @@ bfactor(
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
-numerically ordered data, with missing data coded as \code{NA}}
+numerically ordered data, organized in the form of integers,
+with missing data coded as \code{NA}}
 
 \item{model}{a numeric vector specifying which factor loads on which
   item. For example, if for a 4 item test with two specific factors, the first

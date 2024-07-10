@@ -38,7 +38,8 @@
 #'
 #' @aliases bfactor
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#'   numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, organized in the form of integers,
+#'   with missing data coded as \code{NA}
 #' @param model a numeric vector specifying which factor loads on which
 #'   item. For example, if for a 4 item test with two specific factors, the first
 #'   specific factor loads on the first two items and the second specific factor

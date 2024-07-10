@@ -39,7 +39,8 @@
 #' an alternative \code{item.Q} definition for each respective item.
 #'
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#'   numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, organized in the form of integers,
+#'    with missing data coded as \code{NA}
 #' @param model number of mutually exclusive classes to fit, or alternatively a more specific
 #'   \code{\link{mirt.model}} definition (which reflects the so-called Q-matrix).
 #'   Note that when using a \code{\link{mirt.model}},

@@ -25,7 +25,8 @@ mixedmirt(
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
-numerically ordered data, with missing data coded as \code{NA}}
+numerically ordered data, organized in the form of integers,
+ with missing data coded as \code{NA}}
 
 \item{covdata}{a \code{data.frame} that consists of the \code{nrow(data)} by \code{K}
 'person level' fixed and random predictors. If missing data are present in this object

@@ -27,7 +27,8 @@ mdirt(
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
-numerically ordered data, with missing data coded as \code{NA}}
+numerically ordered data, organized in the form of integers,
+ with missing data coded as \code{NA}}
 
 \item{model}{number of mutually exclusive classes to fit, or alternatively a more specific
 \code{\link{mirt.model}} definition (which reflects the so-called Q-matrix).
