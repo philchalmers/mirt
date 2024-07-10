@@ -428,6 +428,9 @@ itemfit <- function(x, fit_stats = 'S_X2',
     }
 
     if(missing(x)) missingMsg('x')
+    if(!is.null(empirical.plot))
+        stopifnot("Model must be unidimensional to use empirical.plot option"=
+                      extract.mirt(x, 'nfact') == 1L)
     stopifnot(length(p.adjust) == 1L)
     if(return.tables){
         stopifnot(length(fit_stats) == 1L)
