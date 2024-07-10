@@ -193,7 +193,7 @@ the \code{mirtCAT} package and the associated JSS paper (Chalmers, 2016).
 }
 \examples{
 
-mod <- mirt(Science, 1)
+mod <- mirt(Science)
 tabscores <- fscores(mod, full.scores = FALSE)
 head(tabscores)
 
@@ -263,9 +263,15 @@ head(fs)
 pv <- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 
-## define a custom_den function. EAP with a uniform prior between -3 and 3
+## define a custom_den function (*must* return a numeric vector).
+#  EAP with a uniform prior between -3 and 3
 fun <- function(Theta, ...) as.numeric(dunif(Theta, min = -3, max = 3))
 head(fscores(mod, custom_den = fun))
+
+# compare EAP estimators with same modified prior
+fun <- function(Theta, ...) as.numeric(dnorm(Theta, mean=.5))
+head(fscores(mod, custom_den = fun))
+head(fscores(mod, method = 'EAP', mean=.5))
 
 # custom MAP prior: standard truncated normal between 5 and -2
 library(msm)
