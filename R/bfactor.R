@@ -110,6 +110,15 @@
 #' mod2 <- bfactor(data, specific2)
 #' anova(mod1, mod2) # same
 #'
+#' # also equivalent using item names instead (not run)
+#' specific3 <- "S1 = Item.7, Item.9, Item.10, Item.11, Item.13, Item.15,
+#'                 Item.17, Item.18, Item.21, Item.22, Item.24, Item.27, Item.31
+#'               S2 = Item.1, Item.3, Item.6, Item.8, Item.16, Item.29, Item.32
+#'               S3 = Item.2, Item.4, Item.5, Item.12, Item.14, Item.19,
+#'                 Item.20, Item.23, Item.25, Item.26, Item.28, Item.30"
+#' # mod3 <- bfactor(data, specific3)
+#' # anova(mod1, mod2, mod3)  # all same
+#'
 #' ### Try with fixed guessing parameters added
 #' guess <- rep(.1,32)
 #' mod2 <- bfactor(data, specific, guess = guess)

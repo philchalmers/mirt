@@ -15,7 +15,9 @@
 #'   be used instead
 #' @param stats.only logical; return only the person fit statistics without their associated
 #'   response pattern?
-#' @param return.resids logical; return the N by J matrix of person and item residuals?
+#' @param return.resids logical; return the standardized and unstandardized
+#'   N by J matrices of person and item residuals? If \code{TRUE} will return a named
+#'   list of each residual type
 #' @param ... additional arguments to be passed to \code{fscores()}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -62,8 +64,12 @@
 #' fit <- personfit(x)
 #' head(fit)
 #'
-#' # raw residuals
-#' head(personfit(x, return.resids=TRUE))
+#' # raw/standardized residuals
+#' resid_list <- personfit(x, return.resids=TRUE)
+#' head(resid_list$resid) # unstandardized
+#' head(resid_list$std.resid) # standardized (approximate z-scores)
+#'
+#' residuals(x, type = 'score')
 #'
 #' # with missing data
 #' data[3, c(1,3,5,7)] <- NA
@@ -168,21 +174,24 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
                     sigma2 <- sigma2 + P[,i] * P[,j] * log_P[,i] * log(P[,i]/P[,j])
     }
     Zh <- (LL - mu) / sqrt(sigma2)
-    W <- resid <- C <- matrix(0, ncol=J, nrow=N)
+    W <- resid <- std.resid <- C <- matrix(0, ncol=J, nrow=N)
     K <- x@Data$K
+    mins <- extract.mirt(x, 'mins')
     for (i in seq_len(J)){
-        P <- ProbTrace(x=pars[[i]], Theta=Theta)
-        Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
         dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]
         item <- extract.item(x, i)
+        EV <- expected.item(item, Theta=Theta, min=mins[i], include.var=TRUE)
+        P <- ProbTrace(x=pars[[i]], Theta=Theta)
+        Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
         resid[, i] <- rowSums(dat*Emat) - rowSums(Emat * P)
+        std.resid[, i] <- resid[, i] / sqrt(EV$VAR)
         W[ ,i] <- rowSums((Emat - rowSums(Emat * P))^2 * P)
         C[ ,i] <- rowSums((Emat - rowSums(Emat * P))^4 * P)
     }
-    resid[missing_loc] <- W[missing_loc] <- C[missing_loc] <- NA
+    resid[missing_loc] <- std.resid[missing_loc] <- W[missing_loc] <- C[missing_loc] <- NA
     if(return.resids){
-        colnames(resid) <- extract.mirt(x, 'itemnames')
-        return(resid)
+        colnames(resid) <- colnames(std.resid) <- extract.mirt(x, 'itemnames')
+        return(list(resid=resid, std.resid=std.resid))
     }
     W[W^2 < 1e-5] <- sqrt(1e-5)
     if(!is.null(attr(x, 'inoutfitreturn'))) return(list(resid=resid, W=W, C=C))

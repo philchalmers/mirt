@@ -25,7 +25,9 @@ be used instead}
 \item{stats.only}{logical; return only the person fit statistics without their associated
 response pattern?}
 
-\item{return.resids}{logical; return the N by J matrix of person and item residuals?}
+\item{return.resids}{logical; return the standardized and unstandardized
+N by J matrices of person and item residuals? If \code{TRUE} will return a named
+list of each residual type}
 
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
@@ -57,8 +59,12 @@ x <- mirt(data, 1)
 fit <- personfit(x)
 head(fit)
 
-# raw residuals
-head(personfit(x, return.resids=TRUE))
+# raw/standardized residuals
+resid_list <- personfit(x, return.resids=TRUE)
+head(resid_list$resid) # unstandardized
+head(resid_list$std.resid) # standardized (approximate z-scores)
+
+residuals(x, type = 'score')
 
 # with missing data
 data[3, c(1,3,5,7)] <- NA

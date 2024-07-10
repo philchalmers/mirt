@@ -8,6 +8,9 @@
 #' @param Theta a vector (unidimensional) or matrix (multidimensional) of latent trait values
 #' @param min a constant value added to the expected values indicating the lowest theoretical
 #'   category. Default is 0
+#' @param include.var logical; include the model-implied variance of the expected scores as well?
+#'   When \code{TRUE} will return a list containing the expected values (\code{E}) and variances
+#'   (\code{VAR})
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -25,7 +28,9 @@
 #' expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
 #' head(data.frame(expected, Theta=Theta))
 #'
-expected.item <- function(x, Theta, min = 0){
+#' expected.item(extr.2, Theta, min(Science[,1]), include.var=TRUE)
+#'
+expected.item <- function(x, Theta, min = 0, include.var = FALSE){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
     if(is(Theta, 'vector')) Theta <- as.matrix(Theta)
@@ -37,5 +42,10 @@ expected.item <- function(x, Theta, min = 0){
     P <- ProbTrace(x=x, Theta=Theta)
     Emat <- matrix(0:(x@ncat-1), nrow(P), ncol(P), byrow = TRUE)
     E <- rowSums(P * Emat) + min
+    if(include.var){
+        V <- rowSums(P * (Emat-E)^2)
+        ret <- list(E=E, VAR=V)
+        return(ret)
+    }
     E
 }

@@ -25,6 +25,9 @@
   
 - VCOV memory leak bugfix for mixture models (see Github issue #247)
 
+- Standardized residuals for point estimates now returned in `personfit()` 
+  when passing `return.resids=TRUE` (requested by Raymond Hernandez)
+
 # Changes in mirt 1.41
 
 - Fix for `DIF()` when sparse data included with mixed item formats (reported by
