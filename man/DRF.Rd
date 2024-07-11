@@ -99,15 +99,15 @@ should be used in the effect size comparisons?}
 Adjustments are located in the \code{adj_pvals} element in the returned list. Only applicable when
 \code{DIF = TRUE}}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
 \item{verbose}{logical; include additional information in the console?}
 
-\item{...}{additional arguments to be passed to \code{lattice}}
+\item{...}{additional arguments to be passed to \code{\link[lattice]{lattice}}}
 }
 \description{
 Function performs various omnibus differential item (DIF), bundle (DBF), and test (DTF)

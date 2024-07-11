@@ -200,9 +200,9 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
 #' @method plot itemGAM
 #' @param x an object of class 'itemGAM'
 #' @param y a \code{NULL} value ignored by the plotting function
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
 #' @export
 plot.itemGAM <- function(x, y = NULL,
                          par.strip.text = list(cex = 0.7),

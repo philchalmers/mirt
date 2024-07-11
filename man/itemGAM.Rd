@@ -49,11 +49,11 @@ TRUE automatically for multidimensional models)}
 
 \item{y}{a \code{NULL} value ignored by the plotting function}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 }
 \description{
 This function uses a generalized additive model (GAM) to estimate response curves for items that

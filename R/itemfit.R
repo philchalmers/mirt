@@ -89,16 +89,16 @@
 #' @param boot number of parametric bootstrap samples to create for PV_Q1* and X2*
 #' @param boot_dfapprox number of parametric bootstrap samples to create for the X2*_df statistic
 #'   to approximate the scaling factor for X2* as well as the scaled degrees of freedom estimates
-#' @param ETrange rangone of integration nodes for Stone's X2* statistic
+#' @param ETrange range of integration nodes for Stone's X2* statistic
 #' @param ETpoints number of integration nodes to use for Stone's X2* statistic
 # @param impute a number indicating how many imputations to perform (passed to
 #   \code{\link{imputeMissing}}) when there are missing data present.
 #   Will return a data.frame object with the mean estimates
 #   of the stats and their imputed standard deviations
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{fscores()} and \code{\link[lattice]{lattice}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @keywords item fit
 #' @export itemfit

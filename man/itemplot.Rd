@@ -64,16 +64,16 @@ behave when adjusting their parameters}
 
 \item{rot}{a list of rotation coordinates to be used for 3 dimensional plots}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
 \item{npts}{number of quadrature points to be used for plotting features.
 Larger values make plots look smoother}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{...}{additional arguments to be passed to \code{\link{lattice}} and \code{coef()}}
+\item{...}{additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}}
 }
 \description{
 \code{itemplot} displays various item based IRT plots, with special options for plotting items

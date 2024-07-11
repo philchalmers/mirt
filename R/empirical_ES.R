@@ -70,9 +70,9 @@
 #' @param plot logical; plot expected scores of items/test where expected scores are computed
 #'  using focal group thetas and both focal and reference group item parameters
 #' @param type type of objects to draw in \code{lattice}; default plots both points and lines
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{\link{fscores}} and \code{\link{xyplot}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link{fscores}} and \code{\link[lattice]{xyplot}}
 #'
 #' @author Adam Meade, with contributions by Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references

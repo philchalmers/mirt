@@ -76,10 +76,10 @@
 #'   should be used in the effect size comparisons?
 #' @param pairwise logical; perform pairwise computations when the applying to multi-group settings
 #' @param simplify logical; attempt to simplify the output rather than returning larger lists?
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{lattice}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}}
 #' @param verbose logical; include additional information in the console?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -704,8 +704,8 @@ calc_DRFs <- function(mod, Theta, DIF, DIF.cats, plot, max_score, focal_items, d
 #' @param mod estimated single or multiple-group model
 #' @param draws number of draws to obtain
 #' @param method type of plausible values to obtain. Can be 'parametric', for the parametric sampling
-#'   scheme which uses the estimated information matrix, or 'boostrap' to obtain values from the \code{\link{boot}}
-#'   function. Default is 'parametric'
+#'   scheme which uses the estimated information matrix, or 'boostrap' to obtain values from the
+#'   \code{\link[boot]{boot}} function. Default is 'parametric'
 #' @param redraws number of redraws to perform when the given parameteric sample does not satisfy the
 #'   upper and lower parameter bounds. If a valid set cannot be found within this number of draws then
 #'   an error will be thrown

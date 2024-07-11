@@ -35,10 +35,10 @@
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
 #'   This primarily is an instructive tool for demonstrating how item response curves
 #'   behave when adjusting their parameters
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{\link{lattice}} and \code{coef()}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references

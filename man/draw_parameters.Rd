@@ -19,8 +19,8 @@ draw_parameters(
 \item{draws}{number of draws to obtain}
 
 \item{method}{type of plausible values to obtain. Can be 'parametric', for the parametric sampling
-scheme which uses the estimated information matrix, or 'boostrap' to obtain values from the \code{\link{boot}}
-function. Default is 'parametric'}
+scheme which uses the estimated information matrix, or 'boostrap' to obtain values from the
+\code{\link[boot]{boot}} function. Default is 'parametric'}
 
 \item{redraws}{number of redraws to perform when the given parameteric sample does not satisfy the
 upper and lower parameter bounds. If a valid set cannot be found within this number of draws then

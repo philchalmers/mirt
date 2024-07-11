@@ -45,11 +45,11 @@ using focal group thetas and both focal and reference group item parameters}
 
 \item{type}{type of objects to draw in \code{lattice}; default plots both points and lines}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{...}{additional arguments to be passed to \code{\link{fscores}} and \code{\link{xyplot}}}
+\item{...}{additional arguments to be passed to \code{\link{fscores}} and \code{\link[lattice]{xyplot}}}
 }
 \description{
 Computes effect size measures of differential item functioning and differential

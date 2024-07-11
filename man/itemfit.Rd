@@ -114,7 +114,7 @@ is constructed according to the S-X2 statistic's conditional sum-score informati
 \item{S_X2.plot_raw.score}{logical; use the raw-score information in the plot in stead of the latent
 trait scale score? Default is \code{FALSE}}
 
-\item{ETrange}{rangone of integration nodes for Stone's X2* statistic}
+\item{ETrange}{range of integration nodes for Stone's X2* statistic}
 
 \item{ETpoints}{number of integration nodes to use for Stone's X2* statistic}
 
@@ -137,13 +137,13 @@ empirical estimates. If supplied, arguments typically passed to \code{fscores()}
 ignored and these values will be used instead. Also required when estimating statistics
 with missing data via imputation}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{...}{additional arguments to be passed to \code{fscores()} and \code{\link{lattice}}}
+\item{...}{additional arguments to be passed to \code{fscores()} and \code{\link[lattice]{lattice}}}
 }
 \description{
 Computes item-fit statistics for a variety of unidimensional and multidimensional models.

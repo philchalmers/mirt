@@ -107,11 +107,11 @@ placed in one plot for each group}
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
 \item{...}{additional arguments to be passed to lattice}
 

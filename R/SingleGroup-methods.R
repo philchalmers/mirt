@@ -1051,9 +1051,9 @@ setMethod(
 #'   placed in one plot for each group
 #' @param profile logical; provide a profile plot of response probabilities (objects returned from
 #'   \code{\link{mdirt}} only)
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
 #' @param ehist.cut a probability value indicating a threshold for excluding cases in empirical
 #'   histogram plots. Values larger than the default will include more points in the tails of the
 #'   plot, potentially squishing the 'meat' of the plot to take up less area than visually desired
