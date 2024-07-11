@@ -2689,6 +2689,25 @@ add_completely.missing_back <- function(data, completely_missing){
     data
 }
 
+replace_dash <- function(syntax){
+    for(i in 1L:length(syntax)){
+        tmp <- syntax[i]
+        if(any(regexpr(",",tmp)))
+            tmp <- strsplit(tmp,",")[[1L]]
+        popout <- c()
+        for(j in seq_len(length(tmp))){
+            if(regexpr("-",tmp[j]) > 1L){
+                popout <- c(popout,j)
+                tmp2 <- as.numeric(strsplit(tmp[j],"-")[[1L]])
+                tmp2 <- as.character(tmp2[1L]:tmp2[2L])
+                tmp <- c(tmp[-j],tmp2)
+            }
+        }
+        syntax[i] <- paste0(tmp, collapse=',')
+    }
+    syntax
+}
+
 hasConverged <- function(p0, p1, TOL){
     pick <- names(p0) %in% c('g', 'u')
     if(any(pick)){

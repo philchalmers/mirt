@@ -175,12 +175,14 @@ items <- rep('2PL', 14)
 items[5:10] <- 'graded'
 
 sigma <- diag(3)
-dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
+dataset <- simdata(a,d,5000,itemtype=items,sigma=sigma)
 itemstats(dataset)
 
-specific <- c(rep(1,7),rep(2,7))
+specific <- "S1 = 1-7
+             S2 = 8-14"
 simmod <- bfactor(dataset, specific)
-coef(simmod)
+coef(simmod, simplify=TRUE)
+
 
 #########
 # General testlet response model (Wainer, 2007)
@@ -201,7 +203,9 @@ dataset <- simdata(a,d,2000,itemtype=rep('2PL', 12),sigma=sigma)
 itemstats(dataset)
 
 # estimate by applying constraints and freeing the latent variances
-specific <- c(rep(1,4),rep(2,4), rep(3,4))
+specific <- "S1 = 1-4
+             S2 = 5-8
+             S3 = 9-12"
 model <- "G = 1-12
           CONSTRAIN = (1, a1, a2), (2, a1, a2), (3, a1, a2), (4, a1, a2),
             (5, a1, a3), (6, a1, a3), (7, a1, a3), (8, a1, a3),
@@ -255,7 +259,9 @@ sigma[1,2] <- sigma[2,1] <- .4
 dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 itemstats(dataset)
 
-specific <- c(rep(1,5),rep(2,6),rep(3,5))
+specific <- "S1 = 1-5
+             S2 = 6-11
+             S3 = 12-16"
 model <- '
     G1 = 1-8
     G2 = 9-16
