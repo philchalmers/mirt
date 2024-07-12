@@ -28,6 +28,9 @@
 #' @param rxx.method which method to use for pooling the reliability
 #'   information. Currently supports \code{'pooled'} to pool the pre-post
 #'   reliability estimates (default) or \code{'pre'} for using just the pre-test
+#' @param Fisher logical; use the Fisher/expected information function to compute the
+#'   SE terms? If \code{FALSE} the SE information will be extracted from the select
+#'   \code{\link{fscores}} method (default). Only applicable for unidimensional models
 #'
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
@@ -71,8 +74,9 @@
 #' # single response pattern change using EAP information
 #' RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
 #'
-#' # WLE estimator
-#' RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,], method = 'WLE')
+#' # WLE estimator with Fisher information for SE (see Jabrayilov et al. 2016)
+#' RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,],
+#'     method = 'WLE', Fisher = TRUE)
 #'
 #' # multiple respondents
 #' RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,])
@@ -118,7 +122,7 @@ RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
                 rxx.method = 'pooled',
                 rxx.pre = NULL, rxx.post = NULL,
-                SD.pre = NULL, SD.post = NULL, ...){
+                SD.pre = NULL, SD.post = NULL, Fisher = FALSE, ...){
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
     nfact <- 1L
@@ -155,6 +159,10 @@ RCI <- function(mod_pre, predat, postdat,
             fs_pre <- fscores(mod_pre, response.pattern = predat, ...)
             fs_post <- fscores(mod_post, response.pattern = postdat, ...)
             diff <- fs_post[,1] - fs_pre[,1]
+            if(Fisher){
+                fs_pre[,2] <- 1/sqrt(testinfo(mod_pre, Theta = fs_pre[,1]))
+                fs_post[,2] <- 1/sqrt(testinfo(mod_post, Theta = fs_post[,1]))
+            }
             pse <- if(rxx.method == 'pooled')
                 sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
             else sqrt(2*fs_pre[,2]^2)

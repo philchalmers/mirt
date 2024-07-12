@@ -15,6 +15,7 @@ RCI(
   rxx.post = NULL,
   SD.pre = NULL,
   SD.post = NULL,
+  Fisher = FALSE,
   ...
 )
 }
@@ -48,6 +49,10 @@ alpha from \code{predat}}
 \item{SD.pre}{standard deviation of pretest. If not supplied will be computed from \code{predat}}
 
 \item{SD.post}{same as \code{SD.pre}, but for the post-test data}
+
+\item{Fisher}{logical; use the Fisher/expected information function to compute the
+SE terms? If \code{FALSE} the SE information will be extracted from the select
+\code{\link{fscores}} method (default). Only applicable for unidimensional models}
 
 \item{...}{additional arguments passed to \code{\link{fscores}}}
 }
@@ -84,8 +89,9 @@ RCI(mod, predat=dat_pre, postdat=dat_post)
 # single response pattern change using EAP information
 RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
 
-# WLE estimator
-RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,], method = 'WLE')
+# WLE estimator with Fisher information for SE (see Jabrayilov et al. 2016)
+RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,],
+    method = 'WLE', Fisher = TRUE)
 
 # multiple respondents
 RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,])
