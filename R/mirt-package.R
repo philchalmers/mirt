@@ -30,6 +30,7 @@
 #' @importFrom gridExtra grid.arrange
 #' @importFrom graphics symbols
 #' @importFrom Deriv Deriv
+#' @importFrom SimDesign manageWarnings
 #' @exportMethod anova residuals summary logLik vcov
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
