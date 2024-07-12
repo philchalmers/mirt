@@ -54,7 +54,8 @@ alpha from \code{predat}}
 \description{
 Computes an IRT version of the "reliable change index" (RCI) proposed by
 Jacobson and Traux (1991) but modified to use IRT information about scores
-and measurement error. Main benefit of the IRT approach is the inclusion
+and measurement error (see Jabrayilov, Emons, and Sijtsma (2016).
+Main benefit of the IRT approach is the inclusion
 of response pattern information in the pre/post data score estimates, as well
 as conditional standard error of measurement information.
 }
@@ -135,6 +136,10 @@ Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-
 Jacobson, N. S., & Truax, P. (1991). Clinical significance: A statistical approach
 to defining meaningful change in psychotherapy research. Journal
 of Consulting and Clinical Psychology, 59, 12-19.
+
+Jabrayilov, R. , Emons, W. H. M., & Sijtsma, K. (2016). Comparison of
+Classical Test Theory and Item Response Theory in Individual Change Assessment.
+\emph{Applied Psychological Measurement, 40} (8), 559-572.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

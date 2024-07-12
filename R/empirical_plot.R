@@ -20,10 +20,10 @@
 #'   can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'
 #' @param formula formula used for the GAM smoother
 #' @param main the main title for the plot. If NULL an internal default will be used
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{\link{lattice}} and \code{coef()}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #' @keywords empirical plots
 #' @export empirical_plot
 #' @references

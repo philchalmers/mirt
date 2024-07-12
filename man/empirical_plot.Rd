@@ -34,13 +34,13 @@ can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot
 
 \item{main}{the main title for the plot. If NULL an internal default will be used}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{...}{additional arguments to be passed to \code{\link{lattice}} and \code{coef()}}
+\item{...}{additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}}
 }
 \description{
 Given a dataset containing item responses this function will construct empirical graphics
