@@ -177,7 +177,8 @@ fixedCalib <- function(data, model = 1, old_mod, PAU = 'MWU', NEMC = "MEM",
 
     sv <- mod2values(old_mod)
     sv$est <- FALSE
-    sv2 <- mirt(fulldata, model, pars='values', ...)
+    sv2 <- SimDesign::manageWarnings(mirt(fulldata, model, pars='values', ...),
+                                     suppress = "EM cycles terminated after 1 iterations.")
     for(item in c(old_itemnames, 'GROUP')){
         pick1 <- sv$item == item
         pick2 <- sv2$item == item
@@ -190,11 +191,11 @@ fixedCalib <- function(data, model = 1, old_mod, PAU = 'MWU', NEMC = "MEM",
     technical$message <- FALSE
 
     if(PAU %in% c('OWU', 'MWU')){
-        FC_mod_den <- mirt(data=extract.mirt(old_mod, 'data'),
+        FC_mod_den <- SimDesign::manageWarnings(mirt(data=extract.mirt(old_mod, 'data'),
                            model=extract.mirt(old_mod, 'model'),
                            pars=sv, dentype = 'EH', verbose=FALSE,
                            technical = list(NCYCLES = 1L, message = FALSE),
-                           ...)
+                           ...), suppress = "EM cycles terminated after 1 iterations.")
         global_prior <- FC_mod_den@Internals$Prior[[1L]]
         den <- if(PAU == 'OWU') custom_den_const else custom_den_EH
         # names preserved to avoid new starting value issues
@@ -204,13 +205,16 @@ fixedCalib <- function(data, model = 1, old_mod, PAU = 'MWU', NEMC = "MEM",
     }
 
     mod <- if(PAU == "NWU"){
-        mirt(fulldata, model, pars=sv2, technical=technical, ...)
+        SimDesign::manageWarnings(mirt(fulldata, model, pars=sv2, technical=technical, ...),
+                                  suppress = "EM cycles terminated after 1 iterations.")
+
     } else if(PAU %in% c("OWU", "MWU")){
-        mirt(fulldata, model, pars=sv2, customGroup=grp, dentype='EH',
-             technical=technical, ...)
+        SimDesign::manageWarnings(mirt(fulldata, model, pars=sv2, customGroup=grp, dentype='EH',
+             technical=technical, ...), suppress = "EM cycles terminated after 1 iterations.")
     }
     sv_final <- mod2values(mod)
-    FC_mod_den <- mirt(fulldata, model, pars=sv_final,
-                       dentype='EH', TOL=NaN, ...)
+    FC_mod_den <- SimDesign::manageWarnings(mirt(fulldata, model, pars=sv_final,
+                       dentype='EH', TOL=NaN, ...),
+                       suppress = "EM cycles terminated after 1 iterations.")
     FC_mod_den
 }
