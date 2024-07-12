@@ -357,6 +357,6 @@ mdirt <- function(data, model, customTheta = NULL, structure = NULL, item.Q = NU
             mods <- mods[[which(max(LL) == LL)[1L]]]
         }
     }
-    if(!is.null(pars) && pars == 'values') mods <- mods[[1L]]
+    if(!is.null(pars) && !is.data.frame(pars) && pars == 'values') mods <- mods[[1L]]
     return(mods)
 }

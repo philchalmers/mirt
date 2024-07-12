@@ -40,7 +40,11 @@ test_that('discrete', {
 
     #----------
     # polytomous LCA
-    mod2 <- mdirt(Science, 2, verbose=FALSE)
+    vals <- c(1.65,6.9,3.74,9.13,1.89,9.13,1.05,1.62,1.51,3.74,-1.17,3.4,1.64,
+            -2.56,2.5,6.54,0.29,7.2,1.5,2.2,1.97,3.71,0.22,3.75,0.85)
+    sv <- mdirt(Science, 2, verbose=FALSE, pars='values')
+    sv$value <- vals
+    mod2 <- mdirt(Science, 2, verbose=FALSE, pars=sv)
     so <- summary(mod2)
     expect_equal(extract.mirt(mod2, 'logLik'), -1622.466, tolerance = 1e-4)
     expect_equal(extract.mirt(mod2, 'df'), 230)
