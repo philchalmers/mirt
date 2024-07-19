@@ -38,6 +38,10 @@
 #'   \code{\link{summary-method}} for details. If the object is not an exploratory model
 #'   then this argument is ignored
 #' @param Target target rotation; see \code{\link{summary-method}} for details
+#' @param EAPsum.scores logical; include the model-implied expected values and variance for the item
+#'   and total scores when using \code{method = 'EAPsum'} with \code{full.scores=FALSE}?
+#'   This information is included in the hidden \code{'fit'} attribute which
+#'   can be extracted via \code{attr(., 'fit')} for later use
 #' @param plausible.draws number of plausible values to draw for future researchers
 #'   to perform secondary analyses of the latent trait scores. Typically used in conjunction
 #'   with latent regression predictors (see \code{\link{mirt}} for details), but can
@@ -270,7 +274,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     response.pattern = NULL, append_response.pattern = FALSE, na.rm = FALSE,
                     plausible.draws = 0, plausible.type = 'normal', quadpts = NULL,
                     item_weights = rep(1, extract.mirt(object, 'nitems')),
-                    returnER = FALSE, T_as_X = FALSE,
+                    returnER = FALSE, T_as_X = FALSE, EAPsum.scores = FALSE,
                     return.acov = FALSE, mean = NULL, cov = NULL, covdata = NULL,
                     verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     use_dentype_estimate=FALSE, QMC = FALSE, custom_den = NULL,
@@ -321,7 +325,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                             quadpts=quadpts, response.pattern=response.pattern, QMC=QMC,
                             verbose=verbose, returnER=returnER, gmean=mean, gcov=cov,
                             theta_lim=theta_lim, MI=MI, covdata=covdata,
-                            item_weights=item_weights, T_as_X=T_as_X,
+                            item_weights=item_weights, T_as_X=T_as_X, EAPsum.scores=EAPsum.scores,
                             full.scores.SE=full.scores.SE, return.acov=return.acov,
                             plausible.draws = plausible.draws, custom_den=custom_den,
                             custom_theta=custom_theta, Target=Target, min_expected=min_expected,

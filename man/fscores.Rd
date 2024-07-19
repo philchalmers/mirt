@@ -19,6 +19,7 @@ fscores(
   item_weights = rep(1, extract.mirt(object, "nitems")),
   returnER = FALSE,
   T_as_X = FALSE,
+  EAPsum.scores = FALSE,
   return.acov = FALSE,
   mean = NULL,
   cov = NULL,
@@ -103,6 +104,11 @@ estimates as a numeric values?}
 \item{T_as_X}{logical; should the observed variance be equal to
 \code{var(X) = var(T) + E(E^2)} or \code{var(X) = var(T)} when computing
 empirical reliability estimates? Default (\code{FALSE}) uses the former}
+
+\item{EAPsum.scores}{logical; include the model-implied expected values and variance for the item
+and total scores when using \code{method = 'EAPsum'} with \code{full.scores=FALSE}?
+This information is included in the hidden \code{'fit'} attribute which
+can be extracted via \code{attr(., 'fit')} for later use}
 
 \item{return.acov}{logical; return a list containing covariance matrices instead of factors
 scores? \code{impute = TRUE} not supported with this option}

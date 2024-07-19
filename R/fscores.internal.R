@@ -9,7 +9,7 @@ setMethod(
 	                      returnER = FALSE, verbose = TRUE, gmean, gcov,
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
-	                      min_expected, plausible.type, start,
+	                      min_expected, plausible.type, start, EAPsum.scores,
 	                      use_dentype_estimate, leave_missing = FALSE, ...)
 	{
         den_fun <- mirt_dmvnorm
@@ -215,6 +215,7 @@ setMethod(
         if(!is.null(gcov)) gp$gcov <- gcov
         if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
                                              quadpts=quadpts, gp=gp, verbose=verbose,
+                                             EAPsum.scores=EAPsum.scores,
                                              item_weights=item_weights, return.acov=return.acov,
                                              CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
                                              discrete=discrete, QMC=QMC, den_fun=den_fun,
@@ -714,7 +715,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    which.items = 2:length(x@ParObjects$pars)-1,
                    use_dentype_estimate = FALSE, pis, leave_missing,
                    item_weights = rep(1, extract.mirt(x, 'nitems')),
-                   return.acov, nfact, ...){
+                   EAPsum.scores, return.acov, nfact, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         J <- length(K)
         L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
@@ -885,7 +886,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             stop('EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE',
                  call.=FALSE)
         E <- L1 %*% prior * nrow(dat)
-        adj <- extract.mirt(x, 'mins')
+        adj <- mins <- extract.mirt(x, 'mins')
         dat <- t(t(dat) - adj)
         Otmp <- matrix(table(sort(rowSums(dat))))
         got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
@@ -898,13 +899,34 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         X2 <- tmp$X2
         tmp <- suppressWarnings(expand.table(cbind(ret[,2L:(ncol(ret)-1L)], ret$observed)))
         pick <- seq_len(x@Model$nfact)
+        EX <- sum(Sum.Scores * rowSums(t(t(L1) * prior))) + sum(mins)
+        VARX <- sum(( (Sum.Scores + sum(mins)) - EX)^2 *
+                        rowSums(t(t(L1) * prior)))
+        itemx <- matrix(0, nrow=J, ncol=2)
+        colnames(itemx) <- c('E.x', 'VAR.x')
+        rownames(itemx) <- extract.mirt(x, "itemnames")
+        for(i in 1L:J){
+            si <- 0L:(K[i]-1L)
+            px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i+1L]-1L),]) * prior)
+            ex <- sum(si * px)
+            varx <- sum((si - ex)^2 * px)
+            itemx[i,1L] <- ex + mins[i]
+            itemx[i,2L] <- varx
+        }
         rxx <- apply(tmp[,pick, drop=FALSE], 2L, var) /
             (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+x@Model$nfact, drop=FALSE], 2L,
                                                             function(x) mean(x^2)))
         names(rxx) <- paste0('rxx_', factorNames)
         fit <- data.frame(df=df, X2=X2, p.X2 = suppressWarnings(pchisq(X2, df, lower.tail=FALSE)))
+        fit$rxx.alpha <- (J / (J-1)) * (1 - sum(itemx[,2])/VARX)
         fit <- cbind(fit, t(as.data.frame(rxx)))
         rownames(fit) <- 'stats'
+        fit <- as.mirt_df(fit)
+        if(EAPsum.scores){
+            fit <- list(fit=fit,
+                        Sum.Scores=as.mirt_df(data.frame(E.X=EX, VAR.X=VARX)),
+                        Item.Scores=as.mirt_matrix(itemx))
+        }
         attr(ret, 'fit') <- fit
         ret$std.res <- with(ret, sqrt( (observed - expected)^2 / expected))
         if(!all(item_weights == 1)){ # TODO can this be fixed?
