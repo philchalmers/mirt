@@ -134,9 +134,11 @@ RCI <- function(mod_pre, predat, postdat,
             postdat <- matrix(postdat, 1L)
         TS_pre <- rowSums(predat)
         TS_post <- rowSums(postdat)
+        if(is.null(rxx.pre)) rxx.pre <- CA(predat)
+        else if(is.null(SD.pre)) stop('rxx.pre and SD.pre must both be included')
         if(is.null(SD.pre)) SD.pre <- sd(TS_pre)
         if(is.null(SD.post)) SD.post <- sd(TS_post)
-        if(is.null(rxx.pre)) rxx.pre <- CA(predat)
+
         if(rxx.method == 'pre') rxx.post <- rxx.pre
         if(is.null(rxx.post) && rxx.method == 'pooled')
             rxx.post <- CA(postdat)
