@@ -4,16 +4,13 @@
 \alias{marginal_rxx}
 \title{Function to calculate the marginal reliability}
 \usage{
-marginal_rxx(mod, density = dnorm, var_theta = 1, ...)
+marginal_rxx(mod, density = dnorm, ...)
 }
 \arguments{
 \item{mod}{an object of class \code{'SingleGroupClass'}}
 
 \item{density}{a density function to use for integration. Default assumes the latent traits are from a
 normal (Gaussian) distribution}
-
-\item{var_theta}{variance of the Theta distribution (typically 1 for many fitted
-IRT models)}
 
 \item{...}{additional arguments passed to the density function}
 }
@@ -25,10 +22,13 @@ Given an estimated model and a prior density function, compute the marginal reli
 
 
 dat <- expand.table(deAyala)
-mod <- mirt(dat, 1)
+mod <- mirt(dat)
 
-# marginal estimate
+# marginal estimate treating item parameters as known
 marginal_rxx(mod)
+
+# compare to alpha
+itemstats(dat)$overall$alpha
 
 \dontrun{
 
