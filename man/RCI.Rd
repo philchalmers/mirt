@@ -11,6 +11,8 @@ RCI(
   mod_post = mod_pre,
   cutoffs = NULL,
   rxx.method = "pooled",
+  SEM.pre = NULL,
+  SEM.post = NULL,
   rxx.pre = NULL,
   rxx.post = NULL,
   SD.pre = NULL,
@@ -40,6 +42,12 @@ report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off
 \item{rxx.method}{which method to use for pooling the reliability
 information. Currently supports \code{'pooled'} to pool the pre-post
 reliability estimates (default) or \code{'pre'} for using just the pre-test}
+
+\item{SEM.pre}{standard error of measurement for the pretest. This can be used instead of
+\code{rxx.pre} and \code{SD.pre}}
+
+\item{SEM.post}{standard error of measurement for the post-test. This can be used instead of
+\code{rxx.post} and \code{SD.post}}
 
 \item{rxx.pre}{CTT reliability of pretest. If not supplied will be computed using coefficient
 alpha from \code{predat}}
@@ -109,7 +117,14 @@ RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
     rxx.pre=.6, rxx.post=.6, SD.pre=2, SD.post=3,
     cutoffs = c(-1.96, 1.96))
 
-# just pre-test rxx
+# equivalent, but using SEM instead
+SEM.pre <- 2 * sqrt(1 - .6)
+SEM.post <- 3 * sqrt(1 - .6)
+RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
+    SEM.pre=SEM.pre, SEM.post=SEM.post,
+    cutoffs = c(-1.96, 1.96))
+
+# use just pre-test rxx for computing SEM
 RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
     rxx.pre=.6, SD.pre=2, rxx.method = 'pre')
 

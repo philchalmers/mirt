@@ -25,6 +25,10 @@
 #' @param rxx.post same as \code{rxx.pre}, but for post-test data
 #' @param SD.pre standard deviation of pretest. If not supplied will be computed from \code{predat}
 #' @param SD.post same as \code{SD.pre}, but for the post-test data
+#' @param SEM.pre standard error of measurement for the pretest. This can be used instead of
+#'   \code{rxx.pre} and \code{SD.pre}
+#' @param SEM.post standard error of measurement for the post-test. This can be used instead of
+#'   \code{rxx.post} and \code{SD.post}
 #' @param rxx.method which method to use for pooling the reliability
 #'   information. Currently supports \code{'pooled'} to pool the pre-post
 #'   reliability estimates (default) or \code{'pre'} for using just the pre-test
@@ -94,7 +98,14 @@
 #'     rxx.pre=.6, rxx.post=.6, SD.pre=2, SD.post=3,
 #'     cutoffs = c(-1.96, 1.96))
 #'
-#' # just pre-test rxx
+#' # equivalent, but using SEM instead
+#' SEM.pre <- 2 * sqrt(1 - .6)
+#' SEM.post <- 3 * sqrt(1 - .6)
+#' RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
+#'     SEM.pre=SEM.pre, SEM.post=SEM.post,
+#'     cutoffs = c(-1.96, 1.96))
+#'
+#' # use just pre-test rxx for computing SEM
 #' RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
 #'     rxx.pre=.6, SD.pre=2, rxx.method = 'pre')
 #'
@@ -121,6 +132,7 @@
 RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
                 rxx.method = 'pooled',
+                SEM.pre = NULL, SEM.post = NULL,
                 rxx.pre = NULL, rxx.post = NULL,
                 SD.pre = NULL, SD.post = NULL, Fisher = FALSE, ...){
     if(!is.null(cutoffs))
@@ -134,20 +146,26 @@ RCI <- function(mod_pre, predat, postdat,
             postdat <- matrix(postdat, 1L)
         TS_pre <- rowSums(predat)
         TS_post <- rowSums(postdat)
-        if(is.null(rxx.pre)) rxx.pre <- CA(predat)
-        else if(is.null(SD.pre)) stop('rxx.pre and SD.pre must both be included')
-        if(is.null(SD.pre)) SD.pre <- sd(TS_pre)
-        if(is.null(SD.post)) SD.post <- sd(TS_post)
-
-        if(rxx.method == 'pre') rxx.post <- rxx.pre
-        if(is.null(rxx.post) && rxx.method == 'pooled')
-            rxx.post <- CA(postdat)
-        SEM_pre <- as.numeric(SD.pre * sqrt(1 - rxx.pre))
-        SEM_post <- as.numeric(SD.post * sqrt(1 - rxx.post))
+        if(is.null(SEM.post)) SEM.post <- SEM.pre
+        if(is.null(SEM.pre)){
+            if(is.null(rxx.pre)) rxx.pre <- CA(predat)
+            else if(is.null(SD.pre)) stop('rxx.pre and SD.pre must both be included')
+            if(is.null(SD.pre)) SD.pre <- sd(TS_pre)
+            if(is.null(SD.post)) SD.post <- sd(TS_post)
+            if(rxx.method == 'pre') rxx.post <- rxx.pre
+            if(is.null(rxx.post) && rxx.method == 'pooled')
+                rxx.post <- CA(postdat)
+            SEM.pre <- as.numeric(SD.pre * sqrt(1 - rxx.pre))
+            SEM.post <- as.numeric(SD.post * sqrt(1 - rxx.post))
+        } else {
+            stopifnot(is.numeric(SEM.pre) && length(SEM.pre) == 1L)
+            if(!is.null(rxx.pre))
+                stop('Please use either SEM or rxx/SD inputs, not both')
+        }
         if(rxx.method == 'pooled'){
-            SEM <- sqrt(SEM_pre^2 + SEM_post^2)
+            SEM <- sqrt(SEM.pre^2 + SEM.post^2)
         } else if(rxx.method == 'pre'){
-            SEM <- sqrt(2*SEM_pre^2)
+            SEM <- sqrt(2*SEM.pre^2)
         }
         diff <- TS_post - TS_pre
         z_JCI <- diff / SEM
