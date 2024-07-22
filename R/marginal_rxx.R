@@ -47,7 +47,7 @@ marginal_rxx <- function(mod, density = dnorm, ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(is(mod, 'SingleGroupClass'))
     cfs <- coef(mod, simplify=TRUE)
-    var_theta <- cfs$cov
+    var_theta <- as.vector(cfs$cov)
     fn <- function(theta, mod, den, ...){
         TI <- testinfo(mod, matrix(theta))
         TI / (TI + var_theta) * den(theta, ...)
