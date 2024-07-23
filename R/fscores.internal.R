@@ -918,7 +918,9 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                                                             function(x) mean(x^2)))
         names(rxx) <- paste0('rxx_', factorNames)
         fit <- data.frame(df=df, X2=X2, p.X2 = suppressWarnings(pchisq(X2, df, lower.tail=FALSE)))
-        fit$rxx.alpha <- (J / (J-1)) * (1 - sum(itemx[,2])/VARX)
+        rxx.alpha <- (J / (J-1)) * (1 - sum(itemx[,2])/VARX)
+        fit$SEM.alpha <- sqrt(VARX) * sqrt(1 - rxx.alpha)
+        fit$rxx.alpha <- rxx.alpha
         fit <- cbind(fit, t(as.data.frame(rxx)))
         rownames(fit) <- 'stats'
         fit <- as.mirt_df(fit)
