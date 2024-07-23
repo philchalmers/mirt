@@ -14,3 +14,7 @@ data/dataComplete.RData
 data/dataSparse.RData
 data/data2Dim.RData
 tests/tests/testdata/
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
