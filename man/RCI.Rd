@@ -10,7 +10,6 @@ RCI(
   postdat,
   mod_post = mod_pre,
   cutoffs = NULL,
-  rxx.method = "pooled",
   SEM.pre = NULL,
   SEM.post = NULL,
   rxx.pre = NULL,
@@ -39,24 +38,22 @@ otherwise, the pre-test model will be used}
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
 
-\item{rxx.method}{which method to use for pooling the reliability
-information. Currently supports \code{'pooled'} to pool the pre-post
-reliability estimates (default) or \code{'pre'} for using just the pre-test}
-
 \item{SEM.pre}{standard error of measurement for the pretest. This can be used instead of
 \code{rxx.pre} and \code{SD.pre}}
 
-\item{SEM.post}{standard error of measurement for the post-test. This can be used instead of
-\code{rxx.post} and \code{SD.post}}
+\item{SEM.post}{(optional) standard error of measurement for the post-test. This can be used instead of
+\code{rxx.post} and \code{SD.post}. Using this will create a pooled version of the SEM}
 
 \item{rxx.pre}{CTT reliability of pretest. If not supplied will be computed using coefficient
 alpha from \code{predat}}
 
-\item{rxx.post}{same as \code{rxx.pre}, but for post-test data}
+\item{rxx.post}{(optional) same as \code{rxx.pre}, but for post-test data. Using this
+will create a pooled version of the SEM}
 
-\item{SD.pre}{standard deviation of pretest. If not supplied will be computed from \code{predat}}
+\item{SD.pre}{standard deviation of pretest. If not supplied will be computed from \code{predat}.
+Required when \code{rxx.pre} is specified}
 
-\item{SD.post}{same as \code{SD.pre}, but for the post-test data}
+\item{SD.post}{(optional) same as \code{SD.pre}, but for the post-test data}
 
 \item{Fisher}{logical; use the Fisher/expected information function to compute the
 SE terms? If \code{FALSE} the SE information will be extracted from the select

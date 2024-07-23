@@ -22,16 +22,15 @@
 #'
 #' @param rxx.pre CTT reliability of pretest. If not supplied will be computed using coefficient
 #'  alpha from \code{predat}
-#' @param rxx.post same as \code{rxx.pre}, but for post-test data
-#' @param SD.pre standard deviation of pretest. If not supplied will be computed from \code{predat}
-#' @param SD.post same as \code{SD.pre}, but for the post-test data
+#' @param rxx.post (optional) same as \code{rxx.pre}, but for post-test data. Using this
+#'   will create a pooled version of the SEM
+#' @param SD.pre standard deviation of pretest. If not supplied will be computed from \code{predat}.
+#'   Required when \code{rxx.pre} is specified
+#' @param SD.post (optional) same as \code{SD.pre}, but for the post-test data
 #' @param SEM.pre standard error of measurement for the pretest. This can be used instead of
 #'   \code{rxx.pre} and \code{SD.pre}
-#' @param SEM.post standard error of measurement for the post-test. This can be used instead of
-#'   \code{rxx.post} and \code{SD.post}
-#' @param rxx.method which method to use for pooling the reliability
-#'   information. Currently supports \code{'pooled'} to pool the pre-post
-#'   reliability estimates (default) or \code{'pre'} for using just the pre-test
+#' @param SEM.post (optional) standard error of measurement for the post-test. This can be used instead of
+#'   \code{rxx.post} and \code{SD.post}. Using this will create a pooled version of the SEM
 #' @param Fisher logical; use the Fisher/expected information function to compute the
 #'   SE terms? If \code{FALSE} the SE information will be extracted from the select
 #'   \code{\link{fscores}} method (default). Only applicable for unidimensional models
@@ -131,7 +130,6 @@
 #' }
 RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
-                rxx.method = 'pooled',
                 SEM.pre = NULL, SEM.post = NULL,
                 rxx.pre = NULL, rxx.post = NULL,
                 SD.pre = NULL, SD.post = NULL, Fisher = FALSE, ...){
@@ -139,7 +137,6 @@ RCI <- function(mod_pre, predat, postdat,
         stopifnot(length(cutoffs) == 2)
     nfact <- 1L
     if(missing(mod_pre)){
-        stopifnot(rxx.method %in% c('pooled', 'pre'))
         if(is.vector(predat))
             predat <- matrix(predat, 1L)
         if(is.vector(postdat))
@@ -152,9 +149,7 @@ RCI <- function(mod_pre, predat, postdat,
             else if(is.null(SD.pre)) stop('rxx.pre and SD.pre must both be included')
             if(is.null(SD.pre)) SD.pre <- sd(TS_pre)
             if(is.null(SD.post)) SD.post <- sd(TS_post)
-            if(rxx.method == 'pre') rxx.post <- rxx.pre
-            if(is.null(rxx.post) && rxx.method == 'pooled')
-                rxx.post <- CA(postdat)
+            if(is.null(rxx.post)) rxx.post <- CA(postdat)
             SEM.pre <- as.numeric(SD.pre * sqrt(1 - rxx.pre))
             SEM.post <- as.numeric(SD.post * sqrt(1 - rxx.post))
         } else {
@@ -162,11 +157,7 @@ RCI <- function(mod_pre, predat, postdat,
             if(!is.null(rxx.pre))
                 stop('Please use either SEM or rxx/SD inputs, not both')
         }
-        if(rxx.method == 'pooled'){
-            SEM <- sqrt(SEM.pre^2 + SEM.post^2)
-        } else if(rxx.method == 'pre'){
-            SEM <- sqrt(2*SEM.pre^2)
-        }
+        SEM <- sqrt(SEM.pre^2 + SEM.post^2)
         diff <- TS_post - TS_pre
         z_JCI <- diff / SEM
         ret <- data.frame(pre.score=TS_pre, post.score=TS_post, diff,
@@ -183,9 +174,7 @@ RCI <- function(mod_pre, predat, postdat,
                 fs_pre[,2] <- 1/sqrt(testinfo(mod_pre, Theta = fs_pre[,1]))
                 fs_post[,2] <- 1/sqrt(testinfo(mod_post, Theta = fs_post[,1]))
             }
-            pse <- if(rxx.method == 'pooled')
-                sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
-            else sqrt(2*fs_pre[,2]^2)
+            pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
             z <- diff/pse
             ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
                               SEM=pse, z=z,
@@ -195,12 +184,10 @@ RCI <- function(mod_pre, predat, postdat,
             fs_post <- fscores(mod_post, response.pattern=postdat, ...)
             fs_acov <- fs_pre_acov <- fscores(mod_pre, response.pattern = predat,
                                               return.acov=TRUE, ...)
-            if(rxx.method == 'pooled'){
-                fs_post_acov <- fscores(mod_post, response.pattern=postdat,
-                                        return.acov=TRUE, ...)
-                for(i in 1L:length(fs_acov))
-                    fs_acov[[i]] <- fs_pre_acov[[i]] + fs_post_acov[[i]]
-            } else fs_acov <- lapply(fs_acov, \(x) 2*x)
+            fs_post_acov <- fscores(mod_post, response.pattern=postdat,
+                                    return.acov=TRUE, ...)
+            for(i in 1L:length(fs_acov))
+                fs_acov[[i]] <- fs_pre_acov[[i]] + fs_post_acov[[i]]
             diff <- fs_post[,1L:nfact] - fs_pre[,1L:nfact]
             joint <- vector('list', nrow(diff))
             for(i in 1:nrow(diff))
