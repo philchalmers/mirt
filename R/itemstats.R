@@ -108,6 +108,7 @@ itemstats <- function(data, group = NULL,
                               ave.r=mean(rs[lower.tri(rs)]),
                               sd.r=sd(rs[lower.tri(rs)]),
                               alpha = CA(na.omit(data)))
+        overall$SEM.alpha <- with(overall, sd_total.score * sqrt(1-alpha))
         rownames(overall) <- ""
         df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
                          mean=colMeans(data, na.rm = TRUE),
