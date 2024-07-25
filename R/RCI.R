@@ -19,21 +19,14 @@
 #'   measurement
 #' @param cutoffs optional vector of length 2 indicating the type of cut-offs to
 #'   report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)
-#'
-#' @param rxx.pre CTT reliability of pretest. If not supplied will be computed using coefficient
-#'  alpha from \code{predat}
-#' @param rxx.post (optional) same as \code{rxx.pre}, but for post-test data. Using this
-#'   will create a pooled version of the SEM
-#' @param SD.pre standard deviation of pretest. If not supplied will be computed from \code{predat}.
-#'   Required when \code{rxx.pre} is specified
-#' @param SD.post (optional) same as \code{SD.pre}, but for the post-test data
 #' @param SEM.pre standard error of measurement for the pretest. This can be used instead of
 #'   \code{rxx.pre} and \code{SD.pre}
-#' @param SEM.post (optional) standard error of measurement for the post-test. This can be used instead of
-#'   \code{rxx.post} and \code{SD.post}. Using this will create a pooled version of the SEM
+#' @param SEM.post (optional) standard error of measurement for the post-test.
+#'   Using this will create a pooled version of the SEM; otherwise, \code{SEM.post = SEM.pre}
 #' @param Fisher logical; use the Fisher/expected information function to compute the
 #'   SE terms? If \code{FALSE} the SE information will be extracted from the select
 #'   \code{\link{fscores}} method (default). Only applicable for unidimensional models
+#' @param verbose logical; include extra information in the printout?
 #'
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
@@ -89,24 +82,25 @@
 #'     cutoffs = c(-1.96, 1.96))
 #'
 #' ######
-#' # CTT version by omitting IRT model (easiest to use complete dataset)
-#' RCI(predat = dat_pre, postdat = dat_post)
+#' # CTT version by omitting IRT model
+#'     # Requires either sample or population SEM's as input
+#' (istats <- itemstats(dat_pre)$overall)
+#' SEM.alpha <- istats$SEM.alpha    # SEM estimate of dat_pre
 #'
-#' # CTT version with pre-computed information
-#' RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
-#'     rxx.pre=.6, rxx.post=.6, SD.pre=2, SD.post=3,
-#'     cutoffs = c(-1.96, 1.96))
+#' # assumes SEM.post = SEM.pre
+#' RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha)
 #'
-#' # equivalent, but using SEM instead
-#' SEM.pre <- 2 * sqrt(1 - .6)
-#' SEM.post <- 3 * sqrt(1 - .6)
-#' RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
-#'     SEM.pre=SEM.pre, SEM.post=SEM.post,
-#'     cutoffs = c(-1.96, 1.96))
+#' # include cutoffs
+#' RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha,
+#'     cutoffs=c(-1.96, 1.96))
 #'
-#' # use just pre-test rxx for computing SEM
-#' RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
-#'     rxx.pre=.6, SD.pre=2, rxx.method = 'pre')
+#' # allows SEM.post != SEM.pre
+#' (istats.post <- itemstats(dat_post)$overall)
+#' SEM.alpha.post <- istats.post$SEM.alpha
+#'
+#' RCI(predat = dat_pre, postdat = dat_post,
+#'    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+#'
 #'
 #' ############################
 #' # Example where individuals take completely different item set pre-post
@@ -131,8 +125,7 @@
 RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
                 SEM.pre = NULL, SEM.post = NULL,
-                rxx.pre = NULL, rxx.post = NULL,
-                SD.pre = NULL, SD.post = NULL, Fisher = FALSE, ...){
+                Fisher = FALSE, ...){
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
     nfact <- 1L
@@ -143,20 +136,12 @@ RCI <- function(mod_pre, predat, postdat,
             postdat <- matrix(postdat, 1L)
         TS_pre <- rowSums(predat)
         TS_post <- rowSums(postdat)
+        if(is.null(SEM.pre))
+            stop('Must include SEM.pre')
+        SEM.pre <- unname(SEM.pre)
+        stopifnot(is.numeric(SEM.pre) && length(SEM.pre) == 1L)
         if(is.null(SEM.post)) SEM.post <- SEM.pre
-        if(is.null(SEM.pre)){
-            if(is.null(rxx.pre)) rxx.pre <- CA(predat)
-            else if(is.null(SD.pre)) stop('rxx.pre and SD.pre must both be included')
-            if(is.null(SD.pre)) SD.pre <- sd(TS_pre)
-            if(is.null(SD.post)) SD.post <- sd(TS_post)
-            if(is.null(rxx.post)) rxx.post <- CA(postdat)
-            SEM.pre <- as.numeric(SD.pre * sqrt(1 - rxx.pre))
-            SEM.post <- as.numeric(SD.post * sqrt(1 - rxx.post))
-        } else {
-            stopifnot(is.numeric(SEM.pre) && length(SEM.pre) == 1L)
-            if(!is.null(rxx.pre))
-                stop('Please use either SEM or rxx/SD inputs, not both')
-        }
+        SEM.post <- unname(SEM.post)
         SEM <- sqrt(SEM.pre^2 + SEM.post^2)
         diff <- TS_post - TS_pre
         z_JCI <- diff / SEM

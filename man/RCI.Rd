@@ -12,10 +12,6 @@ RCI(
   cutoffs = NULL,
   SEM.pre = NULL,
   SEM.post = NULL,
-  rxx.pre = NULL,
-  rxx.post = NULL,
-  SD.pre = NULL,
-  SD.post = NULL,
   Fisher = FALSE,
   ...
 )
@@ -41,25 +37,16 @@ report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off
 \item{SEM.pre}{standard error of measurement for the pretest. This can be used instead of
 \code{rxx.pre} and \code{SD.pre}}
 
-\item{SEM.post}{(optional) standard error of measurement for the post-test. This can be used instead of
-\code{rxx.post} and \code{SD.post}. Using this will create a pooled version of the SEM}
-
-\item{rxx.pre}{CTT reliability of pretest. If not supplied will be computed using coefficient
-alpha from \code{predat}}
-
-\item{rxx.post}{(optional) same as \code{rxx.pre}, but for post-test data. Using this
-will create a pooled version of the SEM}
-
-\item{SD.pre}{standard deviation of pretest. If not supplied will be computed from \code{predat}.
-Required when \code{rxx.pre} is specified}
-
-\item{SD.post}{(optional) same as \code{SD.pre}, but for the post-test data}
+\item{SEM.post}{(optional) standard error of measurement for the post-test.
+Using this will create a pooled version of the SEM; otherwise, \code{SEM.post = SEM.pre}}
 
 \item{Fisher}{logical; use the Fisher/expected information function to compute the
 SE terms? If \code{FALSE} the SE information will be extracted from the select
 \code{\link{fscores}} method (default). Only applicable for unidimensional models}
 
 \item{...}{additional arguments passed to \code{\link{fscores}}}
+
+\item{verbose}{logical; include extra information in the printout?}
 }
 \description{
 Computes an IRT version of the "reliable change index" (RCI) proposed by
@@ -106,24 +93,25 @@ RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,],
     cutoffs = c(-1.96, 1.96))
 
 ######
-# CTT version by omitting IRT model (easiest to use complete dataset)
-RCI(predat = dat_pre, postdat = dat_post)
+# CTT version by omitting IRT model
+    # Requires either sample or population SEM's as input
+(istats <- itemstats(dat_pre)$overall)
+SEM.alpha <- istats$SEM.alpha    # SEM estimate of dat_pre
 
-# CTT version with pre-computed information
-RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
-    rxx.pre=.6, rxx.post=.6, SD.pre=2, SD.post=3,
-    cutoffs = c(-1.96, 1.96))
+# assumes SEM.post = SEM.pre
+RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha)
 
-# equivalent, but using SEM instead
-SEM.pre <- 2 * sqrt(1 - .6)
-SEM.post <- 3 * sqrt(1 - .6)
-RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
-    SEM.pre=SEM.pre, SEM.post=SEM.post,
-    cutoffs = c(-1.96, 1.96))
+# include cutoffs
+RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha,
+    cutoffs=c(-1.96, 1.96))
 
-# use just pre-test rxx for computing SEM
-RCI(predat = dat_pre[1:6,], postdat = dat_post[1:6,],
-    rxx.pre=.6, SD.pre=2, rxx.method = 'pre')
+# allows SEM.post != SEM.pre
+(istats.post <- itemstats(dat_post)$overall)
+SEM.alpha.post <- istats.post$SEM.alpha
+
+RCI(predat = dat_pre, postdat = dat_post,
+   SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+
 
 ############################
 # Example where individuals take completely different item set pre-post
