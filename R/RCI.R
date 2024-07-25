@@ -171,12 +171,16 @@ RCI <- function(mod_pre, predat, postdat,
             fs_post <- fscores(mod_post, response.pattern = postdat, ...)
             diff <- fs_post[,1] - fs_pre[,1]
             if(Fisher){
-                fs_pre[,2] <- 1/sqrt(testinfo(mod_pre, Theta = fs_pre[,1]))
-                fs_post[,2] <- 1/sqrt(testinfo(mod_post, Theta = fs_post[,1]))
+                fs_pre[,2L] <- 1/sqrt(testinfo(mod_pre, Theta = fs_pre[,1]))
+                fs_post[,2L] <- 1/sqrt(testinfo(mod_post, Theta = fs_post[,1]))
             }
             pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
             z <- diff/pse
+            converge_pre <- converge_post <- rep(TRUE, length(z))
+            converge_pre[attr(fs_pre, 'failed2converge')] <- FALSE
+            converge_post[attr(fs_post, 'failed2converge')] <- FALSE
             ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
+                              converged=converge_pre & converge_post,
                               SEM=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
@@ -196,7 +200,11 @@ RCI <- function(mod_pre, predat, postdat,
             joint <- do.call(rbind, joint)
             SEs <- do.call(rbind, lapply(fs_acov, \(x) sqrt(diag(x))))
             z <- diff/SEs
-            ret <- data.frame(diff=diff, joint, z=z,
+            converge_pre <- converge_post <- rep(TRUE, length(z))
+            converge_pre[attr(fs_pre, 'failed2converge')] <- FALSE
+            converge_post[attr(fs_post, 'failed2converge')] <- FALSE
+            ret <- data.frame(diff=diff, converged=converge_pre & converge_post,
+                              joint, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         }
     }

@@ -440,6 +440,7 @@ setMethod(
                 whc <- which(converge_info_mat != 1)
                 warning(paste0("The following factor score estimates failed to converge successfully:\n    ",
                                paste0(whc, collapse=',')), call.=FALSE)
+                attr(scoremat, 'failed2converge') <- whc
             }
             return(scoremat)
 		} else {
