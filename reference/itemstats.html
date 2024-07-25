@@ -130,8 +130,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      0      0      0      0      0</span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">LSAT7full</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1000            3.707          1.199 0.143 0.052 0.453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000            3.707          1.199 0.143 0.052 0.453     0.886</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -154,8 +154,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">LSAT7full</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">LSAT7full</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete    N mean_total.score sd_total.score ave.r  sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         995 1000            3.726          1.172 0.137 0.052 0.426</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         995 1000            3.726          1.172 0.137 0.052 0.426     0.888</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -286,8 +286,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span>                           <span class="fl">5</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">dat</span>, ts.tables<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  600           18.202          5.054 0.108 0.075 0.798</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  600           18.202          5.054 0.108 0.075 0.798     2.272</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -441,8 +441,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">dat</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G1$overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  300           17.987          5.051 0.107 0.09 0.796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  300           17.987          5.051 0.107 0.09 0.796     2.282</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G1$itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -517,8 +517,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2$overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  300           18.417          5.056  0.11 0.08   0.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  300           18.417          5.056  0.11 0.08   0.8     2.262</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G2$itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -597,8 +597,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># polytomous data example</span></span></span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  392           11.668          2.003 0.275 0.098 0.598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  392           11.668          2.003 0.275 0.098 0.598      1.27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -620,8 +620,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">newScience</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">newScience</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         387 392           11.672          2.011 0.276  0.1 0.605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         387 392           11.672          2.011 0.276  0.1 0.605     1.264</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -642,8 +642,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">newScience</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">Science</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="cn">NA</span>, <span class="va">Science</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">newScience</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         387 392           11.731          1.917  0.26 0.092 0.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         387 392           11.731          1.917  0.26 0.092 0.572     1.254</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
@@ -663,8 +663,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">LSAT7full</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">392</span>,<span class="op">]</span>, <span class="va">Science</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">merged</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         387 392           14.331          2.231 0.037 0.167 0.379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         387 392           14.331          2.231 0.037 0.167 0.379     1.759</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
