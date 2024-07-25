@@ -66,10 +66,6 @@ as conditional standard error of measurement information.</p>
 <span>  cutoffs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  SEM.pre <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  SEM.post <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  rxx.pre <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  rxx.post <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  SD.pre <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  SD.post <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  Fisher <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -112,27 +108,8 @@ report (e.g., <code>c(-1.96, 1.96)</code> reflects the 95 percent z-score type c
 
 
 <dt id="arg-sem-post">SEM.post<a class="anchor" aria-label="anchor" href="#arg-sem-post"></a></dt>
-<dd><p>(optional) standard error of measurement for the post-test. This can be used instead of
-<code>rxx.post</code> and <code>SD.post</code>. Using this will create a pooled version of the SEM</p></dd>
-
-
-<dt id="arg-rxx-pre">rxx.pre<a class="anchor" aria-label="anchor" href="#arg-rxx-pre"></a></dt>
-<dd><p>CTT reliability of pretest. If not supplied will be computed using coefficient
-alpha from <code>predat</code></p></dd>
-
-
-<dt id="arg-rxx-post">rxx.post<a class="anchor" aria-label="anchor" href="#arg-rxx-post"></a></dt>
-<dd><p>(optional) same as <code>rxx.pre</code>, but for post-test data. Using this
-will create a pooled version of the SEM</p></dd>
-
-
-<dt id="arg-sd-pre">SD.pre<a class="anchor" aria-label="anchor" href="#arg-sd-pre"></a></dt>
-<dd><p>standard deviation of pretest. If not supplied will be computed from <code>predat</code>.
-Required when <code>rxx.pre</code> is specified</p></dd>
-
-
-<dt id="arg-sd-post">SD.post<a class="anchor" aria-label="anchor" href="#arg-sd-post"></a></dt>
-<dd><p>(optional) same as <code>SD.pre</code>, but for the post-test data</p></dd>
+<dd><p>(optional) standard error of measurement for the post-test.
+Using this will create a pooled version of the SEM; otherwise, <code>SEM.post = SEM.pre</code></p></dd>
 
 
 <dt id="arg-fisher">Fisher<a class="anchor" aria-label="anchor" href="#arg-fisher"></a></dt>
@@ -143,6 +120,10 @@ SE terms? If <code>FALSE</code> the SE information will be extracted from the se
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>additional arguments passed to <code><a href="fscores.html">fscores</a></code></p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>logical; include extra information in the printout?</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -200,24 +181,25 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span>    cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">######</span></span></span>
-<span class="r-in"><span><span class="co"># CTT version by omitting IRT model (easiest to use complete dataset)</span></span></span>
-<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># CTT version by omitting IRT model</span></span></span>
+<span class="r-in"><span>    <span class="co"># Requires either sample or population SEM's as input</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">istats</span> <span class="op">&lt;-</span> <span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat_pre</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">SEM.alpha</span> <span class="op">&lt;-</span> <span class="va">istats</span><span class="op">$</span><span class="va">SEM.alpha</span>    <span class="co"># SEM estimate of dat_pre</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># CTT version with pre-computed information</span></span></span>
-<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>,</span></span>
-<span class="r-in"><span>    rxx.pre<span class="op">=</span><span class="fl">.6</span>, rxx.post<span class="op">=</span><span class="fl">.6</span>, SD.pre<span class="op">=</span><span class="fl">2</span>, SD.post<span class="op">=</span><span class="fl">3</span>,</span></span>
-<span class="r-in"><span>    cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># assumes SEM.post = SEM.pre</span></span></span>
+<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>, SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># equivalent, but using SEM instead</span></span></span>
-<span class="r-in"><span><span class="va">SEM.pre</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">.6</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">SEM.post</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">.6</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>,</span></span>
-<span class="r-in"><span>    SEM.pre<span class="op">=</span><span class="va">SEM.pre</span>, SEM.post<span class="op">=</span><span class="va">SEM.post</span>,</span></span>
-<span class="r-in"><span>    cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># include cutoffs</span></span></span>
+<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>, SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span>,</span></span>
+<span class="r-in"><span>    cutoffs<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># use just pre-test rxx for computing SEM</span></span></span>
-<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>,</span></span>
-<span class="r-in"><span>    rxx.pre<span class="op">=</span><span class="fl">.6</span>, SD.pre<span class="op">=</span><span class="fl">2</span>, rxx.method <span class="op">=</span> <span class="st">'pre'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># allows SEM.post != SEM.pre</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">istats.post</span> <span class="op">&lt;-</span> <span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat_post</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">SEM.alpha.post</span> <span class="op">&lt;-</span> <span class="va">istats.post</span><span class="op">$</span><span class="va">SEM.alpha</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>,</span></span>
+<span class="r-in"><span>   SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span>, SEM.post<span class="op">=</span><span class="va">SEM.alpha.post</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">############################</span></span></span>
 <span class="r-in"><span><span class="co"># Example where individuals take completely different item set pre-post</span></span></span>
