@@ -179,8 +179,8 @@ RCI <- function(mod_pre, predat, postdat,
             converge_pre <- converge_post <- rep(TRUE, length(z))
             converge_pre[attr(fs_pre, 'failed2converge')] <- FALSE
             converge_post[attr(fs_post, 'failed2converge')] <- FALSE
-            ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
-                              converged=converge_pre & converge_post,
+            ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1],
+                              converged=converge_pre & converge_post, diff,
                               SEM=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
