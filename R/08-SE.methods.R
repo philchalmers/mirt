@@ -171,12 +171,6 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     if(iscross && pars[[1L]][[nitems + 1L]]@itemclass == -1L)
         SLOW.IND <- SLOW.IND[SLOW.IND != (nitems + 1L)]
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
-    if(pars[[1L]][[nitems + 1L]]@itemclass %in% c(-1L, -999L)){
-        for(g in seq_len(length(pars))){
-            gp <- pars[[g]][[nitems + 1L]]
-            pars[[g]][[nitems + 1L]]@density <- gp@safe_den(gp, Theta)
-        }
-    }
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior, do.call(rbind, Priorbetween),
                       Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, Data$wmiss,
                       isbifactor, iscross)

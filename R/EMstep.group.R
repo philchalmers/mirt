@@ -432,7 +432,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                         call.=FALSE)
         }
     }
-    if(dentype == 'custom'){
+    if(dentype %in% c('custom', 'discrete')){
         if(pars[[1L]][[J + 1L]]@itemclass == -1L){
             for(g in 1L:length(pars)){
                 gp <- pars[[g]][[J + 1L]]
