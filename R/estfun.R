@@ -106,7 +106,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
 
   ## check latent regression
   if(length(x@Model$lrPars)) {
-    stop("Scores computations currently not supported for latent regression estimates.")
+    stop("Scores computations currently not supported for latent regression estimates.", call.=FALSE)
   }
   ## check items
   CUSTOM.IND <- x@Internals$CUSTOM.IND
@@ -117,7 +117,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
   }
   whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
   if(length(whichitems)) {
-    stop("Scores computations currently not supported for at least one of the supplied items.")
+    stop("Scores computations currently not supported for at least one of the supplied items.", call.=FALSE)
   }
   ## get relevant model info
   constrain <- x@Model$constrain

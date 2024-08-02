@@ -80,7 +80,7 @@ gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30), ...){
                            out
                         })
         ret <- sapply(items, LIIRF_1, ...)
-    } else stop('type not supported')
+    } else stop('type not supported', call.=FALSE)
     names(ret) <- extract.mirt(mod, 'itemnames')
     ret
 }

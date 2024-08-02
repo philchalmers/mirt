@@ -162,7 +162,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     integration <- 'quad'
     type <- 'score'
     if(!(plot %in% c('none', 'func', 'sDTF')))
-        stop('plot type not supported')
+        stop('plot type not supported', call.=FALSE)
     if(!is.null(Theta_nodes)){
         integration <- 'quad'
         if(plot != 'none') message('plots are not drawn when Theta_nodes is included')
@@ -188,7 +188,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
             stop('Must specify number of draws to generate plot confidence intervals', call.=FALSE)
     }
     if(length(type) > 1L && (plot != 'none' || !is.null(Theta_nodes)))
-        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')
+        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments', call.=FALSE)
 
     if(is.null(draws)){
         draws <- 1L
@@ -197,7 +197,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
         if(length(mod@vcov) == 1L)
             stop('Stop an information matrix must be computed', call.=FALSE)
         if(!mod@OptimInfo$secondordertest)
-            stop('ACOV matrix is not positive definite')
+            stop('ACOV matrix is not positive definite', call.=FALSE)
         impute <- TRUE
         shortpars <- mod@Internals$shortpars
         covB <- mod@vcov

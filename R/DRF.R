@@ -469,9 +469,9 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
             paste0('Theta.', 1L:ncol(Theta_nodes)) else 'Theta'
     }
     if(extract.mirt(mod, 'nfact') != 1L && plot)
-        stop('plot arguments only supported for unidimensional models')
+        stop('plot arguments only supported for unidimensional models', call.=FALSE)
     if(length(type) > 1L && (plot || !is.null(Theta_nodes)))
-        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')
+        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments', call.=FALSE)
     m2v <- mod2values(mod)
     is_logit <- m2v$name %in% c('g', 'u')
     longpars <- do.call(c, lapply(1L:length(groupNames), function(ind)
@@ -489,7 +489,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
         if(length(mod@vcov) == 1L)
             stop('Stop an information matrix must be computed', call.=FALSE)
         if(!mod@OptimInfo$secondordertest)
-            stop('ACOV matrix is not positive definite')
+            stop('ACOV matrix is not positive definite', call.=FALSE)
         impute <- TRUE
         covB <- mod@vcov
         names <- colnames(covB)
@@ -787,7 +787,7 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
 
     if(method == 'parametric'){
         if(!mod@OptimInfo$secondordertest)
-            stop('ACOV matrix is not positive definite')
+            stop('ACOV matrix is not positive definite', call.=FALSE)
         on.exit(reloadPars(longpars=longpars, pars=pars,
                            ngroups=ngroups, J=extract.mirt(mod, 'nitems')), add=TRUE)
         covB <- vcov(mod)
@@ -803,7 +803,7 @@ draw_parameters <- function(mod, draws, method = c('parametric', 'boostrap'),
         if(any(logits))
             ret[,logits] <- antilogit(ret[,logits])
         return(ret)
-    } else stop('bootstrap not supported yet') #TODO
+    } else stop('bootstrap not supported yet', call.=FALSE) #TODO
 
 }
 

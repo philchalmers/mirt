@@ -2483,7 +2483,8 @@ makeHypothesis <- function (cnames, hypothesis, rhs = NULL)
             0
         else sum(as.numeric(x))
         if (any(is.na(x)))
-            stop("The hypothesis \"", hypothesis, "\" is not well formed: contains bad coefficient/variable names.")
+            stop("The hypothesis \"", hypothesis,
+                 "\" is not well formed: contains bad coefficient/variable names.", call.=FALSE)
         x
     }
     coefvector <- function(x, y) {
@@ -2494,7 +2495,8 @@ makeHypothesis <- function (cnames, hypothesis, rhs = NULL)
             stop("The hypothesis \"", hypothesis, "\" is not well formed.")
         rv <- sum(char2num(unlist(strsplit(y[rv], x, fixed = TRUE))))
         if (is.na(rv))
-            stop("The hypothesis \"", hypothesis, "\" is not well formed: contains non-numeric coefficients.")
+            stop("The hypothesis \"", hypothesis,
+                 "\" is not well formed: contains non-numeric coefficients.", call.=FALSE)
         rv
     }
     if (!is.null(rhs))
@@ -2514,7 +2516,8 @@ makeHypothesis <- function (cnames, hypothesis, rhs = NULL)
                                                                                    cnames_symb[i], hypothesis_symb, fixed = TRUE)
     }
     else {
-        stop("The hypothesis \"", hypothesis, "\" is not well formed: contains non-standard coefficient names.")
+        stop("The hypothesis \"", hypothesis,
+             "\" is not well formed: contains non-standard coefficient names.", call.=FALSE)
     }
     lhs <- strsplit(hypothesis_symb, "=", fixed = TRUE)[[1]]
     if (is.null(rhs)) {
@@ -2524,12 +2527,14 @@ makeHypothesis <- function (cnames, hypothesis, rhs = NULL)
             rhs <- lhs[2]
             lhs <- lhs[1]
         }
-        else stop("The hypothesis \"", hypothesis, "\" is not well formed: contains more than one = sign.")
+        else stop("The hypothesis \"", hypothesis,
+                  "\" is not well formed: contains more than one = sign.", call.=FALSE)
     }
     else {
         if (length(lhs) < 2)
             as.character(rhs)
-        else stop("The hypothesis \"", hypothesis, "\" is not well formed: contains a = sign although rhs was specified.")
+        else stop("The hypothesis \"", hypothesis,
+                  "\" is not well formed: contains a = sign although rhs was specified.", call.=FALSE)
     }
     lhs <- stripchars(lhs)
     rhs <- stripchars(rhs)
@@ -2615,9 +2620,9 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
     digitsBase <- function (x, base = 2, ndigits = 1 + floor(1e-09 + log(max(x), base)))
     {
         if (any(x < 0))
-            stop("'x' must be non-negative integers")
+            stop("'x' must be non-negative integers", call.=FALSE)
         if (any(x != trunc(x)))
-            stop("'x' must be integer-valued")
+            stop("'x' must be integer-valued", call.=FALSE)
         r <- matrix(0, nrow = ndigits, ncol = length(x))
         if (ndigits >= 1)
             for (i in ndigits:1) {

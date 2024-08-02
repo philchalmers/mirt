@@ -69,7 +69,7 @@ setMethod(
                     mu=fs, sig=fs_acov))
                 if(any(sapply(jit, is.nan)))
                     stop('Could not draw unique plausible values. Response pattern ACOVs may
-                         not be positive definite')
+                         not be positive definite', call.=FALSE)
                 ret <- vector('list', plausible.draws)
                 completely_missing <- extract.mirt(object, 'completely_missing')
                 for(i in seq_len(plausible.draws)){

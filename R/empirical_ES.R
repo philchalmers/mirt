@@ -157,7 +157,7 @@ empirical_ES <- function(mod, Theta.focal = NULL,
     } else Theta.focal <- as.matrix(Theta.focal)
     stopifnot("Theta must be a matrix" = is.matrix(Theta.focal))
     if(sum(focal_select) != nrow(Theta.focal))
-        stop('Theta elements do not match the number of individuals in the focal group')
+        stop('Theta elements do not match the number of individuals in the focal group', call.=FALSE)
 
     ############# helper function -  Cohen D ###########
     f.cohen.d <- function (vector.1,vector.2){

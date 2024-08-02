@@ -93,7 +93,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
 
     impute <- 0
     if(is(obj, 'MixtureModel'))
-        stop('Mixture IRT models not yet supported')
+        stop('Mixture IRT models not yet supported', call.=FALSE)
     fn <- function(Theta, obj, ...){
         dat <- imputeMissing(obj, Theta, warn=FALSE)
         tmpobj <- obj
@@ -137,7 +137,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         }
         bfactorlist <- obj@Internals$bfactor
         if(.hasSlot(obj@Model$lrPars, 'beta'))
-            stop('Latent regression models not yet supported')
+            stop('Latent regression models not yet supported', call.=FALSE)
         # if(!discrete && obj@ParObjects$pars[[extract.mirt(obj, 'nitems')+1L]]@dentype == 'custom')
         #     stop('M2() does not currently support custom group densities', call.=FALSE)
         if(!discrete && !use_dentype_estimate){
@@ -355,7 +355,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         if(impute == 0)
             stop('Fit statistics cannot be computed when there are missing data.
                  Remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
-        if(residmat) stop('residmat not supported when imputing data')
+        if(residmat) stop('residmat not supported when imputing data', call.=FALSE)
         Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, leave_missing=TRUE, ...)
         collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
                             quadpts=quadpts, QMC=QMC, theta_lim=theta_lim)

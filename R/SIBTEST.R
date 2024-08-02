@@ -593,7 +593,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
         # Multi-group
 
         if(plot != 'none')
-            stop('Multi-group plots not currently supported')
+            stop('Multi-group plots not currently supported', call.=FALSE)
 
         groupnms <- unique(group)
         if(ncol(C) != ngroups)

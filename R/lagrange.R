@@ -86,7 +86,7 @@ lagrange <- function(mod, parnum, SE.type = 'Oakes', type = 'Richardson', ...){
     if(missing(mod)) missingMsg('mod')
     if(missing(parnum)) missingMsg('parnum')
     if(SE.type %in% c('SEM', 'MHRM', 'FMHRM'))
-        stop('SE.type not supported for Lagrange tests')
+        stop('SE.type not supported for Lagrange tests', call.=FALSE)
     ObJeCtIvE <- extract.mirt(mod, 'logLik')
     group <- extract.mirt(mod, 'group')
     parnum <- as.list(parnum)

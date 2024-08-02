@@ -374,11 +374,11 @@ mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NUL
     if(any(itemtype %in% c('spline', 'ideal'))){
         if(fixed != ~ -1){
             warning(paste0('Unsupported itemtype detected for modeling intercepts.\n',
-                    'fixed = ~ -1 used by default to remove intercept'))
+                    'fixed = ~ -1 used by default to remove intercept'), call.=FALSE)
             fixed <- ~ -1
         }
         if(!is.null(random)){
-            warning('random set to NULL due to unsupported itemtypes')
+            warning('random set to NULL due to unsupported itemtypes', call.=FALSE)
             random <- NULL
         }
     }
@@ -407,7 +407,7 @@ mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NUL
     if(length(dropcases) > 0L){
         if(is.null(technical$warn) || technical$warn)
             warning("Missing values in covdata not permitted. Removing all observations row-wise
-                     when rowSums(is.na(covdata)) > 0")
+                     when rowSums(is.na(covdata)) > 0", call.=FALSE)
         data <- data[-dropcases, ]
         covdata <- covdata[-dropcases, ,drop=FALSE]
     }

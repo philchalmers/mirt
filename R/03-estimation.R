@@ -307,7 +307,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
         if(!is.null(latent.regression)){
             if(length(PrepListFull$prodlist))
-                stop('Polynomial combinations currently not supported when latent regression effects are used', call.=FALSE)
+                stop('Polynomial combinations currently not supported when latent regression effects are used',
+                     call.=FALSE)
             lrPars <- make.lrdesign(df=latent.regression$df, formula=latent.regression$formula,
                                     factorNames=PrepListFull$factorNames, EM=latent.regression$EM,
                                     TOL=opts$TOL)
@@ -576,7 +577,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(pars[[1]][[length(pars[[1L]])]]@itemclass %in% c(-1L, -999L))
         SLOW.IND <- c(SLOW.IND, length(pars[[1L]]))
     if(opts$dentype != 'Gaussian' && opts$method %in% c('MHRM', 'MIXED', 'SEM'))
-        stop('Non-Gaussian densities not currently supported with MHRM algorithm')
+        stop('Non-Gaussian densities not currently supported with MHRM algorithm', call.=FALSE)
     #warnings
     wmsg <- 'Lower and upper bound parameters (g and u) should use \'norm\' (i.e., logit) prior'
     for(g in seq_len(length(pars))){
@@ -625,7 +626,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             Theta <- opts$technical$customTheta
             opts$quadpts <- nrow(Theta)
             if(pars[[1L]][[1L]]@nfact != ncol(Theta))
-                stop("mirt.model definition does not have same number of traits/attributes as customTheta input", call.=FALSE)
+                stop("mirt.model definition does not have same number of traits/attributes as customTheta input",
+                     call.=FALSE)
         } else {
             if(is.null(opts$quadpts)){
                 tmp <- if(opts$dentype == 'bfactor') PrepList[[1L]]$nfact - attr(model, 'nspec') + 1L
@@ -860,7 +862,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     if(opts$warn)
                         warning('Very few EM cycles performed. Consider decreasing TOL further to
                             increase EM iteration count or starting farther away from ML estimates by
-                            passing the \'GenRandomPars = TRUE\' argument')
+                            passing the \'GenRandomPars = TRUE\' argument', call.=FALSE)
                 estmat <- matrix(FALSE, length(ESTIMATE$correction), length(ESTIMATE$correction))
                 DM <- estmat + 0
                 diag(estmat) <- TRUE
@@ -945,7 +947,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         } else if(opts$SE.type == 'Fisher' && !(opts$method %in% c('MHRM', 'SEM', 'MIXED'))){
             if(logPrior != 0 && opts$warn)
                 warning('Information matrix with the Fisher method does not
-                        account for prior parameter distribution information')
+                        account for prior parameter distribution information', call.=FALSE)
             ESTIMATE <- SE.Fisher(PrepList=PrepList, ESTIMATE=ESTIMATE, Theta=Theta, Data=Data,
                                   constrain=constrain, Ls=Ls, full=opts$full,
                                   CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND, warn=opts$warn,
@@ -1045,7 +1047,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                  group=if(length(pars) > 1L) group else NULL)))
         if(is(null.mod, 'try-error')){
             if(opts$warn)
-                warning('Null model calculation did not converge.')
+                warning('Null model calculation did not converge.', call.=FALSE)
             null.mod <- unclass(new('SingleGroupClass'))
         } else if(!is.nan(G2)) {
             TLI.G2 <- tli(X2=G2, X2.null=null.mod@Fit$G2, df=df, df.null=null.mod@Fit$df)

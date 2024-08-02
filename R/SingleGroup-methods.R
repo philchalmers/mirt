@@ -737,7 +737,7 @@ setMethod(
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
-            stop('Latent regression models not yet supported')
+            stop('Latent regression models not yet supported', call.=FALSE)
         discrete <- use_dentype_estimate <- FALSE
         if(!is.null(dots$use_dentype_estimate))
             use_dentype_estimate <- dots$use_dentype_estimate
@@ -1136,7 +1136,7 @@ setMethod(
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian',
                        'EAPsum', 'posteriorTheta')))
-            stop('type supplied is not supported')
+            stop('type supplied is not supported', call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])

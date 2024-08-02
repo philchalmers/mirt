@@ -411,7 +411,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         }
         if(cycles == NCYCLES){
             if(list$warn)
-                warning('EM cycles terminated after ', cycles, ' iterations.')
+                warning('EM cycles terminated after ', cycles, ' iterations.', call.=FALSE)
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
             if(list$warn && !(is.nan(TOL) || is.na(TOL)) && !list$NULL.MODEL)

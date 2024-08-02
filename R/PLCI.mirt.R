@@ -246,13 +246,13 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
 
     stopifnot(extract.mirt(mod, 'converged'))
     if(.hasSlot(mod@Model$lrPars, 'beta'))
-        stop('Latent regression models not yet supported')
+        stop('Latent regression models not yet supported', call.=FALSE)
     stopifnot(lower | upper)
     dat <- mod@Data$data
     model <- mod@Model$model
     parprior <- mod@Model$parprior
     if(length(parprior))
-        stop('Confidence intervals cannot be computed for models that include priors')
+        stop('Confidence intervals cannot be computed for models that include priors', call.=FALSE)
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
     itemtype <- extract.mirt(mod, 'itemtype')

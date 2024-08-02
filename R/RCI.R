@@ -137,7 +137,7 @@ RCI <- function(mod_pre, predat, postdat,
         TS_pre <- rowSums(predat)
         TS_post <- rowSums(postdat)
         if(is.null(SEM.pre))
-            stop('Must include SEM.pre')
+            stop('Must include SEM.pre', call.=FALSE)
         SEM.pre <- unname(SEM.pre)
         stopifnot(is.numeric(SEM.pre) && length(SEM.pre) == 1L)
         if(is.null(SEM.post)) SEM.post <- SEM.pre

@@ -819,7 +819,7 @@ LoadGroupPars <- function(gmeans, gcov, estgmeans, estgcov, parnumber, parprior,
         }
     } else {
         nfact <- length(gmeans)
-        if (nfact > 1) stop("Multidimensional DC-IRT models are not supported.")
+        if (nfact > 1) stop("Multidimensional DC-IRT models are not supported.", call.=FALSE)
         # DC Density:
         den <- Theta_DC_den
         fn <- paste('COV_', 1L:nfact, sep='')

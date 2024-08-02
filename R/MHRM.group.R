@@ -316,7 +316,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     #Reload final pars list
     if(cycles == NCYCLES + BURNIN + SEMCYCLES && !list$SE && !no_stage_3){
         if(list$warn)
-            warning('MHRM terminated after ', NCYCLES, ' iterations.')
+            warning('MHRM terminated after ', NCYCLES, ' iterations.', call.=FALSE)
         converge <- FALSE
     }
     if(list$SE) longpars <- list$startlongpars

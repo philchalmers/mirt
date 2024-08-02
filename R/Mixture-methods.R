@@ -98,7 +98,7 @@ plot_mixture <- function(x, y, type = 'score', npts = 200, degrees = 45,
     pis <- extract.mirt(x, 'pis')
     if(!(type %in% c('info', 'SE', 'infoSE', 'trace', 'score', 'itemscore',
                      'infocontour', 'infotrace', 'scorecontour')))
-        stop('type supplied is not supported')
+        stop('type supplied is not supported', call.=FALSE)
     if (any(degrees > 90 | degrees < 0))
         stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])

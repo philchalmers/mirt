@@ -519,7 +519,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
                 call.=FALSE)
     mixture <- is(x, 'MixtureClass')
     if(mixture && !all(fit_stats == 'S_X2'))
-        stop("Only S_X2 fit statistic supported for mixture models")
+        stop("Only S_X2 fit statistic supported for mixture models", call.=FALSE)
     pis <- NULL
     if(mixture){
         discrete <- TRUE

@@ -1730,7 +1730,7 @@ setMethod(
     f = "set_null_model",
     signature = signature(x = 'spline'),
     definition = function(x){
-        stop('spline null should not be run')
+        stop('spline null should not be run', call.=FALSE)
     }
 )
 
@@ -2342,7 +2342,7 @@ setMethod("initialize",
           'grsmIRT',
           function(.Object, nfact, ncat){
             if(nfact != 1L)
-                stop('grsmIRT only possible for unidimensional models')
+                stop('grsmIRT only possible for unidimensional models', call.=FALSE)
             stopifnot(ncat >= 2L)
             .Object@par <- c(rep(1, nfact),  seq(1, -1, length.out=ncat-1), 0)
             #.Object@par <- c(rep(1, nfact),  seq(-3, 3, length.out=ncat-1), 0)

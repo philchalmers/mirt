@@ -48,7 +48,8 @@ MDIFF <- function(x, which.items = NULL, group=NULL){
     for(i in seq_len(length(which.items))){
         item <- extract.item(x, which.items[i])
         if(!(class(item) %in% c('dich', 'graded')))
-            stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]))
+            stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]),
+                 call.=FALSE)
         ds <- ExtractZetas(item)
         out[[i]] <- -ds / MD[which.items[i]]
     }

@@ -267,7 +267,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             }
             res <- try(wald(model, L), silent = TRUE)
             if(is(res, 'try-error')){
-                warning(sprintf('Wald test for \'%s\' failed.', itemnames[item]))
+                warning(sprintf('Wald test for \'%s\' failed.', itemnames[item]), call.=FALSE)
                 res <- data.frame(W=NA, df=NA, p=NA)
             }
             return(res)

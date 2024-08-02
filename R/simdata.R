@@ -356,13 +356,13 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 {
     if(!is.null(prob.list)){
         if(!all(sapply(prob.list, function(x) is.matrix(x) || is.data.frame(x))))
-            stop('Elements of prob.list must be either a matrix or data.frame')
+            stop('Elements of prob.list must be either a matrix or data.frame', call.=FALSE)
         prob.list <- lapply(prob.list, as.matrix)
         if(!all(sapply(prob.list, nrow) == nrow(prob.list[[1L]])))
-            stop('prob.list elements have unequal rows')
+            stop('prob.list elements have unequal rows', call.=FALSE)
         K <- sapply(prob.list, ncol)
         nitems <- length(K)
-        if(any(K == 1L)) stop('prob.list elements should have more than 1 column')
+        if(any(K == 1L)) stop('prob.list elements should have more than 1 column', call.=FALSE)
         if(length(mins) == 1L) mins <- rep(mins, nitems)
         stopifnot(length(mins) == nitems)
         data <- matrix(NA, nrow(prob.list[[1L]]), nitems)
@@ -431,7 +431,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         itemtype <- toInternalItemtype(itemtype)
     }
 	if(any(itemtype == 'ggum') && is.null(t))
-	    stop('ggum requires t matrix input')
+	    stop('ggum requires t matrix input', call.=FALSE)
 	for(i in 1L:length(K)){
 	    K[i] <- length(na.omit(d[i, ])) + 1L
 	    if(itemtype[i] =='partcomp') K[i] <- 2L
