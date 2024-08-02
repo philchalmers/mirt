@@ -1,6 +1,15 @@
 context('extras')
 
 test_that('extras', {
+    suppressMessages(require(nonnest2, quietly=TRUE, warn.conflicts=FALSE))
+    mod_2PL <- mirt(expand.table(LSAT7), 1, SE=TRUE, verbose=FALSE)
+    itemtype <- c('2PL', '2PL', '2PL', '2PL', 'ggum')
+    mod_2PL_ggum <- mirt(expand.table(LSAT7), model=1, itemtype=itemtype, SE=TRUE,
+                         verbose=FALSE)
+    out <- vuongtest(mod_2PL, mod_2PL_ggum)
+    expect_equal(out$p_omega, 2.206736e-05, tol=.0001)
+    expect_equal(as.numeric(out$p_LRT), c(0.6205581, 0.3794419), tol=.0001)
+
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     data <- expand.table(LSAT7)
     data <- rbind(data, data)
