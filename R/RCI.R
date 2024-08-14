@@ -169,28 +169,29 @@ RCI <- function(mod_pre, predat, postdat,
                               SEM=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
-            fs_pre <- fscores(mod_pre, response.pattern=predat, ...)
-            fs_post <- fscores(mod_post, response.pattern=postdat, ...)
-            fs_acov <- fs_pre_acov <- fscores(mod_pre, response.pattern = predat,
-                                              return.acov=TRUE, ...)
-            fs_post_acov <- fscores(mod_post, response.pattern=postdat,
-                                    return.acov=TRUE, ...)
-            for(i in 1L:length(fs_acov))
-                fs_acov[[i]] <- fs_pre_acov[[i]] + fs_post_acov[[i]]
-            diff <- fs_post[,1L:nfact] - fs_pre[,1L:nfact]
-            joint <- vector('list', nrow(diff))
-            for(i in 1:nrow(diff))
-                joint[[i]] <- wald.test(diff[i,], covB = fs_acov[[i]],
-                                        L = diag(ncol(diff)))
-            joint <- do.call(rbind, joint)
-            SEs <- do.call(rbind, lapply(fs_acov, \(x) sqrt(diag(x))))
-            z <- diff/SEs
-            converge_pre <- converge_post <- rep(TRUE, length(z))
-            converge_pre[attr(fs_pre, 'failed2converge')] <- FALSE
-            converge_post[attr(fs_post, 'failed2converge')] <- FALSE
-            ret <- data.frame(diff=diff, converged=converge_pre & converge_post,
-                              joint, z=z,
-                              p=pnorm(abs(z), lower.tail = FALSE)*2)
+            stop('multidimensional IRT models not suppported in RCI()', call.=FALSE)
+            # fs_pre <- fscores(mod_pre, response.pattern=predat, ...)
+            # fs_post <- fscores(mod_post, response.pattern=postdat, ...)
+            # fs_acov <- fs_pre_acov <- fscores(mod_pre, response.pattern = predat,
+            #                                   return.acov=TRUE, ...)
+            # fs_post_acov <- fscores(mod_post, response.pattern=postdat,
+            #                         return.acov=TRUE, ...)
+            # for(i in 1L:length(fs_acov))
+            #     fs_acov[[i]] <- fs_pre_acov[[i]] + fs_post_acov[[i]]
+            # diff <- fs_post[,1L:nfact] - fs_pre[,1L:nfact]
+            # joint <- vector('list', nrow(diff))
+            # for(i in 1:nrow(diff))
+            #     joint[[i]] <- wald.test(diff[i,], covB = fs_acov[[i]],
+            #                             L = diag(ncol(diff)))
+            # joint <- do.call(rbind, joint)
+            # SEs <- do.call(rbind, lapply(fs_acov, \(x) sqrt(diag(x))))
+            # z <- diff/SEs
+            # converge_pre <- converge_post <- rep(TRUE, length(z))
+            # converge_pre[attr(fs_pre, 'failed2converge')] <- FALSE
+            # converge_post[attr(fs_post, 'failed2converge')] <- FALSE
+            # ret <- data.frame(diff=diff, converged=converge_pre & converge_post,
+            #                   joint, z=z,
+            #                   p=pnorm(abs(z), lower.tail = FALSE)*2)
         }
     }
 
