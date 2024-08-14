@@ -385,6 +385,7 @@ setMethod(
             scores <- tmp[[1L]]
             SEscores <- tmp[[2L]]
         }
+        if(return.acov) browser()
         if(any(is.na(scores) & !is.nan(scores)))
             warning('NAs returned for response patterns with no data. Consider removing',
                     call.=FALSE)
@@ -974,7 +975,7 @@ MAP <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND, it
 ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
                item_weights, hessian, return.acov = FALSE, den_fun, max_theta, ...){
     if(any(scores[ID, ] %in% c(-Inf, Inf, NA)))
-        return(c(scores[ID, ], rep(NA, ncol(scores) + 1L)))
+        return(c(scores[ID, ], rep(NA, ncol(scores) + !return.acov)))
     estimate <- try(nlm(MAP.mirt,scores[ID, ],pars=pars,patdata=tabdata[ID, ], den_fun=NULL,
                         itemloc=itemloc, gp=gp, prodlist=prodlist, ML=TRUE, max_theta=max_theta,
                         hessian=hessian, item_weights=item_weights,
@@ -989,14 +990,15 @@ ML <- function(ID, scores, pars, tabdata, itemloc, gp, prodlist, CUSTOM.IND,
             vcov <- matrix(0, length(pick), length(pick))
             vcov[pick,pick] <- vcov_small
         } else vcov <- try(solve(estimate$hessian), TRUE)
-        if(return.acov) return(vcov)
         SEest <- try(sqrt(diag(vcov)), TRUE)
         if(is(vcov, 'try-error') || is(SEest, 'try-error') || any(is.nan(SEest))){
+            vcov <- matrix(NA, ncol(scores), ncol(scores))
             SEest <- rep(NA, ncol(scores))
         } else if(any(SEest > 30)){
             est[SEest > 30] <- Inf * sign(est[SEest > 30])
             SEest[SEest > 30] <- NA
         }
+        if(return.acov) return(as.vector(vcov))
     } else SEest <- rep(NA, ncol(scores))
     return(c(est, SEest, estimate$code))
 }
