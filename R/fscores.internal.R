@@ -385,7 +385,6 @@ setMethod(
             scores <- tmp[[1L]]
             SEscores <- tmp[[2L]]
         }
-        if(return.acov) browser()
         if(any(is.na(scores) & !is.nan(scores)))
             warning('NAs returned for response patterns with no data. Consider removing',
                     call.=FALSE)
