@@ -18,3 +18,4 @@ tests/tests/testdata/
 ^docs$
 ^pkgdown$
 ^\.github$
+dev/
