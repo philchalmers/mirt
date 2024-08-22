@@ -314,7 +314,6 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                         longpars[tmpparnum[2L]] <- attr(Prior[[g]], 'mean_var')['var']
                 }
             }
-            EMhistory[cycles+1L,] <- longpars
             if(verbose)
                 cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL + LP, max(abs(preMstep.longpars - longpars))))
@@ -371,6 +370,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                     longpars[!latent_longpars] <- tmp[!latent_longpars]
                 } else stop('acceleration option not defined', call.=FALSE)
             }
+            EMhistory[cycles+1L,] <- longpars
             pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
             for(g in seq_len(ngroups)){
                 if(any(pars[[g]][[J+1L]]@est) && nfact > 1L){
