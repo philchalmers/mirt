@@ -1109,7 +1109,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                       shortpars=as.numeric(ESTIMATE$shortpars), key=key,
                       bfactor=list(), CUSTOM.IND=CUSTOM.IND, SLOW.IND=SLOW.IND,
                       survey.weights=survey.weights, theta_lim = opts$theta_lim,
-                      customGroup=customGroup, customItems=customItems)
+                      customGroup=customGroup, customItems=customItems,
+                      monopoly.k=monopoly.k, gpcm_mats=gpcm_mats)
     if(opts$method == 'EM'){
         tmp <- lapply(ESTIMATE$Etable, function(tab)
             data.frame(Theta, posterior=rowSums(tab$r1)))

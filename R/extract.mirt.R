@@ -170,6 +170,10 @@ extract.mirt <- function(x, what){
                   completely_missing=x@Data$completely_missing,
                   customGroup=x@Internals$customGroup,
                   customItems=x@Internals$customItems,
+                  gpcm_mats=x@Internals$gpcm_mats,
+                  monopoly.k=x@Internals$monopoly.k,
+                  grsm.block=x@Data$grsm.block,
+                  rsm.block=x@Data$rsm.block,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }
