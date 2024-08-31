@@ -19,7 +19,8 @@
 #' @examples
 #' \dontrun{
 #' dat <- expand.table(LSAT7)
-#' mod <- mirt(dat, 1)
+#' mod <- mirt(dat, "F=1-5
+#'                   CONSTRAIN=(1-5, a1)")
 #' values <- mod2values(mod)
 #' values
 #'
@@ -117,8 +118,19 @@ mod2values <- function(x){
     ubound[parname %in% c('g', 'u')] <- antilogit(ubound[parname %in% c('g', 'u')])
     prior.type <- sapply(as.character(prior.type),
                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', '4'='expbeta', 'none'))
-    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
-                      lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
-                      prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
+    clist <- extract.mirt(x, 'constrain')
+    constrain <- nconstrain <- rep("none", length(gnames))
+    if(!is.null(clist)){
+        for(i in seq_len(length(clist)))
+            constrain[clist[[i]]] <- i
+    }
+    nclist <- extract.mirt(x, 'nconstrain')
+    if(!is.null(nclist)){
+        for(i in seq_len(length(nclist)))
+            nconstrain[nclist[[i]]] <- i
+    }
+    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum,
+                      value=par, lbound=lbound, ubound=ubound, est=est, const=constrain, nconst=nconstrain,
+                      prior.type=prior.type, prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
     ret
 }

@@ -408,8 +408,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(is(pars, 'data.frame')){
             SUPPLIED_STARTS <- TRUE
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
-                                       lrPars=lrPars, lr.random=latent.regression$lr.random,
-                                       MG = TRUE)
+                                       clist=constrain, nclist=opts$technical$nconstrain,
+                                       lrPars=lrPars, lr.random=latent.regression$lr.random, MG = TRUE)
+            constrain <- rebuild_clist(pars$parnum, pars$const)
+            opts$technical$nconstrain <- rebuild_clist(pars$parnum, pars$nconst)
             mixed.design$random <- attr(PrepList, 'random')
             latent.regression$lr.random <- attr(PrepList, 'lr.random')
             if(any(pars$class == 'lrPars')) lrPars <- update.lrPars(pars, lrPars)
@@ -495,7 +497,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         for(g in seq_len(Data$ngroups))
             PrepList[[g]]$pars <- pars[[g]]
         return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, lr.random=latent.regression$lr.random,
-                          random=mixed.design$random, lrPars=lrPars, MG = TRUE))
+                          random=mixed.design$random, lrPars=lrPars, clist=constrain,
+                          nclist=opts$technical$nconstrain, MG = TRUE))
     }
     startlongpars <- c()
     if(opts$NULL.MODEL){
@@ -1071,7 +1074,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         ExtractMixtures(lapply(cmods, function(x) x@ParObjects$pars)) else NULL
     Model <- list(model=oldmodel, factorNames=PrepList[[1L]]$factorNames, itemtype=PrepList[[1L]]$itemtype,
                   itemloc=PrepList[[1L]]$itemloc, nfact=nfact, pis=pis,
-                  Theta=Theta, constrain=constrain, parprior=parprior, nest=as.integer(dfsubtr),
+                  Theta=Theta, constrain=constrain, nconstrain= opts$technical$nconstrain,
+                  parprior=parprior, nest=as.integer(dfsubtr),
                   invariance=invariance, lrPars=lrPars, formulas=attr(mixed.design, 'formula'),
                   prodlist=PrepList[[1L]]$prodlist, nestpars=nestpars)
     if(!is.null(opts$technical$Etable)){

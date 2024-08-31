@@ -124,6 +124,7 @@ extract.mirt <- function(x, what){
                   vcov = x@vcov,
                   nest = x@Model$nest,
                   constrain = x@Model$constrain,
+                  nconstrain = x@Model$nconstrain,
                   iterations = x@OptimInfo$iter,
                   LLhistory = x@Internals$collectLL,
                   exp_resp = x@Internals$Pl,

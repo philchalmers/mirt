@@ -1111,7 +1111,8 @@ resetPriorConstrain <- function(pars, constrain, nconstrain){
     pars
 }
 
-ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG = FALSE){
+ReturnPars <- function(PrepList, itemnames, random, lrPars, clist, nclist,
+                       lr.random = NULL, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
@@ -1193,14 +1194,25 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, lr.random = NULL, MG
     par[parname %in% c('g', 'u')] <- antilogit(par[parname %in% c('g', 'u')])
     lbound[parname %in% c('g', 'u')] <- antilogit(lbound[parname %in% c('g', 'u')])
     ubound[parname %in% c('g', 'u')] <- antilogit(ubound[parname %in% c('g', 'u')])
-    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
-                      lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
-                      prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
+    constrain <- nconstrain <- rep("none", length(gnames))
+    if(length(clist)){
+        for(i in seq_len(length(clist)))
+            constrain[clist[[i]]] <- i
+    }
+    if(length(nclist)){
+        for(i in seq_len(length(nclist)))
+            nconstrain[nclist[[i]]] <- i
+    }
+    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum,
+                      value=par, lbound=lbound, ubound=ubound, est=est, const=constrain, nconst=nconstrain,
+                      prior.type=prior.type, prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
     ret
 }
 
-UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), MG = FALSE){
+UpdatePrepList <- function(PrepList, pars, random, lr.random, clist, nclist,
+                           lrPars = list(), MG = FALSE){
     currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random,
+                                clist=clist, nclist=nclist,
                                 lrPars=lrPars, lr.random=lr.random, MG = TRUE)
     if(nrow(currentDesign) != nrow(pars))
         stop('Rows in supplied and starting value data.frame objects do not match. Were the
@@ -1283,6 +1295,17 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, lrPars = list(), M
     }
     if(!MG) PrepList <- PrepList[[1L]]
     return(PrepList)
+}
+
+rebuild_clist <- function(parnum, cvec){
+    ret <- list()
+    if(!all(cvec == 'none')){
+        uniq <- unique(cvec)
+        uniq <- uniq[uniq != 'none']
+        for(i in seq_len(length(uniq)))
+            ret[[i]] <- parnum[uniq[i] == cvec]
+    }
+    ret
 }
 
 #new gradient and hessian with priors
