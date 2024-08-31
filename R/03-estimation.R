@@ -413,8 +413,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
                                        clist=constrain, nclist=opts$technical$nconstrain,
                                        itemtype=itemtype, lrPars=lrPars, lr.random=latent.regression$lr.random, MG = TRUE)
-            constrain <- rebuild_clist(pars$parnum, pars$const)
-            opts$technical$nconstrain <- rebuild_clist(pars$parnum, pars$nconst)
+            constrain <- c(constrain, rebuild_clist(pars$parnum, pars$const))
+            opts$technical$nconstrain <- c(opts$technical$nconstrain,
+                                           rebuild_clist(pars$parnum, pars$nconst))
             mixed.design$random <- attr(PrepList, 'random')
             latent.regression$lr.random <- attr(PrepList, 'lr.random')
             if(any(pars$class == 'lrPars')) lrPars <- update.lrPars(pars, lrPars)
