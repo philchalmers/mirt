@@ -101,52 +101,52 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">deAyala</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'2PL'</span>, pars <span class="op">=</span> <span class="st">'values'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    group   item     class   name parnum      value lbound ubound   est const</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    all Item.1      dich     a1      1  0.8510000   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    all Item.1      dich      d      2  2.3841111   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    all Item.1      dich      g      3  0.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    all Item.1      dich      u      4  1.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    all Item.2      dich     a1      5  0.8510000   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    all Item.2      dich      d      6  0.7257898   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    all Item.2      dich      g      7  0.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    all Item.2      dich      u      8  1.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    all Item.3      dich     a1      9  0.8510000   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10   all Item.3      dich      d     10  0.3265895   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11   all Item.3      dich      g     11  0.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12   all Item.3      dich      u     12  1.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13   all Item.4      dich     a1     13  0.8510000   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14   all Item.4      dich      d     14 -0.3618092   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15   all Item.4      dich      g     15  0.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16   all Item.4      dich      u     16  1.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17   all Item.5      dich     a1     17  0.8510000   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18   all Item.5      dich      d     18 -0.5626501   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19   all Item.5      dich      g     19  0.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20   all Item.5      dich      u     20  1.0000000  0e+00      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21   all  GROUP GroupPars MEAN_1     21  0.0000000   -Inf    Inf FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22   all  GROUP GroupPars COV_11     22  1.0000000  1e-04    Inf FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    nconst prior.type prior_1 prior_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22   none       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    group   item     class   name parnum  value lbound ubound   est const nconst</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    all Item.1      dich     a1      1  0.851   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    all Item.1      dich      d      2  2.384   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    all Item.1      dich      g      3  0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    all Item.1      dich      u      4  1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    all Item.2      dich     a1      5  0.851   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    all Item.2      dich      d      6  0.726   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    all Item.2      dich      g      7  0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    all Item.2      dich      u      8  1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    all Item.3      dich     a1      9  0.851   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   all Item.3      dich      d     10  0.327   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   all Item.3      dich      g     11  0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   all Item.3      dich      u     12  1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   all Item.4      dich     a1     13  0.851   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   all Item.4      dich      d     14 -0.362   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   all Item.4      dich      g     15  0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   all Item.4      dich      u     16  1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   all Item.5      dich     a1     17  0.851   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   all Item.5      dich      d     18 -0.563   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   all Item.5      dich      g     19  0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   all Item.5      dich      u     20  1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   all  GROUP GroupPars MEAN_1     21  0.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22   all  GROUP GroupPars COV_11     22  1.000      0    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    prior.type prior_1 prior_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       none     NaN     NaN</span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'2PL'</span>, constrain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">9</span>,<span class="fl">13</span>,<span class="fl">17</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -56256.669, Max-Change: 0.23297Iteration: 2, Log-Lik: -55676.726, Max-Change: 0.15211Iteration: 3, Log-Lik: -55476.742, Max-Change: 0.08970Iteration: 4, Log-Lik: -55414.450, Max-Change: 0.05101Iteration: 5, Log-Lik: -55395.424, Max-Change: 0.02855Iteration: 6, Log-Lik: -55389.632, Max-Change: 0.01596Iteration: 7, Log-Lik: -55387.850, Max-Change: 0.00880Iteration: 8, Log-Lik: -55387.308, Max-Change: 0.00490Iteration: 9, Log-Lik: -55387.139, Max-Change: 0.00269Iteration: 10, Log-Lik: -55387.079, Max-Change: 0.00123Iteration: 11, Log-Lik: -55387.067, Max-Change: 0.00066Iteration: 12, Log-Lik: -55387.064, Max-Change: 0.00041Iteration: 13, Log-Lik: -55387.062, Max-Change: 0.00011Iteration: 14, Log-Lik: -55387.062, Max-Change: 0.00008</span>
 <span class="r-in"><span></span></span>
