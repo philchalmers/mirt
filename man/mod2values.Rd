@@ -15,14 +15,23 @@ the model parameters into the design data frame of starting values and other par
 characteristics (similar to using the \code{pars = 'values'} for obtaining starting values).
 }
 \examples{
+
 \dontrun{
 dat <- expand.table(LSAT7)
-mod <- mirt(dat, 1)
+mod <- mirt(dat, "F=1-5
+                  CONSTRAIN=(1-5, a1)")
 values <- mod2values(mod)
 values
 
-#use the converted values as starting values in a new model, and reduce TOL
+# use the converted values as starting values in a new model, and reduce TOL
 mod2 <- mirt(dat, 1, pars = values, TOL=1e-5)
+
+# supports differing itemtypes on second model
+sv <- mirt(Science, itemtype=c('graded', rep('gpcm', 3)), pars='values')
+mod3 <- mirt(Science, pars = sv)  # itemtype omitted
+coef(mod3, simplify=TRUE)$items
+extract.mirt(mod3, 'itemtype')
+
 
 }
 }

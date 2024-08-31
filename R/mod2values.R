@@ -17,6 +17,7 @@
 #' @export mod2values
 #' @seealso \code{\link{extract.mirt}}
 #' @examples
+#'
 #' \dontrun{
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, "F=1-5
@@ -24,8 +25,15 @@
 #' values <- mod2values(mod)
 #' values
 #'
-#' #use the converted values as starting values in a new model, and reduce TOL
+#' # use the converted values as starting values in a new model, and reduce TOL
 #' mod2 <- mirt(dat, 1, pars = values, TOL=1e-5)
+#'
+#' # supports differing itemtypes on second model
+#' sv <- mirt(Science, itemtype=c('graded', rep('gpcm', 3)), pars='values')
+#' mod3 <- mirt(Science, pars = sv)  # itemtype omitted
+#' coef(mod3, simplify=TRUE)$items
+#' extract.mirt(mod3, 'itemtype')
+#'
 #'
 #' }
 mod2values <- function(x){
@@ -132,5 +140,7 @@ mod2values <- function(x){
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum,
                       value=par, lbound=lbound, ubound=ubound, est=est, const=constrain, nconst=nconstrain,
                       prior.type=prior.type, prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
+    ret <- as.mirt_df(ret)
+    attr(ret, 'itemtype') <- extract.mirt(x, 'itemtype')
     ret
 }

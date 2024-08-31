@@ -11,6 +11,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     dots <- list(...)
     if(!is.null(itemtype))
         itemtype <- ifelse(itemtype == 'grsm', 'grsmIRT', itemtype)
+    if(!is.null(pars))
+        if(is(pars, 'data.frame'))
+            itemtype <- attr(pars, 'itemtype')
     if(missing(data)) missingMsg('data')
     if(length(unique(colnames(data))) != ncol(data))
         stop('items must have unique names in data input', call.=FALSE)
@@ -409,7 +412,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             SUPPLIED_STARTS <- TRUE
             PrepList <- UpdatePrepList(PrepList, pars, random=mixed.design$random,
                                        clist=constrain, nclist=opts$technical$nconstrain,
-                                       lrPars=lrPars, lr.random=latent.regression$lr.random, MG = TRUE)
+                                       itemtype=itemtype, lrPars=lrPars, lr.random=latent.regression$lr.random, MG = TRUE)
             constrain <- rebuild_clist(pars$parnum, pars$const)
             opts$technical$nconstrain <- rebuild_clist(pars$parnum, pars$nconst)
             mixed.design$random <- attr(PrepList, 'random')
@@ -498,7 +501,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             PrepList[[g]]$pars <- pars[[g]]
         return(ReturnPars(PrepList, PrepList[[1L]]$itemnames, lr.random=latent.regression$lr.random,
                           random=mixed.design$random, lrPars=lrPars, clist=constrain,
-                          nclist=opts$technical$nconstrain, MG = TRUE))
+                          nclist=opts$technical$nconstrain, itemtype=itemtype, MG = TRUE))
     }
     startlongpars <- c()
     if(opts$NULL.MODEL){

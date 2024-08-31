@@ -1112,7 +1112,7 @@ resetPriorConstrain <- function(pars, constrain, nconstrain){
 }
 
 ReturnPars <- function(PrepList, itemnames, random, lrPars, clist, nclist,
-                       lr.random = NULL, MG = FALSE){
+                       itemtype, lr.random = NULL, MG = FALSE){
     parnum <- par <- est <- item <- parname <- gnames <- class <-
         lbound <- ubound <- prior.type <- prior_1 <- prior_2 <- c()
     if(!MG) PrepList <- list(full=PrepList)
@@ -1206,13 +1206,15 @@ ReturnPars <- function(PrepList, itemnames, random, lrPars, clist, nclist,
     ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum,
                       value=par, lbound=lbound, ubound=ubound, est=est, const=constrain, nconst=nconstrain,
                       prior.type=prior.type, prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
+    ret <- as.mirt_df(ret)
+    attr(ret, 'itemtype') <- itemtype
     ret
 }
 
 UpdatePrepList <- function(PrepList, pars, random, lr.random, clist, nclist,
-                           lrPars = list(), MG = FALSE){
+                           itemtype, lrPars = list(), MG = FALSE){
     currentDesign <- ReturnPars(PrepList, PrepList[[1L]]$itemnames, random=random,
-                                clist=clist, nclist=nclist,
+                                clist=clist, nclist=nclist, itemtype=itemtype,
                                 lrPars=lrPars, lr.random=lr.random, MG = TRUE)
     if(nrow(currentDesign) != nrow(pars))
         stop('Rows in supplied and starting value data.frame objects do not match. Were the
