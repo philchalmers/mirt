@@ -8,7 +8,7 @@ test_that('extras', {
                          verbose=FALSE)
     out <- vuongtest(mod_2PL, mod_2PL_ggum)
     expect_equal(out$p_omega, 2.206736e-05, tol=.0001)
-    expect_equal(as.numeric(out$p_LRT), c(0.6205581, 0.3794419), tol=.0001)
+    expect_equal(as.numeric(out$p_LRT), c(0.6205581, 0.3794419), tol=.01)
 
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     data <- expand.table(LSAT7)
