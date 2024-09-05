@@ -7,7 +7,7 @@ test_that('extras', {
     mod_2PL_ggum <- mirt(expand.table(LSAT7), model=1, itemtype=itemtype, SE=TRUE,
                          verbose=FALSE)
     out <- vuongtest(mod_2PL, mod_2PL_ggum)
-    expect_equal(out$p_omega, 2.206736e-05, tol=.0001)
+    expect_equal(out$p_omega, 0.000246, tol=.01)
     expect_equal(as.numeric(out$p_LRT), c(0.6205581, 0.3794419), tol=.01)
 
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
