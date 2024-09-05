@@ -146,7 +146,9 @@ setMethod(
                 newmod@Data <- list(data=rp, tabdata=large$tabdata2, K=object@Data$K[pick],
                                     tabdatalong=large$tabdata, Freq=large$Freq, ngroups=1L,
                                     covdata=covdata, mins=rep(0L, ncol(response.pattern))[pick])
-                newmod@Internals$CUSTOM.IND <- object@Internals$CUSTOM.IND[pick]
+                if(length(object@Internals$CUSTOM.IND))
+                    newmod@Internals$CUSTOM.IND <- object@Internals$CUSTOM.IND[
+                        pick %in% object@Internals$CUSTOM.IND]
                 if(!is.null(covdata)){
                     newmod@Data$fulldata <- list(large$tabdata)
                     lrPars <- newmod@ParObjects$lrPars
