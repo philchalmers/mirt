@@ -96,7 +96,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
   ## check class
     epars <- mod2values(x)
     was_discrete <- FALSE
-  if(class(x) == 'DiscreteClass'){
+  if(inherits(x, 'DiscreteClass')){
       was_discrete <- TRUE
       class(x) <- "SingleGroupClass"
   }
