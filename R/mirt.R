@@ -317,8 +317,10 @@
 #'   For exploratory IRT models, a single numeric value indicating the number
 #'   of factors to extract is also supported. Default is 1, indicating that a unidimensional
 #'   model will be fit unless otherwise specified
-#' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
-#'   which will be recycled for each item. The \code{NULL} default assumes that the items follow a graded or
+#' @param itemtype type of items to be modeled, declared as either a) a single value to be
+#'   recycled for each item, b) a vector for each respective item, or c) if applicable,
+#'   a matrix with columns equal to the number of items and rows equal to the number of
+#'   latent classes. The \code{NULL} default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following:
 #'   \itemize{
 #'     \item \code{'Rasch'} - Rasch/partial credit model by constraining slopes to 1 and freely estimating
