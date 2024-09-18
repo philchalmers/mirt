@@ -134,8 +134,10 @@ model will be fit unless otherwise specified</p></dd>
 
 
 <dt id="arg-itemtype">itemtype<a class="anchor" aria-label="anchor" href="#arg-itemtype"></a></dt>
-<dd><p>type of items to be modeled, declared as a vector for each item or a single value
-  which will be recycled for each item. The <code>NULL</code> default assumes that the items follow a graded or
+<dd><p>type of items to be modeled, declared as either a) a single value to be
+  recycled for each item, b) a vector for each respective item, or c) if applicable,
+  a matrix with columns equal to the number of items and rows equal to the number of
+  latent classes. The <code>NULL</code> default assumes that the items follow a graded or
   2PL structure, however they may be changed to the following:</p><ul><li><p><code>'Rasch'</code> - Rasch/partial credit model by constraining slopes to 1 and freely estimating
       the variance parameters (alternatively, can be specified by applying equality constraints to the
       slope parameters in <code>'gpcm'</code>; Rasch, 1960)</p></li>
@@ -1593,7 +1595,7 @@ IL: Scientific Software International.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
