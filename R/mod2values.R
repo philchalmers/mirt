@@ -27,6 +27,11 @@
 #'
 #' # use the converted values as starting values in a new model, and reduce TOL
 #' mod2 <- mirt(dat, 1, pars = values, TOL=1e-5)
+#' coef(mod2, simplify=TRUE)
+#'
+#' # use parameters on different dataset
+#' mod3 <- mirt(expand.table(LSAT6), pars=values)
+#' coef(mod3, simplify=TRUE)
 #'
 #' # supports differing itemtypes on second model
 #' sv <- mirt(Science, itemtype=c('graded', rep('gpcm', 3)), pars='values')

@@ -1219,8 +1219,8 @@ UpdatePrepList <- function(PrepList, pars, random, lr.random, clist, nclist,
     if(nrow(currentDesign) != nrow(pars))
         stop('Rows in supplied and starting value data.frame objects do not match. Were the
              data or itemtype input arguments modified?', call.=FALSE)
-    if(!all(as.matrix(currentDesign[,c('group', 'item', 'class', 'name', 'parnum')]) ==
-                as.matrix(pars[,c('group', 'item', 'class', 'name', 'parnum')])))
+    if(!all(as.matrix(currentDesign[,c('group', 'class', 'name', 'parnum')]) ==
+                as.matrix(pars[,c('group', 'class', 'name', 'parnum')])))
         stop('Critical internal parameter labels do not match those returned from pars = \'values\'',
              call.=FALSE)
     if(!all(sapply(currentDesign, class) == sapply(pars, class)))
