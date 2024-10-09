@@ -273,11 +273,11 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                 ),
 
                 shiny::conditionalPanel(condition = "input.method != 'EAPsum'",
-                                        shiny::numericInput('prevec', 'Pretest response vector (e.g., 1011 ...):',
-                                                            value=NA),
+                                        shiny::textInput('prevec', 'Pretest response vector (e.g., 1011 ...):',
+                                                            value=""),
                                         shiny::hr(),
-                                        shiny::numericInput('postvec', 'Posttest response vector (e.g., 1111 ...):',
-                                                            value=NA)
+                                        shiny::textInput('postvec', 'Posttest response vector (e.g., 1111 ...):',
+                                                            value="")
                 )
             ),
 
@@ -358,7 +358,7 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
         output$rci_full <- shiny::renderTable({
             sd <- scores()
             rci <- if(all(!is.na(sd$vecs))){
-                vs <- as.character(sd$vecs)
+                vs <- sd$vecs
                 if(all(nchar(vs) == nitems) && input$method != 'EAPsum'){
                     rV.pre <- rV.post <- integer(nitems)
                     for(i in 1:nitems){
@@ -368,13 +368,13 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                     tmp <- RCI(mod_pre=mod_pre, mod_post=mod_post,
                                      predat=rV.pre, postdat=rV.post, method=input$method,
                                      Fisher = input$fisher)
-                    colnames(tmp) <- c('Theta[pre]', 'Theta[post]', 'Converged',
+                    colnames(tmp) <- c('Theta [pre]', 'Theta [post]', 'Converged',
                                        'Change', 'SEM', 'RCI', 'p(>|RCI|)')
                     if(!identical(mod_pre, mod_post) && input$method %in% c('EAP', 'MAP')){
                         tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
                                           predat=rV.pre, postdat=rV.post, method=input$method,
                                           Fisher = input$fisher)
-                        colnames(tmp2) <- c('Theta[pre]', 'Theta[post]', 'Converged',
+                        colnames(tmp2) <- c('Theta [pre]', 'Theta [post]', 'Converged',
                                             'Change', 'SEM', 'RCI', 'p(>|RCI|)')
                         tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
                                           check.names = FALSE)
