@@ -1,3 +1,7 @@
+# Changes in mirt 1.43
+
+- `RCI()` gains a `shiny` logical create an interactive scoring interface
+
 # Changes in mirt 1.42
 
 - The `model` argument in `bfactor()` can now be specified using the `mirt.model()`

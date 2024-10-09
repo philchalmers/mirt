@@ -26,7 +26,10 @@
 #' @param Fisher logical; use the Fisher/expected information function to compute the
 #'   SE terms? If \code{FALSE} the SE information will be extracted from the select
 #'   \code{\link{fscores}} method (default). Only applicable for unidimensional models
-#' @param verbose logical; include extra information in the printout?
+#' @param shiny logical; launch an interactive shiny applications for real-time scoring
+#'   of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)
+#'   \code{mod_post} inputs
+#' @param main main label to use when \code{shiny=TRUE}
 #'
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
@@ -101,6 +104,23 @@
 #' RCI(predat = dat_pre, postdat = dat_post,
 #'    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
 #'
+#' ######
+#'
+#' # interactive shiny interfaces for live scoring
+#' mod_pre <- mirt(Science)
+#'
+#' # (optional) setup mod_post to have medium effect size change (d = 0.5)
+#' sv <- mod2values(mod_pre)
+#' sv$value[sv$name == 'MEAN_1'] <- 0.5
+#' mod_post <- mirt(Science, pars=sv, TOL=NA)
+#'
+#' # only use pre-test model for scoring
+#' RCI(mod_pre=mod_pre, shiny=TRUE)
+#'
+#' # use both pre-test and post-test models for including empirical priors
+#' RCI(mod_pre=mod_pre, mod_post=mod_post, shiny=TRUE,
+#'     main='Perceptions of Science and Technology')
+#'
 #'
 #' ############################
 #' # Example where individuals take completely different item set pre-post
@@ -125,7 +145,12 @@
 RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
                 SEM.pre = NULL, SEM.post = NULL,
-                Fisher = FALSE, ...){
+                Fisher = FALSE,
+                shiny = FALSE, main = 'Test Scores', ...){
+
+    if(shiny)
+        return(RCI_shiny(mod_pre=mod_pre, mod_post=mod_post, main=main))
+
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
     nfact <- 1L
@@ -203,4 +228,166 @@ RCI <- function(mod_pre, predat, postdat,
     }
     ret <- as.mirt_df(ret)
     ret
+}
+
+
+RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
+
+    fillVector <- function(TS, item.max, adj){
+        vec <- integer(length(item.max))
+        if(is.na(TS)) return(vec)
+        TS <- TS - adj
+        cs <- cumsum(item.max)
+        pick <- TS >= cs
+        vec[pick] <- item.max[pick]
+        remainder <- TS - sum(vec)
+        vec[min(which(!pick))] <- remainder
+        stopifnot(sum(vec) == TS)
+        vec
+    }
+
+    ui <- shiny::fluidPage(
+
+        # Give the page a title
+        shiny::titlePanel(main),
+
+        # Generate a row with a sidebar
+        shiny::sidebarLayout(
+
+            shiny::sidebarPanel(
+
+                shiny::p('For IRT-based Reliable Change Index (RCI) please provide pretest and posttest information.'),
+
+                shiny::selectInput(inputId = "method", 'Estimation criteria',
+                            choices = c('EAP for sum-scores'='EAPsum', 'EAP'='EAP',
+                                        'MAP'='MAP', 'WML'='WLE', 'ML'='ML')),
+
+                shiny::conditionalPanel(condition = "input.method != 'EAPsum'",
+                    shiny::checkboxInput(inputId = "fisher", 'Fisher Information for SE?', value = FALSE)
+                ),
+
+                shiny::conditionalPanel(condition = "input.method == 'EAPsum'",
+                                 shiny::numericInput('pretest', 'Pretest sum-score:', value=NA),
+                                 shiny::hr(),
+                                 shiny::numericInput('posttest', 'Posttest sum-score:', value=NA)
+                ),
+
+                shiny::conditionalPanel(condition = "input.method != 'EAPsum'",
+                                        shiny::numericInput('prevec', 'Pretest response vector (e.g., 1011 ...):',
+                                                            value=NA),
+                                        shiny::hr(),
+                                        shiny::numericInput('postvec', 'Posttest response vector (e.g., 1111 ...):',
+                                                            value=NA)
+                )
+            ),
+
+            # Create a spot for the barplot
+            shiny::mainPanel(
+                shiny::titlePanel("RCI Output Information"),
+                shiny::tableOutput("rci"),
+                shiny::tableOutput("rci_full"),
+                shiny::hr(),
+                shiny::tableOutput("fstab")
+            )
+
+        )
+    )
+
+
+    # Server logic
+    server <- function(input, output) {
+
+        # basic sum-score information from 'mod' object
+        if(is.null(mod_post)) mod_post <- mod_pre
+
+        fs.pre <- fscores(mod_pre, full.scores=FALSE, method='EAPsum', verbose=FALSE)
+        fs.post <- fscores(mod_post, full.scores=FALSE, method='EAPsum', verbose=FALSE)
+        tab <- data.frame(fs.pre[,1:3], fs.post[,2:3])
+        colnames(tab) <- c('Sum Score', 'Theta [pretest]', 'SE(Theta) [pretest]',
+                           'Theta [posttest]', 'SE(Theta) [posttest]')
+        if(identical(mod_pre, mod_post)){
+            tab <- tab[,1:3]
+            colnames(tab) <- c('Sum Score', 'Theta', 'SE(Theta)')
+        }
+
+        scores <- shiny::reactive({
+            list(TS=c(input$pretest, input$posttest),
+                 vecs=c(input$prevec, input$postvec))
+        })
+
+
+
+        output$fstab <- shiny::renderTable({
+            sd <- scores()
+            sd_supplied <- !any(is.na(sd$TS))
+            if(sd_supplied)
+                tab <- tab[tab$`Sum Score` %in% sd$TS, ]
+            if(input$method != 'EAPsum') tab <- data.frame()
+            tab
+        })
+
+        item.max <- extract.mirt(mod_pre, 'K')
+        mins <- extract.mirt(mod_pre, 'mins')
+        nitems <- length(mins)
+        adj <- sum(mins)
+        output$rci <- shiny::renderTable({
+            sd <- scores()
+            sd_supplied <- !any(is.na(sd$TS))
+            rci <- if(sd_supplied && input$method == 'EAPsum'){
+                rV.pre <- fillVector(sd$TS[1], item.max, adj)
+                rV.post <- fillVector(sd$TS[2], item.max, adj)
+                tmp <- RCI(mod_pre=mod_pre, mod_post=mod_post,
+                                 predat=rV.pre + mins, postdat=rV.post + mins,
+                                 method='EAPsum')
+                tmp <- tmp[,!(colnames(tmp) %in% c('pre.score', 'post.score', 'converged'))]
+                colnames(tmp) <- c('Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                if(!identical(mod_pre, mod_post)){
+                    tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
+                                      predat=rV.pre + mins, postdat=rV.post + mins,
+                                      method='EAPsum')
+                    tmp2 <- tmp2[,!(colnames(tmp2) %in% c('pre.score', 'post.score', 'converged'))]
+                    colnames(tmp2) <- c('Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                    tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
+                                      check.names = FALSE)
+                }
+                tmp
+            } else data.frame()
+            rci
+        })
+
+        output$rci_full <- shiny::renderTable({
+            sd <- scores()
+            rci <- if(all(!is.na(sd$vecs))){
+                vs <- as.character(sd$vecs)
+                if(all(nchar(vs) == nitems) && input$method != 'EAPsum'){
+                    rV.pre <- rV.post <- integer(nitems)
+                    for(i in 1:nitems){
+                        rV.pre[i] <- as.integer(substr(vs[1], i, i))
+                        rV.post[i] <- as.integer(substr(vs[2], i, i))
+                    }
+                    tmp <- RCI(mod_pre=mod_pre, mod_post=mod_post,
+                                     predat=rV.pre, postdat=rV.post, method=input$method,
+                                     Fisher = input$fisher)
+                    colnames(tmp) <- c('Theta[pre]', 'Theta[post]', 'Converged',
+                                       'Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                    if(!identical(mod_pre, mod_post) && input$method %in% c('EAP', 'MAP')){
+                        tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
+                                          predat=rV.pre, postdat=rV.post, method=input$method,
+                                          Fisher = input$fisher)
+                        colnames(tmp2) <- c('Theta[pre]', 'Theta[post]', 'Converged',
+                                            'Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                        tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
+                                          check.names = FALSE)
+                    }
+                    if(input$method == 'EAP')
+                        tmp <- tmp[, colnames(tmp) != 'Converged']
+                    tmp
+                }
+            } else data.frame()
+            rci
+        })
+    }
+
+    # Complete app with UI and server components
+    shiny::shinyApp(ui, server)
 }

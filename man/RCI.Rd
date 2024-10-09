@@ -13,6 +13,8 @@ RCI(
   SEM.pre = NULL,
   SEM.post = NULL,
   Fisher = FALSE,
+  shiny = FALSE,
+  main = "Test Scores",
   ...
 )
 }
@@ -44,9 +46,13 @@ Using this will create a pooled version of the SEM; otherwise, \code{SEM.post = 
 SE terms? If \code{FALSE} the SE information will be extracted from the select
 \code{\link{fscores}} method (default). Only applicable for unidimensional models}
 
-\item{...}{additional arguments passed to \code{\link{fscores}}}
+\item{shiny}{logical; launch an interactive shiny applications for real-time scoring
+of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)
+\code{mod_post} inputs}
 
-\item{verbose}{logical; include extra information in the printout?}
+\item{main}{main label to use when \code{shiny=TRUE}}
+
+\item{...}{additional arguments passed to \code{\link{fscores}}}
 }
 \description{
 Computes an IRT version of the "reliable change index" (RCI) proposed by
@@ -111,6 +117,23 @@ SEM.alpha.post <- istats.post$SEM.alpha
 
 RCI(predat = dat_pre, postdat = dat_post,
    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+
+######
+
+# interactive shiny interfaces for live scoring
+mod_pre <- mirt(Science)
+
+# (optional) setup mod_post to have medium effect size change (d = 0.5)
+sv <- mod2values(mod_pre)
+sv$value[sv$name == 'MEAN_1'] <- 0.5
+mod_post <- mirt(Science, pars=sv, TOL=NA)
+
+# only use pre-test model for scoring
+RCI(mod_pre=mod_pre, shiny=TRUE)
+
+# use both pre-test and post-test models for including empirical priors
+RCI(mod_pre=mod_pre, mod_post=mod_post, shiny=TRUE,
+    main='Perceptions of Science and Technology')
 
 
 ############################
