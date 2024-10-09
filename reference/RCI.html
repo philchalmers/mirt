@@ -17,7 +17,7 @@ as conditional standard error of measurement information.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,8 @@ as conditional standard error of measurement information.</p>
 <span>  SEM.pre <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  SEM.post <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  Fisher <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  shiny <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"Test Scores"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -118,12 +120,18 @@ SE terms? If <code>FALSE</code> the SE information will be extracted from the se
 <code><a href="fscores.html">fscores</a></code> method (default). Only applicable for unidimensional models</p></dd>
 
 
+<dt id="arg-shiny">shiny<a class="anchor" aria-label="anchor" href="#arg-shiny"></a></dt>
+<dd><p>logical; launch an interactive shiny applications for real-time scoring
+of supplied total-scores or response vectors? Only requires <code>mod_pre</code> and (optional)
+<code>mod_post</code> inputs</p></dd>
+
+
+<dt id="arg-main">main<a class="anchor" aria-label="anchor" href="#arg-main"></a></dt>
+<dd><p>main label to use when <code>shiny=TRUE</code></p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>additional arguments passed to <code><a href="fscores.html">fscores</a></code></p></dd>
-
-
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>logical; include extra information in the printout?</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -199,6 +207,23 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>,</span></span>
 <span class="r-in"><span>   SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span>, SEM.post<span class="op">=</span><span class="va">SEM.alpha.post</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">######</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># interactive shiny interfaces for live scoring</span></span></span>
+<span class="r-in"><span><span class="va">mod_pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># (optional) setup mod_post to have medium effect size change (d = 0.5)</span></span></span>
+<span class="r-in"><span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="mod2values.html">mod2values</a></span><span class="op">(</span><span class="va">mod_pre</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sv</span><span class="op">$</span><span class="va">value</span><span class="op">[</span><span class="va">sv</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">'MEAN_1'</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.5</span></span></span>
+<span class="r-in"><span><span class="va">mod_post</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, pars<span class="op">=</span><span class="va">sv</span>, TOL<span class="op">=</span><span class="cn">NA</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># only use pre-test model for scoring</span></span></span>
+<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>mod_pre<span class="op">=</span><span class="va">mod_pre</span>, shiny<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># use both pre-test and post-test models for including empirical priors</span></span></span>
+<span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>mod_pre<span class="op">=</span><span class="va">mod_pre</span>, mod_post<span class="op">=</span><span class="va">mod_post</span>, shiny<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    main<span class="op">=</span><span class="st">'Perceptions of Science and Technology'</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">############################</span></span></span>
