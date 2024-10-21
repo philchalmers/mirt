@@ -287,7 +287,8 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                 shiny::tableOutput("rci"),
                 shiny::tableOutput("rci_full"),
                 shiny::hr(),
-                shiny::tableOutput("fstab")
+                shiny::tableOutput("fstab"),
+                shiny::plotOutput("rci_plot")
             )
 
         )
@@ -353,6 +354,40 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                 tmp
             } else data.frame()
             rci
+        })
+
+        output$rci_plot <- shiny::renderPlot({
+            sd <- scores()
+            sd_supplied <- !any(is.na(sd$TS))
+            if(sd_supplied && input$method == 'EAPsum'){
+                rV.pre <- fillVector(sd$TS[1], item.max, adj)
+                rng <- adj:sum(item.max - 1 + mins)
+                if(sd$TS[1] < min(rng) || sd$TS[1] > max(rng))
+                    stop('Pretest score is outside possible test range. Please fix')
+                if(sd$TS[2] < min(rng) || sd$TS[2] > max(rng))
+                    stop('Posttest score is outside possible test range. Please fix')
+                collect <- vector('list', length(rng))
+                for(i in rng){
+                    rV.post <- fillVector(i, item.max, adj)
+                    collect[[i-adj+1]] <- RCI(mod_pre=mod_pre, mod_post=mod_post,
+                                        predat=rV.pre + mins, postdat=rV.post + mins,
+                                        method='EAPsum')
+                }
+                post.scores <- sapply(collect, \(x) as.numeric(x['post.score']))
+                pre.scores <- as.numeric(collect[[1]]['pre.score'])
+                SEs <- sapply(collect, \(x) as.numeric(x['SEM']))
+                diff <- post.scores - pre.scores
+                plot(diff ~ rng, pch=16, ylab=expression(theta[post]-theta[pre]),
+                     las=1, ylim=c(diff[1]-SEs[1],
+                                   diff[length(diff)] + SEs[length(diff)]),
+                     main=sprintf("SEM estimates using fixed prestest score"),
+                     xlab = 'Sum Score')
+                polygon(c(rng, rev(rng)), c(diff - SEs, rev(diff+SEs)),
+                        col=adjustcolor('grey', alpha.f=.5))
+                abline(h=0, lty=2)
+                points(sd$TS[1], diff[sd$TS[1]-adj+1], cex=2, col='blue', pch=16)
+                points(sd$TS[2], diff[sd$TS[2]-adj+1], cex=2, col='red', pch=16)
+            } #else plot.new()
         })
 
         output$rci_full <- shiny::renderTable({
