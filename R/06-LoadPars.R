@@ -578,6 +578,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=2L,
                              itemclass=7L,
+                             cpow=as.integer(freepars[[i]][1:nfact] &
+                                                 startvalues[[i]][1:nfact] != 0),
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              prior.type=rep(0L, length(startvalues[[i]])),

@@ -322,7 +322,8 @@ void P_nested(vector<double> &P, const vector<double> &par,
 }
 
 void P_comp(vector<double> &P, const vector<double> &par,
-    const NumericMatrix &Theta, const int &N, const int &nfact)
+    const NumericMatrix &Theta, const int &N, const int &nfact,
+    const IntegerVector &cpow)
 {
     vector<double> a(nfact), d(nfact);
     for(int j = 0; j < nfact; ++j){
@@ -692,16 +693,17 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
     END_RCPP
 }
 
-RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta)
+RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcpow)
 {
     BEGIN_RCPP
 
     const vector<double> par = as< vector<double> >(Rpar);
+    const IntegerVector cpow(Rcpow);
     const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     vector<double> P(N*2);
-    P_comp(P, par, Theta, N, nfact);
+    P_comp(P, par, Theta, N, nfact, cpow);
     NumericMatrix ret = vec2mat(P, N, 2);
     return(ret);
 
@@ -783,6 +785,9 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     int correct = 0;
     int has_mat = 0;
     int k = 1;
+    IntegerVector cpow;
+    if(itemclass == 7)
+        cpow = as<IntegerVector>(item.slot("cpow"));
     if(itemclass == 8)
         correct = as<int>(item.slot("correctcat"));
     if(itemclass == 12)
@@ -838,7 +843,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_gpcmIRT(P, par, theta, ot, N, nfact2, ncat);
             break;
         case 7 :
-            P_comp(P, par, theta, N, nfact2);
+            P_comp(P, par, theta, N, nfact2, cpow);
             break;
         case 8 :
             P_nested(P, par, theta, N, nfact2, ncat, correct);

@@ -956,7 +956,8 @@ setMethod(
 
 # ----------------------------------------------------------------
 
-setClass("partcomp", contains = 'AllItemsClass')
+setClass("partcomp", contains = 'AllItemsClass',
+         representation = representation(cpow='integer'))
 
 setMethod(
     f = "print",
@@ -1010,20 +1011,21 @@ setMethod(
     definition = function(x){
         x@par[seq_len(x@nfact)] <- 0
         x@est[seq_len(x@nfact)] <- FALSE
+        x@cpow[seq_len(x@nfact)] <- c(1, numeric(x@nfact - 1))
         x
     }
 )
 
-P.comp <- function(par, Theta, ot = 0)
+P.comp <- function(par, Theta, cpow, ot = 0)
 {
-    return(.Call('partcompTraceLinePts', par, Theta))
+    return(.Call('partcompTraceLinePts', par, Theta, cpow))
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        return(P.comp(x@par, Theta=Theta))
+        return(P.comp(x@par, Theta=Theta, cpow=x@cpow))
     }
 )
 
@@ -1037,13 +1039,13 @@ setMethod(
         {
             nfact <- length(lambda)
             pars <- c(zeta,lambda,g)
-            pgrad <- function(pars, r, thetas){
+            pgrad <- function(pars, r, thetas, cpow){
                 nfact <- ncol(thetas)
                 d <- pars[seq_len(nfact)]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,999), thetas)[,2L]
-                Pstar <- P.comp(c(a,d,-999,999),thetas)[,2L]
+                P <- P.comp(c(a,d,c,999), thetas, cpow)[,2L]
+                Pstar <- P.comp(c(a,d,-999,999),thetas,cpow)[,2L]
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 c <- antilogit(c)
@@ -1059,13 +1061,13 @@ setMethod(
                 }
                 return(c(dd,da,dc))
             }
-            phess <- function(pars, r, thetas){
+            phess <- function(pars, r, thetas, cpow){
                 nfact <- ncol(thetas)
                 d <- pars[seq_len(nfact)]
                 a <- pars[(nfact+1L):(length(pars)-1L)]
                 c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,999), thetas)[,2L]
-                Pstar <- P.comp(c(a,d,-999,999),thetas)[,2L]
+                P <- P.comp(c(a,d,c,999), thetas, cpow)[,2L]
+                Pstar <- P.comp(c(a,d,-999,999),thetas, cpow)[,2L]
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 g <- c <- antilogit(c)
@@ -1152,8 +1154,8 @@ setMethod(
                 return(hess)
             }
             #old pars in the form d, a, g
-            g <- pgrad(pars, r, Thetas)
-            if(estHess) h <- phess(pars, r, Thetas)
+            g <- pgrad(pars, r, Thetas, x@cpow)
+            if(estHess) h <- phess(pars, r, Thetas, x@cpow)
             else h <- matrix(0, length(g), length(g))
 
             #translate into current version
@@ -1199,7 +1201,7 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)
-        Pstar <- P.comp(c(a, d, -999, 999), Theta)[,2L]
+        Pstar <- P.comp(c(a, d, -999, 999), Theta, cpow)[,2L]
         g <- antilogit(g)
         u <- antilogit(u)
         grad <- hess <- vector('list', 2L)
