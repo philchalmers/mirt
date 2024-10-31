@@ -1,5 +1,9 @@
 # Changes in mirt 1.43
 
+- Partially-compensatory family of `itemtypes` now behave more consistently
+  when loading structures specified where trace lines products are only 
+  computed for dimensions with non-zero slopes
+
 - `RCI()` gains a `shiny` logical create an interactive scoring interface
 
 # Changes in mirt 1.42

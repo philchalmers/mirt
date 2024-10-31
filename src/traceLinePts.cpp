@@ -335,7 +335,7 @@ void P_comp(vector<double> &P, const vector<double> &par,
     for(int i = 0; i < N; ++i) P[i+N] = 1.0;
     for(int j = 0; j < nfact; ++j)
         for(int i = 0; i < N; ++i)
-            P[i+N] = P[i+N] * (1.0 / (1.0 + exp(-(a[j] * Theta(i,j) + d[j]))));
+            P[i+N] = P[i+N] * pow(1.0 / (1.0 + exp(-(a[j] * Theta(i,j) + d[j]))), cpow(j));
     for(int i = 0; i < N; ++i){
         P[i+N] = g + (1.0 - g) * P[i+N];
         if(P[i+N] < 1e-50) P[i+N] = 1e-50;

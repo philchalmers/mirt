@@ -571,6 +571,10 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         }
 
         if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+            cpow <- as.integer(freepars[[i]][1:nfact] &
+                                   startvalues[[i]][1:nfact] != 0)
+            startvalues[[i]][(nfact+1):(nfact*2)] <- cpow *
+                startvalues[[i]][(nfact+1):(nfact*2)]
             pars[[i]] <- new('partcomp',
                              par=startvalues[[i]],
                              parnames=names(freepars[[i]]),
@@ -578,8 +582,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfact=nfact,
                              ncat=2L,
                              itemclass=7L,
-                             cpow=as.integer(freepars[[i]][1:nfact] &
-                                                 startvalues[[i]][1:nfact] != 0),
+                             cpow=cpow,
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              prior.type=rep(0L, length(startvalues[[i]])),
