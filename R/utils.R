@@ -2836,3 +2836,8 @@ mySapply <- function(X, FUN, progress = FALSE, ...){
         return(t(sapply(X=X, FUN=FUN, ...)))
     }
 }
+
+printf <- function(...) {
+  cat(sprintf(...))
+  flush.console() # print immediately
+}
