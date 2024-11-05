@@ -1,6 +1,7 @@
 LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, J, K, nfact,
                      parprior, parnumber, estLambdas, BFACTOR = FALSE, mixed.design, customItems,
-                     key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData, item.Q)
+                     key, gpcm_mats, spline_args, itemnames, monopoly.k, customItemsData, item.Q,
+                     factorNames)
 {
     customItemNames <- unique(names(customItems))
     if(is.null(customItemNames)) customItemNames <- 'UsElEsSiNtErNaLNaMe'
@@ -183,12 +184,16 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             fp[c(nfact + K[i] + 1L)] <- FALSE
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('ak', 0L:(K[i]-1L), sep=''),
                             paste('d', 0L:(K[i]-1L), sep=''))
-        } else if(any(itemtype[i] == c('PC2PL','PC3PL'))){
+        } else if(any(itemtype[i] == c('PC1PL', 'PC2PL','PC3PL'))){
             if(K[i] != 2L)
                 stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             val <- c(lambdas[i,], rep(1, nfact), guess[i], 999)
             fp <- c(estLambdas[i, ], estLambdas[i, ], FALSE, FALSE)
             if(itemtype[i] == 'PC3PL') fp[length(fp) - 1L] <- TRUE
+            if(itemtype[i] == 'PC1PL'){
+                val[1:nfact * estLambdas[i, ]] <- 1
+                fp[1:nfact] <- FALSE
+            }
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:nfact, sep=''), 'g','u')
         } else if(itemtype[i] == 'ideal'){
             if(K[i] != 2L)
@@ -241,15 +246,22 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             startvalues[[i]] <- c(betas, startvalues[[i]])
         }
         valid.ints <- ifelse(any(K > 2), '', 'd')
+        if(mixed.design$from != 'mixedmirt') # for partcomp
+            valid.ints <- c(valid.ints, paste0('d', 1:(nfact-nfixedeffects)))
         freepars <- lapply(freepars, function(x, valid){
             x[names(x) %in% valid] <- FALSE
             return(x)}, valid=valid.ints)
         startvalues <- lapply(startvalues, function(x, valid){
             x[names(x) %in% valid] <- 0
             return(x)}, valid=valid.ints)
-        N <- nrow(mixed.design$fixed) / J
-        for(i in seq_len(J))
-            fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), , drop = FALSE]
+        if(mixed.design$from == 'mixedmirt'){
+            N <- nrow(mixed.design$fixed) / J
+            for(i in seq_len(J))
+                fixed.design.list[[i]] <- mixed.design$fixed[1L:N + N*(i-1L), , drop = FALSE]
+        } else { # TODO from mirt(), for now at least
+            for(i in seq_len(J))
+                fixed.design.list[[i]] <- fixed.design[i, , drop = FALSE]
+        }
     }
 
     #load items
@@ -570,11 +582,27 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(any(itemtype[i] == c('PC2PL','PC3PL'))){
-            cpow <- as.integer(freepars[[i]][1:nfact] &
-                                   startvalues[[i]][1:nfact] != 0)
-            startvalues[[i]][(nfact+1):(nfact*2)] <- cpow *
-                startvalues[[i]][(nfact+1):(nfact*2)]
+        if(any(itemtype[i] %in% c('PC1PL', 'PC2PL', 'PC3PL'))){
+            pick <- 1:(nfact - nfixedeffects)+nfixedeffects
+            cpow <- as.integer(startvalues[[i]][pick] != 0)
+            startvalues[[i]][pick+length(pick)] <- cpow *
+                startvalues[[i]][pick+length(pick)]
+            fixed.ind <- if(nfixedeffects > 0){ # one longer for last index - 1
+                as.integer(c(sapply(paste0(factorNames, '.'), \(x){
+                           mtch <- grep(x, colnames(fixed.design.list[[i]]))
+                           min(mtch)
+                }), (nfixedeffects+1)))
+            } else integer(0)
+            factor.ind <- as.integer(sort(nfact:(nfixedeffects+1)))
+            if(nfixedeffects > 0){
+                for(j in 1:length(cpow)){
+                    if(cpow[j] != 1){
+                        pick2 <- fixed.ind[j]:(fixed.ind[j+1]-1)
+                        freepars[[i]][pick2] <- FALSE
+                        startvalues[[i]][pick2] <- 0
+                    }
+                }
+            }
             pars[[i]] <- new('partcomp',
                              par=startvalues[[i]],
                              parnames=names(freepars[[i]]),
@@ -584,6 +612,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              itemclass=7L,
                              cpow=cpow,
                              nfixedeffects=nfixedeffects,
+                             fixed.ind=fixed.ind,
+                             factor.ind=factor.ind,
                              any.prior=FALSE,
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],

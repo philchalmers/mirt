@@ -323,19 +323,28 @@ void P_nested(vector<double> &P, const vector<double> &par,
 
 void P_comp(vector<double> &P, const vector<double> &par,
     const NumericMatrix &Theta, const int &N, const int &nfact,
-    const IntegerVector &cpow)
+    const IntegerVector &cpow, const IntegerVector &factor_ind, 
+    const IntegerVector &fixed_ind)
 {
-    vector<double> a(nfact), d(nfact);
-    for(int j = 0; j < nfact; ++j){
-        a[j] = par[j];
-        d[j] = par[j+nfact];
+    const int nfact_star = cpow.length();
+    vector<double> a(nfact_star), d(nfact_star);
+    for(int j = 0; j < nfact_star; ++j){
+        a[j] = par[factor_ind[j] - 1];
+        d[j] = par[factor_ind[j] + nfact_star - 1];
     }
-    const double gtmp = par[nfact*2];
+    const double gtmp = par[nfact + nfact_star];
     const double g = antilogit(&gtmp);
     for(int i = 0; i < N; ++i) P[i+N] = 1.0;
-    for(int j = 0; j < nfact; ++j)
-        for(int i = 0; i < N; ++i)
-            P[i+N] = P[i+N] * pow(1.0 / (1.0 + exp(-(a[j] * Theta(i,j) + d[j]))), cpow(j));
+    for(int j = 0; j < nfact_star; ++j){
+        for(int i = 0; i < N; ++i){
+            double inner = 0;
+            if(nfact != nfact_star && fixed_ind[j] != 0)
+                for(int k = fixed_ind[j] - 1; k < fixed_ind[j+1] - 2; ++k)
+                    inner += par[k] * Theta(i,k);
+            P[i+N] = P[i+N] * pow(1.0 / (1.0 + exp(-(inner + a[j]*Theta(i, factor_ind[j]-1) + d[j]))), 
+                                  cpow(j));
+        }
+    }
     for(int i = 0; i < N; ++i){
         P[i+N] = g + (1.0 - g) * P[i+N];
         if(P[i+N] < 1e-50) P[i+N] = 1e-50;
@@ -693,17 +702,20 @@ RcppExport SEXP nestlogitTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcorrect, SEX
     END_RCPP
 }
 
-RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcpow)
+RcppExport SEXP partcompTraceLinePts(SEXP Rpar, SEXP RTheta, SEXP Rcpow, 
+    SEXP Rfactor_ind, SEXP Rfixed_ind)
 {
     BEGIN_RCPP
 
     const vector<double> par = as< vector<double> >(Rpar);
     const IntegerVector cpow(Rcpow);
+    const IntegerVector factor_ind(Rfactor_ind);
+    const IntegerVector fixed_ind(Rfixed_ind);
     const NumericMatrix Theta(RTheta);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     vector<double> P(N*2);
-    P_comp(P, par, Theta, N, nfact, cpow);
+    P_comp(P, par, Theta, N, nfact, cpow, factor_ind, fixed_ind);
     NumericMatrix ret = vec2mat(P, N, 2);
     return(ret);
 
@@ -786,8 +798,13 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     int has_mat = 0;
     int k = 1;
     IntegerVector cpow;
-    if(itemclass == 7)
+    IntegerVector factor_ind;
+    IntegerVector fixed_ind;
+    if(itemclass == 7){
         cpow = as<IntegerVector>(item.slot("cpow"));
+        factor_ind = as<IntegerVector>(item.slot("factor.ind"));
+        fixed_ind = as<IntegerVector>(item.slot("fixed.ind"));
+    }
     if(itemclass == 8)
         correct = as<int>(item.slot("correctcat"));
     if(itemclass == 12)
@@ -815,8 +832,14 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         NumericMatrix itemFD = item.slot("fixed.design");
         nfact2 = nfact + itemFD.ncol();
         NumericMatrix NewTheta(Theta.nrow(), nfact2);
-        for(int i = 0; i < itemFD.ncol(); ++i)
-            NewTheta(_,i) = itemFD(_,i);
+        if(itemFD.nrow() == 1){
+            for(int j = 0; j < Theta.nrow()-1; ++j)
+                for(int i = 0; i < itemFD.ncol(); ++i)
+                    NewTheta(j,i) = itemFD(0,i);
+        } else {
+            for(int i = 0; i < itemFD.ncol(); ++i)
+                NewTheta(_,i) = itemFD(_,i);
+        }
         for(int i = 0; i < nfact; ++i)
             NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
         theta = NewTheta;
@@ -843,7 +866,7 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
             P_gpcmIRT(P, par, theta, ot, N, nfact2, ncat);
             break;
         case 7 :
-            P_comp(P, par, theta, N, nfact2, cpow);
+            P_comp(P, par, theta, N, nfact2, cpow, factor_ind, fixed_ind);
             break;
         case 8 :
             P_nested(P, par, theta, N, nfact2, ncat, correct);
@@ -882,8 +905,8 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     vector<double> itemtrace(N * (itemloc[J]-1));
     S4 item = pars[0];
     NumericMatrix FD = item.slot("fixed.design");
-    int USEFIXED = 0;
-    if(FD.nrow() > 2) USEFIXED = 1;
+    int USEFIXED = item.slot("nfixedeffects");
+    if(USEFIXED > 0) USEFIXED = 1;
 
     for(int which = 0; which < J; ++which)
         _computeItemTrace(itemtrace, Theta, pars, offterm(_, which), itemloc,

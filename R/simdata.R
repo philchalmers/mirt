@@ -487,12 +487,14 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
                 par <- na.omit(c(a[i, ],d[i,]))
             } else if(itemtype[i] == 'lca'){
                 par <- na.omit(a[i, ])
-            } else {
-                if(itemtype[i] == 'nominal'){
-                    if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
-                        stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
-                }
+            } else if(itemtype[i] == 'nominal'){
+                if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
+                    stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
+            } else if(itemtype[i] == 'partcomp'){
+                par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
+            } else {
+                par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
             }
             obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
             if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
@@ -506,6 +508,11 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	    }
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit', 'ggum')))
             obj@ncat <- K[i]
+        if(itemtype[i] == 'partcomp'){
+            obj@cpow <- as.integer(a[i,] != 0)
+            obj@factor.ind <- as.integer(1:ncol(Theta))
+            obj@fixed.ind <- integer(0)
+        }
         P <- ProbTrace(obj, Theta)
         data[,i] <- respSample(P)
         itemobjects[[i]] <- obj

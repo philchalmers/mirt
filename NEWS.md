@@ -1,5 +1,13 @@
 # Changes in mirt 1.43
 
+- Added `PC1PL` itemtype to more easily specify conjunctive models with
+  slopes fixed to 1 and estimation of the latent variance term, mimicking the 
+  `Rasch` itemtype family
+
+- `mirt()` gains `itemdesign` and `item.formula` arguments to fit fixed 
+  item design characteristics (e.g. LLTMs; Fischer, 1983). Arguments are 
+  similar to those in `mixedmirt()`, though not as flexible
+
 - Partially-compensatory family of `itemtypes` now behave more consistently
   when loading structures specified where trace lines products are only 
   computed for dimensions with non-zero slopes

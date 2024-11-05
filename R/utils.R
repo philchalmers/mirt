@@ -384,7 +384,7 @@ test_info <- function(pars, Theta, Alist, K){
 
 Lambdas <- function(pars, Names){
     J <- length(pars) - 1L
-    lambdas <- matrix(NA, J, length(ExtractLambdas(pars[[1L]])))
+    lambdas <- matrix(NA, J, length(ExtractLambdas(pars[[1L]], include_fixed = FALSE)))
     gcov <- ExtractGroupPars(pars[[J+1L]])$gcov
     if(ncol(gcov) < ncol(lambdas)){
         tmpcov <- diag(ncol(lambdas))
@@ -394,7 +394,7 @@ Lambdas <- function(pars, Names){
     rownames(lambdas) <- Names
     for(i in seq_len(J)){
         tmp <- pars[[i]]
-        lambdas[i,] <- ExtractLambdas(tmp) /1.702
+        lambdas[i,] <- ExtractLambdas(tmp, include_fixed = FALSE) /1.702
     }
     dcov <- if(ncol(gcov) > 1L) diag(sqrt(diag(gcov))) else matrix(sqrt(diag(gcov)))
     lambdas <- lambdas %*% dcov
@@ -610,7 +610,7 @@ fill_neg_groups_with_complement <- function(OptionalGroups, groupNames){
 }
 
 UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngroups, PrepList,
-                            method, itemnames, model, groupNames)
+                            method, itemnames, model, groupNames, mixed.design)
 {
     if(!is.numeric(model)){
         groupNames <- as.character(groupNames)
@@ -714,7 +714,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
     for(g in seq_len(ngroups))
         for(i in seq_len(length(PrepList[[g]]$constrain)))
             constrain[[length(constrain) + 1L]] <- PrepList[[g]]$constrain[[i]]
-    if('covariances' %in% invariance){ #Fix covariance accross groups (only makes sense with vars = 1)
+    if('covariances' %in% invariance){ #Fix covariance across groups (only makes sense with vars = 1)
         tmp <- c()
         tmpmats <- tmpestmats <- matrix(NA, ngroups, nfact*(nfact+1L)/2)
         for(g in seq_len(ngroups)){
@@ -787,7 +787,45 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             }
         }
     }
-    #remove redundent constraints
+    if(!is.null(mixed.design) && mixed.design$from == 'mirt'){
+        for(g in seq_len(ngroups)){
+            are_partcomp <- sapply(pars[[g]], class) == 'partcomp'
+            are_partcomp <- are_partcomp[-length(are_partcomp)] # no group
+            cpow_unique <- NULL
+            if(any(are_partcomp)){
+                cpowmat <- lapply(1:length(are_partcomp), \(i){
+                    if(are_partcomp[i]){
+                        pars[[g]][[i]]@cpow
+                    } else {
+                        NA
+                    }})
+                cpowmat <- do.call(rbind, cpowmat)
+                cpowgroup <- apply(cpowmat, 1, \(x) paste0(x, collapse=','))
+                cpow_unique <- unique(cpowgroup)
+            }
+            if(!is.null(cpow_unique)){
+                for(cp in cpow_unique){
+                    for(p in 1:ncol(mixed.design$fixed)){
+                        constr <- rep(NA, J)
+                        for(i in seq_len(J)){
+                            if(cp == cpowgroup[i] && pars[[g]][[i]]@est[p])
+                                constr[i] <- pars[[g]][[i]]@parnum[p]
+                        }
+                        constrain[[length(constrain) + 1L]] <- na.omit(constr)
+                    }
+                }
+            } else {
+                for(p in 1:ncol(mixed.design$fixed)){
+                    constr <- rep(NA, J)
+                    for(i in seq_len(J))
+                        if(pars[[g]][[i]]@est[p])
+                            constr[i] <- pars[[g]][[i]]@parnum[p]
+                    constrain[[length(constrain) + 1L]] <- na.omit(constr)
+                }
+            }
+        }
+    }
+    #remove redundant constraints
     redun <- rep(FALSE, length(constrain))
     if(length(constrain)){
         for(i in seq_len(length(redun))){
@@ -1779,16 +1817,25 @@ computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, leng
     if(is.null(pis)){
         itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
         if(length(CUSTOM.IND)){
-            for(i in CUSTOM.IND)
-                itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Theta)
+            for(i in CUSTOM.IND){
+                Thetas <- Theta
+                if(pars[[i]]@nfixedeffects > 0 && nrow(pars[[i]]@fixed.design) == 1)
+                    Thetas <- cbind(pars[[i]]@fixed.design[rep(1,nrow(Theta)),], Theta)
+                itemtrace[,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[i]], Theta=Thetas)
+            }
         }
     } else {
         tmp_itemtrace <- vector('list', length(pis))
         for(g in seq_len(length(pis))){
             tmp_itemtrace[[g]] <- .Call('computeItemTrace', pars[[g]]@ParObjects$pars, Theta, itemloc, offterm)
             if(length(CUSTOM.IND)){
-                for(i in CUSTOM.IND)
-                    tmp_itemtrace[[g]][,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(pars[[g]]@ParObjects$pars[[i]], Theta=Theta)
+                for(i in CUSTOM.IND){
+                    Thetas <- Theta
+                    if(pars[[i]]@nfixedeffects > 0 && nrow(pars[[i]]@fixed.design) == 1)
+                        Thetas <- cbind(pars[[i]]@fixed.design[rep(1,nrow(Theta)),], Theta)
+                    tmp_itemtrace[[g]][,itemloc[i]:(itemloc[i+1L] - 1L)] <-
+                        ProbTrace(pars[[g]]@ParObjects$pars[[i]], Theta=Thetas)
+                }
             }
         }
         itemtrace <- do.call(rbind, tmp_itemtrace)

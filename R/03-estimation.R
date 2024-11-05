@@ -244,6 +244,11 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 }
             }
         }
+        if(!is.null(mixed.design)){
+            if(mixed.design$from == 'mirt' && opts$SE &&
+               !(opts$SE.type  %in% c('Oakes', 'complete')))
+                    stop('SE.type with itemdesign argument currently only supports \'Oakes\' or \'complete\'')
+        }
         if(!is.null(dots$PrepList)) {
             PrepListFull <- PrepList[[1L]] <- dots$PrepList
         } else {
@@ -494,7 +499,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     constrain <- UpdateConstrain(pars=pars, constrain=constrain, invariance=invariance, nfact=Data$nfact,
                                  nLambdas=nLambdas, J=nitems, ngroups=Data$ngroups, PrepList=PrepList,
                                  method=opts$method, itemnames=PrepList[[1L]]$itemnames, model=model,
-                                 groupNames=Data$groupNames)
+                                 groupNames=Data$groupNames, mixed.design=mixed.design)
     pars <- resetPriorConstrain(pars=pars, constrain=constrain,
                                 nconstrain=opts$technical$nconstrain)
     if(RETURNVALUES){

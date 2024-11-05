@@ -312,11 +312,11 @@ setMethod(
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         J <- object@Data$nitems
-        nfact <- object@Model$nfact + length(object@Model$prodlist)
+        nfe <- object@ParObjects$pars[[1]]@nfixedeffects
+        nfact <- object@Model$nfact + length(object@Model$prodlist) + nfe
         a <- matrix(0, J, nfact)
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@ParObjects$pars[[i]])
-
         if (object@Options$exploratory && rotate != 'none'){
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, ...)
@@ -377,6 +377,9 @@ setMethod(
         } else {
             for(i in seq_len(J+1L)){
                 allPars[[i]] <- matrix(object@ParObjects$pars[[i]]@par, 1L)
+                if(nfe > 0 && i < (J+1))
+                    allPars[[i]] <- allPars[[i]] * c(object@ParObjects$pars[[i]]@fixed.design,
+                                                     rep(1, length(allPars[[i]]) - nfe))
                 colnames(allPars[[i]]) <- object@ParObjects$pars[[i]]@parnames
                 rownames(allPars[[i]]) <- 'par'
             }

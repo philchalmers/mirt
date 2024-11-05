@@ -33,7 +33,7 @@ setClass("AllItemsClass",
 
 setGeneric('ProbTrace', function(x, Theta, ...) standardGeneric("ProbTrace"))
 
-setGeneric('ExtractLambdas', function(x) standardGeneric("ExtractLambdas"))
+setGeneric('ExtractLambdas', function(x, ...) standardGeneric("ExtractLambdas"))
 
 setGeneric('ExtractZetas', function(x) standardGeneric("ExtractZetas"))
 

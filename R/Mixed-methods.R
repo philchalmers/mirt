@@ -165,24 +165,34 @@ setMethod(
         }
         listnames <- c(colnames(object@Data$data), 'GroupPars')
         if(length(object@ParObjects$random) > 0L){
-            if(printSE){
-                for(i in 1L:length(object@ParObjects$random)){
-                    allPars[[length(allPars) + 1L]] <-
-                        matrix(c(object@ParObjects$random[[i]]@par,
-                                       object@ParObjects$random[[i]]@SEpar),
-                                     2, byrow = TRUE)
-                    rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
-                    colnames(allPars[[length(allPars)]]) <- object@ParObjects$random[[i]]@parnames
-                    listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
+            if(length(object@ParObjects$pars[[1]]@SEpar) > 0){
+                if(printSE){
+                    for(i in 1L:length(object@ParObjects$random)){
+                        allPars[[length(allPars) + 1L]] <-
+                            matrix(c(object@ParObjects$random[[i]]@par,
+                                           object@ParObjects$random[[i]]@SEpar),
+                                         2, byrow = TRUE)
+                        rownames(allPars[[length(allPars)]]) <- c('par', 'SE')
+                        colnames(allPars[[length(allPars)]]) <- object@ParObjects$random[[i]]@parnames
+                        listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
+                    }
+                } else {
+                    for(i in 1L:length(object@ParObjects$random)){
+                        allPars[[length(allPars) + 1L]] <-
+                            matrix(c(object@ParObjects$random[[i]]@par,
+                                           object@ParObjects$random[[i]]@par - z*object@ParObjects$random[[i]]@SEpar,
+                                           object@ParObjects$random[[i]]@par + z*object@ParObjects$random[[i]]@SEpar),
+                                         3, byrow = TRUE)
+                        rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
+                        colnames(allPars[[length(allPars)]]) <- object@ParObjects$random[[i]]@parnames
+                        listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
+                    }
                 }
             } else {
                 for(i in 1L:length(object@ParObjects$random)){
                     allPars[[length(allPars) + 1L]] <-
-                        matrix(c(object@ParObjects$random[[i]]@par,
-                                       object@ParObjects$random[[i]]@par - z*object@ParObjects$random[[i]]@SEpar,
-                                       object@ParObjects$random[[i]]@par + z*object@ParObjects$random[[i]]@SEpar),
-                                     3, byrow = TRUE)
-                    rownames(allPars[[length(allPars)]]) <- c('par', SEnames)
+                        matrix(object@ParObjects$random[[i]]@par, 1, byrow = TRUE)
+                    rownames(allPars[[length(allPars)]]) <- 'par'
                     colnames(allPars[[length(allPars)]]) <- object@ParObjects$random[[i]]@parnames
                     listnames <- c(listnames, colnames(object@ParObjects$random[[i]]@gdesign)[1L])
                 }

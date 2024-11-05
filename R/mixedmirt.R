@@ -201,10 +201,16 @@
 #'                    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #' model <- 'Theta = 1-32'
 #'
+#' # for unconditional intercept comparison
+#' mod <- mirt(data, model, itemtype='Rasch')
+#' coef(mod, simplify=TRUE)
+#'
 #' # Suppose that the first 16 items were suspected to be easier than the last 16 items,
 #' #   and we wish to test this item structure hypothesis (more intercept designs are possible
 #' #   by including more columns).
 #' itemdesign <- data.frame(itemorder = factor(c(rep('easier', 16), rep('harder', 16))))
+#' rownames(itemdesign) <- colnames(data)
+#' itemdesign
 #'
 #' # notice that the 'fixed = ~ ... + items' argument is omitted
 #' LLTM <- mixedmirt(data, model = model, fixed = ~ 0 + itemorder, itemdesign = itemdesign,
@@ -439,13 +445,13 @@ mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NUL
         mr <- make.randomdesign(random=random, longdata=longdata, covnames=colnames(covdata),
                                 itemdesign=itemdesign, N=nrow(covdata))
     } else mr <- list()
-    mixed.design <- list(fixed=mm, random=mr)
+    mixed.design <- list(fixed=mm, random=mr, from='mixedmirt')
     if(is(lr.random, 'formula')) lr.random <- list(lr.random)
     if(length(lr.random) > 0L){
         lr.random <- make.randomdesign(random=lr.random, longdata=covdata,
                                        covnames=colnames(covdata), itemdesign=NULL,
                                        N=nrow(covdata), LR=TRUE)
-    } else lr.random <-
+    } else lr.random <- NULL
     if(is.null(constrain)) constrain <- list()
     if(is.list(lr.fixed) || (lr.fixed != ~ 1) || length(lr.random) > 0L){
         latent.regression <- list(df=covdata, formula=lr.fixed,

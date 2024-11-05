@@ -449,9 +449,14 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     if(list$SE.type %in% c('SEM', 'Oakes', 'complete', 'sandwich', 'Louis', 'sandwich.Louis') && list$SE){
         h <- matrix(0, nfullpars, nfullpars)
         ind1 <- 1L
+        usefixed <- pars[[1L]][[1]]@nfixedeffects > 0
         for(group in seq_len(ngroups)){
             for (i in seq_len(J)){
-                deriv <- Deriv(x=pars[[group]][[i]], Theta=gTheta[[group]], estHess=TRUE)
+                Thetas <- gTheta[[group]]
+                if(usefixed)
+                    Thetas <- cbind(pars[[group]][[i]]@fixed.design[rep(1, nrow(Thetas)),],
+                                    Thetas)
+                deriv <- Deriv(x=pars[[group]][[i]], Theta=Thetas, estHess=TRUE)
                 ind2 <- ind1 + length(pars[[group]][[i]]@par) - 1L
                 h[ind1:ind2, ind1:ind2] <- pars[[group]][[i]]@hessian <- deriv$hess
                 ind1 <- ind2 + 1L

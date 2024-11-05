@@ -6,7 +6,7 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll
 
 Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
                                  'graded', 'grsm', 'gpcm', 'gpcmIRT',
-                                 'rsm', 'nominal', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
+                                 'rsm', 'nominal','PC1PL', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
 
 ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll', 'ull',
@@ -43,8 +43,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'dich'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -168,8 +170,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'graded'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -300,8 +304,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rating'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -470,8 +476,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'gpcm'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -620,8 +628,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'rsm'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -811,8 +821,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nominal'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -957,7 +969,9 @@ setMethod(
 # ----------------------------------------------------------------
 
 setClass("partcomp", contains = 'AllItemsClass',
-         representation = representation(cpow='integer'))
+         representation = representation(cpow='integer',
+                                         fixed.ind='integer',
+                                         factor.ind='integer'))
 
 setMethod(
     f = "print",
@@ -978,8 +992,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'partcomp'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -1016,16 +1032,18 @@ setMethod(
     }
 )
 
-P.comp <- function(par, Theta, cpow, ot = 0)
+P.comp <- function(par, Theta, cpow, factor.ind, fixed.ind, ot = 0)
 {
-    return(.Call('partcompTraceLinePts', par, Theta, cpow))
+    return(.Call('partcompTraceLinePts', par, Theta,
+                 cpow, factor.ind, fixed.ind))
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        return(P.comp(x@par, Theta=Theta, cpow=x@cpow))
+        return(P.comp(x@par, Theta=Theta, cpow=x@cpow,
+                      factor.ind=x@factor.ind, fixed.ind=x@fixed.ind))
     }
 )
 
@@ -1035,39 +1053,71 @@ setMethod(
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
         #local derivative from previous version with small mod
         #u and g in logit form
-        dpars.comp <- function(lambda,zeta,g,r,f,Thetas,estHess)
+        dpars.comp <- function(lambda,zeta,g,r,f,Thetas,estHess, factor.ind, fixed.ind)
         {
             nfact <- length(lambda)
-            pars <- c(zeta,lambda,g)
-            pgrad <- function(pars, r, thetas, cpow){
+            pars <- c(lambda,zeta,g)
+            pgrad <- function(pars, r, thetas, cpow, factor.ind, fixed.ind){
                 nfact <- ncol(thetas)
-                d <- pars[seq_len(nfact)]
-                a <- pars[(nfact+1L):(length(pars)-1L)]
-                c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,999), thetas, cpow)[,2L]
-                Pstar <- P.comp(c(a,d,-999,999),thetas,cpow)[,2L]
+                if(nfact != length(cpow)){
+                    a <- pars[seq_len(nfact)]
+                    d <- pars[(nfact+1L):(length(pars)-1L)]
+                    c <- pars[length(pars)]
+                    P <- P.comp(c(a,d,c,999), thetas, cpow, factor.ind=factor.ind,
+                                fixed.ind=fixed.ind)[,2L]
+                    Pstar <- P.comp(c(a,d,-999,999), thetas, cpow, factor.ind=factor.ind,
+                                    fixed.ind=fixed.ind)[,2L]
+                } else {
+                    a <- pars[seq_len(nfact)]
+                    d <- pars[(nfact+1L):(length(pars)-1L)]
+                    c <- pars[length(pars)]
+                    P <- P.comp(c(a,d,c,999), thetas, cpow, factor.ind=factor.ind,
+                                fixed.ind=fixed.ind)[,2L]
+                    Pstar <- P.comp(c(a,d,-999,999),thetas,cpow, factor.ind=factor.ind,
+                                    fixed.ind=fixed.ind)[,2L]
+                }
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 c <- antilogit(c)
                 g_1g <- c * (1 - c)
                 const1 <- (r/P - (f-r)/Q)
-                dd <- da <- rep(0,nfact)
+                da <- rep(0,nfact)
+                dd <- numeric(length(cpow))
                 dc <- sum(r/P * (g_1g * (1 - Pstar)) + (f-r)/Q * (g_1g * (Pstar - 1)))
-                for(i in seq_len(nfact)){
-                    Pk <- P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))[,2L]
-                    Qk <- 1 - Pk
-                    dd[i] <- sum((1-c)*Pstar*Qk*const1)
-                    da[i] <- sum((1-c)*Pstar*Qk*thetas[,i]*const1)
+                for(i in seq_len(length(cpow))){
+                    if(nfact != length(cpow)){
+                        if(cpow[i] == 0) next
+                        pick <- fixed.ind[i]:(fixed.ind[i+1]-1)
+                        # dstar <- sum(a[pick] * t(thetas[,pick,drop=FALSE]))
+                        Pk <- (P.mirt(c(a[factor.ind[i]], d[i],-999,999),
+                                      matrix(thetas[,factor.ind[i]]))[,2L])^cpow[i]
+                        Qk <- 1 - Pk
+                        dd[i] <- sum((1-c)*Pstar*Qk*const1)
+                        da[factor.ind[i]] <- sum((1-c)*Pstar*Qk*thetas[,factor.ind[i]]*const1)
+                        for(j in 1:length(pick))
+                            da[pick[j]] <- dd[i] * thetas[pick[j]]
+                    } else {
+                        Pk <- (P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))[,2L])^cpow[i]
+                        Qk <- 1 - Pk
+                        dd[i] <- sum((1-c)*Pstar*Qk*const1)
+                        da[i] <- sum((1-c)*Pstar*Qk*thetas[,i]*const1)
+                    }
                 }
-                return(c(dd,da,dc))
+                return(c(da,dd,dc,0))
             }
-            phess <- function(pars, r, thetas, cpow){
+            phess <- function(pars, r, thetas, cpow, factor.ind, fixed.ind){
                 nfact <- ncol(thetas)
-                d <- pars[seq_len(nfact)]
-                a <- pars[(nfact+1L):(length(pars)-1L)]
-                c <- pars[length(pars)]
-                P <- P.comp(c(a,d,c,999), thetas, cpow)[,2L]
-                Pstar <- P.comp(c(a,d,-999,999),thetas, cpow)[,2L]
+                if(nfact != length(cpow)){
+                    browser()
+                } else {
+                    a <- pars[seq_len(nfact)]
+                    d <- pars[(nfact+1L):(length(pars)-1L)]
+                    c <- pars[length(pars)]
+                    P <- P.comp(c(a,d,c,999), thetas, cpow, factor.ind=factor.ind,
+                                fixed.ind=fixed.ind)[,2L]
+                    Pstar <- P.comp(c(a,d,-999,999),thetas, cpow, factor.ind=factor.ind,
+                                    fixed.ind=fixed.ind)[,2L]
+                }
                 Qstar <- 1 - Pstar
                 Q <- 1 - P
                 g <- c <- antilogit(c)
@@ -1153,15 +1203,26 @@ setMethod(
                 }
                 return(hess)
             }
-            #old pars in the form d, a, g
-            g <- pgrad(pars, r, Thetas, x@cpow)
-            if(estHess) h <- phess(pars, r, Thetas, x@cpow)
-            else h <- matrix(0, length(g), length(g))
+
+            # old pars in the form d, a, g
+            g <- pgrad(pars, r, Thetas, x@cpow, factor.ind=factor.ind, fixed.ind=fixed.ind)
+            if(estHess){
+                if(x@nfixedeffects == 0)
+                    h <- phess(pars, r, Thetas, x@cpow, factor.ind=factor.ind,
+                               fixed.ind=fixed.ind)
+                else{
+                    h <- matrix(0, length(x@par), length(x@par))
+                    if(estHess && any(x@est)){
+                        h[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                                           Theta=Thetas, gradient=FALSE)
+                    }
+                }
+            } else h <- matrix(0, length(g), length(g))
 
             #translate into current version
-            grad <- c(g[(nfact+1L):(nfact*2)], g[1L:nfact], g[length(g)], 0)
+            grad <- g
             hess <- matrix(0, ncol(h) + 1L, ncol(h) + 1L)
-            if(estHess){
+            if(estHess && x@nfixedeffects == 0){
                 hess[seq_len(nfact), seq_len(nfact)] <- h[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] #a block
                 hess[(nfact+1L):(nfact*2),(nfact+1L):(nfact*2)] <- h[seq_len(nfact), seq_len(nfact)] #d block
                 hess[nfact*2 + 1L, nfact*2 + 1L] <- h[nfact*2 + 1L, nfact*2 + 1L] #g
@@ -1171,21 +1232,33 @@ setMethod(
                     h[nfact*2 + 1L, seq_len(nfact)] #gd
                 hess[(nfact+1L):(nfact*2), seq_len(nfact)] <- t(h[(nfact+1L):(nfact*2), seq_len(nfact)])
                 hess[seq_len(nfact), (nfact+1L):(nfact*2)] <- t(h[seq_len(nfact), (nfact+1L):(nfact*2)]) #ads
-            }
+            } else hess <- h
 
             return(list(grad=grad, hess=hess))
         }
         #####
         f <- rowSums(x@dat)
         r <- x@dat[ ,2L]
-        nfact <- x@nfact
-        a <- x@par[seq_len(nfact)]
-        d <- x@par[(nfact+1L):(nfact*2L)]
         g <- x@par[length(x@par)-1L]
-        tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),g=x@par[nfact*2L + 1L],r=r, f=f,
-                          Thetas=Theta, estHess=estHess)
-        ret <- list(grad=tmp$grad, hess=tmp$hess)
-        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        if(x@nfixedeffects > 0){ # TODO temporary
+            grad <- rep(0, length(x@par))
+            hess <- matrix(0, length(x@par), length(x@par))
+            pick <- x@est & c(x@fixed.design != 0, rep(TRUE, 2*length(x@cpow)), TRUE, TRUE)
+            x@est <- pick
+            grad[pick] <- numerical_deriv(x@par[pick], EML, obj=x, Theta=Theta)
+            # print(round(rbind(ret$grad[x@est], grad[x@est]), 3))
+            if(estHess && any(pick)){
+                hess[pick, pick] <- numerical_deriv(x@par[pick], EML, obj=x,
+                                                      Theta=Theta, gradient=FALSE)
+            }
+            ret <- list(grad=grad, hess=hess)
+        } else {
+            tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),
+                              g=g, r=r, f=f, Thetas=Theta, estHess=estHess,
+                              factor.ind=x@factor.ind, fixed.ind=x@fixed.ind)
+            ret <- list(grad=tmp$grad, hess=tmp$hess)
+            if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        }
         return(ret)
     }
 )
@@ -1201,7 +1274,8 @@ setMethod(
         g <- x@par[parlength - 1L]
         d <- ExtractZetas(x)
         a <- ExtractLambdas(x)
-        Pstar <- P.comp(c(a, d, -999, 999), Theta, cpow)[,2L]
+        Pstar <- P.comp(c(a, d, -999, 999), Theta, cpow=x@cpow,
+                        factor.ind=x@factor.ind, fixed.ind=x@fixed.ind)[,2L]
         g <- antilogit(g)
         u <- antilogit(u)
         grad <- hess <- vector('list', 2L)
@@ -1250,8 +1324,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'nestlogit'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -1444,8 +1520,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'ideal'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -1588,8 +1666,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'lca'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -1705,8 +1785,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'spline'),
-    definition = function(x){
-        numeric(x@nfact)
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        numeric(length(pick))
     }
 )
 
@@ -1813,8 +1895,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'ggum'),
-    definition = function(x){
-        x@par[1L:x@nfact] #slopes
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -1992,8 +2076,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'custom'),
-    definition = function(x){
-        a <- rep(.001, x@nfact)
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        a <- rep(.001, length(pick))
         a
     }
 )
@@ -2139,8 +2225,10 @@ setMethod(
 setMethod(
   f = "ExtractLambdas",
   signature = signature(x = 'grsmIRT'),
-  definition = function(x){
-    x@par[seq_len(x@nfact)] #slopes
+  definition = function(x, include_fixed = TRUE){
+      pick <- if(include_fixed)
+          seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+      x@par[pick]
   }
 )
 
@@ -2385,8 +2473,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'gpcmIRT'),
-    definition = function(x){
-        x@par[1L]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -2493,8 +2583,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'monopoly'),
-    definition = function(x){
-        x@par[1L]
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -2601,8 +2693,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'sequential'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)] #slopes
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -2767,8 +2861,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'fivePL'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)] #slopes
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 
@@ -2957,8 +3053,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'cll'),
-    definition = function(x){
-        NA
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        numeric(length(pick))
     }
 )
 
@@ -3086,8 +3184,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'ull'),
-    definition = function(x){
-        NA
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        numeric(length(pick))
     }
 )
 
@@ -3255,8 +3355,10 @@ setMethod(
 setMethod(
     f = "ExtractLambdas",
     signature = signature(x = 'experimental'),
-    definition = function(x){
-        x@par[seq_len(x@nfact)] #slopes
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
     }
 )
 

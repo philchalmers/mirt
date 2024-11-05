@@ -382,14 +382,19 @@ Mstep.grad <- function(p, est, longpars, pars, ngroups, J, gTheta, PrepList, L, 
             pars[[g]][[J + 1L]]@density <- gp@safe_den(gp, gTheta[[g]])
         }
     }
-    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
+    usefixed <- pars[[1L]][[1]]@nfixedeffects > 0
+    g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L,
+               usefixed, 1L, TRUE)$grad
     if(length(SLOW.IND)){
         for(group in seq_len(ngroups)){
             for (i in SLOW.IND){
+                Thetas <- gTheta[[group]]
                 deriv <- if(i == (J + 1L)){
-                    Deriv(pars[[group]][[i]], Theta=gTheta[[group]])
+                    Deriv(pars[[group]][[i]], Theta=Thetas)
                 } else {
-                    DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]])
+                    if(pars[[group]][[i]]@nfixedeffects > 0 && nrow(pars[[group]][[i]]@fixed.design) == 1)
+                        Thetas <- cbind(pars[[group]][[i]]@fixed.design[rep(1,nrow(Thetas)),], Thetas)
+                    DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=Thetas)
                 }
                 g[pars[[group]][[i]]@parnum] <- deriv$grad
             }

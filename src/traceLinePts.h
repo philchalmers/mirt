@@ -28,7 +28,8 @@ void P_nested(vector<double> &, const vector<double> &,
     const int &);
 
 void P_comp(vector<double> &, const vector<double> &,
-    const NumericMatrix &, const int &, const int &);
+    const NumericMatrix &, const int &, const int &,
+    const IntegerVector &, const IntegerVector &,const IntegerVector &);
 
 void P_lca(vector<double> &, const vector<double> &, const NumericMatrix &,
 	const NumericMatrix &, const int &, const int &, const int &, const int &);

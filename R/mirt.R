@@ -351,9 +351,10 @@
 #'     \item \code{'sequential'} - multidimensional sequential response model (Tutz, 1990) in slope-intercept form
 #'     \item \code{'Tutz'} - same as the \code{'sequential'} itemtype, except the slopes are fixed to 1
 #'       and the latent variance terms are freely estimated (similar to the \code{'Rasch'} itemtype input)
-#'     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
-#'       Note that constraining the slopes to be equal across items will reduce the model to
-#'       Embretson's (a.k.a. Whitely's) multicomponent model (1980).
+#'     \item \code{'PC1PL'}, \code{'PC2PL'}, and \code{'PC3PL'} - 1-3 parameter partially compensatory model.
+#'       Note that constraining the slopes to be equal across items will also reduce the model to
+#'       Embretson's (a.k.a. Whitely's) multicomponent model (1980), while for \code{'PC1PL'} the
+#'       slopes are fixed to 1 while the latent trait variance terms are estimated
 #'     \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
 #'       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
 #'       the upper asymptote only (Suh and Bolt, 2010)
@@ -475,6 +476,12 @@
 #'   estimation logical values, etc, are defined. The user may observe how the model defines the
 #'   values by using \code{pars = 'values'}, and this object can in turn be modified and input back
 #'   into the estimation with \code{pars = mymodifiedpars}
+#' @param itemdesign a \code{data.frame} with rows equal to the number of items and columns
+#'   containing any item-design effects. The item design matrix is constructed with the use of
+#'   \code{item.formula}. Providing this input will fix the associated \code{'d'} intercepts
+#'   to 0
+#' @param item.formula an R formula used to specify any intercept decomposition (e.g.,
+#'   the LLTM; Fischer, 1973)
 #' @param quadpts number of quadrature points per dimension (must be larger than 2).
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}.
@@ -1271,12 +1278,95 @@
 #' plot(mod2PL, type = 'trace')
 #' plot(mod2PL_asym, type = 'trace')
 #'
+#'
+#' ###################
+#' # LLTM example
+#'
+#' a <- matrix(rep(1,30))
+#' d <- rep(c(1,0, -1),each = 10)  # first easy, then medium, last difficult
+#' dat <- simdata(a, d, 1000, itemtype = '2PL')
+#'
+#' # unconditional model for intercept comparisons
+#' mod <- mirt(dat, itemtype = 'Rasch')
+#' coef(mod, simplify=TRUE)
+#'
+#' # Suppose that the first 10 items were suspected to be easy, followed by 10 medium difficulty items,
+#' # then finally the last 10 items are difficult,
+#' # and we wish to test this item structure hypothesis (more intercept designs are possible
+#' # by including more columns).
+#' itemdesign <- data.frame(difficulty =
+#'    factor(c(rep('easy', 10), rep('medium', 10), rep('hard', 10))))
+#' rownames(itemdesign) <- colnames(dat)
+#' itemdesign
+#'
+#' # LLTM with mirt()
+#' lltm <- mirt(dat, itemtype = 'Rasch', SE=TRUE,
+#'    item.formula = ~ 0 + difficulty, itemdesign=itemdesign)
+#' coef(lltm, simplify=TRUE)
+#' coef(lltm, printSE=TRUE)
+#' anova(lltm, mod)  # models fit effectively the same; hence, intercept variability well captured
+#'
+#' # additional information for LLTM
+#' plot(lltm)
+#' itemfit(lltm)
+#' head(fscores(lltm))  #EAP estimates
+#' fscores(lltm, method='EAPsum', full.scores=FALSE)
+#'
+#' # intercept across items also possible by removing ~ 0 portion, just interpreted differently
+#' lltm.int <- mirt(dat, itemtype = 'Rasch',
+#'    item.formula = ~ difficulty, itemdesign=itemdesign)
+#' coef(lltm.int, simplify=TRUE)
+#'
+#' # LLTM with mixedmirt() (more flexible in general, but slower)
+#' LLTM <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
+#'                   itemdesign=itemdesign, SE=FALSE)
+#' summary(LLTM)
+#' coef(LLTM)
+#'
+#' # LLTM with random error estimate (not supported with mirt() )
+#' LLTM.e <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
+#'                   random = ~ 1|items, itemdesign=itemdesign, SE=FALSE)
+#' coef(LLTM.e)
+#'
+#'
+# ###################
+# # MLTM example
+#
+# as <- matrix(rep(1,60), ncol=2)
+# as[11:20,1] <- as[1:10,2] <- 0
+# d1 <- rep(c(1,0, -1),each = 10)  # first easy, then medium, last difficult for first trait
+# d2 <- rep(c(-1,0,1),each = 10)    # difficult to easy
+# ds <- cbind(d1, d2)
+# dat <- simdata(as, ds, 1000, itemtype = 'partcomp')
+#
+# # unconditional model
+# syntax <- "theta1 = 1-10, 21-30
+#                   theta2 = 11-30
+#                   COV = theta1*theta2"
+# mod <- mirt(dat, syntax, itemtype='PC1PL')
+# coef(mod, simplify=TRUE)
+# data.frame(est=coef(mod, simplify=TRUE)$items, pop=data.frame(a=as, d=ds))
+# itemplot(mod, 1)
+# itemplot(mod, 30)
+#
+# itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('easy', 'medium', 'hard')),
+#                         t2_difficulty=factor(d2, labels=c('easy', 'medium', 'hard')))
+# itemdesign
+# mltm <- mirt(dat, syntax, itemtype = 'PC1PL', itemdesign=itemdesign,
+#              item.formula = list(theta1 ~ t1_difficulty,
+#                                  theta2 ~ t2_difficulty), SE=FALSE)
+# coef(mltm, simplify=TRUE)
+# coef(mltm, printSE=TRUE)
+# anova(mltm, mod)
+#
 #' }
 mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-                 covdata = NULL, formula = NULL, SE.type = 'Oakes', method = 'EM',
+                 covdata = NULL, formula = NULL, itemdesign=NULL, item.formula = NULL,
+                 SE.type = 'Oakes', method = 'EM',
                  optimizer = NULL, dentype = 'Gaussian',
                  pars = NULL, constrain = NULL,
                  calcNull = FALSE, draws = 5000, survey.weights = NULL,
+                 itemdesign.intercept=FALSE,
                  quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL,
                  rsm.block = NULL, monopoly.k = 1L, key = NULL,
                  large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay', verbose = TRUE,
@@ -1288,10 +1378,35 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
                                               dentype=dentype, formula=formula, method=method)
     if(!is.null(latent.regression$data))
         data <- latent.regression$data
+    mixed.design <- NULL
+    if(!is.null(itemdesign)){
+        stopifnot('itemdesign only supported for dichotmous item tests' =
+                      all(apply(data, 2, \(x) length(na.omit(unique(x)))) == 2))
+        itemdesignold <- itemdesign
+        if(is.list(item.formula)){
+            mf <- lapply(item.formula, \(x){
+                ghost <- x[[2]]
+                itemdesign[[ghost]] <- 1
+                model.frame(x, itemdesign)
+            })
+            mm <- lapply(1:length(mf), \(i)
+                model.matrix(item.formula[[i]], mf[[i]]))
+            names(mm) <- do.call(c, lapply(item.formula, \(x) as.character(x[[2]])))
+            for(i in 1:length(mm))
+                colnames(mm[[i]]) <- paste0(names(mm)[i], '.', colnames(mm[[i]]))
+            mm <- do.call(cbind, mm)
+        } else {
+            mf <- model.frame(item.formula, itemdesign)
+            mm <- model.matrix(item.formula, mf)
+        }
+        mixed.design <- list(random=NULL, fixed=mm, from='mirt',
+                             lr.random=NULL, lr.fixed=NULL)
+        attr(mixed.design, 'itemdesign') <- itemdesignold
+    }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,
-                      quadpts=quadpts, monopoly.k=monopoly.k,
+                      quadpts=quadpts, monopoly.k=monopoly.k, mixed.design=mixed.design,
                       technical=technical, verbose=verbose, survey.weights=survey.weights,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       accelerate=accelerate, draws=draws, rsm.block=rsm.block,

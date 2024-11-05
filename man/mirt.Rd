@@ -14,6 +14,8 @@ mirt(
   SE = FALSE,
   covdata = NULL,
   formula = NULL,
+  itemdesign = NULL,
+  item.formula = NULL,
   SE.type = "Oakes",
   method = "EM",
   optimizer = NULL,
@@ -23,6 +25,7 @@ mirt(
   calcNull = FALSE,
   draws = 5000,
   survey.weights = NULL,
+  itemdesign.intercept = FALSE,
   quadpts = NULL,
   TOL = NULL,
   gpcm_mats = list(),
@@ -87,9 +90,10 @@ model will be fit unless otherwise specified}
     \item \code{'sequential'} - multidimensional sequential response model (Tutz, 1990) in slope-intercept form
     \item \code{'Tutz'} - same as the \code{'sequential'} itemtype, except the slopes are fixed to 1
       and the latent variance terms are freely estimated (similar to the \code{'Rasch'} itemtype input)
-    \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
-      Note that constraining the slopes to be equal across items will reduce the model to
-      Embretson's (a.k.a. Whitely's) multicomponent model (1980).
+    \item \code{'PC1PL'}, \code{'PC2PL'}, and \code{'PC3PL'} - 1-3 parameter partially compensatory model.
+      Note that constraining the slopes to be equal across items will also reduce the model to
+      Embretson's (a.k.a. Whitely's) multicomponent model (1980), while for \code{'PC1PL'} the
+      slopes are fixed to 1 while the latent trait variance terms are estimated
     \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
       the upper asymptote only (Suh and Bolt, 2010)
@@ -119,6 +123,14 @@ can be regressed using external covariates in \code{covdata}. If a named list
 of formulas is supplied (where the names correspond to the latent trait names in \code{model})
 then specific regression effects can be estimated for each factor. Supplying a single formula
 will estimate the regression parameters for all latent traits by default}
+
+\item{itemdesign}{a \code{data.frame} with rows equal to the number of items and columns
+containing any item-design effects. The item design matrix is constructed with the use of
+\code{item.formula}. Providing this input will fix the associated \code{'d'} intercepts
+to 0}
+
+\item{item.formula}{an R formula used to specify any intercept decomposition (e.g.,
+the LLTM; Fischer, 1973)}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be:
@@ -1230,6 +1242,57 @@ coef(mod2PL_asym, simplify=TRUE, IRTpars=TRUE)
 anova(mod2PL, mod2PL_asym)
 plot(mod2PL, type = 'trace')
 plot(mod2PL_asym, type = 'trace')
+
+
+###################
+# LLTM example
+
+a <- matrix(rep(1,30))
+d <- rep(c(1,0, -1),each = 10)  # first easy, then medium, last difficult
+dat <- simdata(a, d, 1000, itemtype = '2PL')
+
+# unconditional model for intercept comparisons
+mod <- mirt(dat, itemtype = 'Rasch')
+coef(mod, simplify=TRUE)
+
+# Suppose that the first 10 items were suspected to be easy, followed by 10 medium difficulty items,
+# then finally the last 10 items are difficult,
+# and we wish to test this item structure hypothesis (more intercept designs are possible
+# by including more columns).
+itemdesign <- data.frame(difficulty =
+   factor(c(rep('easy', 10), rep('medium', 10), rep('hard', 10))))
+rownames(itemdesign) <- colnames(dat)
+itemdesign
+
+# LLTM with mirt()
+lltm <- mirt(dat, itemtype = 'Rasch', SE=TRUE,
+   item.formula = ~ 0 + difficulty, itemdesign=itemdesign)
+coef(lltm, simplify=TRUE)
+coef(lltm, printSE=TRUE)
+anova(lltm, mod)  # models fit effectively the same; hence, intercept variability well captured
+
+# additional information for LLTM
+plot(lltm)
+itemfit(lltm)
+head(fscores(lltm))  #EAP estimates
+fscores(lltm, method='EAPsum', full.scores=FALSE)
+
+# intercept across items also possible by removing ~ 0 portion, just interpreted differently
+lltm.int <- mirt(dat, itemtype = 'Rasch',
+   item.formula = ~ difficulty, itemdesign=itemdesign)
+coef(lltm.int, simplify=TRUE)
+
+# LLTM with mixedmirt() (more flexible in general, but slower)
+LLTM <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
+                  itemdesign=itemdesign, SE=FALSE)
+summary(LLTM)
+coef(LLTM)
+
+# LLTM with random error estimate (not supported with mirt() )
+LLTM.e <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
+                  random = ~ 1|items, itemdesign=itemdesign, SE=FALSE)
+coef(LLTM.e)
+
 
 }
 }

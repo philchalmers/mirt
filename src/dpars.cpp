@@ -1652,14 +1652,20 @@ static void _computeDpars(vector<double> &grad, NumericMatrix &hess, const List 
         S4 item = pars[i];
         int nfact2 = nfact;
         NumericMatrix theta = Theta;
-        if(USEFIXED){
+        if(USEFIXED && i < nitems){
             NumericMatrix itemFD = item.slot("fixed.design");
             nfact2 = nfact + itemFD.ncol();
             NumericMatrix NewTheta(Theta.nrow(), nfact2);
-            for(int j = 0; j < itemFD.ncol(); ++j)
-                NewTheta(_,j) = itemFD(_,j);
-            for(int j = 0; j < nfact; ++j)
-                NewTheta(_,j + itemFD.ncol()) = Theta(_,j);
+            if(itemFD.nrow() == 1){
+                for(int j = 0; j < Theta.nrow()-1; ++j)
+                    for(int k = 0; k < itemFD.ncol(); ++k)
+                        NewTheta(j,k) = itemFD(0,k);
+            } else {
+                for(int k = 0; k < itemFD.ncol(); ++k)
+                    NewTheta(_,k) = itemFD(_,k);
+            }
+            for(int k = 0; k < nfact; ++k)
+                NewTheta(_,k+itemFD.ncol()) = Theta(_,k);
             theta = NewTheta;
         }
         vector<double> par = as< vector<double> >(item.slot("par"));
