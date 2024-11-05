@@ -47,6 +47,8 @@
 #' Classical Test Theory and Item Response Theory in Individual Change Assessment.
 #' \emph{Applied Psychological Measurement, 40} (8), 559-572.
 #' @keywords reliable change index
+#' @importFrom graphics abline points polygon
+#' @importFrom grDevices adjustcolor
 #' @export
 #' @examples
 #'
@@ -382,11 +384,11 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                                    diff[length(diff)] + SEs[length(diff)]),
                      main=sprintf("SEM estimates using fixed prestest score"),
                      xlab = 'Sum Score')
-                polygon(c(rng, rev(rng)), c(diff - SEs, rev(diff+SEs)),
-                        col=adjustcolor('grey', alpha.f=.5))
-                abline(h=0, lty=2)
-                points(sd$TS[1], diff[sd$TS[1]-adj+1], cex=2, col='blue', pch=16)
-                points(sd$TS[2], diff[sd$TS[2]-adj+1], cex=2, col='red', pch=16)
+                graphics::polygon(c(rng, rev(rng)), c(diff - SEs, rev(diff+SEs)),
+                        col=grDevices::adjustcolor('grey', alpha.f=.5))
+                graphics::abline(h=0, lty=2)
+                graphics::points(sd$TS[1], diff[sd$TS[1]-adj+1], cex=2, col='blue', pch=16)
+                graphics::points(sd$TS[2], diff[sd$TS[2]-adj+1], cex=2, col='red', pch=16)
             } #else plot.new()
         })
 
