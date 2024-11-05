@@ -258,7 +258,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 for(i in seq_len(length(constrain)))
                     longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
             if(verbose)
-                cat(printmsg, sprintf(", Max-Change = %.4f", max(abs(gamma*correction))), sep='')
+                printf("%s, Max-Change = %.4f", printmsg, max(abs(gamma*correction)))
             if(stagecycle == 2L){
                 SEM.stores[cycles - BURNIN, ] <- longpars
                 if(!no_stage_3)
@@ -287,8 +287,8 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                 longpars[constrain[[i]][-1L]] <- longpars[constrain[[i]][1L]]
 
         if(verbose)
-            cat(printmsg, sprintf(", gam = %.4f, Max-Change = %.4f",
-                                  gamma, max(abs(gamma*correction))), sep='')
+            printf("%s, gam = %.4f, Max-Change = %.4f", printmsg,
+                   gamma, max(abs(gamma*correction)))
         if(hasConverged(longpars0, longpars, TOL)) conv <- conv + 1L
             else conv <- 0L
         if(!list$SE && conv >= 3L) break
