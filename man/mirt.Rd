@@ -25,7 +25,6 @@ mirt(
   calcNull = FALSE,
   draws = 5000,
   survey.weights = NULL,
-  itemdesign.intercept = FALSE,
   quadpts = NULL,
   TOL = NULL,
   gpcm_mats = list(),

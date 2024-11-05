@@ -1366,7 +1366,6 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
                  optimizer = NULL, dentype = 'Gaussian',
                  pars = NULL, constrain = NULL,
                  calcNull = FALSE, draws = 5000, survey.weights = NULL,
-                 itemdesign.intercept=FALSE,
                  quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL,
                  rsm.block = NULL, monopoly.k = 1L, key = NULL,
                  large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay', verbose = TRUE,
