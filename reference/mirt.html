@@ -85,6 +85,8 @@ also available using the <code><a href="multipleGroup.html">multipleGroup</a></c
 <span>  SE <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  covdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  formula <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  itemdesign <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  item.formula <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  SE.type <span class="op">=</span> <span class="st">"Oakes"</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"EM"</span>,</span>
 <span>  optimizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -94,6 +96,7 @@ also available using the <code><a href="multipleGroup.html">multipleGroup</a></c
 <span>  calcNull <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  draws <span class="op">=</span> <span class="fl">5000</span>,</span>
 <span>  survey.weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  itemdesign.intercept <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  quadpts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  TOL <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gpcm_mats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -165,9 +168,10 @@ model will be fit unless otherwise specified</p></dd>
 <li><p><code>'sequential'</code> - multidimensional sequential response model (Tutz, 1990) in slope-intercept form</p></li>
 <li><p><code>'Tutz'</code> - same as the <code>'sequential'</code> itemtype, except the slopes are fixed to 1
       and the latent variance terms are freely estimated (similar to the <code>'Rasch'</code> itemtype input)</p></li>
-<li><p><code>'PC2PL'</code> and <code>'PC3PL'</code> - 2-3 parameter partially compensatory model.
-      Note that constraining the slopes to be equal across items will reduce the model to
-      Embretson's (a.k.a. Whitely's) multicomponent model (1980).</p></li>
+<li><p><code>'PC1PL'</code>, <code>'PC2PL'</code>, and <code>'PC3PL'</code> - 1-3 parameter partially compensatory model.
+      Note that constraining the slopes to be equal across items will also reduce the model to
+      Embretson's (a.k.a. Whitely's) multicomponent model (1980), while for <code>'PC1PL'</code> the
+      slopes are fixed to 1 while the latent trait variance terms are estimated</p></li>
 <li><p><code>'2PLNRM'</code>, <code>'3PLNRM'</code>, <code>'3PLuNRM'</code>, and <code>'4PLNRM'</code> - 2-4 parameter nested
       logistic model, where <code>3PLNRM</code> estimates the lower asymptote only while <code>3PLuNRM</code> estimates
       the upper asymptote only (Suh and Bolt, 2010)</p></li>
@@ -205,6 +209,18 @@ can be regressed using external covariates in <code>covdata</code>. If a named l
 of formulas is supplied (where the names correspond to the latent trait names in <code>model</code>)
 then specific regression effects can be estimated for each factor. Supplying a single formula
 will estimate the regression parameters for all latent traits by default</p></dd>
+
+
+<dt id="arg-itemdesign">itemdesign<a class="anchor" aria-label="anchor" href="#arg-itemdesign"></a></dt>
+<dd><p>a <code>data.frame</code> with rows equal to the number of items and columns
+containing any item-design effects. The item design matrix is constructed with the use of
+<code>item.formula</code>. Providing this input will fix the associated <code>'d'</code> intercepts
+to 0</p></dd>
+
+
+<dt id="arg-item-formula">item.formula<a class="anchor" aria-label="anchor" href="#arg-item-formula"></a></dt>
+<dd><p>an R formula used to specify any intercept decomposition (e.g.,
+the LLTM; Fischer, 1973)</p></dd>
 
 
 <dt id="arg-se-type">SE.type<a class="anchor" aria-label="anchor" href="#arg-se-type"></a></dt>
@@ -1583,6 +1599,57 @@ IL: Scientific Software International.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod2PL</span>, <span class="va">mod2PL_asym</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod2PL</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod2PL_asym</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">###################</span></span></span>
+<span class="r-in"><span><span class="co"># LLTM example</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,each <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>  <span class="co"># first easy, then medium, last difficult</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">1000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># unconditional model for intercept comparisons</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="st">'Rasch'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Suppose that the first 10 items were suspected to be easy, followed by 10 medium difficulty items,</span></span></span>
+<span class="r-in"><span><span class="co"># then finally the last 10 items are difficult,</span></span></span>
+<span class="r-in"><span><span class="co"># and we wish to test this item structure hypothesis (more intercept designs are possible</span></span></span>
+<span class="r-in"><span><span class="co"># by including more columns).</span></span></span>
+<span class="r-in"><span><span class="va">itemdesign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>difficulty <span class="op">=</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'easy'</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'medium'</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'hard'</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">itemdesign</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">itemdesign</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># LLTM with mirt()</span></span></span>
+<span class="r-in"><span><span class="va">lltm</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="st">'Rasch'</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   item.formula <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">difficulty</span>, itemdesign<span class="op">=</span><span class="va">itemdesign</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lltm</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lltm</span>, printSE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">lltm</span>, <span class="va">mod</span><span class="op">)</span>  <span class="co"># models fit effectively the same; hence, intercept variability well captured</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># additional information for LLTM</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lltm</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">lltm</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">lltm</span><span class="op">)</span><span class="op">)</span>  <span class="co">#EAP estimates</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">lltm</span>, method<span class="op">=</span><span class="st">'EAPsum'</span>, full.scores<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># intercept across items also possible by removing ~ 0 portion, just interpreted differently</span></span></span>
+<span class="r-in"><span><span class="va">lltm.int</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="st">'Rasch'</span>,</span></span>
+<span class="r-in"><span>   item.formula <span class="op">=</span> <span class="op">~</span> <span class="va">difficulty</span>, itemdesign<span class="op">=</span><span class="va">itemdesign</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lltm.int</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># LLTM with mixedmirt() (more flexible in general, but slower)</span></span></span>
+<span class="r-in"><span><span class="va">LLTM</span> <span class="op">&lt;-</span> <span class="fu"><a href="mixedmirt.html">mixedmirt</a></span><span class="op">(</span><span class="va">dat</span>, model<span class="op">=</span><span class="fl">1</span>, fixed <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">difficulty</span>,</span></span>
+<span class="r-in"><span>                  itemdesign<span class="op">=</span><span class="va">itemdesign</span>, SE<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">LLTM</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">LLTM</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># LLTM with random error estimate (not supported with mirt() )</span></span></span>
+<span class="r-in"><span><span class="va">LLTM.e</span> <span class="op">&lt;-</span> <span class="fu"><a href="mixedmirt.html">mixedmirt</a></span><span class="op">(</span><span class="va">dat</span>, model<span class="op">=</span><span class="fl">1</span>, fixed <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">difficulty</span>,</span></span>
+<span class="r-in"><span>                  random <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span><span class="op">|</span><span class="va">items</span>, itemdesign<span class="op">=</span><span class="va">itemdesign</span>, SE<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">LLTM.e</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
