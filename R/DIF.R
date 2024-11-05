@@ -434,7 +434,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                 lastkeep <- keep | lastkeep
             } else lastkeep <- keep
             if(verbose)
-                cat(sprintf('\rChecking for DIF in %d more items', if(drop) sum(keep) else sum(!keep)))
+                printf('\rChecking for DIF in %d more items', if(drop) sum(keep) else sum(!keep))
             if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
             constrain <- updatedModel@Model$constrain
             for(j in seq_len(length(keep))){

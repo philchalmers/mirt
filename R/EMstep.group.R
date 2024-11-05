@@ -315,8 +315,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 }
             }
             if(verbose)
-                cat(sprintf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
-                            cycles, LL + LP, max(abs(preMstep.longpars - longpars))))
+                printf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
+                            cycles, LL + LP, max(abs(preMstep.longpars - longpars)))
 
             if(hasConverged(preMstep.longpars, longpars, TOL)){
                 pars <- reloadPars(longpars=longpars, pars=pars,
