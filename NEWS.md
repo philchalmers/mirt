@@ -1,5 +1,9 @@
 # Changes in mirt 1.43
 
+- Related to both points below, general MLTM (Embretson, 1984) added when 
+  itemtype is specified as `PC1PL` and an `itemdesign` set is used, where 
+  formula must include name of the factor in the formula expressions
+
 - Added `PC1PL` itemtype to more easily specify conjunctive models with
   slopes fixed to 1 and estimation of the latent variance term, mimicking the 
   `Rasch` itemtype family

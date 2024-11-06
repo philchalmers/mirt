@@ -1345,7 +1345,7 @@
 #'
 #'
 #' ###################
-#' # MLTM example
+#' # General MLTM example (Embretson, 1984)
 #'
 #' set.seed(42)
 #'
@@ -1380,10 +1380,13 @@
 #' # fit MLTM design, leaving first 18 items as 'Rasch' type
 #' mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
 #'              item.formula = list(theta1 ~ 0 + t1_difficulty,
-#'                                  theta2 ~ 0 + t2_difficulty), SE=FALSE)
+#'                                  theta2 ~ 0 + t2_difficulty), SE=TRUE)
 #' coef(mltm, simplify=TRUE)
 #' coef(mltm, printSE=TRUE)
-#' anova(mltm, mod)
+#' anova(mltm, mod) # similar fit; hence more constrained version preferred
+#'
+#' # EAP estimates
+#' fscores(mltm) |> head()
 #'
 #' }
 mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,

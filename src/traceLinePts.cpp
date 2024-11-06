@@ -332,21 +332,23 @@ void P_comp(vector<double> &P, const vector<double> &par,
         a[j] = par[factor_ind[j] - 1];
         d[j] = par[factor_ind[j] + nfact_star - 1];
     }
-    const double gtmp = par[nfact + nfact_star];
+    const double gtmp = par[par.size()-2];
+    const double utmp = par[par.size()-1];
     const double g = antilogit(&gtmp);
+    const double u = antilogit(&utmp);
     for(int i = 0; i < N; ++i) P[i+N] = 1.0;
     for(int j = 0; j < nfact_star; ++j){
         for(int i = 0; i < N; ++i){
             double inner = 0;
             if(nfact != nfact_star && fixed_ind[j] != 0)
-                for(int k = fixed_ind[j] - 1; k < fixed_ind[j+1] - 2; ++k)
+                for(int k = fixed_ind[j] - 1; k < fixed_ind[j+1] - 1; ++k)
                     inner += par[k] * Theta(i,k);
             P[i+N] = P[i+N] * pow(1.0 / (1.0 + exp(-(inner + a[j]*Theta(i, factor_ind[j]-1) + d[j]))), 
                                   cpow(j));
         }
     }
     for(int i = 0; i < N; ++i){
-        P[i+N] = g + (1.0 - g) * P[i+N];
+        P[i+N] = g + (u - g) * P[i+N];
         if(P[i+N] < 1e-50) P[i+N] = 1e-50;
         else if (P[i+N] > 1.0 - 1e-50) P[i+N] = 1.0 - 1e-50;
         P[i] = 1.0 - P[i+N];

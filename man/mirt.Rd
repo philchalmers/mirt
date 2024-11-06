@@ -1305,6 +1305,50 @@ LLTM.e <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
 coef(LLTM.e)
 
 
+###################
+# General MLTM example (Embretson, 1984)
+
+set.seed(42)
+
+as <- matrix(rep(1,60), ncol=2)
+as[11:18,1] <- as[1:9,2] <- 0
+d1 <- rep(c(3,1),each = 6)  # first easy, then medium, last difficult for first trait
+d2 <- rep(c(0,1,2),times = 4)    # difficult to easy
+d <- rnorm(18)
+ds <- rbind(cbind(d1=NA, d2=d), cbind(d1, d2))
+(pars <- data.frame(a=as, d=ds))
+dat <- simdata(as, ds, 2500,
+  itemtype = c(rep('dich', 18), rep('partcomp', 12)))
+colMeans(dat)
+
+# unconditional model
+syntax <- "theta1 = 1-9, 19-30
+           theta2 = 10-30
+           COV = theta1*theta2"
+itemtype <- c(rep('Rasch', 18), rep('PC1PL', 12))
+mod <- mirt(dat, syntax, itemtype=itemtype)
+coef(mod, simplify=TRUE)
+data.frame(est=coef(mod, simplify=TRUE)$items, pop=data.frame(a=as, d=ds))
+itemplot(mod, 1)
+itemplot(mod, 30)
+
+# MLTM design only for PC1PL items
+itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('medium', 'easy')),
+                        t2_difficulty=factor(d2, labels=c('hard', 'medium', 'easy')))
+rownames(itemdesign) <- colnames(dat)[19:30]
+itemdesign
+
+# fit MLTM design, leaving first 18 items as 'Rasch' type
+mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
+             item.formula = list(theta1 ~ 0 + t1_difficulty,
+                                 theta2 ~ 0 + t2_difficulty), SE=TRUE)
+coef(mltm, simplify=TRUE)
+coef(mltm, printSE=TRUE)
+anova(mltm, mod) # similar fit; hence more constrained version preferred
+
+# EAP estimates
+fscores(mltm) |> head()
+
 }
 }
 \references{
