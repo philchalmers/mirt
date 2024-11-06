@@ -723,6 +723,9 @@
 #' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 #' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
 #'
+#' Embretson, S. E. (1984). A general latent trait model for response processes.
+#' \emph{Psychometrika, 49}, 175-186.
+#'
 #' Falk, C. F. & Cai, L. (2016). Maximum Marginal Likelihood Estimation of a
 #' Monotonic Polynomial Generalized Partial Credit Model with Applications to
 #' Multiple Group Analysis. \emph{Psychometrika, 81}, 434-460.
