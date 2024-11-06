@@ -314,15 +314,9 @@ setMethod(
         J <- object@Data$nitems
         nfe <- max(sapply(1:J, \(i) object@ParObjects$pars[[i]]@nfixedeffects))
         nfact <- object@Model$nfact + length(object@Model$prodlist) + nfe
-        a <- vector('list', J)
-        for(i in 1:J){
-            tmp <- ExtractLambdas(object@ParObjects$pars[[i]])
-            names(tmp) <- names(object@ParObjects$pars[[i]]@est)[1:length(tmp)]
-            if(nfe > 0 && length(tmp) < nfact)
-                tmp <- c(rep(NA, nfact - length(tmp)), tmp)
-            a[[i]] <- tmp
-        }
-        a <- do.call(rbind, a)
+        a <- matrix(0, J, nfact)
+        for(i in 1:J)
+            a[i, ] <- ExtractLambdas(object@ParObjects$pars[[i]])
         if (object@Options$exploratory && rotate != 'none'){
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, ...)

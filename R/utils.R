@@ -821,7 +821,9 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                     for(i in which(mixed.design$has_idesign))
                         if(pars[[g]][[i]]@est[p])
                             constr[i] <- pars[[g]][[i]]@parnum[p]
-                    constrain[[length(constrain) + 1L]] <- na.omit(constr)
+                    constr <- na.omit(constr)
+                    if(length(constr))
+                        constrain[[length(constrain) + 1L]] <- constr
                 }
             }
         }

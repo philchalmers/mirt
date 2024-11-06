@@ -1321,14 +1321,16 @@
 #' # intercept across items also possible by removing ~ 0 portion, just interpreted differently
 #' lltm.int <- mirt(dat, itemtype = 'Rasch',
 #'    item.formula = ~ difficulty, itemdesign=itemdesign)
+#' anova(lltm, lltm.int) # same
 #' coef(lltm.int, simplify=TRUE)
 #'
 #' # using unconditional modeling for first four items
 #' itemdesign.sub <- itemdesign[5:nrow(itemdesign), , drop=FALSE]
 #' itemdesign.sub    # note that rownames are required in this case
 #' lltm.4 <- mirt(dat, itemtype = 'Rasch',
-#'    item.formula = ~ difficulty, itemdesign=itemdesign.sub)
+#'    item.formula = ~ 0 + difficulty, itemdesign=itemdesign.sub)
 #' coef(lltm.4, simplify=TRUE) # first four items are the standard Rasch
+#' anova(lltm, lltm.4) # similar fit, hence more constrained model preferred
 #'
 #' # LLTM with mixedmirt() (more flexible in general, but slower)
 #' LLTM <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
