@@ -1344,36 +1344,47 @@
 #' coef(LLTM.e)
 #'
 #'
-# ###################
-# # MLTM example
-#
-# as <- matrix(rep(1,60), ncol=2)
-# as[11:20,1] <- as[1:10,2] <- 0
-# d1 <- rep(c(1,0, -1),each = 10)  # first easy, then medium, last difficult for first trait
-# d2 <- rep(c(-1,0,1),each = 10)    # difficult to easy
-# ds <- cbind(d1, d2)
-# dat <- simdata(as, ds, 1000, itemtype = 'partcomp')
-#
-# # unconditional model
-# syntax <- "theta1 = 1-10, 21-30
-#                   theta2 = 11-30
-#                   COV = theta1*theta2"
-# mod <- mirt(dat, syntax, itemtype='PC1PL')
-# coef(mod, simplify=TRUE)
-# data.frame(est=coef(mod, simplify=TRUE)$items, pop=data.frame(a=as, d=ds))
-# itemplot(mod, 1)
-# itemplot(mod, 30)
-#
-# itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('easy', 'medium', 'hard')),
-#                         t2_difficulty=factor(d2, labels=c('easy', 'medium', 'hard')))
-# itemdesign
-# mltm <- mirt(dat, syntax, itemtype = 'PC1PL', itemdesign=itemdesign,
-#              item.formula = list(theta1 ~ t1_difficulty,
-#                                  theta2 ~ t2_difficulty), SE=FALSE)
-# coef(mltm, simplify=TRUE)
-# coef(mltm, printSE=TRUE)
-# anova(mltm, mod)
-#
+#' ###################
+#' # MLTM example
+#'
+#' set.seed(42)
+#'
+#' as <- matrix(rep(1,60), ncol=2)
+#' as[11:18,1] <- as[1:9,2] <- 0
+#' d1 <- rep(c(3,1),each = 6)  # first easy, then medium, last difficult for first trait
+#' d2 <- rep(c(0,1,2),times = 4)    # difficult to easy
+#' d <- rnorm(18)
+#' ds <- rbind(cbind(d1=NA, d2=d), cbind(d1, d2))
+#' (pars <- data.frame(a=as, d=ds))
+#' dat <- simdata(as, ds, 2500,
+#'   itemtype = c(rep('dich', 18), rep('partcomp', 12)))
+#' colMeans(dat)
+#'
+#' # unconditional model
+#' syntax <- "theta1 = 1-9, 19-30
+#'            theta2 = 10-30
+#'            COV = theta1*theta2"
+#' itemtype <- c(rep('Rasch', 18), rep('PC1PL', 12))
+#' mod <- mirt(dat, syntax, itemtype=itemtype)
+#' coef(mod, simplify=TRUE)
+#' data.frame(est=coef(mod, simplify=TRUE)$items, pop=data.frame(a=as, d=ds))
+#' itemplot(mod, 1)
+#' itemplot(mod, 30)
+#'
+#' # MLTM design only for PC1PL items
+#' itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('medium', 'easy')),
+#'                         t2_difficulty=factor(d2, labels=c('hard', 'medium', 'easy')))
+#' rownames(itemdesign) <- colnames(dat)[19:30]
+#' itemdesign
+#'
+#' # fit MLTM design, leaving first 18 items as 'Rasch' type
+#' mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
+#'              item.formula = list(theta1 ~ t1_difficulty,
+#'                                  theta2 ~ t2_difficulty), SE=FALSE)
+#' coef(mltm, simplify=TRUE)
+#' coef(mltm, printSE=TRUE)
+#' anova(mltm, mod)
+#'
 #' }
 mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
                  covdata = NULL, formula = NULL, itemdesign=NULL, item.formula = NULL,

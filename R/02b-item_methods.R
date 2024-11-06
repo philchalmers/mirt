@@ -1258,6 +1258,15 @@ setMethod(
                               factor.ind=x@factor.ind, fixed.ind=x@fixed.ind)
             ret <- list(grad=tmp$grad, hess=tmp$hess)
             if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+            # if(FALSE){
+            #     grad <- numeric(length(x@par))
+            #     hess <- matrix(0, length(x@par), length(x@par))
+            #     grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+            #     # print(round(rbind(ret$grad[x@est], grad[x@est]), 3))
+            #     if(estHess && any(x@est))
+            #         hess[x@est, x@est] <- numerical_deriv(x@par[pick], EML, obj=x,
+            #                                             Theta=Theta, gradient=FALSE)
+            # }
         }
         return(ret)
     }
