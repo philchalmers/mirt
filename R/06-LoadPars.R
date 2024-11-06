@@ -277,7 +277,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         item_nfi <- ifelse(!is.null(mixed.design) &&
                           mixed.design$has_idesign[i], nfixedeffects, 0)
         item_nfact <- nfact
-        if(!mixed.design$has_idesign[i])
+        if(!is.null(mixed.design) && !mixed.design$has_idesign[i])
             item_nfact <- nfact - nfixedeffects
 
 
