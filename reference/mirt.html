@@ -29,7 +29,7 @@ also available using the multipleGroup function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -212,17 +212,14 @@ will estimate the regression parameters for all latent traits by default</p></dd
 
 <dt id="arg-itemdesign">itemdesign<a class="anchor" aria-label="anchor" href="#arg-itemdesign"></a></dt>
 <dd><p>a <code>data.frame</code> with rows equal to the number of items and columns
-containing any item-design effects. If items should be included in the design structure
-(i.e., should be left in their canonical structure) then fewer rows can be used,
-however the <code>rownames</code> must be defined and matched with <code>colnames</code> in the <code>data</code>
-input. The item design matrix is constructed with the use of
+containing any item-design effects. The item design matrix is constructed with the use of
 <code>item.formula</code>. Providing this input will fix the associated <code>'d'</code> intercepts
-to 0, where applicable</p></dd>
+to 0</p></dd>
 
 
 <dt id="arg-item-formula">item.formula<a class="anchor" aria-label="anchor" href="#arg-item-formula"></a></dt>
 <dd><p>an R formula used to specify any intercept decomposition (e.g.,
-the LLTM; Fischer, 1983)</p></dd>
+the LLTM; Fischer, 1973)</p></dd>
 
 
 <dt id="arg-se-type">SE.type<a class="anchor" aria-label="anchor" href="#arg-se-type"></a></dt>
@@ -975,8 +972,6 @@ response theory. <em>Journal of Educational and Behavioral Statistics, 22</em>, 
 <p>Falk, C. F. &amp; Cai, L. (2016). Maximum Marginal Likelihood Estimation of a
 Monotonic Polynomial Generalized Partial Credit Model with Applications to
 Multiple Group Analysis. <em>Psychometrika, 81</em>, 434-460.</p>
-<p>Fischer, G. H. (1983). Logistic latent trait models with linear constraints.
-<em>Psychometrika, 48</em>, 3-26.</p>
 <p>Lord, F. M. &amp; Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.</p>
 <p>Lucke, J. F. (2015). Unipolar item response models. In S. P. Reise &amp; D. A. Revicki
 (Eds.), Handbook of item response theory modeling: Applications to
@@ -1069,7 +1064,7 @@ IL: Scientific Software International.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.42.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.42.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
@@ -1642,13 +1637,6 @@ IL: Scientific Software International.</p>
 <span class="r-in"><span><span class="va">lltm.int</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="st">'Rasch'</span>,</span></span>
 <span class="r-in"><span>   item.formula <span class="op">=</span> <span class="op">~</span> <span class="va">difficulty</span>, itemdesign<span class="op">=</span><span class="va">itemdesign</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lltm.int</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># using unconditional modeling for first four items</span></span></span>
-<span class="r-in"><span><span class="va">itemdesign.sub</span> <span class="op">&lt;-</span> <span class="va">itemdesign</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">itemdesign</span><span class="op">)</span>, , drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">itemdesign.sub</span>    <span class="co"># note that rownames are required in this case</span></span></span>
-<span class="r-in"><span><span class="va">lltm.4</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="st">'Rasch'</span>,</span></span>
-<span class="r-in"><span>   item.formula <span class="op">=</span> <span class="op">~</span> <span class="va">difficulty</span>, itemdesign<span class="op">=</span><span class="va">itemdesign.sub</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lltm.4</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="co"># first four items are the standard Rasch</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># LLTM with mixedmirt() (more flexible in general, but slower)</span></span></span>
 <span class="r-in"><span><span class="va">LLTM</span> <span class="op">&lt;-</span> <span class="fu"><a href="mixedmirt.html">mixedmirt</a></span><span class="op">(</span><span class="va">dat</span>, model<span class="op">=</span><span class="fl">1</span>, fixed <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">difficulty</span>,</span></span>
