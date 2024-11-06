@@ -477,11 +477,14 @@
 #'   values by using \code{pars = 'values'}, and this object can in turn be modified and input back
 #'   into the estimation with \code{pars = mymodifiedpars}
 #' @param itemdesign a \code{data.frame} with rows equal to the number of items and columns
-#'   containing any item-design effects. The item design matrix is constructed with the use of
+#'   containing any item-design effects. If items should be included in the design structure
+#'   (i.e., should be left in their canonical structure) then fewer rows can be used,
+#'   however the \code{rownames} must be defined and matched with \code{colnames} in the \code{data}
+#'   input. The item design matrix is constructed with the use of
 #'   \code{item.formula}. Providing this input will fix the associated \code{'d'} intercepts
-#'   to 0
+#'   to 0, where applicable
 #' @param item.formula an R formula used to specify any intercept decomposition (e.g.,
-#'   the LLTM; Fischer, 1973)
+#'   the LLTM; Fischer, 1983)
 #' @param quadpts number of quadrature points per dimension (must be larger than 2).
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}.
@@ -723,6 +726,9 @@
 #' Falk, C. F. & Cai, L. (2016). Maximum Marginal Likelihood Estimation of a
 #' Monotonic Polynomial Generalized Partial Credit Model with Applications to
 #' Multiple Group Analysis. \emph{Psychometrika, 81}, 434-460.
+#'
+#' Fischer, G. H. (1983). Logistic latent trait models with linear constraints.
+#' \emph{Psychometrika, 48}, 3-26.
 #'
 #' Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
 #'
@@ -1317,6 +1323,13 @@
 #'    item.formula = ~ difficulty, itemdesign=itemdesign)
 #' coef(lltm.int, simplify=TRUE)
 #'
+#' # using unconditional modeling for first four items
+#' itemdesign.sub <- itemdesign[5:nrow(itemdesign), , drop=FALSE]
+#' itemdesign.sub    # note that rownames are required in this case
+#' lltm.4 <- mirt(dat, itemtype = 'Rasch',
+#'    item.formula = ~ difficulty, itemdesign=itemdesign.sub)
+#' coef(lltm.4, simplify=TRUE) # first four items are the standard Rasch
+#'
 #' # LLTM with mixedmirt() (more flexible in general, but slower)
 #' LLTM <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
 #'                   itemdesign=itemdesign, SE=FALSE)
@@ -1398,8 +1411,14 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
             mf <- model.frame(item.formula, itemdesign)
             mm <- model.matrix(item.formula, mf)
         }
+        if(nrow(mm) < ncol(data)){
+            has_idesign <- colnames(data) %in% rownames(itemdesign)
+        } else {
+            has_idesign <- rep(TRUE, nrow(itemdesign))
+            rownames(mm) <- colnames(data)
+        }
         mixed.design <- list(random=NULL, fixed=mm, from='mirt',
-                             lr.random=NULL, lr.fixed=NULL)
+                             lr.random=NULL, lr.fixed=NULL, has_idesign=has_idesign)
         attr(mixed.design, 'itemdesign') <- itemdesignold
     }
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),

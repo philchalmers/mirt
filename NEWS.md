@@ -5,8 +5,9 @@
   `Rasch` itemtype family
 
 - `mirt()` gains `itemdesign` and `item.formula` arguments to fit fixed 
-  item design characteristics (e.g. LLTMs; Fischer, 1983). Arguments are 
-  similar to those in `mixedmirt()`, though not as flexible
+  item design characteristics (e.g. LLTMs; Fischer, 1983) to all or a subset
+  of items. Arguments are similar to those in `mixedmirt()`, though generally 
+  not as flexible
 
 - Partially-compensatory family of `itemtypes` now behave more consistently
   when loading structures specified where trace lines products are only 

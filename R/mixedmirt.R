@@ -445,7 +445,8 @@ mixedmirt <- function(data, covdata = NULL, model = 1, fixed = ~ 1, random = NUL
         mr <- make.randomdesign(random=random, longdata=longdata, covnames=colnames(covdata),
                                 itemdesign=itemdesign, N=nrow(covdata))
     } else mr <- list()
-    mixed.design <- list(fixed=mm, random=mr, from='mixedmirt')
+    mixed.design <- list(fixed=mm, random=mr, from='mixedmirt',
+                         has_idesign=rep(TRUE, ncol(data)))
     if(is(lr.random, 'formula')) lr.random <- list(lr.random)
     if(length(lr.random) > 0L){
         lr.random <- make.randomdesign(random=lr.random, longdata=covdata,
