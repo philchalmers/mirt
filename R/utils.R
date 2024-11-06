@@ -793,7 +793,6 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
             are_partcomp <- are_partcomp[-length(are_partcomp)] # no group
             cpow_unique <- NULL
             if(any(are_partcomp & mixed.design$has_idesign)){
-                browser()
                 cpowmat <- lapply(1:length(are_partcomp), \(i){
                     if(are_partcomp[i]){
                         pars[[g]][[i]]@cpow
@@ -802,13 +801,14 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                     }})
                 cpowmat <- do.call(rbind, cpowmat)
                 cpowgroup <- apply(cpowmat, 1, \(x) paste0(x, collapse=','))
-                cpow_unique <- unique(cpowgroup)
+                cpowgroup[rowSums(is.na(cpowmat)) == ncol(cpowmat)] <- NA
+                cpow_unique <- unique(na.omit(cpowgroup))
             }
             if(!is.null(cpow_unique)){
                 for(cp in cpow_unique){
                     for(p in 1:ncol(mixed.design$fixed)){
                         constr <- rep(NA, J)
-                        for(i in which(mixed.design$has_idesign)){
+                        for(i in which(mixed.design$has_idesign & are_partcomp)){
                             if(cp == cpowgroup[i] && pars[[g]][[i]]@est[p])
                                 constr[i] <- pars[[g]][[i]]@parnum[p]
                         }

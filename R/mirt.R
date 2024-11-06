@@ -1379,8 +1379,8 @@
 #'
 #' # fit MLTM design, leaving first 18 items as 'Rasch' type
 #' mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
-#'              item.formula = list(theta1 ~ t1_difficulty,
-#'                                  theta2 ~ t2_difficulty), SE=FALSE)
+#'              item.formula = list(theta1 ~ 0 + t1_difficulty,
+#'                                  theta2 ~ 0 + t2_difficulty), SE=FALSE)
 #' coef(mltm, simplify=TRUE)
 #' coef(mltm, printSE=TRUE)
 #' anova(mltm, mod)
