@@ -132,7 +132,12 @@ input. The item design matrix is constructed with the use of
 to 0, where applicable}
 
 \item{item.formula}{an R formula used to specify any intercept decomposition (e.g.,
-the LLTM; Fischer, 1983)}
+  the LLTM; Fischer, 1983). Note that only the right-hand side of the formula is required
+  for compensatory models.
+
+  For non-compensatory \code{itemtype}s (e.g., \code{'PC1PL'}) the formula must include
+  the name of the latent trait in the left hand side of the expression to indicate which
+  of the trait specification should have their intercepts decomposed (see MLTM; Embretson, 1984)}
 
 \item{SE.type}{type of estimation method to use for calculating the parameter information matrix
   for computing standard errors and \code{\link{wald}} tests. Can be:

@@ -484,7 +484,12 @@
 #'   \code{item.formula}. Providing this input will fix the associated \code{'d'} intercepts
 #'   to 0, where applicable
 #' @param item.formula an R formula used to specify any intercept decomposition (e.g.,
-#'   the LLTM; Fischer, 1983)
+#'   the LLTM; Fischer, 1983). Note that only the right-hand side of the formula is required
+#'   for compensatory models.
+#'
+#'   For non-compensatory \code{itemtype}s (e.g., \code{'PC1PL'}) the formula must include
+#'   the name of the latent trait in the left hand side of the expression to indicate which
+#'   of the trait specification should have their intercepts decomposed (see MLTM; Embretson, 1984)
 #' @param quadpts number of quadrature points per dimension (must be larger than 2).
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}.

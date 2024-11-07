@@ -2,7 +2,8 @@
 
 - Related to both points below, general MLTM (Embretson, 1984) added when 
   itemtype is specified as `PC1PL` and an `itemdesign` set is used, where 
-  formula must include name of the factor in the formula expressions
+  formula must include the name of the factor in the formula expressions. See
+  examples in the `mirt` documentation (requested by Susan Embretson)
 
 - Added `PC1PL` itemtype to more easily specify conjunctive models with
   slopes fixed to 1 and estimation of the latent variance term, mimicking the 
@@ -17,7 +18,7 @@
   when loading structures specified where trace lines products are only 
   computed for dimensions with non-zero slopes
 
-- `RCI()` gains a `shiny` logical create an interactive scoring interface
+- `RCI()` gains a `shiny` logical to create an interactive scoring interface
 
 # Changes in mirt 1.42
 
