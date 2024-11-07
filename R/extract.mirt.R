@@ -71,6 +71,8 @@
 #' @param x mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 #'   'DiscreteGroupClass'
 #' @param what a string indicating what to extract
+#' @param item if necessary, which item to extract information from.
+#'   Defaults to 1 if not specified
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
@@ -97,7 +99,7 @@
 #' extract.mirt(grp1, 'parvec')
 #'
 #' }
-extract.mirt <- function(x, what){
+extract.mirt <- function(x, what, item = 1){
     if(what == 'DIF_coefficients')
         return(attr(x, 'DIF_coefficients'))
     ret <- switch(what,
@@ -162,6 +164,8 @@ extract.mirt <- function(x, what){
                   formulas = x@Model$formulas,
                   lrformulas=x@ParObjects$lrPars@formula,
                   itemdesign = x@Data$itemdesign,
+                  nfixedeffects=x@ParObjects$pars[[item]]@nfixedeffects,
+                  fixed.design=x@ParObjects$pars[[item]]@fixed.design,
                   itemloc = x@Model$itemloc,
                   CUSTOM.IND = x@Internals$CUSTOM.IND,
                   dentype = x@Options$dentype,

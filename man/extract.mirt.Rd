@@ -4,13 +4,16 @@
 \alias{extract.mirt}
 \title{Extract various elements from estimated model objects}
 \usage{
-extract.mirt(x, what)
+extract.mirt(x, what, item = 1)
 }
 \arguments{
 \item{x}{mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 'DiscreteGroupClass'}
 
 \item{what}{a string indicating what to extract}
+
+\item{item}{if necessary, which item to extract information from.
+Defaults to 1 if not specified}
 }
 \description{
 A generic function to extract the internal objects from estimated models.

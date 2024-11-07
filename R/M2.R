@@ -173,6 +173,11 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 }
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta, prodlist)
+                if(extract.mirt(obj, 'nfixedeffects') > 0){
+                    warning('M2() not fully tested for itemdesign effects')
+                    if(nrow(extract.mirt(obj, "fixed.design")) == 1)
+                        Theta <- cbind(extract.mirt(obj, "fixed.design")[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                }
             } else {
                 Theta <- obj@Model$Theta
                 prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
