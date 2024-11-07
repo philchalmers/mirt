@@ -854,7 +854,7 @@ setMethod(
                 }
             }
             if(verbose){
-                cat("LD matrix (lower triangle) and standardized values.\n")
+                cat("LD matrix (lower triangle) and standardized residual correlations (upper triangle)\n")
                 cat("\nUpper triangle summary:\n")
                 print(round(summary(res[upper.tri(res)]), 3))
                 cat("\n")
