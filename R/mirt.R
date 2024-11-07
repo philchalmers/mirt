@@ -1320,6 +1320,9 @@
 #' itemfit(lltm)
 #' head(fscores(lltm))  #EAP estimates
 #' fscores(lltm, method='EAPsum', full.scores=FALSE)
+#' M2(lltm) # goodness of fit
+#' head(personfit(lltm))
+#' residuals(lltm)
 #'
 #' # intercept across items also possible by removing ~ 0 portion, just interpreted differently
 #' lltm.int <- mirt(dat, itemtype = 'Rasch',
@@ -1387,6 +1390,9 @@
 #' coef(mltm, simplify=TRUE)
 #' coef(mltm, printSE=TRUE)
 #' anova(mltm, mod) # similar fit; hence more constrained version preferred
+#' M2(mltm) # goodness of fit
+#' head(personfit(mltm))
+#' residuals(mltm)
 #'
 #' # EAP estimates
 #' fscores(mltm) |> head()

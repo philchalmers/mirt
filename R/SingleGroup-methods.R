@@ -805,8 +805,13 @@ setMethod(
             for(i in seq_len(J)){
                 for(j in seq_len(J)){
                     if(i < j){
-                        P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
-                        P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
+                        Theta1 <- Theta2 <- Theta
+                        if(object@ParObjects$pars[[i]]@nfixedeffects > 0)
+                            Theta1 <- cbind(object@ParObjects$pars[[i]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                        if(object@ParObjects$pars[[j]]@nfixedeffects > 0)
+                            Theta2 <- cbind(object@ParObjects$pars[[j]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                        P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta1)
+                        P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta2)
                         tab <- table(data[,i], data[,j], useNA = 'no')
                         Etab <- matrix(0,K[i],K[j])
                         NN <- sum(tab)
@@ -943,12 +948,17 @@ setMethod(
             diag(res) <- 1
             for(i in seq_len(J)){
                 ei <- extract.item(object, item=i)
-                EI <- expected.item(ei, Theta=Theta)
+                Thetastar <- Theta
+                if(ei@nfixedeffects > 0)
+                    Thetastar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                EI <- expected.item(ei, Theta=Thetastar)
                 dat[ ,1L] <- object@Data$data[ ,i] - EI
                 for(j in seq_len(J)){
                     if(i < j){
                         ej <- extract.item(object, item=j)
-                        EJ <- expected.item(ej, Theta=Theta)
+                        if(ej@nfixedeffects > 0)
+                            Thetastar <- cbind(ej@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                        EJ <- expected.item(ej, Theta=Thetastar)
                         dat[,2L] <- object@Data$data[ ,j] - EJ
                         tmpdat <- na.omit(dat)
                         res[i,j] <- res[j,i] <- cor(tmpdat)[1L,2L]

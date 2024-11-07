@@ -155,7 +155,10 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
     itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
     missing_loc <- is.na(extract.mirt(x, 'data'))
     for (i in seq_len(J)){
-        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+        Thetastar <- Theta
+        if(pars[[i]]@nfixedeffects > 0)
+            Thetastar <- cbind(pars[[i]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+        itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Thetastar)
         itemtrace[ missing_loc[,i],itemloc[i]:(itemloc[i+1L] - 1L)] <- 1
     }
     LL <- itemtrace * fulldata
@@ -180,8 +183,11 @@ personfit <- function(x, method = 'EAP', Theta = NULL, stats.only = TRUE, return
     for (i in seq_len(J)){
         dat <- fulldata[ ,itemloc[i]:(itemloc[i+1] - 1)]
         item <- extract.item(x, i)
-        EV <- expected.item(item, Theta=Theta, min=mins[i], include.var=TRUE)
-        P <- ProbTrace(x=pars[[i]], Theta=Theta)
+        Thetastar <- Theta
+        if(pars[[i]]@nfixedeffects > 0)
+            Thetastar <- cbind(pars[[i]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+        EV <- expected.item(item, Theta=Thetastar, min=mins[i], include.var=TRUE)
+        P <- ProbTrace(x=pars[[i]], Theta=Thetastar)
         Emat <- matrix(0:(K[i]-1), nrow(P), ncol(P), byrow = TRUE)
         resid[, i] <- rowSums(dat*Emat) - rowSums(Emat * P)
         std.resid[, i] <- resid[, i] / sqrt(EV$VAR)
