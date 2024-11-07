@@ -1317,6 +1317,8 @@
 #'
 #' # additional information for LLTM
 #' plot(lltm)
+#' plot(lltm, type = 'trace')
+#' itemplot(lltm, item=1)
 #' itemfit(lltm)
 #' head(fscores(lltm))  #EAP estimates
 #' fscores(lltm, method='EAPsum', full.scores=FALSE)

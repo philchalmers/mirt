@@ -1360,8 +1360,13 @@ setMethod(
                 if(is.null(main))
                     main <- 'Item Information'
                 I <- matrix(NA, nrow(Theta), J)
-                for(i in which.items)
-                    I[,i] <- iteminfo(extract.item(x, i), ThetaFull, degrees=degrees)
+                for(i in which.items){
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    I[,i] <- iteminfo(ei, ThetaFullstar, degrees=degrees)
+                }
                 I <- t(na.omit(t(I)))
                 items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                 plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items)
@@ -1377,7 +1382,11 @@ setMethod(
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
                 for(i in which.items){
-                    S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    S[[ind]] <- expected.item(ei, ThetaFullstar, mins[i])
                     ind <- ind + 1L
                 }
                 Sstack <- do.call(c, S)
@@ -1532,7 +1541,11 @@ setMethod(
                 ind <- 1L
                 alltwocats <- all(extract.mirt(x, 'K')[which.items] == 2L)
                 for(i in which.items){
-                    tmp <- probtrace(extract.item(x, i), ThetaFull)
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    tmp <- probtrace(ei, ThetaFullstar)
                     if(ncol(tmp) == 2L && (facet_items || (!facet_items && alltwocats)) && drop2)
                         tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
@@ -1565,7 +1578,11 @@ setMethod(
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
                 for(i in which.items){
-                    S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    S[[ind]] <- expected.item(ei, ThetaFullstar, mins[i])
                     ind <- ind + 1L
                 }
                 Sstack <- do.call(c, S)
@@ -1587,8 +1604,13 @@ setMethod(
                 if(is.null(main))
                     main <- 'Item Information'
                 I <- matrix(NA, nrow(Theta), J)
-                for(i in which.items)
-                    I[,i] <- iteminfo(extract.item(x, i), ThetaFull)
+                for(i in which.items){
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    I[,i] <- iteminfo(ei, ThetaFullstar)
+                }
                 I <- t(na.omit(t(I)))
                 items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)

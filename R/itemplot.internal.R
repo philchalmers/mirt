@@ -168,12 +168,16 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         Theta <- thetaComb(theta, x@Model$nfact)
         ThetaFull <- prodterms(Theta,prodlist)
     } else Theta <- ThetaFull <- thetaComb(theta, nfact)
+    ThetaFullstar <- ThetaFull
+    if(extract.mirt(x, 'nfixedeffects') > 0)
+        ThetaFullstar <- cbind(x@ParObjects$pars[[item]]@fixed.design[rep(1, nrow(ThetaFull)), , drop=FALSE],
+                               ThetaFull)
     if(length(degrees) == 1) degrees <- rep(degrees, ncol(ThetaFull))
     if(is(x, 'SingleGroupClass') && x@Options$exploratory){
         cfs <- coef(x, ..., verbose=FALSE, rawug=TRUE)
         x@ParObjects$pars[[item]]@par <- as.numeric(cfs[[item]][1L,])
     }
-    P <- ProbTrace(x=x@ParObjects$pars[[item]], Theta=ThetaFull)
+    P <- ProbTrace(x=x@ParObjects$pars[[item]], Theta=ThetaFullstar)
     if(type == 'threshold')
         P <- 1 - t(apply(P, 1, cumsum))
     K <- x@ParObjects$pars[[item]]@ncat
@@ -181,15 +185,15 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
     if(K == 2L) auto.key <- FALSE
     if(type %in% c('info', 'SE', 'infoSE', 'infotrace', 'RE', 'infocontour', 'infocat', 'RETURN')){
         if(nfact == 1){
-            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=0)
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFullstar, degrees=0)
         } else {
-            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull, degrees=degrees)
+            info <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFullstar, degrees=degrees)
         }
     }
     if(type == 'infocat'){
         stopifnot(nfact == 1L && K > 2L)
         type <- 'info'
-        infocat <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFull,
+        infocat <- iteminfo(x=x@ParObjects$pars[[item]], Theta=ThetaFullstar,
                             degrees=0, total.info = FALSE)
     } else infocat <- NULL
     CEinfoupper <- CEinfolower <- info
@@ -217,14 +221,14 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         upper <- sorttmp[ceiling(length(tmp) * (1-CEalpha/2))]
         delta <- delta[tmp < upper & tmp > lower, , drop=FALSE]
         tmpitem@par[tmpitem@est] <- delta[1, ]
-        CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFull, degrees=degrees)
-        CEprobupper <- CEproblower <- ProbTrace(tmpitem, ThetaFull)
-        CEscoreupper <- CEscorelower <- expected.item(tmpitem, ThetaFull, min = x@Data$mins[item])
+        CEinfoupper <- CEinfolower <- iteminfo(tmpitem, ThetaFullstar, degrees=degrees)
+        CEprobupper <- CEproblower <- ProbTrace(tmpitem, ThetaFullstar)
+        CEscoreupper <- CEscorelower <- expected.item(tmpitem, ThetaFullstar, min = x@Data$mins[item])
         for(i in 2:nrow(delta)){
             tmpitem@par[tmpitem@est] <- delta[i, ]
-            CEinfo <- iteminfo(tmpitem, ThetaFull, degrees=degrees)
-            CEprob <- ProbTrace(tmpitem, ThetaFull)
-            CEscore <- expected.item(tmpitem, ThetaFull, min = x@Data$mins[item])
+            CEinfo <- iteminfo(tmpitem, ThetaFullstar, degrees=degrees)
+            CEprob <- ProbTrace(tmpitem, ThetaFullstar)
+            CEscore <- expected.item(tmpitem, ThetaFullstar, min = x@Data$mins[item])
             CEinfoupper <- apply(cbind(CEinfoupper, CEinfo), 1, max)
             CEinfolower <- apply(cbind(CEinfolower, CEinfo), 1, min)
             CEscoreupper <- apply(cbind(CEscoreupper, CEscore), 1, max)
@@ -236,7 +240,7 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
         }
     }
     if(type == 'RETURN') return(data.frame(P=P, info=info, Theta=Theta))
-    score <- expected.item(x@ParObjects$pars[[item]], Theta=ThetaFull, min=x@Data$mins[item])
+    score <- expected.item(x@ParObjects$pars[[item]], Theta=ThetaFullstar, min=x@Data$mins[item])
     if(ncol(P) == 2 && type != 'threshold'){
         P <- P[ ,-1, drop = FALSE]
         CEprobupper <- CEprobupper[ ,-1, drop = FALSE]

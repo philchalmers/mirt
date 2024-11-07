@@ -547,8 +547,12 @@ itemfit <- function(x, fit_stats = 'S_X2',
         if(Zh){
             N <- nrow(Theta)
             itemtrace <- matrix(0, ncol=ncol(fulldata), nrow=N)
-            for (i in which.items)
-                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Theta)
+            for (i in which.items){
+                Thetastar <- Theta
+                if(pars[[i]]@nfixedeffects > 0)
+                    Thetastar <- cbind(pars[[i]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                itemtrace[ ,itemloc[i]:(itemloc[i+1L] - 1L)] <- ProbTrace(x=pars[[i]], Theta=Thetastar)
+            }
             log_itemtrace <- log(itemtrace)
             LL <- log_itemtrace * fulldata
             Lmatrix <- matrix(LL[as.logical(fulldata)], N, J)
