@@ -29,7 +29,7 @@ also available using the multipleGroup function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -222,7 +222,11 @@ to 0, where applicable</p></dd>
 
 <dt id="arg-item-formula">item.formula<a class="anchor" aria-label="anchor" href="#arg-item-formula"></a></dt>
 <dd><p>an R formula used to specify any intercept decomposition (e.g.,
-the LLTM; Fischer, 1983)</p></dd>
+  the LLTM; Fischer, 1983). Note that only the right-hand side of the formula is required
+  for compensatory models.</p>
+<p>For non-compensatory <code>itemtype</code>s (e.g., <code>'PC1PL'</code>) the formula must include
+  the name of the latent trait in the left hand side of the expression to indicate which
+  of the trait specification should have their intercepts decomposed (see MLTM; Embretson, 1984)</p></dd>
 
 
 <dt id="arg-se-type">SE.type<a class="anchor" aria-label="anchor" href="#arg-se-type"></a></dt>
@@ -1071,7 +1075,7 @@ IL: Scientific Software International.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.42.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.42.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
