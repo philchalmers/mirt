@@ -30,6 +30,8 @@ test_that('LLTM', {
     cfs <- coef(lltm.4, simplify=TRUE)$items
     expect_equal(as.vector(cfs[c(1,5), 1:3]), c(0, .9063842, numeric(4)), tol=1e-2)
     expect_equal(anova(lltm, lltm.4)$p[2], 0.04288353, tol=1e-2)
+    m2 <- M2(lltm.4)
+    expect_equal(m2$TLI, 1.001862, tol=1e-2)
 
 })
 
@@ -73,6 +75,8 @@ test_that('MLTM', {
     fs <- fscores(mltm)
     expect_equal(as.vector(fs[1:3,]), c(-2.0019607,1.138449,0.149316,
                                         -0.4814751,0.3697978,1.7928627), tol=1e-2)
+    m2 <- M2(mltm)
+    expect_equal(m2$CFI, 0.9758302, tol=1e-2)
 
 
 })

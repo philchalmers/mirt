@@ -90,7 +90,6 @@
 #' }
 M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
                 CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
-
     impute <- 0
     if(is(obj, 'MixtureModel'))
         stop('Mixture IRT models not yet supported', call.=FALSE)
@@ -173,11 +172,6 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 }
                 if(length(prodlist) > 0L)
                     Theta <- prodterms(Theta, prodlist)
-                if(extract.mirt(obj, 'nfixedeffects') > 0){
-                    warning('M2() not fully tested for itemdesign effects')
-                    if(nrow(extract.mirt(obj, "fixed.design")) == 1)
-                        Theta <- cbind(extract.mirt(obj, "fixed.design")[rep(1, nrow(Theta)), , drop=FALSE], Theta)
-                }
             } else {
                 Theta <- obj@Model$Theta
                 prior <- bfactorlist$prior[[group]]; Priorbetween <- bfactorlist$Priorbetween[[group]]
@@ -198,13 +192,16 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             for(i in seq_len(nitems)){
                 x <- extract.item(obj, i)
                 scs <- 1L:x@ncat - 1L
-                EIs[,i] <- expected.item(x, Theta, min=0L)
-                prob <- ProbTrace(x, Theta)
+                Thetastar <- Theta
+                if(x@nfixedeffects > 0)
+                    Thetastar <- cbind(x@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                EIs[,i] <- expected.item(x, Thetastar, min=0L)
+                prob <- ProbTrace(x, Thetastar)
                 E11s[,i] <- colSums((1L:ncol(prob)-1L)^2 * t(prob))
                 cfs <- scs * scs
                 EIs2[,i] <- t(cfs %*% t(prob))
                 tmp <- length(x@parnum)
-                DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
+                DP[ ,ind:(ind+tmp-1L)] <- dP(x, Thetastar)
                 ind <- ind + tmp
                 wherepar[i+1L] <- ind
             }
@@ -264,14 +261,17 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             for(i in seq_len(nitems)){
                 x <- extract.item(obj, i)
                 scs <- 1L:x@ncat - 1L
-                EIs[,i] <- expected.item(x, Theta, min=0L)
-                prob <- ProbTrace(x, Theta)
+                Thetastar <- Theta
+                if(x@nfixedeffects > 0)
+                    Thetastar <- cbind(x@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                EIs[,i] <- expected.item(x, Thetastar, min=0L)
+                prob <- ProbTrace(x, Thetastar)
                 PIs[,pind:(pind+ncol(prob)-2L)] <- prob[,-1L]
                 E11s[,i] <- colSums((1L:ncol(prob)-1L)^2 * t(prob))
                 cfs <- scs * scs
                 EIs2[,i] <- t(cfs %*% t(prob))
                 tmp <- length(x@parnum)
-                DP[ ,ind:(ind+tmp-1L)] <- dP(x, Theta)
+                DP[ ,ind:(ind+tmp-1L)] <- dP(x, Thetastar)
                 pind <- pind + K[i] - 1L
                 ind <- ind + tmp
                 wherepar[i+1L] <- ind
@@ -303,7 +303,10 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             offset <- pars[[1L]]@parnum[1L] - 1L
             for(i in seq_len(nitems)){
                 x <- extract.item(obj, i)
-                tmp <- lapply(numDeriv_dP2(x, Theta), function(x) colSums(x * Prior))
+                Thetastar <- Theta
+                if(x@nfixedeffects > 0)
+                    Thetastar <- cbind(x@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                tmp <- lapply(numDeriv_dP2(x, Thetastar), function(x) colSums(x * Prior))
                 dp <- if(length(tmp) == 1L) matrix(tmp[[1L]], nrow=1L) else do.call(rbind, tmp)
                 delta1[pind1:(pind1+nrow(dp)-1L), pars[[i]]@parnum - offset] <- dp
                 pind1 <- pind1 + nrow(dp)
