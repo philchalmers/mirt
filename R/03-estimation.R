@@ -748,7 +748,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         if(opts$plausible.draws != 0) return(ESTIMATE)
         if(opts$SE && (ESTIMATE$converge || !opts$info_if_converged)){
             if(opts$verbose)
-                cat('\nCalculating information matrix...\n')
+                catf('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                    list = list(NCYCLES=opts$MHRM_SE_draws, BURNIN=1L,
                                                SEMCYCLES=opts$SEMCYCLES, gain=opts$gain,
@@ -797,7 +797,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         if(opts$SE && (ESTIMATE$converge || !opts$info_if_converged)){
             if(opts$verbose)
-                cat('\nCalculating information matrix...\n')
+                catf('\nCalculating information matrix...\n')
             tmp <- MHRM.group(pars=ESTIMATE$pars, constrain=constrain, Ls=Ls,
                               PrepList=PrepList, random=mixed.design$random, Data=Data,
                               lrPars=ESTIMATE$lrPars, lr.random=latent.regression$lr.random,
@@ -848,7 +848,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
         if(opts$verbose && !(opts$method %in% c('MHRM', 'MIXED', 'SEM')))
-            cat('\n\nCalculating information matrix...\n')
+            catf('\n\nCalculating information matrix...\n')
         if(opts$SE.type %in% c('complete', 'Oakes') && opts$method %in% c('EM', 'QMCEM')){
             opts$times$start.time.SE <- ESTIMATE$start.time.SE
             ESTIMATE <- loadESTIMATEinfo(info=-ESTIMATE$hess, ESTIMATE=ESTIMATE, constrain=constrain,
@@ -1009,8 +1009,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
        (!opts$logLik_if_converged || !(!ESTIMATE$converge && opts$logLik_if_converged))){
         logLik <- G2 <- SElogLik <- 0
         if(opts$draws > 0L){
-            if(opts$verbose) cat("\nCalculating log-likelihood...\n")
-            flush.console()
+            if(opts$verbose) catf("\nCalculating log-likelihood...\n")
             if(!opts$technical$parallel){
                 ncores <- .mirtClusterEnv$ncores
                 .mirtClusterEnv$ncores <- 1L

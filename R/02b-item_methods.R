@@ -1088,14 +1088,14 @@ setMethod(
                     if(nfact != length(cpow)){
                         if(cpow[i] == 0) next
                         pick <- fixed.ind[i]:(fixed.ind[i+1]-1)
-                        # dstar <- sum(a[pick] * t(thetas[,pick,drop=FALSE]))
-                        Pk <- (P.mirt(c(a[factor.ind[i]], d[i],-999,999),
+                        dstar <- sum(a[pick] * thetas[1,pick])
+                        Pk <- (P.mirt(c(a[factor.ind[i]], d[i] + dstar,-999,999),
                                       matrix(thetas[,factor.ind[i]]))[,2L])^cpow[i]
                         Qk <- 1 - Pk
                         dd[i] <- sum((1-c)*Pstar*Qk*const1)
                         da[factor.ind[i]] <- sum((1-c)*Pstar*Qk*thetas[,factor.ind[i]]*const1)
                         for(j in 1:length(pick))
-                            da[pick[j]] <- dd[i] * thetas[pick[j]]
+                            da[pick[j]] <- dd[i] * thetas[1,pick[j]]
                     } else {
                         Pk <- (P.mirt(c(a[i],d[i],-999,999),matrix(thetas[,i]))[,2L])^cpow[i]
                         Qk <- 1 - Pk
@@ -1240,33 +1240,20 @@ setMethod(
         f <- rowSums(x@dat)
         r <- x@dat[ ,2L]
         g <- x@par[length(x@par)-1L]
-        if(x@nfixedeffects > 0){ # TODO temporary
-            grad <- rep(0, length(x@par))
+        tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),
+                          g=g, r=r, f=f, Thetas=Theta, estHess=estHess && x@nfixedeffects != 0,
+                          factor.ind=x@factor.ind, fixed.ind=x@fixed.ind)
+        ret <- list(grad=tmp$grad, hess=tmp$hess)
+        if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        if(estHess && x@nfixedeffects > 0){
             hess <- matrix(0, length(x@par), length(x@par))
-            pick <- x@est & c(x@fixed.design != 0, rep(TRUE, 2*length(x@cpow)), TRUE, TRUE)
-            x@est <- pick
-            grad[pick] <- numerical_deriv(x@par[pick], EML, obj=x, Theta=Theta)
-            # print(round(rbind(ret$grad[x@est], grad[x@est]), 3))
+            pick <- x@est & c(x@fixed.design != 0, rep(TRUE, length(x@cpow)*2), TRUE, TRUE)
             if(estHess && any(pick)){
+                x@est <- pick
                 hess[pick, pick] <- numerical_deriv(x@par[pick], EML, obj=x,
-                                                      Theta=Theta, gradient=FALSE)
+                                                    Theta=Theta, gradient=FALSE)
             }
-            ret <- list(grad=grad, hess=hess)
-        } else {
-            tmp <- dpars.comp(lambda=ExtractLambdas(x),zeta=ExtractZetas(x),
-                              g=g, r=r, f=f, Thetas=Theta, estHess=estHess,
-                              factor.ind=x@factor.ind, fixed.ind=x@fixed.ind)
-            ret <- list(grad=tmp$grad, hess=tmp$hess)
-            if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
-            # if(FALSE){
-            #     grad <- numeric(length(x@par))
-            #     hess <- matrix(0, length(x@par), length(x@par))
-            #     grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
-            #     # print(round(rbind(ret$grad[x@est], grad[x@est]), 3))
-            #     if(estHess && any(x@est))
-            #         hess[x@est, x@est] <- numerical_deriv(x@par[pick], EML, obj=x,
-            #                                             Theta=Theta, gradient=FALSE)
-            # }
+            ret$hess <- hess
         }
         return(ret)
     }

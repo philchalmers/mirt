@@ -2888,6 +2888,10 @@ mySapply <- function(X, FUN, progress = FALSE, ...){
 }
 
 printf <- function(...) {
-  cat(sprintf(...))
-  flush.console() # print immediately
+  catf(sprintf(...))
+}
+
+catf <- function(...) {
+    cat(...)
+    flush.console()
 }
