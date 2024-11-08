@@ -509,6 +509,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         #     warning('Oakes method not supported for models with latent regression effects', call.=FALSE)
         # } else
         if(list$SE.type %in% c('Oakes', 'sandwich') && list$SE){
+            if(verbose)
+                catf('\n\nCalculating information matrix...\n')
             complete_info <- hess
             shortpars <- longpars[estpars & !redun_constr]
             tmp <- updatePrior(pars=pars, gTheta=gTheta,

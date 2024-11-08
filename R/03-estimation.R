@@ -847,7 +847,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     opts$times$start.time.SE <- proc.time()[3L]
     if(!opts$NULL.MODEL && opts$SE){
         tmp <- ESTIMATE
-        if(opts$verbose && !(opts$method %in% c('MHRM', 'MIXED', 'SEM')))
+        if(opts$verbose && !(opts$method %in% c('MHRM', 'MIXED', 'SEM')) &&
+           !(opts$SE.type %in% c('complete', 'Oakes')))
             catf('\n\nCalculating information matrix...\n')
         if(opts$SE.type %in% c('complete', 'Oakes') && opts$method %in% c('EM', 'QMCEM')){
             opts$times$start.time.SE <- ESTIMATE$start.time.SE
