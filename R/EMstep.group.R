@@ -378,12 +378,15 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             for(g in seq_len(ngroups)){
                 if(any(pars[[g]][[J+1L]]@est) && nfact > 1L){
                     gp <- ExtractGroupPars(pars[[g]][[J+1L]])
-                    chl <- try(chol(gp$gcov), silent=TRUE)
-                    if(is(chl, 'try-error')){
-                        if(list$warn)
-                            warning('Latent trait variance-covariance matrix became non-positive definite.',
-                                    call.=FALSE)
-                        converge <- FALSE
+                    ev <- eigen(gp$gcov)
+                    if(any(ev$values <= sqrt(.Machine$double.eps))){
+                        warning('Latent trait covariance matrix became non-positive definite. Model may be unstable', call.=FALSE)
+                        sds <- diag(sqrt(diag(gp$gcov)))
+                        smoothed <- cov2cor(smooth.cov(gp$gcov))
+                        gcov <- sds %*% smoothed %*% sds
+                        longpars[pars[[g]][[J+1]]@parnum] <- c(pars[[g]][[J+1L]]@par[1:nfact],
+                                                               gcov[lower.tri(gcov, TRUE)])
+                        pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
                     }
                 }
             }
@@ -418,7 +421,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
             if(list$warn && !(is.nan(TOL) || is.na(TOL)) && !list$NULL.MODEL)
-                warning('M-step optimizer converged immediately. Solution is either at the ML or
+                warning('M-step optimizer converged immediately. Estimates are either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }
         if(Moptim == 'L-BFGS-B' && cycles <= 10L && !all(!est) && !list$NULL.MODEL){

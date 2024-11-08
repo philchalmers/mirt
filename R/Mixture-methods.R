@@ -103,7 +103,7 @@ plot_mixture <- function(x, y, type = 'score', npts = 200, degrees = 45,
         stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
     nfact <- x@Model$nfact
-    if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
+    if(nfact > 3) stop("Can't plot high dimensional models.", call.=FALSE)
     J <- x@Data$nitems
     theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts/(nfact^2))
     ThetaFull <- Theta <- thetaComb(theta, nfact)

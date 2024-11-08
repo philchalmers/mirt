@@ -227,7 +227,7 @@ setMethod(
                 print(round(Phiprint, 3), na.print = " ")
             }
             if(any(h2 > 1))
-                warning("Solution has Heywood cases. Interpret with caution.",
+                warning("Model has Heywood cases. Interpret with caution.",
                         call.=FALSE)
             invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))
         }
@@ -1154,7 +1154,7 @@ setMethod(
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@Model$nfact
-        if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
+        if(nfact > 3) stop("Can't plot high dimensional models.", call.=FALSE)
         J <- x@Data$nitems
         if(x@ParObjects$pars[[J + 1L]]@dentype == 'custom')
             theta_lim <- x@Internals$theta_lim
