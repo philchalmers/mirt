@@ -1866,7 +1866,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     acov <- try(solve(info), TRUE)
     if(is(acov, 'try-error')){
         if(warn)
-            warning('Could not invert information matrix; model may not be empirically identified.',
+            warning('Could not invert information matrix; model may not be (empirically) identified.',
                     call.=FALSE)
         ESTIMATE$fail_invert_info <- TRUE
         return(ESTIMATE)
@@ -1874,7 +1874,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     SEtmp <- diag(solve(info))
     if(any(is.na(SEtmp) | is.nan(SEtmp)) || any(SEtmp < 0)){
         if(warn)
-            warning('Could not invert information matrix; model may not be empirically identified.',
+            warning('Could not invert information matrix; model may not be (empirically) identified.',
                     call.=FALSE)
         ESTIMATE$fail_invert_info <- TRUE
         return(ESTIMATE)
