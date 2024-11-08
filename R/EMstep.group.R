@@ -102,8 +102,11 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
     for(g in seq_len(ngroups)){
        for(j in seq_len(J+1L))
            est <- c(est, pars[[g]][[j]]@est)
-       if(length(lrPars))
-           est <- c(est, rep(FALSE, length(lrPars@est)))
+       if(length(lrPars)){
+           tmp <- rep(FALSE, length(lrPars@est))
+           names(tmp) <- names(lrPars@est)
+           est <- c(est, tmp)
+       }
     }
     for(i in seq_len(length(constrain)))
         est[constrain[[i]][-1L]] <- FALSE
@@ -481,6 +484,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 for(i in 0L:(ncol(deriv$grad)-1L))
                     h[lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i],
                       lrPars@parnum[1L:nrow(deriv$grad) + nrow(deriv$grad)*i]] <- deriv$hess
+                est[lrPars@parnum] <- lrPars@est
             }
         }
         if(dentype == 'mixture'){
@@ -498,9 +502,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         } else mixtype <- NULL
         hess <- updateHess(h=h, L=L)
         hess <- as.matrix(hess[estpars & !redun_constr, estpars & !redun_constr])
-        if(list$SE.type %in% c('Oakes', 'sandwich') && length(lrPars) && list$SE){
-            warning('Oakes method not supported for models with latent regression effects', call.=FALSE)
-        } else if(list$SE.type %in% c('Oakes', 'sandwich') && list$SE){
+        # if(list$SE.type %in% c('Oakes', 'sandwich') && length(lrPars) && list$SE){
+        #     warning('Oakes method not supported for models with latent regression effects', call.=FALSE)
+        # } else
+        if(list$SE.type %in% c('Oakes', 'sandwich') && list$SE){
             complete_info <- hess
             shortpars <- longpars[estpars & !redun_constr]
             tmp <- updatePrior(pars=pars, gTheta=gTheta,
@@ -513,7 +518,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                                        pars=pars, L=L, constrain=constrain, delta=list$delta,
                                        est=est, shortpars=shortpars, longpars=longpars,
                                        gTheta=gTheta, list=list, ngroups=ngroups, J=J,
-                                       dentype=dentype, sitems=sitems, nfact=nfact,
+                                       dentype=dentype, sitems=sitems, nfact=nfact, lrPars=lrPars,
                                        rlist=rlist, full=full, Data=Data, mixtype=mixtype,
                                        specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                        prior=prior, Priorbetween=Priorbetween, Prior=Prior,
@@ -523,7 +528,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 zero_g <- SE.Oakes(0L, pars=pars, L=L, constrain=constrain, delta=0,
                                    est=est, shortpars=shortpars, longpars=longpars,
                                    gTheta=gTheta, list=list, ngroups=ngroups, J=J,
-                                   dentype=dentype, sitems=sitems, nfact=nfact,
+                                   dentype=dentype, sitems=sitems, nfact=nfact, lrPars=lrPars,
                                    rlist=rlist, full=full, Data=Data, mixtype=mixtype,
                                    specific=specific, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                    prior=prior, Priorbetween=Priorbetween, Prior=Prior,
@@ -544,6 +549,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
             is.latent <- grepl('MEAN_', names(shortpars)) | grepl('COV_', names(shortpars))
+            if(length(lrPars))
+                is.latent[names(shortpars) %in% names(lrPars@est)] <- TRUE
             missing_info[is.latent, is.latent] <- 0
             hess <- complete_info + missing_info
         }

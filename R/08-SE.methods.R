@@ -223,7 +223,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact, mixtype,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, omp_threads,
-                     zero_g = NULL){
+                     lrPars, zero_g = NULL){
     r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
     if(Richardson){
@@ -249,7 +249,12 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_constrain(longpars, constrain)
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
-            tmp <- updatePrior(pars=pars, gTheta=gTheta,
+            if(length(lrPars)){
+                lrPars@par <- longpars[lrPars@parnum]
+                lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
+                lrPars@mus <- lrPars@X %*% lrPars@beta
+            }
+            tmp <- updatePrior(pars=pars, gTheta=gTheta, lrPars=lrPars,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=100L,
                                rlist=rlist, full=full, MC=list$method == 'QMCEM')
@@ -263,6 +268,11 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_old
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
+            if(length(lrPars)){
+                lrPars@par <- longpars[lrPars@parnum]
+                lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
+                lrPars@mus <- lrPars@X %*% lrPars@beta
+            }
             if(pars[[1L]][[J + 1L]]@itemclass == -1L){
                 for(g in seq_len(length(pars))){
                     gp <- pars[[g]][[J + 1L]]
@@ -303,6 +313,17 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                                              function(g) sum(pars[[g]][[J+1L]]@rr)), 1L)
                 deriv <- Deriv.mix(mixtype)
                 g[mixtype$parnum] <- deriv$grad
+            }
+            if(length(lrPars)){
+                for(group in seq_len(ngroups)){
+                    gp <- ExtractGroupPars(pars[[group]][[J+1L]])
+                    tmp <- Mstep.LR(Theta=gTheta[[group]], CUSTOM.IND=CUSTOM.IND, pars=pars[[group]],
+                                    itemloc=itemloc, fulldata=Data$fulldata[[1L]], prior=Prior[[group]],
+                                    lrPars=lrPars, retscores=TRUE)
+                    deriv <- Deriv(lrPars, cov=gp$gcov, theta=tmp)
+                    deriv$grad * lrPars@est
+                    g[lrPars@parnum] <- as.vector(deriv$grad * lrPars@est)
+                }
             }
             tmp <- g %*% L
             if(pick == 0L) return(tmp[est])

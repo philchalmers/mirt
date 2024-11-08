@@ -1,5 +1,8 @@
 # Changes in mirt 1.43
 
+- Added support for latent regression ACOV/SE estimation with Oakes method
+  in `mirt()`
+
 - Related to both points below, general MLTM (Embretson, 1984) added when 
   itemtype is specified as `PC1PL` and an `itemdesign` set is used, where 
   formula must include the name of the factor in the formula expressions. See

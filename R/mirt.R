@@ -1191,7 +1191,7 @@
 #'
 #' # covariates
 #' X1 <- rnorm(N); X2 <- rnorm(N)
-#' covdata <- data.frame(X1, X2)
+#' covdata <- data.frame(X1, X2, X3 = rnorm(N))
 #' Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 #'
 #' # items and response data
@@ -1199,15 +1199,29 @@
 #' dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 #'
 #' # unconditional Rasch model
-#' mod0 <- mirt(dat, 1, 'Rasch')
+#' mod0 <- mirt(dat, 1, 'Rasch', SE=TRUE)
+#' coef(mod0, printSE=TRUE)
 #'
-#' # conditional model using X1 and X2 as predictors of Theta
-#' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+#' # conditional model using X1, X2, and X3 (bad) as predictors of Theta
+#' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2 + X3, SE=TRUE)
+#' coef(mod1, printSE=TRUE)
 #' coef(mod1, simplify=TRUE)
-#' anova(mod0, mod1)
+#' anova(mod0, mod1)  # jointly significant predictors of theta
 #'
-#' # bootstrapped confidence intervals
-#' boot.mirt(mod1, R=5)
+#' # large sample z-ratios and p-values (if one cares)
+#' cfs <- coef(mod1, printSE=TRUE)
+#' (z <- cfs$lr.betas[[1]] / cfs$lr.betas[[2]])
+#' round(pnorm(abs(z[,1]), lower.tail=FALSE)*2, 3)
+#'
+#' # drop predictor for nested comparison
+#' mod1b <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+#' anova(mod1b, mod1)
+#'
+#' # compare to mixedmirt() version of the same model
+#' mod1.mixed <- mixedmirt(dat, 1, itemtype='Rasch',
+#'                         covdata=covdata, lr.fixed = ~ X1 + X2 + X3, SE=TRUE)
+#' coef(mod1.mixed)
+#' coef(mod1.mixed, printSE=TRUE)
 #'
 #' # draw plausible values for secondary analyses
 #' pv <- fscores(mod1, plausible.draws = 10)

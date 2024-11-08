@@ -2000,6 +2000,7 @@ make.lrdesign <- function(df, formula, factorNames, EM=FALSE, TOL){
     colnames(beta) <- factorNames
     rownames(beta) <- colnames(X)
     par <- as.numeric(beta)
+    names(par) <- names(est)
     ret <- new('lrPars',
                par=par,
                SEpar=rep(NaN,length(par)),

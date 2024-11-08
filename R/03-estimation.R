@@ -625,9 +625,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$method %in% c('EM', 'BL', 'QMCEM', 'MCEM')){
         logLik <- G2 <- SElogLik <- 0
         if(length(lrPars)){
-            if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson')))
-                stop('Information matrix method for latent regression estimates not supported',
-                     call.=FALSE)
+            # if(opts$SE && !(opts$SE.type %in% c('complete', 'forward', 'central', 'Richardson')))
+            #     stop('Information matrix method for latent regression estimates not supported',
+            #          call.=FALSE)
             opts$full <- TRUE
         } else opts$full <- FALSE
         temp <- matrix(0L,nrow=nitems,ncol=nspec)
