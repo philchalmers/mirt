@@ -340,9 +340,8 @@ setMethod(
                                                              pars=pars, tabdata=tabdata, freq=freq,
                                                              itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                                                              bfactor_info=bfactor_info,
-                                                             type = if(pars[[length(pars)]]@dentype == 'bfactor')
-                                                                 "central" else "Richardson",
-                                                             gradient=FALSE)
+                                                             type = if(ncol(Theta) > 2)  "central"
+                                                                    else 'Richardson', gradient=FALSE)
                     }
                 }
                 return(list(grad=grad, hess=hess))
