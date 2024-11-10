@@ -25,7 +25,7 @@ density components (where applicable)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,6 @@ density components (where applicable).</p>
 <span>  <span class="va">obj</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"M2*"</span>,</span>
 <span>  calcNull <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  quadpts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  theta_lim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span>,</span>
 <span>  CI <span class="op">=</span> <span class="fl">0.9</span>,</span>
@@ -104,11 +103,6 @@ M2 and M2* where only the bivariate moments are collapsed</p></dd>
 <dd><p>logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via <code><a href="createItem.html">createItem</a></code> will not)</p></dd>
-
-
-<dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
-<dd><p>logical; remove rows with any missing values? The M2 family of statistics
-requires a complete dataset in order to be well defined</p></dd>
 
 
 <dt id="arg-quadpts">quadpts<a class="anchor" aria-label="anchor" href="#arg-quadpts"></a></dt>
@@ -186,8 +180,7 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span><span class="co"># M2 with missing data present</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">250</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Compute stats by removing missing data row-wise</span></span></span>
-<span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">mod2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># C2 statistic (useful when polytomous IRT models have too few df)</span></span></span>
 <span class="r-in"><span><span class="va">pmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
