@@ -447,7 +447,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
     # df <- qr(deltac)$rank
     newret <- list(M2=M2, df=df)
     newret$p <- 1 - pchisq(M2, df)
-    newret$RMSEA <- rmsea(X2=M2, df=df, N=N)
+    newret$RMSEA <- rmsea(X2=M2, df=df, N=N)   # CHECKME this seems off with missing data
     RMSEA.90_CI <- RMSEA.CI(M2, df, N, ci.lower=alpha, ci.upper=1-alpha)
     newret[[paste0("RMSEA_", alpha*100)]]  <- RMSEA.90_CI[1L]
     newret[[paste0("RMSEA_", (1-alpha)*100)]] <- RMSEA.90_CI[2L]
