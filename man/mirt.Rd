@@ -1343,7 +1343,7 @@ ds <- rbind(cbind(d1=NA, d2=d), cbind(d1, d2))
 (pars <- data.frame(a=as, d=ds))
 dat <- simdata(as, ds, 2500,
   itemtype = c(rep('dich', 18), rep('partcomp', 12)))
-colMeans(dat)
+itemstats(dat)
 
 # unconditional model
 syntax <- "theta1 = 1-9, 19-30

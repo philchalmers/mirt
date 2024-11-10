@@ -1,5 +1,9 @@
 # Changes in mirt 1.43
 
+- `M2()` family no longer requires row-wise removal of missing data to behave
+  correctly. As such, the `na.rm` argument has been removed as it is no longer
+  required (requested by Ulrich Schroeders)
+
 - Added support for latent regression ACOV/SE estimation with Oakes method
   in `mirt()`
 

@@ -24,8 +24,6 @@
 #' @param quadpts number of quadrature points to use during estimation. If \code{NULL},
 #'   a suitable value will be chosen based
 #'   on the rubric found in \code{\link{fscores}}
-#' @param na.rm logical; remove rows with any missing values? The M2 family of statistics
-#'   requires a complete dataset in order to be well defined
 #' @param calcNull logical; calculate statistics for the null model as well?
 #'   Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 #'   have a suitable null model (e.g., those created via \code{\link{createItem}} will not)
@@ -77,8 +75,7 @@
 #' # M2 with missing data present
 #' dat[sample(1:prod(dim(dat)), 250)] <- NA
 #' mod2 <- mirt(dat, 1)
-#' # Compute stats by removing missing data row-wise
-#' M2(mod2, na.rm = TRUE)
+#' M2(mod2)
 #'
 #' # C2 statistic (useful when polytomous IRT models have too few df)
 #' pmod <- mirt(Science, 1)
@@ -88,7 +85,7 @@
 #' M2(pmod, type = 'C2')
 #'
 #' }
-M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, theta_lim = c(-6, 6),
+M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-6, 6),
                 CI = .9, residmat = FALSE, QMC = FALSE, suppress = 1, ...){
     impute <- 0
     if(is(obj, 'MixtureModel'))
@@ -110,14 +107,15 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         ret <- list()
         group <- if(is.null(attr(obj, 'MG'))) 1 else attr(obj, 'MG')
         nitems <- ncol(obj@Data$data)
-        if(any(is.na(obj@Data$data)))
-            stop('M2 can not be calculated for data with missing values.', call.=FALSE)
+        # if(any(is.na(obj@Data$data)))
+        #     stop('M2 can not be calculated for data with missing values.', call.=FALSE)
         adj <- obj@Data$mins
         dat <- t(t(obj@Data$data) - adj)
-        N <- nrow(dat)
-        p  <- colMeans(dat)
-        cross <- crossprod(dat, dat)
-        p <- c(p, cross[lower.tri(cross)]/N)
+        N <- colSums(!is.na(dat))
+        cN <- crossprod_miss(!is.na(dat), !is.na(dat))
+        p  <- colMeans(dat, na.rm = TRUE)
+        cross <- crossprod_miss(dat, dat)
+        p <- c(p, cross[lower.tri(cross)]/cN[lower.tri(cross)])
         prodlist <- attr(obj@ParObjects$pars, 'prodlist')
         K <- obj@Data$K
         pars <- obj@ParObjects$pars
@@ -220,7 +218,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             E2[is.na(E2)] <- 0
             E2 <- E2 + t(E2)
             diag(E2) <- E11
-            R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+            R <- cov2cor(cross/cN - outer(colMeans(dat, na.rm=TRUE), colMeans(dat, na.rm=TRUE)))
             Kr <- cov2cor(E2 - outer(E1, E1))
             SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
             if(residmat){
@@ -293,7 +291,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
                 E2[is.na(E2)] <- 0
                 E2 <- E2 + t(E2)
                 diag(E2) <- E11
-                R <- cov2cor(cross/N - outer(colMeans(dat), colMeans(dat)))
+                R <- cov2cor(cross/cN - outer(colMeans(dat, na.rm=TRUE), colMeans(dat, na.rm=TRUE)))
                 Kr <- cov2cor(E2 - outer(E1, E1))
                 SRMSR <- sqrt( sum((R[lower.tri(R)] - Kr[lower.tri(Kr)])^2) / sum(lower.tri(R)))
             } else SRMSR <- NULL
@@ -325,8 +323,15 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
             }
             itemloc <- obj@Model$itemloc
             itemloc <- itemloc[-length(itemloc)]
-            p <- c(colMeans(obj@Data$fulldata[[1L]][,-itemloc]),
-                   cross[lower.tri(cross)]/N)
+            was_na <- is.na(extract.mirt(obj, 'data'))
+            fulldata <- obj@Data$fulldata[[1L]]
+            for(i in 1:(nitems)){
+                pick <- if(i == nitems) c(itemloc[i], ncol(fulldata))
+                    else c(itemloc[i], itemloc[i+1]-1)
+                fulldata[was_na[,i], pick] <- NA
+            }
+            p <- c(colMeans(fulldata[,-itemloc], na.rm=TRUE),
+                   cross[lower.tri(cross)]/cN[lower.tri(cross)])
         } else {
             # M2 TODO
         }
@@ -338,7 +343,9 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
         } else .Call('buildXi2els_C2', nrow(delta1), nrow(delta2), ncol(PIs), nitems,
                      PIs, EIs, EIs2, Prior, abcats, abcats2)
         Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))
-        ret <- list(Xi2=Xi2, delta=delta, estpars=estpars, p=sqrt(N)*p, e=sqrt(N)*e, SRMSR=SRMSR)
+        Nstar <- c(N, cN[lower.tri(cN)])
+        ret <- list(Xi2=Xi2, delta=delta, estpars=estpars,
+                    p=sqrt(Nstar)*p, e=sqrt(Nstar)*e, SRMSR=SRMSR, N=Nstar)
         ret
     }
 
@@ -355,31 +362,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, na.rm=FALSE, quadpts = NULL, th
     if(is(obj, 'MixtureClass'))
         stop('MixtureClass objects are not yet supported', call.=FALSE)
     if(QMC && is.null(quadpts)) quadpts <- 5000L
-    if(na.rm) obj <- removeMissing(obj)
-    if(na.rm) message('Sample size after row-wise response data removal: ',
-                      nrow(extract.mirt(obj, 'data')))
     if(nrow(extract.mirt(obj, 'data')) == 0L) stop('No data!', call.=FALSE)
-    if(any(is.na(obj@Data$data))){
-        if(impute == 0)
-            stop('Fit statistics cannot be computed when there are missing data.
-                 Remove cases row-wise by passing na.rm=TRUE', call.=FALSE)
-        if(residmat) stop('residmat not supported when imputing data', call.=FALSE)
-        Theta <- fscores(obj, plausible.draws = impute, QMC=QMC, leave_missing=TRUE, ...)
-        collect <- myLapply(Theta, fn, obj=obj, calcNull=calcNull,
-                            quadpts=quadpts, QMC=QMC, theta_lim=theta_lim)
-        ave <- SD <- collect[[1L]]
-        ave[ave!= 0] <- SD[SD!=0] <- 0
-        for(i in seq_len(impute))
-            ave <- ave + collect[[i]]
-        ave <- ave/impute
-        vars <- 0
-        for(i in seq_len(impute))
-            vars <- vars + (ave - collect[[i]])^2
-        SD <- sqrt(vars/impute)
-        ret <- rbind(ave, SD)
-        rownames(ret) <- c('stats', 'SD_stats')
-        return(ret)
-    }
     discrete <- FALSE
     if(is(obj, 'DiscreteClass')){
         discrete <- TRUE

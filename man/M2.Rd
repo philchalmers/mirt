@@ -8,7 +8,6 @@ M2(
   obj,
   type = "M2*",
   calcNull = TRUE,
-  na.rm = FALSE,
   quadpts = NULL,
   theta_lim = c(-6, 6),
   CI = 0.9,
@@ -29,9 +28,6 @@ M2 and M2* where only the bivariate moments are collapsed}
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via \code{\link{createItem}} will not)}
-
-\item{na.rm}{logical; remove rows with any missing values? The M2 family of statistics
-requires a complete dataset in order to be well defined}
 
 \item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
 a suitable value will be chosen based
@@ -85,8 +81,7 @@ summary(resids[lower.tri(resids)])
 # M2 with missing data present
 dat[sample(1:prod(dim(dat)), 250)] <- NA
 mod2 <- mirt(dat, 1)
-# Compute stats by removing missing data row-wise
-M2(mod2, na.rm = TRUE)
+M2(mod2)
 
 # C2 statistic (useful when polytomous IRT models have too few df)
 pmod <- mirt(Science, 1)

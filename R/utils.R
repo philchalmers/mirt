@@ -2888,6 +2888,15 @@ mySapply <- function(X, FUN, progress = FALSE, ...){
     }
 }
 
+crossprod_miss <- function(x, y){
+    mat <- matrix(0, ncol(x), ncol(x))
+    for(i in 1:ncol(x))
+        for(j in 1:ncol(x))
+            if(i <= j)
+                mat[i,j] <- mat[j,i] <- sum(x[,i] * y[,j], na.rm=TRUE)
+    mat
+}
+
 printf <- function(...) {
   catf(sprintf(...))
 }
