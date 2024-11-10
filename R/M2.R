@@ -325,6 +325,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
             itemloc <- itemloc[-length(itemloc)]
             was_na <- is.na(extract.mirt(obj, 'data'))
             fulldata <- obj@Data$fulldata[[1L]]
+            N <- colSums(!is.na(fulldata))[-itemloc]
             for(i in 1:(nitems)){
                 pick <- if(i == nitems) c(itemloc[i], ncol(fulldata))
                     else c(itemloc[i], itemloc[i+1]-1)
