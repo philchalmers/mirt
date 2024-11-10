@@ -473,40 +473,42 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	    if(itemtype[i] == 'nestlogit'){
 	        par <- na.omit(c(a[i, ],d[i,1], guess[i], upper[i], nominal[i,-1L],d[i,-1L]))
 	        obj <- new(itemtype[i], par=par, nfact=nfact, correctcat=1L)
-	    } else if(itemtype[i] == 'gpcm'){
-	        if(!use_gpcm_mats[i]){
-                par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,]))
+	    } else {
+	        if(itemtype[i] == 'gpcm'){
+    	        if(!use_gpcm_mats[i]){
+                    par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,]))
+                } else {
+                    stopifnot(nrow(gpcm_mats[[i]]) == K[i])
+                    stopifnot(ncol(gpcm_mats[[i]]) == nfact)
+                    par <- na.omit(c(a[i, ],as.vector(gpcm_mats[[i]]), d[i,]))
+                }
+            } else if(itemtype[i] == 'ideal'){
+                if(K[i] > 2) stop('ideal point models for dichotomous items only', call.=FALSE)
+                if(d[i,1] > 0) stop('ideal point intercepts must be negative', call.=FALSE)
+                par <- na.omit(c(a[i, ],d[i,]))
+            } else if(itemtype[i] == 'lca'){
+                par <- na.omit(a[i, ])
+                item.Q <- matrix(1, K[i], nfact)
+                item.Q[1,] <- 0
+            } else if(itemtype[i] == 'nominal'){
+                if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
+                    stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
+                par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
+            } else if(itemtype[i] == 'partcomp'){
+                par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
             } else {
-                stopifnot(nrow(gpcm_mats[[i]]) == K[i])
-                stopifnot(ncol(gpcm_mats[[i]]) == nfact)
-                par <- na.omit(c(a[i, ],as.vector(gpcm_mats[[i]]), d[i,]))
+                par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
             }
-        } else if(itemtype[i] == 'ideal'){
-            if(K[i] > 2) stop('ideal point models for dichotomous items only', call.=FALSE)
-            if(d[i,1] > 0) stop('ideal point intercepts must be negative', call.=FALSE)
-            par <- na.omit(c(a[i, ],d[i,]))
-        } else if(itemtype[i] == 'lca'){
-            par <- na.omit(a[i, ])
-            item.Q <- matrix(1, K[i], nfact)
-            item.Q[1,] <- 0
-        } else if(itemtype[i] == 'nominal'){
-            if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
-                stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
-            par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
-        } else if(itemtype[i] == 'partcomp'){
-            par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
-        } else {
-            par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
-        }
-        obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
-        if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
-        if(use_gpcm_mats[i]) obj@mat <- TRUE
-	    if(itemtype[i] == 'lca') obj@item.Q <- item.Q
-	    if(itemtype[i] == 'ggum'){
-	        if(length(na.omit(a[i,])) != length(na.omit(d[i,])))
-	            stop('ggums must have the same number of a and d values per item', call.=FALSE)
-	        par <- c(na.omit(a[i, ]), d[i,], t[i,])
-	        obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+            obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+            if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
+            if(use_gpcm_mats[i]) obj@mat <- TRUE
+    	    if(itemtype[i] == 'lca') obj@item.Q <- item.Q
+    	    if(itemtype[i] == 'ggum'){
+    	        if(length(na.omit(a[i,])) != length(na.omit(d[i,])))
+    	            stop('ggums must have the same number of a and d values per item', call.=FALSE)
+    	        par <- c(na.omit(a[i, ]), d[i,], t[i,])
+    	        obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+    	    }
 	    }
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit', 'ggum')))
             obj@ncat <- K[i]
