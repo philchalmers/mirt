@@ -58,7 +58,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
     #start values and free parameters
     startvalues <- freepars <- vector('list', J)
     for(i in seq_len(J)){
-        if(any(itemtype[i] == c('Rasch')) && K[i] == 2L){
+        if(any(itemtype[i] %in% c('Rasch', '1PL')) && K[i] == 2L){
             tmpval <- rep(0, nfact)
             tmpval[lambdas[i,] != 0] <- 1
             val <- c(tmpval, zetas[[i]], guess[i], upper[i])
@@ -82,7 +82,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                                 paste('ak', 0L:(K[i]-1L), sep=''),
                                 paste('d', 0L:(K[i]-1L), sep=''))
             }
-        } else if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL', '5PL'))){
+        } else if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL', '5PL'))){
             if(K[i] != 2L)
                 stop(paste0('Item ', i, ' requires exactly 2 unique categories'), call.=FALSE)
             val <- c(lambdas[i,], zetas[[i]], guess[i], upper[i])
@@ -319,7 +319,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(any(itemtype[i] == c('2PL', '3PL', '3PLu', '4PL'))){
+        if(any(itemtype[i] == c('1PL', '2PL', '3PL', '3PLu', '4PL'))){
             pars[[i]] <- new('dich',
                              par=startvalues[[i]],
                              est=freepars[[i]],
