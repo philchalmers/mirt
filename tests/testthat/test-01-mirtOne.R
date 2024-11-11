@@ -192,6 +192,6 @@ test_that('dich', {
                CONSTRAIN = (1-5, a1)'
     mod3 <- mirt(dat, syntax, verbose=FALSE)
     expect_equal(2*logLik(mod) - logLik(mod2) - logLik(mod3),
-                 0, 1e-2)
+                 0, tolerance=1e-2)
 })
 
