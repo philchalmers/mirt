@@ -11,27 +11,27 @@ test_that('LLTM', {
 
     lltm <- mirt(dat, itemtype = 'Rasch', SE=TRUE, verbose=FALSE,
         item.formula = ~ 0 + difficulty, itemdesign=itemdesign)
-    expect_equal(as.numeric(coef(lltm, simplify=TRUE)$items[1:2,1]), c(0.9587247, 0.9587247), tol=1e-2)
-    expect_equal(as.numeric(coef(lltm, printSE=TRUE)[[1]][2, 1:3]), c(0.03886556, 0.03898911, 0.03769205), tol=1e-2)
-    expect_equal(extract.mirt(lltm, 'condnum'), 6.633144, tol=1e-2)
+    expect_equal(as.numeric(coef(lltm, simplify=TRUE)$items[1:2,1]), c(0.9587247, 0.9587247), tolerance=1e-2)
+    expect_equal(as.numeric(coef(lltm, printSE=TRUE)[[1]][2, 1:3]), c(0.03886556, 0.03898911, 0.03769205), tolerance=1e-2)
+    expect_equal(extract.mirt(lltm, 'condnum'), 6.633144, tolerance=1e-2)
 
     # additional information for LLTM
     oo <- plot(lltm)
     expect_class(oo, 'trellis')
     ifit <- itemfit(lltm)
-    expect_equal(ifit$S_X2[1:3], c(20.06072, 20.90161, 23.48163), tol=1e-2)
+    expect_equal(ifit$S_X2[1:3], c(20.06072, 20.90161, 23.48163), tolerance=1e-2)
     eap <- fscores(lltm)
-    expect_equal(eap[1:3], c(1.0141828, -0.2427042, -0.2427042), tol=1e-2)
+    expect_equal(eap[1:3], c(1.0141828, -0.2427042, -0.2427042), tolerance=1e-2)
 
     # using unconditional modeling for first four items
     itemdesign.sub <- itemdesign[5:nrow(itemdesign), , drop=FALSE]
     lltm.4 <- mirt(dat, itemtype = 'Rasch', SE=TRUE, verbose=FALSE,
         item.formula = ~ 0 + difficulty, itemdesign=itemdesign.sub)
     cfs <- coef(lltm.4, simplify=TRUE)$items
-    expect_equal(as.vector(cfs[c(1,5), 1:3]), c(0, .9063842, numeric(4)), tol=1e-2)
-    expect_equal(anova(lltm, lltm.4)$p[2], 0.04288353, tol=1e-2)
+    expect_equal(as.vector(cfs[c(1,5), 1:3]), c(0, .9063842, numeric(4)), tolerance=1e-2)
+    expect_equal(anova(lltm, lltm.4)$p[2], 0.04288353, tolerance=1e-2)
     m2 <- M2(lltm.4)
-    expect_equal(m2$TLI, 1.001862, tol=1e-2)
+    expect_equal(m2$TLI, 1.001862, tolerance=1e-2)
 
 })
 
@@ -54,8 +54,8 @@ test_that('MLTM', {
     itemtype <- c(rep('Rasch', 18), rep('PC1PL', 12))
     mod <- mirt(dat, syntax, itemtype=itemtype, verbose=FALSE)
     expect_equal(as.numeric(coef(mod, simplify=TRUE)$items[19:21, c('d1', 'd2')]),
-                 c(2.86919500, 3.71533102, 3.23797689, 0.01323629, 0.83160425, 1.90030392), tol=1e-2)
-    expect_equal(logLik(mod), -43860.17, tol=1e-2)
+                 c(2.86919500, 3.71533102, 3.23797689, 0.01323629, 0.83160425, 1.90030392), tolerance=1e-2)
+    expect_equal(logLik(mod), -43860.17, tolerance=1e-2)
 
     # MLTM design only for PC1PL items
     itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('medium', 'easy')),
@@ -67,16 +67,16 @@ test_that('MLTM', {
     mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
                  item.formula = list(theta1 ~ 0 + t1_difficulty,
                                      theta2 ~ 0 + t2_difficulty), SE=TRUE, verbose=FALSE)
-    expect_equal(extract.mirt(mltm, 'condnum'), 36.33511, tol=1e-2)
-    expect_equal(anova(mltm, mod)$p[2], 0.592, tol=1e-2)
+    expect_equal(extract.mirt(mltm, 'condnum'), 36.33511, tolerance=1e-2)
+    expect_equal(anova(mltm, mod)$p[2], 0.592, tolerance=1e-2)
     cfs <- coef(mltm, simplify=TRUE)$items
     expect_equal(sort(unique(as.vector(cfs[,1:5]))),
-                 c(-0.07838095, 0.00000000,  0.92424686,  1.03069049,  1.85666146,  3.18998660), tol=1e-2)
+                 c(-0.07838095, 0.00000000,  0.92424686,  1.03069049,  1.85666146,  3.18998660), tolerance=1e-2)
     fs <- fscores(mltm)
     expect_equal(as.vector(fs[1:3,]), c(-2.0019607,1.138449,0.149316,
-                                        -0.4814751,0.3697978,1.7928627), tol=1e-2)
+                                        -0.4814751,0.3697978,1.7928627), tolerance=1e-2)
     m2 <- M2(mltm)
-    expect_equal(m2$CFI, 0.9758302, tol=1e-2)
+    expect_equal(m2$CFI, 0.9758302, tolerance=1e-2)
 
 
 })
