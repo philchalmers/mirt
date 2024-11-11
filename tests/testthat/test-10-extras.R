@@ -7,8 +7,8 @@ test_that('extras', {
     mod_2PL_ggum <- mirt(expand.table(LSAT7), model=1, itemtype=itemtype, SE=TRUE,
                          verbose=FALSE)
     out <- nonnest2::vuongtest(mod_2PL, mod_2PL_ggum)
-    expect_equal(out$p_omega, 0.000246, tol=.01)
-    expect_equal(as.numeric(out$p_LRT), c(0.6205581, 0.3794419), tol=.01)
+    expect_equal(out$p_omega, 0.000246, tolerance=.01)
+    expect_equal(as.numeric(out$p_LRT), c(0.6205581, 0.3794419), tolerance=.01)
 
     require(boot, quietly=TRUE, warn.conflicts=FALSE)
     data <- expand.table(LSAT7)
