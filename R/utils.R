@@ -95,7 +95,7 @@ thetaStack <- function(theta, nclass){
 #' }
 secondOrderTest <- function(mat, ..., method = 'eigen'){
     if(method == 'eigen'){
-        evs <- eigen(mat, ...)$value
+        evs <- eigen(mat, ...)$values
         ret <- all(!sapply(evs, function(x) isTRUE(all.equal(x, 0))) & evs > 0)
     } else if(method == 'chol'){
         chl <- try(chol(mat, ...), silent = TRUE)
@@ -2428,7 +2428,7 @@ MGC2SC <- function(x, which){
     }
     tmp@Data <- x@Data
     tmp@Data$completely_missing <- integer(0L)
-    tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupName[which], , drop=FALSE]
+    tmp@Data$data <- tmp@Data$data[tmp@Data$group == tmp@Data$groupNames[which], , drop=FALSE]
     tmp@Data$rowID <- 1L:nrow(tmp@Data$data)
     tmp@Data$Freq[[1L]] <- tmp@Data$Freq[[which]]
     tmp@Data$fulldata[[1L]] <- x@Data$fulldata[[which]]

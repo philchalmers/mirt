@@ -341,7 +341,7 @@ setMethod(
         for(g in 1L:length(ret)){
             cmod <- object@ParObjects$pars[[g]]
             cmod@Data <- object@Data
-            cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupName[g], ]
+            cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupNames[g], ]
             cmod@Data$Freq[[1L]] <- cmod@Data$Freq[[g]]
             cmod@Options$quadpts <- object@Options$quadpts
             cmod@Internals$bfactor <- object@Internals$bfactor

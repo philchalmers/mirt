@@ -1,4 +1,4 @@
-context('mirt.model')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('syntax', {
     data <- expand.table(LSAT7)

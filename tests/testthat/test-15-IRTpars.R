@@ -1,4 +1,4 @@
-context('IRTpars')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('IRTpars', {
 

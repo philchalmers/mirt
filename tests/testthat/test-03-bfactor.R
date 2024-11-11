@@ -1,23 +1,23 @@
-context('bfactor')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('dich data', {
     key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
     data <- key2binary(SAT12, key)
     specific <- c(2,3,2,3,3,2,1,2,1,1,1,3,1,3,1,2,1,1,3,3,1,1,3,1,3,3,1,3,2,3,1,2)
     mod1 <- bfactor(data, specific, verbose=FALSE, SE = TRUE, SE.type = 'crossprod')
-    expect_is(mod1, 'SingleGroupClass')
+    expect_class(mod1, 'SingleGroupClass')
     expect_equal(extract.mirt(mod1, 'df'), 4294967199)
     cfs <- do.call(c, coef(mod1))
     cfs <- as.numeric(na.omit(cfs[cfs != 0 & cfs != 1]))
     expect_equal(cfs, c(0.7861, 0.5159, 1.0563, 0.4426, 0.0102, 0.875, -1.0729, -1.3116, -0.8343, 1.4909, 1.066, 1.9157, 0.8135, 0.3039, 1.3231, 0.471, 0.1911, 0.7509, 1.1476, 0.8265, 1.4687, -0.1526, -0.5584, 0.2532, -1.1727, -1.4361, -0.9093, 0.5277, 0.296, 0.7595, 0.5813, 0.1573, 1.0053, -0.5576, -0.7686, -0.3465, 0.968, 0.6684, 1.2677, 0.5136, 0.0972, 0.9299, 0.6283, 0.3893, 0.8672, 1.1389, 0.8043, 1.4734, 0.5835, 0.0236, 1.1435, -2.1287, -2.5185, -1.7389, 1.0383, 0.6538, 1.4228, 0.9505, 0.3252, 1.5758, 1.5624, 1.1836, 1.9412, 0.6731, 0.3993, 0.9468, 0.524, 0.0133, 1.0347, -1.57, -1.8547, -1.2853, 0.4473, 0.051, 0.8437, 1.0716, 0.2209, 1.9223, 2.4985, 1.8584, 3.1386, 1.0389, 0.7071, 1.3706, 0.8009, 0.2857, 1.316, -0.4025, -0.6423, -0.1626, 1.5827, 0.1568, 3.0087, 0.8549, -0.9418, 2.6517, 5.4019, 3.4336, 7.3702, 0.1221, -0.0922, 0.3364, 0.2729, -0.0654, 0.6113, -0.3504, -0.532, -0.1689, 1.0958, 0.7507, 1.4409, 0.5884, 0.1265, 1.0502, 0.8847, 0.629, 1.1404, 1.0908, 0.6922, 1.4894, 1.034, 0.4259, 1.642, 1.3605, 1.0081, 1.713, 1.3277, 0.9036, 1.7518, 0.5674, 0.0418, 1.0931, 2.0162, 1.6303, 2.4022, 0.7375, 0.4793, 0.9957, 0.3912, 0.0054, 0.777, -0.3909, -0.5967, -0.185, 1.5223, 0.7735, 2.271, 0.3034, -0.545, 1.1518, 4.1836, 3.3304, 5.0369, 1.7575, 1.3192, 2.1959, 0.1929, -0.3447, 0.7304, -0.8748, -1.1651, -0.5845, 0.8645, 0.5785, 1.1506, 0.0331, -0.3091, 0.3754, 0.2388, 0.0304, 0.4472, 1.5332, 0.9808, 2.0856, 0.4104, -0.1434, 0.9642, 2.6505, 2.1186, 3.1823, 0.5263, 0.0806, 0.9721, 0.6773, -0.1142, 1.4687, 2.6609, 2.1603, 3.1615, 1.6737, 0.8655, 2.4818, -0.0344, -0.7411, 0.6722, 3.6147, 2.7752, 4.4542, 0.6087, 0.3653, 0.8522, 0.4945, 0.0858, 0.9031, -0.8815, -1.1074, -0.6556, 1.2319, 0.8525, 1.6114, 0.2423, -0.1535, 0.6382, 1.2882, 1.0023, 1.5741, 0.7354, 0.476, 0.9947, 0.6426, 0.2139, 1.0712, -0.5995, -0.8249, -0.3742, 1.4898, 1.0991, 1.8806, 0.4859, 0.0468, 0.9251, -0.1725, -0.4279, 0.0828, 1.9058, 1.3075, 2.504, 0.415, -0.169, 0.9991, 2.8064, 2.2378, 3.375, 1.0572, 0.761, 1.3534, 0.149, -0.2358, 0.5338, 0.1725, -0.0414, 0.3863, 1.2276, 0.0476, 2.4075, 2.0402, -1.1072, 5.1875, -1.1821, -2.307, -0.0571, 0.4342, 0.1946, 0.6738, -0.1733, -0.5266, 0.1801, -0.2521, -0.4383, -0.0658, 2.5816, 1.5551, 3.6081, -0.235, -0.9097, 0.4398, 2.9944, 2.0731, 3.9156, 0.1326, -0.1185, 0.3838, 0.0294, -0.3714, 0.4302, -1.6521, -1.8929, -1.4113),
                  tolerance = 1e-2)
     fs <- suppressWarnings(fscores(mod1, verbose = FALSE, full.scores=FALSE, method='MAP'))
-    expect_is(fs, 'matrix')
+    expect_class(fs, 'matrix')
     expect_equal(fs[1:6,'G'], c(-1.0103793, -0.7807428, -1.2088350, -1.4099888, -2.0074429, -1.2226505), tolerance = 1e-2)
     cof <- coef(mod1, verbose = FALSE)
-    expect_is(cof, 'list')
+    expect_class(cof, 'list')
     sum <- summary(mod1, verbose = FALSE)
-    expect_is(sum, 'list')
+    expect_class(sum, 'list')
     fs <- suppressWarnings(fscores(mod1, method = 'EAPsum', verbose = FALSE, full.scores=FALSE))
     expect_equal(fs[1:3,'G'], c(-3.153030, -2.973976, -2.786622), tolerance = 1e-4)
     expect_equal(fs[1:3,'S1'], c(-1.319310, -1.097647, -0.893891), tolerance = 1e-4)
@@ -25,9 +25,9 @@ test_that('dich data', {
     expect_equal(fit$M2, 553.6781, tolerance = 1e-2)
     expect_equal(fit$df, 432, tolerance = 1e-2)
     pfit1 <- suppressWarnings(personfit(mod1))
-    expect_is(pfit1, 'data.frame')
+    expect_class(pfit1, 'data.frame')
     ifit <- suppressWarnings(itemfit(mod1))
-    expect_is(ifit, 'data.frame')
+    expect_class(ifit, 'data.frame')
     mod2 <- bfactor(data, specific, pars=mod2values(mod1), TOL=NaN,
                     verbose=FALSE, SE = TRUE, SE.type = 'Oakes')
     expect_equal(extract.mirt(mod2, 'condnum'), 619.3619, tolerance = 1e-4)
@@ -93,7 +93,7 @@ test_that('dich data', {
     specific <- c(rep(1,7),rep(2,7))
     items[items == 'dich'] <- '2PL'
     simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3)
-    expect_is(simmod, 'SingleGroupClass')
+    expect_class(simmod, 'SingleGroupClass')
     expect_equal(extract.mirt(simmod, 'df'), 442315)
     cfs <- as.numeric(do.call(c, coef(simmod)))
     cfs <- cfs[cfs != 0 & cfs != 1]
@@ -101,7 +101,7 @@ test_that('dich data', {
                  tolerance = 1e-2)
     specific[1] <- NA
     simmod2 <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3)
-    expect_is(simmod2, 'SingleGroupClass')
+    expect_class(simmod2, 'SingleGroupClass')
     expect_equal(extract.mirt(simmod2, 'df'), 442316)
     cfs <- as.numeric(do.call(c, coef(simmod2)))
     cfs <- cfs[cfs != 0 & cfs != 1]
@@ -109,13 +109,13 @@ test_that('dich data', {
                  tolerance = 1e-2)
     fs <- fscores(simmod, verbose = FALSE, full.scores=FALSE)
     expect_true(mirt:::closeEnough(fs[1:6,'G'] - c(-2.6461, -2.0541, -2.3838, -2.4061, -1.7492, -1.8682), -1e-2, 1e-2))
-    expect_is(fs, 'matrix')
+    expect_class(fs, 'matrix')
 
     res <- residuals(simmod, verbose = FALSE, QMC=TRUE)
-    expect_is(res, 'matrix')
+    expect_class(res, 'matrix')
     expect_equal(res[2,1], 0.08305725, tolerance = 1e-2)
     sum <- summary(simmod, verbose = FALSE)
-    expect_is(sum, 'list')
+    expect_class(sum, 'list')
 
     #two-tier
     if(FALSE){
@@ -156,7 +156,7 @@ test_that('dich data', {
         COV = G1*G2')
 
     simmod <- bfactor(dataset, specific, model, quadpts = 11, TOL = 1e-2, verbose=FALSE)
-    expect_is(simmod, 'SingleGroupClass')
+    expect_class(simmod, 'SingleGroupClass')
     expect_equal(extract.mirt(simmod, 'df'), 65486)
     cfs <- as.numeric(do.call(c, coef(simmod)))
     cfs <- cfs[cfs != 0 & cfs != 1]

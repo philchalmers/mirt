@@ -1,4 +1,4 @@
-context('basics')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('basics', {
     group <- rep(c('G1', 'G2'), each=nrow(Science)/2)
@@ -19,7 +19,7 @@ test_that('basics', {
     tscore <- expected.test(mod, Theta)
     expect_equal(tscore, c(7.935196,9.270222,10.53705,11.69166,12.7803,13.83405,14.73532), tolerance=1e-6)
     IG <- itemGAM(Science[group == 'G1',1], theta_se[,1, drop=FALSE])
-    expect_is(IG, 'itemGAM')
+    expect_class(IG, 'itemGAM')
 
     info <- iteminfo(item1, Theta)
     expect_equal(as.vector(info), c(0.2031261,0.2118485,0.2069816,0.187747,0.1793368,0.1902587,0.1761818),

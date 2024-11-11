@@ -1,4 +1,4 @@
-context('DCIRT')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('DCIRT', {
 
@@ -37,7 +37,7 @@ test_that('DCIRT', {
     expect_equal(unname(resid2[2:4,1]), c(2.145994,1.908699,0.1207362), tolerance=1e-4)
 
     pp <- plot(mod, type = 'empiricalhist')
-    expect_is(pp, 'trellis')
+    expect_class(pp, 'trellis')
 
     mod2 <- mirt(dat_bm, 1, dentype = 'EHW', verbose=FALSE)
     expect_equal(extract.mirt(mod2, 'logLik'), -12758.689, tolerance=1e-4)
@@ -66,7 +66,7 @@ test_that('DCIRT', {
     expect_equal(out2$S_X2[1:3], c(25.44766, 14.06284, 13.88462), tolerance=1e-2)
 
     pp <- plot(res_bm, type = 'Davidian')
-    expect_is(pp, 'trellis')
+    expect_class(pp, 'trellis')
 })
 
 test_that('DCIRT Option Errors and Warnings', {
@@ -173,7 +173,7 @@ test_that('DCIRT-MG', {
     expect_equal(out2$G2$S_X2[1:3], c(10.2253,15.41447,9.010604), tolerance=1e-1)
 
     pp <- plot(mod_configural, type = 'Davidian')
-    expect_is(pp, 'trellis')
+    expect_class(pp, 'trellis')
 
     # not equated
     mod_scalar0 <- multipleGroup(dat, 1, group = group, verbose=FALSE, dentype='Davidian-6',
@@ -183,7 +183,7 @@ test_that('DCIRT-MG', {
     expect_equal(extract.mirt(mod_scalar0, 'df'), 67108760)
     # plot(mod_scalar0)
     pp <- plot(mod_scalar0, type = 'Davidian')
-    expect_is(pp, 'trellis')
+    expect_class(pp, 'trellis')
 
     # equated
     expect_error(multipleGroup(dat, 1, group = group, verbose=FALSE, dentype='Davidian-6',
@@ -196,7 +196,7 @@ test_that('DCIRT-MG', {
     # expect_equal(cfs, c(0.4745419,0.6083134,1.200818,2.058516,2.109649,3.667984,-0.6940906,0.7198784), tolerance=1e-4)
     #
     # pp <- plot(mod_scalar, type = 'Davidian')
-    # expect_is(pp, 'trellis')
+    # expect_class(pp, 'trellis')
 
     # equated EHW
     mod_scalarEHW <- multipleGroup(dat, 1, group = group, verbose=FALSE, dentype='EHW',
@@ -208,7 +208,7 @@ test_that('DCIRT-MG', {
     expect_equal(cfs, c(0.5085824, 0.5889403), tolerance=1e-4)
 
     pp <- plot(mod_scalarEHW, type = 'empiricalhist')
-    expect_is(pp, 'trellis')
+    expect_class(pp, 'trellis')
 
 
 })

@@ -98,7 +98,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
 
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
-        loads <- eigen(Rpoly)$vector[,seq_len(nfact), drop = FALSE]
+        loads <- eigen(Rpoly)$vectors[,seq_len(nfact), drop = FALSE]
         u <- 1 - rowSums(loads^2)
         u[u < .001 ] <- .2
         cs <- sqrt(u)

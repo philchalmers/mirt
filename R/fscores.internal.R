@@ -864,7 +864,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     factorNames <- extract.mirt(x, 'factorNames')
     colnames(thetas) <- factorNames[!grepl('\\(',factorNames)]
     colnames(SEthetas) <- paste0('SE_', colnames(thetas))
-    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$min), thetas, SEthetas)
+    ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$mins), thetas, SEthetas)
     rownames(ret) <- ret$Sum.Scores
     if(full.scores){
         dat <- x@Data$data

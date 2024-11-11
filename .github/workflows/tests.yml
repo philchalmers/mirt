@@ -1,0 +1,23 @@
+name: Tests (Ubuntu-latest)
+
+on:
+  # push:
+  #   branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  Run-Tests:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/kss2k/container-mirt:latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        run: |
+          Rscript -e 'options(warnPartialMatchDollar = TRUE); Sys.setenv("_R_CHECK_LENGTH_1_CONDITION_" = "TRUE", "_R_CHECK_LENGTH_1_LOGIC2_" = "TRUE"); devtools::test(stop_on_failure = TRUE)'

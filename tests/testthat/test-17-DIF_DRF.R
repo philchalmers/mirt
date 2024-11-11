@@ -1,4 +1,4 @@
-context('DIF')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('DIF', {
 
@@ -23,14 +23,14 @@ test_that('DIF', {
                             invariance = c('slopes', 'intercepts', 'free_means', 'free_var'))
 
     DIFF <- suppressMessages(DIF(model1a, which.par='d', items2test = c(1,3)))
-    expect_is(DIFF, 'data.frame')
+    expect_class(DIFF, 'data.frame')
     expect_equal(DIFF[2,'AIC'], -3.414, tolerance = 1e-3)
     DIFF2 <- suppressMessages(DIF(model2, which.par=c('a1', 'd'), items2test = c(1,3), scheme='drop'))
-    expect_is(DIFF2, 'data.frame')
+    expect_class(DIFF2, 'data.frame')
     expect_equal(DIFF2[1L, 'X2'], 18.88, tolerance = 1e-3)
 
     WALD <- suppressMessages(DIF(model1a, which.par='d', items2test = 1:3, Wald=TRUE))
-    expect_is(WALD, 'data.frame')
+    expect_class(WALD, 'data.frame')
     expect_equal(WALD$W[1], 1.532718, tolerance = 1e-3)
     expect_equal(WALD$p[1], 0.2157049, tolerance = 1e-3)
     WALD2 <- suppressMessages(DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr'))
@@ -41,11 +41,11 @@ test_that('DIF', {
                                                                                      'free_means', 'free_var'))
 
     out <- DIF(model1b, which.par = c('a1', 'd'), items2test = 6:10, Wald = TRUE)
-    expect_is(out, 'data.frame')
+    expect_class(out, 'data.frame')
     expect_equal(out$p, c(0.1090403,0.07219868,0.175297,0.1354964,0.6970995), tolerance = 1e-4)
 
     out <- DIF(model1b, which.par = c('a1', 'd'), items2test = 6:10)
-    expect_is(out, 'data.frame')
+    expect_class(out, 'data.frame')
     expect_equal(out$p, c(0.103812,0.04867894,0.1565903,0.1118176,0.6921238), tolerance = 1e-4)
 
     model <- "F = 1-10
@@ -53,7 +53,7 @@ test_that('DIF', {
     model2 <- multipleGroup(dat, model, group, SE = TRUE, verbose=FALSE, invariance = c(colnames(dat)[1:5],
                                                                                      'free_means', 'free_var'))
     out <- DIF(model2, which.par = c('a1', 'd'), items2test = 6:10, seq_stat = 'BIC')
-    expect_is(out, 'data.frame')
+    expect_class(out, 'data.frame')
     expect_equal(out$BIC, c(11.449,9.038,11.424,10.739,14.448), tolerance = 1e-3)
 
     drf <- DRF(model2)

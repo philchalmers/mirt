@@ -1,4 +1,4 @@
-context('grsmIRT')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('grsmIRT', {
 # Response data : num of response categories = 5

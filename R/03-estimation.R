@@ -867,8 +867,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                             Consider changing the starting values', call.=FALSE)
                 dontrun <- TRUE
             }
-            lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'COV_'), length))
-            lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correct), 'MEAN_'), length))
+            lengthsplit <- do.call(c, lapply(strsplit(names(ESTIMATE$correction), 'COV_'), length))
+            lengthsplit <- lengthsplit + do.call(c, lapply(strsplit(names(ESTIMATE$correction), 'MEAN_'), length))
             is.latent <- lengthsplit > 2L
             if(!dontrun){
                 if(ESTIMATE$cycles <= 10L)
@@ -1016,7 +1016,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 .mirtClusterEnv$ncores <- 1L
             }
             for(g in seq_len(Data$ngroups)){
-                cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupName[g], ],
+                cmods[[g]]@Data <- list(data=Data$data[Data$group == Data$groupNames[g], ],
                                         fulldata=Data$fulldata[[g]], tabdata=Data$tabdata,
                                         Freq=list(Data$Freq[[g]]), K=Data$K)
                 cmods[[g]] <- calcLogLik(cmods[[g]], opts$draws, G2 = 'return',
@@ -1166,7 +1166,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             } else {
                 if(Options$exploratory){
                     FF <- F %*% t(F)
-                    V <- eigen(FF)$vector[ ,1L:nfact]
+                    V <- eigen(FF)$vectors[ ,1L:nfact]
                     L <- eigen(FF)$values[1L:nfact]
                     if (nfact == 1L) F <- as.matrix(V * sqrt(L))
                     else F <- V %*% sqrt(diag(L))

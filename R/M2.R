@@ -381,7 +381,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
                 pars[[g]]@Internals$Prior <- list(obj@Internals$Prior[[g]])
                 pars[[g]]@Model$Theta <- obj@Model$Theta
             }
-            pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupName[g], ],
+            pars[[g]]@Data <- list(data=obj@Data$data[obj@Data$group == obj@Data$groupNames[g], ],
                                    mins=obj@Data$mins, K=obj@Data$K,
                                    fulldata=list(obj@Data$fulldata[[g]]))
             if(is(obj, 'MixtureClass')) pars[[g]]@Data$data <- extract.mirt(obj, 'data')
