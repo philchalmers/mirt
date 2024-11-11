@@ -4,7 +4,7 @@
 # note: cannot match Valid_iteminputs
 Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull')
 
-Valid_iteminputs <- function() c('Rasch', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
+Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
                                  'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal','PC1PL', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())

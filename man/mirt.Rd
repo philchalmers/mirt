@@ -64,10 +64,11 @@ model will be fit unless otherwise specified}
   \itemize{
     \item \code{'Rasch'} - Rasch/partial credit model by constraining slopes to 1 and freely estimating
       the variance parameters (alternatively, can be specified by applying equality constraints to the
-      slope parameters in \code{'gpcm'}; Rasch, 1960)
-    \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 parameter logistic model,
+      slope parameters in \code{'gpcm'} and \code{'2PL'}; Rasch, 1960)
+    \item \code{'1PL'}, \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 1-4 parameter logistic model,
       where \code{3PL} estimates the lower asymptote only while \code{3PLu} estimates the upper asymptote only
-      (Lord and Novick, 1968; Lord, 1980)
+      (Lord and Novick, 1968; Lord, 1980). Note that specifying \code{'1PL'} will not automatically estimate
+      the variance of the latent trait compared to the \code{'Rasch'} type
     \item \code{'5PL'} - 5 parameter logistic model to estimate asymmetric logistic
      response curves. Currently restricted to unidimensional models
     \item \code{'CLL'} - complementary log-log link model.
@@ -596,8 +597,9 @@ number of categories (using \eqn{k} for specific category instances).
     'gpcm' below).
      \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
   }
-  \item{2-4PL}{
-    Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
+  \item{1-4PL}{
+    Depending on the model \eqn{u} may be equal to 1 (e.g., 3PL), \eqn{g} may be equal to 0 (e.g., 2PL),
+    or the \code{a}s may be fixed to 1 (e.g., 1PL).
     \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{
       1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
   }
