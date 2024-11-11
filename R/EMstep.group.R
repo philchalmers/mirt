@@ -150,7 +150,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
         tmp <- tmp[lower.tri(tmp, TRUE)]
         tmpmat <- matrix(0, ns, 2L)
         for(i in seq_len(ns))
-            tmpmat[i, ] <- c(gp$gmean[np + i], gp$gcov[np+i, np+i])
+            tmpmat[i, ] <- c(gp$gmeans[np + i], gp$gcov[np+i, np+i])
         for(g in seq_len(ngroups)){
             pars[[g]][[J+1L]]@bindex <- as.integer(c(gp$gmeans[seq_len(np)], tmp))
             pars[[g]][[J+1L]]@sindex = tmpmat

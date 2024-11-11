@@ -95,7 +95,7 @@ thetaStack <- function(theta, nclass){
 #' }
 secondOrderTest <- function(mat, ..., method = 'eigen'){
     if(method == 'eigen'){
-        evs <- eigen(mat, ...)$value
+        evs <- eigen(mat, ...)$values
         ret <- all(!sapply(evs, function(x) isTRUE(all.equal(x, 0))) & evs > 0)
     } else if(method == 'chol'){
         chl <- try(chol(mat, ...), silent = TRUE)
