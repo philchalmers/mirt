@@ -1,0 +1,25 @@
+name: R-CMD-CHECK
+on:
+  push:
+    branches:
+      - main
+      - test-workflow
+  pull_request:
+    branches:
+      - main
+      - test-workflow
+
+jobs:
+  R-CMD-CHECK:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/kss2k/container-mirt:latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: R CMD CHECK
+        run: |
+          Rscript -e 'devtools::check(error_on = "warning")'
