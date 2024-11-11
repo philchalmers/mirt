@@ -1,4 +1,4 @@
-context('gpcm_mats')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('gpcm_mats', {
 

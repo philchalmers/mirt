@@ -1,4 +1,4 @@
-context('multipleGroup')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('one factor', {
     if(FALSE){
@@ -36,7 +36,7 @@ test_that('one factor', {
     # expect_equal(extract.mirt(mod_QMCEM, 'logLik'), -17849.64, tolerance=1e-2)
     mod_configural <- multipleGroup(dat, models, SE=TRUE, SE.type = 'crossprod', optimizer='NR',
                                     group = group, verbose = FALSE, method = 'EM')
-    expect_is(mod_configural, 'MultipleGroupClass')
+    expect_class(mod_configural, 'MultipleGroupClass')
     expect_equal(logLik(mod_configural), -17903.76, tolerance = 1e-4)
     cfs <- as.numeric(do.call(c, coef(mod_configural)[[1L]]))
     cfs <- as.numeric(na.omit(cfs[cfs != 0 & cfs != 1]))
@@ -45,7 +45,7 @@ test_that('one factor', {
     expect_equal(extract.mirt(mod_configural, 'df'), 65474)
     mod_metric <- multipleGroup(dat, models, group = group, invariance=c('slopes'), verbose = FALSE,
                                 method = 'EM', optimizer = 'NR')
-    expect_is(mod_metric, 'MultipleGroupClass')
+    expect_class(mod_metric, 'MultipleGroupClass')
     expect_equal(extract.mirt(mod_metric, 'df'), 65489)
     mod_scalar2 <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_var','free_means'))
@@ -54,15 +54,15 @@ test_that('one factor', {
     cfs <- cfs[cfs != 0 & cfs != 1]
     expect_equal(cfs, c(1.104323,0.5385656,1.20104,-0.6295554,1.061246,-0.2649867,0.8824239,0.9004537,1.081875,0.1640334,0.4445889,0.636301,1.180488,0.9758879,0.977318,-0.3768236,0.8786338,-1.034887,0.6847666,-1.117687,0.948221,1.213217,1.389262,-0.2233858,1.261964,0.4288545,1.153485,0.4531765,0.7745967,-0.06987377),
                  tolerance = 1e-2)
-    expect_is(mod_scalar2, 'MultipleGroupClass')
+    expect_class(mod_scalar2, 'MultipleGroupClass')
     expect_equal(extract.mirt(mod_scalar2, 'df'), 65502)
     newmodel <- mirt.model('F = 1-15
                             CONSTRAINB = (1-15, a1), (1,2,3-15,d)')
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')
-    expect_is(mod_scalar1, 'MultipleGroupClass')
+    expect_class(mod_scalar1, 'MultipleGroupClass')
     mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                             dentype="empiricalhist", optimizer = 'NR')
-    expect_is(mod_EH, 'MultipleGroupClass')
+    expect_class(mod_EH, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_EH)[[1L]]))
     expect_equal(cfs, c(0.9915433,0.5344622,0,1,1.163903,-0.6905668,0,1,0.8828766,-0.1765539,0,1,0.8374425,0.8539179,0,1,1.031439,0.1393504,0,1,0.5279401,0.689807,0,1,1.179048,1.011893,0,1,0.8773885,-0.3201687,0,1,0.8273324,-1.047761,0,1,0.6713642,-1.076773,0,1,0.7647824,1.196511,0,1,1.385943,-0.2402286,0,1,1.196881,0.4558509,0,1,0.963759,0.4638302,0,1,0.8105823,-0.05165506,0,1,0,1),
                  tolerance = 1e-2)
@@ -78,7 +78,7 @@ test_that('one factor', {
     dat[1,1] <- dat[2,2] <- NA
     mod_missing <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
                                  invariance=c('slopes', 'intercepts', 'free_var'))
-    expect_is(mod_missing, 'MultipleGroupClass')
+    expect_class(mod_missing, 'MultipleGroupClass')
     expect_equal(extract.mirt(mod_missing, 'df'), 65503)
     out1 <- M2(mod_missing, na.rm=TRUE)
     out2 <- itemfit(mod_missing, na.rm=TRUE)
@@ -95,19 +95,19 @@ test_that('one factor', {
     fs3 <- fscores(mod_missing, verbose = FALSE, full.scores=FALSE)
     fs4 <- fscores(mod_missing, full.scores = TRUE)
     fs5 <- fscores(mod_metric, full.scores = TRUE, scores.only=TRUE)
-    expect_is(fs1, 'list')
-    expect_is(fs2, 'matrix')
-    expect_is(fs3, 'list')
-    expect_is(fs4, 'matrix')
+    expect_class(fs1, 'list')
+    expect_class(fs2, 'matrix')
+    expect_class(fs3, 'list')
+    expect_class(fs4, 'matrix')
 
     fit1 <- M2(mod_metric)
-    expect_is(fit1, 'data.frame')
+    expect_class(fit1, 'data.frame')
     expect_true(mirt:::closeEnough(fit1$M2 - 184.5311, -1e-2, 1e-2))
     expect_equal(fit1$SRMSR.D1, 0.04055562, tolerance = 1e-4)
     expect_equal(fit1$TLI, 1.001405, tolerance = 1e-4)
     expect_true(mirt:::closeEnough(fit1$df - 195, -1e-4, 1e-4))
     fit2 <- itemfit(mod_metric, c('S_X2', 'Zh'))
-    expect_is(fit2, 'list')
+    expect_class(fit2, 'list')
     expect_equal(as.numeric(fit2[[1]][1L,-1L]), c(2.733099, 7.851266, 11.000000, 0, 0.726562),
                  tolerance = 1e-4)
     fit3 <- M2(mod_scalar2)
@@ -126,7 +126,7 @@ test_that('one factor', {
 ),
                  tolerance=1e-4)
     expect_equal(as.vector(fscores(mod)[1:3,]), c(0.7325525, 0.9279133, 0.5071795), tolerance=1e-4)
-    expect_is(plot(mod, type = 'trace'), 'trellis')
+    expect_class(plot(mod, type = 'trace'), 'trellis')
     ifit <- itemfit(mod, 'X2')
     expect_equal(as.vector(ifit$D1$p.X2[1:4]), c(NaN,NaN,0.0002541653, 0.0009022802), tolerance=1e-4)
 
@@ -146,7 +146,7 @@ test_that('one factor', {
     load('testdata/MG2.rds')
     group <- factor(c(rep('g1',1000), rep('g2',1000)))
     x <- multipleGroup(dat, 1, group=group, method='EM', verbose = FALSE)
-    expect_is(x, 'MultipleGroupClass')
+    expect_class(x, 'MultipleGroupClass')
     out <- empirical_ES(x)
     expect_equal(as.numeric(out[1,]), c(-0.01984901,0.1397911,-0.02010119,0.1390092,-0.03393749,-2.687888,-0.4657692,3.53414,3.553989), tolerance=1e-4)
     out2 <- empirical_ES(x, DIF = FALSE)
@@ -154,7 +154,7 @@ test_that('one factor', {
 
     dat[1,1] <- dat[2,2] <- NA
     x2 <- multipleGroup(dat, 1, group=group, method='EM', verbose = FALSE)
-    expect_is(x2, 'MultipleGroupClass')
+    expect_class(x2, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(x2)[[1L]]))
     cfs <- cfs[cfs != 0 & cfs != 1]
     expect_true(mirt:::closeEnough(cfs - c(0.54559,2.87963,2.09834,1.04898,0.08764,-1.01597,-1.88808,-2.80774,0.5721,3.66458,2.86098,2.07309,0.97108,-0.04591,-1.13943,-2.04077,2.19508,3.985,2.93076,1.92402,0.93888,-3e-04,-0.92533,-2.15966,2.75051,5.52755,4.54548,3.22867,2.2928,1.26823,0.37394,-0.49598,0.40521,2.24053,1.23686,0.3006,-0.65966,-1.68032,-2.71625,-3.65993,5.18399,3.21456,2.30067,1.19408,0.1821,-0.8039,-1.83942,-2.96744,2.50677,2.45572,1.40808,0.48888,-0.67763,-1.67403,-2.61442,-3.75363,1.90942,4.6516,3.56213,2.57738,1.45019,0.65221,-0.43677,-1.41043,2.0672,3.3566,2.50567,1.64636,0.6884,-0.28202,-1.35771,-2.31969,2.54578,2.31928,1.26861,0.29768,-0.87537,-1.86427,-2.76917,-3.71823), -1e-2, 1e-2))
@@ -191,20 +191,20 @@ test_that('one factor', {
 
     mod_metric <- multipleGroup(dat, MGmodelg2, group = group, invariance=c('slopes'), method = 'MHRM',
                                                  verbose = FALSE, draws = 10)
-    expect_is(mod_metric, 'MultipleGroupClass')
+    expect_class(mod_metric, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_metric)[[1]]))[1:20]
     expect_equal(cfs, c(1.223844,0,0,0.5986703,0,1,1.478027,0,0,-0.542961,0,1,1.090491,0,0,-0.2585476,0,1,0.8359449,0),
                  tolerance = 1e-2)
     mod_configural <- multipleGroup(dat, MGmodelg1, group = group, verbose = FALSE, method = 'EM', SE=TRUE,
                                     optimizer = 'NR')
-    expect_is(mod_configural, 'MultipleGroupClass')
+    expect_class(mod_configural, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_configural)[[1]]))
     cfs <- cfs[cfs != 0 & cfs != 1]
     expect_equal(as.numeric(na.exclude(cfs)), c(1.175122,0.8723134,1.47793,0.5905031,0.4203281,0.7606781,1.432219,1.051584,1.812853,-0.5385373,-0.7236171,-0.3534576,1.054938,0.7785073,1.331368,-0.2574002,-0.4120382,-0.1027621,0.9510795,0.6902863,1.211873,0.8776461,0.7088456,1.046447,1.147247,0.8538526,1.440642,0.2582053,0.09907628,0.4173343,0.6090205,0.3766148,0.8414262,0.5171881,0.3763434,0.6580327,1.590855,0.9590698,2.22264,1.129202,0.8384696,1.419934,1.058027,0.7076615,1.408393,-0.5338947,-0.6989874,-0.368802,0.8613521,0.5565073,1.166197,-1.216261,-1.405812,-1.026709,0.5272607,0.2895619,0.7649595,-1.023556,-1.178142,-0.8689692,1.00044,0.707042,1.293839,1.302659,1.102789,1.502529,1.459818,1.046385,1.873251,-0.5183716,-0.7054787,-0.3312645,1.027813,0.7488713,1.306755,0.4739741,0.3155796,0.6323687,1.425603,1.026227,1.824979,0.4233488,0.2429515,0.6037461,0.6053667,0.397785,0.8129484,-0.1520328,-0.2869917,-0.01707401),
                  tolerance = 1e-2)
 
     fs1 <- fscores(mod_metric, verbose = FALSE, full.scores=FALSE)
-    expect_is(fs1, 'list')
+    expect_class(fs1, 'list')
     expect_equal(fs1[[1L]][1:6, 'F3'],
                  c(-0.36817499, -0.45410998, -0.19616041,  0.07609491,  0.33779790, -0.44366024), tolerance = 1e-2)
 

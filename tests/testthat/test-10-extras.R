@@ -1,4 +1,4 @@
-context('extras')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('extras', {
     suppressMessages(require(nonnest2, quietly=TRUE, warn.conflicts=FALSE))
@@ -75,7 +75,7 @@ test_that('extras', {
     expect_equal(expected[1:3], c(0.1083150, 0.1133415, 0.1185956), tolerance=1e-4)
     data[1,1] <- NA
     data <- imputeMissing(mod1, Theta=fscores(mod1, full.scores=TRUE), warn=FALSE)
-    expect_is(data, 'matrix')
+    expect_class(data, 'matrix')
     expect_true(!all(is.na(data)))
     pb <- probtrace(extr.2, Theta)
     expect_equal(pb[1:3, 1], c(0.9965890, 0.9963601, 0.9961159), tolerance = 1e-5)
@@ -83,7 +83,7 @@ test_that('extras', {
     expect_equal(ti[1:3], c(0.06607895, 0.06918330, 0.07242870), tolerance = 1e-5)
     set.seed(1234)
     fs <- fscores(mod1, MI=20, verbose=FALSE, full.scores=FALSE)
-    expect_is(fs, 'matrix')
+    expect_class(fs, 'matrix')
     expect_equal(fs[1:3,'F1'], c(-1.853914, -1.509722, -1.514913), tolerance=1e-3)
 
     set.seed(1)

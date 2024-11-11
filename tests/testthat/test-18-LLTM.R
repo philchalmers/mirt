@@ -1,4 +1,4 @@
-context('LLTM')
+expect_class <- function(x, class) expect_true(inherits(x, class))
 
 test_that('LLTM', {
     set.seed(42)
@@ -17,7 +17,7 @@ test_that('LLTM', {
 
     # additional information for LLTM
     oo <- plot(lltm)
-    expect_is(oo, 'trellis')
+    expect_class(oo, 'trellis')
     ifit <- itemfit(lltm)
     expect_equal(ifit$S_X2[1:3], c(20.06072, 20.90161, 23.48163), tol=1e-2)
     eap <- fscores(lltm)
