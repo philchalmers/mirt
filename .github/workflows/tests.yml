@@ -1,14 +1,11 @@
 name: Tests (Ubuntu-latest)
 
 on:
-  push:
-    branches:
-      - main
-      - test-workflow
+  # push:
+  #   branches: [main, master]
   pull_request:
-    branches:
-      - main
-      - test-workflow
+    branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   Run-Tests:
