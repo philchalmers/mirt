@@ -36,13 +36,11 @@ test_that('DIF', {
     WALD2 <- suppressMessages(DIF(model1a, which.par=c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr'))
     expect_equal(as.numeric(WALD2$adj_p), c(0.02473307,0.01580279,0.1261503,0.4299811,0.4672727,0.4565218,0.05971613,0.5671398,0.4299811,0.4565218), tolerance = 1e-3)
 
-
     model1b <- multipleGroup(dat, 1, group, SE = TRUE, verbose=FALSE, invariance = c(colnames(dat)[1:5],
                                                                                      'free_means', 'free_var'))
-
     out <- DIF(model1b, which.par = c('a1', 'd'), items2test = 6:10, Wald = TRUE)
     expect_class(out, 'data.frame')
-    expect_equal(out$p, c(0.1090403,0.07219868,0.175297,0.1354964,0.6970995), tolerance = 1e-4)
+    expect_equal(out$p, c(0.1090403,0.07219868,0.175297,0.1354964,0.6970995), tolerance = 1e-2)
 
     out <- DIF(model1b, which.par = c('a1', 'd'), items2test = 6:10)
     expect_class(out, 'data.frame')

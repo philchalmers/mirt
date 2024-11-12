@@ -71,7 +71,7 @@ test_that('one factor', {
                                  verbose = FALSE, dentype = 'mixture-2', SE=TRUE))
     expect_equal(extract.mirt(mod_mixture, 'condnum'), 111.45, tolerance=1e-4)
     so <- summary(mod_mixture, verbose=FALSE)
-    expect_equal(so[[1]]$class_proportion, .5104, tolerance=1e-4)
+    expect_equal(so[[1]]$class_proportion, .5104716, tolerance=1e-4)
     fs <- fscores(mod_mixture)
     expect_equal(fs[1:3], c(-0.04600241,  0.48125920,  0.39123595), tolerance=1e-4)
 
@@ -80,10 +80,10 @@ test_that('one factor', {
                                  invariance=c('slopes', 'intercepts', 'free_var'))
     expect_class(mod_missing, 'MultipleGroupClass')
     expect_equal(extract.mirt(mod_missing, 'df'), 65503)
-    out1 <- M2(mod_missing, na.rm=TRUE)
-    out2 <- itemfit(mod_missing, na.rm=TRUE)
+    out1 <- M2(mod_missing)
+    out2 <- suppressMessages(itemfit(mod_missing, na.rm=TRUE))
     out3 <- fscores(mod_missing, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
-    expect_equal(out1$M2, 166.4414, tolerance=1e-4)
+    expect_equal(out1$M2, 166.0549, tolerance=1e-4)
     expect_equal(out2$D1$S_X2[1], 7.633155, tolerance=1e-4)
     expect_equal(out3$D1$expected[1], 5.258545, tolerance=1e-2)
 
