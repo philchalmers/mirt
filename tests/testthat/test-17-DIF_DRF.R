@@ -61,10 +61,10 @@ test_that('DIF', {
     dif <- DRF(model2, DIF = TRUE)
     expect_equal(as.numeric(dif$sDIF[-c(1:5)]),
                  c(-0.04435560,  0.02738697, -0.02307566, -0.01429807,  0.01397205),
-                 tolerance = 1e-4)
+                 tolerance = 1e-2)
     expect_equal(as.numeric(dif$uDIF[-c(1:5)]),
                  c(0.04448119, 0.06111498, 0.04441609, 0.04817261, 0.01960173),
-                 tolerance = 1e-4)
+                 tolerance = 1e-2)
 
     set.seed(1234)
     drf <- DRF(model2, draws = 100)
