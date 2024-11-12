@@ -170,7 +170,7 @@ test_that('dich', {
     data[1,1] <- NA
     modm1 <- mirt(data, 1, verbose=FALSE)
     out1 <- M2(modm1)
-    out2 <- itemfit(modm1, na.rm=TRUE)
+    out2 <- suppressMessages(itemfit(modm1, na.rm=TRUE))
     out3 <- fscores(modm1, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
     expect_equal(out1$M2, 11.96141, tolerance=1e-4)
     expect_equal(out2$S_X2[1], 4.8448539, tolerance=1e-4)
