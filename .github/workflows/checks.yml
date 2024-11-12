@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ghcr.io/kss2k/container-mirt:latest
+      image: ghcr.io/philchalmers/container-mirt:latest
 
     steps:
       - name: Check out the repository
