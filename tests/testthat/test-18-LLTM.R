@@ -91,27 +91,27 @@ test_that('MLTM', {
 
 })
 
-test_that('MLTM', {
-    set.seed(42)
-
-    as <- matrix(rep(1,60), ncol=2)
-    as[11:18,1] <- as[1:9,2] <- 0
-    d1 <- rep(c(3,1),each = 6)  # first easy, then medium, last difficult for first trait
-    d2 <- rep(c(0,1,2),times = 4)    # difficult to easy
-    d <- rep(-1:1, each=6)
-    ds <- rbind(cbind(d1=NA, d2=d), cbind(d1, d2))
-    dat <- simdata(as, ds, 2500,
-                   itemtype = c(rep('dich', 18), rep('partcomp', 12)))
-
-    # MLTM design only for PC1PL items
-    itemdesign <- data.frame(t1_difficulty= factor(c(rep(NA, 18), d1), labels=c('medium', 'easy')),
-                             t2_difficulty=factor(c(rep(NA, 18), d2), labels=c('hard', 'medium', 'easy')),
-                             difficulty=factor(c(d, rep(NA, 12)), labels=c('hard', 'medium', 'easy')))
-
-    # mixed <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
-    #              item.formula = list(theta1 ~ 0 + t1_difficulty,
-    #                                  theta2 ~ 0 + t2_difficulty,
-    #                                  ~ difficulty), SE=TRUE, verbose=FALSE)
-
-
-})
+# test_that('mixed', {
+#     set.seed(42)
+#
+#     as <- matrix(rep(1,60), ncol=2)
+#     as[11:18,1] <- as[1:9,2] <- 0
+#     d1 <- rep(c(3,1),each = 6)  # first easy, then medium, last difficult for first trait
+#     d2 <- rep(c(0,1,2),times = 4)    # difficult to easy
+#     d <- rep(-1:1, each=6)
+#     ds <- rbind(cbind(d1=NA, d2=d), cbind(d1, d2))
+#     dat <- simdata(as, ds, 2500,
+#                    itemtype = c(rep('dich', 18), rep('partcomp', 12)))
+#
+#     # MLTM design only for PC1PL items
+#     itemdesign <- data.frame(t1_difficulty= factor(c(rep(NA, 18), d1), labels=c('medium', 'easy')),
+#                              t2_difficulty=factor(c(rep(NA, 18), d2), labels=c('hard', 'medium', 'easy')),
+#                              difficulty=factor(c(d, rep(NA, 12)), labels=c('hard', 'medium', 'easy')))
+#
+#     # mixed <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
+#     #              item.formula = list(theta1 ~ 0 + t1_difficulty,
+#     #                                  theta2 ~ 0 + t2_difficulty,
+#     #                                  ~ difficulty), SE=TRUE, verbose=FALSE)
+#
+#
+# })
