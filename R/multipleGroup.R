@@ -52,6 +52,8 @@
 #'   differential item functioning (DIF) across groups
 #' @param method a character object that is either \code{'EM'}, \code{'QMCEM'}, or \code{'MHRM'}
 #'   (default is \code{'EM'}). See \code{\link{mirt}} for details
+#' @param itemdesign see \code{\link{mirt}} for details
+#' @param item.formula see \code{\link{mirt}} for details
 #' @param dentype type of density form to use for the latent trait parameters. Current options include
 #'   all of the methods described in \code{\link{mirt}}, as well as
 #'
@@ -534,10 +536,12 @@
 #' }
 multipleGroup <- function(data, model = 1, group, itemtype = NULL,
                           invariance = '', method = 'EM',
-                          dentype = 'Gaussian', ...)
+                          dentype = 'Gaussian', itemdesign=NULL, item.formula = NULL, ...)
 {
     Call <- match.call()
     dots <- list(...)
+    mixed.design <- make.mixed.design(item.formula=item.formula,
+                                      item.design=item.design, data=data)
     if(is.character(model)) model <- mirt.model(model)
     if(!is.null(dots$formula))
         stop('latent regression models not supported for multiple group yet', call.=FALSE) #TODO
@@ -565,7 +569,7 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
     }
     if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
     mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
-                      itemtype=itemtype, dentype=dentype, ...)
+                      itemtype=itemtype, dentype=dentype, mixed.design=mixed.design, ...)
     if(is(mod, 'MultipleGroupClass') || is(mod, 'MixtureClass'))
         mod@Call <- Call
     return(mod)

@@ -33,6 +33,17 @@ test_that('LLTM', {
     m2 <- M2(lltm.4)
     expect_equal(m2$TLI, 1.001862, tolerance=1e-2)
 
+    group <- factor(rep(c('G1', 'G2'), each=500))
+    lltm.G <- multipleGroup(dat, group=group, itemtype = 'Rasch', SE=TRUE, verbose=FALSE,
+                            item.formula = ~ 0 + difficulty, itemdesign=itemdesign)
+    cfsG1 <- coef(lltm.G, simplify=TRUE)$G1$items
+    cfsG2 <- coef(lltm.G, simplify=TRUE)$G2$items
+    expect_equal(as.vector(cfsG1[1, 1:3]), c(1.009664, 0.000000, 0.000000), tolerance=1e-2)
+    expect_equal(as.vector(cfsG2[1, 1:3]), c(0.9074375, 0.000000, 0.000000), tolerance=1e-2)
+    fs <- fscores(lltm.G)
+    expect_equal(fs[1:3], c(1.0170938, -0.2457873, -0.2457873), tolerance=1e-2)
+
+
 })
 
 test_that('MLTM', {

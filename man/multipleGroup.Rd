@@ -12,6 +12,8 @@ multipleGroup(
   invariance = "",
   method = "EM",
   dentype = "Gaussian",
+  itemdesign = NULL,
+  item.formula = NULL,
   ...
 )
 }
@@ -64,6 +66,10 @@ mixtures}
       Note that internally the mixture coefficients are stored as log values where
       the first mixture group coefficient is fixed at 0
    }}
+
+\item{itemdesign}{see \code{\link{mirt}} for details}
+
+\item{item.formula}{see \code{\link{mirt}} for details}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}

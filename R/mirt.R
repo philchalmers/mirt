@@ -1438,50 +1438,8 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
                                               dentype=dentype, formula=formula, method=method)
     if(!is.null(latent.regression$data))
         data <- latent.regression$data
-    mixed.design <- NULL
-    if(!is.null(itemdesign)){
-        stopifnot('itemdesign only supported for dichotmous item tests' =
-                      all(apply(data, 2, \(x) length(na.omit(unique(x)))) == 2))
-        if(nrow(itemdesign) < ncol(data)){
-            has_idesign <- colnames(data) %in% rownames(itemdesign)
-            if(!any(has_idesign))
-                stop('No rownames in itemdesign match colnames(data)', call.=FALSE)
-            dummy <- as.data.frame(matrix(NA, sum(!has_idesign), ncol(itemdesign)))
-            colnames(dummy) <- colnames(itemdesign)
-            itemdesign <- rbind(dummy, itemdesign)
-        } else {
-            has_idesign <- rep(TRUE, nrow(itemdesign))
-            rownames(itemdesign) <- colnames(data)
-        }
-        itemdesignold <- itemdesign
-        if(is.list(item.formula)){
-            mf <- lapply(item.formula, \(x){
-                if(length(x) == 3){
-                    ghost <- x[[2]]
-                    itemdesign[[ghost]] <- 1
-                }
-                model.frame(x, itemdesign, na.action=NULL)
-            })
-            mm <- lapply(1:length(mf), \(i){
-                ret <- model.matrix(item.formula[[i]], mf[[i]])
-                ret[rowSums(is.na(ret)) > 0, ] <- NA
-                ret
-            })
-            names(mm) <- do.call(c, lapply(item.formula,
-                                           \(x) if(length(x) == 3) as.character(x[[2]]) else ""))
-            for(i in 1:length(mm))
-                if(names(mm)[i] != "")
-                    colnames(mm[[i]]) <- paste0(names(mm)[i], '.', colnames(mm[[i]]))
-            mm <- do.call(cbind, mm)
-        } else {
-            mf <- model.frame(item.formula, itemdesign, na.action = NULL)
-            mm <- model.matrix(item.formula, mf)
-        }
-
-        mixed.design <- list(random=NULL, fixed=mm, from='mirt',
-                             lr.random=NULL, lr.fixed=NULL, has_idesign=has_idesign)
-        attr(mixed.design, 'itemdesign') <- itemdesignold
-    }
+    mixed.design <- make.mixed.design(item.formula=item.formula,
+                                      item.design=item.design, data=data)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,
