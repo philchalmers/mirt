@@ -1446,6 +1446,9 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
             has_idesign <- colnames(data) %in% rownames(itemdesign)
             if(!any(has_idesign))
                 stop('No rownames in itemdesign match colnames(data)', call.=FALSE)
+            dummy <- as.data.frame(matrix(NA, sum(!has_idesign), ncol(itemdesign)))
+            colnames(dummy) <- colnames(itemdesign)
+            itemdesign <- rbind(dummy, itemdesign)
         } else {
             has_idesign <- rep(TRUE, nrow(itemdesign))
             rownames(itemdesign) <- colnames(data)
@@ -1471,7 +1474,7 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
                     colnames(mm[[i]]) <- paste0(names(mm)[i], '.', colnames(mm[[i]]))
             mm <- do.call(cbind, mm)
         } else {
-            mf <- model.frame(item.formula, itemdesign)
+            mf <- model.frame(item.formula, itemdesign, na.action = NULL)
             mm <- model.matrix(item.formula, mf)
         }
 

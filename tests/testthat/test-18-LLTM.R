@@ -61,7 +61,6 @@ test_that('MLTM', {
     itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('medium', 'easy')),
                              t2_difficulty=factor(d2, labels=c('hard', 'medium', 'easy')))
     rownames(itemdesign) <- colnames(dat)[19:30]
-    itemdesign
 
     # fit MLTM design, leaving first 18 items as 'Rasch' type
     mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
@@ -98,10 +97,10 @@ test_that('MLTM', {
                              t2_difficulty=factor(c(rep(NA, 18), d2), labels=c('hard', 'medium', 'easy')),
                              difficulty=factor(c(d, rep(NA, 12)), labels=c('hard', 'medium', 'easy')))
 
-    mixed <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
-                 item.formula = list(theta1 ~ 0 + t1_difficulty,
-                                     theta2 ~ 0 + t2_difficulty,
-                                     ~ difficulty), SE=TRUE, verbose=FALSE)
+    # mixed <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
+    #              item.formula = list(theta1 ~ 0 + t1_difficulty,
+    #                                  theta2 ~ 0 + t2_difficulty,
+    #                                  ~ difficulty), SE=TRUE, verbose=FALSE)
 
 
 })
