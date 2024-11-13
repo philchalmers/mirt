@@ -541,7 +541,7 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
     Call <- match.call()
     dots <- list(...)
     mixed.design <- make.mixed.design(item.formula=item.formula,
-                                      item.design=item.design, data=data)
+                                      itemdesign=itemdesign, data=data)
     if(is.character(model)) model <- mirt.model(model)
     if(!is.null(dots$formula))
         stop('latent regression models not supported for multiple group yet', call.=FALSE) #TODO

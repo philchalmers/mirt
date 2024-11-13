@@ -1439,7 +1439,7 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
     if(!is.null(latent.regression$data))
         data <- latent.regression$data
     mixed.design <- make.mixed.design(item.formula=item.formula,
-                                      item.design=item.design, data=data)
+                                      itemdesign=itemdesign, data=data)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,

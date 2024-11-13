@@ -1903,7 +1903,7 @@ loadESTIMATEinfo <- function(info, ESTIMATE, constrain, warn){
     return(ESTIMATE)
 }
 
-make.mixed.design <- function(item.formula, item.design, data){
+make.mixed.design <- function(item.formula, itemdesign, data){
     mixed.design <- NULL
     if(!is.null(itemdesign)){
         stopifnot('itemdesign only supported for dichotmous item tests' =
