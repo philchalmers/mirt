@@ -812,13 +812,16 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                             if(cp == cpowgroup[i] && pars[[g]][[i]]@est[p])
                                 constr[i] <- pars[[g]][[i]]@parnum[p]
                         }
-                        constrain[[length(constrain) + 1L]] <- na.omit(constr)
+                        constr <- na.omit(constr)
+                        if(length(constr))
+                            constrain[[length(constrain) + 1L]] <- constr
                     }
                 }
-            } else {
+            }
+            if(any(!are_partcomp & mixed.design$has_idesign)){
                 for(p in 1:ncol(mixed.design$fixed)){
                     constr <- rep(NA, J)
-                    for(i in which(mixed.design$has_idesign))
+                    for(i in which(mixed.design$has_idesign & !are_partcomp))
                         if(pars[[g]][[i]]@est[p])
                             constr[i] <- pars[[g]][[i]]@parnum[p]
                     constr <- na.omit(constr)
@@ -826,6 +829,7 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
                         constrain[[length(constrain) + 1L]] <- constr
                 }
             }
+
         }
     }
     #remove redundant constraints

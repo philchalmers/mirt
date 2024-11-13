@@ -1442,29 +1442,39 @@ mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FA
     if(!is.null(itemdesign)){
         stopifnot('itemdesign only supported for dichotmous item tests' =
                       all(apply(data, 2, \(x) length(na.omit(unique(x)))) == 2))
+        if(nrow(itemdesign) < ncol(data)){
+            has_idesign <- colnames(data) %in% rownames(itemdesign)
+            if(!any(has_idesign))
+                stop('No rownames in itemdesign match colnames(data)', call.=FALSE)
+        } else {
+            has_idesign <- rep(TRUE, nrow(itemdesign))
+            rownames(itemdesign) <- colnames(data)
+        }
         itemdesignold <- itemdesign
         if(is.list(item.formula)){
             mf <- lapply(item.formula, \(x){
-                ghost <- x[[2]]
-                itemdesign[[ghost]] <- 1
-                model.frame(x, itemdesign)
+                if(length(x) == 3){
+                    ghost <- x[[2]]
+                    itemdesign[[ghost]] <- 1
+                }
+                model.frame(x, itemdesign, na.action=NULL)
             })
-            mm <- lapply(1:length(mf), \(i)
-                model.matrix(item.formula[[i]], mf[[i]]))
-            names(mm) <- do.call(c, lapply(item.formula, \(x) as.character(x[[2]])))
+            mm <- lapply(1:length(mf), \(i){
+                ret <- model.matrix(item.formula[[i]], mf[[i]])
+                ret[rowSums(is.na(ret)) > 0, ] <- NA
+                ret
+            })
+            names(mm) <- do.call(c, lapply(item.formula,
+                                           \(x) if(length(x) == 3) as.character(x[[2]]) else ""))
             for(i in 1:length(mm))
-                colnames(mm[[i]]) <- paste0(names(mm)[i], '.', colnames(mm[[i]]))
+                if(names(mm)[i] != "")
+                    colnames(mm[[i]]) <- paste0(names(mm)[i], '.', colnames(mm[[i]]))
             mm <- do.call(cbind, mm)
         } else {
             mf <- model.frame(item.formula, itemdesign)
             mm <- model.matrix(item.formula, mf)
         }
-        if(nrow(mm) < ncol(data)){
-            has_idesign <- colnames(data) %in% rownames(itemdesign)
-        } else {
-            has_idesign <- rep(TRUE, nrow(itemdesign))
-            rownames(mm) <- colnames(data)
-        }
+
         mixed.design <- list(random=NULL, fixed=mm, from='mirt',
                              lr.random=NULL, lr.fixed=NULL, has_idesign=has_idesign)
         attr(mixed.design, 'itemdesign') <- itemdesignold

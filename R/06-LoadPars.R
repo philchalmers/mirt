@@ -243,9 +243,11 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         nfact <- nfact + nfixedeffects
         for(i in seq_len(J)){
             freepars[[i]] <- if(mixed.design$has_idesign[i])
-                c(estbetas, freepars[[i]]) else c(!estbetas, freepars[[i]])
+                c(estbetas & !is.na(mixed.design$fixed[i,]), freepars[[i]])
+                else c(!estbetas, freepars[[i]])
             startvalues[[i]] <- c(betas, startvalues[[i]])
         }
+        mixed.design$fixed[is.na(mixed.design$fixed)] <- 0
         valid.ints <- ifelse(any(K > 2), '', 'd')
         if(mixed.design$from != 'mixedmirt') # for partcomp
             valid.ints <- c(valid.ints, paste0('d', 1:(nfact-nfixedeffects)))
