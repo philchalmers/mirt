@@ -9,7 +9,7 @@ compute the expected value for an item given the ability parameter(s)."></head><
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,74 +91,19 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.50660Iteration: 2, Log-Lik: -1617.374, Max-Change: 0.25442Iteration: 3, Log-Lik: -1612.894, Max-Change: 0.16991Iteration: 4, Log-Lik: -1610.306, Max-Change: 0.10461Iteration: 5, Log-Lik: -1609.814, Max-Change: 0.09162Iteration: 6, Log-Lik: -1609.534, Max-Change: 0.07363Iteration: 7, Log-Lik: -1609.030, Max-Change: 0.03677Iteration: 8, Log-Lik: -1608.988, Max-Change: 0.03200Iteration: 9, Log-Lik: -1608.958, Max-Change: 0.02754Iteration: 10, Log-Lik: -1608.878, Max-Change: 0.01443Iteration: 11, Log-Lik: -1608.875, Max-Change: 0.00847Iteration: 12, Log-Lik: -1608.873, Max-Change: 0.00515Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.00550Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00318Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00462Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00277Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00145Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00175Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00126Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00025Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00285Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00108Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00022Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00059Iteration: 25, Log-Lik: -1608.870, Max-Change: 0.00014Iteration: 26, Log-Lik: -1608.870, Max-Change: 0.00068Iteration: 27, Log-Lik: -1608.870, Max-Change: 0.00065Iteration: 28, Log-Lik: -1608.870, Max-Change: 0.00019Iteration: 29, Log-Lik: -1608.870, Max-Change: 0.00061Iteration: 30, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 31, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 32, Log-Lik: -1608.870, Max-Change: 0.00058Iteration: 33, Log-Lik: -1608.870, Max-Change: 0.00055Iteration: 34, Log-Lik: -1608.870, Max-Change: 0.00015Iteration: 35, Log-Lik: -1608.870, Max-Change: 0.00052Iteration: 36, Log-Lik: -1608.870, Max-Change: 0.00010</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in make.mixed.design(item.formula = item.formula, item.design = item.design,     data = data):</span> object 'itemdesign' not found</span>
 <span class="r-in"><span><span class="va">extr.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract.item.html">extract.item</a></span><span class="op">(</span><span class="va">mod</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod' not found</span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>,<span class="fl">6</span>, length.out<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">expected</span> <span class="op">&lt;-</span> <span class="fu">expected.item</span><span class="op">(</span><span class="va">extr.2</span>, <span class="va">Theta</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">Science</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="co">#min() of first item</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>restarting interrupted promise evaluation</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'ProbTrace': object 'extr.2' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">expected</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   expected     Theta</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.013391 -6.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.014407 -5.939698</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.015498 -5.879397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1.016672 -5.819095</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1.017933 -5.758794</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1.019289 -5.698492</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'expected' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">expected.item</span><span class="op">(</span><span class="va">extr.2</span>, <span class="va">Theta</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">Science</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>, include.var<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $E</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 1.013391 1.014407 1.015498 1.016672 1.017933 1.019289 1.020744 1.022308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [9] 1.023988 1.025791 1.027727 1.029805 1.032035 1.034427 1.036992 1.039742</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [17] 1.042690 1.045848 1.049231 1.052853 1.056729 1.060875 1.065309 1.070047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] 1.075108 1.080511 1.086276 1.092422 1.098971 1.105943 1.113361 1.121247</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] 1.129622 1.138510 1.147932 1.157911 1.168469 1.179625 1.191402 1.203817</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] 1.216889 1.230634 1.245068 1.260201 1.276046 1.292610 1.309898 1.327913</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] 1.346654 1.366117 1.386296 1.407180 1.428756 1.451008 1.473916 1.497459</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57] 1.521611 1.546346 1.571635 1.597448 1.623754 1.650519 1.677712 1.705300</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] 1.733251 1.761532 1.790113 1.818965 1.848058 1.877365 1.906859 1.936516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] 1.966312 1.996222 2.026225 2.056299 2.086421 2.116571 2.146726 2.176865</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] 2.206964 2.237001 2.266952 2.296794 2.326501 2.356050 2.385416 2.414575</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] 2.443504 2.472180 2.500583 2.528693 2.556494 2.583970 2.611109 2.637904</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] 2.664348 2.690439 2.716178 2.741571 2.766624 2.791350 2.815763 2.839881</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [105] 2.863722 2.887310 2.910668 2.933821 2.956795 2.979616 3.002311 3.024906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [113] 3.047424 3.069889 3.092321 3.114739 3.137157 3.159587 3.182039 3.204516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121] 3.227018 3.249541 3.272079 3.294617 3.317140 3.339628 3.362056 3.384398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [129] 3.406624 3.428701 3.450594 3.472269 3.493688 3.514816 3.535615 3.556050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [137] 3.576087 3.595693 3.614838 3.633495 3.651638 3.669246 3.686301 3.702787</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 3.718692 3.734007 3.748728 3.762852 3.776380 3.789316 3.801665 3.813436</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [153] 3.824638 3.835286 3.845391 3.854970 3.864039 3.872615 3.880715 3.888358</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [161] 3.895562 3.902347 3.908731 3.914733 3.920370 3.925662 3.930626 3.935280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [169] 3.939639 3.943720 3.947540 3.951112 3.954452 3.957572 3.960487 3.963208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [177] 3.965749 3.968118 3.970329 3.972390 3.974312 3.976102 3.977771 3.979325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [185] 3.980773 3.982120 3.983375 3.984543 3.985630 3.986642 3.987583 3.988458</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [193] 3.989273 3.990030 3.990735 3.991390 3.991999 3.992565 3.993092 3.993581</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $VAR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 1.016618 1.017866 1.019207 1.020645 1.022188 1.023843 1.025618 1.027521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [9] 1.029559 1.031743 1.034082 1.036585 1.039263 1.042127 1.045188 1.048457</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [17] 1.051948 1.055673 1.059644 1.063876 1.068380 1.073172 1.078265 1.083673</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] 1.089410 1.095488 1.101921 1.108722 1.115902 1.123471 1.131439 1.139814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] 1.148602 1.157807 1.167431 1.177473 1.187930 1.198794 1.210054 1.221698</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] 1.233706 1.246057 1.258724 1.271677 1.284881 1.298297 1.311884 1.325594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] 1.339380 1.353188 1.366966 1.380659 1.394211 1.407567 1.420673 1.433478</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57] 1.445931 1.457987 1.469604 1.480744 1.491375 1.501468 1.511003 1.519961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] 1.528331 1.536103 1.543274 1.549843 1.555812 1.561184 1.565964 1.570157</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] 1.573769 1.576804 1.579266 1.581159 1.582485 1.583244 1.583437 1.583064</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] 1.582126 1.580625 1.578563 1.575947 1.572785 1.569088 1.564875 1.560165</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] 1.554985 1.549365 1.543342 1.536957 1.530255 1.523285 1.516100 1.508754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] 1.501305 1.493809 1.486322 1.478902 1.471600 1.464468 1.457551 1.450890</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [105] 1.444522 1.438478 1.432779 1.427443 1.422479 1.417891 1.413671 1.409809</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [113] 1.406285 1.403072 1.400140 1.397448 1.394955 1.392612 1.390368 1.388168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121] 1.385957 1.383677 1.381273 1.378688 1.375872 1.372773 1.369347 1.365556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [129] 1.361365 1.356749 1.351687 1.346169 1.340189 1.333753 1.326870 1.319558</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [137] 1.311842 1.303752 1.295323 1.286593 1.277605 1.268404 1.259035 1.249544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 1.239978 1.230381 1.220797 1.211267 1.201828 1.192517 1.183365 1.174401</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [153] 1.165650 1.157134 1.148870 1.140874 1.133157 1.125728 1.118592 1.111753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [161] 1.105213 1.098969 1.093021 1.087362 1.081989 1.076893 1.072068 1.067505</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [169] 1.063195 1.059129 1.055297 1.051689 1.048296 1.045106 1.042112 1.039302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [177] 1.036667 1.034199 1.031887 1.029723 1.027699 1.025807 1.024039 1.022387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [185] 1.020845 1.019406 1.018063 1.016810 1.015642 1.014553 1.013539 1.012593</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [193] 1.011713 1.010892 1.010129 1.009418 1.008756 1.008140 1.007567 1.007034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>restarting interrupted promise evaluation</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'ProbTrace': object 'extr.2' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

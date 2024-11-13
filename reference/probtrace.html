@@ -11,7 +11,7 @@ lines for all categories."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,45 +86,22 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.50660Iteration: 2, Log-Lik: -1617.374, Max-Change: 0.25442Iteration: 3, Log-Lik: -1612.894, Max-Change: 0.16991Iteration: 4, Log-Lik: -1610.306, Max-Change: 0.10461Iteration: 5, Log-Lik: -1609.814, Max-Change: 0.09162Iteration: 6, Log-Lik: -1609.534, Max-Change: 0.07363Iteration: 7, Log-Lik: -1609.030, Max-Change: 0.03677Iteration: 8, Log-Lik: -1608.988, Max-Change: 0.03200Iteration: 9, Log-Lik: -1608.958, Max-Change: 0.02754Iteration: 10, Log-Lik: -1608.878, Max-Change: 0.01443Iteration: 11, Log-Lik: -1608.875, Max-Change: 0.00847Iteration: 12, Log-Lik: -1608.873, Max-Change: 0.00515Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.00550Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00318Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00462Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00277Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00145Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00175Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00126Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00025Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00285Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00108Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00022Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00059Iteration: 25, Log-Lik: -1608.870, Max-Change: 0.00014Iteration: 26, Log-Lik: -1608.870, Max-Change: 0.00068Iteration: 27, Log-Lik: -1608.870, Max-Change: 0.00065Iteration: 28, Log-Lik: -1608.870, Max-Change: 0.00019Iteration: 29, Log-Lik: -1608.870, Max-Change: 0.00061Iteration: 30, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 31, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 32, Log-Lik: -1608.870, Max-Change: 0.00058Iteration: 33, Log-Lik: -1608.870, Max-Change: 0.00055Iteration: 34, Log-Lik: -1608.870, Max-Change: 0.00015Iteration: 35, Log-Lik: -1608.870, Max-Change: 0.00052Iteration: 36, Log-Lik: -1608.870, Max-Change: 0.00010</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in make.mixed.design(item.formula = item.formula, item.design = item.design,     data = data):</span> object 'itemdesign' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># single item probabilty tracelines for Item 2</span></span></span>
 <span class="r-in"><span><span class="va">extr.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract.item.html">extract.item</a></span><span class="op">(</span><span class="va">mod</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod' not found</span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="fl">4</span>, by <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">traceline</span> <span class="op">&lt;-</span> <span class="fu">probtrace</span><span class="op">(</span><span class="va">extr.2</span>, <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'extr.2' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">traceline</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         P.1       P.2        P.3          P.4 Theta</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.8786646 0.1033965 0.01717048 0.0007684150  -4.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.8649759 0.1147928 0.01936274 0.0008685506  -3.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.8500065 0.1271837 0.02182811 0.0009817226  -3.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.8336966 0.1405950 0.02459876 0.0011096245  -3.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.8159972 0.1550385 0.02771018 0.0012541689  -3.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.7968730 0.1705082 0.03120137 0.0014175155  -3.5</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'traceline' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># probability tracelines for all items in test</span></span></span>
 <span class="r-in"><span><span class="va">tracelines</span> <span class="op">&lt;-</span> <span class="fu">probtrace</span><span class="op">(</span><span class="va">mod</span>, <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tracelines</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort.P.1 Comfort.P.2 Comfort.P.3 Comfort.P.4  Work.P.1  Work.P.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   0.3324476   0.4891306   0.1748568 0.003564956 0.8786646 0.1033965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   0.3097452   0.4960477   0.1902523 0.003954823 0.8649759 0.1147928</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   0.2879244   0.5010453   0.2066432 0.004387139 0.8500065 0.1271837</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   0.2670460   0.5040571   0.2240304 0.004866481 0.8336966 0.1405950</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   0.2471562   0.5050429   0.2424030 0.005397913 0.8159972 0.1550385</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   0.2282864   0.5039894   0.2617372 0.005987029 0.7968730 0.1705082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Work.P.3     Work.P.4 Future.P.1 Future.P.2   Future.P.3   Future.P.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.01717048 0.0007684150  0.9809133 0.01813820 0.0009339072 1.456036e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.01936274 0.0008685506  0.9761110 0.02269637 0.0011743453 1.831346e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 0.02182811 0.0009817226  0.9701371 0.02836330 0.0014765907 2.303394e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 0.02459876 0.0011096245  0.9627263 0.03538820 0.0018564770 2.897114e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 0.02771018 0.0012541689  0.9535646 0.04406509 0.0023338620 3.643864e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 0.03120137 0.0014175155  0.9422860 0.05473458 0.0029336324 4.583085e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Benefit.P.1 Benefit.P.2 Benefit.P.3 Benefit.P.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   0.7372533   0.2300751  0.03036097 0.002310633</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   0.7155002   0.2481850  0.03373746 0.002577309</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   0.6926969   0.2669559  0.03747256 0.002874673</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   0.6689116   0.2862818  0.04160042 0.003206237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   0.6442308   0.3060358  0.04615750 0.003575906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   0.6187588   0.3260706  0.05118258 0.003988026</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tracelines' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

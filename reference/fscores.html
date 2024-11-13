@@ -29,7 +29,7 @@ for latent regression predictor effects."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.42.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -345,40 +345,25 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.50660Iteration: 2, Log-Lik: -1617.374, Max-Change: 0.25442Iteration: 3, Log-Lik: -1612.894, Max-Change: 0.16991Iteration: 4, Log-Lik: -1610.306, Max-Change: 0.10461Iteration: 5, Log-Lik: -1609.814, Max-Change: 0.09162Iteration: 6, Log-Lik: -1609.534, Max-Change: 0.07363Iteration: 7, Log-Lik: -1609.030, Max-Change: 0.03677Iteration: 8, Log-Lik: -1608.988, Max-Change: 0.03200Iteration: 9, Log-Lik: -1608.958, Max-Change: 0.02754Iteration: 10, Log-Lik: -1608.878, Max-Change: 0.01443Iteration: 11, Log-Lik: -1608.875, Max-Change: 0.00847Iteration: 12, Log-Lik: -1608.873, Max-Change: 0.00515Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.00550Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00318Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00462Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00277Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00145Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00175Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00126Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00025Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00285Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00108Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00022Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00059Iteration: 25, Log-Lik: -1608.870, Max-Change: 0.00014Iteration: 26, Log-Lik: -1608.870, Max-Change: 0.00068Iteration: 27, Log-Lik: -1608.870, Max-Change: 0.00065Iteration: 28, Log-Lik: -1608.870, Max-Change: 0.00019Iteration: 29, Log-Lik: -1608.870, Max-Change: 0.00061Iteration: 30, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 31, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 32, Log-Lik: -1608.870, Max-Change: 0.00058Iteration: 33, Log-Lik: -1608.870, Max-Change: 0.00055Iteration: 34, Log-Lik: -1608.870, Max-Change: 0.00015Iteration: 35, Log-Lik: -1608.870, Max-Change: 0.00052Iteration: 36, Log-Lik: -1608.870, Max-Change: 0.00010</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in make.mixed.design(item.formula = item.formula, item.design = item.design,     data = data):</span> object 'itemdesign' not found</span>
 <span class="r-in"><span><span class="va">tabscores</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  EAP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6666 </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tabscores</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort Work Future Benefit         F1     SE_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1    1      1       1 -2.7492669 0.6293525</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       1    3      2       1 -1.4198318 0.5772364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1    4      2       3 -0.7141976 0.6200139</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       1    4      3       1 -0.4469265 0.6509531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       2    1      1       1 -2.5437807 0.5909114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       2    1      2       4 -1.2478570 0.5840105</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabscores' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># convert scores into expected total score information with 95% CIs</span></span></span>
 <span class="r-in"><span><span class="va">E.total</span> <span class="op">&lt;-</span> <span class="fu"><a href="expected.test.html">expected.test</a></span><span class="op">(</span><span class="va">mod</span>, Theta<span class="op">=</span><span class="va">tabscores</span><span class="op">[</span>,<span class="st">'F1'</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabscores' not found</span>
 <span class="r-in"><span><span class="va">E.total_2.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="expected.test.html">expected.test</a></span><span class="op">(</span><span class="va">mod</span>, Theta<span class="op">=</span><span class="va">tabscores</span><span class="op">[</span>,<span class="st">'F1'</span><span class="op">]</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>                                       <span class="va">tabscores</span><span class="op">[</span>,<span class="st">'SE_F1'</span><span class="op">]</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">.05</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabscores' not found</span>
 <span class="r-in"><span><span class="va">E.total_97.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="expected.test.html">expected.test</a></span><span class="op">(</span><span class="va">mod</span>, Theta<span class="op">=</span><span class="va">tabscores</span><span class="op">[</span>,<span class="st">'F1'</span><span class="op">]</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>                                       <span class="va">tabscores</span><span class="op">[</span>,<span class="st">'SE_F1'</span><span class="op">]</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fl">.05</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabscores' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Total_score<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">tabscores</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>           <span class="va">E.total</span>, <span class="va">E.total_2.5</span>, <span class="va">E.total_97.5</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Total_score   E.total E.total_2.5 E.total_97.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           4  6.791606    5.321810     9.084082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           7  9.266018    7.128071    11.296189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3          10 10.584682    8.296461    12.504975</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           9 11.041648    8.691107    13.034195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5  7.141179    5.576233     9.330947</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           9  9.592533    7.415339    11.582060</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabscores' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">fullscores</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
