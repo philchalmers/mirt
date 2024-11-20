@@ -1,282 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/mirt-vignettes.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Bock1997.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DIF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DRF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DTF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DiscreteClass-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LSAT6.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LSAT7.html</loc>
-  </url>
-  <url>
-    <loc>/reference/M2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MDIFF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MDISC.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MixedClass-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MixtureClass-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MultipleGroupClass-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PLCI.mirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/RCI.html</loc>
-  </url>
-  <url>
-    <loc>/reference/RMSD_DIF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SAT12.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SIBTEST.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SLF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Science.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SingleGroupClass-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/anova-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/areainfo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/averageMI.html</loc>
-  </url>
-  <url>
-    <loc>/reference/bfactor.html</loc>
-  </url>
-  <url>
-    <loc>/reference/boot.LR.html</loc>
-  </url>
-  <url>
-    <loc>/reference/boot.mirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/coef-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createGroup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createItem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/deAyala.html</loc>
-  </url>
-  <url>
-    <loc>/reference/draw_parameters.html</loc>
-  </url>
-  <url>
-    <loc>/reference/empirical_ES.html</loc>
-  </url>
-  <url>
-    <loc>/reference/empirical_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/empirical_rxx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/estfun.AllModelClass.html</loc>
-  </url>
-  <url>
-    <loc>/reference/expand.table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/expected.item.html</loc>
-  </url>
-  <url>
-    <loc>/reference/expected.test.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extract.group.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extract.item.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extract.mirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fixedCalib.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fixef.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fscores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gen.difficulty.html</loc>
-  </url>
-  <url>
-    <loc>/reference/imputeMissing.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/itemGAM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/itemfit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/iteminfo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/itemplot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/itemstats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/key2binary.html</loc>
-  </url>
-  <url>
-    <loc>/reference/lagrange.html</loc>
-  </url>
-  <url>
-    <loc>/reference/likert2int.html</loc>
-  </url>
-  <url>
-    <loc>/reference/logLik-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/marginal_rxx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mdirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mirt-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mirt.model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mirtCluster.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mixedmirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mod2values.html</loc>
-  </url>
-  <url>
-    <loc>/reference/multipleGroup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/numerical_deriv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/personfit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/poly2dich.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.mirt_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.mirt_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.mirt_matrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/probtrace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/randef.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read.mirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/remap.distance.html</loc>
-  </url>
-  <url>
-    <loc>/reference/residuals-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simdata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summary-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/testinfo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/thetaComb.html</loc>
-  </url>
-  <url>
-    <loc>/reference/traditional2mirt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vcov-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wald.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://philchalmers.github.io/mirt/404.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/articles/index.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/articles/mirt-vignettes.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/authors.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/index.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/news/index.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/ASVAB.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/Bock1997.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/DIF.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/DRF.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/DTF.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/DiscreteClass-class.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/LSAT6.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/LSAT7.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/M2.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/MDIFF.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/MDISC.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/MixedClass-class.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/MixtureClass-class.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/MultipleGroupClass-class.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/PLCI.mirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/RCI.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/RMSD_DIF.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/SAT12.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/SIBTEST.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/SLF.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/Science.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/SingleGroupClass-class.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/anova-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/areainfo.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/averageMI.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/bfactor.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/boot.LR.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/boot.mirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/coef-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/createGroup.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/createItem.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/deAyala.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/draw_parameters.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/empirical_ES.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/empirical_plot.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/empirical_rxx.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/estfun.AllModelClass.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/expand.table.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/expected.item.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/expected.test.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/extract.group.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/extract.item.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/extract.mirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/fixedCalib.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/fixef.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/fscores.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/gen.difficulty.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/imputeMissing.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/index.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/itemGAM.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/itemfit.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/iteminfo.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/itemplot.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/itemstats.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/key2binary.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/lagrange.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/likert2int.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/logLik-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/marginal_rxx.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mdirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mirt-package.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mirt.model.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mirtCluster.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mixedmirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/mod2values.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/multipleGroup.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/numerical_deriv.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/personfit.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/plot-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/poly2dich.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/print-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/print.mirt_df.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/print.mirt_list.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/print.mirt_matrix.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/probtrace.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/randef.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/read.mirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/remap.distance.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/residuals-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/reverse.score.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/secondOrderTest.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/show-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/simdata.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/summary-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/testinfo.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/thetaComb.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/traditional2mirt.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/vcov-method.html</loc></url>
+<url><loc>https://philchalmers.github.io/mirt/reference/wald.html</loc></url>
 </urlset>
+
