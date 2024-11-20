@@ -42,13 +42,12 @@ knitdocs:
 	make kniterrors
 
 pushdocs:
-	mv -rf html/ ../html
+	mv html/ ../mirthtml
 	git checkout gh-pages
-	cp ../html/* 
+	cp ../mirthtml/* html/
 	git commit -am "update pkgdown"
 	git push
 	git checkout main
-	rm -rf ../html/
 
 kniterrors:
 	grep -Hrn '## Error'
