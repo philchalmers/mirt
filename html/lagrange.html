@@ -82,7 +82,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
 <h3>See Also</h3>
 
-<p><code><a href="../../mirt/help/wald.html">wald</a></code>
+<p><code><a href="../../lavaan/html/lavTestWald.html">wald</a></code>
 </p>
 
 
@@ -93,29 +93,29 @@ dat &lt;- expand.table(LSAT7)
 mod &lt;- mirt(dat, 1, 'Rasch')
 (values &lt;- mod2values(mod))
 </code></pre>
-<pre><code>##    group   item     class   name parnum     value lbound ubound   est
-## 1    all Item.1      dich     a1      1 1.0000000   -Inf    Inf FALSE
-## 2    all Item.1      dich      d      2 1.8680718   -Inf    Inf  TRUE
-## 3    all Item.1      dich      g      3 0.0000000  0e+00      1 FALSE
-## 4    all Item.1      dich      u      4 1.0000000  0e+00      1 FALSE
-## 5    all Item.2      dich     a1      5 1.0000000   -Inf    Inf FALSE
-## 6    all Item.2      dich      d      6 0.7909134   -Inf    Inf  TRUE
-## 7    all Item.2      dich      g      7 0.0000000  0e+00      1 FALSE
-## 8    all Item.2      dich      u      8 1.0000000  0e+00      1 FALSE
-## 9    all Item.3      dich     a1      9 1.0000000   -Inf    Inf FALSE
-## 10   all Item.3      dich      d     10 1.4608233   -Inf    Inf  TRUE
-## 11   all Item.3      dich      g     11 0.0000000  0e+00      1 FALSE
-## 12   all Item.3      dich      u     12 1.0000000  0e+00      1 FALSE
-## 13   all Item.4      dich     a1     13 1.0000000   -Inf    Inf FALSE
-## 14   all Item.4      dich      d     14 0.5214399   -Inf    Inf  TRUE
-## 15   all Item.4      dich      g     15 0.0000000  0e+00      1 FALSE
-## 16   all Item.4      dich      u     16 1.0000000  0e+00      1 FALSE
-## 17   all Item.5      dich     a1     17 1.0000000   -Inf    Inf FALSE
-## 18   all Item.5      dich      d     18 1.9927710   -Inf    Inf  TRUE
-## 19   all Item.5      dich      g     19 0.0000000  0e+00      1 FALSE
-## 20   all Item.5      dich      u     20 1.0000000  0e+00      1 FALSE
-## 21   all  GROUP GroupPars MEAN_1     21 0.0000000   -Inf    Inf FALSE
-## 22   all  GROUP GroupPars COV_11     22 1.0219437  1e-04    Inf  TRUE
+<pre><code>##    group   item     class   name parnum value lbound ubound   est const nconst
+## 1    all Item.1      dich     a1      1 1.000   -Inf    Inf FALSE  none   none
+## 2    all Item.1      dich      d      2 1.868   -Inf    Inf  TRUE  none   none
+## 3    all Item.1      dich      g      3 0.000      0      1 FALSE  none   none
+## 4    all Item.1      dich      u      4 1.000      0      1 FALSE  none   none
+## 5    all Item.2      dich     a1      5 1.000   -Inf    Inf FALSE  none   none
+## 6    all Item.2      dich      d      6 0.791   -Inf    Inf  TRUE  none   none
+## 7    all Item.2      dich      g      7 0.000      0      1 FALSE  none   none
+## 8    all Item.2      dich      u      8 1.000      0      1 FALSE  none   none
+## 9    all Item.3      dich     a1      9 1.000   -Inf    Inf FALSE  none   none
+## 10   all Item.3      dich      d     10 1.461   -Inf    Inf  TRUE  none   none
+## 11   all Item.3      dich      g     11 0.000      0      1 FALSE  none   none
+## 12   all Item.3      dich      u     12 1.000      0      1 FALSE  none   none
+## 13   all Item.4      dich     a1     13 1.000   -Inf    Inf FALSE  none   none
+## 14   all Item.4      dich      d     14 0.521   -Inf    Inf  TRUE  none   none
+## 15   all Item.4      dich      g     15 0.000      0      1 FALSE  none   none
+## 16   all Item.4      dich      u     16 1.000      0      1 FALSE  none   none
+## 17   all Item.5      dich     a1     17 1.000   -Inf    Inf FALSE  none   none
+## 18   all Item.5      dich      d     18 1.993   -Inf    Inf  TRUE  none   none
+## 19   all Item.5      dich      g     19 0.000      0      1 FALSE  none   none
+## 20   all Item.5      dich      u     20 1.000      0      1 FALSE  none   none
+## 21   all  GROUP GroupPars MEAN_1     21 0.000   -Inf    Inf FALSE  none   none
+## 22   all  GROUP GroupPars COV_11     22 1.022      0    Inf  TRUE  none   none
 ##    prior.type prior_1 prior_2
 ## 1        none     NaN     NaN
 ## 2        none     NaN     NaN
@@ -145,9 +145,9 @@ parnum &lt;- values$parnum[values$name == 'a1']
 lagrange(mod, parnum)
 </code></pre>
 <pre><code>##            X2 df          p
-## 1  0.36714266  1 0.54456590
+## 1  0.36714267  1 0.54456589
 ## 5  0.04789243  1 0.82677204
-## 9  4.69717572  1 0.03021223
+## 9  4.69717570  1 0.03021223
 ## 13 1.44960175  1 0.22859187
 ## 17 2.55408012  1 0.11000983
 </code></pre>
@@ -208,7 +208,7 @@ lagrange(mod, list(parnum[1:2], parnum[3:5]))
 </code></pre>
 <pre><code>##                X2 df          p
 ## 1.5     0.4591775  2 0.79486042
-## 9.13.17 9.1527190  3 0.02732783
+## 9.13.17 9.1527189  3 0.02732783
 </code></pre>
 <pre><code class="language-r"># test all 5 slopes and first + last jointly
 lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
@@ -221,6 +221,6 @@ lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

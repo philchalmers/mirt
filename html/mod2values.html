@@ -71,33 +71,34 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
 <pre><code class="language-r">## No test: 
 dat &lt;- expand.table(LSAT7)
-mod &lt;- mirt(dat, 1)
+mod &lt;- mirt(dat, &quot;F=1-5
+                  CONSTRAIN=(1-5, a1)&quot;)
 values &lt;- mod2values(mod)
 values
 </code></pre>
-<pre><code>##    group   item     class   name parnum     value lbound ubound   est
-## 1    all Item.1      dich     a1      1 0.9879254   -Inf    Inf  TRUE
-## 2    all Item.1      dich      d      2 1.8560605   -Inf    Inf  TRUE
-## 3    all Item.1      dich      g      3 0.0000000  0e+00      1 FALSE
-## 4    all Item.1      dich      u      4 1.0000000  0e+00      1 FALSE
-## 5    all Item.2      dich     a1      5 1.0808847   -Inf    Inf  TRUE
-## 6    all Item.2      dich      d      6 0.8079786   -Inf    Inf  TRUE
-## 7    all Item.2      dich      g      7 0.0000000  0e+00      1 FALSE
-## 8    all Item.2      dich      u      8 1.0000000  0e+00      1 FALSE
-## 9    all Item.3      dich     a1      9 1.7058006   -Inf    Inf  TRUE
-## 10   all Item.3      dich      d     10 1.8042187   -Inf    Inf  TRUE
-## 11   all Item.3      dich      g     11 0.0000000  0e+00      1 FALSE
-## 12   all Item.3      dich      u     12 1.0000000  0e+00      1 FALSE
-## 13   all Item.4      dich     a1     13 0.7651853   -Inf    Inf  TRUE
-## 14   all Item.4      dich      d     14 0.4859966   -Inf    Inf  TRUE
-## 15   all Item.4      dich      g     15 0.0000000  0e+00      1 FALSE
-## 16   all Item.4      dich      u     16 1.0000000  0e+00      1 FALSE
-## 17   all Item.5      dich     a1     17 0.7357980   -Inf    Inf  TRUE
-## 18   all Item.5      dich      d     18 1.8545127   -Inf    Inf  TRUE
-## 19   all Item.5      dich      g     19 0.0000000  0e+00      1 FALSE
-## 20   all Item.5      dich      u     20 1.0000000  0e+00      1 FALSE
-## 21   all  GROUP GroupPars MEAN_1     21 0.0000000   -Inf    Inf FALSE
-## 22   all  GROUP GroupPars COV_11     22 1.0000000  1e-04    Inf FALSE
+<pre><code>##    group   item     class   name parnum value lbound ubound   est const nconst
+## 1    all Item.1      dich     a1      1 1.011   -Inf    Inf  TRUE     1   none
+## 2    all Item.1      dich      d      2 1.868   -Inf    Inf  TRUE  none   none
+## 3    all Item.1      dich      g      3 0.000      0      1 FALSE  none   none
+## 4    all Item.1      dich      u      4 1.000      0      1 FALSE  none   none
+## 5    all Item.2      dich     a1      5 1.011   -Inf    Inf  TRUE     1   none
+## 6    all Item.2      dich      d      6 0.791   -Inf    Inf  TRUE  none   none
+## 7    all Item.2      dich      g      7 0.000      0      1 FALSE  none   none
+## 8    all Item.2      dich      u      8 1.000      0      1 FALSE  none   none
+## 9    all Item.3      dich     a1      9 1.011   -Inf    Inf  TRUE     1   none
+## 10   all Item.3      dich      d     10 1.461   -Inf    Inf  TRUE  none   none
+## 11   all Item.3      dich      g     11 0.000      0      1 FALSE  none   none
+## 12   all Item.3      dich      u     12 1.000      0      1 FALSE  none   none
+## 13   all Item.4      dich     a1     13 1.011   -Inf    Inf  TRUE     1   none
+## 14   all Item.4      dich      d     14 0.521   -Inf    Inf  TRUE  none   none
+## 15   all Item.4      dich      g     15 0.000      0      1 FALSE  none   none
+## 16   all Item.4      dich      u     16 1.000      0      1 FALSE  none   none
+## 17   all Item.5      dich     a1     17 1.011   -Inf    Inf  TRUE     1   none
+## 18   all Item.5      dich      d     18 1.993   -Inf    Inf  TRUE  none   none
+## 19   all Item.5      dich      g     19 0.000      0      1 FALSE  none   none
+## 20   all Item.5      dich      u     20 1.000      0      1 FALSE  none   none
+## 21   all  GROUP GroupPars MEAN_1     21 0.000   -Inf    Inf FALSE  none   none
+## 22   all  GROUP GroupPars COV_11     22 1.000      0    Inf FALSE  none   none
 ##    prior.type prior_1 prior_2
 ## 1        none     NaN     NaN
 ## 2        none     NaN     NaN
@@ -122,13 +123,65 @@ values
 ## 21       none     NaN     NaN
 ## 22       none     NaN     NaN
 </code></pre>
-<pre><code class="language-r">#use the converted values as starting values in a new model, and reduce TOL
+<pre><code class="language-r"># use the converted values as starting values in a new model, and reduce TOL
 mod2 &lt;- mirt(dat, 1, pars = values, TOL=1e-5)
-
-## End(No test)
+coef(mod2, simplify=TRUE)
+</code></pre>
+<pre><code>## $items
+##           a1     d g u
+## Item.1 1.011 1.868 0 1
+## Item.2 1.011 0.791 0 1
+## Item.3 1.011 1.461 0 1
+## Item.4 1.011 0.521 0 1
+## Item.5 1.011 1.993 0 1
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
+</code></pre>
+<pre><code class="language-r"># use parameters on different dataset
+mod3 &lt;- mirt(expand.table(LSAT6), pars=values)
+coef(mod3, simplify=TRUE)
+</code></pre>
+<pre><code>## $items
+##           a1     d g u
+## Item_1 0.755 2.730 0 1
+## Item_2 0.755 0.999 0 1
+## Item_3 0.755 0.240 0 1
+## Item_4 0.755 1.307 0 1
+## Item_5 0.755 2.100 0 1
+## 
+## $means
+## F1 
+##  0 
+## 
+## $cov
+##    F1
+## F1  1
+</code></pre>
+<pre><code class="language-r"># supports differing itemtypes on second model
+sv &lt;- mirt(Science, itemtype=c('graded', rep('gpcm', 3)), pars='values')
+mod3 &lt;- mirt(Science, pars = sv)  # itemtype omitted
+coef(mod3, simplify=TRUE)$items
+</code></pre>
+<pre><code>##                a1       d1       d2         d3 ak0 ak1 ak2 ak3 d0
+## Comfort 1.0278666 4.842467 2.629427 -1.4610757  NA  NA  NA  NA NA
+## Work    0.8622915 1.735970 2.608453  0.8615093   0   1   2   3  0
+## Future  2.1388465 4.498623 6.612162  4.8108956   0   1   2   3  0
+## Benefit 0.7208997 2.096130 2.894803  1.7189648   0   1   2   3  0
+</code></pre>
+<pre><code class="language-r">extract.mirt(mod3, 'itemtype')
+</code></pre>
+<pre><code>## [1] &quot;graded&quot; &quot;gpcm&quot;   &quot;gpcm&quot;   &quot;gpcm&quot;
+</code></pre>
+<pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

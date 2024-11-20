@@ -120,8 +120,8 @@ head(LSAT7full)
 <pre><code class="language-r">itemstats(LSAT7full)
 </code></pre>
 <pre><code>## $overall
-##     N mean_total.score sd_total.score ave.r  sd.r alpha
-##  1000            3.707          1.199 0.143 0.052 0.453
+##     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  1000            3.707          1.199 0.143 0.052 0.453     0.886
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -144,8 +144,8 @@ LSAT7full[1:5,1] &lt;- NA
 itemstats(LSAT7full)
 </code></pre>
 <pre><code>## $overall
-##  N.complete    N mean_total.score sd_total.score ave.r  sd.r alpha
-##         995 1000            3.726          1.172 0.137 0.052 0.426
+##  N.complete    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##         995 1000            3.726          1.172 0.137 0.052 0.426     0.888
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -278,8 +278,8 @@ dat &lt;- key2binary(SAT12,
 itemstats(dat, ts.tables=TRUE)
 </code></pre>
 <pre><code>## $overall
-##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha
-##         572 600           18.367           4.93 0.107 0.075 0.787
+##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##         572 600           18.367           4.93 0.107 0.075 0.787     2.275
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -433,8 +433,8 @@ itemstats(dat, group=group)
 </code></pre>
 <pre><code>## $G1
 ## $G1$overall
-##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha
-##         287 300           18.167          4.924 0.105 0.09 0.784
+##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha
+##         287 300           18.167          4.924 0.105 0.09 0.784     2.286
 ## 
 ## $G1$itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -509,8 +509,8 @@ itemstats(dat, group=group)
 ## 
 ## $G2
 ## $G2$overall
-##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha
-##         285 300           18.568          4.937  0.11 0.08  0.79
+##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha
+##         285 300           18.568          4.937  0.11 0.08  0.79     2.265
 ## 
 ## $G2$itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -587,8 +587,8 @@ itemstats(dat, group=group)
 itemstats(Science)
 </code></pre>
 <pre><code>## $overall
-##    N mean_total.score sd_total.score ave.r  sd.r alpha
-##  392           11.668          2.003 0.275 0.098 0.598
+##    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  392           11.668          2.003 0.275 0.098 0.598      1.27
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -610,8 +610,8 @@ newScience[1:5,1] &lt;- NA
 itemstats(newScience)
 </code></pre>
 <pre><code>## $overall
-##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha
-##         387 392           11.672          2.011 0.276  0.1 0.605
+##  N.complete   N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha
+##         387 392           11.672          2.011 0.276  0.1 0.605     1.264
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -632,8 +632,8 @@ newScience[,1] &lt;- ifelse(Science[,1] == 1, NA, Science[,1])
 itemstats(newScience)
 </code></pre>
 <pre><code>## $overall
-##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha
-##         387 392           11.731          1.917  0.26 0.092 0.572
+##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##         387 392           11.731          1.917  0.26 0.092 0.572     1.254
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -653,8 +653,8 @@ itemstats(newScience)
 itemstats(merged)
 </code></pre>
 <pre><code>## $overall
-##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha
-##         387 392           14.331          2.231 0.037 0.167 0.379
+##  N.complete   N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##         387 392           14.331          2.231 0.037 0.167 0.379     1.759
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -682,6 +682,6 @@ itemstats(merged)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

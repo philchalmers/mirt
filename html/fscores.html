@@ -56,6 +56,8 @@ for latent regression predictor effects.
   quadpts = NULL,
   item_weights = rep(1, extract.mirt(object, "nitems")),
   returnER = FALSE,
+  T_as_X = FALSE,
+  EAPsum.scores = FALSE,
   return.acov = FALSE,
   mean = NULL,
   cov = NULL,
@@ -169,7 +171,7 @@ samples from the posterior (silently passes object to <code><a href="../../mirt/
 one will be created which decreases as the number of dimensions increases
 (and therefore for estimates such as EAP, will be less accurate). This is determined from
 the switch statement
-<code>quadpts &lt;- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)</code></p>
+<code>quadpts &lt;- switch(as.character(nfact), '1'=121, '2'=61, '3'=31, '4'=19, '5'=11, '6'=7, 5)</code></p>
 </td></tr>
 <tr><td><code id="fscores_:_item_weights">item_weights</code></td>
 <td>
@@ -181,6 +183,19 @@ indicating that all the items receive the same weight</p>
 <td>
 <p>logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?</p>
+</td></tr>
+<tr><td><code id="fscores_:_T_as_X">T_as_X</code></td>
+<td>
+<p>logical; should the observed variance be equal to
+<code>var(X) = var(T) + E(E^2)</code> or <code>var(X) = var(T)</code> when computing
+empirical reliability estimates? Default (<code>FALSE</code>) uses the former</p>
+</td></tr>
+<tr><td><code id="fscores_:_EAPsum.scores">EAPsum.scores</code></td>
+<td>
+<p>logical; include the model-implied expected values and variance for the item
+and total scores when using <code>method = 'EAPsum'</code> with <code>full.scores=FALSE</code>?
+This information is included in the hidden <code>'fit'</code> attribute which
+can be extracted via <code>attr(., 'fit')</code> for later use</p>
 </td></tr>
 <tr><td><code id="fscores_:_return.acov">return.acov</code></td>
 <td>
@@ -328,7 +343,7 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 
 <h3>Examples</h3>
 
-<pre><code class="language-r">mod &lt;- mirt(Science, 1)
+<pre><code class="language-r">mod &lt;- mirt(Science)
 tabscores &lt;- fscores(mod, full.scores = FALSE)
 </code></pre>
 <pre><code>## 
@@ -342,12 +357,30 @@ tabscores &lt;- fscores(mod, full.scores = FALSE)
 <pre><code class="language-r">head(tabscores)
 </code></pre>
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
-## [1,]       1    1      1       1 -2.7492687 0.6293569
+## [1,]       1    1      1       1 -2.7492669 0.6293525
 ## [2,]       1    3      2       1 -1.4198318 0.5772364
 ## [3,]       1    4      2       3 -0.7141976 0.6200139
 ## [4,]       1    4      3       1 -0.4469265 0.6509531
-## [5,]       2    1      1       1 -2.5437808 0.5909117
+## [5,]       2    1      1       1 -2.5437807 0.5909114
 ## [6,]       2    1      2       4 -1.2478570 0.5840105
+</code></pre>
+<pre><code class="language-r"># convert scores into expected total score information with 95% CIs
+E.total &lt;- expected.test(mod, Theta=tabscores[,'F1'])
+E.total_2.5 &lt;- expected.test(mod, Theta=tabscores[,'F1'] +
+                                       tabscores[,'SE_F1'] * qnorm(.05/2))
+E.total_97.5 &lt;- expected.test(mod, Theta=tabscores[,'F1'] +
+                                       tabscores[,'SE_F1'] * qnorm(1-.05/2))
+
+data.frame(Total_score=rowSums(tabscores[,1:4]),
+           E.total, E.total_2.5, E.total_97.5) |&gt; head()
+</code></pre>
+<pre><code>##   Total_score   E.total E.total_2.5 E.total_97.5
+## 1           4  6.791606    5.321810     9.084082
+## 2           7  9.266018    7.128071    11.296189
+## 3          10 10.584682    8.296461    12.504975
+## 4           9 11.041648    8.691107    13.034195
+## 5           5  7.141179    5.576233     9.330947
+## 6           9  9.592533    7.415339    11.582060
 </code></pre>
 <pre><code class="language-r">## No test: 
 fullscores &lt;- fscores(mod)
@@ -372,6 +405,24 @@ head(fullscores)
 ## [5,]  0.7653806 0.6385998
 ## [6,]  0.6695350 0.5761860
 </code></pre>
+<pre><code class="language-r"># convert scores into expected total score information with 95% CIs
+E.total &lt;- expected.test(mod, Theta=fullscores[,'F1'])
+E.total_2.5 &lt;- expected.test(mod, Theta=fullscores_with_SE[,'F1'] +
+                                 fullscores_with_SE[,'SE_F1'] * qnorm(.05/2))
+E.total_97.5 &lt;- expected.test(mod, Theta=fullscores_with_SE[,'F1'] +
+                               fullscores_with_SE[,'SE_F1'] * qnorm(1-.05/2))
+
+data.frame(Total_score=rowSums(Science),
+           E.total, E.total_2.5, E.total_97.5) |&gt; head()
+</code></pre>
+<pre><code>##   Total_score  E.total E.total_2.5 E.total_97.5
+## 1          13 12.34882   10.484432     14.15621
+## 2          12 11.81643    9.994252     13.53226
+## 3          10 10.26478    8.250620     11.99721
+## 4          10 10.26478    8.250620     11.99721
+## 5          12 12.93068   10.976668     14.67563
+## 6          14 12.77499   11.020512     14.43522
+</code></pre>
 <pre><code class="language-r"># change method argument to use MAP estimates
 fullscores &lt;- fscores(mod, method='MAP')
 head(fullscores)
@@ -388,20 +439,20 @@ head(fullscores)
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 </code></pre>
 <pre><code>##              F1     SE_F1
-## [1,] -0.3704194 0.6054169
+## [1,] -0.3704194 0.6054172
 </code></pre>
 <pre><code class="language-r"># or matrix
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 </code></pre>
 <pre><code>##              F1     SE_F1
-## [1,] -0.3704194 0.6054169
+## [1,] -0.3704194 0.6054172
 ## [2,] -1.6937559 0.5773972
 </code></pre>
 <pre><code class="language-r"># return only the scores and their SEs
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 </code></pre>
 <pre><code>##              F1     SE_F1
-## [1,] -0.3704194 0.6054169
+## [1,] -0.3704194 0.6054172
 </code></pre>
 <pre><code class="language-r"># use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
@@ -611,8 +662,8 @@ fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
 <pre><code class="language-r"># EAPsum table of values based on total scores
 (fs &lt;- fscores(mod, method = 'EAPsum', full.scores = FALSE))
 </code></pre>
-<pre><code>##       df       X2       p.X2    rxx_F1
-## stats 10 16.31202 0.09104204 0.6241528
+<pre><code>##       df     X2  p.X2 SEM.alpha rxx.alpha rxx_F1
+## stats 10 16.312 0.091     1.262     0.616  0.624
 </code></pre>
 <pre><code>##    Sum.Scores     F1 SE_F1 observed expected std.res
 ## 4           4 -2.749 0.629        2    0.124   5.324
@@ -654,11 +705,11 @@ acovs
 </code></pre>
 <pre><code>## $`0`
 ##           [,1]
-## [1,] 0.3960901
+## [1,] 0.3960846
 ## 
 ## $`1`
 ##           [,1]
-## [1,] 0.3804013
+## [1,] 0.3804011
 ## 
 ## $`2`
 ##           [,1]
@@ -702,7 +753,7 @@ acovs
 ## 
 ## $`12`
 ##           [,1]
-## [1,] 0.4282523
+## [1,] 0.4282521
 </code></pre>
 <pre><code class="language-r"># WLE estimation, run in parallel using available cores
 if(interactive()) mirtCluster()
@@ -718,10 +769,10 @@ head(fscores(mod, method='WLE', full.scores = FALSE))
 </code></pre>
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
 ## [1,]       1    1      1       1 -5.6980733 1.5782656
-## [2,]       1    3      2       1 -2.1191038 0.6332802
-## [3,]       1    4      2       3 -1.1387624 0.6557002
-## [4,]       1    4      3       1 -0.8489387 0.7000115
-## [5,]       2    1      1       1 -4.0112458 1.1423935
+## [2,]       1    3      2       1 -2.1191038 0.6332801
+## [3,]       1    4      2       3 -1.1387624 0.6557003
+## [4,]       1    4      3       1 -0.8489387 0.7000117
+## [5,]       2    1      1       1 -4.0112458 1.1423934
 ## [6,]       2    1      2       4 -1.8957020 0.6698434
 </code></pre>
 <pre><code class="language-r"># multiple imputation using 30 draws for EAP scores. Requires information matrix
@@ -730,48 +781,71 @@ fs &lt;- fscores(mod, MI = 30)
 head(fs)
 </code></pre>
 <pre><code>##               F1
-## [1,]  0.41530174
-## [2,]  0.05990526
-## [3,] -0.86491131
-## [4,] -0.86491131
-## [5,]  0.76887690
-## [6,]  0.67506540
+## [1,]  0.44176153
+## [2,]  0.07193746
+## [3,] -0.83790601
+## [4,] -0.83790601
+## [5,]  0.73027479
+## [6,]  0.71605941
 </code></pre>
 <pre><code class="language-r"># plausible values for future work
 pv &lt;- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 </code></pre>
 <pre><code>## [[1]]
-##         mean          var          min          max 
-## -0.002620447  0.883637809 -3.069906630  2.801540736 
+##        mean         var         min         max 
+##  0.05330257  0.93163419 -2.96163814  2.86795322 
 ## 
 ## [[2]]
-##       mean        var        min        max 
-## -0.0188369  1.0430719 -3.0653506  2.9726543 
+##         mean          var          min          max 
+##  0.006379846  0.892739272 -2.406650845  2.754533140 
 ## 
 ## [[3]]
-##         mean          var          min          max 
-##  0.004021556  0.940139646 -2.952286568  2.539625741 
+##        mean         var         min         max 
+## -0.03334085  1.02687639 -4.56299130  2.55592762 
 ## 
 ## [[4]]
 ##        mean         var         min         max 
-## -0.02485457  0.99213576 -2.98286183  2.97542549 
+##  0.02008484  1.10372303 -3.36649943  2.72546297 
 ## 
 ## [[5]]
-##        mean         var         min         max 
-##  0.02298123  1.01378345 -2.71442048  2.81063898
+##          mean           var           min           max 
+##  0.0003896072  1.0142018274 -3.6737915702  2.8973793503
 </code></pre>
-<pre><code class="language-r">## define a custom_den function. EAP with a uniform prior between -3 and 3
+<pre><code class="language-r">## define a custom_den function (*must* return a numeric vector).
+#  EAP with a uniform prior between -3 and 3
 fun &lt;- function(Theta, ...) as.numeric(dunif(Theta, min = -3, max = 3))
 head(fscores(mod, custom_den = fun))
 </code></pre>
 <pre><code>##               F1
-## [1,]  0.62811597
-## [2,]  0.07362511
-## [3,] -1.23497086
-## [4,] -1.23497086
-## [5,]  1.25827841
-## [6,]  1.00860231
+## [1,]  0.62740797
+## [2,]  0.07362014
+## [3,] -1.23412036
+## [4,] -1.23412036
+## [5,]  1.25196942
+## [6,]  1.00691502
+</code></pre>
+<pre><code class="language-r"># compare EAP estimators with same modified prior
+fun &lt;- function(Theta, ...) as.numeric(dnorm(Theta, mean=.5))
+head(fscores(mod, custom_den = fun))
+</code></pre>
+<pre><code>##              F1
+## [1,]  0.5801169
+## [2,]  0.2057691
+## [3,] -0.7411082
+## [4,] -0.7411082
+## [5,]  0.9677165
+## [6,]  0.8355336
+</code></pre>
+<pre><code class="language-r">head(fscores(mod, method = 'EAP', mean=.5))
+</code></pre>
+<pre><code>##              F1
+## [1,]  0.5801169
+## [2,]  0.2057691
+## [3,] -0.7411082
+## [4,] -0.7411082
+## [5,]  0.9677165
+## [6,]  0.8355336
 </code></pre>
 <pre><code class="language-r"># custom MAP prior: standard truncated normal between 5 and -2
 library(msm)
@@ -788,12 +862,12 @@ head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
 ## 0.6637
 </code></pre>
 <pre><code>##      Comfort Work Future Benefit         F1     SE_F1
-## [1,]       1    1      1       1 -1.9999997 0.5955534
-## [2,]       1    3      2       1 -1.4234806 0.5680859
-## [3,]       1    4      2       3 -0.7627999 0.5920502
-## [4,]       1    4      3       1 -0.4621219 0.6529191
-## [5,]       2    1      1       1 -1.9999972 0.5706602
-## [6,]       2    1      2       4 -1.2729394 0.5680222
+## [1,]       1    1      1       1 -1.9999989 0.5955535
+## [2,]       1    3      2       1 -1.4234789 0.5680859
+## [3,]       1    4      2       3 -0.7627999 0.5920501
+## [4,]       1    4      3       1 -0.4621220 0.6529196
+## [5,]       2    1      1       1 -1.9999996 0.5706600
+## [6,]       2    1      2       4 -1.2729399 0.5680221
 </code></pre>
 <pre><code class="language-r">####################
 # scoring via response.pattern input (with latent regression structure)
@@ -856,12 +930,12 @@ fs &lt;- fscores(mod, full.scores.SE=TRUE)
 head(fs)
 </code></pre>
 <pre><code>##              F1     SE_F1
-## [1,]  0.3085525 0.3442170
-## [2,] -0.3474238 0.3408507
-## [3,]  2.0484681 0.3903336
-## [4,] -1.9418770 0.3670519
-## [5,] -0.7631629 0.3432706
-## [6,]  2.1019773 0.3922135
+## [1,]  0.3085528 0.3442171
+## [2,] -0.3474225 0.3408508
+## [3,]  2.0484669 0.3903338
+## [4,] -1.9418737 0.3670521
+## [5,] -0.7631612 0.3432707
+## [6,]  2.1019760 0.3922137
 </code></pre>
 <pre><code class="language-r"># score only two response patterns
 rp &lt;- dat[1:2, ]
@@ -870,18 +944,18 @@ cd &lt;- covdata[1:2, ]
 fscores(mod, response.pattern=rp, covdata=cd)
 </code></pre>
 <pre><code>##              F1     SE_F1
-## [1,]  0.3085525 0.3442170
-## [2,] -0.3474238 0.3408507
+## [1,]  0.3085528 0.3442171
+## [2,] -0.3474225 0.3408508
 </code></pre>
 <pre><code class="language-r">fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
 </code></pre>
 <pre><code>##              F1     SE_F1
-## [1,] -0.3474238 0.3408507
+## [1,] -0.3474225 0.3408508
 </code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

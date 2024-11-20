@@ -28,6 +28,8 @@ function processMathHTML() {
 <p>Data from Bock &amp; Lieberman (1970); contains 5 dichotomously scored
 items obtained from the Law School Admissions Test, section 7.
 </p>
+<p>Data from
+</p>
 
 
 <h3>Author(s)</h3>
@@ -41,9 +43,8 @@ items obtained from the Law School Admissions Test, section 7.
 <p>Bock, R. D., &amp; Lieberman, M. (1970). Fitting a response model for <em>n</em>
 dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.
 </p>
-<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
+<p>Bock, R. D., &amp; Lieberman, M. (1970). Fitting a response model for <em>n</em>
+dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.
 </p>
 
 
@@ -64,8 +65,8 @@ head(dat)
 <pre><code class="language-r">itemstats(dat)
 </code></pre>
 <pre><code>## $overall
-##     N mean_total.score sd_total.score ave.r  sd.r alpha
-##  1000            3.707          1.199 0.143 0.052 0.453
+##     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  1000            3.707          1.199 0.143 0.052 0.453     0.886
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -91,7 +92,90 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 28 EM iterations.
-## mirt version: 1.40 
+## mirt version: 1.43 
+## M-step optimizer: BFGS 
+## EM acceleration: Ramsay 
+## Number of rectangular quadrature: 61
+## Latent density type: Gaussian 
+## 
+## Log-likelihood = -2658.805
+## Estimated parameters: 10 
+## AIC = 5337.61
+## BIC = 5386.688; SABIC = 5354.927
+## G2 (21) = 31.7, p = 0.0628
+## RMSEA = 0.023, CFI = NaN, TLI = NaN
+</code></pre>
+<pre><code class="language-r">coef(mod)
+</code></pre>
+<pre><code>## $Item.1
+##        a1     d g u
+## par 0.988 1.856 0 1
+## 
+## $Item.2
+##        a1     d g u
+## par 1.081 0.808 0 1
+## 
+## $Item.3
+##        a1     d g u
+## par 1.706 1.804 0 1
+## 
+## $Item.4
+##        a1     d g u
+## par 0.765 0.486 0 1
+## 
+## $Item.5
+##        a1     d g u
+## par 0.736 1.855 0 1
+## 
+## $GroupPars
+##     MEAN_1 COV_11
+## par      0      1
+</code></pre>
+<pre><code class="language-r">## End(No test)
+
+## No test: 
+dat &lt;- expand.table(LSAT7)
+head(dat)
+</code></pre>
+<pre><code>##   Item.1 Item.2 Item.3 Item.4 Item.5
+## 1      0      0      0      0      0
+## 2      0      0      0      0      0
+## 3      0      0      0      0      0
+## 4      0      0      0      0      0
+## 5      0      0      0      0      0
+## 6      0      0      0      0      0
+</code></pre>
+<pre><code class="language-r">itemstats(dat)
+</code></pre>
+<pre><code>## $overall
+##     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  1000            3.707          1.199 0.143 0.052 0.453     0.886
+## 
+## $itemstats
+##           N  mean    sd total.r total.r_if_rm alpha_if_rm
+## Item.1 1000 0.828 0.378   0.530         0.246       0.396
+## Item.2 1000 0.658 0.475   0.600         0.247       0.394
+## Item.3 1000 0.772 0.420   0.611         0.313       0.345
+## Item.4 1000 0.606 0.489   0.592         0.223       0.415
+## Item.5 1000 0.843 0.364   0.461         0.175       0.438
+## 
+## $proportions
+##            0     1
+## Item.1 0.172 0.828
+## Item.2 0.342 0.658
+## Item.3 0.228 0.772
+## Item.4 0.394 0.606
+## Item.5 0.157 0.843
+</code></pre>
+<pre><code class="language-r">(mod &lt;- mirt(dat, 1))
+</code></pre>
+<pre><code>## 
+## Call:
+## mirt(data = dat, model = 1)
+## 
+## Full-information item factor analysis with 1 factor(s).
+## Converged within 1e-04 tolerance after 28 EM iterations.
+## mirt version: 1.43 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -134,6 +218,6 @@ head(dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

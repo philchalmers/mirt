@@ -32,7 +32,7 @@ returned from <code><a href="../../mirt/help/fscores.html">fscores</a></code>, c
 
 <h3>Usage</h3>
 
-<pre><code class='language-R'>empirical_rxx(Theta_SE)
+<pre><code class='language-R'>empirical_rxx(Theta_SE, T_as_X = FALSE)
 </code></pre>
 
 
@@ -43,6 +43,12 @@ returned from <code><a href="../../mirt/help/fscores.html">fscores</a></code>, c
 <td>
 <p>a matrix of latent trait estimates returned from <code><a href="../../mirt/help/fscores.html">fscores</a></code> with the options
 <code>full.scores = TRUE</code> and <code>full.scores.SE = TRUE</code></p>
+</td></tr>
+<tr><td><code id="empirical_rxx_:_T_as_X">T_as_X</code></td>
+<td>
+<p>logical; should the observed variance be equal to
+<code>var(X) = var(T) + E(E^2)</code> or <code>var(X) = var(T)</code> when computing
+empirical reliability estimates? Default (<code>FALSE</code>) uses the former</p>
 </td></tr>
 </table>
 
@@ -72,7 +78,29 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <pre><code class="language-r">## No test: 
 
 dat &lt;- expand.table(deAyala)
-mod &lt;- mirt(dat, 1)
+itemstats(dat)
+</code></pre>
+<pre><code>## $overall
+##      N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  19601            2.912          1.434 0.233 0.074 0.608     0.898
+## 
+## $itemstats
+##            N  mean    sd total.r total.r_if_rm alpha_if_rm
+## Item.1 19601 0.887 0.316   0.447         0.246       0.605
+## Item.2 19601 0.644 0.479   0.688         0.439       0.510
+## Item.3 19601 0.566 0.496   0.680         0.416       0.523
+## Item.4 19601 0.427 0.495   0.673         0.405       0.529
+## Item.5 19601 0.387 0.487   0.602         0.312       0.581
+## 
+## $proportions
+##            0     1
+## Item.1 0.113 0.887
+## Item.2 0.356 0.644
+## Item.3 0.434 0.566
+## Item.4 0.573 0.427
+## Item.5 0.613 0.387
+</code></pre>
+<pre><code class="language-r">mod &lt;- mirt(dat)
 
 theta_se &lt;- fscores(mod, full.scores.SE = TRUE)
 empirical_rxx(theta_se)
@@ -86,10 +114,15 @@ empirical_rxx(theta_se)
 <pre><code>##        F1 
 ## 0.5636644
 </code></pre>
+<pre><code class="language-r">empirical_rxx(theta_se, T_as_X = TRUE)
+</code></pre>
+<pre><code>##        F1 
+## 0.2258948
+</code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

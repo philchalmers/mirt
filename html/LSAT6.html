@@ -38,10 +38,6 @@ items obtained from the Law School Admissions Test, section 6.
 
 <h3>References</h3>
 
-<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
-</p>
 <p>Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 <em>Psychometrika, 47</em>, 175-186.
 </p>
@@ -64,8 +60,8 @@ head(dat)
 <pre><code class="language-r">itemstats(dat)
 </code></pre>
 <pre><code>## $overall
-##     N mean_total.score sd_total.score ave.r sd.r alpha
-##  1000            3.819          1.035 0.077 0.03 0.295
+##     N mean_total.score sd_total.score ave.r sd.r alpha SEM.alpha
+##  1000            3.819          1.035 0.077 0.03 0.295     0.869
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -93,7 +89,7 @@ head(dat)
 ## 
 ## Full-information item factor analysis with 1 factor(s).
 ## Converged within 1e-04 tolerance after 12 EM iterations.
-## mirt version: 1.40 
+## mirt version: 1.43 
 ## M-step optimizer: BFGS 
 ## EM acceleration: Ramsay 
 ## Number of rectangular quadrature: 61
@@ -149,7 +145,7 @@ anova(mod, mod2) #equal
 <pre><code class="language-r">M2(mod2)
 </code></pre>
 <pre><code>##             M2 df         p RMSEA RMSEA_5   RMSEA_95      SRMSR      TLI CFI
-## stats 5.292778  9 0.8080758     0       0 0.02254382 0.02242585 1.072507   1
+## stats 5.292805  9 0.8080733     0       0 0.02254396 0.02242593 1.072506   1
 </code></pre>
 <pre><code class="language-r">itemfit(mod2)
 </code></pre>
@@ -180,12 +176,12 @@ anova(mod, mod2) #equal
 </code></pre>
 <pre><code class="language-r">sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 </code></pre>
-<pre><code>## [1] 0.7561839
+<pre><code>## [1] 0.7561962
 </code></pre>
 <pre><code class="language-r">## End(No test)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

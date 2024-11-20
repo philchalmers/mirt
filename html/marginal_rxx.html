@@ -32,7 +32,7 @@ function processMathHTML() {
 
 <h3>Usage</h3>
 
-<pre><code class='language-R'>marginal_rxx(mod, density = dnorm, var_theta = 1, ...)
+<pre><code class='language-R'>marginal_rxx(mod, density = dnorm, ...)
 </code></pre>
 
 
@@ -47,11 +47,6 @@ function processMathHTML() {
 <td>
 <p>a density function to use for integration. Default assumes the latent traits are from a
 normal (Gaussian) distribution</p>
-</td></tr>
-<tr><td><code id="marginal_rxx_:_var_theta">var_theta</code></td>
-<td>
-<p>variance of the Theta distribution (typically 1 for many fitted
-IRT models)</p>
 </td></tr>
 <tr><td><code id="marginal_rxx_:_...">...</code></td>
 <td>
@@ -85,12 +80,17 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <h3>Examples</h3>
 
 <pre><code class="language-r">dat &lt;- expand.table(deAyala)
-mod &lt;- mirt(dat, 1)
+mod &lt;- mirt(dat)
 
-# marginal estimate
+# marginal estimate treating item parameters as known
 marginal_rxx(mod)
 </code></pre>
 <pre><code>## [1] 0.6092894
+</code></pre>
+<pre><code class="language-r"># compare to alpha
+itemstats(dat)$overall$alpha
+</code></pre>
+<pre><code>## [1] 0.6077281
 </code></pre>
 <pre><code class="language-r">## No test: 
 
@@ -105,12 +105,12 @@ fs &lt;- fscores(mod, full.scores.SE=TRUE)
 head(fs)
 </code></pre>
 <pre><code>##             F1     SE_F1
-## [1,] -1.580133 0.6699425
-## [2,] -1.580133 0.6699425
-## [3,] -1.580133 0.6699425
-## [4,] -1.580133 0.6699425
-## [5,] -1.580133 0.6699425
-## [6,] -1.580133 0.6699425
+## [1,] -1.580133 0.6699424
+## [2,] -1.580133 0.6699424
+## [3,] -1.580133 0.6699424
+## [4,] -1.580133 0.6699424
+## [5,] -1.580133 0.6699424
+## [6,] -1.580133 0.6699424
 </code></pre>
 <pre><code class="language-r">empirical_rxx(fs)
 </code></pre>
@@ -121,6 +121,6 @@ head(fs)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

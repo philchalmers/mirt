@@ -26,8 +26,8 @@ function processMathHTML() {
 <h3>Description</h3>
 
 <p>A function for extracting the empirical estimating functions of a fitted
-<code><a href="../../mirt/help/mirt.html">mirt</a></code>, <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code> or <code><a href="../../mirt/help/bfactor.html">bfactor</a></code>
-model. This is the derivative of the log-likelihood with respect to the
+<code><a href="../../mirt/help/mirt.html">mirt</a></code>, <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code>, <code><a href="../../mirt/help/bfactor.html">bfactor</a></code>, or
+<code><a href="../../mirt/help/mdirt.html">mdirt</a></code> model. This is the derivative of the log-likelihood with respect to the
 parameter vector, evaluated at the observed (case-wise) data. In other
 words, this function returns the case-wise scores, evaluated at the fitted
 model parameters. Currently, models fitted via the <code>EM</code> or <code>BL</code>
@@ -52,8 +52,8 @@ the model itself along with its matching normalized density.
 <table>
 <tr><td><code id="estfun.AllModelClass_:_x">x</code></td>
 <td>
-<p>a fitted model object of class <code>SingleGroupClass</code> or
-<code>MultipleGroupClass</code></p>
+<p>a fitted model object of class <code>SingleGroupClass</code>,
+<code>MultipleGroupClass</code>, or <code>DiscreteClass</code></p>
 </td></tr>
 <tr><td><code id="estfun.AllModelClass_:_weights">weights</code></td>
 <td>
@@ -83,14 +83,16 @@ obtained from maximum likelihood estimates, this setting does not affect the res
 
 <h3>Author(s)</h3>
 
-<p>Lennart Schneider <a href="mailto:lennart.sch@web.de">lennart.sch@web.de</a>; centering argument contributed by Rudolf Debelak (<a href="mailto:rudolf.debelak@psychologie.uzh.ch">rudolf.debelak@psychologie.uzh.ch</a>)
+<p>Lennart Schneider <a href="mailto:lennart.sch@web.de">lennart.sch@web.de</a> and Phil Chalmers;
+centering argument contributed by Rudolf Debelak
+(<a href="mailto:rudolf.debelak@psychologie.uzh.ch">rudolf.debelak@psychologie.uzh.ch</a>)
 </p>
 
 
 <h3>See Also</h3>
 
 <p><code><a href="../../mirt/help/mirt.html">mirt</a></code>, <code><a href="../../mirt/help/multipleGroup.html">multipleGroup</a></code>,
-<code><a href="../../mirt/help/bfactor.html">bfactor</a></code>
+<code><a href="../../mirt/help/bfactor.html">bfactor</a></code>, <code><a href="../../mirt/help/mdirt.html">mdirt</a></code>
 </p>
 
 
@@ -104,12 +106,29 @@ sc1 &lt;- estfun.AllModelClass(mod1)
 colSums(sc1)
 </code></pre>
 <pre><code>##          a1.1           d.2          a1.5           d.6          a1.9 
-## -2.477599e-03 -1.749067e-03  8.292776e-05 -1.521604e-03  1.198404e-02 
+## -2.477600e-03 -1.749068e-03  8.292831e-05 -1.521604e-03  1.198404e-02 
 ##          d.10         a1.13          d.14         a1.17          d.18 
-##  6.498261e-03 -2.188203e-03  4.417929e-03 -8.004879e-04 -5.566575e-04
+##  6.498262e-03 -2.188204e-03  4.417930e-03 -8.004882e-04 -5.566577e-04
 </code></pre>
 <pre><code class="language-r"># calculate the OPG estimate of the variance-covariance matrix &quot;by hand&quot;
 vc1 &lt;- vcov(mod1)
+all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)
+</code></pre>
+<pre><code>## [1] TRUE
+</code></pre>
+<pre><code class="language-r"># Discrete group
+modd &lt;- mdirt(expand.table(LSAT7), 2, SE = TRUE, SE.type = &quot;crossprod&quot;)
+sc1 &lt;- estfun.AllModelClass(modd)
+# get the gradient
+colSums(sc1)
+</code></pre>
+<pre><code>##        a1.1        a2.2        a1.3        a2.4        a1.5        a2.6 
+## 0.010556100 0.012533394 0.015994245 0.016832574 0.021043233 0.020842513 
+##        a1.7        a2.8        a1.9       a2.10       c1.11 
+## 0.013694253 0.011470848 0.007827056 0.009231532 0.059032789
+</code></pre>
+<pre><code class="language-r"># calculate the OPG estimate of the variance-covariance matrix &quot;by hand&quot;
+vc1 &lt;- vcov(modd)
 all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)
 </code></pre>
 <pre><code>## [1] TRUE
@@ -181,6 +200,6 @@ all.equal(crossprod(sc4_crp), chol2inv(chol(vc4)), check.attributes = FALSE)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

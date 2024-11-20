@@ -42,10 +42,6 @@ scoring key for item 32 may be incorrect, and should be changed from 5 to 3.
 
 <h3>References</h3>
 
-<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
-</p>
 <p>Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., &amp; Bock, R. D. (2003).
 TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
 [Computer software]. Lincolnwood, IL: Scientific Software International.
@@ -200,8 +196,8 @@ head(dat)
 <pre><code class="language-r">itemstats(dat)
 </code></pre>
 <pre><code>## $overall
-##    N mean_total.score sd_total.score ave.r  sd.r alpha
-##  600           18.202          5.054 0.108 0.075 0.798
+##    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  600           18.202          5.054 0.108 0.075 0.798     2.272
 ## 
 ## $itemstats
 ##           N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -316,6 +312,6 @@ dat &lt;- key2binary(SAT12,
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

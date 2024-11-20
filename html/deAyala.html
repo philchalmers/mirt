@@ -37,10 +37,6 @@ function processMathHTML() {
 
 <h3>References</h3>
 
-<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
-<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
-</p>
 <p>de Ayala, R. J. (2009). <em>The theory and practice of item response theory</em>. Guilford Press.
 </p>
 
@@ -62,8 +58,8 @@ head(dat)
 <pre><code class="language-r">itemstats(dat)
 </code></pre>
 <pre><code>## $overall
-##      N mean_total.score sd_total.score ave.r  sd.r alpha
-##  19601            2.912          1.434 0.233 0.074 0.608
+##      N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
+##  19601            2.912          1.434 0.233 0.074 0.608     0.898
 ## 
 ## $itemstats
 ##            N  mean    sd total.r total.r_if_rm alpha_if_rm
@@ -85,6 +81,6 @@ head(dat)
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>

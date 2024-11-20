@@ -28,7 +28,8 @@ function processMathHTML() {
 <p>This is a helper function for users who have previously available traditional/classical
 IRT parameters and want to know the equivalent slope-intercept translation used in <code>mirt</code>.
 Note that this function assumes that the supplied models are unidimensional by definition (i.e.,
-will have only one slope/discrimination). If there is no supported slope-intercept transformation
+will have only one slope/discrimination) and in the logistic metric (i.e., logistic-ogive
+scaling coefficient D=1). If there is no supported slope-intercept transformation
 available then the original vector of parameters will be returned by default.
 </p>
 
@@ -44,7 +45,7 @@ available then the original vector of parameters will be returned by default.
 <table>
 <tr><td><code id="traditional2mirt_:_x">x</code></td>
 <td>
-<p>a vector of parameters to tranform</p>
+<p>a vector of parameters to transform</p>
 </td></tr>
 <tr><td><code id="traditional2mirt_:_cls">cls</code></td>
 <td>
@@ -128,6 +129,6 @@ slopeint
 </code></pre>
 
 
-<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.40 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
 </div>
 </body></html>
