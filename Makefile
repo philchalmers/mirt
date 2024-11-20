@@ -41,6 +41,15 @@ knitdocs:
 	make install
 	make kniterrors
 
+pushdocs:
+	mv -rf html/ ../html
+	git checkout gh-pages
+	cp ../html/* 
+	git commit -am "update pkgdown"
+	git push
+	git checkout main
+	rm -rf ../html/
+
 kniterrors:
 	grep -Hrn '## Error'
 	grep -Hrn '## Warning'
