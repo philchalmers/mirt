@@ -27,24 +27,24 @@ paralleltest:
 extratest:
 	Rscript -e "library('testthat',quietly=TRUE);library('mirt',quietly=TRUE);options(warn=2);test_dir('tests/testthat/extratests')"
 
-knitdocs:
-	rm -rf html/
-	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R
-	sed -i s/dontrun/donttest/g man/*.Rd
-	make install
-	Rscript -e "library('mirt');mirtCluster(2);library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
-	mkdir html
-	mv *.html html/
-	rm R.css
-	rm -rf figure/
-	git checkout -- .
-	make install
-	make kniterrors
+# knitdocs:
+#	rm -rf html/
+#	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R
+#	sed -i s/dontrun/donttest/g man/*.Rd
+#	make install
+#	Rscript -e "library('mirt');mirtCluster(2);library('knitr',quietly=TRUE);knit_rd('$(PKGNAME)')"
+#	mkdir html
+#	mv *.html html/
+#	rm R.css
+#	rm -rf figure/
+#	git checkout -- .
+#	make install
+#	make kniterrors
 
 pushdocs:
-	mv html/ ../mirthtml
+	mv docs/ ../mirtdocs
 	git checkout gh-pages
-	cp ../mirthtml/* html/
+	cp ../mirtdocs/* docs/
 	git commit -am "update pkgdown"
 	git push
 	git checkout main
