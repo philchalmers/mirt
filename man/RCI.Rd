@@ -129,11 +129,13 @@ sv$value[sv$name == 'MEAN_1'] <- 0.5
 mod_post <- mirt(Science, pars=sv, TOL=NA)
 
 # only use pre-test model for scoring
-RCI(mod_pre=mod_pre, shiny=TRUE)
+if(interactive()){
+    RCI(mod_pre=mod_pre, shiny=TRUE)
 
-# use both pre-test and post-test models for including empirical priors
-RCI(mod_pre=mod_pre, mod_post=mod_post, shiny=TRUE,
-    main='Perceptions of Science and Technology')
+    # use both pre-test and post-test models for including empirical priors
+    RCI(mod_pre=mod_pre, mod_post=mod_post, shiny=TRUE,
+        main='Perceptions of Science and Technology')
+ }
 
 
 ############################
