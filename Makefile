@@ -44,7 +44,7 @@ extratest:
 pushdocs:
 	mv docs/ ../mirtdocs
 	git checkout gh-pages
-	cp ../mirtdocs/* docs/
+	cp -r ../mirtdocs/* docs/
 	git commit -am "update pkgdown"
 	git push
 	git checkout main
