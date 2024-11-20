@@ -1,0 +1,130 @@
+<!DOCTYPE html><html><head><title>R: Second-order test of convergence</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head><body><div class="container">
+
+<table style="width: 100%;"><tr><td>secondOrderTest {mirt}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2 id='secondOrderTest'>Second-order test of convergence</h2>
+
+<h3>Description</h3>
+
+<p>Test whether terminated estimation criteria for a given model passes
+the second order test by checking the positive definiteness of the resulting
+Hessian matrix. This function, which accepts the symmetric Hessian/information
+matrix as the input, returns <code>TRUE</code> if the matrix is positive definite
+and <code>FALSE</code> otherwise.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>secondOrderTest(mat, ..., method = "eigen")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="secondOrderTest_:_mat">mat</code></td>
+<td>
+<p>symmetric matrix to test for positive definiteness (typically the Hessian at the
+highest point of model estimator, such as MLE or MAP)</p>
+</td></tr>
+<tr><td><code id="secondOrderTest_:_...">...</code></td>
+<td>
+<p>arguments passed to either <code><a href="../../base/html/eigen.html">eigen</a></code>, <code><a href="../../Matrix/html/chol.html">chol</a></code>, or
+<code>'det'</code> for the positiveness of the eigen values, positiveness of leading minors
+via the Cholesky decomposition, or evaluation of whether the determinant
+is greater than 0</p>
+</td></tr>
+<tr><td><code id="secondOrderTest_:_method">method</code></td>
+<td>
+<p>method to use to test positive definiteness. Default is <code>'eigen'</code></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a matrix with all possible combinations
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Phil Chalmers <a href="mailto:rphilip.chalmers@gmail.com">rphilip.chalmers@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
+<a href="https://doi.org/10.18637/jss.v048.i06">doi:10.18637/jss.v048.i06</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-r">## No test: 
+
+# PD matrix
+mod &lt;- mirt(Science, 1, SE=TRUE)
+info &lt;- solve(vcov(mod))   ## observed information
+secondOrderTest(info)
+</code></pre>
+<pre><code>## [1] TRUE
+</code></pre>
+<pre><code class="language-r">secondOrderTest(info, method = 'chol')
+</code></pre>
+<pre><code>## [1] TRUE
+</code></pre>
+<pre><code class="language-r">secondOrderTest(info, method = 'det')
+</code></pre>
+<pre><code>## [1] TRUE
+</code></pre>
+<pre><code class="language-r"># non-PD matrix
+mat &lt;- matrix(c(1,0,0,0,1,1,0,1,1), ncol=3)
+mat
+</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    1    1
+## [3,]    0    1    1
+</code></pre>
+<pre><code class="language-r">secondOrderTest(mat)
+</code></pre>
+<pre><code>## [1] FALSE
+</code></pre>
+<pre><code class="language-r">secondOrderTest(mat, method = 'chol')
+</code></pre>
+<pre><code>## [1] FALSE
+</code></pre>
+<pre><code class="language-r">secondOrderTest(mat, method = 'det')
+</code></pre>
+<pre><code>## [1] FALSE
+</code></pre>
+<pre><code class="language-r">## End(No test)
+</code></pre>
+
+
+<hr /><div style="text-align: center;">[Package <em>mirt</em> version 1.43 <a href="00Index.html">Index</a>]</div>
+</div>
+</body></html>
