@@ -701,7 +701,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                          keep_vcov_PD=opts$keep_vcov_PD, symmetric=opts$technical$symmetric,
                                          MCEM_draws=opts$MCEM_draws, omp_threads=opts$omp_threads),
                              Theta=Theta, DERIV=DERIV, solnp_args=opts$solnp_args, control=control,
-                             nconstrain=opts$technical$nconstrain)
+                             nconstrain=opts$technical$nconstrain, fixedEtable=opts$technical$fixedEtable)
         if(opts$method == 'MCEM')
             opts$quadpts <- opts$MCEM_draws(ESTIMATE$cycles)
         opts$Moptim <- ESTIMATE$Moptim
@@ -1132,8 +1132,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             Internals$thetaPosterior <- tmp
         }
     }
-    if(opts$storeEtable)
+    if(opts$storeEtable){
         Internals$Etable <- ESTIMATE$Etable
+        Internals$Theta <- Theta
+    }
     if(opts$storeEMhistory)
         Internals$EMhistory <- ESTIMATE$EMhistory
     if(opts$method == 'SEM') Options$TOL <- NA

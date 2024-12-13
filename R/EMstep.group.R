@@ -1,5 +1,5 @@
 EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, solnp_args, control,
-                     nconstrain=NULL)
+                     nconstrain=NULL, fixedEtable=NULL)
 {
     verbose <- list$verbose
     lrPars <- list$lrPars
@@ -251,6 +251,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
                            omp_threads=list$omp_threads)
+            if(!is.null(fixedEtable))
+                Elist$rlist[[1]]$r1 <- fixedEtable
             rlist <- Elist$rlist; LL <- Elist$LL
             if(any(ANY.PRIOR)){
                 LP <- 0
