@@ -396,7 +396,7 @@ Lambdas <- function(pars, Names){
         tmp <- pars[[i]]
         lambdas[i,] <- ExtractLambdas(tmp, include_fixed = FALSE) /1.702
         if(tmp@ncat > 2 && (is(tmp, 'gpcm') || is(tmp, 'nominal')))
-            lambdas[i,] <- lambdas[i,] * sqrt(tmp@ncat-1)
+            lambdas[i,] <- lambdas[i,] * sqrt(tmp@ncat * 1.702)
     }
     dcov <- if(ncol(gcov) > 1L) diag(sqrt(diag(gcov))) else matrix(sqrt(diag(gcov)))
     lambdas <- lambdas %*% dcov
