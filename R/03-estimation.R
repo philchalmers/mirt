@@ -1135,6 +1135,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$storeEtable){
         Internals$Etable <- ESTIMATE$Etable
         Internals$Theta <- Theta
+        if(opts$method == 'QMCEM')
+            Internals$Theta <- updateTheta(npts=opts$quadpts, nfact=nfact,
+                                           pars=pars, QMC=TRUE)[[1]]
     }
     if(opts$storeEMhistory)
         Internals$EMhistory <- ESTIMATE$EMhistory
