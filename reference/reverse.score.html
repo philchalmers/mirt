@@ -59,7 +59,8 @@ range.</p>
 
 
 <dt id="arg-which">which<a class="anchor" aria-label="anchor" href="#arg-which"></a></dt>
-<dd><p>names of items in <code>data</code> that should be rescored. If missing
+<dd><p>names of items or column integer location
+in <code>data</code> that should be rescored. If missing
 the all columns in <code>data</code> will be reverse scored</p></dd>
 
 
@@ -199,12 +200,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span>                              range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Item_1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span>, Item_5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">revdat2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1.RS Item_2 Item_3 Item_4 Item_5.RS Item_6 Item_7 Item_8 Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         0      1      0      2         2      3      3      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         3      4      4      1         2      4      4      4      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         1      0      0      1         2      4      0      0      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         1      2      4      1         1      0      0      0      3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         3      4      3      0         4      4      4      4      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         0      4      0      2         3      4      4      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         1      1      0      2         2      3      3      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         4      4      4      1         2      4      4      4      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         2      0      0      1         2      4      0      0      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         2      2      4      1         1      0      0      0      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         4      4      3      0         4      4      4      4      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         1      4      0      2         3      4      4      0      0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_10.RS Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]          0       3       0       2       2       0       4       0       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]          4       0       4       3       3       3       4       4       4</span>
@@ -225,7 +226,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 124  18  24 134 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">revdat2</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0   1   2   3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 134  24  18 124 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></span>
