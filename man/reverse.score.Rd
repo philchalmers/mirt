@@ -10,7 +10,8 @@ reverse.score(data, which, range = NULL, append = ".RS")
 \item{data}{an object of class \code{data.frame}, \code{matrix}, or
 \code{table} with the response patterns}
 
-\item{which}{names of items in \code{data} that should be rescored. If missing
+\item{which}{names of items or column integer location
+in \code{data} that should be rescored. If missing
 the all columns in \code{data} will be reverse scored}
 
 \item{range}{(optional) a named \code{list} to specify the low and high

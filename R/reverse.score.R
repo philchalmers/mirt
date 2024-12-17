@@ -5,7 +5,8 @@
 #'
 #' @param data an object of class \code{data.frame}, \code{matrix}, or
 #'   \code{table} with the response patterns
-#' @param which names of items in \code{data} that should be rescored. If missing
+#' @param which names of items or column integer location
+#'   in \code{data} that should be rescored. If missing
 #'   the all columns in \code{data} will be reverse scored
 #' @param range (optional) a named \code{list} to specify the low and high
 #'   score ranges. Specified names must match the names found in
@@ -94,7 +95,7 @@ reverse.score <- function(data, which, range = NULL, append = ".RS"){
             max[pick] <- max(range[[i]])
         }
     }
-    subdat <- t((max - min) - t(subdat) + min)
+    subdat <- t(max - t(subdat) + min)
     data[,which] <- subdat
     nms <- colnames(data)
     nms[nms %in% which] <- paste0(nms[nms %in% which], append)
