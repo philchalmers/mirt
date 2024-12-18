@@ -394,7 +394,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     res <- myLapply(X=items2test, FUN=loop_test, progress=verbose, groups2test=groups2test,
                     model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
-                    return_models=return_models, large=large, ...)
+                    return_models=return_models && !(scheme %in% c('add_sequential', 'drop_sequential')),
+                    large=large, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -415,7 +416,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             }
             if(run_number == 2L && (all(!keep) || all(keep))){
                 if(verbose)
-                    message('sequential scheme not required; all/no items contain DIF on first iteration')
+                    message('sequential scheme not required; all/no items display DIF on first iteration')
                 if(return_seq_model) return(MGmodel)
                 if(scheme == 'add_sequential'){
                     scheme <- 'add'
