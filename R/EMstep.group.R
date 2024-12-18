@@ -251,8 +251,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            ngroups=ngroups, itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
                            omp_threads=list$omp_threads)
-            if(!is.null(fixedEtable))
+            if(!is.null(fixedEtable)){
                 Elist$rlist[[1]]$r1 <- fixedEtable
+                control$maxit <- 200
+            }
             rlist <- Elist$rlist; LL <- Elist$LL
             if(any(ANY.PRIOR)){
                 LP <- 0
@@ -323,7 +325,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 printf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL + LP, max(abs(preMstep.longpars - longpars)))
 
-            if(hasConverged(preMstep.longpars, longpars, TOL)){
+            if(hasConverged(preMstep.longpars, longpars, TOL) || !is.null(fixedEtable)){
                 pars <- reloadPars(longpars=longpars, pars=pars,
                                    ngroups=ngroups, J=J)
                 if(length(lrPars)){
@@ -422,7 +424,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 warning('EM cycles terminated after ', cycles, ' iterations.', call.=FALSE)
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
-            if(list$warn && !(is.nan(TOL) || is.na(TOL)) && !list$NULL.MODEL)
+            if(list$warn && !(is.nan(TOL) || is.na(TOL)) && !list$NULL.MODEL && is.null(fixedEtable))
                 warning('M-step optimizer converged immediately. Estimates are either at the ML or
                      starting values are causing issues and should be adjusted. ', call.=FALSE)
         }
