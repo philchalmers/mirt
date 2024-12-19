@@ -431,9 +431,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                 return(ret)
             }
             if(all(keep == lastkeep)) break
-            if(drop && run_number > 2L){
-                lastkeep <- keep | lastkeep
-            } else lastkeep <- keep
+            lastkeep <- keep
             if(verbose)
                 printf('\rChecking for DIF in %d more items', if(drop) sum(keep) else sum(!keep))
             if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
