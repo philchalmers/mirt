@@ -742,6 +742,9 @@ itemfit <- function(x, fit_stats = 'S_X2',
                               },
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
             }
+            if(nrow(empirical.plot_points) == 0)
+                stop(c('One or more groups have completely missing response data.\n',
+                       'Try taking manual group subsets via extract.group().'), call.=FALSE)
             while(nrow(empirical.plot_points) < nrow(empirical.plot_P))
                 empirical.plot_points <- rbind(empirical.plot_points,
                                                rep(NA, length(empirical.plot_points[1,])))
