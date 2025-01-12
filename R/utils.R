@@ -396,9 +396,11 @@ Lambdas <- function(pars, Names){
         tmp <- pars[[i]]
         lambdas[i,] <- ExtractLambdas(tmp, include_fixed = FALSE) /1.702
         if(tmp@ncat > 2 && (is(tmp, 'gpcm') || is(tmp, 'nominal'))){
-            aks <- tmp@par[ncol(lambdas) + 1:tmp@ncat] * sign(lambdas[i, 1])
-            lambdas[i,] <- lambdas[i,] *
-                sqrt((max(aks) - min(aks)) * 1.702)*sign(lambdas[i, 1])
+            aks <- tmp@par[ncol(lambdas) + 1:tmp@ncat]
+            d <- nominal_rescale_d(tmp@par[1:(ncol(lambdas) + tmp@ncat)],
+                              nfact=ncol(lambdas), ncat=tmp@ncat)
+            lambdas[i,] <- lambdas[i,] * d
+            lambdas[i,] <- lambdas[i,] * sqrt((tmp@ncat-1)* 1.702)*sign(lambdas[i, 1])
         }
     }
     dcov <- if(ncol(gcov) > 1L) diag(sqrt(diag(gcov))) else matrix(sqrt(diag(gcov)))
@@ -2799,6 +2801,13 @@ QUnif <- function (n, min = 0, max = 1, n.min = 1, p, leap = 1, silent = FALSE)
     for (j in 1:p) r[, j] <- min[j] + dU[j] * sHalton(n.max,
                                                       n.min, base = pr[j], leap = leap)
     r
+}
+
+nominal_rescale_d <- function(as, nfact, ncat){
+    a <- sum(as[1:nfact])
+    ask <- a * as[-(1:nfact)]
+    d <- max(as[-(1:nfact)]) / (ncat - 1)
+    d
 }
 
 CA <- function(dat, guess_correction = rep(0, ncol(dat))){
