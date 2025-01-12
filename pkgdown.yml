@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   mirt-vignettes: mirt-vignettes.html
-last_built: 2025-01-12T03:52Z
+last_built: 2025-01-12T18:34Z
 urls:
   reference: https://philchalmers.github.io/mirt/reference
   article: https://philchalmers.github.io/mirt/articles
