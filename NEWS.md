@@ -1,3 +1,8 @@
+# Changes in mirt 1.44
+
+- Standardized factor loadings for the multidimensional nominal response model
+  now report consistent values regardless of the category ordering
+
 # Changes in mirt 1.43
 
 - `M2()` family no longer requires row-wise removal of missing data to behave
