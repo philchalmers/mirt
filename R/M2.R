@@ -325,12 +325,12 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
             itemloc <- itemloc[-length(itemloc)]
             was_na <- is.na(extract.mirt(obj, 'data'))
             fulldata <- obj@Data$fulldata[[1L]]
-            N <- colSums(!is.na(fulldata))[-itemloc]
             for(i in 1:(nitems)){
-                pick <- if(i == nitems) c(itemloc[i], ncol(fulldata))
-                    else c(itemloc[i], itemloc[i+1]-1)
+                pick <- if(i == nitems) itemloc[i]:ncol(fulldata)
+                    else itemloc[i]:(itemloc[i+1]-1)
                 fulldata[was_na[,i], pick] <- NA
             }
+            N <- colSums(!is.na(fulldata))[-itemloc]
             p <- c(colMeans(fulldata[,-itemloc], na.rm=TRUE),
                    cross[lower.tri(cross)]/cN[lower.tri(cross)])
         } else {
@@ -440,10 +440,12 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
         stop('M2() statistic cannot be calculated due to too few degrees of freedom',
              call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
+    N <- nrow(extract.mirt(obj, 'data'))
     C2 <- try(deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac), TRUE)
     if(is(C2, 'try-error'))
         stop('Could not invert orthogonal complement matrix', call.=FALSE)
-    N <- nrow(extract.mirt(obj, 'data'))
+    Ns <- do.call(c, lapply(ret, function(x) x$N))
+    C2 <- outer(sqrt(Ns / N), sqrt(Ns / N)) * C2
     M2 <- abs(t(p - e) %*% C2 %*% (p - e))
     df <- length(p) - extract.mirt(obj, 'nest')
     # df <- qr(deltac)$rank

@@ -1,5 +1,8 @@
 # Changes in mirt 1.44
 
+- Fixed `M2()` computations with large amounts of missing data, particularly
+  prevalent with the C2 statistic (reported by Hynek Cigler)
+
 - Standardized factor loadings for the multidimensional nominal response model
   now report consistent values regardless of the category ordering
 
