@@ -111,6 +111,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
         #     stop('M2 can not be calculated for data with missing values.', call.=FALSE)
         adj <- obj@Data$mins
         dat <- t(t(obj@Data$data) - adj)
+        N.full <- nrow(dat)
         N <- colSums(!is.na(dat))
         cN <- crossprod_miss(!is.na(dat), !is.na(dat))
         p  <- colMeans(dat, na.rm = TRUE)
@@ -346,7 +347,8 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
         Xi2 <- rbind(cbind(Xi2els$Xi11, Xi2els$Xi12), cbind(t(Xi2els$Xi12), Xi2els$Xi22))
         Nstar <- c(N, cN[lower.tri(cN)])
         ret <- list(Xi2=Xi2, delta=delta, estpars=estpars,
-                    p=sqrt(Nstar)*p, e=sqrt(Nstar)*e, SRMSR=SRMSR, N=Nstar)
+                    p=sqrt(Nstar)*p, e=sqrt(Nstar)*e, SRMSR=SRMSR, N=Nstar,
+                    N.ratio=Nstar/N.full)
         ret
     }
 
@@ -444,8 +446,8 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
     C2 <- try(deltac %*% solve(t(deltac) %*% Xi2 %*% deltac) %*% t(deltac), TRUE)
     if(is(C2, 'try-error'))
         stop('Could not invert orthogonal complement matrix', call.=FALSE)
-    Ns <- do.call(c, lapply(ret, function(x) x$N))
-    C2 <- outer(sqrt(Ns / N), sqrt(Ns / N)) * C2
+    Ns.ratio <- do.call(c, lapply(ret, function(x) x$N.ratio))
+    C2 <- outer(sqrt(Ns.ratio), sqrt(Ns.ratio)) * C2
     M2 <- abs(t(p - e) %*% C2 %*% (p - e))
     df <- length(p) - extract.mirt(obj, 'nest')
     # df <- qr(deltac)$rank

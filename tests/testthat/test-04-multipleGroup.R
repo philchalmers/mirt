@@ -83,7 +83,7 @@ test_that('one factor', {
     out1 <- M2(mod_missing)
     out2 <- suppressMessages(itemfit(mod_missing, na.rm=TRUE))
     out3 <- fscores(mod_missing, na.rm=TRUE, method = 'EAPsum', full.scores=FALSE, verbose = FALSE)
-    expect_equal(out1$M2, 166.0549, tolerance=1e-4)
+    expect_equal(out1$M2, 166.0331, tolerance=1e-4)
     expect_equal(out2$D1$S_X2[1], 7.633155, tolerance=1e-4)
     expect_equal(out3$D1$expected[1], 5.258545, tolerance=1e-2)
 
