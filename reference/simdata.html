@@ -58,6 +58,7 @@ a user input matrix of \(\theta\)'s.</p>
 <span>  mu <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  guess <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  upper <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  rho <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nominal <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  t <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  Theta <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -102,9 +103,10 @@ be used</p></dd>
   the respective internal classes automatically.</p>
 <p>If the internal class of the object is specified instead, the inputs can
   be <code>'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'</code>,
-  or <code>'lca'</code>, for dichotomous, graded, generalized partial credit, sequential,
+  <code>'lca'</code>, and all the models under the Luo (2001) family (see <code><a href="mirt.html">mirt</a></code>),
+  for dichotomous, graded, generalized partial credit, sequential,
   nominal, nested logit, partially compensatory,
-  generalized graded unfolding model, and latent class analysis model.
+  generalized graded unfolding model, latent class analysis model, and ordered unfolding models.
   Note that for the gpcm, nominal, and nested logit models there should
   be as many parameters as desired categories, however to parametrized them for meaningful
   interpretation the first category intercept should
@@ -132,6 +134,12 @@ the dichotomous items, or a vector with as many values as to be simulated items<
 
 <dt id="arg-upper">upper<a class="anchor" aria-label="anchor" href="#arg-upper"></a></dt>
 <dd><p>same as <code>guess</code>, but for upper bound parameters</p></dd>
+
+
+<dt id="arg-rho">rho<a class="anchor" aria-label="anchor" href="#arg-rho"></a></dt>
+<dd><p>a matrix of <code>rho</code> values to be used for the Lui (2001) family of
+ordered unfolding models (see <code><a href="mirt.html">mirt</a></code>) to control the latitude of
+acceptance. All values must be positive</p></dd>
 
 
 <dt id="arg-nominal">nominal<a class="anchor" aria-label="anchor" href="#arg-nominal"></a></dt>
@@ -445,6 +453,18 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># mod &lt;- mirt(dat, 1, 'ggum')</span></span></span>
 <span class="r-in"><span><span class="co"># coef(mod)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### 10 items with the hyperbolic cosine model with differing category lengths</span></span></span>
+<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, nrow<span class="op">=</span><span class="fl">10</span>, ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rho</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>   <span class="co"># first two items have K=2 categories</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">1000</span>, <span class="st">'hcm'</span>, rho<span class="op">=</span><span class="va">rho</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># mod &lt;- mirt(dat, 1, 'hcm')</span></span></span>
+<span class="r-in"><span><span class="co"># list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">######</span></span></span>
 <span class="r-in"><span><span class="co"># prob.list example</span></span></span>
