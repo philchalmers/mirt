@@ -30,7 +30,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 ggum.start.values[[i]] <- c(rep(1, nfact), numeric(nfact),
                                             seq(3, -3, length.out = K[i]-1))
         } else {
-            data.dca <- as.data.frame(scores(dca, display='species'))
+            data.dca <- as.data.frame(vegan::scores(dca, display='species'))
             dca.mat <- as.matrix(data.dca[,1:nfact])
 
             for (i in 1L:length(K)) {
@@ -223,7 +223,23 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(fp) <- names(val)
             startvalues[[i]] <- val
             freepars[[i]] <- fp
-        } else if (itemtype[i] == 'spline') next
+        } else if (itemtype[i] == 'spline'){
+            next
+        } else if (itemtype[i] %in% Luo2001Set()){
+            val <- c(rep(1, nfact), 1/2, seq(-1, 1, length.out=K[i]-1))
+            val[!estLambdas[i,]] <- 0
+            fp <- if(substr(itemtype[i], 1, 1) == 'g'){ # generalized
+                itemtype[i] <- sub('g', '', itemtype[i])
+                c(estLambdas[i,], TRUE, rep(TRUE, K[i]-1))
+            } else {
+                c(rep(FALSE, nfact), TRUE, rep(TRUE, K[i]-1))
+            }
+            names(val) <- c(paste('a', 1L:nfact, sep=''), 'd',
+                            paste('log_rho', 1L:(max(K[i]) - 1), sep=''))
+            names(fp) <- names(val)
+            startvalues[[i]] <- val
+            freepars[[i]] <- fp
+        }
         if(all(itemtype[i] != valid.items) || itemtype[i] %in% Experimental_itemtypes()) next
         names(fp) <- names(val)
         startvalues[[i]] <- val
@@ -732,6 +748,31 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              nfixedeffects=nfixedeffects,
                              any.prior=FALSE,
                              itemclass=11L,
+                             prior.type=rep(0L, length(startvalues[[i]])),
+                             fixed.design=fixed.design.list[[i]],
+                             lbound=c(rep(1e-4, nfact),
+                                      rep(-Inf, length(startvalues[[i]])-nfact)),
+                             ubound=c(rep(Inf, length(startvalues[[i]]))),
+                             prior_1=rep(NaN,length(startvalues[[i]])),
+                             prior_2=rep(NaN,length(startvalues[[i]])))
+            tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
+            pars[[i]]@parnum <- tmp2
+            parnumber <- parnumber + length(freepars[[i]])
+            next
+        }
+
+        if(itemtype[i] %in% Luo2001Set()){
+            pars[[i]] <- new('Luo2001',
+                             par=startvalues[[i]],
+                             est=freepars[[i]],
+                             parnames=names(freepars[[i]]),
+                             nfact=nfact,
+                             ncat=K[i],
+                             fn=pick.Lui2001.fn(itemtype[i]),
+                             dfn=pick.Lui2001.dfn(itemtype[i]),
+                             nfixedeffects=nfixedeffects,
+                             any.prior=FALSE,
+                             itemclass=13L,
                              prior.type=rep(0L, length(startvalues[[i]])),
                              fixed.design=fixed.design.list[[i]],
                              lbound=c(rep(1e-4, nfact),

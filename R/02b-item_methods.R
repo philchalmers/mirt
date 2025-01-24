@@ -2,7 +2,18 @@
 
 # flag to indicate an experimental item type (requires an S4 initializer in the definitions below)
 # note: cannot match Valid_iteminputs
-Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull')
+
+Luo2001Set <- function(){
+    nms <- c('alm', 'hcm', 'paralla', 'sslm')
+    ret <- c(paste0('g', nms), nms)
+    ret
+}
+
+
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull',
+                                       Luo2001Set())
+
+# NOTE: probably want generalized version of line line 6, at least GHCM
 
 Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
                                  'graded', 'grsm', 'gpcm', 'gpcmIRT',
@@ -11,13 +22,15 @@ Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5
 
 ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll', 'ull',
                                   'ggum', 'rating', 'spline', 'monopoly',
-                                  'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT')
+                                  'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT',
+                                  'GUM')
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', Experimental_itemtypes())
+Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', 'Luo2001',
+                                Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'sequential', 'Tutz',
-                            Experimental_itemtypes())
+                            'Luo2001', Experimental_itemtypes())
 
 #--------------------------------------------------------------------
 # Item model definitions
@@ -3317,6 +3330,246 @@ setMethod(
 setMethod(
     f = "dP",
     signature = signature(x = 'ull', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_dP(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("Luo2001", contains = 'AllItemsClass',
+         representation = representation(fn.fold='character',
+                                         fn='function',
+                                         dfn='function'))
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'Luo2001'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'Luo2001'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+#extract the slopes (should be a vector of length nfact)
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'Luo2001'),
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
+    }
+)
+
+#extract the intercepts
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'Luo2001'),
+    definition = function(x){
+        x@par[x@nfact + 1:x@nfact] # b terms
+    }
+)
+
+# generating random starting values (only called when, e.g., mirt(..., GenRandomPars = TRUE))
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'Luo2001'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact), rnorm(x@nfact), rnorm(x@ncat-1))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+# how to set the null model to compute statistics like CFI and TLI (usually just fixing slopes to 0)
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'Luo2001'),
+    definition = function(x){
+        x@par[1:x@nfact] <- 0
+        x@est[1:x@nfact] <- FALSE
+        x
+    }
+)
+
+# graded unfolding model
+# P.Lui2001.gum <- function(x, C, k)
+#     cosh(((2*C+1)/2 + 1 - k)*x) / cosh(((2*C+1)/2 - k)*x)
+# dP.Lui2001.gum <- function(x, C, k){
+#     .e1 <- (1 + 2 * C)/2
+#     .e2 <- .e1 - k
+#     .e4 <- .e1 + 1 - k
+#     .e5 <- x * .e2
+#     .e6 <- cosh(.e5)
+#     .e7 <- x * .e4
+#     (.e4 * sinh(.e7) - .e2 * cosh(.e7) * sinh(.e5)/.e6)/.e6
+# }
+
+# absolute logistic model
+P.Lui2001.alm <- function(x, C, k) exp(abs(x))
+dP.Lui2001.alm <- function(x, C, k) exp(abs(x)) * sign(x)
+
+# simple squared logistic model
+P.Lui2001.sslm <- function(x, C, k) exp(x^2)
+dP.Lui2001.sslm <- function(x, C, k) 2*(x*exp(x^2))
+
+# parallellogram analysis model
+P.Lui2001.paralla <- function(x, C, k) x^2
+dP.Lui2001.paralla <- function(x, C, k) 2*x
+
+# hyperbolic cosine model
+P.Lui2001.hcm <- function(x, C, k) cosh(x)
+dP.Lui2001.hcm <- function(x, C, k) sinh(x)
+
+pick.Lui2001.fn <- function(fn.fold){
+    switch(fn.fold,
+           'alm' = P.Lui2001.alm,
+           'hcm' = P.Lui2001.hcm,
+           'sslm'= P.Lui2001.sslm,
+           'paralla'=P.Lui2001.paralla)
+}
+
+pick.Lui2001.dfn <- function(fn.fold){
+    switch(fn.fold,
+           'alm' = dP.Lui2001.alm,
+           'hcm' = dP.Lui2001.hcm,
+           'sslm'= dP.Lui2001.sslm,
+           'paralla'=dP.Lui2001.paralla)
+}
+
+P.Lui2001 <- function(par, Theta, ncat, fn, details = FALSE){
+    C <- ncat-1
+    nfact <- ncol(Theta)
+    as <- par[1:nfact]
+    d <- par[nfact+1]
+    rho <- exp(par[(nfact + 2):length(par)]) # keep positive
+    dT <- colSums(as * t(Theta)) + d
+    xi_rho <- numeric(C)
+    xi_td <- matrix(0, nrow(Theta), C)
+    for(i in 1:C){
+        xi_rho[i] <- fn(rho[i], C=C, k=i)
+        xi_td[,i] <- fn(dT, C=C, k=i)
+    }
+    denom <- t(xi_rho + t(xi_td))
+    Qs <- xi_td / denom
+    Ps <- t(xi_rho / t(denom))
+    pat <- Qs
+    ret <- matrix(0, nrow(Theta), ncat)
+    for(i in 1:ncat){
+        if(i > 1)
+            pat[,i-1] <- Ps[,i-1]
+        ret[,i] <- apply(pat, 1, prod)
+    }
+    if(details)
+        return(list(fn.rho=xi_rho, fn.dT=xi_td[,1],
+                    uP=ret, P=ret/rowSums(ret),
+                    NC=rowSums(ret), denom=denom, qs=Qs, ps=Ps))
+    ret <- ret / rowSums(ret)
+    ret
+}
+
+dLL.Lui2001 <- function (par, Theta, dat, ncat, fn, d.fn)
+{
+    details <- P.Lui2001(par=par, Theta=Theta, ncat=ncat, fn=fn, details=TRUE)
+    Ps <- details$P
+    uPs <- details$uP
+    NC <- details$NC
+    denom <- details$denom
+    nfact <- ncol(Theta)
+    C <- ncat - 1
+    as <- par[1:nfact]
+    d <- par[nfact+1]
+    rhos <- par[(2*nfact+1):length(par)]
+    erhos <- exp(rhos)
+    dT <- colSums(as * t(Theta)) + d
+    fn.dT <- details$fn.dT
+    fn.rho <- dfn.rho <- details$fn.rho
+    for(i in 1:C)
+        dfn.rho[i] <- d.fn(erhos[i], C=C, k=i)
+    dfn.rho <- dfn.rho * erhos
+    dfn.dT <- d.fn(dT)
+    dat_Ps <- dat / Ps
+    d.ad <- cbind(Theta, 1)
+    dd <- numeric(nfact * 2 + C)
+
+    # d.rhos
+    for(i in 1:C){
+        pick <- 1:i
+        dNC <- dfn.rho[i] * ( rowSums(0 - uPs[ ,pick,drop=FALSE] / denom[,i]) +
+                             rowSums(uPs[,-pick,drop=FALSE]/fn.rho[i]  - uPs[,-pick,drop=FALSE]/denom[,i]))
+        duPs <- cbind(dfn.rho[i] * (0 - uPs[,pick] / denom[,i]),
+                     dfn.rho[i] * ((uPs[,-pick,drop=FALSE]/fn.rho[i] - uPs[,-pick,drop=FALSE] / denom[,i])))
+        tmp <- 0
+        for(j in 1:ncat)
+            tmp <- tmp + dat_Ps[,j] * ((duPs[,j]*NC - dNC*uPs[,j])/NC^2)
+        dd[nfact*2 + i] <- sum(tmp)
+    }
+    duPs <- duPs2 <- matrix(0, nrow(Theta), ncat)
+    for(i in 1:(nfact+1)){
+        for(j in 1:ncat){
+            tmp <- dfn.dT * ((ncat - j)*uPs[,j]/fn.dT - rowSums(uPs[,j]/denom))
+            duPs[,j] <- d.ad[,i] * tmp
+        }
+        dNC <- rowSums(duPs)
+        tmp <- 0
+        for(j in 1:ncat)
+            tmp <- tmp + dat_Ps[,j] * ((duPs[,j]*NC - dNC*uPs[,j])/NC^2)
+        dd[i] <- sum(tmp)
+    }
+    dd
+}
+
+# probability trace line function. Must return a matrix with a trace line for each category
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'Luo2001', Theta = 'matrix'),
+    definition = function(x, Theta, itemexp = FALSE){
+        ret <- P.Lui2001(x@par, Theta=Theta, ncat=x@ncat, fn=x@fn)
+        ret
+    }
+)
+
+# complete-data derivative used in parameter estimation
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'Luo2001', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        grad <- rep(0, length(x@par))
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(any(x@est)){
+            # grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+            grad <- dLL.Lui2001(x@par, Theta=Theta, dat=x@dat,
+                        ncat=x@ncat, fn=x@fn, d.fn=x@dfn)
+            if(estHess){
+                hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                                      Theta=Theta, gradient=FALSE)
+            }
+        }
+        return(list(grad=grad, hess=hess)) #TODO replace with analytic derivatives
+    }
+)
+
+# derivative of the model wft to the Theta values (done numerically here)
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'Luo2001', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta) #replace with analytical derivatives
+    }
+)
+
+# derivative of the probability trace line function wrt Theta (done numerically here)
+setMethod(
+    f = "dP",
+    signature = signature(x = 'Luo2001', Theta = 'matrix'),
     definition = function(x, Theta){
         numDeriv_dP(x, Theta) #replace with analytical derivatives
     }

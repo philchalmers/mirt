@@ -439,7 +439,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
     delta <- delta[ ,estpars, drop=FALSE]
     tmp <- qr.Q(qr(delta), complete=TRUE)
     if((ncol(delta) + 1L) > ncol(tmp))
-        stop('M2() statistic cannot be calculated due to too few degrees of freedom',
+        stop('Statistic cannot be calculated (too few degrees of freedom)',
              call.=FALSE)
     deltac <- tmp[,(ncol(delta) + 1L):ncol(tmp), drop=FALSE]
     N <- nrow(extract.mirt(obj, 'data'))

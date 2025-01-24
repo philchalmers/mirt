@@ -25,7 +25,8 @@ Description: Analysis of discrete response data using
 	mixed effects designs are included for detecting differential item, bundle, 
 	and test functioning, and for modeling item and person covariates. 
 	Finally, latent class models such as the DINA, DINO, multidimensional latent class, 
-	mixture IRT models, and zero-inflated response models are supported.
+	mixture IRT models, and zero-inflated response models are supported, as well 
+	as a wide family of probabilistic unfolding models.
 VignetteBuilder: knitr
 Depends:
     stats,
