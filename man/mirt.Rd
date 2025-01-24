@@ -754,17 +754,31 @@ number of categories (using \eqn{k} for specific category instances).
     \eqn{z = 1,2,\ldots, C} (where \eqn{C} is the number of categories minus 1),
     and \eqn{M = 2C + 1}.
     }
-  \item{(g)hcm, (g)alm, (g)sslm, (g)paralla}{Following Luo (2001), this family of response models
+  \item{(g)hcm, (g)alm, (g)sslm, and (g)paralla}{Following Luo (2001), this family of response models
     can be characterized under the same ordinal response functioning structure, differentiating only in their
-    linking functions. Currently supported models in this family are:
+    linking functions (\eqn{\psi(x)}). For example, for a two-dimensional model the equation used is
+    \deqn{p_k =
+      \frac{\psi (\rho_k)}{\psi (\rho_k) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} }
+    which is expressed in slope-intercept form to accommodate multidimensionality.
+    The generalized versions of this family estimate the slope parameters, which allow each item
+    to differ in the steepness of the unfolding model functions; otherwise, slopes are fixed to the
+    value of 1. For ordered polytomous items the response function follows the Guttman-scaling logic
+    \deqn{P_1 = q_1\cdot q_2 \cdot q_3 \cdots q_k}
+    \deqn{P_2 = p_1\cdot q_2 \cdot q_3 \cdots q_k}
+    \deqn{P_3 = p_1\cdot p_2 \cdot q_3 \cdots q_k}
+    \deqn{\cdots}
+    \deqn{P_K = p_1\cdot p_2 \cdot p_3 \cdots p_k}
+    Note that for estimation purposes the \code{rho} parameters are expressed in log units so that they
+    remain positive during estimation. Hence, the ratio given the parameterization uses herein is
+    \deqn{p_k =
+      \frac{\psi (exp(\rho^*_k))}{\psi (exp(\rho^*_k))) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} }
+    where \eqn{\rho^*_k} is in natural log units. Currently supported models in this family are:
     \itemize{
-      \item the (generalized) hyperbolic cosine model (\eqn{cosh(x)}),
-      \item the (generalized) absolute logistic model (\eqn{exp(|x|)}),
-      \item the (generalized) simple squared logistic model (\eqn{exp(x^2)}), and
-      \item the (generalized) parallellogram analysis model (\eqn{x^2})), respectively.
+      \item the (generalized) hyperbolic cosine model (\eqn{\psi (x) = cosh(x)}),
+      \item the (generalized) absolute logistic model (\eqn{\psi (x) = exp(|x|)}),
+      \item the (generalized) simple squared logistic model (\eqn{\psi (x) = exp(x^2)}), and
+      \item the (generalized) parallellogram analysis model (\eqn{\psi (x) = x^2}), respectively.
     }
-    The generalized versions of the link functions include an estimated slope parameter, which allow each item
-    to differ in the steepness of the unfolding model functions.
      These are available for dichotomous or ordered polytomous response option items.
   }
   \item{spline}{Spline response models attempt to model the response curves uses non-linear and potentially

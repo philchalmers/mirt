@@ -3510,9 +3510,9 @@ dLL.Lui2001 <- function (par, Theta, dat, ncat, fn, d.fn)
         tmp <- 0
         for(j in 1:ncat)
             tmp <- tmp + dat_Ps[,j] * ((duPs[,j]*NC - dNC*uPs[,j])/NC^2)
-        dd[nfact*2 + i] <- sum(tmp)
+        dd[nfact + 1 + i] <- sum(tmp)
     }
-    duPs <- duPs2 <- matrix(0, nrow(Theta), ncat)
+    duPs <- matrix(0, nrow(Theta), ncat)
     for(i in 1:(nfact+1)){
         for(j in 1:ncat){
             tmp <- dfn.dT * ((ncat - j)*uPs[,j]/fn.dT - rowSums(uPs[,j]/denom))
