@@ -721,7 +721,7 @@ number of categories (using \eqn{k} for specific category instances).
     \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))}^c_1 *
     \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))}^c_2)}
 
-    where $c_1$ and $c_2$ are binary indicator variables reflecting whether the item should include
+    where \eqn{c_1} and \eqn{c_2} are binary indicator variables reflecting whether the item should include
     the select compensatory component (1) or not (0). Note that constraining the slopes to
     be equal across items will reduce the model to Embretson's (Whitely's) multicomponent model (1980).
   }

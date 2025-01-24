@@ -38,3 +38,32 @@ test_that('GGUM', {
 
 })
 
+test_that('unfolding', {
+    dat <- expand.table(LSAT6)
+
+    # ideal
+    mod <- mirt(dat, 1, 'ideal', verbose=FALSE)
+    expect_equal(-2466.925, logLik(mod), tolerance = .01)
+
+    # hcm
+    mod <- mirt(dat, 1, c(rep('2PL',4), 'hcm'), SE=TRUE, verbose=FALSE)
+    expect_equal(-2466.898, logLik(mod), tolerance = .01)
+    expect_equal(305.8971, extract.mirt(mod, 'condnum'), tolerance=.1)
+    mod <- mirt(dat, 1, c(rep('2PL',4), 'ghcm'), verbose=FALSE)
+    expect_equal(-2466.654, logLik(mod), tolerance = .01)
+
+    mod2a <- mirt(dat, 'F1 = 1-3
+                        F2 = 3-5', c(rep('2PL',4), 'hcm'), verbose=FALSE, SE=TRUE)
+    expect_equal(-2469.595, logLik(mod2a), tolerance = .01)
+    expect_equal(724.7384, extract.mirt(mod2a, 'condnum'), tolerance=.1)
+    mod2b <- mirt(dat, 2, c(rep('2PL',4), 'hcm'), verbose=FALSE)
+    expect_equal(-2465.09, logLik(mod2b), tolerance = .01)
+
+    mod <- mirt(Science, 1, c('hcm', rep('graded',3)), verbose=FALSE)
+    expect_equal(-1611.122, logLik(mod), tolerance = .01)
+    mod <- mirt(Science, 1, c(rep('graded',3), 'ghcm'), verbose=FALSE)
+    expect_equal(-1610.266, logLik(mod), tolerance = .01)
+
+
+})
+

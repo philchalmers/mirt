@@ -3487,7 +3487,7 @@ dLL.Lui2001 <- function (par, Theta, dat, ncat, fn, d.fn)
     C <- ncat - 1
     as <- par[1:nfact]
     d <- par[nfact+1]
-    rhos <- par[(2*nfact+1):length(par)]
+    rhos <- par[(nfact+1):length(par)]
     erhos <- exp(rhos)
     dT <- colSums(as * t(Theta)) + d
     fn.dT <- details$fn.dT
@@ -3498,7 +3498,7 @@ dLL.Lui2001 <- function (par, Theta, dat, ncat, fn, d.fn)
     dfn.dT <- d.fn(dT)
     dat_Ps <- dat / Ps
     d.ad <- cbind(Theta, 1)
-    dd <- numeric(nfact * 2 + C)
+    dd <- numeric(length(par))
 
     # d.rhos
     for(i in 1:C){
