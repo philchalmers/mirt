@@ -1,5 +1,11 @@
 # Changes in mirt 1.44
 
+- Added several `itemtype` inputs to specify a family of unfolding models 
+  for dichotomous and polytomous data. These currently include the 
+  (generalized) hyperbolic cosine model, (generalized) absolute logistic model,
+  (generalized) simple squared logistic model, and the 
+  (generalized) parallellogram analysis model
+
 - Fixed `M2()` computations with large amounts of missing data, particularly
   prevalent with the C2 statistic (reported by Hynek Cigler)
 
