@@ -38,8 +38,8 @@ coef(mod.rho, simplify=TRUE, IRTpars=TRUE)  # discrimination-difficulty-rho
 plot(mod.rho)
 plot(mod.rho, type = 'trace')
 
-# without estimating rho, and fixing to rho^2 = 1  (hence, log_rho = -exp(1) =
-  -2.718282 in order to obtain (exp(exp(log_rho))) = 1)
+# without estimating rho, and fixing to rho^2 = 1  (hence,
+#   log_rho = -exp(1) = -2.718282 in order to obtain (exp(exp(log_rho))) = 1)
 syntax <- "Theta = 1-8
            FIXED = (1-8, log_rho1)
            START = (1-8, log_rho1, -2.71828)"
