@@ -23,9 +23,10 @@
 #'
 #'   If the internal class of the object is specified instead, the inputs can
 #'   be \code{'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'},
-#'   or \code{'lca'}, for dichotomous, graded, generalized partial credit, sequential,
+#'   \code{'lca'}, and all the models under the Luo (2001) family (see \code{\link{mirt}}),
+#'   for dichotomous, graded, generalized partial credit, sequential,
 #'   nominal, nested logit, partially compensatory,
-#'   generalized graded unfolding model, and latent class analysis model.
+#'   generalized graded unfolding model, latent class analysis model, and ordered unfolding models.
 #'   Note that for the gpcm, nominal, and nested logit models there should
 #'   be as many parameters as desired categories, however to parametrized them for meaningful
 #'   interpretation the first category intercept should
@@ -45,6 +46,9 @@
 #'   for dichotomous items. Must be either a scalar value that will affect all of
 #'   the dichotomous items, or a vector with as many values as to be simulated items
 #' @param upper same as \code{guess}, but for upper bound parameters
+#' @param rho a matrix of \code{rho} values to be used for the Lui (2001) family of
+#'   ordered unfolding models (see \code{\link{mirt}}) to control the latitude of
+#'   acceptance. All values must be positive
 #' @param gpcm_mats a list of matrices specifying the scoring scheme for generalized partial
 #'   credit models (see \code{\link{mirt}} for details)
 #' @param sigma a covariance matrix of the underlying distribution. Default is
@@ -313,6 +317,18 @@
 #' # mod <- mirt(dat, 1, 'ggum')
 #' # coef(mod)
 #'
+#' ### 10 items with the hyperbolic cosine model with differing category lengths
+#' a <- matrix(1, 10)
+#' d <- rnorm(10)
+#' rho <- matrix(1:2, nrow=10, ncol=2, byrow=TRUE)
+#' rho[1:2,2] <- NA   # first two items have K=2 categories
+#'
+#' dat <- simdata(a, d, 1000, 'hcm', rho=rho)
+#' itemstats(dat)
+#' # mod <- mirt(dat, 1, 'hcm')
+#' # list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))
+#'
+#'
 #' ######
 #' # prob.list example
 #'
@@ -351,7 +367,7 @@
 #'
 #' }
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-	upper = 1, nominal = NULL, t = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
+	upper = 1, rho = NULL, nominal = NULL, t = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
 	model = NULL, equal.K = TRUE, which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 {
     if(!is.null(prob.list)){
@@ -499,7 +515,17 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
             } else {
                 par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
             }
+	        if(itemtype[i] %in% Luo2001Set()){
+	            stopifnot(is.matrix(rho))
+	            K[i] <- length(na.omit(rho[i,])) + 1L
+	            par <- na.omit(c(a[i, ],d[i,], log(rho[i,])))
+	            if(substr(itemtype[i], 1, 1) == 'g')
+	                itemtype[i] <- sub('g', '', itemtype[i])
+	            link_fn <- pick.Lui2001.fn(itemtype[i])
+	            itemtype[i] <- 'Luo2001'
+	        }
             obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+            if(itemtype[i] == 'Luo2001') obj@fn <- link_fn
             if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
             if(use_gpcm_mats[i]) obj@mat <- TRUE
     	    if(itemtype[i] == 'lca') obj@item.Q <- item.Q

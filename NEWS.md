@@ -1,5 +1,7 @@
 # Changes in mirt 1.44
 
+- `simdata()` gains support for Luo (2001) family of generating models
+
 - Added several `itemtype` inputs to specify a family of unfolding models 
   for dichotomous and polytomous data. These currently include the 
   (generalized) hyperbolic cosine model, (generalized) absolute logistic model,

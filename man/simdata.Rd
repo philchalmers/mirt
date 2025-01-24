@@ -13,6 +13,7 @@ simdata(
   mu = NULL,
   guess = 0,
   upper = 1,
+  rho = NULL,
   nominal = NULL,
   t = NULL,
   Theta = NULL,
@@ -47,9 +48,10 @@ be used}
 
   If the internal class of the object is specified instead, the inputs can
   be \code{'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'},
-  or \code{'lca'}, for dichotomous, graded, generalized partial credit, sequential,
+  \code{'lca'}, and all the models under the Luo (2001) family (see \code{\link{mirt}}),
+  for dichotomous, graded, generalized partial credit, sequential,
   nominal, nested logit, partially compensatory,
-  generalized graded unfolding model, and latent class analysis model.
+  generalized graded unfolding model, latent class analysis model, and ordered unfolding models.
   Note that for the gpcm, nominal, and nested logit models there should
   be as many parameters as desired categories, however to parametrized them for meaningful
   interpretation the first category intercept should
@@ -69,6 +71,10 @@ for dichotomous items. Must be either a scalar value that will affect all of
 the dichotomous items, or a vector with as many values as to be simulated items}
 
 \item{upper}{same as \code{guess}, but for upper bound parameters}
+
+\item{rho}{a matrix of \code{rho} values to be used for the Lui (2001) family of
+ordered unfolding models (see \code{\link{mirt}}) to control the latitude of
+acceptance. All values must be positive}
 
 \item{nominal}{a matrix of specific item category slopes for nominal models.
 Should be the dimensions as the intercept specification with one less column, with \code{NA}
@@ -350,6 +356,18 @@ dat <- simdata(a, b, 1000, 'ggum', t=t)
 apply(dat, 2, table)
 # mod <- mirt(dat, 1, 'ggum')
 # coef(mod)
+
+### 10 items with the hyperbolic cosine model with differing category lengths
+a <- matrix(1, 10)
+d <- rnorm(10)
+rho <- matrix(1:2, nrow=10, ncol=2, byrow=TRUE)
+rho[1:2,2] <- NA   # first two items have K=2 categories
+
+dat <- simdata(a, d, 1000, 'hcm', rho=rho)
+itemstats(dat)
+# mod <- mirt(dat, 1, 'hcm')
+# list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))
+
 
 ######
 # prob.list example

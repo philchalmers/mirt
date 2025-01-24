@@ -55,7 +55,7 @@ test_that('unfolding', {
     mod2a <- mirt(dat, 'F1 = 1-3
                         F2 = 3-5', c(rep('2PL',4), 'hcm'), verbose=FALSE, SE=TRUE)
     expect_equal(-2469.595, logLik(mod2a), tolerance = .01)
-    expect_equal(724.7384, extract.mirt(mod2a, 'condnum'), tolerance=.1)
+    expect_equal(618.4735, extract.mirt(mod2a, 'condnum'), tolerance=.1)
     mod2b <- mirt(dat, 2, c(rep('2PL',4), 'hcm'), verbose=FALSE)
     expect_equal(-2465.09, logLik(mod2b), tolerance = .01)
 
@@ -64,6 +64,15 @@ test_that('unfolding', {
     mod <- mirt(Science, 1, c(rep('graded',3), 'ghcm'), verbose=FALSE)
     expect_equal(-1610.266, logLik(mod), tolerance = .01)
 
+    # generate data
+    set.seed(42)
+    a <- matrix(1,10)
+    d <- rnorm(10)
+    rho <- matrix(1:2, nrow=10, ncol=2, byrow=TRUE)
+    rho[1:2,2] <- NA   # first two items have K=2 categories
+    dat <- simdata(a, d, 1000, 'hcm', rho=rho)
+    mod <- mirt(dat, 1, 'hcm', verbose=FALSE)
+    expect_equal(-9116.743, logLik(mod), tolerance=.01)
 
 })
 
