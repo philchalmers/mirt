@@ -1900,6 +1900,26 @@ mirt2traditional <- function(x, vcov, nfact){
         par <- c(par1, as, ds)
         x@est <- c(x@est[1:4], rep(TRUE, (ncat-1)*2))
         x@SEpar <- c(x@SEpar[1], as.numeric(rep(NA, (ncat-1)*2 + 3)))
+    } else if(cls == 'Luo2001'){
+        fns <- vector('list', nfact + ncat)
+        fns[[nfact+1L]] <- function(par, index, opar){
+            if(index == (nfact + 1L)){
+                opar[c(which.a, nfact + 1L)] <- par
+                ret <- -opar[nfact + 1L]/opar[which.a]
+            }
+            ret
+        }
+        fns[[(nfact + 2L):length(par)]] <- function(par, index, opar){
+            if(index > (nfact + 1L))
+                ret <- exp(par)
+            ret
+        }
+        delta_index <- c(as.list(rep(NA, nfact)),
+                         list(c(which.a, nfact + 1L)),
+                         as.list((nfact + 2L):length(par)))
+        par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
+        par[(nfact + 2L):length(par)] <- exp(par[(nfact + 2L):length(par)])
+        names(par) <- c(a.nms, 'b', paste0('rho', ncat-1))
     }
     x@par <- par
     names(x@est) <- names(par)

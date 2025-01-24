@@ -760,9 +760,11 @@ number of categories (using \eqn{k} for specific category instances).
     \deqn{p_k =
       \frac{\psi (\rho_k)}{\psi (\rho_k) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} }
     which is expressed in slope-intercept form to accommodate multidimensionality.
-    The "generalized" versions of this family estimate the slope parameters, which allow each item
+    The "generalized" versions of this family estimate the slope and \code{rho}
+    parameters, which allow each item
     to differ in the steepness of the unfolding model functions; otherwise, slopes are fixed to the
-    value of 1. For ordered polytomous items the response function follows the Guttman-scaling logic
+    value of 1, though the \code{rho} parameters must be set to 0 manually.
+    For ordered polytomous items the response function follows the Guttman-scaling logic
     \deqn{P_1 = q_1\cdot q_2 \cdot q_3 \cdots q_k}
     \deqn{P_2 = p_1\cdot q_2 \cdot q_3 \cdots q_k}
     \deqn{P_3 = p_1\cdot p_2 \cdot q_3 \cdots q_k}

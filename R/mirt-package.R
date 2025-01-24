@@ -324,3 +324,69 @@ NULL
 #' itemstats(dat, group=group)
 #'
 NULL
+
+#' Description of Attitude data
+#'
+#' Table of counts extracted from Andrich (1988). Data the
+#' response patterns observed for an eight item survey.
+#'
+#' The items in this survey were:
+#' \enumerate{
+#'   \item Capital punishment is one of the most hideous practices of our time.
+#'   \item The state cannot teach the sacredness of human life by destroying it.
+#'   \item Capital punishment is not an effective deterrent to crime.
+#'   \item I don't believe in capital punishment but I am not sure it
+#'     isn't necessary.
+#'   \item I think capital punishment is necessary but I wish it were not.
+#'   \item Until we find a more civilized way to prevent crime we must have capital
+#'    punishment.
+#'   \item Capital punishment is justified because it does act as a
+#'    deterrent to crime.
+#'   \item Capital punishment gives the criminal what he deserves.
+#' }
+#'
+#'
+#' @name Attitude
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#'
+#' Andrich, D. (1988). The Application of an Unfolding Model of the PIRT
+#' Type to the Measurement of Attitude. \emph{Applied Psychological Measurement, 12}, 33-51.
+#'
+#' @keywords data
+#' @examples
+#'
+#' head(Attitude)
+#' df <- expand.table(Attitude)
+#' itemstats(df)
+#'
+#' # estimate SSLM with estimated " latitude of acceptance" (rho)
+#' mod.rho <- mirt(df, 1, itemtype = 'sslm')
+#' coef(mod.rho)
+#' coef(mod.rho, simplify=TRUE)  # slope-intercept-log_rho
+#' coef(mod.rho, simplify=TRUE, IRTpars=TRUE)  # discrimination-difficulty-rho
+#' plot(mod.rho)
+#' plot(mod.rho, type = 'trace')
+#'
+#' # without estimating rho, and fixing to rho^2 = 1  (hence, log_rho = -exp(1) =
+#'   -2.718282 in order to obtain (exp(exp(log_rho))) = 1)
+#' syntax <- "Theta = 1-8
+#'            FIXED = (1-8, log_rho1)
+#'            START = (1-8, log_rho1, -2.71828)"
+#' mod <- mirt(df, syntax, itemtype = 'sslm')  # model found in Andrich (1988)
+#' coef(mod)
+#' coef(mod, simplify=TRUE)  # slope-intercept-log_rho
+#' coef(mod, simplify=TRUE, IRTpars=TRUE)  # discrimination-difficulty-rho
+#' plot(mod)
+#' plot(mod, type = 'trace') # notice that all curves have a fixed height of .5
+#'
+#' # goodness of fit (less constrained model fits better)
+#' anova(mod, mod.rho) # original model fits much worse
+#' M2(mod)
+#' M2(mod.rho)
+#' itemfit(mod, p.adjust='fdr')
+#' itemfit(mod.rho, p.adjust='fdr')
+#'
+#'
+NULL

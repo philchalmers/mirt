@@ -1,5 +1,9 @@
 # Changes in mirt 1.44
 
+- Added `Attitude` dataset from Andrich (1988) publication to demonstrate
+  constrained hyperbolic cosine model (HCM) and the same model with the 
+  estimated latitude of acceptance parameters
+
 - `simdata()` gains support for Luo (2001) family of generating models
 
 - Added several `itemtype` inputs to specify a family of unfolding models 
