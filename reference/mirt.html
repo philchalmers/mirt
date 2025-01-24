@@ -23,7 +23,7 @@ be specified independently via the itemtype argument."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.43.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.43.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -940,9 +940,11 @@ number of categories (using \(k\) for specific category instances).</p>
     $$p_k =
       \frac{\psi (\rho_k)}{\psi (\rho_k) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} $$
     which is expressed in slope-intercept form to accommodate multidimensionality.
-    The "generalized" versions of this family estimate the slope parameters, which allow each item
+    The "generalized" versions of this family estimate the slope and <code>rho</code>
+    parameters, which allow each item
     to differ in the steepness of the unfolding model functions; otherwise, slopes are fixed to the
-    value of 1. For ordered polytomous items the response function follows the Guttman-scaling logic
+    value of 1, though the <code>rho</code> parameters must be set to 0 manually.
+    For ordered polytomous items the response function follows the Guttman-scaling logic
     $$P_1 = q_1\cdot q_2 \cdot q_3 \cdots q_k$$
     $$P_2 = p_1\cdot q_2 \cdot q_3 \cdots q_k$$
     $$P_3 = p_1\cdot p_2 \cdot q_3 \cdots q_k$$
@@ -1124,7 +1126,7 @@ IL: Scientific Software International.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.43.5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.43.6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
