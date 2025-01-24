@@ -71,7 +71,60 @@ Type to the Measurement of Attitude. <em>Applied Psychological Measurement, 12</
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Attitude</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'Attitude' not found</span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">Attitude</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'Attitude' not found</span>
+<span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in as.vector(x, mode):</span> cannot coerce type 'closure' to vector of type 'any'</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># estimate SSLM with estimated " latitude of acceptance" (rho)</span></span></span>
+<span class="r-in"><span><span class="va">mod.rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">df</span>, <span class="fl">1</span>, itemtype <span class="op">=</span> <span class="st">'sslm'</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in if (length(unique(colnames(data))) != ncol(data)) stop("items must have unique names in data input",     call. = FALSE):</span> argument is of length zero</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod.rho</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'mod.rho' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod.rho</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># slope-intercept-log_rho</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'mod.rho' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod.rho</span>, simplify<span class="op">=</span><span class="cn">TRUE</span>, IRTpars<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># discrimination-difficulty-rho</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'mod.rho' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod.rho</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'mod.rho' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod.rho</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'mod.rho' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># without estimating rho, and fixing to rho^2 = 1  (hence,</span></span></span>
+<span class="r-in"><span><span class="co">#   log_rho = -exp(1) = -2.718282 in order to obtain (exp(exp(log_rho))) = 1)</span></span></span>
+<span class="r-in"><span><span class="va">syntax</span> <span class="op">&lt;-</span> <span class="st">"Theta = 1-8</span></span></span>
+<span class="r-in"><span><span class="st">           FIXED = (1-8, log_rho1)</span></span></span>
+<span class="r-in"><span><span class="st">           START = (1-8, log_rho1, -2.71828)"</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">syntax</span>, itemtype <span class="op">=</span> <span class="st">'sslm'</span><span class="op">)</span>  <span class="co"># model found in Andrich (1988)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in if (length(unique(colnames(data))) != ncol(data)) stop("items must have unique names in data input",     call. = FALSE):</span> argument is of length zero</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># slope-intercept-log_rho</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span>, IRTpars<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># discrimination-difficulty-rho</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span> <span class="co"># notice that all curves have a fixed height of .5</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'mod' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># goodness of fit (less constrained model fits better)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod.rho</span><span class="op">)</span> <span class="co"># original model fits much worse</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'anova': object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">mod.rho</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod.rho' not found</span>
+<span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod</span>, p.adjust<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod' not found</span>
+<span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod.rho</span>, p.adjust<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'mod.rho' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
