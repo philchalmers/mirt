@@ -195,7 +195,10 @@ parameter (<code>COV_11</code>) to 1.5:</p>
   for the beta distribution after applying the
   function <code><a href="https://rdrr.io/r/stats/Logistic.html" class="external-link">plogis</a></code> to the input value (note, this is specifically for applying a beta
   prior to the lower-bound parameters in 3/4PL models)</p></dd>
-
+. Note that the beta prior
+  specification focuses on the mode of the beta distribution centered around
+  the value \frac{\alpha}{(\alpha + \beta)} rather than the mean; for the
+  mean of the beta distribution specify alpha + 1 and beta + 1 instead
 
 <dt>LBOUND</dt>
 <dd><p>A bracketed, comma separate list specifying lower bounds for estimated
