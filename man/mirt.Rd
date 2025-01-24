@@ -1465,6 +1465,9 @@ Multiple Group Analysis. \emph{Psychometrika, 81}, 434-460.
 Fischer, G. H. (1983). Logistic latent trait models with linear constraints.
 \emph{Psychometrika, 48}, 3-26.
 
+Hoijtink H. (1990). PARELLA: Measurement of latent traits by proximity items.
+The Netherlands: University of Groningen.
+
 Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
 
 Lucke, J. F. (2015). Unipolar item response models. In S. P. Reise & D. A. Revicki
