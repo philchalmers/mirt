@@ -30,6 +30,8 @@ head(Attitude)
 df <- expand.table(Attitude)
 itemstats(df)
 
+\dontrun{
+
 # estimate SSLM with estimated " latitude of acceptance" (rho)
 mod.rho <- mirt(df, 1, itemtype = 'sslm')
 coef(mod.rho)
@@ -56,6 +58,8 @@ M2(mod)
 M2(mod.rho)
 itemfit(mod, p.adjust='fdr')
 itemfit(mod.rho, p.adjust='fdr')
+
+}
 
 
 }
