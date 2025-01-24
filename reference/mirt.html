@@ -935,12 +935,12 @@ number of categories (using \(k\) for specific category instances).</p>
 
   <dt>(g)hcm, (g)alm, (g)sslm, and (g)paralla</dt>
 <dd><p>Following Luo (2001), this family of response models
-    can be characterized under the same ordinal response functioning structure, differentiating only in their
+    can be characterized under the same ordinal response functioning structure, differing only in their
     linking functions (\(\psi(x)\)). For example, for a two-dimensional model the equation used is
     $$p_k =
       \frac{\psi (\rho_k)}{\psi (\rho_k) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} $$
     which is expressed in slope-intercept form to accommodate multidimensionality.
-    The generalized versions of this family estimate the slope parameters, which allow each item
+    The "generalized" versions of this family estimate the slope parameters, which allow each item
     to differ in the steepness of the unfolding model functions; otherwise, slopes are fixed to the
     value of 1. For ordered polytomous items the response function follows the Guttman-scaling logic
     $$P_1 = q_1\cdot q_2 \cdot q_3 \cdots q_k$$
@@ -949,14 +949,14 @@ number of categories (using \(k\) for specific category instances).</p>
     $$\cdots$$
     $$P_K = p_1\cdot p_2 \cdot p_3 \cdots p_k$$
     Note that for estimation purposes the <code>rho</code> parameters are expressed in log units so that they
-    remain positive during estimation. Hence, the ratio given the parameterization uses herein is
+    remain positive during estimation. Hence, the parameterization used herein is
     $$p_k =
       \frac{\psi (exp(\rho^*_k))}{\psi (exp(\rho^*_k))) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} $$
-    where \(\rho^*_k\) is in natural log units. Currently supported models in this family are:</p><ul><li><p>the (generalized) hyperbolic cosine model (\(\psi (x) = cosh(x)\)),</p></li>
-<li><p>the (generalized) absolute logistic model (\(\psi (x) = exp(|x|)\)),</p></li>
-<li><p>the (generalized) simple squared logistic model (\(\psi (x) = exp(x^2)\)), and</p></li>
-<li><p>the (generalized) parallellogram analysis model (\(\psi (x) = x^2\)), respectively.</p></li>
-</ul><p>These are available for dichotomous or ordered polytomous response option items.</p></dd>
+    where \(\rho^*_k\) is in natural log units. Currently supported models in this family are the:</p><ul><li><p>(generalized) hyperbolic cosine model (\(\psi (x) = cosh(x)\)),</p></li>
+<li><p>(generalized) absolute logistic model (\(\psi (x) = exp(|x|)\)),</p></li>
+<li><p>(generalized) simple squared logistic model (\(\psi (x) = exp(x^2)\)), and</p></li>
+<li><p>(generalized) parallellogram analysis model (\(\psi (x) = x^2\)), respectively.</p></li>
+</ul><p>all of which are available for dichotomous and ordered polytomous response option items.</p></dd>
 
   <dt>spline</dt>
 <dd><p>Spline response models attempt to model the response curves uses non-linear and potentially
