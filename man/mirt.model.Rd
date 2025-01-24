@@ -145,7 +145,10 @@ parameter (\code{COV_11}) to 1.5:
   \code{(items, beta, alpha, beta)} for beta, and \code{(items, expbeta, alpha, beta)}
   for the beta distribution after applying the
   function \code{\link{plogis}} to the input value (note, this is specifically for applying a beta
-  prior to the lower-bound parameters in 3/4PL models)}
+  prior to the lower-bound parameters in 3/4PL models)}. Note that the beta prior
+  specification focuses on the mode of the beta distribution centered around
+  the value \eqn{\frac{\alpha}{(\alpha + \beta)}} rather than the mean; for the
+  mean of the beta distribution specify \code{alpha + 1} and \code{beta + 1} instead
 
 \item{LBOUND}{A bracketed, comma separate list specifying lower bounds for estimated
   parameters (used in optimizers such as \code{L-BFGS-B} and \code{nlminb}).
