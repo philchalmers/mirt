@@ -7,12 +7,13 @@
 DeltaMethod(fn, par, acov, ...)
 }
 \arguments{
-\item{fn}{a function or list of functions specifying the
-transformations for each parameter. Must be of the form
-\code{fn(par, ...)} and return a single value}
+\item{fn}{a function specifying the type of
+transformation to make for each new parameter of interest.
+Must be of the form \code{fn(par, ...)} or more simply
+\code{fn(par)}. Must return a numeric vector with one element}
 
 \item{par}{numerical vector passed to \code{fn(par)}
-(typically MLEs)}
+(typically vector of MLEs)}
 
 \item{acov}{numeric matrix for the ACOV of the MLEs}
 
@@ -20,12 +21,12 @@ transformations for each parameter. Must be of the form
 }
 \value{
 returns a list of the transformed parameters, ACOV,
-  and SEs. If fn was a list return will be a list of lists
+  and SEs
 }
 \description{
 Delta method using numerical derivatives
 (via \code{\link{numerical_deriv}} for the provided function.
-Convenient when function is easier to automate grammatically
+Convenient when function is easier to automate programmatically
 rather than using explicit formula or math expressions. Can
 also be useful for checking analytic results.
 }
@@ -40,7 +41,7 @@ toy.lm <- lm(y ~ x + g)
 estmean <- coef(toy.lm)
 estvar <- summary(toy.lm)$cov.unscaled * summary(toy.lm)$sigma^2
 
-## Estimate of (1 / (alphahat + betahat))
+# Estimate of (1 / (b0 + b1)) and (1 / (b0 + b1 + b2))
 1 / (estmean[1] + estmean[2])
 1 / (estmean[1] + estmean[2] + estmean[3])
 
@@ -50,17 +51,13 @@ estvar <- summary(toy.lm)$cov.unscaled * summary(toy.lm)$sigma^2
 
 # with DeltaMethod
 fn <- function(par) 1 / sum(par[1:2])
+fn2 <- function(par) 1 / sum(par[1:3])
 DeltaMethod(fn, estmean, estvar)$se
+DeltaMethod(fn2, estmean, estvar)$se
 
-# index argument for more flexibility
+# index argument for easier flexibility
 fn <- function(par, index) 1 / sum(par[index])
 DeltaMethod(fn, estmean, estvar, index=1:2)$se
 DeltaMethod(fn, estmean, estvar, index=1:3)$se
-
-# as list of functions
-fn1 <- function(par) 1 / sum(par[1:2])
-fn2 <- function(par) 1 / sum(par[1:3])
-out <- DeltaMethod(list(fn1, fn2), estmean, estvar)
-c(out[[1]]$se, out[[2]]$se)
 
 }
