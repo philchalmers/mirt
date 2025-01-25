@@ -2,14 +2,16 @@
 #'
 #' Delta method using numerical derivatives
 #' (via \code{\link{numerical_deriv}} for the provided function.
-#' Convenient when function is easier to automatic grammatically
-#' rather than using an explicit formula or math expression, though
-#' is also useful for checking results.
+#' Convenient when function is easier to automate grammatically
+#' rather than using explicit formula or math expressions. Can
+#' also be useful for checking analytic results.
 #'
-#' @param fn a function or list of functions. Must be of the form
-#'   \code{fn(par, ...)}
-#' @param par numerical vector (typically MLEs)
-#' @param acov numeric matrix of the MLE ACO
+#' @param fn a function or list of functions specifying the
+#'   transformations for each parameter. Must be of the form
+#'   \code{fn(par, ...)} and return a single value
+#' @param par numerical vector passed to \code{fn(par)}
+#'   (typically MLEs)
+#' @param acov numeric matrix for the ACOV of the MLEs
 #' @param ... additional arguments passed to fn
 #'
 #' @export
@@ -52,6 +54,7 @@
 #'
 DeltaMethod <- function(fn, par, acov, ...){
     if(!is.list(fn)) fn <- list(fn)
+    stopifnot(length(par) == ncol(acov))
     ret <- lapply(1:length(fn), function(i, par){
         vals <- unname(fn[[i]](par, ...))
         dfn <- matrix(numerical_deriv(par, fn[[i]], ...), 1)

@@ -7,12 +7,14 @@
 DeltaMethod(fn, par, acov, ...)
 }
 \arguments{
-\item{fn}{a function or list of functions. Must be of the form
-\code{fn(par, ...)}}
+\item{fn}{a function or list of functions specifying the
+transformations for each parameter. Must be of the form
+\code{fn(par, ...)} and return a single value}
 
-\item{par}{numerical vector (typically MLEs)}
+\item{par}{numerical vector passed to \code{fn(par)}
+(typically MLEs)}
 
-\item{acov}{numeric matrix of the MLE ACO}
+\item{acov}{numeric matrix for the ACOV of the MLEs}
 
 \item{...}{additional arguments passed to fn}
 }
@@ -23,9 +25,9 @@ returns a list of the transformed parameters, ACOV,
 \description{
 Delta method using numerical derivatives
 (via \code{\link{numerical_deriv}} for the provided function.
-Convenient when function is easier to automatic grammatically
-rather than using an explicit formula or math expression, though
-is also useful for checking results.
+Convenient when function is easier to automate grammatically
+rather than using explicit formula or math expressions. Can
+also be useful for checking analytic results.
 }
 \examples{
 
