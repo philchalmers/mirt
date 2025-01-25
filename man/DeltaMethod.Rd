@@ -9,8 +9,8 @@ DeltaMethod(fn, par, acov, ...)
 \arguments{
 \item{fn}{a function specifying the type of
 transformation to make for each new parameter of interest.
-Must be of the form \code{fn(par, ...)} or more simply
-\code{fn(par)}. Must return a numeric vector with one element}
+Must be of the form \code{fn(par, ...)}, or more simply
+\code{fn(par)}, and return a numeric vector with one element}
 
 \item{par}{numerical vector passed to \code{fn(par)}
 (typically vector of MLEs)}
@@ -25,9 +25,10 @@ returns a list of the transformed parameters, ACOV,
 }
 \description{
 Delta method using numerical derivatives
-(via \code{\link{numerical_deriv}} for the provided function.
-Convenient when function is easier to automate programmatically
-rather than using explicit formula or math expressions. Can
+(via \code{\link{numerical_deriv}}) for the provided function.
+Convenient when target transformation function is
+easier to automate programmatically
+instead of using explicit formula or math expressions. Can
 also be useful for checking analytic results.
 }
 \examples{
@@ -39,7 +40,7 @@ g <- rep(0:1, each=50)
 y <- rnorm(100, 4*x, 5)
 toy.lm <- lm(y ~ x + g)
 estmean <- coef(toy.lm)
-estvar <- summary(toy.lm)$cov.unscaled * summary(toy.lm)$sigma^2
+estvar <- vcov(toy.lm)
 
 # Estimate of (1 / (b0 + b1)) and (1 / (b0 + b1 + b2))
 1 / (estmean[1] + estmean[2])
