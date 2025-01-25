@@ -18,6 +18,9 @@
 - Standardized factor loadings for the multidimensional nominal response model
   now report consistent values regardless of the category ordering
 
+- Exported `DeltaMethod()` function for numerical version of delta method. Used 
+  internally, though others may find this helpful
+
 # Changes in mirt 1.43
 
 - `M2()` family no longer requires row-wise removal of missing data to behave
