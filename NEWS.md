@@ -5,7 +5,8 @@
   estimated latitude of acceptance parameters
 
 - Added several `itemtype` inputs to specify a family of unfolding models 
-  for dichotomous and polytomous data. These currently include the 
+  for dichotomous and polytomous data. These currently include unidimensional 
+  and multidimensional versions of the 
   (generalized) hyperbolic cosine model, (generalized) absolute logistic model,
   (generalized) simple squared logistic model, and the 
   (generalized) parallellogram analysis model. `simdata()` also gained 
