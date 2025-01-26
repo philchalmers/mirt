@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.43.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.43.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
 <li><p>Fixed <code><a href="../reference/M2.html">M2()</a></code> computations with large amounts of missing data, particularly prevalent with the C2 statistic (reported by Hynek Cigler)</p></li>
 <li><p>Standardized factor loadings for the multidimensional nominal response model now report consistent values regardless of the category ordering</p></li>
 <li><p>Exported <code><a href="../reference/DeltaMethod.html">DeltaMethod()</a></code> function for numerical version of delta method. Used internally, though others may find this helpful</p></li>
+<li><p><code>coef(..., IRTpars=TRUE)</code> reported constant SE term when converting Rasch models as bk = -dk were not correctly tracked</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.43" id="changes-in-mirt-143">Changes in mirt 1.43<a class="anchor" aria-label="anchor" href="#changes-in-mirt-143"></a></h2><p class="text-muted">CRAN release: 2024-11-14</p>
