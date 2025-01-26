@@ -20,6 +20,9 @@
 
 - Exported `DeltaMethod()` function for numerical version of delta method. Used 
   internally, though others may find this helpful
+  
+- `coef(..., IRTpars=TRUE)` reported constant SE term when converting Rasch 
+  models as bk = -dk were not correctly tracked
 
 # Changes in mirt 1.43
 

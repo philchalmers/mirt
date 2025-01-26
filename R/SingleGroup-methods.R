@@ -1706,7 +1706,7 @@ mirt2traditional <- function(x, vcov, nfact){
         ncat <- x@ncat
     if(cls == 'dich'){
         fns <- vector('list', nfact + 3L)
-        fns[[nfact+1L]] <- function(par, index, opar) -opar[2]/par[1]
+        fns[[nfact+1L]] <- function(par, index, opar) -par[2]/par[1]
         fns[[nfact+2L]] <- function(par, index, opar) plogis(par)
         fns[[nfact+3L]] <- function(par, index, opar) plogis(par)
         delta_index <- c(as.list(rep(NA, nfact)),
