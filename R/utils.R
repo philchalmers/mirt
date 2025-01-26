@@ -2897,8 +2897,10 @@ subset_vcov <- function(obj, vcov){
     nms <- colnames(vcov)
     splt <- strsplit(nms, "\\.")
     splt <- lapply(splt, function(x) as.integer(x[-1L]))
-    pick <- sapply(splt, \(ind) ind %in% obj@parnum)
-    vcov[pick, pick, drop=FALSE]
+    pick <- sapply(splt, \(ind) any(ind %in% obj@parnum))
+    ret <- matrix(0, length(obj@par), length(obj@par))
+    ret[obj@est, obj@est] <- vcov[pick, pick, drop=FALSE]
+    ret
 }
 
 makeSymMat <- function(mat){
