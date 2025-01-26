@@ -2892,6 +2892,15 @@ is.latent_regression <- function(mod){
     !is.null(mod@Data$covdata)
 }
 
+# subset of vcov for delta method
+subset_vcov <- function(obj, vcov){
+    nms <- colnames(vcov)
+    splt <- strsplit(nms, "\\.")
+    splt <- lapply(splt, function(x) as.integer(x[-1L]))
+    pick <- sapply(splt, \(ind) ind %in% obj@parnum)
+    vcov[pick, pick, drop=FALSE]
+}
+
 makeSymMat <- function(mat){
     if(ncol(mat) > 1L){
         mat[is.na(mat)] <- 0
