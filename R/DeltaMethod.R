@@ -55,7 +55,7 @@ DeltaMethod <- function(fn, par, acov, ...){
     vals <- unname(fn(par, ...))
     dfn <- matrix(numerical_deriv(par, fn, ...), 1)
     acov_vals <- dfn %*% acov %*% t(dfn)
-    SEs <- sqrt(acov_vals)
-    ret <- list(fn_par=vals, acov=acov_vals, se=sqrt(diag(acov_vals)))
+    ret <- list(fn_par=vals, acov=acov_vals,
+                se=sqrt(diag(acov_vals)))
     ret
 }
