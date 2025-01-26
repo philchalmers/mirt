@@ -1345,6 +1345,26 @@
 #' itemfit(dav) # assume normal prior
 #' itemfit(dav, use_dentype_estimate=TRUE) # use Davidian estimated prior shape
 #'
+#' ############
+#' # Unfolding models
+#'
+#' # polytomous hyperbolic cosine model with
+#' #  estimated latitude of acceptance (rho parameters)
+#' mod <- mirt(Science, model=1, itemtype = 'hcm')
+#' coef(mod, simplify=TRUE)$items
+#' coef(mod, simplify=TRUE, IRTpars=TRUE)$items
+#'
+#' plot(mod)
+#' plot(mod, type = 'trace')
+#' plot(mod, type = 'itemscore')
+#'
+#' # EAP estimates
+#' fs <- fscores(mod)
+#' head(fs)
+#'
+#' itemfit(mod)
+#' M2(mod, type = 'C2')
+#'
 #' ###########
 #' # 5PL and restricted 5PL example
 #' dat <- expand.table(LSAT7)

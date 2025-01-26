@@ -4,13 +4,13 @@
   constrained hyperbolic cosine model (HCM) and the same model with the 
   estimated latitude of acceptance parameters
 
-- `simdata()` gains support for Luo (2001) family of generating models
-
 - Added several `itemtype` inputs to specify a family of unfolding models 
   for dichotomous and polytomous data. These currently include the 
   (generalized) hyperbolic cosine model, (generalized) absolute logistic model,
   (generalized) simple squared logistic model, and the 
-  (generalized) parallellogram analysis model
+  (generalized) parallellogram analysis model. `simdata()` also gained 
+  support for the Luo (2001) family of generating models, among most other 
+  secondary functions
 
 - Fixed `M2()` computations with large amounts of missing data, particularly
   prevalent with the C2 statistic (reported by Hynek Cigler)
@@ -18,10 +18,9 @@
 - Standardized factor loadings for the multidimensional nominal response model
   now report consistent values regardless of the category ordering
 
-- Exported `DeltaMethod()` function for numerical version of delta method. Used 
-  internally, though others may find this helpful
+- Exported `DeltaMethod()` function for numerical version of the delta method
   
-- `coef(..., IRTpars=TRUE)` reported constant SE term when converting Rasch 
+- `coef(..., IRTpars=TRUE)` reported constant SE term of 0.0 when converting Rasch 
   models as bk = -dk were not correctly tracked
 
 # Changes in mirt 1.43
