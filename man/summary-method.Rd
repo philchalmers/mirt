@@ -11,6 +11,7 @@
 \usage{
 \S4method{summary}{SingleGroupClass}(
   object,
+  SE = FALSE,
   rotate = "oblimin",
   Target = NULL,
   suppress = 0,
@@ -22,6 +23,12 @@
 \arguments{
 \item{object}{an object of class \code{SingleGroupClass},
 \code{MultipleGroupClass}, or \code{MixedClass}}
+
+\item{SE}{logical; also include the standard errors for the
+standardized loadings? Requires the initial model to have included
+and estimated of the asymptotic covariance matrix (via, for instance,
+\code{mirt(..., SE = TRUE)}). If \code{TRUE} SEs are computed using the
+delta method}
 
 \item{rotate}{a string indicating which rotation to use for exploratory models, primarily
   from the \code{GPArotation} package (see documentation therein).

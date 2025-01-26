@@ -131,6 +131,11 @@ setMethod(
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
+#' @param SE logical; also include the standard errors for the
+#'   standardized loadings? Requires the initial model to have included
+#'   and estimated of the asymptotic covariance matrix (via, for instance,
+#'   \code{mirt(..., SE = TRUE)}). If \code{TRUE} SEs are computed using the
+#'   delta method
 #' @param rotate a string indicating which rotation to use for exploratory models, primarily
 #'   from the \code{GPArotation} package (see documentation therein).
 #'
@@ -174,7 +179,8 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
-    definition = function(object, rotate = 'oblimin', Target = NULL,
+    definition = function(object, SE = FALSE,
+                          rotate = 'oblimin', Target = NULL,
                           suppress = 0, suppress.cor = 0,
                           verbose = TRUE, ...){
         if (!object@Options$exploratory || rotate == 'none') {
@@ -200,7 +206,7 @@ setMethod(
                 Phiprint[upper.tri(Phiprint, diag = FALSE)] <- NA
                 print(round(Phiprint, 3), na.print = " ")
             }
-            invisible(list(rotF=F,h2=h2,fcor=Phi))
+            ret <- list(rotF=F,h2=h2,fcor=Phi)
         } else {
             F <- object@Fit$F
             h2 <- as.matrix(object@Fit$h2)
@@ -229,8 +235,12 @@ setMethod(
             if(any(h2 > 1))
                 warning("Model has Heywood cases. Interpret with caution.",
                         call.=FALSE)
-            invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))
+            ret <- list(rotF=rotF$loadings,h2=h2,fcor=Phi)
         }
+        if(SE){
+            browser()
+        }
+        invisible(ret)
     }
 )
 
