@@ -759,7 +759,7 @@ setMethod(
         data <- object@Data$data
         N <- nrow(data)
         J <- ncol(data)
-        nfact <- ncol(object@Fit$F)
+        nfact <- extract.mirt(object, 'nfact')
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
