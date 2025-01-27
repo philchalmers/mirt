@@ -183,14 +183,18 @@ setMethod(
                           rotate = 'oblimin', Target = NULL,
                           suppress = 0, suppress.cor = 0,
                           verbose = TRUE, ...){
+        pars <- object@ParObjects$pars
+        nms <- extract.mirt(object, 'itemnames')
+        fnms <- extract.mirt(object, 'factorNames')
+        F <- Lambdas(pars, Names=nms)
+        colnames(F) <- fnms
+        h2 <- matrix(rowSums(F^2))
+        colnames(h2) <- "h2"
         if (!object@Options$exploratory || rotate == 'none') {
-            F <- object@Fit$F
             F[abs(F) < suppress] <- NA
-            h2 <- as.matrix(object@Fit$h2)
             SS <- apply(F^2,2,sum)
             gp <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
             Phi <- cov2cor(gp$gcov)
-            colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <-
                 colnames(F)[seq_len(object@Model$nfact)]
             loads <- cbind(F,h2)
@@ -208,18 +212,14 @@ setMethod(
             }
             ret <- list(rotF=F,h2=h2,fcor=Phi)
         } else {
-            F <- object@Fit$F
-            h2 <- as.matrix(object@Fit$h2)
-            colnames(h2) <- "h2"
             rotF <- Rotate(F, rotate, Target = Target, ...)
             SS <- apply(rotF$loadings^2,2,sum)
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
             loads <- cbind(L,h2)
             Phi <- diag(ncol(F))
-            if(!rotF$orthogonal){
+            if(!rotF$orthogonal)
                 Phi <- rotF$Phi
-            }
             colnames(Phi) <- rownames(Phi) <- colnames(F)
             if(verbose){
                 cat("\nRotation: ", rotate, "\n")

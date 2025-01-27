@@ -979,14 +979,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     lrPars <- ESTIMATE$lrPars
     class(lrPars) <- 'S4'
     for(g in seq_len(Data$ngroups)){
-        if(opts$method == 'MIXED' || opts$dentype == "discrete"){
-            F <- matrix(NA)
-            h2 <- numeric(1)
-        } else {
-            F <- Lambdas(ESTIMATE$pars[[g]], Names=colnames(data))
-            colnames(F) <- PrepList[[1L]]$factorNames
-            h2 <- rowSums(F^2)
-        }
         cmods[[g]] <- new('SingleGroupClass', ParObjects=list(pars=ESTIMATE$pars[[g]], lrPars=lrPars,
                                                               random=ESTIMATE$random,
                                                               lr.random=ESTIMATE$lr.random),
@@ -997,7 +989,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                        prodlist=PrepList[[1L]]$prodlist),
                           Options = list(method = 'MHRM', exploratory=PrepList[[1L]]$exploratory,
                                          theta_lim=opts$theta_lim, dentype=opts$dentype),
-                          Fit = list(G2=G2group[g], F=F, h2=h2),
+                          Fit = list(G2=G2group[g]),
                           Internals = list(Pl = rlist[[g]]$expected, CUSTOM.IND=CUSTOM.IND,
                                            SLOW.IND=SLOW.IND))
         if(opts$dentype %in% c("discrete", 'EH', 'EHW', 'Davidian', 'custom')){
@@ -1078,7 +1070,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Options$exploratory <- PrepList[[1L]]$exploratory
     Fit <- list(G2=G2, p=p.G2, TLI=TLI.G2, CFI=CFI.G2, RMSEA=RMSEA.G2, df=df,
                 AIC=AIC, BIC=BIC, SABIC=SABIC, HQ=HQ, logLik=logLik,
-                logPrior=logPrior, SElogLik=SElogLik, F=F, h2=h2)
+                logPrior=logPrior, SElogLik=SElogLik)
     pis <- if(opts$dentype == 'mixture')
         ExtractMixtures(lapply(cmods, function(x) x@ParObjects$pars)) else NULL
     Model <- list(model=oldmodel, factorNames=PrepList[[1L]]$factorNames, itemtype=PrepList[[1L]]$itemtype,
@@ -1143,7 +1135,6 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         Internals$EMhistory <- ESTIMATE$EMhistory
     if(opts$method == 'SEM') Options$TOL <- NA
     if(opts$odentype == "discrete"){
-        Fit$F <- Fit$h2 <- NULL
         mod <- new('DiscreteClass',
                    Data=Data,
                    Options=Options,
@@ -1169,21 +1160,10 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                            Internals=Internals,
                            vcov=vcov)
             } else {
-                if(Options$exploratory){
-                    FF <- F %*% t(F)
-                    V <- eigen(FF)$vectors[ ,1L:nfact]
-                    L <- eigen(FF)$values[1L:nfact]
-                    if (nfact == 1L) F <- as.matrix(V * sqrt(L))
-                    else F <- V %*% sqrt(diag(L))
-                    if (sum(F[ ,1L] < 0)) F <- (-1) * F
-                    colnames(F) <- paste("F", 1L:ncol(F), sep="")
-                    h2 <- rowSums(F^2)
-                } else {
-                    if(opts$method == 'EM')
-                        Internals$bfactor <- list(prior=ESTIMATE$prior,
-                                                  Priorbetween=ESTIMATE$Priorbetween,
-                                                  sitems=ESTIMATE$sitems, specific=specific)
-                }
+                if(opts$method == 'EM')
+                    Internals$bfactor <- list(prior=ESTIMATE$prior,
+                                              Priorbetween=ESTIMATE$Priorbetween,
+                                              sitems=ESTIMATE$sitems, specific=specific)
                 mod <- new('SingleGroupClass',
                            Data=Data,
                            Options=Options,
