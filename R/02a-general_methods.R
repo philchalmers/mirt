@@ -152,7 +152,8 @@ Deriv.mix <- function(x, estHess=FALSE){
                 hess=matrix(0, length(x$par), length(x$par)))
     ret$grad[x$est] <- numerical_deriv(par=x$par[x$est], f=LL, x=x)
     if(estHess && any(x$est))
-        ret$hess[x$est, x$est] <- numerical_deriv(par=x$par[x$est], f=LL, x=x, gradient=FALSE)
+        ret$hess[x$est, x$est] <- numerical_deriv(par=x$par[x$est],
+                                                  f=LL, x=x, gradient=FALSE)
     ret
 }
 
