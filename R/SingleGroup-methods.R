@@ -197,8 +197,10 @@ setMethod(
         if (!object@Options$exploratory || rotate == 'none') {
             if(SE){
                 SE.F <- SE.Lambdas(pars, acov, nfact)
-                colnames(SE.F) <- paste0('SE.', colnames(F))
-                rownames(SE.F) <- rownames(F)
+                if(!is.null(SE.F)){
+                    colnames(SE.F) <- paste0('SE.', colnames(F))
+                    rownames(SE.F) <- rownames(F)
+                }
             }
             ests <- do.call(rbind, lapply(pars[2:length(pars) - 1],
                                           \(x) x@est[1:nfact]))
