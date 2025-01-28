@@ -420,7 +420,7 @@ SE.Lambdas <- function(pars, acov, nfact){
         out[1, index]
     }
 
-    if(length(acov) == 1 && is.na(acov)) return(NULL)
+    if(!valid_vcov(acov)) return(NULL)
     nitems <- length(pars) - 1
     SE.F <- matrix(NA, nitems, nfact)
     for(i in 1:nitems){
@@ -2917,6 +2917,12 @@ as.mirt_matrix <- function(df){
 
 is.latent_regression <- function(mod){
     !is.null(mod@Data$covdata)
+}
+
+valid_vcov <- function(obj){
+    ret <- if(length(obj) == 0 || (length(obj) == 1 && is.na(obj[1]))) FALSE
+      else TRUE
+    ret
 }
 
 # subset of vcov for delta method

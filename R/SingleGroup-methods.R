@@ -1884,8 +1884,7 @@ mirt2traditional <- function(x, vcov, nfact){
     x@par <- par
     names(x@est) <- names(par)
     x@parnames <- names(x@par)
-    if(length(vcov) == 0L || (is.na(vcov[1L,1L]) || !(cls %in%
-                                                      c('dich', 'graded', 'gpcm', 'nominal', 'nestlogit', 'Luo2001')))){
+    if(!valid_vcov(vcov) || !(cls %in% c('dich', 'graded', 'gpcm', 'nominal', 'nestlogit', 'Luo2001'))){
         x@SEpar <- numeric()
     } else {
         vpick <- subset_vcov(xorg, vcov)
