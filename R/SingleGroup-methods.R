@@ -131,7 +131,7 @@ setMethod(
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
-#' @param SE logical; also include the standard errors for the
+#' @param SE logical; include the standard errors for the
 #'   standardized loadings? Requires the initial model to have included
 #'   and estimated of the asymptotic covariance matrix (via, for instance,
 #'   \code{mirt(..., SE = TRUE)}). If \code{TRUE} SEs are computed using the
@@ -179,18 +179,34 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
-    definition = function(object, SE = FALSE,
+    definition = function(object, SE = TRUE,
                           rotate = 'oblimin', Target = NULL,
                           suppress = 0, suppress.cor = 0,
                           verbose = TRUE, ...){
+        pars <- object@ParObjects$pars
+        nms <- extract.mirt(object, 'itemnames')
+        fnms <- extract.mirt(object, 'factorNames')
+        F <- Lambdas(pars, Names=nms)
+        colnames(F) <- fnms
+        h2 <- matrix(rowSums(F^2))
+        colnames(h2) <- "h2"
+        nfact <- ncol(F)
+        acov <- vcov(object)
+        SE.F <- NULL
+        org.F <- F
         if (!object@Options$exploratory || rotate == 'none') {
-            F <- object@Fit$F
+            if(SE){
+                SE.F <- SE.Lambdas(pars, acov, nfact)
+                colnames(SE.F) <- paste0('SE.', colnames(F))
+                rownames(SE.F) <- rownames(F)
+            }
+            ests <- do.call(rbind, lapply(pars[2:length(pars) - 1],
+                                          \(x) x@est[1:nfact]))
+            F[!ests] <- NA
             F[abs(F) < suppress] <- NA
-            h2 <- as.matrix(object@Fit$h2)
-            SS <- apply(F^2,2,sum)
+            SS <- apply(F^2,2,sum, na.rm=TRUE)
             gp <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
             Phi <- cov2cor(gp$gcov)
-            colnames(h2) <- "h2"
             rownames(Phi) <- colnames(Phi) <- names(SS) <-
                 colnames(F)[seq_len(object@Model$nfact)]
             loads <- cbind(F,h2)
@@ -198,6 +214,10 @@ setMethod(
                 if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
                 print(loads, 3, na.print = " ")
+                if(!is.null(SE.F)){
+                    cat('\n')
+                    print(SE.F, 2, na.print = " ")
+                }
                 cat("\nSS loadings: ", round(SS, 3), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F), 3), "\n")
                 cat("\nFactor correlations: \n\n")
@@ -206,20 +226,16 @@ setMethod(
                 Phiprint[upper.tri(Phiprint, diag = FALSE)] <- NA
                 print(round(Phiprint, 3), na.print = " ")
             }
-            ret <- list(rotF=F,h2=h2,fcor=Phi)
+            ret <- list(rotF=org.F, SE.F=SE.F, h2=h2, fcor=Phi)
         } else {
-            F <- object@Fit$F
-            h2 <- as.matrix(object@Fit$h2)
-            colnames(h2) <- "h2"
             rotF <- Rotate(F, rotate, Target = Target, ...)
             SS <- apply(rotF$loadings^2,2,sum)
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
             loads <- cbind(L,h2)
             Phi <- diag(ncol(F))
-            if(!rotF$orthogonal){
+            if(!rotF$orthogonal)
                 Phi <- rotF$Phi
-            }
             colnames(Phi) <- rownames(Phi) <- colnames(F)
             if(verbose){
                 cat("\nRotation: ", rotate, "\n")
@@ -236,9 +252,6 @@ setMethod(
                 warning("Model has Heywood cases. Interpret with caution.",
                         call.=FALSE)
             ret <- list(rotF=rotF$loadings,h2=h2,fcor=Phi)
-        }
-        if(SE){
-            browser()
         }
         invisible(ret)
     }
@@ -759,7 +772,7 @@ setMethod(
         data <- object@Data$data
         N <- nrow(data)
         J <- ncol(data)
-        nfact <- ncol(object@Fit$F)
+        nfact <- extract.mirt(object, 'nfact')
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
