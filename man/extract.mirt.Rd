@@ -87,7 +87,7 @@ Objects which can be extracted from mirt objects include:
 mod <- mirt(Science, 1)
 
 extract.mirt(mod, 'logLik')
-extract.mirt(mod, 'F')
+extract.mirt(mod, 'K')  # unique categories for each item
 
 #multiple group model
 grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)

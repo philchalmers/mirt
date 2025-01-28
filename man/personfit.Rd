@@ -64,8 +64,6 @@ resid_list <- personfit(x, return.resids=TRUE)
 head(resid_list$resid) # unstandardized
 head(resid_list$std.resid) # standardized (approximate z-scores)
 
-residuals(x, type = 'score')
-
 # with missing data
 data[3, c(1,3,5,7)] <- NA
 x.miss <- mirt(data, 1)
