@@ -16,6 +16,10 @@
 - Fixed `M2()` computations with large amounts of missing data, particularly
   prevalent with the C2 statistic (reported by Hynek Cigler)
 
+- `summary()` now outputs delta-method SEs for standardized factor loadings.
+  Only applied for non-EFA models that include an estimate of the ACOV 
+  (e.g., via `mirt(..., SE=TRUE)`)
+
 - Standardized factor loadings for the multidimensional nominal response model
   now report consistent values regardless of the category ordering
 

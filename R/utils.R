@@ -410,6 +410,33 @@ Lambdas <- function(pars, Names){
     F
 }
 
+# delta SEs
+SE.Lambdas <- function(pars, acov, nfact){
+
+    lambda_one <- function(par, pars, index=1){
+        stopifnot(length(pars) == 2)
+        pars[[1]]@par[index] <- par[index]
+        out <- Lambdas(pars, 'dummy')
+        out[1, index]
+    }
+
+    if(length(acov) == 1 && is.na(acov)) return(NULL)
+    nitems <- length(pars) - 1
+    SE.F <- matrix(NA, nitems, nfact)
+    for(i in 1:nitems){
+        for(j in 1:nfact){
+            ipars <- pars[c(i,nitems+1)]
+            par <- ipars[[1]]@par
+            if(!ipars[[1]]@est[j]) next
+            iacov <- subset_vcov(ipars[[1]], acov)
+            SE.F[i,j] <- DeltaMethod(lambda_one, par, iacov,
+                                     pars=ipars, index=j)$se
+        }
+    }
+    SE.F
+}
+
+
 #change long pars for groups into mean in sigma
 ExtractGroupPars <- function(x){
     if(x@itemclass < 0L) return(list(gmeans=0, gcov=matrix(1)))
