@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.43.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.43.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,7 @@
 <ul><li><p>Added <code>Attitude</code> dataset from Andrich (1988) publication to demonstrate constrained hyperbolic cosine model (HCM) and the same model with the estimated latitude of acceptance parameters</p></li>
 <li><p>Added several <code>itemtype</code> inputs to specify a family of unfolding models for dichotomous and polytomous data. These currently include unidimensional and multidimensional versions of the (generalized) hyperbolic cosine model, (generalized) absolute logistic model, (generalized) simple squared logistic model, and the (generalized) parallellogram analysis model. <code><a href="../reference/simdata.html">simdata()</a></code> also gained support for the Luo (2001) family of generating models, among most other secondary functions</p></li>
 <li><p>Fixed <code><a href="../reference/M2.html">M2()</a></code> computations with large amounts of missing data, particularly prevalent with the C2 statistic (reported by Hynek Cigler)</p></li>
+<li><p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> now outputs delta-method SEs for standardized factor loadings. Only applied for non-EFA models that include an estimate of the ACOV (e.g., via <code>mirt(..., SE=TRUE)</code>)</p></li>
 <li><p>Standardized factor loadings for the multidimensional nominal response model now report consistent values regardless of the category ordering</p></li>
 <li><p>Exported <code><a href="../reference/DeltaMethod.html">DeltaMethod()</a></code> function for numerical version of the delta method</p></li>
 <li><p><code>coef(..., IRTpars=TRUE)</code> reported constant SE term of 0.0 when converting Rasch models as bk = -dk were not correctly tracked</p></li>
