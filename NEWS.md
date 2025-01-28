@@ -13,20 +13,23 @@
   support for the Luo (2001) family of generating models, among most other 
   secondary functions
 
-- Fixed `M2()` computations with large amounts of missing data, particularly
-  prevalent with the C2 statistic (reported by Hynek Cigler)
-
-- `summary()` now outputs delta-method SEs for standardized factor loadings.
+- `summary()` now automatically outputs delta-method SEs for 
+  standardized factor loadings.
   Only applied for non-EFA models that include an estimate of the ACOV 
   (e.g., via `mirt(..., SE=TRUE)`)
 
 - Standardized factor loadings for the multidimensional nominal response model
   now report consistent values regardless of the category ordering
 
-- Exported `DeltaMethod()` function for numerical version of the delta method
+- Exported general-purpose `DeltaMethod()` function for numerical 
+  version of the delta method
   
-- `coef(..., IRTpars=TRUE)` reported constant SE term of 0.0 when converting Rasch 
-  models as bk = -dk were not correctly tracked
+- Fixed `M2()` computations with large amounts of missing data, particularly
+  prevalent with the C2 statistic (reported by Hynek Cigler)
+  
+- Fixed minor `coef(..., IRTpars=TRUE)` issue where output reported a 
+  constant SE term of 0.0 when converting Rasch 
+  models (bk = -dk were not correctly tracked)
 
 # Changes in mirt 1.43
 
