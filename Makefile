@@ -49,9 +49,12 @@ pushdocs:
 	git push
 	git checkout main
 
-kniterrors:
-	grep -Hrn '## Error'
-	grep -Hrn '## Warning'
+pkgdownerrors:
+	cd docs/reference
+	printf "\n#########################\nErrors:\n\n"
+	grep -Hrn '>Error:'
+	printf "\n#########################\nWarnings:\n\n"
+	grep -Hrn '>Warning:'
 
 pkgdown:
 	sed -i 's/# opts$$verbose/opts$$verbose/g' R/03-estimation.R
@@ -60,8 +63,7 @@ pkgdown:
 	Rscript -e "library('pkgdown',quietly=TRUE);build_site()"
 	git checkout -- .
 	make install
-	cd docs/reference
-	make kniterrors
+	make pkgdownerrors
 
 clean:
 	$(RM) src/*.o
