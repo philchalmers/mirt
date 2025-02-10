@@ -563,13 +563,13 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     nmissingtabdata <- sum(is.na(rowSums(Data$tabdata)))
-    dfsubtr <- nestpars - nconstr
-    if(opts$dentype == 'EH') dfsubtr <- dfsubtr + (opts$quadpts - 1L) * Data$ngroups
-    else if(opts$dentype == 'EHW') dfsubtr <- dfsubtr + (opts$quadpts - 3L) * Data$ngroups
-    if(df <= dfsubtr)
+    nestpars <- nestpars - nconstr
+    if(opts$dentype == 'EH') nestpars <- nestpars + (opts$quadpts - 1L) * Data$ngroups
+    else if(opts$dentype == 'EHW') nestpars <- nestpars + (opts$quadpts - 3L) * Data$ngroups
+    if(df <= nestpars)
         stop('Too few degrees of freedom. There are only ', df, ' degrees of freedom but ',
-             dfsubtr, ' parameters were freely estimated.', call.=FALSE)
-    df <- df - dfsubtr
+             nestpars, ' parameters were freely estimated.', call.=FALSE)
+    df <- df - nestpars
     if(!is.null(customItems)){
         for(g in seq_len(Data$ngroups))
             PrepList[[g]]$exploratory <- FALSE
@@ -1034,7 +1034,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     }
     r <- rr
     N <- sum(r)
-    tmp <- dfsubtr
+    tmp <- nestpars
     AIC <- (-2) * logLik + 2 * tmp
     BIC <- (-2) * logLik + tmp*log(N)
     SABIC <- (-2) * logLik + tmp*log((N+2)/24)
@@ -1076,7 +1076,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Model <- list(model=oldmodel, factorNames=PrepList[[1L]]$factorNames, itemtype=PrepList[[1L]]$itemtype,
                   itemloc=PrepList[[1L]]$itemloc, nfact=nfact, pis=pis,
                   Theta=Theta, constrain=constrain, nconstrain= opts$technical$nconstrain,
-                  parprior=parprior, nest=as.integer(dfsubtr),
+                  parprior=parprior, nest=as.integer(nestpars),
                   invariance=invariance, lrPars=lrPars, formulas=attr(mixed.design, 'formula'),
                   prodlist=PrepList[[1L]]$prodlist, nestpars=nestpars)
     if(!is.null(opts$technical$Etable)){
