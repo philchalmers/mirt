@@ -885,6 +885,15 @@ UpdateConstrain <- function(pars, constrain, invariance, nfact, nLambdas, J, ngr
         }
     }
     constrain[redun] <- NULL
+    vec_constr <- do.call(c, constrain)
+    for(g in seq_len(ngroups)){
+        for(i in seq_len(J+1)){
+            pick <- pars[[g]][[i]]@parnum %in% vec_constr
+            if(!all(pars[[g]][[i]]@est[pick]))
+                stop('Equality constraints can only be applied to freely estimated parameters. Please fix',
+                     call.=FALSE)
+        }
+    }
     return(constrain)
 }
 
