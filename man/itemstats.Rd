@@ -37,7 +37,10 @@ prior fitting of IRT models. Contains information about coefficient alpha
 (and alpha if an item is deleted), mean/SD and frequency of total scores,
 reduced item-total correlations, average/sd of the correlation between items,
 response frequencies, and conditional mean/sd information given the
-unweighted sum scores.
+unweighted sum scores. Summary information involving the total scores
+only included for responses with no missing data to ensure the metric is
+meaningful, however standardized statistics (e.g., correlations) utilize
+all possible response information.
 }
 \examples{
 

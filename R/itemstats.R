@@ -5,7 +5,10 @@
 #' (and alpha if an item is deleted), mean/SD and frequency of total scores,
 #' reduced item-total correlations, average/sd of the correlation between items,
 #' response frequencies, and conditional mean/sd information given the
-#' unweighted sum scores.
+#' unweighted sum scores. Summary information involving the total scores
+#' only included for responses with no missing data to ensure the metric is
+#' meaningful, however standardized statistics (e.g., correlations) utilize
+#' all possible response information.
 #'
 #' @param data An object of class \code{data.frame} or \code{matrix}
 #'   with the response patterns
@@ -85,7 +88,8 @@ itemstats <- function(data, group = NULL,
         names(out) <- groups
         return(out)
     }
-    TS <- rowSums(data)
+    TS <- rowSums(data, na.rm = TRUE)
+    TS_miss <- rowSums(data)
     rs <- try(cor(data, use = "pairwise.complete.obs"), silent = TRUE)
     if(is(rs, 'try-err')) rs <- NaN
     if(use_ts){
@@ -102,9 +106,9 @@ itemstats <- function(data, group = NULL,
             tmpdat <- na.omit(data[,-x, drop=FALSE])
             CA(tmpdat)
         })
-        overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data),
-                              mean_total.score=mean(TS, na.rm=TRUE),
-                              sd_total.score=sd(TS, na.rm=TRUE),
+        overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data),
+                              mean_total.score=mean(TS_miss, na.rm=TRUE),
+                              sd_total.score=sd(TS_miss, na.rm=TRUE),
                               ave.r=mean(rs[lower.tri(rs)]),
                               sd.r=sd(rs[lower.tri(rs)]),
                               alpha = CA(na.omit(data)))
@@ -117,7 +121,7 @@ itemstats <- function(data, group = NULL,
                          total.r_if_rm=itemcor_drop,
                          alpha_if_rm=itemalpha)
     } else {
-        overall <- data.frame(N.complete=sum(!is.na(TS)), N=nrow(data))
+        overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data))
         df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
                          mean=colMeans(data, na.rm = TRUE),
                          sd=apply(data, 2, sd, na.rm = TRUE))
@@ -150,13 +154,13 @@ itemstats <- function(data, group = NULL,
         }
     }
     if(ts.tables){
-        ret$total.score_frequency <- as.data.frame(t(as.matrix(table(TS))))
+        ret$total.score_frequency <- as.data.frame(t(as.matrix(table(TS_miss))))
         rownames(ret$total.score_frequency) <- "Freq"
         ret$total.score_means <- t(apply(data, 2, function(x){
-            tapply(TS, x, mean, na.rm=TRUE)
+            tapply(TS_miss, x, mean, na.rm=TRUE)
         }))
         ret$total.score_sds <- t(apply(data, 2, function(x){
-            tapply(TS, x, sd, na.rm=TRUE)
+            tapply(TS_miss, x, sd, na.rm=TRUE)
         }))
     }
     ret
