@@ -2,8 +2,6 @@
 
 # *mirt*: Multidimensional item response theory in R <img src="mirt-logo.png" height="139" align="right"/>
 
-## Description
-
 Analysis of dichotomous and polytomous response data using unidimensional and
 multidimensional latent trait models under the Item Response Theory paradigm.
 Exploratory and confirmatory models can be estimated with quadrature (EM) or
