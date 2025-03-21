@@ -48,7 +48,7 @@ fscores(
       \code{\link{mdirt}} this will return the posterior classification probabilities
     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
     \item \code{"ML"} for maximum likelihood
-    \item \code{"WLE"} for weighted likelihood estimation
+    \item \code{"WLE"} or \code{"WML"} for weighted maximum-likelihood estimation
     \item \code{"EAPsum"} for the expected a-posteriori for each sum score
     \item \code{"plausible"} for a single plausible value imputation for each case.
       This is equivalent to setting \code{plausible.draws = 1}

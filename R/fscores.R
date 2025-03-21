@@ -60,7 +60,7 @@
 #'       \code{\link{mdirt}} this will return the posterior classification probabilities
 #'     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
 #'     \item \code{"ML"} for maximum likelihood
-#'     \item \code{"WLE"} for weighted likelihood estimation
+#'     \item \code{"WLE"} or \code{"WML"} for weighted maximum-likelihood estimation
 #'     \item \code{"EAPsum"} for the expected a-posteriori for each sum score
 #'     \item \code{"plausible"} for a single plausible value imputation for each case.
 #'       This is equivalent to setting \code{plausible.draws = 1}
@@ -280,6 +280,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     use_dentype_estimate=FALSE, QMC = FALSE, custom_den = NULL,
                     custom_theta = NULL, min_expected = 1, max_theta = 20, start = NULL, ...)
 {
+    if(method == 'WML') method <- 'WLE'
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 5000
         if(is.null(quadpts))
