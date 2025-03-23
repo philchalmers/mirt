@@ -244,7 +244,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate data where group 2 has a smaller slopes and more extreme intercepts</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span></span>
@@ -253,6 +253,13 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">a2</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span><span class="op">/</span><span class="fl">3</span></span></span>
 <span class="r-in"><span><span class="va">d1</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">d2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, <span class="op">]</span><span class="op">/</span><span class="fl">4</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>a.group1 <span class="op">=</span> <span class="va">a1</span>, a.group2 <span class="op">=</span> <span class="va">a2</span>, d.group1 <span class="op">=</span> <span class="va">d1</span>, d.group2 <span class="op">=</span> <span class="va">d2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    a.group1  a.group2    d.group1   d.group2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.1756586 0.3918862  0.14295747  0.5718299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.2128398 0.4042799 -0.62045026 -0.6204503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.9672090 0.9672090 -0.05802608 -0.2321043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.8639508 0.8639508  0.78449886  0.7844989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1.1817662 1.1817662  0.20910659  0.2091066</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.4546132 0.4546132  0.54573535  0.5457353</span>
 <span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">a1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span></span>
 <span class="r-in"><span><span class="va">dataset1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a1</span>, <span class="va">d1</span>, <span class="va">N</span>, <span class="va">itemtype</span><span class="op">)</span></span></span>
@@ -268,43 +275,283 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># NOTE: Without properly equating the groups the following example code is not testing for DIF,</span></span></span>
 <span class="r-in"><span>     <span class="co"># but instead reflects a combination of DIF + latent-trait distribution effects</span></span></span>
 <span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="va">group</span>, SE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -18283.404, Max-Change: 0.41202Iteration: 2, Log-Lik: -18118.384, Max-Change: 0.20024Iteration: 3, Log-Lik: -18094.341, Max-Change: 0.10196Iteration: 4, Log-Lik: -18088.963, Max-Change: 0.05526Iteration: 5, Log-Lik: -18087.342, Max-Change: 0.03106Iteration: 6, Log-Lik: -18086.797, Max-Change: 0.01795Iteration: 7, Log-Lik: -18086.547, Max-Change: 0.00855Iteration: 8, Log-Lik: -18086.508, Max-Change: 0.00465Iteration: 9, Log-Lik: -18086.496, Max-Change: 0.00255Iteration: 10, Log-Lik: -18086.490, Max-Change: 0.00107Iteration: 11, Log-Lik: -18086.488, Max-Change: 0.00059Iteration: 12, Log-Lik: -18086.488, Max-Change: 0.00060Iteration: 13, Log-Lik: -18086.487, Max-Change: 0.00024Iteration: 14, Log-Lik: -18086.487, Max-Change: 0.00021Iteration: 15, Log-Lik: -18086.487, Max-Change: 0.00012Iteration: 16, Log-Lik: -18086.487, Max-Change: 0.00009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Likelihood-ratio test for DIF (as well as model information)</span></span></span>
 <span class="r-in"><span><span class="va">dif</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: No hyper-parameters were estimated in the DIF model. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>       For effective DIF testing, freeing the focal group hyper-parameters is recommended.</span>
 <span class="r-in"><span><span class="va">dif</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -34.621 -29.773 -30.507 -23.419 38.621  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2      TRUE -20.364 -15.516 -16.251  -9.162 24.364  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   D1,D2      TRUE -10.101  -5.253  -5.988   1.101 14.101  2 0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   D1,D2      TRUE  -0.356   4.492   3.757  10.846  4.356  2 0.113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   D1,D2      TRUE   0.968   5.815   5.081  12.169  3.032  2  0.22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   D1,D2      TRUE   3.441   8.289   7.554  14.643  0.559  2 0.756</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   D1,D2      TRUE   3.340   8.188   7.453  14.542   0.66  2 0.719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   D1,D2      TRUE  -2.371   2.477   1.742   8.831  6.371  2 0.041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   D1,D2      TRUE   0.546   5.393   4.659  11.748  3.454  2 0.178</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  D1,D2      TRUE   3.215   8.062   7.328  14.416  0.785  2 0.675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  D1,D2      TRUE  -4.853  -0.006  -0.740   6.348  8.853  2 0.012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  D1,D2      TRUE   1.497   6.345   5.610  12.699  2.503  2 0.286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  D1,D2      TRUE   1.854   6.702   5.967  13.056  2.146  2 0.342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  D1,D2      TRUE  -4.350   0.498  -0.237   6.852   8.35  2 0.015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  D1,D2      TRUE   3.831   8.679   7.944  15.033  0.169  2 0.919</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># function silently includes "DIF_coefficients" attribute to view</span></span></span>
 <span class="r-in"><span><span class="co"># the IRT parameters post-completion</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">dif</span>, <span class="st">"DIF_coefficients"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.7472578 0.3483822 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.7472578 0.3483822 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8277687 -0.6535244 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.8277687 -0.6535244 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.213165 -0.1452843 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.213165 -0.1452843 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.017216 0.9327436 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.017216 0.9327436 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.216819 0.1966309 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.216819 0.1966309 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1        d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.5196433 0.652555 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.5196433 0.652555 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1        d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.348864 1.016455 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.348864 1.016455 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.089472 -0.3447219 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.089472 -0.3447219 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.993117 -1.006033 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.993117 -1.006033 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.791053 -1.099697 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.791053 -1.099697 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1        d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.053996 1.235564 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.053996 1.235564 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.593305 -0.1832728 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.593305 -0.1832728 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.389336 0.4619023 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.389336 0.4619023 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.294955 0.4870637 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.294955 0.4870637 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8797218 -0.04575426 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.8797218 -0.04575426 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same as above, but using Wald tests with Benjamini &amp; Hochberg adjustment</span></span></span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, Wald <span class="op">=</span> <span class="cn">TRUE</span>, p.adjust <span class="op">=</span> <span class="st">'fdr'</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: No hyper-parameters were estimated in the DIF model. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>       For effective DIF testing, freeing the focal group hyper-parameters is recommended.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         groups      W df     p adj_p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2 36.513  2     0 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2 22.089  2     0 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   D1,D2 13.444  2 0.001 0.006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   D1,D2  4.293  2 0.117 0.251</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   D1,D2  3.009  2 0.222 0.370</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   D1,D2  0.558  2 0.756 0.810</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   D1,D2  0.658  2  0.72 0.810</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   D1,D2  6.238  2 0.044 0.111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   D1,D2  3.438  2 0.179 0.336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  D1,D2  0.785  2 0.675 0.810</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  D1,D2  8.621  2 0.013 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  D1,D2  2.485  2 0.289 0.433</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  D1,D2  2.133  2 0.344 0.469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  D1,D2  8.062  2 0.018 0.053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  D1,D2  0.168  2 0.919 0.919</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># equate the groups by assuming the last 5 items have no DIF</span></span></span>
 <span class="r-in"><span><span class="va">itemnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="va">group</span>, SE <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>   invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">itemnames</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">]</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -18283.382, Max-Change: 0.36268Iteration: 2, Log-Lik: -18113.739, Max-Change: 0.15040Iteration: 3, Log-Lik: -18094.159, Max-Change: 0.06016Iteration: 4, Log-Lik: -18091.267, Max-Change: 0.02782Iteration: 5, Log-Lik: -18090.632, Max-Change: 0.01702Iteration: 6, Log-Lik: -18090.412, Max-Change: 0.01412Iteration: 7, Log-Lik: -18090.271, Max-Change: 0.01491Iteration: 8, Log-Lik: -18090.191, Max-Change: 0.01166Iteration: 9, Log-Lik: -18090.124, Max-Change: 0.01063Iteration: 10, Log-Lik: -18090.083, Max-Change: 0.03162Iteration: 11, Log-Lik: -18089.893, Max-Change: 0.01166Iteration: 12, Log-Lik: -18089.857, Max-Change: 0.00830Iteration: 13, Log-Lik: -18089.814, Max-Change: 0.01210Iteration: 14, Log-Lik: -18089.784, Max-Change: 0.00741Iteration: 15, Log-Lik: -18089.763, Max-Change: 0.00643Iteration: 16, Log-Lik: -18089.750, Max-Change: 0.01884Iteration: 17, Log-Lik: -18089.692, Max-Change: 0.00694Iteration: 18, Log-Lik: -18089.680, Max-Change: 0.00495Iteration: 19, Log-Lik: -18089.667, Max-Change: 0.00719Iteration: 20, Log-Lik: -18089.657, Max-Change: 0.00437Iteration: 21, Log-Lik: -18089.650, Max-Change: 0.00378Iteration: 22, Log-Lik: -18089.646, Max-Change: 0.01105Iteration: 23, Log-Lik: -18089.628, Max-Change: 0.00405Iteration: 24, Log-Lik: -18089.624, Max-Change: 0.00288Iteration: 25, Log-Lik: -18089.619, Max-Change: 0.00419Iteration: 26, Log-Lik: -18089.616, Max-Change: 0.00254Iteration: 27, Log-Lik: -18089.614, Max-Change: 0.00219Iteration: 28, Log-Lik: -18089.613, Max-Change: 0.00639Iteration: 29, Log-Lik: -18089.607, Max-Change: 0.00233Iteration: 30, Log-Lik: -18089.606, Max-Change: 0.00166Iteration: 31, Log-Lik: -18089.604, Max-Change: 0.00240Iteration: 32, Log-Lik: -18089.603, Max-Change: 0.00145Iteration: 33, Log-Lik: -18089.602, Max-Change: 0.00126Iteration: 34, Log-Lik: -18089.602, Max-Change: 0.00368Iteration: 35, Log-Lik: -18089.600, Max-Change: 0.00133Iteration: 36, Log-Lik: -18089.600, Max-Change: 0.00096Iteration: 37, Log-Lik: -18089.599, Max-Change: 0.00141Iteration: 38, Log-Lik: -18089.599, Max-Change: 0.00083Iteration: 39, Log-Lik: -18089.599, Max-Change: 0.00071Iteration: 40, Log-Lik: -18089.598, Max-Change: 0.00209Iteration: 41, Log-Lik: -18089.598, Max-Change: 0.00076Iteration: 42, Log-Lik: -18089.598, Max-Change: 0.00054Iteration: 43, Log-Lik: -18089.598, Max-Change: 0.00080Iteration: 44, Log-Lik: -18089.597, Max-Change: 0.00047Iteration: 45, Log-Lik: -18089.597, Max-Change: 0.00041Iteration: 46, Log-Lik: -18089.597, Max-Change: 0.00118Iteration: 47, Log-Lik: -18089.597, Max-Change: 0.00043Iteration: 48, Log-Lik: -18089.597, Max-Change: 0.00031Iteration: 49, Log-Lik: -18089.597, Max-Change: 0.00044Iteration: 50, Log-Lik: -18089.597, Max-Change: 0.00027Iteration: 51, Log-Lik: -18089.597, Max-Change: 0.00023Iteration: 52, Log-Lik: -18089.597, Max-Change: 0.00069Iteration: 53, Log-Lik: -18089.597, Max-Change: 0.00024Iteration: 54, Log-Lik: -18089.597, Max-Change: 0.00018Iteration: 55, Log-Lik: -18089.597, Max-Change: 0.00026Iteration: 56, Log-Lik: -18089.597, Max-Change: 0.00015Iteration: 57, Log-Lik: -18089.597, Max-Change: 0.00013Iteration: 58, Log-Lik: -18089.597, Max-Change: 0.00038Iteration: 59, Log-Lik: -18089.597, Max-Change: 0.00014Iteration: 60, Log-Lik: -18089.597, Max-Change: 0.00010Iteration: 61, Log-Lik: -18089.597, Max-Change: 0.00015Iteration: 62, Log-Lik: -18089.597, Max-Change: 0.00009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF</span></span></span>
 <span class="r-in"><span><span class="va">resulta1d</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, plotdif <span class="op">=</span> <span class="cn">TRUE</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="DIF-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">resulta1d</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -43.490 -38.642 -39.377 -32.288 47.49  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2      TRUE -33.840 -28.993 -29.727 -22.638 37.84  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   D1,D2      TRUE  -5.497  -0.649  -1.384   5.705 9.497  2 0.009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   D1,D2      TRUE   2.395   7.242   6.508  13.596 1.605  2 0.448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   D1,D2      TRUE   3.140   7.988   7.253  14.342  0.86  2 0.651</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   D1,D2      TRUE   1.122   5.970   5.235  12.324 2.878  2 0.237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   D1,D2      TRUE   3.083   7.931   7.196  14.285 0.917  2 0.632</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   D1,D2      TRUE   2.857   7.705   6.970  14.059 1.143  2 0.565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   D1,D2      TRUE   3.674   8.521   7.787  14.875 0.326  2 0.849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  D1,D2      TRUE   3.154   8.001   7.267  14.355 0.846  2 0.655</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test whether adding only slope constraints results in DIF for all items</span></span></span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'a1'</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   D1,D2      TRUE   1.980   4.404   4.036   7.581   0.02  1 0.887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   D1,D2      TRUE   1.754   4.178   3.811   7.355  0.246  1  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   D1,D2      TRUE  -0.564   1.860   1.492   5.037  2.564  1 0.109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   D1,D2      TRUE   1.093   3.517   3.150   6.694  0.907  1 0.341</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   D1,D2      TRUE   1.431   3.855   3.488   7.032  0.569  1 0.451</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   D1,D2      TRUE   1.863   4.287   3.920   7.464  0.137  1 0.712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  D1,D2      TRUE   1.775   4.199   3.832   7.376  0.225  1 0.636</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Determine whether it's a1 or d parameter causing DIF (could be joint, however)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">a1s</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'a1'</span>, items2test <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'d'</span>, items2test <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -18.568 -16.145 -16.512 -12.968 20.568  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  D1,D2      TRUE   1.843   4.266   3.899   7.443  0.157  1 0.691</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  D1,D2      TRUE  -6.229  -3.805  -4.173  -0.628  8.229  1 0.004</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### drop down approach (freely estimating parameters across groups) when</span></span></span>
 <span class="r-in"><span><span class="co">### specifying a highly constrained model with estimated latent parameters</span></span></span>
 <span class="r-in"><span><span class="va">model_constrained</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="va">group</span>,</span></span>
 <span class="r-in"><span>  invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -18283.382, Max-Change: 0.36268Iteration: 2, Log-Lik: -18160.843, Max-Change: 0.15044Iteration: 3, Log-Lik: -18145.129, Max-Change: 0.06091Iteration: 4, Log-Lik: -18143.212, Max-Change: 0.02574Iteration: 5, Log-Lik: -18142.939, Max-Change: 0.01162Iteration: 6, Log-Lik: -18142.876, Max-Change: 0.00579Iteration: 7, Log-Lik: -18142.844, Max-Change: 0.00379Iteration: 8, Log-Lik: -18142.825, Max-Change: 0.00330Iteration: 9, Log-Lik: -18142.811, Max-Change: 0.00292Iteration: 10, Log-Lik: -18142.793, Max-Change: 0.00800Iteration: 11, Log-Lik: -18142.770, Max-Change: 0.00276Iteration: 12, Log-Lik: -18142.767, Max-Change: 0.00154Iteration: 13, Log-Lik: -18142.765, Max-Change: 0.00137Iteration: 14, Log-Lik: -18142.764, Max-Change: 0.00098Iteration: 15, Log-Lik: -18142.763, Max-Change: 0.00082Iteration: 16, Log-Lik: -18142.762, Max-Change: 0.00214Iteration: 17, Log-Lik: -18142.761, Max-Change: 0.00076Iteration: 18, Log-Lik: -18142.761, Max-Change: 0.00044Iteration: 19, Log-Lik: -18142.761, Max-Change: 0.00038Iteration: 20, Log-Lik: -18142.761, Max-Change: 0.00027Iteration: 21, Log-Lik: -18142.760, Max-Change: 0.00023Iteration: 22, Log-Lik: -18142.760, Max-Change: 0.00060Iteration: 23, Log-Lik: -18142.760, Max-Change: 0.00021Iteration: 24, Log-Lik: -18142.760, Max-Change: 0.00012Iteration: 25, Log-Lik: -18142.760, Max-Change: 0.00011Iteration: 26, Log-Lik: -18142.760, Max-Change: 0.00008</span>
 <span class="r-in"><span><span class="va">dropdown</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model_constrained</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'drop'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dropdown</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -43.297 -38.450 -39.184 -32.096 47.297  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2      TRUE -32.642 -27.794 -28.529 -21.440 36.642  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   D1,D2      TRUE -10.510  -5.662  -6.397   0.692  14.51  2 0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   D1,D2      TRUE   1.885   6.733   5.998  13.087  2.115  2 0.347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   D1,D2      TRUE   3.155   8.003   7.268  14.357  0.845  2 0.655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   D1,D2      TRUE   1.914   6.761   6.027  13.116  2.086  2 0.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   D1,D2      TRUE   3.887   8.735   8.000  15.089  0.113  2 0.945</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   D1,D2      TRUE   0.703   5.550   4.816  11.905  3.297  2 0.192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   D1,D2      TRUE   3.059   7.907   7.172  14.261  0.941  2 0.625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  D1,D2      TRUE   3.631   8.479   7.744  14.833  0.369  2 0.832</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  D1,D2      TRUE  -0.765   4.083   3.348  10.437  4.765  2 0.092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  D1,D2      TRUE   3.511   8.359   7.624  14.713  0.489  2 0.783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  D1,D2      TRUE   3.416   8.263   7.529  14.618  0.584  2 0.747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  D1,D2      TRUE  -0.690   4.157   3.423  10.511   4.69  2 0.096</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  D1,D2      TRUE   3.599   8.447   7.712  14.801  0.401  2 0.818</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># View silent "DIF_coefficients" attribute</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">dropdown</span>, <span class="st">"DIF_coefficients"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.0070333 0.1008689 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.4519451 0.5696948 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.2404964 -0.7051772 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.4454868 -0.6639707 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.9753304 -0.02503532 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.3391630 -0.38511564 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8791819 0.8382862 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.0156000 0.9950612 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.121610 0.1289461 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.174548 0.2229443 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.5623518 0.6822046 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.4157185 0.6026837 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.283799 1.0057389 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.237164 0.9681292 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8938398 -0.3260637 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.1477262 -0.4254126 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8827366 -1.0565622 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.9625327 -0.9928805 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.7335219 -1.085299 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.7456898 -1.154238 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1        d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8342628 1.189315 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.1656520 1.241327 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1          d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.476098 -0.2510092 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.492375 -0.1714954 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.236010 0.4387954 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.358438 0.4178786 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1         d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 1.042360 0.4541474 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 1.400258 0.4556598 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item_15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8583058 -0.06114579 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.7771780 -0.06825570 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### sequential schemes (add constraints)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -312,16 +559,31 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># starting from completely different models</span></span></span>
 <span class="r-in"><span><span class="va">stepup</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'add_sequential'</span>,</span></span>
 <span class="r-in"><span>              items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Checking for DIF in 3 more items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Computing final DIF estimates...</span>
 <span class="r-in"><span><span class="va">stepup</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  D1,D2      TRUE -34.224 -29.377 -30.111 -23.022 38.224  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  D1,D2      TRUE  -7.368  -2.520  -3.255   3.834 11.368  2 0.003</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># step down procedure for highly constrained model</span></span></span>
 <span class="r-in"><span><span class="va">stepdown</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model_constrained</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'drop_sequential'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Checking for DIF in 12 more items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Computing final DIF estimates...</span>
 <span class="r-in"><span><span class="va">stepdown</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  D1,D2      TRUE -34.224 -29.377 -30.111 -23.022 38.224  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  D1,D2      TRUE  -7.368  -2.520  -3.255   3.834 11.368  2 0.003</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># view final MG model (only useful when scheme is 'add_sequential')</span></span></span>
 <span class="r-in"><span><span class="va">updated_mod</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'add_sequential'</span>,</span></span>
 <span class="r-in"><span>               return_seq_model<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Checking for DIF in 3 more items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Computing final DIF estimates...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">updated_mod</span>, type<span class="op">=</span><span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="DIF-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">###################################</span></span></span>
@@ -333,6 +595,13 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">d3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">d2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, <span class="op">]</span><span class="op">/</span><span class="fl">4</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>a.group1 <span class="op">=</span> <span class="va">a1</span>, a.group2 <span class="op">=</span> <span class="va">a2</span>, a.group3 <span class="op">=</span> <span class="va">a3</span>,</span></span>
 <span class="r-in"><span>                d.group1 <span class="op">=</span> <span class="va">d1</span>, d.group2 <span class="op">=</span> <span class="va">d2</span>, d.group3 <span class="op">=</span> <span class="va">d3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    a.group1  a.group2  a.group3   d.group1   d.group2   d.group3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.9921262 0.3307087 0.9921262 -0.6923662 -0.6923662 -0.1730916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.6115843 0.2038614 0.6115843 -0.4398444 -0.4398444 -0.4398444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.0571399 1.0571399 1.0571399  0.5243734  0.5243734  0.1310934</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1.1508422 1.1508422 1.1508422 -1.0133952 -1.0133952 -1.0133952</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1.2447020 1.2447020 1.2447020 -0.4542548 -0.4542548 -0.4542548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.6518627 0.6518627 0.6518627  0.7766470  0.7766470  0.7766470</span>
 <span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">a1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span></span>
 <span class="r-in"><span><span class="va">dataset1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a1</span>, <span class="va">d1</span>, <span class="va">N</span>, <span class="va">itemtype</span><span class="op">)</span></span></span>
@@ -345,24 +614,142 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">itemnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>   invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">itemnames</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">]</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -27540.157, Max-Change: 0.53724Iteration: 2, Log-Lik: -27276.052, Max-Change: 0.16612Iteration: 3, Log-Lik: -27249.255, Max-Change: 0.05773Iteration: 4, Log-Lik: -27245.143, Max-Change: 0.03886Iteration: 5, Log-Lik: -27243.656, Max-Change: 0.03158Iteration: 6, Log-Lik: -27242.721, Max-Change: 0.02743Iteration: 7, Log-Lik: -27241.799, Max-Change: 0.04985Iteration: 8, Log-Lik: -27240.917, Max-Change: 0.02292Iteration: 9, Log-Lik: -27240.615, Max-Change: 0.01705Iteration: 10, Log-Lik: -27240.297, Max-Change: 0.02823Iteration: 11, Log-Lik: -27240.036, Max-Change: 0.01364Iteration: 12, Log-Lik: -27239.931, Max-Change: 0.01035Iteration: 13, Log-Lik: -27239.824, Max-Change: 0.02009Iteration: 14, Log-Lik: -27239.697, Max-Change: 0.00835Iteration: 15, Log-Lik: -27239.661, Max-Change: 0.00597Iteration: 16, Log-Lik: -27239.619, Max-Change: 0.00916Iteration: 17, Log-Lik: -27239.590, Max-Change: 0.00461Iteration: 18, Log-Lik: -27239.576, Max-Change: 0.00357Iteration: 19, Log-Lik: -27239.564, Max-Change: 0.00856Iteration: 20, Log-Lik: -27239.537, Max-Change: 0.00298Iteration: 21, Log-Lik: -27239.532, Max-Change: 0.00196Iteration: 22, Log-Lik: -27239.526, Max-Change: 0.00247Iteration: 23, Log-Lik: -27239.523, Max-Change: 0.00145Iteration: 24, Log-Lik: -27239.520, Max-Change: 0.00119Iteration: 25, Log-Lik: -27239.518, Max-Change: 0.00316Iteration: 26, Log-Lik: -27239.513, Max-Change: 0.00105Iteration: 27, Log-Lik: -27239.512, Max-Change: 0.00068Iteration: 28, Log-Lik: -27239.510, Max-Change: 0.00097Iteration: 29, Log-Lik: -27239.510, Max-Change: 0.00052Iteration: 30, Log-Lik: -27239.509, Max-Change: 0.00042Iteration: 31, Log-Lik: -27239.508, Max-Change: 0.00116Iteration: 32, Log-Lik: -27239.507, Max-Change: 0.00039Iteration: 33, Log-Lik: -27239.507, Max-Change: 0.00027Iteration: 34, Log-Lik: -27239.507, Max-Change: 0.00057Iteration: 35, Log-Lik: -27239.506, Max-Change: 0.00023Iteration: 36, Log-Lik: -27239.506, Max-Change: 0.00018Iteration: 37, Log-Lik: -27239.506, Max-Change: 0.00051Iteration: 38, Log-Lik: -27239.506, Max-Change: 0.00017Iteration: 39, Log-Lik: -27239.506, Max-Change: 0.00013Iteration: 40, Log-Lik: -27239.506, Max-Change: 0.00036Iteration: 41, Log-Lik: -27239.505, Max-Change: 0.00013Iteration: 42, Log-Lik: -27239.505, Max-Change: 0.00010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">model</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $g1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.982 -0.707 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.571 -0.458 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.991  0.557 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.240 -1.133 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.095 -0.475 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.711  0.712 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.952 -1.641 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.709 -0.568 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.131  0.736 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.211  0.397 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.089 -0.384 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.523 -1.044 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.983  0.345 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 0.950  0.330 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.292 -0.246 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $g2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.286 -0.788 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.080 -0.397 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.898  0.505 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.025 -0.994 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.023 -0.364 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.717  0.832 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.100 -1.903 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.783 -0.487 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.956  0.820 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.095  0.428 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.089 -0.384 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.523 -1.044 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.983  0.345 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 0.950  0.330 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.292 -0.246 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    F1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.038 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $g3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.029 -0.180 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.766 -0.442 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.175  0.171 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.319 -1.101 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.345 -0.567 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.620  0.694 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.073 -1.699 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.842 -0.678 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.227  0.945 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.344  0.540 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.089 -0.384 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.523 -1.044 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.983  0.345 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 0.950  0.330 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.292 -0.246 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    F1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.189 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.893</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># omnibus tests</span></span></span>
 <span class="r-in"><span><span class="va">dif</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, which.par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dif</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          groups converged      AIC   SABIC      HQ     BIC      X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1 g1,g2,g3      TRUE -100.312 -88.996 -91.670 -76.286 108.312  4     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2 g1,g2,g3      TRUE  -39.696 -28.380 -31.054 -15.670  47.696  4     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3 g1,g2,g3      TRUE   -8.644   2.672  -0.002  15.382  16.644  4 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4 g1,g2,g3      TRUE    4.559  15.875  13.201  28.584   3.441  4 0.487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5 g1,g2,g3      TRUE    3.087  14.402  11.728  27.112   4.913  4 0.296</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6 g1,g2,g3      TRUE    5.556  16.872  14.198  29.581   2.444  4 0.655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7 g1,g2,g3      TRUE    4.844  16.160  13.486  28.869   3.156  4 0.532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8 g1,g2,g3      TRUE    4.504  15.819  13.145  28.529   3.496  4 0.478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9 g1,g2,g3      TRUE    2.263  13.578  10.904  26.288   5.737  4  0.22</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># pairwise post-hoc tests for items flagged via omnibus tests</span></span></span>
 <span class="r-in"><span><span class="va">dif.posthoc</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, which.par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                   pairwise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dif.posthoc</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     item groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Item_1  g1,g2      TRUE -32.488 -26.830 -28.167 -20.475 36.488  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Item_2  g1,g2      TRUE -19.000 -13.342 -14.679  -6.988     23  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Item_1  g1,g3      TRUE -19.543 -13.885 -15.222  -7.530 23.543  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Item_2  g1,g3      TRUE   1.728   7.385   6.048  13.740  2.272  2 0.321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Item_1  g2,g3      TRUE -90.300 -84.642 -85.979 -78.287   94.3  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Item_2  g2,g3      TRUE -36.756 -31.098 -32.435 -24.743 40.756  2     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># further probing for df = 1 tests, this time with Wald tests</span></span></span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, which.par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span><span class="op">)</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, pairwise <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    Wald<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     item groups      W df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Item_1  g1,g2 29.897  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Item_2  g1,g2 22.022  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Item_1  g1,g3  0.076  1 0.783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Item_2  g1,g3  1.939  1 0.164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Item_1  g2,g3 27.618  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Item_2  g2,g3 30.587  1     0</span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, which.par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'d'</span><span class="op">)</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, pairwise <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    Wald<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     item groups      W df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Item_1  g1,g2  0.592  1 0.442</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Item_2  g1,g2  0.419  1 0.518</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Item_1  g1,g3 21.130  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Item_2  g1,g3  0.025  1 0.874</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Item_1  g2,g3 29.743  1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Item_2  g2,g3  0.182  1  0.67</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

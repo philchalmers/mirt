@@ -55,23 +55,129 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">Bock1997</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item.1 Item.2 Item.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      1      1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      1      1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      1      1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      1      1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      1      1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      1      1      1</span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span>, use_ts<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 2000 2.443 1.070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 2000 2.666 0.957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 2000 2.780 1.059</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            1     2     3     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 0.240 0.284 0.267 0.208</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 0.122 0.314 0.340 0.224</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 0.141 0.273 0.253 0.334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'nominal'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -8398.179, Max-Change: 1.35680Iteration: 2, Log-Lik: -7888.489, Max-Change: 0.33597Iteration: 3, Log-Lik: -7834.278, Max-Change: 0.30577Iteration: 4, Log-Lik: -7809.008, Max-Change: 0.21948Iteration: 5, Log-Lik: -7797.240, Max-Change: 0.12673Iteration: 6, Log-Lik: -7791.733, Max-Change: 0.09512Iteration: 7, Log-Lik: -7788.907, Max-Change: 0.05676Iteration: 8, Log-Lik: -7787.842, Max-Change: 0.04026Iteration: 9, Log-Lik: -7787.313, Max-Change: 0.02467Iteration: 10, Log-Lik: -7787.092, Max-Change: 0.01304Iteration: 11, Log-Lik: -7787.030, Max-Change: 0.00874Iteration: 12, Log-Lik: -7787.001, Max-Change: 0.00630Iteration: 13, Log-Lik: -7786.978, Max-Change: 0.00185Iteration: 14, Log-Lik: -7786.975, Max-Change: 0.00129Iteration: 15, Log-Lik: -7786.973, Max-Change: 0.00082Iteration: 16, Log-Lik: -7786.973, Max-Change: 0.00068Iteration: 17, Log-Lik: -7786.973, Max-Change: 0.00043Iteration: 18, Log-Lik: -7786.973, Max-Change: 0.00107Iteration: 19, Log-Lik: -7786.972, Max-Change: 0.00034Iteration: 20, Log-Lik: -7786.972, Max-Change: 0.00075Iteration: 21, Log-Lik: -7786.972, Max-Change: 0.00037Iteration: 22, Log-Lik: -7786.972, Max-Change: 0.00025Iteration: 23, Log-Lik: -7786.972, Max-Change: 0.00059Iteration: 24, Log-Lik: -7786.972, Max-Change: 0.00023Iteration: 25, Log-Lik: -7786.972, Max-Change: 0.00017Iteration: 26, Log-Lik: -7786.972, Max-Change: 0.00047Iteration: 27, Log-Lik: -7786.972, Max-Change: 0.00017Iteration: 28, Log-Lik: -7786.972, Max-Change: 0.00011Iteration: 29, Log-Lik: -7786.972, Max-Change: 0.00041Iteration: 30, Log-Lik: -7786.972, Max-Change: 0.00014Iteration: 31, Log-Lik: -7786.971, Max-Change: 0.00011Iteration: 32, Log-Lik: -7786.971, Max-Change: 0.00035Iteration: 33, Log-Lik: -7786.971, Max-Change: 0.00012Iteration: 34, Log-Lik: -7786.971, Max-Change: 0.00007</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># reproduce table 3 in Bock (1997)</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'F1'</span>,<span class="st">'SE_F1'</span><span class="op">)</span><span class="op">]</span>,<span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fttd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">'exp'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">fttd</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">fttd</span><span class="op">)</span><span class="op">]</span>, <span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">table</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item.1 Item.2 Item.3 freq        exp    F1 SE_F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1      1      1   50  46.444027 -1.72  0.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       1      1      2   32  37.215496 -1.22  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       1      1      3   15  18.069304 -0.95  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       1      1      4   10   8.692424 -0.61  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       1      2      1   54  59.965727 -1.38  0.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       1      2      2   80  70.000273 -0.91  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7       1      2      3   40  41.674601 -0.65  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8       1      2      4   24  25.832371 -0.33  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9       1      3      1   27  28.065138 -1.07  0.63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      1      3      2   52  46.689631 -0.62  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      1      3      3   33  33.847511 -0.37  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      1      3      4   27  26.935712 -0.04  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      1      4      1    4   3.940514 -0.63  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      1      4      2   13  10.897962 -0.19  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      1      4      3   10  10.571253  0.06  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      1      4      4   10  12.283469  0.40  0.63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17      2      1      1   27  20.191927 -1.29  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18      2      1      2   19  26.271170 -0.82  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19      2      1      3   11  16.603995 -0.57  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20      2      1      4   11  11.097212 -0.24  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21      2      2      1   30  36.068703 -0.98  0.63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22      2      2      2   78  66.604897 -0.53  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23      2      2      3   69  51.217364 -0.28  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24      2      2      4   48  43.966108  0.05  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25      2      3      1   24  22.900098 -0.68  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26      2      3      2   48  59.345066 -0.25  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27      2      3      3   52  55.428529  0.01  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28      2      3      4   53  61.277297  0.34  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29      2      4      1    3   4.974192 -0.25  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30      2      4      2   21  21.301177  0.19  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31      2      4      3   20  26.765813  0.45  0.63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32      2      4      4   54  43.946401  0.81  0.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33      3      1      1    9   7.040049 -0.96  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34      3      1      2   12  13.275569 -0.51  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35      3      1      3   13  10.330678 -0.26  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36      3      1      4    7   9.005107  0.06  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37      3      2      1   11  16.098345 -0.66  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38      3      2      2   29  42.609506 -0.23  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39      3      2      3   37  40.289025  0.03  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40      3      2      4   44  45.264883  0.36  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41      3      3      1   15  12.966052 -0.38  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42      3      3      2   62  47.984143  0.06  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43      3      3      3   60  55.255840  0.32  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44      3      3      4   88  80.660157  0.67  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45      3      4      1    4   3.999324  0.05  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46      3      4      2   27  24.639934  0.50  0.63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47      3      4      3   43  38.630407  0.78  0.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48      3      4      4   73  85.862836  1.17  0.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49      4      1      1    4   2.538215 -0.75  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50      4      1      2    8   6.100809 -0.31  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51      4      1      3    7   5.455196 -0.06  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52      4      1      4    9   5.695962  0.27  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53      4      2      1    7   6.816068 -0.46  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54      4      2      2   21  22.926076 -0.02  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55      4      2      3   25  24.946447  0.23  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56      4      2      4   31  33.758294  0.58  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57      4      3      1    8   6.427237 -0.17  0.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58      4      3      2   23  30.276410  0.27  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59      4      3      3   35  40.293621  0.54  0.63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60      4      3      4   73  71.523729  0.90  0.66</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61      4      4      1    4   2.513701  0.26  0.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62      4      4      2   21  19.940144  0.73  0.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63      4      4      3   36  36.579513  1.02  0.67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64      4      4      4  105 101.211362  1.43  0.71</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'nominal'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -8398.179, Max-Change: 1.35680Iteration: 2, Log-Lik: -7888.489, Max-Change: 0.33597Iteration: 3, Log-Lik: -7834.278, Max-Change: 0.30577Iteration: 4, Log-Lik: -7809.008, Max-Change: 0.21948Iteration: 5, Log-Lik: -7797.240, Max-Change: 0.12673Iteration: 6, Log-Lik: -7791.733, Max-Change: 0.09512Iteration: 7, Log-Lik: -7788.907, Max-Change: 0.05676Iteration: 8, Log-Lik: -7787.842, Max-Change: 0.04026Iteration: 9, Log-Lik: -7787.313, Max-Change: 0.02467Iteration: 10, Log-Lik: -7787.092, Max-Change: 0.01304Iteration: 11, Log-Lik: -7787.030, Max-Change: 0.00874Iteration: 12, Log-Lik: -7787.001, Max-Change: 0.00630Iteration: 13, Log-Lik: -7786.978, Max-Change: 0.00185Iteration: 14, Log-Lik: -7786.975, Max-Change: 0.00129Iteration: 15, Log-Lik: -7786.973, Max-Change: 0.00082Iteration: 16, Log-Lik: -7786.973, Max-Change: 0.00068Iteration: 17, Log-Lik: -7786.973, Max-Change: 0.00043Iteration: 18, Log-Lik: -7786.973, Max-Change: 0.00107Iteration: 19, Log-Lik: -7786.972, Max-Change: 0.00034Iteration: 20, Log-Lik: -7786.972, Max-Change: 0.00075Iteration: 21, Log-Lik: -7786.972, Max-Change: 0.00037Iteration: 22, Log-Lik: -7786.972, Max-Change: 0.00025Iteration: 23, Log-Lik: -7786.972, Max-Change: 0.00059Iteration: 24, Log-Lik: -7786.972, Max-Change: 0.00023Iteration: 25, Log-Lik: -7786.972, Max-Change: 0.00017Iteration: 26, Log-Lik: -7786.972, Max-Change: 0.00047Iteration: 27, Log-Lik: -7786.972, Max-Change: 0.00017Iteration: 28, Log-Lik: -7786.972, Max-Change: 0.00011Iteration: 29, Log-Lik: -7786.972, Max-Change: 0.00041Iteration: 30, Log-Lik: -7786.972, Max-Change: 0.00014Iteration: 31, Log-Lik: -7786.971, Max-Change: 0.00011Iteration: 32, Log-Lik: -7786.971, Max-Change: 0.00035Iteration: 33, Log-Lik: -7786.971, Max-Change: 0.00012Iteration: 34, Log-Lik: -7786.971, Max-Change: 0.00007</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       a1 ak0   ak1   ak2 ak3 d0    d1    d2     d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.79   0 1.269 2.304   3  0 0.673 0.538 -0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 ak0   ak1   ak2 ak3 d0    d1    d2    d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.898   0 0.859 1.717   3  0 1.452 1.636 0.647</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 ak0   ak1   ak2 ak3 d0    d1    d2    d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.908   0 1.289 2.038   3  0 1.495 1.508 1.457</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 COV_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> <span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

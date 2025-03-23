@@ -62,12 +62,32 @@ INRA (Europe), Brussels. [computer file]</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  392           11.668          2.003 0.275 0.098 0.598      1.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Comfort 392 3.120 0.588   0.596         0.352       0.552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Work    392 2.722 0.807   0.666         0.332       0.567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Future  392 2.990 0.757   0.748         0.488       0.437</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 392 2.837 0.802   0.684         0.363       0.541</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1     2     3     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Comfort 0.013 0.082 0.679 0.227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Work    0.084 0.250 0.526 0.140</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Future  0.036 0.184 0.536 0.245</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Benefit 0.054 0.255 0.492 0.199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.50660Iteration: 2, Log-Lik: -1617.374, Max-Change: 0.25442Iteration: 3, Log-Lik: -1612.894, Max-Change: 0.16991Iteration: 4, Log-Lik: -1610.306, Max-Change: 0.10461Iteration: 5, Log-Lik: -1609.814, Max-Change: 0.09162Iteration: 6, Log-Lik: -1609.534, Max-Change: 0.07363Iteration: 7, Log-Lik: -1609.030, Max-Change: 0.03677Iteration: 8, Log-Lik: -1608.988, Max-Change: 0.03200Iteration: 9, Log-Lik: -1608.958, Max-Change: 0.02754Iteration: 10, Log-Lik: -1608.878, Max-Change: 0.01443Iteration: 11, Log-Lik: -1608.875, Max-Change: 0.00847Iteration: 12, Log-Lik: -1608.873, Max-Change: 0.00515Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.00550Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00318Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00462Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00277Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00145Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00175Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00126Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00025Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00285Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00108Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00022Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00059Iteration: 25, Log-Lik: -1608.870, Max-Change: 0.00014Iteration: 26, Log-Lik: -1608.870, Max-Change: 0.00068Iteration: 27, Log-Lik: -1608.870, Max-Change: 0.00065Iteration: 28, Log-Lik: -1608.870, Max-Change: 0.00019Iteration: 29, Log-Lik: -1608.870, Max-Change: 0.00061Iteration: 30, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 31, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 32, Log-Lik: -1608.870, Max-Change: 0.00058Iteration: 33, Log-Lik: -1608.870, Max-Change: 0.00055Iteration: 34, Log-Lik: -1608.870, Max-Change: 0.00015Iteration: 35, Log-Lik: -1608.870, Max-Change: 0.00052Iteration: 36, Log-Lik: -1608.870, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-plt img"><img src="Science-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

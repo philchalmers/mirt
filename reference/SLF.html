@@ -61,19 +61,74 @@ Statistical Society - Series C, 47, 1-13.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># tabular format</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SLF</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">SLF</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    social1 social2 social3 social4 social5 freq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0       0       0       0       0  156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0       0       0       0       1   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0       0       0       1       0   14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0       0       0       1       1    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0       0       1       0       0  127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0       0       1       0       1   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        0       0       1       1       0   66</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        0       0       1       1       1   16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        0       1       0       0       0  174</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       0       1       0       0       1   35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       0       1       0       1       0   36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       0       1       0       1       1   13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       0       1       1       0       0  208</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       0       1       1       0       1   65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       0       1       1       1       0  195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       0       1       1       1       1  129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       1       0       0       0       0    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       1       0       0       0       1    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       1       0       0       1       0    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       1       0       0       1       1    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       1       0       1       0       0    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       1       0       1       0       1    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       1       0       1       1       0   18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       1       0       1       1       1    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       1       1       0       0       0    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       1       1       0       0       1    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       1       1       0       1       0    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       1       1       0       1       1    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29       1       1       1       0       0   19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       1       1       1       0       1   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31       1       1       1       1       0   31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       1       1       1       1       1   68</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># full dataset</span></span></span>
 <span class="r-in"><span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">SLF</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">full</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1490            2.166          1.324 0.187 0.076 0.536     0.902</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social1 1490 0.131 0.337   0.482         0.251       0.510</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social2 1490 0.672 0.470   0.550         0.227       0.527</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social3 1490 0.668 0.471   0.632         0.335       0.458</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social4 1490 0.413 0.493   0.702         0.420       0.397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social5 1490 0.282 0.450   0.578         0.281       0.493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social1 0.869 0.131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social2 0.328 0.672</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social3 0.332 0.668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social4 0.587 0.413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> social5 0.718 0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">full</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -4186.329, Max-Change: 0.29553Iteration: 2, Log-Lik: -4158.310, Max-Change: 0.24439Iteration: 3, Log-Lik: -4144.592, Max-Change: 0.19556Iteration: 4, Log-Lik: -4137.713, Max-Change: 0.15556Iteration: 5, Log-Lik: -4134.129, Max-Change: 0.12425Iteration: 6, Log-Lik: -4132.182, Max-Change: 0.10007Iteration: 7, Log-Lik: -4129.737, Max-Change: 0.03837Iteration: 8, Log-Lik: -4129.597, Max-Change: 0.03494Iteration: 9, Log-Lik: -4129.497, Max-Change: 0.03096Iteration: 10, Log-Lik: -4129.234, Max-Change: 0.01329Iteration: 11, Log-Lik: -4129.221, Max-Change: 0.01103Iteration: 12, Log-Lik: -4129.212, Max-Change: 0.00984Iteration: 13, Log-Lik: -4129.194, Max-Change: 0.00416Iteration: 14, Log-Lik: -4129.190, Max-Change: 0.00453Iteration: 15, Log-Lik: -4129.188, Max-Change: 0.00378Iteration: 16, Log-Lik: -4129.186, Max-Change: 0.00152Iteration: 17, Log-Lik: -4129.186, Max-Change: 0.00205Iteration: 18, Log-Lik: -4129.186, Max-Change: 0.00253Iteration: 19, Log-Lik: -4129.185, Max-Change: 0.00137Iteration: 20, Log-Lik: -4129.185, Max-Change: 0.00045Iteration: 21, Log-Lik: -4129.185, Max-Change: 0.00044Iteration: 22, Log-Lik: -4129.185, Max-Change: 0.00043Iteration: 23, Log-Lik: -4129.185, Max-Change: 0.00052Iteration: 24, Log-Lik: -4129.185, Max-Change: 0.00016Iteration: 25, Log-Lik: -4129.185, Max-Change: 0.00014Iteration: 26, Log-Lik: -4129.185, Max-Change: 0.00039Iteration: 27, Log-Lik: -4129.184, Max-Change: 0.00051Iteration: 28, Log-Lik: -4129.184, Max-Change: 0.00041Iteration: 29, Log-Lik: -4129.184, Max-Change: 0.00012Iteration: 30, Log-Lik: -4129.184, Max-Change: 0.00033Iteration: 31, Log-Lik: -4129.184, Max-Change: 0.00015Iteration: 32, Log-Lik: -4129.184, Max-Change: 0.00038Iteration: 33, Log-Lik: -4129.184, Max-Change: 0.00011Iteration: 34, Log-Lik: -4129.184, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="SLF-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

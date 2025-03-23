@@ -278,7 +278,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co">#mod &lt;- mirt(dataset1, 3, method = 'MHRM')</span></span></span>
 <span class="r-in"><span><span class="co">#coef(mod)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Unidimensional graded response model with 5 categories each</span></span></span>
 <span class="r-in"><span></span></span>
@@ -333,18 +333,94 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="cn">F</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.7</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [,1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]  0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]  0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]  0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]  0.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]  0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]  0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]  0.5</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu">F2a</span><span class="op">(</span><span class="cn">F</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] 1.6682937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 1.6682937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,] 1.6682937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,] 1.6682937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,] 1.6682937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,] 0.9826502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,] 0.9826502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 0.9826502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 0.9826502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 0.9826502</span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">5000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -29445.272, Max-Change: 0.36716Iteration: 2, Log-Lik: -29131.236, Max-Change: 0.21730Iteration: 3, Log-Lik: -29047.706, Max-Change: 0.12292Iteration: 4, Log-Lik: -29024.243, Max-Change: 0.06758Iteration: 5, Log-Lik: -29017.276, Max-Change: 0.03720Iteration: 6, Log-Lik: -29015.093, Max-Change: 0.02124Iteration: 7, Log-Lik: -29014.208, Max-Change: 0.00916Iteration: 8, Log-Lik: -29014.073, Max-Change: 0.00500Iteration: 9, Log-Lik: -29014.028, Max-Change: 0.00293Iteration: 10, Log-Lik: -29014.009, Max-Change: 0.00119Iteration: 11, Log-Lik: -29014.006, Max-Change: 0.00074Iteration: 12, Log-Lik: -29014.005, Max-Change: 0.00028Iteration: 13, Log-Lik: -29014.005, Max-Change: 0.00021Iteration: 14, Log-Lik: -29014.005, Max-Change: 0.00014Iteration: 15, Log-Lik: -29014.005, Max-Change: 0.00011Iteration: 16, Log-Lik: -29014.005, Max-Change: 0.00006</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                a1           d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.5912124  0.09329250 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.6611479  0.77704003 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.6100289  0.04348744 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.5251147 -0.39866322 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.7126206 -0.69888431 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.9352647 -1.71863199 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.9211469  0.73522267 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.9893392 -1.25501247 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.9999014  0.41687594 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.9416579 -1.00423353 0 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            F1    h2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.683 0.466</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.698 0.488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.687 0.472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.667 0.445</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.709 0.503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.482 0.232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.476 0.227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.503 0.253</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.507 0.257</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.484 0.234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  3.577 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.358 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1  1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">'F1 = 1-10</span></span></span>
 <span class="r-in"><span><span class="st">                   CONSTRAIN = (1-5, a1), (6-10, a1)'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -29445.272, Max-Change: 0.32930Iteration: 2, Log-Lik: -29133.433, Max-Change: 0.19251Iteration: 3, Log-Lik: -29050.590, Max-Change: 0.10762Iteration: 4, Log-Lik: -29027.380, Max-Change: 0.06009Iteration: 5, Log-Lik: -29020.428, Max-Change: 0.03293Iteration: 6, Log-Lik: -29018.278, Max-Change: 0.01871Iteration: 7, Log-Lik: -29017.419, Max-Change: 0.00801Iteration: 8, Log-Lik: -29017.287, Max-Change: 0.00465Iteration: 9, Log-Lik: -29017.241, Max-Change: 0.00247Iteration: 10, Log-Lik: -29017.224, Max-Change: 0.00121Iteration: 11, Log-Lik: -29017.220, Max-Change: 0.00077Iteration: 12, Log-Lik: -29017.219, Max-Change: 0.00056Iteration: 13, Log-Lik: -29017.217, Max-Change: 0.00014Iteration: 14, Log-Lik: -29017.217, Max-Change: 0.00004</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            F1    h2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.689 0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.689 0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.689 0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.689 0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.689 0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.491 0.241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.491 0.241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.491 0.241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.491 0.241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.491 0.241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  3.576 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.358 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1  1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod2</span>, <span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df   p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod2 58058.43 58098.51 58085.85 58136.64 -29017.22             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod  58068.01 58134.80 58113.69 58198.35 -29014.01 6.425  8 0.6</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#### Convert classical 3PL paramerization into slope-intercept form</span></span></span>
 <span class="r-in"><span><span class="va">nitems</span> <span class="op">&lt;-</span> <span class="fl">50</span></span></span>
@@ -354,6 +430,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># convert first item (only intercepts differ in resulting transformation)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="traditional2mirt.html">traditional2mirt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a'</span><span class="op">=</span><span class="va">as</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">'b'</span><span class="op">=</span><span class="va">bs</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">'g'</span><span class="op">=</span><span class="va">gs</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">'u'</span><span class="op">=</span><span class="fl">1</span><span class="op">)</span>, cls<span class="op">=</span><span class="st">'3PL'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         a1          d          g          u </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.2795115 -0.1107008  0.2525144  1.0000000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># convert all difficulties to intercepts</span></span></span>
 <span class="r-in"><span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">nitems</span><span class="op">)</span></span></span>
@@ -419,19 +497,142 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># return list of simulation parameters</span></span></span>
 <span class="r-in"><span><span class="va">listobj</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>,<span class="fl">2000</span>,<span class="va">items</span>,nominal<span class="op">=</span><span class="va">nominal</span>, returnList<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">listobj</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> List of 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ itemobjects:List of 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ :Formal class 'dich' [package "mirt"] with 23 slots</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ par          : num [1:4] 0.863 -1 -999 999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. .. ..- attr(*, "na.action")= 'omit' int [1:3] 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ SEpar        : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnames     : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ est          : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps          :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps2         :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ constr       : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemclass    : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnum       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfact        : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfixedeffects: num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ fixed.design : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dat          : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ncat         : int 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ gradient     : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ hessian      : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemtrace    : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ lbound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ubound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ any.prior    : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior.type   : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_1      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_2      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ :Formal class 'dich' [package "mirt"] with 23 slots</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ par          : num [1:4] 1.25 1.5 -999 999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. .. ..- attr(*, "na.action")= 'omit' int [1:3] 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ SEpar        : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnames     : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ est          : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps          :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps2         :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ constr       : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemclass    : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnum       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfact        : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfixedeffects: num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ fixed.design : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dat          : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ncat         : int 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ gradient     : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ hessian      : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemtrace    : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ lbound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ubound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ any.prior    : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior.type   : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_1      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_2      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ :Formal class 'dich' [package "mirt"] with 23 slots</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ par          : num [1:4] 1.02 0 -999 999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. .. ..- attr(*, "na.action")= 'omit' int [1:3] 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ SEpar        : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnames     : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ est          : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps          :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps2         :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ constr       : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemclass    : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnum       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfact        : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfixedeffects: num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ fixed.design : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dat          : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ncat         : int 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ gradient     : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ hessian      : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemtrace    : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ lbound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ubound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ any.prior    : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior.type   : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_1      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_2      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ :Formal class 'nestlogit' [package "mirt"] with 24 slots</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ correctcat   : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ par          : num [1:10] 0.771 1 -999 999 0 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ SEpar        : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnames     : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ est          : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps          :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dps2         :function ()  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ constr       : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemclass    : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ parnum       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfact        : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ nfixedeffects: num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ fixed.design : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ dat          : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ncat         : int 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ gradient     : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ hessian      : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ itemtrace    : num[0 , 0 ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ lbound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ ubound       : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ any.prior    : logi(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior.type   : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_1      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_2      : num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ data       : num [1:2000, 1:4] 1 1 1 0 0 1 0 1 0 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:4] "Item_1" "Item_2" "Item_3" "Item_4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Theta      : num [1:2000, 1] -0.399 1.931 1.621 -0.424 1.343 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># generate dataset from converged model</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span>, itemtype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'gpcm'</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">'nominal'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -1824.731, Max-Change: 2.56408Iteration: 2, Log-Lik: -1621.860, Max-Change: 0.39930Iteration: 3, Log-Lik: -1616.168, Max-Change: 0.22100Iteration: 4, Log-Lik: -1614.245, Max-Change: 0.21820Iteration: 5, Log-Lik: -1613.376, Max-Change: 0.17196Iteration: 6, Log-Lik: -1612.915, Max-Change: 0.15041Iteration: 7, Log-Lik: -1612.309, Max-Change: 0.09278Iteration: 8, Log-Lik: -1612.204, Max-Change: 0.09055Iteration: 9, Log-Lik: -1612.125, Max-Change: 0.08556Iteration: 10, Log-Lik: -1611.862, Max-Change: 0.05578Iteration: 11, Log-Lik: -1611.844, Max-Change: 0.04532Iteration: 12, Log-Lik: -1611.833, Max-Change: 0.03765Iteration: 13, Log-Lik: -1611.799, Max-Change: 0.03519Iteration: 14, Log-Lik: -1611.794, Max-Change: 0.00580Iteration: 15, Log-Lik: -1611.793, Max-Change: 0.03008Iteration: 16, Log-Lik: -1611.789, Max-Change: 0.02196Iteration: 17, Log-Lik: -1611.786, Max-Change: 0.01966Iteration: 18, Log-Lik: -1611.784, Max-Change: 0.02207Iteration: 19, Log-Lik: -1611.778, Max-Change: 0.00798Iteration: 20, Log-Lik: -1611.776, Max-Change: 0.00188Iteration: 21, Log-Lik: -1611.776, Max-Change: 0.00259Iteration: 22, Log-Lik: -1611.776, Max-Change: 0.01915Iteration: 23, Log-Lik: -1611.775, Max-Change: 0.00149Iteration: 24, Log-Lik: -1611.774, Max-Change: 0.00194Iteration: 25, Log-Lik: -1611.775, Max-Change: 0.00670Iteration: 26, Log-Lik: -1611.774, Max-Change: 0.00125Iteration: 27, Log-Lik: -1611.774, Max-Change: 0.00395Iteration: 28, Log-Lik: -1611.774, Max-Change: 0.00082Iteration: 29, Log-Lik: -1611.774, Max-Change: 0.00040Iteration: 30, Log-Lik: -1611.774, Max-Change: 0.00016Iteration: 31, Log-Lik: -1611.774, Max-Change: 0.02177Iteration: 32, Log-Lik: -1611.773, Max-Change: 0.00149Iteration: 33, Log-Lik: -1611.773, Max-Change: 0.00154Iteration: 34, Log-Lik: -1611.773, Max-Change: 0.00117Iteration: 35, Log-Lik: -1611.772, Max-Change: 0.00021Iteration: 36, Log-Lik: -1611.772, Max-Change: 0.00016Iteration: 37, Log-Lik: -1611.772, Max-Change: 0.01480Iteration: 38, Log-Lik: -1611.772, Max-Change: 0.00092Iteration: 39, Log-Lik: -1611.772, Max-Change: 0.00109Iteration: 40, Log-Lik: -1611.772, Max-Change: 0.00084Iteration: 41, Log-Lik: -1611.772, Max-Change: 0.00046Iteration: 42, Log-Lik: -1611.772, Max-Change: 0.00018Iteration: 43, Log-Lik: -1611.772, Max-Change: 0.00059Iteration: 44, Log-Lik: -1611.772, Max-Change: 0.00044Iteration: 45, Log-Lik: -1611.772, Max-Change: 0.00023Iteration: 46, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 47, Log-Lik: -1611.772, Max-Change: 0.00065Iteration: 48, Log-Lik: -1611.772, Max-Change: 0.00027Iteration: 49, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 50, Log-Lik: -1611.772, Max-Change: 0.00063Iteration: 51, Log-Lik: -1611.772, Max-Change: 0.00031Iteration: 52, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 53, Log-Lik: -1611.772, Max-Change: 0.00063Iteration: 54, Log-Lik: -1611.772, Max-Change: 0.00031Iteration: 55, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 56, Log-Lik: -1611.772, Max-Change: 0.00062Iteration: 57, Log-Lik: -1611.772, Max-Change: 0.00031Iteration: 58, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 59, Log-Lik: -1611.772, Max-Change: 0.00062Iteration: 60, Log-Lik: -1611.772, Max-Change: 0.00031Iteration: 61, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 62, Log-Lik: -1611.772, Max-Change: 0.00061Iteration: 63, Log-Lik: -1611.772, Max-Change: 0.00031Iteration: 64, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 65, Log-Lik: -1611.772, Max-Change: 0.00061Iteration: 66, Log-Lik: -1611.772, Max-Change: 0.00031Iteration: 67, Log-Lik: -1611.772, Max-Change: 0.00011Iteration: 68, Log-Lik: -1611.772, Max-Change: 0.00061Iteration: 69, Log-Lik: -1611.772, Max-Change: 0.00030Iteration: 70, Log-Lik: -1611.772, Max-Change: 0.00010Iteration: 71, Log-Lik: -1611.772, Max-Change: 0.00060Iteration: 72, Log-Lik: -1611.772, Max-Change: 0.00030Iteration: 73, Log-Lik: -1611.771, Max-Change: 0.00010Iteration: 74, Log-Lik: -1611.771, Max-Change: 0.00060Iteration: 75, Log-Lik: -1611.771, Max-Change: 0.00030Iteration: 76, Log-Lik: -1611.771, Max-Change: 0.00010Iteration: 77, Log-Lik: -1611.771, Max-Change: 0.00059Iteration: 78, Log-Lik: -1611.771, Max-Change: 0.00030Iteration: 79, Log-Lik: -1611.771, Max-Change: 0.00010Iteration: 80, Log-Lik: -1611.771, Max-Change: 0.00059Iteration: 81, Log-Lik: -1611.771, Max-Change: 0.00030Iteration: 82, Log-Lik: -1611.771, Max-Change: 0.00010Iteration: 83, Log-Lik: -1611.771, Max-Change: 0.00058Iteration: 84, Log-Lik: -1611.771, Max-Change: 0.00029Iteration: 85, Log-Lik: -1611.771, Max-Change: 0.00010Iteration: 86, Log-Lik: -1611.771, Max-Change: 0.00058Iteration: 87, Log-Lik: -1611.771, Max-Change: 0.00029Iteration: 88, Log-Lik: -1611.771, Max-Change: 0.00010Iteration: 89, Log-Lik: -1611.771, Max-Change: 0.00058Iteration: 90, Log-Lik: -1611.771, Max-Change: 0.00029Iteration: 91, Log-Lik: -1611.771, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span>model<span class="op">=</span><span class="va">mod</span>, N<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort Work Future Benefit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       4    3      3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       3    2      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       3    2      4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       4    3      4       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       3    3      2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       2    3      3       2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span>model<span class="op">=</span><span class="va">mod</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort Work Future Benefit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       3    3      4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       4    2      3       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       3    2      3       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       3    3      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       3    3      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       3    3      4       3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># alternatively, define a suitable object with functions from the mirtCAT package</span></span></span>
 <span class="r-in"><span><span class="co"># help(generate.mirt_object)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/philchalmers/mirtCAT" class="external-link">mirtCAT</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: shiny</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">nitems</span> <span class="op">&lt;-</span> <span class="fl">50</span></span></span>
 <span class="r-in"><span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">rlnorm</a></span><span class="op">(</span><span class="va">nitems</span>, <span class="fl">.2</span>,<span class="fl">.2</span><span class="op">)</span></span></span>
@@ -439,6 +640,13 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span><span class="va">nitems</span>, <span class="fl">20</span>, <span class="fl">80</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>a1<span class="op">=</span><span class="va">a1</span>, d<span class="op">=</span><span class="va">d</span>, g<span class="op">=</span><span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pars</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a1          d         g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.1271598 -0.6479570 0.2637693</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.3539630 -1.4832170 0.1903528</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.1640507  0.3390045 0.1782070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.9568311 -1.3578148 0.1389409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1.0394247  0.3835373 0.2361323</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1.1479152  1.3522255 0.1990177</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mirtCAT/man/generate.mirt_object.html" class="external-link">generate.mirt_object</a></span><span class="op">(</span><span class="va">pars</span>, <span class="st">'3PL'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span>N<span class="op">=</span><span class="fl">200</span>, model<span class="op">=</span><span class="va">obj</span><span class="op">)</span></span></span>
@@ -451,6 +659,11 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="fl">1000</span>, <span class="st">'ggum'</span>, t<span class="op">=</span><span class="va">t</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0    477    496    674    332    438    417    558    458    475     513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    299    309    218    388    364    365    288    320    314     305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    153    155     79    232    158    175    109    167    162     138</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     71     40     29     48     40     43     45     55     49      44</span>
 <span class="r-in"><span><span class="co"># mod &lt;- mirt(dat, 1, 'ggum')</span></span></span>
 <span class="r-in"><span><span class="co"># coef(mod)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -462,6 +675,36 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">1000</span>, <span class="st">'hcm'</span>, rho<span class="op">=</span><span class="va">rho</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000            8.522          2.709 0.015 0.212 0.119     2.543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1000 0.475 0.500   0.128        -0.057       0.146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1000 0.343 0.475   0.352         0.186       0.056</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1000 0.574 0.796   0.367         0.079       0.082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1000 0.989 0.895   0.531         0.231      -0.038</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1000 1.159 0.867   0.163        -0.158       0.234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1000 0.911 0.874   0.511         0.214      -0.021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1000 1.001 0.884   0.525         0.228      -0.034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1000 0.965 0.896   0.016        -0.300       0.323</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1000 0.886 0.895   0.517         0.213      -0.023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1000 1.219 0.861   0.210        -0.110       0.204</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.525 0.475    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.657 0.343    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.620 0.186 0.194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.406 0.199 0.395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.309 0.223 0.468</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.430 0.229 0.341</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.390 0.219 0.391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.419 0.197 0.384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.464 0.186 0.350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.285 0.211 0.504</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># mod &lt;- mirt(dat, 1, 'hcm')</span></span></span>
 <span class="r-in"><span><span class="co"># list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))</span></span></span>
 <span class="r-in"><span></span></span>
@@ -482,9 +725,22 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">rlnorm</a></span><span class="op">(</span><span class="va">nitems</span>, <span class="fl">.2</span>, <span class="fl">.2</span><span class="op">)</span>; <span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">nitems</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nitems</span><span class="op">)</span> <span class="va">prob.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">fun</span><span class="op">(</span><span class="va">a</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">b</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">theta</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">prob.list</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> List of 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : num [1:100, 1:2] 0.836 0.68 0.865 0.317 0.645 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : num [1:100, 1:2] 0.771 0.554 0.813 0.179 0.509 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : num [1:100, 1:2] 0.75 0.569 0.788 0.239 0.532 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : num [1:100, 1:2] 0.737 0.503 0.785 0.146 0.457 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : num [1:100, 1:2] 0.828 0.669 0.858 0.308 0.634 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span>prob.list<span class="op">=</span><span class="va">prob.list</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0      0      0      1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      0      0      0      1      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      1      1      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      1      1      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      0      1      0      1      0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># prob.list input is useful when defining custom items as well</span></span></span>
 <span class="r-in"><span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'old2PL'</span></span></span>
@@ -502,7 +758,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">prob.list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">@</span><span class="va">P</span><span class="op">(</span><span class="va">x</span><span class="op">@</span><span class="va">par</span>, <span class="va">theta</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -63,23 +63,163 @@ dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">LSAT7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item.1 Item.2 Item.3 Item.4 Item.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      0      0      0      0      0</span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000            3.707          1.199 0.143 0.052 0.453     0.886</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1000 0.828 0.378   0.530         0.246       0.396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1000 0.658 0.475   0.600         0.247       0.394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1000 0.772 0.420   0.611         0.313       0.345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1000 0.606 0.489   0.592         0.223       0.415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1000 0.843 0.364   0.461         0.175       0.438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 0.172 0.828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 0.342 0.658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 0.228 0.772</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 0.394 0.606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 0.157 0.843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243Iteration: 2, Log-Lik: -2663.691, Max-Change: 0.13637Iteration: 3, Log-Lik: -2661.454, Max-Change: 0.10231Iteration: 4, Log-Lik: -2659.430, Max-Change: 0.04181Iteration: 5, Log-Lik: -2659.241, Max-Change: 0.03417Iteration: 6, Log-Lik: -2659.113, Max-Change: 0.02911Iteration: 7, Log-Lik: -2658.812, Max-Change: 0.00456Iteration: 8, Log-Lik: -2658.809, Max-Change: 0.00363Iteration: 9, Log-Lik: -2658.808, Max-Change: 0.00273Iteration: 10, Log-Lik: -2658.806, Max-Change: 0.00144Iteration: 11, Log-Lik: -2658.806, Max-Change: 0.00118Iteration: 12, Log-Lik: -2658.806, Max-Change: 0.00101Iteration: 13, Log-Lik: -2658.805, Max-Change: 0.00042Iteration: 14, Log-Lik: -2658.805, Max-Change: 0.00025Iteration: 15, Log-Lik: -2658.805, Max-Change: 0.00026Iteration: 16, Log-Lik: -2658.805, Max-Change: 0.00023Iteration: 17, Log-Lik: -2658.805, Max-Change: 0.00023Iteration: 18, Log-Lik: -2658.805, Max-Change: 0.00021Iteration: 19, Log-Lik: -2658.805, Max-Change: 0.00019Iteration: 20, Log-Lik: -2658.805, Max-Change: 0.00017Iteration: 21, Log-Lik: -2658.805, Max-Change: 0.00017Iteration: 22, Log-Lik: -2658.805, Max-Change: 0.00015Iteration: 23, Log-Lik: -2658.805, Max-Change: 0.00015Iteration: 24, Log-Lik: -2658.805, Max-Change: 0.00013Iteration: 25, Log-Lik: -2658.805, Max-Change: 0.00013Iteration: 26, Log-Lik: -2658.805, Max-Change: 0.00011Iteration: 27, Log-Lik: -2658.805, Max-Change: 0.00011Iteration: 28, Log-Lik: -2658.805, Max-Change: 0.00010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dat, model = 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.44.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -2658.805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 5337.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 5386.688; SABIC = 5354.927</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (21) = 31.7, p = 0.0628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0.023, CFI = NaN, TLI = NaN</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.988 1.856 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.081 0.808 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.706 1.804 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.765 0.486 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.736 1.855 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 COV_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">LSAT7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item.1 Item.2 Item.3 Item.4 Item.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      0      0      0      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      0      0      0      0      0</span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000            3.707          1.199 0.143 0.052 0.453     0.886</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1000 0.828 0.378   0.530         0.246       0.396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1000 0.658 0.475   0.600         0.247       0.394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1000 0.772 0.420   0.611         0.313       0.345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1000 0.606 0.489   0.592         0.223       0.415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1000 0.843 0.364   0.461         0.175       0.438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 0.172 0.828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 0.342 0.658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 0.228 0.772</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 0.394 0.606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 0.157 0.843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243Iteration: 2, Log-Lik: -2663.691, Max-Change: 0.13637Iteration: 3, Log-Lik: -2661.454, Max-Change: 0.10231Iteration: 4, Log-Lik: -2659.430, Max-Change: 0.04181Iteration: 5, Log-Lik: -2659.241, Max-Change: 0.03417Iteration: 6, Log-Lik: -2659.113, Max-Change: 0.02911Iteration: 7, Log-Lik: -2658.812, Max-Change: 0.00456Iteration: 8, Log-Lik: -2658.809, Max-Change: 0.00363Iteration: 9, Log-Lik: -2658.808, Max-Change: 0.00273Iteration: 10, Log-Lik: -2658.806, Max-Change: 0.00144Iteration: 11, Log-Lik: -2658.806, Max-Change: 0.00118Iteration: 12, Log-Lik: -2658.806, Max-Change: 0.00101Iteration: 13, Log-Lik: -2658.805, Max-Change: 0.00042Iteration: 14, Log-Lik: -2658.805, Max-Change: 0.00025Iteration: 15, Log-Lik: -2658.805, Max-Change: 0.00026Iteration: 16, Log-Lik: -2658.805, Max-Change: 0.00023Iteration: 17, Log-Lik: -2658.805, Max-Change: 0.00023Iteration: 18, Log-Lik: -2658.805, Max-Change: 0.00021Iteration: 19, Log-Lik: -2658.805, Max-Change: 0.00019Iteration: 20, Log-Lik: -2658.805, Max-Change: 0.00017Iteration: 21, Log-Lik: -2658.805, Max-Change: 0.00017Iteration: 22, Log-Lik: -2658.805, Max-Change: 0.00015Iteration: 23, Log-Lik: -2658.805, Max-Change: 0.00015Iteration: 24, Log-Lik: -2658.805, Max-Change: 0.00013Iteration: 25, Log-Lik: -2658.805, Max-Change: 0.00013Iteration: 26, Log-Lik: -2658.805, Max-Change: 0.00011Iteration: 27, Log-Lik: -2658.805, Max-Change: 0.00011Iteration: 28, Log-Lik: -2658.805, Max-Change: 0.00010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dat, model = 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.44.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: Gaussian </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Log-likelihood = -2658.805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated parameters: 10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AIC = 5337.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BIC = 5386.688; SABIC = 5354.927</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 (21) = 31.7, p = 0.0628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0.023, CFI = NaN, TLI = NaN</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.988 1.856 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.081 0.808 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.706 1.804 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.765 0.486 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.736 1.855 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 COV_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

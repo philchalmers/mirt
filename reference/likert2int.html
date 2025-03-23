@@ -81,7 +81,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate data</span></span></span>
 <span class="r-in"><span></span></span>
@@ -96,25 +96,102 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># separately</span></span></span>
 <span class="r-in"><span><span class="va">intdat1</span> <span class="op">&lt;-</span> <span class="fu">likert2int</span><span class="op">(</span><span class="va">dat1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]             [,2]             [,3]                [,4]               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "Agree"          "Strongly Agree" NA                  "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "Agree"          NA               "Agree"             "Disagree"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "Disagree"       "Disagree"       NA                  "Disagree"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "Strongly Agree" "Agree"          "Strongly Disagree" "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "Disagree"       "Strongly Agree" "Strongly Disagree" "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "Disagree"       "Neutral"        "Disagree"          "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,5]               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "Agree"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "Agree"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "Neutral"          </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intdat1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   V1 V2 V3 V4 V5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 NA NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 NA NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 NA NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 NA NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 NA NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 NA NA NA NA NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># more useful with explicit levels</span></span></span>
 <span class="r-in"><span><span class="va">lvl1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Strongly Disagree'</span><span class="op">=</span><span class="fl">1</span>, <span class="st">'Disagree'</span><span class="op">=</span><span class="fl">2</span>, <span class="st">'Neutral'</span><span class="op">=</span><span class="fl">3</span>, <span class="st">'Agree'</span><span class="op">=</span><span class="fl">4</span>,</span></span>
 <span class="r-in"><span>          <span class="st">'Strongly Agree'</span><span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">intdat1</span> <span class="op">&lt;-</span> <span class="fu">likert2int</span><span class="op">(</span><span class="va">dat1</span>, levels <span class="op">=</span> <span class="va">lvl1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]             [,2]             [,3]                [,4]               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "Agree"          "Strongly Agree" NA                  "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "Agree"          NA               "Agree"             "Disagree"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "Disagree"       "Disagree"       NA                  "Disagree"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "Strongly Agree" "Agree"          "Strongly Disagree" "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "Disagree"       "Strongly Agree" "Strongly Disagree" "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "Disagree"       "Neutral"        "Disagree"          "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,5]               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "Agree"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "Agree"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "Neutral"          </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intdat1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   V1 V2 V3 V4 V5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  4  5 NA  5  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  4 NA  4  2  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2  2 NA  2  4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  5  4  1  5  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2  5  1  1  4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2  3  2  5  3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># second data</span></span></span>
 <span class="r-in"><span><span class="va">lvl2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SD'</span><span class="op">=</span><span class="fl">1</span>, <span class="st">'D'</span><span class="op">=</span><span class="fl">2</span>, <span class="st">'N'</span><span class="op">=</span><span class="fl">3</span>, <span class="st">'A'</span><span class="op">=</span><span class="fl">4</span>, <span class="st">'SA'</span><span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">intdat2</span> <span class="op">&lt;-</span> <span class="fu">likert2int</span><span class="op">(</span><span class="va">dat2</span>, levels <span class="op">=</span> <span class="va">lvl2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "A"  "N"  "D"  "D"  "SA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "SD" "A"  "SA" "SD" "A" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "A"  "SA" "A"  "N"  "SA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "N"  "A"  "A"  "A"  "N" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "N"  "D"  "SD" "N"  "N" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "N"  "A"  "SA" "SA" "A" </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intdat2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   V1 V2 V3 V4 V5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  4  3  2  2  5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1  4  5  1  4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  4  5  4  3  5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  3  4  4  4  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  3  2  1  3  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  3  4  5  5  4</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># full dataset (using both mapping schemes)</span></span></span>
 <span class="r-in"><span><span class="va">intdat</span> <span class="op">&lt;-</span> <span class="fu">likert2int</span><span class="op">(</span><span class="va">dat</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">lvl1</span>, <span class="va">lvl2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]             [,2]             [,3]                [,4]               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "Agree"          "Strongly Agree" NA                  "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "Agree"          NA               "Agree"             "Disagree"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "Disagree"       "Disagree"       NA                  "Disagree"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "Strongly Agree" "Agree"          "Strongly Disagree" "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "Disagree"       "Strongly Agree" "Strongly Disagree" "Strongly Disagree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "Disagree"       "Neutral"        "Disagree"          "Strongly Agree"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,5]                [,6] [,7] [,8] [,9] [,10]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "Strongly Disagree" "A"  "N"  "D"  "D"  "SA" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "Strongly Disagree" "SD" "A"  "SA" "SD" "A"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] "Agree"             "A"  "SA" "A"  "N"  "SA" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] "Strongly Disagree" "N"  "A"  "A"  "A"  "N"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] "Agree"             "N"  "D"  "SD" "N"  "N"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] "Neutral"           "N"  "A"  "SA" "SA" "A"  </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intdat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  4  5 NA  5  1  4  3  2  2   5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  4 NA  4  2  1  1  4  5  1   4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2  2 NA  2  4  4  5  4  3   5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  5  4  1  5  1  3  4  4  4   3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2  5  1  1  4  3  2  1  3   3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2  3  2  5  3  3  4  5  5   4</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#####</span></span></span>
@@ -125,6 +202,17 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">dat.old</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat.old</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'Item_'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dat.old</span><span class="op">)</span> <span class="co"># factors are leveled alphabetically by default</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	1000 obs. of  10 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_1 : chr  "Agree" "Agree" "Disagree" "Strongly Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_2 : chr  "Strongly Agree" NA "Disagree" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_3 : chr  NA "Agree" NA "Strongly Disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_4 : chr  "Strongly Agree" "Disagree" "Disagree" "Strongly Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_5 : chr  "Strongly Disagree" "Strongly Disagree" "Agree" "Strongly Disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_6 : chr  "A" "SD" "A" "N" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_7 : chr  "N" "A" "SA" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_8 : chr  "D" "SA" "A" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_9 : chr  "D" "SD" "N" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_10: chr  "SA" "A" "SA" "N" ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create explicit ordering in factor variables</span></span></span>
 <span class="r-in"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dat1</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -137,12 +225,54 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat.old</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co"># note ordering</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	1000 obs. of  10 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_1 : chr  "Agree" "Agree" "Disagree" "Strongly Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_2 : chr  "Strongly Agree" NA "Disagree" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_3 : chr  NA "Agree" NA "Strongly Disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_4 : chr  "Strongly Agree" "Disagree" "Disagree" "Strongly Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_5 : chr  "Strongly Disagree" "Strongly Disagree" "Agree" "Strongly Disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_6 : chr  "A" "SD" "A" "N" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_7 : chr  "N" "A" "SA" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_8 : chr  "D" "SA" "A" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_9 : chr  "D" "SD" "N" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Item_10: chr  "SA" "A" "SA" "N" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">intdat</span> <span class="op">&lt;-</span> <span class="fu">likert2int</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Item_1         Item_2            Item_3            Item_4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          Agree Strongly Agree              &lt;NA&gt;    Strongly Agree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          Agree           &lt;NA&gt;             Agree          Disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       Disagree       Disagree              &lt;NA&gt;          Disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Strongly Agree          Agree Strongly Disagree    Strongly Agree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       Disagree Strongly Agree Strongly Disagree Strongly Disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       Disagree        Neutral          Disagree    Strongly Agree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Strongly Disagree      A      N      D      D      SA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Strongly Disagree     SD      A     SA     SD       A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3             Agree      A     SA      A      N      SA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Strongly Disagree      N      A      A      A       N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5             Agree      N      D     SD      N       N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6           Neutral      N      A     SA     SA       A</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intdat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      4      5     NA      5      1      4      3      2      2       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      4     NA      4      2      1      1      4      5      1       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      2      2     NA      2      4      4      5      4      3       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4      1      5      1      3      4      4      4       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      2      5      1      1      4      3      2      1      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      2      3      2      5      3      3      4      5      5       4</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

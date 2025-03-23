@@ -76,7 +76,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">1</span>,<span class="fl">.3</span><span class="op">)</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">0</span>,<span class="fl">.7</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
@@ -89,10 +89,36 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">models</span> <span class="op">&lt;-</span> <span class="st">'F1 = 1-15'</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod_configural</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">models</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -18088.494, Max-Change: 0.37763Iteration: 2, Log-Lik: -17943.205, Max-Change: 0.18868Iteration: 3, Log-Lik: -17915.337, Max-Change: 0.10010Iteration: 4, Log-Lik: -17907.752, Max-Change: 0.05644Iteration: 5, Log-Lik: -17905.241, Max-Change: 0.03385Iteration: 6, Log-Lik: -17904.329, Max-Change: 0.02073Iteration: 7, Log-Lik: -17903.856, Max-Change: 0.00942Iteration: 8, Log-Lik: -17903.798, Max-Change: 0.00531Iteration: 9, Log-Lik: -17903.778, Max-Change: 0.00309Iteration: 10, Log-Lik: -17903.767, Max-Change: 0.00141Iteration: 11, Log-Lik: -17903.764, Max-Change: 0.00087Iteration: 12, Log-Lik: -17903.764, Max-Change: 0.00041Iteration: 13, Log-Lik: -17903.763, Max-Change: 0.00036Iteration: 14, Log-Lik: -17903.763, Max-Change: 0.00018Iteration: 15, Log-Lik: -17903.763, Max-Change: 0.00013Iteration: 16, Log-Lik: -17903.763, Max-Change: 0.00009</span>
 <span class="r-in"><span><span class="va">group.1</span> <span class="op">&lt;-</span> <span class="fu">extract.group</span><span class="op">(</span><span class="va">mod_configural</span>, <span class="st">'D1'</span><span class="op">)</span> <span class="co">#extract first group</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">group.1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            F1     h2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.532 0.2835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.582 0.3383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.487 0.2371</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.466 0.2176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.542 0.2935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.315 0.0992</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.599 0.3592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.477 0.2280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.464 0.2148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.391 0.1529</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 0.438 0.1923</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.655 0.4291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.604 0.3650</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 0.519 0.2699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 0.453 0.2048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  3.885 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.259 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1  1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">group.1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-plt img"><img src="extract.group-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

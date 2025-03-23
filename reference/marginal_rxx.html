@@ -98,17 +98,28 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span><span class="op">$</span><span class="va">alpha</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6077281</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># empirical estimate (assuming the same prior)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span>, returnER <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        F1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6200703 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># empirical rxx the alternative way, given theta scores and SEs</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span>, full.scores.SE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             F1     SE_F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -1.580133 0.6699424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -1.580133 0.6699424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -1.580133 0.6699424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -1.580133 0.6699424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -1.580133 0.6699424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -1.580133 0.6699424</span>
 <span class="r-in"><span><span class="fu"><a href="empirical_rxx.html">empirical_rxx</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        F1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6200703 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

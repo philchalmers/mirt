@@ -91,7 +91,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate data</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span></span>
@@ -107,7 +107,45 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">1000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span>, covdata<span class="op">=</span><span class="va">covdata</span>, formula <span class="op">=</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -11123.874, Max-Change: 0.77434Iteration: 2, Log-Lik: -10724.065, Max-Change: 0.53447Iteration: 3, Log-Lik: -10569.146, Max-Change: 0.20072Iteration: 4, Log-Lik: -10525.011, Max-Change: 0.08901Iteration: 5, Log-Lik: -10508.664, Max-Change: 0.04954Iteration: 6, Log-Lik: -10501.108, Max-Change: 0.03132Iteration: 7, Log-Lik: -10497.152, Max-Change: 0.02140Iteration: 8, Log-Lik: -10494.904, Max-Change: 0.01541Iteration: 9, Log-Lik: -10493.551, Max-Change: 0.01150Iteration: 10, Log-Lik: -10492.672, Max-Change: 0.00901Iteration: 11, Log-Lik: -10492.127, Max-Change: 0.00697Iteration: 12, Log-Lik: -10491.775, Max-Change: 0.00549Iteration: 13, Log-Lik: -10491.541, Max-Change: 0.00449Iteration: 14, Log-Lik: -10491.376, Max-Change: 0.00359Iteration: 15, Log-Lik: -10491.270, Max-Change: 0.00290Iteration: 16, Log-Lik: -10491.197, Max-Change: 0.00240Iteration: 17, Log-Lik: -10491.146, Max-Change: 0.00196Iteration: 18, Log-Lik: -10491.112, Max-Change: 0.00161Iteration: 19, Log-Lik: -10491.088, Max-Change: 0.00137Iteration: 20, Log-Lik: -10491.070, Max-Change: 0.00112Iteration: 21, Log-Lik: -10491.058, Max-Change: 0.00093Iteration: 22, Log-Lik: -10491.050, Max-Change: 0.00078Iteration: 23, Log-Lik: -10491.044, Max-Change: 0.00065Iteration: 24, Log-Lik: -10491.040, Max-Change: 0.00054Iteration: 25, Log-Lik: -10491.037, Max-Change: 0.00046Iteration: 26, Log-Lik: -10491.035, Max-Change: 0.00039Iteration: 27, Log-Lik: -10491.034, Max-Change: 0.00032Iteration: 28, Log-Lik: -10491.033, Max-Change: 0.00027Iteration: 29, Log-Lik: -10491.032, Max-Change: 0.00023Iteration: 30, Log-Lik: -10491.032, Max-Change: 0.00019Iteration: 31, Log-Lik: -10491.031, Max-Change: 0.00026Iteration: 32, Log-Lik: -10491.031, Max-Change: 0.00014Iteration: 33, Log-Lik: -10491.031, Max-Change: 0.00012Iteration: 34, Log-Lik: -10491.031, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod1</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         a1      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1 -0.409 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1  0.491 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1  0.313 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1  1.965 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1  1.753 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   1 -0.246 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   1 -1.077 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   1  0.533 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   1 -1.232 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  1  0.603 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  1 -0.404 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  1  1.238 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  1  1.033 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  1  1.524 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  1 -0.548 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16  1  2.075 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17  1 -0.695 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18  1 -1.200 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19  1  0.121 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20  1  0.523 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.215</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $lr.betas</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X1           0.527</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X2          -1.036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># draw plausible values for secondary analyses</span></span></span>
 <span class="r-in"><span><span class="va">pv</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod1</span>, plausible.draws <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
@@ -119,8 +157,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">so</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span>, <span class="st">'Estimate'</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">SEpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">so</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span>, <span class="st">'Std. Error'</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">averageMI</span><span class="op">(</span><span class="va">par</span>, <span class="va">SEpar</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                par SEpar       t      df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  0.003 0.016   0.209 198.552 0.209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> covdata$X1   0.528 0.018  28.554  63.384     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> covdata$X2  -1.037 0.021 -49.311  35.705     0</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

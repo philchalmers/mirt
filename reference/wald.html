@@ -101,47 +101,129 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># View parnumber index</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">LSAT7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">LSAT7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, SE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243Iteration: 2, Log-Lik: -2663.691, Max-Change: 0.13637Iteration: 3, Log-Lik: -2661.454, Max-Change: 0.10231Iteration: 4, Log-Lik: -2659.430, Max-Change: 0.04181Iteration: 5, Log-Lik: -2659.241, Max-Change: 0.03417Iteration: 6, Log-Lik: -2659.113, Max-Change: 0.02911Iteration: 7, Log-Lik: -2658.812, Max-Change: 0.00456Iteration: 8, Log-Lik: -2658.809, Max-Change: 0.00363Iteration: 9, Log-Lik: -2658.808, Max-Change: 0.00273Iteration: 10, Log-Lik: -2658.806, Max-Change: 0.00144Iteration: 11, Log-Lik: -2658.806, Max-Change: 0.00118Iteration: 12, Log-Lik: -2658.806, Max-Change: 0.00101Iteration: 13, Log-Lik: -2658.805, Max-Change: 0.00042Iteration: 14, Log-Lik: -2658.805, Max-Change: 0.00025Iteration: 15, Log-Lik: -2658.805, Max-Change: 0.00026Iteration: 16, Log-Lik: -2658.805, Max-Change: 0.00023Iteration: 17, Log-Lik: -2658.805, Max-Change: 0.00023Iteration: 18, Log-Lik: -2658.805, Max-Change: 0.00021Iteration: 19, Log-Lik: -2658.805, Max-Change: 0.00019Iteration: 20, Log-Lik: -2658.805, Max-Change: 0.00017Iteration: 21, Log-Lik: -2658.805, Max-Change: 0.00017Iteration: 22, Log-Lik: -2658.805, Max-Change: 0.00015Iteration: 23, Log-Lik: -2658.805, Max-Change: 0.00015Iteration: 24, Log-Lik: -2658.805, Max-Change: 0.00013Iteration: 25, Log-Lik: -2658.805, Max-Change: 0.00013Iteration: 26, Log-Lik: -2658.805, Max-Change: 0.00011Iteration: 27, Log-Lik: -2658.805, Max-Change: 0.00011Iteration: 28, Log-Lik: -2658.805, Max-Change: 0.00010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d  g  u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par     0.988 1.856  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_2.5  0.641 1.598 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_97.5 1.335 2.114 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d  g  u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par     1.081 0.808  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_2.5  0.750 0.629 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_97.5 1.412 0.987 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d  g  u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par     1.706 1.804  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_2.5  1.078 1.404 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_97.5 2.334 2.205 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d  g  u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par     0.765 0.486  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_2.5  0.502 0.339 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_97.5 1.028 0.633 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Item.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d  g  u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par     0.736 1.855  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_2.5  0.440 1.630 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_97.5 1.032 2.079 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         MEAN_1 COV_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par          0      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_2.5      NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CI_97.5     NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># see how the information matrix relates to estimated parameters, and how it lines up</span></span></span>
 <span class="r-in"><span><span class="co">#   with the parameter index</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">infonames</span> <span class="op">&lt;-</span> <span class="fu">wald</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.1   d.2  a1.5   d.6  a1.9  d.10 a1.13  d.14 a1.17  d.18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.988 1.856 1.081 0.808 1.706 1.804 0.765 0.486 0.736 1.855 </span>
 <span class="r-in"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="mod2values.html">mod2values</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">index</span><span class="op">[</span><span class="va">index</span><span class="op">$</span><span class="va">est</span>, <span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    group   item class name parnum value lbound ubound  est const nconst</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    all Item.1  dich   a1      1 0.988   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    all Item.1  dich    d      2 1.856   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    all Item.2  dich   a1      5 1.081   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    all Item.2  dich    d      6 0.808   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    all Item.3  dich   a1      9 1.706   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   all Item.3  dich    d     10 1.804   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   all Item.4  dich   a1     13 0.765   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   all Item.4  dich    d     14 0.486   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   all Item.5  dich   a1     17 0.736   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   all Item.5  dich    d     18 1.855   -Inf    Inf TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    prior.type prior_1 prior_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       none     NaN     NaN</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># second item slope equal to 0?</span></span></span>
 <span class="r-in"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">L</span><span class="op">[</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="fu">wald</span><span class="op">(</span><span class="va">mod</span>, <span class="va">L</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         W df            p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 41.0005  1 1.521906e-10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same as above using character syntax input</span></span></span>
 <span class="r-in"><span><span class="va">infonames</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.1   d.2  a1.5   d.6  a1.9  d.10 a1.13  d.14 a1.17  d.18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.988 1.856 1.081 0.808 1.706 1.804 0.765 0.486 0.736 1.855 </span>
 <span class="r-in"><span><span class="fu">wald</span><span class="op">(</span><span class="va">mod</span>, <span class="st">"a1.5 = 0"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         W df            p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 41.0005  1 1.521906e-10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simultaneously test equal factor slopes for item 1 and 2, and 4 and 5</span></span></span>
 <span class="r-in"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">L</span><span class="op">[</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">L</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">7</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="va">L</span><span class="op">[</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">L</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">9</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="va">L</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    1    0   -1    0    0    0    0    0    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    0    0    0    0    0    0    1    0   -1     0</span>
 <span class="r-in"><span><span class="fu">wald</span><span class="op">(</span><span class="va">mod</span>, <span class="va">L</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           W df         p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1528867  2 0.9264054</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Again, using more efficient syntax</span></span></span>
 <span class="r-in"><span><span class="va">infonames</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.1   d.2  a1.5   d.6  a1.9  d.10 a1.13  d.14 a1.17  d.18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.988 1.856 1.081 0.808 1.706 1.804 0.765 0.486 0.736 1.855 </span>
 <span class="r-in"><span><span class="fu">wald</span><span class="op">(</span><span class="va">mod</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a1.1 = a1.5"</span>, <span class="st">"a1.13 = a1.17"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           W df         p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1528867  2 0.9264054</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># log-Liklihood tests (requires estimating a new model)</span></span></span>
 <span class="r-in"><span><span class="va">cmodel</span> <span class="op">&lt;-</span> <span class="st">'theta = 1-5</span></span></span>
 <span class="r-in"><span><span class="st">           CONSTRAIN = (1,2, a1), (4,5, a1)'</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">cmodel</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -2668.786, Max-Change: 0.18243Iteration: 2, Log-Lik: -2663.808, Max-Change: 0.13888Iteration: 3, Log-Lik: -2661.502, Max-Change: 0.10551Iteration: 4, Log-Lik: -2659.196, Max-Change: 0.03290Iteration: 5, Log-Lik: -2659.083, Max-Change: 0.02744Iteration: 6, Log-Lik: -2659.016, Max-Change: 0.02305Iteration: 7, Log-Lik: -2658.892, Max-Change: 0.00707Iteration: 8, Log-Lik: -2658.888, Max-Change: 0.00613Iteration: 9, Log-Lik: -2658.886, Max-Change: 0.00488Iteration: 10, Log-Lik: -2658.882, Max-Change: 0.00116Iteration: 11, Log-Lik: -2658.882, Max-Change: 0.00166Iteration: 12, Log-Lik: -2658.882, Max-Change: 0.00069Iteration: 13, Log-Lik: -2658.882, Max-Change: 0.00058Iteration: 14, Log-Lik: -2658.882, Max-Change: 0.00236Iteration: 15, Log-Lik: -2658.882, Max-Change: 0.00040Iteration: 16, Log-Lik: -2658.882, Max-Change: 0.00036Iteration: 17, Log-Lik: -2658.881, Max-Change: 0.00027Iteration: 18, Log-Lik: -2658.881, Max-Change: 0.00030Iteration: 19, Log-Lik: -2658.881, Max-Change: 0.00024Iteration: 20, Log-Lik: -2658.881, Max-Change: 0.00025Iteration: 21, Log-Lik: -2658.881, Max-Change: 0.00022Iteration: 22, Log-Lik: -2658.881, Max-Change: 0.00021Iteration: 23, Log-Lik: -2658.881, Max-Change: 0.00018Iteration: 24, Log-Lik: -2658.881, Max-Change: 0.00018Iteration: 25, Log-Lik: -2658.881, Max-Change: 0.00016Iteration: 26, Log-Lik: -2658.881, Max-Change: 0.00015Iteration: 27, Log-Lik: -2658.881, Max-Change: 0.00014Iteration: 28, Log-Lik: -2658.881, Max-Change: 0.00013Iteration: 29, Log-Lik: -2658.881, Max-Change: 0.00012Iteration: 30, Log-Lik: -2658.881, Max-Change: 0.00011Iteration: 31, Log-Lik: -2658.881, Max-Change: 0.00010Iteration: 32, Log-Lik: -2658.881, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="co"># or, equivalently</span></span></span>
 <span class="r-in"><span><span class="co">#mod2 &lt;- mirt(data, 1, constrain = list(c(1,5), c(13,17)))</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod2</span>, <span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod2 5333.763 5347.616 5348.685 5373.025 -2658.881               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod  5337.610 5354.927 5356.263 5386.688 -2658.805 0.152  2 0.927</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#####</span></span></span>
 <span class="r-in"><span><span class="co"># test equality of means in multi-group model:</span></span></span>
@@ -159,19 +241,43 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dataset1</span>, <span class="va">dataset2</span>, <span class="va">dataset3</span>, <span class="va">dataset4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'D'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>, each<span class="op">=</span><span class="va">N</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "D1" "D2" "D3" "D4"</span>
 <span class="r-in"><span><span class="va">models</span> <span class="op">&lt;-</span> <span class="st">'F1 = 1-15'</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 3 means estimated</span></span></span>
 <span class="r-in"><span><span class="va">mod_free</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">models</span>, group <span class="op">=</span> <span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                          invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span>, <span class="st">'free_var'</span>,<span class="st">'free_means'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -17745.920, Max-Change: 0.38568Iteration: 2, Log-Lik: -17572.697, Max-Change: 0.14556Iteration: 3, Log-Lik: -17560.767, Max-Change: 0.05810Iteration: 4, Log-Lik: -17558.317, Max-Change: 0.02706Iteration: 5, Log-Lik: -17556.791, Max-Change: 0.01811Iteration: 6, Log-Lik: -17555.521, Max-Change: 0.01676Iteration: 7, Log-Lik: -17553.494, Max-Change: 0.06689Iteration: 8, Log-Lik: -17550.635, Max-Change: 0.01867Iteration: 9, Log-Lik: -17550.091, Max-Change: 0.01255Iteration: 10, Log-Lik: -17549.198, Max-Change: 0.02525Iteration: 11, Log-Lik: -17548.652, Max-Change: 0.01024Iteration: 12, Log-Lik: -17548.384, Max-Change: 0.00795Iteration: 13, Log-Lik: -17547.951, Max-Change: 0.02867Iteration: 14, Log-Lik: -17547.362, Max-Change: 0.00836Iteration: 15, Log-Lik: -17547.242, Max-Change: 0.00565Iteration: 16, Log-Lik: -17547.038, Max-Change: 0.01271Iteration: 17, Log-Lik: -17546.901, Max-Change: 0.00473Iteration: 18, Log-Lik: -17546.842, Max-Change: 0.00380Iteration: 19, Log-Lik: -17546.746, Max-Change: 0.01310Iteration: 20, Log-Lik: -17546.618, Max-Change: 0.00371Iteration: 21, Log-Lik: -17546.591, Max-Change: 0.00251Iteration: 22, Log-Lik: -17546.545, Max-Change: 0.00613Iteration: 23, Log-Lik: -17546.513, Max-Change: 0.00213Iteration: 24, Log-Lik: -17546.500, Max-Change: 0.00183Iteration: 25, Log-Lik: -17546.478, Max-Change: 0.00613Iteration: 26, Log-Lik: -17546.449, Max-Change: 0.00164Iteration: 27, Log-Lik: -17546.443, Max-Change: 0.00120Iteration: 28, Log-Lik: -17546.432, Max-Change: 0.00304Iteration: 29, Log-Lik: -17546.424, Max-Change: 0.00095Iteration: 30, Log-Lik: -17546.422, Max-Change: 0.00088Iteration: 31, Log-Lik: -17546.416, Max-Change: 0.00288Iteration: 32, Log-Lik: -17546.410, Max-Change: 0.00071Iteration: 33, Log-Lik: -17546.409, Max-Change: 0.00058Iteration: 34, Log-Lik: -17546.406, Max-Change: 0.00156Iteration: 35, Log-Lik: -17546.404, Max-Change: 0.00043Iteration: 36, Log-Lik: -17546.404, Max-Change: 0.00042Iteration: 37, Log-Lik: -17546.402, Max-Change: 0.00135Iteration: 38, Log-Lik: -17546.401, Max-Change: 0.00030Iteration: 39, Log-Lik: -17546.401, Max-Change: 0.00028Iteration: 40, Log-Lik: -17546.400, Max-Change: 0.00085Iteration: 41, Log-Lik: -17546.400, Max-Change: 0.00021Iteration: 42, Log-Lik: -17546.399, Max-Change: 0.00019Iteration: 43, Log-Lik: -17546.399, Max-Change: 0.00059Iteration: 44, Log-Lik: -17546.399, Max-Change: 0.00014Iteration: 45, Log-Lik: -17546.399, Max-Change: 0.00013Iteration: 46, Log-Lik: -17546.399, Max-Change: 0.00040Iteration: 47, Log-Lik: -17546.399, Max-Change: 0.00009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu">wald</span><span class="op">(</span><span class="va">mod_free</span><span class="op">)</span> <span class="co"># obtain parameter names</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   a1.1.63.125.187    d.2.64.126.188   a1.5.67.129.191    d.6.68.130.192 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1.234             0.643             1.189            -0.573 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   a1.9.71.133.195   d.10.72.134.196  a1.13.75.137.199   d.14.76.138.200 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0.981            -0.141             1.058             0.864 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.17.79.141.203   d.18.80.142.204  a1.21.83.145.207   d.22.84.146.208 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1.146             0.248             0.499             0.537 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.25.87.149.211   d.26.88.150.212  a1.29.91.153.215   d.30.92.154.216 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1.274             1.204             0.997            -0.368 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.33.95.157.219   d.34.96.158.220  a1.37.99.161.223  d.38.100.162.224 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0.899            -1.032             0.735            -1.087 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a1.41.103.165.227  d.42.104.166.228 a1.45.107.169.231  d.46.108.170.232 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1.031             1.345             1.603            -0.160 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a1.49.111.173.235  d.50.112.174.236 a1.53.115.177.239  d.54.116.178.240 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1.272             0.578             1.228             0.501 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a1.57.119.181.243  d.58.120.182.244        MEAN_1.123        COV_11.124 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0.850            -0.080             0.382             0.865 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        MEAN_1.185        COV_11.186        MEAN_1.247        COV_11.248 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            -1.062             0.864            -0.594             0.936 </span>
 <span class="r-in"><span><span class="co"># View(mod2values(mod_free))</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># reference group mean = 0 by default</span></span></span>
 <span class="r-in"><span><span class="fu">wald</span><span class="op">(</span><span class="va">mod_free</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0 - MEAN_1.123 = MEAN_1.185 - MEAN_1.247"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           W df         p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.7142209  1 0.3980461</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
