@@ -36,7 +36,7 @@ due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hart
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 #----- generate some data
 set.seed(12345)

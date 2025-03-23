@@ -27,7 +27,7 @@ These estimates are used to gauge how difficult a polytomous item may be.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 mod <- mirt(Science, 1)
 coef(mod, simplify=TRUE, IRTpars = TRUE)$items

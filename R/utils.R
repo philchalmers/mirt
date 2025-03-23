@@ -76,7 +76,7 @@ thetaStack <- function(theta, nclass){
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # PD matrix
 #' mod <- mirt(Science, 1, SE=TRUE)

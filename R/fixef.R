@@ -18,7 +18,7 @@
 #' @keywords fixed effects
 #' @export fixef
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' #simulate data
 #' set.seed(1234)

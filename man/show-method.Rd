@@ -20,7 +20,7 @@ Print model object summaries to the console.
 }
 \examples{
 
-\dontrun{
+\donttest{
 x <- mirt(Science, 1)
 show(x)
 }

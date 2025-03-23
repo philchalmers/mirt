@@ -43,7 +43,7 @@ Theta <- matrix(seq(-4,4,.01))
 tinfo <- testinfo(mod, Theta)
 plot(Theta, tinfo, type = 'l')
 
-\dontrun{
+\donttest{
 
 # compare information loss between two tests
 tinfo_smaller <- testinfo(mod, Theta, which.items = 3:5)

@@ -166,7 +166,7 @@
 #' data.frame(Total_score=rowSums(tabscores[,1:4]),
 #'            E.total, E.total_2.5, E.total_97.5) |> head()
 #'
-#' \dontrun{
+#' \donttest{
 #' fullscores <- fscores(mod)
 #' fullscores_with_SE <- fscores(mod, full.scores.SE=TRUE)
 #' head(fullscores)

@@ -131,7 +131,7 @@ These two properties help to fix the metric of the groups so that
 item parameter estimates do not contain latent distribution characteristics.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # simulate data where group 2 has a smaller slopes and more extreme intercepts
 set.seed(12345)

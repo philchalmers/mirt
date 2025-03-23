@@ -33,7 +33,7 @@
 #' #do something with the info?
 #' plot(Theta, info.2, type = 'l', main = 'Item information')
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' #category information curves
 #' cat.info <- iteminfo(extr.2, Theta, total.info = FALSE)

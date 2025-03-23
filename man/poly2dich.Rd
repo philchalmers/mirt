@@ -23,7 +23,7 @@ converted into comparable dichotomous items with the same information.
 }
 \examples{
 
-\dontrun{
+\donttest{
 data(Science)
 
 head(Science)

@@ -13,7 +13,7 @@
 #' @export read.mirt
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' ## unidimensional
 #' library(plink)

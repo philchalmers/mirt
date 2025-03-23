@@ -48,7 +48,7 @@
 #' @keywords plot
 #' @export itemplot
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' data(LSAT7)
 #' fulldata <- expand.table(LSAT7)

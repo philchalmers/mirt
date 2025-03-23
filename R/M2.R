@@ -64,7 +64,7 @@
 #' @keywords model fit
 #' @export M2
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' dat <- as.matrix(expand.table(LSAT7))
 #' (mod1 <- mirt(dat, 1))
 #' M2(mod1)

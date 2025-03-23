@@ -23,7 +23,7 @@
 #' \doi{10.18637/jss.v048.i06}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # standard
 #' dat <- expand.table(LSAT7)

@@ -20,7 +20,7 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' f <- function(x) 3*x[1]^3 - 4*x[2]^2
 #' par <- c(3,8)
 #'

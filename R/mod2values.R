@@ -18,7 +18,7 @@
 #' @seealso \code{\link{extract.mirt}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, "F=1-5
 #'                   CONSTRAIN=(1-5, a1)")

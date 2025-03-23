@@ -35,7 +35,7 @@
 #' dat <- simdata(a,d,itemtype='graded', N=300)
 #' head(dat)
 #'
-#' \dontrun{
+#' \donttest{
 #' # fitted model has negative slopes due to flipped scoring
 #' mod <- mirt(dat)
 #' coef(mod, simplify=TRUE)$items
@@ -50,7 +50,7 @@
 #' apply(dat[,c(1,5,10)], 2, table)
 #' apply(revdat[,c(1,5,10)], 2, table)
 #'
-#' \dontrun{
+#' \donttest{
 #' # slopes all positive now
 #' mod2 <- mirt(revdat)
 #' coef(mod2, simplify=TRUE)$items

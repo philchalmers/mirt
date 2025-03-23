@@ -12,7 +12,7 @@ Data from
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT7)
 head(dat)
 itemstats(dat)
@@ -21,7 +21,7 @@ itemstats(dat)
 coef(mod)
 }
 
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT7)
 head(dat)
 itemstats(dat)

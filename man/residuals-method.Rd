@@ -98,7 +98,7 @@ density components (where applicable).
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 x <- mirt(Science, 1)
 residuals(x)

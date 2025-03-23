@@ -28,7 +28,7 @@
 #' @export boot.mirt
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # standard
 #' mod <- mirt(Science, 1)

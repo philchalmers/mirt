@@ -20,7 +20,7 @@
 #' @keywords data conversion
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # simulate data
 #'

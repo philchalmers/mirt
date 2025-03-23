@@ -64,7 +64,7 @@ as conditional standard error of measurement information.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # simulate some data
 N <- 1000

@@ -14,7 +14,7 @@ function}
 Create expected values for fixed effects parameters in latent regression models.
 }
 \examples{
-\dontrun{
+\donttest{
 
 #simulate data
 set.seed(1234)

@@ -28,7 +28,7 @@ definition.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # standard
 dat <- expand.table(LSAT7)

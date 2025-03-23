@@ -21,7 +21,7 @@
 #' @keywords random effects
 #' @export randef
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # make an arbitrary groups
 #' covdat <- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
 #'

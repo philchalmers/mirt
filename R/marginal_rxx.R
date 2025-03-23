@@ -32,7 +32,7 @@
 #' # compare to alpha
 #' itemstats(dat)$overall$alpha
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # empirical estimate (assuming the same prior)
 #' fscores(mod, returnER = TRUE)

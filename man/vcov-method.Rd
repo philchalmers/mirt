@@ -20,7 +20,7 @@ Extract parameter variance covariance matrix
 }
 \examples{
 
-\dontrun{
+\donttest{
 x <- mirt(Science, 1, SE=TRUE)
 vcov(x)
 

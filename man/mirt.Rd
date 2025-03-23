@@ -817,7 +817,7 @@ summary(mod1)
 plot(mod1)
 plot(mod1, type = 'trace')
 
-\dontrun{
+\donttest{
 (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors via the Oakes method
 (mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 coef(mod2)

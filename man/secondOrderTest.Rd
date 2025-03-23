@@ -29,7 +29,7 @@ and \code{FALSE} otherwise.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # PD matrix
 mod <- mirt(Science, 1, SE=TRUE)

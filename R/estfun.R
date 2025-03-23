@@ -37,7 +37,7 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' # fit a 2PL on the LSAT7 data and get the scores
 #' mod1 <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod")
 #' sc1 <- estfun.AllModelClass(mod1)

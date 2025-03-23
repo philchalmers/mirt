@@ -64,7 +64,7 @@ to three digits, the returned list of objects is not. For simulations, use
 }
 \examples{
 
-\dontrun{
+\donttest{
 x <- mirt(Science, 2)
 summary(x)
 summary(x, rotate = 'varimax')

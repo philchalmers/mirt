@@ -17,7 +17,7 @@ a multiple-group model}
 Returns a vector containing the MDISC values for each item in the model input object (Reckase, 2009).
 }
 \examples{
-\dontrun{
+\donttest{
 
 mod <- mirt(Science, 2)
 MDISC(mod)

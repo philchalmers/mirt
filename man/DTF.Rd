@@ -57,7 +57,7 @@ the baseline model should contain a set of 'anchor' items and have freely estima
 hyper-parameters in the focal groups. See \code{\link{DIF}} for details.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1234)
 n <- 30
 N <- 500

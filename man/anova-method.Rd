@@ -51,7 +51,7 @@ of most constrained model to least constrained.
 }
 \examples{
 
-\dontrun{
+\donttest{
 x <- mirt(Science, 1)
 x2 <- mirt(Science, 2)
 anova(x, x2)

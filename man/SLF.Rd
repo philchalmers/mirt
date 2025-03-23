@@ -11,7 +11,7 @@ respondents to five statements on perceptions of social life.
 }
 \examples{
 
-\dontrun{
+\donttest{
 # tabular format
 data(SLF)
 SLF

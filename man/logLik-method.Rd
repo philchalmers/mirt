@@ -20,7 +20,7 @@ Extract the observed-data log-likelihood.
 }
 \examples{
 
-\dontrun{
+\donttest{
 x <- mirt(Science, 1)
 logLik(x)
 

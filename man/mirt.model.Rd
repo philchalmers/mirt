@@ -188,7 +188,7 @@ parameter (\code{COV_11}) to 1.5:
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # interactively through the console (not run)
 #model <- mirt.model()

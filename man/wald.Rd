@@ -39,7 +39,7 @@ model information matrix be computed (by passing \code{SE = TRUE} when estimatin
 the estimated model contains constrained parameters (e.g., 1PL).
 }
 \examples{
-\dontrun{
+\donttest{
 
 # View parnumber index
 data(LSAT7)

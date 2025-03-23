@@ -40,7 +40,7 @@ was computed) or via bootstrap sampling. Primarily for use with the \code{\link{
 }
 \examples{
 
-\dontrun{
+\donttest{
 set.seed(1234)
 n <- 40
 N <- 500

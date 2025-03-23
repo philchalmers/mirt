@@ -181,7 +181,7 @@ dataset2 <- simdata(a, d, 2000, itemtype = '2PL', mu = mu, sigma = sigma)
 #mod <- mirt(dataset1, 3, method = 'MHRM')
 #coef(mod)
 
-\dontrun{
+\donttest{
 
 ### Unidimensional graded response model with 5 categories each
 

@@ -144,7 +144,7 @@ For dichotomous response models, \code{mixedmirt} follows the general form
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # make some data
 set.seed(1234)

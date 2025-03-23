@@ -82,7 +82,7 @@
 #' @export createItem
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' name <- 'old2PL'
 #' par <- c(a = .5, b = -2)

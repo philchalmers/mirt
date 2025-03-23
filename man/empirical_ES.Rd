@@ -107,7 +107,7 @@ test scores.}
 }
 
 \examples{
-\dontrun{
+\donttest{
 
 # no DIF
 set.seed(12345)

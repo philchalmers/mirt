@@ -9,7 +9,7 @@ Mathematics data from de Ayala (2009; pg. 14); 5 item dataset in table format.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(deAyala)
 head(dat)
 itemstats(dat)

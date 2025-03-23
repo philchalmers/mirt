@@ -58,7 +58,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' itemstats(Science)
 #'
 #' mod <- mirt(Science, 1)
@@ -81,7 +81,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' # tabular format
 #' data(SLF)
 #' SLF
@@ -118,7 +118,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' itemstats(SAT12, use_ts = FALSE)
 #'
@@ -158,7 +158,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' head(dat)
 #' itemstats(dat)
@@ -185,7 +185,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT6)
 #' head(dat)
 #' itemstats(dat)
@@ -223,7 +223,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' head(dat)
 #' itemstats(dat)
@@ -248,7 +248,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(deAyala)
 #' head(dat)
 #' itemstats(dat)
@@ -271,7 +271,7 @@ NULL
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(Bock1997)
 #' head(dat)
 #' itemstats(dat, use_ts=FALSE)
@@ -361,7 +361,7 @@ NULL
 #' df <- expand.table(Attitude)
 #' itemstats(df)
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # estimate SSLM with estimated " latitude of acceptance" (rho)
 #' mod.rho <- mirt(df, 1, itemtype = 'sslm')

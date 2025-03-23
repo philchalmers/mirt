@@ -24,7 +24,7 @@
 #' @keywords discrimination
 #' @export MDIFF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' mod <- mirt(Science, 2)
 #' MDIFF(mod)

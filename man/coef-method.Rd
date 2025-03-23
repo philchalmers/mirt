@@ -68,7 +68,7 @@ for simulations).
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT7)
 x <- mirt(dat, 1)
 coef(x)

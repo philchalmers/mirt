@@ -19,7 +19,7 @@ Given a matrix or data.frame object consisting of Likert responses return an
 object of the same dimensions with integer values.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # simulate data
 

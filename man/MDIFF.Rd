@@ -21,7 +21,7 @@ Returns a matrix containing the MDIFF values (Reckase, 2009). Only supported for
 'dich' and 'graded'.
 }
 \examples{
-\dontrun{
+\donttest{
 
 mod <- mirt(Science, 2)
 MDIFF(mod)

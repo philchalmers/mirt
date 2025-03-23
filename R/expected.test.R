@@ -24,7 +24,7 @@
 #' @export expected.test
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(deAyala)
 #' model <- 'F = 1-5
 #'           CONSTRAIN = (1-5, a1)'

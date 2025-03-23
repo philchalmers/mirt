@@ -70,7 +70,7 @@ then passing \code{use_dentype_estimate = TRUE} will use the internally saved qu
 density components (where applicable).
 }
 \examples{
-\dontrun{
+\donttest{
 dat <- as.matrix(expand.table(LSAT7))
 (mod1 <- mirt(dat, 1))
 M2(mod1)

@@ -85,7 +85,7 @@
 #' @keywords models
 #' @export multipleGroup
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # single factor
 #' set.seed(12345)

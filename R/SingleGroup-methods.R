@@ -16,7 +16,7 @@
 #' @rdname print-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' print(x)
 #' }
@@ -110,7 +110,7 @@ setMethod(
 #' \doi{10.18637/jss.v048.i06}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' show(x)
 #' }
@@ -170,7 +170,7 @@ setMethod(
 #' @seealso \code{\link{coef-method}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 2)
 #' summary(x)
 #' summary(x, rotate = 'varimax')
@@ -303,7 +303,7 @@ setMethod(
 #' @seealso \code{\link{summary-method}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' x <- mirt(dat, 1)
 #' coef(x)
@@ -511,7 +511,7 @@ setMethod(
 #' @rdname anova-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' x2 <- mirt(Science, 2)
 #' anova(x, x2)
@@ -691,7 +691,7 @@ setMethod(
 #' parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' x <- mirt(Science, 1)
 #' residuals(x)
@@ -1113,7 +1113,7 @@ setMethod(
 #' @rdname plot-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1, SE=TRUE)
 #' plot(x)
 #' plot(x, type = 'info')
@@ -2021,7 +2021,7 @@ traditional2mirt <- function(x, cls, ncat){
 #' @rdname vcov-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1, SE=TRUE)
 #' vcov(x)
 #'
@@ -2051,7 +2051,7 @@ setMethod(
 #' @rdname logLik-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' logLik(x)
 #'

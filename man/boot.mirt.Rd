@@ -32,7 +32,7 @@ package). Parameters are organized from the freely estimated values in \code{mod
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # standard
 mod <- mirt(Science, 1)

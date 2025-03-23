@@ -52,7 +52,7 @@
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # simulate some data
 #' N <- 1000

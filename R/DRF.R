@@ -90,7 +90,7 @@
 #' @keywords differential response functioning
 #' @export DRF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' set.seed(1234)
 #' n <- 30
@@ -717,7 +717,7 @@ calc_DRFs <- function(mod, Theta, DIF, DIF.cats, plot, max_score, focal_items, d
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' set.seed(1234)
 #' n <- 40
 #' N <- 500

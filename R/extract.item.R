@@ -19,7 +19,7 @@
 #' @export extract.item
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' mod <- mirt(Science, 1)
 #' extr.1 <- extract.item(mod, 1)
 #' }

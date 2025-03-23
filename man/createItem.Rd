@@ -103,7 +103,7 @@ defined at all!). Instead loadings of .001 are filled in as place-holders.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 name <- 'old2PL'
 par <- c(a = .5, b = -2)

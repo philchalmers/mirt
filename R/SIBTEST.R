@@ -102,7 +102,7 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' set.seed(1234)
 #' n <- 30

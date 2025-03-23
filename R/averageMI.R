@@ -23,7 +23,7 @@
 #' @export averageMI
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # simulate data
 #' set.seed(1234)

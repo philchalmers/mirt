@@ -102,7 +102,7 @@
 #, \code{\link{DTF}}
 #' @export DIF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # simulate data where group 2 has a smaller slopes and more extreme intercepts
 #' set.seed(12345)

@@ -46,7 +46,7 @@ colMeans(LSAT7samp) #equal
 
 #--------
 
-\dontrun{
+\donttest{
 # Generate data from separate response pattern matrix and freq vector
 # The following uses Table 2.1 from de Ayala (2009)
 f <- c(691,2280,242,235,158,184,1685,1053,134,462,92,65,571,79,87,41,1682,702,

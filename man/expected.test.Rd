@@ -39,7 +39,7 @@ same form as the data used to estimate the model.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(deAyala)
 model <- 'F = 1-5
           CONSTRAIN = (1-5, a1)'

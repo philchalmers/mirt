@@ -38,7 +38,7 @@
 #' @keywords wald
 #' @export wald
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # View parnumber index
 #' data(LSAT7)

@@ -98,7 +98,7 @@ to by \code{constrain} argument, of define equality constraints using the
 \code{\link{mirt.model}} syntax (recommended).
 }
 \examples{
-\dontrun{
+\donttest{
 
 # single factor
 set.seed(12345)

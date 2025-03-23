@@ -16,7 +16,7 @@ characteristics (similar to using the \code{pars = 'values'} for obtaining start
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, "F=1-5
                   CONSTRAIN=(1-5, a1)")

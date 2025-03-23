@@ -21,7 +21,7 @@
 #' @seealso \code{\link{fscores}}, \code{\link{marginal_rxx}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' dat <- expand.table(deAyala)
 #' itemstats(dat)

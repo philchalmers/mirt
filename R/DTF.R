@@ -46,7 +46,7 @@
 #' @keywords differential test functioning
 #' @export DTF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1234)
 #' n <- 30
 #' N <- 500

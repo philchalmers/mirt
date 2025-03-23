@@ -9,7 +9,7 @@ A 3-item tabulated data set extracted from Table 3 in Chapter Two.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(Bock1997)
 head(dat)
 itemstats(dat, use_ts=FALSE)

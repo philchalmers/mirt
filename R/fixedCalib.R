@@ -39,7 +39,7 @@
 #' \emph{Journal of Educational Measurement, 4}(43), 355-381.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # single factor
 #' set.seed(12345)

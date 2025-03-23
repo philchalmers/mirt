@@ -10,7 +10,7 @@ items obtained from the Law School Admissions Test, section 6.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT6)
 head(dat)
 itemstats(dat)

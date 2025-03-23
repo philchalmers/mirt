@@ -56,7 +56,7 @@ serve as a visual diagnostic tool so long as the majority of items are indeed mo
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 SAT12[SAT12 == 8] <- NA
 data <- key2binary(SAT12,

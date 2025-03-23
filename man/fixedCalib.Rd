@@ -46,7 +46,7 @@ For more flexible calibration of items, including a fixed-item calibration varia
 anchor items for equating, see \code{\link{multipleGroup}}.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # single factor
 set.seed(12345)

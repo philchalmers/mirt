@@ -27,7 +27,7 @@
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' mod <- mirt(Science, 1)
 #' coef(mod, simplify=TRUE, IRTpars = TRUE)$items

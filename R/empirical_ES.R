@@ -84,7 +84,7 @@
 #' of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 #' @export empirical_ES
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # no DIF
 #' set.seed(12345)

@@ -18,7 +18,7 @@
 #' @export poly2dich
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' data(Science)
 #'
 #' head(Science)

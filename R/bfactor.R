@@ -93,7 +93,7 @@
 #' @export bfactor
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' ### load SAT12 and compute bifactor model with 3 specific factors
 #' data(SAT12)

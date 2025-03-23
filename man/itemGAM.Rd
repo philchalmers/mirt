@@ -66,7 +66,7 @@ the items under investigation are unknown.
 }
 \examples{
 
-\dontrun{
+\donttest{
 set.seed(10)
 N <- 1000
 J <- 30

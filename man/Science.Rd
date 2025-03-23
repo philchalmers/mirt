@@ -11,7 +11,7 @@ well as Karlheinz and Melich (1992).
 }
 \examples{
 
-\dontrun{
+\donttest{
 itemstats(Science)
 
 mod <- mirt(Science, 1)

@@ -170,7 +170,7 @@
 #' @export mirt.model
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # interactively through the console (not run)
 #' #model <- mirt.model()

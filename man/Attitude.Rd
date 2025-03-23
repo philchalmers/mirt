@@ -30,7 +30,7 @@ head(Attitude)
 df <- expand.table(Attitude)
 itemstats(df)
 
-\dontrun{
+\donttest{
 
 # estimate SSLM with estimated " latitude of acceptance" (rho)
 mod.rho <- mirt(df, 1, itemtype = 'sslm')

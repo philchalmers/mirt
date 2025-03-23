@@ -80,7 +80,7 @@ Larger values make plots look smoother}
 that contain several 0 slope parameters. Supports up to three dimensional models.
 }
 \examples{
-\dontrun{
+\donttest{
 
 data(LSAT7)
 fulldata <- expand.table(LSAT7)

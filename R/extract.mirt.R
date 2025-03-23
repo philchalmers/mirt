@@ -82,7 +82,7 @@
 #' @export extract.item
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' mod <- mirt(Science, 1)
 #'
 #' extract.mirt(mod, 'logLik')

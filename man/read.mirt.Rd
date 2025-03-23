@@ -20,7 +20,7 @@ This function exports item parameters from the \code{mirt} package to the
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 ## unidimensional
 library(plink)

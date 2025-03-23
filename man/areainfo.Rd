@@ -40,7 +40,7 @@ dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)
 
 areainfo(mod, c(-2,0), which.items = 1) #item 1
-\dontrun{
+\donttest{
 areainfo(mod, c(-2,0), which.items = 1:3) #items 1 to 3
 areainfo(mod, c(-2,0)) # all items (total test information)
 

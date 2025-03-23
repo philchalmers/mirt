@@ -45,7 +45,7 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' #make some data
 #' set.seed(1)

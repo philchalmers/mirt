@@ -33,7 +33,7 @@
 #' @seealso \code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' SAT12[SAT12 == 8] <- NA
 #' data <- key2binary(SAT12,

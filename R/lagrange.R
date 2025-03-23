@@ -23,7 +23,7 @@
 #' @export lagrange
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1, 'Rasch')
 #' (values <- mod2values(mod))

@@ -41,7 +41,7 @@
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' #----- generate some data
 #' set.seed(12345)

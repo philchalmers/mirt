@@ -23,7 +23,7 @@ latent trait, impute plausible missing data values. Returns the original data in
 list of complete datasets is returned instead.
 }
 \examples{
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT7)
 (original <- mirt(dat, 1))
 NAperson <- sample(1:nrow(dat), 20, replace = TRUE)

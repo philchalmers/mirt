@@ -159,7 +159,7 @@ is reported to help gauge the magnitude of item misfit.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 P <- function(Theta){exp(Theta^2 * 1.2 - 1) / (1 + exp(Theta^2 * 1.2 - 1))}
 

@@ -142,7 +142,7 @@ Plot various test implied response functions from models estimated in the mirt p
 }
 \examples{
 
-\dontrun{
+\donttest{
 x <- mirt(Science, 1, SE=TRUE)
 plot(x)
 plot(x, type = 'info')

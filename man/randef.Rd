@@ -21,7 +21,7 @@ samplers and averaging over the draws to obtain expected a posteriori prediction
 Returns a list of the estimated effects.
 }
 \examples{
-\dontrun{
+\donttest{
 # make an arbitrary groups
 covdat <- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
 

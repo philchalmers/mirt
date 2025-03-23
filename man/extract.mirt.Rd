@@ -83,7 +83,7 @@ Objects which can be extracted from mirt objects include:
 }
 \examples{
 
-\dontrun{
+\donttest{
 mod <- mirt(Science, 1)
 
 extract.mirt(mod, 'logLik')

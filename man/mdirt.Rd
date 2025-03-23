@@ -143,7 +143,7 @@ dat <- expand.table(LSAT6)
 
 # fit with 2-3 latent classes
 (mod2 <- mdirt(dat, 2))
-\dontrun{
+\donttest{
 (mod3 <- mdirt(dat, 3))
 summary(mod2)
 residuals(mod2)

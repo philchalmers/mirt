@@ -14,7 +14,7 @@ scoring key for item 32 may be incorrect, and should be changed from 5 to 3.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 itemstats(SAT12, use_ts = FALSE)
 

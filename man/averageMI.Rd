@@ -25,7 +25,7 @@ variability due to the multiple imputations according to Rubin's (1987) methodol
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 # simulate data
 set.seed(1234)

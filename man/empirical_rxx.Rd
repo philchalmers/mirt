@@ -20,7 +20,7 @@ returned from \code{\link{fscores}}, compute the empirical reliability.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 dat <- expand.table(deAyala)
 itemstats(dat)
