@@ -222,7 +222,7 @@
 #'
 #' # DIF
 #' sDIF <- DRF(mod3, Theta_nodes=Theta_nodes, focal_items = 30, draws=200)
-#' car::some(sDIF)
+#' head(sDIF)
 #'
 #' ## ----------------------------------------------------------------
 #' # polytomous example

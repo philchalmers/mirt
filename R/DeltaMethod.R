@@ -35,9 +35,11 @@
 #' 1 / (estmean[1] + estmean[2])
 #' 1 / (estmean[1] + estmean[2] + estmean[3])
 #'
-#' ## Approximate standard error (uncomment to check)
-#' # msm::deltamethod (~ 1 / (x1 + x2), estmean, estvar)
-#' # msm::deltamethod (~ 1 / (x1 + x2 + x3), estmean, estvar)
+#' \dontrun{
+#' ## Approximate standard error
+#' msm::deltamethod (~ 1 / (x1 + x2), estmean, estvar)
+#' msm::deltamethod (~ 1 / (x1 + x2 + x3), estmean, estvar)
+#' }
 #'
 #' # with DeltaMethod
 #' fn <- function(par) 1 / sum(par[1:2])

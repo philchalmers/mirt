@@ -175,6 +175,7 @@ anova(mod0, mod1)
 summary(mod1)
 coef(mod1)
 
+\dontrun{
 # same model as above in lme4
 wide <- data.frame(id=1:nrow(data),data,covdata)
 long <- reshape2::melt(wide, id.vars = c('id', 'group', 'pseudoIQ'))
@@ -182,6 +183,7 @@ library(lme4)
 lmod0 <- glmer(value ~ 0 + variable + (1|id), long, family = binomial)
 lmod1 <- glmer(value ~ 0 + group + variable + (1|id), long, family = binomial)
 anova(lmod0, lmod1)
+}
 
 # model using 2PL items instead of Rasch
 mod1b <- mixedmirt(data, covdata, model, fixed = ~ 0 + group + items, itemtype = '2PL')

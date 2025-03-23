@@ -61,11 +61,13 @@
 #' mod <- mirt(dat, 1) #fit a model that does not contain the bad items
 #' itemfit(mod)
 #'
+#' \dontrun{
 #' #### Pure non-parametric way of investigating the items
 #' library(KernSmoothIRT)
 #' ks <- ksIRT(newdat, rep(1, ncol(newdat)), 1)
 #' plot(ks, item=c(1,31,32))
 #' par(ask=FALSE)
+#' }
 #'
 #' # Using point estimates from the model
 #' Theta <- fscores(mod)

@@ -279,11 +279,13 @@ fun <- function(Theta, ...) as.numeric(dnorm(Theta, mean=.5))
 head(fscores(mod, custom_den = fun))
 head(fscores(mod, method = 'EAP', mean=.5))
 
+\dontrun{
 # custom MAP prior: standard truncated normal between 5 and -2
 library(msm)
 # need the :: scope for parallel to see the function (not require if no mirtCluster() defined)
 fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
 head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
+}
 
 
 ####################

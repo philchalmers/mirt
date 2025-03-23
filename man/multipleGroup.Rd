@@ -281,6 +281,7 @@ dat <- do.call(rbind, list(d11, d12, d13, d21, d22, d23))
 group <- rep(c('G1.D1', 'G1.D2', 'G1.D3', 'G2.D1', 'G2.D2', 'G2.D3'), each=N)
 table(group)
 
+\dontrun{
 # in practice, group would be organized in a data.frame as follows
 df <- data.frame(group)
 dfw <- tidyr::separate_wider_delim(df, group, delim='.', names = c('G', 'D'))
@@ -309,7 +310,7 @@ wald(mod, c("0 + MEAN_1.247 = MEAN_1.123 + MEAN_1.309",
 wald(mod, "0 + MEAN_1.247 = MEAN_1.123 + MEAN_1.309") # D1 vs D2
 wald(mod, "0 + MEAN_1.247 = MEAN_1.185 + MEAN_1.371") # D1 vs D3
 wald(mod, "MEAN_1.123 + MEAN_1.309 = MEAN_1.185 + MEAN_1.371") # D2 vs D3
-
+}
 
 #############
 # multiple factors
