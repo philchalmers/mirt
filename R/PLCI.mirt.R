@@ -53,12 +53,12 @@
 #' result <- PLCI.mirt(mod)
 #' result
 #'
-#' # model with constraints
-#' mod <- mirt(dat, 'F = 1-5
-#'                   CONSTRAIN = (1-5, a1)')
-#'
-#' result <- PLCI.mirt(mod)
-#' result
+# # TODO: model with constraints
+# mod <- mirt(dat, 'F = 1-5
+#                   CONSTRAIN = (1-5, a1)')
+#
+# result <- PLCI.mirt(mod)
+# result
 #'
 #' mod2 <- mirt(Science, 1)
 #' result2 <- PLCI.mirt(mod2)
