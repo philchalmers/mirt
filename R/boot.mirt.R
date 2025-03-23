@@ -36,10 +36,12 @@
 #' plot(booted)
 #' booted
 #'
+#' \dontrun{
 #' #run in parallel using snow back-end using all available cores
 #' mod <- mirt(Science, 1)
 #' booted <- boot.mirt(mod, parallel = 'snow', ncpus = parallel::detectCores())
 #' booted
+#' }
 #'
 #' ####
 #' # bootstrapped CIs for standardized factor loadings

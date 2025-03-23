@@ -95,6 +95,7 @@
 #' dat <- dat[,-32]
 #' mod <- mirt(dat, 1)
 #'
+#' \dontrun{
 #' # Kernal smoothing is very sensitive to which category is selected as 'correct'
 #' # 5th category as correct
 #' ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 5), 1)
@@ -103,6 +104,7 @@
 #' # 3rd category as correct
 #' ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 3), 1)
 #' plot(ks, items = c(1,2,32))
+#' }
 #'
 #' # splines approach
 #' Theta <- fscores(mod)
