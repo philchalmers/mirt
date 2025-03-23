@@ -810,8 +810,14 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DIF</span></span></span>
 <span class="r-in"><span><span class="va">sDIF</span> <span class="op">&lt;-</span> <span class="fu">DRF</span><span class="op">(</span><span class="va">mod3</span>, Theta_nodes<span class="op">=</span><span class="va">Theta_nodes</span>, focal_items <span class="op">=</span> <span class="fl">30</span>, draws<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">car</span><span class="fu">::</span><span class="fu">some</span><span class="op">(</span><span class="va">sDIF</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘car’</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sDIF</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Theta   sDRF CI_2.5 CI_97.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF.1 -6.000  0.000 -0.001       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF.2 -5.879  0.000 -0.002       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF.3 -5.758  0.000 -0.002       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF.4 -5.636  0.000 -0.002       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF.5 -5.515  0.000 -0.002       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF.6 -5.394 -0.001 -0.003       0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ----------------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># polytomous example</span></span></span>
