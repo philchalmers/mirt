@@ -762,36 +762,36 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, MI <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.40907278</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.05006728</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.88881872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.88881872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.76412382</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.66804423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3720606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.0539255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.8674981</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.8674981</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.7247553</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.6498679</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible values for future work</span></span></span>
 <span class="r-in"><span><span class="va">pv</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, plausible.draws <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pv</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, var<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, min<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, max<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.01485932  0.88868955 -3.22707205  2.57449286 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01540237  1.07227398 -2.43269331  3.15610040 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.02860932  1.06204095 -3.27005503  3.64599868 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.00249347  1.06570741 -3.13255019  3.04597603 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.008527255  1.001784934 -3.376981088  2.877640211 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.01664463  1.02431342 -3.73483365  3.02147578 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.06401764  0.98658898 -2.73954604  2.54380464 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.006654758  0.990663378 -3.329031783  2.766346400 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.001887832  1.009089531 -3.514717648  2.615653870 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01120032  1.03650905 -3.18673485  3.23817662 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## define a custom_den function (*must* return a numeric vector).</span></span></span>
