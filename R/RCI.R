@@ -175,7 +175,7 @@ RCI <- function(mod_pre, predat, postdat,
         diff <- TS_post - TS_pre
         z_JCI <- diff / SEM
         ret <- data.frame(pre.score=TS_pre, post.score=TS_post, diff,
-                          SEM=SEM, z=z_JCI,
+                          SE=SEM, z=z_JCI,
                           p=pnorm(abs(z_JCI), lower.tail = FALSE)*2)
     } else {
         if(is.null(mod_post)) mod_post <- mod_pre
@@ -195,7 +195,7 @@ RCI <- function(mod_pre, predat, postdat,
             converge_post[attr(fs_post, 'failed2converge')] <- FALSE
             ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1],
                               converged=converge_pre & converge_post, diff,
-                              SEM=pse, z=z,
+                              SE=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
         } else {
             stop('multidimensional IRT models not suppported in RCI()', call.=FALSE)
@@ -345,13 +345,13 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                                  predat=rV.pre + mins, postdat=rV.post + mins,
                                  method='EAPsum')
                 tmp <- tmp[,!(colnames(tmp) %in% c('pre.score', 'post.score', 'converged'))]
-                colnames(tmp) <- c('Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                colnames(tmp) <- c('Change', 'SE', 'RCI', 'p(>|RCI|)')
                 if(!identical(mod_pre, mod_post)){
                     tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
                                       predat=rV.pre + mins, postdat=rV.post + mins,
                                       method='EAPsum')
                     tmp2 <- tmp2[,!(colnames(tmp2) %in% c('pre.score', 'post.score', 'converged'))]
-                    colnames(tmp2) <- c('Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                    colnames(tmp2) <- c('Change', 'SE', 'RCI', 'p(>|RCI|)')
                     tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
                                       check.names = FALSE)
                 }
@@ -384,7 +384,7 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                 plot(diff ~ rng, pch=16, ylab=expression(theta[post]-theta[pre]),
                      las=1, ylim=c(diff[1]-SEs[1],
                                    diff[length(diff)] + SEs[length(diff)]),
-                     main=sprintf("SEM estimates using fixed prestest score"),
+                     main=sprintf("SE estimates using fixed prestest score"),
                      xlab = 'Sum Score')
                 graphics::polygon(c(rng, rev(rng)), c(diff - SEs, rev(diff+SEs)),
                         col=grDevices::adjustcolor('grey', alpha.f=.5))
@@ -408,13 +408,13 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                                      predat=rV.pre, postdat=rV.post, method=input$method,
                                      Fisher = input$fisher)
                     colnames(tmp) <- c('Theta [pre]', 'Theta [post]', 'Converged',
-                                       'Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                                       'Change', 'SE', 'RCI', 'p(>|RCI|)')
                     if(!identical(mod_pre, mod_post) && input$method %in% c('EAP', 'MAP')){
                         tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
                                           predat=rV.pre, postdat=rV.post, method=input$method,
                                           Fisher = input$fisher)
                         colnames(tmp2) <- c('Theta [pre]', 'Theta [post]', 'Converged',
-                                            'Change', 'SEM', 'RCI', 'p(>|RCI|)')
+                                            'Change', 'SE', 'RCI', 'p(>|RCI|)')
                         tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
                                           check.names = FALSE)
                     }
