@@ -17,7 +17,7 @@ as conditional standard error of measurement information.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -174,7 +174,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># all changes using fitted model from pre data</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat<span class="op">=</span><span class="va">dat_pre</span>, postdat<span class="op">=</span><span class="va">dat_post</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score converged   diff   SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score converged   diff    SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.785     -0.266      TRUE -1.051 0.529 -1.986 0.047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       -1.019     -2.281      TRUE -1.261 0.708 -1.782 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       -1.230     -1.577      TRUE -0.346 0.633 -0.547 0.584</span>
@@ -1178,18 +1178,18 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># single response pattern change using EAP information</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat<span class="op">=</span><span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>, postdat<span class="op">=</span><span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff   SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff    SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.785     -0.266      TRUE -1.051 0.529 -1.986 0.047</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># WLE estimator with Fisher information for SE (see Jabrayilov et al. 2016)</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat <span class="op">=</span> <span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>,</span></span>
 <span class="r-in"><span>    method <span class="op">=</span> <span class="st">'WLE'</span>, Fisher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff   SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff    SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.813     -0.284      TRUE -1.096 0.563 -1.946 0.052</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># multiple respondents</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat <span class="op">=</span> <span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff   SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff    SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.785     -0.266      TRUE -1.051 0.529 -1.986 0.047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    -1.019     -2.281      TRUE -1.261 0.708 -1.782 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    -1.230     -1.577      TRUE -0.346 0.633 -0.547 0.584</span>
@@ -1200,7 +1200,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="co"># include large-sample z-type cutoffs</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat <span class="op">=</span> <span class="va">dat_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>, postdat <span class="op">=</span> <span class="va">dat_post</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>,</span></span>
 <span class="r-in"><span>    cutoffs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff   SEM      z     p cut_decision</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff    SE      z     p cut_decision</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.785     -0.266      TRUE -1.051 0.529 -1.986 0.047    decreased</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    -1.019     -2.281      TRUE -1.261 0.708 -1.782 0.075    unchanged</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    -1.230     -1.577      TRUE -0.346 0.633 -0.547 0.584    unchanged</span>
@@ -1218,7 +1218,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># assumes SEM.post = SEM.pre</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>, SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score diff  SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score diff   SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1           15          9   -6 2.72 -2.206 0.027</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            4          0   -4 2.72 -1.471 0.141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3            4          3   -1 2.72 -0.368 0.713</span>
@@ -2223,7 +2223,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="co"># include cutoffs</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>, SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span>,</span></span>
 <span class="r-in"><span>    cutoffs<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score diff  SEM      z     p cut_decision</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score diff   SE      z     p cut_decision</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1           15          9   -6 2.72 -2.206 0.027    decreased</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            4          0   -4 2.72 -1.471 0.141    unchanged</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3            4          3   -1 2.72 -0.368 0.713    unchanged</span>
@@ -3233,7 +3233,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>,</span></span>
 <span class="r-in"><span>   SEM.pre<span class="op">=</span><span class="va">SEM.alpha</span>, SEM.post<span class="op">=</span><span class="va">SEM.alpha.post</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score diff   SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      pre.score post.score diff    SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1           15          9   -6 2.705 -2.218 0.027</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            4          0   -4 2.705 -1.479 0.139</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3            4          3   -1 2.705 -0.370 0.712</span>
@@ -4323,7 +4323,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       1       0       1       0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, <span class="va">predat</span>, <span class="va">postdat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff   SEM      z     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff    SE      z     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     2.206      1.808      TRUE -0.398 0.951 -0.419 0.675</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     0.373     -0.344      TRUE -0.717 0.720 -0.995  0.32</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.303     -0.115      TRUE -0.419 0.728 -0.575 0.566</span>
