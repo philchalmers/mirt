@@ -20,5 +20,4 @@ jobs:
 
       - name: R CMD CHECK
         run: |
-          Rscript -e 'install.packages(c("latticeExtra", "directlabels", "Rsolnp", "nloptr", "plink",
-    "mirtCAT")); devtools::check(error_on = "warning")'
+          Rscript -e 'install.packages(c("latticeExtra", "directlabels", "Rsolnp", "nloptr", "plink", "mirtCAT")); devtools::check(error_on = "warning")'
