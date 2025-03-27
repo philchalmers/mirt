@@ -21,7 +21,7 @@ mixture models to estimate any latent group components."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -363,7 +363,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -18088.494, Max-Change: 0.34759Iteration: 2, Log-Lik: -17963.262, Max-Change: 0.17817Iteration: 3, Log-Lik: -17938.768, Max-Change: 0.08488Iteration: 4, Log-Lik: -17932.061, Max-Change: 0.04473Iteration: 5, Log-Lik: -17929.929, Max-Change: 0.02729Iteration: 6, Log-Lik: -17929.182, Max-Change: 0.01644Iteration: 7, Log-Lik: -17928.848, Max-Change: 0.00691Iteration: 8, Log-Lik: -17928.792, Max-Change: 0.00407Iteration: 9, Log-Lik: -17928.770, Max-Change: 0.00267Iteration: 10, Log-Lik: -17928.756, Max-Change: 0.00056Iteration: 11, Log-Lik: -17928.755, Max-Change: 0.00019Iteration: 12, Log-Lik: -17928.754, Max-Change: 0.00016Iteration: 13, Log-Lik: -17928.754, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.272  0.052  0.063  0.145  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.277  0.053  0.061  0.152  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -372,7 +372,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -18088.494, Max-Change: 0.34660Iteration: 2, Log-Lik: -17963.343, Max-Change: 0.17323Iteration: 3, Log-Lik: -17938.535, Max-Change: 0.08956Iteration: 4, Log-Lik: -17931.998, Max-Change: 0.04846Iteration: 5, Log-Lik: -17929.902, Max-Change: 0.02720Iteration: 6, Log-Lik: -17929.173, Max-Change: 0.01568Iteration: 7, Log-Lik: -17928.828, Max-Change: 0.00607Iteration: 8, Log-Lik: -17928.783, Max-Change: 0.00367Iteration: 9, Log-Lik: -17928.765, Max-Change: 0.00223Iteration: 10, Log-Lik: -17928.756, Max-Change: 0.00084Iteration: 11, Log-Lik: -17928.755, Max-Change: 0.00051Iteration: 12, Log-Lik: -17928.754, Max-Change: 0.00032Iteration: 13, Log-Lik: -17928.754, Max-Change: 0.00014Iteration: 14, Log-Lik: -17928.754, Max-Change: 0.00011Iteration: 15, Log-Lik: -17928.754, Max-Change: 0.00009</span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.175  0.052  0.069  0.044  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.177  0.053  0.067  0.047  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -558,15 +558,15 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="multipleGroup-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span>, type <span class="op">=</span> <span class="st">'info'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-2.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Model was not estimated with multipleGroup()</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span>, type <span class="op">=</span> <span class="st">'trace'</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_configural</span>, <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_configural</span>, <span class="fl">2</span>, type <span class="op">=</span> <span class="st">'RE'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-6.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_metric</span>, <span class="va">mod_configural</span><span class="op">)</span> <span class="co">#equal slopes only</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik    X2 df p</span>
@@ -1035,7 +1035,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within NaN tolerance after 1 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.44.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.44.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
@@ -2046,17 +2046,17 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="va">mod_configural</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -34412.001, Max-Change: 0.50962Iteration: 2, Log-Lik: -34167.562, Max-Change: 0.22394Iteration: 3, Log-Lik: -34141.265, Max-Change: 0.13027Iteration: 4, Log-Lik: -34131.412, Max-Change: 0.09083Iteration: 5, Log-Lik: -34127.437, Max-Change: 0.06043Iteration: 6, Log-Lik: -34125.397, Max-Change: 0.04270Iteration: 7, Log-Lik: -34124.782, Max-Change: 0.03782Iteration: 8, Log-Lik: -34124.082, Max-Change: 0.01765Iteration: 9, Log-Lik: -34123.767, Max-Change: 0.01169Iteration: 10, Log-Lik: -34123.518, Max-Change: 0.00648Iteration: 11, Log-Lik: -34123.453, Max-Change: 0.00402Iteration: 12, Log-Lik: -34123.416, Max-Change: 0.00386Iteration: 13, Log-Lik: -34123.356, Max-Change: 0.00289Iteration: 14, Log-Lik: -34123.346, Max-Change: 0.00227Iteration: 15, Log-Lik: -34123.342, Max-Change: 0.00039Iteration: 16, Log-Lik: -34123.342, Max-Change: 0.00033Iteration: 17, Log-Lik: -34123.342, Max-Change: 0.00097Iteration: 18, Log-Lik: -34123.340, Max-Change: 0.00127Iteration: 19, Log-Lik: -34123.340, Max-Change: 0.00145Iteration: 20, Log-Lik: -34123.338, Max-Change: 0.00031Iteration: 21, Log-Lik: -34123.337, Max-Change: 0.00072Iteration: 22, Log-Lik: -34123.337, Max-Change: 0.00035Iteration: 23, Log-Lik: -34123.336, Max-Change: 0.00076Iteration: 24, Log-Lik: -34123.336, Max-Change: 0.00023Iteration: 25, Log-Lik: -34123.336, Max-Change: 0.00019Iteration: 26, Log-Lik: -34123.336, Max-Change: 0.00049Iteration: 27, Log-Lik: -34123.335, Max-Change: 0.00084Iteration: 28, Log-Lik: -34123.335, Max-Change: 0.00034Iteration: 29, Log-Lik: -34123.335, Max-Change: 0.00058Iteration: 30, Log-Lik: -34123.335, Max-Change: 0.00028Iteration: 31, Log-Lik: -34123.334, Max-Change: 0.00022Iteration: 32, Log-Lik: -34123.334, Max-Change: 0.00049Iteration: 33, Log-Lik: -34123.334, Max-Change: 0.00015Iteration: 34, Log-Lik: -34123.334, Max-Change: 0.00012Iteration: 35, Log-Lik: -34123.334, Max-Change: 0.00031Iteration: 36, Log-Lik: -34123.334, Max-Change: 0.00056Iteration: 37, Log-Lik: -34123.334, Max-Change: 0.00021Iteration: 38, Log-Lik: -34123.334, Max-Change: 0.00041Iteration: 39, Log-Lik: -34123.334, Max-Change: 0.00017Iteration: 40, Log-Lik: -34123.334, Max-Change: 0.00014Iteration: 41, Log-Lik: -34123.334, Max-Change: 0.00034Iteration: 42, Log-Lik: -34123.334, Max-Change: 0.00011Iteration: 43, Log-Lik: -34123.334, Max-Change: 0.00009</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-7.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span>, type <span class="op">=</span> <span class="st">'SE'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-8.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Model was not estimated with multipleGroup()</span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_configural</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-9.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_configural</span>, <span class="fl">1</span>, type <span class="op">=</span> <span class="st">'info'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-10.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span> <span class="co"># messy, score function typically better</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-11.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural</span>, type <span class="op">=</span> <span class="st">'itemscore'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-12.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_configural</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2200,11 +2200,11 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="va">mod_configural2</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model2</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -34412.001, Max-Change: 0.31938Iteration: 2, Log-Lik: -34328.899, Max-Change: 0.08440Iteration: 3, Log-Lik: -34305.996, Max-Change: 0.06675Iteration: 4, Log-Lik: -34296.479, Max-Change: 0.04419Iteration: 5, Log-Lik: -34292.571, Max-Change: 0.02327Iteration: 6, Log-Lik: -34290.898, Max-Change: 0.01614Iteration: 7, Log-Lik: -34289.676, Max-Change: 0.00825Iteration: 8, Log-Lik: -34289.460, Max-Change: 0.00517Iteration: 9, Log-Lik: -34289.353, Max-Change: 0.00408Iteration: 10, Log-Lik: -34289.172, Max-Change: 0.00304Iteration: 11, Log-Lik: -34289.157, Max-Change: 0.00173Iteration: 12, Log-Lik: -34289.149, Max-Change: 0.00177Iteration: 13, Log-Lik: -34289.129, Max-Change: 0.00072Iteration: 14, Log-Lik: -34289.128, Max-Change: 0.00043Iteration: 15, Log-Lik: -34289.127, Max-Change: 0.00007</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural2</span>, type <span class="op">=</span> <span class="st">'SE'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-13.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Model was not estimated with multipleGroup()</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_configural2</span>, type <span class="op">=</span> <span class="st">'RE'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-14.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Model was not estimated with multipleGroup()</span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_configural2</span>, <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-15.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">############</span></span></span>
 <span class="r-in"><span><span class="co">## empirical histogram example (normal and bimodal groups)</span></span></span>
@@ -2347,7 +2347,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">EH</span>, type <span class="op">=</span> <span class="st">'empiricalhist'</span>, npts <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-16.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-12.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DIF test for item 1</span></span></span>
 <span class="r-in"><span><span class="va">EH1</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group<span class="op">=</span><span class="va">group</span>, dentype<span class="op">=</span><span class="st">"empiricalhist"</span>, invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
@@ -2525,11 +2525,11 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Class proportion:  0.345 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_mix</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-17.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_mix</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-18.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-14.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_mix</span>, <span class="fl">1</span>, type <span class="op">=</span> <span class="st">'info'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="multipleGroup-19.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="multipleGroup-15.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_mix</span><span class="op">)</span><span class="op">)</span> <span class="co"># theta estimates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         Class_1</span>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,13 +32,13 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Extract an item object from mirt objects</h1>
+      <h1>Extract an item object from <code>mirt</code> objects</h1>
       <small class="dont-index">Source: <a href="https://github.com/philchalmers/mirt/blob/main/R/extract.item.R" class="external-link"><code>R/extract.item.R</code></a></small>
       <div class="d-none name"><code>extract.item.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
-    <p>Extract the internal mirt objects from any estimated model.</p>
+    <p>Extract the internal <code>mirt</code> objects from any estimated model.</p>
     </div>
 
     <div class="section level2">
@@ -51,7 +51,8 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>mirt model of class 'SingleGroupClass' or 'MultipleGroupClass'</p></dd>
+<dd><p>mirt model of class <code>'SingleGroupClass'</code>, <code>'MultipleGroupClass'</code>, or
+<code>'MixtureClass'</code></p></dd>
 
 
 <dt id="arg-item">item<a class="anchor" aria-label="anchor" href="#arg-item"></a></dt>
@@ -60,7 +61,7 @@
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
 <dd><p>a number signifying which group the item should be extracted from (applies to
-'MultipleGroupClass' only)</p></dd>
+<code>'MultipleGroupClass'</code> and <code>'MixtureClass'</code> only)</p></dd>
 
 
 <dt id="arg-drop-zeros">drop.zeros<a class="anchor" aria-label="anchor" href="#arg-drop-zeros"></a></dt>
