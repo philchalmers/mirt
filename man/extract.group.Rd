@@ -7,12 +7,13 @@
 extract.group(x, group)
 }
 \arguments{
-\item{x}{mirt model of class 'MultipleGroupClass'}
+\item{x}{model object of class \code{'MultipleGroupClass'} or \code{'MixtureClass'}}
 
 \item{group}{the name of the group to extract}
 }
 \description{
-Extract a single group from an object defined by \code{\link{multipleGroup}}.
+Extract a single group from an object defined by \code{\link{multipleGroup}},
+or as a mixture model from \code{\link{mirt}}.
 }
 \examples{
 

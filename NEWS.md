@@ -1,3 +1,7 @@
+# Changes in mirt 1.45
+
+- `extract.item()` now supports objects of class `MixtureClass`
+
 # Changes in mirt 1.44
 
 - Added `Attitude` dataset from Andrich (1988) publication to demonstrate

@@ -1,9 +1,10 @@
 #' Extract a group from a multiple group mirt object
 #'
-#' Extract a single group from an object defined by \code{\link{multipleGroup}}.
+#' Extract a single group from an object defined by \code{\link{multipleGroup}},
+#' or as a mixture model from \code{\link{mirt}}.
 #'
 #' @aliases extract.group
-#' @param x mirt model of class 'MultipleGroupClass'
+#' @param x model object of class \code{'MultipleGroupClass'} or \code{'MixtureClass'}
 #' @param group the name of the group to extract
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
@@ -35,7 +36,7 @@
 #' }
 extract.group <- function(x, group){
     if(missing(x)) missingMsg('x')
-    if(!is(x, 'MultipleGroupClass'))
+    if(!is(x, 'MultipleGroupClass') || !is(x, 'MixtureClass'))
         stop('Model was not estimated with multipleGroup()', call.=FALSE)
     if(missing(group)) stop('Must specify group number or name', call.=FALSE)
     stopifnot(length(group) == 1L)

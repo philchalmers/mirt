@@ -1,12 +1,13 @@
-#' Extract an item object from mirt objects
+#' Extract an item object from \code{mirt} objects
 #'
-#' Extract the internal mirt objects from any estimated model.
+#' Extract the internal \code{mirt} objects from any estimated model.
 #'
 #' @aliases extract.item
-#' @param x mirt model of class 'SingleGroupClass' or 'MultipleGroupClass'
+#' @param x mirt model of class \code{'SingleGroupClass'}, \code{'MultipleGroupClass'}, or
+#'   \code{'MixtureClass'}
 #' @param item a number or character signifying which item to extract
 #' @param group a number signifying which group the item should be extracted from (applies to
-#'   'MultipleGroupClass' only)
+#'   \code{'MultipleGroupClass'} and \code{'MixtureClass'} only)
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
@@ -32,7 +33,7 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     inames <- extract.mirt(x, 'itemnames')
     ind <- 1L:length(inames)
     if(!is.numeric(item)) item <- ind[inames == item]
-    if(is(x, 'MultipleGroupClass')){
+    if(is(x, 'MultipleGroupClass') || is(x, 'MixtureClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?', call.=FALSE)
         ret <- extract.mirt(extract.mirt(x, 'pars')[[group]], 'pars')[[item]]
     } else {
