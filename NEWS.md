@@ -1,6 +1,7 @@
 # Changes in mirt 1.45
 
-- `extract.item()` now supports objects of class `MixtureClass`
+- `extract.item()` and `extract.group()` now support objects 
+  of class `MixtureClass`
 
 # Changes in mirt 1.44
 
