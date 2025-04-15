@@ -13,6 +13,7 @@ RCI(
   SEM.pre = NULL,
   SEM.post = NULL,
   Fisher = FALSE,
+  zero_cor = TRUE,
   shiny = FALSE,
   main = "Test Scores",
   ...
@@ -45,6 +46,9 @@ Using this will create a pooled version of the SEM; otherwise, \code{SEM.post = 
 \item{Fisher}{logical; use the Fisher/expected information function to compute the
 SE terms? If \code{FALSE} the SE information will be extracted from the select
 \code{\link{fscores}} method (default). Only applicable for unidimensional models}
+
+\item{zero_cor}{logical; when the supplied \code{mod_pre} is a two-factor model
+should the covariance/correlation between the latent traits be forced to be 0?}
 
 \item{shiny}{logical; launch an interactive shiny applications for real-time scoring
 of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)

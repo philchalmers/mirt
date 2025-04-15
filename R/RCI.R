@@ -29,6 +29,8 @@
 #' @param shiny logical; launch an interactive shiny applications for real-time scoring
 #'   of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)
 #'   \code{mod_post} inputs
+#' @param zero_cor logical; when the supplied \code{mod_pre} is a two-factor model
+#'   should the covariance/correlation between the latent traits be forced to be 0?
 #' @param main main label to use when \code{shiny=TRUE}
 #'
 #' @param ... additional arguments passed to \code{\link{fscores}}
@@ -149,7 +151,7 @@
 RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
                 SEM.pre = NULL, SEM.post = NULL,
-                Fisher = FALSE,
+                Fisher = FALSE, zero_cor = TRUE,
                 shiny = FALSE, main = 'Test Scores', ...){
 
     if(shiny)
@@ -203,7 +205,11 @@ RCI <- function(mod_pre, predat, postdat,
                           extract.mirt(mod_pre, 'nfact') == 2)
             if(!missing(postdat))
                 stop('Only mod_pre and predat are required for multidimensional model')
-            fs <- fscores(mod_pre, response.pattern=predat, ...)
+            cfs <- coef(mod_pre, simplify=TRUE)
+            sigma <- cfs$cov
+            if(zero_cor)
+                sigma[1,2] <- sigma[2,1] <- 0
+            fs <- fscores(mod_pre, response.pattern=predat, cov=sigma, ...)
             diff <- fs[,1] - fs[,2]
             pse <- sqrt(fs[,3]^2 + fs[,4]^2)
             z <- diff/pse
