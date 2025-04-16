@@ -45,6 +45,11 @@ test_that('syntax', {
                           FIXED = (1-5, a1)
                           START = (1-5, a1, 1.0)
                           FREE = (GROUP, COV_11)")
+    model15 <- mirt.model("F = 1-5
+                          FIXED [female] = (1-5, a1)
+                          START [female] = (1-5, a1, 1.0)
+                          FREE [male] = (GROUP, COV_11)
+                          MEAN [male] = F")
 
     mod0 <- mirt(data, model0, verbose=FALSE, calcNull=FALSE)
     expect_equal(mod2values(mod0)$value, c(0.9879254,1.85606,0,1,1.080885,0.8079786,0,1,1.705801,1.804219,0,1,0.7651853,0.4859966,0,1,0.735798,1.854513,0,1,0,1),
@@ -91,6 +96,10 @@ test_that('syntax', {
     mod14 <- mirt(data, model14, verbose = FALSE)
     expect_equal(mod2values(mod14)$value, c(1,1.868016,0,1,1,0.7908857,0,1,1,1.46078,0,1,1,0.5214175,0,1,1,1.99271,0,1,0,1.021912),
                  tolerance = 1e-2)
+    mod15 <- multipleGroup(data, model15, group=group, verbose = FALSE)
+
+    expect_equal(as.integer(mod2values(mod15)$est), c(0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1))
+
 
     data(data.read, package = 'sirt')
     dat <- data.read

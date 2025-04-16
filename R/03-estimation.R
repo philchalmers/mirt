@@ -262,7 +262,24 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                          customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
                          fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                          gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
-                         dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q)
+                         dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q,
+                         groupName=Data$groupNames[1])
+            if(length(unique(Data$model$x[,'OptionalGroups'])) > 1){
+                for(g in 2:Data$ngroups)
+                    PrepList[[g]] <-
+                        PrepData(data=Data$data, model=Data$model, itemtype=itemtype, guess=guess,
+                                 upper=upper, parprior=parprior, verbose=opts$verbose,
+                                 technical=opts$technical, parnumber=1L, BFACTOR=opts$dentype == 'bfactor',
+                                 grsm.block=Data$grsm.block, rsm.block=Data$rsm.block,
+                                 mixed.design=mixed.design, customItems=customItems,
+                                 customItemsData=customItemsData,
+                                 customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
+                                 fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
+                                 gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
+                                 dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q,
+                                 groupName=Data$groupNames[g])
+
+            }
             if(!is.null(dots$Return_PrepList)) return(PrepListFull)
             if(!is.null(itemtypefull)){
                 for(g in 2L:nrow(itemtypefull)){
@@ -276,7 +293,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                  customGroup=customGroup[[1L]], spline_args=spline_args, monopoly.k=monopoly.k,
                                  fulldata=opts$PrepList[[1L]]$fulldata, key=key, opts=opts,
                                  gpcm_mats=gpcm_mats, internal_constraints=opts$internal_constraints,
-                                 dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q)
+                                 dcIRT_nphi=opts$dcIRT_nphi, dentype=opts$dentype, item.Q=opts$item.Q,
+                                 groupName=Data$groupNames[g])
                 }
             }
         }
@@ -291,7 +309,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             matrix(sapply(PrepListFull$pars, function(y) length(y@parnum)), nrow=1L)
         for(g in seq_len(Data$ngroups)){
             if(g != 1L){
-                if(is.null(itemtypefull))
+                if(is.null(itemtypefull) && length(unique(Data$model$x[,'OptionalGroups'])) == 1)
                     PrepList[[g]] <- list(pars=PrepList[[1L]]$pars)
                 else attr(PrepList[[g]]$pars, 'nclasspars') <-
                         sapply(PrepList[[g]]$pars, function(y) length(y@parnum))

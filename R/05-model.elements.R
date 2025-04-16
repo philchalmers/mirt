@@ -2,7 +2,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
                            parnumber, BFACTOR = FALSE, mixed.design, customItems, customItemsData,
                            dentype, item.Q, customGroup, key, gpcm_mats, spline_args,
-                           monopoly.k, dcIRT_nphi = NULL)
+                           monopoly.k, dcIRT_nphi = NULL, groupName)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL

@@ -2,8 +2,11 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                      parprior, verbose, technical, parnumber = 1, BFACTOR = FALSE,
                      grsm.block = NULL, rsm.block = NULL, mixed.design, customItems,
                      customGroup, customItemsData, fulldata = NULL, key,
-                     spline_args, internal_constraints, monopoly.k, dentype, dcIRT_nphi, item.Q)
+                     spline_args, internal_constraints, monopoly.k, dentype, dcIRT_nphi, item.Q,
+                     groupName)
 {
+    pick <- sapply(strsplit(model$x[,'OptionalGroups'], ','), \(x) any(x == groupName))
+    model$x <- model$x[pick, , drop=FALSE]
     if(is.null(grsm.block)) grsm.block <- rep(1, ncol(data))
     if(is.null(rsm.block)) rsm.block <- rep(1, ncol(data))
     grsm.block[!itemtype %in% c('grsm', 'grsmIRT')] <- NA
