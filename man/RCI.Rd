@@ -29,10 +29,11 @@ of response data to be scored, where each individuals' responses are
 included in exactly one row}
 
 \item{postdat}{same as \code{predat}, but with respect to the post/follow-up
-measurement}
+measurement. Ignored when a two-dimensional IRT model is included}
 
 \item{mod_post}{(optional) IRT model for post-test if different from pre-test;
-otherwise, the pre-test model will be used}
+otherwise, the pre-test model will be used. Ignored when a two-dimensional model
+IRT is included}
 
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
@@ -61,10 +62,14 @@ of supplied total-scores or response vectors? Only requires \code{mod_pre} and (
 \description{
 Computes an IRT version of the "reliable change index" (RCI) proposed by
 Jacobson and Traux (1991) but modified to use IRT information about scores
-and measurement error (see Jabrayilov, Emons, and Sijtsma (2016).
+and measurement error (see Jabrayilov, Emons, and Sijtsma (2016)).
 Main benefit of the IRT approach is the inclusion
 of response pattern information in the pre/post data score estimates, as well
-as conditional standard error of measurement information.
+as conditional standard error of measurement information. Models can be specified
+as separate unidimensional IRT models fitted via \code{\link{mirt}}
+(or extracted from \code{\link{multipleGroup}} via \code{\link{extract.group}}),
+or a two-dimensional model where the latent traits correspond to the two
+test administrations.
 }
 \examples{
 
@@ -160,6 +165,64 @@ head(predat)
 head(postdat)
 
 RCI(mod, predat, postdat)
+
+######
+# Two-dimensional IRT model for each time point, 20 items (no DIF)
+
+J <- 20
+N <- 500
+slopes <- rlnorm(J, .2, .2)
+a <- matrix(c(slopes, numeric(J*2), slopes),J*2)
+ints <- rnorm(J)
+d <- matrix(c(ints, ints), ncol=1)
+data.frame(a=a, d=d)
+
+# mean effects across time
+mu <- c(0, -1/2)
+sigma <- matrix(c(1, .7, .7, 1), 2,2)
+
+dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
+
+# build equality constraints across time points
+constr <- NULL
+for(i in (1:J)){
+    constr <- c(constr, paste0("(", i, ',', i+J, ",a1,a2)"))
+    constr <- c(constr, paste0("(", i, ',', i+J, ",d)"))
+}
+constr <- paste0(constr, collapse=',')
+
+# define model where item parameters constrained over time, and
+# latent trait has potential scale-location changes (e.g., regression to the
+# mean effects)
+model <- sprintf("
+                  thetapre = 1-\%i,
+                  thetapost = \%i-\%i,
+                  COV = thetapre*thetapost, thetapost*thetapost
+                  MEAN = thetapost
+                  CONSTRAIN = \%s", J, J+1, 2*J, constr)
+cat(model)
+
+# fit the model to calibration data
+mod <- mirt(dat, model = model, SE=TRUE)
+coef(mod, printSE=TRUE)
+coef(mod, simplify=TRUE)
+summary(mod)
+
+# test data
+Theta <- cbind(c(0, 1, 2), c(0,1,2))
+nochange <- simdata(a, d, itemtype = '2PL', Theta = Theta)
+change <- simdata(a, d, itemtype = '2PL', Theta = Theta +
+                      cbind(0, c(-1, -1, -1)))
+
+# total score differences
+data.frame(pre=rowSums(nochange[,1:J]),
+           post=rowSums(nochange[,1:J + J]))
+data.frame(pre=rowSums(change[,1:J]),
+           post=rowSums(change[,1:J + J]))
+
+
+RCI(mod, predat = nochange)
+RCI(mod, predat = change)
 
 }
 }
