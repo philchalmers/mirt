@@ -41,7 +41,8 @@ setMethod(
         else
             cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
                 x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
-        cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
+    cat('Object\'s mirt version:', as.character(x@Metadata$mirtVersion), '\n')
+    cat('Current mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
         if(method %in% c('EM', 'QMCEM', 'BL', 'MCEM')){
             if(method == 'EM' || method == 'QMCEM')
