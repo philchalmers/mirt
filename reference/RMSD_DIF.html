@@ -76,7 +76,8 @@ due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hart
 
 <dl><dt id="arg-pooled-mod">pooled_mod<a class="anchor" aria-label="anchor" href="#arg-pooled-mod"></a></dt>
 <dd><p>a multiple-group model (used to compute the model-implied
-probability in the goodness-of-fit test)</p></dd>
+probability in the goodness-of-fit test) or a single-group model for computing RMSD goodness-of-fit
+values relative to the model-implied information</p></dd>
 
 
 <dt id="arg-flag">flag<a class="anchor" aria-label="anchor" href="#arg-flag"></a></dt>
@@ -98,6 +99,11 @@ from the model object(default), <code>'snorm'</code> for a standard normal distr
 or <code>'empirical'</code> to use the density estimate obtained via the E-table</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function is generally designed to work with multiple-group models, however if a single-group
+model is passed this will return the RMSD information regarding the observed vs expected response functions.</p>
+    </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Buchholz, J., and Hartig, J. (2019). Comparing Attitudes Across Groups: An IRT-Based Item-Fit Statistic
@@ -650,6 +656,34 @@ or <code>'empirical'</code> to use the density estimate obtained via the E-table
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_19  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_20  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#################</span></span></span>
+<span class="r-in"><span><span class="co"># Single group model (GOF only)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -21219.257, Max-Change: 1.22398Iteration: 2, Log-Lik: -20289.291, Max-Change: 0.21036Iteration: 3, Log-Lik: -20202.073, Max-Change: 0.11195Iteration: 4, Log-Lik: -20182.183, Max-Change: 0.06197Iteration: 5, Log-Lik: -20177.810, Max-Change: 0.02772Iteration: 6, Log-Lik: -20176.398, Max-Change: 0.01538Iteration: 7, Log-Lik: -20175.711, Max-Change: 0.00843Iteration: 8, Log-Lik: -20175.499, Max-Change: 0.00680Iteration: 9, Log-Lik: -20175.394, Max-Change: 0.00487Iteration: 10, Log-Lik: -20175.300, Max-Change: 0.00269Iteration: 11, Log-Lik: -20175.291, Max-Change: 0.00138Iteration: 12, Log-Lik: -20175.287, Max-Change: 0.00118Iteration: 13, Log-Lik: -20175.284, Max-Change: 0.00061Iteration: 14, Log-Lik: -20175.283, Max-Change: 0.00026Iteration: 15, Log-Lik: -20175.283, Max-Change: 0.00023Iteration: 16, Log-Lik: -20175.282, Max-Change: 0.00013Iteration: 17, Log-Lik: -20175.282, Max-Change: 0.00010Iteration: 18, Log-Lik: -20175.282, Max-Change: 0.00009</span>
+<span class="r-in"><span><span class="fu">RMSD_DIF</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           P.0   P.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.019 0.019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.014 0.014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.027 0.027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.009 0.009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.013 0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.004 0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.011 0.011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.005 0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.016 0.016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.013 0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 0.005 0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.014 0.014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.024 0.024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 0.006 0.006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 0.019 0.019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 0.010 0.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 0.005 0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 0.013 0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 0.013 0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 0.003 0.003</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#################</span></span></span>
 <span class="r-in"><span><span class="co"># polytomous example</span></span></span>
