@@ -10,8 +10,12 @@
 #' then the multiple-group model should be adjusted to better account for the large response bias
 #' due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hartig (2019) for details.
 #'
+#' This function is generally designed to work with multiple-group models, however if a single-group
+#' model is passed this will return the RMSD information regarding the observed vs expected response functions.
+#'
 #' @param pooled_mod a multiple-group model (used to compute the model-implied
-#'   probability in the goodness-of-fit test)
+#'   probability in the goodness-of-fit test) or a single-group model for computing RMSD goodness-of-fit
+#'   values relative to the model-implied information
 #' @param flag a numeric value used as a cut-off to help flag larger RMSD values
 #'   (e.g., \code{flag = .03} will highlight only categories with RMSD values greater than
 #'   .03)
@@ -107,6 +111,11 @@
 #' RMSD_DIF(mod, flag = .03)
 #'
 #' #################
+#' # Single group model (GOF only)
+#' mod <- mirt(dat)
+#' RMSD_DIF(mod)
+#'
+#' #################
 #' # polytomous example
 #' set.seed(12345)
 #' a <- a2 <- matrix(rlnorm(20,.2,.3))
@@ -159,7 +168,8 @@ RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
     ret <- vector('list', length(which.groups))
     names(ret) <- which.groups
     for(which.group in which.groups){
-        smod <- extract.group(pooled_mod, which.group)
+        if(is(pooled_mod, 'SingleGroupClass'))
+            smod <- pooled_mod else smod <- extract.group(pooled_mod, which.group)
         nfact <- extract.mirt(smod, 'nfact')
         stopifnot(nfact == 1L)
         sv <- mod2values(smod)
@@ -221,7 +231,7 @@ RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
         items <- as.mirt_df(items)
 
         ret[[which.group]] <- items
-
     }
+    if(length(ret) == 1) ret <- ret[[1]]
     ret
 }
