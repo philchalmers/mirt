@@ -110,9 +110,15 @@ RMSD_DIF(mod, flag = .03)
 # Single group model (GOF only)
 mod <- mirt(dat)
 RMSD_DIF(mod)
+RMSD_DIF(mod, probfun=FALSE)
+
+# polytomous
+mod2 <- mirt(Science)
+RMSD_DIF(mod2)
+RMSD_DIF(mod2, probfun=FALSE)
 
 #################
-# polytomous example
+# polytomous DIF example
 set.seed(12345)
 a <- a2 <- matrix(rlnorm(20,.2,.3))
 
