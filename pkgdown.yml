@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   mirt-vignettes: mirt-vignettes.html
-last_built: 2025-04-25T20:21Z
+last_built: 2025-05-09T18:18Z
 urls:
   reference: https://philchalmers.github.io/mirt/reference
   article: https://philchalmers.github.io/mirt/articles

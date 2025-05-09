@@ -763,35 +763,35 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, MI <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3903333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.0440182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.8918158</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.8918158</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.7639483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.6538507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.4077142</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.0520620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.8684159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.8684159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.7238801</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.6827096</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible values for future work</span></span></span>
 <span class="r-in"><span><span class="va">pv</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, plausible.draws <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pv</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, var<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, min<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, max<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.04139505  0.97963847 -3.38059229  3.18981801 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.04020879  0.95518694 -3.13710140  2.44720316 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.009279182  1.010939871 -3.157141420  3.444246522 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.02395652  1.00927707 -3.35655112  3.19919680 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01967742  0.99277074 -3.11826311  3.64719118 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.06847318  1.00212716 -3.81301430  2.89405844 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01082505  0.99004124 -3.02267632  2.88030166 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.03534066  1.07833160 -3.40229572  2.70540378 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.01829676  1.04038304 -3.23595300  3.14584109 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01196727  1.08192379 -3.48071520  3.05385120 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## define a custom_den function (*must* return a numeric vector).</span></span></span>
@@ -926,7 +926,7 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>

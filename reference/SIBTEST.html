@@ -197,6 +197,13 @@ and therefore the sum of these plotted observations will equal the beta coeffici
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>a <code>data.frame</code> type object containing the SIBTEST results. Note that
+  the <code>beta</code> coefficient for (G)CSIBTEST are reported as absolute values to
+  reflect the sum of the respective area information above and below
+  the estimated crossing locations</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a regression
 correction based on the KR-20/coefficient alpha reliability index to correct the observed
@@ -256,7 +263,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 -0.014 0.027 0.265  1 0.606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.015    NA 0.331  2 0.848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1  0.015    NA 0.331  2 0.848</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Some plots depicting the above tests</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span>, plot <span class="op">=</span> <span class="st">'observed'</span><span class="op">)</span></span></span>
@@ -270,43 +277,43 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span>, randomize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 -0.014 0.027 0.265  1 0.606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.015 0.027          0.827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1  0.015 0.027          0.827</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># remove crossing-location (identical to Li and Stout 1996 definition of CSIBTEST)</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span>, randomize <span class="op">=</span> <span class="cn">TRUE</span>, remove_cross<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 -0.014 0.027 0.265  1 0.606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.016 0.026          0.781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1  0.016 0.026          0.781</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DIF (specific anchors)</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, suspect_set <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 -0.008 0.028 0.078  1 0.781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.004    NA 0.105  2 0.949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.004    NA 0.105  2 0.949</span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, suspect_set <span class="op">=</span> <span class="fl">6</span>, randomize<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 -0.008 0.028 0.078  1 0.781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.004 0.028              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.004 0.028              1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DBF (all and specific anchors, respectively)</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            10            20  0.053 0.165 0.102  1 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            10            20 -0.053    NA 0.102  1 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            10            20 0.053 0.165 0.102  1 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            10            20 0.053    NA 0.102  1 0.75</span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, suspect_set <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df   p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5            20  0.166 0.197 0.708  1 0.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5            20 -0.166    NA 0.708  1 0.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df   p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5            20 0.166 0.197 0.708  1 0.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5            20 0.166    NA 0.708  1 0.4</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DTF</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            10            20  0.053 0.165 0.102  1 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            10            20 -0.053    NA 0.102  1 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            10            20 0.053 0.165 0.102  1 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            10            20 0.053    NA 0.102  1 0.75</span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="co">#equivalent</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            10            20  0.053 0.165 0.102  1 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            10            20 -0.053    NA 0.102  1 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            10            20 0.053 0.165 0.102  1 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            10            20 0.053    NA 0.102  1 0.75</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># different hyper pars</span></span></span>
 <span class="r-in"><span><span class="va">dat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">N</span>, itemtype <span class="op">=</span> <span class="st">'dich'</span><span class="op">)</span></span></span>
@@ -333,7 +340,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, <span class="fl">8</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 -0.026 0.028 0.824  1 0.364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.026    NA 0.824  1 0.364</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.026    NA 0.824  1 0.364</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DIF testing with all other items as anchors</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, <span class="fl">6</span><span class="op">)</span></span></span>
@@ -347,7 +354,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, <span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 -0.045 0.026 2.883  1 0.089</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.045    NA 2.883  1 0.089</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1  0.045    NA 2.883  1 0.089</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## -------------</span></span></span>
 <span class="r-in"><span><span class="co">## systematic differing slopes and intercepts (clear DTF)</span></span></span>
@@ -378,9 +385,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 -0.013 0.028 0.209  1 0.648</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.060    NA 5.276  2 0.071</span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">7</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.011 0.027  0.17  1  0.68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.006    NA 0.173  2 0.917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.011 0.027  0.17  1  0.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.006    NA 0.173  2 0.917</span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">30</span>, match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE      X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 -0.335 0.026 166.911  1 0</span>
@@ -394,9 +401,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.060    NA 5.276  2 0.071</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.011 0.027  0.17  1  0.68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.006    NA 0.173  2 0.917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.011 0.027  0.17  1  0.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.006    NA 0.173  2 0.917</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
@@ -404,19 +411,19 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.007    NA 0.071  1 0.79</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.004 0.027 0.022  1 0.882</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.020    NA 0.562  2 0.755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.004 0.027 0.022  1 0.882</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.020    NA 0.562  2 0.755</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.031 0.027 1.309  1 0.253</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.018    NA 1.314  2 0.518</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.031 0.027 1.309  1 0.253</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.018    NA 1.314  2 0.518</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.032 0.028 1.292  1 0.256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.032    NA 1.292  1 0.256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.032 0.028 1.292  1 0.256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.032    NA 1.292  1 0.256</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -429,9 +436,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.029    NA 1.135  2 0.567</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.004 0.028 0.024  1 0.876</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.005    NA 0.032  2 0.984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.004 0.028 0.024  1 0.876</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.005    NA 0.032  2 0.984</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -454,9 +461,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.122    NA 20.077  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1  0.206 0.025 67.462  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.206    NA 67.462  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 0.206 0.025 67.462  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 0.206    NA 67.462  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -466,7 +473,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE      X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal             5             1 -0.288 0.026 120.661  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1 -0.288    NA 120.661  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal             5             1  0.288    NA 120.661  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df p</span>
@@ -517,14 +524,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="co"># test DIF using all-other-as-anchors method (not typically recommended)</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, DIF<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.127 0.028 20.939  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.127    NA 20.939  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.127 0.028 20.939  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.127    NA 20.939  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.048 0.029 2.801  1 0.094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.089    NA 9.376  2 0.009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.048 0.029 2.801  1 0.094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.089    NA 9.376  2 0.009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE   X2 df     p</span>
@@ -532,9 +539,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.013    NA 0.25  1 0.617</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.067 0.023 8.472  1 0.004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.067    NA 8.472  1 0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.067 0.023 8.472  1 0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.067    NA 8.472  1 0.004</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -547,19 +554,19 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.047    NA 3.679  2 0.159</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.082 0.028 8.455  1 0.004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.085    NA 9.148  2  0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.082 0.028 8.455  1 0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.085    NA 9.148  2  0.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.088 0.028 10.042  1 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.108    NA 15.424  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.088 0.028 10.042  1 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.108    NA 15.424  2     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.082 0.029  8.256  1 0.004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.099    NA 12.193  2 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.082 0.029  8.256  1 0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.099    NA 12.193  2 0.002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -567,14 +574,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.076    NA 7.264  1 0.007</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.096 0.028 12.036  1 0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.114    NA 17.072  2     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.096 0.028 12.036  1 0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.114    NA 17.072  2     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.105 0.027 14.678  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.105    NA 14.678  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.105 0.027 14.678  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.105    NA 14.678  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -582,9 +589,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.057    NA 4.098  1 0.043</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.082 0.026 9.589  1 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.082    NA 9.589  1 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.082 0.026 9.589  1 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.082    NA 9.589  1 0.002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -607,9 +614,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1  0.094    NA 14.977  2 0.001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1  0.315 0.033 93.742  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.315    NA 93.742  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE     X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 0.315 0.033 93.742  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 0.315    NA 93.742  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -619,7 +626,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE     X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST        focal            29             1 -0.225 0.025 80.654  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1 -0.225    NA 80.654  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST       focal            29             1  0.225    NA 80.654  1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df p</span>
@@ -696,11 +703,11 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.005 -0.005 0.084  2 0.959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.004 -0.016 1.027         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.004  0.016 1.027         </span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span>, randomize<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.005 -0.005 0.084  2 0.959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.004 -0.016 1.027    0.847</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.004  0.016 1.027    0.847</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># explicit contrasts</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">6</span>, randomize<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
@@ -714,17 +721,17 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.017  0.001 1.008  2 0.604</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.022  0.031 7.502         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.022  0.031 7.502         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.046 -0.022 4.695  2 0.096</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.038 -0.026 3.452         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.038  0.026 3.452         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.001 -0.002 0.009  2 0.996</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.003  0.008 0.298         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.003  0.008 0.298         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -734,12 +741,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.028  0.015 1.807  2 0.405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.028 -0.029 7.164         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.028  0.029 7.164         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.005 -0.005 0.084  2 0.959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.004 -0.016 1.027         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.004  0.016 1.027         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -749,12 +756,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.001  0.007 0.147  2 0.929</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.019 -0.011 0.835         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.019  0.011 0.835         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.046  0.002 6.347  2 0.042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.037 -0.031 3.719         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.037  0.031 3.719         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -764,17 +771,17 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.017 -0.015 0.788  2 0.674</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.017 -0.017 2.736         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.017  0.017 2.736         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.026  0.024  2.02  2 0.364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.035 -0.023 3.074         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.035  0.023 3.074         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.005      0 0.088  2 0.957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.016      0 0.769         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.016      0 0.769         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -794,42 +801,42 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.001  0.001 0.002  2 0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.002 -0.006 0.088         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.002  0.006 0.088         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  -0.06 -0.023  8.761  2 0.013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  -0.06 -0.004 10.588         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1   0.06  0.004 10.588         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.005 -0.025 1.591  2 0.451</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.029 -0.010 4.078         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.029  0.010 4.078         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.011  0.002 0.583  2 0.747</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.011 -0.014 2.621         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.011  0.014 2.621         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.013  0.031 2.247  2 0.325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.032  0.031  8.87         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.032  0.031  8.87         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.010 -0.019 1.868  2 0.393</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.012 -0.019 0.792         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.012  0.019 0.792         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.007 -0.018 0.745  2 0.689</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.030 -0.018 5.375         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.030  0.018 5.375         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.006  0.020 0.891  2 0.641</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.016 -0.025  3.57         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.016  0.025  3.57         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -839,7 +846,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.010  0.010 0.434  2 0.805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1 -0.017  0.005 1.637         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.017  0.005 1.637         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -859,64 +866,64 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1  0.013 -0.011 1.391  2 0.499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.012 -0.020 2.593         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.012  0.020 2.593         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">16</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, DIF<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>        match_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span> <span class="co"># specific anchors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.003 -0.035 3.407  2 0.182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.018 -0.035 6.656         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.018  0.035 6.656         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1  0.000   0.00     0  2 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1 -0.019  -0.03 2.148     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.019   0.03 2.148     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.064 -0.027 10.021  2 0.007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1 -0.064 -0.010  11.28         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.064  0.010  11.28         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.013 -0.029 1.915  2 0.384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.015 -0.027 4.362         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.015  0.027 4.362         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1   0.01 -0.002 0.817  2 0.665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  -0.01 -0.008  0.54         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1   0.01  0.008  0.54         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1  0.015  0.022 1.116  2 0.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1 -0.035 -0.022 2.729         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.035  0.022 2.729         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2   X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1  0.005 -0.026 2.51  2 0.285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1 -0.005  0.026 2.51         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.005  0.026 2.51         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.008 -0.022 1.108  2 0.575</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.007 -0.022 2.045         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.007  0.022 2.045         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df    p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1  0.003  0.016 0.686  2 0.71</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.018 -0.023 3.804        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.018  0.023 3.804        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.033  0.007 4.161  2 0.125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.033 -0.007 4.161         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.033  0.007 4.161         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1  0.011  0.007 0.338  2 0.845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.011 -0.005 0.729         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.011  0.005 0.729         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
@@ -926,36 +933,36 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.009 -0.003  0.235  2 0.889</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1 -0.035  0.028 10.697         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.035  0.028 10.697         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1 -0.007 -0.032 2.394  2 0.302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.018 -0.032 5.554         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.018  0.032 5.554         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             15             1  0.013 -0.012 1.558  2 0.459</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1 -0.013 -0.028 1.872         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            15             1  0.013  0.028 1.872         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># post-hoc between two groups only</span></span></span>
 <span class="r-in"><span><span class="va">pick</span> <span class="op">&lt;-</span> <span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'group1'</span>, <span class="st">'group2'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">pick</span><span class="op">)</span>, <span class="va">group</span><span class="op">[</span><span class="va">pick</span><span class="op">]</span>, suspect_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, DIF<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.023 0.02 1.399  1 0.237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.027   NA  1.95  2 0.377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.023 0.02 1.399  1 0.237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.027   NA  1.95  2 0.377</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.045 0.021 4.628  1 0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.041    NA 4.639  2 0.098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.041    NA 4.639  2 0.098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.003 0.021 0.027  1 0.87</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.003    NA 0.027  1 0.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.003 0.021 0.027  1 0.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.003    NA 0.027  1 0.87</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -980,12 +987,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.002 0.021  0.01  1 0.92</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.019    NA 1.123  2 0.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.019    NA 1.123  2 0.57</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.045 0.021 4.696  1 0.03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.035    NA  4.82  2 0.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.045 0.021 4.696  1 0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.035    NA  4.82  2 0.09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -998,14 +1005,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.017    NA 0.624  1 0.43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.026 0.02 1.733  1 0.188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.037   NA 3.391  2 0.183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.026 0.02 1.733  1 0.188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.037   NA 3.391  2 0.183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.002 0.021 0.009  1 0.925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.019    NA 1.139  2 0.566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.019    NA 1.139  2 0.566</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1023,14 +1030,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.016    NA 0.547  2 0.761</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.002 0.021 0.011  1 0.916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.003    NA 0.025  2 0.987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.002 0.021 0.011  1 0.916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.003    NA 0.025  2 0.987</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.059 0.02 8.584  1 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.059   NA 8.584  1 0.003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.059   NA 8.584  1 0.003</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1038,19 +1045,19 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.02    NA 1.031  2 0.597</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.018 0.017 1.224  1 0.268</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.018    NA 1.224  1 0.268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.018 0.017 1.224  1 0.268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.018    NA 1.224  1 0.268</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.012 0.021 0.338  1 0.561</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.030    NA  2.06  2 0.357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.012 0.021 0.338  1 0.561</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.030    NA  2.06  2 0.357</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.008 0.021 0.141  1 0.707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.008    NA 0.171  2 0.918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.008 0.021 0.141  1 0.707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.008    NA 0.171  2 0.918</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1068,9 +1075,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.026    NA 1.468  1 0.226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.009 0.018 0.219  1  0.64</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.019    NA 3.558  2 0.169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.009 0.018 0.219  1  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.019    NA 3.558  2 0.169</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE   X2 df     p</span>
@@ -1097,19 +1104,19 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, DIF<span class="op">=</span><span class="cn">TRUE</span>, pairwise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.023 0.02 1.399  1 0.237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.027   NA  1.95  2 0.377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.023 0.02 1.399  1 0.237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.027   NA  1.95  2 0.377</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.045 0.021 4.628  1 0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.041    NA 4.639  2 0.098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.041    NA 4.639  2 0.098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.003 0.021 0.027  1 0.87</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.003    NA 0.027  1 0.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.003 0.021 0.027  1 0.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.003    NA 0.027  1 0.87</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1134,12 +1141,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.002 0.021  0.01  1 0.92</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.019    NA 1.123  2 0.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.019    NA 1.123  2 0.57</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df    p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.045 0.021 4.696  1 0.03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.035    NA  4.82  2 0.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df    p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.045 0.021 4.696  1 0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.035    NA  4.82  2 0.09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1152,14 +1159,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.017    NA 0.624  1 0.43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.026 0.02 1.733  1 0.188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.037   NA 3.391  2 0.183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.026 0.02 1.733  1 0.188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.037   NA 3.391  2 0.183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.002 0.021 0.009  1 0.925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.019    NA 1.139  2 0.566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.019    NA 1.139  2 0.566</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1177,14 +1184,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.016    NA 0.547  2 0.761</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.002 0.021 0.011  1 0.916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.003    NA 0.025  2 0.987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.002 0.021 0.011  1 0.916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.003    NA 0.025  2 0.987</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 -0.059 0.02 8.584  1 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.059   NA 8.584  1 0.003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.059   NA 8.584  1 0.003</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1192,19 +1199,19 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.02    NA 1.031  2 0.597</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.018 0.017 1.224  1 0.268</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.018    NA 1.224  1 0.268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.018 0.017 1.224  1 0.268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.018    NA 1.224  1 0.268</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.012 0.021 0.338  1 0.561</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.030    NA  2.06  2 0.357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.012 0.021 0.338  1 0.561</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.030    NA  2.06  2 0.357</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.008 0.021 0.141  1 0.707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.008    NA 0.171  2 0.918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.008 0.021 0.141  1 0.707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.008    NA 0.171  2 0.918</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1222,9 +1229,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1  0.026    NA 1.468  1 0.226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1  0.009 0.018 0.219  1  0.64</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 -0.019    NA 3.558  2 0.169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group2            29             1 0.009 0.018 0.219  1  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group2            29             1 0.019    NA 3.558  2 0.169</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2$Item_27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE   X2 df     p</span>
@@ -1256,7 +1263,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.022 0.021 1.079  1 0.299</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.024    NA 1.265  2 0.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.024    NA 1.265  2 0.531</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
@@ -1269,14 +1276,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.004    NA 0.079  2 0.961</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.019 0.021 0.757  1 0.384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.033    NA  2.45  2 0.294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.019 0.021 0.757  1 0.384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.033    NA  2.45  2 0.294</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.006 0.021 0.079  1 0.779</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.017    NA 0.819  2 0.664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.017    NA 0.819  2 0.664</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1284,14 +1291,14 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.016    NA 0.589  1 0.443</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.007 0.021 0.103  1 0.748</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.010    NA  0.26  2 0.878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.007 0.021 0.103  1 0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.010    NA  0.26  2 0.878</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.002 0.021 0.013  1 0.911</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.032    NA   2.8  2 0.247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.002 0.021 0.013  1 0.911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.032    NA   2.8  2 0.247</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
@@ -1301,12 +1308,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.014 0.021 0.447  1 0.504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.014    NA 1.612  2 0.447</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.014    NA 1.612  2 0.447</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.024 0.02 1.397  1 0.237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.023   NA 1.453  2 0.484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.024 0.02 1.397  1 0.237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.023   NA 1.453  2 0.484</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1329,24 +1336,24 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.034    NA 2.489  1 0.115</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.000 0.021     0  1 0.985</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.007    NA 0.141  2 0.932</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.000 0.021     0  1 0.985</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.007    NA 0.141  2 0.932</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.022 0.02 1.216  1  0.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.001   NA  2.58  2 0.275</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.001   NA  2.58  2 0.275</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.025 0.02 1.525  1 0.217</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.010   NA 1.879  2 0.391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.010   NA 1.879  2 0.391</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.003 0.015 0.034  1 0.854</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.014    NA 1.113  2 0.573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.003 0.015 0.034  1 0.854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.014    NA 1.113  2 0.573</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1356,17 +1363,17 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.018 0.021 0.676  1 0.411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.018    NA 0.676  1 0.411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.018    NA 0.676  1 0.411</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.019 0.021 0.823  1 0.364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.019    NA 0.823  1 0.364</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.019    NA 0.823  1 0.364</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.018 0.021  0.75  1 0.386</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.026    NA 1.727  2 0.422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.018 0.021  0.75  1 0.386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.026    NA 1.727  2 0.422</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1396,7 +1403,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.011 0.02 0.316  1 0.574</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.025   NA 1.705  2 0.426</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.025   NA 1.705  2 0.426</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3</span>
@@ -1406,9 +1413,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.003    NA 1.628  2 0.443</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.023 0.021 1.233  1 0.267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.023    NA 1.233  1 0.267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.023 0.021 1.233  1 0.267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.023    NA 1.233  1 0.267</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
@@ -1428,7 +1435,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.006 0.021 0.078  1 0.779</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.006    NA 0.078  1 0.779</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.006    NA 0.078  1 0.779</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1453,7 +1460,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.001 0.021 0.001  1 0.978</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.017    NA 0.866  2 0.648</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.017    NA 0.866  2 0.648</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
@@ -1466,9 +1473,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.008    NA 0.204  2 0.903</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.005 0.021 0.051  1 0.822</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.011    NA 1.915  2 0.384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.005 0.021 0.051  1 0.822</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.011    NA 1.915  2 0.384</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
@@ -1478,7 +1485,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.031 0.021 2.131  1 0.144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.029    NA 2.194  2 0.334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.029    NA 2.194  2 0.334</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1486,9 +1493,9 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.001    NA  0.03  2 0.985</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.038 0.021 3.351  1 0.067</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.038    NA 3.351  1 0.067</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.038 0.021 3.351  1 0.067</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.038    NA 3.351  1 0.067</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
@@ -1498,7 +1505,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.017 0.017 0.992  1 0.319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.017    NA 0.992  1 0.319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.017    NA 0.992  1 0.319</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
@@ -1513,12 +1520,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.009 0.021 0.178  1 0.673</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.024    NA 1.949  2 0.377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.024    NA 1.949  2 0.377</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.008 0.022 0.151  1 0.698</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.018    NA 0.683  2 0.711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta    SE    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.008 0.022 0.151  1 0.698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.018    NA 0.683  2 0.711</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE    X2 df     p</span>
@@ -1543,12 +1550,12 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta    SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.018 0.022 0.722  1 0.395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.026    NA 1.466  2 0.481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.026    NA 1.466  2 0.481</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.029 0.02 1.973  1  0.16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.032   NA 2.615  2 0.271</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.032   NA 2.615  2 0.271</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -1570,11 +1577,11 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2     X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.136 -0.025 52.967  2 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.130 -0.009 61.401     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.130  0.009 61.401     </span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fl">19</span>, randomize<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2     X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.136 -0.025 52.967  2 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.130 -0.009 61.401    0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.130  0.009 61.401    0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">19</span><span class="op">)</span>, DIF<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_16</span>
@@ -1585,7 +1592,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           n_matched_set n_suspect_set beta_1 beta_2     X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GSIBTEST             29             1 -0.136 -0.025 52.967  2 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.130 -0.009 61.401     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GCSIBTEST            29             1  0.130  0.009 61.401     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">SIBTEST</span><span class="op">(</span><span class="va">dat</span>, <span class="va">group</span>, suspect_set <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">19</span><span class="op">)</span>, DIF<span class="op">=</span><span class="cn">TRUE</span>, pairwise<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group2</span>
@@ -1609,19 +1616,19 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group1_group3$Item_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.025 0.02 1.525  1 0.217</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.010   NA 1.879  2 0.391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.010   NA 1.879  2 0.391</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 -0.039 0.02 3.721  1 0.054</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.040   NA 4.185  2 0.123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1  0.040   NA 4.185  2 0.123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $group2_group3$Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set   beta   SE     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1  0.112 0.02 30.503  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 -0.118   NA 37.348  2 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          focal_group n_matched_set n_suspect_set  beta   SE     X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SIBTEST       group3            29             1 0.112 0.02 30.503  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CSIBTEST      group3            29             1 0.118   NA 37.348  2 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -1638,7 +1645,7 @@ SIBTEST and Crossing-SIBTEST. <em>Applied Measurement in Education, 36</em>(2), 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>
