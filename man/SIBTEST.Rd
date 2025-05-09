@@ -101,6 +101,12 @@ and therefore the sum of these plotted observations will equal the beta coeffici
 
 \item{...}{additional plotting arguments to be passed}
 }
+\value{
+a \code{data.frame} type object containing the SIBTEST results. Note that
+  the \code{beta} coefficient for (G)CSIBTEST are reported as absolute values to
+  reflect the sum of the respective area information above and below
+  the estimated crossing locations
+}
 \description{
 Classical test theory approach to detecting unidirectional and bidirectional (with one
 crossing location) DIF. This family of statistics is intended for unidimensional tests,

@@ -100,6 +100,11 @@
 #'   bias/DIF from group ability differences and detect test bias/DTF as well as item bias/DIF.
 #'   \emph{Psychometrika, 58}, 159-194.
 #'
+#' @return a \code{data.frame} type object containing the SIBTEST results. Note that
+#'   the \code{beta} coefficient for (G)CSIBTEST are reported as absolute values to
+#'   reflect the sum of the respective area information above and below
+#'   the estimated crossing locations
+#'
 #' @examples
 #'
 #' \donttest{
@@ -494,7 +499,7 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
         sigma_cross <- NA
         ret <- data.frame(focal_group=focal_name, n_matched_set=length(match_set),
                           n_suspect_set = length(suspect_set),
-                          beta = c(beta_uni, beta_cross), SE=c(sigma_uni, NA),
+                          beta = c(beta_uni, abs(beta_cross)), SE=c(sigma_uni, NA),
                           X2=c(X2_uni, X2_cross),
                           df=c(1, df), p = c(p_uni, p_cross))
         rownames(ret) <- c('SIBTEST', 'CSIBTEST')
@@ -716,13 +721,13 @@ SIBTEST <- function(dat, group, suspect_set, match_set, focal_name = unique(grou
         if(nrow(C) == 1L){
             ret <- data.frame(n_matched_set=length(match_set),
                               n_suspect_set = length(suspect_set),
-                              beta = c(beta_uni, beta_cross),
+                              beta = c(beta_uni, abs(beta_cross)),
                               X2=c(X2_uni, X2_cross),
                               df=c(1, NA), p = c(p_uni, NA))
             rownames(ret) <- c('GSIBTEST', 'GCSIBTEST')
             class(ret) <- c('mirt_df', 'data.frame')
         } else {
-            mat1 <- rbind(as.vector(beta_uni), beta_cross)
+            mat1 <- rbind(as.vector(beta_uni), abs(beta_cross))
             colnames(mat1) <- paste0('beta_', 1:nrow(C))
             ret <- data.frame(n_matched_set=length(match_set),
                               n_suspect_set = length(suspect_set),
