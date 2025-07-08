@@ -273,7 +273,7 @@ RCI <- function(mod_pre, predat, postdat,
             if(zero_cor)
                 sigma[1,2] <- sigma[2,1] <- 0
             fs <- fscores(mod_pre, response.pattern=predat, cov=sigma, ...)
-            diff <- fs[,1] - fs[,2]
+            diff <- fs[,2] - fs[,1]
             pse <- sqrt(fs[,3]^2 + fs[,4]^2)
             z <- diff/pse
             converge <- rep(TRUE, length(z))
