@@ -13,7 +13,7 @@ package). Parameters are organized from the freely estimated values in mod2value
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,7 +106,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -1629.361, Max-Change: 0.50660Iteration: 2, Log-Lik: -1617.374, Max-Change: 0.25442Iteration: 3, Log-Lik: -1612.894, Max-Change: 0.16991Iteration: 4, Log-Lik: -1610.306, Max-Change: 0.10461Iteration: 5, Log-Lik: -1609.814, Max-Change: 0.09162Iteration: 6, Log-Lik: -1609.534, Max-Change: 0.07363Iteration: 7, Log-Lik: -1609.030, Max-Change: 0.03677Iteration: 8, Log-Lik: -1608.988, Max-Change: 0.03200Iteration: 9, Log-Lik: -1608.958, Max-Change: 0.02754Iteration: 10, Log-Lik: -1608.878, Max-Change: 0.01443Iteration: 11, Log-Lik: -1608.875, Max-Change: 0.00847Iteration: 12, Log-Lik: -1608.873, Max-Change: 0.00515Iteration: 13, Log-Lik: -1608.872, Max-Change: 0.00550Iteration: 14, Log-Lik: -1608.872, Max-Change: 0.00318Iteration: 15, Log-Lik: -1608.871, Max-Change: 0.00462Iteration: 16, Log-Lik: -1608.871, Max-Change: 0.00277Iteration: 17, Log-Lik: -1608.870, Max-Change: 0.00145Iteration: 18, Log-Lik: -1608.870, Max-Change: 0.00175Iteration: 19, Log-Lik: -1608.870, Max-Change: 0.00126Iteration: 20, Log-Lik: -1608.870, Max-Change: 0.00025Iteration: 21, Log-Lik: -1608.870, Max-Change: 0.00285Iteration: 22, Log-Lik: -1608.870, Max-Change: 0.00108Iteration: 23, Log-Lik: -1608.870, Max-Change: 0.00022Iteration: 24, Log-Lik: -1608.870, Max-Change: 0.00059Iteration: 25, Log-Lik: -1608.870, Max-Change: 0.00014Iteration: 26, Log-Lik: -1608.870, Max-Change: 0.00068Iteration: 27, Log-Lik: -1608.870, Max-Change: 0.00065Iteration: 28, Log-Lik: -1608.870, Max-Change: 0.00019Iteration: 29, Log-Lik: -1608.870, Max-Change: 0.00061Iteration: 30, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 31, Log-Lik: -1608.870, Max-Change: 0.00012Iteration: 32, Log-Lik: -1608.870, Max-Change: 0.00058Iteration: 33, Log-Lik: -1608.870, Max-Change: 0.00055Iteration: 34, Log-Lik: -1608.870, Max-Change: 0.00015Iteration: 35, Log-Lik: -1608.870, Max-Change: 0.00052Iteration: 36, Log-Lik: -1608.870, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="va">booted</span> <span class="op">&lt;-</span> <span class="fu">boot.mirt</span><span class="op">(</span><span class="va">mod</span>, R<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">booted</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="boot.mirt-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">booted</span></span></span>
@@ -119,23 +118,23 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootstrap Statistics :</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        original        bias    std. error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t1*   1.0417547  1.740444e-02   0.1904304</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t2*   4.8641542  1.343367e-01   0.4229983</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t3*   2.6399417  5.530817e-02   0.2159828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t4*  -1.4660135 -3.491278e-02   0.1223034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t5*   1.2259618  2.723756e-02   0.2371705</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t6*   2.9240027  4.155927e-02   0.3352348</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t7*   0.9011651 -2.975668e-03   0.1389067</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t8*  -2.2665647 -4.463624e-02   0.2169337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t9*   2.2933717  7.284125e-05   0.5191957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t10*  5.2339928  6.762286e-02   0.8326838</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t11*  2.2137728 -5.567994e-02   0.4026079</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t12* -1.9637062 -6.846435e-02   0.3752243</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t13*  1.0949151 -3.698904e-02   0.1979288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t14*  3.3479196 -1.755712e-02   0.2532703</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t15*  0.9916289 -6.915037e-02   0.1036222</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t16* -1.6882599  1.739899e-02   0.1837708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        original       bias    std. error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t1*   1.0417547  0.039756609   0.2180908</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t2*   4.8641542  0.107617991   0.4246238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t3*   2.6399417  0.008343677   0.2938708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t4*  -1.4660135 -0.044006228   0.1801285</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t5*   1.2259618 -0.010737940   0.1673617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t6*   2.9240027  0.059797889   0.2816925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t7*   0.9011651 -0.011811056   0.1472792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t8*  -2.2665647  0.015599564   0.2175903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t9*   2.2933717 -0.001395176   0.4712084</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t10*  5.2339928 -0.006057157   0.8133609</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t11*  2.2137728 -0.016503240   0.4009882</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t12* -1.9637062 -0.027397765   0.3737457</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t13*  1.0949151  0.011490687   0.2112956</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t14*  3.3479196 -0.042309791   0.3130434</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t15*  0.9916289 -0.020381501   0.1864301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t16* -1.6882599 -0.013255970   0.1565944</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co">#run in parallel using snow back-end using all available cores</span></span></span>
@@ -169,10 +168,10 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootstrap Statistics :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      original       bias    std. error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t1* 0.5220496  0.004664565  0.08413149</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t2* 0.5844686 -0.006647398  0.06021513</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t3* 0.8030199 -0.008141530  0.06939387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t4* 0.5410276  0.010047291  0.08117562</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t1* 0.5220496  0.005643174  0.08294517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t2* 0.5844686 -0.006140366  0.06189828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t3* 0.8030199 -0.006557025  0.07143835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t4* 0.5410276  0.011377983  0.08396097</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
@@ -186,7 +185,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

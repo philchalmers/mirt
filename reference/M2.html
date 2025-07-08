@@ -25,7 +25,7 @@ density components (where applicable)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -179,7 +179,7 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.44.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.44.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
@@ -211,12 +211,12 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span><span class="co"># M2 with missing data present</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">250</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -2547.291, Max-Change: 0.18194Iteration: 2, Log-Lik: -2539.425, Max-Change: 0.13938Iteration: 3, Log-Lik: -2536.809, Max-Change: 0.10708Iteration: 4, Log-Lik: -2534.711, Max-Change: 0.05139Iteration: 5, Log-Lik: -2534.472, Max-Change: 0.04305Iteration: 6, Log-Lik: -2534.308, Max-Change: 0.03620Iteration: 7, Log-Lik: -2533.924, Max-Change: 0.01092Iteration: 8, Log-Lik: -2533.912, Max-Change: 0.00981Iteration: 9, Log-Lik: -2533.904, Max-Change: 0.00868Iteration: 10, Log-Lik: -2533.883, Max-Change: 0.00250Iteration: 11, Log-Lik: -2533.882, Max-Change: 0.00195Iteration: 12, Log-Lik: -2533.882, Max-Change: 0.00175Iteration: 13, Log-Lik: -2533.881, Max-Change: 0.00121Iteration: 14, Log-Lik: -2533.881, Max-Change: 0.00111Iteration: 15, Log-Lik: -2533.881, Max-Change: 0.00050Iteration: 16, Log-Lik: -2533.881, Max-Change: 0.00043Iteration: 17, Log-Lik: -2533.881, Max-Change: 0.00184Iteration: 18, Log-Lik: -2533.881, Max-Change: 0.00036Iteration: 19, Log-Lik: -2533.881, Max-Change: 0.00026Iteration: 20, Log-Lik: -2533.881, Max-Change: 0.00025Iteration: 21, Log-Lik: -2533.881, Max-Change: 0.00026Iteration: 22, Log-Lik: -2533.881, Max-Change: 0.00023Iteration: 23, Log-Lik: -2533.881, Max-Change: 0.00023Iteration: 24, Log-Lik: -2533.881, Max-Change: 0.00108Iteration: 25, Log-Lik: -2533.881, Max-Change: 0.00033Iteration: 26, Log-Lik: -2533.881, Max-Change: 0.00020Iteration: 27, Log-Lik: -2533.881, Max-Change: 0.00015Iteration: 28, Log-Lik: -2533.881, Max-Change: 0.00071Iteration: 29, Log-Lik: -2533.881, Max-Change: 0.00055Iteration: 30, Log-Lik: -2533.881, Max-Change: 0.00043Iteration: 31, Log-Lik: -2533.881, Max-Change: 0.00033Iteration: 32, Log-Lik: -2533.881, Max-Change: 0.00020Iteration: 33, Log-Lik: -2533.881, Max-Change: 0.00012Iteration: 34, Log-Lik: -2533.881, Max-Change: 0.00005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -2546.250, Max-Change: 0.18168Iteration: 2, Log-Lik: -2538.436, Max-Change: 0.13920Iteration: 3, Log-Lik: -2535.837, Max-Change: 0.10698Iteration: 4, Log-Lik: -2533.741, Max-Change: 0.05128Iteration: 5, Log-Lik: -2533.498, Max-Change: 0.04283Iteration: 6, Log-Lik: -2533.332, Max-Change: 0.03637Iteration: 7, Log-Lik: -2532.925, Max-Change: 0.00775Iteration: 8, Log-Lik: -2532.918, Max-Change: 0.00681Iteration: 9, Log-Lik: -2532.914, Max-Change: 0.00647Iteration: 10, Log-Lik: -2532.904, Max-Change: 0.00272Iteration: 11, Log-Lik: -2532.903, Max-Change: 0.00163Iteration: 12, Log-Lik: -2532.903, Max-Change: 0.00095Iteration: 13, Log-Lik: -2532.903, Max-Change: 0.00046Iteration: 14, Log-Lik: -2532.903, Max-Change: 0.00036Iteration: 15, Log-Lik: -2532.903, Max-Change: 0.00039Iteration: 16, Log-Lik: -2532.902, Max-Change: 0.00035Iteration: 17, Log-Lik: -2532.902, Max-Change: 0.00035Iteration: 18, Log-Lik: -2532.902, Max-Change: 0.00162Iteration: 19, Log-Lik: -2532.902, Max-Change: 0.00050Iteration: 20, Log-Lik: -2532.902, Max-Change: 0.00030Iteration: 21, Log-Lik: -2532.902, Max-Change: 0.00023Iteration: 22, Log-Lik: -2532.902, Max-Change: 0.00106Iteration: 23, Log-Lik: -2532.902, Max-Change: 0.00082Iteration: 24, Log-Lik: -2532.902, Max-Change: 0.00013Iteration: 25, Log-Lik: -2532.902, Max-Change: 0.00013Iteration: 26, Log-Lik: -2532.902, Max-Change: 0.00060Iteration: 27, Log-Lik: -2532.902, Max-Change: 0.00016Iteration: 28, Log-Lik: -2532.902, Max-Change: 0.00010</span>
 <span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             M2 df         p      RMSEA RMSEA_5   RMSEA_95      SRMSR       TLI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 8.181306  5 0.1465225 0.02523684       0 0.05513589 0.03213259 0.9636641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats 8.239687  5 0.1435113 0.02546735       0 0.05530946 0.03324067 0.9630427</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.9818321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.9815213</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># C2 statistic (useful when polytomous IRT models have too few df)</span></span></span>
 <span class="r-in"><span><span class="va">pmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
@@ -242,7 +242,7 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

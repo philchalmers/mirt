@@ -17,7 +17,7 @@ also be useful for checking analytic results."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.44.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,10 +106,10 @@ Must be of the form <code>fn(par, ...)</code>, or more simply
 <span class="r-in"><span><span class="co"># Estimate of (1 / (b0 + b1)) and (1 / (b0 + b1 + b2))</span></span></span>
 <span class="r-in"><span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">estmean</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">estmean</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.2402778 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.2355943 </span>
 <span class="r-in"><span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">estmean</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">estmean</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">estmean</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1578399 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0.158912 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co">## Approximate standard error</span></span></span>
@@ -121,16 +121,16 @@ Must be of the form <code>fn(par, ...)</code>, or more simply
 <span class="r-in"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">par</span><span class="op">)</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fn2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">par</span><span class="op">)</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">DeltaMethod</span><span class="op">(</span><span class="va">fn</span>, <span class="va">estmean</span>, <span class="va">estvar</span><span class="op">)</span><span class="op">$</span><span class="va">se</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.06402223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0615558</span>
 <span class="r-in"><span><span class="fu">DeltaMethod</span><span class="op">(</span><span class="va">fn2</span>, <span class="va">estmean</span>, <span class="va">estvar</span><span class="op">)</span><span class="op">$</span><span class="va">se</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.06692663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.06784448</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># index argument for easier flexibility</span></span></span>
 <span class="r-in"><span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">par</span>, <span class="va">index</span><span class="op">)</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="va">index</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">DeltaMethod</span><span class="op">(</span><span class="va">fn</span>, <span class="va">estmean</span>, <span class="va">estvar</span>, index<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="va">se</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.06402223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0615558</span>
 <span class="r-in"><span><span class="fu">DeltaMethod</span><span class="op">(</span><span class="va">fn</span>, <span class="va">estmean</span>, <span class="va">estvar</span>, index<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">$</span><span class="va">se</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.06692663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.06784448</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -143,7 +143,7 @@ Must be of the form <code>fn(par, ...)</code>, or more simply
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
