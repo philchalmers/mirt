@@ -33,6 +33,14 @@
 #' head(effects$Theta)
 #' head(effects$group)
 #'
+#' # lr.random input
+#' mod2 <- mixedmirt(Science, covdat, model=1, lr.random = ~ 1|group)
+#' summary(mod2)
+#'
+#' effects <- randef(mod2, ndraws = 2000)
+#' head(effects$Theta)
+#' head(effects$group)
+#'
 #' }
 randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
     if(missing(x)) missingMsg('x')
@@ -89,10 +97,11 @@ randef <- function(x, ndraws = 1000, thin = 10, return.draws=FALSE){
         }
     }
     if(return.draws){
-        DRAWS <- vector('list', 1 + length(random))
+        DRAWS <- vector('list', 1 + length(random) + length(lr.random))
         retnames <- "Theta"
-        if(length(random))
-            retnames <- c('Theta', sapply(random, function(x) colnames(x@gdesign)[1L]))
+        if(length(random) || length(lr.random))
+            retnames <- c('Theta', sapply(random, function(x) colnames(x@gdesign)[1L]),
+                          sapply(lr.random, function(x) colnames(x@gdesign)[1L]))
         names(DRAWS) <- retnames
     }
     for(i in seq_len(ndraws)){

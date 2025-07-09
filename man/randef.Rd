@@ -33,6 +33,14 @@ effects <- randef(mod, ndraws = 2000, thin = 20)
 head(effects$Theta)
 head(effects$group)
 
+# lr.random input
+mod2 <- mixedmirt(Science, covdat, model=1, lr.random = ~ 1|group)
+summary(mod2)
+
+effects <- randef(mod2, ndraws = 2000)
+head(effects$Theta)
+head(effects$group)
+
 }
 }
 \references{

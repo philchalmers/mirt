@@ -1,5 +1,7 @@
 # Changes in mirt 1.45
 
+- Fixed extraction bug in `randef()` when `lr.random` structures were used
+
 - `extract.item()` and `extract.group()` now support objects 
   of class `MixtureClass`
 
