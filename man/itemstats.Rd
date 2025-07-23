@@ -8,7 +8,7 @@ itemstats(
   data,
   group = NULL,
   use_ts = TRUE,
-  proportions = TRUE,
+  itemfreq = "proportions",
   ts.tables = FALSE
 )
 }
@@ -22,8 +22,9 @@ summary information}
 \item{use_ts}{logical; include information that is conditional on a
 meaningful total score?}
 
-\item{proportions}{logical; include response proportion information for
-each item?}
+\item{itemfreq}{character vector indicting whether to
+include item response \code{"proportions"} or \code{"counts"}
+for each item. If set to \code{'none'} then this will be omitted}
 
 \item{ts.tables}{logical; include mean/sd summary information
 pertaining to the unweighted total score?}
@@ -48,6 +49,7 @@ all possible response information.
 LSAT7full <- expand.table(LSAT7)
 head(LSAT7full)
 itemstats(LSAT7full)
+itemstats(LSAT7full, itemfreq='counts')
 
 # behaviour with missing data
 LSAT7full[1:5,1] <- NA

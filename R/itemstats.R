@@ -14,8 +14,9 @@
 #'   with the response patterns
 #' @param group optional grouping variable to condition on when computing
 #'   summary information
-#' @param proportions logical; include response proportion information for
-#'   each item?
+#' @param itemfreq character vector indicting whether to
+#'   include item response \code{"proportions"} or \code{"counts"}
+#'   for each item. If set to \code{'none'} then this will be omitted
 #' @param use_ts logical; include information that is conditional on a
 #'   meaningful total score?
 #' @param ts.tables logical; include mean/sd summary information
@@ -36,6 +37,7 @@
 #' LSAT7full <- expand.table(LSAT7)
 #' head(LSAT7full)
 #' itemstats(LSAT7full)
+#' itemstats(LSAT7full, itemfreq='counts')
 #'
 #' # behaviour with missing data
 #' LSAT7full[1:5,1] <- NA
@@ -74,7 +76,7 @@
 #'
 itemstats <- function(data, group = NULL,
                       use_ts=TRUE,
-                      proportions=TRUE,
+                      itemfreq="proportions",
                       ts.tables=FALSE){
     data <- as.matrix(data)
     if(!is.null(group) && !is.factor(group)) group <- factor(group)
@@ -82,7 +84,7 @@ itemstats <- function(data, group = NULL,
         groups <- levels(group)
         out <- lapply(groups, function(g){
             itemstats(data=data[group == g, , drop=FALSE], group=NULL,
-                      use_ts=use_ts, proportions=proportions,
+                      use_ts=use_ts, itemfreq=itemfreq,
                       ts.tables=ts.tables)
         })
         names(out) <- groups
@@ -131,10 +133,12 @@ itemstats <- function(data, group = NULL,
 
     ret <- list(overall=as.mirt_df(overall),
                 itemstats=as.mirt_df(df))
-    if(proportions){
+    if(itemfreq == "proportions" || itemfreq == 'counts'){
         useNA <- ifelse(any(is.na(data)), 'always', 'ifany')
         props <- apply(data, 2, function(x){
-            out <- prop.table(table(x, useNA=useNA))
+            out <- table(x, useNA=useNA)
+            if(itemfreq == 'proportions')
+                out <- prop.table(out)
             if(useNA == 'always' && out[length(out)] == 0)
                 out[length(out)] <- NA
             out
@@ -148,9 +152,9 @@ itemstats <- function(data, group = NULL,
                 pick <- names(props[[i]])
                 proportions[i,colnames(proportions) %in% pick] <- props[[i]]
             }
-            ret$proportions <- as.mirt_df(as.data.frame(proportions))
+            ret[[itemfreq]] <- as.mirt_df(as.data.frame(proportions))
         } else {
-            ret$proportions <- as.mirt_df(as.data.frame(t(props)))
+            ret[[itemfreq]] <- as.mirt_df(as.data.frame(t(props)))
         }
     }
     if(ts.tables){
