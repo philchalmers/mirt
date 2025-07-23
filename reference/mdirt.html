@@ -467,23 +467,22 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">class_prob</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class_prob</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 338 662 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 345 655 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible value imputations for stochastic classification in both classes</span></span></span>
 <span class="r-in"><span><span class="va">pvs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod2</span>, plausible.draws<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pvs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tabs</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [,1] [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0  663  326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  337  674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0  693  328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  307  672</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit with random starting points (run in parallel to save time)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span>, nruns<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model log-likelihoods:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -2467.408 -2467.408 -2467.407 -2467.408 -2467.408 -2467.408 -2467.408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -2467.406 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8] -2467.408 -2467.408 -2467.408</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--------------------------</span></span></span>

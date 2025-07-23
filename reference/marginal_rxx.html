@@ -119,6 +119,45 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>        F1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.6200703 </span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#############</span></span></span>
+<span class="r-in"><span><span class="co"># example demonstrating correlation attenuation</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">theta</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, sd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span>    <span class="co"># correlation without measurement error (what you want)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4644682</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># measured with a 10 item GRM test</span></span></span>
+<span class="r-in"><span><span class="va">nitems</span> <span class="op">&lt;-</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">rlnorm</a></span><span class="op">(</span><span class="va">nitems</span>,<span class="fl">.2</span>,<span class="fl">.3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">diffs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">nitems</span><span class="op">*</span><span class="fl">4</span>, <span class="fl">.3</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">nitems</span><span class="op">)</span>, <span class="fl">1</span>, <span class="va">cumsum</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">diffs</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="op">(</span><span class="va">diffs</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">diffs</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">diffs</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">nitems</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, itemtype <span class="op">=</span> <span class="st">'graded'</span>, Theta<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># correlation with total score (attenuated)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="va">X</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4279283</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># fit single group model</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration: 1, Log-Lik: -12638.902, Max-Change: 0.49082Iteration: 2, Log-Lik: -12565.042, Max-Change: 0.24076Iteration: 3, Log-Lik: -12523.393, Max-Change: 0.14515Iteration: 4, Log-Lik: -12516.473, Max-Change: 0.10364Iteration: 5, Log-Lik: -12511.817, Max-Change: 0.06581Iteration: 6, Log-Lik: -12510.110, Max-Change: 0.04295Iteration: 7, Log-Lik: -12509.178, Max-Change: 0.01531Iteration: 8, Log-Lik: -12509.038, Max-Change: 0.00953Iteration: 9, Log-Lik: -12508.990, Max-Change: 0.00623Iteration: 10, Log-Lik: -12508.952, Max-Change: 0.00168Iteration: 11, Log-Lik: -12508.948, Max-Change: 0.00123Iteration: 12, Log-Lik: -12508.946, Max-Change: 0.00093Iteration: 13, Log-Lik: -12508.944, Max-Change: 0.00034Iteration: 14, Log-Lik: -12508.943, Max-Change: 0.00011Iteration: 15, Log-Lik: -12508.943, Max-Change: 0.00027Iteration: 16, Log-Lik: -12508.943, Max-Change: 0.00011Iteration: 17, Log-Lik: -12508.943, Max-Change: 0.00022Iteration: 18, Log-Lik: -12508.943, Max-Change: 0.00011Iteration: 19, Log-Lik: -12508.943, Max-Change: 0.00009</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># EAP correlation (also attenuated)</span></span></span>
+<span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">fs</span>, <span class="va">X</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         [,1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.4302499</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># correction for attenuation, r_x.theta = r_x.theta.hat / sqrt(rxx_theta.hat)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">rxx</span> <span class="op">&lt;-</span> <span class="fu">marginal_rxx</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">)</span>  <span class="co"># alternatively, could use empirical_rxx()</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8095505</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">fs</span>, <span class="va">X</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">rxx</span><span class="op">)</span>  <span class="co"># correction estimate</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         [,1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.4781881</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span>           <span class="co"># compare to true correlation</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4644682</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
