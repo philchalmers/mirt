@@ -71,7 +71,7 @@ all possible response information.</p>
 <span>  <span class="va">data</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_ts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  proportions <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  itemfreq <span class="op">=</span> <span class="st">"proportions"</span>,</span>
 <span>  ts.tables <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -95,9 +95,10 @@ summary information</p></dd>
 meaningful total score?</p></dd>
 
 
-<dt id="arg-proportions">proportions<a class="anchor" aria-label="anchor" href="#arg-proportions"></a></dt>
-<dd><p>logical; include response proportion information for
-each item?</p></dd>
+<dt id="arg-itemfreq">itemfreq<a class="anchor" aria-label="anchor" href="#arg-itemfreq"></a></dt>
+<dd><p>character vector indicting whether to
+include item response <code>"proportions"</code> or <code>"counts"</code>
+for each item. If set to <code>'none'</code> then this will be omitted</p></dd>
 
 
 <dt id="arg-ts-tables">ts.tables<a class="anchor" aria-label="anchor" href="#arg-ts-tables"></a></dt>
@@ -157,6 +158,27 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 0.228 0.772</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 0.394 0.606</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 0.157 0.843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">itemstats</span><span class="op">(</span><span class="va">LSAT7full</span>, itemfreq<span class="op">=</span><span class="st">'counts'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000            3.707          1.199 0.143 0.052 0.453     0.886</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 1000 0.828 0.378   0.530         0.246       0.396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 1000 0.658 0.475   0.600         0.247       0.394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 1000 0.772 0.420   0.611         0.313       0.345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 1000 0.606 0.489   0.592         0.223       0.415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 1000 0.843 0.364   0.461         0.175       0.438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $counts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          0   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.1 172 828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.2 342 658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.3 228 772</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.4 394 606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 157 843</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># behaviour with missing data</span></span></span>
