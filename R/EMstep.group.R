@@ -321,7 +321,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                         longpars[tmpparnum[2L]] <- attr(Prior[[g]], 'mean_var')['var']
                 }
             }
-            if(verbose)
+            if(verbose && interactive())
                 printf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL + LP, max(abs(preMstep.longpars - longpars)))
 

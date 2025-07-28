@@ -384,7 +384,7 @@ MHRM.draws <- function(pars, lrPars, lr.random, random, gstructgrouppars, OffTer
         CTV <- c(CTV, do.call(c, lapply(lr.random,
                                         function(x) x@cand.t.var)))
     }
-    if(verbose){
+    if(verbose && interactive()){
         ARprint <- paste0(sapply(AR, function(x) sprintf('%.2f', x)), collapse='; ')
         CTV <- paste0(sapply(CTV, function(x) sprintf('%.2f', x)), collapse='; ')
         if(cycles <= BURNIN)
