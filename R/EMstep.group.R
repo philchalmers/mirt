@@ -252,8 +252,15 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                            dentype=dentype, rlist=rlist, full=full, Etable=list$Etable,
                            omp_threads=list$omp_threads)
             if(!is.null(fixedEtable)){
+                if(!(Moptim %in% c('BFGS', 'L-BFGS-B', 'nlminb')))
+                    stop('Optimizer not supported when using fixedEtable input', call.=FALSE)
                 Elist$rlist[[1]]$r1 <- fixedEtable
-                control$maxit <- 200
+                if(Moptim %in% c('BFGS', 'L-BFGS-B'))
+                    control$maxit <- 200
+                else if(Moptim == 'nlminb'){
+                    control$rel.tol <- 1e-10
+                    control$iter.max <- 200
+                }
             }
             rlist <- Elist$rlist; LL <- Elist$LL
             if(any(ANY.PRIOR)){
