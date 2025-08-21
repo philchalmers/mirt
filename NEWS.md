@@ -1,5 +1,8 @@
 # Changes in mirt 1.45
 
+- Added argument `fscores(..., expected.info = FALSE)` to allow computation of the 
+  expected vs observed information
+
 - Fixed extraction bug in `randef()` when `lr.random` structures were used
 
 - `extract.item()` and `extract.group()` now support objects 

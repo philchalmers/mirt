@@ -10,7 +10,7 @@ setMethod(
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
 	                      min_expected, plausible.type, start, EAPsum.scores,
-	                      use_dentype_estimate, leave_missing = FALSE, ...)
+	                      use_dentype_estimate, leave_missing = FALSE, expected.info, ...)
 	{
         den_fun <- mirt_dmvnorm
         item_weights_long <- rep(item_weights, extract.mirt(object, "K"))
@@ -391,6 +391,8 @@ setMethod(
         if(any(is.na(scores) & !is.nan(scores)))
             warning('NAs returned for response patterns with no data. Consider removing',
                     call.=FALSE)
+        if(expected.info)
+            SEscores[is.finite(scores)] <- 1/sqrt(testinfo(object, scores[is.finite(scores)]))
 		if (full.scores){
             if(USETABDATA){
                 tabdata2 <- object@Data$tabdata[keep, , drop=FALSE]

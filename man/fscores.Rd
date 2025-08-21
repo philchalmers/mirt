@@ -32,6 +32,7 @@ fscores(
   QMC = FALSE,
   custom_den = NULL,
   custom_theta = NULL,
+  expected.info = FALSE,
   min_expected = 1,
   max_theta = 20,
   start = NULL,
@@ -154,6 +155,10 @@ default number of nodes is 5000}
 
 \item{custom_theta}{a matrix of custom integration nodes to use instead of the default, where
 each column corresponds to the respective dimension in the model}
+
+\item{expected.info}{logical; instead of using the observed information when
+\code{method = 'ML'} or \code{method = 'WLE'} use the expected information computed via
+\code{\link{testinfo}}? Only currently supported for unidimensional models}
 
 \item{min_expected}{when computing goodness of fit tests when \code{method = 'EAPsum'}, this value is used
 to collapse across the conditioned total scores until the expected values are greater than this value. Note
