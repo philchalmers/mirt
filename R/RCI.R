@@ -440,7 +440,7 @@ RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
                 }
                 post.scores <- sapply(collect, \(x) as.numeric(x['post.score']))
                 pre.scores <- as.numeric(collect[[1]]['pre.score'])
-                SEs <- sapply(collect, \(x) as.numeric(x['SEM']))
+                SEs <- sapply(collect, \(x) as.numeric(x['SE']))
                 diff <- post.scores - pre.scores
                 plot(diff ~ rng, pch=16, ylab=expression(theta[post]-theta[pre]),
                      las=1, ylim=c(diff[1]-SEs[1],
