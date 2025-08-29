@@ -259,17 +259,17 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>  750            4.655          2.346 0.166 0.133 0.671     1.345</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  750 0.363 0.481   0.368         0.172       0.678</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  750 0.335 0.472   0.631         0.485       0.617</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  750 0.428 0.495   0.711         0.580       0.594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  750 0.512 0.500   0.234         0.021       0.708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  750 0.628 0.484   0.638         0.490       0.615</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  750 0.472 0.500   0.669         0.523       0.607</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  750 0.385 0.487   0.471         0.286       0.657</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  750 0.301 0.459   0.483         0.312       0.651</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  750 0.319 0.466   0.481         0.307       0.652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 750 0.912 0.283   0.295         0.180       0.670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N K  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  750 2 0.363 0.481   0.368         0.172       0.678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  750 2 0.335 0.472   0.631         0.485       0.617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  750 2 0.428 0.495   0.711         0.580       0.594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  750 2 0.512 0.500   0.234         0.021       0.708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  750 2 0.628 0.484   0.638         0.490       0.615</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  750 2 0.472 0.500   0.669         0.523       0.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  750 2 0.385 0.487   0.471         0.286       0.657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  750 2 0.301 0.459   0.483         0.312       0.651</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  750 2 0.319 0.466   0.481         0.307       0.652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 750 2 0.912 0.283   0.295         0.180       0.670</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
@@ -674,11 +674,11 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="randef.html">randef</a></span><span class="op">(</span><span class="va">rmod3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">eff</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Theta: num [1:750, 1] -0.05348 0.02932 -0.00505 0.01437 -0.01314 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Theta: num [1:750, 1] -0.0323 0.0622 0.0507 0.0329 -0.0329 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr "F1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ group: num [1:50, 1:2] -1.62 -1.17 -1.32 -1.56 -1.47 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ group: num [1:50, 1:2] -1.6 -1.21 -1.35 -1.54 -1.42 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:50] "G1" "G2" "G3" "G4" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:2] "group" "pseudoIQ"</span>
@@ -1706,17 +1706,17 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>  900            6.932          2.347 0.197 0.035 0.709     1.266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  900 0.570 0.495   0.604         0.443       0.673</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  900 0.689 0.463   0.518         0.351       0.690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  900 0.526 0.500   0.531         0.352       0.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  900 0.892 0.310   0.422         0.305       0.698</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  900 0.748 0.435   0.522         0.367       0.687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  900 0.543 0.498   0.569         0.398       0.682</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  900 0.759 0.428   0.530         0.379       0.685</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  900 0.803 0.398   0.516         0.375       0.686</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  900 0.777 0.417   0.489         0.337       0.692</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 900 0.626 0.484   0.548         0.378       0.685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N K  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  900 2 0.570 0.495   0.604         0.443       0.673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  900 2 0.689 0.463   0.518         0.351       0.690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  900 2 0.526 0.500   0.531         0.352       0.691</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  900 2 0.892 0.310   0.422         0.305       0.698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  900 2 0.748 0.435   0.522         0.367       0.687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  900 2 0.543 0.498   0.569         0.398       0.682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  900 2 0.759 0.428   0.530         0.379       0.685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  900 2 0.803 0.398   0.516         0.375       0.686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  900 2 0.777 0.417   0.489         0.337       0.692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 900 2 0.626 0.484   0.548         0.378       0.685</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
@@ -1879,19 +1879,19 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 MEAN_2   COV_11 COV_21   COV_22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      0 1.036063      0 1.102629</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 MEAN_2 COV_11 COV_21   COV_22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      0 1.0425      0 1.104005</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lr.betas</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     F1        F2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 0.00000000 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2     0.71299292 0.8947086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3     1.74265934 1.6925384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     0.06373162 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      F1        F2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  0.00000000 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2      0.72234455 0.9026986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3      1.74739695 1.6972747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     -0.01095631 0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">mod2b</span> <span class="op">&lt;-</span> <span class="fu">mixedmirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">covdata</span>, <span class="va">model</span>, fixed <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">items</span>,</span></span>
 <span class="r-in"><span>        lr.fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>F1 <span class="op">=</span> <span class="op">~</span> <span class="va">group</span> <span class="op">+</span> <span class="va">contvar</span>, F2 <span class="op">=</span> <span class="op">~</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.1876, Max-Change = 0.1642, Max-Change = 0.1435, Max-Change = 0.1200, Max-Change = 0.0968, Max-Change = 0.0826, Max-Change = 0.0694, Max-Change = 0.0561, Max-Change = 0.0479, Max-Change = 0.0488, Max-Change = 0.0410, Max-Change = 0.0327, Max-Change = 0.0290, Max-Change = 0.0225, Max-Change = 0.0265, Max-Change = 0.0194, Max-Change = 0.0337, Max-Change = 0.0217, Max-Change = 0.0114, Max-Change = 0.0087, Max-Change = 0.0259, Max-Change = 0.0372, Max-Change = 0.0195, Max-Change = 0.0209, Max-Change = 0.0256, Max-Change = 0.0153, Max-Change = 0.0131, Max-Change = 0.0191, Max-Change = 0.0097, Max-Change = 0.0220, Max-Change = 0.0226, Max-Change = 0.0178, Max-Change = 0.0126, Max-Change = 0.0155, Max-Change = 0.0141, Max-Change = 0.0109, Max-Change = 0.0104, Max-Change = 0.0144, Max-Change = 0.0167, Max-Change = 0.0151, Max-Change = 0.0090, Max-Change = 0.0102, Max-Change = 0.0153, Max-Change = 0.0157, Max-Change = 0.0143, Max-Change = 0.0169, Max-Change = 0.0148, Max-Change = 0.0182, Max-Change = 0.0143, Max-Change = 0.0135, Max-Change = 0.0127, Max-Change = 0.0115, Max-Change = 0.0187, Max-Change = 0.0224, Max-Change = 0.0149, Max-Change = 0.0148, Max-Change = 0.0179, Max-Change = 0.0187, Max-Change = 0.0163, Max-Change = 0.0162, Max-Change = 0.0114, Max-Change = 0.0127, Max-Change = 0.0190, Max-Change = 0.0219, Max-Change = 0.0123, Max-Change = 0.0188, Max-Change = 0.0224, Max-Change = 0.0180, Max-Change = 0.0123, Max-Change = 0.0171, Max-Change = 0.0114, Max-Change = 0.0144, Max-Change = 0.0075, Max-Change = 0.0241, Max-Change = 0.0142, Max-Change = 0.0235, Max-Change = 0.0066, Max-Change = 0.0181, Max-Change = 0.0173, Max-Change = 0.0125, Max-Change = 0.0053, Max-Change = 0.0169, Max-Change = 0.0142, Max-Change = 0.0104, Max-Change = 0.0217, Max-Change = 0.0244, Max-Change = 0.0144, Max-Change = 0.0184, Max-Change = 0.0142, Max-Change = 0.0153, Max-Change = 0.0160, Max-Change = 0.0165, Max-Change = 0.0212, Max-Change = 0.0187, Max-Change = 0.0166, Max-Change = 0.0156, Max-Change = 0.0058, Max-Change = 0.0104, Max-Change = 0.0126, Max-Change = 0.0103, Max-Change = 0.0082, Max-Change = 0.0180, Max-Change = 0.0192, Max-Change = 0.0131, Max-Change = 0.0096, Max-Change = 0.0255, Max-Change = 0.0172, Max-Change = 0.0138, Max-Change = 0.0092, Max-Change = 0.0101, Max-Change = 0.0174, Max-Change = 0.0277, Max-Change = 0.0163, Max-Change = 0.0181, Max-Change = 0.0148, Max-Change = 0.0097, Max-Change = 0.0134, Max-Change = 0.0160, Max-Change = 0.0148, Max-Change = 0.0168, Max-Change = 0.0158, Max-Change = 0.0147, Max-Change = 0.0069, Max-Change = 0.0123, Max-Change = 0.0061, Max-Change = 0.0296, Max-Change = 0.0106, Max-Change = 0.0224, Max-Change = 0.0195, Max-Change = 0.0184, Max-Change = 0.0230, Max-Change = 0.0100, Max-Change = 0.0114, Max-Change = 0.0178, Max-Change = 0.0215, Max-Change = 0.0231, Max-Change = 0.0129, Max-Change = 0.0075, Max-Change = 0.0146, Max-Change = 0.0125, Max-Change = 0.0101, Max-Change = 0.0161, Max-Change = 0.0115, Max-Change = 0.0118, Max-Change = 0.0172, Max-Change = 0.0113, Max-Change = 0.0217, Max-Change = 0.0201, Max-Change = 0.0169, Max-Change = 0.0144, Max-Change = 0.0143, Max-Change = 0.0232, Max-Change = 0.0111, Max-Change = 0.0111, Max-Change = 0.0135, Max-Change = 0.0106, Max-Change = 0.0180, Max-Change = 0.0159, Max-Change = 0.0117, Max-Change = 0.0148, Max-Change = 0.0262, Max-Change = 0.0161, Max-Change = 0.0192, Max-Change = 0.0080, Max-Change = 0.0239, Max-Change = 0.0136, Max-Change = 0.0256, Max-Change = 0.0234, Max-Change = 0.0188, Max-Change = 0.0110, Max-Change = 0.0203, Max-Change = 0.0123, Max-Change = 0.0069, Max-Change = 0.0092, Max-Change = 0.0135, Max-Change = 0.0145, Max-Change = 0.0113, Max-Change = 0.0162, Max-Change = 0.0115, Max-Change = 0.0137, Max-Change = 0.0181, Max-Change = 0.0149, Max-Change = 0.0175, Max-Change = 0.0252, Max-Change = 0.0189, Max-Change = 0.0128, Max-Change = 0.0186, Max-Change = 0.0167, Max-Change = 0.0166, Max-Change = 0.0173, Max-Change = 0.0207, Max-Change = 0.0130, Max-Change = 0.0087, Max-Change = 0.0118, Max-Change = 0.0211, Max-Change = 0.0139, Max-Change = 0.0186, Max-Change = 0.0114, Max-Change = 0.0092, Max-Change = 0.0129, Max-Change = 0.0119, Max-Change = 0.0172, Max-Change = 0.0133, Max-Change = 0.0151, Max-Change = 0.0073, Max-Change = 0.0221, Max-Change = 0.0138, Max-Change = 0.0163, Max-Change = 0.0170, Max-Change = 0.0148, Max-Change = 0.0137, Max-Change = 0.0125, Max-Change = 0.0172, Max-Change = 0.0080, Max-Change = 0.0090, Max-Change = 0.0317, Max-Change = 0.0146, Max-Change = 0.0132, Max-Change = 0.0124, Max-Change = 0.0241, Max-Change = 0.0149, Max-Change = 0.0205, Max-Change = 0.0131, Max-Change = 0.0118, Max-Change = 0.0102, Max-Change = 0.0127, Max-Change = 0.0182, Max-Change = 0.0122, Max-Change = 0.0147, Max-Change = 0.0107, Max-Change = 0.0101, Max-Change = 0.0150, Max-Change = 0.0137, Max-Change = 0.0144, Max-Change = 0.0129, Max-Change = 0.0176, Max-Change = 0.0140, Max-Change = 0.0140, Max-Change = 0.0072, Max-Change = 0.0202, Max-Change = 0.0086, Max-Change = 0.0210, Max-Change = 0.0150, Max-Change = 0.0273, Max-Change = 0.0196, Max-Change = 0.0189, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0224, gam = 0.1057, Max-Change = 0.0053, gam = 0.0780, Max-Change = 0.0057, gam = 0.0629, Max-Change = 0.0040, gam = 0.0532, Max-Change = 0.0051, gam = 0.0464, Max-Change = 0.0038, gam = 0.0413, Max-Change = 0.0037, gam = 0.0374, Max-Change = 0.0026, gam = 0.0342, Max-Change = 0.0053, gam = 0.0316, Max-Change = 0.0022, gam = 0.0294, Max-Change = 0.0020, gam = 0.0276, Max-Change = 0.0018, gam = 0.0260, Max-Change = 0.0022, gam = 0.0246, Max-Change = 0.0027, gam = 0.0233, Max-Change = 0.0022, gam = 0.0222, Max-Change = 0.0028, gam = 0.0212, Max-Change = 0.0019, gam = 0.0203, Max-Change = 0.0011, gam = 0.0195, Max-Change = 0.0019, gam = 0.0188, Max-Change = 0.0011, gam = 0.0181, Max-Change = 0.0010, gam = 0.0175, Max-Change = 0.0009, gam = 0.0169, Max-Change = 0.0011, gam = 0.0164, Max-Change = 0.0022, gam = 0.0159, Max-Change = 0.0019, gam = 0.0154, Max-Change = 0.0008, gam = 0.0150, Max-Change = 0.0009, gam = 0.0146, Max-Change = 0.0019, gam = 0.0142, Max-Change = 0.0017, gam = 0.0139, Max-Change = 0.0008, gam = 0.0135, Max-Change = 0.0011, gam = 0.0132, Max-Change = 0.0014, gam = 0.0129, Max-Change = 0.0014, gam = 0.0126, Max-Change = 0.0012, gam = 0.0124, Max-Change = 0.0008, gam = 0.0121, Max-Change = 0.0008, gam = 0.0119, Max-Change = 0.0014, gam = 0.0116, Max-Change = 0.0013, gam = 0.0114, Max-Change = 0.0011, gam = 0.0112, Max-Change = 0.0005, gam = 0.0110, Max-Change = 0.0010, gam = 0.0108, Max-Change = 0.0012, gam = 0.0106, Max-Change = 0.0007, gam = 0.0104, Max-Change = 0.0010, gam = 0.0102, Max-Change = 0.0008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.1868, Max-Change = 0.1641, Max-Change = 0.1439, Max-Change = 0.1208, Max-Change = 0.0967, Max-Change = 0.0835, Max-Change = 0.0682, Max-Change = 0.0551, Max-Change = 0.0480, Max-Change = 0.0482, Max-Change = 0.0417, Max-Change = 0.0342, Max-Change = 0.0300, Max-Change = 0.0251, Max-Change = 0.0220, Max-Change = 0.0235, Max-Change = 0.0400, Max-Change = 0.0210, Max-Change = 0.0111, Max-Change = 0.0122, Max-Change = 0.0190, Max-Change = 0.0368, Max-Change = 0.0235, Max-Change = 0.0220, Max-Change = 0.0176, Max-Change = 0.0120, Max-Change = 0.0126, Max-Change = 0.0134, Max-Change = 0.0108, Max-Change = 0.0230, Max-Change = 0.0225, Max-Change = 0.0177, Max-Change = 0.0079, Max-Change = 0.0131, Max-Change = 0.0187, Max-Change = 0.0184, Max-Change = 0.0206, Max-Change = 0.0175, Max-Change = 0.0122, Max-Change = 0.0205, Max-Change = 0.0095, Max-Change = 0.0110, Max-Change = 0.0185, Max-Change = 0.0129, Max-Change = 0.0138, Max-Change = 0.0208, Max-Change = 0.0143, Max-Change = 0.0131, Max-Change = 0.0134, Max-Change = 0.0148, Max-Change = 0.0130, Max-Change = 0.0124, Max-Change = 0.0166, Max-Change = 0.0187, Max-Change = 0.0153, Max-Change = 0.0178, Max-Change = 0.0265, Max-Change = 0.0209, Max-Change = 0.0084, Max-Change = 0.0124, Max-Change = 0.0110, Max-Change = 0.0141, Max-Change = 0.0150, Max-Change = 0.0207, Max-Change = 0.0110, Max-Change = 0.0210, Max-Change = 0.0225, Max-Change = 0.0206, Max-Change = 0.0197, Max-Change = 0.0083, Max-Change = 0.0140, Max-Change = 0.0135, Max-Change = 0.0081, Max-Change = 0.0200, Max-Change = 0.0180, Max-Change = 0.0213, Max-Change = 0.0104, Max-Change = 0.0232, Max-Change = 0.0154, Max-Change = 0.0098, Max-Change = 0.0095, Max-Change = 0.0125, Max-Change = 0.0118, Max-Change = 0.0083, Max-Change = 0.0166, Max-Change = 0.0290, Max-Change = 0.0186, Max-Change = 0.0183, Max-Change = 0.0119, Max-Change = 0.0122, Max-Change = 0.0188, Max-Change = 0.0168, Max-Change = 0.0203, Max-Change = 0.0108, Max-Change = 0.0156, Max-Change = 0.0127, Max-Change = 0.0080, Max-Change = 0.0102, Max-Change = 0.0104, Max-Change = 0.0127, Max-Change = 0.0056, Max-Change = 0.0192, Max-Change = 0.0215, Max-Change = 0.0110, Max-Change = 0.0100, Max-Change = 0.0156, Max-Change = 0.0157, Max-Change = 0.0114, Max-Change = 0.0101, Max-Change = 0.0116, Max-Change = 0.0193, Max-Change = 0.0104, Max-Change = 0.0206, Max-Change = 0.0155, Max-Change = 0.0101, Max-Change = 0.0104, Max-Change = 0.0160, Max-Change = 0.0173, Max-Change = 0.0247, Max-Change = 0.0117, Max-Change = 0.0123, Max-Change = 0.0159, Max-Change = 0.0133, Max-Change = 0.0207, Max-Change = 0.0079, Max-Change = 0.0186, Max-Change = 0.0079, Max-Change = 0.0218, Max-Change = 0.0145, Max-Change = 0.0177, Max-Change = 0.0182, Max-Change = 0.0123, Max-Change = 0.0102, Max-Change = 0.0188, Max-Change = 0.0178, Max-Change = 0.0210, Max-Change = 0.0113, Max-Change = 0.0092, Max-Change = 0.0066, Max-Change = 0.0132, Max-Change = 0.0185, Max-Change = 0.0190, Max-Change = 0.0155, Max-Change = 0.0120, Max-Change = 0.0227, Max-Change = 0.0134, Max-Change = 0.0143, Max-Change = 0.0156, Max-Change = 0.0160, Max-Change = 0.0100, Max-Change = 0.0273, Max-Change = 0.0111, Max-Change = 0.0182, Max-Change = 0.0094, Max-Change = 0.0081, Max-Change = 0.0191, Max-Change = 0.0154, Max-Change = 0.0149, Max-Change = 0.0205, Max-Change = 0.0183, Max-Change = 0.0229, Max-Change = 0.0132, Max-Change = 0.0121, Max-Change = 0.0131, Max-Change = 0.0212, Max-Change = 0.0115, Max-Change = 0.0204, Max-Change = 0.0144, Max-Change = 0.0186, Max-Change = 0.0146, Max-Change = 0.0274, Max-Change = 0.0173, Max-Change = 0.0103, Max-Change = 0.0099, Max-Change = 0.0090, Max-Change = 0.0106, Max-Change = 0.0150, Max-Change = 0.0136, Max-Change = 0.0110, Max-Change = 0.0148, Max-Change = 0.0172, Max-Change = 0.0231, Max-Change = 0.0236, Max-Change = 0.0323, Max-Change = 0.0115, Max-Change = 0.0101, Max-Change = 0.0193, Max-Change = 0.0144, Max-Change = 0.0174, Max-Change = 0.0096, Max-Change = 0.0146, Max-Change = 0.0150, Max-Change = 0.0123, Max-Change = 0.0150, Max-Change = 0.0178, Max-Change = 0.0124, Max-Change = 0.0113, Max-Change = 0.0128, Max-Change = 0.0132, Max-Change = 0.0109, Max-Change = 0.0178, Max-Change = 0.0077, Max-Change = 0.0173, Max-Change = 0.0087, Max-Change = 0.0109, Max-Change = 0.0221, Max-Change = 0.0127, Max-Change = 0.0130, Max-Change = 0.0188, Max-Change = 0.0142, Max-Change = 0.0281, Max-Change = 0.0099, Max-Change = 0.0136, Max-Change = 0.0121, Max-Change = 0.0136, Max-Change = 0.0310, Max-Change = 0.0144, Max-Change = 0.0147, Max-Change = 0.0161, Max-Change = 0.0150, Max-Change = 0.0215, Max-Change = 0.0074, Max-Change = 0.0217, Max-Change = 0.0134, Max-Change = 0.0116, Max-Change = 0.0138, Max-Change = 0.0168, Max-Change = 0.0082, Max-Change = 0.0142, Max-Change = 0.0154, Max-Change = 0.0133, Max-Change = 0.0147, Max-Change = 0.0284, Max-Change = 0.0105, Max-Change = 0.0133, Max-Change = 0.0164, Max-Change = 0.0095, Max-Change = 0.0172, Max-Change = 0.0105, Max-Change = 0.0125, Max-Change = 0.0173, Max-Change = 0.0090, Max-Change = 0.0205, Max-Change = 0.0172, Max-Change = 0.0091, Max-Change = 0.0115, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0255, gam = 0.1057, Max-Change = 0.0075, gam = 0.0780, Max-Change = 0.0052, gam = 0.0629, Max-Change = 0.0034, gam = 0.0532, Max-Change = 0.0066, gam = 0.0464, Max-Change = 0.0030, gam = 0.0413, Max-Change = 0.0024, gam = 0.0374, Max-Change = 0.0029, gam = 0.0342, Max-Change = 0.0067, gam = 0.0316, Max-Change = 0.0023, gam = 0.0294, Max-Change = 0.0020, gam = 0.0276, Max-Change = 0.0012, gam = 0.0260, Max-Change = 0.0024, gam = 0.0246, Max-Change = 0.0015, gam = 0.0233, Max-Change = 0.0019, gam = 0.0222, Max-Change = 0.0028, gam = 0.0212, Max-Change = 0.0020, gam = 0.0203, Max-Change = 0.0014, gam = 0.0195, Max-Change = 0.0016, gam = 0.0188, Max-Change = 0.0018, gam = 0.0181, Max-Change = 0.0012, gam = 0.0175, Max-Change = 0.0009, gam = 0.0169, Max-Change = 0.0012, gam = 0.0164, Max-Change = 0.0023, gam = 0.0159, Max-Change = 0.0016, gam = 0.0154, Max-Change = 0.0007, gam = 0.0150, Max-Change = 0.0005, gam = 0.0146, Max-Change = 0.0013, gam = 0.0142, Max-Change = 0.0026, gam = 0.0139, Max-Change = 0.0011, gam = 0.0135, Max-Change = 0.0005, gam = 0.0132, Max-Change = 0.0010, gam = 0.0129, Max-Change = 0.0015, gam = 0.0126, Max-Change = 0.0009, gam = 0.0124, Max-Change = 0.0012, gam = 0.0121, Max-Change = 0.0011, gam = 0.0119, Max-Change = 0.0007, gam = 0.0116, Max-Change = 0.0018, gam = 0.0114, Max-Change = 0.0008, gam = 0.0112, Max-Change = 0.0007, gam = 0.0110, Max-Change = 0.0009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1909,23 +1909,23 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Theta</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      F1   F2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.01 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.00 1.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.03 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.00 1.13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LATENT REGRESSION FIXED EFFECTS:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                F1    F2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2     0.711 0.810</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3     1.744 1.612</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     0.054 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 F1    F2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2      0.675 0.832</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3      1.731 1.651</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     -0.009 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Std.Error_F1 Std.Error_F2   z_F1   z_F2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)           NA           NA     NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2            0.043        0.114 16.496  7.110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3              NaN        0.129    NaN 12.489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> contvar            0.063           NA  0.856     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2              NaN        0.090    NaN  9.277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3              NaN        0.117    NaN 14.113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> contvar            0.054           NA -0.171     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">####################################################</span></span></span>
 <span class="r-in"><span><span class="co">## Simulated Multilevel Rasch Model</span></span></span>
@@ -1949,17 +1949,17 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>  2000            5.414          2.749  0.25 0.019 0.769     1.321</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            N  mean    sd total.r total.r_if_rm alpha_if_rm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2000 0.424 0.494   0.573         0.433       0.750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2000 0.560 0.497   0.602         0.467       0.745</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2000 0.373 0.484   0.547         0.405       0.754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2000 0.781 0.414   0.524         0.402       0.754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  2000 0.577 0.494   0.585         0.447       0.748</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2000 0.378 0.485   0.571         0.434       0.750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  2000 0.598 0.491   0.568         0.428       0.751</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2000 0.652 0.476   0.568         0.432       0.750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  2000 0.620 0.486   0.577         0.440       0.749</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 2000 0.453 0.498   0.584         0.445       0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            N K  mean    sd total.r total.r_if_rm alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2000 2 0.424 0.494   0.573         0.433       0.750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2000 2 0.560 0.497   0.602         0.467       0.745</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2000 2 0.373 0.484   0.547         0.405       0.754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2000 2 0.781 0.414   0.524         0.402       0.754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  2000 2 0.577 0.494   0.585         0.447       0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2000 2 0.378 0.485   0.571         0.434       0.750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  2000 2 0.598 0.491   0.568         0.428       0.751</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2000 2 0.652 0.476   0.568         0.432       0.750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  2000 2 0.620 0.486   0.577         0.440       0.749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 2000 2 0.453 0.498   0.584         0.445       0.748</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
@@ -2148,12 +2148,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="randef.html">randef</a></span><span class="op">(</span><span class="va">mod3</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>, <span class="va">random_intercept</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         group random_intercept</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G1  1.0130792       1.51178117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G2 -0.4348785       0.38984324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G3 -0.5633607      -0.62124058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G4 -2.3371799      -2.21469989</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G5  0.5178754       1.12493092</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G6 -0.6225640      -0.04493361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G1  1.2590521       1.51178117</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 -0.5477213       0.38984324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G3 -0.3939817      -0.62124058</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G4 -2.5611023      -2.21469989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G5  0.6037928       1.12493092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G6 -0.6438288      -0.04493361</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
