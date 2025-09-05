@@ -7,6 +7,11 @@
 
 - `extract.item()` and `extract.group()` now support objects 
   of class `MixtureClass`
+  
+- `RMSD_DIF()` now works for single group models to investigate goodness of fit
+
+- Number of response options (`K`) per item added to `itemstats()` output, as well as 
+  option to report raw counts instead of proportions
 
 # Changes in mirt 1.44
 
