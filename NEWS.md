@@ -1,4 +1,4 @@
-# Changes in mirt 1.45
+# Changes in mirt 1.45.1
 
 - Added argument `fscores(..., expected.info = FALSE)` to allow computation of the 
   expected vs observed information
