@@ -19,7 +19,7 @@ the items under investigation are unknown."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -266,27 +266,31 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># Using point estimates from the model</span></span></span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">IG0</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">Theta</span><span class="op">)</span> <span class="co">#good item</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="va">IG1</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">baditems</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemGAM(baditems[, 1], Theta):</span> is.matrix(Theta[[1L]]) is not TRUE</span>
 <span class="r-in"><span><span class="va">IG2</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">baditems</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemGAM(baditems[, 2], Theta):</span> is.matrix(Theta[[1L]]) is not TRUE</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG0</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-3.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG0' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-4.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG1' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-5.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG2' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same as above, but with plausible values to obtain the standard errors</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4321</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ThetaPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span>, plausible.draws<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">IG0</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">ThetaPV</span><span class="op">)</span> <span class="co">#good item</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="va">IG1</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">baditems</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="va">ThetaPV</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">IG2</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">baditems</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="va">ThetaPV</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG0</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-6.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG0' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-7.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="itemGAM-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-8.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="itemGAM-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## for polytomous test items</span></span></span>
 <span class="r-in"><span><span class="va">SAT12</span><span class="op">[</span><span class="va">SAT12</span> <span class="op">==</span> <span class="fl">8</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
@@ -310,22 +314,26 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># splines approach</span></span></span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">IG</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span>, <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-9.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1423</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ThetaPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span>, plausible.draws<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">IG2</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span>, <span class="va">ThetaPV</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-10.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="itemGAM-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># assuming a simple increasing parametric form (like in a standard IRT model)</span></span></span>
 <span class="r-in"><span><span class="va">IG3</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span>, <span class="va">Theta</span>, formula <span class="op">=</span> <span class="va">resp</span> <span class="op">~</span> <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG3</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-11.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG3' not found</span>
 <span class="r-in"><span><span class="va">IG3</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span>, <span class="va">ThetaPV</span>, formula <span class="op">=</span> <span class="va">resp</span> <span class="op">~</span> <span class="va">Theta</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG3</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-12.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG3' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### multidimensional example by returning the GAM objects</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span><span class="op">)</span></span></span>
@@ -333,17 +341,15 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">IG4</span> <span class="op">&lt;-</span> <span class="fu">itemGAM</span><span class="op">(</span><span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span>, <span class="va">Theta</span>, formula <span class="op">=</span> <span class="va">resp</span> <span class="op">~</span> <span class="fu">s</span><span class="op">(</span><span class="va">Theta1</span>, k<span class="op">=</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span> <span class="fu">s</span><span class="op">(</span><span class="va">Theta2</span>, k<span class="op">=</span><span class="fl">10</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   return.models<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemGAM(SAT12[, 32], Theta, formula = resp ~ s(Theta1, k = 10) +     s(Theta2, k = 10), return.models = TRUE):</span> Models will only be returned when Theta is a matrix</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">IG4</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cat_1" "cat_2" "cat_3" "cat_4" "cat_5"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'IG4' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG4</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span>, main <span class="op">=</span> <span class="st">'Category 1'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-13.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="itemGAM-14.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG4' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG4</span><span class="op">[[</span><span class="fl">2L</span><span class="op">]</span><span class="op">]</span>, main <span class="op">=</span> <span class="st">'Category 2'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-15.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="itemGAM-16.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG4' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">IG4</span><span class="op">[[</span><span class="fl">3L</span><span class="op">]</span><span class="op">]</span>, main <span class="op">=</span> <span class="st">'Category 3'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemGAM-17.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="itemGAM-18.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'plot': object 'IG4' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

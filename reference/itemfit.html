@@ -25,7 +25,7 @@ is reported to help gauge the magnitude of item misfit."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -376,51 +376,9 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># two different fit stats (with/without p-value adjustment)</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S_X2'</span> ,<span class="st">'X2'</span><span class="op">)</span>, p.adjust<span class="op">=</span><span class="st">'fdr'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  30.842     8    0.038 0.000  16.519      15      0.007  0.732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  27.970     8    0.035 0.001  11.718      15      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  43.995     8    0.047 0.000  22.835      15      0.016  0.480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  33.272     8    0.040 0.000  11.703      16      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  29.469     8    0.037 0.001  15.241      15      0.003  0.829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  21.325     8    0.029 0.007  11.983      16      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  23.127     8    0.031 0.004  23.912      16      0.016  0.480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  25.332     8    0.033 0.002  12.744      15      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  33.778     8    0.040 0.000  16.931      15      0.008  0.732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  22.972     8    0.031 0.004   9.199      16      0.000  0.905</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  27.300     8    0.035 0.001  17.630      15      0.009  0.732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  23.256     8    0.031 0.004  12.198      15      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  31.523     8    0.038 0.000  17.487      15      0.009  0.732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  27.924     8    0.035 0.001  19.117      15      0.012  0.732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  18.462     8    0.026 0.020  11.542      16      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  25.057     8    0.033 0.002  12.534      16      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  14.828     8    0.021 0.063  29.453      15      0.022  0.148</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  17.676     8    0.025 0.025  15.064      16      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  32.585     8    0.039 0.000  17.125      15      0.008  0.732</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  37.207     8    0.043 0.000  10.064      15      0.000  0.856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem 228.367     8    0.117 0.000 233.224      18      0.077  0.000</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S_X2'</span> ,<span class="st">'X2'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  30.842     8    0.038 0.000  16.519      15      0.007  0.348</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  27.970     8    0.035 0.000  11.718      15      0.000  0.700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  43.995     8    0.047 0.000  22.835      15      0.016  0.088</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  33.272     8    0.040 0.000  11.703      16      0.000  0.764</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  29.469     8    0.037 0.000  15.241      15      0.003  0.434</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  21.325     8    0.029 0.006  11.983      16      0.000  0.745</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  23.127     8    0.031 0.003  23.912      16      0.016  0.091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  25.332     8    0.033 0.001  12.744      15      0.000  0.622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  33.778     8    0.040 0.000  16.931      15      0.008  0.323</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  22.972     8    0.031 0.003   9.199      16      0.000  0.905</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  27.300     8    0.035 0.001  17.630      15      0.009  0.283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  23.256     8    0.031 0.003  12.198      15      0.000  0.664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  31.523     8    0.038 0.000  17.487      15      0.009  0.291</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  27.924     8    0.035 0.000  19.117      15      0.012  0.208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  18.462     8    0.026 0.018  11.542      16      0.000  0.775</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  25.057     8    0.033 0.002  12.534      16      0.000  0.706</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  14.828     8    0.021 0.063  29.453      15      0.022  0.014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  17.676     8    0.025 0.024  15.064      16      0.000  0.520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  32.585     8    0.039 0.000  17.125      15      0.008  0.311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  37.207     8    0.043 0.000  10.064      15      0.000  0.816</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem 228.367     8    0.117 0.000 233.224      18      0.077  0.000</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Conditional sum-score plot from S-X2 information</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, S_X2.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># good fit</span></span></span>
@@ -431,61 +389,19 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-plt img"><img src="itemfit-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, <span class="st">'X2'</span><span class="op">)</span> <span class="co"># just X2</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  30.842     8    0.038 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  27.970     8    0.035 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  43.995     8    0.047 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  33.272     8    0.040 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  29.469     8    0.037 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  21.325     8    0.029 0.006</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  23.127     8    0.031 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  25.332     8    0.033 0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  33.778     8    0.040 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  22.972     8    0.031 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  27.300     8    0.035 0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  23.256     8    0.031 0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  31.523     8    0.038 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  27.924     8    0.035 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  18.462     8    0.026 0.018</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  25.057     8    0.033 0.002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  14.828     8    0.021 0.063</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  17.676     8    0.025 0.024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  32.585     8    0.039 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  37.207     8    0.043 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem 228.367     8    0.117 0.000</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, <span class="st">'X2'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co"># X2 with maximum-likelihood estimates for traits</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following factor score estimates failed to converge successfully:</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     311,315,352,518,677,748,909,927,1081,1243,1277,1305,1415,1480,1620,1893</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  35.941     8    0.042 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  53.226     8    0.053 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  47.010     8    0.049 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  85.852     8    0.070 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  85.280     8    0.070 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6   8.632     8    0.006 0.374</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  57.623     8    0.056 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  42.952     8    0.047 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  55.180     8    0.054 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  32.456     8    0.039 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11 131.613     8    0.088 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  50.094     8    0.051 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  55.846     8    0.055 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  18.717     8    0.026 0.016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  12.402     8    0.017 0.134</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  38.229     8    0.043 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17   4.413     8    0.000 0.818</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  16.165     8    0.023 0.040</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  14.190     8    0.020 0.077</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  21.215     8    0.029 0.007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem 227.191     8    0.117 0.000</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, group.bins<span class="op">=</span><span class="fl">15</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co">#empirical item plot with 15 points</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following factor score estimates failed to converge successfully:</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     311,315,352,518,677,748,909,927,1081,1243,1277,1305,1415,1480,1620,1893</span>
-<span class="r-plt img"><img src="itemfit-4.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, group.bins<span class="op">=</span><span class="fl">15</span>, empirical.plot <span class="op">=</span> <span class="fl">21</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following factor score estimates failed to converge successfully:</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     311,315,352,518,677,748,909,927,1081,1243,1277,1305,1415,1480,1620,1893</span>
-<span class="r-plt img"><img src="itemfit-5.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># PV and X2* statistics (parametric bootstrap stats not run to save time)</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, <span class="st">'PV_Q1'</span><span class="op">)</span></span></span>
@@ -519,161 +435,22 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># empirical tables for X2 statistic</span></span></span>
 <span class="r-in"><span><span class="va">tabs</span> <span class="op">&lt;-</span> <span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span>, <span class="st">'X2'</span>, return.tables<span class="op">=</span><span class="cn">TRUE</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="va">tabs</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -1.4531`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      183 158.63869   1.934176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       17  41.36131  -3.787943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.9416`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      149 138.43172  0.8982277</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       51  61.56828 -1.3468702</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.6475`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      132 124.64146  0.6591135</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       68  75.35854 -0.8476670</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.3921`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      112 111.77447  0.02133235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       88  88.22553 -0.02401114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.1393`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       88  98.63125  -1.070476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      112 101.36875   1.055923</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.0936`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       86  86.5533 -0.05947283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      114 113.4467  0.05194748</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.346`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       61  73.91477  -1.502177</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      139 126.08523   1.150150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.6087`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       54  61.64828 -0.9740998</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      146 138.35172  0.6502370</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.9646`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       41  47.0127 -0.8769235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      159 152.9873  0.4861179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 1.5621`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       24  28.27768 -0.8044264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      176 171.72232  0.3264336</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabs' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#infit/outfit statistics. method='ML' agrees better with eRm package</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'infit'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co">#infit and outfit stats</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.919   -2.945 0.951  -2.699</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.962   -1.281 0.960  -2.010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.876   -4.455 0.918  -4.332</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.998   -0.049 1.009   0.495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  0.982   -0.523 0.974  -1.227</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.890   -2.233 0.950  -1.692</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  1.008    0.259 1.003   0.171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.933   -1.743 0.961  -1.631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.958   -1.519 0.964  -1.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  1.011    0.303 1.013   0.534</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  0.898   -2.300 0.939  -2.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  0.988   -0.383 1.012   0.607</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  0.991   -0.263 1.002   0.093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  0.973   -0.841 0.974  -1.256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  0.947   -0.943 0.993  -0.210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  0.988   -0.271 0.985  -0.546</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  0.878   -1.532 0.960  -0.872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  0.961   -0.759 0.978  -0.742</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  0.943   -2.060 0.974  -1.352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  0.868   -4.736 0.911  -4.687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem  1.513   16.123 1.338  16.509</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in personfit(x, method = method, Theta = Theta):</span> Theta must be a matrix</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#same as above, but inputting ML estimates instead (saves time for re-use)</span></span></span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">raschfit</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'infit'</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.919   -2.945 0.951  -2.699</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.962   -1.281 0.960  -2.010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.876   -4.455 0.918  -4.332</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.998   -0.049 1.009   0.495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  0.982   -0.523 0.974  -1.227</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.890   -2.233 0.950  -1.692</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  1.008    0.259 1.003   0.171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.933   -1.743 0.961  -1.631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.958   -1.519 0.964  -1.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  1.011    0.303 1.013   0.534</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  0.898   -2.300 0.939  -2.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  0.988   -0.383 1.012   0.607</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  0.991   -0.263 1.002   0.093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  0.973   -0.841 0.974  -1.256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  0.947   -0.943 0.993  -0.210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  0.988   -0.271 0.985  -0.546</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  0.878   -1.532 0.960  -0.872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  0.961   -0.759 0.978  -0.742</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  0.943   -2.060 0.974  -1.352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  0.868   -4.736 0.911  -4.687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem  1.513   16.123 1.338  16.509</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemfit(raschfit, "infit", Theta = Theta):</span> Theta does not have the correct number of rows</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, empirical.plot<span class="op">=</span><span class="fl">1</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemfit-6.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemfit(raschfit, empirical.plot = 1, Theta = Theta):</span> Theta does not have the correct number of rows</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'X2'</span>, return.tables<span class="op">=</span><span class="cn">TRUE</span>, Theta<span class="op">=</span><span class="va">Theta</span>, which.items<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -1.7718`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      178 166.44926  0.8953008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       22  33.55074 -1.9941546</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -1.0782`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      147 142.51602  0.3756054</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       53  57.48398 -0.5914121</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.7497`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      138 128.19072  0.8663808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       62  71.80928 -1.1575688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.4577`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      109 114.2782 -0.4937469</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       91  85.7218  0.5700861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.193`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       91 101.13957  -1.008228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      109  98.86043   1.019784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.0765`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       77  87.7275  -1.145330</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      123 112.2725   1.012423</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.3374`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       74  75.15333 -0.1330391</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      126 124.84667  0.1032203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.6728`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       47  60.18187  -1.699199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      153 139.81813   1.114796</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 1.0787`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       47  44.57924  0.3625653</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      153 155.42076 -0.1941771</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 1.9249`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected   z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       22  21.91506  0.018144094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1      178 178.08494 -0.006364921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemfit(raschfit, "X2", return.tables = TRUE, Theta = Theta,     which.items = 1):</span> Theta does not have the correct number of rows</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit a new more flexible model for the mis-fitting item</span></span></span>
 <span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fl">20</span><span class="op">)</span>, <span class="st">'spline'</span><span class="op">)</span></span></span>
@@ -704,7 +481,7 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  9.333      15      0.000  0.859</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem 11.473      13      0.000  0.571</span>
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">x2</span>, <span class="fl">21</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemfit-7.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="itemfit-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         AIC    SABIC       HQ      BIC    logLik     X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x  49477.85 49579.65 49564.23 49713.09 -24696.93            </span>
@@ -717,13 +494,15 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.0</span>,<span class="fl">0.0</span>,<span class="op">-</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1.5</span><span class="op">)</span>,<span class="fl">10</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">4</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>,<span class="fl">2000</span>, itemtype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'graded'</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      4      0      1      4      1      4      3      2      1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      2      1      1      3      2      4      2      1      4       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      2      2      3      0      0      0      4      4      4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      1      2      4      1      2      2      2      2      0       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      1      3      0      2      1      4      4      4      3       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      1      3      3      2      3      1      1      2      0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      4      0      1      4      1      4      3      2      1       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      2      1      1      3      2      4      2      1      4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      2      2      3      0      0      0      4      4      4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      1      2      4      1      2      2      2      2      0       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>      1      3      0      2      1      4      4      4      3       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>      1      3      3      2      3      1      1      2      0       1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -740,119 +519,20 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  83.214      98      0.000  0.857</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10 104.402      99      0.005  0.336</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span>, <span class="st">'X2'</span><span class="op">)</span> <span class="co"># less useful given inflated Type I error rates</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  93.925    35    0.029 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  43.667    35    0.011 0.149</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  81.354    35    0.026 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  90.490    35    0.028 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  36.169    35    0.004 0.414</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  97.559    35    0.030 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7 129.917    35    0.037 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8 130.263    35    0.037 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9 141.266    35    0.039 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10 117.650    35    0.034 0.000</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemfit-8.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span>, empirical.poly.collapse<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemfit-9.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># collapsed tables (see mincell.X2) for X2 and G2</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span>, <span class="st">'X2'</span>, return.tables <span class="op">=</span> <span class="cn">TRUE</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -1.4692`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       98 65.020718  4.0899247</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       76 88.468143 -1.3255872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       12 26.774054 -2.8552400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        7  6.656543  0.1331215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4        7 13.080542 -1.6812388</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.8519`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       65 45.508938  2.8892636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       87 88.222767 -0.1301827</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       29 35.896766 -1.1511126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        6  9.834511 -1.2227385</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       13 20.537019 -1.6631481</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.5476`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       35 37.54994 -0.4161270</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       97 85.03642  1.2973549</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       34 40.25662 -0.9861003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        5 11.70198 -1.9591763</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       29 25.45504  0.7026267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.3145`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       27 32.21053 -0.9180857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       91 81.40120  1.0639013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       40 43.28252 -0.4989437</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       15 13.23174  0.4861130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       27 29.87400 -0.5258232</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.0993`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       23 27.84181 -0.9176111</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       73 77.27754 -0.4865943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       60 45.69537  2.1161218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       12 14.68759 -0.7012737</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       32 34.49770 -0.4252515</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.1116`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       23 24.05321 -0.21474860</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       73 72.66989  0.03872444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       50 47.59720  0.34827910</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       16 16.11821 -0.02944308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       38 39.56149 -0.24825845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.3293`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected   z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       18 20.61824 -0.576612407</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       69 67.48888  0.183942450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       49 48.98546  0.002077898</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       24 17.55297  1.538809131</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       40 45.35445 -0.795069543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.5568`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        6 17.49926 -2.74890777</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       60 61.79242 -0.22801909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       56 49.73600  0.88821096</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       19 18.94936  0.01163316</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       59 52.02296  0.96732827</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.8512`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        7 14.09896 -1.8906068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       45 54.28449 -1.2601441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       48 49.58044 -0.2244513</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       26 20.49440  1.2161493</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       74 61.54171  1.5880848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 1.4358`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        6  9.087564 -1.0242177</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       25 40.094053 -2.3837784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       44 45.694100 -0.2506161</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       21 22.208083 -0.2563547</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4      104 82.916200  2.3154169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xtfrm.data.frame(x):</span> cannot xtfrm data frames</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod2</span>, <span class="st">'infit'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.959   -1.407 0.946  -2.141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  1.098    3.226 1.074   2.791</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.962   -1.326 0.961  -1.575</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.946   -1.867 0.932  -2.704</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  1.121    3.943 1.094   3.496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.917   -2.902 0.917  -3.296</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  0.864   -4.829 0.881  -4.899</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.873   -4.656 0.879  -5.025</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.876   -4.467 0.887  -4.696</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  0.883   -4.255 0.892  -4.519</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in personfit(x, method = method, Theta = Theta):</span> Theta must be a matrix</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># massive list of tables for S-X2</span></span></span>
 <span class="r-in"><span><span class="va">tables</span> <span class="op">&lt;-</span> <span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span>, return.tables <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -934,121 +614,26 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit stats with missing data (run in parallel using all cores)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in `[&lt;-`(`*tmp*`, sample(1:prod(dim(dat)), 100), value = NA):</span> Can't assign to columns beyond the end with non-consecutive locations.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> Input has size 10.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Subscript `sample(1:prod(dim(dat)), 100)` contains non-consecutive locations 820, 1141, 1583, 1918, 2007, etc.</span>
 <span class="r-in"><span><span class="va">raschfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, itemtype<span class="op">=</span><span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use only valid data by removing rows with missing terms</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S_X2'</span>, <span class="st">'infit'</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sample size after row-wise response data removal: 1901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.906   -3.626 0.911  -3.660 155.053     102      0.017  0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.997   -0.107 1.004   0.146 146.662     103      0.015  0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.917   -3.282 0.919  -3.385 114.783     103      0.008  0.201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.884   -4.448 0.896  -4.291 121.470     102      0.010  0.092</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  1.006    0.235 1.009   0.349 204.451     103      0.023  0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.880   -4.515 0.895  -4.216  93.810     103      0.000  0.730</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  0.852   -5.852 0.866  -5.666 129.878     102      0.012  0.033</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.862   -5.635 0.870  -5.607 120.879     102      0.010  0.098</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.855   -5.841 0.867  -5.722  96.812     102      0.000  0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  0.852   -6.127 0.863  -6.019 111.851     101      0.008  0.216</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Data does not contain missing values. Continuing normally</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Sample size after row-wise response data removal: 2000</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in personfit(x, method = method, Theta = Theta):</span> Theta must be a matrix</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># note that X2, G2, PV-Q1, and X2* do not require complete datasets</span></span></span>
 <span class="r-in"><span><span class="va">thetas</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">raschfit</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co"># save for faster computations</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X2'</span>, <span class="st">'G2'</span><span class="op">)</span>, Theta<span class="op">=</span><span class="va">thetas</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2     G2 df.G2 RMSEA.G2  p.G2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  56.082    36    0.017 0.018 57.138    36    0.017 0.014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  72.433    36    0.023 0.000 68.605    36    0.021 0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  51.674    36    0.015 0.044 52.944    36    0.015 0.034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  42.209    36    0.009 0.220 40.864    36    0.008 0.265</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5 108.433    36    0.032 0.000 93.285    36    0.028 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  37.478    36    0.005 0.401 39.799    36    0.007 0.305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  61.895    36    0.019 0.005 68.502    35    0.022 0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  56.125    36    0.017 0.017 59.579    36    0.018 0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  66.332    36    0.021 0.002 69.041    36    0.021 0.001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  47.281    36    0.013 0.099 51.188    36    0.015 0.048</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemfit(raschfit, c("X2", "G2"), Theta = thetas):</span> Theta does not have the correct number of rows</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, empirical.plot<span class="op">=</span><span class="fl">1</span>, Theta<span class="op">=</span><span class="va">thetas</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="itemfit-10.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemfit(raschfit, empirical.plot = 1, Theta = thetas):</span> Theta does not have the correct number of rows</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'X2'</span>, return.tables<span class="op">=</span><span class="cn">TRUE</span>, which.items<span class="op">=</span><span class="fl">1</span>, Theta<span class="op">=</span><span class="va">thetas</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.9751`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       96 89.203274  0.7196302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       81 87.319279 -0.6762581</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       14 20.552190 -1.4452982</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        5  2.584993  1.5020654</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4        6  2.340264  2.3923098</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.4747`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       52 55.810605 -0.5100768</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       98 90.111135  0.8310464</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       34 34.983142 -0.1662214</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        6  7.257589 -0.4668126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4        9 10.837528 -0.5581731</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.2825`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       45 43.95405  0.1577652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       95 86.00287  0.9701688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       34 40.46184 -1.0158593</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        9 10.17259 -0.3676465</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       16 18.40864 -0.5613857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.151`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       33 36.30398 -0.5483529</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       74 81.02032 -0.7799379</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       45 43.47628  0.2310896</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       11 12.46706 -0.4154939</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       36 25.73237  2.0240925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.0334`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       19 29.93222 -1.9981990</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       90 75.13532  1.7148795</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       48 45.34903  0.3936594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       12 14.62666 -0.6868010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       30 33.95678 -0.6790139</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.0651`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       23 25.02007 -0.4038516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       62 69.30476 -0.8774538</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       63 46.15898  2.4787928</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       17 16.42868  0.1409549</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       34 42.08752 -1.2466326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.1642`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       19 20.52933 -0.33753058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       63 62.79341  0.02607073</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       45 46.18193 -0.17392181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       23 18.15027  1.13834925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       49 51.34506 -0.32726919</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.2767`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected   z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        4 16.04548 -3.007099726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       66 54.92379  1.494551513</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       47 45.20504  0.266969704</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       19 19.88229 -0.197868736</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       63 62.94340  0.007134114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.4164`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       11 11.43297 -0.1280506</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       44 45.00327 -0.1495531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       48 42.59391  0.8283409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       26 21.54290  0.9602843</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       70 78.42694 -0.9515622</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.7405`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed   Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        4   4.631286 -0.2933428</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       23  25.205901 -0.4393746</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       43  32.985379  1.7437081</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       22  23.067149 -0.2221919</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4      110 116.110285 -0.5670562</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in itemfit(raschfit, "X2", return.tables = TRUE, which.items = 1,     Theta = thetas):</span> Theta does not have the correct number of rows</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

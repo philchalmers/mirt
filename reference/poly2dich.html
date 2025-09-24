@@ -9,7 +9,7 @@ converted into comparable dichotomous items with the same information."></head><
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,48 +86,59 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Science</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 392 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Comfort  Work Future Benefit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>       4     4      3       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>       3     3      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>       3     2      2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>       3     2      2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>       3     4      4       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>       4     4      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>       3     2      3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>       3     2      3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>       3     3      4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>       4     3      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 382 more rows</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Comfort Work Future Benefit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       4    4      3       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       3    3      3       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3    2      2       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       3    2      2       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       3    4      4       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       4    4      3       3</span>
 <span class="r-in"><span><span class="va">newScience</span> <span class="op">&lt;-</span> <span class="fu">poly2dich</span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">newScience</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort_cat.1 Comfort_cat.2 Comfort_cat.3 Comfort_cat.4 Work_cat.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]             0             0             0             1          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]             0             0             1             0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]             0             0             1             0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]             0             0             1             0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]             0             0             1             0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]             0             0             0             1          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Work_cat.2 Work_cat.3 Work_cat.4 Future_cat.1 Future_cat.2 Future_cat.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]          0          0          1            0            0            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]          0          1          0            0            0            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]          1          0          0            0            1            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]          1          0          0            0            1            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]          0          0          1            0            0            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]          0          0          1            0            0            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Future_cat.4 Benefit_cat.1 Benefit_cat.2 Benefit_cat.3 Benefit_cat.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]            0             0             1             0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]            0             0             0             1             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]            0             0             0             1             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]            0             0             0             1             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]            1             1             0             0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]            0             0             0             1             0</span>
+<span class="r-in"><span><span class="va">newScience</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 392 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Comfort_cat.1 Comfort_cat.2 Comfort_cat.3 Comfort_cat.4 Work_cat.1 Work_cat.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>             0             0             0             1          0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>             0             0             1             0          0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>             0             0             1             0          0          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>             0             0             1             0          0          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>             0             0             1             0          0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>             0             0             0             1          0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>             0             0             1             0          0          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>             0             0             1             0          0          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>             0             0             1             0          0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>             0             0             0             1          0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 382 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: Work_cat.3 &lt;int&gt;, Work_cat.4 &lt;int&gt;, Future_cat.1 &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Future_cat.2 &lt;int&gt;, Future_cat.3 &lt;int&gt;, Future_cat.4 &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Benefit_cat.1 &lt;int&gt;, Benefit_cat.2 &lt;int&gt;, Benefit_cat.3 &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Benefit_cat.4 &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">newScience2</span> <span class="op">&lt;-</span> <span class="fu">poly2dich</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">newScience2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Comfort Work_cat.1 Work_cat.2 Work_cat.3 Work_cat.4 Future Benefit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       4          0          0          0          1      3       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       3          0          0          1          0      3       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3          0          1          0          0      2       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       3          0          1          0          0      2       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       3          0          0          0          1      4       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       4          0          0          0          1      3       3</span>
+<span class="r-in"><span><span class="va">newScience2</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 392 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Comfort Work_cat.1 Work_cat.2 Work_cat.3 Work_cat.4 Future Benefit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>       4          0          0          0          1      3       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>       3          0          0          1          0      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>       3          0          1          0          0      2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>       3          0          1          0          0      2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>       3          0          0          0          1      4       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>       4          0          0          0          1      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>       3          0          1          0          0      3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>       3          0          1          0          0      3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>       3          0          0          1          0      4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>       4          0          0          1          0      3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 382 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

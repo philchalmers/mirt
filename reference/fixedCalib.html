@@ -17,7 +17,7 @@ anchor items for equating, see multipleGroup."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,34 +141,19 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></dd>
 <span class="r-in"><span><span class="co">#     (unobserved; hence removed)</span></span></span>
 <span class="r-in"><span><span class="va">dataset1</span> <span class="op">&lt;-</span> <span class="va">dataset1</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">J</span><span class="op">:</span><span class="op">(</span><span class="va">J</span><span class="op">*</span><span class="fl">.6</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dataset1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0      0      0      0      0      0      1      1      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      0      0      0      1      0      1      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      0      1      0      1      1      1      1      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      0      1      1      0      1      0      0      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      1      0      1      1      1      0      1      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      1      1      0      1      0      1      0      1      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18 Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1       1       1       1       1       0       0       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0       0       1       0       0       0       1       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1       1       0       1       0       1       0       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       0       0       1       1       0       0       1       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0       0       0       1       0       0       1       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       1       0       1       1       0       0       1       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_20 Item_21 Item_22 Item_23 Item_24 Item_25 Item_26 Item_27 Item_28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0       0       0       1       0       0       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0       1       0       0       1       0       0       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       0       1       0       1       1       1       1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       0       0       0       0       0       1       0       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0       1       1       1       1       1       1       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0       0       0       1       1       1       0       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 29</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10 Item_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      0      0      0      0      0      0      1      1      1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      0      0      0      1      0      1      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      0      1      0      1      1      1      1      1      1       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      0      1      1      0      1      0      0      0      1       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>      1      0      1      1      1      0      1      0      1       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>      1      1      0      1      0      1      0      1      1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 18 more variables: Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;, Item_14 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_15 &lt;dbl&gt;, Item_16 &lt;dbl&gt;, Item_17 &lt;dbl&gt;, Item_18 &lt;dbl&gt;, Item_19 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_20 &lt;dbl&gt;, Item_21 &lt;dbl&gt;, Item_22 &lt;dbl&gt;, Item_23 &lt;dbl&gt;, Item_24 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_25 &lt;dbl&gt;, Item_26 &lt;dbl&gt;, Item_27 &lt;dbl&gt;, Item_28 &lt;dbl&gt;, Item_29 &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
@@ -824,13 +809,13 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></dd>
 <span class="r-in"><span><span class="co"># factor scores distribution check</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">MWU_MEM</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="fixedCalib-6.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hist.default(fs):</span> 'x' must be numeric</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean_calib<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span>, <span class="op">]</span><span class="op">)</span>, sd_calib<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    mean_calib      sd_calib </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.0001434688  0.9215504578 </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>argument is not numeric or logical: returning NA</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.data.frame(x):</span> 'list' object cannot be coerced to type 'double'</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean_exper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span>, sd_exper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mean_exper   sd_exper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.03352674 0.93335579 </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>argument is not numeric or logical: returning NA</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.data.frame(x):</span> 'list' object cannot be coerced to type 'double'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">############################</span></span></span>
@@ -1018,20 +1003,20 @@ Supports one (<code>"OEM"</code>) and many (<code>"MEM"</code>)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_49 1.1583841 -0.31781501 1.1749563 -0.41985829</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_50 0.6916807 -0.43180765 0.6079603 -0.48618269</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">MWU_MEM</span>, type <span class="op">=</span> <span class="st">'empiricalhist'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="fixedCalib-7.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="fixedCalib-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## factor scores check</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">MWU_MEM</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="fixedCalib-8.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hist.default(fs):</span> 'x' must be numeric</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean_calib<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span>, <span class="op">]</span><span class="op">)</span>, sd_calib<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    mean_calib      sd_calib </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.0001434688  0.9215504578 </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>argument is not numeric or logical: returning NA</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.data.frame(x):</span> 'list' object cannot be coerced to type 'double'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## shrinkage, but generally different from calibrated sample</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean_exper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span>, sd_exper<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mean_exper   sd_exper </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.3531216  1.0349737 </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>argument is not numeric or logical: returning NA</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.data.frame(x):</span> 'list' object cannot be coerced to type 'double'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

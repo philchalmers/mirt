@@ -15,7 +15,7 @@ to compute expected scores."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -294,65 +294,16 @@ of items and scales. <em>Journal of Applied Psychology, 95</em>, 728-743.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           SIDS  UIDS   SIDN  UIDN   ESSD theta.of.max.D  max.D mean.ES.foc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   0.000 0.000  0.000 0.000  0.000         -1.786  0.000       0.618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   0.000 0.000  0.000 0.000  0.000         -1.786  0.000       0.408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   0.000 0.000  0.000 0.000  0.000         -1.786  0.000       0.468</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   0.000 0.000  0.000 0.000  0.000         -1.786  0.000       0.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   0.000 0.000  0.000 0.000  0.000         -1.786  0.000       0.550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  -0.018 0.042 -0.020 0.037 -0.148         -2.560  0.098       0.645</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  -0.004 0.023 -0.007 0.021 -0.018         -1.935  0.047       0.686</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  -0.024 0.024 -0.026 0.026 -0.106         -0.533 -0.037       0.431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  -0.001 0.007  0.000 0.006 -0.005          2.571 -0.020       0.313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 -0.024 0.025 -0.023 0.023 -0.163          2.571 -0.065       0.271</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 -0.009 0.024 -0.006 0.021 -0.048         -2.357 -0.081       0.736</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 -0.003 0.023 -0.003 0.022 -0.012          1.229 -0.036       0.484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.012 0.015 -0.014 0.015 -0.045          0.618 -0.024       0.589</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 -0.012 0.027 -0.012 0.025 -0.048         -1.426 -0.056       0.595</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.013 0.031 -0.013 0.028 -0.064          1.901 -0.057       0.494</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean.ES.ref</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1        0.618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2        0.408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3        0.468</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4        0.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5        0.550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6        0.663</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7        0.690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8        0.455</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9        0.314</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10       0.295</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11       0.744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12       0.487</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13       0.601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14       0.607</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15       0.507</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, DIF<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Effect Size       Value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                STDS -0.12007524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                UTDS  0.24122923</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              UETSDS  0.13068433</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4               ETSSD -0.03693475</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         Starks.DTFR -0.12338715</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6               UDTFR  0.22580510</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              UETSDN  0.12941066</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 theta.of.max.test.D  1.73546824</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           Test.Dmax -0.23002060</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, DIF<span class="op">=</span><span class="cn">FALSE</span>, focal_items <span class="op">=</span> <span class="fl">10</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Effect Size       Value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                STDS -0.07301229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                UTDS  0.14449888</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              UETSDS  0.07301229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4               ETSSD -0.05523295</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         Starks.DTFR -0.06993679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6               UDTFR  0.13444167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              UETSDN  0.06993679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 theta.of.max.test.D  1.90144409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           Test.Dmax -0.12250160</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, plot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_ES-1.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, plot<span class="op">=</span><span class="cn">TRUE</span>, DIF<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_ES-2.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">###---------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># DIF</span></span></span>
@@ -430,53 +381,13 @@ of items and scales. <em>Journal of Applied Psychology, 95</em>, 728-743.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           SIDS  UIDS   SIDN  UIDN   ESSD theta.of.max.D  max.D mean.ES.foc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   0.000 0.000  0.000 0.000  0.000          1.153  0.000       0.624</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   0.000 0.000  0.000 0.000  0.000          1.153  0.000       0.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   0.000 0.000  0.000 0.000  0.000          1.153  0.000       0.464</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   0.000 0.000  0.000 0.000  0.000          1.153  0.000       0.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   0.000 0.000  0.000 0.000  0.000          1.153  0.000       0.556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  -0.014 0.045 -0.017 0.037 -0.120         -2.463  0.103       0.640</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  -0.009 0.010 -0.010 0.011 -0.037          0.312 -0.016       0.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  -0.043 0.043 -0.046 0.046 -0.174          0.940 -0.066       0.424</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  -0.010 0.018 -0.008 0.015 -0.054          2.421 -0.050       0.319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 -0.016 0.025 -0.020 0.025 -0.089          2.622  0.043       0.284</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 -0.136 0.136 -0.138 0.138 -0.545         -1.274 -0.291       0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  0.064 0.070  0.075 0.079  0.195          0.536  0.139       0.555</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 -0.016 0.026 -0.017 0.025 -0.055         -1.037 -0.055       0.579</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  0.014 0.042  0.019 0.039  0.055         -1.774 -0.061       0.630</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 -0.137 0.137 -0.147 0.147 -0.663         -0.086 -0.173       0.355</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean.ES.ref</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1        0.624</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2        0.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3        0.464</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4        0.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5        0.556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6        0.654</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7        0.699</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8        0.467</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9        0.329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10       0.300</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11       0.763</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12       0.490</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13       0.595</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14       0.616</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15       0.492</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, DIF <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Effect Size       Value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                STDS -0.30204052</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                UTDS  0.55171554</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              UETSDS  0.30204052</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4               ETSSD -0.08665251</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         Starks.DTFR -0.30918657</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6               UDTFR  0.56373600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              UETSDN  0.30918906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 theta.of.max.test.D -1.05111220</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           Test.Dmax -0.54821795</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, plot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_ES-3.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu">empirical_ES</span><span class="op">(</span><span class="va">mod</span>, plot<span class="op">=</span><span class="cn">TRUE</span>, DIF<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_ES-4.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

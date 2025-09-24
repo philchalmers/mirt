@@ -21,7 +21,7 @@ mixture models to estimate any latent group components."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -363,7 +363,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.281  0.054  0.077  0.133  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.287  0.055  0.062  0.153  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -372,7 +372,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.184  0.052  0.070  0.044  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.185  0.054  0.070  0.044  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -596,256 +596,21 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="co"># test whether first 6 slopes should be equal across groups</span></span></span>
 <span class="r-in"><span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group <span class="op">=</span> <span class="va">group</span>, pars <span class="op">=</span> <span class="st">'values'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">values</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group    item     class   name parnum  value lbound ubound   est const</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      D1  Item_1      dich     a1      1  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      D1  Item_1      dich      d      2  0.541   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      D1  Item_1      dich      g      3  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      D1  Item_1      dich      u      4  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      D1  Item_2      dich     a1      5  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      D1  Item_2      dich      d      6 -0.536   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      D1  Item_2      dich      g      7  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      D1  Item_2      dich      u      8  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      D1  Item_3      dich     a1      9  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     D1  Item_3      dich      d     10 -0.220   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11     D1  Item_3      dich      g     11  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12     D1  Item_3      dich      u     12  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13     D1  Item_4      dich     a1     13  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14     D1  Item_4      dich      d     14  0.941   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15     D1  Item_4      dich      g     15  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16     D1  Item_4      dich      u     16  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17     D1  Item_5      dich     a1     17  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18     D1  Item_5      dich      d     18  0.190   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19     D1  Item_5      dich      g     19  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20     D1  Item_5      dich      u     20  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21     D1  Item_6      dich     a1     21  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22     D1  Item_6      dich      d     22  0.752   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23     D1  Item_6      dich      g     23  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24     D1  Item_6      dich      u     24  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25     D1  Item_7      dich     a1     25  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26     D1  Item_7      dich      d     26  0.927   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27     D1  Item_7      dich      g     27  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28     D1  Item_7      dich      u     28  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29     D1  Item_8      dich     a1     29  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30     D1  Item_8      dich      d     30 -0.339   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31     D1  Item_8      dich      g     31  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32     D1  Item_8      dich      u     32  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33     D1  Item_9      dich     a1     33  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34     D1  Item_9      dich      d     34 -1.019   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35     D1  Item_9      dich      g     35  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36     D1  Item_9      dich      u     36  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37     D1 Item_10      dich     a1     37  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38     D1 Item_10      dich      d     38 -1.178   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39     D1 Item_10      dich      g     39  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40     D1 Item_10      dich      u     40  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41     D1 Item_11      dich     a1     41  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42     D1 Item_11      dich      d     42  1.228   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43     D1 Item_11      dich      g     43  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44     D1 Item_11      dich      u     44  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45     D1 Item_12      dich     a1     45  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46     D1 Item_12      dich      d     46 -0.150   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47     D1 Item_12      dich      g     47  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48     D1 Item_12      dich      u     48  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49     D1 Item_13      dich     a1     49  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50     D1 Item_13      dich      d     50  0.419   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51     D1 Item_13      dich      g     51  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52     D1 Item_13      dich      u     52  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53     D1 Item_14      dich     a1     53  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54     D1 Item_14      dich      d     54  0.455   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55     D1 Item_14      dich      g     55  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56     D1 Item_14      dich      u     56  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57     D1 Item_15      dich     a1     57  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58     D1 Item_15      dich      d     58 -0.047   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59     D1 Item_15      dich      g     59  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60     D1 Item_15      dich      u     60  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61     D1   GROUP GroupPars MEAN_1     61  0.000   -Inf    Inf FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62     D1   GROUP GroupPars COV_11     62  1.000      0    Inf FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63     D2  Item_1      dich     a1     63  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64     D2  Item_1      dich      d     64  0.541   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65     D2  Item_1      dich      g     65  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66     D2  Item_1      dich      u     66  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67     D2  Item_2      dich     a1     67  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68     D2  Item_2      dich      d     68 -0.536   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69     D2  Item_2      dich      g     69  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70     D2  Item_2      dich      u     70  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71     D2  Item_3      dich     a1     71  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72     D2  Item_3      dich      d     72 -0.220   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73     D2  Item_3      dich      g     73  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 74     D2  Item_3      dich      u     74  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75     D2  Item_4      dich     a1     75  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76     D2  Item_4      dich      d     76  0.941   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77     D2  Item_4      dich      g     77  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78     D2  Item_4      dich      u     78  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79     D2  Item_5      dich     a1     79  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80     D2  Item_5      dich      d     80  0.190   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81     D2  Item_5      dich      g     81  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82     D2  Item_5      dich      u     82  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83     D2  Item_6      dich     a1     83  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84     D2  Item_6      dich      d     84  0.752   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85     D2  Item_6      dich      g     85  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86     D2  Item_6      dich      u     86  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87     D2  Item_7      dich     a1     87  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88     D2  Item_7      dich      d     88  0.927   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89     D2  Item_7      dich      g     89  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90     D2  Item_7      dich      u     90  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91     D2  Item_8      dich     a1     91  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92     D2  Item_8      dich      d     92 -0.339   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93     D2  Item_8      dich      g     93  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94     D2  Item_8      dich      u     94  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95     D2  Item_9      dich     a1     95  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96     D2  Item_9      dich      d     96 -1.019   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97     D2  Item_9      dich      g     97  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98     D2  Item_9      dich      u     98  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99     D2 Item_10      dich     a1     99  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 100    D2 Item_10      dich      d    100 -1.178   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 101    D2 Item_10      dich      g    101  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 102    D2 Item_10      dich      u    102  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 103    D2 Item_11      dich     a1    103  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 104    D2 Item_11      dich      d    104  1.228   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 105    D2 Item_11      dich      g    105  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 106    D2 Item_11      dich      u    106  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 107    D2 Item_12      dich     a1    107  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 108    D2 Item_12      dich      d    108 -0.150   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 109    D2 Item_12      dich      g    109  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 110    D2 Item_12      dich      u    110  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 111    D2 Item_13      dich     a1    111  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 112    D2 Item_13      dich      d    112  0.419   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 113    D2 Item_13      dich      g    113  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 114    D2 Item_13      dich      u    114  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 115    D2 Item_14      dich     a1    115  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 116    D2 Item_14      dich      d    116  0.455   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 117    D2 Item_14      dich      g    117  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 118    D2 Item_14      dich      u    118  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 119    D2 Item_15      dich     a1    119  0.851   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 120    D2 Item_15      dich      d    120 -0.047   -Inf    Inf  TRUE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 121    D2 Item_15      dich      g    121  0.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 122    D2 Item_15      dich      u    122  1.000      0      1 FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 123    D2   GROUP GroupPars MEAN_1    123  0.000   -Inf    Inf FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 124    D2   GROUP GroupPars COV_11    124  1.000      0    Inf FALSE  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nconst prior.type prior_1 prior_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 74    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99    none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 100   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 101   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 102   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 103   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 104   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 105   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 106   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 107   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 108   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 109   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 110   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 111   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 112   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 113   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 114   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 115   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 116   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 117   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 118   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 119   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 120   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 121   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 122   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 123   none       none     NaN     NaN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 124   none       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 124 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    group item   class name  parnum  value lbound ubound est   const nconst</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> D1    Item_1 dich  a1         1  0.851   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> D1    Item_1 dich  d          2  0.541   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> D1    Item_1 dich  g          3  0          0      1 FALSE none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> D1    Item_1 dich  u          4  1          0      1 FALSE none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> D1    Item_2 dich  a1         5  0.851   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> D1    Item_2 dich  d          6 -<span style="color: #BB0000;">0.536</span>   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> D1    Item_2 dich  g          7  0          0      1 FALSE none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> D1    Item_2 dich  u          8  1          0      1 FALSE none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> D1    Item_3 dich  a1         9  0.851   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> D1    Item_3 dich  d         10 -<span style="color: #BB0000;">0.220</span>   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 114 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: prior.type &lt;chr&gt;, prior_1 &lt;dbl&gt;, prior_2 &lt;dbl&gt;</span></span>
 <span class="r-in"><span><span class="va">constrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">63</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">67</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>,<span class="fl">71</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">13</span>,<span class="fl">75</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">17</span>,<span class="fl">79</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>,<span class="fl">83</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">equalslopes</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group <span class="op">=</span> <span class="va">group</span>, constrain <span class="op">=</span> <span class="va">constrain</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -923,35 +688,29 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="va">dat2</span> <span class="op">&lt;-</span> <span class="va">dat</span></span></span>
 <span class="r-in"><span><span class="va">dat2</span><span class="op">[</span><span class="va">group</span> <span class="op">==</span> <span class="st">'D1'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">dat2</span><span class="op">[</span><span class="va">group</span> <span class="op">!=</span> <span class="st">'D1'</span>, <span class="fl">14</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]     NA     NA      1      1      1      0      1      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]     NA     NA      1      1      1      1      1      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]     NA     NA      0      1      1      1      1      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]     NA     NA      1      1      1      1      1      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]     NA     NA      1      0      1      1      1      1      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]     NA     NA      1      1      1      1      1      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_11 Item_12 Item_13 Item_14 Item_15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1       1       0       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0       1       1       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1       0       1       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       1       1       1       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       1       1       1       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       1       1       1       1       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10 Item_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      1      1      1      0      1      1      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      1      1      1      1      1      0      1       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      0      1      1      1      1      1      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      1      1      1      1      1      1      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      1      0      1      1      1      1      1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      1      1      1      1      1      0      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;, Item_14 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_15 &lt;dbl&gt;</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">dat2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1995,]      1      1      0      0      0      1      1      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1996,]      1      0      1      1      1      0      1      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1997,]      0      1      0      0      0      1      0      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1998,]      0      1      0      0      1      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1999,]      1      1      0      1      1      1      1      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2000,]      0      0      0      0      0      0      1      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Item_11 Item_12 Item_13 Item_14 Item_15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1995,]       1       0       1      NA      NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1996,]       1       1       0      NA      NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1997,]       1       0       1      NA      NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1998,]       0       1       0      NA      NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1999,]       1       1       1      NA      NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2000,]       0       0       0      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10 Item_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      1      1      0      0      0      1      1      1      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      1      0      1      1      1      0      1      1      1       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      0      1      0      0      0      1      0      1      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      0      1      0      0      1      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>      1      1      0      1      1      1      1      1      0       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>      0      0      0      0      0      0      1      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;, Item_14 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_15 &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># items with missing responses need to be constrained across groups for identification</span></span></span>
 <span class="r-in"><span><span class="va">nms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat2</span><span class="op">)</span></span></span>
@@ -1035,7 +794,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within NaN tolerance after 1 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
@@ -2074,20 +1833,17 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.7249 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[[</span><span class="st">"D1"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_11 Item_12 Item_13 Item_14 Item_15        F1     SE_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0       0       0       0 -2.137056 0.6262714</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0       0       0       1       0 -1.785692 0.5741235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       0       0       0       2       0 -1.726621 0.5800312</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       0       0       0       3       0 -1.688716 0.5856268</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0       0       0       3       1 -1.439230 0.5535499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0       2       0       0       0 -1.582715 0.5660598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10 Item_11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      0      0      0      0      0      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      0      0      0      0      0      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      0      0      0      0      0      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      0      0      0      0      0      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>      0      0      0      0      0      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>      0      0      0      0      0      0      0      0      0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;, Item_14 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
 <span class="r-in"><span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_configural</span>, method <span class="op">=</span> <span class="st">'EAPsum'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       df     X2  p.X2 SEM.alpha rxx.alpha rxx_F1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 39 42.374 0.328     3.869     0.784  0.776</span>
@@ -2096,102 +1852,36 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 42 29.475 0.928     3.825     0.842  0.832</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores     F1 SE_F1 observed expected std.res</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0           0 -2.137 0.626        6    5.731   0.112</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           1 -1.842 0.589        6   10.082   1.286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           2 -1.645 0.575       19   15.026   1.025</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           3 -1.491 0.568       22   21.117   0.192</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -1.323 0.548       31   26.167   0.945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -1.173 0.534       21   30.811   1.768</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           6 -1.033 0.523       30   34.974   0.841</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7 -0.898 0.510       37   38.286   0.208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           8 -0.770 0.500       47   40.921   0.950</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           9 -0.648 0.490       40   42.896   0.442</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10         10 -0.531 0.481       54   44.208   1.473</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11         11 -0.417 0.473       52   44.945   1.052</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12         12 -0.307 0.466       50   45.161   0.720</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13         13 -0.201 0.460       35   44.909   1.479</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14         14 -0.097 0.455       41   44.252   0.489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15         15  0.005 0.450       33   43.244   1.558</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  0.104 0.446       50   41.936   1.245</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17         17  0.202 0.443       38   40.375   0.374</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18         18  0.298 0.440       34   38.606   0.741</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19         19  0.394 0.437       40   36.668   0.550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20         20  0.488 0.436       30   34.599   0.782</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21         21  0.582 0.435       42   32.431   1.680</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22         22  0.675 0.434       32   30.195   0.328</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23         23  0.768 0.434       28   27.920   0.015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24         24  0.861 0.434       19   25.631   1.310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25         25  0.954 0.435       34   23.350   2.204</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26         26  1.048 0.436       21   21.099   0.022</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27         27  1.142 0.438       18   18.899   0.207</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28         28  1.237 0.441       21   16.765   1.034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29         29  1.334 0.444       10   14.717   1.229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30         30  1.431 0.447       11   12.767   0.495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31         31  1.530 0.451        8   10.931   0.887</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32         32  1.631 0.456        8    9.221   0.402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33         33  1.733 0.461        8    7.648   0.127</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34         34  1.838 0.466        6    6.221   0.089</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35         35  1.946 0.472        1    4.949   1.775</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36         36  2.056 0.479        4    3.835   0.084</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37         37  2.169 0.486        6    2.881   1.838</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38         38  2.287 0.494        3    2.086   0.632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39         39  2.409 0.503        3    1.445   1.293</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40         40  2.535 0.512        1    0.946   0.055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41         41  2.668 0.522        0    0.580   0.761</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42         42  2.809 0.534        0    0.324   0.569</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43         43  2.955 0.544        0    0.158   0.397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44         44  3.126 0.559        0    0.066   0.256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45         45  3.345 0.584        0    0.019   0.137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          0 -<span style="color: #BB0000;">2.14</span>  0.626        6     5.73   0.112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          1 -<span style="color: #BB0000;">1.84</span>  0.589        6    10.1    1.29 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          2 -<span style="color: #BB0000;">1.65</span>  0.575       19    15.0    1.03 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          3 -<span style="color: #BB0000;">1.49</span>  0.568       22    21.1    0.192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          4 -<span style="color: #BB0000;">1.32</span>  0.548       31    26.2    0.945</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          5 -<span style="color: #BB0000;">1.17</span>  0.534       21    30.8    1.77 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          6 -<span style="color: #BB0000;">1.03</span>  0.523       30    35.0    0.841</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          7 -<span style="color: #BB0000;">0.898</span> 0.510       37    38.3    0.208</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          8 -<span style="color: #BB0000;">0.770</span> 0.500       47    40.9    0.950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          9 -<span style="color: #BB0000;">0.648</span> 0.490       40    42.9    0.442</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores     F1 SE_F1 observed expected std.res</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0           0 -2.051 0.591        9   11.036   0.613</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           1 -1.750 0.548       23   16.140   1.708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           2 -1.554 0.530       22   20.995   0.219</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           3 -1.412 0.524       31   27.050   0.759</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -1.240 0.493       35   30.434   0.828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -1.095 0.475       33   33.197   0.034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           6 -0.964 0.460       34   35.476   0.248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7 -0.836 0.444       32   36.880   0.804</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           8 -0.718 0.431       32   37.812   0.945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           9 -0.607 0.419       31   38.353   1.187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10         10 -0.501 0.409       28   38.516   1.695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11         11 -0.400 0.400       46   38.404   1.226</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12         12 -0.303 0.393       41   38.063   0.476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13         13 -0.210 0.386       36   37.526   0.249</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14         14 -0.119 0.381       33   36.830   0.631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15         15 -0.031 0.376       37   36.003   0.166</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  0.055 0.372       33   35.064   0.349</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17         17  0.140 0.369       33   34.032   0.177</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18         18  0.223 0.366       42   32.921   1.582</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19         19  0.305 0.364       28   31.744   0.665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20         20  0.386 0.363       29   30.511   0.274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21         21  0.466 0.362       30   29.230   0.142</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22         22  0.546 0.362       24   27.908   0.740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23         23  0.626 0.362       28   26.553   0.281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24         24  0.706 0.363       29   25.169   0.764</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25         25  0.787 0.364       27   23.761   0.664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26         26  0.868 0.366       29   22.334   1.411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27         27  0.950 0.369       19   20.892   0.414</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28         28  1.033 0.372       17   19.437   0.553</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29         29  1.117 0.376       13   17.975   1.174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30         30  1.203 0.380       19   16.510   0.613</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31         31  1.291 0.385       17   15.044   0.504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32         32  1.381 0.391       17   13.583   0.927</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33         33  1.473 0.398       16   12.135   1.109</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34         34  1.568 0.405       11   10.703   0.091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35         35  1.667 0.414        8    9.299   0.426</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36         36  1.769 0.423       11    7.936   1.088</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37         37  1.874 0.433        3    6.617   1.406</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38         38  1.984 0.444        6    5.370   0.272</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39         39  2.101 0.457        4    4.219   0.107</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40         40  2.219 0.469        2    3.152   0.649</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41         41  2.344 0.482        2    2.236   0.158</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42         42  2.484 0.501        0    1.485   1.219</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43         43  2.612 0.511        0    0.842   0.918</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44         44  2.766 0.525        0    0.438   0.662</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45         45  2.988 0.555        0    0.185   0.431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          0 -<span style="color: #BB0000;">2.05</span>  0.591        9     11.0  0.613 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          1 -<span style="color: #BB0000;">1.75</span>  0.548       23     16.1  1.71  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          2 -<span style="color: #BB0000;">1.55</span>  0.530       22     21.0  0.219 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          3 -<span style="color: #BB0000;">1.41</span>  0.524       31     27.0  0.759 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          4 -<span style="color: #BB0000;">1.24</span>  0.493       35     30.4  0.828 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          5 -<span style="color: #BB0000;">1.09</span>  0.475       33     33.2  0.034<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          6 -<span style="color: #BB0000;">0.964</span> 0.460       34     35.5  0.248 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          7 -<span style="color: #BB0000;">0.836</span> 0.444       32     36.9  0.804 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          8 -<span style="color: #BB0000;">0.718</span> 0.431       32     37.8  0.945 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          9 -<span style="color: #BB0000;">0.607</span> 0.419       31     38.4  1.19  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># constrain slopes within each group to be equal (but not across groups)</span></span></span>
@@ -2532,21 +2222,25 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-plt img"><img src="multipleGroup-19.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_mix</span><span class="op">)</span><span class="op">)</span> <span class="co"># theta estimates</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.3609178</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -1.6950807</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.8217168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.8090483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.7936363</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.2286020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Class_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  -<span style="color: #BB0000;">0.361</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  -<span style="color: #BB0000;">1.70</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  -<span style="color: #BB0000;">0.822</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>   0.809</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>   0.794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>   0.229</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_mix</span>, method <span class="op">=</span> <span class="st">'classify'</span><span class="op">)</span><span class="op">)</span> <span class="co"># classification probability</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         CLASS_1   CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.04826707 0.9517329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.74223456 0.2577654</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 0.02496631 0.9750337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 0.02929597 0.9707040</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 0.07220958 0.9277904</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 0.42428417 0.5757158</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   CLASS_1 CLASS_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  0.048<span style="text-decoration: underline;">3</span>   0.952</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  0.742    0.258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  0.025<span style="text-decoration: underline;">0</span>   0.975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  0.029<span style="text-decoration: underline;">3</span>   0.971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  0.072<span style="text-decoration: underline;">2</span>   0.928</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  0.424    0.576</span>
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod_mix</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1 30.498      12      0.032  0.002</span>
@@ -2698,6 +2392,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="va">nonzeros</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">n</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">zi_p</span><span class="op">)</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>,</span></span>
 <span class="r-in"><span>                   Theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">zi_p</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">nonzeros</span>, <span class="va">zeros</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in match.names(clabs, names(xi)):</span> names do not match previous names</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># define class with extreme theta but fixed item parameters</span></span></span>
 <span class="r-in"><span><span class="va">zi2PL</span> <span class="op">&lt;-</span> <span class="st">"F = 1-20</span></span></span>
@@ -2711,120 +2406,95 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit ZIM-IRT</span></span></span>
 <span class="r-in"><span><span class="va">zi2PL.fit</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">data</span>, <span class="va">zi2PL</span>, dentype <span class="op">=</span> <span class="st">'mixture-2'</span>, technical<span class="op">=</span><span class="va">technical</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in rep("full", nrow(data)):</span> invalid 'times' argument</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">zi2PL.fit</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MIXTURE_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         a1 d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20  1 0 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    F </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   F</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $class_proportion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.209</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MIXTURE_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            a1      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.867 -2.089 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.998 -1.979 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.954 -1.932 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.595 -1.841 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.922 -0.986 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.924 -0.926 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  2.045 -1.209 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2.069 -1.005 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.782  0.101 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.942  0.195 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 2.080  0.039 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.956  0.039 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.540  0.835 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 2.047  1.092 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.956  0.973 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.807  1.026 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 2.084  2.069 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.917  2.153 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.464  1.735 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.739  1.920 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   F</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $class_proportion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.791</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'zi2PL.fit' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># classification estimates</span></span></span>
 <span class="r-in"><span><span class="va">pi_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">zi2PL.fit</span>, method <span class="op">=</span> <span class="st">'classify'</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'zi2PL.fit' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            CLASS_1 CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 8.544142e-180       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  2.267724e-14       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 2.122840e-178       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 4.509158e-210       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  1.130538e-13       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 9.974115e-149       1</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pi_hat' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           CLASS_1    CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] 0.9243758 0.07562418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] 0.9243758 0.07562418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] 0.9243758 0.07562418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] 0.9243758 0.07562418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] 0.9243758 0.07562418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] 0.9243758 0.07562418</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pi_hat' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAP estimates (not useful for zip class)</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">zi2PL.fit</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'zi2PL.fit' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.262140462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -1.762463343</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.285984614</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.562650718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -1.669323391</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.005541674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 987 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 977 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 971 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 961 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] -92.59647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] -92.59647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] -92.59647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] -92.59647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] -92.59647</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] -92.59647</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 987 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 977 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 971 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 961 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">########################################</span></span></span>
 <span class="r-in"><span><span class="co"># Zero-inflated graded response model (Magnus and Garnier-Villarreal, 2022)</span></span></span>
@@ -2847,64 +2517,17 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="va">nonzeros</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">n</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">zi_p</span><span class="op">)</span>, itemtype <span class="op">=</span> <span class="st">'graded'</span>,</span></span>
 <span class="r-in"><span>                    Theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">theta</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">zi_p</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">nonzeros</span>, <span class="va">zeros</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in match.names(clabs, names(xi)):</span> names do not match previous names</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># intercepts will be labelled as d1 through d4</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0    474    276    431    384    763    354    420    379    342     610</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    128     61    107     26     69     99    140    137    116     114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     62    105    112     54     45     58    120    136    165      98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     89    135    159     87     37    135    118     70     68      34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    247    423    191    449     86    354    202    278    309     144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18 Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0     393     756     668     605     463     321     683     664     406</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     115     114      75     104      74      55      65      46      99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      54      62      55     113     119     123      58      46      66</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     134      33      66      81      89     130      42      57      67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     304      35     136      97     255     371     152     187     362</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0     588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      85</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     174</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in apply(data, 2, table):</span> dim(X) must have a positive length</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ignoring zero inflation (bad idea)</span></span></span>
 <span class="r-in"><span><span class="va">modGRM</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in if (length(unique(colnames(data))) != ncol(data)) stop("items must have unique names in data input",     call. = FALSE):</span> argument is of length zero</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">modGRM</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2.540 -0.223 -1.106 -1.527 -2.166</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2.284  1.418  0.791 -0.010 -0.848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.771  0.167 -0.479 -1.108 -2.132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  3.367  0.392  0.141 -0.330 -1.021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  3.450 -2.806 -3.524 -4.105 -4.691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.003  0.715  0.013 -0.347 -1.145</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  2.375  0.182 -0.781 -1.545 -2.405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2.286  0.515 -0.466 -1.336 -1.795</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  2.768  0.837 -0.152 -1.319 -1.801</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 2.910 -1.290 -2.154 -3.034 -3.397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 2.681  0.382 -0.484 -0.858 -1.792</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.734 -1.721 -2.648 -3.462 -4.224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 2.042 -1.307 -1.802 -2.209 -2.804</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.914 -0.871 -1.516 -2.346 -3.185</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 4.247 -0.504 -1.187 -2.250 -3.114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 2.628  1.020  0.501 -0.428 -1.305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 2.522 -1.628 -2.114 -2.605 -3.007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 2.547 -1.508 -1.835 -2.189 -2.675</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.906  0.340 -0.291 -0.677 -1.065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 2.287 -0.906 -1.572 -2.181 -2.606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F1  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'modGRM' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Define class with extreme theta but fixed item parameters</span></span></span>
 <span class="r-in"><span><span class="co">#   For GRM in zero-inflated class the intercept values are arbitrary</span></span></span>
@@ -2923,120 +2546,95 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit zero-inflated GRM</span></span></span>
 <span class="r-in"><span><span class="va">ziGRM.fit</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">data</span>, <span class="va">ziGRM</span>, dentype <span class="op">=</span> <span class="st">'mixture-2'</span>, technical<span class="op">=</span><span class="va">technical</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in rep("full", nrow(data)):</span> invalid 'times' argument</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ziGRM.fit</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MIXTURE_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         a1 d1 d2 d3 d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20  1  2  1  0 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    F </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   F</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $class_proportion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MIXTURE_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.287  0.857 -0.022 -0.438 -1.068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.764  2.477  1.751  0.932  0.124</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.695  0.975  0.325 -0.293 -1.284</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.711  1.782  1.532  1.064  0.381</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.928 -1.382 -2.106 -2.689 -3.276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.751  1.601  0.875  0.518 -0.255</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.137  1.198  0.242 -0.506 -1.343</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.030  1.498  0.515 -0.332 -0.778</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.307  1.994  0.998 -0.138 -0.604</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.583 -0.062 -0.930 -1.809 -2.171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.308  1.508  0.644  0.276 -0.636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.886 -0.954 -1.873 -2.677 -3.431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.048 -0.420 -0.912 -1.315 -1.903</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 0.946 -0.030 -0.668 -1.485 -2.310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 2.338  1.299  0.604 -0.475 -1.353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.154  2.119  1.582  0.664 -0.180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.363 -0.559 -1.046 -1.536 -1.937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.359 -0.428 -0.755 -1.108 -1.591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 0.725  1.173  0.539  0.161 -0.216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.179  0.077 -0.586 -1.190 -1.609</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   F</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $class_proportion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'coef': object 'ziGRM.fit' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># classification estimates</span></span></span>
 <span class="r-in"><span><span class="va">pi_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">ziGRM.fit</span>, method <span class="op">=</span> <span class="st">'classify'</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'ziGRM.fit' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            CLASS_1 CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 7.494632e-176       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 9.061522e-303       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 8.797229e-303       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 8.991331e-293       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 2.992170e-231       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  1.967057e-82       1</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pi_hat' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           CLASS_1     CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] 0.9982456 0.001754398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] 0.9982456 0.001754398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] 0.9982456 0.001754398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] 0.9982456 0.001754398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] 0.9982456 0.001754398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] 0.9982456 0.001754398</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pi_hat' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAP estimates (not useful for zip class)</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">ziGRM.fit</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'ziGRM.fit' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.5412082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.8572726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  1.5055426</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  1.1937282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.2213623</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -1.4092123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 987 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 977 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 971 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 961 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] -99.82944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] -99.82944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] -99.82944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] -99.82944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] -99.82944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] -99.82944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 987 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 977 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $D2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 971 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      0      0      0      0      0      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 961 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, F1 &lt;dbl&gt;, SE_F1 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
