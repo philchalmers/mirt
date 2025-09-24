@@ -25,11 +25,19 @@ information will be extracted from the data input objects to compute the classic
 test theory version of the RCI statistics}
 
 \item{predat}{a vector (if one individual) or matrix/data.frame
-of response data to be scored, where each individuals' responses are
-included in exactly one row}
+  of response data to be scored, where each individuals' responses are
+  included in exactly one row.
+
+  If total score information only is to be used instead of the
+  complete response matrix then
+  a \code{matrix} object with exactly \code{ncol = 1} columns
+  should be provided}
 
 \item{postdat}{same as \code{predat}, but with respect to the post/follow-up
-measurement. Ignored when a two-dimensional IRT model is included}
+  measurement. Ignored when a two-dimensional IRT model is included.
+
+  For the original RCI approach, a matrix containing the complete responses,
+  or a matrix with one column containing only the total scores, can be provided}
 
 \item{mod_post}{(optional) IRT model for post-test if different from pre-test;
 otherwise, the pre-test model will be used. Ignored when a two-dimensional model
@@ -125,6 +133,12 @@ RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha,
 SEM.alpha.post <- istats.post$SEM.alpha
 
 RCI(predat = dat_pre, postdat = dat_post,
+   SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+
+# Supplying only the total scores
+TS_pre <- matrix(rowSums(dat_pre))
+TS_post <- matrix(rowSums(dat_post))
+RCI(predat = TS_pre, postdat = TS_post,
    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
 
 ######

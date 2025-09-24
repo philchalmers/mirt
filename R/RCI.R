@@ -19,9 +19,17 @@
 #'  IRT is included
 #' @param predat a vector (if one individual) or matrix/data.frame
 #'   of response data to be scored, where each individuals' responses are
-#'   included in exactly one row
+#'   included in exactly one row.
+#'
+#'   If total score information only is to be used instead of the
+#'   complete response matrix then
+#'   a \code{matrix} object with exactly \code{ncol = 1} columns
+#'   should be provided
 #' @param postdat same as \code{predat}, but with respect to the post/follow-up
-#'   measurement. Ignored when a two-dimensional IRT model is included
+#'   measurement. Ignored when a two-dimensional IRT model is included.
+#'
+#'   For the original RCI approach, a matrix containing the complete responses,
+#'   or a matrix with one column containing only the total scores, can be provided
 #' @param cutoffs optional vector of length 2 indicating the type of cut-offs to
 #'   report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)
 #' @param SEM.pre standard error of measurement for the pretest. This can be used instead of
@@ -111,6 +119,12 @@
 #' SEM.alpha.post <- istats.post$SEM.alpha
 #'
 #' RCI(predat = dat_pre, postdat = dat_post,
+#'    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+#'
+#' # Supplying only the total scores
+#' TS_pre <- matrix(rowSums(dat_pre))
+#' TS_post <- matrix(rowSums(dat_post))
+#' RCI(predat = TS_pre, postdat = TS_post,
 #'    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
 #'
 #' ######
