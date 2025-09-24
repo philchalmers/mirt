@@ -345,7 +345,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>             CFI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.9893768</span>
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Item_1 0.433       2          0  0.805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Item_2 1.702       2          0  0.427</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Item_3 0.747       1          0  0.387</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Item_4 0.184       2          0  0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Item_5 0.145       2          0  0.930</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># generate classification plots</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
@@ -408,36 +413,42 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># classify individuals either with the largest posterior probability.....</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'fs' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Class_1    Class_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.9883254 0.01167461</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.9883254 0.01167461</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.9883254 0.01167461</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.9608042 0.03919579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.9608042 0.03919579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.9608042 0.03919579</span>
 <span class="r-in"><span><span class="va">classes</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span></span></span>
 <span class="r-in"><span><span class="va">class_max</span> <span class="op">&lt;-</span> <span class="va">classes</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">fs</span>, <span class="fl">1</span>, <span class="va">max</span><span class="op">)</span> <span class="op">==</span> <span class="va">fs</span>, <span class="fl">1</span>, <span class="va">which</span><span class="op">)</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'fs' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">class_max</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'class_max' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class_max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 291 709 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ... or by probability sampling (i.e., plausible value draws)</span></span></span>
 <span class="r-in"><span><span class="va">class_prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">fs</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span>, prob<span class="op">=</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'fs' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">class_prob</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'class_prob' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class_prob</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 345 655 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible value imputations for stochastic classification in both classes</span></span></span>
 <span class="r-in"><span><span class="va">pvs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod2</span>, plausible.draws<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
 <span class="r-in"><span><span class="va">tabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pvs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'pvs' not found</span>
 <span class="r-in"><span><span class="va">tabs</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'tabs' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [,1] [,2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0  693  328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  307  672</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit with random starting points (run in parallel to save time)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span>, nruns<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model log-likelihoods:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -2467.408 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -2467.406 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8] -2467.408 -2467.408 -2467.408</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--------------------------</span></span></span>
@@ -2683,7 +2694,19 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>             TLI       CFI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.8130941 0.8555727</span>
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[wch, j] &lt;- ret[[g]][, j]:</span> incorrect number of subscripts on matrix</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    A1 27.808       7      0.095  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    A2  2.984       6      0.000  0.811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    A3 10.219       6      0.046  0.116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    A4  5.575       6      0.000  0.472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    B1  8.168       7      0.023  0.318</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    B2  7.176       6      0.024  0.305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    B3  9.351       7      0.032  0.228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    B4  2.359       6      0.000  0.884</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    C1  6.260       5      0.028  0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   C2  6.914       6      0.022  0.329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   C3 11.734       7      0.045  0.110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   C4  5.585       7      0.000  0.589</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
