@@ -727,7 +727,7 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>      1      3      0      2      1      4      4      4      3       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>      1      3      3      2      3      1      1      2      0       1</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
@@ -841,7 +841,7 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-out co"><span class="r-pr">#&gt;</span> cat_4      104 82.916200  2.3154169</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, itemtype<span class="op">=</span><span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod2</span>, <span class="st">'infit'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
@@ -935,125 +935,122 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="co"># itemfit(mod, return.tables = TRUE, which.items=1)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit stats with missing data (run in parallel using all cores)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in `[&lt;-`(`*tmp*`, sample(1:prod(dim(dat)), 100), value = NA):</span> Can't assign to columns beyond the end with non-consecutive locations.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> Input has size 10.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Subscript `sample(1:prod(dim(dat)), 100)` contains non-consecutive locations 820, 1141, 1583, 1918, 2007, etc.</span>
 <span class="r-in"><span><span class="va">raschfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, itemtype<span class="op">=</span><span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use only valid data by removing rows with missing terms</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S_X2'</span>, <span class="st">'infit'</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Data does not contain missing values. Continuing normally</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sample size after row-wise response data removal: 2000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Sample size after row-wise response data removal: 1901</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.904   -3.789 0.910  -3.814 156.742     102      0.016  0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.990   -0.342 0.998  -0.088 141.312     103      0.014  0.007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.914   -3.470 0.918  -3.530 115.505     103      0.008  0.188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.889   -4.349 0.900  -4.210 123.946     102      0.010  0.069</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  1.009    0.340 1.011   0.455 204.747     103      0.022  0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.884   -4.467 0.896  -4.253  90.413     103      0.000  0.807</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  0.853   -5.937 0.867  -5.764 126.524     102      0.011  0.050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.855   -6.081 0.863  -6.063 118.627     102      0.009  0.125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.856   -5.948 0.868  -5.823  96.696     102      0.000  0.630</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  0.857   -6.048 0.868  -5.920 109.599     101      0.007  0.263</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.906   -3.626 0.911  -3.660 155.053     102      0.017  0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.997   -0.107 1.004   0.146 146.662     103      0.015  0.003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.917   -3.282 0.919  -3.385 114.783     103      0.008  0.201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.884   -4.448 0.896  -4.291 121.470     102      0.010  0.092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  1.006    0.235 1.009   0.349 204.451     103      0.023  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.880   -4.515 0.895  -4.216  93.810     103      0.000  0.730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  0.852   -5.852 0.866  -5.666 129.878     102      0.012  0.033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.862   -5.635 0.870  -5.607 120.879     102      0.010  0.098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.855   -5.841 0.867  -5.722  96.812     102      0.000  0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  0.852   -6.127 0.863  -6.019 111.851     101      0.008  0.216</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># note that X2, G2, PV-Q1, and X2* do not require complete datasets</span></span></span>
 <span class="r-in"><span><span class="va">thetas</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">raschfit</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co"># save for faster computations</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X2'</span>, <span class="st">'G2'</span><span class="op">)</span>, Theta<span class="op">=</span><span class="va">thetas</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item      X2 df.X2 RMSEA.X2  p.X2     G2 df.G2 RMSEA.G2  p.G2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  53.363    36    0.016 0.031 54.688    36    0.016 0.024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  82.338    36    0.025 0.000 75.979    36    0.024 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  47.526    36    0.013 0.095 47.703    36    0.013 0.092</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  45.849    36    0.012 0.126 43.255    36    0.010 0.189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5 107.142    36    0.031 0.000 89.248    36    0.027 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  32.538    36    0.000 0.634 34.456    36    0.000 0.542</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  71.897    36    0.022 0.000 79.043    35    0.025 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  51.998    36    0.015 0.041 54.157    36    0.016 0.027</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  58.199    36    0.018 0.011 61.630    35    0.020 0.004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  52.755    36    0.015 0.035 56.708    36    0.017 0.015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  56.082    36    0.017 0.018 57.138    36    0.017 0.014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  72.433    36    0.023 0.000 68.605    36    0.021 0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  51.674    36    0.015 0.044 52.944    36    0.015 0.034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  42.209    36    0.009 0.220 40.864    36    0.008 0.265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5 108.433    36    0.032 0.000 93.285    36    0.028 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  37.478    36    0.005 0.401 39.799    36    0.007 0.305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  61.895    36    0.019 0.005 68.502    35    0.022 0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  56.125    36    0.017 0.017 59.579    36    0.018 0.008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  66.332    36    0.021 0.002 69.041    36    0.021 0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  47.281    36    0.013 0.099 51.188    36    0.015 0.048</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, empirical.plot<span class="op">=</span><span class="fl">1</span>, Theta<span class="op">=</span><span class="va">thetas</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="itemfit-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'X2'</span>, return.tables<span class="op">=</span><span class="cn">TRUE</span>, which.items<span class="op">=</span><span class="fl">1</span>, Theta<span class="op">=</span><span class="va">thetas</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.9802`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.9751`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0      100 88.928779  1.1740169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       78 86.064038 -0.8692440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       13 20.199879 -1.6019569</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        4  2.537766  0.9178908</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4        5  2.269537  1.8124565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       96 89.203274  0.7196302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       81 87.319279 -0.6762581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       14 20.552190 -1.4452982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        5  2.584993  1.5020654</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4        6  2.340264  2.3923098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.4767`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       51 56.442042 -0.72437013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       96 90.374999  0.59169580</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       35 35.094702 -0.01598591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        6  7.294753 -0.47938183</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       12 10.793505  0.36723522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.4747`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed  Expected z.Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       52 55.810605 -0.5100768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       98 90.111135  0.8310464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       34 34.983142 -0.1662214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        6  7.257589 -0.4668126</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4        9 10.837528 -0.5581731</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.2843`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.2825`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       45 43.95405  0.1577652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       95 86.00287  0.9701688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       34 40.46184 -1.0158593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        9 10.17259 -0.3676465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       16 18.40864 -0.5613857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.151`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       33 36.30398 -0.5483529</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       74 81.02032 -0.7799379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       45 43.47628  0.2310896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       11 12.46706 -0.4154939</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       36 25.73237  2.0240925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.0334`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       19 29.93222 -1.9981990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       90 75.13532  1.7148795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       48 45.34903  0.3936594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       12 14.62666 -0.6868010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       30 33.95678 -0.6790139</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.0651`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       23 25.02007 -0.4038516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       62 69.30476 -0.8774538</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       63 46.15898  2.4787928</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       17 16.42868  0.1409549</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       34 42.08752 -1.2466326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.1642`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       45 44.46549  0.08015743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       99 86.30787  1.36618447</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       32 40.62799 -1.35362103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3        9 10.23708 -0.38664273</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       15 18.36157 -0.78448910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       19 20.52933 -0.33753058</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       63 62.79341  0.02607073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       45 46.18193 -0.17392181</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       23 18.15027  1.13834925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       49 51.34506 -0.32726919</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.1515`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.2767`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected   z.Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        4 16.04548 -3.007099726</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       66 54.92379  1.494551513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       47 45.20504  0.266969704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       19 19.88229 -0.197868736</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       63 62.94340  0.007134114</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.4164`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       30 36.67356 -1.1019984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       73 81.29218 -0.9196965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       50 43.70108  0.9528397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       12 12.57510 -0.1621757</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       35 25.75808  1.8209820</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       11 11.43297 -0.1280506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       44 45.00327 -0.1495531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       48 42.59391  0.8283409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       26 21.54290  0.9602843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       70 78.42694 -0.9515622</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = -0.0327`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       19 30.18193 -2.0353691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       89 75.33971  1.5737937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       47 45.60880  0.2059993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       13 14.77914 -0.4627909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       32 34.09042 -0.3580289</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.0655`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected  z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       24 25.24394 -0.24758337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       69 69.51337 -0.06157352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       57 46.42235  1.55247812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       19 16.59441  0.59052899</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       31 42.22593 -1.72755840</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.1641`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0       19 20.73580 -0.3811878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       58 63.02024 -0.6323887</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       54 46.45013  1.1077607</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       23 18.32608  1.0918080</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       46 51.46775 -0.7621514</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.2779`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        6 16.16153 -2.5276554</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       68 55.03931  1.7469954</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       42 45.45808 -0.5128966</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       18 20.09671 -0.4677099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       66 63.24437  0.3465057</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.4187`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       Observed Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        9 11.48345 -0.7328572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       43 45.01903 -0.3009160</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       49 42.80235  0.9473132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       23 21.78285  0.2607870</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4       76 78.91232 -0.3278435</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.7434`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`theta = 0.7405`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Observed   Expected z.Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        5   4.569235  0.2015203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       23  24.785051 -0.3585550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       43  32.604972  1.8204708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       24  22.959035  0.2172499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4      105 115.081707 -0.9397902</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_0        4   4.631286 -0.2933428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_1       23  25.205901 -0.4393746</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_2       43  32.985379  1.7437081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_3       22  23.067149 -0.2221919</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cat_4      110 116.110285 -0.5670562</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
