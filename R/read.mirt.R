@@ -175,7 +175,7 @@ read.mirt <- function (x, as.irt.pars = TRUE, ...)
                 ab <- ab[-(1:nfact)]
                 cat[i] <- K[i]
                 if(nfact == 1L){
-                    pars[i, 1:length(ab)] <- ab
+                    pars[i, 1:(length(ab)+1)] <- c(a, ab)
                 } else {
                     stop('Multidimensional gpcm not yet supported', call.=FALSE)
                 }
