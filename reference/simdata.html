@@ -11,7 +11,7 @@ a user input matrix of \(\theta\)'s."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -272,46 +272,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.4</span>, <span class="op">-</span><span class="fl">.7</span>, <span class="fl">.1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.21</span>,<span class="fl">.297</span>,<span class="fl">1.232</span>,<span class="fl">.297</span>,<span class="fl">.81</span>,<span class="fl">.252</span>,<span class="fl">1.232</span>,<span class="fl">.252</span>,<span class="fl">1.96</span><span class="op">)</span>,<span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">dataset1</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">2000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,000 × 30</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1      0      0      0      1      0      1      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      1      1      1      1      1      1      0      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      1      1      0      1      0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1      1      1      1      1      1      1      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      1      0      0      0      0      0      1      0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      0      0      1      0      0      0      1      0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      1      0      0      1      0      0      0      0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1      0      1      0      0      0      0      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1,990 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, Item_16 &lt;dbl&gt;, Item_17 &lt;dbl&gt;, Item_18 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_19 &lt;dbl&gt;, Item_20 &lt;dbl&gt;, Item_21 &lt;dbl&gt;, Item_22 &lt;dbl&gt;, Item_23 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_24 &lt;dbl&gt;, Item_25 &lt;dbl&gt;, Item_26 &lt;dbl&gt;, Item_27 &lt;dbl&gt;, Item_28 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_29 &lt;dbl&gt;, Item_30 &lt;dbl&gt;</span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">dataset2</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">2000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>, mu <span class="op">=</span> <span class="va">mu</span>, sigma <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,000 × 30</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1      0      1      1      0      0      0      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      0      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      0      1      0      1      0      0      1      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1      1      0      1      0      1      0      1      0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1      1      0      0      0      0      0      0      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      1      0      0      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1      1      0      1      0      0      0      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1      0      1      1      0      1      0      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      0      1      0      0      0      0      1      0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1,990 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, Item_16 &lt;dbl&gt;, Item_17 &lt;dbl&gt;, Item_18 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_19 &lt;dbl&gt;, Item_20 &lt;dbl&gt;, Item_21 &lt;dbl&gt;, Item_22 &lt;dbl&gt;, Item_23 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_24 &lt;dbl&gt;, Item_25 &lt;dbl&gt;, Item_26 &lt;dbl&gt;, Item_27 &lt;dbl&gt;, Item_28 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_29 &lt;dbl&gt;, Item_30 &lt;dbl&gt;</span></span>
+<span class="r-in"><span><span class="va">dataset1</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">2000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset2</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">2000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>, mu <span class="op">=</span> <span class="va">mu</span>, sigma <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#mod &lt;- mirt(dataset1, 3, method = 'MHRM')</span></span></span>
 <span class="r-in"><span><span class="co">#coef(mod)</span></span></span>
@@ -329,25 +291,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">diffs</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">500</span>, itemtype <span class="op">=</span> <span class="st">'graded'</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">dat</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 500 × 20</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      3      4      0      3      4      0      0      4      4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      3      4      3      0      4      0      4      4      4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      3      0      2      4      0      0      0      0       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4      4      0      4      4      0      2      0      4       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      2      0      1      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      4      4      4      4      4      4      1      4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4      4      0      0      4      4      4      0      0       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      0      4      0      0      4      0      4      0      4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      3      0      2      4      1      0      0      4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      3      2      0      0      4      4      4      4      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 490 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: Item_11 &lt;dbl&gt;, Item_12 &lt;dbl&gt;, Item_13 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_14 &lt;dbl&gt;, Item_15 &lt;dbl&gt;, Item_16 &lt;dbl&gt;, Item_17 &lt;dbl&gt;, Item_18 &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Item_19 &lt;dbl&gt;, Item_20 &lt;dbl&gt;</span></span>
-<span class="r-in"><span><span class="co"># mod &lt;- mirt(dat)</span></span></span>
+<span class="r-in"><span><span class="co"># mod &lt;- mirt(dat, 1)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### An example of a mixed item, bifactor loadings pattern with correlated specific factors</span></span></span>
 <span class="r-in"><span></span></span>
@@ -375,21 +319,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">sigma</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">sigma</span><span class="op">[</span><span class="fl">3</span>,<span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">.25</span></span></span>
 <span class="r-in"><span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'2PL'</span>,<span class="st">'2PL'</span>,<span class="st">'2PL'</span>,<span class="st">'nominal'</span>,<span class="st">'gpcm'</span>,<span class="st">'graded'</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>,<span class="fl">2000</span>,<span class="va">items</span>,sigma<span class="op">=</span><span class="va">sigma</span>,nominal<span class="op">=</span><span class="va">nominal</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,000 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      1      0      2      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1      1      1      2      1      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      1      0      0      0      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      0      1      1      2      2      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      0      0      0      0      0      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      0      0      1      2      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      1      1      1      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1      1      0      2      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      1      0      0      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1      1      1      2      1      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1,990 more rows</span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>,<span class="fl">2000</span>,<span class="va">items</span>,sigma<span class="op">=</span><span class="va">sigma</span>,nominal<span class="op">=</span><span class="va">nominal</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#mod &lt;- bfactor(dataset, c(1,1,1,2,2,2), itemtype=c(rep('2PL', 3), 'nominal', 'gpcm','graded'))</span></span></span>
 <span class="r-in"><span><span class="co">#coef(mod)</span></span></span>
@@ -428,22 +358,8 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10,] 0.9826502</span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">5000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5,000 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      0      1      0      0      0      0      1      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1      1      0      0      0      0      1      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      0      1      0      0      0      0      0      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1      0      0      0      0      0      1      1      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1      1      1      0      0      0      1      1      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1      1      1      1      1      1      1      0      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      0      1      1      0      0      0      1      0      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1      0      1      0      0      0      1      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      0      1      0      1      0      0      1      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      0      1      0      0      0      0      1      0      1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4,990 more rows</span></span>
-<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">simdata</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="fl">5000</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                a1           d g u</span>
@@ -683,11 +599,10 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior.type   : int(0) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_1      : num(0) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..@ prior_2      : num(0) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ data       : tibble [2,000 × 4] (S3: tbl_df/tbl/data.frame)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Item_1: num [1:2000] 1 1 1 0 0 1 0 1 0 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Item_2: num [1:2000] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Item_3: num [1:2000] 0 1 1 1 0 1 0 0 0 0 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Item_4: num [1:2000] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ data       : num [1:2000, 1:4] 1 1 1 0 0 1 0 1 0 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:4] "Item_1" "Item_2" "Item_3" "Item_4"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ Theta      : num [1:2000, 1] -0.399 1.931 1.621 -0.424 1.343 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># generate dataset from converged model</span></span></span>

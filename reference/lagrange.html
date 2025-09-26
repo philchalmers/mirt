@@ -9,7 +9,7 @@ more constrained baseline model."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,21 +100,52 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="op">(</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="mod2values.html">mod2values</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22 × 14</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    group item   class name  parnum value lbound ubound est   const nconst</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> all   Item.1 dich  a1         1 1       -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> all   Item.1 dich  d          2 1.87    -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> all   Item.1 dich  g          3 0          0      1 FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> all   Item.1 dich  u          4 1          0      1 FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> all   Item.2 dich  a1         5 1       -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> all   Item.2 dich  d          6 0.791   -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> all   Item.2 dich  g          7 0          0      1 FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> all   Item.2 dich  u          8 1          0      1 FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> all   Item.3 dich  a1         9 1       -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> FALSE none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> all   Item.3 dich  d         10 1.46    -<span style="color: #BB0000;">Inf</span>    <span style="color: #BB0000;">Inf</span> TRUE  none  none  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: prior.type &lt;chr&gt;, prior_1 &lt;dbl&gt;, prior_2 &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    group   item     class   name parnum value lbound ubound   est const nconst</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    all Item.1      dich     a1      1 1.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    all Item.1      dich      d      2 1.868   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    all Item.1      dich      g      3 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    all Item.1      dich      u      4 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    all Item.2      dich     a1      5 1.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    all Item.2      dich      d      6 0.791   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    all Item.2      dich      g      7 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    all Item.2      dich      u      8 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    all Item.3      dich     a1      9 1.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   all Item.3      dich      d     10 1.461   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   all Item.3      dich      g     11 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   all Item.3      dich      u     12 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   all Item.4      dich     a1     13 1.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   all Item.4      dich      d     14 0.521   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   all Item.4      dich      g     15 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   all Item.4      dich      u     16 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   all Item.5      dich     a1     17 1.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   all Item.5      dich      d     18 1.993   -Inf    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   all Item.5      dich      g     19 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   all Item.5      dich      u     20 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   all  GROUP GroupPars MEAN_1     21 0.000   -Inf    Inf FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22   all  GROUP GroupPars COV_11     22 1.022      0    Inf  TRUE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    prior.type prior_1 prior_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       none     NaN     NaN</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test all fixed slopes individually</span></span></span>
 <span class="r-in"><span><span class="va">parnum</span> <span class="op">&lt;-</span> <span class="va">values</span><span class="op">$</span><span class="va">parnum</span><span class="op">[</span><span class="va">values</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">'a1'</span><span class="op">]</span></span></span>
