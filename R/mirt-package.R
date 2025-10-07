@@ -26,7 +26,7 @@
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan dcurver pbapply
-#' @importFrom utils write.table flush.console packageVersion capture.output head
+#' @importFrom utils write.table flush.console packageVersion capture.output head tail
 #' @importFrom gridExtra grid.arrange
 #' @importFrom graphics symbols
 #' @importFrom Deriv Deriv
