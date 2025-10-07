@@ -447,6 +447,7 @@ setMethod(
                                paste0(whc, collapse=',')), call.=FALSE)
                 attr(scoremat, 'failed2converge') <- whc
             }
+            scoremat <- as.mirt_matrix(scoremat)
             return(scoremat)
 		} else {
             if(return.acov){
@@ -599,7 +600,7 @@ setMethod(
                                     extract.mirt(object, 'completely_missing'))
         }
         if(is.data.frame(ret))
-            ret <- as.matrix(ret)
+            ret <- as.mirt_matrix(ret)
         return(ret)
     }
 )
