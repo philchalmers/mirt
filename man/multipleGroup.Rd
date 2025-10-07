@@ -446,9 +446,9 @@ mix2 <- extract.group(mod_mix, group = "MIXTURE_2")
 
 # EAP estimates per mixture group, ignoring the original mixture structure.
 #   Used to demonstrate the behaviour of how the individuals would have
-#   been scored if they (deterministically) beloned to one class
-data.frame(EAP_mix1=fscores(mix1),
-           EAP_mix2=fscores(mix2)) |> head()
+#   been scored if they (deterministically) belonged to one class
+data.frame(EAP_mix1=unname(fscores(mix1)),
+           EAP_mix2=unname(fscores(mix2))) |> head()
 
 ############
 # Mixture 2PL model
