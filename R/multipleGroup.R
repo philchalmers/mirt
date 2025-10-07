@@ -426,6 +426,18 @@
 #' head(fscores(mod_mix, method = 'classify')) # classification probability
 #' itemfit(mod_mix)
 #'
+#' # For obtaining isolated estimates within each mixture, use extract.group()
+#' #   to construct single-group extractions of the mixtures
+#' mix1 <- extract.group(mod_mix, group = "MIXTURE_1")
+#' mix2 <- extract.group(mod_mix, group = "MIXTURE_2")
+#'
+#' # EAP estimates per mixture group, ignoring the original mixture structure.
+#' #   Used to demonstrate the behaviour of how the individuals would have
+#' #   been scored if they (deterministically) beloned to one class
+#' data.frame(EAP_mix1=fscores(mix1),
+#'            EAP_mix2=fscores(mix2)) |> head()
+#'
+#' ############
 #' # Mixture 2PL model
 #' mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', GenRandomPars = TRUE)
 #' anova(mod_mix, mod_mix2)
