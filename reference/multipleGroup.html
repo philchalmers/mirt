@@ -363,7 +363,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.282  0.054  0.060  0.151  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.267  0.053  0.061  0.135  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -372,7 +372,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.197  0.053  0.073  0.053  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.187  0.055  0.070  0.044  0.000  0.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2570,6 +2570,25 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19 11.425      12      0.000  0.493</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20 15.291      12      0.014  0.226</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># For obtaining isolated estimates within each mixture, use extract.group()</span></span></span>
+<span class="r-in"><span><span class="co">#   to construct single-group extractions of the mixtures</span></span></span>
+<span class="r-in"><span><span class="va">mix1</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract.group.html">extract.group</a></span><span class="op">(</span><span class="va">mod_mix</span>, group <span class="op">=</span> <span class="st">"MIXTURE_1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mix2</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract.group.html">extract.group</a></span><span class="op">(</span><span class="va">mod_mix</span>, group <span class="op">=</span> <span class="st">"MIXTURE_2"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># EAP estimates per mixture group, ignoring the original mixture structure.</span></span></span>
+<span class="r-in"><span><span class="co">#   Used to demonstrate the behaviour of how the individuals would have</span></span></span>
+<span class="r-in"><span><span class="co">#   been scored if they (deterministically) beloned to one class</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>EAP_mix1<span class="op">=</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mix1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           EAP_mix2<span class="op">=</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mix2</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            F1       F1.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.46829891 -0.3554720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -1.65671411 -1.8055570</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -0.83309483 -0.8214255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.46043047  0.8195696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.46043047  0.8195696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.07558437  0.3413711</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">############</span></span></span>
 <span class="r-in"><span><span class="co"># Mixture 2PL model</span></span></span>
 <span class="r-in"><span><span class="va">mod_mix2</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, dentype <span class="op">=</span> <span class="st">'mixture-2'</span>, GenRandomPars <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
