@@ -573,12 +573,54 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#infit/outfit statistics. method='ML' agrees better with eRm package</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'infit'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co">#infit and outfit stats</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> unable to find an inherited method for function ‘ProbTrace’ for signature ‘x = "dich", Theta = "mirt_matrix"’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.919   -2.945 0.951  -2.699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.962   -1.281 0.960  -2.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.876   -4.455 0.918  -4.332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.998   -0.049 1.009   0.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  0.982   -0.523 0.974  -1.227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.890   -2.233 0.950  -1.692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  1.008    0.259 1.003   0.171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.933   -1.743 0.961  -1.631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.958   -1.519 0.964  -1.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  1.011    0.303 1.013   0.534</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  0.898   -2.300 0.939  -2.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  0.988   -0.383 1.012   0.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  0.991   -0.263 1.002   0.093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  0.973   -0.841 0.974  -1.256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  0.947   -0.943 0.993  -0.210</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  0.988   -0.271 0.985  -0.546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  0.878   -1.532 0.960  -0.872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  0.961   -0.759 0.978  -0.742</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  0.943   -2.060 0.974  -1.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  0.868   -4.736 0.911  -4.687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem  1.513   16.123 1.338  16.509</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#same as above, but inputting ML estimates instead (saves time for re-use)</span></span></span>
 <span class="r-in"><span><span class="va">Theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">raschfit</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'infit'</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> unable to find an inherited method for function ‘ProbTrace’ for signature ‘x = "dich", Theta = "mirt_matrix"’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.919   -2.945 0.951  -2.699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.962   -1.281 0.960  -2.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.876   -4.455 0.918  -4.332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.998   -0.049 1.009   0.495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  0.982   -0.523 0.974  -1.227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.890   -2.233 0.950  -1.692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  1.008    0.259 1.003   0.171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.933   -1.743 0.961  -1.631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.958   -1.519 0.964  -1.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  1.011    0.303 1.013   0.534</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  0.898   -2.300 0.939  -2.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12  0.988   -0.383 1.012   0.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13  0.991   -0.263 1.002   0.093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14  0.973   -0.841 0.974  -1.256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  0.947   -0.943 0.993  -0.210</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16  0.988   -0.271 0.985  -0.546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17  0.878   -1.532 0.960  -0.872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18  0.961   -0.759 0.978  -0.742</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  0.943   -2.060 0.974  -1.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20  0.868   -4.736 0.911  -4.687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 baditem  1.513   16.123 1.338  16.509</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, empirical.plot<span class="op">=</span><span class="fl">1</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="itemfit-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="st">'X2'</span>, return.tables<span class="op">=</span><span class="cn">TRUE</span>, Theta<span class="op">=</span><span class="va">Theta</span>, which.items<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
@@ -800,7 +842,17 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod2</span>, <span class="st">'infit'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> unable to find an inherited method for function ‘ProbTrace’ for signature ‘x = "gpcm", Theta = "mirt_matrix"’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.959   -1.407 0.946  -2.141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  1.098    3.226 1.074   2.791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.962   -1.326 0.961  -1.575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.946   -1.867 0.932  -2.704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  1.121    3.943 1.094   3.496</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.917   -2.902 0.917  -3.296</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  0.864   -4.829 0.881  -4.899</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.873   -4.656 0.879  -5.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.876   -4.467 0.887  -4.696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  0.883   -4.255 0.892  -4.519</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># massive list of tables for S-X2</span></span></span>
 <span class="r-in"><span><span class="va">tables</span> <span class="op">&lt;-</span> <span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span>, return.tables <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -888,7 +940,17 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="co"># use only valid data by removing rows with missing terms</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S_X2'</span>, <span class="st">'infit'</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Sample size after row-wise response data removal: 1901</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> unable to find an inherited method for function ‘ProbTrace’ for signature ‘x = "gpcm", Theta = "mirt_matrix"’</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.906   -3.626 0.911  -3.660 155.053     102      0.017  0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2  0.997   -0.107 1.004   0.146 146.662     103      0.015  0.003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3  0.917   -3.282 0.919  -3.385 114.783     103      0.008  0.201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  0.884   -4.448 0.896  -4.291 121.470     102      0.010  0.092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5  1.006    0.235 1.009   0.349 204.451     103      0.023  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6  0.880   -4.515 0.895  -4.216  93.810     103      0.000  0.730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  0.852   -5.852 0.866  -5.666 129.878     102      0.012  0.033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8  0.862   -5.635 0.870  -5.607 120.879     102      0.010  0.098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9  0.855   -5.841 0.867  -5.722  96.812     102      0.000  0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10  0.852   -6.127 0.863  -6.019 111.851     101      0.008  0.216</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># note that X2, G2, PV-Q1, and X2* do not require complete datasets</span></span></span>
 <span class="r-in"><span><span class="va">thetas</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">raschfit</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span> <span class="co"># save for faster computations</span></span></span>
