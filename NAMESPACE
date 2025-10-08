@@ -2,6 +2,7 @@
 
 S3method(head,mirt_matrix)
 S3method(plot,itemGAM)
+S3method(print,matrix)
 S3method(print,mirt_df)
 S3method(print,mirt_list)
 S3method(print,mirt_matrix)

@@ -2920,7 +2920,7 @@ as.mirt_df <- function(df){
 }
 
 as.mirt_matrix <- function(df){
-    class(df) <- c('mirt_matrix', class(df))
+    class(df) <- c(class(df), 'mirt_matrix')
     df
 }
 

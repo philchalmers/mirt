@@ -2,9 +2,12 @@
 % Please edit documentation in R/02a-general_methods.R
 \name{print.mirt_matrix}
 \alias{print.mirt_matrix}
+\alias{print.matrix}
 \title{Print generic for customized matrix console output}
 \usage{
 \method{print}{mirt_matrix}(x, digits = 3, ...)
+
+\method{print}{matrix}(x, ...)
 }
 \arguments{
 \item{x}{object of class \code{'mirt_matrix'}}

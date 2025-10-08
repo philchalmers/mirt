@@ -207,6 +207,19 @@ print.mirt_matrix <- function(x, digits = 3, ...){
     print(x, ...)
 }
 
+#' @method print matrix
+#' @rdname print.mirt_matrix
+#' @export
+print.matrix <- function(x, ...){
+    if(is(x, 'mirt_matrix')){
+        class(x) <- 'mirt_matrix'
+        print(x, ...)
+    } else {
+        print.default(x, ...)
+    }
+    invisible(NULL)
+}
+
 #' Head generic for customized matrix console output
 #'
 #' Provides a nicer output for most printed \code{matrix}
