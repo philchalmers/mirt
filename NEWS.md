@@ -1,3 +1,10 @@
+# Changes in mirt 1.46
+
+- `multipleGroup()` gains `nruns` and friends with the same specification
+  as in `mdirt()`. Allows for multiple models to be compared (potentially in 
+  parallel with `mirtCluster()`) where local maximum may be an issue (e.g., 
+  in mixture IRT models)
+
 # Changes in mirt 1.45.1
 
 - Added argument `fscores(..., expected.info = FALSE)` to allow computation of the 

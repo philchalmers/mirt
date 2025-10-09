@@ -65,6 +65,20 @@
 #'       Note that internally the mixture coefficients are stored as log values where
 #'       the first mixture group coefficient is fixed at 0
 #'    }
+#'
+#' @param nruns a numeric value indicating how many times the model should be fit to the data
+#'   when using random starting values, which is particularly useful
+#'   when evaluating mixture IRT Models. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+#'   by default. Using this returns a list of fitted model objects, where the model
+#'   with the highest log-likelihood should generally be selected as the model
+#'   best associated with the MLE (this is done automatically if \code{return_max = TRUE}).
+#'   Note that if a \code{\link{mirtCluster}} was
+#'   defined earlier then the runs will be run in parallel
+#'
+#' @param return_max logical; when \code{nruns > 1}, return the model that has the most optimal
+#'   maximum likelihood criteria? If FALSE, returns a list of all the estimated objects
+#' @param GenRandomPars see \code{\link{mirt}} for details
+#' @param verbose see \code{\link{mirt}} for details
 #' @param ... additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 #'   for details and examples
 #'
@@ -426,6 +440,13 @@
 #' head(fscores(mod_mix, method = 'classify')) # classification probability
 #' itemfit(mod_mix)
 #'
+#' # Above works fine, but its generally a good idea to evaluate models
+#' # with multiple random starting values in case local maximums are an issue.
+#' # To do this use the argument "nruns", which returns the best model
+#' if(interactive()) mirtCluster()
+#' mod_mix <- multipleGroup(dat, models, dentype = 'mixture-2', nruns=5)
+#' mod_mix
+#'
 #' # For obtaining isolated estimates within each mixture, use extract.group()
 #' #   to construct single-group extractions of the mixtures
 #' mix1 <- extract.group(mod_mix, group = "MIXTURE_1")
@@ -549,10 +570,13 @@
 #' }
 multipleGroup <- function(data, model = 1, group, itemtype = NULL,
                           invariance = '', method = 'EM',
-                          dentype = 'Gaussian', itemdesign=NULL, item.formula = NULL, ...)
+                          dentype = 'Gaussian', itemdesign=NULL, item.formula = NULL,
+                          nruns = 1, return_max = TRUE, GenRandomPars = FALSE,
+                          verbose = interactive(), ...)
 {
     Call <- match.call()
     dots <- list(...)
+    if(nruns > 1) GenRandomPars <- TRUE
     mixed.design <- make.mixed.design(item.formula=item.formula,
                                       itemdesign=itemdesign, data=data)
     if(is.character(model)) model <- mirt.model(model)
@@ -581,9 +605,28 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
                  anchoring items).', call.=FALSE)
     }
     if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
-    mod <- ESTIMATION(data=data, model=model, group=group, invariance=invariance, method=method,
-                      itemtype=itemtype, dentype=dentype, mixed.design=mixed.design, ...)
-    if(is(mod, 'MultipleGroupClass') || is(mod, 'MixtureClass'))
-        mod@Call <- Call
-    return(mod)
+    mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)),
+                     progress=verbose && nruns > 1L,
+                     data=data, model=model, group=group, invariance=invariance, method=method,
+                     itemtype=itemtype, dentype=dentype, mixed.design=mixed.design,
+                     GenRandomPars=GenRandomPars, ...)
+    is_model <- is(mods[[1]], 'MultipleGroupClass') ||
+        is(mods[[1]], 'MixtureClass')
+    if(is_model){
+        for(i in 1:length(mods)) mods[[i]]@Call <- Call
+    }
+    if(!return_max){
+        return(mods)
+    } else {
+        if(is_model){
+            LL <- sapply(mods, function(x) x@Fit$logLik)
+            if(verbose && nruns > 1L){
+                cat('Model log-likelihoods:\n')
+                print(round(LL, 4))
+            }
+            mods <- mods[[which(max(LL) == LL)[1L]]]
+        }
+    }
+    if(!is_model) mods <- mods[[1L]]
+    mods
 }

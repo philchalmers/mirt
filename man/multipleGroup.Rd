@@ -14,6 +14,10 @@ multipleGroup(
   dentype = "Gaussian",
   itemdesign = NULL,
   item.formula = NULL,
+  nruns = 1,
+  return_max = TRUE,
+  GenRandomPars = FALSE,
+  verbose = interactive(),
   ...
 )
 }
@@ -70,6 +74,22 @@ mixtures}
 \item{itemdesign}{see \code{\link{mirt}} for details}
 
 \item{item.formula}{see \code{\link{mirt}} for details}
+
+\item{nruns}{a numeric value indicating how many times the model should be fit to the data
+when using random starting values, which is particularly useful
+when evaluating mixture IRT Models. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+by default. Using this returns a list of fitted model objects, where the model
+with the highest log-likelihood should generally be selected as the model
+best associated with the MLE (this is done automatically if \code{return_max = TRUE}).
+Note that if a \code{\link{mirtCluster}} was
+defined earlier then the runs will be run in parallel}
+
+\item{return_max}{logical; when \code{nruns > 1}, return the model that has the most optimal
+maximum likelihood criteria? If FALSE, returns a list of all the estimated objects}
+
+\item{GenRandomPars}{see \code{\link{mirt}} for details}
+
+\item{verbose}{see \code{\link{mirt}} for details}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}
@@ -438,6 +458,13 @@ itemplot(mod_mix, 1, type = 'info')
 head(fscores(mod_mix)) # theta estimates
 head(fscores(mod_mix, method = 'classify')) # classification probability
 itemfit(mod_mix)
+
+# Above works fine, but its generally a good idea to evaluate models
+# with multiple random starting values in case local maximums are an issue.
+# To do this use the argument "nruns", which returns the best model
+if(interactive()) mirtCluster()
+mod_mix <- multipleGroup(dat, models, dentype = 'mixture-2', nruns=5)
+mod_mix
 
 # For obtaining isolated estimates within each mixture, use extract.group()
 #   to construct single-group extractions of the mixtures

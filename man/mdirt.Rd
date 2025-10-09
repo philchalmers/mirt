@@ -58,8 +58,11 @@ contains only 0's for proper identification. Incidentally, the first row of each
 contain only 0's so that the first category represents the reference category for identification}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
-when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
-by default}
+when using random starting values. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+by default. Using this returns a list of fitted model objects, where the model
+with the highest log-likelihood should generally be selected as the model
+best associated with the MLE. Note that if a \code{\link{mirtCluster}} was
+defined earlier then the runs will be run in parallel}
 
 \item{method}{estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)}
 

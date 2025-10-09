@@ -69,8 +69,11 @@
 #'   membership mutually distinct and exhaustive. See \code{\link{thetaComb}} for a quick method
 #'   to generate a matrix with all possible combinations
 #' @param nruns a numeric value indicating how many times the model should be fit to the data
-#'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
-#'   by default
+#'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+#'   by default. Using this returns a list of fitted model objects, where the model
+#'   with the highest log-likelihood should generally be selected as the model
+#'   best associated with the MLE. Note that if a \code{\link{mirtCluster}} was
+#'   defined earlier then the runs will be run in parallel
 #' @param return_max logical; when \code{nruns > 1}, return the model that has the most optimal
 #'   maximum likelihood criteria? If FALSE, returns a list of all the estimated objects
 #' @param covdata a data.frame of data used for latent regression models
