@@ -15,7 +15,7 @@ then customized models can defined using the createItem function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,8 +124,11 @@ contain only 0's so that the first category represents the reference category fo
 
 <dt id="arg-nruns">nruns<a class="anchor" aria-label="anchor" href="#arg-nruns"></a></dt>
 <dd><p>a numeric value indicating how many times the model should be fit to the data
-when using random starting values. If greater than 1, <code>GenRandomPars</code> is set to true
-by default</p></dd>
+when using random starting values. If greater than 1, <code>GenRandomPars</code> is set to <code>TRUE</code>
+by default. Using this returns a list of fitted model objects, where the model
+with the highest log-likelihood should generally be selected as the model
+best associated with the MLE. Note that if a <code><a href="mirtCluster.html">mirtCluster</a></code> was
+defined earlier then the runs will be run in parallel</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
@@ -252,7 +255,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent class model with 2 classes and 2 profiles.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 363 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: discrete</span>
@@ -272,7 +275,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent class model with 3 classes and 3 profiles.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: discrete</span>
@@ -503,7 +506,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent class model with 2 classes and 3 profiles.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: discrete</span>
@@ -576,7 +579,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent class model with 3 classes and 8 profiles.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 142 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: discrete</span>
@@ -964,7 +967,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent class model with 3 classes and 3 profiles.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 364 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: nlminb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Latent density type: discrete</span>

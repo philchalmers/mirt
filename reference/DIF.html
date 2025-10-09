@@ -17,7 +17,7 @@ a set of 'anchor' items and have freely estimated hyper-parameters in the focal 
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -283,6 +283,21 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">dif</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: No hyper-parameters were estimated in the DIF model. </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>       For effective DIF testing, freeing the focal group hyper-parameters is recommended.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">dif</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -34.621 -29.773 -30.507 -23.419 38.621  2     0</span>
@@ -411,6 +426,16 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF</span></span></span>
 <span class="r-in"><span><span class="va">resulta1d</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, plotdif <span class="op">=</span> <span class="cn">TRUE</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-plt img"><img src="DIF-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">resulta1d</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC    X2 df     p</span>
@@ -427,6 +452,16 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test whether adding only slope constraints results in DIF for all items</span></span></span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'a1'</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0</span>
@@ -441,11 +476,17 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Determine whether it's a1 or d parameter causing DIF (could be joint, however)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">a1s</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'a1'</span>, items2test <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'d'</span>, items2test <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -18.568 -16.145 -16.512 -12.968 20.568  1     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  D1,D2      TRUE   1.843   4.266   3.899   7.443  0.157  1 0.691</span>
@@ -457,6 +498,21 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span>  invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">dropdown</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model_constrained</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'drop'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">dropdown</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -43.297 -38.450 -39.184 -32.096 47.297  2     0</span>
@@ -559,8 +615,25 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># starting from completely different models</span></span></span>
 <span class="r-in"><span><span class="va">stepup</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'add_sequential'</span>,</span></span>
 <span class="r-in"><span>              items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Checking for DIF in 3 more items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Computing final DIF estimates...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">stepup</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0</span>
@@ -569,8 +642,39 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># step down procedure for highly constrained model</span></span></span>
 <span class="r-in"><span><span class="va">stepdown</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model_constrained</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'drop_sequential'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Checking for DIF in 12 more items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Computing final DIF estimates...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">stepdown</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0</span>
@@ -580,7 +684,26 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># view final MG model (only useful when scheme is 'add_sequential')</span></span></span>
 <span class="r-in"><span><span class="va">updated_mod</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'add_sequential'</span>,</span></span>
 <span class="r-in"><span>               return_seq_model<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Checking for DIF in 3 more items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Computing final DIF estimates...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">updated_mod</span>, type<span class="op">=</span><span class="st">'trace'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="DIF-2.png" alt="" width="700" height="433"></span>
@@ -705,6 +828,15 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># omnibus tests</span></span></span>
 <span class="r-in"><span><span class="va">dif</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, which.par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">dif</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          groups converged      AIC   SABIC      HQ     BIC      X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_1 g1,g2,g3      TRUE -100.312 -88.996 -91.670 -76.286 108.312  4     0</span>
@@ -720,6 +852,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># pairwise post-hoc tests for items flagged via omnibus tests</span></span></span>
 <span class="r-in"><span><span class="va">dif.posthoc</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, which.par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                   pairwise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">dif.posthoc</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     item groups converged     AIC   SABIC      HQ     BIC     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Item_1  g1,g2      TRUE -32.488 -26.830 -28.167 -20.475 36.488  2     0</span>
