@@ -67,8 +67,11 @@ mixtures}
       where the \code{#} placeholder represents the number of potential grouping variables
       (e.g., \code{'mixture-3'} will estimate 3 underlying classes). Each class is
       assigned the group name \code{MIXTURE_#}, where \code{#} is the class number.
+
       Note that internally the mixture coefficients are stored as log values where
-      the first mixture group coefficient is fixed at 0
+      the first mixture group coefficient is fixed at 0. Additionally, it is recommended
+      to use the \code{nruns} argument as mixture IRT models are known to contain
+      local maximums
    }}
 
 \item{itemdesign}{see \code{\link{mirt}} for details}
@@ -480,7 +483,7 @@ data.frame(EAP_mix1=unname(fscores(mix1)),
 
 ############
 # Mixture 2PL model
-mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', GenRandomPars = TRUE)
+mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', nruns=5)
 anova(mod_mix, mod_mix2)
 coef(mod_mix2, simplify=TRUE)
 itemfit(mod_mix2)
