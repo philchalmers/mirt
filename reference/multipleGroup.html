@@ -145,9 +145,11 @@ mixtures</p></dd>
 <p></p><ul><li><p><code>'mixture-#'</code> estimates mixtures of Gaussian distributions,
       where the <code>#</code> placeholder represents the number of potential grouping variables
       (e.g., <code>'mixture-3'</code> will estimate 3 underlying classes). Each class is
-      assigned the group name <code>MIXTURE_#</code>, where <code>#</code> is the class number.
-      Note that internally the mixture coefficients are stored as log values where
-      the first mixture group coefficient is fixed at 0</p></li>
+      assigned the group name <code>MIXTURE_#</code>, where <code>#</code> is the class number.</p>
+<p>Note that internally the mixture coefficients are stored as log values where
+      the first mixture group coefficient is fixed at 0. Additionally, it is recommended
+      to use the <code>nruns</code> argument as mixture IRT models are known to contain
+      local maximums</p></li>
 </ul></dd>
 
 
@@ -392,7 +394,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.281  0.054  0.061  0.150  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.282  0.054  0.060  0.150  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -401,7 +403,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.184  0.053  0.068  0.046  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.183  0.053  0.067  0.045  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2669,18 +2671,23 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="co">#   Used to demonstrate the behaviour of how the individuals would have</span></span></span>
 <span class="r-in"><span><span class="co">#   been scored if they (deterministically) belonged to one class</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>EAP_mix1<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mix1</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>           EAP_mix2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mix2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      EAP_mix1   EAP_mix2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.46823421 -0.3555457</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -1.65665303 -1.8056233</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -0.83303093 -0.8214973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.46049686  0.8194937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.46049686  0.8194937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.07565017  0.3412955</span>
+<span class="r-in"><span>           EAP_mix2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mix2</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           EAP<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_mix</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      EAP_mix1   EAP_mix2        EAP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.46823421 -0.3555457 -0.3609861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -1.65665303 -1.8056233 -1.6950401</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -0.83303093 -0.8214973 -0.8217853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.46049686  0.8194937  0.8089769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.46049686  0.8194937  0.7935688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.07565017  0.3412955  0.2286019</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">############</span></span></span>
 <span class="r-in"><span><span class="co"># Mixture 2PL model</span></span></span>
-<span class="r-in"><span><span class="va">mod_mix2</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, dentype <span class="op">=</span> <span class="st">'mixture-2'</span>, GenRandomPars <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod_mix2</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, dentype <span class="op">=</span> <span class="st">'mixture-2'</span>, nruns<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_mix</span>, <span class="va">mod_mix2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               AIC    SABIC       HQ      BIC    logLik     X2 df    p</span>
@@ -2695,17 +2702,17 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.533 -0.012 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.386 -0.363 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.452  0.552 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.731 -1.903 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.730 -1.903 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.031  0.879 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.745 -0.274 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.901  0.038 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.744 -0.274 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.900  0.038 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.710 -0.777 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 0.539 -0.189 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.916  2.081 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.730  0.691 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.916  2.080 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.729  0.691 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.184  0.723 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 0.812 -0.716 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 0.581  0.843 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 0.582  0.843 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 0.792 -0.952 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 0.657 -0.289 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 0.498  1.222 0 1</span>
@@ -2732,7 +2739,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.244 -0.566 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.684 -1.827 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.669 -1.802 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.475  2.152 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.474  2.152 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.143 -0.511 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.244  0.574 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.272  0.506 0 1</span>
@@ -2764,25 +2771,25 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod_mix2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1 21.271      12      0.023  0.047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2 44.605      13      0.040  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item_2 44.607      13      0.040  0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item_3 14.259      12      0.011  0.284</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item_4  6.551      11      0.000  0.834</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item_5 20.641      12      0.022  0.056</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6 27.962      13      0.028  0.009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item_6 27.961      13      0.028  0.009</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item_7  8.628      12      0.000  0.734</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item_8 16.262      12      0.015  0.180</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item_9 21.305      12      0.023  0.046</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item_10 11.461      12      0.000  0.490</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item_11  7.091      12      0.000  0.852</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12 13.833      12      0.010  0.311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13 10.443      12      0.000  0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item_12 13.834      12      0.010  0.311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item_13 10.444      12      0.000  0.577</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item_14 15.706      13      0.012  0.265</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item_15  9.439      12      0.000  0.665</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item_16 10.128      12      0.000  0.605</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item_17 17.474      12      0.017  0.133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18 11.839      11      0.007  0.376</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  8.068      11      0.000  0.707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20 14.541      12      0.012  0.267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item_18 11.838      11      0.007  0.376</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item_19  8.069      11      0.000  0.707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item_20 14.542      12      0.012  0.267</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare to single group</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
@@ -2862,26 +2869,26 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> $MIXTURE_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            a1      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2.045 -2.136 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.563 -1.865 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2.001 -1.952 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.567 -2.412 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.895 -1.203 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.207 -1.156 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.629 -0.756 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.861 -1.042 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.904 -0.119 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 2.141 -0.241 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 2.050 -0.142 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 2.151 -0.025 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.952  0.857 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.948  0.848 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 2.171  0.942 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 2.027  0.912 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.713  1.711 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.791  1.855 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.832  1.836 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.929  1.848 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2.145 -1.865 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2.070 -2.187 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.987 -2.169 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.276 -2.282 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.831 -0.875 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.633 -0.769 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.743 -0.861 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.715 -0.960 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.960  0.039 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.860  0.061 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 2.089  0.184 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 2.092 -0.002 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.964  1.070 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.727  0.979 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.842  1.162 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.714  0.910 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 2.326  2.527 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.846  2.095 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.855  1.979 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.900  2.331 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F </span>
@@ -2900,40 +2907,40 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="co"># classification estimates</span></span></span>
 <span class="r-in"><span><span class="va">pi_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">zi2PL.fit</span>, method <span class="op">=</span> <span class="st">'classify'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            CLASS_1   CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  3.726112e-28 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 1.641753e-287 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 4.636366e-118 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 6.333729e-134 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  8.955427e-01 0.1044573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 6.367389e-179 1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            CLASS_1 CLASS_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.549844e-164       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 6.529859e-210       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 2.336737e-223       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 3.525975e-164       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 1.362734e-115       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  9.240858e-29       1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           CLASS_1   CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] 0.8955427 0.1044573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] 0.8955427 0.1044573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] 0.8955427 0.1044573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] 0.8955427 0.1044573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] 0.8955427 0.1044573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] 0.8955427 0.1044573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           CLASS_1    CLASS_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] 0.9188292 0.08117085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] 0.9188292 0.08117085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] 0.9188292 0.08117085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] 0.9188292 0.08117085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] 0.9188292 0.08117085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] 0.9188292 0.08117085</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAP estimates (not useful for zip class)</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">zi2PL.fit</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  -1.2813746</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   1.6673290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  -0.1952363</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  -0.0804503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -89.7647681</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   0.3535353</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Class_1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.0512440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.5477758</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.7687951</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.0973191</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -0.3378649</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -1.4372167</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] -89.76477</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] -89.76477</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] -89.76477</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] -89.76477</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] -89.76477</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] -89.76477</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] -92.05499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] -92.05499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] -92.05499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] -92.05499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] -92.05499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] -92.05499</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">########################################</span></span></span>
 <span class="r-in"><span><span class="co"># Zero-inflated graded response model (Magnus and Garnier-Villarreal, 2022)</span></span></span>
@@ -2960,51 +2967,50 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="co"># intercepts will be labelled as d1 through d4</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0    436    594    455    457    427    449    357    456    725     757</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    112     90     84     55     90    149     59    128     82      88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     64     78     66     75    105     97    108     41     72      75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    117     52    130    110    110    132    139     85     59      16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    271    186    265    303    268    173    337    290     62      64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0    688    450    414    359    545    454    334    418    451     346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     36     44    149     60     48    105     44     67     87     103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     96     52    118     93     68     68     71     58     49      77</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     32    110    130    156     98    124    107     41    101      85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    148    344    189    332    241    249    444    416    312     389</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18 Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0     334     511     461     358     305     355     520     508     504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      80      80     149     101      75      85      87      86      68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     150      51      73      45      85     120      43      64     166</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      98      85     116     114     128     160      90     100      36</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     338     273     201     382     407     280     260     242     226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0     497     327     437     433     456     416     346     550     715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     159      83     132      63      67      91      60     142      90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     124     126      94     112      74      60      62      67      77</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      64     146     142     103      45     114     108      70      52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     156     318     195     289     358     319     424     171      66</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0     484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      59</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      59</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      97</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0     458</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      80</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     246</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ignoring zero inflation (bad idea)</span></span></span>
 <span class="r-in"><span><span class="va">modGRM</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">modGRM</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.767  0.182 -0.485 -0.845 -1.542</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2.586 -1.046 -1.672 -2.269 -2.720</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2.588 -0.063 -0.657 -1.104 -2.033</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  3.416 -0.245 -0.717 -1.325 -2.210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  2.396  0.149 -0.500 -1.198 -1.941</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.139  0.048 -0.929 -1.554 -2.534</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  2.440  0.710  0.213 -0.551 -1.457</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2.372 -0.033 -0.906 -1.173 -1.739</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.747 -1.526 -2.111 -2.780 -3.612</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.212 -1.481 -2.116 -2.918 -3.168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 2.175  0.882  0.228 -0.744 -1.333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 2.012 -0.311 -0.799 -1.111 -1.658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 2.633 -0.134 -1.191 -1.697 -2.598</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 3.002  0.742 -0.177 -0.535 -1.385</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 3.499  1.386  0.472 -0.326 -1.383</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 2.422  0.744  0.051 -0.776 -1.844</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 3.036 -0.665 -1.318 -1.644 -2.354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 3.279 -0.656 -1.342 -1.843 -2.665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 2.727 -0.456 -0.950 -2.155 -2.443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 3.091 -0.414 -0.868 -1.305 -2.041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2.818 -1.826 -2.108 -2.958 -3.294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2.839 -0.045 -0.390 -0.777 -1.579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.763  0.319 -0.583 -1.261 -2.134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.340  0.701  0.219 -0.426 -1.439</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  2.560 -0.715 -1.049 -1.516 -2.237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.134  0.028 -0.655 -1.075 -1.896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  3.303  1.013  0.521 -0.141 -1.018</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2.933  0.194 -0.360 -0.809 -1.113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  2.761 -0.060 -0.714 -1.065 -1.795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 2.751  0.836 -0.077 -0.646 -1.238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 2.031 -0.244 -1.229 -2.072 -2.613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 2.590  1.020  0.247 -0.687 -1.675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 2.278  0.128 -0.763 -1.380 -2.433</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 3.058  0.039 -0.489 -1.357 -2.148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 4.557 -0.411 -1.117 -1.869 -2.317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 2.128  0.296 -0.311 -0.687 -1.412</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 3.586  0.889  0.234 -0.350 -1.277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 2.403 -0.667 -1.617 -2.110 -2.716</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.822 -1.505 -2.149 -2.868 -3.596</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 2.852 -0.144 -0.796 -1.750 -2.374</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F1 </span>
@@ -3068,32 +3074,32 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $class_proportion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.199</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $MIXTURE_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.712  0.973  0.302 -0.053 -0.731</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.411  0.042 -0.582 -1.176 -1.623</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.339  1.022  0.430 -0.012 -0.925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.876  1.179  0.705  0.097 -0.788</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.185  1.161  0.515 -0.171 -0.897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.036  0.968  0.000 -0.611 -1.564</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.135  1.740  1.233  0.476 -0.405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.187  0.967  0.101 -0.162 -0.718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.911 -0.758 -1.338 -1.997 -2.817</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.525 -0.889 -1.519 -2.314 -2.563</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 0.881  1.833  1.151  0.195 -0.372</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.972  0.556  0.071 -0.237 -0.773</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.381  0.974 -0.078 -0.578 -1.463</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.527  1.977  1.057  0.705 -0.128</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.786  2.814  1.885  1.096  0.064</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.134  1.775  1.068  0.254 -0.779</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.649  0.601 -0.050 -0.374 -1.079</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.813  0.712  0.023 -0.478 -1.300</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.462  0.687  0.194 -1.001 -1.286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.678  0.876  0.421 -0.015 -0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.624 -0.668 -0.951 -1.802 -2.138</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.525  1.124  0.780  0.395 -0.398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.726  1.114  0.205 -0.456 -1.297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  1.088  1.684  1.190  0.549 -0.432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.403  0.353  0.020 -0.445 -1.160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.052  0.935  0.255 -0.160 -0.961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.722  2.342  1.845  1.187  0.327</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.553  1.391  0.840  0.396  0.096</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.479  1.081  0.429  0.081 -0.639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.371  1.965  1.046  0.486 -0.092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.018  0.628 -0.347 -1.171 -1.698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.244  2.106  1.311  0.392 -0.563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.162  1.093  0.203 -0.403 -1.431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.670  1.301  0.773 -0.091 -0.873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 2.599  1.469  0.755 -0.003 -0.455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 0.991  1.194  0.585  0.214 -0.488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.916  2.332  1.678  1.100  0.188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.302  0.341 -0.602 -1.090 -1.686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 0.986 -0.718 -1.358 -2.069 -2.788</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.550  1.036  0.386 -0.559 -1.175</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F </span>
@@ -3105,7 +3111,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $class_proportion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.799</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -3113,39 +3119,39 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="va">pi_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">ziGRM.fit</span>, method <span class="op">=</span> <span class="st">'classify'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            CLASS_1 CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 6.576686e-247       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 3.405040e-170       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 5.853135e-294       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 6.314969e-221       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 6.144361e-262       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 2.068905e-235       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.558633e-300       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 3.846940e-248       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 1.372135e-214       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 1.220535e-224       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 2.774206e-126       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 8.219653e-210       1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">pi_hat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           CLASS_1    CLASS_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] 0.9949666 0.00503345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] 0.9949666 0.00503345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] 0.9949666 0.00503345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] 0.9949666 0.00503345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] 0.9949666 0.00503345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] 0.9949666 0.00503345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           CLASS_1     CLASS_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] 0.9932982 0.006701771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] 0.9932982 0.006701771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] 0.9932982 0.006701771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] 0.9932982 0.006701771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] 0.9932982 0.006701771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] 0.9932982 0.006701771</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAP estimates (not useful for zip class)</span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">ziGRM.fit</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.38385974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.57947242</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  1.11703658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.07294002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  1.33552957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.31745248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.03415732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.77178287</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.08031843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.29479164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -1.27315493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -0.45721982</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           Class_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] -99.51024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] -99.51024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] -99.51024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] -99.51024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] -99.51024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] -99.51024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [995,] -99.34781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [996,] -99.34781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [997,] -99.34781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [998,] -99.34781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [999,] -99.34781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1000,] -99.34781</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
