@@ -456,7 +456,8 @@
 #' #   Used to demonstrate the behaviour of how the individuals would have
 #' #   been scored if they (deterministically) belonged to one class
 #' data.frame(EAP_mix1=unname(fscores(mix1)),
-#'            EAP_mix2=unname(fscores(mix2))) |> head()
+#'            EAP_mix2=unname(fscores(mix2)),
+#'            EAP=unname(fscores(mod_mix))) |> head()
 #'
 #' ############
 #' # Mixture 2PL model
