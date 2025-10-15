@@ -394,6 +394,7 @@ model <- 'F1 = 1-15'
 mod_configural <- multipleGroup(dat, model, group = group)
 plot(mod_configural)
 plot(mod_configural, type = 'SE')
+plot(mod_configural, type = 'gen.difficulty')
 itemplot(mod_configural, 1)
 itemplot(mod_configural, 1, type = 'info')
 plot(mod_configural, type = 'trace') # messy, score function typically better
@@ -456,6 +457,7 @@ coef(mod_mix, simplify=TRUE)
 summary(mod_mix)
 plot(mod_mix)
 plot(mod_mix, type = 'trace')
+plot(mod_mix, type = 'gen.difficulty')
 itemplot(mod_mix, 1, type = 'info')
 
 head(fscores(mod_mix)) # theta estimates

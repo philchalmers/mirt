@@ -47,17 +47,16 @@ extract.group <- function(x, group){
     }
     vals <- mod2values(x)
     vals <- vals[vals$group == groupNames[group], ]
-    if(is(x, 'MixtureClass'))
-        vals <- vals[-nrow(vals),] # remove PI
+    vals <- vals[vals$name != 'PI',]
     dat <- extract.mirt(x, 'data')
     nfact <- extract.mirt(x, 'nfact')
     K <- extract.mirt(x, 'K')
     groupvec <- extract.mirt(x, 'group')
-    groupNames <- extract.mirt(x, 'groupNames')
     itemtype <- extract.mirt(x, 'itemtype')
     mins <- extract.mirt(x, 'mins')
     pick <- if(is(x, 'MultipleGroupClass'))
         groupvec == groupNames[group] else rep(TRUE, length(groupvec))
+    if(!any(pick)) pick <- rep(TRUE, nrow(dat))
     sv <- mirt(dat[pick, ], nfact, itemtype=itemtype,
                 pars = 'values', technical = list(customK = K))
     sv$value <- vals$value

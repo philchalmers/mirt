@@ -23,6 +23,7 @@
   facet_items = TRUE,
   theta_lim = c(-6, 6),
   par.strip.text = list(cex = 0.7),
+  gen.diff_type = "IRF",
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
     "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
@@ -38,6 +39,7 @@
   degrees = 45,
   theta_lim = c(-6, 6),
   which.items = 1:extract.mirt(x, "nitems"),
+  gen.diff_type = "IRF",
   MI = 0,
   CI = 0.95,
   rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
@@ -74,6 +76,8 @@
     \item{\code{'score'}}{expected total score surface}
     \item{\code{'scorecontour'}}{expected total score contour plot}
     \item{\code{'posteriorTheta'}}{posterior for the latent trait distribution}
+    \item{\code{'gen.difficulty'}}{plots items by generalized difficulty estimates
+      (see \code{\link{gen.difficulty}})}
     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
       on the EAP for sum-scores method (see \code{\link{fscores}})}
   }
@@ -109,6 +113,8 @@ used in conjunction with \code{npts}}
 
 \item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
+\item{gen.diff_type}{argument passed to \code{type} in \code{\link{gen.difficulty}}}
+
 \item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
 \item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
@@ -143,7 +149,7 @@ Plot various test implied response functions from models estimated in the mirt p
 \examples{
 
 \donttest{
-x <- mirt(Science, 1, SE=TRUE)
+x <- mirt(Science, SE=TRUE)
 plot(x)
 plot(x, type = 'info')
 plot(x, type = 'infotrace')
@@ -151,6 +157,7 @@ plot(x, type = 'infotrace', facet_items = FALSE)
 plot(x, type = 'infoSE')
 plot(x, type = 'rxx')
 plot(x, type = 'posteriorTheta')
+plot(x, type = 'gen.difficulty')
 
 # confidence interval plots when information matrix computed
 plot(x)
@@ -179,6 +186,7 @@ plot(x2, type = 'trace', which.items = 1:2)
 plot(x2, type = 'itemscore', which.items = 1:2)
 plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 plot(x2, type = 'info')
+plot(x2, type = 'gen.difficulty')
 
 x3 <- mirt(Science, 2)
 plot(x3, type = 'info')

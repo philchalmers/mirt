@@ -1057,6 +1057,8 @@ setMethod(
 #'     \item{\code{'score'}}{expected total score surface}
 #'     \item{\code{'scorecontour'}}{expected total score contour plot}
 #'     \item{\code{'posteriorTheta'}}{posterior for the latent trait distribution}
+#'     \item{\code{'gen.difficulty'}}{plots items by generalized difficulty estimates
+#'       (see \code{\link{gen.difficulty}})}
 #'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
 #'       on the EAP for sum-scores method (see \code{\link{fscores}})}
 #'   }
@@ -1097,6 +1099,7 @@ setMethod(
 #'   plot, potentially squishing the 'meat' of the plot to take up less area than visually desired
 #' @param main argument passed to lattice. Default generated automatically
 #' @param drape logical argument passed to lattice. Default generated automatically
+#' @param gen.diff_type argument passed to \code{type} in \code{\link{gen.difficulty}}
 #' @param colorkey logical argument passed to lattice. Default generated automatically
 #' @param add.ylab2 logical argument passed to lattice. Default generated automatically
 #' @param ... additional arguments to be passed to lattice
@@ -1114,7 +1117,7 @@ setMethod(
 #' @examples
 #'
 #' \donttest{
-#' x <- mirt(Science, 1, SE=TRUE)
+#' x <- mirt(Science, SE=TRUE)
 #' plot(x)
 #' plot(x, type = 'info')
 #' plot(x, type = 'infotrace')
@@ -1122,6 +1125,7 @@ setMethod(
 #' plot(x, type = 'infoSE')
 #' plot(x, type = 'rxx')
 #' plot(x, type = 'posteriorTheta')
+#' plot(x, type = 'gen.difficulty')
 #'
 #' # confidence interval plots when information matrix computed
 #' plot(x)
@@ -1150,6 +1154,7 @@ setMethod(
 #' plot(x2, type = 'itemscore', which.items = 1:2)
 #' plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 #' plot(x2, type = 'info')
+#' plot(x2, type = 'gen.difficulty')
 #'
 #' x3 <- mirt(Science, 2)
 #' plot(x3, type = 'info')
@@ -1161,7 +1166,7 @@ setMethod(
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
     definition = function(x, y, type = 'score', npts = 200, drop2 = TRUE, degrees = 45,
                           theta_lim = c(-6,6), which.items = 1:extract.mirt(x, 'nitems'),
-                          MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+                          gen.diff_type = 'IRF', MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE,
                           par.strip.text = list(cex = 0.7),
@@ -1173,7 +1178,7 @@ setMethod(
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian',
-                       'EAPsum', 'posteriorTheta')))
+                       'EAPsum', 'posteriorTheta', 'gen.difficulty')))
             stop('type supplied is not supported', call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
@@ -1461,7 +1466,7 @@ setMethod(
             } else {
                 stop('plot type not supported for two dimensional model', call.=FALSE)
             }
-        } else {
+        } else { # one factor
             colnames(plt) <- c("info", "score", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
             plt$rxx <- plt$info / (plt$info + 1/gp$gcov[1L,1L])
@@ -1712,8 +1717,15 @@ setMethod(
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = main,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
-
-            }else {
+            } else if(type == 'gen.difficulty'){
+                diffs <- gen.difficulty(x, type=gen.diff_type)
+                plt <- data.frame(items=factor(names(diffs), levels=names(diffs)), diffs)
+                return(xyplot(diffs ~ items, plt,
+                              xlab = 'Items', ylab = 'Generalized difficulty',
+                              type = 'b', main = 'Item by Generalized Difficulty',
+                              par.strip.text=par.strip.text, par.settings=par.settings,
+                              scales=list(x=list(rot=90)), ...))
+            } else {
                 stop('plot not supported for unidimensional models', call.=FALSE)
             }
         }

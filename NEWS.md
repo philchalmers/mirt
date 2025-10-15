@@ -1,5 +1,8 @@
 # Changes in mirt 1.46
 
+- Added `plot(.., type = 'gen.difficulty')` to plot item by generalized difficulty.
+  Mainly useful in multi-group/mixture modeling contexts
+
 - `multipleGroup()` gains `nruns` and friends with the same specification
   as in `mdirt()`. Allows for multiple models to be compared (potentially in 
   parallel with `mirtCluster()`) where local maximum may be an issue (e.g., 
