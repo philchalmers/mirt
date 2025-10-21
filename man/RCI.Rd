@@ -14,6 +14,7 @@ RCI(
   SEM.post = NULL,
   Fisher = FALSE,
   zero_cor = TRUE,
+  expected.scores = FALSE,
   shiny = FALSE,
   main = "Test Scores",
   ...
@@ -59,6 +60,12 @@ SE terms? If \code{FALSE} the SE information will be extracted from the select
 \item{zero_cor}{logical; when the supplied \code{mod_pre} is a two-factor model
 should the covariance/correlation between the latent traits be forced to be 0?}
 
+\item{expected.scores}{logical; when using IRT scoring methods, should the expected total scores
+be reported instead of the scaled (theta) scores returned from \code{\link{fscores}}? When set
+to \code{TRUE} the factor score estimates are passed to \code{\link{expected.test}}, and delta method
+standard error for the difference between teh scores are reported,
+however the original \code{z} and \code{p}-value information will be unchanged}
+
 \item{shiny}{logical; launch an interactive shiny applications for real-time scoring
 of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)
 \code{mod_post} inputs}
@@ -100,6 +107,9 @@ mod <- mirt(dat_pre)
 
 # all changes using fitted model from pre data
 RCI(mod, predat=dat_pre, postdat=dat_post)
+
+# reported all expected change estimates in the original test-score metric
+RCI(mod, predat=dat_pre, postdat=dat_post, expected.scores=TRUE)
 
 # single response pattern change using EAP information
 RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
@@ -180,6 +190,9 @@ head(postdat)
 
 RCI(mod, predat, postdat)
 
+# expected scores /32 (even though only /16 items answered)
+RCI(mod, predat, postdat, expected.scores=TRUE)
+
 ######
 # Two-dimensional IRT model for each time point, 20 items (no DIF)
 
@@ -196,6 +209,7 @@ mu <- c(0, -1/2)
 sigma <- matrix(c(1, .7, .7, 1), 2,2)
 
 dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
+itemstats(dat)$overall
 
 # build equality constraints across time points
 constr <- NULL
@@ -237,6 +251,10 @@ data.frame(pre=rowSums(change[,1:J]),
 
 RCI(mod, predat = nochange)
 RCI(mod, predat = change)
+
+# expected total-score metric reported instead
+RCI(mod, predat = nochange, expected.scores=TRUE)
+RCI(mod, predat = change, expected.scores=TRUE)
 
 }
 }

@@ -1,5 +1,8 @@
 # Changes in mirt 1.46
 
+- `RCI()` gains logical argument `expected.scores` to convert factor scores into metric 
+  of observed scores with their associated delta-method SEs
+
 - Added `plot(.., type = 'gen.difficulty')` to plot item by generalized difficulty.
   Mainly useful in multi-group/mixture modeling contexts
 

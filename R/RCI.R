@@ -45,6 +45,11 @@
 #' @param zero_cor logical; when the supplied \code{mod_pre} is a two-factor model
 #'   should the covariance/correlation between the latent traits be forced to be 0?
 #' @param main main label to use when \code{shiny=TRUE}
+#' @param expected.scores logical; when using IRT scoring methods, should the expected total scores
+#'   be reported instead of the scaled (theta) scores returned from \code{\link{fscores}}? When set
+#'   to \code{TRUE} the factor score estimates are passed to \code{\link{expected.test}}, and delta method
+#'   standard error for the difference between teh scores are reported,
+#'   however the original \code{z} and \code{p}-value information will be unchanged
 #'
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
@@ -86,6 +91,9 @@
 #'
 #' # all changes using fitted model from pre data
 #' RCI(mod, predat=dat_pre, postdat=dat_post)
+#'
+#' # reported all expected change estimates in the original test-score metric
+#' RCI(mod, predat=dat_pre, postdat=dat_post, expected.scores=TRUE)
 #'
 #' # single response pattern change using EAP information
 #' RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
@@ -166,6 +174,9 @@
 #'
 #' RCI(mod, predat, postdat)
 #'
+#' # expected scores /32 (even though only /16 items answered)
+#' RCI(mod, predat, postdat, expected.scores=TRUE)
+#'
 #' ######
 #' # Two-dimensional IRT model for each time point, 20 items (no DIF)
 #'
@@ -182,6 +193,7 @@
 #' sigma <- matrix(c(1, .7, .7, 1), 2,2)
 #'
 #' dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
+#' itemstats(dat)$overall
 #'
 #' # build equality constraints across time points
 #' constr <- NULL
@@ -224,15 +236,27 @@
 #' RCI(mod, predat = nochange)
 #' RCI(mod, predat = change)
 #'
+#' # expected total-score metric reported instead
+#' RCI(mod, predat = nochange, expected.scores=TRUE)
+#' RCI(mod, predat = change, expected.scores=TRUE)
+#'
 #' }
 RCI <- function(mod_pre, predat, postdat,
                 mod_post = mod_pre, cutoffs = NULL,
                 SEM.pre = NULL, SEM.post = NULL,
-                Fisher = FALSE, zero_cor = TRUE,
+                Fisher = FALSE, zero_cor = TRUE, expected.scores=FALSE,
                 shiny = FALSE, main = 'Test Scores', ...){
 
     if(shiny)
         return(RCI_shiny(mod_pre=mod_pre, mod_post=mod_post, main=main))
+
+    Escore_diff <- function(par, multidim = FALSE, pick=NULL){
+        ret <- if(multidim)
+            expected.test(mod_pre, matrix(c(0, par[2]), nrow=1), which.items=which(pick[,2])) -
+            expected.test(mod_pre, matrix(c(par[1], 0), nrow=1), which.items=which(pick[,1]))
+        else expected.test(mod_post, par[2]) - expected.test(mod_pre, par[1])
+        ret
+    }
 
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
@@ -276,8 +300,18 @@ RCI <- function(mod_pre, predat, postdat,
                               converged=converge_pre & converge_post, diff,
                               SE=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
+            if(expected.scores){
+                ret$pre.score <- expected.test(mod_pre, fs_pre[,1])
+                ret$post.score <- expected.test(mod_post, fs_post[,1])
+                for(i in 1:nrow(ret)){
+                    acov <- diag(c(fs_pre[i,2]^2, fs_post[i,2]^2))
+                    tmp <- DeltaMethod(Escore_diff,
+                                       c(fs_pre[i,1], fs_post[i,1]), acov=acov)
+                    ret$diff[i] <- tmp$fn_par
+                    ret$SE[i] <- tmp$se
+                }
+            }
         } else {
-            # TODO document this later, and include an example
             stopifnot("Must have exactly 2 latent traits" =
                           extract.mirt(mod_pre, 'nfact') == 2)
             if(!missing(postdat))
@@ -296,6 +330,20 @@ RCI <- function(mod_pre, predat, postdat,
                               converged=converge, diff,
                               SE=pse, z=z,
                               p=pnorm(abs(z), lower.tail = FALSE)*2)
+            if(expected.scores){
+                pick <- summary(mod_pre, verbose=FALSE)$rotF != 0
+                ret$pre.score <- expected.test(mod_pre, cbind(fs[,1], 0),
+                                               which.items = which(pick[,1]))
+                ret$post.score <- expected.test(mod_pre, cbind(0, fs[,2]),
+                                                which.items = which(pick[,2]))
+                for(i in 1:nrow(ret)){
+                    acov <- diag(c(fs[i,3]^2, fs[i,4]^2))
+                    tmp <- DeltaMethod(Escore_diff,
+                                       c(fs[i,1], fs[i,2]), acov=acov, multidim=TRUE, pick=pick)
+                    ret$diff[i] <- tmp$fn_par
+                    ret$SE[i] <- tmp$se
+                }
+            }
         }
     }
 
