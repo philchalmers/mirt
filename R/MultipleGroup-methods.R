@@ -225,6 +225,7 @@ setMethod(
                     pltfull[[g]] <- plt
                 }
                 plt <- do.call(rbind, pltfull)
+                plt <- na.omit(plt)
                 return(xyplot(Prior ~ Theta, plt, groups=plt$group, auto.key = auto.key,
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = 'Empirical Histogram',

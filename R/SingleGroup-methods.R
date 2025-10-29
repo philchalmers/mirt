@@ -1692,6 +1692,7 @@ setMethod(
                 keep2 <- max(which(Prior > ehist.cut))
                 plt <- data.frame(Theta = Theta, Prior = Prior)
                 plt <- plt[keep1:keep2, , drop=FALSE]
+                plt <- na.omit(plt)
                 return(xyplot(Prior ~ Theta, plt,
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = main,
