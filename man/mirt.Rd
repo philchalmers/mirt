@@ -34,7 +34,6 @@ mirt(
   key = NULL,
   large = FALSE,
   GenRandomPars = FALSE,
-  EH.pooled = "none",
   accelerate = "Ramsay",
   verbose = interactive(),
   solnp_args = list(),
