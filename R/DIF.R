@@ -226,7 +226,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                 groups2test = 'all', seq_stat = 'SABIC', Wald = FALSE,
                 p.adjust = 'none', pairwise = FALSE, return_models = FALSE,
                 return_seq_model = FALSE, max_run = Inf, plotdif = FALSE, type = 'trace',
-                simplify = TRUE, verbose = TRUE, ...){
+                simplify = TRUE, verbose = interactive(), ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
                           return_models, groups2test, large, technical = list(), ...)

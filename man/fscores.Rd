@@ -24,7 +24,7 @@ fscores(
   mean = NULL,
   cov = NULL,
   covdata = NULL,
-  verbose = TRUE,
+  verbose = interactive(),
   full.scores.SE = FALSE,
   theta_lim = c(-6, 6),
   MI = 0,

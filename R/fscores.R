@@ -281,7 +281,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                     item_weights = rep(1, extract.mirt(object, 'nitems')),
                     returnER = FALSE, T_as_X = FALSE, EAPsum.scores = FALSE,
                     return.acov = FALSE, mean = NULL, cov = NULL, covdata = NULL,
-                    verbose = TRUE, full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
+                    verbose = interactive(), full.scores.SE = FALSE, theta_lim = c(-6,6), MI = 0,
                     use_dentype_estimate=FALSE, QMC = FALSE, custom_den = NULL,
                     custom_theta = NULL, expected.info=FALSE,
                     min_expected = 1, max_theta = 20, start = NULL, ...)

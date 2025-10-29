@@ -74,7 +74,7 @@
 PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
                       search_bound = TRUE, step = .5,
                       lower = TRUE, upper = TRUE, inf2val = 30,
-                      NealeMiller = FALSE, verbose = TRUE, ...){
+                      NealeMiller = FALSE, verbose = interactive(), ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 

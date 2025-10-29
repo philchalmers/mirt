@@ -14,7 +14,7 @@ PLCI.mirt(
   upper = TRUE,
   inf2val = 30,
   NealeMiller = FALSE,
-  verbose = TRUE,
+  verbose = interactive(),
   ...
 )
 }

@@ -20,7 +20,7 @@ DIF(
   plotdif = FALSE,
   type = "trace",
   simplify = TRUE,
-  verbose = TRUE,
+  verbose = interactive(),
   ...
 )
 }

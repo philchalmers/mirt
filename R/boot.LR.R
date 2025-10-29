@@ -38,7 +38,7 @@
 #' boot.LR(mod1, mod2, R=200)
 #'
 #' }
-boot.LR <- function(mod, mod2, R = 1000, verbose=TRUE){
+boot.LR <- function(mod, mod2, R = 1000, verbose=interactive()){
     stopifnot(is(mod, 'SingleGroupClass'))
     df1 <- extract.mirt(mod, 'df')
     df2 <- extract.mirt(mod2, 'df')

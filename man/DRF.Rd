@@ -27,7 +27,7 @@ DRF(
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
     "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
-  verbose = TRUE,
+  verbose = interactive(),
   ...
 )
 }

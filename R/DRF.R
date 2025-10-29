@@ -348,7 +348,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                 par.settings = list(strip.background = list(col = '#9ECAE1'),
                                  strip.border = list(col = "black")),
                 auto.key = list(space = 'right', points=FALSE, lines=TRUE),
-                verbose = TRUE, ...){
+                verbose = interactive(), ...){
 
     compute_ps <- function(x, xs, X2=FALSE){
         if(X2){

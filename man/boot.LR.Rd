@@ -4,7 +4,7 @@
 \alias{boot.LR}
 \title{Parametric bootstrap likelihood-ratio test}
 \usage{
-boot.LR(mod, mod2, R = 1000, verbose = TRUE)
+boot.LR(mod, mod2, R = 1000, verbose = interactive())
 }
 \arguments{
 \item{mod}{an estimated model object, more constrained than \code{mod2}}

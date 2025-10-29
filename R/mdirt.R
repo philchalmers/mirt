@@ -321,7 +321,7 @@
 mdirt <- function(data, model, customTheta = NULL, structure = NULL, item.Q = NULL,
                   nruns = 1, method = 'EM', covdata = NULL, formula = NULL, itemtype = 'lca',
                   optimizer = 'nlminb', return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-                  verbose = TRUE, pars = NULL, technical = list(), ...)
+                  verbose = interactive(), pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
     dots <- list(...)

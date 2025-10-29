@@ -19,7 +19,7 @@ mdirt(
   return_max = TRUE,
   group = NULL,
   GenRandomPars = FALSE,
-  verbose = TRUE,
+  verbose = interactive(),
   pars = NULL,
   technical = list(),
   ...
