@@ -4,7 +4,7 @@
 \alias{extract.mirt}
 \title{Extract various elements from estimated model objects}
 \usage{
-extract.mirt(x, what, item = 1)
+extract.mirt(x, what, item = 1, ...)
 }
 \arguments{
 \item{x}{mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
@@ -14,6 +14,8 @@ extract.mirt(x, what, item = 1)
 
 \item{item}{if necessary, which item to extract information from.
 Defaults to 1 if not specified}
+
+\item{...}{additional arguments to pass to \code{summary()} (e.g., for different factor rotations)}
 }
 \description{
 A generic function to extract the internal objects from estimated models.
@@ -54,6 +56,8 @@ Objects which can be extracted from mirt objects include:
   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
     tabulated frequencies}
   \item{EMhistory}{if saved, extract the EM iteration history}
+  \item{F}{unrotated factor loadings matrix}
+  \item{Frot}{rotated factor loadings matrix}
   \item{exp_resp}{expected probability of the unique response patterns}
   \item{survey.weights}{if supplied, the vector of survey weights used during estimation (NULL if missing)}
   \item{converged}{a logical value indicating whether the model terminated within
@@ -89,7 +93,7 @@ mod <- mirt(Science, 1)
 extract.mirt(mod, 'logLik')
 extract.mirt(mod, 'K')  # unique categories for each item
 
-#multiple group model
+# multiple group model
 grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)
 mod2 <- multipleGroup(Science, 1, grp)
 
