@@ -321,9 +321,7 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>, <span class="fl">2000</span>, <span class="va">items</span>, Theta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span>, baditem<span class="op">=</span><span class="va">baditem</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">raschfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, itemtype<span class="op">=</span><span class="st">'Rasch'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">itemfit</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
@@ -678,7 +676,6 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="co"># fit a new more flexible model for the mis-fitting item</span></span></span>
 <span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fl">20</span><span class="op">)</span>, <span class="st">'spline'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, itemtype<span class="op">=</span><span class="va">itemtype</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
@@ -726,7 +723,6 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      1      3      3      2      3      1      1      2      0       1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1 143.021     103      0.014  0.006</span>
@@ -840,7 +836,6 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">mod2</span>, <span class="st">'infit'</span>, method <span class="op">=</span> <span class="st">'ML'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item outfit z.outfit infit z.infit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1  0.959   -1.407 0.946  -2.141</span>
@@ -935,7 +930,6 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="co"># fit stats with missing data (run in parallel using all cores)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">raschfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, itemtype<span class="op">=</span><span class="st">'Rasch'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use only valid data by removing rows with missing terms</span></span></span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">raschfit</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'S_X2'</span>, <span class="st">'infit'</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>

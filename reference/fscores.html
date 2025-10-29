@@ -96,7 +96,7 @@ for latent regression predictor effects.</p>
 <span>  mean <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cov <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  covdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  full.scores.SE <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  theta_lim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span>,</span>
 <span>  MI <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -352,15 +352,7 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">tabscores</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  EAP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6666 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tabscores</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort Work Future Benefit         F1     SE_F1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1    1      1       1 -2.7492669 0.6293525</span>
@@ -458,13 +450,6 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use custom latent variable properties (diffuse prior for MAP is very close to ML)</span></span></span>
 <span class="r-in"><span><span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method<span class="op">=</span><span class="st">'MAP'</span>, cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  MAP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.4207 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Comfort Work Future Benefit     F1  SE_F1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]       1    1      1       1 -9.340  9.636</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]       1    3      2       1 -2.104  0.689</span>
@@ -559,13 +544,6 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-in"><span><span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method<span class="op">=</span><span class="st">'ML'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  ML</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.716 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Comfort Work Future Benefit     F1 SE_F1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]       1    1      1       1   -Inf    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]       1    3      2       1 -2.105 0.689</span>
@@ -662,9 +640,6 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAPsum table of values based on total scores</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method <span class="op">=</span> <span class="st">'EAPsum'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       df     X2  p.X2 SEM.alpha rxx.alpha rxx_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 10 16.312 0.091     1.262     0.616  0.624</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores          F1     SE_F1 observed   expected   std.res</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -2.74926694 0.6293525        2  0.1241448 5.3239625</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -2.43096701 0.6167666        1  0.7902670 0.2359282</span>
@@ -757,13 +732,6 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span><span class="co"># WLE estimation, run in parallel using available cores</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method<span class="op">=</span><span class="st">'WLE'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  WLE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7513 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort Work Future Benefit         F1     SE_F1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1    1      1       1 -5.6980733 1.5782658</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       1    3      2       1 -2.1191038 0.6332801</span>
@@ -774,41 +742,38 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># multiple imputation using 30 draws for EAP scores. Requires information matrix</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span>, SE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, MI <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.40949106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.05982912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.86388900</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.86388900</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.73072606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.68507563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.40394112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.04829628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.87204775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.87204775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.73226668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.67435579</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible values for future work</span></span></span>
 <span class="r-in"><span><span class="va">pv</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, plausible.draws <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pv</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, var<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, min<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, max<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.02509567  0.98304857 -2.76743574  2.95482696 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.002997716  1.071227651 -2.985234482  3.257143483 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.00310704  1.00923584 -2.77421947  2.67652505 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.01624957  0.96670552 -3.61396958  2.74931076 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.007521311  0.990820119 -4.189122057  3.001626994 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01273237  1.03123675 -2.84457885  3.11693992 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.01886708  1.07670543 -3.27991986  2.87044343 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01631207  0.84994999 -2.76727945  2.68185057 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.03321909  0.98213761 -3.50368823  2.74579411 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.04335508  1.00791566 -3.29692510  2.52423201 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## define a custom_den function (*must* return a numeric vector).</span></span></span>
@@ -868,7 +833,6 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># conditional model using X1 and X2 as predictors of Theta</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, <span class="st">'Rasch'</span>, covdata<span class="op">=</span><span class="va">covdata</span>, formula <span class="op">=</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         a1      d g u</span>

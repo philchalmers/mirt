@@ -122,9 +122,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         AIC    SABIC       HQ      BIC    logLik     X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x  3249.739 3262.512 3274.922 3313.279 -1608.870                </span>
@@ -132,9 +130,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># compare three models sequentially (X2 not always meaningful)</span></span></span>
 <span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span>, <span class="st">'gpcm'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">x4</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span>, <span class="st">'nominal'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x2</span>, <span class="va">x3</span>, <span class="va">x4</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         AIC    SABIC       HQ      BIC    logLik      X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x  3249.739 3262.512 3274.922 3313.279 -1608.870                 </span>
@@ -151,7 +147,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"Theta = 1-4</span></span></span>
 <span class="r-in"><span><span class="st">          PRIOR = (1-4, a1, lnorm, 0, 10)"</span></span></span>
 <span class="r-in"><span><span class="va">xp</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="va">model</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">xp</span>, <span class="va">x2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         AIC    SABIC       HQ      BIC    logLik   logPost df</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> xp 3249.829 3262.602 3275.012 3313.369 -1608.914 -1622.881 NA</span>
@@ -163,9 +158,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># bounded parameter</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">LSAT7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, itemtype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">'3PL'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod2</span><span class="op">)</span> <span class="co">#unbounded test</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df    p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod  5337.610 5354.927 5356.263 5386.688 -2658.805              </span>
@@ -179,7 +172,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">'F = 1-5</span></span></span>
 <span class="r-in"><span><span class="st">          PRIOR = (5, g, norm, -1, 1)'</span></span></span>
 <span class="r-in"><span><span class="va">mod1b</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, itemtype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">'3PL'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod1b</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            AIC   SABIC       HQ      BIC    logLik   logPost</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod1b 5339.571 5358.62 5360.089 5393.557 -2658.786 -2659.705</span>
@@ -187,7 +179,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">model2</span> <span class="op">&lt;-</span> <span class="st">'F = 1-5</span></span></span>
 <span class="r-in"><span><span class="st">          PRIOR = (1-5, g, norm, -1, 1)'</span></span></span>
 <span class="r-in"><span><span class="va">mod2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model2</span>, itemtype <span class="op">=</span> <span class="st">'3PL'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod1b</span>, <span class="va">mod2b</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            AIC    SABIC       HQ      BIC    logLik   logPost df</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod1b 5339.571 5358.620 5360.089 5393.557 -2658.786 -2659.705 NA</span>

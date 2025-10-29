@@ -394,7 +394,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.286  0.055  0.059  0.155  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.279  0.053  0.077  0.133  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -403,7 +403,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.190  0.054  0.071  0.046  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.183  0.053  0.070  0.043  0.000  0.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2122,20 +2122,6 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-plt img"><img src="multipleGroup-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_configural</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  EAP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7942 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Method:  EAP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empirical Reliability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     F1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7249 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">[[</span><span class="st">"D1"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0      0      0      0      0      0      0      0      0       0</span>
@@ -2152,12 +2138,6 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0       0       0       3       1 -1.439230 0.5535499</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0       2       0       0       0 -1.582715 0.5660598</span>
 <span class="r-in"><span><span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod_configural</span>, method <span class="op">=</span> <span class="st">'EAPsum'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       df     X2  p.X2 SEM.alpha rxx.alpha rxx_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 39 42.374 0.328     3.869     0.784  0.776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       df     X2  p.X2 SEM.alpha rxx.alpha rxx_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 42 29.475 0.928     3.825     0.842  0.832</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores           F1     SE_F1 observed    expected    std.res</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0           0 -2.137056441 0.6262714        6  5.73109332 0.11232666</span>
@@ -2797,7 +2777,6 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare to single group</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod_mix2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               AIC    SABIC       HQ      BIC    logLik      X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod      35276.70 35362.16 35355.88 35489.23 -17598.35             </span>
@@ -2991,7 +2970,6 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ignoring zero inflation (bad idea)</span></span></span>
 <span class="r-in"><span><span class="va">modGRM</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">modGRM</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            a1     d1     d2     d3     d4</span>

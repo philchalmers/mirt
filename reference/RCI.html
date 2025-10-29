@@ -204,7 +204,6 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="va">dat_post</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>, Theta <span class="op">=</span> <span class="va">theta2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat_pre</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># all changes using fitted model from pre data</span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat<span class="op">=</span><span class="va">dat_pre</span>, postdat<span class="op">=</span><span class="va">dat_post</span><span class="op">)</span></span></span>
@@ -6284,7 +6283,6 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># interactive shiny interfaces for live scoring</span></span></span>
 <span class="r-in"><span><span class="va">mod_pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># (optional) setup mod_post to have medium effect size change (d = 0.5)</span></span></span>
 <span class="r-in"><span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="mod2values.html">mod2values</a></span><span class="op">(</span><span class="va">mod_pre</span><span class="op">)</span></span></span>
@@ -6309,7 +6307,6 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span>  key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># with N=5 individuals under investigation</span></span></span>
 <span class="r-in"><span><span class="va">predat</span> <span class="op">&lt;-</span> <span class="va">postdat</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span></span></span>
@@ -6472,9 +6469,6 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit the model to calibration data</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, model <span class="op">=</span> <span class="va">model</span>, SE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, printSE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2      d logit(g) logit(u)</span>

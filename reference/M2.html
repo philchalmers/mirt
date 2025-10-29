@@ -173,7 +173,6 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">LSAT7</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dat, model = 1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -211,7 +210,6 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span><span class="co"># M2 with missing data present</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">250</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             M2 df         p      RMSEA RMSEA_5   RMSEA_95      SRMSR       TLI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 8.239687  5 0.1435113 0.02546735       0 0.05530946 0.03324067 0.9630427</span>
@@ -220,7 +218,6 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># C2 statistic (useful when polytomous IRT models have too few df)</span></span></span>
 <span class="r-in"><span><span class="va">pmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># This fails with too few df:</span></span></span>
 <span class="r-in"><span><span class="co"># M2(pmod)</span></span></span>
 <span class="r-in"><span><span class="co"># This, however, works:</span></span></span>

@@ -70,7 +70,7 @@ then customized models can defined using the <code><a href="createItem.html">cre
 <span>  return_max <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  GenRandomPars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pars <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -249,7 +249,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># fit with 2-3 latent classes</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mdirt(data = dat, model = 2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -267,7 +266,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> G2 (20) = 22.74, p = 0.3018, RMSEA = 0.012</span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod3</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
@@ -382,7 +380,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># available for polytomous data</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">Science</span>, <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Comfort</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        category_1 category_2 category_3 category_4</span>
@@ -484,9 +481,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># fit with random starting points (run in parallel to save time)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span>, nruns<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Model log-likelihoods:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -2467.406 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408 -2467.408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] -2467.408 -2467.408 -2467.408</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># Grade of measurement model</span></span></span>
@@ -498,7 +492,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.5  0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.0  1.0</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod_gom</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">2</span>, customTheta <span class="op">=</span> <span class="va">Theta</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
@@ -572,7 +565,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [7,]    0    1    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [8,]    1    1    1</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod_discrete</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">3</span>, customTheta <span class="op">=</span> <span class="va">Theta</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mdirt(data = dat, model = 3, customTheta = Theta)</span>
@@ -961,7 +953,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="st">                     CONSTRAIN = (1-32, a1), (1-32, a2), (1-32, a3)'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mod_located</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, customTheta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mdirt(data = dat, model = model, customTheta = diag(3))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1205,7 +1196,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># last 5 items are DINA (first 10 are unidimensional C-RUMs)</span></span></span>
 <span class="r-in"><span><span class="va">DINA</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, customTheta <span class="op">=</span> <span class="va">theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">DINA</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1    a2    a3    a4</span>
@@ -1384,7 +1374,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># last five items are DINOs (first 10 are unidimensional C-RUMs)</span></span></span>
 <span class="r-in"><span><span class="va">DINO</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, customTheta <span class="op">=</span> <span class="va">theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">DINO</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2    a3    a4</span>
@@ -1534,7 +1523,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="st">                     A2 = 6-15'</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">CRUM</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, customTheta <span class="op">=</span> <span class="va">theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">CRUM</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2    a3</span>
@@ -1701,7 +1689,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="co"># defined explicitly. Otherwise, this profile is assumed</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, customTheta <span class="op">=</span> <span class="va">theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             a1     a2     a3     a4     a5   a6    a7    a8    a9   a10</span>
@@ -2185,7 +2172,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="st">                     A2 = 1-32</span></span></span>
 <span class="r-in"><span><span class="st">                     CONSTRAINB = (33, c1)'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>, customTheta <span class="op">=</span> <span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $G1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -2631,7 +2617,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="st">                     C3 = 3,4,6"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mdirt</span><span class="op">(</span><span class="va">data.read</span>, <span class="va">model</span>, customTheta<span class="op">=</span><span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $A1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            category_1 category_2</span>
