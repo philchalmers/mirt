@@ -106,6 +106,8 @@ extract.mirt <- function(x, what, item = 1, ...){
     if(what %in% c('F', 'Frot')){
         so <- if(what == 'F') summary(x, rotate = 'none', verbose=FALSE, ...)
         else summary(x, verbose=FALSE, ...)
+        F <- if(is(x, 'MultipleGroupClass'))
+            lapply(so, \(y) y$rotF) else so$rotF
     }
     ret <- switch(what,
                   G2 = x@Fit$G2,
@@ -148,8 +150,8 @@ extract.mirt <- function(x, what, item = 1, ...){
                   covdata = x@Data$covdata,
                   tabdata = x@Data$tabdata,
                   freq = x@Data$Freq,
-                  F = so$rotF,
-                  Frot = so$rotF,
+                  F = F,
+                  Frot = F,
                   tabdatalong = x@Data$tabdatalong,
                   fulldatalong = x@Data$fulldata,
                   groupNames = x@Data$groupNames,
