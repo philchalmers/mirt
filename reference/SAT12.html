@@ -17,7 +17,7 @@ scoring key for item 32 may be incorrect, and should be changed from 5 to 3."></
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -324,6 +324,60 @@ TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item
 <span class="r-in"><span><span class="co"># potentially better scoring for item 32 (based on nominal model finding)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="key2binary.html">key2binary</a></span><span class="op">(</span><span class="va">SAT12</span>,</span></span>
 <span class="r-in"><span>    key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">4</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># fit 2PL model to each item</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="SAT12-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item.1 22.083      18      0.019  0.228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item.2 19.864      17      0.017  0.281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   Item.3  9.966      17      0.000  0.905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Item.4 31.479      19      0.033  0.036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   Item.5 27.275      19      0.027  0.098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   Item.6 31.832      16      0.041  0.011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   Item.7 18.125      18      0.003  0.447</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Item.8 19.515      17      0.016  0.300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Item.9 12.968      19      0.000  0.840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Item.10 18.951      18      0.009  0.395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Item.11  1.434       3      0.000  0.698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Item.12 13.756      21      0.000  0.880</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Item.13 20.770      18      0.016  0.291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Item.14 20.995      18      0.017  0.280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Item.15 21.586      16      0.024  0.157</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Item.16 14.872      19      0.000  0.731</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Item.17 13.111      10      0.023  0.218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Item.18 18.183      15      0.019  0.253</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Item.19 19.950      19      0.009  0.398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 Item.20 14.831      14      0.010  0.390</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 Item.21 21.598      17      0.021  0.201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 Item.22 12.706      12      0.010  0.391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 Item.23 26.228      19      0.025  0.124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 Item.24 14.767      16      0.000  0.542</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 Item.25 19.590      19      0.007  0.420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 Item.26 11.548      16      0.000  0.774</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 Item.27  9.354      13      0.000  0.746</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 Item.28 20.872      18      0.016  0.286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 Item.29 22.654      19      0.018  0.253</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 Item.30 24.891      20      0.020  0.206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 Item.31 13.107      12      0.012  0.361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 Item.32 23.509      20      0.017  0.265</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># fit monotonic spline model to items 4 through 6 to improve fit</span></span></span>
+<span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fl">32</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">itemtype</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">'monospline'</span></span></span>
+<span class="r-in"><span><span class="va">mod_mspline</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="va">itemtype</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod_mspline</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  AIC    SABIC       HQ      BIC    logLik     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod         19372.78 19451.00 19482.32 19654.18 -9622.389                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_mspline 19366.76 19452.32 19486.58 19674.55 -9613.382 18.013  6 0.006</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, which.items<span class="op">=</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="SAT12-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_mspline</span>, which.items<span class="op">=</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span>, type <span class="op">=</span> <span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="SAT12-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

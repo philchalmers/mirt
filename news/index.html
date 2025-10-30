@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.46" id="changes-in-mirt-146">Changes in mirt 1.46<a class="anchor" aria-label="anchor" href="#changes-in-mirt-146"></a></h2>
-<ul><li><p><code><a href="../reference/RCI.html">RCI()</a></code> gains logical argument <code>expected.scores</code> to convert factor scores into metric of observed scores with their associated delta-method SEs</p></li>
+<ul><li><p>Added <code>itemtype = 'monospline'</code> for the monotonic spline model</p></li>
+<li><p><code><a href="../reference/RCI.html">RCI()</a></code> gains logical argument <code>expected.scores</code> to convert factor scores into metric of observed scores with their associated delta-method SEs</p></li>
 <li><p>Added <code>plot(.., type = 'gen.difficulty')</code> to plot item by generalized difficulty. Mainly useful in multi-group/mixture modeling contexts</p></li>
 <li><p><code><a href="../reference/multipleGroup.html">multipleGroup()</a></code> gains <code>nruns</code> and friends with the same specification as in <code><a href="../reference/mdirt.html">mdirt()</a></code>. Allows for multiple models to be compared (potentially in parallel with <code><a href="../reference/mirtCluster.html">mirtCluster()</a></code>) where local maximum may be an issue (e.g., in mixture IRT models)</p></li>
 </ul></div>

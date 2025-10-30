@@ -11,7 +11,7 @@ Data from"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,14 +95,15 @@ dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.5 0.157 0.843</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># fit 2PL model for each item</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dat, model = 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt(data = dat)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
@@ -139,6 +140,27 @@ dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 COV_11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> par      0      1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)</span></span></span>
+<span class="r-in"><span><span class="va">mod_monospline</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, itemtype <span class="op">=</span> <span class="st">'monospline'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod_monospline</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    AIC    SABIC       HQ      BIC    logLik   X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod            5337.61 5354.927 5356.263 5386.688 -2658.805              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_monospline 5355.36 5389.994 5392.666 5453.515 -2657.680 2.25 10 0.994</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod_monospline</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="LSAT7-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># compare item 1 trace-lines</span></span></span>
+<span class="r-in"><span><span class="va">i1</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract.item.html">extract.item</a></span><span class="op">(</span><span class="va">mod</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">i1mono</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract.item.html">extract.item</a></span><span class="op">(</span><span class="va">mod_monospline</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="fl">6</span>, length.out<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">twoPL</span> <span class="op">&lt;-</span> <span class="fu"><a href="probtrace.html">probtrace</a></span><span class="op">(</span><span class="va">i1</span>, <span class="va">theta</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">monospline</span> <span class="op">&lt;-</span> <span class="fu"><a href="probtrace.html">probtrace</a></span><span class="op">(</span><span class="va">i1mono</span>, <span class="va">theta</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">twoPL</span> <span class="op">~</span> <span class="va">theta</span>, type <span class="op">=</span> <span class="st">'l'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">monospline</span> <span class="op">~</span> <span class="va">theta</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="LSAT7-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
@@ -180,7 +202,7 @@ dichotomously scored items. <em>Psychometrika, 35</em>(2), 179-197.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full-information item factor analysis with 1 factor(s).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged within 1e-04 tolerance after 28 EM iterations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mirt version: 1.45.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> M-step optimizer: BFGS </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> EM acceleration: Ramsay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of rectangular quadrature: 61</span>
