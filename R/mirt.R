@@ -415,7 +415,7 @@
 #'     \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
 #'       or the \code{\link{ns}} function
 #'     \item \code{'monospline'} - monotonic spline response model with a constrained version of the
-#'       I-spline basis from \code{\link[splines2]{iSpline}} (Winsberg, Thissen, and Wainer, 1984)
+#'       I-spline basis from \code{\link[splines2]{iSpline}} (Ramsay and Winsberg, 1991; Winsberg, Thissen, and Wainer, 1984)
 #'     \item \code{'monopoly'} - monotonic polynomial model for unidimensional tests
 #'       for dichotomous and polytomous response data (Falk and Cai, 2016)
 #'  }
@@ -835,6 +835,9 @@
 #'
 #' Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis.
 #' \emph{Psychometrika, 40}, 337-360.
+#'
+#' Ramsay, J. O. & Winsberg, S. (1991). Maximum marginal likelihood estimation for
+#' Semiparametric item analysis. \emph{Psychometrika, 56}(3), 365-379.
 #'
 #' Rasch, G. (1960). Probabilistic models for some intelligence and attainment tests.
 #' \emph{Danish Institute for Educational Research}.
