@@ -350,7 +350,8 @@ equality constraints, inequality constraints, etc}
 function for equality constraints, inequality constraints, etc}
 
 \item{spline_args}{a named list of lists containing information to be passed to the \code{\link{bs}} (default)
-  and \code{\link{ns}} for each spline itemtype. Each element must refer to the name of the itemtype with the
+  \code{\link{ns}}, and \code{\link[splines2]{iSpline}} for each spline/monospline itemtype.
+  Each element must refer to the name of the itemtype with the
   spline, while the internal list names refer to the arguments which are passed. For example, if item 2 were called
   'read2', and item 5 were called 'read5', both of which were of itemtype 'spline' but item 5 should use the
   \code{\link{ns}} form, then a modified list for each input might be of the form:
@@ -370,7 +371,7 @@ control input)}
 \item{technical}{a list containing lower level technical parameters for estimation. May be:
 \describe{
   \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
-  \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
+  \item{MAXQUAD}{maximum number of quadrature, which you can increase if you have more than
     4GB or RAM on your PC; default 20000}
   \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}. Note that
     when \code{itemtype = 'ULL'} a log-normal distribution is used and the range is change to
