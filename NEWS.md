@@ -1,5 +1,7 @@
 # Changes in mirt 1.46
 
+- Added `itemtype = 'monospline'` for the monotonic spline model 
+
 - `RCI()` gains logical argument `expected.scores` to convert factor scores into metric 
   of observed scores with their associated delta-method SEs
 

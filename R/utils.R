@@ -2551,6 +2551,9 @@ loadSplineParsItem <- function(x, Theta){
     } else if(x@stype == 'ns'){
         splines::ns(Theta, df=sargs$df, knots=sargs$knots,
                     intercept=sargs$intercept)
+    } else if(x@stype == 'iSpline'){
+        cbind(1, splines2::iSpline(Theta, df=sargs$df, knots=sargs$knots,
+                          degree=sargs$degree, intercept=FALSE))
     }
     class(Theta_prime) <- 'matrix'
     x@Theta_prime <- Theta_prime

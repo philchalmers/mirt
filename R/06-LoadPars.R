@@ -11,8 +11,8 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         stop(paste("Unknown itemtype:", paste(itemtype[invalid.items], collapse=" ")), call.=FALSE)
     if(any(itemtype %in% c('gpcmIRT', 'monopoly', 'grsmIRT')) && nfact > 1L)
         stop('Multidimensional model not supported for select itemtype(s)', call.=FALSE)
-    if(any(itemtype == 'spline' & K > 2L))
-        stop('spline itemtype only supported for dichotomous items', call.=FALSE)
+    if(any(itemtype %in% c('spline', 'monospline') & K > 2L))
+        stop('spline and monospline itemtype only supported for dichotomous items', call.=FALSE)
     if(length(gpcm_mats)){
         tmp <- sapply(gpcm_mats, ncol)
         if(!all(tmp == nfact))
@@ -223,7 +223,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             names(fp) <- names(val)
             startvalues[[i]] <- val
             freepars[[i]] <- fp
-        } else if (itemtype[i] == 'spline'){
+        } else if (itemtype[i] %in% c('spline', 'monospline')){
             next
         } else if (itemtype[i] %in% Luo2001Set()){
             val <- c(rep(1, nfact), 1/2, seq(-1, 1, length.out=K[i]-1))
@@ -691,7 +691,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(itemtype[i] == 'spline'){
+        if(itemtype[i] %in% c('spline', 'monospline')){
             stype <- 'bs'
             intercept <- TRUE
             df <- knots <- NULL
@@ -704,13 +704,17 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                 if(!is.null(sargs$knots)) knots <- sargs$knots
                 if(!is.null(sargs$degree)) degree <- sargs$degree
             }
+            if(itemtype[i] == 'monospline')
+                stype <- 'iSpline'
             sargs <- list(stype=stype, intercept=intercept, df=df, knots=knots, degree=degree)
             Theta_prime <- if(stype == 'bs'){
                 splines::bs(c(-2,2), df=df, knots=knots, degree=degree, intercept=intercept)
             } else if(stype == 'ns'){
                 splines::ns(c(-2,2), df=df, knots=knots, intercept=intercept)
+            } else if(stype == 'iSpline'){
+                cbind(1, splines2::iSpline(c(-2,2), df=df, knots=knots, degree=degree, intercept=FALSE))
             } else stop('splines function not supported', call.=FALSE)
-            p <- seq(-10, 10, length.out=ncol(Theta_prime))
+            p <- rep(1, length.out=ncol(Theta_prime))
             est <- rep(TRUE, ncol(Theta_prime))
             names(est) <- paste0('s', 1L:length(p))
             pars[[i]] <- new('spline', par=p,
@@ -727,7 +731,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                              itemclass=11L,
                              prior.type=rep(0L, length(p)),
                              fixed.design=fixed.design.list[[i]],
-                             lbound=rep(-Inf, length(p)),
+                             lbound=if(stype == 'iSpline') c(-Inf, rep(0.0001, length(p)-1)) else rep(-Inf, length(p)),
                              ubound=rep(Inf, length(p)),
                              prior_1=rep(NaN,length(p)),
                              prior_2=rep(NaN,length(p)))

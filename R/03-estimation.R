@@ -147,12 +147,12 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 itemtype[itemtype == 'rsm'] <- 'gpcm'
                 itemtype[itemtype == '3PL' | itemtype == '3PLu' | itemtype == '4PL'] <- '2PL'
                 itemtype[itemtype == '3PLNRM' | itemtype == '3PLuNRM' | itemtype == '4PLNRM'] <- '2PLNRM'
-                itemtype[itemtype == 'spline'] <- '2PL'
+                itemtype[itemtype %in% c('spline', 'monospline')] <- '2PL'
             }
         }
         if(!is.null(itemtype)){
-            if(any(itemtype == 'spline') && !(opts$method %in% c('EM', 'QMCEM', 'MCEM')))
-                stop('spline itemtype only supported for EM algorithm', call.=FALSE)
+            if(any(itemtype %in% c('spline', 'monospline')) && !(opts$method %in% c('EM', 'QMCEM', 'MCEM')))
+                stop('spline and monospline itemtype only supported for EM algorithm', call.=FALSE)
         }
         if(length(group) != nrow(data))
             stop('length of group not equal to number of rows in data.', call.=FALSE)

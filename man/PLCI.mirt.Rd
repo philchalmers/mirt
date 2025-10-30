@@ -43,7 +43,7 @@ this value will be adjusted accordingly}
 \item{inf2val}{a numeric used to change parameter bounds which are infinity to a finite number.
 Decreasing this too much may not allow a suitable bound to be located. Default is 30}
 
-\item{NealeMiller}{logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}}
+\item{NealeMiller}{logical; use the Neale and Miller (1997) approximation? Default is \code{FALSE}}
 
 \item{verbose}{logical; include additional information in the console?}
 

@@ -18,18 +18,19 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll
 Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
                                  'graded', 'grsm', 'gpcm', 'gpcmIRT',
                                  'rsm', 'nominal','PC1PL', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
-                                 'ideal', 'lca', 'spline', 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
+                                 'ideal', 'lca', 'spline', 'monospline',
+                                 'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
 
 ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll', 'ull',
-                                  'ggum', 'rating', 'spline', 'monopoly',
+                                  'ggum', 'rating', 'spline', 'monospline', 'monopoly',
                                   'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT',
                                   'GUM')
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'spline', 'sequential', 'Tutz', 'Luo2001',
+Use_R_ProbTrace <- function() c('custom', 'spline', 'monospline', 'sequential', 'Tutz', 'Luo2001',
                                 Experimental_itemtypes())
 
-Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'sequential', 'Tutz',
+Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'monospline', 'sequential', 'Tutz',
                             'Luo2001', Experimental_itemtypes())
 
 #--------------------------------------------------------------------

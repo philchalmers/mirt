@@ -17,8 +17,25 @@ dat <- expand.table(LSAT7)
 head(dat)
 itemstats(dat)
 
-(mod <- mirt(dat, 1))
+# fit 2PL model for each item
+(mod <- mirt(dat))
 coef(mod)
+
+# monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)
+mod_monospline <- mirt(dat, itemtype = 'monospline')
+anova(mod, mod_monospline)
+plot(mod_monospline)
+
+# compare item 1 trace-lines
+i1 <- extract.item(mod, 1)
+i1mono <- extract.item(mod_monospline, 1)
+theta <- matrix(seq(-6, 6, length.out=100))
+twoPL <- probtrace(i1, theta)[,2]
+monospline <- probtrace(i1mono, theta)[,2]
+
+plot(twoPL ~ theta, type = 'l')
+lines(monospline ~ theta, col='red')
+
 }
 
 \donttest{

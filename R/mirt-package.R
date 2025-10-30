@@ -31,6 +31,7 @@
 #' @importFrom graphics symbols
 #' @importFrom Deriv Deriv
 #' @importFrom SimDesign manageWarnings
+#' @importFrom splines2 iSpline
 #' @exportMethod anova residuals summary logLik vcov
 #' @references
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
@@ -139,6 +140,21 @@ NULL
 #' # potentially better scoring for item 32 (based on nominal model finding)
 #' dat <- key2binary(SAT12,
 #'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
+#'
+#' # fit 2PL model to each item
+#' mod <- mirt(dat)
+#' plot(mod)
+#' itemfit(mod)
+#'
+#' # fit monotonic spline model to items 4 through 6 to improve fit
+#' itemtype <- rep('2PL', 32)
+#' itemtype[4:6] <- 'monospline'
+#' mod_mspline <- mirt(dat, itemtype = itemtype)
+#' anova(mod, mod_mspline)
+#'
+#' plot(mod, which.items=4:6, type = 'trace')
+#' plot(mod_mspline, which.items=4:6, type = 'trace')
+#'
 #' }
 NULL
 
@@ -163,8 +179,25 @@ NULL
 #' head(dat)
 #' itemstats(dat)
 #'
-#' (mod <- mirt(dat, 1))
+#' # fit 2PL model for each item
+#' (mod <- mirt(dat))
 #' coef(mod)
+#'
+#' # monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)
+#' mod_monospline <- mirt(dat, itemtype = 'monospline')
+#' anova(mod, mod_monospline)
+#' plot(mod_monospline)
+#'
+#' # compare item 1 trace-lines
+#' i1 <- extract.item(mod, 1)
+#' i1mono <- extract.item(mod_monospline, 1)
+#' theta <- matrix(seq(-6, 6, length.out=100))
+#' twoPL <- probtrace(i1, theta)[,2]
+#' monospline <- probtrace(i1mono, theta)[,2]
+#'
+#' plot(twoPL ~ theta, type = 'l')
+#' lines(monospline ~ theta, col='red')
+#'
 #' }
 NULL
 

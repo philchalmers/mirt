@@ -1,5 +1,5 @@
 Package: mirt
-Version: 1.45.4
+Version: 1.45.5
 Type: Package
 Title: Multidimensional Item Response Theory
 Authors@R: c( person("Phil", family="Chalmers", email =
@@ -43,6 +43,7 @@ Imports:
     vegan,
     Deriv,
     splines,
+    splines2,
     pbapply (>= 1.3-0),
     dcurver,
     SimDesign

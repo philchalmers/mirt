@@ -106,7 +106,9 @@ model will be fit unless otherwise specified}
       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
       the upper asymptote only (Suh and Bolt, 2010)
     \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
-      or the \code{\link{ns}} function (Winsberg, Thissen, and Wainer, 1984)
+      or the \code{\link{ns}} function
+    \item \code{'monospline'} - monotonic spline response model with a constrained version of the
+      I-spline basis from \code{\link[splines2]{iSpline}} (Winsberg, Thissen, and Wainer, 1984)
     \item \code{'monopoly'} - monotonic polynomial model for unidimensional tests
       for dichotomous and polytomous response data (Falk and Cai, 2016)
  }
@@ -754,6 +756,7 @@ number of categories (using \eqn{k} for specific category instances).
     \eqn{z = 1,2,\ldots, C} (where \eqn{C} is the number of categories minus 1),
     and \eqn{M = 2C + 1}.
     }
+
   \item{(g)hcm, (g)alm, (g)sslm, and (g)paralla}{Following Luo (2001), this family of response models
     can be characterized under the same ordinal response functioning structure, differing only in their
     linking functions (\eqn{\psi(x)}). For example, for a two-dimensional model the equation used is
@@ -783,12 +786,20 @@ number of categories (using \eqn{k} for specific category instances).
     }
      all of which are available for dichotomous and ordered polytomous response option items.
   }
+
   \item{spline}{Spline response models attempt to model the response curves uses non-linear and potentially
     non-monotonic patterns. The form is
     \deqn{P(x = 1|\theta, \eta) = \frac{1}{1 + exp(-(\eta_1 * X_1 + \eta_2 * X_2 + \cdots + \eta_n * X_n))}}
     where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
     values. B-splines with a natural or polynomial basis are supported, and the \code{intercept} input is
     set to \code{TRUE} by default.}
+
+  \item{monospline}{The structure of the monotone spline is the same as the \code{'spline'} type, however
+  is built from a constrained version of an I-spline from \code{\link[splines2]{iSpline}}, which are cumulative
+  sums of B-splines. In this case, the intercept is left as an unconstrained parameter to be estimated,
+  however all other terms are constrained to
+  be positive. For this model to work correctly \code{intercept} must always be \code{TRUE}.}
+
   \item{monopoly}{Monotone polynomial model for polytomous response data of the form
     \deqn{P(x = k | \theta, \psi) =
     \frac{exp(\sum_1^k (m^*(\psi) + \xi_{c-1})}
