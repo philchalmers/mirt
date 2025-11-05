@@ -75,10 +75,16 @@ test_that('dich', {
     modideal <- mirt(data, 1, verbose=FALSE, itemtype='ideal')
     cfs <- as.numeric(do.call(c, coef(modideal)))
     expect_equal(cfs, c(0.2833761,-0.5685226,0.4186987,-0.8906244,0.5679343,-0.5649427,0.2920432,-0.999962,0.2066424,-0.5591496,0,1), tolerance = 1e-2)
-    modspline <- mirt(data, 1, verbose=FALSE, itemtype=c(rep('2PL', 4), 'spline'))
+    modspline <- mirt(data, 1, verbose=FALSE,
+                      itemtype=c(rep('2PL', 4), 'spline'), technical=list(NCYCLES=5000))
     cfs <- as.numeric(do.call(c, coef(modspline)))
-    expect_equal(cfs, c(0.963,1.848,0,1,1.08,0.809,0,1,1.719,1.812,0,1,0.758,0.485,0,1,-0.91,0.359,0.8,11.81,0,1), tolerance = 1e-2)
-    expect_equal(logLik(modspline), -2657.558, tolerance = 1e-4)
+    expect_equal(cfs, c(c(0.97,1.85,0,1,1.08,0.81,0,1,1.72,1.81,0,1,0.76,0.49,0,1,0.04,-1.96,4.93,5.76,0,1)), tolerance = 1e-2)
+    expect_equal(logLik(modspline), -2657.599, tolerance = 1e-4)
+    monospline <- mirt(data, 1, verbose=FALSE,
+                      itemtype=c('monospline', rep('2PL', 4)))
+    cfs <- as.numeric(do.call(c, coef(monospline)))
+    expect_equal(cfs, c(c(c(-1.99,4.54,0,11.07,1.08,0.81,0,1,1.73,1.82,0,1,0.76,0.49,0,1,0.73,1.85,0,1,0,1))), tolerance = 1e-2)
+    expect_equal(logLik(monospline), -2657.631, tolerance = 1e-4)
 
     #QMCEM
     mod <- mirt(dat, 1, method = 'QMCEM', verbose=FALSE, optimizer='NR')
