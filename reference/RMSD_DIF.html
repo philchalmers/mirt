@@ -148,7 +148,6 @@ model is passed this will return the RMSD information regarding the observed vs 
 <span class="r-in"><span><span class="co"># fully pooled model</span></span></span>
 <span class="r-in"><span><span class="va">pooled_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group<span class="op">=</span><span class="va">group</span>,</span></span>
 <span class="r-in"><span>   invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="st">'free_mean'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pooled_mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -322,7 +321,6 @@ model is passed this will return the RMSD information regarding the observed vs 
 <span class="r-in"><span><span class="co"># more freely estimated model (item 1 has 2 parameters estimated)</span></span></span>
 <span class="r-in"><span><span class="va">MGmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group<span class="op">=</span><span class="va">group</span>,</span></span>
 <span class="r-in"><span>                       invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="st">'free_mean'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">MGmod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -479,7 +477,6 @@ model is passed this will return the RMSD information regarding the observed vs 
 <span class="r-in"><span><span class="st">                            PRIOR = (1-20, g, norm, -1, 0.5)"</span>,</span></span>
 <span class="r-in"><span>                     group<span class="op">=</span><span class="va">group</span>, itemtype<span class="op">=</span><span class="st">'3PL'</span>,</span></span>
 <span class="r-in"><span>                     invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="st">'free_mean'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $g1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -733,7 +730,6 @@ model is passed this will return the RMSD information regarding the observed vs 
 <span class="r-in"><span><span class="co"># fully pooled model</span></span></span>
 <span class="r-in"><span><span class="va">pooled_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group<span class="op">=</span><span class="va">group</span>,</span></span>
 <span class="r-in"><span>         invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="st">'free_mean'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">pooled_mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -948,7 +944,6 @@ model is passed this will return the RMSD information regarding the observed vs 
 <span class="r-in"><span><span class="co"># more freely estimated model (item 1 has more parameters estimated)</span></span></span>
 <span class="r-in"><span><span class="va">MGmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group<span class="op">=</span><span class="va">group</span>,</span></span>
 <span class="r-in"><span>                       invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="st">'free_mean'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">MGmod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>

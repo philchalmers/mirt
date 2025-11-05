@@ -274,9 +274,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                     invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="DRF-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, which.items <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="co">#DBF</span></span></span>
@@ -736,7 +733,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span>                <span class="va">d</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">-</span><span class="fl">15</span>, <span class="fl">0</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>, <span class="va">N</span>, itemtype <span class="op">=</span> <span class="st">'dich'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="DRF-12.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span> <span class="co">#does not account for group differences! Need anchors</span></span></span>
@@ -747,9 +743,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="DRF-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -774,9 +767,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod3</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod3</span><span class="op">)</span> <span class="co">#visable DTF happening</span></span></span>
 <span class="r-plt img"><img src="DRF-14.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -876,9 +866,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span><span class="co"># item 1-10 as anchors</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                     invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $D1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -1060,9 +1047,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                     invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Group_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
@@ -1206,9 +1190,6 @@ which in general can be seen as special-case estimators of this family.</p>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group<span class="op">=</span><span class="va">group</span>, SE<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                     invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Group_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
