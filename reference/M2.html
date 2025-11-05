@@ -191,10 +191,8 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> G2 (21) = 31.7, p = 0.0628</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> RMSEA = 0.023, CFI = NaN, TLI = NaN</span>
 <span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             M2 df          p     RMSEA     RMSEA_5   RMSEA_95      SRMSR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 11.93769  5 0.03565165 0.0372683 0.008950922 0.06496573 0.03195919</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             TLI       CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.9369332 0.9684666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats 11.938  5 0.036 0.037   0.009    0.065 0.032 0.937 0.968</span>
 <span class="r-in"><span><span class="va">resids</span> <span class="op">&lt;-</span> <span class="fu">M2</span><span class="op">(</span><span class="va">mod1</span>, residmat<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="co">#lower triangle of residual correlation matrix</span></span></span>
 <span class="r-in"><span><span class="va">resids</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Item.1      Item.2       Item.3       Item.4 Item.5</span>
@@ -211,10 +209,8 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/prod.html" class="external-link">prod</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span>, <span class="fl">250</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             M2 df         p      RMSEA RMSEA_5   RMSEA_95      SRMSR       TLI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 8.239687  5 0.1435113 0.02546735       0 0.05530946 0.03324067 0.9630427</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.9815213</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats 8.24  5 0.144 0.025       0    0.055 0.033 0.963 0.982</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># C2 statistic (useful when polytomous IRT models have too few df)</span></span></span>
 <span class="r-in"><span><span class="va">pmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="fl">1</span><span class="op">)</span></span></span>
@@ -222,10 +218,8 @@ multidimensional contingency tables. <em>Psychometrika, 71</em>, 713-732.</p>
 <span class="r-in"><span><span class="co"># M2(pmod)</span></span></span>
 <span class="r-in"><span><span class="co"># This, however, works:</span></span></span>
 <span class="r-in"><span><span class="fu">M2</span><span class="op">(</span><span class="va">pmod</span>, type <span class="op">=</span> <span class="st">'C2'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             M2 df           p     RMSEA    RMSEA_5  RMSEA_95      SRMSR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 19.17929  2 6.84337e-05 0.1482174 0.09234204 0.2116368 0.07257313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             TLI       CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 0.7300952 0.9100317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR  TLI  CFI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats 19.179  2 0 0.148   0.092    0.212 0.073 0.73 0.91</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
