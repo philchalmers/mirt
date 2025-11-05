@@ -151,5 +151,5 @@ wald.test <- function(B, covB, L, C = NULL){
     ret <- list(W=W, df = qr(L)$rank)
     p <- 1 - pchisq(ret$W, ret$df)
     ret$p <- p
-    as.data.frame(ret)
+    as.mirt_df(as.data.frame(ret))
 }

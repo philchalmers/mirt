@@ -286,8 +286,9 @@ Rotate <- function(F, rotate, Target = NULL, par.strip.text = NULL, par.settings
 	    sign(x[which.max(abs(x))]))
 	rotF$loadings <- t(s * t(rotF$loadings))
 	if(is.null(rotF$Phi)) rotF$Phi <- diag(ncol(rotF$loadings))
-	rotF$Phi <- diag(s) %*% rotF$Phi %*% diag(s)
-	return(unclass(rotF))
+	rotF$Phi <- as.mirt_matrix(diag(s) %*% rotF$Phi %*% diag(s))
+	rotF$loadings <- as.mirt_matrix(rotF$loadings)
+	rotF
 }
 
 # Gamma correlation, mainly for obtaining a sign
@@ -406,7 +407,7 @@ Lambdas <- function(pars, Names){
     dcov <- if(ncol(gcov) > 1L) diag(sqrt(diag(gcov))) else matrix(sqrt(diag(gcov)))
     lambdas <- lambdas %*% dcov
     norm <- sqrt(1 + rowSums(lambdas^2))
-    F <- as.matrix(lambdas/norm)
+    F <- as.mirt_matrix(lambdas/norm)
     F
 }
 

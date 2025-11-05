@@ -211,7 +211,7 @@ setMethod(
             Phi <- cov2cor(gp$gcov)
             rownames(Phi) <- colnames(Phi) <- names(SS) <-
                 colnames(F)[seq_len(object@Model$nfact)]
-            loads <- cbind(F,h2)
+            loads <- as.mirt_matrix(cbind(F,h2))
             if(verbose){
                 if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
@@ -234,7 +234,7 @@ setMethod(
             SS <- apply(rotF$loadings^2,2,sum)
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
-            loads <- cbind(L,h2)
+            loads <- as.mirt_matrix(cbind(L,h2))
             Phi <- diag(ncol(F))
             if(!rotF$orthogonal)
                 Phi <- rotF$Phi

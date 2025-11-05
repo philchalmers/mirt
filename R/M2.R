@@ -480,7 +480,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
                               df.null=null.fit$df)
         } else warning('Null model chi-squared value smaller than fitted model', call.=FALSE)
     }
-    newret <- as.data.frame(newret)
+    newret <- as.mirt_df(as.data.frame(newret))
     rownames(newret) <- 'stats'
     newret
 }

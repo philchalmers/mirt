@@ -172,7 +172,7 @@ Deriv.mix <- function(x, estHess=FALSE){
 #' @param ... additional arguments passed to \code{print(...)}
 #' @export
 print.mirt_df <- function(x, digits = 3, ...){
-    cls <- class(x)[2L]
+    cls <- 'data.frame'
     class(x) <- cls
     if(nrow(x) > 0){
         clsss <- sapply(x, class)
@@ -201,7 +201,7 @@ print.mirt_df <- function(x, digits = 3, ...){
 #' @param ... additional arguments passed to \code{print(...)}
 #' @export
 print.mirt_matrix <- function(x, digits = 3, ...){
-    cls <- class(x)[2L]
+    cls <- 'matrix'
     class(x) <- cls
     x <- round(x, digits=digits)
     print(x, ...)
