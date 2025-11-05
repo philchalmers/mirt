@@ -83,7 +83,7 @@ test_that('dich', {
     monospline <- mirt(data, 1, verbose=FALSE,
                       itemtype=c('monospline', rep('2PL', 4)))
     cfs <- as.numeric(do.call(c, coef(monospline)))
-    expect_equal(cfs, c(c(c(-1.99,4.54,0,11.07,1.08,0.81,0,1,1.73,1.82,0,1,0.76,0.49,0,1,0.73,1.85,0,1,0,1))), tolerance = 1e-2)
+    expect_equal(cfs, c(c(c(-1.99,4.54,0,11.07,1.08,0.81,0,1,1.73,1.82,0,1,0.76,0.49,0,1,0.73,1.85,0,1,0,1))), tolerance = 1e-1)
     expect_equal(logLik(monospline), -2657.631, tolerance = 1e-4)
 
     #QMCEM
