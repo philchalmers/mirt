@@ -613,6 +613,7 @@ multipleGroup <- function(data, model = 1, group, itemtype = NULL,
     if(grepl('mixture', dentype)) group <- rep('full', nrow(data))
     mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)),
                      progress=verbose && nruns > 1L,
+                     verbose=verbose,
                      data=data, model=model, group=group, invariance=invariance, method=method,
                      itemtype=itemtype, dentype=dentype, mixed.design=mixed.design,
                      GenRandomPars=GenRandomPars, ...)
