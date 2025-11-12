@@ -86,7 +86,7 @@ empirical_rxx(fs)
 theta <- rnorm(1000)
 X <- theta + rnorm(1000, sd=2)
 cor(X, theta)    # correlation without measurement error (what you want)
-#> [1] 0.4644682
+#> [1] 0.4504707
 
 # measured with a 10 item GRM test
 nitems <- 10
@@ -98,7 +98,7 @@ dat <- simdata(a, d, itemtype = 'graded', Theta=matrix(theta))
 
 # correlation with total score (attenuated)
 cor(rowSums(dat), X)
-#> [1] 0.4279283
+#> [1] 0.3875882
 
 # fit single group model
 mod <- mirt(dat)
@@ -107,16 +107,16 @@ mod <- mirt(dat)
 fs <- fscores(mod)
 cor(fs, X)
 #>         [,1]
-#> F1 0.4302499
+#> F1 0.3901645
 
 # correction for attenuation, r_x.theta = r_x.theta.hat / sqrt(rxx_theta.hat)
 (rxx <- marginal_rxx(mod))  # alternatively, could use empirical_rxx()
-#> [1] 0.8095505
+#> [1] 0.7563939
 cor(fs, X) / sqrt(rxx)  # correction estimate
 #>         [,1]
-#> F1 0.4781881
+#> F1 0.4486149
 cor(X, theta)           # compare to true correlation
-#> [1] 0.4644682
+#> [1] 0.4504707
 
 # }
 ```

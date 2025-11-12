@@ -190,6 +190,10 @@
 - [`logLik(`*`<SingleGroupClass>`*`)`](https://philchalmers.github.io/mirt/reference/logLik-method.md)
   : Extract log-likelihood
 
+- [`marginal_moments()`](https://philchalmers.github.io/mirt/reference/marginal_moments.md)
+  : Function to calculate the marginal moments for items and bundles fit
+  via IRT models
+
 - [`marginal_rxx()`](https://philchalmers.github.io/mirt/reference/marginal_rxx.md)
   : Function to calculate the marginal reliability
 

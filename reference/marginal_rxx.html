@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,7 +124,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">theta</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, sd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span>    <span class="co"># correlation without measurement error (what you want)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4644682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4504707</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># measured with a 10 item GRM test</span></span></span>
 <span class="r-in"><span><span class="va">nitems</span> <span class="op">&lt;-</span> <span class="fl">10</span></span></span>
@@ -136,7 +136,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># correlation with total score (attenuated)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="va">X</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4279283</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3875882</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fit single group model</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
@@ -145,16 +145,16 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">fs</span>, <span class="va">X</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.4302499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.3901645</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># correction for attenuation, r_x.theta = r_x.theta.hat / sqrt(rxx_theta.hat)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">rxx</span> <span class="op">&lt;-</span> <span class="fu">marginal_rxx</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">)</span>  <span class="co"># alternatively, could use empirical_rxx()</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8095505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7563939</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">fs</span>, <span class="va">X</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">rxx</span><span class="op">)</span>  <span class="co"># correction estimate</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.4781881</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 0.4486149</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">theta</span><span class="op">)</span>           <span class="co"># compare to true correlation</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4644682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4504707</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

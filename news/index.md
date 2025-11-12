@@ -2,6 +2,11 @@
 
 ## Changes in mirt 1.46
 
+- Exposed
+  [`marginal_moments()`](https://philchalmers.github.io/mirt/reference/marginal_moments.md)
+  function to compute marginal item/bundle moment information for the
+  scoring functions
+
 - Added `itemtype = 'monospline'` for the monotonic spline model
 
 - [`RCI()`](https://philchalmers.github.io/mirt/reference/RCI.md) gains
