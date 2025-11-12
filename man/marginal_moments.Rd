@@ -40,7 +40,8 @@ as the values of the mean/variance are extracted and passed from the supplied mo
 }
 \description{
 Given an estimated model and a prior density function, compute the marginal moments for either
-and item or a bundle of items. Currently limited to unidimensional IRT models.
+and item or a bundle of items. Function returns the first found moments implied by the model
+and select density function (MEAN, VAR, SKEW, and KURT). Currently limited to unidimensional IRT models.
 }
 \examples{
 

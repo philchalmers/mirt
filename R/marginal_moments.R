@@ -1,7 +1,8 @@
 #' Function to calculate the marginal moments for items and bundles fit via IRT models
 #'
 #' Given an estimated model and a prior density function, compute the marginal moments for either
-#' and item or a bundle of items. Currently limited to unidimensional IRT models.
+#' and item or a bundle of items. Function returns the first found moments implied by the model
+#' and select density function (MEAN, VAR, SKEW, and KURT). Currently limited to unidimensional IRT models.
 #'
 #' @param mod an object of class \code{'SingleGroupClass'} or \code{'MultipleGroupClass'}
 #' @param which.items vector indicating which items to use in the computation of the expected values.
