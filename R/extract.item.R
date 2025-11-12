@@ -6,8 +6,9 @@
 #' @param x mirt model of class \code{'SingleGroupClass'}, \code{'MultipleGroupClass'}, or
 #'   \code{'MixtureClass'}
 #' @param item a number or character signifying which item to extract
-#' @param group a number signifying which group the item should be extracted from (applies to
-#'   \code{'MultipleGroupClass'} and \code{'MixtureClass'} only)
+#' @param group which group the item should be extracted from (applies to
+#'   \code{'MultipleGroupClass'} and \code{'MixtureClass'} only). Can be a numeric
+#'   value or the name of the group to be extracted
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
@@ -35,6 +36,10 @@ extract.item <- function(x, item, group = NULL, drop.zeros = FALSE){
     if(!is.numeric(item)) item <- ind[inames == item]
     if(is(x, 'MultipleGroupClass') || is(x, 'MixtureClass')){
         if(is.null(group)) stop('Which group are you trying to extract from?', call.=FALSE)
+        if(is.character(group)){
+            grp <- extract.mirt(x, 'groupNames')
+            group <- which(group == grp)
+        }
         ret <- extract.mirt(extract.mirt(x, 'pars')[[group]], 'pars')[[item]]
     } else {
         ret <- extract.mirt(x, 'pars')[[item]]

@@ -12,8 +12,9 @@ extract.item(x, item, group = NULL, drop.zeros = FALSE)
 
 \item{item}{a number or character signifying which item to extract}
 
-\item{group}{a number signifying which group the item should be extracted from (applies to
-\code{'MultipleGroupClass'} and \code{'MixtureClass'} only)}
+\item{group}{which group the item should be extracted from (applies to
+\code{'MultipleGroupClass'} and \code{'MixtureClass'} only). Can be a numeric
+value or the name of the group to be extracted}
 
 \item{drop.zeros}{logical; drop slope values that are numerically close to zero to reduce
 dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
