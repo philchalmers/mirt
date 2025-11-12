@@ -129,12 +129,20 @@ where \eqn{S(.)} are the scoring equations used to evaluate the model-implied
 difference between the focal and reference group. The \eqn{f(\theta)}
 terms can either be estimated from the posterior via an empirical
 histogram approach (default), or can use the best
-fitting prior distribution that is obtain post-convergence (default is a Guassian
+fitting prior distribution that is obtain post-convergence (default is a Gaussian
 distribution). Note that, in comparison to Chalmers (2018), the focal group is
 the leftmost scoring function while the reference group is the rightmost
 scoring function. This is largely to keep consistent with similar effect
 size statistics, such as SIBTEST, DFIT, Wainer's measures of impact, etc,
 which in general can be seen as special-case estimators of this family.
+
+Finally, for unidimensional models the
+standardized versions of the above effect sizes are also reported, which are obtained by dividing by the
+associated (pooled) standard deviation of the item/bundle/test scoring functions given a  Gaussian density function
+with the associated group mean-variance estimates (see \code{\link{marginal_moments}}). These are reported as
+\code{DRF*} values in the output to reflect the standardization (in a Cohen's d type metric). Note that
+this standardization approach reflects a model-based analogues of the \code{ESSD} and \code{ETSSD} statistics found
+in \code{\link{empirical_ES}} (see Meade, 2010).
 }
 \examples{
 \donttest{
