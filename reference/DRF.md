@@ -194,12 +194,25 @@ are the scoring equations used to evaluate the model-implied difference
 between the focal and reference group. The \\f(\theta)\\ terms can
 either be estimated from the posterior via an empirical histogram
 approach (default), or can use the best fitting prior distribution that
-is obtain post-convergence (default is a Guassian distribution). Note
+is obtain post-convergence (default is a Gaussian distribution). Note
 that, in comparison to Chalmers (2018), the focal group is the leftmost
 scoring function while the reference group is the rightmost scoring
 function. This is largely to keep consistent with similar effect size
 statistics, such as SIBTEST, DFIT, Wainer's measures of impact, etc,
 which in general can be seen as special-case estimators of this family.
+
+Finally, for unidimensional models the standardized versions of the
+above effect sizes are also reported, which are obtained by dividing by
+the associated (pooled) standard deviation of the item/bundle/test
+scoring functions given a Gaussian density function with the associated
+group mean-variance estimates (see
+[`marginal_moments`](https://philchalmers.github.io/mirt/reference/marginal_moments.md)).
+These are reported as `DRF*` values in the output to reflect the
+standardization (in a Cohen's d type metric). Note that this
+standardization approach reflects a model-based analogues of the `ESSD`
+and `ETSSD` statistics found in
+[`empirical_ES`](https://philchalmers.github.io/mirt/reference/empirical_ES.md)
+(see Meade, 2010).
 
 ## References
 
@@ -251,99 +264,99 @@ plot(mod, type = 'itemscore', which.items = 10:15)
 
 # empirical histogram approach
 DRF(mod)
-#>            groups n_focal_items   sDRF  uDRF  dDRF
-#> 1 Group_1,Group_2            30 -0.326 0.326 0.328
+#>            groups n_focal_items   sDRF  uDRF  dDRF  sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2            30 -0.326 0.326 0.328 -0.058 0.058 0.058
 DRF(mod, focal_items = 6:10) #DBF
-#>            groups n_focal_items   sDRF  uDRF  dDRF
-#> 1 Group_1,Group_2             5 -0.069 0.071 0.084
+#>            groups n_focal_items   sDRF  uDRF  dDRF sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2             5 -0.069 0.071 0.084 -0.07 0.072 0.085
 DRF(mod, DIF=TRUE)
-#>             groups    item   sDIF  uDIF  dDIF
-#> 1  Group_1,Group_2  Item_1  0.000 0.000 0.000
-#> 2  Group_1,Group_2  Item_2  0.000 0.000 0.000
-#> 3  Group_1,Group_2  Item_3  0.000 0.000 0.000
-#> 4  Group_1,Group_2  Item_4  0.000 0.000 0.000
-#> 5  Group_1,Group_2  Item_5  0.000 0.000 0.000
-#> 6  Group_1,Group_2  Item_6  0.000 0.016 0.018
-#> 7  Group_1,Group_2  Item_7 -0.026 0.026 0.028
-#> 8  Group_1,Group_2  Item_8 -0.008 0.008 0.008
-#> 9  Group_1,Group_2  Item_9 -0.026 0.026 0.028
-#> 10 Group_1,Group_2 Item_10 -0.010 0.036 0.044
-#> 11 Group_1,Group_2 Item_11 -0.056 0.059 0.065
-#> 12 Group_1,Group_2 Item_12 -0.016 0.016 0.017
-#> 13 Group_1,Group_2 Item_13 -0.015 0.022 0.025
-#> 14 Group_1,Group_2 Item_14 -0.033 0.046 0.054
-#> 15 Group_1,Group_2 Item_15 -0.045 0.045 0.047
-#> 16 Group_1,Group_2 Item_16 -0.030 0.030 0.032
-#> 17 Group_1,Group_2 Item_17  0.018 0.019 0.023
-#> 18 Group_1,Group_2 Item_18  0.011 0.013 0.014
-#> 19 Group_1,Group_2 Item_19 -0.045 0.094 0.117
-#> 20 Group_1,Group_2 Item_20 -0.008 0.010 0.010
-#> 21 Group_1,Group_2 Item_21 -0.070 0.070 0.073
-#> 22 Group_1,Group_2 Item_22  0.017 0.020 0.024
-#> 23 Group_1,Group_2 Item_23  0.036 0.064 0.078
-#> 24 Group_1,Group_2 Item_24  0.040 0.040 0.042
-#> 25 Group_1,Group_2 Item_25  0.002 0.018 0.021
-#> 26 Group_1,Group_2 Item_26 -0.019 0.047 0.065
-#> 27 Group_1,Group_2 Item_27 -0.049 0.049 0.052
-#> 28 Group_1,Group_2 Item_28  0.027 0.029 0.031
-#> 29 Group_1,Group_2 Item_29  0.007 0.025 0.029
-#> 30 Group_1,Group_2 Item_30 -0.029 0.031 0.033
+#>             groups    item   sDIF  uDIF  dDIF  sDIF* uDIF* dDIF*
+#> 1  Group_1,Group_2  Item_1  0.000 0.000 0.000  0.000 0.000 0.000
+#> 2  Group_1,Group_2  Item_2  0.000 0.000 0.000  0.000 0.000 0.000
+#> 3  Group_1,Group_2  Item_3  0.000 0.000 0.000  0.000 0.000 0.000
+#> 4  Group_1,Group_2  Item_4  0.000 0.000 0.000  0.000 0.000 0.000
+#> 5  Group_1,Group_2  Item_5  0.000 0.000 0.000  0.000 0.000 0.000
+#> 6  Group_1,Group_2  Item_6  0.000 0.016 0.018  0.000 0.072 0.081
+#> 7  Group_1,Group_2  Item_7 -0.026 0.026 0.028 -0.131 0.131 0.138
+#> 8  Group_1,Group_2  Item_8 -0.008 0.008 0.008 -0.038 0.038 0.040
+#> 9  Group_1,Group_2  Item_9 -0.026 0.026 0.028 -0.135 0.137 0.147
+#> 10 Group_1,Group_2 Item_10 -0.010 0.036 0.044 -0.052 0.191 0.238
+#> 11 Group_1,Group_2 Item_11 -0.056 0.059 0.065 -0.269 0.285 0.313
+#> 12 Group_1,Group_2 Item_12 -0.016 0.016 0.017 -0.089 0.089 0.092
+#> 13 Group_1,Group_2 Item_13 -0.015 0.022 0.025 -0.086 0.131 0.143
+#> 14 Group_1,Group_2 Item_14 -0.033 0.046 0.054 -0.154 0.214 0.251
+#> 15 Group_1,Group_2 Item_15 -0.045 0.045 0.047 -0.244 0.244 0.251
+#> 16 Group_1,Group_2 Item_16 -0.030 0.030 0.032 -0.138 0.138 0.144
+#> 17 Group_1,Group_2 Item_17  0.018 0.019 0.023  0.100 0.108 0.132
+#> 18 Group_1,Group_2 Item_18  0.011 0.013 0.014  0.050 0.059 0.064
+#> 19 Group_1,Group_2 Item_19 -0.045 0.094 0.117 -0.231 0.479 0.598
+#> 20 Group_1,Group_2 Item_20 -0.008 0.010 0.010 -0.074 0.090 0.099
+#> 21 Group_1,Group_2 Item_21 -0.070 0.070 0.073 -0.392 0.392 0.411
+#> 22 Group_1,Group_2 Item_22  0.017 0.020 0.024  0.086 0.098 0.119
+#> 23 Group_1,Group_2 Item_23  0.036 0.064 0.078  0.177 0.313 0.381
+#> 24 Group_1,Group_2 Item_24  0.040 0.040 0.042  0.185 0.186 0.196
+#> 25 Group_1,Group_2 Item_25  0.002 0.018 0.021  0.011 0.100 0.114
+#> 26 Group_1,Group_2 Item_26 -0.019 0.047 0.065 -0.113 0.285 0.391
+#> 27 Group_1,Group_2 Item_27 -0.049 0.049 0.052 -0.225 0.225 0.241
+#> 28 Group_1,Group_2 Item_28  0.027 0.029 0.031  0.144 0.156 0.167
+#> 29 Group_1,Group_2 Item_29  0.007 0.025 0.029  0.033 0.115 0.129
+#> 30 Group_1,Group_2 Item_30 -0.029 0.031 0.033 -0.176 0.189 0.202
 DRF(mod, DIF=TRUE, focal_items = 10:15)
-#>            groups    item   sDIF  uDIF  dDIF
-#> 1 Group_1,Group_2 Item_10 -0.010 0.036 0.044
-#> 2 Group_1,Group_2 Item_11 -0.056 0.059 0.065
-#> 3 Group_1,Group_2 Item_12 -0.016 0.016 0.017
-#> 4 Group_1,Group_2 Item_13 -0.015 0.022 0.025
-#> 5 Group_1,Group_2 Item_14 -0.033 0.046 0.054
-#> 6 Group_1,Group_2 Item_15 -0.045 0.045 0.047
+#>            groups    item   sDIF  uDIF  dDIF  sDIF* uDIF* dDIF*
+#> 1 Group_1,Group_2 Item_10 -0.010 0.036 0.044 -0.052 0.191 0.238
+#> 2 Group_1,Group_2 Item_11 -0.056 0.059 0.065 -0.269 0.285 0.313
+#> 3 Group_1,Group_2 Item_12 -0.016 0.016 0.017 -0.089 0.089 0.092
+#> 4 Group_1,Group_2 Item_13 -0.015 0.022 0.025 -0.086 0.131 0.143
+#> 5 Group_1,Group_2 Item_14 -0.033 0.046 0.054 -0.154 0.214 0.251
+#> 6 Group_1,Group_2 Item_15 -0.045 0.045 0.047 -0.244 0.244 0.251
 
 # Best-fitting Gaussian distributions
 DRF(mod, best_fitting=TRUE)
-#>            groups n_focal_items   sDRF  uDRF  dDRF
-#> 1 Group_1,Group_2            30 -0.326 0.326 0.328
+#>            groups n_focal_items   sDRF  uDRF  dDRF  sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2            30 -0.326 0.326 0.328 -0.058 0.058 0.058
 DRF(mod, focal_items = 6:10, best_fitting=TRUE) #DBF
-#>            groups n_focal_items   sDRF  uDRF  dDRF
-#> 1 Group_1,Group_2             5 -0.069 0.071 0.084
+#>            groups n_focal_items   sDRF  uDRF  dDRF sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2             5 -0.069 0.071 0.084 -0.07 0.072 0.085
 DRF(mod, DIF=TRUE, best_fitting=TRUE)
-#>             groups    item   sDIF  uDIF  dDIF
-#> 1  Group_1,Group_2  Item_1  0.000 0.000 0.000
-#> 2  Group_1,Group_2  Item_2  0.000 0.000 0.000
-#> 3  Group_1,Group_2  Item_3  0.000 0.000 0.000
-#> 4  Group_1,Group_2  Item_4  0.000 0.000 0.000
-#> 5  Group_1,Group_2  Item_5  0.000 0.000 0.000
-#> 6  Group_1,Group_2  Item_6  0.000 0.016 0.018
-#> 7  Group_1,Group_2  Item_7 -0.026 0.026 0.028
-#> 8  Group_1,Group_2  Item_8 -0.008 0.008 0.008
-#> 9  Group_1,Group_2  Item_9 -0.026 0.026 0.028
-#> 10 Group_1,Group_2 Item_10 -0.010 0.036 0.045
-#> 11 Group_1,Group_2 Item_11 -0.056 0.059 0.065
-#> 12 Group_1,Group_2 Item_12 -0.016 0.016 0.017
-#> 13 Group_1,Group_2 Item_13 -0.015 0.023 0.025
-#> 14 Group_1,Group_2 Item_14 -0.033 0.046 0.054
-#> 15 Group_1,Group_2 Item_15 -0.045 0.045 0.047
-#> 16 Group_1,Group_2 Item_16 -0.030 0.030 0.032
-#> 17 Group_1,Group_2 Item_17  0.018 0.019 0.023
-#> 18 Group_1,Group_2 Item_18  0.011 0.013 0.014
-#> 19 Group_1,Group_2 Item_19 -0.045 0.094 0.118
-#> 20 Group_1,Group_2 Item_20 -0.008 0.010 0.010
-#> 21 Group_1,Group_2 Item_21 -0.070 0.070 0.073
-#> 22 Group_1,Group_2 Item_22  0.017 0.020 0.024
-#> 23 Group_1,Group_2 Item_23  0.036 0.064 0.078
-#> 24 Group_1,Group_2 Item_24  0.040 0.040 0.042
-#> 25 Group_1,Group_2 Item_25  0.002 0.019 0.021
-#> 26 Group_1,Group_2 Item_26 -0.019 0.047 0.065
-#> 27 Group_1,Group_2 Item_27 -0.049 0.049 0.052
-#> 28 Group_1,Group_2 Item_28  0.027 0.029 0.031
-#> 29 Group_1,Group_2 Item_29  0.007 0.025 0.028
-#> 30 Group_1,Group_2 Item_30 -0.029 0.031 0.033
+#>             groups    item   sDIF  uDIF  dDIF  sDIF* uDIF* dDIF*
+#> 1  Group_1,Group_2  Item_1  0.000 0.000 0.000  0.000 0.000 0.000
+#> 2  Group_1,Group_2  Item_2  0.000 0.000 0.000  0.000 0.000 0.000
+#> 3  Group_1,Group_2  Item_3  0.000 0.000 0.000  0.000 0.000 0.000
+#> 4  Group_1,Group_2  Item_4  0.000 0.000 0.000  0.000 0.000 0.000
+#> 5  Group_1,Group_2  Item_5  0.000 0.000 0.000  0.000 0.000 0.000
+#> 6  Group_1,Group_2  Item_6  0.000 0.016 0.018  0.000 0.072 0.081
+#> 7  Group_1,Group_2  Item_7 -0.026 0.026 0.028 -0.130 0.131 0.138
+#> 8  Group_1,Group_2  Item_8 -0.008 0.008 0.008 -0.037 0.037 0.040
+#> 9  Group_1,Group_2  Item_9 -0.026 0.026 0.028 -0.135 0.137 0.147
+#> 10 Group_1,Group_2 Item_10 -0.010 0.036 0.045 -0.053 0.192 0.239
+#> 11 Group_1,Group_2 Item_11 -0.056 0.059 0.065 -0.269 0.285 0.314
+#> 12 Group_1,Group_2 Item_12 -0.016 0.016 0.017 -0.089 0.089 0.092
+#> 13 Group_1,Group_2 Item_13 -0.015 0.023 0.025 -0.086 0.131 0.144
+#> 14 Group_1,Group_2 Item_14 -0.033 0.046 0.054 -0.155 0.215 0.251
+#> 15 Group_1,Group_2 Item_15 -0.045 0.045 0.047 -0.244 0.244 0.251
+#> 16 Group_1,Group_2 Item_16 -0.030 0.030 0.032 -0.138 0.138 0.144
+#> 17 Group_1,Group_2 Item_17  0.018 0.019 0.023  0.100 0.108 0.132
+#> 18 Group_1,Group_2 Item_18  0.011 0.013 0.014  0.050 0.059 0.064
+#> 19 Group_1,Group_2 Item_19 -0.045 0.094 0.118 -0.230 0.479 0.601
+#> 20 Group_1,Group_2 Item_20 -0.008 0.010 0.010 -0.074 0.090 0.099
+#> 21 Group_1,Group_2 Item_21 -0.070 0.070 0.073 -0.392 0.392 0.411
+#> 22 Group_1,Group_2 Item_22  0.017 0.020 0.024  0.086 0.098 0.119
+#> 23 Group_1,Group_2 Item_23  0.036 0.064 0.078  0.176 0.312 0.381
+#> 24 Group_1,Group_2 Item_24  0.040 0.040 0.042  0.185 0.186 0.196
+#> 25 Group_1,Group_2 Item_25  0.002 0.019 0.021  0.011 0.100 0.115
+#> 26 Group_1,Group_2 Item_26 -0.019 0.047 0.065 -0.114 0.286 0.394
+#> 27 Group_1,Group_2 Item_27 -0.049 0.049 0.052 -0.225 0.225 0.242
+#> 28 Group_1,Group_2 Item_28  0.027 0.029 0.031  0.144 0.156 0.167
+#> 29 Group_1,Group_2 Item_29  0.007 0.025 0.028  0.033 0.114 0.129
+#> 30 Group_1,Group_2 Item_30 -0.029 0.031 0.033 -0.176 0.189 0.202
 DRF(mod, DIF=TRUE, focal_items = 10:15, best_fitting=TRUE)
-#>            groups    item   sDIF  uDIF  dDIF
-#> 1 Group_1,Group_2 Item_10 -0.010 0.036 0.045
-#> 2 Group_1,Group_2 Item_11 -0.056 0.059 0.065
-#> 3 Group_1,Group_2 Item_12 -0.016 0.016 0.017
-#> 4 Group_1,Group_2 Item_13 -0.015 0.023 0.025
-#> 5 Group_1,Group_2 Item_14 -0.033 0.046 0.054
-#> 6 Group_1,Group_2 Item_15 -0.045 0.045 0.047
+#>            groups    item   sDIF  uDIF  dDIF  sDIF* uDIF* dDIF*
+#> 1 Group_1,Group_2 Item_10 -0.010 0.036 0.045 -0.053 0.192 0.239
+#> 2 Group_1,Group_2 Item_11 -0.056 0.059 0.065 -0.269 0.285 0.314
+#> 3 Group_1,Group_2 Item_12 -0.016 0.016 0.017 -0.089 0.089 0.092
+#> 4 Group_1,Group_2 Item_13 -0.015 0.023 0.025 -0.086 0.131 0.144
+#> 5 Group_1,Group_2 Item_14 -0.033 0.046 0.054 -0.155 0.215 0.251
+#> 6 Group_1,Group_2 Item_15 -0.045 0.045 0.047 -0.244 0.244 0.251
 
 DRF(mod, plot = TRUE)
 
@@ -377,6 +390,15 @@ DRF(mod, focal_items = 6, param_set=param_set) #DIF test
 #> uDRF Group_1,Group_2             1 0.016  0.007   0.085 0.766  2 0.682
 #> dDRF Group_1,Group_2             1 0.018  0.008   0.098               
 DRF(mod, DIF=TRUE, param_set=param_set) #DIF test
+#> Called from: DRF(mod, DIF = TRUE, param_set = param_set)
+#> debug: if (p.adjust != "none") {
+#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
+#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
+#> }
+#> debug: ret
+#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
+#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
+#>     J = length(pars[[1L]]) - 1L)
 #> $sDIF
 #>             groups    item   sDIF CI_2.5 CI_97.5    X2 df     p
 #> 1  Group_1,Group_2  Item_1  0.000  0.000   0.000               
@@ -499,6 +521,15 @@ DRF(mod, focal_items = 10:15, draws=500) #DBF test
 #> dDRF Group_1,Group_2             6  0.185  0.054   0.415               
 
 DIFs <- DRF(mod, draws = 500, DIF=TRUE)
+#> Called from: DRF(mod, draws = 500, DIF = TRUE)
+#> debug: if (p.adjust != "none") {
+#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
+#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
+#> }
+#> debug: ret
+#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
+#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
+#>     J = length(pars[[1L]]) - 1L)
 print(DIFs)
 #> $sDIF
 #>             groups    item   sDIF CI_2.5 CI_97.5    X2 df     p
@@ -603,6 +634,15 @@ DRF(mod, draws = 500, DIF=TRUE, plot=TRUE)
 
 
 DIFs <- DRF(mod, draws = 500, DIF=TRUE, focal_items = 6:10)
+#> Called from: DRF(mod, draws = 500, DIF = TRUE, focal_items = 6:10)
+#> debug: if (p.adjust != "none") {
+#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
+#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
+#> }
+#> debug: ret
+#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
+#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
+#>     J = length(pars[[1L]]) - 1L)
 print(DIFs)
 #> $sDIF
 #>            groups    item   sDIF CI_2.5 CI_97.5    X2 df     p
@@ -632,9 +672,18 @@ DRF(mod, draws = 500, DIF=TRUE, focal_items = 6:10, plot = TRUE)
 
 
 DRF(mod, DIF=TRUE, focal_items = 6)
-#>            groups   item sDIF  uDIF  dDIF
-#> 1 Group_1,Group_2 Item_6    0 0.016 0.018
+#>            groups   item sDIF  uDIF  dDIF sDIF* uDIF* dDIF*
+#> 1 Group_1,Group_2 Item_6    0 0.016 0.018     0  0.11 0.107
 DRF(mod, draws=500, DIF=TRUE, focal_items = 6)
+#> Called from: DRF(mod, draws = 500, DIF = TRUE, focal_items = 6)
+#> debug: if (p.adjust != "none") {
+#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
+#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
+#> }
+#> debug: ret
+#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
+#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
+#>     J = length(pars[[1L]]) - 1L)
 #> $sDIF
 #>            groups   item sDIF CI_2.5 CI_97.5 X2 df     p
 #> 1 Group_1,Group_2 Item_6    0 -0.059   0.058  0  1 0.998
@@ -704,8 +753,8 @@ plot(mod1)
 DRF(mod1) #does not account for group differences! Need anchors
 #> No hyper-parameters were estimated in the DIF model. For effective
 #>                  DRF testing freeing the focal group hyper-parameters is recommended.
-#>            groups n_focal_items  sDRF  uDRF  dDRF
-#> 1 Group_1,Group_2            30 -3.25 3.268 3.642
+#>            groups n_focal_items  sDRF  uDRF  dDRF  sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2            30 -3.25 3.268 3.642 -0.534 0.536 0.598
 
 mod2 <- multipleGroup(dat, model, group=group, SE=TRUE,
                       invariance=c('free_means', 'free_var'))
@@ -715,8 +764,8 @@ plot(mod2)
 # significant DIF in multiple items....
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 DRF(mod2)
-#>            groups n_focal_items   sDRF  uDRF dDRF
-#> 1 Group_1,Group_2            30 -0.421 0.421 0.51
+#>            groups n_focal_items   sDRF  uDRF dDRF  sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2            30 -0.421 0.421 0.51 -0.069 0.069 0.084
 DRF(mod2, draws=500) #non-sig DTF due to item cancellation
 #>               groups n_focal_items   stat CI_2.5 CI_97.5    X2 df     p
 #> sDRF Group_1,Group_2            30 -0.421 -1.085   0.273 1.529  1 0.216
@@ -738,8 +787,8 @@ plot(mod3) #visable DTF happening
 
 # DIF(mod3, c('a1', 'd'), items2test=16:30)
 DRF(mod3) #unsigned bias. Signed bias (group 2 scores higher on average)
-#>            groups n_focal_items  sDRF  uDRF  dDRF
-#> 1 Group_1,Group_2            30 1.983 2.193 2.471
+#>            groups n_focal_items  sDRF  uDRF  dDRF sDRF* uDRF* dDRF*
+#> 1 Group_1,Group_2            30 1.983 2.193 2.471 0.292 0.322 0.363
 DRF(mod3, draws=500)
 #>               groups n_focal_items  stat CI_2.5 CI_97.5     X2 df p
 #> sDRF Group_1,Group_2            30 1.983  1.275   2.659 29.992  1 0
@@ -921,20 +970,20 @@ DIF(mod, items2test=11:20,
 #> Item_20  D1,D2  32.769  5     0     0
 
 DRF(mod)
-#>   groups n_focal_items   sDRF  uDRF  dDRF
-#> 1  D1,D2            20 -0.195 0.329 0.382
+#>   groups n_focal_items   sDRF  uDRF  dDRF  sDRF* uDRF* dDRF*
+#> 1  D1,D2            20 -0.195 0.329 0.382 -0.011 0.019 0.022
 DRF(mod, DIF=TRUE, focal_items=11:20)
-#>    groups    item   sDIF  uDIF  dDIF
-#> 1   D1,D2 Item_11 -0.080 0.119 0.131
-#> 2   D1,D2 Item_12  0.011 0.024 0.031
-#> 3   D1,D2 Item_13 -0.068 0.069 0.072
-#> 4   D1,D2 Item_14 -0.010 0.121 0.134
-#> 5   D1,D2 Item_15 -0.083 0.083 0.085
-#> 6   D1,D2 Item_16 -0.393 0.402 0.522
-#> 7   D1,D2 Item_17 -0.053 0.219 0.248
-#> 8   D1,D2 Item_18  0.038 0.093 0.110
-#> 9   D1,D2 Item_19  0.073 0.104 0.122
-#> 10  D1,D2 Item_20  0.370 0.425 0.542
+#>    groups    item   sDIF  uDIF  dDIF  sDIF* uDIF* dDIF*
+#> 1   D1,D2 Item_11 -0.080 0.119 0.131 -0.096 0.143 0.157
+#> 2   D1,D2 Item_12  0.011 0.024 0.031  0.013 0.027 0.035
+#> 3   D1,D2 Item_13 -0.068 0.069 0.072 -0.111 0.112 0.118
+#> 4   D1,D2 Item_14 -0.010 0.121 0.134 -0.009 0.105 0.117
+#> 5   D1,D2 Item_15 -0.083 0.083 0.085 -0.125 0.125 0.128
+#> 6   D1,D2 Item_16 -0.393 0.402 0.522 -0.358 0.366 0.475
+#> 7   D1,D2 Item_17 -0.053 0.219 0.248 -0.067 0.279 0.317
+#> 8   D1,D2 Item_18  0.038 0.093 0.110  0.053 0.131 0.154
+#> 9   D1,D2 Item_19  0.073 0.104 0.122  0.107 0.152 0.179
+#> 10  D1,D2 Item_20  0.370 0.425 0.542  0.448 0.515 0.657
 DRF(mod, DIF.cats=TRUE, focal_items=11:20)
 #>    groups    item cat   sDIF  uDIF  dDIF
 #> 1   D1,D2 Item_11   1  0.009 0.021 0.024
