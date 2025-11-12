@@ -105,7 +105,7 @@ marginal_moments <- function(mod, which.items = NULL, group = NULL, bundle = TRU
             VAR <- sum((Eitem - E)^2 * den)
             SKEW <- sum((Eitem - E)^3 * den) / VAR^(3/2)
             KURT <- sum((Eitem - E)^4 * den) / VAR^2
-            ret[pick, ] <- c(E, VAR, SKEW, KURT)
+            ret[i, ] <- c(E, VAR, SKEW, KURT)
         }
     }
     ret <- as.mirt_df(ret)
