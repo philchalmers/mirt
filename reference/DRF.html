@@ -418,15 +418,6 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2             1 0.016  0.007   0.085 0.766  2 0.682</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dDRF Group_1,Group_2             1 0.018  0.008   0.098               </span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, DIF<span class="op">=</span><span class="cn">TRUE</span>, param_set<span class="op">=</span><span class="va">param_set</span><span class="op">)</span> <span class="co">#DIF test</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: DRF(mod, DIF = TRUE, param_set = param_set)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (p.adjust != "none") {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$sDIF$adj_pvals &lt;- p.adjust(ret$sDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$uDIF$adj_pvals &lt;- p.adjust(ret$uDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: ret</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: .mirtClusterEnv$rslist &lt;- .mirtClusterEnv$param_set &lt;- NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     J = length(pars[[1L]]) - 1L)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sDIF</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             groups    item   sDIF CI_2.5 CI_97.5    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  Group_1,Group_2  Item_1  0.000  0.000   0.000               </span>
@@ -549,15 +540,6 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> dDRF Group_1,Group_2             6  0.185  0.054   0.415               </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">DIFs</span> <span class="op">&lt;-</span> <span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws <span class="op">=</span> <span class="fl">500</span>, DIF<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: DRF(mod, draws = 500, DIF = TRUE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (p.adjust != "none") {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$sDIF$adj_pvals &lt;- p.adjust(ret$sDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$uDIF$adj_pvals &lt;- p.adjust(ret$uDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: ret</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: .mirtClusterEnv$rslist &lt;- .mirtClusterEnv$param_set &lt;- NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     J = length(pars[[1L]]) - 1L)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">DIFs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sDIF</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             groups    item   sDIF CI_2.5 CI_97.5    X2 df     p</span>
@@ -662,15 +644,6 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-plt img"><img src="DRF-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">DIFs</span> <span class="op">&lt;-</span> <span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws <span class="op">=</span> <span class="fl">500</span>, DIF<span class="op">=</span><span class="cn">TRUE</span>, focal_items <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: DRF(mod, draws = 500, DIF = TRUE, focal_items = 6:10)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (p.adjust != "none") {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$sDIF$adj_pvals &lt;- p.adjust(ret$sDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$uDIF$adj_pvals &lt;- p.adjust(ret$uDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: ret</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: .mirtClusterEnv$rslist &lt;- .mirtClusterEnv$param_set &lt;- NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     J = length(pars[[1L]]) - 1L)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">DIFs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sDIF</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            groups    item   sDIF CI_2.5 CI_97.5    X2 df     p</span>
@@ -703,15 +676,6 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span>            groups   item sDIF  uDIF  dDIF sDIF* uDIF* dDIF*</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Group_1,Group_2 Item_6    0 0.016 0.018     0  0.11 0.107</span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws<span class="op">=</span><span class="fl">500</span>, DIF<span class="op">=</span><span class="cn">TRUE</span>, focal_items <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: DRF(mod, draws = 500, DIF = TRUE, focal_items = 6)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (p.adjust != "none") {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$sDIF$adj_pvals &lt;- p.adjust(ret$sDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ret$uDIF$adj_pvals &lt;- p.adjust(ret$uDIF$p, method = p.adjust)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: ret</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: .mirtClusterEnv$rslist &lt;- .mirtClusterEnv$param_set &lt;- NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     J = length(pars[[1L]]) - 1L)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sDIF</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            groups   item sDIF CI_2.5 CI_97.5 X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Group_1,Group_2 Item_6    0 -0.059   0.058  0  1 0.998</span>

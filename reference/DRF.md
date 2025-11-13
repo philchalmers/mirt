@@ -390,15 +390,6 @@ DRF(mod, focal_items = 6, param_set=param_set) #DIF test
 #> uDRF Group_1,Group_2             1 0.016  0.007   0.085 0.766  2 0.682
 #> dDRF Group_1,Group_2             1 0.018  0.008   0.098               
 DRF(mod, DIF=TRUE, param_set=param_set) #DIF test
-#> Called from: DRF(mod, DIF = TRUE, param_set = param_set)
-#> debug: if (p.adjust != "none") {
-#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
-#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
-#> }
-#> debug: ret
-#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
-#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
-#>     J = length(pars[[1L]]) - 1L)
 #> $sDIF
 #>             groups    item   sDIF CI_2.5 CI_97.5    X2 df     p
 #> 1  Group_1,Group_2  Item_1  0.000  0.000   0.000               
@@ -521,15 +512,6 @@ DRF(mod, focal_items = 10:15, draws=500) #DBF test
 #> dDRF Group_1,Group_2             6  0.185  0.054   0.415               
 
 DIFs <- DRF(mod, draws = 500, DIF=TRUE)
-#> Called from: DRF(mod, draws = 500, DIF = TRUE)
-#> debug: if (p.adjust != "none") {
-#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
-#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
-#> }
-#> debug: ret
-#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
-#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
-#>     J = length(pars[[1L]]) - 1L)
 print(DIFs)
 #> $sDIF
 #>             groups    item   sDIF CI_2.5 CI_97.5    X2 df     p
@@ -634,15 +616,6 @@ DRF(mod, draws = 500, DIF=TRUE, plot=TRUE)
 
 
 DIFs <- DRF(mod, draws = 500, DIF=TRUE, focal_items = 6:10)
-#> Called from: DRF(mod, draws = 500, DIF = TRUE, focal_items = 6:10)
-#> debug: if (p.adjust != "none") {
-#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
-#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
-#> }
-#> debug: ret
-#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
-#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
-#>     J = length(pars[[1L]]) - 1L)
 print(DIFs)
 #> $sDIF
 #>            groups    item   sDIF CI_2.5 CI_97.5    X2 df     p
@@ -675,15 +648,6 @@ DRF(mod, DIF=TRUE, focal_items = 6)
 #>            groups   item sDIF  uDIF  dDIF sDIF* uDIF* dDIF*
 #> 1 Group_1,Group_2 Item_6    0 0.016 0.018     0  0.11 0.107
 DRF(mod, draws=500, DIF=TRUE, focal_items = 6)
-#> Called from: DRF(mod, draws = 500, DIF = TRUE, focal_items = 6)
-#> debug: if (p.adjust != "none") {
-#>     ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method = p.adjust)
-#>     ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method = p.adjust)
-#> }
-#> debug: ret
-#> debug: .mirtClusterEnv$rslist <- .mirtClusterEnv$param_set <- NULL
-#> debug: reloadPars(longpars = longpars, pars = pars, ngroups = length(groupNames), 
-#>     J = length(pars[[1L]]) - 1L)
 #> $sDIF
 #>            groups   item sDIF CI_2.5 CI_97.5 X2 df     p
 #> 1 Group_1,Group_2 Item_6    0 -0.059   0.058  0  1 0.998
