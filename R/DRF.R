@@ -628,7 +628,6 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                             item=extract.mirt(mod, 'itemnames')[focal_items],
                             dDIF=oCM[,3L], t(CIs[,1L:length(focal_items) + length(focal_items)*2]),
                             row.names=NULL)))
-            browser()
             if(p.adjust != 'none'){
                 ret$sDIF$adj_pvals <- p.adjust(ret$sDIF$p, method=p.adjust)
                 ret$uDIF$adj_pvals <- p.adjust(ret$uDIF$p, method=p.adjust)
