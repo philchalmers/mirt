@@ -125,7 +125,8 @@
 #' # limited information fit statistics
 #' M2(mod_configural)
 #'
-#' mod_metric <- multipleGroup(dat, 1, group = group, invariance=c('slopes')) #equal slopes
+#' mod_metric <- multipleGroup(dat, 1, group = group,
+#'                             invariance=c('slopes', 'free_var')) #equal slopes
 #' # equal intercepts, free variance and means
 #' mod_scalar2 <- multipleGroup(dat, 1, group = group,
 #'                              invariance=c('slopes', 'intercepts', 'free_var','free_means'))
@@ -151,7 +152,7 @@
 #' itemplot(mod_configural, 2)
 #' itemplot(mod_configural, 2, type = 'RE')
 #'
-#' anova(mod_metric, mod_configural) #equal slopes only
+#' anova(mod_metric, mod_configural) #equal slopes
 #' anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
 #' anova(mod_scalar1, mod_scalar2) #fix mean
 #' anova(mod_fullconstrain, mod_scalar1) #fix variance
@@ -342,7 +343,8 @@
 #'
 #' # EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 #' mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses
-#' mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes')) #equal slopes
+#' mod_metric <- multipleGroup(dat, model, group = group,
+#'                             invariance=c('slopes', 'free_var')) #equal slopes
 #' mod_fullconstrain <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
 #'                              invariance=c('slopes', 'intercepts'))
 #'
@@ -351,7 +353,8 @@
 #'
 #' # same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
 #' mod_configural <- multipleGroup(dat, model, group = group, method = 'MHRM')
-#' mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes'), method = 'MHRM')
+#' mod_metric <- multipleGroup(dat, model, group = group,
+#'                             invariance=c('slopes', 'free_var'), method = 'MHRM')
 #' mod_fullconstrain <- multipleGroup(dat, model, group = group, method = 'MHRM',
 #'                              invariance=c('slopes', 'intercepts'))
 #'
