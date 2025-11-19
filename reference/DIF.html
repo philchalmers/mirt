@@ -377,9 +377,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8797218 -0.04575426 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.8797218 -0.04575426 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $adj_p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same as above, but using Wald tests with Benjamini &amp; Hochberg adjustment</span></span></span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, Wald <span class="op">=</span> <span class="cn">TRUE</span>, p.adjust <span class="op">=</span> <span class="st">'fdr'</span><span class="op">)</span></span></span>
@@ -409,9 +406,19 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF</span></span></span>
 <span class="r-in"><span><span class="va">resulta1d</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, plotdif <span class="op">=</span> <span class="cn">TRUE</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x[1L, stat]:</span> incorrect number of dimensions</span>
+<span class="r-plt img"><img src="DIF-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">resulta1d</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'resulta1d' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         groups converged     AIC   SABIC      HQ     BIC    X2 df     p adj_p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   D1,D2      TRUE -43.490 -38.642 -39.377 -32.288 47.49  2     0 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   D1,D2      TRUE -33.840 -28.993 -29.727 -22.638 37.84  2     0 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   D1,D2      TRUE  -5.497  -0.649  -1.384   5.705 9.497  2 0.009 0.069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   D1,D2      TRUE   2.395   7.242   6.508  13.596 1.605  2 0.448 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5   D1,D2      TRUE   3.140   7.988   7.253  14.342  0.86  2 0.651 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   D1,D2      TRUE   1.122   5.970   5.235  12.324 2.878  2 0.237 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   D1,D2      TRUE   3.083   7.931   7.196  14.285 0.917  2 0.632 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   D1,D2      TRUE   2.857   7.705   6.970  14.059 1.143  2 0.565 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   D1,D2      TRUE   3.674   8.521   7.787  14.875 0.326  2 0.849 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  D1,D2      TRUE   3.154   8.001   7.267  14.355 0.846  2 0.655 1.000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test whether adding only slope constraints results in DIF for all items</span></span></span>
 <span class="r-in"><span><span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="st">'a1'</span>, items2test<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
@@ -539,9 +546,6 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> D1 0.8583058 -0.06114579 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> D2 0.7771780 -0.06825570 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $adj_p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### sequential schemes (add constraints)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -567,7 +571,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">updated_mod</span> <span class="op">&lt;-</span> <span class="fu">DIF</span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1'</span>, <span class="st">'d'</span><span class="op">)</span>, scheme <span class="op">=</span> <span class="st">'add_sequential'</span>,</span></span>
 <span class="r-in"><span>               return_seq_model<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">updated_mod</span>, type<span class="op">=</span><span class="st">'trace'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="DIF-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="DIF-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">###################################</span></span></span>

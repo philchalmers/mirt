@@ -355,9 +355,6 @@ extract.mirt(dif, "DIF_coefficients")
 #> D1 0.8797218 -0.04575426 0 1
 #> D2 0.8797218 -0.04575426 0 1
 #> 
-#> $adj_p
-#> NULL
-#> 
 
 # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
@@ -387,9 +384,19 @@ model <- multipleGroup(dat, 1, group, SE = TRUE,
 
 # test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
 resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE, items2test=1:10)
-#> Error in x[1L, stat]: incorrect number of dimensions
+
 resulta1d
-#> Error: object 'resulta1d' not found
+#>         groups converged     AIC   SABIC      HQ     BIC    X2 df     p adj_p
+#> Item_1   D1,D2      TRUE -43.490 -38.642 -39.377 -32.288 47.49  2     0 0.000
+#> Item_2   D1,D2      TRUE -33.840 -28.993 -29.727 -22.638 37.84  2     0 0.000
+#> Item_3   D1,D2      TRUE  -5.497  -0.649  -1.384   5.705 9.497  2 0.009 0.069
+#> Item_4   D1,D2      TRUE   2.395   7.242   6.508  13.596 1.605  2 0.448 1.000
+#> Item_5   D1,D2      TRUE   3.140   7.988   7.253  14.342  0.86  2 0.651 1.000
+#> Item_6   D1,D2      TRUE   1.122   5.970   5.235  12.324 2.878  2 0.237 1.000
+#> Item_7   D1,D2      TRUE   3.083   7.931   7.196  14.285 0.917  2 0.632 1.000
+#> Item_8   D1,D2      TRUE   2.857   7.705   6.970  14.059 1.143  2 0.565 1.000
+#> Item_9   D1,D2      TRUE   3.674   8.521   7.787  14.875 0.326  2 0.849 1.000
+#> Item_10  D1,D2      TRUE   3.154   8.001   7.267  14.355 0.846  2 0.655 1.000
 
 # test whether adding only slope constraints results in DIF for all items
 DIF(model, 'a1', items2test=1:10)
@@ -516,9 +523,6 @@ extract.mirt(dropdown, "DIF_coefficients")
 #>           a1           d g u
 #> D1 0.8583058 -0.06114579 0 1
 #> D2 0.7771780 -0.06825570 0 1
-#> 
-#> $adj_p
-#> NULL
 #> 
 
 ### sequential schemes (add constraints)
