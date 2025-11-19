@@ -505,7 +505,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             }, stat = 'p'))
         }
         ps <- p.adjust(ps, p.adjust)
-        res$adj_p <- ps
+        attr(res, 'adj_p') <- ps
     }
     if(plotdif && any(scheme %in% c('add', 'add_sequential'))){
         if(seq_stat != 'p'){
@@ -540,20 +540,17 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             message('No DIF items were detected for plotting.')
         }
     }
-    pick <- names(res)
-    pick <- pick[pick != 'adj_p']
+    adj_p <- attr(res, "adj_p")
     if(Wald && !return_models){
-        adj_p <- res$adj_p
-        res <- do.call(rbind, res[pick])
+        res <- do.call(rbind, res)
         res$adj_p <- adj_p
         res <- data.frame(groups=paste0(groups2test,collapse=','), res)
         res <- as.mirt_df(res)
         return(res)
     }
     if(simplify && !return_models){
-        adj_p <- res$adj_p
         DIF_coefs <- lapply(res, function(x) attr(x, 'coefs'))
-        out <- lapply(res[pick], function(x){
+        out <- lapply(res, function(x){
              r <- x[2L, ] - x[1L, ]
              if(!has_priors)
                 r[,c("X2", 'df', 'p')] <- x[2L, c("X2", 'df', 'p')]
