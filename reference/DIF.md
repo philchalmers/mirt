@@ -22,7 +22,7 @@ DIF(
   groups2test = "all",
   seq_stat = "SABIC",
   Wald = FALSE,
-  p.adjust = "none",
+  p.adjust = "holm",
   pairwise = FALSE,
   return_models = FALSE,
   return_seq_model = FALSE,
@@ -127,7 +127,7 @@ DIF(
   string to be passed to the
   [`p.adjust`](https://rdrr.io/r/stats/p.adjust.html) function to adjust
   p-values. Adjustments are located in the `adj_p` element in the
-  returned list
+  returned list. Default uses the Holm-sequential Bonferroni adjustment
 
 - pairwise:
 
@@ -260,22 +260,22 @@ dif <- DIF(model, c('a1', 'd'))
 #> NOTE: No hyper-parameters were estimated in the DIF model. 
 #>       For effective DIF testing, freeing the focal group hyper-parameters is recommended.
 dif
-#>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1   D1,D2      TRUE -34.621 -29.773 -30.507 -23.419 38.621  2     0
-#> Item_2   D1,D2      TRUE -20.364 -15.516 -16.251  -9.162 24.364  2     0
-#> Item_3   D1,D2      TRUE -10.101  -5.253  -5.988   1.101 14.101  2 0.001
-#> Item_4   D1,D2      TRUE  -0.356   4.492   3.757  10.846  4.356  2 0.113
-#> Item_5   D1,D2      TRUE   0.968   5.815   5.081  12.169  3.032  2  0.22
-#> Item_6   D1,D2      TRUE   3.441   8.289   7.554  14.643  0.559  2 0.756
-#> Item_7   D1,D2      TRUE   3.340   8.188   7.453  14.542   0.66  2 0.719
-#> Item_8   D1,D2      TRUE  -2.371   2.477   1.742   8.831  6.371  2 0.041
-#> Item_9   D1,D2      TRUE   0.546   5.393   4.659  11.748  3.454  2 0.178
-#> Item_10  D1,D2      TRUE   3.215   8.062   7.328  14.416  0.785  2 0.675
-#> Item_11  D1,D2      TRUE  -4.853  -0.006  -0.740   6.348  8.853  2 0.012
-#> Item_12  D1,D2      TRUE   1.497   6.345   5.610  12.699  2.503  2 0.286
-#> Item_13  D1,D2      TRUE   1.854   6.702   5.967  13.056  2.146  2 0.342
-#> Item_14  D1,D2      TRUE  -4.350   0.498  -0.237   6.852   8.35  2 0.015
-#> Item_15  D1,D2      TRUE   3.831   8.679   7.944  15.033  0.169  2 0.919
+#>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1   D1,D2      TRUE -34.621 -29.773 -30.507 -23.419 38.621  2     0 0.000
+#> Item_2   D1,D2      TRUE -20.364 -15.516 -16.251  -9.162 24.364  2     0 0.000
+#> Item_3   D1,D2      TRUE -10.101  -5.253  -5.988   1.101 14.101  2 0.001 0.011
+#> Item_4   D1,D2      TRUE  -0.356   4.492   3.757  10.846  4.356  2 0.113 1.000
+#> Item_5   D1,D2      TRUE   0.968   5.815   5.081  12.169  3.032  2  0.22 1.000
+#> Item_6   D1,D2      TRUE   3.441   8.289   7.554  14.643  0.559  2 0.756 1.000
+#> Item_7   D1,D2      TRUE   3.340   8.188   7.453  14.542   0.66  2 0.719 1.000
+#> Item_8   D1,D2      TRUE  -2.371   2.477   1.742   8.831  6.371  2 0.041 0.414
+#> Item_9   D1,D2      TRUE   0.546   5.393   4.659  11.748  3.454  2 0.178 1.000
+#> Item_10  D1,D2      TRUE   3.215   8.062   7.328  14.416  0.785  2 0.675 1.000
+#> Item_11  D1,D2      TRUE  -4.853  -0.006  -0.740   6.348  8.853  2 0.012 0.143
+#> Item_12  D1,D2      TRUE   1.497   6.345   5.610  12.699  2.503  2 0.286 1.000
+#> Item_13  D1,D2      TRUE   1.854   6.702   5.967  13.056  2.146  2 0.342 1.000
+#> Item_14  D1,D2      TRUE  -4.350   0.498  -0.237   6.852   8.35  2 0.015 0.169
+#> Item_15  D1,D2      TRUE   3.831   8.679   7.944  15.033  0.169  2 0.919 1.000
 
 # function silently includes "DIF_coefficients" attribute to view
 # the IRT parameters post-completion
@@ -355,6 +355,9 @@ extract.mirt(dif, "DIF_coefficients")
 #> D1 0.8797218 -0.04575426 0 1
 #> D2 0.8797218 -0.04575426 0 1
 #> 
+#> $adj_p
+#> NULL
+#> 
 
 # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
@@ -384,45 +387,35 @@ model <- multipleGroup(dat, 1, group, SE = TRUE,
 
 # test whether adding slopes and intercepts constraints results in DIF. Plot items showing DIF
 resulta1d <- DIF(model, c('a1', 'd'), plotdif = TRUE, items2test=1:10)
-
+#> Error in x[1L, stat]: incorrect number of dimensions
 resulta1d
-#>         groups converged     AIC   SABIC      HQ     BIC    X2 df     p
-#> Item_1   D1,D2      TRUE -43.490 -38.642 -39.377 -32.288 47.49  2     0
-#> Item_2   D1,D2      TRUE -33.840 -28.993 -29.727 -22.638 37.84  2     0
-#> Item_3   D1,D2      TRUE  -5.497  -0.649  -1.384   5.705 9.497  2 0.009
-#> Item_4   D1,D2      TRUE   2.395   7.242   6.508  13.596 1.605  2 0.448
-#> Item_5   D1,D2      TRUE   3.140   7.988   7.253  14.342  0.86  2 0.651
-#> Item_6   D1,D2      TRUE   1.122   5.970   5.235  12.324 2.878  2 0.237
-#> Item_7   D1,D2      TRUE   3.083   7.931   7.196  14.285 0.917  2 0.632
-#> Item_8   D1,D2      TRUE   2.857   7.705   6.970  14.059 1.143  2 0.565
-#> Item_9   D1,D2      TRUE   3.674   8.521   7.787  14.875 0.326  2 0.849
-#> Item_10  D1,D2      TRUE   3.154   8.001   7.267  14.355 0.846  2 0.655
+#> Error: object 'resulta1d' not found
 
 # test whether adding only slope constraints results in DIF for all items
 DIF(model, 'a1', items2test=1:10)
-#>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1   D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0
-#> Item_2   D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0
-#> Item_3   D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211
-#> Item_4   D1,D2      TRUE   1.980   4.404   4.036   7.581   0.02  1 0.887
-#> Item_5   D1,D2      TRUE   1.754   4.178   3.811   7.355  0.246  1  0.62
-#> Item_6   D1,D2      TRUE  -0.564   1.860   1.492   5.037  2.564  1 0.109
-#> Item_7   D1,D2      TRUE   1.093   3.517   3.150   6.694  0.907  1 0.341
-#> Item_8   D1,D2      TRUE   1.431   3.855   3.488   7.032  0.569  1 0.451
-#> Item_9   D1,D2      TRUE   1.863   4.287   3.920   7.464  0.137  1 0.712
-#> Item_10  D1,D2      TRUE   1.775   4.199   3.832   7.376  0.225  1 0.636
+#>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1   D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0 0.000
+#> Item_2   D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0 0.000
+#> Item_3   D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211 1.000
+#> Item_4   D1,D2      TRUE   1.980   4.404   4.036   7.581   0.02  1 0.887 1.000
+#> Item_5   D1,D2      TRUE   1.754   4.178   3.811   7.355  0.246  1  0.62 1.000
+#> Item_6   D1,D2      TRUE  -0.564   1.860   1.492   5.037  2.564  1 0.109 0.875
+#> Item_7   D1,D2      TRUE   1.093   3.517   3.150   6.694  0.907  1 0.341 1.000
+#> Item_8   D1,D2      TRUE   1.431   3.855   3.488   7.032  0.569  1 0.451 1.000
+#> Item_9   D1,D2      TRUE   1.863   4.287   3.920   7.464  0.137  1 0.712 1.000
+#> Item_10  D1,D2      TRUE   1.775   4.199   3.832   7.376  0.225  1 0.636 1.000
 
 # Determine whether it's a1 or d parameter causing DIF (could be joint, however)
 (a1s <- DIF(model, 'a1', items2test = 1:3))
-#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1  D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0
-#> Item_2  D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0
-#> Item_3  D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211
+#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1  D1,D2      TRUE -20.871 -18.447 -18.815 -15.270 22.871  1     0 0.000
+#> Item_2  D1,D2      TRUE -34.675 -32.252 -32.619 -29.075 36.675  1     0 0.000
+#> Item_3  D1,D2      TRUE   0.435   2.859   2.492   6.036  1.565  1 0.211 0.211
 (ds <- DIF(model, 'd', items2test = 1:3))
-#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1  D1,D2      TRUE -18.568 -16.145 -16.512 -12.968 20.568  1     0
-#> Item_2  D1,D2      TRUE   1.843   4.266   3.899   7.443  0.157  1 0.691
-#> Item_3  D1,D2      TRUE  -6.229  -3.805  -4.173  -0.628  8.229  1 0.004
+#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1  D1,D2      TRUE -18.568 -16.145 -16.512 -12.968 20.568  1     0 0.000
+#> Item_2  D1,D2      TRUE   1.843   4.266   3.899   7.443  0.157  1 0.691 0.691
+#> Item_3  D1,D2      TRUE  -6.229  -3.805  -4.173  -0.628  8.229  1 0.004 0.008
 
 ### drop down approach (freely estimating parameters across groups) when
 ### specifying a highly constrained model with estimated latent parameters
@@ -430,22 +423,22 @@ model_constrained <- multipleGroup(dat, 1, group,
   invariance = c(colnames(dat), 'free_means', 'free_var'))
 dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 dropdown
-#>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1   D1,D2      TRUE -43.297 -38.450 -39.184 -32.096 47.297  2     0
-#> Item_2   D1,D2      TRUE -32.642 -27.794 -28.529 -21.440 36.642  2     0
-#> Item_3   D1,D2      TRUE -10.510  -5.662  -6.397   0.692  14.51  2 0.001
-#> Item_4   D1,D2      TRUE   1.885   6.733   5.998  13.087  2.115  2 0.347
-#> Item_5   D1,D2      TRUE   3.155   8.003   7.268  14.357  0.845  2 0.655
-#> Item_6   D1,D2      TRUE   1.914   6.761   6.027  13.116  2.086  2 0.352
-#> Item_7   D1,D2      TRUE   3.887   8.735   8.000  15.089  0.113  2 0.945
-#> Item_8   D1,D2      TRUE   0.703   5.550   4.816  11.905  3.297  2 0.192
-#> Item_9   D1,D2      TRUE   3.059   7.907   7.172  14.261  0.941  2 0.625
-#> Item_10  D1,D2      TRUE   3.631   8.479   7.744  14.833  0.369  2 0.832
-#> Item_11  D1,D2      TRUE  -0.765   4.083   3.348  10.437  4.765  2 0.092
-#> Item_12  D1,D2      TRUE   3.511   8.359   7.624  14.713  0.489  2 0.783
-#> Item_13  D1,D2      TRUE   3.416   8.263   7.529  14.618  0.584  2 0.747
-#> Item_14  D1,D2      TRUE  -0.690   4.157   3.423  10.511   4.69  2 0.096
-#> Item_15  D1,D2      TRUE   3.599   8.447   7.712  14.801  0.401  2 0.818
+#>         groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1   D1,D2      TRUE -43.297 -38.450 -39.184 -32.096 47.297  2     0 0.000
+#> Item_2   D1,D2      TRUE -32.642 -27.794 -28.529 -21.440 36.642  2     0 0.000
+#> Item_3   D1,D2      TRUE -10.510  -5.662  -6.397   0.692  14.51  2 0.001 0.009
+#> Item_4   D1,D2      TRUE   1.885   6.733   5.998  13.087  2.115  2 0.347 1.000
+#> Item_5   D1,D2      TRUE   3.155   8.003   7.268  14.357  0.845  2 0.655 1.000
+#> Item_6   D1,D2      TRUE   1.914   6.761   6.027  13.116  2.086  2 0.352 1.000
+#> Item_7   D1,D2      TRUE   3.887   8.735   8.000  15.089  0.113  2 0.945 1.000
+#> Item_8   D1,D2      TRUE   0.703   5.550   4.816  11.905  3.297  2 0.192 1.000
+#> Item_9   D1,D2      TRUE   3.059   7.907   7.172  14.261  0.941  2 0.625 1.000
+#> Item_10  D1,D2      TRUE   3.631   8.479   7.744  14.833  0.369  2 0.832 1.000
+#> Item_11  D1,D2      TRUE  -0.765   4.083   3.348  10.437  4.765  2 0.092 1.000
+#> Item_12  D1,D2      TRUE   3.511   8.359   7.624  14.713  0.489  2 0.783 1.000
+#> Item_13  D1,D2      TRUE   3.416   8.263   7.529  14.618  0.584  2 0.747 1.000
+#> Item_14  D1,D2      TRUE  -0.690   4.157   3.423  10.511   4.69  2 0.096 1.000
+#> Item_15  D1,D2      TRUE   3.599   8.447   7.712  14.801  0.401  2 0.818 1.000
 
 # View silent "DIF_coefficients" attribute
 extract.mirt(dropdown, "DIF_coefficients")
@@ -524,6 +517,9 @@ extract.mirt(dropdown, "DIF_coefficients")
 #> D1 0.8583058 -0.06114579 0 1
 #> D2 0.7771780 -0.06825570 0 1
 #> 
+#> $adj_p
+#> NULL
+#> 
 
 ### sequential schemes (add constraints)
 
@@ -532,18 +528,18 @@ extract.mirt(dropdown, "DIF_coefficients")
 stepup <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
               items2test=1:10)
 stepup
-#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0
-#> Item_2  D1,D2      TRUE -34.224 -29.377 -30.111 -23.022 38.224  2     0
-#> Item_3  D1,D2      TRUE  -7.368  -2.520  -3.255   3.834 11.368  2 0.003
+#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0 0.000
+#> Item_2  D1,D2      TRUE -34.224 -29.377 -30.111 -23.022 38.224  2     0 0.000
+#> Item_3  D1,D2      TRUE  -7.368  -2.520  -3.255   3.834 11.368  2 0.003 0.003
 
 # step down procedure for highly constrained model
 stepdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop_sequential')
 stepdown
-#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0
-#> Item_2  D1,D2      TRUE -34.224 -29.377 -30.111 -23.022 38.224  2     0
-#> Item_3  D1,D2      TRUE  -7.368  -2.520  -3.255   3.834 11.368  2 0.003
+#>        groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> Item_1  D1,D2      TRUE -43.161 -38.314 -39.048 -31.959 47.161  2     0 0.000
+#> Item_2  D1,D2      TRUE -34.224 -29.377 -30.111 -23.022 38.224  2     0 0.000
+#> Item_3  D1,D2      TRUE  -7.368  -2.520  -3.255   3.834 11.368  2 0.003 0.003
 
 # view final MG model (only useful when scheme is 'add_sequential')
 updated_mod <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
@@ -679,38 +675,48 @@ dif
 #> Item_7 g1,g2,g3      TRUE    4.844  16.160  13.486  28.869   3.156  4 0.532
 #> Item_8 g1,g2,g3      TRUE    4.504  15.819  13.145  28.529   3.496  4 0.478
 #> Item_9 g1,g2,g3      TRUE    2.263  13.578  10.904  26.288   5.737  4  0.22
+#>        adj_p
+#> Item_1 0.000
+#> Item_2 0.000
+#> Item_3 0.016
+#> Item_4 1.000
+#> Item_5 1.000
+#> Item_6 1.000
+#> Item_7 1.000
+#> Item_8 1.000
+#> Item_9 1.000
 
 # pairwise post-hoc tests for items flagged via omnibus tests
 dif.posthoc <- DIF(model, which.par = c('a1', 'd'), items2test=1:2,
                    pairwise = TRUE)
 dif.posthoc
-#>     item groups converged     AIC   SABIC      HQ     BIC     X2 df     p
-#> 1 Item_1  g1,g2      TRUE -32.488 -26.830 -28.167 -20.475 36.488  2     0
-#> 2 Item_2  g1,g2      TRUE -19.000 -13.342 -14.679  -6.988     23  2     0
-#> 3 Item_1  g1,g3      TRUE -19.543 -13.885 -15.222  -7.530 23.543  2     0
-#> 4 Item_2  g1,g3      TRUE   1.728   7.385   6.048  13.740  2.272  2 0.321
-#> 5 Item_1  g2,g3      TRUE -90.300 -84.642 -85.979 -78.287   94.3  2     0
-#> 6 Item_2  g2,g3      TRUE -36.756 -31.098 -32.435 -24.743 40.756  2     0
+#>     item groups converged     AIC   SABIC      HQ     BIC     X2 df     p adj_p
+#> 1 Item_1  g1,g2      TRUE -32.488 -26.830 -28.167 -20.475 36.488  2     0 0.000
+#> 2 Item_2  g1,g2      TRUE -19.000 -13.342 -14.679  -6.988     23  2     0 0.000
+#> 3 Item_1  g1,g3      TRUE -19.543 -13.885 -15.222  -7.530 23.543  2     0 0.000
+#> 4 Item_2  g1,g3      TRUE   1.728   7.385   6.048  13.740  2.272  2 0.321 0.321
+#> 5 Item_1  g2,g3      TRUE -90.300 -84.642 -85.979 -78.287   94.3  2     0 0.000
+#> 6 Item_2  g2,g3      TRUE -36.756 -31.098 -32.435 -24.743 40.756  2     0 0.000
 
 # further probing for df = 1 tests, this time with Wald tests
 DIF(model, which.par = c('a1'), items2test=1:2, pairwise = TRUE,
     Wald=TRUE)
-#>     item groups      W df     p
-#> 1 Item_1  g1,g2 29.897  1     0
-#> 2 Item_2  g1,g2 22.022  1     0
-#> 3 Item_1  g1,g3  0.076  1 0.783
-#> 4 Item_2  g1,g3  1.939  1 0.164
-#> 5 Item_1  g2,g3 27.618  1     0
-#> 6 Item_2  g2,g3 30.587  1     0
+#>     item groups      W df     p adj_p
+#> 1 Item_1  g1,g2 29.897  1     0 0.000
+#> 2 Item_2  g1,g2 22.022  1     0 0.000
+#> 3 Item_1  g1,g3  0.076  1 0.783 0.783
+#> 4 Item_2  g1,g3  1.939  1 0.164 0.328
+#> 5 Item_1  g2,g3 27.618  1     0 0.000
+#> 6 Item_2  g2,g3 30.587  1     0 0.000
 DIF(model, which.par = c('d'), items2test=1:2, pairwise = TRUE,
     Wald=TRUE)
-#>     item groups      W df     p
-#> 1 Item_1  g1,g2  0.592  1 0.442
-#> 2 Item_2  g1,g2  0.419  1 0.518
-#> 3 Item_1  g1,g3 21.130  1     0
-#> 4 Item_2  g1,g3  0.025  1 0.874
-#> 5 Item_1  g2,g3 29.743  1     0
-#> 6 Item_2  g2,g3  0.182  1  0.67
+#>     item groups      W df     p adj_p
+#> 1 Item_1  g1,g2  0.592  1 0.442 0.884
+#> 2 Item_2  g1,g2  0.419  1 0.518 0.884
+#> 3 Item_1  g1,g3 21.130  1     0 0.000
+#> 4 Item_2  g1,g3  0.025  1 0.874 0.874
+#> 5 Item_1  g2,g3 29.743  1     0 0.000
+#> 6 Item_2  g2,g3  0.182  1  0.67 0.670
 
 # }
 ```
