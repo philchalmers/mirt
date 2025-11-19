@@ -78,7 +78,8 @@
 #'   another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
 #'   mirt's \code{plot()} function is set to \code{TRUE}
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
-#'   Adjustments are located in the \code{adj_p} element in the returned list
+#'   Adjustments are located in the \code{adj_p} element in the returned list. Default uses the
+#'   Holm-sequential Bonferroni adjustment
 #' @param verbose logical print extra information to the console?
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #'
@@ -224,7 +225,7 @@
 DIF <- function(MGmodel, which.par, scheme = 'add',
                 items2test = 1:extract.mirt(MGmodel, 'nitems'),
                 groups2test = 'all', seq_stat = 'SABIC', Wald = FALSE,
-                p.adjust = 'none', pairwise = FALSE, return_models = FALSE,
+                p.adjust = 'holm', pairwise = FALSE, return_models = FALSE,
                 return_seq_model = FALSE, max_run = Inf, plotdif = FALSE, type = 'trace',
                 simplify = TRUE, verbose = interactive(), ...){
 

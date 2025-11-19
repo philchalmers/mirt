@@ -12,7 +12,7 @@ DIF(
   groups2test = "all",
   seq_stat = "SABIC",
   Wald = FALSE,
-  p.adjust = "none",
+  p.adjust = "holm",
   pairwise = FALSE,
   return_models = FALSE,
   return_seq_model = FALSE,
@@ -77,7 +77,8 @@ or p > .05 in the drop scheme), along with the specified \code{p.adjust} input}
 \item{Wald}{logical; perform Wald tests for DIF instead of likelihood ratio test?}
 
 \item{p.adjust}{string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
-Adjustments are located in the \code{adj_p} element in the returned list}
+Adjustments are located in the \code{adj_p} element in the returned list. Default uses the
+Holm-sequential Bonferroni adjustment}
 
 \item{pairwise}{logical; perform pairwise tests between groups when the number of groups
 is greater than 2? Useful as quickly specified post-hoc tests}
