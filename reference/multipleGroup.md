@@ -358,7 +358,8 @@ M2(mod_configural)
 #>            M2  df     p RMSEA RMSEA_5 RMSEA_95 SRMSR.D1 SRMSR.D2   TLI CFI
 #> stats 142.987 180 0.981     0       0        0    0.024    0.019 1.005   1
 
-mod_metric <- multipleGroup(dat, 1, group = group, invariance=c('slopes')) #equal slopes
+mod_metric <- multipleGroup(dat, 1, group = group,
+                            invariance=c('slopes', 'free_var')) #equal slopes
 # equal intercepts, free variance and means
 mod_scalar2 <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts', 'free_var','free_means'))
@@ -368,7 +369,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.282  0.055  0.059  0.152  0.000  0.001 
+#>  0.279  0.054  0.061  0.147  0.001  0.000 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -376,7 +377,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.184  0.053  0.070  0.044  0.000  0.001 
+#>  0.184  0.052  0.067  0.047  0.000  0.000 
 
 summary(mod_scalar2)
 #> 
@@ -572,14 +573,14 @@ itemplot(mod_configural, 2)
 itemplot(mod_configural, 2, type = 'RE')
 
 
-anova(mod_metric, mod_configural) #equal slopes only
-#>                     AIC    SABIC       HQ      BIC    logLik    X2 df p
-#> mod_metric     35937.61 36046.68 36030.15 36189.65 -17923.80           
-#> mod_configural 35927.53 36072.96 36050.92 36263.58 -17903.76 40.08 15 0
+anova(mod_metric, mod_configural) #equal slopes
+#>                     AIC    SABIC       HQ      BIC    logLik     X2 df     p
+#> mod_metric     35914.27 36025.77 36008.87 36171.91 -17911.13                
+#> mod_configural 35927.53 36072.96 36050.92 36263.58 -17903.76 14.743 14 0.396
 anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
-#>                  AIC    SABIC       HQ      BIC    logLik      X2 df   p
-#> mod_scalar2 35894.66 35972.22 35960.47 36073.89 -17915.33               
-#> mod_metric  35937.61 36046.68 36030.15 36189.65 -17923.80 -16.947 13 NaN
+#>                  AIC    SABIC       HQ      BIC    logLik   X2 df     p
+#> mod_scalar2 35894.66 35972.22 35960.47 36073.89 -17915.33              
+#> mod_metric  35914.27 36025.77 36008.87 36171.91 -17911.13 8.39 14 0.868
 anova(mod_scalar1, mod_scalar2) #fix mean
 #>                  AIC    SABIC       HQ      BIC    logLik    X2 df     p
 #> mod_scalar1 35893.96 35969.10 35957.71 36067.58 -17915.98               
@@ -1982,33 +1983,35 @@ if(interactive()) mirtCluster()
 
 # EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses
-mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes')) #equal slopes
+mod_metric <- multipleGroup(dat, model, group = group,
+                            invariance=c('slopes', 'free_var')) #equal slopes
 mod_fullconstrain <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)
-#>                     AIC    SABIC       HQ      BIC    logLik     X2 df     p
-#> mod_metric     36921.29 37030.37 37013.84 37173.33 -18415.65                
-#> mod_configural 36916.10 37061.53 37039.49 37252.15 -18398.05 35.197 15 0.002
+#>                     AIC    SABIC       HQ      BIC    logLik    X2 df     p
+#> mod_metric     36900.54 37016.89 36999.25 37169.38 -18402.27               
+#> mod_configural 36916.10 37061.53 37039.49 37252.15 -18398.05 8.445 12 0.749
 anova(mod_fullconstrain, mod_metric)
 #>                        AIC    SABIC       HQ      BIC    logLik      X2 df p
 #> mod_fullconstrain 37020.58 37093.29 37082.27 37188.60 -18480.29             
-#> mod_metric        36921.29 37030.37 37013.84 37173.33 -18415.65 129.284 15 0
+#> mod_metric        36900.54 37016.89 36999.25 37169.38 -18402.27 156.036 18 0
 
 # same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
 mod_configural <- multipleGroup(dat, model, group = group, method = 'MHRM')
-mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes'), method = 'MHRM')
+mod_metric <- multipleGroup(dat, model, group = group,
+                            invariance=c('slopes', 'free_var'), method = 'MHRM')
 mod_fullconstrain <- multipleGroup(dat, model, group = group, method = 'MHRM',
                              invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)
-#>                     AIC    SABIC       HQ      BIC    logLik     X2 df p
-#> mod_metric     36927.79 37036.86 37020.33 37179.83 -18418.89            
-#> mod_configural 36918.04 37063.47 37041.43 37254.10 -18399.02 39.745 15 0
+#>                     AIC    SABIC       HQ      BIC    logLik     X2 df     p
+#> mod_metric     36906.68 37023.03 37005.40 37175.53 -18405.34                
+#> mod_configural 36918.04 37063.47 37041.43 37254.10 -18399.02 12.643 12 0.395
 anova(mod_fullconstrain, mod_metric)
-#>                        AIC    SABIC       HQ      BIC    logLik     X2 df p
-#> mod_fullconstrain 37023.82 37096.54 37085.52 37191.85 -18481.91            
-#> mod_metric        36927.79 37036.86 37020.33 37179.83 -18418.89 126.04 15 0
+#>                        AIC    SABIC       HQ      BIC    logLik      X2 df p
+#> mod_fullconstrain 37023.82 37096.54 37085.52 37191.85 -18481.91             
+#> mod_metric        36906.68 37023.03 37005.40 37175.53 -18405.34 153.141 18 0
 
 ############
 # polytomous item example

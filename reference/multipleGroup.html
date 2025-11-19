@@ -376,7 +376,8 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-out co"><span class="r-pr">#&gt;</span>            M2  df     p RMSEA RMSEA_5 RMSEA_95 SRMSR.D1 SRMSR.D2   TLI CFI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stats 142.987 180 0.981     0       0        0    0.024    0.019 1.005   1</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mod_metric</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group <span class="op">=</span> <span class="va">group</span>, invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span><span class="op">)</span><span class="op">)</span> <span class="co">#equal slopes</span></span></span>
+<span class="r-in"><span><span class="va">mod_metric</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
+<span class="r-in"><span>                            invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span> <span class="co">#equal slopes</span></span></span>
 <span class="r-in"><span><span class="co"># equal intercepts, free variance and means</span></span></span>
 <span class="r-in"><span><span class="va">mod_scalar2</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span>, <span class="st">'free_var'</span>,<span class="st">'free_means'</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -386,7 +387,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.282  0.055  0.059  0.152  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.279  0.054  0.061  0.147  0.001  0.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -394,7 +395,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.184  0.053  0.070  0.044  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.184  0.052  0.067  0.047  0.000  0.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -590,14 +591,14 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span><span class="fu"><a href="itemplot.html">itemplot</a></span><span class="op">(</span><span class="va">mod_configural</span>, <span class="fl">2</span>, type <span class="op">=</span> <span class="st">'RE'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="multipleGroup-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_metric</span>, <span class="va">mod_configural</span><span class="op">)</span> <span class="co">#equal slopes only</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik    X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric     35937.61 36046.68 36030.15 36189.65 -17923.80           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_configural 35927.53 36072.96 36050.92 36263.58 -17903.76 40.08 15 0</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_metric</span>, <span class="va">mod_configural</span><span class="op">)</span> <span class="co">#equal slopes</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric     35914.27 36025.77 36008.87 36171.91 -17911.13                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_configural 35927.53 36072.96 36050.92 36263.58 -17903.76 14.743 14 0.396</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_scalar2</span>, <span class="va">mod_metric</span><span class="op">)</span> <span class="co">#equal intercepts, free variance and mean</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  AIC    SABIC       HQ      BIC    logLik      X2 df   p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_scalar2 35894.66 35972.22 35960.47 36073.89 -17915.33               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric  35937.61 36046.68 36030.15 36189.65 -17923.80 -16.947 13 NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  AIC    SABIC       HQ      BIC    logLik   X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_scalar2 35894.66 35972.22 35960.47 36073.89 -17915.33              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric  35914.27 36025.77 36008.87 36171.91 -17911.13 8.39 14 0.868</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_scalar1</span>, <span class="va">mod_scalar2</span><span class="op">)</span> <span class="co">#fix mean</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod_scalar1 35893.96 35969.10 35957.71 36067.58 -17915.98               </span>
@@ -2000,33 +2001,35 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)</span></span></span>
 <span class="r-in"><span><span class="va">mod_configural</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="co">#completely separate analyses</span></span></span>
-<span class="r-in"><span><span class="va">mod_metric</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>, invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span><span class="op">)</span><span class="op">)</span> <span class="co">#equal slopes</span></span></span>
+<span class="r-in"><span><span class="va">mod_metric</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
+<span class="r-in"><span>                            invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span> <span class="co">#equal slopes</span></span></span>
 <span class="r-in"><span><span class="va">mod_fullconstrain</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>, <span class="co">#equal means, slopes, intercepts</span></span></span>
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_metric</span>, <span class="va">mod_configural</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik     X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric     36921.29 37030.37 37013.84 37173.33 -18415.65                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_configural 36916.10 37061.53 37039.49 37252.15 -18398.05 35.197 15 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric     36900.54 37016.89 36999.25 37169.38 -18402.27               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_configural 36916.10 37061.53 37039.49 37252.15 -18398.05 8.445 12 0.749</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="va">mod_metric</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        AIC    SABIC       HQ      BIC    logLik      X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod_fullconstrain 37020.58 37093.29 37082.27 37188.60 -18480.29             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric        36921.29 37030.37 37013.84 37173.33 -18415.65 129.284 15 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric        36900.54 37016.89 36999.25 37169.38 -18402.27 156.036 18 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)</span></span></span>
 <span class="r-in"><span><span class="va">mod_configural</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>, method <span class="op">=</span> <span class="st">'MHRM'</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mod_metric</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>, invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">'MHRM'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod_metric</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
+<span class="r-in"><span>                            invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'free_var'</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">'MHRM'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod_fullconstrain</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="va">model</span>, group <span class="op">=</span> <span class="va">group</span>, method <span class="op">=</span> <span class="st">'MHRM'</span>,</span></span>
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_metric</span>, <span class="va">mod_configural</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric     36927.79 37036.86 37020.33 37179.83 -18418.89            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_configural 36918.04 37063.47 37041.43 37254.10 -18399.02 39.745 15 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     AIC    SABIC       HQ      BIC    logLik     X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric     36906.68 37023.03 37005.40 37175.53 -18405.34                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_configural 36918.04 37063.47 37041.43 37254.10 -18399.02 12.643 12 0.395</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="va">mod_metric</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        AIC    SABIC       HQ      BIC    logLik     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_fullconstrain 37023.82 37096.54 37085.52 37191.85 -18481.91            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric        36927.79 37036.86 37020.33 37179.83 -18418.89 126.04 15 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        AIC    SABIC       HQ      BIC    logLik      X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_fullconstrain 37023.82 37096.54 37085.52 37191.85 -18481.91             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_metric        36906.68 37023.03 37005.40 37175.53 -18405.34 153.141 18 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">############</span></span></span>
 <span class="r-in"><span><span class="co"># polytomous item example</span></span></span>
