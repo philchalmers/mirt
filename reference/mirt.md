@@ -2371,13 +2371,13 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.263  0.035  0.080  0.133  0.000  0.001 
+#>  0.244  0.035  0.077  0.117  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.214  0.034  0.087  0.072  0.000  0.000 
+#>  0.238  0.056  0.090  0.071  0.000  0.001 
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
 #> Warning: EM cycles terminated after 500 iterations.
@@ -2779,75 +2779,75 @@ mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
 #> $Item_1
 #>        a1 a2     d g u
-#> par 1.475  0 -1.07 0 1
+#> par 2.006  0 -1.18 0 1
 #> 
 #> $Item_2
 #>        a1 a2      d g u
-#> par 0.598  0 -1.482 0 1
+#> par 0.368  0 -1.581 0 1
 #> 
 #> $Item_3
 #>        a1 a2     d g u
-#> par 1.068  0 1.599 0 1
+#> par 1.147  0 1.672 0 1
 #> 
 #> $Item_4
 #>        a1    a2     d g u
-#> par 0.977 0.432 0.034 0 1
+#> par 0.762 0.522 0.061 0 1
 #> 
 #> $Item_5
 #>     a1    a2    d1    d2     d3
-#> par  0 1.576 3.099 2.033 -0.524
+#> par  0 1.316 2.946 1.984 -0.356
 #> 
 #> $Item_6
-#>     a1    a2   d1    d2     d3
-#> par  0 0.496 2.54 0.985 -1.052
+#>     a1   a2   d1    d2     d3
+#> par  0 0.54 2.52 1.033 -0.953
 #> 
 #> $Item_7
-#>     a1    a2    d1     d2
-#> par  0 0.976 1.928 -0.048
+#>     a1    a2    d1    d2
+#> par  0 0.977 2.045 0.051
 #> 
 #> $Item_8
-#>     a1    a2     d g u
-#> par  0 1.093 1.044 0 1
+#>     a1   a2     d g u
+#> par  0 1.22 1.031 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#> par      0      0      1  0.333      1
+#> par      0      0      1  0.386      1
 #> 
 summary(mod1)
 #>           F1    F2    h2
-#> Item_1 0.655       0.429
-#> Item_2 0.331       0.110
-#> Item_3 0.532       0.283
-#> Item_4 0.486 0.215 0.283
-#> Item_5       0.679 0.462
-#> Item_6       0.280 0.078
+#> Item_1 0.762       0.581
+#> Item_2 0.211       0.045
+#> Item_3 0.559       0.312
+#> Item_4 0.393 0.269 0.227
+#> Item_5       0.612 0.374
+#> Item_6       0.303 0.092
 #> Item_7       0.498 0.248
-#> Item_8       0.540 0.292
+#> Item_8       0.583 0.339
 #> 
-#> SS loadings:  1.058 1.126 
-#> Proportion Var:  0.132 0.141 
+#> SS loadings:  1.093 1.126 
+#> Proportion Var:  0.137 0.141 
 #> 
 #> Factor correlations: 
 #> 
 #>       F1 F2
 #> F1 1.000   
-#> F2 0.333  1
+#> F2 0.386  1
 residuals(mod1)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.060  -0.022  -0.007  -0.005   0.014   0.049 
+#>  -0.046  -0.021  -0.004  -0.002   0.017   0.045 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.018 -0.008 -0.007  0.020  0.049  0.022 -0.011
-#> Item_2  0.620        -0.011 -0.013 -0.046  0.008  0.017 -0.002
-#> Item_3  0.116  0.241         0.009  0.013 -0.060  0.012 -0.025
-#> Item_4  0.088  0.364  0.165        -0.042  0.025  0.014  0.016
-#> Item_5  0.768  4.299  0.330  3.582        -0.039 -0.027 -0.028
-#> Item_6  4.895  0.127  7.093  1.264  8.981        -0.021 -0.020
-#> Item_7  0.995  0.576  0.306  0.387  3.021  1.846        -0.013
-#> Item_8  0.245  0.007  1.220  0.525  1.612  0.835  0.341       
+#> Item_1         0.017 -0.005  0.005 -0.021 -0.036 -0.017 -0.004
+#> Item_2  0.579        -0.029 -0.018  0.017  0.011  0.026  0.017
+#> Item_3  0.048  1.665        -0.004 -0.021 -0.021  0.045 -0.003
+#> Item_4  0.051  0.671  0.025        -0.021  0.042 -0.046  0.002
+#> Item_5  0.916  0.610  0.915  0.912         0.029  0.039 -0.027
+#> Item_6  2.608  0.232  0.919  3.474  5.220        -0.026 -0.024
+#> Item_7  0.579  1.318  3.988  4.163  5.932  2.782         0.019
+#> Item_8  0.031  0.608  0.024  0.006  1.406  1.125  0.715       
 
 #####
 # bifactor
@@ -2860,35 +2860,35 @@ mod3 <- mirt(dataset,model.3, method = 'MHRM')
 coef(mod3)
 #> $Item_1
 #>        a1    a2 a3      d g u
-#> par 0.805 1.295  0 -1.082 0 1
+#> par 0.978 1.719  0 -1.167 0 1
 #> 
 #> $Item_2
-#>        a1    a2 a3      d g u
-#> par 0.298 0.539  0 -1.487 0 1
+#>        a1    a2 a3     d g u
+#> par 0.273 0.245  0 -1.58 0 1
 #> 
 #> $Item_3
 #>        a1    a2 a3     d g u
-#> par 0.534 0.898  0 1.585 0 1
+#> par 0.566 0.955  0 1.654 0 1
 #> 
 #> $Item_4
-#>        a1    a2 a3     d g u
-#> par 1.237 0.593  0 0.039 0 1
+#>        a1    a2 a3    d g u
+#> par 1.155 0.527  0 0.07 0 1
 #> 
 #> $Item_5
-#>        a1 a2    a3    d1    d2     d3
-#> par 1.036  0 1.282 3.175 2.084 -0.529
+#>        a1 a2    a3    d1    d2    d3
+#> par 0.952  0 1.071 3.066 2.071 -0.36
 #> 
 #> $Item_6
-#>        a1 a2    a3    d1    d2     d3
-#> par 0.356  0 0.317 2.536 0.984 -1.045
+#>        a1 a2    a3   d1    d2     d3
+#> par 0.469  0 0.244 2.52 1.035 -0.947
 #> 
 #> $Item_7
-#>        a1 a2    a3    d1     d2
-#> par 0.728  0 0.632 1.928 -0.042
+#>        a1 a2    a3    d1    d2
+#> par 0.695  0 0.688 2.058 0.061
 #> 
 #> $Item_8
-#>        a1 a2    a3    d g u
-#> par 0.771  0 0.775 1.05 0 1
+#>        a1 a2    a3     d g u
+#> par 0.935  0 0.711 1.028 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2896,17 +2896,17 @@ coef(mod3)
 #> 
 summary(mod3)
 #>            G    F1    F2    h2
-#> Item_1 0.352 0.567       0.445
-#> Item_2 0.165 0.298       0.116
-#> Item_3 0.267 0.450       0.274
-#> Item_4 0.566 0.271       0.394
-#> Item_5 0.437       0.541 0.484
-#> Item_6 0.201       0.180 0.073
-#> Item_7 0.372       0.323 0.243
-#> Item_8 0.381       0.383 0.292
+#> Item_1 0.375 0.659       0.575
+#> Item_2 0.157 0.140       0.044
+#> Item_3 0.279 0.470       0.299
+#> Item_4 0.544 0.248       0.357
+#> Item_5 0.428       0.481 0.415
+#> Item_6 0.263       0.137 0.088
+#> Item_7 0.354       0.351 0.248
+#> Item_8 0.452       0.344 0.322
 #> 
-#> SS loadings:  1.059 0.686 0.576 
-#> Proportion Var:  0.132 0.086 0.072 
+#> SS loadings:  1.121 0.736 0.491 
+#> Proportion Var:  0.14 0.092 0.061 
 #> 
 #> Factor correlations: 
 #> 
@@ -2919,21 +2919,21 @@ residuals(mod3)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.061  -0.022  -0.008  -0.006   0.014   0.044 
+#>  -0.043  -0.025  -0.005  -0.003   0.019   0.050 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.013 -0.008 -0.006  0.019  0.044 -0.020 -0.021
-#> Item_2  0.322        -0.012 -0.011 -0.046 -0.009  0.014 -0.005
-#> Item_3  0.134  0.273         0.018  0.014 -0.061  0.007 -0.028
-#> Item_4  0.075  0.228  0.634        -0.042 -0.026 -0.009  0.007
-#> Item_5  0.734  4.310  0.374  3.598         0.039 -0.027 -0.029
-#> Item_6  3.847  0.147  7.388  1.342  9.004         0.022  0.021
-#> Item_7  0.796  0.389  0.103  0.166  2.982  1.947        -0.014
-#> Item_8  0.867  0.042  1.584  0.088  1.740  0.876  0.369       
+#> Item_1         0.022  0.006  0.006  0.023 -0.038 -0.013 -0.006
+#> Item_2  0.987        -0.025 -0.028  0.016 -0.012  0.019  0.007
+#> Item_3  0.062  1.255        -0.004 -0.019 -0.026  0.050 -0.005
+#> Item_4  0.075  1.579  0.036         0.022  0.037 -0.043 -0.007
+#> Item_5  1.091  0.502  0.748  0.961         0.031 -0.039 -0.028
+#> Item_6  2.964  0.308  1.380  2.668  5.656        -0.024 -0.020
+#> Item_7  0.315  0.698  5.008  3.753  6.080  2.384         0.023
+#> Item_8  0.063  0.107  0.054  0.096  1.578  0.830  1.046       
 anova(mod1,mod3)
 #>           AIC    SABIC       HQ      BIC    logLik     X2 df   p
-#> mod1 24845.01 24900.76 24892.31 24973.83 -12399.50              
-#> mod3 24858.71 24929.00 24918.35 25021.13 -12400.35 -1.697  6 NaN
+#> mod1 24588.83 24644.57 24636.12 24717.65 -12271.41              
+#> mod3 24602.17 24672.46 24661.81 24764.60 -12272.08 -1.344  6 NaN
 
 #####
 # polynomial/combinations
@@ -3784,19 +3784,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.36704 -0.34721  0.00548  0.31707  1.32624 
+#> -1.28131 -0.30449 -0.00608  0.28920  1.30157 
 #> 
 #> Coefficients:
-#>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  0.000349   0.014543   0.024    0.981    
-#> covdata$X1   0.503810   0.014606  34.494   <2e-16 ***
-#> covdata$X2  -0.991432   0.014846 -66.781   <2e-16 ***
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.01609    0.01400  -1.149    0.251    
+#> covdata$X1   0.51922    0.01406  36.927   <2e-16 ***
+#> covdata$X2  -1.00097    0.01429 -70.037   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4597 on 997 degrees of freedom
-#> Multiple R-squared:  0.8443, Adjusted R-squared:  0.844 
-#> F-statistic:  2703 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4425 on 997 degrees of freedom
+#> Multiple R-squared:  0.8574, Adjusted R-squared:  0.8571 
+#> F-statistic:  2998 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[2]]
@@ -3806,19 +3806,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.44225 -0.30555 -0.00584  0.32115  1.53171 
+#> -1.62505 -0.30009  0.01575  0.29821  1.45416 
 #> 
 #> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.02899    0.01424  -2.036   0.0421 *  
-#> covdata$X1   0.51292    0.01430  35.858   <2e-16 ***
-#> covdata$X2  -1.02873    0.01454 -70.754   <2e-16 ***
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.005776   0.014338  -0.403    0.687    
+#> covdata$X1   0.504994   0.014400  35.069   <2e-16 ***
+#> covdata$X2  -0.983292   0.014637 -67.179   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4502 on 997 degrees of freedom
-#> Multiple R-squared:  0.858,  Adjusted R-squared:  0.8577 
-#> F-statistic:  3012 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4532 on 997 degrees of freedom
+#> Multiple R-squared:  0.8464, Adjusted R-squared:  0.8461 
+#> F-statistic:  2747 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[3]]
@@ -3828,19 +3828,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.36240 -0.32062  0.01254  0.31198  1.74255 
+#> -1.51766 -0.30441  0.01185  0.31056  1.52033 
 #> 
 #> Coefficients:
 #>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.01431    0.01429  -1.001    0.317    
-#> covdata$X1   0.51416    0.01435  35.827   <2e-16 ***
-#> covdata$X2  -0.98259    0.01459 -67.358   <2e-16 ***
+#> (Intercept)  0.01900    0.01453   1.308    0.191    
+#> covdata$X1   0.51467    0.01459  35.273   <2e-16 ***
+#> covdata$X2  -0.99804    0.01483 -67.293   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4517 on 997 degrees of freedom
-#> Multiple R-squared:  0.8481, Adjusted R-squared:  0.8478 
-#> F-statistic:  2783 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4592 on 997 degrees of freedom
+#> Multiple R-squared:  0.847,  Adjusted R-squared:  0.8467 
+#> F-statistic:  2761 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[4]]
@@ -3850,19 +3850,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.36928 -0.30350 -0.00393  0.30726  1.28288 
+#> -1.41720 -0.33542  0.01016  0.34057  1.44281 
 #> 
 #> Coefficients:
 #>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.004666   0.014210  -0.328    0.743    
-#> covdata$X1   0.512114   0.014271  35.886   <2e-16 ***
-#> covdata$X2  -1.008874   0.014505 -69.552   <2e-16 ***
+#> (Intercept) -0.005343   0.014783  -0.361    0.718    
+#> covdata$X1   0.503094   0.014846  33.887   <2e-16 ***
+#> covdata$X2  -1.010078   0.015090 -66.935   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4491 on 997 degrees of freedom
-#> Multiple R-squared:  0.8546, Adjusted R-squared:  0.8543 
-#> F-statistic:  2931 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4672 on 997 degrees of freedom
+#> Multiple R-squared:  0.8439, Adjusted R-squared:  0.8436 
+#> F-statistic:  2695 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[5]]
@@ -3871,20 +3871,20 @@ so
 #> lm(formula = x ~ covdata$X1 + covdata$X2)
 #> 
 #> Residuals:
-#>     Min      1Q  Median      3Q     Max 
-#> -1.7496 -0.2831 -0.0196  0.3180  1.3900 
+#>      Min       1Q   Median       3Q      Max 
+#> -1.97983 -0.30324 -0.01063  0.31249  1.24206 
 #> 
 #> Coefficients:
 #>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.004307   0.014742  -0.292     0.77    
-#> covdata$X1   0.513038   0.014805  34.653   <2e-16 ***
-#> covdata$X2  -1.006049   0.015049 -66.853   <2e-16 ***
+#> (Intercept) -0.001993   0.014562  -0.137    0.891    
+#> covdata$X1   0.506848   0.014625  34.657   <2e-16 ***
+#> covdata$X2  -0.990598   0.014866 -66.637   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4659 on 997 degrees of freedom
-#> Multiple R-squared:  0.8448, Adjusted R-squared:  0.8444 
-#> F-statistic:  2713 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4603 on 997 degrees of freedom
+#> Multiple R-squared:  0.8441, Adjusted R-squared:  0.8438 
+#> F-statistic:  2699 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[6]]
@@ -3894,19 +3894,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.67788 -0.28584 -0.01811  0.28923  1.42733 
+#> -1.33466 -0.29863  0.00691  0.30527  1.81266 
 #> 
 #> Coefficients:
 #>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  0.002951   0.014240   0.207    0.836    
-#> covdata$X1   0.517100   0.014301  36.158   <2e-16 ***
-#> covdata$X2  -1.015996   0.014537 -69.892   <2e-16 ***
+#> (Intercept) -0.003868   0.014528  -0.266     0.79    
+#> covdata$X1   0.507891   0.014591  34.809   <2e-16 ***
+#> covdata$X2  -1.023059   0.014831 -68.982   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4501 on 997 degrees of freedom
-#> Multiple R-squared:  0.856,  Adjusted R-squared:  0.8557 
-#> F-statistic:  2963 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4592 on 997 degrees of freedom
+#> Multiple R-squared:  0.8515, Adjusted R-squared:  0.8512 
+#> F-statistic:  2858 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[7]]
@@ -3916,19 +3916,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.57295 -0.30306 -0.00982  0.31216  1.37292 
+#> -1.73746 -0.30785 -0.01995  0.31766  1.28536 
 #> 
 #> Coefficients:
-#>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.006395   0.014288  -0.448    0.655    
-#> covdata$X1   0.523847   0.014349  36.507   <2e-16 ***
-#> covdata$X2  -1.021395   0.014585 -70.029   <2e-16 ***
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  0.01355    0.01437   0.943    0.346    
+#> covdata$X1   0.52320    0.01443  36.258   <2e-16 ***
+#> covdata$X2  -1.00809    0.01467 -68.729   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4516 on 997 degrees of freedom
-#> Multiple R-squared:  0.8568, Adjusted R-squared:  0.8565 
-#> F-statistic:  2983 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4541 on 997 degrees of freedom
+#> Multiple R-squared:  0.8528, Adjusted R-squared:  0.8525 
+#> F-statistic:  2887 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[8]]
@@ -3938,19 +3938,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.48151 -0.30747 -0.01363  0.32460  1.34216 
+#> -1.41405 -0.29802 -0.00111  0.32413  1.52959 
 #> 
 #> Coefficients:
 #>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  0.01248    0.01483   0.841      0.4    
-#> covdata$X1   0.51906    0.01489  34.850   <2e-16 ***
-#> covdata$X2  -1.01773    0.01514 -67.225   <2e-16 ***
+#> (Intercept)  0.00976    0.01455   0.671    0.503    
+#> covdata$X1   0.51900    0.01462  35.508   <2e-16 ***
+#> covdata$X2  -1.00795    0.01486 -67.845   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4688 on 997 degrees of freedom
-#> Multiple R-squared:  0.8462, Adjusted R-squared:  0.8459 
-#> F-statistic:  2743 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.46 on 997 degrees of freedom
+#> Multiple R-squared:  0.8491, Adjusted R-squared:  0.8488 
+#> F-statistic:  2804 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> [[9]]
@@ -3959,18 +3959,18 @@ so
 #> lm(formula = x ~ covdata$X1 + covdata$X2)
 #> 
 #> Residuals:
-#>     Min      1Q  Median      3Q     Max 
-#> -1.4834 -0.3259  0.0019  0.3141  1.5660 
+#>      Min       1Q   Median       3Q      Max 
+#> -1.45991 -0.31157  0.01785  0.32466  1.22404 
 #> 
 #> Coefficients:
 #>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -0.008737   0.014366  -0.608    0.543    
-#> covdata$X1   0.516561   0.014428  35.803   <2e-16 ***
-#> covdata$X2  -1.003705   0.014665 -68.441   <2e-16 ***
+#> (Intercept) -0.005682   0.014273  -0.398    0.691    
+#> covdata$X1   0.512342   0.014335  35.742   <2e-16 ***
+#> covdata$X2  -0.997535   0.014570 -68.463   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4541 on 997 degrees of freedom
+#> Residual standard error: 0.4511 on 997 degrees of freedom
 #> Multiple R-squared:  0.8513, Adjusted R-squared:  0.851 
 #> F-statistic:  2853 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
@@ -3982,19 +3982,19 @@ so
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -1.34699 -0.30806  0.00298  0.30130  1.57331 
+#> -1.55481 -0.30529  0.00362  0.30236  1.83547 
 #> 
 #> Coefficients:
-#>              Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  0.009093   0.014341   0.634    0.526    
-#> covdata$X1   0.538702   0.014403  37.403   <2e-16 ***
-#> covdata$X2  -1.010478   0.014640 -69.024   <2e-16 ***
+#>               Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.0008255  0.0146690  -0.056    0.955    
+#> covdata$X1   0.5296614  0.0147319  35.953   <2e-16 ***
+#> covdata$X2  -1.0250761  0.0149743 -68.456   <2e-16 ***
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 0.4533 on 997 degrees of freedom
-#> Multiple R-squared:  0.8552, Adjusted R-squared:  0.8549 
-#> F-statistic:  2945 on 2 and 997 DF,  p-value: < 2.2e-16
+#> Residual standard error: 0.4636 on 997 degrees of freedom
+#> Multiple R-squared:  0.8515, Adjusted R-squared:  0.8512 
+#> F-statistic:  2859 on 2 and 997 DF,  p-value: < 2.2e-16
 #> 
 #> 
 
@@ -4002,10 +4002,10 @@ so
 par <- lapply(so, function(x) x$coefficients[, 'Estimate'])
 SEpar <- lapply(so, function(x) x$coefficients[, 'Std. Error'])
 averageMI(par, SEpar)
-#>                par SEpar       t     df     p
-#> (Intercept) -0.004 0.019  -0.223 49.226 0.206
-#> covdata$X1   0.517 0.017  29.738 95.288     0
-#> covdata$X2  -1.009 0.021 -48.889 37.234     0
+#>                par SEpar       t      df     p
+#> (Intercept)  0.000 0.018   0.015  65.192 0.247
+#> covdata$X1   0.514 0.017  30.018 114.147     0
+#> covdata$X2  -1.004 0.020 -49.621  41.071     0
 
 ############
 # Example using Gauss-Hermite quadrature with custom input functions
@@ -4270,36 +4270,36 @@ mod <- mirt(dat, itemtype = 'Rasch')
 coef(mod, simplify=TRUE)
 #> $items
 #>         a1      d g u
-#> Item_1   1  1.019 0 1
-#> Item_2   1  0.986 0 1
-#> Item_3   1  1.030 0 1
-#> Item_4   1  0.828 0 1
-#> Item_5   1  1.025 0 1
-#> Item_6   1  1.030 0 1
-#> Item_7   1  0.903 0 1
-#> Item_8   1  0.947 0 1
-#> Item_9   1  0.969 0 1
-#> Item_10  1  0.991 0 1
-#> Item_11  1 -0.178 0 1
-#> Item_12  1  0.049 0 1
-#> Item_13  1  0.000 0 1
-#> Item_14  1 -0.053 0 1
-#> Item_15  1  0.005 0 1
-#> Item_16  1 -0.048 0 1
-#> Item_17  1  0.044 0 1
-#> Item_18  1 -0.053 0 1
-#> Item_19  1 -0.130 0 1
-#> Item_20  1 -0.096 0 1
-#> Item_21  1 -0.985 0 1
-#> Item_22  1 -0.854 0 1
-#> Item_23  1 -0.969 0 1
-#> Item_24  1 -1.151 0 1
-#> Item_25  1 -0.963 0 1
-#> Item_26  1 -1.140 0 1
-#> Item_27  1 -1.008 0 1
-#> Item_28  1 -1.030 0 1
-#> Item_29  1 -0.958 0 1
-#> Item_30  1 -1.265 0 1
+#> Item_1   1  1.000 0 1
+#> Item_2   1  0.977 0 1
+#> Item_3   1  0.900 0 1
+#> Item_4   1  0.994 0 1
+#> Item_5   1  0.950 0 1
+#> Item_6   1  1.062 0 1
+#> Item_7   1  0.955 0 1
+#> Item_8   1  1.051 0 1
+#> Item_9   1  0.851 0 1
+#> Item_10  1  0.994 0 1
+#> Item_11  1 -0.033 0 1
+#> Item_12  1 -0.047 0 1
+#> Item_13  1 -0.124 0 1
+#> Item_14  1  0.044 0 1
+#> Item_15  1 -0.013 0 1
+#> Item_16  1 -0.119 0 1
+#> Item_17  1  0.025 0 1
+#> Item_18  1 -0.095 0 1
+#> Item_19  1 -0.004 0 1
+#> Item_20  1 -0.086 0 1
+#> Item_21  1 -1.078 0 1
+#> Item_22  1 -0.993 0 1
+#> Item_23  1 -1.055 0 1
+#> Item_24  1 -0.960 0 1
+#> Item_25  1 -1.072 0 1
+#> Item_26  1 -1.130 0 1
+#> Item_27  1 -1.118 0 1
+#> Item_28  1 -0.922 0 1
+#> Item_29  1 -0.954 0 1
+#> Item_30  1 -1.038 0 1
 #> 
 #> $means
 #> F1 
@@ -4307,7 +4307,7 @@ coef(mod, simplify=TRUE)
 #> 
 #> $cov
 #>       F1
-#> F1 0.961
+#> F1 0.975
 #> 
 
 # Suppose that the first 10 items were suspected to be easy, followed by 10 medium difficulty items,
@@ -4356,36 +4356,36 @@ lltm <- mirt(dat, itemtype = 'Rasch', SE=TRUE,
 coef(lltm, simplify=TRUE)
 #> $items
 #>         difficultyeasy difficultyhard difficultymedium a1 d g u
-#> Item_1           0.973          0.000            0.000  1 0 0 1
-#> Item_2           0.973          0.000            0.000  1 0 0 1
-#> Item_3           0.973          0.000            0.000  1 0 0 1
-#> Item_4           0.973          0.000            0.000  1 0 0 1
-#> Item_5           0.973          0.000            0.000  1 0 0 1
-#> Item_6           0.973          0.000            0.000  1 0 0 1
-#> Item_7           0.973          0.000            0.000  1 0 0 1
-#> Item_8           0.973          0.000            0.000  1 0 0 1
-#> Item_9           0.973          0.000            0.000  1 0 0 1
-#> Item_10          0.973          0.000            0.000  1 0 0 1
-#> Item_11          0.000          0.000           -0.045  1 0 0 1
-#> Item_12          0.000          0.000           -0.045  1 0 0 1
-#> Item_13          0.000          0.000           -0.045  1 0 0 1
-#> Item_14          0.000          0.000           -0.045  1 0 0 1
-#> Item_15          0.000          0.000           -0.045  1 0 0 1
-#> Item_16          0.000          0.000           -0.045  1 0 0 1
-#> Item_17          0.000          0.000           -0.045  1 0 0 1
-#> Item_18          0.000          0.000           -0.045  1 0 0 1
-#> Item_19          0.000          0.000           -0.045  1 0 0 1
-#> Item_20          0.000          0.000           -0.045  1 0 0 1
-#> Item_21          0.000         -1.029            0.000  1 0 0 1
-#> Item_22          0.000         -1.029            0.000  1 0 0 1
-#> Item_23          0.000         -1.029            0.000  1 0 0 1
-#> Item_24          0.000         -1.029            0.000  1 0 0 1
-#> Item_25          0.000         -1.029            0.000  1 0 0 1
-#> Item_26          0.000         -1.029            0.000  1 0 0 1
-#> Item_27          0.000         -1.029            0.000  1 0 0 1
-#> Item_28          0.000         -1.029            0.000  1 0 0 1
-#> Item_29          0.000         -1.029            0.000  1 0 0 1
-#> Item_30          0.000         -1.029            0.000  1 0 0 1
+#> Item_1           0.972          0.000            0.000  1 0 0 1
+#> Item_2           0.972          0.000            0.000  1 0 0 1
+#> Item_3           0.972          0.000            0.000  1 0 0 1
+#> Item_4           0.972          0.000            0.000  1 0 0 1
+#> Item_5           0.972          0.000            0.000  1 0 0 1
+#> Item_6           0.972          0.000            0.000  1 0 0 1
+#> Item_7           0.972          0.000            0.000  1 0 0 1
+#> Item_8           0.972          0.000            0.000  1 0 0 1
+#> Item_9           0.972          0.000            0.000  1 0 0 1
+#> Item_10          0.972          0.000            0.000  1 0 0 1
+#> Item_11          0.000          0.000           -0.046  1 0 0 1
+#> Item_12          0.000          0.000           -0.046  1 0 0 1
+#> Item_13          0.000          0.000           -0.046  1 0 0 1
+#> Item_14          0.000          0.000           -0.046  1 0 0 1
+#> Item_15          0.000          0.000           -0.046  1 0 0 1
+#> Item_16          0.000          0.000           -0.046  1 0 0 1
+#> Item_17          0.000          0.000           -0.046  1 0 0 1
+#> Item_18          0.000          0.000           -0.046  1 0 0 1
+#> Item_19          0.000          0.000           -0.046  1 0 0 1
+#> Item_20          0.000          0.000           -0.046  1 0 0 1
+#> Item_21          0.000         -1.032            0.000  1 0 0 1
+#> Item_22          0.000         -1.032            0.000  1 0 0 1
+#> Item_23          0.000         -1.032            0.000  1 0 0 1
+#> Item_24          0.000         -1.032            0.000  1 0 0 1
+#> Item_25          0.000         -1.032            0.000  1 0 0 1
+#> Item_26          0.000         -1.032            0.000  1 0 0 1
+#> Item_27          0.000         -1.032            0.000  1 0 0 1
+#> Item_28          0.000         -1.032            0.000  1 0 0 1
+#> Item_29          0.000         -1.032            0.000  1 0 0 1
+#> Item_30          0.000         -1.032            0.000  1 0 0 1
 #> 
 #> $means
 #> F1 
@@ -4393,168 +4393,168 @@ coef(lltm, simplify=TRUE)
 #> 
 #> $cov
 #>       F1
-#> F1 0.958
+#> F1 0.973
 #> 
 coef(lltm, printSE=TRUE)
 #> $Item_1
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_2
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_3
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_4
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_5
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_6
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_7
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_8
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_9
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_10
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_11
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_12
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_13
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_14
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_15
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_16
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_17
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_18
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_19
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_20
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_21
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_22
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_23
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_24
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_25
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_26
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_27
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_28
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_29
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $Item_30
 #>     difficultyeasy difficultyhard difficultymedium a1  d logit(g) logit(u)
-#> par          0.973         -1.029           -0.045  1  0     -999      999
-#> SE           0.039          0.039            0.038 NA NA       NA       NA
+#> par          0.972         -1.032           -0.046  1  0     -999      999
+#> SE           0.039          0.040            0.038 NA NA       NA       NA
 #> 
 #> $GroupPars
 #>     MEAN_1 COV_11
-#> par      0  0.958
-#> SE      NA  0.054
+#> par      0  0.973
+#> SE      NA  0.055
 #> 
 anova(lltm, mod)  # models fit effectively the same; hence, intercept variability well captured
 #>           AIC    SABIC       HQ      BIC    logLik     X2 df     p
-#> lltm 35246.49 35253.41 35253.95 35266.12 -17619.24                
-#> mod  35260.86 35314.55 35318.69 35413.00 -17599.43 39.621 27 0.056
+#> lltm 35238.07 35245.00 35245.53 35257.70 -17615.03                
+#> mod  35270.67 35324.35 35328.49 35422.81 -17604.33 21.402 27 0.767
 
 # additional information for LLTM
 plot(lltm)
@@ -4565,260 +4565,260 @@ itemplot(lltm, item=1)
 
 itemfit(lltm)
 #>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
-#> 1   Item_1 37.589      20      0.030  0.010
-#> 2   Item_2 14.795      20      0.000  0.788
-#> 3   Item_3 19.312      20      0.000  0.502
-#> 4   Item_4 15.440      20      0.000  0.751
-#> 5   Item_5 15.054      20      0.000  0.773
-#> 6   Item_6 22.689      20      0.012  0.304
-#> 7   Item_7 23.157      20      0.013  0.281
-#> 8   Item_8 21.918      20      0.010  0.345
-#> 9   Item_9 28.950      20      0.021  0.089
-#> 10 Item_10 22.374      20      0.011  0.321
-#> 11 Item_11 18.555      21      0.000  0.614
-#> 12 Item_12 23.552      21      0.011  0.315
-#> 13 Item_13 22.619      21      0.009  0.365
-#> 14 Item_14 25.614      21      0.015  0.222
-#> 15 Item_15 19.284      21      0.000  0.567
-#> 16 Item_16 21.323      21      0.004  0.439
-#> 17 Item_17 32.891      21      0.024  0.047
-#> 18 Item_18 26.230      21      0.016  0.198
-#> 19 Item_19 26.460      21      0.016  0.189
-#> 20 Item_20 27.493      21      0.018  0.155
-#> 21 Item_21 21.934      20      0.010  0.344
-#> 22 Item_22 27.872      20      0.020  0.112
-#> 23 Item_23 30.729      20      0.023  0.059
-#> 24 Item_24 34.545      20      0.027  0.023
-#> 25 Item_25 22.244      20      0.011  0.327
-#> 26 Item_26 13.622      20      0.000  0.849
-#> 27 Item_27 28.705      20      0.021  0.094
-#> 28 Item_28 25.747      20      0.017  0.174
-#> 29 Item_29 17.434      20      0.000  0.625
-#> 30 Item_30 31.870      20      0.024  0.045
+#> 1   Item_1 14.739      20      0.000  0.791
+#> 2   Item_2 27.350      20      0.019  0.126
+#> 3   Item_3 22.148      20      0.010  0.333
+#> 4   Item_4 18.597      20      0.000  0.548
+#> 5   Item_5 11.628      20      0.000  0.928
+#> 6   Item_6 18.432      20      0.000  0.559
+#> 7   Item_7 18.202      20      0.000  0.574
+#> 8   Item_8 16.534      20      0.000  0.683
+#> 9   Item_9 28.891      20      0.021  0.090
+#> 10 Item_10 29.936      20      0.022  0.071
+#> 11 Item_11 18.171      19      0.000  0.511
+#> 12 Item_12 14.770      19      0.000  0.737
+#> 13 Item_13 14.288      19      0.000  0.767
+#> 14 Item_14 19.353      19      0.004  0.434
+#> 15 Item_15 15.441      19      0.000  0.694
+#> 16 Item_16 27.702      19      0.021  0.089
+#> 17 Item_17 26.908      19      0.020  0.107
+#> 18 Item_18 24.992      19      0.018  0.161
+#> 19 Item_19 23.075      19      0.015  0.234
+#> 20 Item_20 16.607      19      0.000  0.616
+#> 21 Item_21  9.590      20      0.000  0.975
+#> 22 Item_22 21.101      20      0.007  0.391
+#> 23 Item_23 25.533      20      0.017  0.182
+#> 24 Item_24 19.560      20      0.000  0.486
+#> 25 Item_25 13.314      20      0.000  0.864
+#> 26 Item_26 23.931      20      0.014  0.245
+#> 27 Item_27 28.350      20      0.020  0.101
+#> 28 Item_28 20.997      20      0.007  0.397
+#> 29 Item_29 33.185      20      0.026  0.032
+#> 30 Item_30 10.960      20      0.000  0.947
 head(fscores(lltm))  #EAP estimates
-#>               F1
-#> [1,]  0.30297863
-#> [2,]  0.02981062
-#> [3,] -0.38197146
-#> [4,]  0.02981062
-#> [5,] -0.10649743
-#> [6,] -0.66620202
+#>              F1
+#> [1,]  0.1673518
+#> [2,]  0.3046000
+#> [3,]  1.3530052
+#> [4,] -1.4729489
+#> [5,]  1.1863028
+#> [6,]  1.0275168
 fscores(lltm, method='EAPsum', full.scores=FALSE)
-#>    Sum.Scores          F1     SE_F1 observed   expected     std.res
-#> 0           0 -2.63001959 0.5556459        2  1.0649189 0.906130992
-#> 1           1 -2.34237820 0.5181280        3  3.5195381 0.276932921
-#> 2           2 -2.08982673 0.4878932        4  7.2227070 1.199142568
-#> 3           3 -1.86391755 0.4634569       11 11.8803549 0.255413046
-#> 4           4 -1.65850087 0.4436076       15 17.1819057 0.526381122
-#> 5           5 -1.46904890 0.4274060       27 22.8437667 0.869593055
-#> 6           6 -1.29217029 0.4141369       31 28.6176602 0.445334805
-#> 7           7 -1.12527411 0.4032584       39 34.2883147 0.804642948
-#> 8           8 -0.96633893 0.3943600       38 39.6693582 0.265046422
-#> 9           9 -0.81375304 0.3871301       47 44.6001028 0.359355842
-#> 10         10 -0.66620202 0.3813323       46 48.9436804 0.420767647
-#> 11         11 -0.52258819 0.3767881       57 52.5862732 0.608652273
-#> 12         12 -0.38197146 0.3733651       50 55.4370204 0.730232276
-#> 13         13 -0.24352445 0.3709677       59 57.4282201 0.207409696
-#> 14         14 -0.10649743 0.3695314       57 58.5155483 0.198122654
-#> 15         15  0.02981062 0.3690192       57 58.6781183 0.219070794
-#> 16         16  0.16607702 0.3694186       59 57.9182898 0.142135667
-#> 17         17  0.30297863 0.3707416       54 56.2611984 0.301463111
-#> 18         18  0.44121502 0.3730248       54 53.7540182 0.033550392
-#> 19         19  0.58153334 0.3763320       44 50.4650006 0.910067124
-#> 20         20  0.72475679 0.3807572       45 46.4823666 0.217426011
-#> 21         21  0.87181920 0.3864314       48 41.9131696 0.940190690
-#> 22         22  1.02380904 0.3935302       41 36.8823012 0.678024784
-#> 23         23  1.18202732 0.4022862       25 31.5318688 1.163221977
-#> 24         24  1.34806644 0.4130058       26 26.0212168 0.004159263
-#> 25         25  1.52391991 0.4260922       27 20.5278297 1.428493995
-#> 26         26  1.71213832 0.4420773       15 15.2491276 0.063796866
-#> 27         27  1.91605451 0.4616630       12 10.4044240 0.494661923
-#> 28         28  2.14011122 0.4857717        3  6.2342845 1.295343394
-#> 29         29  2.39033527 0.5155953        4  2.9893215 0.584556785
-#> 30         30  2.67499994 0.5526009        0  0.8880949 0.942387879
+#>    Sum.Scores          F1     SE_F1 observed   expected    std.res
+#> 0           0 -2.64320592 0.5589610        5  1.1218139 3.66157746
+#> 1           1 -2.35244548 0.5206490        4  3.6633378 0.17589595
+#> 2           2 -2.09765328 0.4898481        8  7.4476393 0.20240139
+#> 3           3 -1.87008429 0.4650069        5 12.1591397 2.05309675
+#> 4           4 -1.66339935 0.4448651       22 17.4790593 1.08135870
+#> 5           5 -1.47294889 0.4284493       26 23.1240356 0.59806955
+#> 6           6 -1.29526163 0.4150212       25 28.8506491 0.71689599
+#> 7           7 -1.12769290 0.4040238       32 34.4507409 0.41754003
+#> 8           8 -0.96818425 0.3950357       39 39.7459116 0.11831536
+#> 9           9 -0.81509773 0.3877380       44 44.5834814 0.08738563
+#> 10         10 -0.66709987 0.3818891       42 48.8341183 0.97795938
+#> 11         11 -0.52307877 0.3773071       56 52.3907365 0.49864484
+#> 12         12 -0.38208332 0.3738569       53 55.1681736 0.29191052
+#> 13         13 -0.24327737 0.3714412       66 57.1032318 1.17734009
+#> 14         14 -0.10590383 0.3699946       51 58.1547894 0.93821876
+#> 15         15  0.03074478 0.3694790       50 58.3037975 1.08749765
+#> 16         16  0.16735178 0.3698820       63 57.5530694 0.71798867
+#> 17         17  0.30460002 0.3712156       55 55.9268302 0.12393389
+#> 18         18  0.44319542 0.3735171       51 53.4700356 0.33779093
+#> 19         19  0.58389225 0.3768510       66 50.2475022 2.22224628
+#> 20         20  0.72752220 0.3813134       54 46.3429226 1.12478969
+#> 21         21  0.87502969 0.3870372       41 41.8578834 0.13259882
+#> 22         22  1.02751680 0.3942017       40 36.9110612 0.50842984
+#> 23         23  1.18630280 0.4030444       20 31.6378394 2.06904031
+#> 24         24  1.35300516 0.4138786       23 26.1906460 0.62345558
+#> 25         25  1.52965279 0.4271178       21 20.7403123 0.05702216
+#> 26         26  1.71884765 0.4433088       22 15.4785759 1.65758933
+#> 27         27  1.92399896 0.4631756        9 10.6211927 0.49744836
+#> 28         28  2.14966590 0.4876733        3  6.4091921 1.34663480
+#> 29         29  2.40205634 0.5180412        3  3.1005813 0.05712101
+#> 30         30  2.68972835 0.5558119        1  0.9316995 0.07075974
 M2(lltm) # goodness of fit
 #>            M2  df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 507.809 461 0.065  0.01       0    0.015 0.032 0.996 0.995
+#> stats 474.323 461 0.324 0.005       0    0.012  0.03 0.999 0.999
 head(personfit(lltm))
-#>      outfit   z.outfit     infit    z.infit         Zh
-#> 1 0.7043895 -1.9380718 0.7507049 -1.8412361  1.7458796
-#> 2 0.9717539 -0.1315404 0.9743149 -0.1341722  0.1806809
-#> 3 0.6842137 -1.9300453 0.7395905 -1.8683425  1.7541435
-#> 4 0.8921495 -0.6682475 0.9011231 -0.6701227  0.6934835
-#> 5 1.0416291  0.3121704 1.0478173  0.3758029 -0.3098147
-#> 6 1.1312134  0.6513655 1.0302701  0.2386675 -0.3327146
+#>      outfit    z.outfit     infit     z.infit         Zh
+#> 1 0.8187581 -1.16934175 0.8251665 -1.25294381 1.19663571
+#> 2 0.9601934 -0.18747533 0.9626058 -0.21306870 0.25219387
+#> 3 0.9960028  0.10153225 0.9642656 -0.09219111 0.10992374
+#> 4 0.9567335  0.01446843 0.8910688 -0.37530944 0.34043369
+#> 5 0.9440828 -0.08736706 0.9441843 -0.22028084 0.25072780
+#> 6 1.0633311  0.31970649 0.9693332 -0.10896384 0.03169427
 residuals(lltm)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.128  -0.046   0.020   0.004   0.050   0.123 
+#>  -0.092  -0.043   0.014   0.000   0.042   0.098 
 #> 
 #>         Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-#> Item_1         -0.042  0.029  0.077 -0.051  0.040  0.037 -0.024  0.028  -0.033
-#> Item_2   1.751        -0.041 -0.068 -0.037 -0.053 -0.046 -0.015 -0.013  -0.020
-#> Item_3   0.821  1.681         0.066 -0.029  0.031 -0.040  0.034  0.023  -0.022
-#> Item_4   5.938  4.571  4.400        -0.078 -0.067  0.076 -0.060  0.059   0.062
-#> Item_5   2.607  1.397  0.840  6.068         0.053 -0.071 -0.027 -0.031  -0.026
-#> Item_6   1.586  2.821  0.937  4.459  2.814         0.071  0.029  0.025  -0.024
-#> Item_7   1.385  2.145  1.565  5.782  5.084  5.046         0.036 -0.039   0.046
-#> Item_8   0.558  0.233  1.184  3.644  0.705  0.856  1.283         0.047   0.015
-#> Item_9   0.778  0.161  0.544  3.481  0.939  0.622  1.518  2.194          0.032
-#> Item_10  1.061  0.407  0.490  3.789  0.669  0.592  2.097  0.226  1.032        
-#> Item_11  5.745  3.631  4.023  6.777  4.701  4.033  5.895  5.218  6.317   6.670
-#> Item_12  4.110  1.725  3.747  9.298  6.506  1.930  4.546  1.791  1.681   1.525
-#> Item_13  0.764  0.357  2.312  4.213  2.086  1.986  1.335  0.764  0.385   0.678
-#> Item_14  0.346  1.250  2.409  4.023  0.441  2.815  0.791  0.855  1.102   3.265
-#> Item_15  1.313  1.218  1.669  4.645  1.149  0.928  3.838  1.503  1.416   0.474
-#> Item_16  2.749  0.870  0.686  4.517  1.836  0.573  0.997  1.199  0.151   0.361
-#> Item_17  1.890  1.524  1.724  5.601  4.350  2.987  5.657  6.063  3.263   1.488
-#> Item_18  0.455  0.128  0.675  4.894  0.441  0.728  1.620  0.308  0.426   0.274
-#> Item_19  1.954  2.166  2.182  4.250  2.138  2.033  2.214  3.017  2.958   5.850
-#> Item_20  3.755  5.253  1.171  3.655  1.230  1.842  1.077  0.744  3.191   0.571
-#> Item_21  1.181  2.155  1.480  4.101  0.686  1.521  1.469  0.509  0.572   2.067
-#> Item_22  6.403  4.976  6.868 10.055  5.189  5.081 10.619  9.020  5.095   4.960
-#> Item_23  2.239  1.243  1.558  4.487  5.098  1.326  3.539  1.079  0.693   1.066
-#> Item_24  7.845  2.722  4.022  4.980  2.943  3.706  2.974  2.226  7.366   5.552
-#> Item_25  4.819  2.106  1.100  5.028  3.298  3.386  1.718  1.837  0.727   2.846
-#> Item_26  2.458  5.542  3.435  4.888  2.419  2.523  2.589  1.752  1.744   2.197
-#> Item_27  1.631  0.100  0.517  8.313  2.007  2.902  0.951  2.377  0.526   4.693
-#> Item_28  2.964  1.106  1.027  5.105  0.880  0.813  0.897  0.225  0.102   0.080
-#> Item_29  1.001  2.321  1.493  4.968  1.520  1.211  2.292  1.742  1.325   1.874
-#> Item_30  9.133  8.132  8.831 11.340  9.618  8.849  7.921  7.723  8.859   9.142
+#> Item_1         -0.026 -0.042  0.015 -0.016  0.071  0.037  0.038 -0.063   0.031
+#> Item_2   0.690        -0.035  0.063  0.032  0.077  0.028  0.035  0.067  -0.012
+#> Item_3   1.788  1.228        -0.031  0.038  0.063 -0.033 -0.046 -0.055   0.031
+#> Item_4   0.226  3.926  0.980         0.025  0.037  0.035  0.035 -0.050  -0.013
+#> Item_5   0.250  1.004  1.408  0.649        -0.039  0.048  0.039  0.047   0.014
+#> Item_6   5.007  5.890  3.994  1.374  1.535        -0.048  0.065 -0.067   0.037
+#> Item_7   1.358  0.803  1.072  1.197  2.260  2.311        -0.047 -0.060   0.022
+#> Item_8   1.473  1.194  2.110  1.226  1.538  4.275  2.214         0.061  -0.032
+#> Item_9   4.011  4.455  3.064  2.529  2.174  4.473  3.595  3.702          0.050
+#> Item_10  0.951  0.143  0.939  0.168  0.191  1.374  0.495  1.025  2.500        
+#> Item_11  0.341  2.169  1.957  1.863  2.411  1.290  2.202  2.306  4.217   2.791
+#> Item_12  0.312  4.595  3.762  0.693  0.087  2.752  0.855  1.365  3.360   2.271
+#> Item_13  1.631  2.282  1.778  1.537  1.132  4.163  1.861  2.368  2.747   1.283
+#> Item_14  3.037  1.636  2.799  1.530  2.107  3.391  2.378  2.852  4.458   5.454
+#> Item_15  6.617  0.753  1.660  0.285  1.021  6.747  1.401  1.722  2.729   1.372
+#> Item_16  2.604  0.910  1.374  3.479  0.973  2.536  1.027  2.268  2.960   1.749
+#> Item_17  1.251  1.716  6.507  1.169  1.175  2.861  1.586  2.320  4.617   1.169
+#> Item_18  0.593  3.335  8.642  2.332  1.626  1.950  0.414  1.615  2.715   0.780
+#> Item_19  1.088  0.474  2.450  2.440  1.891  1.789  2.867  1.374  3.218   0.497
+#> Item_20  0.710  0.515  0.862  1.122  1.360  1.889  1.870  1.587  7.860   0.672
+#> Item_21  3.422  0.486  1.277  0.644  0.650  1.914  1.374  1.476  2.332   1.313
+#> Item_22  0.583  0.239  1.248  0.299  2.111  1.937  0.395  1.212  5.688   0.584
+#> Item_23  2.716  0.285  0.809  2.188  0.283  1.470  7.576  2.219  8.421   2.070
+#> Item_24  0.886  1.647  3.004  0.929  2.419  1.942  1.482  5.189  3.430   0.852
+#> Item_25  0.624  0.313  1.089  1.651  0.643  1.814  1.064  2.857  2.355   1.308
+#> Item_26  2.048  2.172  5.384  2.146  3.729  4.286  1.833  2.746  6.115   1.665
+#> Item_27  1.832  2.564  4.281  1.704  1.297  4.370  1.141  5.843  2.982   1.281
+#> Item_28  2.049  1.935  3.106  2.721  2.609  3.385  2.311  3.516  5.310   3.100
+#> Item_29  1.883  2.385  4.595  1.654  2.462  1.973  1.390  2.267  3.591   1.087
+#> Item_30  0.190  0.118  1.033  1.972  0.535  1.882  0.461  2.736  2.256   0.111
 #>         Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18 Item_19
-#> Item_1   -0.076  -0.064  -0.028  -0.019  -0.036  -0.052  -0.043  -0.021   0.044
-#> Item_2   -0.060   0.042   0.019  -0.035  -0.035  -0.030  -0.039   0.011   0.047
-#> Item_3   -0.063  -0.061  -0.048   0.049  -0.041   0.026  -0.042   0.026  -0.047
-#> Item_4    0.082  -0.096   0.065   0.063  -0.068  -0.067   0.075  -0.070   0.065
-#> Item_5   -0.069  -0.081  -0.046  -0.021   0.034  -0.043  -0.066  -0.021  -0.046
-#> Item_6    0.064   0.044   0.045   0.053  -0.030  -0.024  -0.055  -0.027   0.045
-#> Item_7   -0.077   0.067  -0.037  -0.028   0.062  -0.032  -0.075  -0.040   0.047
-#> Item_8    0.072   0.042   0.028   0.029   0.039   0.035  -0.078   0.018   0.055
-#> Item_9    0.079  -0.041   0.020   0.033   0.038   0.012  -0.057  -0.021  -0.054
-#> Item_10   0.082  -0.039   0.026   0.057   0.022  -0.019   0.039  -0.017   0.076
-#> Item_11           0.074   0.069  -0.061   0.063   0.056   0.073  -0.072  -0.065
-#> Item_12   5.437           0.043   0.042  -0.043  -0.063  -0.049  -0.085  -0.060
-#> Item_13   4.732   1.812          -0.021  -0.046  -0.088   0.043  -0.102   0.045
-#> Item_14   3.747   1.802   0.434           0.022  -0.031   0.040   0.009   0.063
-#> Item_15   3.984   1.807   2.152   0.492          -0.051  -0.049  -0.022  -0.046
-#> Item_16   3.121   3.932   7.676   0.970   2.651           0.038   0.018  -0.036
-#> Item_17   5.291   2.445   1.858   1.590   2.359   1.412          -0.128  -0.057
-#> Item_18   5.199   7.236  10.334   0.075   0.477   0.326  16.272          -0.071
-#> Item_19   4.231   3.647   2.053   3.931   2.141   1.275   3.277   5.078        
-#> Item_20   3.337   3.614   1.582   4.010   1.959   1.309   4.726   2.001   1.775
-#> Item_21   3.828   1.880   0.575   0.733   0.642   0.335   1.698   0.353   4.304
-#> Item_22  13.691   5.893   5.682   7.933   6.507   5.748   6.399   7.066   8.458
-#> Item_23   4.569   2.769   2.332   0.939   1.469   0.991   2.387   5.793   2.187
-#> Item_24   8.612   4.295   7.095   2.316   4.665   2.274   4.780   2.809   3.319
-#> Item_25   4.332   1.956   0.914   1.321   1.143   1.234   2.403   1.015   5.660
-#> Item_26   4.265   3.876   7.206   1.735   6.805   2.148   3.813   2.781   2.832
-#> Item_27   4.449   2.172   0.820   0.394   0.471   0.204   4.757   1.427   1.459
-#> Item_28   3.139   1.856   0.448   2.462   1.020   0.672   1.530   0.344   2.061
-#> Item_29   4.471   4.307   1.159   1.080   2.956   1.690   2.382   0.887   2.848
-#> Item_30   9.936  10.586   8.729   9.189   9.051   7.819  10.805   8.871   8.806
+#> Item_1    0.018  -0.018   0.040   0.055  -0.081   0.051  -0.035   0.024   0.033
+#> Item_2   -0.047  -0.068  -0.048   0.040  -0.027   0.030   0.041  -0.058   0.022
+#> Item_3   -0.044  -0.061   0.042  -0.053  -0.041  -0.037   0.081   0.093  -0.049
+#> Item_4    0.043  -0.026  -0.039   0.039   0.017   0.059  -0.034   0.048   0.049
+#> Item_5    0.049  -0.009  -0.034   0.046   0.032   0.031  -0.034   0.040  -0.043
+#> Item_6   -0.036  -0.052   0.065   0.058  -0.082   0.050   0.053   0.044   0.042
+#> Item_7    0.047   0.029   0.043   0.049   0.037   0.032  -0.040   0.020   0.054
+#> Item_8    0.048   0.037   0.049   0.053  -0.042  -0.048   0.048   0.040  -0.037
+#> Item_9   -0.065  -0.058  -0.052   0.067   0.052  -0.054   0.068   0.052   0.057
+#> Item_10  -0.053   0.048  -0.036   0.074  -0.037  -0.042  -0.034   0.028   0.022
+#> Item_11          -0.030   0.039   0.061  -0.016   0.041  -0.032  -0.023  -0.036
+#> Item_12   0.871           0.046   0.098  -0.029  -0.030  -0.040  -0.044  -0.038
+#> Item_13   1.503   2.142           0.063   0.037  -0.052  -0.049  -0.036  -0.049
+#> Item_14   3.721   9.559   4.017          -0.074   0.059   0.072  -0.048   0.042
+#> Item_15   0.248   0.827   1.398   5.504           0.037  -0.042  -0.031   0.038
+#> Item_16   1.651   0.904   2.681   3.512   1.344           0.052  -0.033  -0.042
+#> Item_17   0.996   1.567   2.389   5.194   1.738   2.654           0.040   0.035
+#> Item_18   0.545   1.918   1.286   2.264   0.982   1.076   1.567          -0.034
+#> Item_19   1.302   1.426   2.408   1.785   1.433   1.785   1.191   1.146        
+#> Item_20   3.496   0.594   1.089   4.792   3.816   1.247   2.200   0.535   1.529
+#> Item_21   0.845   0.320   1.126   2.828   0.756   1.524   3.567   1.181   2.404
+#> Item_22   0.261   2.170   2.732   2.780   1.631   1.380   1.273   0.899   0.771
+#> Item_23   0.189   0.651   1.058   2.496   2.216   1.928   2.419   1.596   0.709
+#> Item_24   1.336   0.830   6.353   3.095   0.958   1.973   4.673   1.658   3.530
+#> Item_25   0.481   0.243   2.247   2.597   2.540   0.963   1.933   1.001   1.115
+#> Item_26   2.212   1.564   5.550   3.449   2.046   1.948   2.872   3.337   2.024
+#> Item_27   1.256   1.719   1.958   3.087   6.275   1.746   3.624   1.888   2.151
+#> Item_28   2.643   2.490   3.532   6.542   2.672   3.319   2.765   3.975   5.314
+#> Item_29   1.584   1.415   2.466   2.240   1.404   2.950   2.164   1.603   1.262
+#> Item_30   0.518   1.080   1.007   2.917   5.586   1.830   1.573   0.779   1.346
 #>         Item_20 Item_21 Item_22 Item_23 Item_24 Item_25 Item_26 Item_27 Item_28
-#> Item_1   -0.061   0.034  -0.080  -0.047   0.089  -0.069  -0.050   0.040   0.054
-#> Item_2   -0.072   0.046   0.071  -0.035   0.052   0.046   0.074  -0.010   0.033
-#> Item_3   -0.034   0.038   0.083  -0.039   0.063  -0.033   0.059   0.023   0.032
-#> Item_4   -0.060  -0.064   0.100   0.067   0.071  -0.071   0.070   0.091  -0.071
-#> Item_5   -0.035   0.026  -0.072  -0.071  -0.054  -0.057   0.049   0.045  -0.030
-#> Item_6    0.043  -0.039  -0.071  -0.036   0.061   0.058   0.050   0.054  -0.029
-#> Item_7   -0.033   0.038   0.103   0.059   0.055  -0.041  -0.051  -0.031   0.030
-#> Item_8    0.027   0.023   0.095  -0.033   0.047   0.043   0.042   0.049   0.015
-#> Item_9    0.056   0.024  -0.071   0.026   0.086   0.027  -0.042   0.023  -0.010
-#> Item_10  -0.024   0.045  -0.070  -0.033   0.075  -0.053  -0.047   0.069   0.009
-#> Item_11  -0.058  -0.062   0.117  -0.068   0.093  -0.066   0.065   0.067   0.056
-#> Item_12   0.060  -0.043   0.077   0.053  -0.066   0.044   0.062   0.047  -0.043
-#> Item_13  -0.040   0.024   0.075   0.048   0.084   0.030   0.085   0.029  -0.021
-#> Item_14  -0.063  -0.027  -0.089   0.031  -0.048   0.036  -0.042   0.020   0.050
-#> Item_15   0.044   0.025   0.081   0.038   0.068   0.034  -0.082  -0.022  -0.032
-#> Item_16  -0.036  -0.018   0.076  -0.031   0.048   0.035   0.046  -0.014   0.026
-#> Item_17  -0.069  -0.041   0.080  -0.049  -0.069   0.049   0.062   0.069  -0.039
-#> Item_18  -0.045   0.019  -0.084  -0.076   0.053  -0.032  -0.053  -0.038   0.019
-#> Item_19   0.042   0.066  -0.092  -0.047   0.058  -0.075  -0.053  -0.038  -0.045
-#> Item_20           0.047   0.081   0.035   0.056  -0.041  -0.062   0.025  -0.026
-#> Item_21   2.241           0.087   0.035   0.097  -0.047   0.048   0.067  -0.025
-#> Item_22   6.634   7.617          -0.072   0.118   0.096   0.089   0.083   0.074
-#> Item_23   1.231   1.210   5.185           0.066  -0.046  -0.061   0.026  -0.025
-#> Item_24   3.146   9.447  13.880   4.346           0.057   0.064  -0.050   0.051
-#> Item_25   1.679   2.225   9.208   2.149   3.275          -0.072  -0.037  -0.028
-#> Item_26   3.800   2.306   7.971   3.752   4.137   5.157          -0.057  -0.043
-#> Item_27   0.607   4.515   6.862   0.685   2.545   1.367   3.210           0.010
-#> Item_28   0.682   0.609   5.547   0.608   2.587   0.804   1.871   0.091        
-#> Item_29   1.543   1.060   8.015   1.330  12.819   1.927   4.419   0.935   1.759
-#> Item_30   7.724   8.663  15.097   9.683  10.680  14.148   9.460   8.162   8.009
+#> Item_1    0.027   0.059   0.024  -0.052   0.030   0.025  -0.045  -0.043  -0.045
+#> Item_2   -0.023   0.022  -0.015  -0.017  -0.041  -0.018   0.047  -0.051   0.044
+#> Item_3   -0.029   0.036   0.035  -0.028   0.055   0.033   0.073  -0.065   0.056
+#> Item_4    0.034   0.025   0.017   0.047   0.030   0.041   0.046   0.041   0.052
+#> Item_5   -0.037  -0.025   0.046  -0.017  -0.049   0.025   0.061   0.036   0.051
+#> Item_6   -0.043  -0.044  -0.044  -0.038   0.044   0.043   0.065  -0.066   0.058
+#> Item_7    0.043   0.037   0.020  -0.087  -0.038   0.033   0.043   0.034   0.048
+#> Item_8   -0.040   0.038   0.035   0.047  -0.072  -0.053   0.052  -0.076  -0.059
+#> Item_9   -0.089  -0.048  -0.075  -0.092   0.059  -0.049   0.078   0.055  -0.073
+#> Item_10  -0.026   0.036   0.024  -0.045  -0.029   0.036   0.041   0.036  -0.056
+#> Item_11   0.059   0.029   0.016   0.014  -0.037  -0.022   0.047  -0.035   0.051
+#> Item_12  -0.024  -0.018  -0.047   0.026  -0.029   0.016   0.040   0.041  -0.050
+#> Item_13   0.033   0.034  -0.052   0.033  -0.080   0.047   0.074   0.044  -0.059
+#> Item_14  -0.069   0.053   0.053  -0.050   0.056   0.051  -0.059   0.056   0.081
+#> Item_15  -0.062   0.027  -0.040  -0.047  -0.031   0.050  -0.045  -0.079   0.052
+#> Item_16  -0.035  -0.039  -0.037  -0.044   0.044   0.031   0.044  -0.042  -0.058
+#> Item_17  -0.047   0.060  -0.036  -0.049  -0.068  -0.044   0.054  -0.060   0.053
+#> Item_18   0.023  -0.034   0.030  -0.040   0.041   0.032  -0.058  -0.043  -0.063
+#> Item_19  -0.039  -0.049   0.028  -0.027   0.059  -0.033  -0.045   0.046  -0.073
+#> Item_20          -0.038  -0.024  -0.019  -0.035   0.054  -0.039  -0.036  -0.076
+#> Item_21   1.460          -0.037   0.021  -0.046  -0.022   0.039  -0.052  -0.056
+#> Item_22   0.598   1.391          -0.043  -0.057  -0.037  -0.066  -0.039   0.051
+#> Item_23   0.376   0.421   1.852          -0.078   0.031   0.037  -0.037  -0.076
+#> Item_24   1.225   2.082   3.218   6.112          -0.038   0.056  -0.082  -0.074
+#> Item_25   2.967   0.485   1.399   0.947   1.454          -0.050   0.036  -0.052
+#> Item_26   1.484   1.522   4.323   1.385   3.147   2.476          -0.069   0.072
+#> Item_27   1.263   2.672   1.544   1.362   6.792   1.307   4.744           0.059
+#> Item_28   5.704   3.168   2.599   5.740   5.436   2.734   5.165   3.520        
+#> Item_29   1.483   2.320   1.307   1.619   2.012   1.651   3.230   3.729   3.964
+#> Item_30   0.543   0.630   1.205   0.081   0.906   1.154   1.413   4.524   2.362
 #>         Item_29 Item_30
-#> Item_1    0.032  -0.096
-#> Item_2    0.048   0.090
-#> Item_3    0.039   0.094
-#> Item_4   -0.070   0.106
-#> Item_5   -0.039  -0.098
-#> Item_6    0.035   0.094
-#> Item_7    0.048  -0.089
-#> Item_8    0.042  -0.088
-#> Item_9    0.036   0.094
-#> Item_10   0.043  -0.096
-#> Item_11   0.067   0.100
-#> Item_12   0.066   0.103
-#> Item_13   0.034   0.093
-#> Item_14  -0.033  -0.096
-#> Item_15  -0.054   0.095
-#> Item_16   0.041  -0.088
-#> Item_17   0.049  -0.104
-#> Item_18   0.030  -0.094
-#> Item_19  -0.053  -0.094
-#> Item_20  -0.039  -0.088
-#> Item_21   0.033   0.093
-#> Item_22   0.090   0.123
-#> Item_23  -0.036   0.098
-#> Item_24   0.113   0.103
-#> Item_25   0.044  -0.119
-#> Item_26   0.066   0.097
-#> Item_27   0.031   0.090
-#> Item_28   0.042  -0.089
-#> Item_29           0.099
-#> Item_30   9.890        
+#> Item_1    0.043   0.014
+#> Item_2   -0.049  -0.011
+#> Item_3    0.068   0.032
+#> Item_4   -0.041   0.044
+#> Item_5   -0.050   0.023
+#> Item_6   -0.044   0.043
+#> Item_7    0.037  -0.021
+#> Item_8    0.048  -0.052
+#> Item_9    0.060  -0.048
+#> Item_10  -0.033   0.011
+#> Item_11  -0.040   0.023
+#> Item_12  -0.038  -0.033
+#> Item_13  -0.050   0.032
+#> Item_14  -0.047   0.054
+#> Item_15   0.037  -0.075
+#> Item_16  -0.054   0.043
+#> Item_17  -0.047   0.040
+#> Item_18  -0.040   0.028
+#> Item_19  -0.036  -0.037
+#> Item_20   0.039   0.023
+#> Item_21  -0.048   0.025
+#> Item_22   0.036   0.035
+#> Item_23  -0.040  -0.009
+#> Item_24  -0.045  -0.030
+#> Item_25  -0.041   0.034
+#> Item_26   0.057   0.038
+#> Item_27  -0.061  -0.067
+#> Item_28  -0.063   0.049
+#> Item_29          -0.045
+#> Item_30   1.997        
 
 # intercept across items also possible by removing ~ 0 portion, just interpreted differently
 lltm.int <- mirt(dat, itemtype = 'Rasch',
    item.formula = ~ difficulty, itemdesign=itemdesign)
 anova(lltm, lltm.int) # same
-#>               AIC    SABIC       HQ      BIC    logLik X2 df   p
-#> lltm     35246.49 35253.41 35253.95 35266.12 -17619.24          
-#> lltm.int 35246.49 35253.41 35253.95 35266.12 -17619.24  0  0 NaN
+#>               AIC SABIC       HQ     BIC    logLik X2 df   p
+#> lltm     35238.07 35245 35245.53 35257.7 -17615.03          
+#> lltm.int 35238.07 35245 35245.53 35257.7 -17615.03  0  0 NaN
 coef(lltm.int, simplify=TRUE)
 #> $items
 #>         (Intercept) difficultyhard difficultymedium a1 d g u
-#> Item_1        0.972          0.000            0.000  1 0 0 1
-#> Item_2        0.972          0.000            0.000  1 0 0 1
-#> Item_3        0.972          0.000            0.000  1 0 0 1
-#> Item_4        0.972          0.000            0.000  1 0 0 1
-#> Item_5        0.972          0.000            0.000  1 0 0 1
-#> Item_6        0.972          0.000            0.000  1 0 0 1
-#> Item_7        0.972          0.000            0.000  1 0 0 1
-#> Item_8        0.972          0.000            0.000  1 0 0 1
-#> Item_9        0.972          0.000            0.000  1 0 0 1
-#> Item_10       0.972          0.000            0.000  1 0 0 1
-#> Item_11       0.972          0.000           -1.018  1 0 0 1
-#> Item_12       0.972          0.000           -1.018  1 0 0 1
-#> Item_13       0.972          0.000           -1.018  1 0 0 1
-#> Item_14       0.972          0.000           -1.018  1 0 0 1
-#> Item_15       0.972          0.000           -1.018  1 0 0 1
-#> Item_16       0.972          0.000           -1.018  1 0 0 1
-#> Item_17       0.972          0.000           -1.018  1 0 0 1
-#> Item_18       0.972          0.000           -1.018  1 0 0 1
-#> Item_19       0.972          0.000           -1.018  1 0 0 1
-#> Item_20       0.972          0.000           -1.018  1 0 0 1
-#> Item_21       0.972         -2.002            0.000  1 0 0 1
-#> Item_22       0.972         -2.002            0.000  1 0 0 1
-#> Item_23       0.972         -2.002            0.000  1 0 0 1
-#> Item_24       0.972         -2.002            0.000  1 0 0 1
-#> Item_25       0.972         -2.002            0.000  1 0 0 1
-#> Item_26       0.972         -2.002            0.000  1 0 0 1
-#> Item_27       0.972         -2.002            0.000  1 0 0 1
-#> Item_28       0.972         -2.002            0.000  1 0 0 1
-#> Item_29       0.972         -2.002            0.000  1 0 0 1
-#> Item_30       0.972         -2.002            0.000  1 0 0 1
+#> Item_1        0.973          0.000            0.000  1 0 0 1
+#> Item_2        0.973          0.000            0.000  1 0 0 1
+#> Item_3        0.973          0.000            0.000  1 0 0 1
+#> Item_4        0.973          0.000            0.000  1 0 0 1
+#> Item_5        0.973          0.000            0.000  1 0 0 1
+#> Item_6        0.973          0.000            0.000  1 0 0 1
+#> Item_7        0.973          0.000            0.000  1 0 0 1
+#> Item_8        0.973          0.000            0.000  1 0 0 1
+#> Item_9        0.973          0.000            0.000  1 0 0 1
+#> Item_10       0.973          0.000            0.000  1 0 0 1
+#> Item_11       0.973          0.000           -1.018  1 0 0 1
+#> Item_12       0.973          0.000           -1.018  1 0 0 1
+#> Item_13       0.973          0.000           -1.018  1 0 0 1
+#> Item_14       0.973          0.000           -1.018  1 0 0 1
+#> Item_15       0.973          0.000           -1.018  1 0 0 1
+#> Item_16       0.973          0.000           -1.018  1 0 0 1
+#> Item_17       0.973          0.000           -1.018  1 0 0 1
+#> Item_18       0.973          0.000           -1.018  1 0 0 1
+#> Item_19       0.973          0.000           -1.018  1 0 0 1
+#> Item_20       0.973          0.000           -1.018  1 0 0 1
+#> Item_21       0.973         -2.004            0.000  1 0 0 1
+#> Item_22       0.973         -2.004            0.000  1 0 0 1
+#> Item_23       0.973         -2.004            0.000  1 0 0 1
+#> Item_24       0.973         -2.004            0.000  1 0 0 1
+#> Item_25       0.973         -2.004            0.000  1 0 0 1
+#> Item_26       0.973         -2.004            0.000  1 0 0 1
+#> Item_27       0.973         -2.004            0.000  1 0 0 1
+#> Item_28       0.973         -2.004            0.000  1 0 0 1
+#> Item_29       0.973         -2.004            0.000  1 0 0 1
+#> Item_30       0.973         -2.004            0.000  1 0 0 1
 #> 
 #> $means
 #> F1 
@@ -4826,7 +4826,7 @@ coef(lltm.int, simplify=TRUE)
 #> 
 #> $cov
 #>       F1
-#> F1 0.958
+#> F1 0.973
 #> 
 
 # using unconditional modeling for first four items
@@ -4864,36 +4864,36 @@ lltm.4 <- mirt(dat, itemtype = 'Rasch',
 coef(lltm.4, simplify=TRUE) # first four items are the standard Rasch
 #> $items
 #>         difficultyeasy difficultyhard difficultymedium a1     d g u
-#> Item_1           0.000           0.00            0.000  1 1.019 0 1
-#> Item_2           0.000           0.00            0.000  1 0.986 0 1
-#> Item_3           0.000           0.00            0.000  1 1.030 0 1
-#> Item_4           0.000           0.00            0.000  1 0.828 0 1
-#> Item_5           0.977           0.00            0.000  1 0.000 0 1
-#> Item_6           0.977           0.00            0.000  1 0.000 0 1
-#> Item_7           0.977           0.00            0.000  1 0.000 0 1
-#> Item_8           0.977           0.00            0.000  1 0.000 0 1
-#> Item_9           0.977           0.00            0.000  1 0.000 0 1
-#> Item_10          0.977           0.00            0.000  1 0.000 0 1
-#> Item_11          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_12          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_13          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_14          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_15          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_16          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_17          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_18          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_19          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_20          0.000           0.00           -0.045  1 0.000 0 1
-#> Item_21          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_22          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_23          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_24          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_25          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_26          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_27          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_28          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_29          0.000          -1.03            0.000  1 0.000 0 1
-#> Item_30          0.000          -1.03            0.000  1 0.000 0 1
+#> Item_1           0.000          0.000            0.000  1 0.999 0 1
+#> Item_2           0.000          0.000            0.000  1 0.977 0 1
+#> Item_3           0.000          0.000            0.000  1 0.900 0 1
+#> Item_4           0.000          0.000            0.000  1 0.994 0 1
+#> Item_5           0.976          0.000            0.000  1 0.000 0 1
+#> Item_6           0.976          0.000            0.000  1 0.000 0 1
+#> Item_7           0.976          0.000            0.000  1 0.000 0 1
+#> Item_8           0.976          0.000            0.000  1 0.000 0 1
+#> Item_9           0.976          0.000            0.000  1 0.000 0 1
+#> Item_10          0.976          0.000            0.000  1 0.000 0 1
+#> Item_11          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_12          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_13          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_14          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_15          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_16          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_17          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_18          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_19          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_20          0.000          0.000           -0.046  1 0.000 0 1
+#> Item_21          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_22          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_23          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_24          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_25          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_26          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_27          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_28          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_29          0.000         -1.031            0.000  1 0.000 0 1
+#> Item_30          0.000         -1.031            0.000  1 0.000 0 1
 #> 
 #> $means
 #> F1 
@@ -4901,17 +4901,17 @@ coef(lltm.4, simplify=TRUE) # first four items are the standard Rasch
 #> 
 #> $cov
 #>       F1
-#> F1 0.958
+#> F1 0.973
 #> 
 anova(lltm, lltm.4) # similar fit, hence more constrained model preferred
 #>             AIC    SABIC       HQ      BIC    logLik    X2 df     p
-#> lltm   35246.49 35253.41 35253.95 35266.12 -17619.24               
-#> lltm.4 35249.56 35263.41 35264.48 35288.82 -17616.78 4.929  4 0.295
+#> lltm   35238.07 35245.00 35245.53 35257.70 -17615.03               
+#> lltm.4 35244.88 35258.73 35259.80 35284.14 -17614.44 1.192  4 0.879
 
 # LLTM with mixedmirt() (more flexible in general, but slower)
 LLTM <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
                   itemdesign=itemdesign, SE=FALSE)
-#> , Max-Change = 0.1884, Max-Change = 0.1521, Max-Change = 0.1247, Max-Change = 0.1034, Max-Change = 0.0817, Max-Change = 0.0665, Max-Change = 0.0549, Max-Change = 0.0438, Max-Change = 0.0365, Max-Change = 0.0303, Max-Change = 0.0252, Max-Change = 0.0213, Max-Change = 0.0161, Max-Change = 0.0153, Max-Change = 0.0139, Max-Change = 0.0102, Max-Change = 0.0118, Max-Change = 0.0110, Max-Change = 0.0131, Max-Change = 0.0083, Max-Change = 0.0043, Max-Change = 0.0058, Max-Change = 0.0064, Max-Change = 0.0037, Max-Change = 0.0089, Max-Change = 0.0064, Max-Change = 0.0029, Max-Change = 0.0019, Max-Change = 0.0038, Max-Change = 0.0035, Max-Change = 0.0035, Max-Change = 0.0051, Max-Change = 0.0040, Max-Change = 0.0057, Max-Change = 0.0046, Max-Change = 0.0048, Max-Change = 0.0045, Max-Change = 0.0012, Max-Change = 0.0075, Max-Change = 0.0004, Max-Change = 0.0018, Max-Change = 0.0031, Max-Change = 0.0042, Max-Change = 0.0098, Max-Change = 0.0057, Max-Change = 0.0053, Max-Change = 0.0040, Max-Change = 0.0066, Max-Change = 0.0041, Max-Change = 0.0080, Max-Change = 0.0020, Max-Change = 0.0011, Max-Change = 0.0032, Max-Change = 0.0117, Max-Change = 0.0008, Max-Change = 0.0028, Max-Change = 0.0018, Max-Change = 0.0052, Max-Change = 0.0061, Max-Change = 0.0050, Max-Change = 0.0035, Max-Change = 0.0017, Max-Change = 0.0024, Max-Change = 0.0023, Max-Change = 0.0031, Max-Change = 0.0057, Max-Change = 0.0107, Max-Change = 0.0062, Max-Change = 0.0085, Max-Change = 0.0057, Max-Change = 0.0041, Max-Change = 0.0042, Max-Change = 0.0009, Max-Change = 0.0026, Max-Change = 0.0020, Max-Change = 0.0025, Max-Change = 0.0031, Max-Change = 0.0049, Max-Change = 0.0047, Max-Change = 0.0125, Max-Change = 0.0024, Max-Change = 0.0062, Max-Change = 0.0085, Max-Change = 0.0050, Max-Change = 0.0035, Max-Change = 0.0019, Max-Change = 0.0051, Max-Change = 0.0071, Max-Change = 0.0039, Max-Change = 0.0044, Max-Change = 0.0063, Max-Change = 0.0053, Max-Change = 0.0042, Max-Change = 0.0039, Max-Change = 0.0062, Max-Change = 0.0020, Max-Change = 0.0014, Max-Change = 0.0118, Max-Change = 0.0072, Max-Change = 0.0033, Max-Change = 0.0064, Max-Change = 0.0074, Max-Change = 0.0068, Max-Change = 0.0093, Max-Change = 0.0013, Max-Change = 0.0034, Max-Change = 0.0079, Max-Change = 0.0068, Max-Change = 0.0030, Max-Change = 0.0078, Max-Change = 0.0043, Max-Change = 0.0059, Max-Change = 0.0046, Max-Change = 0.0049, Max-Change = 0.0073, Max-Change = 0.0042, Max-Change = 0.0034, Max-Change = 0.0017, Max-Change = 0.0027, Max-Change = 0.0073, Max-Change = 0.0028, Max-Change = 0.0028, Max-Change = 0.0059, Max-Change = 0.0079, Max-Change = 0.0053, Max-Change = 0.0058, Max-Change = 0.0092, Max-Change = 0.0055, Max-Change = 0.0027, Max-Change = 0.0051, Max-Change = 0.0059, Max-Change = 0.0059, Max-Change = 0.0095, Max-Change = 0.0043, Max-Change = 0.0058, Max-Change = 0.0027, Max-Change = 0.0071, Max-Change = 0.0014, Max-Change = 0.0021, Max-Change = 0.0022, Max-Change = 0.0068, Max-Change = 0.0158, Max-Change = 0.0041, Max-Change = 0.0084, Max-Change = 0.0035, Max-Change = 0.0034, Max-Change = 0.0012, Max-Change = 0.0049, Max-Change = 0.0080, Max-Change = 0.0021, Max-Change = 0.0068, Max-Change = 0.0037, Max-Change = 0.0026, Max-Change = 0.0038, Max-Change = 0.0099, Max-Change = 0.0036, Max-Change = 0.0042, Max-Change = 0.0081, Max-Change = 0.0033, Max-Change = 0.0047, Max-Change = 0.0117, Max-Change = 0.0061, Max-Change = 0.0050, Max-Change = 0.0027, Max-Change = 0.0007, Max-Change = 0.0079, Max-Change = 0.0032, Max-Change = 0.0032, Max-Change = 0.0047, Max-Change = 0.0023, Max-Change = 0.0063, Max-Change = 0.0074, Max-Change = 0.0037, Max-Change = 0.0037, Max-Change = 0.0134, Max-Change = 0.0065, Max-Change = 0.0065, Max-Change = 0.0049, Max-Change = 0.0041, Max-Change = 0.0018, Max-Change = 0.0102, Max-Change = 0.0028, Max-Change = 0.0068, Max-Change = 0.0069, Max-Change = 0.0021, Max-Change = 0.0010, Max-Change = 0.0082, Max-Change = 0.0058, Max-Change = 0.0035, Max-Change = 0.0067, Max-Change = 0.0013, Max-Change = 0.0016, Max-Change = 0.0095, Max-Change = 0.0042, Max-Change = 0.0034, Max-Change = 0.0029, Max-Change = 0.0131, Max-Change = 0.0012, Max-Change = 0.0040, Max-Change = 0.0045, Max-Change = 0.0012, Max-Change = 0.0073, Max-Change = 0.0084, Max-Change = 0.0133, Max-Change = 0.0082, Max-Change = 0.0016, Max-Change = 0.0053, Max-Change = 0.0050, Max-Change = 0.0056, Max-Change = 0.0019, Max-Change = 0.0033, Max-Change = 0.0043, Max-Change = 0.0061, Max-Change = 0.0019, Max-Change = 0.0061, Max-Change = 0.0042, Max-Change = 0.0151, Max-Change = 0.0094, Max-Change = 0.0021, Max-Change = 0.0026, Max-Change = 0.0076, Max-Change = 0.0041, Max-Change = 0.0032, Max-Change = 0.0079, Max-Change = 0.0037, Max-Change = 0.0028, Max-Change = 0.0032, Max-Change = 0.0039, Max-Change = 0.0079, Max-Change = 0.0040, Max-Change = 0.0079, Max-Change = 0.0103, Max-Change = 0.0010, Max-Change = 0.0042, Max-Change = 0.0027, Max-Change = 0.0031, Max-Change = 0.0114, Max-Change = 0.0164, Max-Change = 0.0044, Max-Change = 0.0064, Max-Change = 0.0005, Max-Change = 0.0023, Max-Change = 0.0061, Max-Change = 0.0014, Max-Change = 0.0067, Max-Change = 0.0008, Max-Change = 0.0018, Max-Change = 0.0043, Max-Change = 0.0068, Max-Change = 0.0059, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0062, gam = 0.1057, Max-Change = 0.0020, gam = 0.0780, Max-Change = 0.0005, gam = 0.0629, Max-Change = 0.0037, gam = 0.0532, Max-Change = 0.0027, gam = 0.0464, Max-Change = 0.0009, gam = 0.0413, Max-Change = 0.0003, gam = 0.0374, Max-Change = 0.0004
+#> , Max-Change = 0.1858, Max-Change = 0.1538, Max-Change = 0.1238, Max-Change = 0.1016, Max-Change = 0.0824, Max-Change = 0.0675, Max-Change = 0.0565, Max-Change = 0.0447, Max-Change = 0.0339, Max-Change = 0.0306, Max-Change = 0.0262, Max-Change = 0.0197, Max-Change = 0.0165, Max-Change = 0.0157, Max-Change = 0.0173, Max-Change = 0.0099, Max-Change = 0.0105, Max-Change = 0.0145, Max-Change = 0.0097, Max-Change = 0.0099, Max-Change = 0.0083, Max-Change = 0.0096, Max-Change = 0.0031, Max-Change = 0.0047, Max-Change = 0.0082, Max-Change = 0.0083, Max-Change = 0.0041, Max-Change = 0.0101, Max-Change = 0.0038, Max-Change = 0.0044, Max-Change = 0.0055, Max-Change = 0.0047, Max-Change = 0.0036, Max-Change = 0.0027, Max-Change = 0.0025, Max-Change = 0.0059, Max-Change = 0.0029, Max-Change = 0.0017, Max-Change = 0.0111, Max-Change = 0.0044, Max-Change = 0.0058, Max-Change = 0.0069, Max-Change = 0.0026, Max-Change = 0.0045, Max-Change = 0.0023, Max-Change = 0.0030, Max-Change = 0.0030, Max-Change = 0.0040, Max-Change = 0.0026, Max-Change = 0.0070, Max-Change = 0.0002, Max-Change = 0.0054, Max-Change = 0.0087, Max-Change = 0.0052, Max-Change = 0.0048, Max-Change = 0.0092, Max-Change = 0.0033, Max-Change = 0.0019, Max-Change = 0.0039, Max-Change = 0.0039, Max-Change = 0.0089, Max-Change = 0.0095, Max-Change = 0.0120, Max-Change = 0.0148, Max-Change = 0.0045, Max-Change = 0.0057, Max-Change = 0.0020, Max-Change = 0.0066, Max-Change = 0.0022, Max-Change = 0.0074, Max-Change = 0.0028, Max-Change = 0.0029, Max-Change = 0.0025, Max-Change = 0.0050, Max-Change = 0.0036, Max-Change = 0.0099, Max-Change = 0.0087, Max-Change = 0.0037, Max-Change = 0.0035, Max-Change = 0.0020, Max-Change = 0.0023, Max-Change = 0.0112, Max-Change = 0.0066, Max-Change = 0.0058, Max-Change = 0.0082, Max-Change = 0.0013, Max-Change = 0.0060, Max-Change = 0.0041, Max-Change = 0.0022, Max-Change = 0.0063, Max-Change = 0.0055, Max-Change = 0.0031, Max-Change = 0.0015, Max-Change = 0.0095, Max-Change = 0.0025, Max-Change = 0.0064, Max-Change = 0.0106, Max-Change = 0.0024, Max-Change = 0.0099, Max-Change = 0.0036, Max-Change = 0.0081, Max-Change = 0.0039, Max-Change = 0.0034, Max-Change = 0.0042, Max-Change = 0.0034, Max-Change = 0.0067, Max-Change = 0.0050, Max-Change = 0.0046, Max-Change = 0.0073, Max-Change = 0.0074, Max-Change = 0.0090, Max-Change = 0.0076, Max-Change = 0.0083, Max-Change = 0.0097, Max-Change = 0.0075, Max-Change = 0.0010, Max-Change = 0.0029, Max-Change = 0.0052, Max-Change = 0.0046, Max-Change = 0.0023, Max-Change = 0.0112, Max-Change = 0.0024, Max-Change = 0.0007, Max-Change = 0.0013, Max-Change = 0.0037, Max-Change = 0.0061, Max-Change = 0.0017, Max-Change = 0.0083, Max-Change = 0.0004, Max-Change = 0.0025, Max-Change = 0.0040, Max-Change = 0.0024, Max-Change = 0.0036, Max-Change = 0.0054, Max-Change = 0.0030, Max-Change = 0.0028, Max-Change = 0.0067, Max-Change = 0.0024, Max-Change = 0.0057, Max-Change = 0.0012, Max-Change = 0.0037, Max-Change = 0.0006, Max-Change = 0.0044, Max-Change = 0.0037, Max-Change = 0.0032, Max-Change = 0.0034, Max-Change = 0.0035, Max-Change = 0.0021, Max-Change = 0.0046, Max-Change = 0.0023, Max-Change = 0.0065, Max-Change = 0.0053, Max-Change = 0.0032, Max-Change = 0.0087, Max-Change = 0.0083, Max-Change = 0.0073, Max-Change = 0.0047, Max-Change = 0.0063, Max-Change = 0.0017, Max-Change = 0.0025, Max-Change = 0.0057, Max-Change = 0.0115, Max-Change = 0.0021, Max-Change = 0.0055, Max-Change = 0.0037, Max-Change = 0.0056, Max-Change = 0.0041, Max-Change = 0.0088, Max-Change = 0.0053, Max-Change = 0.0035, Max-Change = 0.0059, Max-Change = 0.0019, Max-Change = 0.0025, Max-Change = 0.0082, Max-Change = 0.0003, Max-Change = 0.0018, Max-Change = 0.0035, Max-Change = 0.0016, Max-Change = 0.0030, Max-Change = 0.0102, Max-Change = 0.0006, Max-Change = 0.0011, Max-Change = 0.0064, Max-Change = 0.0039, Max-Change = 0.0014, Max-Change = 0.0052, Max-Change = 0.0031, Max-Change = 0.0153, Max-Change = 0.0014, Max-Change = 0.0038, Max-Change = 0.0040, Max-Change = 0.0027, Max-Change = 0.0035, Max-Change = 0.0045, Max-Change = 0.0018, Max-Change = 0.0017, Max-Change = 0.0014, Max-Change = 0.0014, Max-Change = 0.0055, Max-Change = 0.0016, Max-Change = 0.0030, Max-Change = 0.0037, Max-Change = 0.0091, Max-Change = 0.0070, Max-Change = 0.0044, Max-Change = 0.0021, Max-Change = 0.0050, Max-Change = 0.0022, Max-Change = 0.0050, Max-Change = 0.0043, Max-Change = 0.0043, Max-Change = 0.0028, Max-Change = 0.0053, Max-Change = 0.0068, Max-Change = 0.0051, Max-Change = 0.0051, Max-Change = 0.0051, Max-Change = 0.0035, Max-Change = 0.0059, Max-Change = 0.0034, Max-Change = 0.0102, Max-Change = 0.0124, Max-Change = 0.0027, Max-Change = 0.0097, Max-Change = 0.0062, Max-Change = 0.0048, Max-Change = 0.0015, Max-Change = 0.0022, Max-Change = 0.0031, Max-Change = 0.0090, Max-Change = 0.0052, Max-Change = 0.0090, Max-Change = 0.0019, Max-Change = 0.0068, Max-Change = 0.0039, Max-Change = 0.0043, Max-Change = 0.0059, Max-Change = 0.0021, Max-Change = 0.0030, Max-Change = 0.0033, Max-Change = 0.0012, Max-Change = 0.0043, Max-Change = 0.0053, Max-Change = 0.0065, Max-Change = 0.0025, Max-Change = 0.0024, Max-Change = 0.0053, Max-Change = 0.0015, Max-Change = 0.0017, Max-Change = 0.0048, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0024, gam = 0.1057, Max-Change = 0.0018, gam = 0.0780, Max-Change = 0.0021, gam = 0.0629, Max-Change = 0.0013, gam = 0.0532, Max-Change = 0.0007, gam = 0.0464, Max-Change = 0.0006, gam = 0.0413, Max-Change = 0.0007
 #> 
 #> Calculating log-likelihood...
 summary(LLTM)
@@ -4923,9 +4923,9 @@ summary(LLTM)
 #> --------------
 #> FIXED EFFECTS:
 #>                  Estimate Std.Error z.value
-#> difficultyeasy      0.979        NA      NA
-#> difficultyhard     -1.024        NA      NA
-#> difficultymedium   -0.039        NA      NA
+#> difficultyeasy      0.982        NA      NA
+#> difficultyhard     -1.022        NA      NA
+#> difficultymedium   -0.036        NA      NA
 #> 
 #> --------------
 #> RANDOM EFFECT COVARIANCE(S):
@@ -4933,268 +4933,268 @@ summary(LLTM)
 #> 
 #> $Theta
 #>       F1
-#> F1 0.959
+#> F1 0.971
 #> 
 coef(LLTM)
 #> $Item_1
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_2
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_3
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_4
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_5
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_6
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_7
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_8
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_9
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_10
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_11
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_12
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_13
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_14
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_15
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_16
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_17
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_18
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_19
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_20
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_21
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_22
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_23
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_24
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_25
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_26
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_27
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_28
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_29
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $Item_30
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          0.979         -1.024           -0.039  1 0 0 1
+#> par          0.982         -1.022           -0.036  1 0 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 COV_11
-#> par      0  0.959
+#> par      0  0.971
 #> 
 
 # LLTM with random error estimate (not supported with mirt() )
 LLTM.e <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
                   random = ~ 1|items, itemdesign=itemdesign, SE=FALSE)
-#> , Max-Change = 0.1884, Max-Change = 0.1521, Max-Change = 0.1247, Max-Change = 0.1034, Max-Change = 0.0817, Max-Change = 0.0665, Max-Change = 0.0549, Max-Change = 0.0438, Max-Change = 0.0365, Max-Change = 0.0303, Max-Change = 0.0252, Max-Change = 0.0213, Max-Change = 0.0161, Max-Change = 0.0153, Max-Change = 0.0139, Max-Change = 0.0102, Max-Change = 0.0118, Max-Change = 0.0110, Max-Change = 0.0131, Max-Change = 0.0083, Max-Change = 0.0043, Max-Change = 0.0058, Max-Change = 0.0064, Max-Change = 0.0037, Max-Change = 0.0089, Max-Change = 0.0064, Max-Change = 0.0029, Max-Change = 0.0019, Max-Change = 0.0038, Max-Change = 0.0035, Max-Change = 0.0035, Max-Change = 0.0051, Max-Change = 0.0040, Max-Change = 0.0057, Max-Change = 0.0046, Max-Change = 0.0048, Max-Change = 0.0045, Max-Change = 0.0012, Max-Change = 0.0075, Max-Change = 0.0004, Max-Change = 0.0018, Max-Change = 0.0031, Max-Change = 0.0042, Max-Change = 0.0098, Max-Change = 0.0057, Max-Change = 0.0053, Max-Change = 0.0040, Max-Change = 0.0066, Max-Change = 0.0041, Max-Change = 0.0080, Max-Change = 0.0020, Max-Change = 0.0011, Max-Change = 0.0032, Max-Change = 0.0117, Max-Change = 0.0008, Max-Change = 0.0028, Max-Change = 0.0018, Max-Change = 0.0052, Max-Change = 0.0061, Max-Change = 0.0050, Max-Change = 0.0035, Max-Change = 0.0017, Max-Change = 0.0024, Max-Change = 0.0023, Max-Change = 0.0031, Max-Change = 0.0057, Max-Change = 0.0107, Max-Change = 0.0062, Max-Change = 0.0085, Max-Change = 0.0057, Max-Change = 0.0041, Max-Change = 0.0042, Max-Change = 0.0009, Max-Change = 0.0026, Max-Change = 0.0020, Max-Change = 0.0025, Max-Change = 0.0031, Max-Change = 0.0049, Max-Change = 0.0047, Max-Change = 0.0125, Max-Change = 0.0024, Max-Change = 0.0062, Max-Change = 0.0085, Max-Change = 0.0050, Max-Change = 0.0035, Max-Change = 0.0019, Max-Change = 0.0051, Max-Change = 0.0071, Max-Change = 0.0039, Max-Change = 0.0044, Max-Change = 0.0063, Max-Change = 0.0053, Max-Change = 0.0042, Max-Change = 0.0039, Max-Change = 0.0062, Max-Change = 0.0020, Max-Change = 0.0014, Max-Change = 0.0118, Max-Change = 0.0072, Max-Change = 0.0296, Max-Change = 0.2000, Max-Change = 0.1655, Max-Change = 0.1325, Max-Change = 0.1061, Max-Change = 0.0851, Max-Change = 0.0683, Max-Change = 0.0550, Max-Change = 0.0446, Max-Change = 0.0366, Max-Change = 0.0313, Max-Change = 0.0315, Max-Change = 0.0189, Max-Change = 0.0116, Max-Change = 0.0037, Max-Change = 0.0033, Max-Change = 0.0019, Max-Change = 0.0061, Max-Change = 0.0044, Max-Change = 0.0036, Max-Change = 0.0105, Max-Change = 0.0061, Max-Change = 0.0027, Max-Change = 0.0032, Max-Change = 0.0039, Max-Change = 0.0037, Max-Change = 0.0040, Max-Change = 0.0152, Max-Change = 0.0046, Max-Change = 0.0016, Max-Change = 0.0046, Max-Change = 0.0012, Max-Change = 0.0023, Max-Change = 0.0051, Max-Change = 0.0064, Max-Change = 0.0051, Max-Change = 0.0044, Max-Change = 0.0030, Max-Change = 0.0020, Max-Change = 0.0053, Max-Change = 0.0050, Max-Change = 0.0049, Max-Change = 0.0010, Max-Change = 0.0057, Max-Change = 0.0026, Max-Change = 0.0055, Max-Change = 0.0067, Max-Change = 0.0010, Max-Change = 0.0013, Max-Change = 0.0021, Max-Change = 0.0033, Max-Change = 0.0075, Max-Change = 0.0015, Max-Change = 0.0064, Max-Change = 0.0069, Max-Change = 0.0037, Max-Change = 0.0015, Max-Change = 0.0048, Max-Change = 0.0150, Max-Change = 0.0009, Max-Change = 0.0020, Max-Change = 0.0029, Max-Change = 0.0032, Max-Change = 0.0111, Max-Change = 0.0092, Max-Change = 0.0059, Max-Change = 0.0054, Max-Change = 0.0022, Max-Change = 0.0030, Max-Change = 0.0016, Max-Change = 0.0064, Max-Change = 0.0046, Max-Change = 0.0023, Max-Change = 0.0058, Max-Change = 0.0015, Max-Change = 0.0077, Max-Change = 0.0132, Max-Change = 0.0013, Max-Change = 0.0038, Max-Change = 0.0025, Max-Change = 0.0096, Max-Change = 0.0119, Max-Change = 0.0054, Max-Change = 0.0027, Max-Change = 0.0051, Max-Change = 0.0020, Max-Change = 0.0030, Max-Change = 0.0033, Max-Change = 0.0020, Max-Change = 0.0069, Max-Change = 0.0025, Max-Change = 0.0064, Max-Change = 0.0029, Max-Change = 0.0054, Max-Change = 0.0067, Max-Change = 0.0025, Max-Change = 0.0038, Max-Change = 0.0087, Max-Change = 0.0010, Max-Change = 0.0038, Max-Change = 0.0003, Max-Change = 0.0029, Max-Change = 0.0048, Max-Change = 0.0047, Max-Change = 0.0086, Max-Change = 0.0051, Max-Change = 0.0020, Max-Change = 0.0016, Max-Change = 0.0086, Max-Change = 0.0038, Max-Change = 0.0007, Max-Change = 0.0026, Max-Change = 0.0035, Max-Change = 0.0046, Max-Change = 0.0025, Max-Change = 0.0095, Max-Change = 0.0042, Max-Change = 0.0041, Max-Change = 0.0092, Max-Change = 0.0034, Max-Change = 0.0014, Max-Change = 0.0020, Max-Change = 0.0007, Max-Change = 0.0025, Max-Change = 0.0041, Max-Change = 0.0051, Max-Change = 0.0058, Max-Change = 0.0095, Max-Change = 0.0050, Max-Change = 0.0056, Max-Change = 0.0033, Max-Change = 0.0026, Max-Change = 0.0063, Max-Change = 0.0059, Max-Change = 0.0041, Max-Change = 0.0046, Max-Change = 0.0077, Max-Change = 0.0023, Max-Change = 0.0053, Max-Change = 0.0017, Max-Change = 0.0040, Max-Change = 0.0035, Max-Change = 0.0054, Max-Change = 0.0054, Max-Change = 0.0027, Max-Change = 0.0058, Max-Change = 0.0051, Max-Change = 0.0042, Max-Change = 0.0063, Max-Change = 0.0075, Max-Change = 0.0062, Max-Change = 0.0026, Max-Change = 0.0028, Max-Change = 0.0039, Max-Change = 0.0038, Max-Change = 0.0057, Max-Change = 0.0062, Max-Change = 0.0071, Max-Change = 0.0033, Max-Change = 0.0039, Max-Change = 0.0071, Max-Change = 0.0129, Max-Change = 0.0034, Max-Change = 0.0037, Max-Change = 0.0034, Max-Change = 0.0082, Max-Change = 0.0053, Max-Change = 0.0077, Max-Change = 0.0051, Max-Change = 0.0043, Max-Change = 0.0027, Max-Change = 0.0010, Max-Change = 0.0090, Max-Change = 0.0083, Max-Change = 0.0058, Max-Change = 0.0048, Max-Change = 0.0023, Max-Change = 0.0023, Max-Change = 0.0056, Max-Change = 0.0041, Max-Change = 0.0051, Max-Change = 0.0024, Max-Change = 0.0049, Max-Change = 0.0022, Max-Change = 0.0015, Max-Change = 0.0063, Max-Change = 0.0084, Max-Change = 0.0062, Max-Change = 0.0057, Max-Change = 0.0035, Max-Change = 0.0067, Max-Change = 0.0042, Max-Change = 0.0032, Max-Change = 0.0115, Max-Change = 0.0050, Max-Change = 0.0031, Max-Change = 0.0026, Max-Change = 0.0024, Max-Change = 0.0063, Max-Change = 0.0024, Max-Change = 0.0033, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0026, gam = 0.1057, Max-Change = 0.0006, gam = 0.0780, Max-Change = 0.0023, gam = 0.0629, Max-Change = 0.0006, gam = 0.0532, Max-Change = 0.0015, gam = 0.0464, Max-Change = 0.0002, gam = 0.0413, Max-Change = 0.0026, gam = 0.0374, Max-Change = 0.0015, gam = 0.0342, Max-Change = 0.0012, gam = 0.0316, Max-Change = 0.0006, gam = 0.0294, Max-Change = 0.0010, gam = 0.0276, Max-Change = 0.0010, gam = 0.0260, Max-Change = 0.0007, gam = 0.0246, Max-Change = 0.0010, gam = 0.0233, Max-Change = 0.0003
+#> , Max-Change = 0.1858, Max-Change = 0.1538, Max-Change = 0.1238, Max-Change = 0.1016, Max-Change = 0.0824, Max-Change = 0.0675, Max-Change = 0.0565, Max-Change = 0.0447, Max-Change = 0.0339, Max-Change = 0.0306, Max-Change = 0.0262, Max-Change = 0.0197, Max-Change = 0.0165, Max-Change = 0.0157, Max-Change = 0.0173, Max-Change = 0.0099, Max-Change = 0.0105, Max-Change = 0.0145, Max-Change = 0.0097, Max-Change = 0.0099, Max-Change = 0.0083, Max-Change = 0.0096, Max-Change = 0.0031, Max-Change = 0.0047, Max-Change = 0.0082, Max-Change = 0.0083, Max-Change = 0.0041, Max-Change = 0.0101, Max-Change = 0.0038, Max-Change = 0.0044, Max-Change = 0.0055, Max-Change = 0.0047, Max-Change = 0.0036, Max-Change = 0.0027, Max-Change = 0.0025, Max-Change = 0.0059, Max-Change = 0.0029, Max-Change = 0.0017, Max-Change = 0.0111, Max-Change = 0.0044, Max-Change = 0.0058, Max-Change = 0.0069, Max-Change = 0.0026, Max-Change = 0.0045, Max-Change = 0.0023, Max-Change = 0.0030, Max-Change = 0.0030, Max-Change = 0.0040, Max-Change = 0.0026, Max-Change = 0.0070, Max-Change = 0.0002, Max-Change = 0.0054, Max-Change = 0.0087, Max-Change = 0.0052, Max-Change = 0.0048, Max-Change = 0.0092, Max-Change = 0.0033, Max-Change = 0.0019, Max-Change = 0.0039, Max-Change = 0.0039, Max-Change = 0.0089, Max-Change = 0.0095, Max-Change = 0.0120, Max-Change = 0.0148, Max-Change = 0.0045, Max-Change = 0.0057, Max-Change = 0.0020, Max-Change = 0.0066, Max-Change = 0.0022, Max-Change = 0.0074, Max-Change = 0.0028, Max-Change = 0.0029, Max-Change = 0.0025, Max-Change = 0.0050, Max-Change = 0.0036, Max-Change = 0.0099, Max-Change = 0.0087, Max-Change = 0.0037, Max-Change = 0.0035, Max-Change = 0.0020, Max-Change = 0.0023, Max-Change = 0.0112, Max-Change = 0.0066, Max-Change = 0.0058, Max-Change = 0.0082, Max-Change = 0.0013, Max-Change = 0.0060, Max-Change = 0.0041, Max-Change = 0.0022, Max-Change = 0.0063, Max-Change = 0.0055, Max-Change = 0.0031, Max-Change = 0.0015, Max-Change = 0.0095, Max-Change = 0.0025, Max-Change = 0.0064, Max-Change = 0.0106, Max-Change = 0.0024, Max-Change = 0.0099, Max-Change = 0.0327, Max-Change = 0.2000, Max-Change = 0.1625, Max-Change = 0.1299, Max-Change = 0.1035, Max-Change = 0.0826, Max-Change = 0.0672, Max-Change = 0.0546, Max-Change = 0.0434, Max-Change = 0.0346, Max-Change = 0.0277, Max-Change = 0.0225, Max-Change = 0.0185, Max-Change = 0.0148, Max-Change = 0.0172, Max-Change = 0.0132, Max-Change = 0.0053, Max-Change = 0.0120, Max-Change = 0.0063, Max-Change = 0.0059, Max-Change = 0.0054, Max-Change = 0.0118, Max-Change = 0.0085, Max-Change = 0.0073, Max-Change = 0.0033, Max-Change = 0.0062, Max-Change = 0.0047, Max-Change = 0.0054, Max-Change = 0.0078, Max-Change = 0.0043, Max-Change = 0.0049, Max-Change = 0.0115, Max-Change = 0.0052, Max-Change = 0.0039, Max-Change = 0.0074, Max-Change = 0.0028, Max-Change = 0.0113, Max-Change = 0.0013, Max-Change = 0.0047, Max-Change = 0.0085, Max-Change = 0.0038, Max-Change = 0.0036, Max-Change = 0.0021, Max-Change = 0.0058, Max-Change = 0.0076, Max-Change = 0.0023, Max-Change = 0.0076, Max-Change = 0.0031, Max-Change = 0.0025, Max-Change = 0.0013, Max-Change = 0.0016, Max-Change = 0.0028, Max-Change = 0.0048, Max-Change = 0.0042, Max-Change = 0.0071, Max-Change = 0.0055, Max-Change = 0.0046, Max-Change = 0.0074, Max-Change = 0.0043, Max-Change = 0.0100, Max-Change = 0.0024, Max-Change = 0.0127, Max-Change = 0.0026, Max-Change = 0.0112, Max-Change = 0.0063, Max-Change = 0.0020, Max-Change = 0.0047, Max-Change = 0.0033, Max-Change = 0.0038, Max-Change = 0.0026, Max-Change = 0.0077, Max-Change = 0.0053, Max-Change = 0.0085, Max-Change = 0.0018, Max-Change = 0.0038, Max-Change = 0.0122, Max-Change = 0.0012, Max-Change = 0.0040, Max-Change = 0.0093, Max-Change = 0.0016, Max-Change = 0.0066, Max-Change = 0.0025, Max-Change = 0.0039, Max-Change = 0.0020, Max-Change = 0.0077, Max-Change = 0.0052, Max-Change = 0.0054, Max-Change = 0.0043, Max-Change = 0.0043, Max-Change = 0.0067, Max-Change = 0.0036, Max-Change = 0.0013, Max-Change = 0.0040, Max-Change = 0.0032, Max-Change = 0.0024, Max-Change = 0.0015, Max-Change = 0.0079, Max-Change = 0.0080, Max-Change = 0.0034, Max-Change = 0.0053, Max-Change = 0.0088, Max-Change = 0.0075, Max-Change = 0.0080, Max-Change = 0.0075, Max-Change = 0.0126, Max-Change = 0.0106, Max-Change = 0.0034, Max-Change = 0.0014, Max-Change = 0.0019, Max-Change = 0.0059, Max-Change = 0.0043, Max-Change = 0.0033, Max-Change = 0.0019, Max-Change = 0.0036, Max-Change = 0.0031, Max-Change = 0.0068, Max-Change = 0.0017, Max-Change = 0.0056, Max-Change = 0.0097, Max-Change = 0.0031, Max-Change = 0.0078, Max-Change = 0.0033, Max-Change = 0.0043, Max-Change = 0.0009, Max-Change = 0.0038, Max-Change = 0.0021, Max-Change = 0.0038, Max-Change = 0.0061, Max-Change = 0.0074, Max-Change = 0.0043, Max-Change = 0.0013, Max-Change = 0.0020, Max-Change = 0.0017, Max-Change = 0.0040, Max-Change = 0.0053, Max-Change = 0.0052, Max-Change = 0.0108, Max-Change = 0.0036, Max-Change = 0.0090, Max-Change = 0.0012, Max-Change = 0.0040, Max-Change = 0.0010, Max-Change = 0.0048, Max-Change = 0.0046, Max-Change = 0.0003, Max-Change = 0.0037, Max-Change = 0.0021, Max-Change = 0.0015, Max-Change = 0.0059, Max-Change = 0.0048, Max-Change = 0.0058, Max-Change = 0.0141, Max-Change = 0.0026, Max-Change = 0.0082, Max-Change = 0.0025, Max-Change = 0.0055, Max-Change = 0.0034, Max-Change = 0.0038, Max-Change = 0.0031, Max-Change = 0.0052, Max-Change = 0.0040, Max-Change = 0.0078, Max-Change = 0.0014, Max-Change = 0.0043, Max-Change = 0.0030, Max-Change = 0.0032, Max-Change = 0.0058, Max-Change = 0.0116, Max-Change = 0.0075, Max-Change = 0.0088, Max-Change = 0.0028, Max-Change = 0.0078, Max-Change = 0.0056, Max-Change = 0.0024, Max-Change = 0.0026, Max-Change = 0.0055, Max-Change = 0.0036, Max-Change = 0.0092, Max-Change = 0.0055, Max-Change = 0.0062, Max-Change = 0.0034, Max-Change = 0.0034, Max-Change = 0.0052, Max-Change = 0.0038, Max-Change = 0.0030, Max-Change = 0.0053, Max-Change = 0.0033, Max-Change = 0.0021, Max-Change = 0.0009, Max-Change = 0.0038, Max-Change = 0.0071, Max-Change = 0.0030, Max-Change = 0.0033, Max-Change = 0.0028, Max-Change = 0.0072, Max-Change = 0.0007, Max-Change = 0.0089, Max-Change = 0.0033, Max-Change = 0.0013, Max-Change = 0.0031, Max-Change = 0.0027, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0079, gam = 0.1057, Max-Change = 0.0028, gam = 0.0780, Max-Change = 0.0024, gam = 0.0629, Max-Change = 0.0013, gam = 0.0532, Max-Change = 0.0006, gam = 0.0464, Max-Change = 0.0009, gam = 0.0413, Max-Change = 0.0014, gam = 0.0374, Max-Change = 0.0006, gam = 0.0342, Max-Change = 0.0010, gam = 0.0316, Max-Change = 0.0014, gam = 0.0294, Max-Change = 0.0006, gam = 0.0276, Max-Change = 0.0011, gam = 0.0260, Max-Change = 0.0002, gam = 0.0246, Max-Change = 0.0005, gam = 0.0233, Max-Change = 0.0008
 #> 
 #> Calculating log-likelihood...
 coef(LLTM.e)
 #> $Item_1
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_2
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_3
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_4
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_5
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_6
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_7
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_8
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_9
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_10
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_11
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_12
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_13
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_14
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_15
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_16
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_17
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_18
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_19
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_20
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_21
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_22
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_23
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_24
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_25
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_26
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_27
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_28
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_29
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $Item_30
 #>     difficultyeasy difficultyhard difficultymedium a1 d g u
-#> par          1.128         -1.167           -0.006  1 0 0 1
+#> par          0.977         -1.068           -0.076  1 0 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 COV_11
-#> par      0  0.965
+#> par      0  0.963
 #> 
 #> $items
 #>     COV_items_items
-#> par           0.026
+#> par           0.003
 #> 
 
 
