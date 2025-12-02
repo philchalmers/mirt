@@ -161,6 +161,7 @@ extract.mirt <- function(x, what, item = 1, ...){
                   factorNames=x@Model$factorNames,
                   EMhistory=x@Internals$EMhistory,
                   invariance=x@Model$invariance,
+                  bfactor=x@Internals$bfactor,
                   thetaPosterior=x@Internals$thetaPosterior,
                   # undocumented
                   factorNames = x@Model$factorNames,
