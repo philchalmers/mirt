@@ -1198,58 +1198,111 @@ sum(ds)
 
 
 #######
-# latent regression Rasch model
+# Latent regression Rasch model, with endogenous and exogenous variables
 
-# simulate data
+# Example assumes that exogenous variables relate to latent trait,
+# and latent trait related to endogenous variables not included in the
+# measurement model. Equates to the following structure
+#
+# Exogenous (X3 not related):
+# Theta ~ beta*X1 + beta*X2 + 0*X3 + e
+#
+# Endogenous:
+# Y0 ~ 0*Theta + e      (no relationship)
+# Y1 ~ gamma*Theta + e
+# Y2 ~ gamma*Theta + gamma*Theta^2 + e
+
+# generate suitable data
 set.seed(1234)
 N <- 1000
 
-# covariates
+# covariates (exogeneous variables for Theta)
 X1 <- rnorm(N); X2 <- rnorm(N)
 covdata <- data.frame(X1, X2, X3 = rnorm(N))
-Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+Theta <- matrix(0.2 * X1  -0.3 * X2 + rnorm(N, sd=sqrt(1 - .2^2 - .3^2)))
+var(Theta)
+
+# relation to endogenous variables, Y1 and Y2, not included in measurement model
+Y0 <- rnorm(N)   # no relationship
+Y1 <- .5 * Theta + rnorm(N, sd=sqrt(1 - .5^2))
+Y2 <- .5 * Theta + .25 * Theta^2 + rnorm(N, sd=0.79028)
+var(Y1)
+var(Y2)
+
+# true relationship between Y and Theta
+lm(Y0 ~ Theta)
+lm(Y1 ~ Theta)
+lm(Y2 ~ Theta + I(Theta^2))
 
 # items and response data
 a <- matrix(1, 20); d <- matrix(rnorm(20))
-dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
+dat <- simdata(a, d, N, itemtype = '2PL', Theta=Theta)
 
 # unconditional Rasch model
 mod0 <- mirt(dat, 1, 'Rasch', SE=TRUE)
 coef(mod0, printSE=TRUE)
 
+#######
+# For exogenous predictor variables (e.g., Theta ~ X1 + X2 + e)
+#   include directly in model, and perform LR/Wald tests
+#######
+#
 # conditional model using X1, X2, and X3 (bad) as predictors of Theta
 mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2 + X3, SE=TRUE)
 coef(mod1, printSE=TRUE)
 coef(mod1, simplify=TRUE)
 anova(mod0, mod1)  # jointly significant predictors of theta
 
-# large sample z-ratios and p-values (if one cares)
+# large sample z-ratios and p-values via Wald tests
 cfs <- coef(mod1, printSE=TRUE)
 (z <- cfs$lr.betas[[1]] / cfs$lr.betas[[2]])
-round(pnorm(abs(z[,1]), lower.tail=FALSE)*2, 3)
+ps <- round(pnorm(abs(z[,1]), lower.tail=FALSE)*2, 3)
+names(ps) <- paste0('p.', names(ps))
+ps
 
-# drop predictor for nested comparison
+# drop X3 predictor for nested LR comparison
 mod1b <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
-anova(mod1b, mod1)
+anova(mod1b, mod1)  # same information as Wald test
 
-# compare to mixedmirt() version of the same model
-mod1.mixed <- mixedmirt(dat, 1, itemtype='Rasch',
-                        covdata=covdata, lr.fixed = ~ X1 + X2 + X3, SE=TRUE)
-coef(mod1.mixed)
-coef(mod1.mixed, printSE=TRUE)
+#####
+# For exogenous Y's, need rxx estimate for attenuation corrections of betas,
+#   and plausible value sets to obtain corrected SEs
+#####
+fs <- fscores(mod1b, full.scores.SE = TRUE)
+(rxx <- empirical_rxx(fs))
 
-# draw plausible values for secondary analyses
-pv <- fscores(mod1, plausible.draws = 10)
-pvmods <- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
-                 covdata=covdata)
-# population characteristics recovered well, and can be averaged over
-so <- lapply(pvmods, summary)
-so
+# plausible value set for theta, adjusting the variance via rxx
+pvs <- fscores(mod1b, method = 'plausible') * rxx
 
-# compute Rubin's multiple imputation average
-par <- lapply(so, function(x) x$coefficients[, 'Estimate'])
-SEpar <- lapply(so, function(x) x$coefficients[, 'Std. Error'])
-averageMI(par, SEpar)
+# relationship with endogenous Y variable (one draw, SE's may not be correct)
+summary(lm(Y0 ~ pvs))
+summary(lm(Y1 ~ pvs))
+summary(lm(Y2 ~ pvs + I(pvs^2)))
+
+# perform multiple times, and average over posterior uncertainty
+pv <- fscores(mod1b, plausible.draws = 10) |>
+    lapply(\(fs) fs * rxx)
+
+pvmods0 <- lapply(pv, function(x) lm(Y0 ~ x))
+pvmods1 <- lapply(pv, function(x) lm(Y1 ~ x))
+pvmods2 <- lapply(pv, function(x) lm(Y2 ~ x + I(x^2)))
+
+so0 <- lapply(pvmods0, summary)
+so1 <- lapply(pvmods1, summary)
+so2 <- lapply(pvmods2, summary)
+
+# Finally, compute Rubin's multiple imputation average (correct SEs)
+# for Y0
+averageMI(par = lapply(so0, \(x) x$coefficients[, 'Estimate']),
+          SEpar = lapply(so0, \(x) x$coefficients[, 'Std. Error']))
+
+# for Y1
+averageMI(par = lapply(so1, \(x) x$coefficients[, 'Estimate']),
+          SEpar = lapply(so1, \(x) x$coefficients[, 'Std. Error']))
+
+# for Y2
+averageMI(par = lapply(so2, \(x) x$coefficients[, 'Estimate']),
+          SEpar = lapply(so2, \(x) x$coefficients[, 'Std. Error']))
 
 ############
 # Example using Gauss-Hermite quadrature with custom input functions

@@ -77,7 +77,7 @@ averageMI <- function(par, SEpar, as.data.frame = TRUE){
     SEscores <- sqrt(Ubar + (1 + 1/MI) * B)
     df <- (MI - 1) * (1 + MI * Ubar / ((MI + 1) * B))^2
     ret <- list(par=scores, SEpar=SEscores, t = scores/SEscores, df=df)
-    ret$p <- (1 - pt(abs(ret$t), ret$df, lower.tail=TRUE))/2
+    ret$p <- (1 - pt(abs(ret$t), ret$df, lower.tail=TRUE)) * 2
     if(as.data.frame){
         n <- ncol(scores)
         ret <- as.data.frame(ret)
