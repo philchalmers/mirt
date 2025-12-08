@@ -115,7 +115,7 @@ par <- lapply(so, function(x) x$coefficients[, 'Estimate'])
 SEpar <- lapply(so, function(x) x$coefficients[, 'Std. Error'])
 averageMI(par, SEpar)
 #>                par SEpar       t      df     p
-#> (Intercept)  0.003 0.016   0.209 198.552 0.209
+#> (Intercept)  0.003 0.016   0.209 198.552 0.834
 #> covdata$X1   0.528 0.018  28.554  63.384     0
 #> covdata$X2  -1.037 0.021 -49.311  35.705     0
 
