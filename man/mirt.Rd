@@ -1198,7 +1198,7 @@ sum(ds)
 
 
 #######
-# Latent regression Rasch model, with endogenous and exogenous variables
+# Latent regression Rasch model, followed by factor score regression
 
 # Example assumes that exogenous variables relate to latent trait,
 # and latent trait related to endogenous variables not included in the
@@ -1224,15 +1224,13 @@ var(Theta)
 
 # relation to endogenous variables, Y1 and Y2, not included in measurement model
 Y0 <- rnorm(N)   # no relationship
-Y1 <- .5 * Theta + rnorm(N, sd=sqrt(1 - .5^2))
-Y2 <- .5 * Theta + .25 * Theta^2 + rnorm(N, sd=0.79028)
-var(Y1)
-var(Y2)
+Y1 <- .5 * Theta + rnorm(N)
+Y2 <- .5 * Theta + .25 * Theta^2 + rnorm(N)
 
 # true relationship between Y and Theta
-lm(Y0 ~ Theta)
-lm(Y1 ~ Theta)
-lm(Y2 ~ Theta + I(Theta^2))
+lm(Y0 ~ Theta) |> summary()
+lm(Y1 ~ Theta) |> summary()
+lm(Y2 ~ Theta + I(Theta^2)) |> summary()
 
 # items and response data
 a <- matrix(1, 20); d <- matrix(rnorm(20))
@@ -1265,44 +1263,40 @@ mod1b <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 anova(mod1b, mod1)  # same information as Wald test
 
 #####
-# For exogenous Y's, need rxx estimate for attenuation corrections of betas,
-#   and plausible value sets to obtain corrected SEs
+# For exogenous Y's, treat scores as in factor score regression.
+#  However, update the VCOV/SEs and R^2 as the regression
+#  assumes the scores in the IV side are error-free (too optimistic)
 #####
-fs <- fscores(mod1b, full.scores.SE = TRUE)
+
+# EAP estimates and SEs
+fs <- fscores(mod1b, full.scores.SE=TRUE)
+theta <- fs[,1]
+
+# relationship with endogenous Y variable
+summary(lmmod0 <- lm(Y0 ~ theta))
+summary(lmmod1 <- lm(Y1 ~ theta))
+summary(lmmod2 <- lm(Y2 ~ theta + I(theta^2)))
+
+# improve SEs/R^2 in regression model by accounting for unreliability
 (rxx <- empirical_rxx(fs))
 
-# plausible value set for theta, adjusting the variance via rxx
-pvs <- fscores(mod1b, method = 'plausible') * rxx
+# updates most lm() output, but not everything (do not use for other purposes!)
+update.summary <- function(lmmod, rxx){
+  so <- summary(lmmod)
+  so$r.squared <- so$r.squared / rxx
+  so$adj.r.squared <- so$adj.r.squared / rxx
+  so$cov.unscaled  <- vcov(lmmod) / rxx
+  so$coefficients[,2] <- sqrt(diag(so$cov.unscaled))
+  so$coefficients[,3] <- so$coefficients[,1] / so$coefficients[,2]
+  so$coefficients[,4] <- pt(abs(so$coefficients[,3]), df=lmmod$df.residual,
+    lower.tail = FALSE) * 2
+  so
+}
 
-# relationship with endogenous Y variable (one draw, SE's may not be correct)
-summary(lm(Y0 ~ pvs))
-summary(lm(Y1 ~ pvs))
-summary(lm(Y2 ~ pvs + I(pvs^2)))
+update.summary(lmmod0, rxx)
+update.summary(lmmod1, rxx)
+update.summary(lmmod2, rxx)
 
-# perform multiple times, and average over posterior uncertainty
-pv <- fscores(mod1b, plausible.draws = 10) |>
-    lapply(\(fs) fs * rxx)
-
-pvmods0 <- lapply(pv, function(x) lm(Y0 ~ x))
-pvmods1 <- lapply(pv, function(x) lm(Y1 ~ x))
-pvmods2 <- lapply(pv, function(x) lm(Y2 ~ x + I(x^2)))
-
-so0 <- lapply(pvmods0, summary)
-so1 <- lapply(pvmods1, summary)
-so2 <- lapply(pvmods2, summary)
-
-# Finally, compute Rubin's multiple imputation average (correct SEs)
-# for Y0
-averageMI(par = lapply(so0, \(x) x$coefficients[, 'Estimate']),
-          SEpar = lapply(so0, \(x) x$coefficients[, 'Std. Error']))
-
-# for Y1
-averageMI(par = lapply(so1, \(x) x$coefficients[, 'Estimate']),
-          SEpar = lapply(so1, \(x) x$coefficients[, 'Std. Error']))
-
-# for Y2
-averageMI(par = lapply(so2, \(x) x$coefficients[, 'Estimate']),
-          SEpar = lapply(so2, \(x) x$coefficients[, 'Std. Error']))
 
 ############
 # Example using Gauss-Hermite quadrature with custom input functions
