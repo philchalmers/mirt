@@ -121,21 +121,21 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">effects</span> <span class="op">&lt;-</span> <span class="fu">randef</span><span class="op">(</span><span class="va">mod</span>, ndraws <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">effects</span><span class="op">$</span><span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.48228462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.02240079</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.59012826</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.69652128</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.12753434</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.88949558</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3847588</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.2070734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.6950335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.6603027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.1700439</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.8572267</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">effects</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               group</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group1 -0.012071784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group2  0.024751195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group3 -0.030156600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group4  0.004955802</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group5 -0.011062188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group6  0.039348474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group1  0.008380644</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group2  0.021968345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group3  0.005246956</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group4 -0.022627858</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group5 -0.020800705</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group6 -0.009607101</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># lr.random input</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mixedmirt.html">mixedmirt</a></span><span class="op">(</span><span class="va">Science</span>, <span class="va">covdat</span>, model<span class="op">=</span><span class="fl">1</span>, lr.random <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span><span class="op">|</span><span class="va">group</span><span class="op">)</span></span></span>
@@ -171,21 +171,21 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">effects</span> <span class="op">&lt;-</span> <span class="fu">randef</span><span class="op">(</span><span class="va">mod2</span>, ndraws <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">effects</span><span class="op">$</span><span class="va">Theta</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.4967384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.1496310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.7668693</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.6358130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.1010125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  1.0367025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                F1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.548228174</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.261093541</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.697144814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.732104248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.006148526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.959296061</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">effects</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              group</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group1  0.01474238</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group2 -0.06258657</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group3 -0.46818341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group4 -0.29087492</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group5  0.14867431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> group6 -0.27978462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group1  0.06154054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group2 -0.12812779</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group3 -0.45378928</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group4 -0.24927125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group5  0.18990744</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> group6 -0.30906842</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
