@@ -188,7 +188,7 @@ RMSD_DIF <- function(pooled_mod, flag = 0, probfun = TRUE, dentype = 'norm'){
         tmpdat <- tmpdat[,apply(tmpdat, 2, function(x) all(is.na(x)))]
         mod_g <- mirt(subset(dat, group == which.group), nfact,
                       itemtype = extract.mirt(smod, 'itemtype'),
-                      pars = sv, technical = list(storeEtable=TRUE, customTheta=Theta,
+                      pars = sv, technical = list(customTheta=Theta,
                                                   customK=extract.mirt(pooled_mod, 'K')))
         Etable <- mod_g@Internals$Etable[[1]]$r1
 

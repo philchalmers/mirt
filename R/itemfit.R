@@ -349,7 +349,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
             dat <- extract.mirt(mod, 'data')
             Emod <- mirt(dat, nfact, itemtype=itemtype,
                          pars=sv, verbose=FALSE,
-                         technical=list(storeEtable=TRUE, customTheta=Theta), ...)
+                         technical=list(customTheta=Theta), ...)
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
             X2 <- rep(NA, ncol(dat))

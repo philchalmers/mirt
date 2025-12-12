@@ -1747,7 +1747,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$delta <- ifelse(is.null(technical$delta), 1e-5, technical$delta)
     opts$Etable <- ifelse(is.null(technical$Etable), TRUE, technical$Etable)
     opts$plausible.draws <- ifelse(is.null(technical$plausible.draws), 0, technical$plausible.draws)
-    opts$storeEtable <- ifelse(is.null(technical$storeEtable), FALSE, technical$storeEtable)
+    opts$storeEtable <- ifelse(is.null(technical$storeEtable), TRUE, technical$storeEtable)
     if(!is.null(TOL))
         if(is.nan(TOL) || is.na(TOL)) opts$calcNull <- opts$verbose <- FALSE
     opts$TOL <- ifelse(is.null(TOL),

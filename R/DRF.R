@@ -560,7 +560,7 @@ DRF <- function(mod, draws = NULL, focal_items = 1L:extract.mirt(mod, 'nitems'),
                     itemtype = extract.mirt(mod, 'itemtype'),
                     customItems = extract.mirt(mod, 'customItems'),
                     customGroup = extract.mirt(mod, 'customGroup'),
-                    technical = list(storeEtable=TRUE, theta_lim=theta_lim, omp=FALSE),
+                    technical = list(theta_lim=theta_lim, omp=FALSE),
                     quadpts=quadpts, large=large, TOL = NaN)
     if(plot) Theta_nodes <- matrix(seq(theta_lim[1L], theta_lim[2L], length.out=1000))
     oCM <- lapply(1L, fn, omod=mod, Theta_nodes=Theta_nodes, best_fitting=best_fitting,
