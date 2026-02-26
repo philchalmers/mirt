@@ -1,6 +1,10 @@
 #include "Misc.h"
 #include "traceLinePts.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 void itemTrace(vector<double> &P, vector<double> &Pstar, const vector<double> &a, const double *d,
         const NumericMatrix &Theta, const double *g, const double *u, const NumericVector &ot)
 {
@@ -787,9 +791,10 @@ void P_switch(vector<double> &P, const vector<double> &par,
 
 void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
     const List &pars, const NumericVector &ot, const vector<int> &itemloc, const int &which,
-    const int &nfact, const int &N, const int &USEFIXED)
+    const int &nfact, const int &N)
 {
-    NumericMatrix theta = Theta;
+    const NumericMatrix* theta_ptr = &Theta;
+    NumericMatrix theta_fixed;
     int nfact2 = nfact;
     S4 item = pars[which];
     int ncat = as<int>(item.slot("ncat"));
@@ -830,22 +835,24 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         12 = monopoly
     */
 
-    if(USEFIXED){
+    const int usefixed = as<int>(item.slot("nfixedeffects")) > 0;
+    if(usefixed){
         NumericMatrix itemFD = item.slot("fixed.design");
         nfact2 = nfact + itemFD.ncol();
-        NumericMatrix NewTheta(Theta.nrow(), nfact2);
+        theta_fixed = NumericMatrix(Theta.nrow(), nfact2);
         if(itemFD.nrow() == 1){
-            for(int j = 0; j < Theta.nrow()-1; ++j)
+            for(int j = 0; j < Theta.nrow(); ++j)
                 for(int i = 0; i < itemFD.ncol(); ++i)
-                    NewTheta(j,i) = itemFD(0,i);
+                    theta_fixed(j,i) = itemFD(0,i);
         } else {
             for(int i = 0; i < itemFD.ncol(); ++i)
-                NewTheta(_,i) = itemFD(_,i);
+                theta_fixed(_,i) = itemFD(_,i);
         }
         for(int i = 0; i < nfact; ++i)
-            NewTheta(_,i+itemFD.ncol()) = Theta(_,i);
-        theta = NewTheta;
+            theta_fixed(_,i+itemFD.ncol()) = Theta(_,i);
+        theta_ptr = &theta_fixed;
     }
+    const NumericMatrix &theta = *theta_ptr;
     switch(itemclass){
         case 1 :
             P_dich(P, par, theta, ot, N, nfact2);
@@ -905,14 +912,10 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     vector<double> itemtrace(N * (itemloc[J]-1));
-    S4 item = pars[0];
-    NumericMatrix FD = item.slot("fixed.design");
-    int USEFIXED = item.slot("nfixedeffects");
-    if(USEFIXED > 0) USEFIXED = 1;
-
+    #pragma omp parallel for if(J > 30 && N > 1500)
     for(int which = 0; which < J; ++which)
         _computeItemTrace(itemtrace, Theta, pars, offterm(_, which), itemloc,
-            which, nfact, N, USEFIXED);
+            which, nfact, N);
 
     NumericMatrix ret = vec2mat(itemtrace, N, itemloc[J]-1);
     return(ret);
