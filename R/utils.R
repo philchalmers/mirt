@@ -1548,10 +1548,27 @@ nameInfoMatrix <- function(info, correction, L, npars){
 maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
                         Names, itemnames, survey.weights){
     tmpdata[is.na(tmpdata)] <- 99999L
-    stringfulldata <- apply(tmpdata, 1L, paste, sep='', collapse = '/')
-    stringtabdata <- unique(stringfulldata)
-    tabdata2 <- lapply(strsplit(stringtabdata, split='/'), as.integer)
-    tabdata2 <- do.call(rbind, tabdata2)
+    ord <- do.call(order, as.data.frame(tmpdata))
+    sorted <- tmpdata[ord, , drop=FALSE]
+    if(nrow(sorted) == 1L){
+        change <- TRUE
+    } else {
+        change <- c(TRUE, rowSums(sorted[-1L, , drop=FALSE] != sorted[-nrow(sorted), , drop=FALSE]) > 0L)
+    }
+    pattern_id_sorted <- cumsum(change)
+    pattern_id <- integer(nrow(tmpdata))
+    pattern_id[ord] <- pattern_id_sorted
+    first_idx <- which(change)
+    tabdata2_lex <- sorted[first_idx, , drop=FALSE]
+
+    first_occ <- tapply(seq_along(pattern_id), pattern_id, min)
+    id_perm <- order(as.integer(first_occ))
+    remap <- integer(length(id_perm))
+    remap[id_perm] <- seq_along(id_perm)
+    pattern_id <- remap[pattern_id]
+    tabdata2 <- tabdata2_lex[id_perm, , drop=FALSE]
+    rownames(tabdata2) <- NULL
+
     tabdata2[tabdata2 == 99999L] <- NA
     tabdata <- matrix(0L, nrow(tabdata2), sum(K))
     for(i in seq_len(nitem)){
@@ -1561,20 +1578,19 @@ maketabData <- function(tmpdata, group, groupNames, nitem, K, itemloc,
             tabdata[,itemloc[i] + j - 1L] <- as.integer(tabdata2[,i] == uniq[j])
     }
     tabdata[is.na(tabdata)] <- 0L
+    rownames(tabdata) <- NULL
     colnames(tabdata) <- Names
     colnames(tabdata2) <- itemnames
     groupFreq <- vector('list', length(groupNames))
     names(groupFreq) <- groupNames
     for(g in seq_len(length(groupNames))){
-        Freq <- integer(length(stringtabdata))
-        tmpstringdata <- stringfulldata[group == groupNames[g]]
+        Freq <- numeric(nrow(tabdata))
+        pick <- group == groupNames[g]
         if(!is.null(survey.weights)){
-            Freq <- mySapply(seq_len(nrow(tabdata)), function(x, std, tstd, w)
-                sum(w[stringtabdata[x] == tstd]), std=stringtabdata, tstd=tmpstringdata,
-                w=survey.weights[group == groupNames[g]])
+            ws <- rowsum(survey.weights[pick], group = pattern_id[pick], reorder = FALSE)
+            Freq[as.integer(rownames(ws))] <- ws[,1L]
         } else {
-            Freq[stringtabdata %in% tmpstringdata] <- as.integer(table(
-                match(tmpstringdata, stringtabdata)))
+            Freq <- tabulate(pattern_id[pick], nbins = nrow(tabdata))
         }
         groupFreq[[g]] <- Freq
     }
