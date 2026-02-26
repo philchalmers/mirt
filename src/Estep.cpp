@@ -363,3 +363,53 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
 
     END_RCPP
 }
+
+RcppExport SEXP calcL1_cpp(SEXP Ritemtrace, SEXP RK, SEXP Ritemloc)
+{
+    BEGIN_RCPP
+
+    const NumericMatrix itemtrace(Ritemtrace);
+    const IntegerVector K(RK);
+    const IntegerVector itemloc(Ritemloc);
+    const int J = K.size();
+    const int nquad = itemtrace.ncol();
+
+    int maxScore = 0;
+    for(int i = 0; i < J; ++i)
+        maxScore += K[i] - 1;
+    const int nrows = maxScore + 1;
+
+    NumericMatrix L0(nrows, nquad);
+    NumericMatrix L1(nrows, nquad);
+
+    const int firstStart = itemloc[0] - 1;
+    for(int cat = 0; cat < K[0]; ++cat)
+        for(int q = 0; q < nquad; ++q)
+            L0(cat, q) = itemtrace(firstStart + cat, q);
+
+    int maxPrev = K[0] - 1;
+    for(int item = 1; item < J; ++item){
+        std::fill(L1.begin(), L1.end(), 0.0);
+        const int itemStart = itemloc[item] - 1;
+        for(int score = 0; score <= maxPrev; ++score){
+            for(int cat = 0; cat < K[item]; ++cat){
+                const int newScore = score + cat;
+                for(int q = 0; q < nquad; ++q)
+                    L1(newScore, q) += L0(score, q) * itemtrace(itemStart + cat, q);
+            }
+        }
+        maxPrev += K[item] - 1;
+        std::swap(L0, L1);
+    }
+
+    IntegerVector SumScores(nrows);
+    for(int i = 0; i < nrows; ++i)
+        SumScores[i] = i;
+
+    List ret;
+    ret["L1"] = L0;
+    ret["Sum.Scores"] = SumScores;
+    return ret;
+
+    END_RCPP
+}
