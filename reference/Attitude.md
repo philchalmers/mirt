@@ -264,9 +264,11 @@ anova(mod, mod.rho) # original model fits much worse
 #> mod     581.139 571.917 587.275 597.051 -282.569             
 #> mod.rho 422.326 403.882 434.599 454.149 -195.163 174.813  8 0
 M2(mod)
-#> Error: Could not extract element 'nest'
+#>            M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
+#> stats 271.098 28 0 0.405   0.358    0.445 0.423 0.359 0.359
 M2(mod.rho)
-#> Error: Could not extract element 'nest'
+#>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
+#> stats 34.709 20 0.022 0.118   0.045     0.18  0.08 0.946 0.961
 itemfit(mod, p.adjust='fdr')
 #>                    item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1               hideous  9.192       4      0.156  0.075

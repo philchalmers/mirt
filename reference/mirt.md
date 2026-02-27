@@ -1655,7 +1655,8 @@ coef(mod1.3PL.norm)
 #> 
 #limited information fit statistics
 M2(mod1.3PL.norm)
-#> Error: Could not extract element 'nest'
+#>        M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
+#> stats 8.8  4 0.066 0.035       0    0.066 0.032 0.945 0.978
 
 # unidimensional ideal point model
 idealpt <- mirt(data, 1, itemtype = 'ideal')
@@ -2257,7 +2258,8 @@ itemfit(unimod)
 #> 3  Future 19.477       8      0.061  0.013
 #> 4 Benefit 12.106      11      0.016  0.356
 M2(unimod, type = 'C2')
-#> Error: Could not extract element 'nest'
+#>           M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
+#> stats 18.695  2 0 0.146    0.09     0.21 0.079 0.738 0.913
 fs <- fscores(unimod)
 hist(fs, 20)
 
@@ -2369,13 +2371,13 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.242  0.034  0.081  0.112  0.000  0.000 
+#>  0.246  0.035  0.081  0.115  0.000  0.000 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.220  0.034  0.092  0.072  0.000  0.000 
+#>  0.222  0.034  0.092  0.073  0.000  0.000 
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
 #> Warning: EM cycles terminated after 500 iterations.
@@ -2777,75 +2779,75 @@ mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
 #> $Item_1
 #>        a1 a2      d g u
-#> par 1.088  0 -0.847 0 1
+#> par 1.728  0 -1.082 0 1
 #> 
 #> $Item_2
 #>        a1 a2      d g u
-#> par 0.635  0 -1.642 0 1
+#> par 0.778  0 -1.568 0 1
 #> 
 #> $Item_3
-#>        a1 a2     d g u
-#> par 0.901  0 1.589 0 1
+#>       a1 a2     d g u
+#> par 0.96  0 1.514 0 1
 #> 
 #> $Item_4
-#>        a1    a2      d g u
-#> par 0.995 0.356 -0.044 0 1
+#>        a1    a2     d g u
+#> par 1.088 0.501 0.096 0 1
 #> 
 #> $Item_5
 #>     a1    a2    d1    d2     d3
-#> par  0 1.674 3.155 2.054 -0.514
+#> par  0 1.379 2.957 1.994 -0.472
 #> 
 #> $Item_6
 #>     a1    a2    d1    d2     d3
-#> par  0 0.433 2.515 0.989 -0.998
+#> par  0 0.601 2.579 1.064 -1.076
 #> 
 #> $Item_7
-#>     a1   a2    d1    d2
-#> par  0 1.01 2.091 0.016
+#>     a1    a2    d1    d2
+#> par  0 0.965 1.981 0.026
 #> 
 #> $Item_8
 #>     a1    a2     d g u
-#> par  0 1.032 1.088 0 1
+#> par  0 0.948 1.095 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#> par      0      0      1  0.457      1
+#> par      0      0      1  0.383      1
 #> 
 summary(mod1)
 #>           F1    F2    h2
-#> Item_1 0.539       0.290
-#> Item_2 0.350       0.122
-#> Item_3 0.468       0.219
-#> Item_4 0.497 0.178 0.278
-#> Item_5       0.701 0.492
-#> Item_6       0.247 0.061
-#> Item_7       0.510 0.261
-#> Item_8       0.518 0.269
+#> Item_1 0.712       0.508
+#> Item_2 0.416       0.173
+#> Item_3 0.491       0.241
+#> Item_4 0.523 0.241 0.331
+#> Item_5       0.629 0.396
+#> Item_6       0.333 0.111
+#> Item_7       0.493 0.243
+#> Item_8       0.486 0.237
 #> 
-#> SS loadings:  0.878 1.114 
-#> Proportion Var:  0.11 0.139 
+#> SS loadings:  1.195 1.045 
+#> Proportion Var:  0.149 0.131 
 #> 
 #> Factor correlations: 
 #> 
 #>       F1 F2
 #> F1 1.000   
-#> F2 0.457  1
+#> F2 0.383  1
 residuals(mod1)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.058  -0.027  -0.005   0.000   0.028   0.065 
+#>  -0.045  -0.023   0.007   0.002   0.026   0.050 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1        -0.003 -0.008 -0.003  0.046  0.034 -0.020 -0.038
-#> Item_2  0.015        -0.008  0.026 -0.053 -0.058 -0.027 -0.030
-#> Item_3  0.123  0.143        -0.008  0.018  0.044  0.052  0.036
-#> Item_4  0.017  1.348  0.122         0.019  0.065 -0.032  0.016
-#> Item_5  4.288  5.688  0.672  0.743        -0.044 -0.027 -0.018
-#> Item_6  2.301  6.658  3.836  8.452 11.549         0.033 -0.028
-#> Item_7  0.811  1.471  5.350  2.052  2.811  4.373         0.015
-#> Item_8  2.918  1.818  2.599  0.542  0.613  1.548  0.452       
+#> Item_1         0.005 -0.008 -0.005  0.033  0.014  0.025  0.029
+#> Item_2  0.053        -0.011  0.015 -0.045 -0.029 -0.023 -0.022
+#> Item_3  0.142  0.261         0.008 -0.031  0.025  0.037  0.003
+#> Item_4  0.047  0.473  0.125         0.031  0.023 -0.043  0.026
+#> Item_5  2.237  4.107  1.878  1.877        -0.035  0.026 -0.026
+#> Item_6  0.390  1.700  1.269  1.014  7.196         0.050 -0.024
+#> Item_7  1.294  1.031  2.685  3.748  2.680 10.164         0.013
+#> Item_8  1.648  0.931  0.024  1.391  1.331  1.154  0.325       
 
 #####
 # bifactor
@@ -2858,35 +2860,35 @@ mod3 <- mirt(dataset,model.3, method = 'MHRM')
 coef(mod3)
 #> $Item_1
 #>        a1    a2 a3      d g u
-#> par 0.626 0.764  0 -0.825 0 1
+#> par 0.974 1.471  0 -1.083 0 1
 #> 
 #> $Item_2
 #>        a1    a2 a3      d g u
-#> par 0.287 0.739  0 -1.706 0 1
+#> par 0.248 0.841  0 -1.605 0 1
 #> 
 #> $Item_3
 #>        a1    a2 a3     d g u
-#> par 0.651 0.441  0 1.538 0 1
+#> par 0.578 0.692  0 1.494 0 1
 #> 
 #> $Item_4
-#>       a1    a2 a3     d g u
-#> par 1.19 0.743  0 -0.05 0 1
+#>        a1    a2 a3     d g u
+#> par 1.382 0.776  0 0.112 0 1
 #> 
 #> $Item_5
-#>        a1 a2    a3    d1   d2     d3
-#> par 1.285  0 1.014 3.106 2.02 -0.506
+#>        a1 a2    a3    d1    d2    d3
+#> par 1.001  0 0.936 2.944 1.987 -0.46
 #> 
 #> $Item_6
-#>        a1 a2    a3    d1   d2     d3
-#> par 0.397  0 0.174 2.516 0.99 -0.996
+#>        a1 a2    a3    d1    d2     d3
+#> par 0.438  0 0.388 2.572 1.061 -1.067
 #> 
 #> $Item_7
 #>        a1 a2    a3    d1    d2
-#> par 0.666  0 0.861 2.134 0.018
+#> par 0.569  0 1.009 2.091 0.034
 #> 
 #> $Item_8
-#>        a1 a2    a3     d g u
-#> par 0.771  0 0.751 1.102 0 1
+#>        a1 a2   a3     d g u
+#> par 0.801  0 0.53 1.101 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2894,17 +2896,17 @@ coef(mod3)
 #> 
 summary(mod3)
 #>            G    F1    F2    h2
-#> Item_1 0.318 0.388       0.252
-#> Item_2 0.153 0.393       0.178
-#> Item_3 0.347 0.235       0.176
-#> Item_4 0.539 0.337       0.405
-#> Item_5 0.544       0.429 0.481
-#> Item_6 0.226       0.099 0.061
-#> Item_7 0.330       0.426 0.290
-#> Item_8 0.383       0.373 0.286
+#> Item_1 0.397 0.600       0.518
+#> Item_2 0.129 0.439       0.210
+#> Item_3 0.300 0.360       0.219
+#> Item_4 0.594 0.334       0.464
+#> Item_5 0.458       0.428 0.393
+#> Item_6 0.244       0.216 0.106
+#> Item_7 0.276       0.490 0.317
+#> Item_8 0.410       0.271 0.242
 #> 
-#> SS loadings:  1.139 0.475 0.515 
-#> Proportion Var:  0.142 0.059 0.064 
+#> SS loadings:  1.131 0.793 0.544 
+#> Proportion Var:  0.141 0.099 0.068 
 #> 
 #> Factor correlations: 
 #> 
@@ -2917,21 +2919,21 @@ residuals(mod3)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.065  -0.019  -0.005  -0.001   0.025   0.051 
+#>  -0.039  -0.021  -0.007  -0.002   0.015   0.049 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1        -0.008  0.019 -0.002  0.046  0.027 -0.011 -0.035
-#> Item_2  0.123        -0.001  0.015 -0.047 -0.057  0.026 -0.018
-#> Item_3  0.708  0.004        -0.010 -0.019  0.037  0.051  0.024
-#> Item_4  0.007  0.462  0.202        -0.018 -0.065 -0.016  0.014
-#> Item_5  4.279  4.406  0.703  0.667         0.044 -0.028 -0.019
-#> Item_6  1.447  6.416  2.694  8.349 11.425         0.034 -0.026
-#> Item_7  0.245  1.391  5.110  0.535  3.045  4.549         0.004
-#> Item_8  2.417  0.650  1.162  0.417  0.694  1.329  0.032       
+#> Item_1        -0.006 -0.003 -0.016 -0.033  0.013  0.038  0.012
+#> Item_2  0.072        -0.008  0.028 -0.029 -0.020  0.005 -0.009
+#> Item_3  0.016  0.139         0.004 -0.039  0.022  0.042 -0.014
+#> Item_4  0.489  1.531  0.036         0.030  0.021 -0.020  0.004
+#> Item_5  2.211  1.720  3.061  1.767        -0.034 -0.026 -0.026
+#> Item_6  0.322  0.787  0.970  0.913  7.079         0.049 -0.023
+#> Item_7  2.868  0.055  3.462  0.779  2.748  9.774        -0.014
+#> Item_8  0.285  0.166  0.385  0.031  1.322  1.041  0.384       
 anova(mod1,mod3)
-#>           AIC    SABIC       HQ      BIC    logLik    X2 df     p
-#> mod1 24680.92 24736.67 24728.22 24809.74 -12317.46               
-#> mod3 24683.76 24754.05 24743.40 24846.19 -12312.88 9.163  6 0.165
+#>           AIC    SABIC       HQ      BIC    logLik    X2 df    p
+#> mod1 24636.62 24692.37 24683.92 24765.44 -12295.31              
+#> mod3 24643.43 24713.72 24703.07 24805.85 -12292.72 5.191  6 0.52
 
 #####
 # polynomial/combinations
@@ -3902,7 +3904,8 @@ itemfit(mod)
 #> 3  Future 18.242      10      0.046  0.051
 #> 4 Benefit 12.020      11      0.015  0.362
 M2(mod, type = 'C2')
-#> Error: Could not extract element 'nest'
+#>           M2 df p RMSEA RMSEA_5 RMSEA_95   TLI   CFI
+#> stats 18.783  2 0 0.146   0.091     0.21 0.736 0.912
 
 ###########
 # 5PL and restricted 5PL example
@@ -4382,7 +4385,8 @@ fscores(lltm, method='EAPsum', full.scores=FALSE)
 #> 29         29  2.34250950 0.5191610        3  3.5936683 0.31316619
 #> 30         30  2.63136955 0.5568957        2  1.0917394 0.86926254
 M2(lltm) # goodness of fit
-#> Error: Could not extract element 'nest'
+#>            M2  df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI CFI
+#> stats 431.706 461 0.832     0       0    0.007 0.029 1.003   1
 head(personfit(lltm))
 #>      outfit   z.outfit     infit    z.infit         Zh
 #> 1 1.3516210  1.0227275 1.1105900  0.5592044 -0.6879126
@@ -5645,7 +5649,8 @@ anova(mltm, mod) # similar fit; hence more constrained version preferred
 #> mltm 87789.31 87858.12 87844.28 87940.73 -43868.65                
 #> mod  87810.34 87929.44 87905.48 88072.42 -43860.17 16.972 19 0.592
 M2(mltm) # goodness of fit
-#> Error: Could not extract element 'nest'
+#>            M2  df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
+#> stats 724.318 439 0 0.016   0.014    0.018 0.031 0.976 0.976
 head(personfit(mltm))
 #>      outfit   z.outfit     infit    z.infit         Zh
 #> 1 0.4099102 -2.3020948 0.5059336 -2.9261983  2.2862274

@@ -355,7 +355,8 @@ itemstats(dat, group=group)
 mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
 # limited information fit statistics
 M2(mod_configural)
-#> Error: Could not extract element 'nest'
+#>            M2  df     p RMSEA RMSEA_5 RMSEA_95 SRMSR.D1 SRMSR.D2   TLI CFI
+#> stats 142.987 180 0.981     0       0        0    0.024    0.019 1.005   1
 
 mod_metric <- multipleGroup(dat, 1, group = group,
                             invariance=c('slopes', 'free_var')) #equal slopes
@@ -368,7 +369,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.284  0.054  0.058  0.153  0.000  0.000 
+#>  0.285  0.073  0.060  0.135  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -376,7 +377,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.186  0.053  0.070  0.046  0.000  0.001 
+#>  0.191  0.057  0.071  0.045  0.000  0.001 
 
 summary(mod_scalar2)
 #> 
