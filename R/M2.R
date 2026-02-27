@@ -449,7 +449,7 @@ M2 <- function(obj, type="M2*", calcNull = TRUE, quadpts = NULL, theta_lim = c(-
     Ns.ratio <- do.call(c, lapply(ret, function(x) x$N.ratio))
     C2 <- outer(sqrt(Ns.ratio), sqrt(Ns.ratio)) * C2
     M2 <- abs(t(p - e) %*% C2 %*% (p - e))
-    df <- length(p) - extract.mirt(obj, 'nest')
+    df <- length(p) - extract.mirt(obj, 'nestpars')
     # df <- qr(deltac)$rank
     newret <- list(M2=M2, df=df)
     newret$p <- 1 - pchisq(M2, df)

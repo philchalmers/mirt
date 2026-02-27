@@ -705,7 +705,7 @@ setMethod(
 #' full_table <- residuals(x, type = 'expfull')
 #' head(full_table)
 #' X2 <- with(full_table, sum((freq - exp)^2 / exp))
-#' df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#' df <- nrow(full_table) - extract.mirt(x, 'nestpars') - 1
 #' p <- pchisq(X2, df = df, lower.tail=FALSE)
 #' data.frame(X2, df, p, row.names='Pearson-X2')
 #'
@@ -713,7 +713,7 @@ setMethod(
 #' PearsonX2 <- function(x){
 #'    full_table <- residuals(x, type = 'expfull')
 #'    X2 <- with(full_table, sum((freq - exp)^2 / exp))
-#'    df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#'    df <- nrow(full_table) - extract.mirt(x, 'nestpars') - 1
 #'    p <- pchisq(X2, df = df, lower.tail=FALSE)
 #'    data.frame(X2, df, p, row.names='Pearson-X2')
 #' }
