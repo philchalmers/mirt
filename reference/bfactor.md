@@ -823,8 +823,7 @@ itemfit(simmod, QMC=TRUE)
 #> 15 Item_15 14.142       9      0.017  0.117
 #> 16 Item_16  5.926      10      0.000  0.821
 M2(simmod, QMC=TRUE)
-#>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR TLI CFI
-#> stats 86.282 87 0.502     0       0    0.012 0.017   1   1
+#> Error: Could not extract element 'nest'
 residuals(simmod, QMC=TRUE)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 

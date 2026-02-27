@@ -483,10 +483,11 @@ head(full_table)
 #> 6       1    1      2       2    0 0.219 -0.468
 X2 <- with(full_table, sum((freq - exp)^2 / exp))
 df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#> Error: Could not extract element 'nest'
 p <- pchisq(X2, df = df, lower.tail=FALSE)
+#> Error in pchisq(X2, df = df, lower.tail = FALSE): Non-numeric argument to mathematical function
 data.frame(X2, df, p, row.names='Pearson-X2')
-#>                  X2  df            p
-#> Pearson-X2 689.3347 239 2.942933e-45
+#> Error: object 'p' not found
 
 # above FOG test as a function
 PearsonX2 <- function(x){
@@ -497,8 +498,7 @@ PearsonX2 <- function(x){
    data.frame(X2, df, p, row.names='Pearson-X2')
 }
 PearsonX2(x)
-#>                  X2  df            p
-#> Pearson-X2 689.3347 239 2.942933e-45
+#> Error: Could not extract element 'nest'
 
 
 # extract results manually

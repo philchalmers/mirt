@@ -265,8 +265,7 @@ coef(mod, simplify=TRUE)
 
 # several secondary functions supported
 M2(mod, calcNull=FALSE)
-#>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR
-#> stats 11.936  5 0.036 0.037   0.009    0.065 0.032
+#> Error: Could not extract element 'nest'
 itemfit(mod)
 #>     item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1 Item.1  4.750       2      0.037  0.093

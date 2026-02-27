@@ -1655,8 +1655,7 @@ coef(mod1.3PL.norm)
 #> 
 #limited information fit statistics
 M2(mod1.3PL.norm)
-#>        M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 8.8  4 0.066 0.035       0    0.066 0.032 0.945 0.978
+#> Error: Could not extract element 'nest'
 
 # unidimensional ideal point model
 idealpt <- mirt(data, 1, itemtype = 'ideal')
@@ -2258,8 +2257,7 @@ itemfit(unimod)
 #> 3  Future 19.477       8      0.061  0.013
 #> 4 Benefit 12.106      11      0.016  0.356
 M2(unimod, type = 'C2')
-#>           M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 18.695  2 0 0.146    0.09     0.21 0.079 0.738 0.913
+#> Error: Could not extract element 'nest'
 fs <- fscores(unimod)
 hist(fs, 20)
 
@@ -2371,13 +2369,13 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.266  0.035  0.079  0.138  0.000  0.000 
+#>  0.242  0.034  0.081  0.112  0.000  0.000 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.213  0.035  0.089  0.070  0.000  0.000 
+#>  0.220  0.034  0.092  0.072  0.000  0.000 
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
 #> Warning: EM cycles terminated after 500 iterations.
@@ -2779,75 +2777,75 @@ mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
 #> $Item_1
 #>        a1 a2      d g u
-#> par 1.414  0 -0.952 0 1
+#> par 1.088  0 -0.847 0 1
 #> 
 #> $Item_2
 #>        a1 a2      d g u
-#> par 0.563  0 -1.533 0 1
+#> par 0.635  0 -1.642 0 1
 #> 
 #> $Item_3
 #>        a1 a2     d g u
-#> par 0.985  0 1.481 0 1
+#> par 0.901  0 1.589 0 1
 #> 
 #> $Item_4
-#>        a1    a2     d g u
-#> par 1.081 0.459 0.044 0 1
+#>        a1    a2      d g u
+#> par 0.995 0.356 -0.044 0 1
 #> 
 #> $Item_5
-#>     a1    a2 d1    d2    d3
-#> par  0 1.548  3 2.057 -0.57
+#>     a1    a2    d1    d2     d3
+#> par  0 1.674 3.155 2.054 -0.514
 #> 
 #> $Item_6
-#>     a1    a2    d1 d2     d3
-#> par  0 0.622 2.582  1 -1.032
+#>     a1    a2    d1    d2     d3
+#> par  0 0.433 2.515 0.989 -0.998
 #> 
 #> $Item_7
-#>     a1    a2    d1    d2
-#> par  0 1.071 2.038 0.038
+#>     a1   a2    d1    d2
+#> par  0 1.01 2.091 0.016
 #> 
 #> $Item_8
-#>     a1   a2     d g u
-#> par  0 1.03 1.023 0 1
+#>     a1    a2     d g u
+#> par  0 1.032 1.088 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#> par      0      0      1   0.43      1
+#> par      0      0      1  0.457      1
 #> 
 summary(mod1)
 #>           F1    F2    h2
-#> Item_1 0.639       0.409
-#> Item_2 0.314       0.098
-#> Item_3 0.501       0.251
-#> Item_4 0.523 0.222 0.323
-#> Item_5       0.673 0.453
-#> Item_6       0.343 0.118
-#> Item_7       0.533 0.284
-#> Item_8       0.518 0.268
+#> Item_1 0.539       0.290
+#> Item_2 0.350       0.122
+#> Item_3 0.468       0.219
+#> Item_4 0.497 0.178 0.278
+#> Item_5       0.701 0.492
+#> Item_6       0.247 0.061
+#> Item_7       0.510 0.261
+#> Item_8       0.518 0.269
 #> 
-#> SS loadings:  1.031 1.171 
-#> Proportion Var:  0.129 0.146 
+#> SS loadings:  0.878 1.114 
+#> Proportion Var:  0.11 0.139 
 #> 
 #> Factor correlations: 
 #> 
-#>      F1 F2
-#> F1 1.00   
-#> F2 0.43  1
+#>       F1 F2
+#> F1 1.000   
+#> F2 0.457  1
 residuals(mod1)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.054  -0.026  -0.007  -0.005   0.011   0.045 
+#>  -0.058  -0.027  -0.005   0.000   0.028   0.065 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.011 -0.013  0.010 -0.020 -0.029  0.005 -0.013
-#> Item_2  0.245         0.003 -0.015 -0.054 -0.036 -0.009 -0.004
-#> Item_3  0.334  0.014        -0.004  0.038 -0.025  0.024  0.008
-#> Item_4  0.217  0.462  0.026        -0.043 -0.036  0.006  0.022
-#> Item_5  0.780  5.875  2.917  3.749         0.037  0.045 -0.018
-#> Item_6  1.657  2.602  1.226  2.537  8.343        -0.046  0.045
-#> Item_7  0.059  0.150  1.155  0.066  8.149  8.560        -0.029
-#> Item_8  0.361  0.039  0.125  0.936  0.636  4.034  1.666       
+#> Item_1        -0.003 -0.008 -0.003  0.046  0.034 -0.020 -0.038
+#> Item_2  0.015        -0.008  0.026 -0.053 -0.058 -0.027 -0.030
+#> Item_3  0.123  0.143        -0.008  0.018  0.044  0.052  0.036
+#> Item_4  0.017  1.348  0.122         0.019  0.065 -0.032  0.016
+#> Item_5  4.288  5.688  0.672  0.743        -0.044 -0.027 -0.018
+#> Item_6  2.301  6.658  3.836  8.452 11.549         0.033 -0.028
+#> Item_7  0.811  1.471  5.350  2.052  2.811  4.373         0.015
+#> Item_8  2.918  1.818  2.599  0.542  0.613  1.548  0.452       
 
 #####
 # bifactor
@@ -2859,36 +2857,36 @@ model.3 <- '
 mod3 <- mirt(dataset,model.3, method = 'MHRM')
 coef(mod3)
 #> $Item_1
-#>       a1    a2 a3      d g u
-#> par 0.75 1.281  0 -0.966 0 1
+#>        a1    a2 a3      d g u
+#> par 0.626 0.764  0 -0.825 0 1
 #> 
 #> $Item_2
 #>        a1    a2 a3      d g u
-#> par 0.188 0.602  0 -1.554 0 1
+#> par 0.287 0.739  0 -1.706 0 1
 #> 
 #> $Item_3
-#>        a1    a2 a3    d g u
-#> par 0.612 0.596  0 1.43 0 1
+#>        a1    a2 a3     d g u
+#> par 0.651 0.441  0 1.538 0 1
 #> 
 #> $Item_4
-#>        a1    a2 a3     d g u
-#> par 1.237 0.871  0 0.057 0 1
+#>       a1    a2 a3     d g u
+#> par 1.19 0.743  0 -0.05 0 1
 #> 
 #> $Item_5
-#>        a1 a2    a3   d1    d2     d3
-#> par 1.239  0 1.043 3.08 2.122 -0.565
+#>        a1 a2    a3    d1   d2     d3
+#> par 1.285  0 1.014 3.106 2.02 -0.506
 #> 
 #> $Item_6
-#>        a1 a2    a3    d1    d2    d3
-#> par 0.415  0 0.531 2.615 1.017 -1.04
+#>        a1 a2    a3    d1   d2     d3
+#> par 0.397  0 0.174 2.516 0.99 -0.996
 #> 
 #> $Item_7
 #>        a1 a2    a3    d1    d2
-#> par 0.886  0 0.532 2.024 0.048
+#> par 0.666  0 0.861 2.134 0.018
 #> 
 #> $Item_8
 #>        a1 a2    a3     d g u
-#> par 0.868  0 0.504 1.026 0 1
+#> par 0.771  0 0.751 1.102 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2896,17 +2894,17 @@ coef(mod3)
 #> 
 summary(mod3)
 #>            G    F1    F2    h2
-#> Item_1 0.332 0.567       0.432
-#> Item_2 0.103 0.331       0.121
-#> Item_3 0.321 0.313       0.201
-#> Item_4 0.543 0.382       0.441
-#> Item_5 0.527       0.444 0.475
-#> Item_6 0.227       0.290 0.135
-#> Item_7 0.445       0.267 0.269
-#> Item_8 0.439       0.255 0.258
+#> Item_1 0.318 0.388       0.252
+#> Item_2 0.153 0.393       0.178
+#> Item_3 0.347 0.235       0.176
+#> Item_4 0.539 0.337       0.405
+#> Item_5 0.544       0.429 0.481
+#> Item_6 0.226       0.099 0.061
+#> Item_7 0.330       0.426 0.290
+#> Item_8 0.383       0.373 0.286
 #> 
-#> SS loadings:  1.24 0.676 0.418 
-#> Proportion Var:  0.155 0.084 0.052 
+#> SS loadings:  1.139 0.475 0.515 
+#> Proportion Var:  0.142 0.059 0.064 
 #> 
 #> Factor correlations: 
 #> 
@@ -2919,21 +2917,21 @@ residuals(mod3)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.047  -0.020  -0.004   0.000   0.015   0.046 
+#>  -0.065  -0.019  -0.005  -0.001   0.025   0.051 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1        -0.003  0.008 -0.005  0.022 -0.025  0.006 -0.016
-#> Item_2  0.020         0.012 -0.014 -0.047 -0.026  0.015  0.009
-#> Item_3  0.116  0.275        -0.005  0.033 -0.025  0.015 -0.010
-#> Item_4  0.051  0.407  0.043        -0.045  0.034 -0.008  0.012
-#> Item_5  0.935  4.370  2.145  3.967        -0.038  0.046 -0.019
-#> Item_6  1.219  1.336  1.228  2.263  8.665         0.046  0.046
-#> Item_7  0.082  0.462  0.445  0.132  8.498  8.600        -0.023
-#> Item_8  0.524  0.153  0.188  0.279  0.756  4.250  1.032       
+#> Item_1        -0.008  0.019 -0.002  0.046  0.027 -0.011 -0.035
+#> Item_2  0.123        -0.001  0.015 -0.047 -0.057  0.026 -0.018
+#> Item_3  0.708  0.004        -0.010 -0.019  0.037  0.051  0.024
+#> Item_4  0.007  0.462  0.202        -0.018 -0.065 -0.016  0.014
+#> Item_5  4.279  4.406  0.703  0.667         0.044 -0.028 -0.019
+#> Item_6  1.447  6.416  2.694  8.349 11.425         0.034 -0.026
+#> Item_7  0.245  1.391  5.110  0.535  3.045  4.549         0.004
+#> Item_8  2.417  0.650  1.162  0.417  0.694  1.329  0.032       
 anova(mod1,mod3)
-#>           AIC    SABIC       HQ      BIC    logLik    X2 df    p
-#> mod1 24747.89 24803.64 24795.19 24876.71 -12350.94              
-#> mod3 24755.91 24826.21 24815.55 24918.34 -12348.96 3.977  6 0.68
+#>           AIC    SABIC       HQ      BIC    logLik    X2 df     p
+#> mod1 24680.92 24736.67 24728.22 24809.74 -12317.46               
+#> mod3 24683.76 24754.05 24743.40 24846.19 -12312.88 9.163  6 0.165
 
 #####
 # polynomial/combinations
@@ -3904,8 +3902,7 @@ itemfit(mod)
 #> 3  Future 18.242      10      0.046  0.051
 #> 4 Benefit 12.020      11      0.015  0.362
 M2(mod, type = 'C2')
-#>           M2 df p RMSEA RMSEA_5 RMSEA_95   TLI   CFI
-#> stats 18.783  2 0 0.146   0.091     0.21 0.736 0.912
+#> Error: Could not extract element 'nest'
 
 ###########
 # 5PL and restricted 5PL example
@@ -4385,8 +4382,7 @@ fscores(lltm, method='EAPsum', full.scores=FALSE)
 #> 29         29  2.34250950 0.5191610        3  3.5936683 0.31316619
 #> 30         30  2.63136955 0.5568957        2  1.0917394 0.86926254
 M2(lltm) # goodness of fit
-#>            M2  df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI CFI
-#> stats 431.706 461 0.832     0       0    0.007 0.029 1.003   1
+#> Error: Could not extract element 'nest'
 head(personfit(lltm))
 #>      outfit   z.outfit     infit    z.infit         Zh
 #> 1 1.3516210  1.0227275 1.1105900  0.5592044 -0.6879126
@@ -5649,8 +5645,7 @@ anova(mltm, mod) # similar fit; hence more constrained version preferred
 #> mltm 87789.31 87858.12 87844.28 87940.73 -43868.65                
 #> mod  87810.34 87929.44 87905.48 88072.42 -43860.17 16.972 19 0.592
 M2(mltm) # goodness of fit
-#>            M2  df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 724.318 439 0 0.016   0.014    0.018 0.031 0.976 0.976
+#> Error: Could not extract element 'nest'
 head(personfit(mltm))
 #>      outfit   z.outfit     infit    z.infit         Zh
 #> 1 0.4099102 -2.3020948 0.5059336 -2.9261983  2.2862274

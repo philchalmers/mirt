@@ -358,8 +358,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod2 4956.816 4975.865 4977.335 5010.802 -2467.408               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod3 4964.499 4993.938 4996.209 5047.931 -2465.249 4.317  6 0.634</span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          M2 df    p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 4.604  4 0.33 0.012       0    0.051 0.021 0.973 0.989</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Could not extract element 'nest'</span>
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Item_1 0.433       2          0  0.805</span>
@@ -1332,8 +1331,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_4         1  1  1    1 0.493</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">DINA</span><span class="op">)</span> <span class="co"># fits well (as it should)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 96.492 87 0.228  0.01       0    0.021  0.03 0.966 0.971</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Could not extract element 'nest'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cfs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">DINA</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">15</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">guess</span>, estguess <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html" class="external-link">plogis</a></span><span class="op">(</span><span class="va">cfs</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -1508,8 +1506,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Profile_4         1  1  1    -1 0.033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">DINO</span><span class="op">)</span> <span class="co">#doesn't fit as well, because not the generating model</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 146.478 87 0 0.026   0.019    0.033 0.041 0.784 0.821</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Could not extract element 'nest'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## C-RUM (analogous to MIRT model)</span></span></span>
 <span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="thetaComb.html">thetaComb</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -1657,8 +1654,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># good fit, but over-saturated (main effects for items 11-15 can be set to 0)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">CRUM</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 85.548 82 0.373 0.007       0    0.019 0.028 0.986 0.989</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Could not extract element 'nest'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#------------------</span></span></span>
 <span class="r-in"><span><span class="co"># multidimensional latent class model</span></span></span>
@@ -2704,8 +2700,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="M2.html">M2</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stats 145.055 51 0 0.075   0.061    0.089 0.092 0.813 0.856</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Could not extract element 'nest'</span>
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    A1 27.808       7      0.095  0.000</span>

@@ -360,8 +360,7 @@ anova(mod2, mod3)
 #> mod2 4956.816 4975.865 4977.335 5010.802 -2467.408               
 #> mod3 4964.499 4993.938 4996.209 5047.931 -2465.249 4.317  6 0.634
 M2(mod2)
-#>          M2 df    p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 4.604  4 0.33 0.012       0    0.051 0.021 0.973 0.989
+#> Error: Could not extract element 'nest'
 itemfit(mod2)
 #>     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1 Item_1 0.433       2          0  0.805
@@ -1334,8 +1333,7 @@ summary(DINA)
 #> Profile_4         1  1  1    1 0.493
 #> 
 M2(DINA) # fits well (as it should)
-#>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 96.492 87 0.228  0.01       0    0.021  0.03 0.966 0.971
+#> Error: Could not extract element 'nest'
 
 cfs <- coef(DINA, simplify=TRUE)$items[11:15,]
 cbind(guess, estguess = plogis(cfs[,1]))
@@ -1510,8 +1508,7 @@ summary(DINO)
 #> Profile_4         1  1  1    -1 0.033
 #> 
 M2(DINO) #doesn't fit as well, because not the generating model
-#>            M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 146.478 87 0 0.026   0.019    0.033 0.041 0.784 0.821
+#> Error: Could not extract element 'nest'
 
 ## C-RUM (analogous to MIRT model)
 theta <- cbind(1, thetaComb(0:1, 2))
@@ -1659,8 +1656,7 @@ summary(CRUM)
 
 # good fit, but over-saturated (main effects for items 11-15 can be set to 0)
 M2(CRUM)
-#>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 85.548 82 0.373 0.007       0    0.019 0.028 0.986 0.989
+#> Error: Could not extract element 'nest'
 
 #------------------
 # multidimensional latent class model
@@ -2706,8 +2702,7 @@ summary(mod)
 #> 
 
 M2(mod)
-#>            M2 df p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
-#> stats 145.055 51 0 0.075   0.061    0.089 0.092 0.813 0.856
+#> Error: Could not extract element 'nest'
 itemfit(mod)
 #>    item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1    A1 27.808       7      0.095  0.000

@@ -69,8 +69,7 @@ model <- 'F = 1-5
 #> G2 (25) = 21.8, p = 0.6474
 #> RMSEA = 0, CFI = NaN, TLI = NaN
 M2(mod)
-#>          M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI CFI
-#> stats 5.293  9 0.808     0       0    0.023 0.022 1.073   1
+#> Error: Could not extract element 'nest'
 itemfit(mod)
 #>     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1 Item_1 0.436       2          0  0.804
@@ -103,8 +102,7 @@ anova(mod, mod2) #equal
 #> mod  4945.875 4956.265 4957.067 4975.322 -2466.938          
 #> mod2 4945.875 4956.266 4957.067 4975.322 -2466.938  0  0 NaN
 M2(mod2)
-#>          M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI CFI
-#> stats 5.293  9 0.808     0       0    0.023 0.022 1.073   1
+#> Error: Could not extract element 'nest'
 itemfit(mod2)
 #>     item  S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1 Item_1 0.436       2          0  0.804

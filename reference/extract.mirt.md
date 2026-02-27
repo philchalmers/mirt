@@ -180,7 +180,7 @@ Objects which can be extracted from mirt objects include:
 
   number of iterations it took to reach the convergence criteria
 
-- nest:
+- nestpars:
 
   number of freely estimated parameters
 
