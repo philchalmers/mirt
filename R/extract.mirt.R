@@ -178,6 +178,7 @@ extract.mirt <- function(x, what, item = 1, ...){
                   dentype = x@Options$dentype,
                   pis = x@Model$pis,
                   nestpars=x@Model$nestpars,
+                  nest=x@Model$nestpars,
                   prodlist=x@Model$prodlist,
                   completely_missing=x@Data$completely_missing,
                   customGroup=x@Internals$customGroup,
