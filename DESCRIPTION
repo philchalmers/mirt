@@ -14,7 +14,7 @@ Authors@R: c( person("Phil", family="Chalmers", email =
     person("Lennart", family="Schneider", role=c('ctb')),
     person("David", family="King", role=c('ctb')),
     person("Chen-Wei", family="Liu", role=c('ctb')),
-    person("Ogreden", family="Oguzhan", role=c('ctb')))
+    person("Ogreden", family="Oguzhan", role=c('ctb')),
     person("Samuel", family="Huang", role=c('ctb')))
 Description: Analysis of discrete response data using
     unidimensional and multidimensional item analysis models under the Item
