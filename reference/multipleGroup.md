@@ -369,7 +369,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.266  0.053  0.062  0.133  0.000  0.000 
+#>  0.280  0.072  0.065  0.125  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -377,7 +377,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.206  0.073  0.069  0.046  0.000  0.001 
+#>  0.190  0.053  0.074  0.045  0.000  0.000 
 
 summary(mod_scalar2)
 #> 
