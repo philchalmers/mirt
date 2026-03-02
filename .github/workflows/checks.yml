@@ -7,6 +7,10 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+concurrency:
+  group: checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   R-CMD-CHECK:
     runs-on: ubuntu-latest
@@ -20,4 +24,50 @@ jobs:
 
       - name: R CMD CHECK
         run: |
-          Rscript -e 'install.packages(c("latticeExtra", "directlabels", "Rsolnp", "nloptr", "plink", "mirtCAT", "splines2", "nloptr")); devtools::check(error_on = "warning")'
+          Rscript -e 'install.packages(c("latticeExtra", "directlabels", "Rsolnp", "nloptr", "plink", "mirtCAT", "splines2")); devtools::check(error_on = "warning", args = "--no-tests")'
+
+  Discover_Tests:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/philchalmers/container-mirt:latest
+
+    outputs:
+      test_files: ${{ steps.discover.outputs.test_files }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Discover test files
+        id: discover
+        run: |
+          Rscript -e 'files <- sort(list.files("tests/testthat", full.names = TRUE)); files <- files[startsWith(basename(files), "test-") & endsWith(basename(files), ".R")]; json <- paste0("[", paste(sprintf("\"%s\"", files), collapse = ","), "]"); cat(sprintf("test_files=%s\n", json), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)'
+
+  Tests:
+    needs: Discover_Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test_file: ${{ fromJson(needs.Discover_Tests.outputs.test_files) }}
+    env:
+      OMP_NUM_THREADS: "1"
+      TESTTHAT_PARALLEL: "FALSE"
+      TESTTHAT_CPUS: "1"
+      TEST_FILE: ${{ matrix.test_file }}
+
+    container:
+      image: ghcr.io/philchalmers/container-mirt:latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          Rscript -e 'install.packages(c("splines2"))'
+
+      - name: Run test file
+        run: |
+          Rscript -e 'options(warnPartialMatchDollar = TRUE); Sys.setenv("_R_CHECK_LENGTH_1_CONDITION_" = "TRUE", "_R_CHECK_LENGTH_1_LOGIC2_" = "TRUE"); devtools::load_all(quiet = TRUE); test_file <- Sys.getenv("TEST_FILE"); cat(sprintf("Running %s\n", test_file)); testthat::test_file(test_file, stop_on_failure = TRUE)'
