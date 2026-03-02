@@ -18,6 +18,10 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
+      - name: Install test dependencies
+        run: |
+          Rscript -e 'install.packages(c("splines2"))'
+
       - name: Run tests
         run: |
           Rscript -e 'options(warnPartialMatchDollar = TRUE); Sys.setenv("_R_CHECK_LENGTH_1_CONDITION_" = "TRUE", "_R_CHECK_LENGTH_1_LOGIC2_" = "TRUE"); devtools::test(stop_on_failure = TRUE)'
