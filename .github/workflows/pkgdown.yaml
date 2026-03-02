@@ -21,6 +21,7 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      PKGDOWN_EXAMPLES: ${{ github.event_name != 'pull_request' }}
     permissions:
       contents: write
     steps:
@@ -38,7 +39,10 @@ jobs:
           needs: website
 
       - name: Build site
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        run: |
+          examples <- tolower(Sys.getenv("PKGDOWN_EXAMPLES", "false")) == "true"
+          message("pkgdown examples enabled: ", examples)
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, examples = examples)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
