@@ -20,4 +20,50 @@ jobs:
 
       - name: R CMD CHECK
         run: |
-          Rscript -e 'install.packages(c("latticeExtra", "directlabels", "Rsolnp", "nloptr", "plink", "mirtCAT", "splines2", "nloptr")); devtools::check(error_on = "warning")'
+          Rscript -e 'install.packages(c("latticeExtra", "directlabels", "Rsolnp", "nloptr", "plink", "mirtCAT", "splines2")); devtools::check(error_on = "warning", args = "--no-tests")'
+
+  Tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test_file:
+          - tests/testthat/test-00-basics.R
+          - tests/testthat/test-01-mirtOne.R
+          - tests/testthat/test-02-mirtTwo.R
+          - tests/testthat/test-03-bfactor.R
+          - tests/testthat/test-04-multipleGroup.R
+          - tests/testthat/test-05-confmirtOne.R
+          - tests/testthat/test-06-confmirtTwo.R
+          - tests/testthat/test-07-mixedmirt.R
+          - tests/testthat/test-08-createItem.R
+          - tests/testthat/test-09-mirt.model.R
+          - tests/testthat/test-10-extras.R
+          - tests/testthat/test-11-discrete.R
+          - tests/testthat/test-12-gpcm_mats.R
+          - tests/testthat/test-13-grsmIRT.R
+          - tests/testthat/test-14-unfolding.R
+          - tests/testthat/test-15-IRTpars.R
+          - tests/testthat/test-16-DCIRT.R
+          - tests/testthat/test-17-DIF_DRF.R
+          - tests/testthat/test-18-LLTM.R
+    env:
+      OMP_NUM_THREADS: "1"
+      TESTTHAT_PARALLEL: "FALSE"
+      TESTTHAT_CPUS: "1"
+      TEST_FILE: ${{ matrix.test_file }}
+
+    container:
+      image: ghcr.io/philchalmers/container-mirt:latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          Rscript -e 'install.packages(c("splines2"))'
+
+      - name: Run test file
+        run: |
+          Rscript -e 'options(warnPartialMatchDollar = TRUE); Sys.setenv("_R_CHECK_LENGTH_1_CONDITION_" = "TRUE", "_R_CHECK_LENGTH_1_LOGIC2_" = "TRUE"); devtools::load_all(quiet = TRUE); test_file <- Sys.getenv("TEST_FILE"); cat(sprintf("Running %s\n", test_file)); testthat::test_file(test_file, stop_on_failure = TRUE)'
