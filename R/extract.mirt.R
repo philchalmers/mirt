@@ -44,7 +44,7 @@
 #'   \item{converged}{a logical value indicating whether the model terminated within
 #'     the convergence criteria}
 #'   \item{iterations}{number of iterations it took to reach the convergence criteria}
-#'   \item{nest}{number of freely estimated parameters}
+#'   \item{nestpars}{number of freely estimated parameters}
 #'   \item{parvec}{vector containing uniquely estimated parameters}
 #'   \item{vcov}{parameter covariance matrix (associated with parvec)}
 #'   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
@@ -129,7 +129,6 @@ extract.mirt <- function(x, what, item = 1, ...){
                   itemnames = colnames(x@Data$data),
                   parvec = x@Internals$shortpars,
                   vcov = x@vcov,
-                  nest = x@Model$nest,
                   constrain = x@Model$constrain,
                   nconstrain = x@Model$nconstrain,
                   iterations = x@OptimInfo$iter,
@@ -179,6 +178,7 @@ extract.mirt <- function(x, what, item = 1, ...){
                   dentype = x@Options$dentype,
                   pis = x@Model$pis,
                   nestpars=x@Model$nestpars,
+                  nest=x@Model$nestpars,
                   prodlist=x@Model$prodlist,
                   completely_missing=x@Data$completely_missing,
                   customGroup=x@Internals$customGroup,

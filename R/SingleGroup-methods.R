@@ -74,7 +74,7 @@ setMethod(
             if(x@Fit$logPrior != 0){
                 cat("\nLog-posterior = ", x@Fit$logLik + x@Fit$logPrior, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
-                cat('Estimated parameters:', length(extract.mirt(x, 'nestpars')), '\n')
+                cat('Estimated parameters:', extract.mirt(x, 'nestpars'), '\n')
             } else {
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
@@ -705,7 +705,7 @@ setMethod(
 #' full_table <- residuals(x, type = 'expfull')
 #' head(full_table)
 #' X2 <- with(full_table, sum((freq - exp)^2 / exp))
-#' df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#' df <- nrow(full_table) - extract.mirt(x, 'nestpars') - 1
 #' p <- pchisq(X2, df = df, lower.tail=FALSE)
 #' data.frame(X2, df, p, row.names='Pearson-X2')
 #'
@@ -713,7 +713,7 @@ setMethod(
 #' PearsonX2 <- function(x){
 #'    full_table <- residuals(x, type = 'expfull')
 #'    X2 <- with(full_table, sum((freq - exp)^2 / exp))
-#'    df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#'    df <- nrow(full_table) - extract.mirt(x, 'nestpars') - 1
 #'    p <- pchisq(X2, df = df, lower.tail=FALSE)
 #'    data.frame(X2, df, p, row.names='Pearson-X2')
 #' }

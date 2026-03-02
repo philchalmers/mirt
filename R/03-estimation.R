@@ -1094,8 +1094,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     Model <- list(model=oldmodel, factorNames=PrepList[[1L]]$factorNames, itemtype=PrepList[[1L]]$itemtype,
                   itemloc=PrepList[[1L]]$itemloc, nfact=nfact, pis=pis,
                   Theta=Theta, constrain=constrain, nconstrain= opts$technical$nconstrain,
-                  parprior=parprior, nest=as.integer(nestpars),
-                  invariance=invariance, lrPars=lrPars, formulas=attr(mixed.design, 'formula'),
+                  parprior=parprior, invariance=invariance, lrPars=lrPars, formulas=attr(mixed.design, 'formula'),
                   prodlist=PrepList[[1L]]$prodlist, nestpars=nestpars)
     if(!is.null(opts$technical$Etable)){
         Model$Etable <- ESTIMATE$rlist
