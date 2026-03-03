@@ -35,12 +35,14 @@ setMethod(
         if(x@Options$method == 'EM') EMquad <- c('\n     using ', x@Options$quadpts, ' quadrature')
         method <- x@Options$method
         if(method == 'MIXED') method <- 'MHRM'
-        if(x@OptimInfo$converged)
-            cat("Converged within ", x@Options$TOL, ' tolerance after ', x@OptimInfo$iter, ' ',
-                method, " iterations.\n", sep = "")
-        else
-            cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
-                x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
+        if(method != 'none'){
+            if(x@OptimInfo$converged)
+                cat("Converged within ", x@Options$TOL, ' tolerance after ', x@OptimInfo$iter, ' ',
+                    method, " iterations.\n", sep = "")
+            else
+                cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
+                    x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
+        }
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
         if(method %in% c('EM', 'QMCEM', 'BL', 'MCEM')){

@@ -1,5 +1,8 @@
 # Changes in mirt 1.46
 
+- `technical = list(TrueTheta)` matrix input added to estimate item parameters 
+  assuming that the true latent trait terms are known (requested by Richard Luecht)
+
 - Exposed `marginal_moments()` function to compute marginal item/bundle moment 
   information for the scoring functions
   

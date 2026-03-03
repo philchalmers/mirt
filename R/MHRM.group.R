@@ -69,22 +69,31 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     cand.t.var <- if(is.null(list$cand.t.var)) 1 else list$cand.t.var[1L]
     tmp <- .1
     OffTerm <- matrix(0, 1, J)
-    for(g in seq_len(ngroups)){
-        PAs <- CTVs <- rep(NA, 25L)
-        for(i in seq_len(31L)){
-            gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
-                                        itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
-                                        prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
-                                        prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
-            if(is.null(list$cand.t.var)){
-                if(i > 5L){
-                    pa <- attr(gtheta0[[g]],"Proportion Accepted")
-                    PAs[i-5L] <- pa
-                    CTVs[i-5L] <- cand.t.var
-                    cand.t.var <- update_cand.var(PAs, CTVs)
+    TRUETHETA <- !is.null(list$TrueTheta)
+    if(!TRUETHETA){
+        for(g in seq_len(ngroups)){
+            PAs <- CTVs <- rep(NA, 25L)
+            for(i in seq_len(31L)){
+                gtheta0[[g]] <- draw.thetas(theta0=gtheta0[[g]], pars=pars[[g]], fulldata=Data$fulldata[[g]],
+                                            itemloc=itemloc, cand.t.var=cand.t.var, CUSTOM.IND=CUSTOM.IND,
+                                            prior.t.var=gstructgrouppars[[g]]$gcov, OffTerm=OffTerm,
+                                            prior.mu=gstructgrouppars[[g]]$gmeans, prodlist=prodlist)
+                if(is.null(list$cand.t.var)){
+                    if(i > 5L){
+                        pa <- attr(gtheta0[[g]],"Proportion Accepted")
+                        PAs[i-5L] <- pa
+                        CTVs[i-5L] <- cand.t.var
+                        cand.t.var <- update_cand.var(PAs, CTVs)
+                    }
                 }
             }
         }
+    } else {
+        verbose <- FALSE
+        no_stage_3 <- TRUE
+        # assuming Thetas are known
+        for(g in seq_len(ngroups))
+            gtheta0[[g]] <- list$TrueTheta[Data$groupNames[g] == Data$group, , drop=FALSE]
     }
     if(RAND) OffTerm <- OffTerm(random, J=J, N=N)
     if(list$plausible.draws > 0L){
@@ -166,7 +175,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     }
     aveAR <- vector('list', NCYCLES)
     control$fnscale <- -1
-    if(is.null(control$maxit)) control$maxit <- 15
+    if(is.null(control$maxit) && !TRUETHETA) control$maxit <- 15
     if(list$Moptim == 'BFGS')
         if(any(is.finite(LBOUND[estindex_unique]) | is.finite(UBOUND[estindex_unique])))
             list$Moptim <- 'L-BFGS-B'
@@ -174,6 +183,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         for(i in seq_len(J))
             pars[[g]][[i]]@dat <- Data$fulldata[[g]][, c(itemloc[i]:(itemloc[i+1L] - 1L))]
     Draws.time <- Mstep.time <- 0
+    if(TRUETHETA) gamma <- 1
 
     ####Big MHRM loop
     for(cycles in seq_len(NCYCLES + BURNIN + SEMCYCLES))
@@ -198,7 +208,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
         if(list$SE) longpars <- list$startlongpars
         tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, gstructgrouppars=gstructgrouppars,
                                ngroups=ngroups, J=J, has_graded=has_graded, cycles=cycles,
-                               LRPARS=LRPARS, LR.RAND=LR.RAND, RANDSTART=RANDSTART,
+                               LRPARS=LRPARS, LR.RAND=LR.RAND, RANDSTART=RANDSTART, TRUETHETA=TRUETHETA,
                                RAND=RAND, lrPars=lrPars, lr.random=lr.random, random=random)
         pars <- with(tmp, pars)
         gstructgrouppars <- with(tmp, gstructgrouppars)
@@ -210,17 +220,19 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
             break
         }
         start <- proc.time()[3L]
-        tmp <- MHRM.draws(pars=pars, lrPars=lrPars, lr.random=lr.random, random=random,
-                          gstructgrouppars=gstructgrouppars, RAND=RAND, LR.RAND=LR.RAND,
-                          RANDSTART=RANDSTART, gtheta0=gtheta0, OffTerm=OffTerm, J=J, N=N, cycles=cycles,
-                          itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, Data=Data, nfact=nfact,
-                          prodlist=prodlist, ngroups=ngroups, MHDRAWS=MHDRAWS, BURNIN=BURNIN,
-                          SEMCYCLES=SEMCYCLES, cand.t.var=cand.t.var, list=list, verbose=verbose)
-        lr.random <- with(tmp, lr.random)
-        random <- with(tmp, random)
-        gtheta0 <- with(tmp, gtheta0)
-        OffTerm <- with(tmp, OffTerm)
-        printmsg <- with(tmp, printmsg)
+        if(!TRUETHETA){
+            tmp <- MHRM.draws(pars=pars, lrPars=lrPars, lr.random=lr.random, random=random,
+                              gstructgrouppars=gstructgrouppars, RAND=RAND, LR.RAND=LR.RAND,
+                              RANDSTART=RANDSTART, gtheta0=gtheta0, OffTerm=OffTerm, J=J, N=N, cycles=cycles,
+                              itemloc=itemloc, CUSTOM.IND=CUSTOM.IND, Data=Data, nfact=nfact,
+                              prodlist=prodlist, ngroups=ngroups, MHDRAWS=MHDRAWS, BURNIN=BURNIN,
+                              SEMCYCLES=SEMCYCLES, cand.t.var=cand.t.var, list=list, verbose=verbose)
+            lr.random <- with(tmp, lr.random)
+            random <- with(tmp, random)
+            gtheta0 <- with(tmp, gtheta0)
+            OffTerm <- with(tmp, OffTerm)
+            printmsg <- with(tmp, printmsg)
+        } else printmsg <- ""
 
         if(stagecycle == 3L)
             aveAR[[cycles - SEMCYCLES - BURNIN]] <- tmp$AR
@@ -242,13 +254,15 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                           RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L, has_graded=has_graded,
                           constrain=constrain, estpars=estpars, redun_constr=redun_constr,
                           estindex_unique=estindex_unique,LBOUND=LBOUND, UBOUND=UBOUND,
-                          gfulldata=Data$fulldata, itemloc=itemloc, control=control)
+                          gfulldata=Data$fulldata, itemloc=itemloc, control=control, TRUETHETA=TRUETHETA)
         grad <- tmp$grad
         ave.h <- tmp$hess
         correction <- tmp$correction
         if(stagecycle < 3L){
-            correction[correction > 1] <- 1
-            correction[correction < -1] <- -1
+            if(!TRUETHETA){
+                correction[correction > 1] <- 1
+                correction[correction < -1] <- -1
+            }
             longpars[estindex_unique] <- longpars[estindex_unique] + gamma*correction
             if(any(longpars < LBOUND))
                 longpars[longpars < LBOUND] <- (longpars0[longpars < LBOUND] + LBOUND[longpars < LBOUND])/2
@@ -265,6 +279,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
                     SEM.stores2[[cycles - BURNIN]] <- ave.h
             }
             Mstep.time <- Mstep.time + proc.time()[3L] - start
+            if(TRUETHETA) break
             next
         }
 
@@ -322,7 +337,7 @@ MHRM.group <- function(pars, constrain, Ls, Data, PrepList, list, random = list(
     if(list$SE) longpars <- list$startlongpars
     tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, gstructgrouppars=gstructgrouppars,
                            ngroups=ngroups, J=J, has_graded=has_graded, cycles=cycles,
-                           LRPARS=LRPARS, LR.RAND=LR.RAND, RANDSTART=RANDSTART,
+                           LRPARS=LRPARS, LR.RAND=LR.RAND, RANDSTART=RANDSTART, TRUETHETA=TRUETHETA,
                            RAND=RAND, lrPars=lrPars, lr.random=lr.random, random=random)
     pars <- with(tmp, pars)
     gstructgrouppars <- with(tmp, gstructgrouppars)
