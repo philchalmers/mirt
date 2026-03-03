@@ -724,27 +724,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    item_weights = rep(1, extract.mirt(x, 'nitems')),
                    EAPsum.scores, return.acov, nfact, ...){
     calcL1 <- function(itemtrace, K, itemloc){
-        J <- length(K)
-        L0 <- L1 <- matrix(1, sum(K-1L) + 1L, ncol(itemtrace))
-        L0[1L:K[1L], ] <- itemtrace[1:K[1], ]
-        nstar <- K[1L] + K[2L] - 3L
-        Sum.Scores <- 1L:nrow(L0)-1L
-        MAX.Scores <- cumsum(K-1L)
-        for(i in seq_len(J-1L)){
-            T <- itemtrace[itemloc[i+1L]:(itemloc[i+2L] - 1L), , drop=FALSE]
-            L1[1L, ] <- L0[1L, ] * T[1L, ]
-            for(j in 1L:nstar+1L){
-                sums <- 0
-                for(k in 1L:K[i+1L]-1L)
-                    if(Sum.Scores[j] >= k && (MAX.Scores[i] + k) >= Sum.Scores[j])
-                        sums <- sums + L0[j - k, ] * T[1L + k, ]
-                L1[j, ] <- sums
-            }
-            L1[j+1L, ] <- L0[j - k + 1L, ] * T[nrow(T), ]
-            L0 <- L1
-            if(i != J) nstar <- nstar + K[i+2L] - 1L
-        }
-        list(L1=L1, Sum.Scores=Sum.Scores)
+        .Call('calcL1_cpp', itemtrace, as.integer(K), as.integer(itemloc))
     }
     collapseTotals <- function(table, min_expected){
 
