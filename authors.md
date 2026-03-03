@@ -25,6 +25,8 @@
 
 - **Ogreden Oguzhan**. Contributor.
 
+- **Samuel Huang**. Contributor.
+
 ## Citation
 
 Source:
