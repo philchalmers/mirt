@@ -52,5 +52,14 @@ test_that('exploratory mods', {
     expect_class(fs2, 'matrix')
     fs3 <- fscores(onefactmissing, verbose = FALSE, full.scores=FALSE)
     expect_class(fs3, 'matrix')
+
+    # fixedTheta
+    set.seed(8675309)
+    TrueTheta <- matrix(rnorm(1000))
+    TruePar <- data.frame(a1=rlnorm(40, sdlog = 1/2), d=rnorm(40))
+    dat <- simdata(a=TruePar$a1, d=TruePar$d, itemtype = '2PL', Theta = TrueTheta)
+    mod <- mirt(dat, technical=list(fixedTheta=TrueTheta))
+    ests <- coef(mod, simplify=TRUE)$items
+    expect_equal(unname(colMeans(abs(ests - TruePar))), c(0.09611273, 0.07331233), tolerance=1e-3)
 })
 
