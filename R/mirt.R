@@ -688,10 +688,10 @@
 #'       positive or negative infinity. The default is \code{FALSE}}
 #'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
-#'     \item{TrueTheta}{a \code{matrix} of latent trait estimates taken to be fixed and known. This
-#'       will perform a single M-step optimization to obtain item parameter estimates
-#'       using the \code{'MHRM'} engine with the BFGS/L-BFGS-B algorithm. Matrix input must
-#'       have as many rows as there are rows in \code{data}}
+#'     \item{fixedTheta}{a \code{matrix} of latent trait values taken to be fixed and known. This
+#'       will perform a single M-step optimization to obtain item parameter estimates, holding constant
+#'       the elements in \code{fixedTheta}, using the \code{'MHRM'} engine with the BFGS/L-BFGS-B
+#'       algorithm. Matrix input must have as many rows as there are rows in \code{data}}
 #'     \item{nconstrain}{same specification as the \code{constrain} list argument,
 #'       however imposes a negative equality constraint instead (e.g., \eqn{a12 = -a21}, which
 #'       is specified as \code{nconstrain = list(c(12, 21))}). Note that each specification

@@ -747,9 +747,9 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     } else if(opts$method %in% c('MHRM', 'SEM')){ #MHRM/SEM/JML estimation
         Theta <- matrix(0, Data$N, nitems)
         if(opts$method == 'SEM') opts$NCYCLES <- NA
-        if(!is.null(opts$TrueTheta)){
-            Theta <- opts$TrueTheta
-            stopifnot("TrueTheta must have the same number of rows as response data" = nrow(Theta) == Data$N)
+        if(!is.null(opts$fixedTheta)){
+            Theta <- opts$fixedTheta
+            stopifnot("fixedTheta must have the same number of rows as response data" = nrow(Theta) == Data$N)
         }
         ESTIMATE <- MHRM.group(pars=pars, constrain=constrain, Ls=Ls, PrepList=PrepList, Data=Data,
                                list = list(NCYCLES=opts$NCYCLES, BURNIN=opts$BURNIN,
@@ -765,7 +765,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                            message=opts$message, expl=PrepList[[1L]]$exploratory,
                                            plausible.draws=opts$plausible.draws,
                                            MSTEPTOL=opts$MSTEPTOL, Moptim=opts$Moptim,
-                                           keep_vcov_PD=opts$keep_vcov_PD, TrueTheta=opts$TrueTheta),
+                                           keep_vcov_PD=opts$keep_vcov_PD, fixedTheta=opts$fixedTheta),
                                DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
         if(opts$plausible.draws != 0) return(ESTIMATE)
         if(opts$SE && (ESTIMATE$converge || !opts$info_if_converged)){
@@ -784,7 +784,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                                                cand.t.var=opts$technical$MHcand, warn=opts$warn,
                                                message=opts$message, expl=PrepList[[1L]]$exploratory,
                                                MSTEPTOL=opts$MSTEPTOL, Moptim='NR1',
-                                               keep_vcov_PD=opts$keep_vcov_PD, TrueTheta=opts$TrueTheta),
+                                               keep_vcov_PD=opts$keep_vcov_PD, fixedTheta=opts$fixedTheta),
                                    DERIV=DERIV, solnp_args=opts$solnp_args, control=control)
             ESTIMATE$pars <- tmp$pars
             ESTIMATE$info <- tmp$info
@@ -1155,7 +1155,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(opts$storeEMhistory)
         Internals$EMhistory <- ESTIMATE$EMhistory
     if(opts$method == 'SEM') Options$TOL <- NA
-    if(!is.null(opts$TrueTheta)) Options$method <- 'none'
+    if(!is.null(opts$fixedTheta)) Options$method <- 'none'
     if(opts$odentype == "discrete"){
         mod <- new('DiscreteClass',
                    Data=Data,

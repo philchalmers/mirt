@@ -1,5 +1,5 @@
 MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups,
-                      DERIV, gstructgrouppars, CUSTOM.IND, RAND, nfact, TRUETHETA,
+                      DERIV, gstructgrouppars, CUSTOM.IND, RAND, nfact, FIXEDTHETA,
                       cycles, RANDSTART, random, J, LRPARS, lrPars, LR.RAND, lr.random,
                       constrain, estpars, redun_constr, L, estHess = TRUE){
     tmp <- .Call('computeDPars', pars, gtheta, OffTerm, length(longpars), estHess,
@@ -86,14 +86,14 @@ MHRM.deriv <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
 }
 
 MHRM.deriv_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, USE.FIXED,
-                             list, ngroups, LR.RAND, DERIV, has_graded, nfact, TRUETHETA,
+                             list, ngroups, LR.RAND, DERIV, has_graded, nfact, FIXEDTHETA,
                              CUSTOM.IND, RAND, cycles, lr.random, RANDSTART, random, J, LRPARS, L,
                              constrain, estpars, redun_constr, estindex_unique, gfulldata, itemloc,
                              estHess = FALSE){
     longpars[estindex_unique] <- shortpars
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J,
-                           has_graded=has_graded, cycles=cycles, LRPARS=LRPARS, TRUETHETA=TRUETHETA,
+                           has_graded=has_graded, cycles=cycles, LRPARS=LRPARS, FIXEDTHETA=FIXEDTHETA,
                            LR.RAND=LR.RAND, RANDSTART=RANDSTART, gstructgrouppars=vector('list', ngroups),
                            RAND=RAND, lrPars=lrPars, lr.random=lr.random, random=random)
     pars <- with(tmp, pars)
@@ -103,7 +103,7 @@ MHRM.deriv_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm
     lrPars <- with(tmp, lrPars)
     ret <- MHRM.deriv(pars=pars, gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                       USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
-                      DERIV=DERIV, gstructgrouppars=gstructgrouppars, nfact=nfact, TRUETHETA=TRUETHETA,
+                      DERIV=DERIV, gstructgrouppars=gstructgrouppars, nfact=nfact, FIXEDTHETA=FIXEDTHETA,
                       CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
                       RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
                       constrain=constrain, estpars=estpars, redun_constr=redun_constr,
@@ -112,7 +112,7 @@ MHRM.deriv_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm
     else return(ret$grad)
 }
 
-MHRM.LL <- function(pars, gstructgrouppars, gtheta, lr.random, random, lrPars, OffTerm, TRUETHETA,
+MHRM.LL <- function(pars, gstructgrouppars, gtheta, lr.random, random, lrPars, OffTerm, FIXEDTHETA,
                     ngroups, nfact, J, USE.FIXED, LR.RAND, RAND, RANDSTART, LRPARS, CUSTOM.IND,
                     gfulldata, itemloc){
     LL <- 0
@@ -121,18 +121,18 @@ MHRM.LL <- function(pars, gstructgrouppars, gtheta, lr.random, random, lrPars, O
                                prior.mu=gstructgrouppars[[g]]$gmeans,
                                prior.t.var=gstructgrouppars[[g]]$gcov,
                                OffTerm=OffTerm, CUSTOM.IND=CUSTOM.IND,
-                               itemloc=itemloc, fulldata=gfulldata[[g]], TRUETHETA=TRUETHETA))
+                               itemloc=itemloc, fulldata=gfulldata[[g]], FIXEDTHETA=FIXEDTHETA))
     LL
 }
 
 MHRM.LL_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, USE.FIXED,
-                           list, ngroups, LR.RAND, DERIV, has_graded, nfact, TRUETHETA,
+                           list, ngroups, LR.RAND, DERIV, has_graded, nfact, FIXEDTHETA,
                            CUSTOM.IND, RAND, cycles, lr.random, RANDSTART, random, J, LRPARS, L,
                            constrain, estpars, redun_constr, estindex_unique, gfulldata, itemloc){
     longpars[estindex_unique] <- shortpars
     longpars <- longpars_constrain(longpars=longpars, constrain=constrain)
     tmp <- MHRM.reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J,
-                           has_graded=has_graded, cycles=cycles, LRPARS=LRPARS, TRUETHETA=TRUETHETA,
+                           has_graded=has_graded, cycles=cycles, LRPARS=LRPARS, FIXEDTHETA=FIXEDTHETA,
                            LR.RAND=LR.RAND, RANDSTART=RANDSTART, gstructgrouppars=vector('list', ngroups),
                            RAND=RAND, lrPars=lrPars, lr.random=lr.random, random=random)
     pars <- with(tmp, pars)
@@ -143,7 +143,7 @@ MHRM.LL_reload <- function(shortpars, longpars, pars, gtheta, lrPars, OffTerm, U
     LL <- MHRM.LL(pars=pars, gstructgrouppars=gstructgrouppars, gtheta=gtheta, lr.random=lr.random,
                   random=random, lrPars=lrPars, ngroups=ngroups, nfact=nfact, J=J, OffTerm=OffTerm,
                   USE.FIXED=USE.FIXED, LR.RAND=LR.RAND, RAND=RAND, RANDSTART=RANDSTART, LRPARS=LRPARS,
-                  CUSTOM.IND=CUSTOM.IND, gfulldata=gfulldata, itemloc=itemloc, TRUETHETA=TRUETHETA)
+                  CUSTOM.IND=CUSTOM.IND, gfulldata=gfulldata, itemloc=itemloc, FIXEDTHETA=FIXEDTHETA)
     LL
 }
 
@@ -191,7 +191,7 @@ MHRM.NR <- function(shortpars, pars, gtheta, lrPars, OffTerm, longpars, USE.FIXE
     p - shortpars
 }
 
-MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_graded, TRUETHETA,
+MHRM.reloadPars <- function(longpars, pars, gstructgrouppars, ngroups, J, has_graded, FIXEDTHETA,
                             cycles, LRPARS, LR.RAND, RANDSTART, RAND, lrPars, lr.random, random){
     pars <- reloadPars(longpars=longpars, pars=pars, ngroups=ngroups, J=J)
     if(has_graded){
@@ -405,7 +405,7 @@ MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
                        DERIV, gstructgrouppars, CUSTOM.IND, RAND, has_graded, nfact,
                        cycles, RANDSTART, random, J, LRPARS, lrPars, LR.RAND, lr.random,
                        constrain, estpars, redun_constr, L, estindex_unique, gfulldata, itemloc, control,
-                       TRUETHETA=FALSE){
+                       FIXEDTHETA=FALSE){
     Moptim <- list$Moptim
     shortpars <- longpars[estindex_unique]
     lbound <- LBOUND[estindex_unique]
@@ -430,7 +430,7 @@ MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
         opt <- optim(shortpars, MHRM.LL_reload, gr=MHRM.deriv_reload, pars=pars,
                      gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                      USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
-                     DERIV=DERIV, has_graded=has_graded, nfact=nfact, TRUETHETA=TRUETHETA,
+                     DERIV=DERIV, has_graded=has_graded, nfact=nfact, FIXEDTHETA=FIXEDTHETA,
                      CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
                      RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
                      constrain=constrain, estpars=estpars, redun_constr=redun_constr,
@@ -441,7 +441,7 @@ MHRM.Mstep <- function(pars, gtheta, OffTerm, longpars, USE.FIXED, list, ngroups
         opt <- optim(shortpars, MHRM.LL_reload, gr=MHRM.deriv_reload, pars=pars,
                      gtheta=gtheta, lrPars=lrPars, OffTerm=OffTerm, longpars=longpars,
                      USE.FIXED=USE.FIXED, list=list, ngroups=ngroups, LR.RAND=LR.RAND,
-                     DERIV=DERIV, has_graded=has_graded, nfact=nfact, TRUETHETA=TRUETHETA,
+                     DERIV=DERIV, has_graded=has_graded, nfact=nfact, FIXEDTHETA=FIXEDTHETA,
                      CUSTOM.IND=CUSTOM.IND, RAND=RAND, cycles=cycles, lr.random=lr.random,
                      RANDSTART=RANDSTART, random=random, J=J, LRPARS=LRPARS, L=L,
                      constrain=constrain, estpars=estpars, redun_constr=redun_constr,

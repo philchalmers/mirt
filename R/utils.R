@@ -174,10 +174,10 @@ draw.thetas <- function(theta0, pars, fulldata, itemloc, cand.t.var, prior.t.var
 }
 
 complete.LL <- function(theta, pars, nfact, prior.mu, prior.t.var,
-                        OffTerm, CUSTOM.IND, itemloc, fulldata, TRUETHETA=FALSE){
+                        OffTerm, CUSTOM.IND, itemloc, fulldata, FIXEDTHETA=FALSE){
     itemtrace <- computeItemtrace(pars=pars, Theta=theta, itemloc=itemloc,
                                   offterm=OffTerm, CUSTOM.IND=CUSTOM.IND)
-    log_den <- if(TRUETHETA) 0 else
+    log_den <- if(FIXEDTHETA) 0 else
         mirt_dmvnorm(theta[,seq_len(nfact), drop=FALSE], prior.mu, prior.t.var, log=TRUE)
     rowSums(fulldata * log(itemtrace)) + log_den
 }
@@ -1701,7 +1701,7 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                 'internal_constraints', 'SEM_window', 'delta', 'MHRM_SE_draws', 'Etable', 'infoAsVcov',
                 'PLCI', 'plausible.draws', 'storeEtable', 'keep_vcov_PD', 'Norder', 'MCEM_draws',
                 "zeroExtreme", 'mins', 'info_if_converged', 'logLik_if_converged', 'omp', 'nconstrain',
-                'standardize_ref', "storeEMhistory", 'fixedEtable', 'TrueTheta')
+                'standardize_ref', "storeEMhistory", 'fixedEtable', 'fixedTheta')
     if(!all(tnames %in% gnames))
         stop('The following inputs to technical are invalid: ',
              paste0(tnames[!(tnames %in% gnames)], ' '), call.=FALSE)
@@ -1831,9 +1831,9 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
     opts$USEEM <- ifelse(method == 'EM', TRUE, FALSE)
     opts$returnPrepList <- FALSE
     opts$PrepList <- NULL
-    opts$TrueTheta <- technical$TrueTheta
-    if(!is.null(opts$TrueTheta)){
-        stopifnot("TrueTheta must be a matrix" = is.matrix(opts$TrueTheta))
+    opts$fixedTheta <- technical$fixedTheta
+    if(!is.null(opts$fixedTheta)){
+        stopifnot("fixedTheta must be a matrix" = is.matrix(opts$fixedTheta))
         opts$method <- method <- 'MHRM'
         optimizer <- 'BFGS'
         opts$calcLL <- FALSE
