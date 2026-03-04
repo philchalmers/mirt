@@ -551,11 +551,11 @@ control input)</p></dd>
 <dd><p>a custom <code>Theta</code> grid, in matrix form, used for integration.
     If not defined, the grid is determined internally based on the number of <code>quadpts</code></p></dd>
 
-  <dt>TrueTheta</dt>
-<dd><p>a <code>matrix</code> of latent trait estimates taken to be fixed and known. This
-    will perform a single M-step optimization to obtain item parameter estimates
-    using the <code>'MHRM'</code> engine with the BFGS/L-BFGS-B algorithm. Matrix input must
-    have as many rows as there are rows in <code>data</code></p></dd>
+  <dt>fixedTheta</dt>
+<dd><p>a <code>matrix</code> of latent trait values taken to be fixed and known. This
+    will perform a single M-step optimization to obtain item parameter estimates, holding constant
+    the elements in <code>fixedTheta</code>, using the <code>'MHRM'</code> engine with the BFGS/L-BFGS-B
+    algorithm. Matrix input must have as many rows as there are rows in <code>data</code></p></dd>
 
   <dt>nconstrain</dt>
 <dd><p>same specification as the <code>constrain</code> list argument,
@@ -2129,13 +2129,13 @@ IL: Scientific Software International.</p>
 <span class="r-in"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod1</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time elapsed for each estimation component</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.244  0.027  0.080  0.121  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.242  0.027  0.078  0.121  0.000  0.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the M-step's</span></span></span>
 <span class="r-in"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, optimizer <span class="op">=</span> <span class="st">'NR'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod1</span>, <span class="st">'time'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.215  0.028  0.092  0.073  0.000  0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.240  0.028  0.094  0.095  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="op">(</span><span class="va">data</span>, <span class="fl">2</span>, optimizer <span class="op">=</span> <span class="st">'NR'</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>EM cycles terminated after 500 iterations.</span>
@@ -2537,75 +2537,75 @@ IL: Scientific Software International.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.354  0 -1.054 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.479  0 -1.063 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.303  0 -1.485 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.569  0 -1.544 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2   d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.865  0 1.5 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.946  0 1.456 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a1    a2      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.091 0.322 -0.001 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1  a2     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.905 0.4 0.042 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2    d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.494 2.956 1.924 -0.48</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1   d2    d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.424 3.064 2.05 -0.47</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2   d1   d2     d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.617 2.63 1.16 -0.887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2     d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.478 2.557 1.029 -0.921</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.892 1.931 -0.073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2   d1    d2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.021 1.97 0.034</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2     d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.054 0.959 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.967 0.992 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      0      1  0.493      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      0      1  0.397      1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           F1    F2    h2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1 0.622       0.387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2 0.176       0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3 0.453       0.205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4 0.533 0.157 0.309</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5       0.660 0.435</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6       0.341 0.116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7       0.464 0.215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8       0.526 0.277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1 0.656       0.430</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2 0.317       0.100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3 0.486       0.236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4 0.460 0.203 0.253</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5       0.642 0.412</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6       0.271 0.073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7       0.515 0.265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8       0.494 0.244</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  0.907 1.068 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.113 0.134 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  0.978 1.035 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.122 0.129 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       F1 F2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.000   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.493  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.397  1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LD matrix (lower triangle) and standardized residual correlations (upper triangle)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Upper triangle summary:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.036  -0.019  -0.004   0.003   0.030   0.047 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.040  -0.024   0.003   0.001   0.020   0.050 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1        -0.011  0.010  0.001  0.039  0.046 -0.025 -0.017</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.244        -0.019  0.029 -0.018  0.047 -0.036 -0.017</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.201  0.742        -0.008 -0.022  0.043 -0.018  0.013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.004  1.685  0.142         0.024 -0.020  0.004  0.003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  2.965  0.618  0.944  1.194         0.031 -0.020 -0.027</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  4.306  4.439  3.647  0.820  5.941         0.032 -0.019</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.244  2.540  0.617  0.034  1.536  4.168         0.041</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.565  0.575  0.335  0.024  1.472  0.720  3.404       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1        -0.007  0.017  0.001 -0.032  0.036 -0.040 -0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.099        -0.023  0.010  0.044  0.041  0.029  0.011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.571  1.050        -0.009 -0.036  0.050  0.009  0.006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.004  0.195  0.152        -0.040  0.040  0.005  0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.995  3.787  2.548  3.256        -0.027 -0.039 -0.014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.564  3.386  5.075  3.237  4.444         0.041 -0.026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  3.222  1.675  0.149  0.046  6.001  6.743        -0.007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.057  0.241  0.073  0.044  0.384  1.301  0.099       </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#####</span></span></span>
 <span class="r-in"><span><span class="co"># bifactor</span></span></span>
@@ -2618,35 +2618,35 @@ IL: Scientific Software International.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1    a2 a3      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.882 1.099  0 -1.068 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.696 1.329  0 -1.064 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a1    a2 a3      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.138 0.309  0 -1.491 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       a1    a2 a3      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.43 0.314  0 -1.532 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1    a2 a3     d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.596 0.564  0 1.482 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.438 0.971  0 1.515 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a1    a2 a3     d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.125 0.769  0 0.001 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1   a2 a3     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.035 0.66  0 0.048 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       a1 a2    a3    d1    d2     d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.14  0 1.048 3.013 1.965 -0.474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.04  0 0.882 3.017 2.016 -0.454</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2   a3    d1    d2    d3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.538  0 0.29 2.632 1.163 -0.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2  a3    d1    d2     d3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.469  0 0.2 2.572 1.038 -0.924</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       a1 a2   a3    d1     d2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.67  0 0.61 1.945 -0.066</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    a3   d1    d2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.747  0 0.823 2.03 0.045</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item_8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    a3     d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.803  0 0.658 0.963 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      a1 a2    a3     d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.8  0 0.571 1.002 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33</span>
@@ -2654,17 +2654,17 @@ IL: Scientific Software International.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            G    F1    F2    h2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1 0.399 0.497       0.407</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2 0.080 0.178       0.038</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3 0.315 0.299       0.189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4 0.516 0.353       0.390</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5 0.495       0.456 0.453</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6 0.297       0.161 0.114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7 0.348       0.316 0.221</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8 0.403       0.330 0.271</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1 0.307 0.586       0.437</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2 0.241 0.176       0.089</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3 0.218 0.484       0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4 0.493 0.315       0.342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5 0.477       0.405 0.391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6 0.264       0.113 0.082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7 0.367       0.405 0.299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8 0.407       0.290 0.250</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  1.148 0.493 0.443 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.144 0.062 0.055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  1.041 0.707 0.425 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.13 0.088 0.053 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2677,21 +2677,21 @@ IL: Scientific Software International.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Upper triangle summary:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.030  -0.019  -0.001   0.004   0.029   0.048 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.044  -0.028  -0.006  -0.004   0.012   0.048 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1        -0.017  0.014 -0.009  0.039  0.044 -0.024 -0.017</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.569        -0.019  0.029  0.019  0.048 -0.029 -0.010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.405  0.700        -0.009 -0.027  0.033 -0.019  0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.157  1.638  0.174         0.028 -0.030  0.010  0.007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  3.030  0.723  1.450  1.525         0.032 -0.022 -0.027</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  3.785  4.527  2.184  1.784  6.031         0.032 -0.015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.113  1.724  0.707  0.204  1.913  4.197         0.041</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.545  0.213  0.127  0.097  1.489  0.462  3.442       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1         0.010 -0.005  0.007  0.029  0.034 -0.028 -0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.220        -0.016  0.006 -0.042  0.032 -0.028 -0.007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.042  0.500        -0.013 -0.033  0.048  0.017  0.010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.102  0.072  0.322        -0.040 -0.044  0.011 -0.007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.729  3.544  2.194  3.160        -0.027 -0.040  0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.338  2.005  4.632  3.834  4.384         0.041 -0.028</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.561  1.521  0.605  0.259  6.323  6.886        -0.014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.048  0.111  0.219  0.085  0.354  1.528  0.388       </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod1</span>,<span class="va">mod3</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik   X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod1 24813.19 24868.94 24860.49 24942.01 -12383.60              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mod3 24823.38 24893.68 24883.02 24985.81 -12382.69 1.81  6 0.936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           AIC    SABIC       HQ      BIC    logLik    X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod1 24829.27 24885.02 24876.57 24958.09 -12391.63               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod3 24835.66 24905.96 24895.30 24998.09 -12388.83 5.604  6 0.469</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#####</span></span></span>
 <span class="r-in"><span><span class="co"># polynomial/combinations</span></span></span>

@@ -2,9 +2,9 @@
 
 ## Changes in mirt 1.46
 
-- `technical = list(TrueTheta)` matrix input added to estimate item
-  parameters assuming that the true latent trait terms are known
-  (requested by Richard Luecht)
+- `technical = list(fixedTheta)` matrix input added to estimate item
+  parameters assuming that the true latent trait terms are fixed and
+  known (requested by Richard Luecht)
 
 - Exposed
   [`marginal_moments()`](https://philchalmers.github.io/mirt/reference/marginal_moments.md)

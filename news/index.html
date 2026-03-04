@@ -38,7 +38,7 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.46" id="changes-in-mirt-146">Changes in mirt 1.46<a class="anchor" aria-label="anchor" href="#changes-in-mirt-146"></a></h2>
-<ul><li><p><code>technical = list(TrueTheta)</code> matrix input added to estimate item parameters assuming that the true latent trait terms are known (requested by Richard Luecht)</p></li>
+<ul><li><p><code>technical = list(fixedTheta)</code> matrix input added to estimate item parameters assuming that the true latent trait terms are fixed and known (requested by Richard Luecht)</p></li>
 <li><p>Exposed <code><a href="../reference/marginal_moments.html">marginal_moments()</a></code> function to compute marginal item/bundle moment information for the scoring functions</p></li>
 <li><p>Added <code>itemtype = 'monospline'</code> for the monotonic spline model</p></li>
 <li><p><code><a href="../reference/RCI.html">RCI()</a></code> gains logical argument <code>expected.scores</code> to convert factor scores into metric of observed scores with their associated delta-method SEs</p></li>
