@@ -130,7 +130,7 @@ coef(mod2, simplify=TRUE)
 #> F1 0.572
 #> 
 sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
-#> [1] 0.7561798
+#> [1] 0.7561877
 
 # }
 ```

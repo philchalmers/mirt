@@ -398,13 +398,13 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               groups n_focal_items   stat CI_2.5 CI_97.5    X2 df     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF Group_1,Group_2            30 -0.326 -0.957   0.360 0.983  1 0.322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            30  0.326  0.102   0.957 2.643  2 0.267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF Group_1,Group_2            30 -0.326 -0.957   0.360 0.982  1 0.322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            30  0.326  0.102   0.957 2.642  2 0.267</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dDRF Group_1,Group_2            30  0.328  0.125   1.044               </span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws <span class="op">=</span> <span class="fl">500</span>, best_fitting<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               groups n_focal_items   stat CI_2.5 CI_97.5    X2 df     p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sDRF Group_1,Group_2            30 -0.326 -0.977   0.339 0.939  1 0.333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            30  0.326  0.095   0.977 2.614  2 0.271</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            30  0.326  0.095   0.977 2.613  2 0.271</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dDRF Group_1,Group_2            30  0.328  0.108   1.086               </span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws <span class="op">=</span> <span class="fl">500</span>, plot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="DRF-9.png" alt="" width="700" height="433"></span>
@@ -434,11 +434,11 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12 Group_1,Group_2 Item_12 -0.016 -0.074   0.038 0.305  1 0.581</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13 Group_1,Group_2 Item_13 -0.015 -0.075   0.042 0.233  1 0.629</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14 Group_1,Group_2 Item_14 -0.033 -0.096   0.027 1.029  1  0.31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Group_1,Group_2 Item_15 -0.045 -0.103   0.012  2.48  1 0.115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Group_1,Group_2 Item_15 -0.045 -0.103   0.012 2.479  1 0.115</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16 Group_1,Group_2 Item_16 -0.030 -0.098   0.036 0.882  1 0.348</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17 Group_1,Group_2 Item_17  0.018 -0.042   0.079  0.31  1 0.578</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18 Group_1,Group_2 Item_18  0.011 -0.051   0.072 0.126  1 0.723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Group_1,Group_2 Item_19 -0.045 -0.103   0.011 2.293  1  0.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 Group_1,Group_2 Item_19 -0.045 -0.103   0.011 2.292  1  0.13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20 Group_1,Group_2 Item_20 -0.008 -0.045   0.034  0.16  1 0.689</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21 Group_1,Group_2 Item_21 -0.070 -0.133  -0.006 4.678  1 0.031</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 22 Group_1,Group_2 Item_22  0.017 -0.048   0.071 0.312  1 0.576</span>
@@ -448,7 +448,7 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26 Group_1,Group_2 Item_26 -0.019 -0.075   0.037  0.47  1 0.493</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27 Group_1,Group_2 Item_27 -0.049 -0.111   0.014 2.298  1  0.13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28 Group_1,Group_2 Item_28  0.027 -0.036   0.090 0.681  1 0.409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 Group_1,Group_2 Item_29  0.007 -0.057   0.073  0.05  1 0.824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 Group_1,Group_2 Item_29  0.007 -0.057   0.073  0.05  1 0.823</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30 Group_1,Group_2 Item_30 -0.029 -0.092   0.022 1.001  1 0.317</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $uDIF</span>
@@ -467,13 +467,13 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12 Group_1,Group_2 Item_12 0.016  0.005   0.074  0.848  2 0.654</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13 Group_1,Group_2 Item_13 0.022  0.007   0.084  1.691  2 0.429</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14 Group_1,Group_2 Item_14 0.046  0.012   0.108  5.685  2 0.058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Group_1,Group_2 Item_15 0.045  0.013   0.103  6.043  2 0.049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Group_1,Group_2 Item_16 0.030  0.008   0.100  2.553  2 0.279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Group_1,Group_2 Item_15 0.045  0.013   0.103  6.042  2 0.049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Group_1,Group_2 Item_16 0.030  0.008   0.100  2.552  2 0.279</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17 Group_1,Group_2 Item_17 0.019  0.006   0.087  0.994  2 0.608</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18 Group_1,Group_2 Item_18 0.013  0.005   0.081  0.397  2  0.82</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19 Group_1,Group_2 Item_19 0.094  0.046   0.145 24.256  2     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20 Group_1,Group_2 Item_20 0.010  0.004   0.051  0.567  2 0.753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 Group_1,Group_2 Item_21 0.070  0.016   0.132 10.313  2 0.006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 Group_1,Group_2 Item_21 0.070  0.016   0.132 10.312  2 0.006</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 22 Group_1,Group_2 Item_22 0.020  0.007   0.087  1.065  2 0.587</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 23 Group_1,Group_2 Item_23 0.064  0.022   0.119  8.046  2 0.018</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 24 Group_1,Group_2 Item_24 0.040  0.011   0.100  2.796  2 0.247</span>
@@ -558,9 +558,9 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13 Group_1,Group_2 Item_13 -0.015 -0.073   0.042 0.261  1 0.609</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14 Group_1,Group_2 Item_14 -0.033 -0.097   0.036 1.077  1 0.299</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15 Group_1,Group_2 Item_15 -0.045 -0.101   0.013 2.454  1 0.117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Group_1,Group_2 Item_16 -0.030 -0.096   0.033  0.87  1 0.351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Group_1,Group_2 Item_16 -0.030 -0.096   0.033 0.869  1 0.351</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 17 Group_1,Group_2 Item_17  0.018 -0.041   0.076 0.317  1 0.573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Group_1,Group_2 Item_18  0.011 -0.051   0.068 0.131  1 0.718</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Group_1,Group_2 Item_18  0.011 -0.051   0.068 0.131  1 0.717</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19 Group_1,Group_2 Item_19 -0.045 -0.105   0.012 2.273  1 0.132</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20 Group_1,Group_2 Item_20 -0.008 -0.044   0.039  0.15  1 0.699</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 21 Group_1,Group_2 Item_21 -0.070 -0.128  -0.007 5.598  1 0.018</span>
@@ -587,7 +587,7 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9  Group_1,Group_2  Item_9 0.026  0.009   0.090  2.362  2 0.307</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10 Group_1,Group_2 Item_10 0.036  0.008   0.094  3.754  2 0.153</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11 Group_1,Group_2 Item_11 0.059  0.018   0.119  9.247  2  0.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Group_1,Group_2 Item_12 0.016  0.008   0.081  0.892  2  0.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Group_1,Group_2 Item_12 0.016  0.008   0.081  0.891  2  0.64</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13 Group_1,Group_2 Item_13 0.022  0.007   0.079  1.965  2 0.374</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14 Group_1,Group_2 Item_14 0.046  0.011   0.109  5.687  2 0.058</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15 Group_1,Group_2 Item_15 0.045  0.012   0.101  5.996  2  0.05</span>
@@ -601,8 +601,8 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 23 Group_1,Group_2 Item_23 0.064  0.018   0.121  7.167  2 0.028</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 24 Group_1,Group_2 Item_24 0.040  0.008   0.112  2.247  2 0.325</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 25 Group_1,Group_2 Item_25 0.018  0.006   0.086  0.917  2 0.632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 Group_1,Group_2 Item_26 0.047  0.013   0.096  6.622  2 0.036</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 Group_1,Group_2 Item_27 0.049  0.013   0.108  6.467  2 0.039</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 Group_1,Group_2 Item_26 0.047  0.013   0.096  6.621  2 0.036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 Group_1,Group_2 Item_27 0.049  0.013   0.108  6.466  2 0.039</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28 Group_1,Group_2 Item_28 0.029  0.010   0.088  1.805  2 0.405</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 29 Group_1,Group_2 Item_29 0.025  0.009   0.085  1.808  2 0.405</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30 Group_1,Group_2 Item_30 0.031  0.008   0.093  3.105  2 0.212</span>
@@ -780,11 +780,11 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-in"><span><span class="co"># DIF(mod3, c('a1', 'd'), items2test=16:30)</span></span></span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod3</span><span class="op">)</span> <span class="co">#unsigned bias. Signed bias (group 2 scores higher on average)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            groups n_focal_items  sDRF  uDRF  dDRF sDRF* uDRF* dDRF*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Group_1,Group_2            30 1.983 2.192 2.471 0.292 0.322 0.363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Group_1,Group_2            30 1.983 2.193 2.471 0.292 0.322 0.363</span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod3</span>, draws<span class="op">=</span><span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               groups n_focal_items  stat CI_2.5 CI_97.5     X2 df p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF Group_1,Group_2            30 1.983  1.275   2.660 29.992  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            30 2.192  1.638   2.836 54.324  2 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sDRF Group_1,Group_2            30 1.983  1.275   2.659 29.992  1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            30 2.193  1.638   2.836 54.336  2 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dDRF Group_1,Group_2            30 2.471  1.856   3.172            </span>
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod3</span>, draws<span class="op">=</span><span class="fl">500</span>, plot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="co">#multiple DRF areas along Theta</span></span></span>
 <span class="r-plt img"><img src="DRF-15.png" alt="" width="700" height="433"></span>
@@ -884,9 +884,9 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.249  1.435  0.351 -0.329 -1.273</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.071  0.517  0.072 -0.564 -1.551</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.333  0.157 -0.374 -0.848 -1.911</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.304  1.117  0.512 -0.467 -0.869</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.304  1.117  0.512 -0.467 -0.868</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.830  1.501  0.639 -0.176 -0.906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.073  1.485  0.567 -0.190 -0.813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.073  1.485  0.567 -0.190 -0.812</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.327  2.039  1.529  0.756 -0.283</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.481 -0.268 -1.021 -1.534 -2.229</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.812  0.641  0.086 -0.832 -1.977</span>
@@ -917,16 +917,16 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.249  1.435  0.351 -0.329 -1.273</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2.071  0.517  0.072 -0.564 -1.551</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.333  0.157 -0.374 -0.848 -1.911</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.304  1.117  0.512 -0.467 -0.869</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.304  1.117  0.512 -0.467 -0.868</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.830  1.501  0.639 -0.176 -0.906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.073  1.485  0.567 -0.190 -0.813</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.106  1.818  1.282  0.634 -0.499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.073  1.485  0.567 -0.190 -0.812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.106  1.818  1.282  0.635 -0.498</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.562 -0.249 -0.917 -1.667 -2.266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.853  0.595 -0.044 -1.057 -1.890</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 2.147  2.155  1.311  0.566 -0.248</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 0.889  2.101  1.164  0.343 -0.010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.622 -0.395 -0.979 -1.278 -2.255</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.060  2.345  0.587 -0.114 -2.040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.060  2.345  0.587 -0.113 -2.040</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 0.923  1.860  1.099 -0.508 -0.793</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 1.051  2.528  0.960 -0.227 -1.976</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.456  0.690 -0.277 -0.806 -1.164</span>
@@ -955,7 +955,7 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  D1,D2   6.854  5 0.232     1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  D1,D2   4.854  5 0.434     1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  D1,D2   3.861  5  0.57     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16  D1,D2  35.920  5     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16  D1,D2  35.918  5     0     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_17  D1,D2 121.671  5     0     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_18  D1,D2  45.135  5     0     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_19  D1,D2  96.182  5     0     0</span>
@@ -1058,11 +1058,11 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Group_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            a1    a2      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.007 0.000 -1.208 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.006 0.000 -1.208 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.080 0.000  0.301 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.833 0.000  1.126 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.977 0.000 -2.342 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.006 0.000  0.410 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.005 0.000  0.410 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.864 0.000  0.428 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.014 0.000 -0.495 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.133 0.000 -0.472 0 1</span>
@@ -1071,26 +1071,26 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.009 0.000 -0.390 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 0.920 0.000 -1.061 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.189 0.000 -0.711 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.125 0.000  0.066 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.125 0.000  0.067 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.122 0.000  0.896 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.094 0.000 -0.203 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 1.041 0.000 -0.479 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 1.011 0.000 -0.849 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 0.962 0.000 -0.768 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 0.937 0.000  2.372 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_21 0.935 0.000  0.081 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_21 0.935 0.000  0.082 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_22 0.886 0.000 -0.482 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_23 0.921 0.000 -0.443 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_24 0.937 0.000  0.521 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_25 0.959 0.000 -0.674 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_26 0.000 0.998 -1.498 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_26 0.000 0.999 -1.498 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_27 0.000 0.978  0.590 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_28 0.000 0.997 -1.035 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_29 0.000 0.917 -0.055 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_30 0.000 0.982 -0.970 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_31 0.000 0.891  0.931 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_32 0.000 0.863 -0.453 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_33 0.000 1.140 -0.760 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_33 0.000 1.140 -0.759 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_34 0.000 0.943 -0.469 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_35 0.000 1.289 -1.852 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_36 0.000 0.791 -1.064 0 1</span>
@@ -1122,38 +1122,38 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Group_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            a1    a2      d g u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.007 0.000 -1.208 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.006 0.000 -1.208 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.080 0.000  0.301 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.833 0.000  1.126 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.977 0.000 -2.342 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.006 0.000  0.410 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.005 0.000  0.410 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.886 0.000  0.558 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.967 0.000 -0.583 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.988 0.000 -0.613 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.962 0.000 -0.467 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.866 0.000 -0.999 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.865 0.000 -0.999 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.076 0.000 -0.448 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.145 0.000 -1.198 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 0.991 0.000 -0.789 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.039 0.000  0.070 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.201 0.000  1.070 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.200 0.000  1.070 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 0.989 0.000 -0.084 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_17 0.995 0.000 -0.569 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_18 0.932 0.000 -0.925 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_19 0.866 0.000 -0.790 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.123 0.000  2.463 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20 1.122 0.000  2.463 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_21 1.055 0.000  0.200 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_22 1.107 0.000 -0.610 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_23 0.992 0.000 -0.513 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_24 0.992 0.000  0.388 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_25 0.935 0.000 -0.794 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_26 0.000 0.998 -1.498 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_25 0.934 0.000 -0.794 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_26 0.000 0.999 -1.498 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_27 0.000 0.978  0.590 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_28 0.000 0.997 -1.035 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_29 0.000 0.917 -0.055 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_30 0.000 0.982 -0.970 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_31 0.000 1.015  0.962 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_32 0.000 1.115 -0.596 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_32 0.000 1.115 -0.595 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_33 0.000 1.095 -0.874 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_34 0.000 0.856 -0.486 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item_35 0.000 1.138 -1.636 0 1</span>
@@ -1179,8 +1179,8 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       F1    F2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.067 0.518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.518 1.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.068 0.518</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.518 1.415</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, degrees <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>,<span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -1335,7 +1335,7 @@ in <code><a href="empirical_ES.html">empirical_ES</a></code> (see Meade, 2010).<
 <span class="r-in"><span><span class="fu">DRF</span><span class="op">(</span><span class="va">mod</span>, draws <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               groups n_focal_items  stat CI_2.5 CI_97.5     X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sDRF Group_1,Group_2            50 1.803  1.232   2.303 44.609  1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            50 1.803  1.232   2.303 47.433  2 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> uDRF Group_1,Group_2            50 1.803  1.232   2.303 47.432  2 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dDRF Group_1,Group_2            50 1.831  1.278   2.354            </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
