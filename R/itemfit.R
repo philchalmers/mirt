@@ -796,6 +796,12 @@ itemfit <- function(x, fit_stats = 'S_X2',
     if(S_X2 || !is.null(S_X2.plot)){
         dat <- x@Data$data
         adj <- x@Data$mins
+        K <- x@Data$K
+        Kobs <- apply(x@Data$data, 2, \(x) length(unique(x, na.rm=TRUE)))
+        if(!all(K == Kobs))
+            stop(c("S_X2 cannot be computed for subgroups where the observed\n",
+                  "response options are less than the full range of possible response options"),
+                 call.=FALSE)
         dat <- t(t(dat) - adj)
         S_X2 <- df.S_X2 <- rep(NA, J)
         O <- makeObstables(dat, x@Data$K, which.items=which.items)
