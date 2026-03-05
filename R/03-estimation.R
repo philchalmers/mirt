@@ -570,7 +570,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                 tmp <- apply(subset(Data$data, Data$group == Data$groupNames[j]), 2L,
                              function(x) length(unique(na.omit(x)))) == Data$K
             for(i in which(!tmp)){
-                if(any(PrepList[[j]]$pars[[i]]@est))
+                if(any(PrepList[[j]]$pars[[i]]@est) && !isTRUE(opts$technical$IGNOREWARNINGS))
                     stop(paste0('Multiple Group model will not be identified without ',
                                 'proper constraints (groups contain missing data patterns ',
                                 'where item responses have been completely omitted or, alternatively, ',
