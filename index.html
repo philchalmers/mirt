@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
 <div class="page-header"><h1 id="mirt-multidimensional-item-response-theory-in-r-">
 <em>mirt</em>: Multidimensional item response theory in R <img src="mirt-logo.png" height="139" align="right"><a class="anchor" aria-label="anchor" href="#mirt-multidimensional-item-response-theory-in-r-"></a>
 </h1></div>
-<p>Analysis of dichotomous and polytomous response data using unidimensional and multidimensional latent trait models under the Item Response Theory paradigm. Exploratory and confirmatory models can be estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory bi-factor and two-tier analyses are available for modeling item testlets. Multiple group analysis and mixed effects designs also are available for detecting differential item functioning and modeling item and person covariates.</p>
+<p>Analysis of discrete response data using unidimensional and multidimensional item analysis models under the Item Response Theory paradigm (Chalmers, 2012). Exploratory and confirmatory item factor analysis models are estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory bi-factor and two-tier models are available for modeling item testlets using dimension reduction EM algorithms, while multiple group analyses and mixed effects designs are included for detecting differential item, bundle, and test functioning, and for modeling item and person covariates. Finally, latent class models such as the DINA, DINO, multidimensional latent class, mixture IRT models, and zero-inflated response models are supported, as well as a wide family of probabilistic unfolding models.</p>
 <div class="section level2">
 <h2 id="examples-and-evaluated-help-files-are-available-on-the-wiki">Examples and evaluated help files are available on the wiki<a class="anchor" aria-label="anchor" href="#examples-and-evaluated-help-files-are-available-on-the-wiki"></a>
 </h2>
@@ -85,8 +85,8 @@
 <p>If the <code>devtools</code> approach does not work on your system, then you can download and install the repository directly.</p>
 <ol style="list-style-type: decimal">
 <li><p>Obtain recent gcc, g++, and gfortran compilers (see above instructions).</p></li>
-<li><p>Install the <a href="https://git-scm.com/downloads" class="external-link">git command line tools</a>.</p></li>
-<li><p>Open a terminal/command-line tool. The following code will download the repository code to your computer, and install the package directly using R tools (Windows users may also have to add R and git to their <a href="https://www.computerhope.com/issues/ch000549.htm" class="external-link">path</a>)</p></li>
+<li><p>Install the git command line tools (e.g., from <code>https://git-scm.com/downloads/</code>).</p></li>
+<li><p>Open a terminal/command-line tool. The following code will download the repository code to your computer, and install the package directly using R tools (Windows users may also have to add R and git to their path)</p></li>
 </ol>
 <pre><code>git clone https://github.com/philchalmers/mirt
 R CMD INSTALL mirt</code></pre>

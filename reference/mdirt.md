@@ -256,7 +256,7 @@ dat <- expand.table(LSAT6)
 #> 
 #> Latent class model with 2 classes and 2 profiles.
 #> Converged within 1e-04 tolerance after 363 EM iterations.
-#> mirt version: 1.46 
+#> mirt version: 1.46.1 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -275,7 +275,7 @@ dat <- expand.table(LSAT6)
 #> 
 #> Latent class model with 3 classes and 3 profiles.
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.46 
+#> mirt version: 1.46.1 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -499,7 +499,7 @@ mod <- mdirt(dat, 2, nruns=10)
 #> 
 #> Latent class model with 2 classes and 3 profiles.
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.46 
+#> mirt version: 1.46.1 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -571,7 +571,7 @@ dat <- key2binary(SAT12,
 #> 
 #> Latent class model with 3 classes and 8 profiles.
 #> Converged within 1e-04 tolerance after 142 EM iterations.
-#> mirt version: 1.46 
+#> mirt version: 1.46.1 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -958,7 +958,7 @@ model <- mirt.model('C1 = 1-32
 #> 
 #> Latent class model with 3 classes and 3 profiles.
 #> Converged within 1e-04 tolerance after 364 EM iterations.
-#> mirt version: 1.46 
+#> mirt version: 1.46.1 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete

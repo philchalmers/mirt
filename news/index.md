@@ -1,6 +1,6 @@
 # Changelog
 
-## Changes in mirt 1.46
+## Changes in mirt 1.46.1
 
 - [`mirtCluster()`](https://philchalmers.github.io/mirt/reference/mirtCluster.md)
   definition switched from `parallel` to `mirai` package by default.
