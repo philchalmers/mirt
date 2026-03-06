@@ -54,20 +54,20 @@ dat <- cbind(dat1, dat2)
 # separately
 intdat1 <- likert2int(dat1)
 head(dat1)
-#>      [,1]             [,2]                [,3]             [,4]               
-#> [1,] "Strongly Agree" "Strongly Disagree" NA               "Neutral"          
-#> [2,] "Disagree"       NA                  "Agree"          "Disagree"         
-#> [3,] "Disagree"       "Neutral"           NA               "Disagree"         
-#> [4,] "Disagree"       "Neutral"           "Disagree"       "Neutral"          
-#> [5,] "Neutral"        "Strongly Agree"    "Agree"          "Strongly Disagree"
-#> [6,] "Strongly Agree" "Agree"             "Strongly Agree" "Strongly Agree"   
+#>      [,1]             [,2]             [,3]                [,4]               
+#> [1,] "Agree"          "Strongly Agree" NA                  "Strongly Agree"   
+#> [2,] "Agree"          NA               "Agree"             "Disagree"         
+#> [3,] "Disagree"       "Disagree"       NA                  "Disagree"         
+#> [4,] "Strongly Agree" "Agree"          "Strongly Disagree" "Strongly Agree"   
+#> [5,] "Disagree"       "Strongly Agree" "Strongly Disagree" "Strongly Disagree"
+#> [6,] "Disagree"       "Neutral"        "Disagree"          "Strongly Agree"   
 #>      [,5]               
-#> [1,] "Strongly Agree"   
-#> [2,] "Strongly Agree"   
-#> [3,] "Strongly Disagree"
-#> [4,] "Neutral"          
-#> [5,] "Strongly Agree"   
-#> [6,] "Agree"            
+#> [1,] "Strongly Disagree"
+#> [2,] "Strongly Disagree"
+#> [3,] "Agree"            
+#> [4,] "Strongly Disagree"
+#> [5,] "Agree"            
+#> [6,] "Neutral"          
 head(intdat1)
 #>   V1 V2 V3 V4 V5
 #> 1 NA NA NA NA NA
@@ -82,74 +82,74 @@ lvl1 <- c('Strongly Disagree'=1, 'Disagree'=2, 'Neutral'=3, 'Agree'=4,
           'Strongly Agree'=5)
 intdat1 <- likert2int(dat1, levels = lvl1)
 head(dat1)
-#>      [,1]             [,2]                [,3]             [,4]               
-#> [1,] "Strongly Agree" "Strongly Disagree" NA               "Neutral"          
-#> [2,] "Disagree"       NA                  "Agree"          "Disagree"         
-#> [3,] "Disagree"       "Neutral"           NA               "Disagree"         
-#> [4,] "Disagree"       "Neutral"           "Disagree"       "Neutral"          
-#> [5,] "Neutral"        "Strongly Agree"    "Agree"          "Strongly Disagree"
-#> [6,] "Strongly Agree" "Agree"             "Strongly Agree" "Strongly Agree"   
+#>      [,1]             [,2]             [,3]                [,4]               
+#> [1,] "Agree"          "Strongly Agree" NA                  "Strongly Agree"   
+#> [2,] "Agree"          NA               "Agree"             "Disagree"         
+#> [3,] "Disagree"       "Disagree"       NA                  "Disagree"         
+#> [4,] "Strongly Agree" "Agree"          "Strongly Disagree" "Strongly Agree"   
+#> [5,] "Disagree"       "Strongly Agree" "Strongly Disagree" "Strongly Disagree"
+#> [6,] "Disagree"       "Neutral"        "Disagree"          "Strongly Agree"   
 #>      [,5]               
-#> [1,] "Strongly Agree"   
-#> [2,] "Strongly Agree"   
-#> [3,] "Strongly Disagree"
-#> [4,] "Neutral"          
-#> [5,] "Strongly Agree"   
-#> [6,] "Agree"            
+#> [1,] "Strongly Disagree"
+#> [2,] "Strongly Disagree"
+#> [3,] "Agree"            
+#> [4,] "Strongly Disagree"
+#> [5,] "Agree"            
+#> [6,] "Neutral"          
 head(intdat1)
 #>   V1 V2 V3 V4 V5
-#> 1  5  1 NA  3  5
-#> 2  2 NA  4  2  5
-#> 3  2  3 NA  2  1
-#> 4  2  3  2  3  3
-#> 5  3  5  4  1  5
-#> 6  5  4  5  5  4
+#> 1  4  5 NA  5  1
+#> 2  4 NA  4  2  1
+#> 3  2  2 NA  2  4
+#> 4  5  4  1  5  1
+#> 5  2  5  1  1  4
+#> 6  2  3  2  5  3
 
 # second data
 lvl2 <- c('SD'=1, 'D'=2, 'N'=3, 'A'=4, 'SA'=5)
 intdat2 <- likert2int(dat2, levels = lvl2)
 head(dat2)
 #>      [,1] [,2] [,3] [,4] [,5]
-#> [1,] "SA" "A"  "SA" "N"  "D" 
-#> [2,] "D"  "D"  "SD" "SD" "D" 
-#> [3,] "N"  "N"  "SD" "A"  "N" 
-#> [4,] "SD" "A"  "SA" "SD" "SA"
-#> [5,] "SA" "N"  "N"  "SD" "A" 
-#> [6,] "A"  "D"  "SD" "SD" "SA"
+#> [1,] "A"  "N"  "D"  "D"  "SA"
+#> [2,] "SD" "A"  "SA" "SD" "A" 
+#> [3,] "A"  "SA" "A"  "N"  "SA"
+#> [4,] "N"  "A"  "A"  "A"  "N" 
+#> [5,] "N"  "D"  "SD" "N"  "N" 
+#> [6,] "N"  "A"  "SA" "SA" "A" 
 head(intdat2)
 #>   V1 V2 V3 V4 V5
-#> 1  5  4  5  3  2
-#> 2  2  2  1  1  2
-#> 3  3  3  1  4  3
-#> 4  1  4  5  1  5
-#> 5  5  3  3  1  4
-#> 6  4  2  1  1  5
+#> 1  4  3  2  2  5
+#> 2  1  4  5  1  4
+#> 3  4  5  4  3  5
+#> 4  3  4  4  4  3
+#> 5  3  2  1  3  3
+#> 6  3  4  5  5  4
 
 # full dataset (using both mapping schemes)
 intdat <- likert2int(dat, levels = c(lvl1, lvl2))
 head(dat)
-#>      [,1]             [,2]                [,3]             [,4]               
-#> [1,] "Strongly Agree" "Strongly Disagree" NA               "Neutral"          
-#> [2,] "Disagree"       NA                  "Agree"          "Disagree"         
-#> [3,] "Disagree"       "Neutral"           NA               "Disagree"         
-#> [4,] "Disagree"       "Neutral"           "Disagree"       "Neutral"          
-#> [5,] "Neutral"        "Strongly Agree"    "Agree"          "Strongly Disagree"
-#> [6,] "Strongly Agree" "Agree"             "Strongly Agree" "Strongly Agree"   
+#>      [,1]             [,2]             [,3]                [,4]               
+#> [1,] "Agree"          "Strongly Agree" NA                  "Strongly Agree"   
+#> [2,] "Agree"          NA               "Agree"             "Disagree"         
+#> [3,] "Disagree"       "Disagree"       NA                  "Disagree"         
+#> [4,] "Strongly Agree" "Agree"          "Strongly Disagree" "Strongly Agree"   
+#> [5,] "Disagree"       "Strongly Agree" "Strongly Disagree" "Strongly Disagree"
+#> [6,] "Disagree"       "Neutral"        "Disagree"          "Strongly Agree"   
 #>      [,5]                [,6] [,7] [,8] [,9] [,10]
-#> [1,] "Strongly Agree"    "SA" "A"  "SA" "N"  "D"  
-#> [2,] "Strongly Agree"    "D"  "D"  "SD" "SD" "D"  
-#> [3,] "Strongly Disagree" "N"  "N"  "SD" "A"  "N"  
-#> [4,] "Neutral"           "SD" "A"  "SA" "SD" "SA" 
-#> [5,] "Strongly Agree"    "SA" "N"  "N"  "SD" "A"  
-#> [6,] "Agree"             "A"  "D"  "SD" "SD" "SA" 
+#> [1,] "Strongly Disagree" "A"  "N"  "D"  "D"  "SA" 
+#> [2,] "Strongly Disagree" "SD" "A"  "SA" "SD" "A"  
+#> [3,] "Agree"             "A"  "SA" "A"  "N"  "SA" 
+#> [4,] "Strongly Disagree" "N"  "A"  "A"  "A"  "N"  
+#> [5,] "Agree"             "N"  "D"  "SD" "N"  "N"  
+#> [6,] "Neutral"           "N"  "A"  "SA" "SA" "A"  
 head(intdat)
 #>   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10
-#> 1  5  1 NA  3  5  5  4  5  3   2
-#> 2  2 NA  4  2  5  2  2  1  1   2
-#> 3  2  3 NA  2  1  3  3  1  4   3
-#> 4  2  3  2  3  3  1  4  5  1   5
-#> 5  3  5  4  1  5  5  3  3  1   4
-#> 6  5  4  5  5  4  4  2  1  1   5
+#> 1  4  5 NA  5  1  4  3  2  2   5
+#> 2  4 NA  4  2  1  1  4  5  1   4
+#> 3  2  2 NA  2  4  4  5  4  3   5
+#> 4  5  4  1  5  1  3  4  4  4   3
+#> 5  2  5  1  1  4  3  2  1  3   3
+#> 6  2  3  2  5  3  3  4  5  5   4
 
 
 #####
@@ -161,16 +161,16 @@ dat.old <- cbind(dat1, dat2)
 colnames(dat.old) <- paste0('Item_', 1:10)
 str(dat.old) # factors are leveled alphabetically by default
 #> 'data.frame':    1000 obs. of  10 variables:
-#>  $ Item_1 : chr  "Strongly Agree" "Disagree" "Disagree" "Disagree" ...
-#>  $ Item_2 : chr  "Strongly Disagree" NA "Neutral" "Neutral" ...
-#>  $ Item_3 : chr  NA "Agree" NA "Disagree" ...
-#>  $ Item_4 : chr  "Neutral" "Disagree" "Disagree" "Neutral" ...
-#>  $ Item_5 : chr  "Strongly Agree" "Strongly Agree" "Strongly Disagree" "Neutral" ...
-#>  $ Item_6 : chr  "SA" "D" "N" "SD" ...
-#>  $ Item_7 : chr  "A" "D" "N" "A" ...
-#>  $ Item_8 : chr  "SA" "SD" "SD" "SA" ...
-#>  $ Item_9 : chr  "N" "SD" "A" "SD" ...
-#>  $ Item_10: chr  "D" "D" "N" "SA" ...
+#>  $ Item_1 : chr  "Agree" "Agree" "Disagree" "Strongly Agree" ...
+#>  $ Item_2 : chr  "Strongly Agree" NA "Disagree" "Agree" ...
+#>  $ Item_3 : chr  NA "Agree" NA "Strongly Disagree" ...
+#>  $ Item_4 : chr  "Strongly Agree" "Disagree" "Disagree" "Strongly Agree" ...
+#>  $ Item_5 : chr  "Strongly Disagree" "Strongly Disagree" "Agree" "Strongly Disagree" ...
+#>  $ Item_6 : chr  "A" "SD" "A" "N" ...
+#>  $ Item_7 : chr  "N" "A" "SA" "A" ...
+#>  $ Item_8 : chr  "D" "SA" "A" "A" ...
+#>  $ Item_9 : chr  "D" "SD" "N" "A" ...
+#>  $ Item_10: chr  "SA" "A" "SA" "N" ...
 
 # create explicit ordering in factor variables
 for(i in 1:ncol(dat1))
@@ -184,51 +184,51 @@ dat <- cbind(dat1, dat2)
 colnames(dat) <- colnames(dat.old)
 str(dat) # note ordering
 #> 'data.frame':    1000 obs. of  10 variables:
-#>  $ Item_1 : chr  "Strongly Agree" "Disagree" "Disagree" "Disagree" ...
+#>  $ Item_1 : chr  "Agree" "Agree" "Disagree" "Strongly Agree" ...
 #>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...
-#>  $ Item_2 : chr  "Strongly Disagree" NA "Neutral" "Neutral" ...
+#>  $ Item_2 : chr  "Strongly Agree" NA "Disagree" "Agree" ...
 #>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...
-#>  $ Item_3 : chr  NA "Agree" NA "Disagree" ...
+#>  $ Item_3 : chr  NA "Agree" NA "Strongly Disagree" ...
 #>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...
-#>  $ Item_4 : chr  "Neutral" "Disagree" "Disagree" "Neutral" ...
+#>  $ Item_4 : chr  "Strongly Agree" "Disagree" "Disagree" "Strongly Agree" ...
 #>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...
-#>  $ Item_5 : chr  "Strongly Agree" "Strongly Agree" "Strongly Disagree" "Neutral" ...
+#>  $ Item_5 : chr  "Strongly Disagree" "Strongly Disagree" "Agree" "Strongly Disagree" ...
 #>   ..- attr(*, "levels")= chr [1:5] "Strongly Disagree" "Disagree" "Neutral" "Agree" ...
-#>  $ Item_6 : chr  "SA" "D" "N" "SD" ...
+#>  $ Item_6 : chr  "A" "SD" "A" "N" ...
 #>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...
-#>  $ Item_7 : chr  "A" "D" "N" "A" ...
+#>  $ Item_7 : chr  "N" "A" "SA" "A" ...
 #>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...
-#>  $ Item_8 : chr  "SA" "SD" "SD" "SA" ...
+#>  $ Item_8 : chr  "D" "SA" "A" "A" ...
 #>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...
-#>  $ Item_9 : chr  "N" "SD" "A" "SD" ...
+#>  $ Item_9 : chr  "D" "SD" "N" "A" ...
 #>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...
-#>  $ Item_10: chr  "D" "D" "N" "SA" ...
+#>  $ Item_10: chr  "SA" "A" "SA" "N" ...
 #>   ..- attr(*, "levels")= chr [1:5] "SD" "D" "N" "A" ...
 
 intdat <- likert2int(dat)
 head(dat)
-#>           Item_1            Item_2         Item_3            Item_4
-#> 1 Strongly Agree Strongly Disagree           <NA>           Neutral
-#> 2       Disagree              <NA>          Agree          Disagree
-#> 3       Disagree           Neutral           <NA>          Disagree
-#> 4       Disagree           Neutral       Disagree           Neutral
-#> 5        Neutral    Strongly Agree          Agree Strongly Disagree
-#> 6 Strongly Agree             Agree Strongly Agree    Strongly Agree
+#>           Item_1         Item_2            Item_3            Item_4
+#> 1          Agree Strongly Agree              <NA>    Strongly Agree
+#> 2          Agree           <NA>             Agree          Disagree
+#> 3       Disagree       Disagree              <NA>          Disagree
+#> 4 Strongly Agree          Agree Strongly Disagree    Strongly Agree
+#> 5       Disagree Strongly Agree Strongly Disagree Strongly Disagree
+#> 6       Disagree        Neutral          Disagree    Strongly Agree
 #>              Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-#> 1    Strongly Agree     SA      A     SA      N       D
-#> 2    Strongly Agree      D      D     SD     SD       D
-#> 3 Strongly Disagree      N      N     SD      A       N
-#> 4           Neutral     SD      A     SA     SD      SA
-#> 5    Strongly Agree     SA      N      N     SD       A
-#> 6             Agree      A      D     SD     SD      SA
+#> 1 Strongly Disagree      A      N      D      D      SA
+#> 2 Strongly Disagree     SD      A     SA     SD       A
+#> 3             Agree      A     SA      A      N      SA
+#> 4 Strongly Disagree      N      A      A      A       N
+#> 5             Agree      N      D     SD      N       N
+#> 6           Neutral      N      A     SA     SA       A
 head(intdat)
 #>   Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
-#> 1      5      1     NA      3      5      5      4      5      3       2
-#> 2      2     NA      4      2      5      2      2      1      1       2
-#> 3      2      3     NA      2      1      3      3      1      4       3
-#> 4      2      3      2      3      3      1      4      5      1       5
-#> 5      3      5      4      1      5      5      3      3      1       4
-#> 6      5      4      5      5      4      4      2      1      1       5
+#> 1      4      5     NA      5      1      4      3      2      2       5
+#> 2      4     NA      4      2      1      1      4      5      1       4
+#> 3      2      2     NA      2      4      4      5      4      3       5
+#> 4      5      4      1      5      1      3      4      4      4       3
+#> 5      2      5      1      1      4      3      2      1      3       3
+#> 6      2      3      2      5      3      3      4      5      5       4
 
 # }
 ```

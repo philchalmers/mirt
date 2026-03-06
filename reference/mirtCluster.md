@@ -4,6 +4,9 @@ This function defines a object that is placed in a relevant internal
 environment defined in mirt. Internal functions such as `calcLogLik`,
 `fscores`, etc, will utilize this object automatically to capitalize on
 parallel processing architecture. The object defined is a call from
+either
+[`mirai::make_cluster()`](https://mirai.r-lib.org/reference/make_cluster.html)
+(the default) or
 [`parallel::makeCluster()`](https://rdrr.io/r/parallel/makeCluster.html).
 Note that if you are defining other parallel objects (for simulation
 designs, for example) it is not recommended to define a mirtCluster.
@@ -11,7 +14,7 @@ designs, for example) it is not recommended to define a mirtCluster.
 ## Usage
 
 ``` r
-mirtCluster(spec, omp_threads, remove = FALSE, ...)
+mirtCluster(spec, omp_threads, remove = FALSE, use_mirai = TRUE, ...)
 ```
 
 ## Arguments
@@ -32,6 +35,10 @@ mirtCluster(spec, omp_threads, remove = FALSE, ...)
 - remove:
 
   logical; remove previously defined `mirtCluster()`?
+
+- use_mirai:
+
+  logical; use the `mirai` cluster definition instead of `parallel`?
 
 - ...:
 

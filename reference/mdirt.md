@@ -256,7 +256,7 @@ dat <- expand.table(LSAT6)
 #> 
 #> Latent class model with 2 classes and 2 profiles.
 #> Converged within 1e-04 tolerance after 363 EM iterations.
-#> mirt version: 1.45.7 
+#> mirt version: 1.46 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -275,7 +275,7 @@ dat <- expand.table(LSAT6)
 #> 
 #> Latent class model with 3 classes and 3 profiles.
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.45.7 
+#> mirt version: 1.46 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -467,21 +467,20 @@ class_prob <- apply(fs, 1, function(x) sample(1:2, 1, prob=x))
 table(class_prob)
 #> class_prob
 #>   1   2 
-#> 333 667 
+#> 343 657 
 
 # plausible value imputations for stochastic classification in both classes
 pvs <- fscores(mod2, plausible.draws=10)
 tabs <- lapply(pvs, function(x) apply(x, 2, table))
 tabs[[1]]
 #>   [,1] [,2]
-#> 0  667  310
-#> 1  333  690
+#> 0  678  311
+#> 1  322  689
 
 
 # fit with random starting points (run in parallel to save time)
 if(interactive()) mirtCluster()
 mod <- mdirt(dat, 2, nruns=10)
-#> Warning: EM cycles terminated after 500 iterations.
 
 #--------------------------
 # Grade of measurement model
@@ -500,7 +499,7 @@ mod <- mdirt(dat, 2, nruns=10)
 #> 
 #> Latent class model with 2 classes and 3 profiles.
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.45.7 
+#> mirt version: 1.46 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -572,7 +571,7 @@ dat <- key2binary(SAT12,
 #> 
 #> Latent class model with 3 classes and 8 profiles.
 #> Converged within 1e-04 tolerance after 142 EM iterations.
-#> mirt version: 1.45.7 
+#> mirt version: 1.46 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete
@@ -959,7 +958,7 @@ model <- mirt.model('C1 = 1-32
 #> 
 #> Latent class model with 3 classes and 3 profiles.
 #> Converged within 1e-04 tolerance after 364 EM iterations.
-#> mirt version: 1.45.7 
+#> mirt version: 1.46 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay
 #> Latent density type: discrete

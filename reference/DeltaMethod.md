@@ -52,10 +52,10 @@ estvar <- vcov(toy.lm)
 # Estimate of (1 / (b0 + b1)) and (1 / (b0 + b1 + b2))
 1 / (estmean[1] + estmean[2])
 #> (Intercept) 
-#>   0.2355943 
+#>   0.2402778 
 1 / (estmean[1] + estmean[2] + estmean[3])
 #> (Intercept) 
-#>    0.158912 
+#>   0.1578399 
 
 if (FALSE) { # \dontrun{
 ## Approximate standard error
@@ -67,14 +67,14 @@ msm::deltamethod (~ 1 / (x1 + x2 + x3), estmean, estvar)
 fn <- function(par) 1 / sum(par[1:2])
 fn2 <- function(par) 1 / sum(par[1:3])
 DeltaMethod(fn, estmean, estvar)$se
-#> [1] 0.0615558
+#> [1] 0.06402223
 DeltaMethod(fn2, estmean, estvar)$se
-#> [1] 0.06784448
+#> [1] 0.06692663
 
 # index argument for easier flexibility
 fn <- function(par, index) 1 / sum(par[index])
 DeltaMethod(fn, estmean, estvar, index=1:2)$se
-#> [1] 0.0615558
+#> [1] 0.06402223
 DeltaMethod(fn, estmean, estvar, index=1:3)$se
-#> [1] 0.06784448
+#> [1] 0.06692663
 ```

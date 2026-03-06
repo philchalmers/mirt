@@ -2,6 +2,11 @@
 
 ## Changes in mirt 1.46
 
+- [`mirtCluster()`](https://philchalmers.github.io/mirt/reference/mirtCluster.md)
+  definition switched from `parallel` to `mirai` package by default.
+  Should help with performance issues when definition more aggressive
+  cluster sizes
+
 - `technical = list(fixedTheta)` matrix input added to estimate item
   parameters assuming that the true latent trait terms are fixed and
   known (requested by Richard Luecht)

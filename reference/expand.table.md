@@ -77,11 +77,11 @@ LSAT7samp <- expand.table(LSAT7, sample = TRUE)
 head(LSAT7samp)
 #>   Item.1 Item.2 Item.3 Item.4 Item.5
 #> 1      1      1      1      1      1
-#> 2      1      0      1      1      1
-#> 3      1      1      0      1      1
-#> 4      1      0      1      1      1
-#> 5      1      1      1      1      1
-#> 6      1      1      1      1      1
+#> 2      1      1      1      0      1
+#> 3      0      1      1      1      1
+#> 4      1      1      1      0      1
+#> 5      1      0      1      1      1
+#> 6      1      0      1      0      1
 colMeans(LSAT7full)
 #> Item.1 Item.2 Item.3 Item.4 Item.5 
 #>  0.828  0.658  0.772  0.606  0.843 

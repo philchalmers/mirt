@@ -9,7 +9,7 @@ range."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.45.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,52 +104,52 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>,itemtype<span class="op">=</span><span class="st">'graded'</span>, N<span class="op">=</span><span class="fl">300</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      4      4      2      4      4      4      2      4      4       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      4      4      1      2      4      0      4      0      4       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      3      0      4      0      4      0      4      0      0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      0      4      3      4      4      4      4      4      4       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      0      0      0      1      4      4      0      1      1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      1      0      0      0      3      1      3      0      0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0      1      4      4      0      3      4      4      4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      1      1      4      4      0      3      4      2      3       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      0      3      4      4      0      1      4      4      4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      4      3      4      4      0      0      4      4      3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      3      3      2      1      0      0      4      1      4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      4      3      0      4      4      0      0      4      3       4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18 Item_19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       4       4       0       4       4       4       1       4       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       4       0       2       4       4       2       0       1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       4       2       0       0       0       2       0       1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       4       4       3       4       4       4       4       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       4       2       1       0       4       2       2       4       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0       4       3       3       1       1       0       1       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1       4       4       4       4       3       4       4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0       0       4       2       4       0       0       2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       0       4       4       4       4       4       4       2       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       0       0       2       4       3       4       4       2       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       1       4       0       2       0       4       3       4       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       3       1       0       0       3       0       0       0       3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># fitted model has negative slopes due to flipped scoring</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 a1         d1          d2          d3         d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  -1.1171924  2.4296469  1.73288248  1.26067403  0.2297665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2   7.7979262  0.6344815  0.10842378 -0.40343108 -0.5373447</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3   0.2629820  1.0227374  0.40406181  0.05877758 -0.7416570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4   4.7612348  0.4181758  0.09659425 -0.39620617 -0.8081206</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  -0.2508314  1.7270595  1.44413339  1.00569169  0.4374845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6   0.2825226  0.6987403  0.33984035 -0.10978202 -0.5318410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7   0.5483014  1.1687726  0.61066779 -0.17876210 -0.8428922</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8   0.2589735  0.1645560 -0.50937611 -0.97348674 -1.6301845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9   4.7482498  0.4760300 -0.17069300 -1.25756806 -2.0364066</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 -3.4544141 -0.9539374 -1.70812723 -1.99858134 -2.6710047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11  4.5041025  1.3508597  0.82245138  0.38868246 -0.6469871</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12  0.6126098  2.0281560  1.23506017  0.35720032 -0.2322765</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13  0.9980961 -0.4148028 -1.06332972 -1.72305387 -2.4443652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14  2.9404701  1.4499665  0.65492514  0.16151658 -0.1173663</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15  3.0592768  1.0422137  0.65828309  0.23004194 -0.8853085</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16  2.1588771  1.2437703  0.88064791 -0.61804921 -1.1362945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17  0.9028578  1.2465837  0.38556807 -0.45153380 -0.9196150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18  0.2863930  2.4301695  1.84214734  1.30810063  0.9140620</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19  1.3145920  1.6329817  0.90542889 -0.07961438 -0.6340161</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20  1.0298438  2.3208002  1.75183674  0.90002111  0.6407807</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  a1          d1         d2          d3         d4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1   -1.7883098  2.31995288  1.4499834  1.07726421  0.4510197</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2    1.0769866  0.36191208 -0.4796053 -0.77937162 -1.9037988</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3    2.0870495  0.89367114  0.4259646 -0.35856200 -1.0589551</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4    1.0650652  2.30861621  1.6791993  1.13148980  0.4942154</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  -11.4060505  1.73798765  1.0440471 -0.16089560 -1.0876508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6    0.2942558  0.94241730  0.3792134 -0.10333893 -0.8226098</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7    4.1129557  0.87257493  0.1039055 -0.41943179 -1.0620040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8    0.1449906  1.97055826  1.2737632  0.63847030  0.4085881</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9    0.4696289  1.27148178  0.3775533  0.01052184 -0.9478330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10  -0.3739309  0.76112262  0.4617020  0.04222674 -0.2764863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11   0.2515094  0.01994729 -0.2106310 -0.90307832 -1.5791507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12   4.2893751 -0.01594705 -0.5478900 -0.77386779 -1.0680246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13   2.5148791 -0.42978095 -1.0988879 -1.53643200 -2.4275679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14   4.5781642  1.56567048  0.4968111 -0.19671080 -0.9985485</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15   0.3902411  1.83912307  1.3005456  0.66219058 -0.2833309</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16   1.4550661 -0.66105067 -1.3785125 -1.49246863 -2.2246198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17   3.5799803  1.30852675  0.7649316  0.16509885 -0.7689310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18   2.5408922  0.96129403  0.5650282 -0.43645974 -0.7919668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19   1.5596373  1.30292181  0.6382722  0.03209491 -0.7689053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20   1.1586202  0.79856397  0.1092070 -0.26714791 -0.7051084</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">'itemscore'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="reverse.score-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
@@ -158,68 +158,68 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">revdat</span> <span class="op">&lt;-</span> <span class="fu">reverse.score</span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Item_1'</span>, <span class="st">'Item_5'</span>, <span class="st">'Item_10'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">revdat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1.RS Item_2 Item_3 Item_4 Item_5.RS Item_6 Item_7 Item_8 Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         0      4      2      4         0      4      2      4      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         0      4      1      2         0      0      4      0      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         1      0      4      0         0      0      4      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         4      4      3      4         0      4      4      4      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         4      0      0      1         0      4      0      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         3      0      0      0         1      1      3      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         4      1      4      4         4      3      4      4      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         3      1      4      4         4      3      4      2      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         4      3      4      4         4      1      4      4      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         0      3      4      4         4      0      4      4      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         1      3      2      1         4      0      4      1      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         0      3      0      4         0      0      0      4      3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_10.RS Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]          4       4       4       0       4       4       4       1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]          4       4       0       2       4       4       2       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]          4       4       2       0       0       0       2       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]          4       4       4       3       4       4       4       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]          3       4       2       1       0       4       2       2       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]          4       0       4       3       3       1       1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]          2       1       4       4       4       4       3       4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]          2       0       0       4       2       4       0       0       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]          0       0       4       4       4       4       4       4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]          0       0       0       2       4       3       4       4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]          0       1       4       0       2       0       4       3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]          0       3       1       0       0       3       0       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_19 Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       4       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       3       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       2       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       4       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       3       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       3       0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># compare</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">10</span><span class="op">)</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1 Item_5 Item_10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0     35     46     179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     23     12      23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     21     23       8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     57     37      17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    164    182      73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0     52    135      97</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     32      8      20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     16     14      30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     29     10      23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    171    133     130</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">revdat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">10</span><span class="op">)</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">table</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Item_1.RS Item_5.RS Item_10.RS</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0       164       182         73</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        57        37         17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        21        23          8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        23        12         23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        35        46        179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0       171       133        130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        29        10         23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        16        14         30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        32         8         20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        52       135         97</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># slopes all positive now</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">revdat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   a1         d1         d2          d3         d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1.RS  1.1182344 -0.2276345 -1.2585807 -1.73084542 -2.4277274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2     7.8235698  0.6524445  0.1261525 -0.38602040 -0.5201021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3     0.2632045  1.0232150  0.4045218  0.05926287 -0.7411866</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4     4.7761244  0.4286916  0.1068883 -0.38632467 -0.7986421</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5.RS  0.2510760 -0.4370332 -1.0052289 -1.44369998 -1.7266003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6     0.2827955  0.6992590  0.3403556 -0.10926752 -0.5313230</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7     0.5487299  1.1697835  0.6116507 -0.17771403 -0.8418820</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8     0.2591667  0.1650238 -0.5089098 -0.97301720 -1.6297131</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9     4.7606067  0.4861014 -0.1609173 -1.24853436 -2.0280968</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10.RS 3.4634667  2.6802518  2.0073365  1.71669942  0.9620659</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11    4.5179204  1.3616041  0.8328228  0.39869560 -0.6378781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12    0.6132529  2.0293027  1.2362469  0.35825699 -0.2310679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13    0.9990765 -0.4129181 -1.0614558 -1.72125802 -2.4426937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14    2.9461576  1.4563648  0.6611071  0.16754860 -0.1114038</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15    3.0649176  1.0485816  0.6646115  0.23628993 -0.8793653</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16    2.1617219  1.2479992  0.8848828 -0.61395520 -1.1322718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17    0.9038909  1.2483193  0.3872151 -0.44980307 -0.9180791</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18    0.2866437  2.4306786  1.8426855  1.30858320  0.9146260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19    1.3159613  1.6354544  0.9078839 -0.07718882 -0.6315840</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20    1.0310717  2.3228460  1.7538611  0.90199444  0.6427890</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    a1          d1          d2          d3         d4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1.RS   1.7901718 -0.47020423 -1.09635906 -1.46895051 -2.3387232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2      1.0776078  0.35073997 -0.49079883 -0.79052751 -1.9147922</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3      2.0884401  0.87114963  0.40337312 -0.38093467 -1.0810479</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4      1.0649146  2.29754853  1.66804690  1.12027064  0.4830812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5.RS  11.7687575  0.97113547  0.02139226 -1.21634700 -1.9259345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6      0.2943092  0.93944969  0.37623506 -0.10630691 -0.8255798</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7      4.1171834  0.82635722  0.05814954 -0.46467930 -1.1068153</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8      0.1451793  1.96909071  1.27229211  0.63699976  0.4071182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9      0.4694871  1.26664759  0.37277717  0.00574058 -0.9525291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10.RS  0.3742519  0.27270242 -0.04603928 -0.46552604 -0.7649342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11     0.2517395  0.01742505 -0.21317429 -0.90562414 -1.5817076</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12     4.3047387 -0.06511026 -0.59784126 -0.82422241 -1.1185195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13     2.5190756 -0.45761311 -1.12678857 -1.56424704 -2.4551758</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14     4.5744997  1.51157765  0.44372720 -0.24860516 -1.0481648</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15     0.3904429  1.83522215  1.29664120  0.65827189 -0.2872616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16     1.4567669 -0.67657459 -1.39406916 -1.50794145 -2.2400164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_17     3.5769208  1.26677582  0.72365082  0.12492814 -0.8069567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_18     2.5421257  0.93354704  0.53733383 -0.46392718 -0.8192254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_19     1.5594394  1.28637378  0.62177933  0.01574451 -0.7849071</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_20     1.1594008  0.78662321  0.09713840 -0.27921560 -0.7171663</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod2</span>, type <span class="op">=</span> <span class="st">'itemscore'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="reverse.score-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
@@ -230,57 +230,57 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  58  21  57 164 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  84  16  29 171 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 4 score not observed for item 5, though should have been rescored to a 0</span></span></span>
 <span class="r-in"><span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">5</span><span class="op">]</span> <span class="op">==</span> <span class="fl">4</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">3</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0   1   2   3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  46  12  23 219 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135   8  14 143 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># specify theoretical scoring values in the range list</span></span></span>
 <span class="r-in"><span><span class="va">revdat2</span> <span class="op">&lt;-</span> <span class="fu">reverse.score</span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Item_1'</span>, <span class="st">'Item_5'</span>, <span class="st">'Item_10'</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                              range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Item_1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span>, Item_5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">revdat2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1.RS Item_2 Item_3 Item_4 Item_5.RS Item_6 Item_7 Item_8 Item_9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         1      4      2      4         1      4      2      4      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         1      4      1      2         1      0      4      0      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         2      0      4      0         1      0      4      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         4      4      3      4         1      4      4      4      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         4      0      0      1         1      4      0      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         4      0      0      0         1      1      3      0      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         4      1      4      4         4      3      4      4      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         4      1      4      4         4      3      4      2      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         4      3      4      4         4      1      4      4      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         1      3      4      4         4      0      4      4      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         2      3      2      1         4      0      4      1      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         1      3      0      4         1      0      0      4      3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_10.RS Item_11 Item_12 Item_13 Item_14 Item_15 Item_16 Item_17 Item_18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]          4       4       4       0       4       4       4       1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]          4       4       0       2       4       4       2       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]          4       4       2       0       0       0       2       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]          4       4       4       3       4       4       4       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]          3       4       2       1       0       4       2       2       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]          4       0       4       3       3       1       1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]          2       1       4       4       4       4       3       4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]          2       0       0       4       2       4       0       0       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]          0       0       4       4       4       4       4       4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]          0       0       0       2       4       3       4       4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]          0       1       4       0       2       0       4       3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]          0       3       1       0       0       3       0       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Item_19 Item_20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       4       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       4       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       3       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       2       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       4       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       2       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       3       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       3       0</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  58  21  57 164 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  84  16  29 171 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">revdat2</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 164  57  21  58 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 171  29  16  84 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0   1   2   3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  46  12  23 219 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135   8  14 143 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">revdat2</span><span class="op">[</span>,<span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 219  23  12  46 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 143  14   8 135 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

@@ -54,7 +54,7 @@ dat <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.45.7 
+#> mirt version: 1.46 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -76,17 +76,17 @@ for(i in 1:20)
 #> mirt(data = dat, model = 1)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
-#> Converged within 1e-04 tolerance after 25 EM iterations.
-#> mirt version: 1.45.7 
+#> Converged within 1e-04 tolerance after 24 EM iterations.
+#> mirt version: 1.46 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
 #> Latent density type: Gaussian 
 #> 
-#> Log-likelihood = -2652.1
+#> Log-likelihood = -2647.798
 #> Estimated parameters: 10 
-#> AIC = 5324.2
-#> BIC = 5373.277; SABIC = 5341.517
+#> AIC = 5315.596
+#> BIC = 5364.674; SABIC = 5332.913
 #> 
 scores <- fscores(mod, method = 'MAP')
 
@@ -98,19 +98,19 @@ fulldata <- imputeMissing(mod, scores)
 #> mirt(data = fulldata, model = 1)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
-#> Converged within 1e-04 tolerance after 24 EM iterations.
-#> mirt version: 1.45.7 
+#> Converged within 1e-04 tolerance after 25 EM iterations.
+#> mirt version: 1.46 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
 #> Latent density type: Gaussian 
 #> 
-#> Log-likelihood = -2660.331
+#> Log-likelihood = -2654.296
 #> Estimated parameters: 10 
-#> AIC = 5340.663
-#> BIC = 5389.741; SABIC = 5357.98
-#> G2 (21) = 30.61, p = 0.0804
-#> RMSEA = 0.021, CFI = NaN, TLI = NaN
+#> AIC = 5328.593
+#> BIC = 5377.67; SABIC = 5345.91
+#> G2 (21) = 31.58, p = 0.0645
+#> RMSEA = 0.022, CFI = NaN, TLI = NaN
 
 # with multipleGroup
 set.seed(1)
