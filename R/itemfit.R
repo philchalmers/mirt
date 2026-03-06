@@ -349,7 +349,9 @@ itemfit <- function(x, fit_stats = 'S_X2',
             dat <- extract.mirt(mod, 'data')
             Emod <- mirt(dat, nfact, itemtype=itemtype,
                          pars=sv, verbose=FALSE,
-                         technical=list(customTheta=Theta), ...)
+                         technical=list(customTheta=Theta,
+                                        storeEtable=TRUE,
+                                        customK=extract.mirt(mod, 'K')), ...)
             Etable <- Emod@Internals$Etable[[1]]$r1
             itemloc <- extract.mirt(mod, 'itemloc')
             X2 <- rep(NA, ncol(dat))
@@ -374,6 +376,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
                            ETpoints, ...){
             count <- 0L
             K <- extract.mirt(mod, 'K')
+            nfact <- extract.mirt(mod, 'nfact')
             while(TRUE){
                 count <- count + 1L
                 if(count == 20)
@@ -381,7 +384,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
                 dat <- simdata(model=mod, N=N)
                 dat[is_NA] <- NA
                 if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
-                mod2 <- mirt(dat, model, itemtype=itemtype, verbose=FALSE, pars=sv,
+                mod2 <- mirt(dat, nfact, itemtype=itemtype, verbose=FALSE, pars=sv,
                              technical=list(warn=FALSE, omp=FALSE), ...)
                 if(!extract.mirt(mod2, 'converged')) next
                 ret <- X2star(mod2, which.items=which.items, ETrange=ETrange,
@@ -653,7 +656,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
                 tmpdat <- fulldata[pick[,i], , drop=FALSE]
                 dat <- tmpdat[Groups == j, itemloc[i]:(itemloc[i+1] - 1), drop = FALSE]
                 if(nrow(dat) <= 1L) next
-                colnames(dat) <- paste0("cat_", sort(unique(extract.mirt(x, "data")[,i])))
+                colnames(dat) <- paste0("cat_", 1:x@Data$K[i])
                 r <- colSums(dat)
                 N <- nrow(dat)
                 tmpTheta <- Theta[pick[,i], , drop=FALSE]
