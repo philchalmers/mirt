@@ -4,7 +4,7 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-mirtCluster(spec, omp_threads, remove = FALSE, ...)
+mirtCluster(spec, omp_threads, remove = FALSE, use_mirai = TRUE, ...)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
@@ -16,13 +16,16 @@ Not used when argument input is missing}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
 
+\item{use_mirai}{logical; use the \code{mirai} cluster definition instead of \code{parallel}?}
+
 \item{...}{additional arguments to pass to \code{parallel::makeCluster}}
 }
 \description{
 This function defines a object that is placed in a relevant internal environment defined in mirt.
 Internal functions such as \code{calcLogLik}, \code{fscores}, etc, will utilize this object
 automatically to capitalize on parallel
-processing architecture. The object defined is a call from \code{parallel::makeCluster()}.
+processing architecture. The object defined is a call from either
+\code{mirai::make_cluster()} (the default) or \code{parallel::makeCluster()}.
 Note that if you are defining other parallel objects (for simulation designs, for example)
 it is not recommended to define a mirtCluster.
 }
