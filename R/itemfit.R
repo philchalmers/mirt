@@ -313,7 +313,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
                 dat <- simdata(model=mod, N=N)
                 dat[is_NA] <- NA
                 if(!all(apply(dat, 2, function(x) length(na.omit(unique(x)))) == K)) next
-                mod2 <- mirt(dat, model, itemtype=itemtype,
+                mod2 <- mirt(dat, extract.mirt(mod, 'nfact'), itemtype=itemtype,
                              verbose=FALSE, pars=sv, technical=list(warn=FALSE))
                 if(!extract.mirt(mod2, 'converged')) next
                 tmp <- PV_itemfit(mod2, which.items=which.items, draws=draws, ...)
@@ -800,7 +800,7 @@ itemfit <- function(x, fit_stats = 'S_X2',
         dat <- x@Data$data
         adj <- x@Data$mins
         K <- x@Data$K
-        Kobs <- apply(x@Data$data, 2, \(x) length(unique(x, na.rm=TRUE)))
+        Kobs <- apply(x@Data$data, 2, \(x) length(na.omit(unique(x))))
         if(!all(K == Kobs))
             stop(c("S_X2 cannot be computed for subgroups where the observed\n",
                   "response options are less than the full range of possible response options"),
