@@ -1,4 +1,4 @@
-# Changes in mirt 1.46
+# Changes in mirt 1.46.1
 
 - `mirtCluster()` definition switched from `parallel` to `mirai` package by 
   default. Should help with performance issues when definition more aggressive 
