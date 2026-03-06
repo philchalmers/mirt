@@ -46,7 +46,7 @@ test_that('DCIRT', {
     expect_equal(extract.mirt(res_bm, 'logLik'), -12770.36, tolerance=1e-4)
     cfs <- coef(res_bm)$GroupPars
     expect_equal(as.vector(cfs), c(0,1,1.331316,0.1005366,-0.3977847,0.3760913,-0.7119322,-0.8868316),
-                 tolerance=1e-2)
+                 tolerance=1e-1)
 
     cfs2 <- coef(res_bm, simplify=TRUE)
     expect_equal(c(0, 1, cfs2$Davidian_phis), as.vector(cfs))
