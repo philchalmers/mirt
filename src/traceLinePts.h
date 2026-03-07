@@ -58,6 +58,10 @@ struct ItemTraceData {
     int usefixed;
 };
 
+void _computeItemTrace_serial(vector<double> &, const NumericMatrix &,
+    const List &, const NumericVector &, const vector<int> &, const int &,
+    const int &, const int &, const int &);
+
 void _computeItemTrace(vector<double> &, const NumericMatrix &,
     const ItemTraceData &, const vector<int> &, const int &, const int &, const int &);
 
