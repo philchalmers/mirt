@@ -1,9 +1,19 @@
 #include "Misc.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // hack fix
 void R_init_mirt(DllInfo* info) {
     R_registerRoutines(info, NULL, NULL, NULL, NULL);
     R_useDynamicSymbols(info, TRUE);
+}
+
+void if_omp_set_num_threads(const int &omp_threads){
+    #ifdef _OPENMP
+        omp_set_num_threads(omp_threads);
+    #endif
 }
 
 NumericMatrix polyOuter(const NumericMatrix &Thetas, const vector<double> &Pk,

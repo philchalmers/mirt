@@ -1888,9 +1888,9 @@ reloadPars <- function(longpars, pars, ngroups, J){
 }
 
 computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, length(itemloc)-1L),
-                             CUSTOM.IND, pis = NULL){
+                             CUSTOM.IND, pis = NULL, omp_threads = .mirtClusterEnv$omp_threads){
     if(is.null(pis)){
-        itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm)
+        itemtrace <- .Call('computeItemTrace', pars, Theta, itemloc, offterm, as.integer(omp_threads))
         if(length(CUSTOM.IND)){
             for(i in CUSTOM.IND){
                 Thetas <- Theta
@@ -1902,7 +1902,8 @@ computeItemtrace <- function(pars, Theta, itemloc, offterm = matrix(0L, 1L, leng
     } else {
         tmp_itemtrace <- vector('list', length(pis))
         for(g in seq_len(length(pis))){
-            tmp_itemtrace[[g]] <- .Call('computeItemTrace', pars[[g]]@ParObjects$pars, Theta, itemloc, offterm)
+            tmp_itemtrace[[g]] <- .Call('computeItemTrace', pars[[g]]@ParObjects$pars, Theta, itemloc,
+                                        offterm, as.integer(omp_threads))
             if(length(CUSTOM.IND)){
                 for(i in CUSTOM.IND){
                     Thetas <- Theta
