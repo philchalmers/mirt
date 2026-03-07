@@ -2,6 +2,8 @@
 
 ## Changes in mirt 1.46.1
 
+CRAN release: 2026-03-07
+
 - [`mirtCluster()`](https://philchalmers.github.io/mirt/reference/mirtCluster.md)
   definition switched from `parallel` to `mirai` package by default.
   Should help with performance issues when definition more aggressive

@@ -30,7 +30,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/philchalmers/mirt/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/philchalmers/mirt/blob/v1.46.1/inst/CITATION)
 
 R. Philip Chalmers (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. Journal of Statistical Software, 48(6),
