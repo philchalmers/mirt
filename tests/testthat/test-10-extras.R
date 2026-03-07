@@ -81,6 +81,12 @@ test_that('extras', {
     expect_equal(pb[1:3, 1], c(0.9965890, 0.9963601, 0.9961159), tolerance = 1e-5)
     ti <- testinfo(mod1, Theta=Theta)
     expect_equal(ti[1:3], c(0.06607895, 0.06918330, 0.07242870), tolerance = 1e-5)
+    Theta_big <- matrix(seq(-6, 6, length.out=3000))
+    trace_serial <- mirt:::computeItemtrace(mod1@ParObjects$pars, Theta_big, mod1@Model$itemloc,
+                                            CUSTOM.IND=mod1@Internals$CUSTOM.IND, omp_threads=1L)
+    trace_parallel <- mirt:::computeItemtrace(mod1@ParObjects$pars, Theta_big, mod1@Model$itemloc,
+                                              CUSTOM.IND=mod1@Internals$CUSTOM.IND, omp_threads=2L)
+    expect_equal(trace_serial, trace_parallel)
     set.seed(1234)
     fs <- fscores(mod1, MI=20, verbose=FALSE, full.scores=FALSE)
     expect_class(fs, 'matrix')
@@ -104,4 +110,3 @@ test_that('extras', {
     expect_equal(abs(cfs), abs(c(0.7835446,2.088519,4.489773,0.6727285,0.2357904,0.3148114,1.736133,0.3861383,0.07062774,6.563708,1.01623,0.05366885,0.2764068,-5.030398,-0.1089204,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,2.737057,9.954572,8.696347,2.051471,1.746521,1.493303,4.871186,2.184036,5.174404,13.00528,12.46809,2.830379,4.335373,6.261805,7.718796,3.259992,3.88189,5.255669,9.140148,1.683119,4.413986,6.18042,8.669859,3.579751,NA,NA,NA,NA,4,4,4,4,NA,NA,NA,NA,5,5,5,5,NA,NA,NA,NA,0,0,0,0,NA,NA,NA,NA,0,0,0,0,NA,NA,NA,NA,4.178023,5.776866,7.750279,3.300487,NA,NA,NA,NA,3.043197,4.313529,5.190609,1.550788)), tolerance=1e-4)
 
 })
-

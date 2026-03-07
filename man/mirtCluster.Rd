@@ -11,7 +11,7 @@ mirtCluster(spec, omp_threads, remove = FALSE, use_mirai = TRUE, ...)
 maximum number of available local cores minus 1 will be used.
 Setting this to NULL will skip a new definition (allows \code{omp_threads} to be used independently)}
 
-\item{omp_threads}{number of OpenMP threads to use (currently applies to E-step computations only).
+\item{omp_threads}{number of OpenMP threads to use for OpenMP-backed E-step and item trace computations.
 Not used when argument input is missing}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}

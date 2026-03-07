@@ -12,7 +12,7 @@
 #' @param spec input that is passed to \code{parallel::makeCluster()}. If no input is given the
 #'   maximum number of available local cores minus 1 will be used.
 #'   Setting this to NULL will skip a new definition (allows \code{omp_threads} to be used independently)
-#' @param omp_threads number of OpenMP threads to use (currently applies to E-step computations only).
+#' @param omp_threads number of OpenMP threads to use for OpenMP-backed E-step and item trace computations.
 #'   Not used when argument input is missing
 #' @param use_mirai logical; use the \code{mirai} cluster definition instead of \code{parallel}?
 #' @param ... additional arguments to pass to \code{parallel::makeCluster}

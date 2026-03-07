@@ -37,7 +37,7 @@ Estep.mirt <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND, w
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                      CUSTOM.IND=CUSTOM.IND)
+                                      CUSTOM.IND=CUSTOM.IND, omp_threads=omp_threads)
     retlist <- if(full) .Call("Estep2", itemtrace, prior, tabdata,
                               wmiss, Etable, omp_threads)
         else .Call("Estep", itemtrace, prior, tabdata, freq,
@@ -52,7 +52,7 @@ Estep.bfactor <- function(pars, tabdata, freq, Theta, prior, Priorbetween, speci
 {
     if(is.null(itemtrace))
         itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                      CUSTOM.IND=CUSTOM.IND)
+                                      CUSTOM.IND=CUSTOM.IND, omp_threads=omp_threads)
     retlist <- .Call("Estepbfactor", itemtrace, prior, Priorbetween, tabdata,
                      freq, sitems, wmiss, Etable, omp_threads)
     return(retlist)
@@ -67,7 +67,8 @@ Estep.mixture <- function(pars, tabdata, freq, Theta, prior, itemloc, CUSTOM.IND
         itemtrace <- vector('list', ngroups)
         for(g in seq_len(ngroups))
             itemtrace[[g]] <- computeItemtrace(pars=pars[[g]], Theta=Theta,
-                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND)
+                                               itemloc=itemloc, CUSTOM.IND=CUSTOM.IND,
+                                               omp_threads=omp_threads)
     }
     tmp <- .Call("Estep", do.call(rbind, itemtrace),
                  do.call(c, prior), tabdata, freq, wmiss, Etable, omp_threads)

@@ -42,8 +42,23 @@ void P_monopoly(vector<double> &, const vector<double> &,
     const NumericMatrix &, const int &,
     const int &, const int &, const int &);
 
+struct ItemTraceData {
+    vector<double> par;
+    NumericVector ot;
+    IntegerVector cpow;
+    IntegerVector factor_ind;
+    IntegerVector fixed_ind;
+    NumericMatrix item_Q;
+    NumericMatrix theta_fixed;
+    int ncat;
+    int itemclass;
+    int correct;
+    int has_mat;
+    int k;
+    int usefixed;
+};
+
 void _computeItemTrace(vector<double> &, const NumericMatrix &,
-    const List &, const NumericVector &, const vector<int> &, const int &,
-    const int &, const int &, const int &);
+    const ItemTraceData &, const vector<int> &, const int &, const int &, const int &);
 
 #endif

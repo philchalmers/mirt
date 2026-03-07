@@ -1,6 +1,11 @@
 #include "Misc.h"
 #include "traceLinePts.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+const int ITEMTRACE_OMP_MIN_WORK = 10000;
+#endif
+
 void itemTrace(vector<double> &P, vector<double> &Pstar, const vector<double> &a, const double *d,
         const NumericMatrix &Theta, const double *g, const double *u, const NumericVector &ot)
 {
@@ -786,35 +791,15 @@ void P_switch(vector<double> &P, const vector<double> &par,
 }
 
 void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
-    const List &pars, const NumericVector &ot, const vector<int> &itemloc, const int &which,
-    const int &nfact, const int &N, const int &usefixed)
+    const ItemTraceData &item, const vector<int> &itemloc, const int &which,
+    const int &nfact, const int &N)
 {
     const NumericMatrix* theta_ptr = &Theta;
-    NumericMatrix theta_fixed;
     int nfact2 = nfact;
-    S4 item = pars[which];
-    int ncat = as<int>(item.slot("ncat"));
-    vector<double> par = as< vector<double> >(item.slot("par"));
+    const int ncat = item.ncat;
+    const vector<double> &par = item.par;
     vector<double> P(N*ncat);
-    int itemclass = as<int>(item.slot("itemclass"));
-    int correct = 0;
-    int has_mat = 0;
-    int k = 1;
-    IntegerVector cpow;
-    IntegerVector factor_ind;
-    IntegerVector fixed_ind;
-    if(itemclass == 7){
-        cpow = as<IntegerVector>(item.slot("cpow"));
-        factor_ind = as<IntegerVector>(item.slot("factor.ind"));
-        fixed_ind = as<IntegerVector>(item.slot("fixed.ind"));
-    }
-    if(itemclass == 8)
-        correct = as<int>(item.slot("correctcat"));
-    if(itemclass == 12)
-        k = as<int>(item.slot("k"));
-    NumericMatrix item_Q;
-    if(itemclass == 10)
-        item_Q = as<NumericMatrix>(item.slot("item.Q"));
+    const int itemclass = item.itemclass;
 
     /*
         1 = dich
@@ -831,71 +816,59 @@ void _computeItemTrace(vector<double> &itemtrace, const NumericMatrix &Theta,
         12 = monopoly
     */
 
-    if(usefixed){
-        NumericMatrix itemFD = item.slot("fixed.design");
-        nfact2 = nfact + itemFD.ncol();
-        theta_fixed = NumericMatrix(Theta.nrow(), nfact2);
-        if(itemFD.nrow() == 1){
-            for(int j = 0; j < Theta.nrow(); ++j)
-                for(int i = 0; i < itemFD.ncol(); ++i)
-                    theta_fixed(j,i) = itemFD(0,i);
-        } else {
-            for(int i = 0; i < itemFD.ncol(); ++i)
-                theta_fixed(_,i) = itemFD(_,i);
-        }
-        for(int i = 0; i < nfact; ++i)
-            theta_fixed(_,i+itemFD.ncol()) = Theta(_,i);
-        theta_ptr = &theta_fixed;
+    if(item.usefixed){
+        nfact2 = item.theta_fixed.ncol();
+        theta_ptr = &item.theta_fixed;
     }
     const NumericMatrix &theta = *theta_ptr;
     switch(itemclass){
         case 1 :
-            P_dich(P, par, theta, ot, N, nfact2);
+            P_dich(P, par, theta, item.ot, N, nfact2);
             break;
         case 2 :
-            P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 0);
+            P_graded(P, par, theta, item.ot, N, nfact2, ncat-1, 1, 0);
             break;
         case 3 :
-        	has_mat = as<int>(item.slot("mat"));
-        	if(has_mat) P_nominal2(P, par, theta, ot, N, nfact2, ncat, 0, 0);
-            	else P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);
+            if(item.has_mat) P_nominal2(P, par, theta, item.ot, N, nfact2, ncat, 0, 0);
+                else P_nominal(P, par, theta, item.ot, N, nfact2, ncat, 0, 0);
             break;
         case 4 :
-            P_nominal(P, par, theta, ot, N, nfact2, ncat, 0, 0);
+            P_nominal(P, par, theta, item.ot, N, nfact2, ncat, 0, 0);
             break;
         case 5 :
-            P_graded(P, par, theta, ot, N, nfact2, ncat-1, 1, 1);
+            P_graded(P, par, theta, item.ot, N, nfact2, ncat-1, 1, 1);
             break;
         case 6 :
-            P_gpcmIRT(P, par, theta, ot, N, nfact2, ncat);
+            P_gpcmIRT(P, par, theta, item.ot, N, nfact2, ncat);
             break;
         case 7 :
-            P_comp(P, par, theta, N, nfact2, cpow, factor_ind, fixed_ind);
+            P_comp(P, par, theta, N, nfact2, item.cpow, item.factor_ind, item.fixed_ind);
             break;
         case 8 :
-            P_nested(P, par, theta, N, nfact2, ncat, correct);
+            P_nested(P, par, theta, N, nfact2, ncat, item.correct);
             break;
         case 9 :
-            P_ideal(P, par, theta, ot, N, nfact2);
+            P_ideal(P, par, theta, item.ot, N, nfact2);
             break;
         case 10 :
-            P_lca(P, par, theta, item_Q, N, ncat, nfact2, 0);
+            P_lca(P, par, theta, item.item_Q, N, ncat, nfact2, 0);
             break;
         case 11 :
             P_ggum(P, par, theta, N, nfact2, ncat);
             break;
         case 12 :
-            P_monopoly(P, par, Theta, N, nfact2, ncat, k);
+            P_monopoly(P, par, Theta, N, nfact2, ncat, item.k);
             break;
         default :
-            P_switch(P, par, theta, ot, N, ncat, nfact, k, itemclass);
+            P_switch(P, par, theta, item.ot, N, ncat, nfact, item.k, itemclass);
     }
     int where = (itemloc[which]-1) * N;
     for(int i = 0; i < N*ncat; ++i)
         itemtrace[where + i] = P[i];
 }
 
-RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Roffterm)
+RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Roffterm,
+    SEXP Romp_threads)
 {
     BEGIN_RCPP
 
@@ -903,18 +876,56 @@ RcppExport SEXP computeItemTrace(SEXP Rpars, SEXP RTheta, SEXP Ritemloc, SEXP Ro
     const NumericMatrix Theta(RTheta);
     const NumericMatrix offterm(Roffterm);
     const vector<int> itemloc = as< vector<int> >(Ritemloc);
+    const int omp_threads = as<int>(Romp_threads);
     const int J = itemloc.size() - 1;
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
     vector<double> itemtrace(N * (itemloc[J]-1));
-    vector<int> usefixed(J);
+    vector<ItemTraceData> items(J);
+    if_omp_set_num_threads(omp_threads);
     for(int which = 0; which < J; ++which){
         S4 item = pars[which];
-        usefixed[which] = as<int>(item.slot("nfixedeffects")) > 0;
+        ItemTraceData &itemdat = items[which];
+        itemdat.ncat = as<int>(item.slot("ncat"));
+        itemdat.par = as< vector<double> >(item.slot("par"));
+        itemdat.itemclass = as<int>(item.slot("itemclass"));
+        itemdat.correct = itemdat.itemclass == 8 ? as<int>(item.slot("correctcat")) : 0;
+        itemdat.has_mat = itemdat.itemclass == 3 ? as<int>(item.slot("mat")) : 0;
+        itemdat.k = itemdat.itemclass == 12 ? as<int>(item.slot("k")) : 1;
+        itemdat.usefixed = as<int>(item.slot("nfixedeffects")) > 0;
+        itemdat.ot = NumericVector(offterm.nrow());
+        for(int i = 0; i < offterm.nrow(); ++i)
+            itemdat.ot[i] = offterm(i, which);
+        if(itemdat.itemclass == 7){
+            itemdat.cpow = clone(as<IntegerVector>(item.slot("cpow")));
+            itemdat.factor_ind = clone(as<IntegerVector>(item.slot("factor.ind")));
+            itemdat.fixed_ind = clone(as<IntegerVector>(item.slot("fixed.ind")));
+        }
+        if(itemdat.itemclass == 10)
+            itemdat.item_Q = clone(as<NumericMatrix>(item.slot("item.Q")));
+        if(itemdat.usefixed){
+            const NumericMatrix itemFD = as<NumericMatrix>(item.slot("fixed.design"));
+            itemdat.theta_fixed = NumericMatrix(N, nfact + itemFD.ncol());
+            if(itemFD.nrow() == 1){
+                for(int j = 0; j < N; ++j)
+                    for(int i = 0; i < itemFD.ncol(); ++i)
+                        itemdat.theta_fixed(j,i) = itemFD(0,i);
+            } else {
+                for(int j = 0; j < N; ++j)
+                    for(int i = 0; i < itemFD.ncol(); ++i)
+                        itemdat.theta_fixed(j,i) = itemFD(j,i);
+            }
+            for(int j = 0; j < N; ++j)
+                for(int i = 0; i < nfact; ++i)
+                    itemdat.theta_fixed(j, i + itemFD.ncol()) = Theta(j,i);
+        }
     }
+    #ifdef _OPENMP
+    const int parallel = omp_threads > 1 && J > 1 && (J * N) >= ITEMTRACE_OMP_MIN_WORK;
+    #pragma omp parallel for if(parallel) schedule(static)
+    #endif
     for(int which = 0; which < J; ++which)
-        _computeItemTrace(itemtrace, Theta, pars, offterm(_, which), itemloc,
-            which, nfact, N, usefixed[which]);
+        _computeItemTrace(itemtrace, Theta, items[which], itemloc, which, nfact, N);
 
     NumericMatrix ret = vec2mat(itemtrace, N, itemloc[J]-1);
     return(ret);
