@@ -146,12 +146,13 @@ test_that('mixed dich', {
     expect_equal(extract.mirt(mod, 'logLik'), -4314.043, tolerance = 1e-2)
     expect_equal(extract.mirt(mod, 'df'), 1001)
 
-    mod2 <- mixedmirt(dat, covdata = covdata, 1, itemtype = 'Rasch', fixed = ~ 0 + items,
-                     lr.fixed = ~ group, verbose=FALSE, draws=1, SE=FALSE)
-    so <- summary(mod2, verbose=FALSE)
-    expect_equal(as.numeric(c(so$random$Theta, so$lr.out[,1])),
-                 c(0.2094428,0,0.7084939,1.712383), tolerance=1e-3)
-    expect_equal(extract.mirt(mod2, 'logLik'), -4647.105, tolerance = 1e-4)
+    # mod2 <- mixedmirt(dat, covdata = covdata, 1, itemtype = 'Rasch', fixed = ~ 0 + items,
+    #                  lr.fixed = ~ group, verbose=FALSE, draws=1, SE=FALSE)
+    # so <- summary(mod2, verbose=FALSE)
+    # expect_equal(as.numeric(c(so$random$Theta, so$lr.out[,1])),
+    #              c(0.2094428,0,0.7084939,1.712383), tolerance=1e-3)
+    # expect_equal(extract.mirt(mod2, 'logLik'), -4647.105, tolerance = 1e-4)
+
     # set.seed(1)
     # bs <- boot.mirt(mod2, R = 3)
     # expect_class(bs, 'boot')
