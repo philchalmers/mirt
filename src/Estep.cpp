@@ -12,12 +12,6 @@
 
 const double ABSMIN = std::numeric_limits<double>::min();
 
-void if_omp_set_num_threads(const int &omp_threads){
-    #ifdef _OPENMP
-        omp_set_num_threads(omp_threads);
-    #endif
-}
-
 void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
     const vector<double> &prior, const vector<double> &r, 
     const IntegerMatrix &data, const NumericMatrix &itemtrace,

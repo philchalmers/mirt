@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+# Benchmark script compatible with both main and refactor/openmp branches
 
 suppressPackageStartupMessages(library(microbenchmark))
 
@@ -55,6 +56,27 @@ if (mode == "baseline") {
   }
 }
 
+# Check if omp_threads parameter is supported
+has_omp_support <- FALSE
+tryCatch({
+  # Try to call with omp_threads parameter
+  data("SAT12", package = "mirt", envir = environment())
+  key <- c(1, 4, 5, 2, 3, 1, 2, 1, 3, 1, 2, 4, 2, 1, 5, 3,
+           4, 4, 1, 4, 3, 3, 4, 1, 3, 5, 1, 3, 1, 5, 4, 5)
+  SAT12[SAT12 == 8] <- NA
+  dat_test <- key2binary(SAT12, key)
+  mod_test <- mirt(dat_test, 1, verbose = FALSE, technical = list(NCYCLES = 5L))
+  Theta_test <- matrix(seq(-6, 6, length.out = 100))
+  # This will fail on main branch
+  invisible(mirt:::computeItemtrace(mod_test@ParObjects$pars, Theta_test, 
+                                    mod_test@Model$itemloc, 
+                                    CUSTOM.IND = mod_test@Internals$CUSTOM.IND,
+                                    omp_threads = 1L))
+  has_omp_support <- TRUE
+}, error = function(e) {
+  has_omp_support <<- FALSE
+})
+
 set.seed(20260227)
 if (dataset == "sim") {
   a <- matrix(abs(rnorm(J, mean = 1.1, sd = 0.2)), ncol = 1L)
@@ -90,17 +112,31 @@ mod_for_scores <- mirt(dat_fit, 1, itemtype = itemtype, verbose = FALSE,
                        technical = list(NCYCLES = 40L))
 Theta_itemtrace <- matrix(seq(-6, 6, length.out = theta_n), ncol = 1L)
 
-bench_itemtrace <- microbenchmark(
-  itemtrace_large = mirt:::computeItemtrace(
-    mod_for_scores@ParObjects$pars,
-    Theta_itemtrace,
-    mod_for_scores@Model$itemloc,
-    CUSTOM.IND = mod_for_scores@Internals$CUSTOM.IND,
-    omp_threads = omp_threads
-  ),
-  times = times_itemtrace,
-  unit = "ms"
-)
+# Use omp_threads only if supported
+if (has_omp_support) {
+  bench_itemtrace <- microbenchmark(
+    itemtrace_large = mirt:::computeItemtrace(
+      mod_for_scores@ParObjects$pars,
+      Theta_itemtrace,
+      mod_for_scores@Model$itemloc,
+      CUSTOM.IND = mod_for_scores@Internals$CUSTOM.IND,
+      omp_threads = omp_threads
+    ),
+    times = times_itemtrace,
+    unit = "ms"
+  )
+} else {
+  bench_itemtrace <- microbenchmark(
+    itemtrace_large = mirt:::computeItemtrace(
+      mod_for_scores@ParObjects$pars,
+      Theta_itemtrace,
+      mod_for_scores@Model$itemloc,
+      CUSTOM.IND = mod_for_scores@Internals$CUSTOM.IND
+    ),
+    times = times_itemtrace,
+    unit = "ms"
+  )
+}
 
 bench_eapsum <- microbenchmark(
   eapsum_large = fscores(mod_for_scores, method = "EAPsum", full.scores = TRUE),
@@ -112,11 +148,12 @@ to_row <- function(name, bench, n_obs, n_items) {
   data.frame(
     mode = mode,
     dataset = dataset,
+    has_omp = has_omp_support,
     benchmark = name,
     N = n_obs,
     J = n_items,
     theta_n = theta_n,
-    omp_threads = omp_threads,
+    omp_threads = if(has_omp_support) omp_threads else NA,
     times = nrow(bench),
     median_ms = unname(median(bench$time) / 1e6),
     mean_ms = unname(mean(bench$time) / 1e6),
