@@ -93,17 +93,18 @@ itemstats <- function(data, group = NULL,
     }
     TS <- rowSums(data, na.rm = TRUE)
     TS_miss <- rowSums(data)
-    rs <- try(cor(data, use = "pairwise.complete.obs"), silent = TRUE)
+    rs <- suppressWarnings(try(cor(data, use = "pairwise.complete.obs"),
+                               silent = TRUE))
     if(is(rs, 'try-err')) rs <- NaN
     if(use_ts){
         itemcor_drop <- apply(data, 2, function(x, drop){
             tsx <- if(drop) TS-x else TS
-            ret <- cor(x, tsx, use = 'pairwise.complete.obs')
+            ret <- suppressWarnings(cor(x, tsx, use = 'pairwise.complete.obs'))
             ret
         }, drop=TRUE)
         itemcor <- apply(data, 2, function(x, drop){
             tsx <- if(drop) TS-x else TS
-            cor(x, tsx, use = 'pairwise.complete.obs')
+            suppressWarnings(cor(x, tsx, use = 'pairwise.complete.obs'))
         }, drop=FALSE)
         itemalpha <- sapply(1:ncol(data), function(x){
             tmpdat <- na.omit(data[,-x, drop=FALSE])
