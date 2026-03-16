@@ -17,6 +17,8 @@ double vecsum(const vector<double> &);
 
 SEXP vec2mat(vector<double> &, const int &, const int &);
 
+void if_omp_set_num_threads(const int &);
+
 const double ABS_MAX_Z = 35;
 
 #endif
