@@ -29,8 +29,8 @@ mirtCluster(spec, omp_threads, remove = FALSE, use_mirai = TRUE, ...)
 
 - omp_threads:
 
-  number of OpenMP threads to use (currently applies to E-step
-  computations only). Not used when argument input is missing
+  number of OpenMP threads to use for OpenMP-backed E-step and item
+  trace computations. Not used when argument input is missing
 
 - remove:
 
