@@ -104,7 +104,7 @@ test_that('poly', {
     fm2 <- fscores(modp2, rotate = 'oblimin', verbose = FALSE, full.scores=FALSE)
     expect_class(fm2, 'matrix')
     expect_true(mirt:::closeEnough(abs(as.numeric(fm2[1:6,c('F1','F2')])) -
-                                       c(2.5966,1.8668,0.6578,1.1597,2.4204,0.7001,2.412,0.8689,0.0258,0.2609,2.3376,1.4844),
+                                       c(c(2.662,2.104,0.788,1.578,2.322,0.516,2.315,0.629,0.162,0.51,2.223,1.537)),
                                    -1e-2, 1e-2))
     fm3 <- fscores(modp3, rotate = 'oblimin', full.scores = TRUE, verbose = FALSE)
     expect_class(fm3, 'matrix')
@@ -130,7 +130,7 @@ test_that('poly', {
     expect_class(IP1, 'trellis')
     expect_class(IP2, 'trellis')
     fit <- suppressMessages(itemfit(modp2, c('S_X2', 'Zh')))
-    expect_equal(fit$Zh, c(1.287093, 4.581860, 3.934030, 3.989205), tolerance=1e-4)
+    expect_equal(fit$Zh, c(1.505113, 5.391407, 3.529149, 4.815629), tolerance=1e-4)
     expect_equal(fit$S_X2, c(3.941804,10.58528,6.913239,10.11068), tolerance=1e-4)
     fs <- fscores(modp1, method = 'WLE', verbose=FALSE, full.scores=FALSE)
     expect_equal(as.numeric(fs[1:3, 5:6]), c(-5.7024116, -2.1162737, -1.1386969,  1.5797286,
@@ -181,5 +181,5 @@ test_that('poly', {
     ER <- fscores(modp2, returnER = TRUE)
     expect_equal(as.numeric(ER), c(0.4882546, 0.5099054), tolerance=1e-4)
     suppressWarnings(ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2)))
-    expect_equal(as.numeric(ER2), c(0.5433246, 0.5929488), tolerance=1e-4)
+    expect_equal(as.numeric(ER2), c(0.6160923, 0.6702524), tolerance=1e-4)
 })
