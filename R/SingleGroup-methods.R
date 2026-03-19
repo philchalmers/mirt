@@ -347,7 +347,7 @@ setMethod(
         if (object@Options$exploratory && rotate != 'none'){
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, ...)
-            a <- rotateLambdas(so) * 1.702
+            a <- rotateLambdas(so)
             for(i in 1:J){
                 object@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
                 object@ParObjects$pars[[i]]@SEpar <- numeric(0L)
@@ -1212,7 +1212,7 @@ setMethod(
         if (x@Options$exploratory){
             if(!is.null(dots$rotate)){
                 so <- summary(x, verbose=FALSE, digits=5, ...)
-                a <- rotateLambdas(so) * 1.702
+                a <- rotateLambdas(so)
                 for(i in 1:J)
                     x@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
             }

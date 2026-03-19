@@ -124,7 +124,7 @@ plot_mixture <- function(x, y, type = 'score', npts = 200, degrees = 45,
     if (x@Options$exploratory){
         if(!is.null(dots$rotate)){
             so <- summary(x, verbose=FALSE, digits=5, ...)
-            a <- rotateLambdas(so) * 1.702
+            a <- rotateLambdas(so)
             for(i in 1:J)
                 x@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
         }

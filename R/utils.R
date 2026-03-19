@@ -338,7 +338,7 @@ rotateLambdas <- function(so){
     h2 <- so$h2
     h <- matrix(rep(sqrt(1 - h2), ncol(F)), ncol = ncol(F))
     a <- F / h
-    a
+    a * 1.702
 }
 
 d2r <-function(d) pi*d/180
