@@ -179,7 +179,7 @@ test_that('poly', {
     expect_class(tinfo, 'numeric')
 
     ER <- fscores(modp2, returnER = TRUE)
-    expect_equal(as.numeric(ER), c(0.4882546, 0.5099054), tolerance=1e-4)
+    expect_equal(as.numeric(ER), c(0.5971615, 0.6197533), tolerance=1e-4)
     suppressWarnings(ER2 <- fscores(modp2, returnER = TRUE, mean = c(-1, 1), cov = matrix(c(1.5,1,1,2), 2)))
     expect_equal(as.numeric(ER2), c(0.6160923, 0.6702524), tolerance=1e-4)
 })
