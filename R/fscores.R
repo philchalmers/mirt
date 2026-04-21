@@ -41,7 +41,8 @@
 #'   then this argument is ignored
 #' @param Target target rotation; see \code{\link{summary-method}} for details
 #' @param EAPsum.scores logical; include the model-implied expected values and variance for the item
-#'   and total scores when using \code{method = 'EAPsum'} with \code{full.scores=FALSE}?
+#'   and total scores when using \code{method = 'EAPsum'} or \code{method = 'EAPsum_2.0'}
+#'   with \code{full.scores=FALSE}?
 #'   This information is included in the hidden \code{'fit'} attribute which
 #'   can be extracted via \code{attr(., 'fit')} for later use
 #' @param plausible.draws number of plausible values to draw for future researchers
@@ -139,6 +140,11 @@
 #' @seealso \code{\link{averageMI}}
 #' @export fscores
 #' @references
+#'
+#' Cai, L. (2015). Lord–Wingersky algorithm version 2.0 for hierarchical item
+#' factor models with applications in test scoring, scale alignment, and model fit testing.
+#' \emph{Psychometrika, 80}(2), 535–559.
+#'
 #' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}

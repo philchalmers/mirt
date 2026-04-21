@@ -761,9 +761,18 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         blist <- extract.mirt(x, 'bfactor')
         if(is.null(blist$specific))
             stop('EAPsum_2.0 only applicable when model was estimated with bfactor()', call.=FALSE)
-        browser()
-        calcL1_lst <- vector('list', ncol(blist$sitems))
-        # Theta, prior, other stuff
+        L1_lst <- vector('list', ncol(blist$sitems))
+        nspec <- length(L1_lst)
+        stage2K <- integer(nspec)
+        ngen <- extract.mirt(x, 'nfact') - nspec
+        stopifnot("structure must resemble a bifactor model" = ngen == 1)
+        theta <- theta.unique <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
+        Theta <- thetaComb(theta, ngen + 1)
+        Theta <- ThetaShort <- cbind(Theta, matrix(Theta[,2], nrow=nrow(Theta), ncol=nspec-1))
+        prior <- den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
+        prior <- prior/sum(prior)
+        sprior <- den_fun(matrix(theta), mean=gp$gmeans[ngen+1], sigma=gp$gcov[ngen+1, ngen+1], ...)
+        sprior <- sprior/sum(sprior)
     } else {
         if(discrete){
             Theta <- ThetaShort <- x@Model$Theta
@@ -780,29 +789,58 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             prior <- if(QMC) rep(1, nrow(Theta)) else
                 den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
             prior <- prior/sum(prior)
-            if(length(prodlist) > 0L)
-                Theta <- prodterms(Theta, prodlist)
         }
-        if(use_dentype_estimate){
-            Theta <- ThetaShort <- x@Model$Theta
-            prior <- x@Internals$Prior[[1L]]
-        }
+    }
+    if(length(prodlist) > 0L)
+        Theta <- prodterms(Theta, prodlist)
+    if(use_dentype_estimate){
+        Theta <- ThetaShort <- x@Model$Theta
+        prior <- x@Internals$Prior[[1L]]
     }
 
     pars <- x@ParObjects$pars
     J <- length(K)
     itemloc <- extract.mirt(x, 'itemloc')
-    browser() # make version2 a list
-    itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
-                                  CUSTOM.IND=CUSTOM.IND, pis=pis)
-    item_weights_long <- rep(item_weights, extract.mirt(x, "K"))
-    itemtrace <- t(itemtrace)^item_weights_long
-    tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
-    L1 <- tmp$L1
-    Sum.Scores <- tmp$Sum.Scores
-
-    browser() # marginalize version2 here, tricking K and other consts
-
+    nfact <- extract.mirt(x, 'nfact')
+    if(version2){
+        if(length(CUSTOM.IND))
+            stop('Custom items not yet supported for EAPsum_2.0', call.=FALSE) ## TODO
+        for(i in seq_len(nspec)){
+            pick <- blist$specific == i
+            if(i == 1) pick <- blist$specific == i | is.na(blist$specific)
+            tmpitemloc <- c(1, cumsum(K[pick])+1)
+            itemtrace <- computeItemtrace(pars=pars[c(which(pick), length(pars))],
+                                          Theta=Theta, itemloc=tmpitemloc,
+                                          CUSTOM.IND=CUSTOM.IND, pis=pis)
+            item_weights_long <- rep(item_weights[pick], K[pick])
+            itemtrace <- t(itemtrace)^item_weights_long
+            tmp <- calcL1(itemtrace=itemtrace, K=K[pick], itemloc=tmpitemloc)
+            L1 <- t(tmp$L1)
+            stage2K[i] <- length(tmp$Sum.Scores)
+            subL1 <- matrix(0, ncol(L1), length(theta))
+            for(j in 1:length(theta))
+                subL1[,j] <- colSums(L1[Theta[,1] == theta[j], ] * sprior)
+            L1_lst[[i]] <- subL1
+        }
+        itemtrace <- do.call(rbind, L1_lst)
+        K <- stage2K
+        itemloc <- c(1, cumsum(K)+1)
+        tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
+        L1 <- tmp$L1
+        Sum.Scores <- tmp$Sum.Scores
+        Theta <- ThetaShort <- matrix(theta)
+        prior <- den_fun(Theta, mean=gp$gmeans[1], sigma=gp$gcov[1,1], ...)
+        prior <- prior/sum(prior)
+        nfact <- 1
+    } else {
+        itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
+                                      CUSTOM.IND=CUSTOM.IND, pis=pis)
+        item_weights_long <- rep(item_weights, K)
+        itemtrace <- t(itemtrace)^item_weights_long
+        tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
+        L1 <- tmp$L1
+        Sum.Scores <- tmp$Sum.Scores
+    }
     if(S_X2){
         L1total <- L1 %*% prior
         Elist <- vector('list', J)
@@ -824,7 +862,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         return(Elist)
     }
     if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
-    thetas <- SEthetas <- matrix(0, nrow(L1), x@Model$nfact)
+    thetas <- SEthetas <- matrix(0, nrow(L1), nfact)
     if(return.acov){
         vcovs <- vector('list', nrow(thetas))
         names(vcovs) <- Sum.Scores
@@ -860,8 +898,8 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             } else thetas[i, ] <- expLW / nc
         }
     }
-    browser() # version2 has diff factor names
     factorNames <- extract.mirt(x, 'factorNames')
+    if(version2) factorNames <- factorNames[1]
     colnames(thetas) <- factorNames[!grepl('\\(',factorNames)]
     colnames(SEthetas) <- paste0('SE_', colnames(thetas))
     ret <- data.frame(Sum.Scores=Sum.Scores + sum(x@Data$mins), thetas, SEthetas)
@@ -876,7 +914,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             return(vcovs[match(scores, Sum.Scores)])
         if(discrete)
             colnames(EAPscores) <- gsub('Theta.', 'Class_', colnames(EAPscores))
-        pick <- if(full.scores.SE) seq_len(x@Model$nfact*2) else 1L:x@Model$nfact
+        pick <- if(full.scores.SE) seq_len(nfact*2) else 1L:nfact
         ret <- as.matrix(EAPscores[,pick, drop=FALSE])
         rownames(ret) <- NULL
         if(!leave_missing){
@@ -902,14 +940,15 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         df <- tmp$df
         X2 <- tmp$X2
         tmp <- suppressWarnings(expand.table(cbind(ret[,2L:(ncol(ret)-1L)], ret$observed)))
-        pick <- seq_len(x@Model$nfact)
+        pick <- seq_len(nfact)
         EX <- sum(Sum.Scores * rowSums(t(t(L1) * prior))) + sum(mins)
         VARX <- sum(( (Sum.Scores + sum(mins)) - EX)^2 *
                         rowSums(t(t(L1) * prior)))
-        itemx <- matrix(0, nrow=J, ncol=2)
+        itemx <- matrix(0, nrow=length(K), ncol=2)
         colnames(itemx) <- c('E.x', 'VAR.x')
-        rownames(itemx) <- extract.mirt(x, "itemnames")
-        for(i in 1L:J){
+        rownames(itemx) <- if(version2) extract.mirt(x, 'factorNames')[-1]
+          else extract.mirt(x, "itemnames")
+        for(i in 1L:length(K)){
             si <- 0L:(K[i]-1L)
             px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i+1L]-1L),]) * prior)
             ex <- sum(si * px)
@@ -918,7 +957,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             itemx[i,2L] <- varx
         }
         rxx <- apply(tmp[,pick, drop=FALSE], 2L, var) /
-            (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+x@Model$nfact, drop=FALSE], 2L,
+            (apply(tmp[,pick, drop=FALSE], 2L, var) + apply(tmp[,pick+nfact, drop=FALSE], 2L,
                                                             function(x) mean(x^2)))
         names(rxx) <- paste0('rxx_', factorNames)
         fit <- data.frame(df=df, X2=X2, p.X2 = suppressWarnings(pchisq(X2, df, lower.tail=FALSE)))

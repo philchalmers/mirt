@@ -50,7 +50,8 @@ fscores(
     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
     \item \code{"ML"} for maximum likelihood
     \item \code{"WLE"} or \code{"WML"} for weighted maximum-likelihood estimation
-    \item \code{"EAPsum"} for the expected a-posteriori for each sum score
+    \item \code{"EAPsum"} and \code{"EAPsum_2.0"} for the expected a-posteriori for each sum
+      score (the latter is relevant for bifactor models)
     \item \code{"plausible"} for a single plausible value imputation for each case.
       This is equivalent to setting \code{plausible.draws = 1}
     \item \code{"classify"} for the posteriori classification probabilities (only
@@ -107,7 +108,8 @@ estimates as a numeric values?}
 empirical reliability estimates? Default (\code{FALSE}) uses the former}
 
 \item{EAPsum.scores}{logical; include the model-implied expected values and variance for the item
-and total scores when using \code{method = 'EAPsum'} with \code{full.scores=FALSE}?
+and total scores when using \code{method = 'EAPsum'} or \code{method = 'EAPsum_2.0'}
+with \code{full.scores=FALSE}?
 This information is included in the hidden \code{'fit'} attribute which
 can be extracted via \code{attr(., 'fit')} for later use}
 
@@ -198,8 +200,10 @@ in parallel to decrease estimation times if a \code{\link{mirtCluster}} object i
 If the input object is a discrete latent class object estimated from \code{\link{mdirt}}
 then the returned results will be with respect to the posterior classification for each
 individual. The method inputs for \code{'DiscreteClass'} objects may only be \code{'EAP'},
-for posterior classification of each response pattern, or \code{'EAPsum'} for posterior
-classification based on the raw sum-score. For more information on these algorithms refer to
+for posterior classification of each response pattern, \code{'EAPsum'} and \code{'EAPsum_2.0'}
+for posterior classification based on the raw sum-score (\code{'EAPsum_2.0'} results in marginal
+estimates of the primary dimensions only using the 2.0 algorithm described by Cai, 2015).
+For more information on these algorithms refer to
 the \code{mirtCAT} package and the associated JSS paper (Chalmers, 2016).
 }
 \examples{
@@ -326,6 +330,10 @@ fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
 }
 }
 \references{
+Cai, L. (2015). Lord–Wingersky algorithm version 2.0 for hierarchical item
+factor models with applications in test scoring, scale alignment, and model fit testing.
+\emph{Psychometrika, 80}(2), 535–559.
+
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}

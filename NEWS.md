@@ -1,3 +1,8 @@
+# Changes in mirt 1.47
+
+- `fscores()` gains `method = 'EAPsum_2.0'` to obtain the 2.0 version of the 
+  Lord-Wingersky Algorithm described in Cai (2015)
+
 # Changes in mirt 1.46.1
 
 - `mirtCluster()` definition switched from `parallel` to `mirai` package by 
