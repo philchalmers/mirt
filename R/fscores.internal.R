@@ -25,7 +25,7 @@ setMethod(
             }
         }
         if(!is.null(custom_den)) den_fun <- custom_den
-        if(use_dentype_estimate && !(method %in% c('EAP', 'EAPsum', 'plausible')))
+        if(use_dentype_estimate && !(method %in% c('EAP', 'EAPsum', 'EAPsum_2.0', 'plausible')))
             stop("use_dentype_estimate only supported for EAP, EAPsum, or plausible method",
                  call.=FALSE)
         if(method == 'classify')
@@ -216,15 +216,17 @@ setMethod(
         }
         if(!is.null(gmean)) gp$gmeans <- gmean
         if(!is.null(gcov)) gp$gcov <- gcov
-        if(method == 'EAPsum') return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
-                                             quadpts=quadpts, gp=gp, verbose=verbose,
-                                             EAPsum.scores=EAPsum.scores,
-                                             item_weights=item_weights, return.acov=return.acov,
-                                             CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
-                                             discrete=discrete, QMC=QMC, den_fun=den_fun,
-                                             min_expected=min_expected, pis=pis, mixture=mixture,
-                                             use_dentype_estimate=use_dentype_estimate,
-                                             leave_missing=leave_missing, nfact=nfact, ...))
+        if(method == 'EAPsum' || method == 'EAPsum_2.0')
+            return(EAPsum(object, full.scores=full.scores, full.scores.SE=full.scores.SE,
+                          quadpts=quadpts, gp=gp, verbose=verbose,
+                          EAPsum.scores=EAPsum.scores,
+                          item_weights=item_weights, return.acov=return.acov,
+                          CUSTOM.IND=CUSTOM.IND, theta_lim=theta_lim,
+                          discrete=discrete, QMC=QMC, den_fun=den_fun,
+                          min_expected=min_expected, pis=pis, mixture=mixture,
+                          use_dentype_estimate=use_dentype_estimate,
+                          leave_missing=leave_missing, nfact=nfact,
+                          version2 = method == 'EAPsum_2.0', ...))
 		theta <- as.matrix(seq(theta_lim[1L], theta_lim[2L], length.out=quadpts))
 		LR <- .hasSlot(object@Model$lrPars, 'beta')
 		USETABDATA <- TRUE
@@ -722,7 +724,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
                    which.items = 2:length(x@ParObjects$pars)-1,
                    use_dentype_estimate = FALSE, pis, leave_missing,
                    item_weights = rep(1, extract.mirt(x, 'nitems')),
-                   EAPsum.scores, return.acov, nfact, ...){
+                   EAPsum.scores, return.acov, nfact, version2 = FALSE, ...){
     calcL1 <- function(itemtrace, K, itemloc){
         .Call('calcL1_cpp', itemtrace, as.integer(K), as.integer(itemloc))
     }
@@ -753,33 +755,44 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
         list(X2=X2, df=df)
     }
 
+    K <- extract.mirt(x, 'K')
     prodlist <- attr(x@ParObjects$pars, 'prodlist')
-    if(discrete){
-        Theta <- ThetaShort <- x@Model$Theta
-        prior <- if(mixture) do.call(c, x@Internals$Prior) else x@Internals$Prior[[1L]]
+    if(version2){
+        blist <- extract.mirt(x, 'bfactor')
+        if(is.null(blist$specific))
+            stop('EAPsum_2.0 only applicable when model was estimated with bfactor()', call.=FALSE)
+        browser()
+        calcL1_lst <- vector('list', ncol(blist$sitems))
+        # Theta, prior, other stuff
     } else {
-        nfact <- x@Model$nfact
-        ThetaShort <- Theta <- if(QMC){
-            tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim)
-            Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
+        if(discrete){
+            Theta <- ThetaShort <- x@Model$Theta
+            prior <- if(mixture) do.call(c, x@Internals$Prior) else x@Internals$Prior[[1L]]
         } else {
-            theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
-            thetaComb(theta,nfact)
+            nfact <- x@Model$nfact
+            ThetaShort <- Theta <- if(QMC){
+                tmp <- QMC_quad(npts=quadpts, nfact=nfact, lim=theta_lim)
+                Theta_meanSigma_shift(tmp, gp$gmeans, gp$gcov)
+            } else {
+                theta <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
+                thetaComb(theta,nfact)
+            }
+            prior <- if(QMC) rep(1, nrow(Theta)) else
+                den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
+            prior <- prior/sum(prior)
+            if(length(prodlist) > 0L)
+                Theta <- prodterms(Theta, prodlist)
         }
-        prior <- if(QMC) rep(1, nrow(Theta)) else
-            den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
-        prior <- prior/sum(prior)
-        if(length(prodlist) > 0L)
-            Theta <- prodterms(Theta, prodlist)
+        if(use_dentype_estimate){
+            Theta <- ThetaShort <- x@Model$Theta
+            prior <- x@Internals$Prior[[1L]]
+        }
     }
-    if(use_dentype_estimate){
-        Theta <- ThetaShort <- x@Model$Theta
-        prior <- x@Internals$Prior[[1L]]
-    }
+
     pars <- x@ParObjects$pars
-    K <- x@Data$K
     J <- length(K)
-    itemloc <- x@Model$itemloc
+    itemloc <- extract.mirt(x, 'itemloc')
+    browser() # make version2 a list
     itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                   CUSTOM.IND=CUSTOM.IND, pis=pis)
     item_weights_long <- rep(item_weights, extract.mirt(x, "K"))
@@ -787,6 +800,9 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     tmp <- calcL1(itemtrace=itemtrace, K=K, itemloc=itemloc)
     L1 <- tmp$L1
     Sum.Scores <- tmp$Sum.Scores
+
+    browser() # marginalize version2 here, tricking K and other consts
+
     if(S_X2){
         L1total <- L1 %*% prior
         Elist <- vector('list', J)
@@ -844,6 +860,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             } else thetas[i, ] <- expLW / nc
         }
     }
+    browser() # version2 has diff factor names
     factorNames <- extract.mirt(x, 'factorNames')
     colnames(thetas) <- factorNames[!grepl('\\(',factorNames)]
     colnames(SEthetas) <- paste0('SE_', colnames(thetas))

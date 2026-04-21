@@ -22,8 +22,10 @@
 #' If the input object is a discrete latent class object estimated from \code{\link{mdirt}}
 #' then the returned results will be with respect to the posterior classification for each
 #' individual. The method inputs for \code{'DiscreteClass'} objects may only be \code{'EAP'},
-#' for posterior classification of each response pattern, or \code{'EAPsum'} for posterior
-#' classification based on the raw sum-score. For more information on these algorithms refer to
+#' for posterior classification of each response pattern, \code{'EAPsum'} and \code{'EAPsum_2.0'}
+#' for posterior classification based on the raw sum-score (\code{'EAPsum_2.0'} results in marginal
+#' estimates of the primary dimensions only using the 2.0 algorithm described by Cai, 2015).
+#' For more information on these algorithms refer to
 #' the \code{mirtCAT} package and the associated JSS paper (Chalmers, 2016).
 #'
 #'
@@ -61,7 +63,8 @@
 #'     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
 #'     \item \code{"ML"} for maximum likelihood
 #'     \item \code{"WLE"} or \code{"WML"} for weighted maximum-likelihood estimation
-#'     \item \code{"EAPsum"} for the expected a-posteriori for each sum score
+#'     \item \code{"EAPsum"} and \code{"EAPsum_2.0"} for the expected a-posteriori for each sum
+#'       score (the latter is relevant for bifactor models)
 #'     \item \code{"plausible"} for a single plausible value imputation for each case.
 #'       This is equivalent to setting \code{plausible.draws = 1}
 #'     \item \code{"classify"} for the posteriori classification probabilities (only
@@ -303,7 +306,7 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
     if(is(object, "MultipleGroupClass") && !is.null(response.pattern))
         stop(c("response.pattern input cannot be used with multiple-group models. ",
                "Please extract the group you want first with the extract.group() and supply this object to fscores()"), call.=FALSE)
-    if(any(extract.mirt(object, 'itemtype') == 'spline') && !(method %in% c('EAP', 'EAPsum')))
+    if(any(extract.mirt(object, 'itemtype') == 'spline') && !(method %in% c('EAP', 'EAPsum', 'EAPsum_2.0')))
         stop('Only EAP and EAPsum method supported when spline items are modeled', call.=FALSE)
     if(returnER) full.scores <- FALSE
     if(na.rm)
