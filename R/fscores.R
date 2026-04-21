@@ -301,8 +301,10 @@ fscores <- function(object, method = "EAP", full.scores = TRUE, rotate = 'oblimi
                   extract.mirt(object, 'nfact') == 1)
     if(!is(object, 'DiscreteClass')){
         if(QMC && is.null(quadpts)) quadpts <- 5000
+        nfact <- object@Model$nfact
+        if(method == 'EAPsum_2.0') nfact <- 2
         if(is.null(quadpts))
-            quadpts <- switch(as.character(object@Model$nfact),
+            quadpts <- switch(as.character(nfact),
                               '1'=121, '2'=61, '3'=31, '4'=19, '5'=11, '6'=7, 5)
     } else quadpts <- 1
     if(method == 'plausible'){

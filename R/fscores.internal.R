@@ -978,7 +978,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
             ret$expected <- NULL
             ret$std.res <- NULL
         }
-        ret <- as.mirt_matrix(ret)
+        ret <- as.mirt_df(ret)
         if(verbose && !discrete && all(item_weights == 1)){
             print(attr(ret, 'fit'))
             cat('\n')
