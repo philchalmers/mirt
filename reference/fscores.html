@@ -29,7 +29,7 @@ for latent regression predictor effects."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -127,7 +127,8 @@ for latent regression predictor effects.</p>
 <li><p><code>"MAP"</code> for the maximum a-posteriori (i.e, Bayes modal)</p></li>
 <li><p><code>"ML"</code> for maximum likelihood</p></li>
 <li><p><code>"WLE"</code> or <code>"WML"</code> for weighted maximum-likelihood estimation</p></li>
-<li><p><code>"EAPsum"</code> for the expected a-posteriori for each sum score</p></li>
+<li><p><code>"EAPsum"</code> and <code>"EAPsum_2.0"</code> for the expected a-posteriori for each sum
+      score (the latter is relevant for bifactor models)</p></li>
 <li><p><code>"plausible"</code> for a single plausible value imputation for each case.
       This is equivalent to setting <code>plausible.draws = 1</code></p></li>
 <li><p><code>"classify"</code> for the posteriori classification probabilities (only
@@ -210,7 +211,8 @@ empirical reliability estimates? Default (<code>FALSE</code>) uses the former</p
 
 <dt id="arg-eapsum-scores">EAPsum.scores<a class="anchor" aria-label="anchor" href="#arg-eapsum-scores"></a></dt>
 <dd><p>logical; include the model-implied expected values and variance for the item
-and total scores when using <code>method = 'EAPsum'</code> with <code>full.scores=FALSE</code>?
+and total scores when using <code>method = 'EAPsum'</code> or <code>method = 'EAPsum_2.0'</code>
+with <code>full.scores=FALSE</code>?
 This information is included in the hidden <code>'fit'</code> attribute which
 can be extracted via <code>attr(., 'fit')</code> for later use</p></dd>
 
@@ -320,13 +322,18 @@ in parallel to decrease estimation times if a <code><a href="mirtCluster.html">m
 <p>If the input object is a discrete latent class object estimated from <code><a href="mdirt.html">mdirt</a></code>
 then the returned results will be with respect to the posterior classification for each
 individual. The method inputs for <code>'DiscreteClass'</code> objects may only be <code>'EAP'</code>,
-for posterior classification of each response pattern, or <code>'EAPsum'</code> for posterior
-classification based on the raw sum-score. For more information on these algorithms refer to
+for posterior classification of each response pattern, <code>'EAPsum'</code> and <code>'EAPsum_2.0'</code>
+for posterior classification based on the raw sum-score (<code>'EAPsum_2.0'</code> results in marginal
+estimates of the primary dimensions only using the 2.0 algorithm described by Cai, 2015).
+For more information on these algorithms refer to
 the <code>mirtCAT</code> package and the associated JSS paper (Chalmers, 2016).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+    <p>Cai, L. (2015). Lord–Wingersky algorithm version 2.0 for hierarchical item
+factor models with applications in test scoring, scale alignment, and model fit testing.
+<em>Psychometrika, 80</em>(2), 535–559.</p>
+<p>Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 1-29.
 <a href="https://doi.org/10.18637/jss.v048.i06" class="external-link">doi:10.18637/jss.v048.i06</a></p>
 <p>Chalmers, R. P. (2016). Generating Adaptive and Non-Adaptive Test Interfaces for
@@ -630,38 +637,38 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># EAPsum table of values based on total scores</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method <span class="op">=</span> <span class="st">'EAPsum'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores          F1     SE_F1 observed   expected   std.res</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -2.74926694 0.6293525        2  0.1241448 5.3239625</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -2.43096701 0.6167666        1  0.7902670 0.2359282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           6 -2.08095804 0.6101826        2  2.7598787 0.4574033</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7 -1.71797996 0.6019326        1  7.2515944 2.3215286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           8 -1.36354348 0.5979810       11 15.8925644 1.2272684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           9 -1.01186764 0.6038596       32 29.6740255 0.4269890</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10         10 -0.64926712 0.6101301       58 48.3632492 1.3857117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11         11 -0.28688279 0.6048405       70 68.4845962 0.1831184</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12         12  0.08240446 0.5996636       91 80.5530281 1.1639907</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13         13  0.48709473 0.6133534       56 65.6680929 1.1930636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14         14  0.93406958 0.6170256       36 42.6372130 1.0164625</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15         15  1.38421709 0.6218261       20 22.3313442 0.4933430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  1.85351389 0.6544097       12  7.4700015 1.6574396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores     F1 SE_F1 observed expected std.res</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -2.749 0.629        2    0.124   5.324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -2.431 0.617        1    0.790   0.236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6           6 -2.081 0.610        2    2.760   0.457</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7 -1.718 0.602        1    7.252   2.322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8           8 -1.364 0.598       11   15.893   1.227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9           9 -1.012 0.604       32   29.674   0.427</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         10 -0.649 0.610       58   48.363   1.386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11         11 -0.287 0.605       70   68.485   0.183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12         12  0.082 0.600       91   80.553   1.164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13         13  0.487 0.613       56   65.668   1.193</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14         14  0.934 0.617       36   42.637   1.016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15         15  1.384 0.622       20   22.331   0.493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  1.854 0.654       12    7.470   1.657</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># convert expected counts back into marginal probability distribution</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">fs</span>,</span></span>
 <span class="r-in"><span>   <span class="va">`P(y)`</span> <span class="op">&lt;-</span> <span class="va">expected</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">observed</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores          F1     SE_F1 observed   expected   std.res        P(y)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -2.74926694 0.6293525        2  0.1241448 5.3239625 0.000316696</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -2.43096701 0.6167666        1  0.7902670 0.2359282 0.002015987</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           6 -2.08095804 0.6101826        2  2.7598787 0.4574033 0.007040507</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7 -1.71797996 0.6019326        1  7.2515944 2.3215286 0.018498965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           8 -1.36354348 0.5979810       11 15.8925644 1.2272684 0.040542256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           9 -1.01186764 0.6038596       32 29.6740255 0.4269890 0.075699045</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10         10 -0.64926712 0.6101301       58 48.3632492 1.3857117 0.123375636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11         11 -0.28688279 0.6048405       70 68.4845962 0.1831184 0.174705603</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12         12  0.08240446 0.5996636       91 80.5530281 1.1639907 0.205492419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13         13  0.48709473 0.6133534       56 65.6680929 1.1930636 0.167520645</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14         14  0.93406958 0.6170256       36 42.6372130 1.0164625 0.108768401</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15         15  1.38421709 0.6218261       20 22.3313442 0.4933430 0.056967715</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  1.85351389 0.6544097       12  7.4700015 1.6574396 0.019056126</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Sum.Scores     F1 SE_F1 observed expected std.res  P(y)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           4 -2.749 0.629        2    0.124   5.324 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           5 -2.431 0.617        1    0.790   0.236 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6           6 -2.081 0.610        2    2.760   0.457 0.007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7           7 -1.718 0.602        1    7.252   2.322 0.018</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8           8 -1.364 0.598       11   15.893   1.227 0.041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9           9 -1.012 0.604       32   29.674   0.427 0.076</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         10 -0.649 0.610       58   48.363   1.386 0.123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11         11 -0.287 0.605       70   68.485   0.183 0.175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12         12  0.082 0.600       91   80.553   1.164 0.205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13         13  0.487 0.613       56   65.668   1.193 0.168</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14         14  0.934 0.617       36   42.637   1.016 0.109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15         15  1.384 0.622       20   22.331   0.493 0.057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16         16  1.854 0.654       12    7.470   1.657 0.019</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># list of error VCOV matrices for EAPsum (works for other estimators as well)</span></span></span>
 <span class="r-in"><span><span class="va">acovs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method <span class="op">=</span> <span class="st">'EAPsum'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span>, return.acov <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -735,35 +742,35 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, MI <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.38315515</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.04589839</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.89786121</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.89786121</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.76767341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.64534910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.42189846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.05510954</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.87439150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.87439150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.74889691</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.68845272</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible values for future work</span></span></span>
 <span class="r-in"><span><span class="va">pv</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, plausible.draws <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pv</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, var<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, min<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, max<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.04121567  0.93854066 -3.23073301  2.73043955 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.007941992  1.056680375 -3.113564647  2.999640750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.00476226  1.09445048 -3.34508409  2.91347150 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.02067453  1.08642010 -3.29279897  3.68811347 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.01165497  0.96612768 -3.32907964  2.83918045 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.008958707  1.082049681 -3.247606615  3.340018194 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.008048217  1.011628611 -3.408496824  2.583349208 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.002200381  1.032016630 -3.316962292  3.432060079 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.02160325  1.10254773 -3.25758811  3.57467669 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.04187097  1.04701535 -2.84818234  3.07836275 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## define a custom_den function (*must* return a numeric vector).</span></span></span>

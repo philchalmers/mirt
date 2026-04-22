@@ -77,7 +77,8 @@ fscores(
 
   - `"WLE"` or `"WML"` for weighted maximum-likelihood estimation
 
-  - `"EAPsum"` for the expected a-posteriori for each sum score
+  - `"EAPsum"` and `"EAPsum_2.0"` for the expected a-posteriori for each
+    sum score (the latter is relevant for bifactor models)
 
   - `"plausible"` for a single plausible value imputation for each case.
     This is equivalent to setting `plausible.draws = 1`
@@ -170,10 +171,10 @@ fscores(
 - EAPsum.scores:
 
   logical; include the model-implied expected values and variance for
-  the item and total scores when using `method = 'EAPsum'` with
-  `full.scores=FALSE`? This information is included in the hidden
-  `'fit'` attribute which can be extracted via `attr(., 'fit')` for
-  later use
+  the item and total scores when using `method = 'EAPsum'` or
+  `method = 'EAPsum_2.0'` with `full.scores=FALSE`? This information is
+  included in the hidden `'fit'` attribute which can be extracted via
+  `attr(., 'fit')` for later use
 
 - return.acov:
 
@@ -298,12 +299,18 @@ If the input object is a discrete latent class object estimated from
 the returned results will be with respect to the posterior
 classification for each individual. The method inputs for
 `'DiscreteClass'` objects may only be `'EAP'`, for posterior
-classification of each response pattern, or `'EAPsum'` for posterior
-classification based on the raw sum-score. For more information on these
+classification of each response pattern, `'EAPsum'` and `'EAPsum_2.0'`
+for posterior classification based on the raw sum-score (`'EAPsum_2.0'`
+results in marginal estimates of the primary dimensions only using the
+2.0 algorithm described by Cai, 2015). For more information on these
 algorithms refer to the `mirtCAT` package and the associated JSS paper
 (Chalmers, 2016).
 
 ## References
+
+Cai, L. (2015). Lord–Wingersky algorithm version 2.0 for hierarchical
+item factor models with applications in test scoring, scale alignment,
+and model fit testing. *Psychometrika, 80*(2), 535–559.
 
 Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. *Journal of Statistical Software, 48*(6),
@@ -614,38 +621,38 @@ fscores(mod, method='ML', full.scores = FALSE)
 
 # EAPsum table of values based on total scores
 (fs <- fscores(mod, method = 'EAPsum', full.scores = FALSE))
-#>    Sum.Scores          F1     SE_F1 observed   expected   std.res
-#> 4           4 -2.74926694 0.6293525        2  0.1241448 5.3239625
-#> 5           5 -2.43096701 0.6167666        1  0.7902670 0.2359282
-#> 6           6 -2.08095804 0.6101826        2  2.7598787 0.4574033
-#> 7           7 -1.71797996 0.6019326        1  7.2515944 2.3215286
-#> 8           8 -1.36354348 0.5979810       11 15.8925644 1.2272684
-#> 9           9 -1.01186764 0.6038596       32 29.6740255 0.4269890
-#> 10         10 -0.64926712 0.6101301       58 48.3632492 1.3857117
-#> 11         11 -0.28688279 0.6048405       70 68.4845962 0.1831184
-#> 12         12  0.08240446 0.5996636       91 80.5530281 1.1639907
-#> 13         13  0.48709473 0.6133534       56 65.6680929 1.1930636
-#> 14         14  0.93406958 0.6170256       36 42.6372130 1.0164625
-#> 15         15  1.38421709 0.6218261       20 22.3313442 0.4933430
-#> 16         16  1.85351389 0.6544097       12  7.4700015 1.6574396
+#>    Sum.Scores     F1 SE_F1 observed expected std.res
+#> 4           4 -2.749 0.629        2    0.124   5.324
+#> 5           5 -2.431 0.617        1    0.790   0.236
+#> 6           6 -2.081 0.610        2    2.760   0.457
+#> 7           7 -1.718 0.602        1    7.252   2.322
+#> 8           8 -1.364 0.598       11   15.893   1.227
+#> 9           9 -1.012 0.604       32   29.674   0.427
+#> 10         10 -0.649 0.610       58   48.363   1.386
+#> 11         11 -0.287 0.605       70   68.485   0.183
+#> 12         12  0.082 0.600       91   80.553   1.164
+#> 13         13  0.487 0.613       56   65.668   1.193
+#> 14         14  0.934 0.617       36   42.637   1.016
+#> 15         15  1.384 0.622       20   22.331   0.493
+#> 16         16  1.854 0.654       12    7.470   1.657
 
 # convert expected counts back into marginal probability distribution
 within(fs,
    `P(y)` <- expected / sum(observed))
-#>    Sum.Scores          F1     SE_F1 observed   expected   std.res        P(y)
-#> 4           4 -2.74926694 0.6293525        2  0.1241448 5.3239625 0.000316696
-#> 5           5 -2.43096701 0.6167666        1  0.7902670 0.2359282 0.002015987
-#> 6           6 -2.08095804 0.6101826        2  2.7598787 0.4574033 0.007040507
-#> 7           7 -1.71797996 0.6019326        1  7.2515944 2.3215286 0.018498965
-#> 8           8 -1.36354348 0.5979810       11 15.8925644 1.2272684 0.040542256
-#> 9           9 -1.01186764 0.6038596       32 29.6740255 0.4269890 0.075699045
-#> 10         10 -0.64926712 0.6101301       58 48.3632492 1.3857117 0.123375636
-#> 11         11 -0.28688279 0.6048405       70 68.4845962 0.1831184 0.174705603
-#> 12         12  0.08240446 0.5996636       91 80.5530281 1.1639907 0.205492419
-#> 13         13  0.48709473 0.6133534       56 65.6680929 1.1930636 0.167520645
-#> 14         14  0.93406958 0.6170256       36 42.6372130 1.0164625 0.108768401
-#> 15         15  1.38421709 0.6218261       20 22.3313442 0.4933430 0.056967715
-#> 16         16  1.85351389 0.6544097       12  7.4700015 1.6574396 0.019056126
+#>    Sum.Scores     F1 SE_F1 observed expected std.res  P(y)
+#> 4           4 -2.749 0.629        2    0.124   5.324 0.000
+#> 5           5 -2.431 0.617        1    0.790   0.236 0.002
+#> 6           6 -2.081 0.610        2    2.760   0.457 0.007
+#> 7           7 -1.718 0.602        1    7.252   2.322 0.018
+#> 8           8 -1.364 0.598       11   15.893   1.227 0.041
+#> 9           9 -1.012 0.604       32   29.674   0.427 0.076
+#> 10         10 -0.649 0.610       58   48.363   1.386 0.123
+#> 11         11 -0.287 0.605       70   68.485   0.183 0.175
+#> 12         12  0.082 0.600       91   80.553   1.164 0.205
+#> 13         13  0.487 0.613       56   65.668   1.193 0.168
+#> 14         14  0.934 0.617       36   42.637   1.016 0.109
+#> 15         15  1.384 0.622       20   22.331   0.493 0.057
+#> 16         16  1.854 0.654       12    7.470   1.657 0.019
 
 # list of error VCOV matrices for EAPsum (works for other estimators as well)
 acovs <- fscores(mod, method = 'EAPsum', full.scores = FALSE, return.acov = TRUE)
@@ -719,35 +726,35 @@ mod <- mirt(Science, 1, SE=TRUE)
 fs <- fscores(mod, MI = 30)
 head(fs)
 #>               F1
-#> [1,]  0.38315515
-#> [2,]  0.04589839
-#> [3,] -0.89786121
-#> [4,] -0.89786121
-#> [5,]  0.76767341
-#> [6,]  0.64534910
+#> [1,]  0.42189846
+#> [2,]  0.05510954
+#> [3,] -0.87439150
+#> [4,] -0.87439150
+#> [5,]  0.74889691
+#> [6,]  0.68845272
 
 # plausible values for future work
 pv <- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 #> [[1]]
-#>        mean         var         min         max 
-#> -0.04121567  0.93854066 -3.23073301  2.73043955 
+#>         mean          var          min          max 
+#>  0.007941992  1.056680375 -3.113564647  2.999640750 
 #> 
 #> [[2]]
 #>        mean         var         min         max 
-#>  0.00476226  1.09445048 -3.34508409  2.91347150 
+#>  0.02067453  1.08642010 -3.29279897  3.68811347 
 #> 
 #> [[3]]
-#>        mean         var         min         max 
-#> -0.01165497  0.96612768 -3.32907964  2.83918045 
+#>         mean          var          min          max 
+#> -0.008958707  1.082049681 -3.247606615  3.340018194 
 #> 
 #> [[4]]
 #>         mean          var          min          max 
-#>  0.008048217  1.011628611 -3.408496824  2.583349208 
+#>  0.002200381  1.032016630 -3.316962292  3.432060079 
 #> 
 #> [[5]]
 #>        mean         var         min         max 
-#>  0.02160325  1.10254773 -3.25758811  3.57467669 
+#> -0.04187097  1.04701535 -2.84818234  3.07836275 
 #> 
 
 ## define a custom_den function (*must* return a numeric vector).
