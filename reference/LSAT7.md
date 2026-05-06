@@ -61,7 +61,7 @@ itemstats(dat)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.4 
+#> mirt version: 1.46.3 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -102,9 +102,9 @@ coef(mod)
 # monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)
 mod_monospline <- mirt(dat, itemtype = 'monospline')
 anova(mod, mod_monospline)
-#>                     AIC    SABIC       HQ      BIC    logLik   X2 df     p
-#> mod            5337.610 5354.927 5356.263 5386.688 -2658.805              
-#> mod_monospline 5355.361 5389.995 5392.666 5453.516 -2657.680 2.25 10 0.994
+#>                    AIC    SABIC       HQ      BIC    logLik   X2 df     p
+#> mod            5337.61 5354.927 5356.263 5386.688 -2658.805              
+#> mod_monospline 5355.36 5389.994 5392.666 5453.515 -2657.680 2.25 10 0.994
 plot(mod_monospline)
 
 
@@ -160,7 +160,7 @@ itemstats(dat)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.4 
+#> mirt version: 1.46.3 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
