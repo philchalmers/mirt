@@ -71,6 +71,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # dichotomous data example
 LSAT7full <- expand.table(LSAT7)
 head(LSAT7full)

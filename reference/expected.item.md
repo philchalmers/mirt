@@ -50,6 +50,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 mod <- mirt(Science, 1)
 extr.2 <- extract.item(mod, 2)
 Theta <- matrix(seq(-6,6, length.out=200))

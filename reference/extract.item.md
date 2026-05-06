@@ -46,6 +46,7 @@ Package for the R Environment. *Journal of Statistical Software, 48*(6),
 ## Examples
 
 ``` r
+
 # \donttest{
 mod <- mirt(Science, 1)
 extr.1 <- extract.item(mod, 1)

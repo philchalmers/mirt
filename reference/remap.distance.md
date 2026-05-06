@@ -39,6 +39,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # category 2 for item 1 missing
 dat <- Science
 dat[,1] <- ifelse(Science[,1] == 2, 1, Science[,1])

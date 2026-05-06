@@ -58,6 +58,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 if(interactive()){
   # use all available cores

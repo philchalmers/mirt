@@ -68,6 +68,7 @@ argument contributed by Rudolf Debelak
 ## Examples
 
 ``` r
+
 # \donttest{
 # fit a 2PL on the LSAT7 data and get the scores
 mod1 <- mirt(expand.table(LSAT7), 1, SE = TRUE, SE.type = "crossprod")
@@ -89,9 +90,9 @@ sc1 <- estfun.AllModelClass(modd)
 # get the gradient
 colSums(sc1)
 #>        a1.1        a2.2        a1.3        a2.4        a1.5        a2.6 
-#> 0.010556101 0.012533394 0.015994245 0.016832573 0.021043233 0.020842514 
+#> 0.010556100 0.012533394 0.015994245 0.016832574 0.021043233 0.020842513 
 #>        a1.7        a2.8        a1.9       a2.10       c1.11 
-#> 0.013694253 0.011470847 0.007827056 0.009231532 0.059032788 
+#> 0.013694253 0.011470848 0.007827056 0.009231532 0.059032787 
 # calculate the OPG estimate of the variance-covariance matrix "by hand"
 vc1 <- vcov(modd)
 all.equal(crossprod(sc1), chol2inv(chol(vc1)), check.attributes = FALSE)

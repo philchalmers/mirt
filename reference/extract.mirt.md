@@ -272,6 +272,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 mod <- mirt(Science, 1)
 

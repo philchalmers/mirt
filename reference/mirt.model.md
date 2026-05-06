@@ -250,6 +250,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com> and Alexander Robitzsch
 ## Examples
 
 ``` r
+
 # \donttest{
 
 # interactively through the console (not run)

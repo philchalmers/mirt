@@ -16,6 +16,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 # tabular format
 data(SLF)

@@ -43,6 +43,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 
 dat <- expand.table(deAyala)

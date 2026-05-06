@@ -59,6 +59,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 dat <- expand.table(deAyala)
 (mirt(dat, 1, '2PL', pars = 'values'))
 #>    group   item     class   name parnum  value lbound ubound   est const nconst

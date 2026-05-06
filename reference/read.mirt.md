@@ -32,6 +32,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 
 ## unidimensional
@@ -45,7 +46,7 @@ data <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -96,8 +97,8 @@ data <- expand.table(LSAT7)
 #> mirt(data = data, model = 2)
 #> 
 #> Full-information item factor analysis with 2 factor(s).
-#> Converged within 1e-04 tolerance after 436 EM iterations.
-#> mirt version: 1.46.3 
+#> Converged within 1e-04 tolerance after 433 EM iterations.
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 31
@@ -113,12 +114,12 @@ plinkpars <- read.mirt(mod1)
 plinkpars
 #> An object of class "irt.pars"
 #> Slot "pars":
-#>              a1         a2            
-#> [1,] -2.0071991  0.8703411 2.6479286 0
-#> [2,] -0.8488431 -0.5221152 0.7876390 0
-#> [3,] -2.1529666 -1.8364974 2.4829603 0
-#> [4,] -0.7559009 -0.0280359 0.4847286 0
-#> [5,] -0.7572746  0.0000000 1.8640966 0
+#>              a1          a2            
+#> [1,] -2.0068141  0.86994079 2.6475389 0
+#> [2,] -0.8488503 -0.52221327 0.7876521 0
+#> [3,] -2.1524998 -1.83617554 2.4825965 0
+#> [4,] -0.7559391 -0.02805342 0.4847338 0
+#> [5,] -0.7573073  0.00000000 1.8641113 0
 #> 
 #> Slot "cat":
 #> [1] 2 2 2 2 2
@@ -231,7 +232,7 @@ equate(out)
 #> 3   -1.910192  2 2.023409
 #> 4   -0.999050  3 3.021848
 #> 5    0.048359  4 3.973672
-#> 6   57.411786  5 5.000000
+#> 6   57.411729  5 5.000000
 #> 
 #> $ose
 #> $ose$scores

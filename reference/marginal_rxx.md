@@ -48,6 +48,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 
 ``` r
 
+
 dat <- expand.table(deAyala)
 mod <- mirt(dat)
 

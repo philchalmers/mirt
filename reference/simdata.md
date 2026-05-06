@@ -206,6 +206,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 ### Parameters from Reckase (2009), p. 153
 
 set.seed(1234)

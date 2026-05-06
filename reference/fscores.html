@@ -29,7 +29,7 @@ for latent regression predictor effects."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -730,10 +730,10 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, method<span class="op">=</span><span class="st">'WLE'</span>, full.scores <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Comfort Work Future Benefit         F1     SE_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1    1      1       1 -5.6980733 1.5782658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1    1      1       1 -5.6980733 1.5782656</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       1    3      2       1 -2.1191038 0.6332801</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1    4      2       3 -1.1387624 0.6557002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       1    4      3       1 -0.8489387 0.7000117</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       1    4      3       1 -0.8489387 0.7000120</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       2    1      1       1 -4.0112458 1.1423934</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       2    1      2       4 -1.8957020 0.6698434</span>
 <span class="r-in"><span></span></span>
@@ -742,35 +742,35 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, MI <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.42189846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.05510954</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.87439150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.87439150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.74889691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.68845272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.39271436</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.04754194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.89013942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.89013942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.77444660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  0.65160004</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plausible values for future work</span></span></span>
 <span class="r-in"><span><span class="va">pv</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, plausible.draws <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pv</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, var<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, min<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, max<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.007941992  1.056680375 -3.113564647  2.999640750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.01656094  0.92414746 -3.14608264  3.47567311 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.02067453  1.08642010 -3.29279897  3.68811347 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.02413928  0.97999448 -3.23760980  2.77091782 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.008958707  1.082049681 -3.247606615  3.340018194 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.05127833  1.04435964 -3.50774427  3.30865300 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.002200381  1.032016630 -3.316962292  3.432060079 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.05109543  1.02663371 -3.85955679  3.42897726 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        mean         var         min         max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.04187097  1.04701535 -2.84818234  3.07836275 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mean          var          min          max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.005665056  1.002841134 -4.065671269  3.225408086 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## define a custom_den function (*must* return a numeric vector).</span></span></span>
@@ -873,12 +873,12 @@ Item Response Theory for Scores on Tests Including Polytomous Items with Ordered
 <span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">fscores</span><span class="op">(</span><span class="va">mod</span>, full.scores.SE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              F1     SE_F1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3085492 0.3442152</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.3474178 0.3408490</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  2.0484395 0.3903304</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -1.9418498 0.3670495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -0.7631517 0.3432688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  2.1019471 0.3922103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3085474 0.3442157</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.3474171 0.3408495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  2.0484340 0.3903310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -1.9418448 0.3670500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -0.7631504 0.3432692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]  2.1019411 0.3922108</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># score only two response patterns</span></span></span>
 <span class="r-in"><span><span class="va">rp</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span></span></span>

@@ -108,6 +108,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 if(interactive()) mirtCluster() #use all available cores to estimate CI's in parallel
 dat <- expand.table(LSAT7)

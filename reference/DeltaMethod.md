@@ -40,6 +40,7 @@ returns a list of the transformed parameters, ACOV, and SEs
 ## Examples
 
 ``` r
+
 # Slightly modified example from ?msm::deltamethod
 # Multiple linear regression, E(y) = alpha + beta1 x + beta2 g
 x <- 1:100

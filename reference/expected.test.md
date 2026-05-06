@@ -66,6 +66,7 @@ Package for the R Environment. *Journal of Statistical Software, 48*(6),
 ## Examples
 
 ``` r
+
 # \donttest{
 dat <- expand.table(deAyala)
 model <- 'F = 1-5

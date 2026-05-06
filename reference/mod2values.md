@@ -34,6 +34,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, "F=1-5

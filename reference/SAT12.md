@@ -23,6 +23,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 
 itemstats(SAT12, use_ts = FALSE)

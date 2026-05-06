@@ -45,6 +45,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 mod <- mirt(Science, 1)
 
 # single item probabilty tracelines for Item 2

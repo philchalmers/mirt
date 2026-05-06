@@ -107,6 +107,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # normal density example, N(mu, sigma^2)
 den <- function(obj, Theta) dnorm(Theta, obj@par[1], sqrt(obj@par[2]))
 par <- c(mu = 0, sigma2 = .5)

@@ -40,6 +40,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 head(Attitude)
 #>   hideous state_teaching deterrent believe_not.necessary necessary_wish.not
 #> 1       0              1         1                     0                  0

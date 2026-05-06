@@ -59,6 +59,7 @@ Supported class transformations for the `cls` input are:
 ## Examples
 
 ``` r
+
 # classical 3PL model
 vec <- c(a=1.5, b=-1, g=.1, u=1)
 slopeint <- traditional2mirt(vec, '3PL', ncat=2)

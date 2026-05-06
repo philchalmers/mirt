@@ -56,6 +56,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1, 'Rasch')

@@ -40,6 +40,7 @@ this package from source:
     following into the console:
 
 ``` r
+
 install.packages('devtools')
 ```
 
@@ -47,6 +48,7 @@ install.packages('devtools')
     the Github source code.
 
 ``` r
+
 library('devtools')
 install_github('philchalmers/mirt')
 ```

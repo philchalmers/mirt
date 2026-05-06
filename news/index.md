@@ -910,7 +910,7 @@ CRAN release: 2017-11-29
   from fitted objects (contributed by Lennart Schneider)
 
 - [`simdata()`](https://philchalmers.github.io/mirt/reference/simdata.md)
-  gains an `equal.K` argument to redraw data until $K$ categories are
+  gains an `equal.K` argument to redraw data until $`K`$ categories are
   populated for a given item
 
 - Fix initialization of

@@ -113,6 +113,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 set.seed(10)
 N <- 1000

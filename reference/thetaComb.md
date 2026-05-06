@@ -46,6 +46,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # all possible joint combinations for the vector -4 to 4
 thetaComb(-4:4, 2)
 #>       [,1] [,2]

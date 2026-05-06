@@ -104,6 +104,7 @@ Package for the R Environment. *Journal of Statistical Software, 48*(6),
 ## Examples
 
 ``` r
+
 # \donttest{
 dat <- expand.table(LSAT7)
 x <- mirt(dat, 1)

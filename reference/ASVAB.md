@@ -17,6 +17,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 data(ASVAB)
 datWM <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, White_Male)))
 datWF <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, White_Female)))

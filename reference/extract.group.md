@@ -39,6 +39,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 set.seed(12345)
 a <- matrix(abs(rnorm(15,1,.3)), ncol=1)

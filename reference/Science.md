@@ -17,6 +17,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 # \donttest{
 itemstats(Science)
 #> $overall

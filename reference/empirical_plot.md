@@ -100,6 +100,7 @@ Package for the R Environment. *Journal of Statistical Software, 48*(6),
 ## Examples
 
 ``` r
+
 # \donttest{
 
 SAT12[SAT12 == 8] <- NA

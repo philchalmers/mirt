@@ -51,6 +51,7 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 ## Examples
 
 ``` r
+
 data(LSAT7)
 head(LSAT7) # frequency in right-most column
 #>   Item.1 Item.2 Item.3 Item.4 Item.5 freq
