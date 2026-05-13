@@ -34,7 +34,7 @@ imputeMissing(x, Theta, warn = TRUE, ...)
 
 ## References
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. *Journal of Statistical Software, 48*(6),
 1-29. [doi:10.18637/jss.v048.i06](https://doi.org/10.18637/jss.v048.i06)
 
@@ -54,7 +54,7 @@ dat <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -77,7 +77,7 @@ for(i in 1:20)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 24 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -99,7 +99,7 @@ fulldata <- imputeMissing(mod, scores)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 25 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61

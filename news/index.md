@@ -3,6 +3,11 @@
 ## Changes in mirt 1.47
 
 - [`fscores()`](https://philchalmers.github.io/mirt/reference/fscores.md)
+  also gains `method = 'EAP_general'` to perform the dimension reduction
+  EAP estimates for bifactor/two-tier general factor predictions as
+  described in Gibbons et al. (2007)
+
+- [`fscores()`](https://philchalmers.github.io/mirt/reference/fscores.md)
   gains `method = 'EAPsum_2.0'` to obtain the 2.0 version of the
   Lord-Wingersky Algorithm described in Cai (2015)
 

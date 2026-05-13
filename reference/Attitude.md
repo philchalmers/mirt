@@ -271,6 +271,252 @@ M2(mod.rho)
 #>           M2 df     p RMSEA RMSEA_5 RMSEA_95 SRMSR   TLI   CFI
 #> stats 34.709 20 0.022 0.118   0.045     0.18  0.08 0.946 0.961
 itemfit(mod, p.adjust='fdr')
+#> Called from: EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND = x@Internals$CUSTOM.IND, 
+#>     den_fun = mirt_dmvnorm, quadpts = quadpts, theta_lim = theta_lim, 
+#>     discrete = discrete, QMC = QMC, mixture = mixture, pis = pis, 
+#>     which.items = which.items, use_dentype_estimate = use_dentype_estimate)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: L1total <- L1 %*% prior
+#> debug: Elist <- vector("list", J)
+#> debug: for (i in which.items) {
+#>     KK <- K[-i]
+#>     T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#>     itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>         1L)), , drop = FALSE]
+#>     if (i != J) {
+#>         itemloc2 <- itemloc[-i]
+#>         itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>     }
+#>     else itemloc2 <- itemloc[-(J + 1)]
+#>     tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>     E <- matrix(NA, nrow(L1total), nrow(T))
+#>     for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>         (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#>     Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> }
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-(J + 1)]
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: return(Elist)
 #>                    item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1               hideous  9.192       4      0.156  0.075
 #> 2        state_teaching 37.649       4      0.398  0.000
@@ -281,6 +527,252 @@ itemfit(mod, p.adjust='fdr')
 #> 7             justified  4.967       4      0.068  0.291
 #> 8              deserved 11.061       3      0.225  0.023
 itemfit(mod.rho, p.adjust='fdr')
+#> Called from: EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND = x@Internals$CUSTOM.IND, 
+#>     den_fun = mirt_dmvnorm, quadpts = quadpts, theta_lim = theta_lim, 
+#>     discrete = discrete, QMC = QMC, mixture = mixture, pis = pis, 
+#>     which.items = which.items, use_dentype_estimate = use_dentype_estimate)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: L1total <- L1 %*% prior
+#> debug: Elist <- vector("list", J)
+#> debug: for (i in which.items) {
+#>     KK <- K[-i]
+#>     T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#>     itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>         1L)), , drop = FALSE]
+#>     if (i != J) {
+#>         itemloc2 <- itemloc[-i]
+#>         itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>     }
+#>     else itemloc2 <- itemloc[-(J + 1)]
+#>     tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>     E <- matrix(NA, nrow(L1total), nrow(T))
+#>     for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>         (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#>     Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> }
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-(J + 1)]
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: return(Elist)
 #>                    item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1               hideous  0.893       2      0.000  0.640
 #> 2        state_teaching 12.861       2      0.320  0.013

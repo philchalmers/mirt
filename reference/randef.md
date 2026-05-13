@@ -33,7 +33,7 @@ randef(x, ndraws = 1000, thin = 10, return.draws = FALSE)
 
 ## References
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. *Journal of Statistical Software, 48*(6),
 1-29.
 
@@ -82,21 +82,21 @@ summary(mod)
 
 effects <- randef(mod, ndraws = 2000, thin = 20)
 head(effects$Theta)
-#>               F1
-#> [1,]  0.50426754
-#> [2,]  0.09923104
-#> [3,] -0.64744634
-#> [4,] -0.65081280
-#> [5,]  0.08006334
-#> [6,]  0.82676080
+#>              F1
+#> [1,]  0.4698651
+#> [2,]  0.1093364
+#> [3,] -0.6089436
+#> [4,] -0.6809916
+#> [5,]  0.1078195
+#> [6,]  0.8836711
 head(effects$group)
-#>               group
-#> group1 -0.013581586
-#> group2  0.018425983
-#> group3  0.009353571
-#> group4 -0.007895453
-#> group5 -0.007547738
-#> group6  0.004855861
+#>              group
+#> group1  0.05651474
+#> group2  0.01928965
+#> group3  0.03465059
+#> group4  0.02239062
+#> group5 -0.01311456
+#> group6  0.03921143
 
 # lr.random input
 mod2 <- mixedmirt(Science, covdat, model=1, lr.random = ~ 1|group)
@@ -133,20 +133,20 @@ summary(mod2)
 effects <- randef(mod2, ndraws = 2000)
 head(effects$Theta)
 #>               F1
-#> [1,]  0.55327405
-#> [2,]  0.06291237
-#> [3,] -0.58450534
-#> [4,] -0.70690874
-#> [5,]  0.15137658
-#> [6,]  0.94540224
+#> [1,]  0.52365482
+#> [2,]  0.06846177
+#> [3,] -0.65977537
+#> [4,] -0.63787437
+#> [5,]  0.09012556
+#> [6,]  0.96933660
 head(effects$group)
 #>              group
-#> group1  0.04033295
-#> group2 -0.05352359
-#> group3 -0.49271471
-#> group4 -0.22222592
-#> group5  0.13375084
-#> group6 -0.34481481
+#> group1  0.02624445
+#> group2 -0.08560075
+#> group3 -0.36947562
+#> group4 -0.29505470
+#> group5  0.15136717
+#> group6 -0.39626280
 
 # }
 ```

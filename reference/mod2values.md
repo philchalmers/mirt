@@ -19,7 +19,7 @@ mod2values(x)
 
 ## References
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. *Journal of Statistical Software, 48*(6),
 1-29. [doi:10.18637/jss.v048.i06](https://doi.org/10.18637/jss.v048.i06)
 

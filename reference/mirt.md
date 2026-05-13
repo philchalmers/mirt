@@ -1228,7 +1228,7 @@ Cai, L. (2010b). Metropolis-Hastings Robbins-Monro algorithm for
 confirmatory item factor analysis. *Journal of Educational and
 Behavioral Statistics, 35*, 307-335.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. *Journal of Statistical Software, 48*(6),
 1-29. [doi:10.18637/jss.v048.i06](https://doi.org/10.18637/jss.v048.i06)
 
@@ -1240,7 +1240,7 @@ Chalmers, R. P. (2018). Numerical Approximation of the Observed
 Information Matrix with Oakes' Identity. *British Journal of
 Mathematical and Statistical Psychology* *DOI: 10.1111/bmsp.12127*
 
-Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of
+Chalmers, R. P. & Flora, D. (2014). Maximum-likelihood Estimation of
 Noncompensatory IRT Models with the MH-RM Algorithm. *Applied
 Psychological Measurement, 38*, 339-358.
 [doi:10.1177/0146621614520958](https://doi.org/10.1177/0146621614520958)
@@ -1399,7 +1399,7 @@ itemstats(data)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1464,7 +1464,7 @@ plot(mod1, type = 'trace')
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1487,7 +1487,7 @@ plot(mod1, type = 'trace')
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-05 tolerance after 74 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: none 
 #> Number of rectangular quadrature: 61
@@ -1547,7 +1547,7 @@ coef(mod2)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1594,7 +1594,7 @@ plot(mod2, MI=200) #expected total score with 95% confidence intervals
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 43 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1820,7 +1820,7 @@ anova(cmod, mod2)
 #> 
 #> Full-information item factor analysis with 2 factor(s).
 #> Converged within 1e-04 tolerance after 125 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 31
@@ -1929,7 +1929,7 @@ values #note that slopes are numbered 1,5,9,13, or index with values$parnum[valu
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 15 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -1973,7 +1973,7 @@ model <- 'F = 1-4
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 15 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2070,7 +2070,7 @@ anova(pmod1, pmod2)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 50 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2113,7 +2113,7 @@ coef(gpcmod)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 71 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2161,7 +2161,7 @@ itemplot(nomod, 3)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 89 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2204,7 +2204,7 @@ plot(ggum, type = 'itemscore')
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 55 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2262,6 +2262,192 @@ itemplot(unimod, 1)
 
 # following use the correct log-normal density for latent trait
 itemfit(unimod)
+#> Called from: EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND = x@Internals$CUSTOM.IND, 
+#>     den_fun = mirt_dmvnorm, quadpts = quadpts, theta_lim = theta_lim, 
+#>     discrete = discrete, QMC = QMC, mixture = mixture, pis = pis, 
+#>     which.items = which.items, use_dentype_estimate = use_dentype_estimate)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: L1total <- L1 %*% prior
+#> debug: Elist <- vector("list", J)
+#> debug: for (i in which.items) {
+#>     KK <- K[-i]
+#>     T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#>     itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>         1L)), , drop = FALSE]
+#>     if (i != J) {
+#>         itemloc2 <- itemloc[-i]
+#>         itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>     }
+#>     else itemloc2 <- itemloc[-(J + 1)]
+#>     tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>     E <- matrix(NA, nrow(L1total), nrow(T))
+#>     for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>         (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#>     Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> }
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-(J + 1)]
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: return(Elist)
 #>      item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1 Comfort  5.664       6      0.000  0.462
 #> 2    Work 10.136       8      0.026  0.256
@@ -2274,6 +2460,1432 @@ fs <- fscores(unimod)
 hist(fs, 20)
 
 fscores(unimod, method = 'EAPsum', full.scores = FALSE)
+#> Called from: EAPsum(object, full.scores = full.scores, full.scores.SE = full.scores.SE, 
+#>     quadpts = quadpts, gp = gp, verbose = verbose, EAPsum.scores = EAPsum.scores, 
+#>     item_weights = item_weights, return.acov = return.acov, CUSTOM.IND = CUSTOM.IND, 
+#>     theta_lim = theta_lim, discrete = discrete, QMC = QMC, den_fun = den_fun, 
+#>     min_expected = min_expected, pis = pis, mixture = mixture, 
+#>     use_dentype_estimate = use_dentype_estimate, leave_missing = leave_missing, 
+#>     nfact = nfact, version2 = method == "EAPsum_2.0", ...)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: if (mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
+#> debug: thetas <- SEthetas <- matrix(0, nrow(L1), nfact)
+#> debug: if (return.acov) {
+#>     vcovs <- vector("list", nrow(thetas))
+#>     names(vcovs) <- Sum.Scores
+#> }
+#> debug: for (i in seq_len(nrow(thetas))) {
+#>     expLW <- L1[i, ] * prior
+#>     LW <- log(L1[i, ]) + log(prior)
+#>     maxLW <- max(LW)
+#>     nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#>     if (nc == 0) {
+#>         warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>             call. = FALSE)
+#>         thetas[i, ] <- SEthetas[i, ] <- NaN
+#>     }
+#>     else {
+#>         if (!discrete) {
+#>             thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>             thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>             Thetaprod <- matrix(0, nrow(ThetaShort), nfact * 
+#>                 (nfact + 1L)/2L)
+#>             ind <- 1L
+#>             for (k in seq_len(nfact)) {
+#>                 for (j in seq_len(nfact)) {
+#>                   if (k <= j) {
+#>                     Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                       j]
+#>                     ind <- ind + 1L
+#>                   }
+#>                 }
+#>             }
+#>             vcov <- matrix(0, nfact, nfact)
+#>             vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * 
+#>                 expLW/nc)
+#>             if (nfact > 1L) 
+#>                 vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>             if (return.acov) 
+#>                 vcovs[[i]] <- vcov
+#>             SEthetas[i, ] <- sqrt(diag(vcov))
+#>         }
+#>         else thetas[i, ] <- expLW/nc
+#>     }
+#> }
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: factorNames <- extract.mirt(x, "factorNames")
+#> debug: if (version2) factorNames <- factorNames[1]
+#> debug: colnames(thetas) <- factorNames[!grepl("\\(", factorNames)]
+#> debug: colnames(SEthetas) <- paste0("SE_", colnames(thetas))
+#> debug: ret <- data.frame(Sum.Scores = Sum.Scores + sum(x@Data$mins), 
+#>     thetas, SEthetas)
+#> debug: rownames(ret) <- ret$Sum.Scores
+#> debug: if (full.scores) {
+#>     dat <- x@Data$data
+#>     adj <- extract.mirt(x, "mins")
+#>     dat <- t(t(dat) - adj)
+#>     scores <- rowSums(dat)
+#>     EAPscores <- ret[match(scores, Sum.Scores), -1L, drop = FALSE]
+#>     if (return.acov) 
+#>         return(vcovs[match(scores, Sum.Scores)])
+#>     if (discrete) 
+#>         colnames(EAPscores) <- gsub("Theta.", "Class_", colnames(EAPscores))
+#>     pick <- if (full.scores.SE) 
+#>         seq_len(nfact * 2)
+#>     else 1L:nfact
+#>     ret <- as.matrix(EAPscores[, pick, drop = FALSE])
+#>     rownames(ret) <- NULL
+#>     if (!leave_missing) {
+#>         completely_missing <- extract.mirt(x, "completely_missing")
+#>         ret <- add_completely.missing_back(ret, completely_missing)
+#>     }
+#> } else {
+#>     if (return.acov) 
+#>         return(vcovs)
+#>     dat <- x@Data$data
+#>     if (any(is.na(dat))) 
+#>         stop("EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE", 
+#>             call. = FALSE)
+#>     E <- L1 %*% prior * nrow(dat)
+#>     adj <- mins <- extract.mirt(x, "mins")
+#>     dat <- t(t(dat) - adj)
+#>     Otmp <- matrix(table(sort(rowSums(dat))))
+#>     got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
+#>     O <- matrix(0, nrow(E), 1)
+#>     O[got, 1] <- Otmp
+#>     ret$observed <- as.numeric(O)
+#>     ret$expected <- as.numeric(E)
+#>     tmp <- collapseTotals(ret, min_expected)
+#>     df <- tmp$df
+#>     X2 <- tmp$X2
+#>     tmp <- suppressWarnings(expand.table(cbind(ret[, 2L:(ncol(ret) - 
+#>         1L)], ret$observed)))
+#>     pick <- seq_len(nfact)
+#>     EX <- sum(Sum.Scores * rowSums(t(t(L1) * prior))) + sum(mins)
+#>     VARX <- sum(((Sum.Scores + sum(mins)) - EX)^2 * rowSums(t(t(L1) * 
+#>         prior)))
+#>     itemx <- matrix(0, nrow = length(K), ncol = 2)
+#>     colnames(itemx) <- c("E.x", "VAR.x")
+#>     rownames(itemx) <- if (version2) 
+#>         extract.mirt(x, "factorNames")[-1]
+#>     else extract.mirt(x, "itemnames")
+#>     for (i in 1L:length(K)) {
+#>         si <- 0L:(K[i] - 1L)
+#>         px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 
+#>             1L), ]) * prior)
+#>         ex <- sum(si * px)
+#>         varx <- sum((si - ex)^2 * px)
+#>         itemx[i, 1L] <- ex + mins[i]
+#>         itemx[i, 2L] <- varx
+#>     }
+#>     rxx <- apply(tmp[, pick, drop = FALSE], 2L, var)/(apply(tmp[, 
+#>         pick, drop = FALSE], 2L, var) + apply(tmp[, pick + nfact, 
+#>         drop = FALSE], 2L, function(x) mean(x^2)))
+#>     names(rxx) <- paste0("rxx_", factorNames)
+#>     fit <- data.frame(df = df, X2 = X2, p.X2 = suppressWarnings(pchisq(X2, 
+#>         df, lower.tail = FALSE)))
+#>     rxx.alpha <- (J/(J - 1)) * (1 - sum(itemx[, 2])/VARX)
+#>     fit$SEM.alpha <- sqrt(VARX) * sqrt(1 - rxx.alpha)
+#>     fit$rxx.alpha <- rxx.alpha
+#>     fit <- cbind(fit, t(as.data.frame(rxx)))
+#>     rownames(fit) <- "stats"
+#>     fit <- as.mirt_df(fit)
+#>     if (EAPsum.scores) {
+#>         fit <- list(fit = fit, Sum.Scores = as.mirt_df(data.frame(E.X = EX, 
+#>             VAR.X = VARX)), Item.Scores = as.mirt_matrix(itemx))
+#>     }
+#>     attr(ret, "fit") <- fit
+#>     ret$std.res <- with(ret, sqrt((observed - expected)^2/expected))
+#>     if (!all(item_weights == 1)) {
+#>         ret$expected <- NULL
+#>         ret$std.res <- NULL
+#>     }
+#>     ret <- as.mirt_df(ret)
+#>     if (verbose && !discrete && all(item_weights == 1)) {
+#>         print(attr(ret, "fit"))
+#>         cat("\n")
+#>     }
+#> }
+#> debug: if (return.acov) return(vcovs)
+#> debug: dat <- x@Data$data
+#> debug: if (any(is.na(dat))) stop("EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE", 
+#>     call. = FALSE)
+#> debug: E <- L1 %*% prior * nrow(dat)
+#> debug: adj <- mins <- extract.mirt(x, "mins")
+#> debug: dat <- t(t(dat) - adj)
+#> debug: Otmp <- matrix(table(sort(rowSums(dat))))
+#> debug: got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
+#> debug: O <- matrix(0, nrow(E), 1)
+#> debug: O[got, 1] <- Otmp
+#> debug: ret$observed <- as.numeric(O)
+#> debug: ret$expected <- as.numeric(E)
+#> debug: tmp <- collapseTotals(ret, min_expected)
+#> debug: df <- tmp$df
+#> debug: X2 <- tmp$X2
+#> debug: tmp <- suppressWarnings(expand.table(cbind(ret[, 2L:(ncol(ret) - 
+#>     1L)], ret$observed)))
+#> debug: pick <- seq_len(nfact)
+#> debug: EX <- sum(Sum.Scores * rowSums(t(t(L1) * prior))) + sum(mins)
+#> debug: VARX <- sum(((Sum.Scores + sum(mins)) - EX)^2 * rowSums(t(t(L1) * 
+#>     prior)))
+#> debug: itemx <- matrix(0, nrow = length(K), ncol = 2)
+#> debug: colnames(itemx) <- c("E.x", "VAR.x")
+#> debug: rownames(itemx) <- if (version2) extract.mirt(x, "factorNames")[-1] else extract.mirt(x, 
+#>     "itemnames")
+#> debug: extract.mirt(x, "itemnames")
+#> debug: for (i in 1L:length(K)) {
+#>     si <- 0L:(K[i] - 1L)
+#>     px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>         ]) * prior)
+#>     ex <- sum(si * px)
+#>     varx <- sum((si - ex)^2 * px)
+#>     itemx[i, 1L] <- ex + mins[i]
+#>     itemx[i, 2L] <- varx
+#> }
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: rxx <- apply(tmp[, pick, drop = FALSE], 2L, var)/(apply(tmp[, 
+#>     pick, drop = FALSE], 2L, var) + apply(tmp[, pick + nfact, 
+#>     drop = FALSE], 2L, function(x) mean(x^2)))
+#> debug: names(rxx) <- paste0("rxx_", factorNames)
+#> debug: fit <- data.frame(df = df, X2 = X2, p.X2 = suppressWarnings(pchisq(X2, 
+#>     df, lower.tail = FALSE)))
+#> debug: rxx.alpha <- (J/(J - 1)) * (1 - sum(itemx[, 2])/VARX)
+#> debug: fit$SEM.alpha <- sqrt(VARX) * sqrt(1 - rxx.alpha)
+#> debug: fit$rxx.alpha <- rxx.alpha
+#> debug: fit <- cbind(fit, t(as.data.frame(rxx)))
+#> debug: rownames(fit) <- "stats"
+#> debug: fit <- as.mirt_df(fit)
+#> debug: if (EAPsum.scores) {
+#>     fit <- list(fit = fit, Sum.Scores = as.mirt_df(data.frame(E.X = EX, 
+#>         VAR.X = VARX)), Item.Scores = as.mirt_matrix(itemx))
+#> }
+#> debug: attr(ret, "fit") <- fit
+#> debug: ret$std.res <- with(ret, sqrt((observed - expected)^2/expected))
+#> debug: if (!all(item_weights == 1)) {
+#>     ret$expected <- NULL
+#>     ret$std.res <- NULL
+#> }
+#> debug: ret <- as.mirt_df(ret)
+#> debug: if (verbose && !discrete && all(item_weights == 1)) {
+#>     print(attr(ret, "fit"))
+#>     cat("\n")
+#> }
+#> debug: ret
 #>    Sum.Scores    F1 SE_F1 observed expected std.res
 #> 4           4 0.138 0.153        2    0.127   5.251
 #> 5           5 0.304 0.088        1    0.766   0.267
@@ -2381,13 +3993,13 @@ itemstats(data)
 mod1 <- mirt(data, 1)
 extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.244  0.026  0.083  0.118  0.000  0.001 
+#>  0.269  0.029  0.078  0.146  0.000  0.000 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 mod1 <- mirt(data, 1, optimizer = 'NR')
 extract.mirt(mod1, 'time')
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.206  0.027  0.083  0.075  0.000  0.000 
+#>  0.210  0.028  0.088  0.073  0.000  0.001 
 
 mod2 <- mirt(data, 2, optimizer = 'NR')
 #> Warning: EM cycles terminated after 500 iterations.
@@ -2735,7 +4347,7 @@ fulldata <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 0.001 tolerance after 73 MHRM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: NR1 
 #> Latent density type: Gaussian 
 #> Average MH acceptance ratio(s): 0.4 
@@ -2789,75 +4401,75 @@ mod1 <- mirt(dataset, model.1, method = 'MHRM')
 coef(mod1)
 #> $Item_1
 #>        a1 a2      d g u
-#> par 1.437  0 -1.005 0 1
+#> par 1.735  0 -1.073 0 1
 #> 
 #> $Item_2
-#>        a1 a2      d g u
-#> par 0.479  0 -1.581 0 1
+#>        a1 a2     d g u
+#> par 0.415  0 -1.52 0 1
 #> 
 #> $Item_3
 #>        a1 a2     d g u
-#> par 1.053  0 1.638 0 1
+#> par 0.818  0 1.368 0 1
 #> 
 #> $Item_4
 #>        a1    a2      d g u
-#> par 1.125 0.531 -0.033 0 1
+#> par 0.938 0.589 -0.028 0 1
 #> 
 #> $Item_5
 #>     a1    a2    d1    d2     d3
-#> par  0 1.267 2.854 1.898 -0.374
+#> par  0 1.285 2.845 1.829 -0.499
 #> 
 #> $Item_6
 #>     a1    a2    d1    d2     d3
-#> par  0 0.541 2.542 0.998 -0.967
+#> par  0 0.492 2.555 0.988 -1.054
 #> 
 #> $Item_7
-#>     a1    a2    d1    d2
-#> par  0 0.887 2.056 0.064
+#>     a1    a2    d1     d2
+#> par  0 1.072 2.048 -0.018
 #> 
 #> $Item_8
 #>     a1    a2     d g u
-#> par  0 1.061 0.992 0 1
+#> par  0 0.946 0.935 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22
-#> par      0      0      1  0.393      1
+#> par      0      0      1   0.35      1
 #> 
 summary(mod1)
 #>           F1    F2    h2
-#> Item_1 0.645       0.416
-#> Item_2 0.271       0.073
-#> Item_3 0.526       0.277
-#> Item_4 0.534 0.252 0.348
-#> Item_5       0.597 0.356
-#> Item_6       0.303 0.092
-#> Item_7       0.462 0.213
-#> Item_8       0.529 0.280
+#> Item_1 0.714       0.509
+#> Item_2 0.237       0.056
+#> Item_3 0.433       0.188
+#> Item_4 0.462 0.290 0.298
+#> Item_5       0.602 0.363
+#> Item_6       0.278 0.077
+#> Item_7       0.533 0.284
+#> Item_8       0.486 0.236
 #> 
-#> SS loadings:  1.051 1.005 
-#> Proportion Var:  0.131 0.126 
+#> SS loadings:  0.966 1.044 
+#> Proportion Var:  0.121 0.131 
 #> 
 #> Factor correlations: 
 #> 
-#>       F1 F2
-#> F1 1.000   
-#> F2 0.393  1
+#>      F1 F2
+#> F1 1.00   
+#> F2 0.35  1
 residuals(mod1)
 #> LD matrix (lower triangle) and standardized residual correlations (upper triangle)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.067  -0.030  -0.005  -0.005   0.018   0.057 
+#>  -0.062  -0.034  -0.017  -0.009   0.014   0.062 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.031 -0.010 -0.002 -0.033 -0.035 -0.067  0.018
-#> Item_2  1.956        -0.005 -0.019 -0.047  0.024 -0.024  0.018
-#> Item_3  0.184  0.058        -0.003  0.015  0.019  0.032  0.057
-#> Item_4  0.006  0.734  0.017         0.033 -0.029  0.017 -0.005
-#> Item_5  2.143  4.447  0.458  2.147        -0.044 -0.041 -0.019
-#> Item_6  2.386  1.152  0.743  1.653 11.771         0.033 -0.047
-#> Item_7  9.051  1.154  2.048  0.602  6.594  4.479        -0.017
-#> Item_8  0.639  0.658  6.546  0.056  0.746  4.437  0.580       
+#> Item_1        -0.008  0.012 -0.014 -0.035  0.040  0.062  0.008
+#> Item_2  0.113         0.020  0.012 -0.049 -0.042 -0.027  0.001
+#> Item_3  0.311  0.823         0.007 -0.037 -0.053 -0.034 -0.047
+#> Item_4  0.371  0.277  0.111        -0.033  0.049  0.023 -0.021
+#> Item_5  2.424  4.803  2.812  2.185         0.022 -0.024  0.031
+#> Item_6  3.222  3.572  5.557  4.712  2.959        -0.033 -0.062
+#> Item_7  7.780  1.502  2.362  1.026  2.313  4.319        -0.021
+#> Item_8  0.136  0.003  4.371  0.870  1.905  7.614  0.904       
 
 #####
 # bifactor
@@ -2870,35 +4482,35 @@ mod3 <- mirt(dataset,model.3, method = 'MHRM')
 coef(mod3)
 #> $Item_1
 #>        a1    a2 a3      d g u
-#> par 0.782 1.627  0 -1.121 0 1
+#> par 0.767 1.114  0 -0.954 0 1
 #> 
 #> $Item_2
 #>        a1    a2 a3      d g u
-#> par 0.199 0.463  0 -1.588 0 1
+#> par 0.056 0.522  0 -1.551 0 1
 #> 
 #> $Item_3
 #>        a1    a2 a3     d g u
-#> par 0.741 0.582  0 1.589 0 1
+#> par 0.202 1.104  0 1.489 0 1
 #> 
 #> $Item_4
 #>        a1    a2 a3      d g u
-#> par 1.411 0.704  0 -0.026 0 1
+#> par 1.192 0.775  0 -0.028 0 1
 #> 
 #> $Item_5
 #>        a1 a2    a3    d1    d2     d3
-#> par 0.882  0 0.727 2.758 1.832 -0.355
+#> par 1.054  0 1.167 3.094 2.001 -0.535
 #> 
 #> $Item_6
-#>        a1 a2    a3    d1    d2     d3
-#> par 0.331  0 0.534 2.583 1.019 -0.984
+#>        a1 a2    a3   d1    d2     d3
+#> par 0.458  0 0.192 2.56 0.992 -1.052
 #> 
 #> $Item_7
-#>        a1 a2    a3    d1    d2
-#> par 0.634  0 0.818 2.139 0.068
+#>        a1 a2    a3    d1     d2
+#> par 0.992  0 0.366 2.043 -0.013
 #> 
 #> $Item_8
-#>        a1 a2  a3     d g u
-#> par 0.844  0 0.5 0.972 0 1
+#>        a1 a2    a3     d g u
+#> par 0.683  0 0.714 0.952 0 1
 #> 
 #> $GroupPars
 #>     MEAN_1 MEAN_2 MEAN_3 COV_11 COV_21 COV_31 COV_22 COV_32 COV_33
@@ -2906,17 +4518,17 @@ coef(mod3)
 #> 
 summary(mod3)
 #>            G    F1    F2    h2
-#> Item_1 0.315 0.656       0.529
-#> Item_2 0.112 0.261       0.080
-#> Item_3 0.381 0.299       0.235
-#> Item_4 0.608 0.304       0.462
-#> Item_5 0.430       0.355 0.311
-#> Item_6 0.183       0.294 0.120
-#> Item_7 0.318       0.411 0.270
-#> Item_8 0.430       0.255 0.249
+#> Item_1 0.353 0.513       0.387
+#> Item_2 0.031 0.293       0.087
+#> Item_3 0.099 0.542       0.303
+#> Item_4 0.538 0.349       0.411
+#> Item_5 0.455       0.504 0.461
+#> Item_6 0.258       0.108 0.078
+#> Item_7 0.495       0.182 0.278
+#> Item_8 0.347       0.363 0.252
 #> 
-#> SS loadings:  1.131 0.68 0.446 
-#> Proportion Var:  0.141 0.085 0.056 
+#> SS loadings:  1.064 0.764 0.43 
+#> Proportion Var:  0.133 0.096 0.054 
 #> 
 #> Factor correlations: 
 #> 
@@ -2929,21 +4541,21 @@ residuals(mod3)
 #> 
 #> Upper triangle summary:
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  -0.055  -0.022   0.005  -0.001   0.024   0.047 
+#>  -0.061  -0.023  -0.004  -0.002   0.021   0.050 
 #> 
 #>        Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8
-#> Item_1         0.015  0.006  0.005 -0.031  0.036 -0.055  0.018
-#> Item_2  0.473         0.006 -0.011 -0.041  0.027 -0.020  0.022
-#> Item_3  0.061  0.062        -0.006 -0.014  0.016  0.025  0.027
-#> Item_4  0.044  0.251  0.079         0.034 -0.021  0.023 -0.024
-#> Item_5  1.935  3.321  0.397  2.351        -0.045 -0.042  0.028
-#> Item_6  2.555  1.431  0.516  0.902 11.900        -0.027  0.047
-#> Item_7  6.153  0.839  1.246  1.081  7.051  2.971        -0.014
-#> Item_8  0.614  0.979  1.435  1.162  1.560  4.325  0.418       
+#> Item_1        -0.004  0.010 -0.004 -0.038 -0.039  0.038  0.007
+#> Item_2  0.037        -0.007  0.016  0.050 -0.035 -0.014  0.016
+#> Item_3  0.187  0.093         0.003  0.025 -0.051  0.032 -0.025
+#> Item_4  0.027  0.537  0.020         0.032  0.046 -0.013 -0.006
+#> Item_5  2.964  5.092  1.261  2.027         0.022 -0.022 -0.013
+#> Item_6  2.984  2.385  5.178  4.307  2.835        -0.033 -0.061
+#> Item_7  2.875  0.409  2.111  0.317  1.998  4.312         0.021
+#> Item_8  0.105  0.503  1.267  0.065  0.324  7.380  0.901       
 anova(mod1,mod3)
 #>           AIC    SABIC       HQ      BIC    logLik     X2 df     p
-#> mod1 24686.99 24742.74 24734.29 24815.81 -12320.49                
-#> mod3 24686.71 24757.00 24746.35 24849.14 -12314.36 12.276  6 0.056
+#> mod1 24965.95 25021.70 25013.25 25094.77 -12459.98                
+#> mod3 24960.46 25030.75 25020.10 25122.89 -12451.23 17.492  6 0.008
 
 #####
 # polynomial/combinations
@@ -2969,7 +4581,7 @@ model.combo <- '
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> FAILED TO CONVERGE within 1e-04 tolerance after 500 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -3029,7 +4641,7 @@ summary(mod.quad)
 #> 
 #> Full-information item factor analysis with 2 factor(s).
 #> Converged within 1e-04 tolerance after 22 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 31
@@ -3153,7 +4765,7 @@ print(mod)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 34 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: solnp 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -3908,6 +5520,192 @@ head(fs)
 #> [6,] -1.0079077
 
 itemfit(mod)
+#> Called from: EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND = x@Internals$CUSTOM.IND, 
+#>     den_fun = mirt_dmvnorm, quadpts = quadpts, theta_lim = theta_lim, 
+#>     discrete = discrete, QMC = QMC, mixture = mixture, pis = pis, 
+#>     which.items = which.items, use_dentype_estimate = use_dentype_estimate)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: L1total <- L1 %*% prior
+#> debug: Elist <- vector("list", J)
+#> debug: for (i in which.items) {
+#>     KK <- K[-i]
+#>     T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#>     itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>         1L)), , drop = FALSE]
+#>     if (i != J) {
+#>         itemloc2 <- itemloc[-i]
+#>         itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>     }
+#>     else itemloc2 <- itemloc[-(J + 1)]
+#>     tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>     E <- matrix(NA, nrow(L1total), nrow(T))
+#>     for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>         (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#>     Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> }
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-(J + 1)]
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: return(Elist)
 #>      item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1 Comfort  4.437       6      0.000  0.618
 #> 2    Work 10.778       8      0.030  0.215
@@ -3929,7 +5727,7 @@ mod2PL
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -3958,7 +5756,7 @@ mod2PL_asym
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 69 EM iterations.
-#> mirt version: 1.46.3 
+#> mirt version: 1.46.4 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -4322,6 +6120,670 @@ plot(lltm, type = 'trace')
 itemplot(lltm, item=1)
 
 itemfit(lltm)
+#> Called from: EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND = x@Internals$CUSTOM.IND, 
+#>     den_fun = mirt_dmvnorm, quadpts = quadpts, theta_lim = theta_lim, 
+#>     discrete = discrete, QMC = QMC, mixture = mixture, pis = pis, 
+#>     which.items = which.items, use_dentype_estimate = use_dentype_estimate)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: L1total <- L1 %*% prior
+#> debug: Elist <- vector("list", J)
+#> debug: for (i in which.items) {
+#>     KK <- K[-i]
+#>     T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#>     itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>         1L)), , drop = FALSE]
+#>     if (i != J) {
+#>         itemloc2 <- itemloc[-i]
+#>         itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>     }
+#>     else itemloc2 <- itemloc[-(J + 1)]
+#>     tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>     E <- matrix(NA, nrow(L1total), nrow(T))
+#>     for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>         (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#>     Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> }
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-i]
+#> debug: itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: KK <- K[-i]
+#> debug: T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]
+#> debug: itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>     , drop = FALSE]
+#> debug: if (i != J) {
+#>     itemloc2 <- itemloc[-i]
+#>     itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#> } else itemloc2 <- itemloc[-(J + 1)]
+#> debug: itemloc2 <- itemloc[-(J + 1)]
+#> debug: tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#> debug: E <- matrix(NA, nrow(L1total), nrow(T))
+#> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + 
+#>     j - 1L, ]
+#> debug: Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#> debug: return(Elist)
 #>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1   Item_1 41.823      21      0.032  0.004
 #> 2   Item_2 34.244      21      0.025  0.034
@@ -4362,6 +6824,3162 @@ head(fscores(lltm))  #EAP estimates
 #> [5,] -0.4557691
 #> [6,] -0.8900394
 fscores(lltm, method='EAPsum', full.scores=FALSE)
+#> Called from: EAPsum(object, full.scores = full.scores, full.scores.SE = full.scores.SE, 
+#>     quadpts = quadpts, gp = gp, verbose = verbose, EAPsum.scores = EAPsum.scores, 
+#>     item_weights = item_weights, return.acov = return.acov, CUSTOM.IND = CUSTOM.IND, 
+#>     theta_lim = theta_lim, discrete = discrete, QMC = QMC, den_fun = den_fun, 
+#>     min_expected = min_expected, pis = pis, mixture = mixture, 
+#>     use_dentype_estimate = use_dentype_estimate, leave_missing = leave_missing, 
+#>     nfact = nfact, version2 = method == "EAPsum_2.0", ...)
+#> debug: if (version2) {
+#>     if (length(CUSTOM.IND)) 
+#>         stop("Custom items not yet supported for EAPsum_2.0", 
+#>             call. = FALSE)
+#>     for (i in seq_len(nspec)) {
+#>         pick <- blist$specific == i
+#>         if (i == 1) 
+#>             pick <- blist$specific == i | is.na(blist$specific)
+#>         tmpitemloc <- c(1, cumsum(K[pick]) + 1)
+#>         itemtrace <- computeItemtrace(pars = pars[c(which(pick), 
+#>             length(pars))], Theta = Theta, itemloc = tmpitemloc, 
+#>             CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>         item_weights_long <- rep(item_weights[pick], K[pick])
+#>         itemtrace <- t(itemtrace)^item_weights_long
+#>         tmp <- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)
+#>         L1 <- t(tmp$L1)
+#>         stage2K[i] <- length(tmp$Sum.Scores)
+#>         subL1 <- matrix(0, ncol(L1), length(theta))
+#>         for (j in 1:length(theta)) subL1[, j] <- colSums(L1[Theta[, 
+#>             1] == theta[j], ] * sprior)
+#>         L1_lst[[i]] <- subL1
+#>     }
+#>     itemtrace <- do.call(rbind, L1_lst)
+#>     K <- stage2K
+#>     itemloc <- c(1, cumsum(K) + 1)
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#>     Theta <- ThetaShort <- matrix(theta)
+#>     prior <- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, 
+#>         1], ...)
+#>     prior <- prior/sum(prior)
+#>     nfact <- 1
+#> } else {
+#>     itemtrace <- computeItemtrace(pars = pars, Theta = Theta, 
+#>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)
+#>     item_weights_long <- rep(item_weights, K)
+#>     itemtrace <- t(itemtrace)^item_weights_long
+#>     tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#>     L1 <- tmp$L1
+#>     Sum.Scores <- tmp$Sum.Scores
+#> }
+#> debug: itemtrace <- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, 
+#>     CUSTOM.IND = CUSTOM.IND, pis = pis)
+#> debug: item_weights_long <- rep(item_weights, K)
+#> debug: itemtrace <- t(itemtrace)^item_weights_long
+#> debug: tmp <- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)
+#> debug: L1 <- tmp$L1
+#> debug: Sum.Scores <- tmp$Sum.Scores
+#> debug: if (S_X2) {
+#>     L1total <- L1 %*% prior
+#>     Elist <- vector("list", J)
+#>     for (i in which.items) {
+#>         KK <- K[-i]
+#>         T <- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), 
+#>             , drop = FALSE]
+#>         itemtrace2 <- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 
+#>             1L)), , drop = FALSE]
+#>         if (i != J) {
+#>             itemloc2 <- itemloc[-i]
+#>             itemloc2[i:J] <- itemloc2[i:J] - nrow(T)
+#>         }
+#>         else itemloc2 <- itemloc[-(J + 1)]
+#>         tmp <- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)
+#>         E <- matrix(NA, nrow(L1total), nrow(T))
+#>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] <- tmp$L1 %*% 
+#>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, 
+#>             ]
+#>         Elist[[i]] <- E[-c(1L, nrow(E)), ]
+#>     }
+#>     return(Elist)
+#> }
+#> debug: if (mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
+#> debug: thetas <- SEthetas <- matrix(0, nrow(L1), nfact)
+#> debug: if (return.acov) {
+#>     vcovs <- vector("list", nrow(thetas))
+#>     names(vcovs) <- Sum.Scores
+#> }
+#> debug: for (i in seq_len(nrow(thetas))) {
+#>     expLW <- L1[i, ] * prior
+#>     LW <- log(L1[i, ]) + log(prior)
+#>     maxLW <- max(LW)
+#>     nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#>     if (nc == 0) {
+#>         warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>             call. = FALSE)
+#>         thetas[i, ] <- SEthetas[i, ] <- NaN
+#>     }
+#>     else {
+#>         if (!discrete) {
+#>             thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>             thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>             Thetaprod <- matrix(0, nrow(ThetaShort), nfact * 
+#>                 (nfact + 1L)/2L)
+#>             ind <- 1L
+#>             for (k in seq_len(nfact)) {
+#>                 for (j in seq_len(nfact)) {
+#>                   if (k <= j) {
+#>                     Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                       j]
+#>                     ind <- ind + 1L
+#>                   }
+#>                 }
+#>             }
+#>             vcov <- matrix(0, nfact, nfact)
+#>             vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * 
+#>                 expLW/nc)
+#>             if (nfact > 1L) 
+#>                 vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>             if (return.acov) 
+#>                 vcovs[[i]] <- vcov
+#>             SEthetas[i, ] <- sqrt(diag(vcov))
+#>         }
+#>         else thetas[i, ] <- expLW/nc
+#>     }
+#> }
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: expLW <- L1[i, ] * prior
+#> debug: LW <- log(L1[i, ]) + log(prior)
+#> debug: maxLW <- max(LW)
+#> debug: nc <- sum(exp(LW - maxLW)) * exp(maxLW)
+#> debug: if (nc == 0) {
+#>     warning("Unable to compute normalization constant for EAPsum estimates. Returning NaNs", 
+#>         call. = FALSE)
+#>     thetas[i, ] <- SEthetas[i, ] <- NaN
+#> } else {
+#>     if (!discrete) {
+#>         thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>         thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>         Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>             1L)/2L)
+#>         ind <- 1L
+#>         for (k in seq_len(nfact)) {
+#>             for (j in seq_len(nfact)) {
+#>                 if (k <= j) {
+#>                   Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                     j]
+#>                   ind <- ind + 1L
+#>                 }
+#>             }
+#>         }
+#>         vcov <- matrix(0, nfact, nfact)
+#>         vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>         if (nfact > 1L) 
+#>             vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>         if (return.acov) 
+#>             vcovs[[i]] <- vcov
+#>         SEthetas[i, ] <- sqrt(diag(vcov))
+#>     }
+#>     else thetas[i, ] <- expLW/nc
+#> }
+#> debug: if (!discrete) {
+#>     thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#>     thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#>     Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 
+#>         1L)/2L)
+#>     ind <- 1L
+#>     for (k in seq_len(nfact)) {
+#>         for (j in seq_len(nfact)) {
+#>             if (k <= j) {
+#>                 Thetaprod[, ind] <- thetadif[, k] * thetadif[, 
+#>                   j]
+#>                 ind <- ind + 1L
+#>             }
+#>         }
+#>     }
+#>     vcov <- matrix(0, nfact, nfact)
+#>     vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#>     if (nfact > 1L) 
+#>         vcov <- vcov + t(vcov) - diag(diag(vcov))
+#>     if (return.acov) 
+#>         vcovs[[i]] <- vcov
+#>     SEthetas[i, ] <- sqrt(diag(vcov))
+#> } else thetas[i, ] <- expLW/nc
+#> debug: thetas[i, ] <- colSums(ThetaShort * expLW/nc)
+#> debug: thetadif <- t((t(ThetaShort) - thetas[i, ]))
+#> debug: Thetaprod <- matrix(0, nrow(ThetaShort), nfact * (nfact + 1L)/2L)
+#> debug: ind <- 1L
+#> debug: for (k in seq_len(nfact)) {
+#>     for (j in seq_len(nfact)) {
+#>         if (k <= j) {
+#>             Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>             ind <- ind + 1L
+#>         }
+#>     }
+#> }
+#> debug: for (j in seq_len(nfact)) {
+#>     if (k <= j) {
+#>         Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>         ind <- ind + 1L
+#>     }
+#> }
+#> debug: if (k <= j) {
+#>     Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#>     ind <- ind + 1L
+#> }
+#> debug: Thetaprod[, ind] <- thetadif[, k] * thetadif[, j]
+#> debug: ind <- ind + 1L
+#> debug: vcov <- matrix(0, nfact, nfact)
+#> debug: vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW/nc)
+#> debug: if (nfact > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
+#> debug: if (return.acov) vcovs[[i]] <- vcov
+#> debug: SEthetas[i, ] <- sqrt(diag(vcov))
+#> debug: factorNames <- extract.mirt(x, "factorNames")
+#> debug: if (version2) factorNames <- factorNames[1]
+#> debug: colnames(thetas) <- factorNames[!grepl("\\(", factorNames)]
+#> debug: colnames(SEthetas) <- paste0("SE_", colnames(thetas))
+#> debug: ret <- data.frame(Sum.Scores = Sum.Scores + sum(x@Data$mins), 
+#>     thetas, SEthetas)
+#> debug: rownames(ret) <- ret$Sum.Scores
+#> debug: if (full.scores) {
+#>     dat <- x@Data$data
+#>     adj <- extract.mirt(x, "mins")
+#>     dat <- t(t(dat) - adj)
+#>     scores <- rowSums(dat)
+#>     EAPscores <- ret[match(scores, Sum.Scores), -1L, drop = FALSE]
+#>     if (return.acov) 
+#>         return(vcovs[match(scores, Sum.Scores)])
+#>     if (discrete) 
+#>         colnames(EAPscores) <- gsub("Theta.", "Class_", colnames(EAPscores))
+#>     pick <- if (full.scores.SE) 
+#>         seq_len(nfact * 2)
+#>     else 1L:nfact
+#>     ret <- as.matrix(EAPscores[, pick, drop = FALSE])
+#>     rownames(ret) <- NULL
+#>     if (!leave_missing) {
+#>         completely_missing <- extract.mirt(x, "completely_missing")
+#>         ret <- add_completely.missing_back(ret, completely_missing)
+#>     }
+#> } else {
+#>     if (return.acov) 
+#>         return(vcovs)
+#>     dat <- x@Data$data
+#>     if (any(is.na(dat))) 
+#>         stop("EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE", 
+#>             call. = FALSE)
+#>     E <- L1 %*% prior * nrow(dat)
+#>     adj <- mins <- extract.mirt(x, "mins")
+#>     dat <- t(t(dat) - adj)
+#>     Otmp <- matrix(table(sort(rowSums(dat))))
+#>     got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
+#>     O <- matrix(0, nrow(E), 1)
+#>     O[got, 1] <- Otmp
+#>     ret$observed <- as.numeric(O)
+#>     ret$expected <- as.numeric(E)
+#>     tmp <- collapseTotals(ret, min_expected)
+#>     df <- tmp$df
+#>     X2 <- tmp$X2
+#>     tmp <- suppressWarnings(expand.table(cbind(ret[, 2L:(ncol(ret) - 
+#>         1L)], ret$observed)))
+#>     pick <- seq_len(nfact)
+#>     EX <- sum(Sum.Scores * rowSums(t(t(L1) * prior))) + sum(mins)
+#>     VARX <- sum(((Sum.Scores + sum(mins)) - EX)^2 * rowSums(t(t(L1) * 
+#>         prior)))
+#>     itemx <- matrix(0, nrow = length(K), ncol = 2)
+#>     colnames(itemx) <- c("E.x", "VAR.x")
+#>     rownames(itemx) <- if (version2) 
+#>         extract.mirt(x, "factorNames")[-1]
+#>     else extract.mirt(x, "itemnames")
+#>     for (i in 1L:length(K)) {
+#>         si <- 0L:(K[i] - 1L)
+#>         px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 
+#>             1L), ]) * prior)
+#>         ex <- sum(si * px)
+#>         varx <- sum((si - ex)^2 * px)
+#>         itemx[i, 1L] <- ex + mins[i]
+#>         itemx[i, 2L] <- varx
+#>     }
+#>     rxx <- apply(tmp[, pick, drop = FALSE], 2L, var)/(apply(tmp[, 
+#>         pick, drop = FALSE], 2L, var) + apply(tmp[, pick + nfact, 
+#>         drop = FALSE], 2L, function(x) mean(x^2)))
+#>     names(rxx) <- paste0("rxx_", factorNames)
+#>     fit <- data.frame(df = df, X2 = X2, p.X2 = suppressWarnings(pchisq(X2, 
+#>         df, lower.tail = FALSE)))
+#>     rxx.alpha <- (J/(J - 1)) * (1 - sum(itemx[, 2])/VARX)
+#>     fit$SEM.alpha <- sqrt(VARX) * sqrt(1 - rxx.alpha)
+#>     fit$rxx.alpha <- rxx.alpha
+#>     fit <- cbind(fit, t(as.data.frame(rxx)))
+#>     rownames(fit) <- "stats"
+#>     fit <- as.mirt_df(fit)
+#>     if (EAPsum.scores) {
+#>         fit <- list(fit = fit, Sum.Scores = as.mirt_df(data.frame(E.X = EX, 
+#>             VAR.X = VARX)), Item.Scores = as.mirt_matrix(itemx))
+#>     }
+#>     attr(ret, "fit") <- fit
+#>     ret$std.res <- with(ret, sqrt((observed - expected)^2/expected))
+#>     if (!all(item_weights == 1)) {
+#>         ret$expected <- NULL
+#>         ret$std.res <- NULL
+#>     }
+#>     ret <- as.mirt_df(ret)
+#>     if (verbose && !discrete && all(item_weights == 1)) {
+#>         print(attr(ret, "fit"))
+#>         cat("\n")
+#>     }
+#> }
+#> debug: if (return.acov) return(vcovs)
+#> debug: dat <- x@Data$data
+#> debug: if (any(is.na(dat))) stop("EAPsum scores are not meaningful when data contains missing values. If possible, pass na.rm=TRUE", 
+#>     call. = FALSE)
+#> debug: E <- L1 %*% prior * nrow(dat)
+#> debug: adj <- mins <- extract.mirt(x, "mins")
+#> debug: dat <- t(t(dat) - adj)
+#> debug: Otmp <- matrix(table(sort(rowSums(dat))))
+#> debug: got <- as.numeric(names(table(sort(rowSums(dat))))) + 1L
+#> debug: O <- matrix(0, nrow(E), 1)
+#> debug: O[got, 1] <- Otmp
+#> debug: ret$observed <- as.numeric(O)
+#> debug: ret$expected <- as.numeric(E)
+#> debug: tmp <- collapseTotals(ret, min_expected)
+#> debug: df <- tmp$df
+#> debug: X2 <- tmp$X2
+#> debug: tmp <- suppressWarnings(expand.table(cbind(ret[, 2L:(ncol(ret) - 
+#>     1L)], ret$observed)))
+#> debug: pick <- seq_len(nfact)
+#> debug: EX <- sum(Sum.Scores * rowSums(t(t(L1) * prior))) + sum(mins)
+#> debug: VARX <- sum(((Sum.Scores + sum(mins)) - EX)^2 * rowSums(t(t(L1) * 
+#>     prior)))
+#> debug: itemx <- matrix(0, nrow = length(K), ncol = 2)
+#> debug: colnames(itemx) <- c("E.x", "VAR.x")
+#> debug: rownames(itemx) <- if (version2) extract.mirt(x, "factorNames")[-1] else extract.mirt(x, 
+#>     "itemnames")
+#> debug: extract.mirt(x, "itemnames")
+#> debug: for (i in 1L:length(K)) {
+#>     si <- 0L:(K[i] - 1L)
+#>     px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>         ]) * prior)
+#>     ex <- sum(si * px)
+#>     varx <- sum((si - ex)^2 * px)
+#>     itemx[i, 1L] <- ex + mins[i]
+#>     itemx[i, 2L] <- varx
+#> }
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: si <- 0L:(K[i] - 1L)
+#> debug: px <- colSums(t(itemtrace[itemloc[i]:(itemloc[i + 1L] - 1L), 
+#>     ]) * prior)
+#> debug: ex <- sum(si * px)
+#> debug: varx <- sum((si - ex)^2 * px)
+#> debug: itemx[i, 1L] <- ex + mins[i]
+#> debug: itemx[i, 2L] <- varx
+#> debug: rxx <- apply(tmp[, pick, drop = FALSE], 2L, var)/(apply(tmp[, 
+#>     pick, drop = FALSE], 2L, var) + apply(tmp[, pick + nfact, 
+#>     drop = FALSE], 2L, function(x) mean(x^2)))
+#> debug: names(rxx) <- paste0("rxx_", factorNames)
+#> debug: fit <- data.frame(df = df, X2 = X2, p.X2 = suppressWarnings(pchisq(X2, 
+#>     df, lower.tail = FALSE)))
+#> debug: rxx.alpha <- (J/(J - 1)) * (1 - sum(itemx[, 2])/VARX)
+#> debug: fit$SEM.alpha <- sqrt(VARX) * sqrt(1 - rxx.alpha)
+#> debug: fit$rxx.alpha <- rxx.alpha
+#> debug: fit <- cbind(fit, t(as.data.frame(rxx)))
+#> debug: rownames(fit) <- "stats"
+#> debug: fit <- as.mirt_df(fit)
+#> debug: if (EAPsum.scores) {
+#>     fit <- list(fit = fit, Sum.Scores = as.mirt_df(data.frame(E.X = EX, 
+#>         VAR.X = VARX)), Item.Scores = as.mirt_matrix(itemx))
+#> }
+#> debug: attr(ret, "fit") <- fit
+#> debug: ret$std.res <- with(ret, sqrt((observed - expected)^2/expected))
+#> debug: if (!all(item_weights == 1)) {
+#>     ret$expected <- NULL
+#>     ret$std.res <- NULL
+#> }
+#> debug: ret <- as.mirt_df(ret)
+#> debug: if (verbose && !discrete && all(item_weights == 1)) {
+#>     print(attr(ret, "fit"))
+#>     cat("\n")
+#> }
+#> debug: ret
 #>    Sum.Scores     F1 SE_F1 observed expected std.res
 #> 0           0 -2.702 0.553        2    0.816   1.311
 #> 1           1 -2.417 0.516        4    2.779   0.732

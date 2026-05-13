@@ -17,7 +17,7 @@ scoring key for item 32 may be incorrect, and should be changed from 5 to 3."></
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -330,6 +330,708 @@ TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="SAT12-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="itemfit.html">itemfit</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: EAPsum(x, S_X2 = TRUE, gp = gp, CUSTOM.IND = x@Internals$CUSTOM.IND, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     den_fun = mirt_dmvnorm, quadpts = quadpts, theta_lim = theta_lim, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     discrete = discrete, QMC = QMC, mixture = mixture, pis = pis, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     which.items = which.items, use_dentype_estimate = use_dentype_estimate)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (version2) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (length(CUSTOM.IND)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         stop("Custom items not yet supported for EAPsum_2.0", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             call. = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     for (i in seq_len(nspec)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         pick &lt;- blist$specific == i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (i == 1) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             pick &lt;- blist$specific == i | is.na(blist$specific)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         tmpitemloc &lt;- c(1, cumsum(K[pick]) + 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         itemtrace &lt;- computeItemtrace(pars = pars[c(which(pick), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             length(pars))], Theta = Theta, itemloc = tmpitemloc, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             CUSTOM.IND = CUSTOM.IND, pis = pis)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         item_weights_long &lt;- rep(item_weights[pick], K[pick])</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         itemtrace &lt;- t(itemtrace)^item_weights_long</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         tmp &lt;- calcL1(itemtrace = itemtrace, K = K[pick], itemloc = tmpitemloc)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         L1 &lt;- t(tmp$L1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         stage2K[i] &lt;- length(tmp$Sum.Scores)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         subL1 &lt;- matrix(0, ncol(L1), length(theta))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         for (j in 1:length(theta)) subL1[, j] &lt;- colSums(L1[Theta[, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1] == theta[j], ] * sprior)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         L1_lst[[i]] &lt;- subL1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemtrace &lt;- do.call(rbind, L1_lst)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     K &lt;- stage2K</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc &lt;- c(1, cumsum(K) + 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     tmp &lt;- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     L1 &lt;- tmp$L1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Sum.Scores &lt;- tmp$Sum.Scores</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta &lt;- ThetaShort &lt;- matrix(theta)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     prior &lt;- den_fun(Theta, mean = gp$gmeans[1], sigma = gp$gcov[1, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         1], ...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     prior &lt;- prior/sum(prior)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nfact &lt;- 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemtrace &lt;- computeItemtrace(pars = pars, Theta = Theta, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         itemloc = itemloc, CUSTOM.IND = CUSTOM.IND, pis = pis)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     item_weights_long &lt;- rep(item_weights, K)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemtrace &lt;- t(itemtrace)^item_weights_long</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     tmp &lt;- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     L1 &lt;- tmp$L1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Sum.Scores &lt;- tmp$Sum.Scores</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace &lt;- computeItemtrace(pars = pars, Theta = Theta, itemloc = itemloc, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     CUSTOM.IND = CUSTOM.IND, pis = pis)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: item_weights_long &lt;- rep(item_weights, K)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace &lt;- t(itemtrace)^item_weights_long</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace, K = K, itemloc = itemloc)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: L1 &lt;- tmp$L1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Sum.Scores &lt;- tmp$Sum.Scores</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (S_X2) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     L1total &lt;- L1 %*% prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Elist &lt;- vector("list", J)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     for (i in which.items) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     return(Elist)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: L1total &lt;- L1 %*% prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist &lt;- vector("list", J)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (i in which.items) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: KK &lt;- K[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: T &lt;- itemtrace[c(itemloc[i]:(itemloc[i + 1L] - 1L)), , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemtrace2 &lt;- itemtrace[-c(itemloc[i]:(itemloc[i + 1L] - 1L)), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     , drop = FALSE]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (i != J) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2 &lt;- itemloc[-i]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     itemloc2[i:J] &lt;- itemloc2[i:J] - nrow(T)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: itemloc2 &lt;- itemloc[-(J + 1)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tmp &lt;- calcL1(itemtrace = itemtrace2, K = KK, itemloc = itemloc2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E &lt;- matrix(NA, nrow(L1total), nrow(T))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: for (j in 1L:(nrow(T))) E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: E[1L:nrow(tmp$L1) + j - 1L, j] &lt;- tmp$L1 %*% (T[j, ] * prior)/L1total[1L:nrow(tmp$L1) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     j - 1L, ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: Elist[[i]] &lt;- E[-c(1L, nrow(E)), ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: return(Elist)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item.1 22.083      18      0.019  0.228</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   Item.2 19.864      17      0.017  0.281</span>
