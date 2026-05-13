@@ -338,7 +338,7 @@ setMethod(
                 } else if(method == 'EAP_general' && return.acov){
                     tmp <- myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L,
                                    FUN=EAP_general, progress=verbose,
-                                   itemtrace=itemtrace, theta=theta, Theta=Theta,
+                                   log_itemtrace=log_itemtrace, theta=theta, Theta=Theta,
                                    sprior=sprior, prior=prior, blist=blist,
                                    tabdata=tabdata, ThetaShort=ThetaShort, return.acov=TRUE,
                                    scores=scores, hessian=TRUE)
@@ -346,7 +346,7 @@ setMethod(
                     tmp <- if(method == 'EAP_general'){
                         myApply(X=matrix(seq_len(nrow(scores))), MARGIN=1L,
                                 FUN=EAP_general, progress=verbose,
-                                itemtrace=itemtrace, theta=theta, Theta=Theta,
+                                log_itemtrace=log_itemtrace, theta=theta, Theta=Theta,
                                 sprior=sprior, prior=prior, blist=blist,
                                 tabdata=tabdata, ThetaShort=ThetaShort, scores=scores)
                     } else {
@@ -1142,7 +1142,7 @@ EAP <- function(ID, log_itemtrace, tabdata, ThetaShort, W, hessian, scores,
     return(c(thetas, SE, 1))
 }
 
-EAP_general <- function(ID, theta, Theta, sprior, prior, blist, itemtrace,
+EAP_general <- function(ID, theta, Theta, sprior, prior, blist, log_itemtrace,
                         tabdata, ThetaShort, hessian = TRUE, scores,
                 return.acov = FALSE, return_zeros = FALSE, classify = FALSE){
 
@@ -1156,7 +1156,7 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, itemtrace,
     for(i in 1:nspec){
         pick <- blist$sitems[,i] == 1 & resp
         if(i == 1) pick & rowSums(blist$sitems == 0)
-        log_itrace <- log(itemtrace[,pick])
+        log_itrace <- log_itemtrace[,pick]
         log_likelihood <- rowSums(log_itrace)
         likelihood <- exp(log_likelihood)
         for(j in 1:nrow(theta)){

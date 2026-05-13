@@ -248,22 +248,22 @@
 #' # simulate data
 #' set.seed(1234)
 #' a <- matrix(c(
-#'   0,1,0.5,NA,NA,
-#'   0,1,0.5,NA,NA,
-#'   0,1,0.5,NA,NA,
-#'   0,1,0.5,NA,NA,
-#'   0,1,0.5,NA,NA,
-#'   0,1,NA,0.5,NA,
-#'   0,1,NA,0.5,NA,
-#'   0,1,NA,0.5,NA,
+#'   1,0,0.5,NA,NA,
+#'   1,0,0.5,NA,NA,
+#'   1,0,0.5,NA,NA,
+#'   1,0,0.5,NA,NA,
+#'   1,0,0.5,NA,NA,
 #'   1,0,NA,0.5,NA,
 #'   1,0,NA,0.5,NA,
 #'   1,0,NA,0.5,NA,
-#'   1,0,NA,NA,0.5,
-#'   1,0,NA,NA,0.5,
-#'   1,0,NA,NA,0.5,
-#'   1,0,NA,NA,0.5,
-#'   1,0,NA,NA,0.5),ncol=5,byrow=TRUE)
+#'   0,1,NA,0.5,NA,
+#'   0,1,NA,0.5,NA,
+#'   0,1,NA,0.5,NA,
+#'   0,1,NA,NA,0.5,
+#'   0,1,NA,NA,0.5,
+#'   0,1,NA,NA,0.5,
+#'   0,1,NA,NA,0.5,
+#'   0,1,NA,NA,0.5),ncol=5,byrow=TRUE)
 #'
 #' d <- matrix(rnorm(16))
 #' items <- rep('2PL', 16)
@@ -282,7 +282,7 @@
 #'     COV = G1*G2'
 #'
 #' # quadpts dropped for faster estimation, but not as precise
-#' simmod <- bfactor(dataset, specific, model, quadpts = 9, TOL = 1e-3)
+#' simmod <- bfactor(dataset, specific, model, quadpts = 15, TOL = 1e-3)
 #' coef(simmod, simplify=TRUE)
 #' summary(simmod)
 #' itemfit(simmod, QMC=TRUE)
@@ -290,12 +290,10 @@
 #' residuals(simmod, QMC=TRUE)
 #'
 #' # EAP predictions for all factors (high dimensional)
-#' eaps_all <- fscores(simmod, QMC=TRUE)
+#' eaps_all <- fscores(simmod, QMC=TRUE, quadpts=50000)
 #' head(eaps_all)
-#'
-#' # EAP predictions for general factors only
-#' eaps <- fscores(simmod, method = 'EAP_general', quadpts=15)
-#' head(eaps)
+#' maps <- fscores(simmod, method = 'MAP')
+#' head(maps)
 #'
 #' }
 #'
