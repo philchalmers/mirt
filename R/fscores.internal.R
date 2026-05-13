@@ -289,7 +289,7 @@ setMethod(
                                  sigma=gp$gcov[1:ngen, 1:ngen, drop=FALSE], ...) # for generals only
                 prior <- prior/sum(prior)
                 Theta <- ThetaShort <- cbind(Theta, matrix(Theta[,2], nrow=nrow(Theta), ncol=nspec-1))
-                sprior <- den_fun(matrix(theta), mean=gp$gmeans[ngen+1], sigma=gp$gcov[ngen+1, ngen+1], ...)
+                sprior <- den_fun(matrix(theta.unique), mean=gp$gmeans[ngen+1], sigma=gp$gcov[ngen+1, ngen+1], ...)
                 sprior <- sprior/sum(sprior)
                 nfact <- ngen
             }
@@ -836,7 +836,6 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     J <- length(K)
     itemloc <- extract.mirt(x, 'itemloc')
     nfact <- extract.mirt(x, 'nfact')
-    browser()
     if(version2){
         if(length(CUSTOM.IND))
             stop('Custom items not yet supported for EAPsum_2.0', call.=FALSE) ## TODO
@@ -1154,7 +1153,6 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, itemtrace,
     ngen <- nfact - nspec
     resp <- as.logical(tabdata[ID,])
     Plk <- matrix(0, nrow(theta), nspec)
-    pickstore <- vector('list', nspec)
     for(i in 1:nspec){
         pick <- blist$sitems[,i] == 1 & resp
         if(i == 1) pick & rowSums(blist$sitems == 0)
@@ -1162,7 +1160,7 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, itemtrace,
         log_likelihood <- rowSums(log_itrace)
         likelihood <- exp(log_likelihood)
         for(j in 1:nrow(theta)){
-            pick2 <- theta[j, ] == t(Theta[,1:ngen, drop=FALSE])
+            pick2 <- colSums(theta[j, ] == t(Theta[,1:ngen, drop=FALSE])) == ncol(theta)
             Plk[j, i] <- sum(likelihood[pick2] * sprior)
         }
     }
@@ -1197,7 +1195,7 @@ EAP_general <- function(ID, theta, Theta, sprior, prior, blist, itemtrace,
         }
         vcov <- matrix(0, ngen, ngen)
         if(!classify){
-            vcov[lower.tri(ngen, TRUE)] <- colSums(Thetaprod * expLW / nc)
+            vcov[lower.tri(vcov, TRUE)] <- colSums(Thetaprod * expLW / nc)
             if(ngen > 1L) vcov <- vcov + t(vcov) - diag(diag(vcov))
         }
         if(return.acov) return(vcov)

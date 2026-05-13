@@ -112,6 +112,9 @@
 #' eaps_gen <- fscores(mod1, method = 'EAP_general')
 #' head(cbind(eaps_gen, NA, eaps))
 #'
+#' # similar EAP estimates, but with respect to sum-scores
+#' fscores(mod1, method = 'EAPsum_2.0', full.scores=FALSE)
+#'
 #' # alternative model definition via ?mirt.model syntax
 #' specific2 <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
 #'               S2 = 1,3,6,8,16,29,32
@@ -285,6 +288,14 @@
 #' itemfit(simmod, QMC=TRUE)
 #' M2(simmod, QMC=TRUE)
 #' residuals(simmod, QMC=TRUE)
+#'
+#' # EAP predictions for all factors (high dimensional)
+#' eaps_all <- fscores(simmod, QMC=TRUE)
+#' head(eaps_all)
+#'
+#' # EAP predictions for general factors only
+#' eaps <- fscores(simmod, method = 'EAP_general', quadpts=15)
+#' head(eaps)
 #'
 #' }
 #'
