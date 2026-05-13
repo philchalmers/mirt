@@ -12,7 +12,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #'
 #' Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.

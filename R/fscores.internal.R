@@ -276,6 +276,23 @@ setMethod(
                     if(!is(pars, 'try-error')) break
                 }
             }
+            if(method == 'EAP_general'){
+                browser()
+                blist <- extract.mirt(object, 'bfactor')
+                if(is.null(blist$specific))
+                    stop('EAP_general only applicable when model was estimated with bfactor()', call.=FALSE)
+                L1_lst <- vector('list', ncol(blist$sitems))
+                nspec <- length(L1_lst)
+                stage2K <- integer(nspec)
+                ngen <- extract.mirt(object, 'nfact') - nspec
+                theta <- theta.unique <- seq(theta_lim[1L],theta_lim[2L],length.out = quadpts)
+                Theta <- thetaComb(theta, ngen + 1)
+                Theta <- ThetaShort <- cbind(Theta, matrix(Theta[,2], nrow=nrow(Theta), ncol=nspec-1))
+                prior <- den_fun(Theta, mean=gp$gmeans, sigma=gp$gcov, ...)
+                prior <- prior/sum(prior)
+                sprior <- den_fun(matrix(theta), mean=gp$gmeans[ngen+1], sigma=gp$gcov[ngen+1, ngen+1], ...)
+                sprior <- sprior/sum(sprior)
+            }
             if(nfact < 3 || method %in% c('EAP', 'classify') && !mirtCAT){
                 if(discrete){
                     ThetaShort <- Theta <- object@Model$Theta
@@ -802,6 +819,7 @@ EAPsum <- function(x, full.scores = FALSE, full.scores.SE = FALSE,
     J <- length(K)
     itemloc <- extract.mirt(x, 'itemloc')
     nfact <- extract.mirt(x, 'nfact')
+    browser()
     if(version2){
         if(length(CUSTOM.IND))
             stop('Custom items not yet supported for EAPsum_2.0', call.=FALSE) ## TODO

@@ -138,7 +138,7 @@ itemplot(pmod, 1, type = 'infoSE')
 
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

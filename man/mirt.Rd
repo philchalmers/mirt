@@ -1539,7 +1539,7 @@ Cai, L. (2010b). Metropolis-Hastings Robbins-Monro algorithm for confirmatory
 item factor analysis. \emph{Journal of Educational and Behavioral
 Statistics, 35}, 307-335.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 
@@ -1549,7 +1549,7 @@ Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-
 Chalmers, R. P. (2018). Numerical Approximation of the Observed Information Matrix with Oakes' Identity.
 \emph{British Journal of Mathematical and Statistical Psychology} \emph{DOI: 10.1111/bmsp.12127}
 
-Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
+Chalmers, R. P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
 Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 339-358.
 \doi{10.1177/0146621614520958}
 

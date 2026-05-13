@@ -101,7 +101,7 @@ Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response t
 models for ordinal data}. National Center for Research on Evaluation, Standards,
 & Student Testing. Technical Report.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

@@ -353,7 +353,7 @@ itemfit(mod)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 
 Proctor, C. H. (1970). A probabilistic formulation and statistical analysis for Guttman scaling.
