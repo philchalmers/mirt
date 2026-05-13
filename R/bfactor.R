@@ -104,6 +104,14 @@
 #' summary(mod1)
 #' itemplot(mod1, 18, drop.zeros = TRUE) #drop the zero slopes to allow plotting
 #'
+#' # complete factor score predictions (general + specific factors)
+#' eaps <- fscores(mod1)
+#'
+#' # factor score predictions for general factors only (more accurate due
+#' # to lower dimensional integration)
+#' eaps_gen <- fscores(mod1, method = 'EAP_general')
+#' head(cbind(eaps_gen, NA, eaps))
+#'
 #' # alternative model definition via ?mirt.model syntax
 #' specific2 <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
 #'               S2 = 1,3,6,8,16,29,32

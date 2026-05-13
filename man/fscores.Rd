@@ -47,6 +47,12 @@ fscores(
 \itemize{
     \item \code{"EAP"} for the expected a-posteriori (default). For models fit using
       \code{\link{mdirt}} this will return the posterior classification probabilities
+    \item \code{"EAP_general"} for the expected a-posteriori estimates using dimension reduction
+      to obtain estimates of the general factor(s) only (Gibbons, et al., 2007). This is generally
+      more accurate than the \code{'EAP'} approach as the dimensions to integrate are reduced to the
+      number of general factors plus one, and therefore higher number of quadrature nodes can be used
+      (see \code{quadpts} for the defaults. For a bifactor model, for example,
+      this method requires exactly 2 dimensions). Model must have been fit using \code{\link{bfactor}}
     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
     \item \code{"ML"} for maximum likelihood
     \item \code{"WLE"} or \code{"WML"} for weighted maximum-likelihood estimation
@@ -334,7 +340,7 @@ Cai, L. (2015). Lord–Wingersky algorithm version 2.0 for hierarchical item
 factor models with applications in test scoring, scale alignment, and model fit testing.
 \emph{Psychometrika, 80}(2), 535–559.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 
@@ -343,6 +349,9 @@ Multidimensional Item Response Theory Applications. \emph{Journal of Statistical
 1-39. \doi{10.18637/jss.v071.i05}
 
 Embretson, S. E. & Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
+
+Gibbons. R. D., Bock, R. D., Hedeker, D., et al. (2007). Full-Information item bifactor
+analysis of graded response data. \emph{Applied Psychological Measurement, 31}(1), 4-19.
 
 Thissen, D., Pommerich, M., Billeaud, K., & Williams, V. S. L. (1995).
 Item Response Theory for Scores on Tests Including Polytomous Items with Ordered Responses.
