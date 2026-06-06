@@ -1800,8 +1800,8 @@ makeopts <- function(method = 'MHRM', draws = 2000L, calcLL = TRUE, quadpts = NU
                                          TRUE, technical$internal_constraints)
     opts$keep_vcov_PD  <- ifelse(is.null(technical$keep_vcov_PD), TRUE, technical$keep_vcov_PD)
     if(dentype == 'mixture'){
-        if(opts$method != 'EM')
-            stop('Mixture IRT densities only supported when method = \'EM\' ', call.=FALSE)
+        if(!(opts$method %in% c('EM', 'QMCEM', 'MCEM')))
+            stop('Mixture IRT densities only supported with EM-based methods', call.=FALSE)
         if(SE && !(SE.type %in% c('complete', 'Oakes')))
             stop('Only Oakes and complete SE.types current supported for mixture models', call.=FALSE)
     }
