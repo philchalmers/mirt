@@ -2,6 +2,11 @@
 
 ## Changes in mirt 1.47
 
+- [`itemplot()`](https://philchalmers.github.io/mirt/reference/itemplot.md)
+  gains `empirical_proportions` argument to plot the model-implied
+  proportion estimates from the E-table in the EM algorithm. Currently
+  limited to unidimenisonal models only
+
 - [`fscores()`](https://philchalmers.github.io/mirt/reference/fscores.md)
   also gains `method = 'EAP_general'` to perform the dimension reduction
   EAP estimates for bifactor/two-tier general factor predictions as

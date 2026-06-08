@@ -57,7 +57,7 @@ model <- 'F = 1-5
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 12 EM iterations.
-#> mirt version: 1.46.4 
+#> mirt version: 1.46.5 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61

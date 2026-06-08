@@ -17,6 +17,7 @@ itemplot(
   CEdraws = 1000,
   drop.zeros = FALSE,
   theta_lim = c(-6, 6),
+  empirical_proportions = FALSE,
   shiny = FALSE,
   rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
   par.strip.text = list(cex = 0.7),
@@ -84,6 +85,11 @@ itemplot(
   lower and upper limits of the latent trait (theta) to be evaluated,
   and is used in conjunction with `npts`. Default uses `c(-6,6)`
 
+- empirical_proportions:
+
+  logical; for unidimensional models, include the empirical proportion
+  estimates from the E-table when `type = 'trace'`?
+
 - shiny:
 
   logical; run interactive display for item plots using the `shiny`
@@ -137,9 +143,9 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
-mod1 <- mirt(fulldata,1,SE=TRUE)
-mod2 <- mirt(fulldata,1, itemtype = 'Rasch')
-mod3 <- mirt(fulldata,2)
+mod1 <- mirt(fulldata,SE=TRUE)
+mod2 <- mirt(fulldata, itemtype = 'Rasch')
+mod3 <- mirt(fulldata, 2)
 
 itemplot(mod1, 2)
 
@@ -148,6 +154,10 @@ itemplot(mod1, 2, CE = TRUE)
 itemplot(mod1, 2, type = 'info')
 
 itemplot(mod1, 2, type = 'info', CE = TRUE)
+
+itemplot(mod1, 2, empirical_proportions=TRUE)
+
+itemplot(mod2, 2, empirical_proportions=TRUE)
 
 
 mods <- list(twoPL = mod1, onePL = mod2)
