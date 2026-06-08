@@ -155,7 +155,8 @@ setMethod(
 
 itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zeros, rot,
                           theta_lim, cuts = 30, colorkey = TRUE, auto.key = TRUE, main = NULL,
-                          add.ylab2 = TRUE, drape = TRUE, npts = 200, ...){
+                          add.ylab2 = TRUE, drape = TRUE, npts = 200,
+                          empirical_proportions = FALSE, ...){
     if(drop.zeros){
         if(x@Options$exploratory) stop('Cannot drop zeros in exploratory models', call.=FALSE)
         x@ParObjects$pars[[item]] <- extract.item(x, item, drop.zeros=TRUE)
@@ -288,9 +289,29 @@ itemplot.main <- function(x, item, type, degrees, CE, CEalpha, CEdraws, drop.zer
                        main = main, ylim = c(-0.1,1.1), auto.key = auto.key,
                        ylab = expression(P(theta)), xlab = expression(theta), ...))
             } else {
-                return(xyplot(P ~ Theta, plt2, groups = time, type = 'l', auto.key = auto.key,
-                                main = main, ylim = c(-0.1,1.1),
-                                ylab = expression(P(theta)), xlab = expression(theta), ... ))
+                ret <- xyplot(P ~ Theta, plt2, groups = time, type = 'l', auto.key = auto.key,
+                              main = main, ylim = c(-0.1,1.1),
+                              ylab = expression(P(theta)), xlab = expression(theta), ... )
+                if(empirical_proportions){
+                    stopifnot(nfact == 1)
+                    itemloc <- extract.mirt(x, 'itemloc')[c(item, item+1)]
+                    ncat <-  itemloc[2] - itemloc[1]
+                    etab <- x@Internals$Etable[[1]]$r1[,itemloc[1]:(itemloc[2]-1)]
+                    etab <- etab / rowSums(etab)
+                    etheta <- x@Internals$Theta
+                    plt_edat <- data.frame(etheta=etheta, etab=etab[,2])
+                    line_colors <- lattice::trellis.par.get("superpose.line")$col
+                    ret <- update(ret, panel = function(...) {
+                        panel.xyplot(...)
+                        fromto <- 1:ncat
+                        if(ncat == 2){
+                            panel.xyplot(etheta, etab[,2])
+                        } else
+                            for(cat in fromto)
+                                panel.xyplot(etheta, etab[,cat], col=line_colors[cat], pch=cat)
+                    })
+                }
+                return(ret)
             }
         } else if(type == 'threshold'){
             if(is.null(main))

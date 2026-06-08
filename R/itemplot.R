@@ -24,6 +24,8 @@
 #' @param CEalpha area remaining in the tail for confidence envelope. Default gives 95\% confidence
 #'   region
 #' @param CEdraws draws number of draws to use for confidence envelope
+#' @param empirical_proportions logical; for unidimensional models, include the empirical proportion
+#'   estimates from the E-table when \code{type = 'trace'}?
 #' @param rot a list of rotation coordinates to be used for 3 dimensional plots
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
@@ -52,14 +54,16 @@
 #'
 #' data(LSAT7)
 #' fulldata <- expand.table(LSAT7)
-#' mod1 <- mirt(fulldata,1,SE=TRUE)
-#' mod2 <- mirt(fulldata,1, itemtype = 'Rasch')
-#' mod3 <- mirt(fulldata,2)
+#' mod1 <- mirt(fulldata,SE=TRUE)
+#' mod2 <- mirt(fulldata, itemtype = 'Rasch')
+#' mod3 <- mirt(fulldata, 2)
 #'
 #' itemplot(mod1, 2)
 #' itemplot(mod1, 2, CE = TRUE)
 #' itemplot(mod1, 2, type = 'info')
 #' itemplot(mod1, 2, type = 'info', CE = TRUE)
+#' itemplot(mod1, 2, empirical_proportions=TRUE)
+#' itemplot(mod2, 2, empirical_proportions=TRUE)
 #'
 #' mods <- list(twoPL = mod1, onePL = mod2)
 #' itemplot(mods, 1, type = 'RE')
@@ -105,8 +109,8 @@
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
-                     rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), empirical_proportions=FALSE,
+                     shiny = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
@@ -144,7 +148,8 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,
-                             par.settings=par.settings, auto.key=auto.key, npts=npts, ...)
+                             par.settings=par.settings, auto.key=auto.key, npts=npts,
+                             empirical_proportions=empirical_proportions, ...)
     if(!is.list(object) && object@Options$exploratory)
         ret$main <- paste0(ret$main, ' (rotate = \'', rotate, '\')')
     return(ret)

@@ -14,6 +14,7 @@ itemplot(
   CEdraws = 1000,
   drop.zeros = FALSE,
   theta_lim = c(-6, 6),
+  empirical_proportions = FALSE,
   shiny = FALSE,
   rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
   par.strip.text = list(cex = 0.7),
@@ -58,6 +59,9 @@ models that contain several zero slopes}
 \item{theta_lim}{lower and upper limits of the latent trait (theta) to be evaluated, and is
 used in conjunction with \code{npts}. Default uses \code{c(-6,6)}}
 
+\item{empirical_proportions}{logical; for unidimensional models, include the empirical proportion
+estimates from the E-table when \code{type = 'trace'}?}
+
 \item{shiny}{logical; run interactive display for item plots using the \code{shiny} interface.
 This primarily is an instructive tool for demonstrating how item response curves
 behave when adjusting their parameters}
@@ -84,14 +88,16 @@ that contain several 0 slope parameters. Supports up to three dimensional models
 
 data(LSAT7)
 fulldata <- expand.table(LSAT7)
-mod1 <- mirt(fulldata,1,SE=TRUE)
-mod2 <- mirt(fulldata,1, itemtype = 'Rasch')
-mod3 <- mirt(fulldata,2)
+mod1 <- mirt(fulldata,SE=TRUE)
+mod2 <- mirt(fulldata, itemtype = 'Rasch')
+mod3 <- mirt(fulldata, 2)
 
 itemplot(mod1, 2)
 itemplot(mod1, 2, CE = TRUE)
 itemplot(mod1, 2, type = 'info')
 itemplot(mod1, 2, type = 'info', CE = TRUE)
+itemplot(mod1, 2, empirical_proportions=TRUE)
+itemplot(mod2, 2, empirical_proportions=TRUE)
 
 mods <- list(twoPL = mod1, onePL = mod2)
 itemplot(mods, 1, type = 'RE')
