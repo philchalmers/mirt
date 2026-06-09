@@ -18,12 +18,16 @@ DRF(
   Theta_nodes = NULL,
   plot = FALSE,
   DIF = FALSE,
+  DIF.cats = FALSE,
+  groups2test = "all",
+  pairwise = FALSE,
+  simplify = TRUE,
   p.adjust = "none",
   par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
-    = "black")),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
+    "black")),
   auto.key = list(space = "right", points = FALSE, lines = TRUE),
-  verbose = TRUE,
+  verbose = interactive(),
   ...
 )
 }
@@ -35,7 +39,7 @@ or bootstrap estimate of the expected test scores (100 or more). If \code{boot =
 requires an estimated parameter information matrix. Returns a list containing the
 bootstrap/imputation distribution and null hypothesis test for the sDRF statistics}
 
-\item{focal_items}{a numeric vector indicating which items to include in the DRF tests. The
+\item{focal_items}{a character/numeric vector indicating which items to include in the DRF tests. The
 default uses all of the items (note that including anchors in the focal items has no effect
 because they are exactly equal across groups). Selecting fewer items will result in tests of
 'differential bundle functioning'}
@@ -80,19 +84,30 @@ If plausible parameter sets were obtained/supplied then imputed confidence inter
 These can generally be used as a DIF detection method and as a graphical display for
 understanding DIF within each item}
 
+\item{DIF.cats}{logical; same as \code{DIF = TRUE}, however computations will
+be performed on each item category probability functions rather than the score functions.
+Only useful for understanding DIF in polytomous items}
+
+\item{groups2test}{when more than 2 groups are being investigated which two groups
+should be used in the effect size comparisons?}
+
+\item{pairwise}{logical; perform pairwise computations when the applying to multi-group settings}
+
+\item{simplify}{logical; attempt to simplify the output rather than returning larger lists?}
+
 \item{p.adjust}{string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
 Adjustments are located in the \code{adj_pvals} element in the returned list. Only applicable when
 \code{DIF = TRUE}}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{auto.key}{plotting argument passed to \code{\link{lattice}}}
+\item{auto.key}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
 \item{verbose}{logical; include additional information in the console?}
 
-\item{...}{additional arguments to be passed to \code{lattice}}
+\item{...}{additional arguments to be passed to \code{\link[lattice]{lattice}}}
 }
 \description{
 Function performs various omnibus differential item (DIF), bundle (DBF), and test (DTF)
@@ -114,15 +129,23 @@ where \eqn{S(.)} are the scoring equations used to evaluate the model-implied
 difference between the focal and reference group. The \eqn{f(\theta)}
 terms can either be estimated from the posterior via an empirical
 histogram approach (default), or can use the best
-fitting prior distribution that is obtain post-convergence (default is a Guassian
+fitting prior distribution that is obtain post-convergence (default is a Gaussian
 distribution). Note that, in comparison to Chalmers (2018), the focal group is
 the leftmost scoring function while the reference group is the rightmost
 scoring function. This is largely to keep consistent with similar effect
 size statistics, such as SIBTEST, DFIT, Wainer's measures of impact, etc,
 which in general can be seen as special-case estimators of this family.
+
+Finally, for unidimensional models the
+standardized versions of the above effect sizes are also reported, which are obtained by dividing by the
+associated (pooled) standard deviation of the item/bundle/test scoring functions given a  Gaussian density function
+with the associated group mean-variance estimates (see \code{\link{marginal_moments}}). These are reported as
+\code{DRF*} values in the output to reflect the standardization (in a Cohen's d type metric). Note that
+this standardization approach reflects a model-based analogues of the \code{ESSD} and \code{ETSSD} statistics found
+in \code{\link{empirical_ES}} (see Meade, 2010).
 }
 \examples{
-\dontrun{
+\donttest{
 
 set.seed(1234)
 n <- 30
@@ -165,7 +188,7 @@ DRF(mod, focal_items = 6:10, plot = TRUE) #DBF
 DRF(mod, DIF=TRUE, plot = TRUE)
 DRF(mod, DIF=TRUE, focal_items = 10:15, plot = TRUE)
 
-mirtCluster()
+if(interactive()) mirtCluster()
 DRF(mod, draws = 500)
 DRF(mod, draws = 500, best_fitting=TRUE)
 DRF(mod, draws = 500, plot=TRUE)
@@ -173,13 +196,13 @@ DRF(mod, draws = 500, plot=TRUE)
 # pre-draw parameter set to save computations
 #  (more useful when using non-parametric bootstrap)
 param_set <- draw_parameters(mod, draws = 500)
-DRF(mod, focal_items = 6, param_set=param_set) #DIF
-DRF(mod, DIF=TRUE, param_set=param_set) #DIF
-DRF(mod, focal_items = 6:10, param_set=param_set) #DBF
-DRF(mod, param_set=param_set) #DTF
+DRF(mod, focal_items = 6, param_set=param_set) #DIF test
+DRF(mod, DIF=TRUE, param_set=param_set) #DIF test
+DRF(mod, focal_items = 6:10, param_set=param_set) #DBF test
+DRF(mod, param_set=param_set) #DTF test
 
-DRF(mod, focal_items = 6:10, draws=500) #DBF
-DRF(mod, focal_items = 10:15, draws=500) #DBF
+DRF(mod, focal_items = 6:10, draws=500) #DBF test
+DRF(mod, focal_items = 10:15, draws=500) #DBF test
 
 DIFs <- DRF(mod, draws = 500, DIF=TRUE)
 print(DIFs)
@@ -222,7 +245,7 @@ mod2 <- multipleGroup(dat, model, group=group, SE=TRUE,
                       invariance=c('free_means', 'free_var'))
 plot(mod2)
 
-#significant DIF in multiple items....
+# significant DIF in multiple items....
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 DRF(mod2)
 DRF(mod2, draws=500) #non-sig DTF due to item cancellation
@@ -254,7 +277,52 @@ head(sDTF)
 
 # DIF
 sDIF <- DRF(mod3, Theta_nodes=Theta_nodes, focal_items = 30, draws=200)
-car::some(sDIF)
+head(sDIF)
+
+## ----------------------------------------------------------------
+# polytomous example
+# simulate data where group 2 has a different slopes/intercepts
+set.seed(4321)
+a1 <- a2 <- matrix(rlnorm(20,.2,.3))
+a2[c(16:17, 19:20),] <- a1[c(16:17, 19:20),] + c(-.5, -.25, .25, .5)
+
+# for the graded model, ensure that there is enough space between the intercepts,
+# otherwise closer categories will not be selected often
+diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+diffs <- -(diffs - rowMeans(diffs))
+d1 <- d2 <- diffs + rnorm(20)
+rownames(d1) <- rownames(d2) <- paste0('Item.', 1:20)
+d2[16:20,] <- d1[16:20,] + matrix(c(-.5, -.5, -.5, -.5,
+                                    1, 0, 0, -1,
+                                    .5, .5, -.5, -.5,
+                                    1, .5, 0, -1,
+                                    .5, .5, .5, .5), byrow=TRUE, nrow=5)
+
+tail(data.frame(a.group1 = a1, a.group2 = a2), 6)
+list(d.group1 = d1[15:20,], d.group2 = d2[15:20,])
+
+itemtype <- rep('graded', nrow(a1))
+N <- 600
+dataset1 <- simdata(a1, d1, N, itemtype)
+dataset2 <- simdata(a2, d2, N, itemtype, mu = -.25, sigma = matrix(1.25))
+dat <- rbind(dataset1, dataset2)
+group <- c(rep('D1', N), rep('D2', N))
+
+# item 1-10 as anchors
+mod <- multipleGroup(dat, group=group, SE=TRUE,
+                     invariance=c(colnames(dat)[1:10], 'free_means', 'free_var'))
+coef(mod, simplify=TRUE)
+plot(mod)
+plot(mod, type='itemscore')
+
+# DIF tests vis Wald method
+DIF(mod, items2test=11:20,
+   which.par=c('a1', paste0('d', 1:4)),
+   Wald=TRUE, p.adjust='holm')
+
+DRF(mod)
+DRF(mod, DIF=TRUE, focal_items=11:20)
+DRF(mod, DIF.cats=TRUE, focal_items=11:20)
 
 ## ----------------------------------------------------------------
 ### multidimensional DTF

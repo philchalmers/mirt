@@ -14,34 +14,45 @@ scoring key for item 32 may be incorrect, and should be changed from 5 to 3.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 itemstats(SAT12, use_ts = FALSE)
 
-#score the data (missing scored as 0)
+# score the data (missing scored as 0)
 head(SAT12)
-data <- key2binary(SAT12,
+dat <- key2binary(SAT12,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-head(data)
-itemstats(data)
+head(dat)
+itemstats(dat)
 
-#score the data, missing (value of 8) treated as NA
+# score the data, missing (value of 8) treated as NA
 SAT12missing <- SAT12
 SAT12missing[SAT12missing == 8] <- NA
-data <- key2binary(SAT12missing,
+dat <- key2binary(SAT12missing,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-head(data)
+head(dat)
 
-#potentially better scoring for item 32 (based on nominal model finding)
-data <- key2binary(SAT12,
+# potentially better scoring for item 32 (based on nominal model finding)
+dat <- key2binary(SAT12,
     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
+
+# fit 2PL model to each item
+mod <- mirt(dat)
+plot(mod)
+itemfit(mod)
+
+# fit monotonic spline model to items 4 through 6 to improve fit
+itemtype <- rep('2PL', 32)
+itemtype[4:6] <- 'monospline'
+mod_mspline <- mirt(dat, itemtype = itemtype)
+anova(mod, mod_mspline)
+
+plot(mod, which.items=4:6, type = 'trace')
+plot(mod_mspline, which.items=4:6, type = 'trace')
+
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
-
 Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003).
 TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
 [Computer software]. Lincolnwood, IL: Scientific Software International.

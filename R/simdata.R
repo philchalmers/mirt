@@ -23,9 +23,10 @@
 #'
 #'   If the internal class of the object is specified instead, the inputs can
 #'   be \code{'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'},
-#'   or \code{'lca'}, for dichotomous, graded, generalized partial credit, sequential,
+#'   \code{'lca'}, and all the models under the Luo (2001) family (see \code{\link{mirt}}),
+#'   for dichotomous, graded, generalized partial credit, sequential,
 #'   nominal, nested logit, partially compensatory,
-#'   generalized graded unfolding model, and latent class analysis model.
+#'   generalized graded unfolding model, latent class analysis model, and ordered unfolding models.
 #'   Note that for the gpcm, nominal, and nested logit models there should
 #'   be as many parameters as desired categories, however to parametrized them for meaningful
 #'   interpretation the first category intercept should
@@ -45,6 +46,9 @@
 #'   for dichotomous items. Must be either a scalar value that will affect all of
 #'   the dichotomous items, or a vector with as many values as to be simulated items
 #' @param upper same as \code{guess}, but for upper bound parameters
+#' @param rho a matrix of \code{rho} values to be used for the Lui (2001) family of
+#'   ordered unfolding models (see \code{\link{mirt}}) to control the latitude of
+#'   acceptance. All values must be positive
 #' @param gpcm_mats a list of matrices specifying the scoring scheme for generalized partial
 #'   credit models (see \code{\link{mirt}} for details)
 #' @param sigma a covariance matrix of the underlying distribution. Default is
@@ -78,7 +82,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -137,7 +141,7 @@
 #' #mod <- mirt(dataset1, 3, method = 'MHRM')
 #' #coef(mod)
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' ### Unidimensional graded response model with 5 categories each
 #'
@@ -171,7 +175,7 @@
 #' 2.0,0.0,NA),ncol=3,byrow=TRUE)
 #'
 #' nominal <- matrix(NA, nrow(d), ncol(d))
-#' #the first 0 and last (ncat - 1) = 2 values are the recommended constraints
+#' # the first 0 and last (ncat - 1) = 2 values are the recommended constraints
 #' nominal[4, ] <- c(0,1.2,2)
 #'
 #' sigma <- diag(3)
@@ -203,7 +207,7 @@
 #' mod2 <- mirt(dat, 'F1 = 1-10
 #'                    CONSTRAIN = (1-5, a1), (6-10, a1)')
 #' summary(mod2)
-#' anova(mod, mod2)
+#' anova(mod2, mod)
 #'
 #' #### Convert classical 3PL paramerization into slope-intercept form
 #' nitems <- 50
@@ -256,7 +260,7 @@
 #'
 #' a <- matrix(rlnorm(4,0,.2))
 #'
-#' #first column of item 4 is the intercept for the correct category of 2PL model,
+#' # first column of item 4 is the intercept for the correct category of 2PL model,
 #' #    otherwise nominal model configuration
 #' d <- matrix(c(
 #' -1.0,NA,NA,NA,
@@ -275,7 +279,7 @@
 #' #coef(mod)
 #' #itemplot(mod,4)
 #'
-#' #return list of simulation parameters
+#' # return list of simulation parameters
 #' listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 #' str(listobj)
 #'
@@ -312,6 +316,18 @@
 #' apply(dat, 2, table)
 #' # mod <- mirt(dat, 1, 'ggum')
 #' # coef(mod)
+#'
+#' ### 10 items with the hyperbolic cosine model with differing category lengths
+#' a <- matrix(1, 10)
+#' d <- rnorm(10)
+#' rho <- matrix(1:2, nrow=10, ncol=2, byrow=TRUE)
+#' rho[1:2,2] <- NA   # first two items have K=2 categories
+#'
+#' dat <- simdata(a, d, 1000, 'hcm', rho=rho)
+#' itemstats(dat)
+#' # mod <- mirt(dat, 1, 'hcm')
+#' # list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))
+#'
 #'
 #' ######
 #' # prob.list example
@@ -351,18 +367,18 @@
 #'
 #' }
 simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
-	upper = 1, nominal = NULL, t = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
+	upper = 1, rho = NULL, nominal = NULL, t = NULL, Theta = NULL, gpcm_mats = list(), returnList = FALSE,
 	model = NULL, equal.K = TRUE, which.items = NULL, mins = 0, lca_cats = NULL, prob.list = NULL)
 {
     if(!is.null(prob.list)){
         if(!all(sapply(prob.list, function(x) is.matrix(x) || is.data.frame(x))))
-            stop('Elements of prob.list must be either a matrix or data.frame')
+            stop('Elements of prob.list must be either a matrix or data.frame', call.=FALSE)
         prob.list <- lapply(prob.list, as.matrix)
         if(!all(sapply(prob.list, nrow) == nrow(prob.list[[1L]])))
-            stop('prob.list elements have unequal rows')
+            stop('prob.list elements have unequal rows', call.=FALSE)
         K <- sapply(prob.list, ncol)
         nitems <- length(K)
-        if(any(K == 1L)) stop('prob.list elements should have more than 1 column')
+        if(any(K == 1L)) stop('prob.list elements should have more than 1 column', call.=FALSE)
         if(length(mins) == 1L) mins <- rep(mins, nitems)
         stopifnot(length(mins) == nitems)
         data <- matrix(NA, nrow(prob.list[[1L]]), nitems)
@@ -402,8 +418,11 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
     if(missing(itemtype)) missingMsg('itemtype')
     if(missing(d) && !all(itemtype == 'lca')) missingMsg('d')
     if(is.vector(a)) a <- matrix(a)
+    a <- as.matrix(a)
     if(missing(d)) d <- matrix(1, nrow(a))
     if(is.vector(d)) d <- matrix(d)
+    d <- as.matrix(d)
+    stopifnot(is.matrix(d))
     if(any(itemtype == 'nominal') && is.null(nominal))
         stop('nominal itemtypes require a \'nominal\' matrix input of scoring coefficients (the ak values)',
              call.=FALSE)
@@ -431,7 +450,7 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
         itemtype <- toInternalItemtype(itemtype)
     }
 	if(any(itemtype == 'ggum') && is.null(t))
-	    stop('ggum requires t matrix input')
+	    stop('ggum requires t matrix input', call.=FALSE)
 	for(i in 1L:length(K)){
 	    K[i] <- length(na.omit(d[i, ])) + 1L
 	    if(itemtype[i] =='partcomp') K[i] <- 2L
@@ -462,13 +481,19 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
 	data <- matrix(0, N, nitems)
     a[is.na(a)] <- 0
     itemobjects <- vector('list', nitems)
+    pick <- itemtype == 'graded' & K == 2L
+    if(any(pick)){
+        upper[pick] <- 999
+        guess[pick] <- -999
+        itemtype[pick] <- 'dich'
+    }
 	for(i in 1L:nitems){
 	    if(itemtype[i] == 'nestlogit'){
 	        par <- na.omit(c(a[i, ],d[i,1], guess[i], upper[i], nominal[i,-1L],d[i,-1L]))
 	        obj <- new(itemtype[i], par=par, nfact=nfact, correctcat=1L)
 	    } else {
-            if(itemtype[i] == 'gpcm'){
-                if(!use_gpcm_mats[i]){
+	        if(itemtype[i] == 'gpcm'){
+    	        if(!use_gpcm_mats[i]){
                     par <- na.omit(c(a[i, ],0:(K[i]-1), d[i,]))
                 } else {
                     stopifnot(nrow(gpcm_mats[[i]]) == K[i])
@@ -481,25 +506,45 @@ simdata <- function(a, d, N, itemtype, sigma = NULL, mu = NULL, guess = 0,
                 par <- na.omit(c(a[i, ],d[i,]))
             } else if(itemtype[i] == 'lca'){
                 par <- na.omit(a[i, ])
-            } else {
-                if(itemtype[i] == 'nominal'){
-                    if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
-                        stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
-                }
+                item.Q <- matrix(1, K[i], nfact)
+                item.Q[1,] <- 0
+            } else if(itemtype[i] == 'nominal'){
+                if(length(na.omit(nominal[i,])) != length(na.omit(d[i,])))
+                    stop('nominal and d inputs must have same length for nominal reponse model', call.=FALSE)
                 par <- na.omit(c(a[i, ],nominal[i,],d[i,],guess[i],upper[i]))
+            } else if(itemtype[i] == 'partcomp'){
+                par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
+            } else {
+                par <- na.omit(c(a[i, ],d[i,],guess[i],upper[i]))
             }
+	        if(itemtype[i] %in% Luo2001Set()){
+	            stopifnot(is.matrix(rho))
+	            K[i] <- length(na.omit(rho[i,])) + 1L
+	            par <- na.omit(c(a[i, ],d[i,], log(rho[i,])))
+	            if(substr(itemtype[i], 1, 1) == 'g')
+	                itemtype[i] <- sub('g', '', itemtype[i])
+	            link_fn <- pick.Lui2001.fn(itemtype[i])
+	            itemtype[i] <- 'Luo2001'
+	        }
             obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+            if(itemtype[i] == 'Luo2001') obj@fn <- link_fn
             if(itemtype[i] %in% c('gpcm', 'nominal')) obj@mat <- FALSE
             if(use_gpcm_mats[i]) obj@mat <- TRUE
-	    }
-	    if(itemtype[i] == 'ggum'){
-	        if(length(na.omit(a[i,])) != length(na.omit(d[i,])))
-	            stop('ggums must have the same number of a and d values per item', call.=FALSE)
-	        par <- c(na.omit(a[i, ]), -d[i,], t[i,])
-	        obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+    	    if(itemtype[i] == 'lca') obj@item.Q <- item.Q
+    	    if(itemtype[i] == 'ggum'){
+    	        if(length(na.omit(a[i,])) != length(na.omit(d[i,])))
+    	            stop('ggums must have the same number of a and d values per item', call.=FALSE)
+    	        par <- c(na.omit(a[i, ]), d[i,], t[i,])
+    	        obj <- new(itemtype[i], par=par, nfact=nfact, ncat=K[i])
+    	    }
 	    }
         if(any(itemtype[i] == c('gpcm','nominal', 'nestlogit', 'ggum')))
             obj@ncat <- K[i]
+        if(itemtype[i] == 'partcomp'){
+            obj@cpow <- as.integer(a[i,] != 0)
+            obj@factor.ind <- as.integer(1:ncol(Theta))
+            obj@fixed.ind <- integer(0)
+        }
         P <- ProbTrace(obj, Theta)
         data[,i] <- respSample(P)
         itemobjects[[i]] <- obj

@@ -9,16 +9,18 @@ DIF(
   which.par,
   scheme = "add",
   items2test = 1:extract.mirt(MGmodel, "nitems"),
+  groups2test = "all",
   seq_stat = "SABIC",
   Wald = FALSE,
-  p.adjust = "none",
+  p.adjust = "holm",
+  pairwise = FALSE,
   return_models = FALSE,
   return_seq_model = FALSE,
   max_run = Inf,
   plotdif = FALSE,
   type = "trace",
   simplify = TRUE,
-  verbose = TRUE,
+  verbose = interactive(),
   ...
 )
 }
@@ -60,6 +62,12 @@ this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
 \code{items2test = 3:10} would work for testing the remaining items (important to remember
 when using sequential schemes)}
 
+\item{groups2test}{a character vector indicating which groups to use in the DIF testing
+investigations. Default is \code{'all'}, which uses all group information to perform
+joint hypothesis tests of DIF (for a two group setup these result in pair-wise tests).
+For example, if the group names were 'g1', 'g2' and 'g3', and DIF was only to be investigated
+between group 'g1' and 'g3' then pass \code{groups2test = c('g1', 'g3')}}
+
 \item{seq_stat}{select a statistic to test for in the sequential schemes. Potential values are
 (in descending order of power) \code{'AIC'}, \code{'SABIC'}, \code{'HQ'}, and \code{'BIC'}.
 If a numeric value is input that ranges between 0 and 1, the 'p' value will be tested
@@ -69,7 +77,11 @@ or p > .05 in the drop scheme), along with the specified \code{p.adjust} input}
 \item{Wald}{logical; perform Wald tests for DIF instead of likelihood ratio test?}
 
 \item{p.adjust}{string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
-Adjustments are located in the \code{adj_pvals} element in the returned list}
+Adjustments are located in the \code{adj_p} element in the returned list. Default uses the
+Holm-sequential Bonferroni adjustment}
+
+\item{pairwise}{logical; perform pairwise tests between groups when the number of groups
+is greater than 2? Useful as quickly specified post-hoc tests}
 
 \item{return_models}{logical; return estimated model objects for further analysis?
 Default is FALSE}
@@ -96,16 +108,22 @@ df and p-values}
 
 \item{...}{additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}}
 }
+\value{
+a \code{mirt_df} object with the information-based criteria for DIF, though this may be changed
+  to a list output when \code{return_models} or \code{simplify} are modified. As well, a silent
+  \code{'DIF_coefficeints'} attribute is included to view the item parameter differences
+  between the groups
+}
 \description{
 This function runs the Wald and likelihood-ratio approaches for testing differential
-item functioning (DIF). This is primarily a convenience wrapper to the
+item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
 \code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
 models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
-which will help to decrease the runtime. For best results, the baseline model should contain
+which will help to decrease the run time. For best results, the baseline model should contain
 a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.
 }
 \details{
-Generally, the precomputed baseline model should have been
+Generally, the pre-computed baseline model should have been
 configured with two estimation properties: 1) a set of 'anchor' items,
 where the anchor items have various parameters that have been constrained to be equal
 across the groups, and 2) contain freely estimated latent mean and variance terms in
@@ -114,7 +132,7 @@ These two properties help to fix the metric of the groups so that
 item parameter estimates do not contain latent distribution characteristics.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # simulate data where group 2 has a smaller slopes and more extreme intercepts
 set.seed(12345)
@@ -132,7 +150,7 @@ group <- c(rep('D1', N), rep('D2', N))
 
 #### no anchors, all items tested for DIF by adding item constrains one item at a time.
 # define a parallel cluster (optional) to help speed up internal functions
-mirtCluster()
+if(interactive()) mirtCluster()
 
 # Information matrix with Oakes' identity (not controlling for latent group differences)
 # NOTE: Without properly equating the groups the following example code is not testing for DIF,
@@ -140,8 +158,12 @@ mirtCluster()
 model <- multipleGroup(dat, 1, group, SE = TRUE)
 
 # Likelihood-ratio test for DIF (as well as model information)
-DIF(model, c('a1', 'd'))
-DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
+dif <- DIF(model, c('a1', 'd'))
+dif
+
+# function silently includes "DIF_coefficients" attribute to view
+# the IRT parameters post-completion
+extract.mirt(dif, "DIF_coefficients")
 
 # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
@@ -169,6 +191,9 @@ model_constrained <- multipleGroup(dat, 1, group,
 dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 dropdown
 
+# View silent "DIF_coefficients" attribute
+extract.mirt(dropdown, "DIF_coefficients")
+
 ### sequential schemes (add constraints)
 
 ### sequential searches using SABIC as the selection criteria
@@ -186,10 +211,49 @@ updated_mod <- DIF(model, c('a1', 'd'), scheme = 'add_sequential',
                return_seq_model=TRUE)
 plot(updated_mod, type='trace')
 
+
+###################################
+# Multi-group example
+
+a1 <- a2 <- a3 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d1 <- d2 <- d3 <- matrix(rnorm(15,0,.7),ncol=1)
+a2[1:2, ] <- a1[1:2, ]/3
+d3[c(1,3), ] <- d2[c(1,3), ]/4
+head(data.frame(a.group1 = a1, a.group2 = a2, a.group3 = a3,
+                d.group1 = d1, d.group2 = d2, d.group3 = d3))
+itemtype <- rep('2PL', nrow(a1))
+N <- 1000
+dataset1 <- simdata(a1, d1, N, itemtype)
+dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
+dataset3 <- simdata(a3, d3, N, itemtype, mu = .2)
+dat <- rbind(dataset1, dataset2, dataset3)
+group <- gl(3, N, labels = c('g1', 'g2', 'g3'))
+
+# equate the groups by assuming the last 5 items have no DIF
+itemnames <- colnames(dat)
+model <- multipleGroup(dat, group=group, SE=TRUE,
+   invariance = c(itemnames[11:ncol(dat)], 'free_means', 'free_var'))
+coef(model, simplify=TRUE)
+
+# omnibus tests
+dif <- DIF(model, which.par = c('a1', 'd'), items2test=1:9)
+dif
+
+# pairwise post-hoc tests for items flagged via omnibus tests
+dif.posthoc <- DIF(model, which.par = c('a1', 'd'), items2test=1:2,
+                   pairwise = TRUE)
+dif.posthoc
+
+# further probing for df = 1 tests, this time with Wald tests
+DIF(model, which.par = c('a1'), items2test=1:2, pairwise = TRUE,
+    Wald=TRUE)
+DIF(model, which.par = c('d'), items2test=1:2, pairwise = TRUE,
+    Wald=TRUE)
+
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

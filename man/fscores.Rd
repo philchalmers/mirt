@@ -16,12 +16,15 @@ fscores(
   plausible.draws = 0,
   plausible.type = "normal",
   quadpts = NULL,
+  item_weights = rep(1, extract.mirt(object, "nitems")),
   returnER = FALSE,
+  T_as_X = FALSE,
+  EAPsum.scores = FALSE,
   return.acov = FALSE,
   mean = NULL,
   cov = NULL,
   covdata = NULL,
-  verbose = TRUE,
+  verbose = interactive(),
   full.scores.SE = FALSE,
   theta_lim = c(-6, 6),
   MI = 0,
@@ -29,6 +32,7 @@ fscores(
   QMC = FALSE,
   custom_den = NULL,
   custom_theta = NULL,
+  expected.info = FALSE,
   min_expected = 1,
   max_theta = 20,
   start = NULL,
@@ -41,20 +45,29 @@ fscores(
 
 \item{method}{type of factor score estimation method. Can be:
 \itemize{
-    \item \code{"EAP"} for the expected a-posteriori (default)
+    \item \code{"EAP"} for the expected a-posteriori (default). For models fit using
+      \code{\link{mdirt}} this will return the posterior classification probabilities
+    \item \code{"EAP_general"} for the expected a-posteriori estimates using dimension reduction
+      to obtain estimates of the general factor(s) only (Gibbons, et al., 2007). This is generally
+      more accurate than the \code{'EAP'} approach as the dimensions to integrate are reduced to the
+      number of general factors plus one, and therefore higher number of quadrature nodes can be used
+      (see \code{quadpts} for the defaults. For a bifactor model, for example,
+      this method requires exactly 2 dimensions). Model must have been fit using \code{\link{bfactor}}
     \item \code{"MAP"} for the maximum a-posteriori (i.e, Bayes modal)
     \item \code{"ML"} for maximum likelihood
-    \item \code{"WLE"} for weighted likelihood estimation
-    \item \code{"EAPsum"} for the expected a-posteriori for each sum score
+    \item \code{"WLE"} or \code{"WML"} for weighted maximum-likelihood estimation
+    \item \code{"EAPsum"} and \code{"EAPsum_2.0"} for the expected a-posteriori for each sum
+      score (the latter is relevant for bifactor models)
     \item \code{"plausible"} for a single plausible value imputation for each case.
       This is equivalent to setting \code{plausible.draws = 1}
     \item \code{"classify"} for the posteriori classification probabilities (only
       applicable when the input model was of class \code{MixtureClass})
  }}
 
-\item{full.scores}{if \code{FALSE} then a summary table with
-factor scores for each unique pattern is displayed. Otherwise, a matrix of factor scores
-for each response pattern in the data is returned (default)}
+\item{full.scores}{if \code{FALSE} then a summary table with factor scores
+for each unique pattern is displayed as a formatted \code{matrix} object.
+Otherwise, a matrix of factor scores for each response pattern in the data
+is returned (default)}
 
 \item{rotate}{prior rotation to be used when estimating the factor scores. See
 \code{\link{summary-method}} for details. If the object is not an exploratory model
@@ -75,7 +88,7 @@ to ensure that the sum-scores correspond to the same composite score}
 \item{plausible.draws}{number of plausible values to draw for future researchers
 to perform secondary analyses of the latent trait scores. Typically used in conjunction
 with latent regression predictors (see \code{\link{mirt}} for details), but can
-also be generated when no predictor variables were modeled. If \code{plausible.draws}
+also be generated when no predictor variables were modelled. If \code{plausible.draws}
 is greater than 0 a list of plausible values will be returned}
 
 \item{plausible.type}{type of plausible values to obtain. Can be either \code{'normal'} (default)
@@ -83,14 +96,28 @@ to use a normal approximation based on the ACOV matrix, or \code{'MH'} to obtain
 samples from the posterior (silently passes object to \code{\link{mirt}}, therefore arguments like
 \code{technical} can be supplied to increase the number of burn-in draws and discarded samples)}
 
-\item{quadpts}{number of quadratures to use per dimension. If not specified, a suitable
+\item{quadpts}{number of quadrature to use per dimension. If not specified, a suitable
 one will be created which decreases as the number of dimensions increases
 (and therefore for estimates such as EAP, will be less accurate). This is determined from
 the switch statement
-\code{quadpts <- switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}}
+\code{quadpts <- switch(as.character(nfact), '1'=121, '2'=61, '3'=31, '4'=19, '5'=11, '6'=7, 5)}}
+
+\item{item_weights}{a user-defined weight vector used in the likelihood expressions
+to add more/less weight for a given observed response. Default is a vector of 1's,
+indicating that all the items receive the same weight}
 
 \item{returnER}{logical; return empirical reliability (also known as marginal reliability)
 estimates as a numeric values?}
+
+\item{T_as_X}{logical; should the observed variance be equal to
+\code{var(X) = var(T) + E(E^2)} or \code{var(X) = var(T)} when computing
+empirical reliability estimates? Default (\code{FALSE}) uses the former}
+
+\item{EAPsum.scores}{logical; include the model-implied expected values and variance for the item
+and total scores when using \code{method = 'EAPsum'} or \code{method = 'EAPsum_2.0'}
+with \code{full.scores=FALSE}?
+This information is included in the hidden \code{'fit'} attribute which
+can be extracted via \code{attr(., 'fit')} for later use}
 
 \item{return.acov}{logical; return a list containing covariance matrices instead of factors
 scores? \code{impute = TRUE} not supported with this option}
@@ -137,6 +164,10 @@ default number of nodes is 5000}
 \item{custom_theta}{a matrix of custom integration nodes to use instead of the default, where
 each column corresponds to the respective dimension in the model}
 
+\item{expected.info}{logical; instead of using the observed information when
+\code{method = 'ML'} or \code{method = 'WLE'} use the expected information computed via
+\code{\link{testinfo}}? Only currently supported for unidimensional models}
+
 \item{min_expected}{when computing goodness of fit tests when \code{method = 'EAPsum'}, this value is used
 to collapse across the conditioned total scores until the expected values are greater than this value. Note
 that this only affect the goodness of fit tests and not the returned EAP for sum scores table}
@@ -175,46 +206,76 @@ in parallel to decrease estimation times if a \code{\link{mirtCluster}} object i
 If the input object is a discrete latent class object estimated from \code{\link{mdirt}}
 then the returned results will be with respect to the posterior classification for each
 individual. The method inputs for \code{'DiscreteClass'} objects may only be \code{'EAP'},
-for posterior classification of each response pattern, or \code{'EAPsum'} for posterior
-classification based on the raw sum-score. For more information on these algorithms refer to
+for posterior classification of each response pattern, \code{'EAPsum'} and \code{'EAPsum_2.0'}
+for posterior classification based on the raw sum-score (\code{'EAPsum_2.0'} results in marginal
+estimates of the primary dimensions only using the 2.0 algorithm described by Cai, 2015).
+For more information on these algorithms refer to
 the \code{mirtCAT} package and the associated JSS paper (Chalmers, 2016).
 }
 \examples{
 
-mod <- mirt(Science, 1)
+mod <- mirt(Science)
 tabscores <- fscores(mod, full.scores = FALSE)
 head(tabscores)
 
-\dontrun{
+# convert scores into expected total score information with 95\% CIs
+E.total <- expected.test(mod, Theta=tabscores[,'F1'])
+E.total_2.5 <- expected.test(mod, Theta=tabscores[,'F1'] +
+                                       tabscores[,'SE_F1'] * qnorm(.05/2))
+E.total_97.5 <- expected.test(mod, Theta=tabscores[,'F1'] +
+                                       tabscores[,'SE_F1'] * qnorm(1-.05/2))
+
+data.frame(Total_score=rowSums(tabscores[,1:4]),
+           E.total, E.total_2.5, E.total_97.5) |> head()
+
+\donttest{
 fullscores <- fscores(mod)
 fullscores_with_SE <- fscores(mod, full.scores.SE=TRUE)
 head(fullscores)
 head(fullscores_with_SE)
 
-#change method argument to use MAP estimates
+# convert scores into expected total score information with 95\% CIs
+E.total <- expected.test(mod, Theta=fullscores[,'F1'])
+E.total_2.5 <- expected.test(mod, Theta=fullscores_with_SE[,'F1'] +
+                                 fullscores_with_SE[,'SE_F1'] * qnorm(.05/2))
+E.total_97.5 <- expected.test(mod, Theta=fullscores_with_SE[,'F1'] +
+                               fullscores_with_SE[,'SE_F1'] * qnorm(1-.05/2))
+
+data.frame(Total_score=rowSums(Science),
+           E.total, E.total_2.5, E.total_97.5) |> head()
+
+# change method argument to use MAP estimates
 fullscores <- fscores(mod, method='MAP')
 head(fullscores)
 
-#calculate MAP for a given response vector
+# calculate MAP for a given response vector
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
-#or matrix
+# or matrix
 fscores(mod, method='MAP', response.pattern = rbind(c(1,2,3,4), c(2,2,1,3)))
 
 # return only the scores and their SEs
 fscores(mod, method='MAP', response.pattern = c(1,2,3,4))
 
-#use custom latent variable properties (diffuse prior for MAP is very close to ML)
+# use custom latent variable properties (diffuse prior for MAP is very close to ML)
 fscores(mod, method='MAP', cov = matrix(1000), full.scores = FALSE)
 fscores(mod, method='ML', full.scores = FALSE)
 
 # EAPsum table of values based on total scores
-fscores(mod, method = 'EAPsum', full.scores = FALSE)
+(fs <- fscores(mod, method = 'EAPsum', full.scores = FALSE))
 
-#WLE estimation, run in parallel using available cores
-mirtCluster()
+# convert expected counts back into marginal probability distribution
+within(fs,
+   `P(y)` <- expected / sum(observed))
+
+# list of error VCOV matrices for EAPsum (works for other estimators as well)
+acovs <- fscores(mod, method = 'EAPsum', full.scores = FALSE, return.acov = TRUE)
+acovs
+
+# WLE estimation, run in parallel using available cores
+if(interactive()) mirtCluster()
 head(fscores(mod, method='WLE', full.scores = FALSE))
 
-#multiple imputation using 30 draws for EAP scores. Requires information matrix
+# multiple imputation using 30 draws for EAP scores. Requires information matrix
 mod <- mirt(Science, 1, SE=TRUE)
 fs <- fscores(mod, MI = 30)
 head(fs)
@@ -223,20 +284,28 @@ head(fs)
 pv <- fscores(mod, plausible.draws = 5)
 lapply(pv, function(x) c(mean=mean(x), var=var(x), min=min(x), max=max(x)))
 
-## define a custom_den function. EAP with a uniform prior between -3 and 3
+## define a custom_den function (*must* return a numeric vector).
+#  EAP with a uniform prior between -3 and 3
 fun <- function(Theta, ...) as.numeric(dunif(Theta, min = -3, max = 3))
 head(fscores(mod, custom_den = fun))
 
+# compare EAP estimators with same modified prior
+fun <- function(Theta, ...) as.numeric(dnorm(Theta, mean=.5))
+head(fscores(mod, custom_den = fun))
+head(fscores(mod, method = 'EAP', mean=.5))
+
+\dontrun{
 # custom MAP prior: standard truncated normal between 5 and -2
 library(msm)
 # need the :: scope for parallel to see the function (not require if no mirtCluster() defined)
 fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
 head(fscores(mod, custom_den = fun, method = 'MAP', full.scores = FALSE))
+}
 
 
 ####################
 # scoring via response.pattern input (with latent regression structure)
-#simulate data
+# simulate data
 set.seed(1234)
 N <- 1000
 
@@ -245,11 +314,11 @@ X1 <- rnorm(N); X2 <- rnorm(N)
 covdata <- data.frame(X1, X2)
 Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 
-#items and response data
+# items and response data
 a <- matrix(1, 20); d <- matrix(rnorm(20))
 dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 
-#conditional model using X1 and X2 as predictors of Theta
+# conditional model using X1 and X2 as predictors of Theta
 mod <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 coef(mod, simplify=TRUE)
 
@@ -267,7 +336,11 @@ fscores(mod, response.pattern=rp[2,], covdata=cd[2,]) # just one pattern
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Cai, L. (2015). Lord–Wingersky algorithm version 2.0 for hierarchical item
+factor models with applications in test scoring, scale alignment, and model fit testing.
+\emph{Psychometrika, 80}(2), 535–559.
+
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 
@@ -276,6 +349,9 @@ Multidimensional Item Response Theory Applications. \emph{Journal of Statistical
 1-39. \doi{10.18637/jss.v071.i05}
 
 Embretson, S. E. & Reise, S. P. (2000). Item Response Theory for Psychologists. Erlbaum.
+
+Gibbons. R. D., Bock, R. D., Hedeker, D., et al. (2007). Full-Information item bifactor
+analysis of graded response data. \emph{Applied Psychological Measurement, 31}(1), 4-19.
 
 Thissen, D., Pommerich, M., Billeaud, K., & Williams, V. S. L. (1995).
 Item Response Theory for Scores on Tests Including Polytomous Items with Ordered Responses.

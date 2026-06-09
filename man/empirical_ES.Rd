@@ -14,8 +14,8 @@ empirical_ES(
   plot = FALSE,
   type = "b",
   par.strip.text = list(cex = 0.7),
-  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col
-    = "black")),
+  par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
+    "black")),
   ...
 )
 }
@@ -45,11 +45,11 @@ using focal group thetas and both focal and reference group item parameters}
 
 \item{type}{type of objects to draw in \code{lattice}; default plots both points and lines}
 
-\item{par.strip.text}{plotting argument passed to \code{\link{lattice}}}
+\item{par.strip.text}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{par.settings}{plotting argument passed to \code{\link{lattice}}}
+\item{par.settings}{plotting argument passed to \code{\link[lattice]{lattice}}}
 
-\item{...}{additional arguments to be passed to \code{\link{fscores}} and \code{\link{xyplot}}}
+\item{...}{additional arguments to be passed to \code{\link{fscores}} and \code{\link[lattice]{xyplot}}}
 }
 \description{
 Computes effect size measures of differential item functioning and differential
@@ -107,9 +107,9 @@ test scores.}
 }
 
 \examples{
-\dontrun{
+\donttest{
 
-#no DIF
+# no DIF
 set.seed(12345)
 a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -159,7 +159,7 @@ empirical_ES(mod, plot=TRUE, DIF=FALSE)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

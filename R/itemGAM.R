@@ -24,7 +24,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords item fit
@@ -32,7 +32,7 @@
 #' @export itemGAM
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' set.seed(10)
 #' N <- 1000
 #' J <- 30
@@ -49,7 +49,7 @@
 #' ps2 <- exp(2 * Theta^2 + Theta + .5 * Theta^3) / (1 + exp(2 * Theta^2 + Theta + .5 * Theta^3))
 #' item2 <- sapply(ps2, function(x) sample(c(0,1), size = 1, prob = c(1-x, x)))
 #'
-#' #' # how the actual item looks in the population
+#' # how the actual item looks in the population
 #' plot(Theta, ps, ylim = c(0,1))
 #' plot(Theta, ps2, ylim = c(0,1))
 #'
@@ -61,11 +61,13 @@
 #' mod <- mirt(dat, 1) #fit a model that does not contain the bad items
 #' itemfit(mod)
 #'
+#' \dontrun{
 #' #### Pure non-parametric way of investigating the items
 #' library(KernSmoothIRT)
 #' ks <- ksIRT(newdat, rep(1, ncol(newdat)), 1)
 #' plot(ks, item=c(1,31,32))
 #' par(ask=FALSE)
+#' }
 #'
 #' # Using point estimates from the model
 #' Theta <- fscores(mod)
@@ -93,6 +95,7 @@
 #' dat <- dat[,-32]
 #' mod <- mirt(dat, 1)
 #'
+#' \dontrun{
 #' # Kernal smoothing is very sensitive to which category is selected as 'correct'
 #' # 5th category as correct
 #' ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 5), 1)
@@ -101,6 +104,7 @@
 #' # 3rd category as correct
 #' ks <- ksIRT(cbind(dat, SAT12[,32]), c(rep(1, 31), 3), 1)
 #' plot(ks, items = c(1,2,32))
+#' }
 #'
 #' # splines approach
 #' Theta <- fscores(mod)
@@ -200,9 +204,9 @@ itemGAM <- function(item, Theta, formula = resp ~ s(Theta, k = 10), CI = .95,
 #' @method plot itemGAM
 #' @param x an object of class 'itemGAM'
 #' @param y a \code{NULL} value ignored by the plotting function
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
 #' @export
 plot.itemGAM <- function(x, y = NULL,
                          par.strip.text = list(cex = 0.7),

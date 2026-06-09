@@ -2,14 +2,14 @@
 #'
 #' Analysis of dichotomous and polytomous response data using
 #' unidimensional and multidimensional latent trait models under the Item
-#' Response Theory paradigm. Exploratory and confirmatory models can be
+#' Response Theory (IRT) paradigm. Exploratory and confirmatory models can be
 #' estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory
 #' bi-factor and two-tier analyses are available for modeling item testlets.
 #' Multiple group analysis and mixed effects designs also are available for
 #' detecting differential item and test functioning as well as modeling
 #' item and person covariates. Finally, latent class models such as the DINA,
-#' DINO, multidimensional latent class, and several other discrete variable
-#' models are supported.
+#' DINO, multidimensional latent class, mixture and zero-inflated IRT models,
+#' and several other discrete variable models are supported.
 #'
 #' Users interested in the most recent version of this package can visit
 #' \url{https://github.com/philchalmers/mirt} and follow the instructions
@@ -22,18 +22,19 @@
 #'
 #'
 #' @name mirt-package
-#' @docType package
 #' @title Full information maximum likelihood estimation of IRT models.
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @useDynLib mirt
 #' @import stats lattice GPArotation Rcpp stats4 methods mgcv splines vegan dcurver pbapply
-#' @importFrom utils write.table flush.console packageVersion capture.output head
+#' @importFrom utils write.table flush.console packageVersion capture.output head tail
 #' @importFrom gridExtra grid.arrange
 #' @importFrom graphics symbols
 #' @importFrom Deriv Deriv
+#' @importFrom SimDesign manageWarnings
+#' @importFrom splines2 iSpline
 #' @exportMethod anova residuals summary logLik vcov
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords package
@@ -42,24 +43,57 @@ NULL
 #' Description of Science data
 #'
 #' A 4-item data set borrowed from \code{ltm} package in R, first example
-#' of the \code{grm()} function. See more complete documentation therein.
+#' of the \code{grm()} function. See more complete documentation therein, as
+#' well as Karlheinz and Melich (1992).
 #'
 #'
 #' @name Science
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
+#'
+#' Karlheinz, R. and Melich, A. (1992). Euro-Barometer 38.1:
+#' \emph{Consumer Protection and Perceptions of Science and Technology}.
+#' INRA (Europe), Brussels. [computer file]
+#'
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' itemstats(Science)
 #'
 #' mod <- mirt(Science, 1)
 #' plot(mod, type = 'trace')
+#' }
+NULL
+
+#' Social Life Feelings Data
+#'
+#' A 5-item data set analyzed by Bartholomew (1998). Data contains
+#' dichotomous responses (endorsement vs non-endorsement) from 1490 German
+#' respondents to five statements on perceptions of social life.
+#'
+#' @name SLF
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Bartholomew, D., J. (1998). Scaling unobservable constructs in social science. Journal of the Royal
+#' Statistical Society - Series C, 47, 1-13.
+#' @keywords data
+#' @examples
+#'
+#' \donttest{
+#' # tabular format
+#' data(SLF)
+#' SLF
+#'
+#' # full dataset
+#' full <- expand.table(SLF)
+#' itemstats(full)
+#'
+#' mod <- mirt(full)
+#' plot(mod, type = 'trace')
+#'
 #' }
 NULL
 
@@ -77,9 +111,6 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #'
 #' Wood, R., Wilson, D. T., Gibbons, R. D., Schilling, S. G., Muraki, E., & Bock, R. D. (2003).
 #' TESTFACT 4 for Windows: Test Scoring, Item Statistics, and Full-information Item Factor Analysis
@@ -88,27 +119,42 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' itemstats(SAT12, use_ts = FALSE)
 #'
-#' #score the data (missing scored as 0)
+#' # score the data (missing scored as 0)
 #' head(SAT12)
-#' data <- key2binary(SAT12,
+#' dat <- key2binary(SAT12,
 #'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-#' head(data)
-#' itemstats(data)
+#' head(dat)
+#' itemstats(dat)
 #'
-#' #score the data, missing (value of 8) treated as NA
+#' # score the data, missing (value of 8) treated as NA
 #' SAT12missing <- SAT12
 #' SAT12missing[SAT12missing == 8] <- NA
-#' data <- key2binary(SAT12missing,
+#' dat <- key2binary(SAT12missing,
 #'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
-#' head(data)
+#' head(dat)
 #'
-#' #potentially better scoring for item 32 (based on nominal model finding)
-#' data <- key2binary(SAT12,
+#' # potentially better scoring for item 32 (based on nominal model finding)
+#' dat <- key2binary(SAT12,
 #'     key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,3))
+#'
+#' # fit 2PL model to each item
+#' mod <- mirt(dat)
+#' plot(mod)
+#' itemfit(mod)
+#'
+#' # fit monotonic spline model to items 4 through 6 to improve fit
+#' itemtype <- rep('2PL', 32)
+#' itemtype[4:6] <- 'monospline'
+#' mod_mspline <- mirt(dat, itemtype = itemtype)
+#' anova(mod, mod_mspline)
+#'
+#' plot(mod, which.items=4:6, type = 'trace')
+#' plot(mod_mspline, which.items=4:6, type = 'trace')
+#'
 #' }
 NULL
 
@@ -125,20 +171,33 @@ NULL
 #' Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
 #' dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 #'
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
-#'
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' head(dat)
 #' itemstats(dat)
 #'
-#' (mod <- mirt(dat, 1))
+#' # fit 2PL model for each item
+#' (mod <- mirt(dat))
 #' coef(mod)
+#'
+#' # monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)
+#' mod_monospline <- mirt(dat, itemtype = 'monospline')
+#' anova(mod, mod_monospline)
+#' plot(mod_monospline)
+#'
+#' # compare item 1 trace-lines
+#' i1 <- extract.item(mod, 1)
+#' i1mono <- extract.item(mod_monospline, 1)
+#' theta <- matrix(seq(-6, 6, length.out=100))
+#' twoPL <- probtrace(i1, theta)[,2]
+#' monospline <- probtrace(i1mono, theta)[,2]
+#'
+#' plot(twoPL ~ theta, type = 'l')
+#' lines(monospline ~ theta, col='red')
+#'
 #' }
 NULL
 
@@ -152,9 +211,6 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #'
 #' Thissen, D. (1982). Marginal maximum likelihood estimation for the one-parameter logistic model.
 #' \emph{Psychometrika, 47}, 175-186.
@@ -162,7 +218,7 @@ NULL
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT6)
 #' head(dat)
 #' itemstats(dat)
@@ -174,7 +230,7 @@ NULL
 #' itemfit(mod)
 #' coef(mod, simplify=TRUE)
 #'
-#' #equivalentely, but with a different parameterization
+#' # equivalentely, but with a different parameterization
 #' mod2 <- mirt(dat, 1, itemtype = 'Rasch')
 #' anova(mod, mod2) #equal
 #' M2(mod2)
@@ -182,6 +238,31 @@ NULL
 #' coef(mod2, simplify=TRUE)
 #' sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
 #'
+#' }
+NULL
+
+#' Description of ASVAB data
+#'
+#' Data from
+#'
+#'
+#' @name LSAT7
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#' Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
+#' dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
+#'
+#' @keywords data
+#' @examples
+#'
+#' \donttest{
+#' dat <- expand.table(LSAT7)
+#' head(dat)
+#' itemstats(dat)
+#'
+#' (mod <- mirt(dat, 1))
+#' coef(mod)
 #' }
 NULL
 
@@ -194,16 +275,13 @@ NULL
 #' @docType data
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #'
 #' de Ayala, R. J. (2009). \emph{The theory and practice of item response theory}. Guilford Press.
 #'
 #' @keywords data
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(deAyala)
 #' head(dat)
 #' itemstats(dat)
@@ -224,19 +302,16 @@ NULL
 #' Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K.
 #' \emph{Handbook of modern item response theory}. New York: Springer.
 #'
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-#' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-#' \doi{10.18637/jss.v048.i06}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(Bock1997)
 #' head(dat)
 #' itemstats(dat, use_ts=FALSE)
 #'
 #' mod <- mirt(dat, 1, 'nominal')
 #'
-#' #reproduce table 3 in Bock (1997)
+#' # reproduce table 3 in Bock (1997)
 #' fs <- round(fscores(mod, verbose = FALSE, full.scores = FALSE)[,c('F1','SE_F1')],2)
 #' fttd <- residuals(mod, type = 'exp')
 #' table <- data.frame(fttd[,-ncol(fttd)], fs)
@@ -248,3 +323,107 @@ NULL
 #'  }
 NULL
 
+#' Description of ASVAB data
+#'
+#' Table of counts extracted from Mislvey (1985). Data the 16 possible
+#' response patterns observed for four items from the arithmetic reasoning
+#' test of the Armed Services Vocational Aptitude Battery (ASVAB), Form 8A,
+#' from samples of white males and females and black males and females.
+#'
+#' @name ASVAB
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#'
+#' Mislevy, R. J. (1985). Estimation of latent group effects.
+#' \emph{Journal of the American Statistical Association, 80}, 993-997.
+#'
+#' @keywords data
+#' @examples
+#'
+#' data(ASVAB)
+#' datWM <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, White_Male)))
+#' datWF <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, White_Female)))
+#' datBM <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, Black_Male)))
+#' datBF <- expand.table(subset(ASVAB, select=c(Item.1:Item.4, Black_Female)))
+#'
+#' dat <- rbind(datWM, datWF, datBM, datBF)
+#' sex <- rep(c("Male", "Female", "Male", "Female"),
+#'   times=c(nrow(datWM), nrow(datWF), nrow(datBM), nrow(datBF))) |> factor()
+#' color <- rep(c("White", "Black"),
+#'   times=c(nrow(datWM) + nrow(datWF), nrow(datBM) + nrow(datBF))) |> factor()
+#' group <- sex:color
+#'
+#' itemstats(dat, group=group)
+#'
+NULL
+
+#' Description of Attitude data
+#'
+#' Table of counts extracted from Andrich (1988). Data the
+#' response patterns observed for an eight item survey.
+#'
+#' The items in this survey were:
+#' \enumerate{
+#'   \item Capital punishment is one of the most hideous practices of our time.
+#'   \item The state cannot teach the sacredness of human life by destroying it.
+#'   \item Capital punishment is not an effective deterrent to crime.
+#'   \item I don't believe in capital punishment but I am not sure it
+#'     isn't necessary.
+#'   \item I think capital punishment is necessary but I wish it were not.
+#'   \item Until we find a more civilized way to prevent crime we must have capital
+#'    punishment.
+#'   \item Capital punishment is justified because it does act as a
+#'    deterrent to crime.
+#'   \item Capital punishment gives the criminal what he deserves.
+#' }
+#'
+#'
+#' @name Attitude
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#' @references
+#'
+#' Andrich, D. (1988). The Application of an Unfolding Model of the PIRT
+#' Type to the Measurement of Attitude. \emph{Applied Psychological Measurement, 12}, 33-51.
+#'
+#' @keywords data
+#' @examples
+#'
+#' head(Attitude)
+#' df <- expand.table(Attitude)
+#' itemstats(df)
+#'
+#' \donttest{
+#'
+#' # estimate SSLM with estimated " latitude of acceptance" (rho)
+#' mod.rho <- mirt(df, 1, itemtype = 'sslm')
+#' coef(mod.rho)
+#' coef(mod.rho, simplify=TRUE)  # slope-intercept-log_rho
+#' coef(mod.rho, simplify=TRUE, IRTpars=TRUE)  # discrimination-difficulty-rho
+#' plot(mod.rho)
+#' plot(mod.rho, type = 'trace')
+#'
+#' # without estimating rho, and fixing to rho^2 = 1  (hence,
+#' #   log_rho = -exp(1) = -2.718282 in order to obtain (exp(exp(log_rho))) = 1)
+#' syntax <- "Theta = 1-8
+#'            FIXED = (1-8, log_rho1)
+#'            START = (1-8, log_rho1, -2.71828)"
+#' mod <- mirt(df, syntax, itemtype = 'sslm')  # model found in Andrich (1988)
+#' coef(mod)
+#' coef(mod, simplify=TRUE)  # slope-intercept-log_rho
+#' coef(mod, simplify=TRUE, IRTpars=TRUE)  # discrimination-difficulty-rho
+#' plot(mod)
+#' plot(mod, type = 'trace') # notice that all curves have a fixed height of .5
+#'
+#' # goodness of fit (less constrained model fits better)
+#' anova(mod, mod.rho) # original model fits much worse
+#' M2(mod)
+#' M2(mod.rho)
+#' itemfit(mod, p.adjust='fdr')
+#' itemfit(mod.rho, p.adjust='fdr')
+#'
+#' }
+#'
+#'
+NULL

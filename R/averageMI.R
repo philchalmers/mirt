@@ -15,7 +15,7 @@
 #'   standard errors, and t-values with the associated degrees of freedom and two tailed p-values
 #' @keywords multiple imputation
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -23,9 +23,9 @@
 #' @export averageMI
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
-#' #simulate data
+#' # simulate data
 #' set.seed(1234)
 #' N <- 1000
 #'
@@ -34,14 +34,14 @@
 #' covdata <- data.frame(X1, X2)
 #' Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
 #'
-#' #items and response data
+#' # items and response data
 #' a <- matrix(1, 20); d <- matrix(rnorm(20))
 #' dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
 #'
 #' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
 #' coef(mod1, simplify=TRUE)
 #'
-#' #draw plausible values for secondary analyses
+#' # draw plausible values for secondary analyses
 #' pv <- fscores(mod1, plausible.draws = 10)
 #' pvmods <- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
 #'                  covdata=covdata)
@@ -77,7 +77,7 @@ averageMI <- function(par, SEpar, as.data.frame = TRUE){
     SEscores <- sqrt(Ubar + (1 + 1/MI) * B)
     df <- (MI - 1) * (1 + MI * Ubar / ((MI + 1) * B))^2
     ret <- list(par=scores, SEpar=SEscores, t = scores/SEscores, df=df)
-    ret$p <- (1 - pt(abs(ret$t), ret$df, lower.tail=TRUE))/2
+    ret$p <- (1 - pt(abs(ret$t), ret$df, lower.tail=TRUE)) * 2
     if(as.data.frame){
         n <- ncol(scores)
         ret <- as.data.frame(ret)

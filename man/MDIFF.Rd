@@ -21,7 +21,7 @@ Returns a matrix containing the MDIFF values (Reckase, 2009). Only supported for
 'dich' and 'graded'.
 }
 \examples{
-\dontrun{
+\donttest{
 
 mod <- mirt(Science, 2)
 MDIFF(mod)
@@ -32,7 +32,7 @@ MDIFF(mod)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

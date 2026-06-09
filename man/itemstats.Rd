@@ -8,7 +8,7 @@ itemstats(
   data,
   group = NULL,
   use_ts = TRUE,
-  proportions = TRUE,
+  itemfreq = "proportions",
   ts.tables = FALSE
 )
 }
@@ -22,8 +22,9 @@ summary information}
 \item{use_ts}{logical; include information that is conditional on a
 meaningful total score?}
 
-\item{proportions}{logical; include response proportion information for
-each item?}
+\item{itemfreq}{character vector indicting whether to
+include item response \code{"proportions"} or \code{"counts"}
+for each item. If set to \code{'none'} then this will be omitted}
 
 \item{ts.tables}{logical; include mean/sd summary information
 pertaining to the unweighted total score?}
@@ -33,11 +34,15 @@ Returns a list containing the summary statistics
 }
 \description{
 Function to compute generic item summary statistics that do not require
-prior fitting of IRT models. Contains information about coefficient alpha
+prior fitting of IRT models. Contains information about sample sizes (\code{N}),
+number of observed categories (\code{K}), coefficient alpha
 (and alpha if an item is deleted), mean/SD and frequency of total scores,
 reduced item-total correlations, average/sd of the correlation between items,
 response frequencies, and conditional mean/sd information given the
-unweighted sum scores.
+unweighted sum scores. Summary information involving the total scores
+only included for responses with no missing data to ensure the metric is
+meaningful, however standardized statistics (e.g., correlations) utilize
+all possible response information.
 }
 \examples{
 
@@ -45,6 +50,7 @@ unweighted sum scores.
 LSAT7full <- expand.table(LSAT7)
 head(LSAT7full)
 itemstats(LSAT7full)
+itemstats(LSAT7full, itemfreq='counts')
 
 # behaviour with missing data
 LSAT7full[1:5,1] <- NA
@@ -83,7 +89,7 @@ itemstats(merged)
 
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

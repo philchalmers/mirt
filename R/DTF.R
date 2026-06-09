@@ -33,7 +33,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -46,7 +46,7 @@
 #' @keywords differential test functioning
 #' @export DTF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1234)
 #' n <- 30
 #' N <- 500
@@ -69,7 +69,7 @@
 #' plot(mod)
 #'
 #' DTF(mod)
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' DTF(mod, draws = 1000) #95% C.I. for sDTF containing 0. uDTF is very small
 #' DTF(mod, draws = 1000, plot='sDTF') #sDTF 95% C.I.'s across Theta always include 0
 #'
@@ -88,7 +88,7 @@
 #'                       invariance=c('free_means', 'free_var'))
 #' plot(mod2)
 #'
-#' #significant DIF in multiple items....
+#' # significant DIF in multiple items....
 #' # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 #' DTF(mod2)
 #' DTF(mod2, draws=1000) #non-sig DTF due to item cancellation
@@ -162,13 +162,13 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
     integration <- 'quad'
     type <- 'score'
     if(!(plot %in% c('none', 'func', 'sDTF')))
-        stop('plot type not supported')
+        stop('plot type not supported', call.=FALSE)
     if(!is.null(Theta_nodes)){
         integration <- 'quad'
         if(plot != 'none') message('plots are not drawn when Theta_nodes is included')
         plot <- 'none'
     }
-    if(class(mod) != 'MultipleGroupClass')
+    if(!is(mod, 'MultipleGroupClass'))
         stop('mod input was not estimated by multipleGroup()', call.=FALSE)
     if(length(mod@ParObjects$pars) != 2L)
         stop('DTF only supports two group models at a time', call.=FALSE)
@@ -188,7 +188,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
             stop('Must specify number of draws to generate plot confidence intervals', call.=FALSE)
     }
     if(length(type) > 1L && (plot != 'none' || !is.null(Theta_nodes)))
-        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments')
+        stop('Multiple type arguments cannot be combined with plot or Theta_nodes arguments', call.=FALSE)
 
     if(is.null(draws)){
         draws <- 1L
@@ -197,7 +197,7 @@ DTF <- function(mod, draws = NULL, CI = .95, npts = 1000, theta_lim=c(-6,6), The
         if(length(mod@vcov) == 1L)
             stop('Stop an information matrix must be computed', call.=FALSE)
         if(!mod@OptimInfo$secondordertest)
-            stop('ACOV matrix is not positive definite')
+            stop('ACOV matrix is not positive definite', call.=FALSE)
         impute <- TRUE
         shortpars <- mod@Internals$shortpars
         covB <- mod@vcov

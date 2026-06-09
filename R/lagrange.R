@@ -16,19 +16,19 @@
 #' @seealso \code{\link{wald}}
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords Lagrange test
 #' @export lagrange
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1, 'Rasch')
 #' (values <- mod2values(mod))
 #'
-#' #test all fixed slopes individually
+#' # test all fixed slopes individually
 #' parnum <- values$parnum[values$name == 'a1']
 #' lagrange(mod, parnum)
 #'
@@ -86,7 +86,7 @@ lagrange <- function(mod, parnum, SE.type = 'Oakes', type = 'Richardson', ...){
     if(missing(mod)) missingMsg('mod')
     if(missing(parnum)) missingMsg('parnum')
     if(SE.type %in% c('SEM', 'MHRM', 'FMHRM'))
-        stop('SE.type not supported for Lagrange tests')
+        stop('SE.type not supported for Lagrange tests', call.=FALSE)
     ObJeCtIvE <- extract.mirt(mod, 'logLik')
     group <- extract.mirt(mod, 'group')
     parnum <- as.list(parnum)

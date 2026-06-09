@@ -2,7 +2,7 @@
 % Please edit documentation in R/SIBTEST.R
 \name{SIBTEST}
 \alias{SIBTEST}
-\title{Simultaneous Item Bias Test (SIBTEST)}
+\title{(Generalized) Simultaneous Item Bias Test (SIBTEST)}
 \usage{
 SIBTEST(
   dat,
@@ -13,10 +13,15 @@ SIBTEST(
   guess_correction = 0,
   Jmin = 5,
   na.rm = FALSE,
-  LiStout1996 = FALSE,
+  randomize = FALSE,
+  C = cbind(1, -diag(length(unique(group)) - 1L)),
+  pairwise = FALSE,
+  DIF = FALSE,
+  p.adjust.method = "none",
   permute = 1000,
   pk_focal = FALSE,
   correction = TRUE,
+  remove_cross = FALSE,
   details = FALSE,
   plot = "none",
   ...
@@ -25,8 +30,8 @@ SIBTEST(
 \arguments{
 \item{dat}{integer-based dataset to be tested, containing dichotomous or polytomous responses}
 
-\item{group}{a vector indicating group membership with the same length as the number of rows in
-\code{dat}}
+\item{group}{a (factor) vector indicating group membership
+with the same length as the number of rows in \code{dat}}
 
 \item{suspect_set}{an integer vector indicating which items to inspect with SIBTEST. Including only
 one value will perform a DIF test, while including more than one will perform a simultaneous
@@ -51,11 +56,26 @@ reference groups conditioned on the matched set}
 rows with missing data will be removed, as well as the corresponding elements in the \code{group}
 input}
 
-\item{LiStout1996}{logical; perform the crossing test for non-compensatory bias
+\item{randomize}{logical; perform the crossing test for non-compensatory bias
 using Li and Stout's (1996) permutation approach? Default is \code{FALSE}, which uses the
-Chalmers (2018) mixed degrees of freedom method}
+ad-hoc mixed degrees of freedom method suggested by Chalmers (2018)}
 
-\item{permute}{number of permutations to perform when \code{LiStout1996 = TRUE}. Default is 1000}
+\item{C}{a contrast matrix to use for pooled testing with more than two groups. Default uses an
+effects coding approach, where the last group (last column of the matrix) is treated as the reference
+group, and each column is associated with the respective name via \code{unique(group)} (i.e., the first
+column is the coefficient for \code{unique(group)[1]}, second column for \code{unique(group)[2]}, and
+so on)}
+
+\item{pairwise}{logical; perform pairwise comparisons in multi-group applications?}
+
+\item{DIF}{logical; should the elements in \code{suspect_set} be treated one at a time
+to test for DIF? Use of this logical will treat all other items as part of the \code{match_set}
+unless this input is provided explicitly. Default is \code{FALSE} to allow DBF and DTF tests}
+
+\item{p.adjust.method}{a character input dictating which \code{method} to use in \code{\link{p.adjust}}.
+when studying more than two groups. Default does not present any p-value adjustments}
+
+\item{permute}{number of permutations to perform when \code{randomize = TRUE}. Default is 1000}
 
 \item{pk_focal}{logical; using the group weights from the focal group instead of the total
 sample? Default is FALSE as per Shealy and Stout's recommendation}
@@ -64,6 +84,11 @@ sample? Default is FALSE as per Shealy and Stout's recommendation}
 composite scores using the true-score regression technique? Default is \code{TRUE},
 reflecting Shealy and Stout's linear extrapolation method}
 
+\item{remove_cross}{logical; remove the subtest information associated with the approximate
+crossing location? If TRUE this reflects the CSIBTEST definition of Li and Stout (1996);
+if FALSE, this reflects the version of CSIBTEST utilized by Chalmers (2018). Only applicable
+in two-group settings (in multi-group this is fixed to FALSE)}
+
 \item{details}{logical; return a data.frame containing the details required to compute SIBTEST?}
 
 \item{plot}{a character input indicating the type of plot to construct. Options are \code{'none'}
@@ -71,16 +96,23 @@ reflecting Shealy and Stout's linear extrapolation method}
 scores, \code{'weights'} for the proportion weights used (i.e., the proportion of observations at
 each matched score), \code{'difference'} for the difference between the scaled focal subtest scores
 against the matched subtest scores, and \code{'wdifference'} for the conditional differences multiplied
-by each respective weight. Note that the last plot reflects the components used in SIBTEST, and therefore
-the sum of these plotted observations will equal the beta coefficient for SIBTEST}
+by each respective weight. Note that the last plot reflects the components used in SIBTEST,
+and therefore the sum of these plotted observations will equal the beta coefficient for SIBTEST}
 
 \item{...}{additional plotting arguments to be passed}
+}
+\value{
+a \code{data.frame} type object containing the SIBTEST results. Note that
+  the \code{beta} coefficient for (G)CSIBTEST are reported as absolute values to
+  reflect the sum of the respective area information above and below
+  the estimated crossing locations
 }
 \description{
 Classical test theory approach to detecting unidirectional and bidirectional (with one
 crossing location) DIF. This family of statistics is intended for unidimensional tests,
 and applies a regression-corrected matched-total score approach to quantify the response
-bias between two groups. Can be used for DIF, DBF, and DTF testing.
+bias between two or more groups. Can be used for DIF, DBF, and DTF testing with two or more
+discrete groups.
 }
 \details{
 SIBTEST is similar to the Mantel-Haenszel approach for detecting DIF but uses a regression
@@ -89,12 +121,15 @@ differences when the latent trait distributions are not equal.
 Function supports the standard SIBTEST for dichotomous and polytomous data (compensatory) and
 supports crossing DIF testing (i.e., non-compensatory/non-uniform) using the asymptotic sampling
 distribution version of the Crossing-SIBTEST (CSIBTEST) statistic described by
-Chalmers (2018) and the permutation method described by Li and Stout (1996).
-For convenience, the beta coefficient for CSIBTEST is always reported as an absolute value.
+Chalmers (2018) and the permutation method described by Li and Stout (1996). This
+function also supports the multi-group generalizations (GSIBTEST and GCSIBTEST)
+proposed by Chalmers and Zheng (2023), where users may specify alternative
+contrast matrices to evaluate specific comparisons between groups as well as
+perform joint hypothesis tests.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 set.seed(1234)
 n <- 30
@@ -118,11 +153,14 @@ SIBTEST(dat, group, suspect_set = 6, plot = 'weights')
 SIBTEST(dat, group, suspect_set = 6, plot = 'wdifference')
 
 # Include CSIBTEST with randomization method
-SIBTEST(dat, group, suspect_set = 6, LiStout1996 = TRUE)
+SIBTEST(dat, group, suspect_set = 6, randomize = TRUE)
+
+# remove crossing-location (identical to Li and Stout 1996 definition of CSIBTEST)
+SIBTEST(dat, group, suspect_set = 6, randomize = TRUE, remove_cross=TRUE)
 
 # DIF (specific anchors)
 SIBTEST(dat, group, match_set = 1:5, suspect_set = 6)
-SIBTEST(dat, group, match_set = 1:5, suspect_set = 6, LiStout1996=TRUE)
+SIBTEST(dat, group, match_set = 1:5, suspect_set = 6, randomize=TRUE)
 
 # DBF (all and specific anchors, respectively)
 SIBTEST(dat, group, suspect_set = 11:30)
@@ -168,9 +206,66 @@ SIBTEST(dat, group, suspect_set = 6, match_set = 1:5)
 SIBTEST(dat, group, suspect_set = 7, match_set = 1:5)
 SIBTEST(dat, group, suspect_set = 30, match_set = 1:5)
 
+# test DIF using specific match_set
+SIBTEST(dat, group, suspect_set = 6:30, match_set = 1:5, DIF=TRUE)
+
+# test DIF using all-other-as-anchors method (not typically recommended)
+SIBTEST(dat, group, suspect_set = 1:30, DIF=TRUE)
+
 # randomization method is fairly poor when smaller matched-set used
-SIBTEST(dat, group, suspect_set = 30, match_set = 1:5, LiStout1996=TRUE)
-SIBTEST(dat, group, suspect_set = 30, LiStout1996=TRUE)
+SIBTEST(dat, group, suspect_set = 30, match_set = 1:5, randomize=TRUE)
+SIBTEST(dat, group, suspect_set = 30, randomize=TRUE)
+
+## ----------------------------------
+# three group SIBTEST test
+set.seed(1234)
+n <- 30
+N <- 1000
+a <- matrix(1, n)
+d <- matrix(rnorm(n), n)
+group <- c(rep('group1', N), rep('group2', N), rep('group3', N))
+
+# groups completely equal
+dat1 <- simdata(a, d, N, itemtype = 'dich')
+dat2 <- simdata(a, d, N, itemtype = 'dich')
+dat3 <- simdata(a, d, N, itemtype = 'dich')
+dat <- rbind(dat1, dat2, dat3)
+
+# omnibus test using effects-coding contrast matrix (default)
+SIBTEST(dat, group, suspect_set = 6)
+SIBTEST(dat, group, suspect_set = 6, randomize=TRUE)
+
+# explicit contrasts
+SIBTEST(dat, group, suspect_set = 6, randomize=TRUE,
+        C = matrix(c(1,-1,0), 1))
+
+# test all items for DIF
+SIBTEST(dat, group, suspect_set = 1:ncol(dat), DIF=TRUE)
+SIBTEST(dat, group, suspect_set = 16:ncol(dat), DIF=TRUE,
+        match_set = 1:15) # specific anchors
+
+# post-hoc between two groups only
+pick <- group \%in\% c('group1', 'group2')
+SIBTEST(subset(dat, pick), group[pick], suspect_set = 1:ncol(dat), DIF=TRUE)
+
+# post-hoc pairwise comparison for all groups
+SIBTEST(dat, group, suspect_set = 1:ncol(dat), DIF=TRUE, pairwise = TRUE)
+
+## systematic differing slopes and intercepts
+dat2 <- simdata(a + c(numeric(15), .5,.5,.5,.5,.5, numeric(10)),
+        d + c(numeric(15), 0,.6,.7,.8,.9, numeric(10)),
+        N, itemtype = 'dich')
+dat <- rbind(dat1, dat2, dat3)
+
+SIBTEST(dat, group, suspect_set = 16)
+SIBTEST(dat, group, suspect_set = 16, randomize=TRUE)
+
+SIBTEST(dat, group, suspect_set = 19)
+SIBTEST(dat, group, suspect_set = 19, randomize=TRUE)
+
+SIBTEST(dat, group, suspect_set = c(16, 19), DIF=TRUE)
+SIBTEST(dat, group, suspect_set = c(16, 19), DIF=TRUE, pairwise=TRUE)
+
 
 }
 }
@@ -178,9 +273,13 @@ SIBTEST(dat, group, suspect_set = 30, LiStout1996=TRUE)
 Chalmers, R. P. (2018). Improving the Crossing-SIBTEST statistic for
 detecting non-uniform DIF. \emph{Psychometrika, 83}, 2, 376-386.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
+
+Chalmers, R. P. & Zheng, G. (2023). Multi-group Generalizations of
+SIBTEST and Crossing-SIBTEST. \emph{Applied Measurement in Education, 36}(2), 171-191,
+\doi{10.1080/08957347.2023.2201703}.
 
 Chang, H. H., Mazzeo, J. & Roussos, L. (1996). DIF for Polytomously Scored Items: An Adaptation of the
   SIBTEST Procedure. \emph{Journal of Educational Measurement, 33}, 333-353.
@@ -196,4 +295,3 @@ Shealy, R. & Stout, W. (1993). A model-based standardization approach that separ
 Phil Chalmers \email{rphilip.chalmers@gmail.com}
 }
 \keyword{SIBTEST}
-\keyword{crossing-SIBTEST}

@@ -7,17 +7,16 @@
 #'
 #' @name print-method
 #' @aliases print,SingleGroupClass-method
-#'   print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
-#'   print,MixtureClass-method
+#' @aliases  print,MultipleGroupClass-method print,MixedClass-method print,DiscreteClass-method
+#' @aliases  print,MixtureClass-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
-#' @docType methods
 #' @rdname print-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' print(x)
 #' }
@@ -36,12 +35,14 @@ setMethod(
         if(x@Options$method == 'EM') EMquad <- c('\n     using ', x@Options$quadpts, ' quadrature')
         method <- x@Options$method
         if(method == 'MIXED') method <- 'MHRM'
-        if(x@OptimInfo$converged)
-            cat("Converged within ", x@Options$TOL, ' tolerance after ', x@OptimInfo$iter, ' ',
-                method, " iterations.\n", sep = "")
-        else
-            cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
-                x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
+        if(method != 'none'){
+            if(x@OptimInfo$converged)
+                cat("Converged within ", x@Options$TOL, ' tolerance after ', x@OptimInfo$iter, ' ',
+                    method, " iterations.\n", sep = "")
+            else
+                cat("FAILED TO CONVERGE within ", x@Options$TOL, ' tolerance after ',
+                    x@OptimInfo$iter, ' ', method, " iterations.\n", sep="")
+        }
         cat('mirt version:', as.character(utils::packageVersion('mirt')), '\n')
         cat('M-step optimizer:', x@Options$Moptim, '\n')
         if(method %in% c('EM', 'QMCEM', 'BL', 'MCEM')){
@@ -75,7 +76,7 @@ setMethod(
             if(x@Fit$logPrior != 0){
                 cat("\nLog-posterior = ", x@Fit$logLik + x@Fit$logPrior, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
-                cat('Estimated parameters:', length(extract.mirt(x, 'parvec')), '\n')
+                cat('Estimated parameters:', extract.mirt(x, 'nestpars'), '\n')
             } else {
                 cat("\nLog-likelihood = ", x@Fit$logLik, if(method == 'MHRM')
                     paste(', SE =', round(x@Fit$SElogLik,3)), "\n",sep='')
@@ -102,17 +103,16 @@ setMethod(
 #'
 #' @name show-method
 #' @aliases show,SingleGroupClass-method
-#'   show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
-#'   show,MixtureClass-method
-#' @docType methods
+#' @aliases  show,MultipleGroupClass-method show,MixedClass-method show,DiscreteClass-method
+#' @aliases  show,MixtureClass-method
 #' @rdname show-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' show(x)
 #' }
@@ -133,6 +133,11 @@ setMethod(
 #'
 #' @param object an object of class \code{SingleGroupClass},
 #'   \code{MultipleGroupClass}, or \code{MixedClass}
+#' @param SE logical; include the standard errors for the
+#'   standardized loadings? Requires the initial model to have included
+#'   and estimated of the asymptotic covariance matrix (via, for instance,
+#'   \code{mirt(..., SE = TRUE)}). If \code{TRUE} SEs are computed using the
+#'   delta method
 #' @param rotate a string indicating which rotation to use for exploratory models, primarily
 #'   from the \code{GPArotation} package (see documentation therein).
 #'
@@ -149,24 +154,25 @@ setMethod(
 #' @param suppress a numeric value indicating which (possibly rotated) factor
 #'   loadings should be suppressed. Typical values are around .3 in most
 #'   statistical software. Default is 0 for no suppression
+#' @param suppress.cor same as \code{suppress}, but for the correlation matrix
+#'   output
 #' @param verbose logical; allow information to be printed to the console?
 #' @param ... additional arguments to be passed
 #'
 #' @name summary-method
 #' @aliases summary,SingleGroupClass-method
-#'   summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
-#'   summary,MixtureClass-method
-#' @docType methods
+#' @aliases  summary,MultipleGroupClass-method summary,MixedClass-method summary,DiscreteClass-method
+#' @aliases  summary,MixtureClass-method
 #' @export
 #' @rdname summary-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @seealso \code{\link{coef-method}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 2)
 #' summary(x)
 #' summary(x, rotate = 'varimax')
@@ -175,54 +181,83 @@ setMethod(
 setMethod(
     f = "summary",
     signature = 'SingleGroupClass',
-    definition = function(object, rotate = 'oblimin', Target = NULL, suppress = 0,
+    definition = function(object, SE = TRUE,
+                          rotate = 'oblimin', Target = NULL,
+                          suppress = 0, suppress.cor = 0,
                           verbose = TRUE, ...){
+        pars <- object@ParObjects$pars
+        nms <- extract.mirt(object, 'itemnames')
+        fnms <- extract.mirt(object, 'factorNames')
+        F <- Lambdas(pars, Names=nms)
+        colnames(F) <- fnms
+        h2 <- matrix(rowSums(F^2))
+        colnames(h2) <- "h2"
+        nfact <- ncol(F)
+        acov <- vcov(object)
+        SE.F <- NULL
+        org.F <- F
         if (!object@Options$exploratory || rotate == 'none') {
-            F <- object@Fit$F
+            if(SE){
+                SE.F <- SE.Lambdas(pars, acov, nfact)
+                if(!is.null(SE.F)){
+                    colnames(SE.F) <- paste0('SE.', colnames(F))
+                    rownames(SE.F) <- rownames(F)
+                }
+            }
+            ests <- do.call(rbind, lapply(pars[2:length(pars) - 1],
+                                          \(x) x@est[1:nfact]))
+            F[!ests] <- NA
             F[abs(F) < suppress] <- NA
-            h2 <- as.matrix(object@Fit$h2)
-            SS <- apply(F^2,2,sum)
+            SS <- apply(F^2,2,sum, na.rm=TRUE)
             gp <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
             Phi <- cov2cor(gp$gcov)
-            colnames(h2) <- "h2"
-            rownames(Phi) <- colnames(Phi) <- names(SS) <- colnames(F)[seq_len(object@Model$nfact)]
-            loads <- cbind(F,h2)
+            rownames(Phi) <- colnames(Phi) <- names(SS) <-
+                colnames(F)[seq_len(object@Model$nfact)]
+            loads <- as.mirt_matrix(cbind(F,h2))
             if(verbose){
                 if(object@Options$exploratory)
                     cat("\nUnrotated factor loadings: \n\n")
-                print(loads, 3)
+                print(loads, 3, na.print = " ")
+                if(!is.null(SE.F)){
+                    cat('\n')
+                    print(SE.F, 2, na.print = " ")
+                }
                 cat("\nSS loadings: ", round(SS, 3), "\n")
                 cat("Proportion Var: ",round(SS/nrow(F), 3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, 3))
+                Phiprint <- Phi
+                Phiprint[abs(Phi) < suppress.cor] <- NA
+                Phiprint[upper.tri(Phiprint, diag = FALSE)] <- NA
+                print(round(Phiprint, 3), na.print = " ")
             }
-            invisible(list(rotF=F,h2=h2,fcor=Phi))
+            ret <- list(rotF=org.F, SE.F=SE.F, h2=h2, fcor=Phi)
         } else {
-            F <- object@Fit$F
-            h2 <- as.matrix(object@Fit$h2)
-            colnames(h2) <- "h2"
             rotF <- Rotate(F, rotate, Target = Target, ...)
             SS <- apply(rotF$loadings^2,2,sum)
             L <- rotF$loadings
             L[abs(L) < suppress] <- NA
-            loads <- cbind(L,h2)
+            loads <- as.mirt_matrix(cbind(L,h2))
             Phi <- diag(ncol(F))
-            if(!rotF$orthogonal){
+            if(!rotF$orthogonal)
                 Phi <- rotF$Phi
-            }
             colnames(Phi) <- rownames(Phi) <- colnames(F)
             if(verbose){
                 cat("\nRotation: ", rotate, "\n")
                 cat("\nRotated factor loadings: \n\n")
-                print(loads, 3)
+                print(loads, 3, na.print = " ")
                 cat("\nRotated SS loadings: ",round(SS,3), "\n")
                 cat("\nFactor correlations: \n\n")
-                print(round(Phi, 3))
+                Phiprint <- Phi
+                Phiprint[abs(Phi) < suppress.cor] <- NA
+                Phiprint[upper.tri(Phiprint, diag = FALSE)] <- NA
+                print(round(Phiprint, 3), na.print = " ")
             }
             if(any(h2 > 1))
-                warning("Solution has Heywood cases. Interpret with caution.", call.=FALSE)
-            invisible(list(rotF=rotF$loadings,h2=h2,fcor=Phi))
+                warning("Model has Heywood cases. Interpret with caution.",
+                        call.=FALSE)
+            ret <- list(rotF=rotF$loadings,h2=h2,fcor=Phi)
         }
+        invisible(ret)
     }
 )
 
@@ -230,7 +265,7 @@ setMethod(
 #'
 #' Return a list (or data.frame) of raw item and group level coefficients. Note that while
 #' the output to the console is rounded to three digits, the returned list of objects is not.
-#' Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the unrounded results (useful
+#' Hence, elements from \code{cfs <- coef(mod); cfs[[1]]} will contain the non-rounded results (useful
 #' for simulations).
 #'
 #' @param object an object of class \code{SingleGroupClass},
@@ -238,7 +273,8 @@ setMethod(
 #' @param CI the amount of converged used to compute confidence intervals; default is
 #'   95 percent confidence intervals
 #' @param IRTpars logical; convert slope intercept parameters into traditional IRT parameters?
-#'   Only applicable to unidimensional models. If a suitable ACOV estimate was computed in the fitted
+#'   Only applicable to unidimensional models or models with simple structure (i.e., only one non-zero slope).
+#'   If a suitable ACOV estimate was computed in the fitted
 #'   model, and \code{printSE = FALSE}, then suitable CIs will be included based on the delta
 #'   method (where applicable)
 #' @param rotate see \code{summary} method for details. The default rotation is \code{'none'}
@@ -258,19 +294,18 @@ setMethod(
 #'
 #' @name coef-method
 #' @aliases coef,SingleGroupClass-method
-#'   coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
-#'   coef,MixtureClass-method
-#' @docType methods
+#' @aliases  coef,MultipleGroupClass-method coef,MixedClass-method coef,DiscreteClass-method
+#' @aliases  coef,MixtureClass-method
 #' @rdname coef-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @export
 #' @seealso \code{\link{summary-method}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' x <- mirt(dat, 1)
 #' coef(x)
@@ -304,15 +339,15 @@ setMethod(
         z <- abs(qnorm((1 - CI)/2))
         SEnames <- paste0('CI_', c((1 - CI)/2*100, ((1 - CI)/2 + CI)*100))
         J <- object@Data$nitems
-        nfact <- object@Model$nfact + length(object@Model$prodlist)
+        nfe <- max(sapply(1:J, \(i) object@ParObjects$pars[[i]]@nfixedeffects))
+        nfact <- object@Model$nfact + length(object@Model$prodlist) + nfe
         a <- matrix(0, J, nfact)
         for(i in 1:J)
             a[i, ] <- ExtractLambdas(object@ParObjects$pars[[i]])
-
         if (object@Options$exploratory && rotate != 'none'){
             if(verbose) cat("\nRotation: ", rotate, "\n\n")
             so <- summary(object, rotate=rotate, Target=Target, verbose=FALSE, ...)
-            a <- rotateLambdas(so) * 1.702
+            a <- rotateLambdas(so)
             for(i in 1:J){
                 object@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
                 object@ParObjects$pars[[i]]@SEpar <- numeric(0L)
@@ -320,14 +355,23 @@ setMethod(
             object@ParObjects$pars[[J + 1]]@par[-c(1:nfact)] <- so$fcor[lower.tri(so$fcor, TRUE)]
         }
         if(IRTpars){
-            if(object@Model$nfact > 1L)
-                stop('traditional parameterization is only available for unidimensional models',
-                     call.=FALSE)
-            vcov <- vcov(object)
-            for(i in 1L:J){
-                if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
-                object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]], vcov=vcov)
-
+            if(object@Model$nfact > 1L){
+                apars <- lapply(object@ParObjects$pars[-(extract.mirt(object, 'nitems') + 1L)],
+                                function(x) x@par[1L:object@Model$nfact])
+                is_ss <- sapply(apars, function(x) sum(x != 0) == 1L)
+                if(!any(is_ss)){
+                    warning(c('Traditional parameterization only available for unidimensional ',
+                           'models or models with simple structure patterns (neither found)'), call.=FALSE)
+                    IRTpars <- FALSE
+                }
+            }
+            if(IRTpars){
+                vcov <- vcov(object)
+                for(i in 1L:J){
+                    if(class(object@ParObjects$pars[[i]]) %in% c('gpcmIRT')) next
+                    object@ParObjects$pars[[i]] <- mirt2traditional(object@ParObjects$pars[[i]],
+                                                                    vcov=vcov, nfact=object@Model$nfact)
+                }
             }
         }
         allPars <- list()
@@ -348,8 +392,10 @@ setMethod(
             } else {
                 for(i in seq_len(J+1L)){
                     allPars[[i]] <- matrix(c(object@ParObjects$pars[[i]]@par,
-                                                   object@ParObjects$pars[[i]]@par - z*object@ParObjects$pars[[i]]@SEpar,
-                                                   object@ParObjects$pars[[i]]@par + z*object@ParObjects$pars[[i]]@SEpar),
+                                                   object@ParObjects$pars[[i]]@par -
+                                                 z*object@ParObjects$pars[[i]]@SEpar,
+                                                   object@ParObjects$pars[[i]]@par +
+                                                 z*object@ParObjects$pars[[i]]@SEpar),
                                                  3, byrow = TRUE)
                     rownames(allPars[[i]]) <- c('par', SEnames)
                     colnames(allPars[[i]]) <- object@ParObjects$pars[[i]]@parnames
@@ -358,13 +404,17 @@ setMethod(
         } else {
             for(i in seq_len(J+1L)){
                 allPars[[i]] <- matrix(object@ParObjects$pars[[i]]@par, 1L)
+                if(i < (J+1) && object@ParObjects$pars[[i]]@nfixedeffects > 0)
+                    allPars[[i]] <- allPars[[i]] * c(object@ParObjects$pars[[i]]@fixed.design,
+                                                     rep(1, length(allPars[[i]]) - nfe))
                 colnames(allPars[[i]]) <- object@ParObjects$pars[[i]]@parnames
                 rownames(allPars[[i]]) <- 'par'
             }
         }
         if(!rawug && !IRTpars){
             allPars <- lapply(allPars, function(x, digits){
-                x[ , colnames(x) %in% c('g', 'u')] <- antilogit(x[ , colnames(x) %in% c('g', 'u')])
+                x[ , colnames(x) %in% c('g', 'u')] <-
+                    antilogit(x[ , colnames(x) %in% c('g', 'u')])
                 x
             })
         }
@@ -382,27 +432,30 @@ setMethod(
             for(i in seq_len(nrow(items)))
                 items[i, nms[[i]]] <- items.old[[i]]
             nfact <- object@Model$nfact
-            means <- allPars$GroupPars[seq_len(nfact)]
             if(discrete){
                 allPars <- list(items=items, group.intercepts=allPars$GroupPars)
-            } else {
+            } else if(object@ParObjects$pars[[J+1L]]@dentype != "custom"){
+                means <- allPars$GroupPars[seq_len(nfact)]
                 if(object@ParObjects$pars[[J+1L]]@dentype == "Davidian"){
                     covs <- matrix(NA, nfact, nfact)
                     covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[2L]
                     covs[upper.tri(covs, FALSE)] <- covs[lower.tri(covs, FALSE)]
-                    colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
+                    colnames(covs) <- rownames(covs) <- names(means) <-
+                        object@Model$factorNames[seq_len(nfact)]
                     allPars <- list(items=items, means=means, cov=covs,
                                     Davidian_phis=allPars$GroupPars[-c(1:2)])
                 } else {
                     covs <- matrix(NA, nfact, nfact)
                     if(object@ParObjects$pars[[J+1L]]@dentype == "mixture")
-                        covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-c(seq_len(nfact), length(allPars$GroupPars))]
+                        covs[lower.tri(covs, TRUE)] <-
+                            allPars$GroupPars[-c(seq_len(nfact), length(allPars$GroupPars))]
                     else covs[lower.tri(covs, TRUE)] <- allPars$GroupPars[-seq_len(nfact)]
                     covs <- makeSymMat(covs)
-                    colnames(covs) <- rownames(covs) <- names(means) <- object@Model$factorNames[seq_len(nfact)]
+                    colnames(covs) <- rownames(covs) <- names(means) <-
+                        object@Model$factorNames[seq_len(nfact)]
                     allPars <- list(items=items, means=means, cov=covs)
                 }
-            }
+            } else allPars <- list(items=items, GroupPars=allPars$GroupPars)
         }
         if(.hasSlot(object@Model$lrPars, 'beta')){
             allPars$lr.betas <- object@Model$lrPars@beta
@@ -431,42 +484,44 @@ setMethod(
 #' Bayesian Information Criterion (BIC),
 #' Sample-Size Adjusted BIC (SABIC), and Hannan-Quinn (HQ) Criterion.
 #' When given a sequence of objects, \code{anova} tests the models against one another
-#' in the order specified.
+#' in the order specified. Note that the \code{object} inputs should be ordered in terms
+#' of most constrained model to least constrained.
 #'
 #' @param object an object of class \code{SingleGroupClass},
-#'   \code{MultipleGroupClass}, or \code{MixedClass}
+#'   \code{MultipleGroupClass}, or \code{MixedClass}, reflecting the most constrained model fitted
 #' @param object2 a second model estimated from any of the mirt package estimation methods
-#' @param ... additional model objects to be sequentially compared
+#' @param ... additional less constrained model objects to be compared
+#'   sequentially to the previous model
 #' @param bounded logical; are the two models comparing a bounded parameter (e.g., comparing a single
 #'   2PL and 3PL model with 1 df)? If \code{TRUE} then a 50:50 mix of chi-squared distributions
 #'   is used to obtain the p-value
 #' @param mix proportion of chi-squared mixtures. Default is 0.5
-#' @param verbose logical; print additional information to console?
+#' @param frame (internal parameter not for standard use)
+#' @param verbose (deprecated argument)
 #'
 #' @return a \code{data.frame}/\code{mirt_df} object
 #'
 #' @name anova-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @aliases anova,SingleGroupClass-method
-#'   anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
-#'   anova,MixtureClass-method
+#' @aliases  anova,MultipleGroupClass-method anova,MixedClass-method anova,DiscreteClass-method
+#' @aliases  anova,MixtureClass-method
 #' @export
-#' @docType methods
 #' @rdname anova-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' x2 <- mirt(Science, 2)
 #' anova(x, x2)
 #'
-#' # compare three models sequentially
-#' x2 <- mirt(Science, 1, 'gpcm')
-#' x3 <- mirt(Science, 1, 'nominal')
-#' anova(x, x2, x3)
+#' # compare three models sequentially (X2 not always meaningful)
+#' x3 <- mirt(Science, 1, 'gpcm')
+#' x4 <- mirt(Science, 1, 'nominal')
+#' anova(x, x2, x3, x4)
 #'
 #' # in isolation
 #' anova(x)
@@ -501,19 +556,32 @@ setMethod(
     f = "anova",
     signature = signature(object = 'SingleGroupClass'),
     definition = function(object, object2, ...,
-                          bounded = FALSE, mix = 0.5, verbose = TRUE){
+                          bounded = FALSE, mix = 0.5, frame = 1, verbose = FALSE){
+        if(frame > 1){
+            nms1 <- deparse(substitute(object, env = parent.frame(frame+1)))
+            nms2 <- deparse(substitute(object2, env = parent.frame(frame)))
+        } else {
+            nms1 <- deparse(substitute(object, env = parent.frame()))
+            nms2 <- deparse(substitute(object2, env = environment()))
+        }
         dots <- list(...)
         if(length(dots)){
+            nms3 <- if(frame > 1)
+                deparse(substitute(list(...), env = parent.frame(frame)))
+            else deparse(substitute(list(...), env = environment()))
+            nms3 <- gsub("list\\(", "", nms3)
+            nms3 <- gsub(")", "", nms3)
+            nms3 <- strsplit(nms3, ", ")[[1]]
             dots <- c(object, object2, dots)
             ret <- vector('list', length(dots)-1L)
             for(i in 1L:length(ret)){
                 ret[[i]] <- anova(dots[[i]], dots[[i+1L]], bounded=bounded,
-                                  mix=mix, verbose=FALSE)
+                                  mix=mix)
                 if(i > 1L)
                     ret[[i]] <- ret[[i]][2L, ]
             }
             ret <- do.call(rbind, ret)
-            rownames(ret) <- 1L:nrow(ret)
+            rownames(ret) <- c(nms1, nms2, nms3)
             return(ret)
         }
         if(missing(object2)){
@@ -526,27 +594,10 @@ setMethod(
             if(hasPriors)
                 ret$logPost = object@Fit$logPrior + object@Fit$logLik
             ret <- as.mirt_df(ret)
+            rownames(ret) <- nms1
             return(ret)
         }
         df <- object@Fit$df - object2@Fit$df
-        if(df < 0){
-            temp <- object
-            object <- object2
-            object2 <- temp
-        } else if(df == 0 && !any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
-            if((2*object2@Fit$logLik - 2*object@Fit$logLik) < 0){
-                temp <- object
-                object <- object2
-                object2 <- temp
-            }
-        }
-        if(verbose){
-            cat('\nModel 1: ')
-            print(object@Call)
-            cat('Model 2: ')
-            print(object2@Call)
-            cat('\n')
-        }
         ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                           SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
                           HQ = c(object@Fit$HQ, object2@Fit$HQ),
@@ -555,15 +606,18 @@ setMethod(
         if(any(object2@Fit$logPrior != 0 || object@Fit$logPrior != 0)){
             ret$logPost = c(object@Fit$logLik + object@Fit$logPrior,
                             object2@Fit$logLik + object2@Fit$logPrior)
-            ret$df <- c(NaN, abs(df))
+            ret$df <- c(NA, abs(df))
         } else {
             X2 <- 2*object2@Fit$logLik - 2*object@Fit$logLik
-            ret$X2 <- c(NaN, X2)
-            ret$df <- c(NaN, abs(df))
-            ret$p <- c(NaN, 1 - pchisq(X2,abs(df)))
+            ret$X2 <- c(NA, X2)
+            ret$df <- c(NA, df)
+            ret$p <- c(NA, 1 - pchisq(X2,abs(df)))
             if(bounded)
                 ret$p[2L] <- 1 - mixX2(X2, df=abs(df), mix=mix)
+            ret$p[ret$X2 < 0] <- NaN
+            ret$p[ret$df <= 0] <- NaN
         }
+        rownames(ret) <- c(nms1, nms2)
         ret <- as.mirt_df(ret)
         ret
     }
@@ -602,14 +656,17 @@ setMethod(
 #'   If supplied, arguments typically passed to \code{fscores()} will be ignored and these values will
 #'   be used instead
 #' @param theta_lim range for the integration grid
+#' @param p.adjust method to use for adjusting all p-values (see \code{\link{p.adjust}}
+#'   for available options). Default is \code{'none'}
 #' @param fold logical; apply the sum 'folding' described by Edwards et al. (2018) for the JSI statistic?
 #' @param quadpts number of quadrature nodes to use. The default is extracted from model (if available)
 #'   or generated automatically if not available
 #' @param QMC logical; use quasi-Monte Carlo integration? If \code{quadpts} is omitted the
 #'   default number of nodes is 5000
 #' @param suppress a numeric value indicating which parameter local dependency combinations
-#'   to flag as being too high. Absolute values for the standardized estimates greater than
-#'   this value will be returned, while all values less than this value will be set to NA
+#'   to flag as being too high (for LD, LDG2, and Q3 the standardize correlations are used; for
+#'   JSI, the z-ratios are used). Absolute values for the standardized estimates greater than
+#'   this value will be returned, while all values less than this value will be set to missing
 #' @param upper logical; which portion of the matrix (upper versus lower triangle)
 #'   should the \code{suppress} argument be applied to?
 #' @param technical list of technical arguments when models are re-estimated (see \code{\link{mirt}}
@@ -618,11 +675,10 @@ setMethod(
 #'
 #' @name residuals-method
 #' @aliases residuals,SingleGroupClass-method residuals,MixtureClass-method
-#'   residuals,MultipleGroupClass-method residuals,DiscreteClass-method
-#' @docType methods
+#' @aliases  residuals,MultipleGroupClass-method residuals,DiscreteClass-method
 #' @rdname residuals-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -637,7 +693,7 @@ setMethod(
 #' parameter logistic model. \emph{Applied Psychological Measurement, 8}, 125-145.
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' x <- mirt(Science, 1)
 #' residuals(x)
@@ -645,12 +701,13 @@ setMethod(
 #' residuals(x, type = 'exp')
 #' residuals(x, suppress = .15)
 #' residuals(x, df.p = TRUE)
+#' residuals(x, df.p = TRUE, p.adjust = 'fdr') # apply FWE control
 #'
 #' # Pearson's X2 estimate for goodness-of-fit
 #' full_table <- residuals(x, type = 'expfull')
 #' head(full_table)
 #' X2 <- with(full_table, sum((freq - exp)^2 / exp))
-#' df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#' df <- nrow(full_table) - extract.mirt(x, 'nestpars') - 1
 #' p <- pchisq(X2, df = df, lower.tail=FALSE)
 #' data.frame(X2, df, p, row.names='Pearson-X2')
 #'
@@ -658,7 +715,7 @@ setMethod(
 #' PearsonX2 <- function(x){
 #'    full_table <- residuals(x, type = 'expfull')
 #'    X2 <- with(full_table, sum((freq - exp)^2 / exp))
-#'    df <- nrow(full_table) - extract.mirt(x, 'nest') - 1
+#'    df <- nrow(full_table) - extract.mirt(x, 'nestpars') - 1
 #'    p <- pchisq(X2, df = df, lower.tail=FALSE)
 #'    data.frame(X2, df, p, row.names='Pearson-X2')
 #' }
@@ -694,14 +751,15 @@ setMethod(
 #' mod <- mirt(dat, 1)
 #'
 #' # JSI executed in parallel over multiple cores
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' residuals(mod, type = 'JSI')
 #'
 #' }
 setMethod(
     f = "residuals",
     signature = signature(object = 'SingleGroupClass'),
-    definition = function(object, type = 'LD', df.p = FALSE, approx.z = FALSE,
+    definition = function(object, type = 'LD', p.adjust = 'none',
+                          df.p = FALSE, approx.z = FALSE,
                           full.scores = FALSE, QMC = FALSE,
                           printvalue = NULL, tables = FALSE, verbose = TRUE, Theta = NULL,
                           suppress = NA, theta_lim = c(-6, 6), quadpts = NULL, fold = TRUE,
@@ -709,7 +767,7 @@ setMethod(
     {
         dots <- list(...)
         if(.hasSlot(object@Model$lrPars, 'beta'))
-            stop('Latent regression models not yet supported')
+            stop('Latent regression models not yet supported', call.=FALSE)
         discrete <- use_dentype_estimate <- FALSE
         if(!is.null(dots$use_dentype_estimate))
             use_dentype_estimate <- dots$use_dentype_estimate
@@ -718,7 +776,7 @@ setMethod(
         data <- object@Data$data
         N <- nrow(data)
         J <- ncol(data)
-        nfact <- ncol(object@Fit$F)
+        nfact <- extract.mirt(object, 'nfact')
         res <- matrix(0,J,J)
         diag(res) <- NA
         colnames(res) <- rownames(res) <- colnames(data)
@@ -726,6 +784,8 @@ setMethod(
             if(!is.matrix(Theta)) Theta <- matrix(Theta)
             if(nrow(Theta) > nrow(data))
                 Theta <- Theta[-extract.mirt(object, 'completely_missing'), , drop=FALSE]
+            stopifnot("Theta does not have the correct number of rows" =
+                          nrow(Theta) == nrow(object@Data$data))
         }
         if(!discrete){
             if(is.null(quadpts)){
@@ -757,6 +817,7 @@ setMethod(
             if(!discrete){
                 groupPars <- ExtractGroupPars(object@ParObjects$pars[[object@Data$nitems + 1L]])
                 if(QMC){
+                    Theta <- Theta_meanSigma_shift(Theta, groupPars$gmeans, groupPars$gcov)
                     prior <- rep(1/nrow(Theta), nrow(Theta))
                 } else {
                     prior <- mirt_dmvnorm(Theta,groupPars$gmeans, groupPars$gcov)
@@ -771,15 +832,20 @@ setMethod(
             for(i in seq_len(J)){
                 for(j in seq_len(J)){
                     if(i < j){
-                        P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta)
-                        P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta)
+                        Theta1 <- Theta2 <- Theta
+                        if(object@ParObjects$pars[[i]]@nfixedeffects > 0)
+                            Theta1 <- cbind(object@ParObjects$pars[[i]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                        if(object@ParObjects$pars[[j]]@nfixedeffects > 0)
+                            Theta2 <- cbind(object@ParObjects$pars[[j]]@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                        P1 <- ProbTrace(x=object@ParObjects$pars[[i]], Theta=Theta1)
+                        P2 <- ProbTrace(x=object@ParObjects$pars[[j]], Theta=Theta2)
                         tab <- table(data[,i], data[,j], useNA = 'no')
                         Etab <- matrix(0,K[i],K[j])
                         NN <- sum(tab)
                         for(k in seq_len(K[i]))
                             for(m in seq_len(K[j]))
                                 Etab[k,m] <- NN * sum(P1[,k] * P2[,m] * prior)
-                        s <- try(gamma.cor(tab) - gamma.cor(Etab), TRUE)
+                        s <- try(gamma_cor(tab) - gamma_cor(Etab), TRUE)
                         if(is.nan(s) || is(s, 'try-error')){
                             res[i,j] <- res[j,i] <- NaN
                             next
@@ -803,19 +869,26 @@ setMethod(
                     }
                 }
             }
+            if(df.p)
+                df[upper.tri(df)] <- p.adjust(df[upper.tri(df)], method=p.adjust)
             if(tables) return(listtabs)
             if(df.p){
                 class(df) <- c('mirt_matrix', 'matrix')
                 if(verbose){
                     cat("Degrees of freedom (lower triangle) and p-values:\n\n")
-                    print(df, ...)
+                    print(df, ..., na.print = " ")
                     cat("\n")
                 }
             }
-            if(verbose) cat("LD matrix (lower triangle) and standardized values:\n\n")
+            if(verbose){
+                cat("LD matrix (lower triangle) and standardized residual correlations (upper triangle)\n")
+                cat("\nUpper triangle summary:\n")
+                print(round(summary(res[upper.tri(res)]), 3))
+                cat("\n")
+            }
             res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
-            if(verbose) print(res, ...)
+            if(verbose) print(res, ..., na.print = " ")
             if(df.p){
                 ret <- list(df, res)
                 names(ret) <- c('df.p', type)
@@ -828,7 +901,6 @@ setMethod(
                              sqrt(object@Internals$Pl * nrow(object@Data$data))
             expected <- N * object@Internals$Pl
             tabdata <- object@Data$tabdata
-            rownames(tabdata) <- NULL
             ISNA <- is.na(rowSums(tabdata))
             expected[ISNA] <- res[ISNA] <- NA
             tabdata <- data.frame(tabdata,object@Data$Freq[[1L]],expected,res)
@@ -853,6 +925,7 @@ setMethod(
                     tabdata <- tabdata[abs(tabdata[ ,ncol(tabdata)]) > printvalue, ]
                 }
                 tabdata <- as.mirt_df(tabdata)
+                rownames(tabdata) <- NULL
                 return(tabdata)
             }
         } else if(type == 'expfull'){
@@ -870,8 +943,7 @@ setMethod(
             nfact <- extract.mirt(object, 'nfact')
             tmpdat <- matrix(0, nrow=2, ncol=nitems)
             colnames(tmpdat) <- colnames(tabdata)
-            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return',
-                                      technical = list(customK=K))
+            large <- mirt(tmpdat, nfact, itemtype=itemtype, pars=sv, TOL=NaN, large='return')
             large$tabdata <- poly2dich(tabdata)
             large$Freq$all <- rep(1L, nrow(tabdata))
             large$tabdata2 <- matrix(1L)
@@ -903,22 +975,31 @@ setMethod(
             diag(res) <- 1
             for(i in seq_len(J)){
                 ei <- extract.item(object, item=i)
-                EI <- expected.item(ei, Theta=Theta)
+                Thetastar <- Theta
+                if(ei@nfixedeffects > 0)
+                    Thetastar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                EI <- expected.item(ei, Theta=Thetastar)
                 dat[ ,1L] <- object@Data$data[ ,i] - EI
                 for(j in seq_len(J)){
                     if(i < j){
                         ej <- extract.item(object, item=j)
-                        EJ <- expected.item(ej, Theta=Theta)
+                        if(ej@nfixedeffects > 0)
+                            Thetastar <- cbind(ej@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], Theta)
+                        EJ <- expected.item(ej, Theta=Thetastar)
                         dat[,2L] <- object@Data$data[ ,j] - EJ
                         tmpdat <- na.omit(dat)
                         res[i,j] <- res[j,i] <- cor(tmpdat)[1L,2L]
                     }
                 }
             }
-            if(verbose) cat("Q3 matrix:\n\n")
+            if(verbose){
+                cat("Q3 summary statistics:\n")
+                print(round(summary(res[upper.tri(res)]), 3))
+                cat("\n")
+            }
             res <- suppressMat(res, suppress=suppress, upper=upper)
             class(res) <- c('mirt_matrix', 'matrix')
-            if(verbose) print(res, ...)
+            if(verbose) print(res, ..., na.print = " ")
             return(invisible(res))
         } else if(type == 'JSI'){
             nfact <- extract.mirt(object, 'nfact')
@@ -943,9 +1024,15 @@ setMethod(
                 retmat[i, pick] <- zs
             }
             if(fold) retmat <- retmat + t(retmat)
+            retmat <- suppressMat(retmat, suppress=suppress, upper=upper)
             class(retmat) <- c('mirt_matrix', 'matrix')
-            retmat
-
+            if(verbose){
+                cat("JSI summary statistics:\n")
+                print(round(summary(na.omit(as.vector(retmat))), 3))
+                cat("\n")
+                print(retmat, ..., na.print = " ")
+            }
+            return(invisible(retmat))
         } else {
             stop('specified type does not exist', call.=FALSE)
         }
@@ -971,7 +1058,11 @@ setMethod(
 #'     \item{\code{'itemscore'}}{item scoring traceline plots}
 #'     \item{\code{'score'}}{expected total score surface}
 #'     \item{\code{'scorecontour'}}{expected total score contour plot}
-#'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based on the EAP for sum-scores method (see \code{\link{fscores}})}
+#'     \item{\code{'posteriorTheta'}}{posterior for the latent trait distribution}
+#'     \item{\code{'gen.difficulty'}}{plots items by generalized difficulty estimates
+#'       (see \code{\link{gen.difficulty}})}
+#'     \item{\code{'EAPsum'}}{compares sum-scores to the expected values based
+#'       on the EAP for sum-scores method (see \code{\link{fscores}})}
 #'   }
 #'
 #'   Note that if \code{dentype = 'empiricalhist'} was used in estimation then
@@ -984,8 +1075,8 @@ setMethod(
 #'   and provide information pertaining only to the second response option?
 #' @param degrees numeric value ranging from 0 to 90 used in \code{plot} to compute angle
 #'   for information-based plots with respect to the first dimension.
-#'   If a vector is used then a bubble plot is created with the summed information across the angles specified
-#'   (e.g., \code{degrees = seq(0, 90, by=10)})
+#'   If a vector is used then a bubble plot is created with the summed information
+#'   across the angles specified (e.g., \code{degrees = seq(0, 90, by=10)})
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
 #'   used in conjunction with \code{npts}
 #' @param npts number of quadrature points to be used for plotting features.
@@ -1002,14 +1093,15 @@ setMethod(
 #'   placed in one plot for each group
 #' @param profile logical; provide a profile plot of response probabilities (objects returned from
 #'   \code{\link{mdirt}} only)
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
 #' @param ehist.cut a probability value indicating a threshold for excluding cases in empirical
 #'   histogram plots. Values larger than the default will include more points in the tails of the
 #'   plot, potentially squishing the 'meat' of the plot to take up less area than visually desired
 #' @param main argument passed to lattice. Default generated automatically
 #' @param drape logical argument passed to lattice. Default generated automatically
+#' @param gen.diff_type argument passed to \code{type} in \code{\link{gen.difficulty}}
 #' @param colorkey logical argument passed to lattice. Default generated automatically
 #' @param add.ylab2 logical argument passed to lattice. Default generated automatically
 #' @param ... additional arguments to be passed to lattice
@@ -1017,24 +1109,25 @@ setMethod(
 #' @name plot-method
 #' @export
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @aliases plot,SingleGroupClass-method
-#'   plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
-#'   plot,DiscreteClass,missing-method plot,MixtureClass,missing-method
-#' @docType methods
+#' @aliases  plot,MultipleGroupClass-method plot,SingleGroupClass,missing-method
+#' @aliases  plot,DiscreteClass,missing-method plot,MixtureClass,missing-method
 #' @rdname plot-method
 #' @examples
 #'
-#' \dontrun{
-#' x <- mirt(Science, 1, SE=TRUE)
+#' \donttest{
+#' x <- mirt(Science, SE=TRUE)
 #' plot(x)
 #' plot(x, type = 'info')
 #' plot(x, type = 'infotrace')
 #' plot(x, type = 'infotrace', facet_items = FALSE)
 #' plot(x, type = 'infoSE')
 #' plot(x, type = 'rxx')
+#' plot(x, type = 'posteriorTheta')
+#' plot(x, type = 'gen.difficulty')
 #'
 #' # confidence interval plots when information matrix computed
 #' plot(x)
@@ -1048,6 +1141,12 @@ setMethod(
 #' plt <- plot(x, type = 'trace')
 #' direct.label(plt, 'top.points')
 #'
+#' # additional modifications can be made via update().
+#' # See ?update.trellis for further documentation
+#' plt
+#' update(plt, ylab = expression(Prob(theta)),
+#'             main = "Item Traceline Functions") # ylab/main changed
+#'
 #' set.seed(1234)
 #' group <- sample(c('g1','g2'), nrow(Science), TRUE)
 #' x2 <- multipleGroup(Science, 1, group)
@@ -1057,6 +1156,7 @@ setMethod(
 #' plot(x2, type = 'itemscore', which.items = 1:2)
 #' plot(x2, type = 'trace', which.items = 1, facet_items = FALSE) #facet by group
 #' plot(x2, type = 'info')
+#' plot(x2, type = 'gen.difficulty')
 #'
 #' x3 <- mirt(Science, 2)
 #' plot(x3, type = 'info')
@@ -1068,7 +1168,7 @@ setMethod(
     signature = signature(x = 'SingleGroupClass', y = 'missing'),
     definition = function(x, y, type = 'score', npts = 200, drop2 = TRUE, degrees = 45,
                           theta_lim = c(-6,6), which.items = 1:extract.mirt(x, 'nitems'),
-                          MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+                          gen.diff_type = 'IRF', MI = 0, CI = .95, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                           facet_items = TRUE, main = NULL,
                           drape = TRUE, colorkey = TRUE, ehist.cut = 1e-10, add.ylab2 = TRUE,
                           par.strip.text = list(cex = 0.7),
@@ -1080,14 +1180,16 @@ setMethod(
         dots <- list(...)
         if(!(type %in% c('info', 'SE', 'infoSE', 'rxx', 'trace', 'score', 'itemscore',
                        'infocontour', 'infotrace', 'scorecontour', 'empiricalhist', 'Davidian',
-                       'EAPsum')))
-            stop('type supplied is not supported')
+                       'EAPsum', 'posteriorTheta', 'gen.difficulty')))
+            stop('type supplied is not supported', call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         nfact <- x@Model$nfact
-        if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
+        if(nfact > 3) stop("Can't plot high dimensional models.", call.=FALSE)
         J <- x@Data$nitems
+        if(x@ParObjects$pars[[J + 1L]]@dentype == 'custom')
+            theta_lim <- x@Internals$theta_lim
         theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts/(nfact^2))
         ThetaFull <- Theta <- thetaComb(theta, nfact)
         prodlist <- attr(x@ParObjects$pars, 'prodlist')
@@ -1110,7 +1212,7 @@ setMethod(
         if (x@Options$exploratory){
             if(!is.null(dots$rotate)){
                 so <- summary(x, verbose=FALSE, digits=5, ...)
-                a <- rotateLambdas(so) * 1.702
+                a <- rotateLambdas(so)
                 for(i in 1:J)
                     x@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
             }
@@ -1290,8 +1392,13 @@ setMethod(
                 if(is.null(main))
                     main <- 'Item Information'
                 I <- matrix(NA, nrow(Theta), J)
-                for(i in which.items)
-                    I[,i] <- iteminfo(extract.item(x, i), ThetaFull, degrees=degrees)
+                for(i in which.items){
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    I[,i] <- iteminfo(ei, ThetaFullstar, degrees=degrees)
+                }
                 I <- t(na.omit(t(I)))
                 items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                 plotobj <- data.frame(I = as.numeric(I), Theta=ThetaFull, item=items)
@@ -1307,7 +1414,11 @@ setMethod(
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
                 for(i in which.items){
-                    S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    S[[ind]] <- expected.item(ei, ThetaFullstar, mins[i])
                     ind <- ind + 1L
                 }
                 Sstack <- do.call(c, S)
@@ -1357,7 +1468,7 @@ setMethod(
             } else {
                 stop('plot type not supported for two dimensional model', call.=FALSE)
             }
-        } else {
+        } else { # one factor
             colnames(plt) <- c("info", "score", "Theta")
             plt$SE <- 1 / sqrt(plt$info)
             plt$rxx <- plt$info / (plt$info + 1/gp$gcov[1L,1L])
@@ -1462,7 +1573,11 @@ setMethod(
                 ind <- 1L
                 alltwocats <- all(extract.mirt(x, 'K')[which.items] == 2L)
                 for(i in which.items){
-                    tmp <- probtrace(extract.item(x, i), ThetaFull)
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    tmp <- probtrace(ei, ThetaFullstar)
                     if(ncol(tmp) == 2L && (facet_items || (!facet_items && alltwocats)) && drop2)
                         tmp <- tmp[,2, drop=FALSE]
                     tmp2 <- data.frame(P=as.numeric(tmp), cat=gl(ncol(tmp), k=nrow(Theta),
@@ -1495,7 +1610,11 @@ setMethod(
                 names(S) <- colnames(x@Data$data)[which.items]
                 ind <- 1L
                 for(i in which.items){
-                    S[[ind]] <- expected.item(extract.item(x, i), ThetaFull, mins[i])
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    S[[ind]] <- expected.item(ei, ThetaFullstar, mins[i])
                     ind <- ind + 1L
                 }
                 Sstack <- do.call(c, S)
@@ -1517,8 +1636,13 @@ setMethod(
                 if(is.null(main))
                     main <- 'Item Information'
                 I <- matrix(NA, nrow(Theta), J)
-                for(i in which.items)
-                    I[,i] <- iteminfo(extract.item(x, i), ThetaFull)
+                for(i in which.items){
+                    ei <- extract.item(x, i)
+                    ThetaFullstar <- ThetaFull
+                    if(ei@nfixedeffects > 0)
+                        ThetaFullstar <- cbind(ei@fixed.design[rep(1, nrow(Theta)), , drop=FALSE], ThetaFull)
+                    I[,i] <- iteminfo(ei, ThetaFullstar)
+                }
                 I <- t(na.omit(t(I)))
                 items <- rep(colnames(x@Data$data)[which.items], each=nrow(Theta))
                 plotobj <- data.frame(I = as.numeric(I), Theta=Theta, item=items)
@@ -1570,6 +1694,7 @@ setMethod(
                 keep2 <- max(which(Prior > ehist.cut))
                 plt <- data.frame(Theta = Theta, Prior = Prior)
                 plt <- plt[keep1:keep2, , drop=FALSE]
+                plt <- na.omit(plt)
                 return(xyplot(Prior ~ Theta, plt,
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = main,
@@ -1587,6 +1712,22 @@ setMethod(
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = main,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            } else if(type == 'posteriorTheta'){
+                if(is.null(main))
+                    main <- 'Posterior Distribution of Latent Trait'
+                plt <- extract.mirt(x, 'thetaPosterior')[[1]]
+                return(xyplot(posterior ~ Theta, plt,
+                              xlab = expression(theta), ylab = 'Density',
+                              type = 'b', main = main,
+                              par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            } else if(type == 'gen.difficulty'){
+                diffs <- gen.difficulty(x, type=gen.diff_type)
+                plt <- data.frame(items=factor(names(diffs), levels=names(diffs)), diffs)
+                return(xyplot(diffs ~ items, plt,
+                              xlab = 'Items', ylab = 'Generalized difficulty',
+                              type = 'b', main = 'Item by Generalized Difficulty',
+                              par.strip.text=par.strip.text, par.settings=par.settings,
+                              scales=list(x=list(rot=90)), ...))
             } else {
                 stop('plot not supported for unidimensional models', call.=FALSE)
             }
@@ -1594,100 +1735,101 @@ setMethod(
     }
 )
 
-mirt2traditional <- function(x, vcov){
+mirt2traditional <- function(x, vcov, nfact){
+    xorg <- x
     cls <- class(x)
     opar <- par <- x@par
+    which.a <- which(x@par[1L:nfact] != 0)
+    if(length(which.a) != 1L) return(x)
+    a.nms <- if(nfact == 1L) 'a' else paste0('a', 1L:nfact)
     if(cls != 'GroupPars')
         ncat <- x@ncat
     if(cls == 'dich'){
-        fns <- vector('list', 4L)
-        fns[[2]] <- function(par, index, opar){
-            if(index == 2L){
-                opar[1L:2L] <- par
-                ret <- -opar[2L]/opar[1L]
-            }
-            ret
-        }
-        fns[[3]] <- function(par, index, opar){
-            if(index == 3L)
-                ret <- plogis(par)
-            ret
-        }
-        fns[[4]] <- function(par, index, opar){
-            if(index == 4L)
-                ret <- plogis(par)
-            ret
-        }
-        delta_index <- list(NA, 1L:2L, 3L, 4L)
-        par[2] <- -par[2]/par[1]
-        par[3] <- plogis(par[3])
-        par[4] <- plogis(par[4])
-        names(par) <- c('a', 'b', 'g', 'u')
+        fns <- vector('list', nfact + 3L)
+        fns[[nfact+1L]] <- function(par, index, opar) -par[2]/par[1]
+        fns[[nfact+2L]] <- function(par, index, opar) plogis(par)
+        fns[[nfact+3L]] <- function(par, index, opar) plogis(par)
+        delta_index <- c(as.list(rep(NA, nfact)),
+                         list(c(which.a, nfact + 1L),
+                              nfact + 2L, nfact+3L))
+        par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
+        par[nfact + 2L] <- plogis(par[nfact + 2L])
+        par[nfact + 3L] <- plogis(par[nfact + 3L])
+        names(par) <- c(a.nms, 'b', 'g', 'u')
+        index <- delta_index
+    } else if(cls == 'fivePL'){
+        fns <- vector('list', nfact + 4L)
+        fns[[nfact+1L]] <- function(par, index, opar) -opar[2]/par[1]
+        fns[[nfact+2L]] <- function(par, index, opar) plogis(par)
+        fns[[nfact+3L]] <- function(par, index, opar) plogis(par)
+        fns[[nfact+4L]] <- function(par, index, opar) exp(par)
+        delta_index <- c(as.list(rep(NA, nfact)),
+                         list(c(which.a, nfact + 1L),
+                              nfact + 2L, nfact+3L, nfact+4L))
+        par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
+        par[nfact + 2L] <- plogis(par[nfact + 2L])
+        par[nfact + 3L] <- plogis(par[nfact + 3L])
+        par[nfact + 4L] <- exp(par[nfact + 4L])
+        names(par) <- c(a.nms, 'b', 'g', 'u', 'S')
+        index <- delta_index
     } else if(cls == 'graded'){
-        fns <- vector('list', ncat+1L)
-        for(i in 2L:ncat){
-            fns[[i]] <- function(par, index, opar){
-                if(index > 1L){
-                    opar[c(1L, index)] <- par
-                    ret <- -opar[index]/opar[1L]
-                }
-                ret
-            }
+        fns <- vector('list', ncat + nfact-1L)
+        for(i in 2L:ncat - 1L)
+            fns[[i + nfact]] <- function(par, index, opar) -par[2]/par[1]
+        delta_index <- vector('list', ncat + nfact - 1L)
+        for(i in 1:nfact)
+            delta_index[[i]] <- NA
+        for(i in 2:ncat-1L){
+            par[i+nfact] <- -par[i+nfact]/par[which.a]
+            delta_index[[i+nfact]] <- c(which.a, i+nfact)
         }
-        delta_index <- vector('list', ncat)
-        delta_index[[1L]] <- NA
-        for(i in 2:ncat){
-            par[i] <- -par[i]/par[1]
-            delta_index[[i]] <- c(1L, i)
-        }
-        names(par) <- c('a', paste0('b', 1:(length(par)-1)))
+        names(par) <- c(a.nms, paste0('b', 2:ncat-1L))
+        index <- delta_index
     } else if(cls == 'gpcm'){
-        fns <- vector('list', ncat+1L)
-        for(i in 2L:ncat){
-            fns[[i]] <- function(par, index, opar){
-                if(index > 1L){
-                    if(index == 2L) opar[c(1, ncat + 3)] <- par
-                    else opar[c(1, ncat + index, ncat + index + 1)] <- par
-                    par <- opar
-                    ds <- par[-1]/par[1]
-                    ds <- ds[-seq_len(ncat)]
-                    newd <- numeric(length(ds)-1L)
-                    for(i in 2:length(ds))
-                        newd[i-1L] <- -(ds[i] - ds[i-1L])
-                    ret <- c(par[1], newd)
-                    ret <- ret[index]
-                }
+        fns <- vector('list', ncat+nfact)
+        for(i in 2L:ncat-1L){
+            fns[[i+nfact]] <- function(par, index, opar){
+                opar[index] <- par
+                par <- opar
+                ds <- par[(nfact+1):length(par)]/par[which.a]
+                ds <- ds[-seq_len(ncat)]
+                newd <- numeric(length(ds)-1L)
+                for(i in 2:length(ds))
+                    newd[i-1L] <- -(ds[i] - ds[i-1L])
+                ret <- c(par[1:nfact], 1:ncat-1, newd)
+                ret <- ret[index[2]]
                 ret
             }
         }
-        delta_index <- vector('list', ncat)
-        delta_index[[1L]] <- NA
-        ds <- par[-1]/par[1]
+        delta_index <- vector('list', ncat+nfact-1L)
+        for(i in 1:nfact)
+            delta_index[[i]] <- NA
+        ds <- par[(nfact+1):length(par)]/par[which.a]
         ds <- ds[-seq_len(ncat)]
         newd <- numeric(length(ds)-1L)
+        for(i in 2:length(ds))
+            newd[i-1L] <- -(ds[i] - ds[i-1L])
         tmp <- rbind(1:(ncat-1), 2:ncat)
         for(i in 2:length(ds)){
             newd[i-1L] <- -(ds[i] - ds[i-1L])
-            delta_index[[i]] <- c(1L, tmp[,i-1L] + ncat + 1L)
+            delta_index[[i+nfact-1L]] <- c(which.a, tmp[,i-1L] + ncat + nfact)
         }
-        delta_index[[2L]] <- c(1L, ncat + 3L)
-        par <- c(par[1], newd)
-        names(par) <- c('a', paste0('b', 1:length(newd)))
-        x@est <- x@est[c(1, (ncat+3L):length(x@est))]
+        delta_index[[nfact+1L]] <- c(which.a, ncat + nfact + 2L)
+        par <- c(x@par[1:nfact], newd)
+        names(par) <- c(a.nms, paste0('b', 1:length(newd)))
+        x@est <- x@est[c(1:nfact, (ncat+nfact+2L):length(x@est))]
+        index <- delta_index
     } else if(cls == 'nominal'){
         fns <- vector('list', ncat*2)
-        for(i in 2L:length(par)-1L){
+        for(i in 1:ncat){
             fns[[i]] <- function(par, index, opar){
-                if(index <= floor(length(opar)/2)){
-                    as <- par[2:(ncat+1)] * par[1]
-                    as <- as - mean(as)
-                    ret <- as[index]
-                } else {
-                    ds <- par
-                    ds <- ds - mean(ds)
-                    ret <- ds[index-ncat]
-                }
-                ret
+                as <- par[-1] * par[1]
+                as <- as - mean(as)
+                as[index]
+            }
+            fns[[i+ncat]] <- function(par, index, opar){
+                ds <- par - mean(par)
+                ds[index]
             }
         }
         delta_index <- vector('list', ncat*2)
@@ -1701,37 +1843,21 @@ mirt2traditional <- function(x, vcov){
         names(par) <- c(paste0('a', 1:ncat), paste0('c', 1:ncat))
         x@est <- rep(TRUE, ncat*2)
         x@SEpar <- rep(as.numeric(NA), ncat*2)
+        index <- as.list(c(1:ncat, 1:ncat)) ## this differs as everything changes
     } else if(cls == 'nestlogit'){
-        fns <- vector('list', ncat*2 + 4)
-        fns[[2]] <- function(par, index, opar){
-            if(index == 2L){
-                opar[1L:2L] <- par
-                ret <- -opar[2L]/opar[1L]
-            }
-            ret
-        }
-        fns[[3]] <- function(par, index, opar){
-            if(index == 3L)
-                ret <- plogis(par)
-            ret
-        }
-        fns[[4]] <- function(par, index, opar){
-            if(index == 4L)
-                ret <- plogis(par)
-            ret
-        }
-        for(i in (2L:length(par)-1L) + 4){
+        if(nfact > 1L) return(x)
+        fns <- vector('list', (ncat-1)*2 + 4)
+        fns[[2]] <- function(par, index, opar) -opar[2L]/opar[1L]
+        fns[[3]] <- function(par, index, opar) plogis(par)
+        fns[[4]] <- function(par, index, opar) plogis(par)
+        for(i in 1:(ncat-1) + 4){
             fns[[i]] <- function(par, index, opar){
-                if(index <= (5 + ncat-2)){
-                    as <- par
-                    as <- as - mean(as)
-                    ret <- as[index-4]
-                } else {
-                    ds <- par
-                    ds <- ds - mean(ds)
-                    ret <- ds[index-4-(ncat-1)]
-                }
-                ret
+                as <- par - mean(par)
+                as[index]
+            }
+            fns[[i+ncat-1]] <- function(par, index, opar){
+                ds <- par - mean(par)
+                ds[index]
             }
         }
 
@@ -1743,7 +1869,7 @@ mirt2traditional <- function(x, vcov){
         par1[2] <- -par1[2]/par1[1]
         par1[3] <- plogis(par1[3])
         par1[4] <- plogis(par1[4])
-        names(par1) <- c('a', 'b', 'g', 'u')
+        names(par1) <- c(a.nms, 'b', 'g', 'u')
         par2 <- par[5:length(par)]
         as <- par2[1:(ncat-1)]
         as <- as - mean(as)
@@ -1754,29 +1880,36 @@ mirt2traditional <- function(x, vcov){
         par <- c(par1, as, ds)
         x@est <- c(x@est[1:4], rep(TRUE, (ncat-1)*2))
         x@SEpar <- c(x@SEpar[1], as.numeric(rep(NA, (ncat-1)*2 + 3)))
+        index <- delta_index
+        index[1:(ncat-1) + 4] <- 1:(ncat-1)
+        index[1:(ncat-1) + 4 + (ncat-1)] <- 1:(ncat-1)
+    } else if(cls == 'Luo2001'){
+        fns <- vector('list', nfact + ncat)
+        fns[[nfact+1L]] <- function(par, index, opar) -par[2]/par[1]
+        for(i in 1:(ncat-1))
+            fns[[nfact + 1L + i]] <- function(par, index, opar) exp(par)
+        delta_index <- c(as.list(rep(NA, nfact)),
+                         list(c(which.a, nfact + 1L)),
+                         as.list((nfact + 2L):length(par)))
+        par[nfact + 1L] <- -par[nfact + 1L]/par[which.a]
+        par[(nfact + 2L):length(par)] <- exp(par[(nfact + 2L):length(par)])
+        names(par) <- c(a.nms, 'b', paste0('rho', 1:(ncat-1)))
+        index <- delta_index
     }
     x@par <- par
     names(x@est) <- names(par)
     x@parnames <- names(x@par)
-    if(length(vcov) == 0L || (is.na(vcov[1L,1L]) || !(cls %in%
-                                                      c('dich', 'graded', 'gpcm', 'nominal', 'nestlogit')))){
+    if(!valid_vcov(vcov) || !(cls %in% c('dich', 'graded', 'gpcm', 'nominal', 'nestlogit', 'Luo2001'))){
         x@SEpar <- numeric()
     } else {
-        nms <- colnames(vcov)
-        splt <- strsplit(nms, "\\.")
-        splt <- lapply(splt, function(x) as.integer(x[-1L]))
+        vpick <- subset_vcov(xorg, vcov)
         for(i in 1L:length(delta_index)){
             if(!x@est[i]) next
             if(is.na(delta_index[[i]][1L])) next
-            grad <- numerical_deriv(opar[delta_index[[i]]], fns[[i]], opar=opar, index=i)
-            parnum <- x@parnum[delta_index[[i]]]
-            pick <- numeric(length(grad))
-            for(j in 1L:length(parnum))
-                pick[j] <- suppressWarnings(min(which(do.call(c, lapply(splt, function(x)
-                    any(x %in% parnum[j]))))))
-            grad <- grad[is.finite(pick)]
-            pick <- pick[is.finite(pick)]
-            x@SEpar[i] <- as.vector(sqrt(grad %*% vcov[pick, pick, drop=FALSE] %*% grad))
+            svpick <- vpick[delta_index[[i]], delta_index[[i]], drop=FALSE]
+            spar <- opar[delta_index[[i]]]
+            x@SEpar[i] <- DeltaMethod(fns[[i]], spar, svpick,
+                                      index=index[[i]], opar=opar)$se
         }
         if(cls == 'gpcm') x@SEpar <- x@SEpar[1L:length(x@par)]
     }
@@ -1788,7 +1921,8 @@ mirt2traditional <- function(x, vcov){
 #' This is a helper function for users who have previously available traditional/classical
 #' IRT parameters and want to know the equivalent slope-intercept translation used in \code{mirt}.
 #' Note that this function assumes that the supplied models are unidimensional by definition (i.e.,
-#' will have only one slope/discrimination). If there is no supported slope-interecept transformation
+#' will have only one slope/discrimination) and in the logistic metric (i.e., logistic-ogive
+#' scaling coefficient D=1). If there is no supported slope-intercept transformation
 #' available then the original vector of parameters will be returned by default.
 #'
 #' Supported class transformations for the \code{cls} input are:
@@ -1809,7 +1943,7 @@ mirt2traditional <- function(x, vcov){
 #'     }
 #' }
 #'
-#' @param x a vector of parameters to tranform
+#' @param x a vector of parameters to transform
 #' @param cls the class or itemtype of the supplied model
 #' @param ncat the number of categories implied by the IRT model
 #'
@@ -1893,17 +2027,16 @@ traditional2mirt <- function(x, cls, ncat){
 #'
 #' @name vcov-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @export
 #' @aliases vcov,SingleGroupClass-method vcov,MixtureClass-method
-#'   vcov,MultipleGroupClass-method vcov,MixedClass-method vcov,DiscreteClass-method
-#' @docType methods
+#' @aliases  vcov,MultipleGroupClass-method vcov,MixedClass-method vcov,DiscreteClass-method
 #' @rdname vcov-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1, SE=TRUE)
 #' vcov(x)
 #'
@@ -1925,16 +2058,15 @@ setMethod(
 #'
 #' @name logLik-method
 #' @aliases logLik,SingleGroupClass-method logLik,MixtureClass-method
-#'   logLik,MultipleGroupClass-method logLik,MixedClass-method logLik,DiscreteClass-method
-#' @docType methods
+#' @aliases  logLik,MultipleGroupClass-method logLik,MixedClass-method logLik,DiscreteClass-method
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @rdname logLik-method
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' x <- mirt(Science, 1)
 #' logLik(x)
 #'

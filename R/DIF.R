@@ -1,13 +1,13 @@
 #' Differential item functioning statistics
 #'
 #' This function runs the Wald and likelihood-ratio approaches for testing differential
-#' item functioning (DIF). This is primarily a convenience wrapper to the
+#' item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
 #' \code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
 #' models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
-#' which will help to decrease the runtime. For best results, the baseline model should contain
+#' which will help to decrease the run time. For best results, the baseline model should contain
 #' a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.
 #'
-#' Generally, the precomputed baseline model should have been
+#' Generally, the pre-computed baseline model should have been
 #' configured with two estimation properties: 1) a set of 'anchor' items,
 #' where the anchor items have various parameters that have been constrained to be equal
 #' across the groups, and 2) contain freely estimated latent mean and variance terms in
@@ -26,6 +26,11 @@
 #'   this vector. For example, if items 1 and 2 are anchors in a 10 item test, then
 #'   \code{items2test = 3:10} would work for testing the remaining items (important to remember
 #'   when using sequential schemes)
+#' @param groups2test a character vector indicating which groups to use in the DIF testing
+#'   investigations. Default is \code{'all'}, which uses all group information to perform
+#'   joint hypothesis tests of DIF (for a two group setup these result in pair-wise tests).
+#'   For example, if the group names were 'g1', 'g2' and 'g3', and DIF was only to be investigated
+#'   between group 'g1' and 'g3' then pass \code{groups2test = c('g1', 'g3')}
 #' @param return_models logical; return estimated model objects for further analysis?
 #'   Default is FALSE
 #' @param return_seq_model logical; on the last iteration of the sequential schemes, return
@@ -34,6 +39,8 @@
 #' @param simplify logical; simplify the output by returning a data.frame object with
 #'   the differences between AIC, BIC, etc, as well as the chi-squared test (X2) and associated
 #'   df and p-values
+#' @param pairwise logical; perform pairwise tests between groups when the number of groups
+#'   is greater than 2? Useful as quickly specified post-hoc tests
 #' @param scheme type of DIF analysis to perform, either by adding or dropping constraints across
 #'   groups. These can be:
 #' \describe{
@@ -71,13 +78,19 @@
 #'   another good option is 'infotrace'. For ease of viewing, the \code{facet_item} argument to
 #'   mirt's \code{plot()} function is set to \code{TRUE}
 #' @param p.adjust string to be passed to the \code{\link{p.adjust}} function to adjust p-values.
-#'   Adjustments are located in the \code{adj_pvals} element in the returned list
+#'   Adjustments are located in the \code{adj_p} element in the returned list. Default uses the
+#'   Holm-sequential Bonferroni adjustment
 #' @param verbose logical print extra information to the console?
 #' @param ... additional arguments to be passed to \code{\link{multipleGroup}} and \code{plot}
 #'
+#' @return a \code{mirt_df} object with the information-based criteria for DIF, though this may be changed
+#'   to a list output when \code{return_models} or \code{simplify} are modified. As well, a silent
+#'   \code{'DIF_coefficeints'} attribute is included to view the item parameter differences
+#'   between the groups
+#'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -90,7 +103,7 @@
 #, \code{\link{DTF}}
 #' @export DIF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # simulate data where group 2 has a smaller slopes and more extreme intercepts
 #' set.seed(12345)
@@ -108,7 +121,7 @@
 #'
 #' #### no anchors, all items tested for DIF by adding item constrains one item at a time.
 #' # define a parallel cluster (optional) to help speed up internal functions
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #'
 #' # Information matrix with Oakes' identity (not controlling for latent group differences)
 #' # NOTE: Without properly equating the groups the following example code is not testing for DIF,
@@ -116,8 +129,12 @@
 #' model <- multipleGroup(dat, 1, group, SE = TRUE)
 #'
 #' # Likelihood-ratio test for DIF (as well as model information)
-#' DIF(model, c('a1', 'd'))
-#' DIF(model, c('a1', 'd'), simplify=FALSE) # return list output
+#' dif <- DIF(model, c('a1', 'd'))
+#' dif
+#'
+#' # function silently includes "DIF_coefficients" attribute to view
+#' # the IRT parameters post-completion
+#' extract.mirt(dif, "DIF_coefficients")
 #'
 #' # same as above, but using Wald tests with Benjamini & Hochberg adjustment
 #' DIF(model, c('a1', 'd'), Wald = TRUE, p.adjust = 'fdr')
@@ -145,6 +162,9 @@
 #' dropdown <- DIF(model_constrained, c('a1', 'd'), scheme = 'drop')
 #' dropdown
 #'
+#' # View silent "DIF_coefficients" attribute
+#' extract.mirt(dropdown, "DIF_coefficients")
+#'
 #' ### sequential schemes (add constraints)
 #'
 #' ### sequential searches using SABIC as the selection criteria
@@ -162,14 +182,55 @@
 #'                return_seq_model=TRUE)
 #' plot(updated_mod, type='trace')
 #'
+#'
+#' ###################################
+#' # Multi-group example
+#'
+#' a1 <- a2 <- a3 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+#' d1 <- d2 <- d3 <- matrix(rnorm(15,0,.7),ncol=1)
+#' a2[1:2, ] <- a1[1:2, ]/3
+#' d3[c(1,3), ] <- d2[c(1,3), ]/4
+#' head(data.frame(a.group1 = a1, a.group2 = a2, a.group3 = a3,
+#'                 d.group1 = d1, d.group2 = d2, d.group3 = d3))
+#' itemtype <- rep('2PL', nrow(a1))
+#' N <- 1000
+#' dataset1 <- simdata(a1, d1, N, itemtype)
+#' dataset2 <- simdata(a2, d2, N, itemtype, mu = .1, sigma = matrix(1.5))
+#' dataset3 <- simdata(a3, d3, N, itemtype, mu = .2)
+#' dat <- rbind(dataset1, dataset2, dataset3)
+#' group <- gl(3, N, labels = c('g1', 'g2', 'g3'))
+#'
+#' # equate the groups by assuming the last 5 items have no DIF
+#' itemnames <- colnames(dat)
+#' model <- multipleGroup(dat, group=group, SE=TRUE,
+#'    invariance = c(itemnames[11:ncol(dat)], 'free_means', 'free_var'))
+#' coef(model, simplify=TRUE)
+#'
+#' # omnibus tests
+#' dif <- DIF(model, which.par = c('a1', 'd'), items2test=1:9)
+#' dif
+#'
+#' # pairwise post-hoc tests for items flagged via omnibus tests
+#' dif.posthoc <- DIF(model, which.par = c('a1', 'd'), items2test=1:2,
+#'                    pairwise = TRUE)
+#' dif.posthoc
+#'
+#' # further probing for df = 1 tests, this time with Wald tests
+#' DIF(model, which.par = c('a1'), items2test=1:2, pairwise = TRUE,
+#'     Wald=TRUE)
+#' DIF(model, which.par = c('d'), items2test=1:2, pairwise = TRUE,
+#'     Wald=TRUE)
+#'
 #' }
-DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(MGmodel, 'nitems'),
-                seq_stat = 'SABIC', Wald = FALSE, p.adjust = 'none', return_models = FALSE,
+DIF <- function(MGmodel, which.par, scheme = 'add',
+                items2test = 1:extract.mirt(MGmodel, 'nitems'),
+                groups2test = 'all', seq_stat = 'SABIC', Wald = FALSE,
+                p.adjust = 'holm', pairwise = FALSE, return_models = FALSE,
                 return_seq_model = FALSE, max_run = Inf, plotdif = FALSE, type = 'trace',
-                simplify = TRUE, verbose = TRUE, ...){
+                simplify = TRUE, verbose = interactive(), ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, technical = list(), ...)
+                          return_models, groups2test, large, technical = list(), ...)
     {
         constrain <- model@Model$constrain
         mirt_model <- model@Model$model
@@ -177,10 +238,14 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             mirt_model$x <- mirt_model$x[mirt_model$x[,"Type"] != 'CONSTRAINB',
                                          , drop=FALSE]
         technical$omp <- FALSE
+        whcgroup <- which(extract.mirt(model, 'groupNames') %in% groups2test)
         parnum <- list()
-        for(i in seq_len(length(which.par)))
-            parnum[[i]] <- values$parnum[values$name == which.par[i] &
+        for(i in seq_len(length(which.par))){
+            tmp <- values$parnum[values$name == which.par[i] &
                                              values$item == itemnames[item]]
+            if(all(is.na(tmp))) next
+            parnum[[i]] <- tmp[whcgroup]
+        }
         for(i in length(parnum):1L)
             if(!length(parnum[[i]])) parnum[[i]] <- NULL
         if(!length(parnum))
@@ -190,12 +255,22 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         if(Wald){
             wv <- wald(model)
             infoname <- names(wv)
-            L <- matrix(0, length(parnum), length(infoname))
+            each_set <- sapply(parnum, length) - 1L
+            L <- matrix(0, sum(each_set), length(infoname))
+            ind <- 1L
             for(i in seq_len(length(parnum))){
-                L[i, paste0(which.par[i], '.', parnum[[i]][1L]) == infoname] <- 1
-                L[i, paste0(which.par[i], '.', parnum[[i]][2L]) == infoname] <- -1
+                for(j in 2L:length(parnum[[i]])){
+                    # FIXME this won't work with more complex constraints (e.g., a1.15.51)
+                    L[ind, infoname %in% paste0(which.par, '.', parnum[[i]][1L])] <- 1
+                    L[ind, infoname %in% paste0(which.par, '.', parnum[[i]][j])] <- -1
+                    ind <- ind + 1L
+                }
             }
-            res <- wald(model, L)
+            res <- try(wald(model, L), silent = TRUE)
+            if(is(res, 'try-error')){
+                warning(sprintf('Wald test for \'%s\' failed.', itemnames[item]), call.=FALSE)
+                res <- data.frame(W=NA, df=NA, p=NA)
+            }
             return(res)
         }
         if(drop){
@@ -213,28 +288,73 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
         }
         newmodel <- multipleGroup(model@Data$data, mirt_model, group=model@Data$group,
                                   invariance = invariance, constrain=constrain, pars=sv,
+                                  customItems = extract.mirt(model, 'customItems'),
+                                  customGroup = extract.mirt(model, 'customGroup'), large=large,
                                   itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
                                   ...)
-        aov <- anova(newmodel, model, verbose = FALSE)
+        aov <- if(drop) anova(model, newmodel) else anova(newmodel, model)
         attr(aov, 'parnum') <- parnum
         attr(aov, 'converged') <- extract.mirt(newmodel, 'converged')
+        cfs <- coef(newmodel)
+        attr(aov, 'coefs') <- do.call(rbind, lapply(cfs, function(x) x[[item]]))
+        rownames(attr(aov, 'coefs')) <- names(cfs)
         if(return_models) aov <- newmodel
         return(aov)
     }
 
+    if(pairwise){
+        if(length(groups2test) == 1L && groups2test == 'all')
+            groups2test <- extract.mirt(MGmodel, 'groupNames')
+        ngroups <- length(groups2test)
+        compare <- vector('list', ngroups*(ngroups-1L)/2L)
+        ind <- 1L
+        for(i in 1L:ngroups){
+            for(j in 1L:ngroups){
+                if(i < j){
+                    compare[[ind]] <- DIF(MGmodel=MGmodel, which.par=which.par,
+                                          groups2test = groups2test[c(i,j)],
+                                          scheme=scheme, items2test=items2test,
+                                          seq_stat=seq_stat, Wald=Wald, p.adjust=p.adjust,
+                                          pairwise=FALSE, return_models=return_models,
+                                          return_seq_model=return_seq_model, max_run=max_run,
+                                          plotdif=FALSE, type=type, simplify=simplify,
+                                          verbose=verbose, ...)
+                    ind <- ind + 1L
+                }
+            }
+        }
+        if(simplify && is(compare[[1L]], 'mirt_df')){
+            row_names <- rownames(compare[[1L]])
+            compare <- data.frame(item=row_names, do.call(rbind, compare))
+            rownames(compare) <- NULL
+            compare <- as.mirt_df(compare)
+        }
+        else names(compare) <- sapply(compare, function(x) x$groups[1L])
+        return(compare)
+    }
     if(missing(MGmodel)) missingMsg('MGmodel')
+    cfs <- coef(MGmodel, simplify=TRUE)[[1]]$items
+    oparnames <- colnames(cfs)
+    if(!all(which.par %in% oparnames))
+        stop('which.par contains parameter names that were not in the fitted model',
+             call.=FALSE)
+    if(Wald) verbose <- FALSE
+    if(length(groups2test) == 1L && groups2test == 'all')
+        groups2test <- extract.mirt(MGmodel, 'groupNames')
+    stopifnot(all(groups2test %in% extract.mirt(MGmodel, 'groupNames')))
     if(missing(which.par)) missingMsg('which.par')
+    stopifnot(length(p.adjust) == 1L)
     if(!is(MGmodel, 'MultipleGroupClass'))
         stop('Input model must be fitted by multipleGroup()', call.=FALSE)
     aov <- anova(MGmodel)
     has_priors <- !is.null(aov$logPost)
     if(has_priors && is.numeric(seq_stat))
-        stop('p-value seq_stat for models fitted with Bayesian priors in not meaningful. Please select alternative',
-             call.=FALSE)
+        stop(c('p-value seq_stat for models fitted with Bayesian priors',
+               ' is not meaningful. Please select alternative'), call.=FALSE)
 
     if(!any(sapply(MGmodel@ParObjects$pars, function(x, pick) x@ParObjects$pars[[pick]]@est,
                    pick = MGmodel@Data$nitems + 1L)))
-        message(paste('No hyper-parameters were estimated in the DIF model. For effective',
+        message(paste('NOTE: No hyper-parameters were estimated in the DIF model. \n      For effective',
                 'DIF testing, freeing the focal group hyper-parameters is recommended.'))
     bfactorlist <- MGmodel@Internals$bfactor
     if(!is.null(bfactorlist$Priorbetween[[1L]]))
@@ -261,17 +381,22 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
     } else if(!any(seq_stat %in% c('p', 'AIC', 'SABIC', 'BIC', 'DIC', 'HQ'))){
         stop('Invalid seq_stat input', call.=FALSE)
     }
-    if(is.character(items2test)) items2test <- which(items2test %in% itemnames)
+    if(is.character(items2test))
+        items2test <- which(itemnames %in% items2test)
     invariance <- MGmodel@Model$invariance
     values <- mod2values(MGmodel)
+    values$const <- 'none'
     drop <- scheme == 'drop' || scheme == 'drop_sequential'
     invariance <- MGmodel@Model$invariance[MGmodel@Model$invariance %in%
                                          c('free_means', 'free_var')]
     if(!length(invariance)) invariance <- ''
-    res <- myLapply(X=items2test, FUN=loop_test, progress=verbose,
+    large <- multipleGroup(extract.mirt(MGmodel, 'data'), 1,
+                           group=extract.mirt(MGmodel, 'group'), large='return')
+    res <- myLapply(X=items2test, FUN=loop_test, progress=verbose, groups2test=groups2test,
                     model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
-                    return_models=return_models, ...)
+                    return_models=return_models && !(scheme %in% c('add_sequential', 'drop_sequential')),
+                    large=large, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -292,7 +417,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             }
             if(run_number == 2L && (all(!keep) || all(keep))){
                 if(verbose)
-                    message('sequential scheme not required; all/no items contain DIF on first iteration')
+                    message('sequential scheme not required; all/no items display DIF on first iteration')
                 if(return_seq_model) return(MGmodel)
                 if(scheme == 'add_sequential'){
                     scheme <- 'add'
@@ -307,11 +432,9 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
                 return(ret)
             }
             if(all(keep == lastkeep)) break
-            if(drop && run_number > 2L){
-                lastkeep <- keep | lastkeep
-            } else lastkeep <- keep
+            lastkeep <- keep
             if(verbose)
-                cat(sprintf('\rChecking for DIF in %d more items', if(drop) sum(keep) else sum(!keep)))
+                printf('\rChecking for DIF in %d more items', if(drop) sum(keep) else sum(!keep))
             if(ifelse(drop, sum(keep), sum(!keep)) == 0) break
             constrain <- updatedModel@Model$constrain
             for(j in seq_len(length(keep))){
@@ -337,12 +460,15 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             updatedModel <- multipleGroup(MGmodel@Data$data, MGmodel@Model$model,
                                           group=MGmodel@Data$group, itemtype=MGmodel@Model$itemtype,
                                           invariance = invariance, constrain=constrain,
+                                          customItems = extract.mirt(MGmodel, 'customItems'),
+                                          customGroup = extract.mirt(MGmodel, 'customGroup'),
                                           verbose = FALSE, ...)
             pick <- !keep
             if(drop) pick <- !pick
             tmp <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
-                            itemnames=itemnames, invariance=invariance, return_models=FALSE, ...)
+                            itemnames=itemnames, invariance=invariance, return_models=FALSE,
+                            groups2test=groups2test, large=large, ...)
             names(tmp) <- itemnames[items2test][pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
@@ -358,16 +484,17 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             res <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                             itemnames=itemnames, invariance=invariance, return_models=return_models,
-                            ...)
+                            groups2test=groups2test, large=large, ...)
             names(res) <- itemnames[items2test][pick]
         }
     }
+    if(return_models) return(res)
     converged <- logical(length(res))
     for(i in seq_len(length(res))){
         if(!Wald) converged[i] <- attr(res[[i]], 'converged')
         attr(res[[i]], 'converged') <- attr(res[[i]], 'parnum') <- NULL
     }
-    if(return_models) return(res)
+
     if(p.adjust != 'none'){
         if(Wald){
             ps <- do.call(c, lapply(res, function(x) x$p))
@@ -378,7 +505,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             }, stat = 'p'))
         }
         ps <- p.adjust(ps, p.adjust)
-        res$adj_pvals <- ps
+        attr(res, 'adj_p') <- ps
     }
     if(plotdif && any(scheme %in% c('add', 'add_sequential'))){
         if(seq_stat != 'p'){
@@ -388,7 +515,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             }, stat = seq_stat))
             keep <- statdiff <= 0
         } else {
-            statdiff <- res$adj_pvals
+            statdiff <- res$adj_p
             if(is.null(statdiff)){
                 if(Wald){
                     statdiff <- do.call(c, lapply(res, function(x) x$p))
@@ -413,18 +540,17 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
             message('No DIF items were detected for plotting.')
         }
     }
-    pick <- names(res)
-    pick <- pick[pick != 'adj_pvals']
+    adj_p <- attr(res, "adj_p")
     if(Wald && !return_models){
-        adj_pvals <- res$adj_pvals
-        res <- do.call(rbind, res[pick])
-        res$adj_pvals <- adj_pvals
+        res <- do.call(rbind, res)
+        res$adj_p <- adj_p
+        res <- data.frame(groups=paste0(groups2test,collapse=','), res)
         res <- as.mirt_df(res)
         return(res)
     }
     if(simplify && !return_models){
-        adj_pvals <- res$adj_pvals
-        out <- lapply(res[pick], function(x){
+        DIF_coefs <- lapply(res, function(x) attr(x, 'coefs'))
+        out <- lapply(res, function(x){
              r <- x[2L, ] - x[1L, ]
              if(!has_priors)
                 r[,c("X2", 'df', 'p')] <- x[2L, c("X2", 'df', 'p')]
@@ -432,9 +558,11 @@ DIF <- function(MGmodel, which.par, scheme = 'add', items2test = 1:extract.mirt(
              r$logLik <- NULL
              r
          })
-         res <- cbind(converged, do.call(rbind, out))
-         if(!has_priors) res$adj_pvals <- adj_pvals
+         res <- data.frame(groups=paste0(groups2test,collapse=','),
+                           converged, do.call(rbind, out))
+         if(!has_priors) res$adj_p <- adj_p
          res <- as.mirt_df(res)
+         attr(res, 'DIF_coefficients') <- DIF_coefs
     }
     return(res)
 }

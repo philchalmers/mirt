@@ -57,7 +57,7 @@ the baseline model should contain a set of 'anchor' items and have freely estima
 hyper-parameters in the focal groups. See \code{\link{DIF}} for details.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1234)
 n <- 30
 N <- 500
@@ -80,7 +80,7 @@ mod <- multipleGroup(dat, model, group=group, SE=TRUE,
 plot(mod)
 
 DTF(mod)
-mirtCluster()
+if(interactive()) mirtCluster()
 DTF(mod, draws = 1000) #95\% C.I. for sDTF containing 0. uDTF is very small
 DTF(mod, draws = 1000, plot='sDTF') #sDTF 95\% C.I.'s across Theta always include 0
 
@@ -99,7 +99,7 @@ mod2 <- multipleGroup(dat, model, group=group, SE=TRUE,
                       invariance=c('free_means', 'free_var'))
 plot(mod2)
 
-#significant DIF in multiple items....
+# significant DIF in multiple items....
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 DTF(mod2)
 DTF(mod2, draws=1000) #non-sig DTF due to item cancellation
@@ -130,7 +130,7 @@ head(sDTF)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

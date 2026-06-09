@@ -27,12 +27,12 @@ more constrained baseline model.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1, 'Rasch')
 (values <- mod2values(mod))
 
-#test all fixed slopes individually
+# test all fixed slopes individually
 parnum <- values$parnum[values$name == 'a1']
 lagrange(mod, parnum)
 
@@ -61,7 +61,7 @@ lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

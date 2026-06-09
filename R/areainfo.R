@@ -18,7 +18,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords information area
@@ -29,7 +29,7 @@
 #' mod <- mirt(dat, 1)
 #'
 #' areainfo(mod, c(-2,0), which.items = 1) #item 1
-#' \dontrun{
+#' \donttest{
 #' areainfo(mod, c(-2,0), which.items = 1:3) #items 1 to 3
 #' areainfo(mod, c(-2,0)) # all items (total test information)
 #'
@@ -63,7 +63,7 @@ areainfo <- function(x, theta_lim, which.items = 1:extract.mirt(x, 'nitems'), gr
     nitems <- ifelse(is.null(which.items), extract.mirt(x, 'nitems'), length(which.items))
     ii <- integrate(f, lower = theta_lim[1L], upper = theta_lim[2L],
                     x=x, which.items=which.items, ...)
-    iT <- integrate(f, lower = -10, upper = 10, x=x, which.items=which.items, ...)
+    iT <- integrate(f, lower = -Inf, upper = Inf, x=x, which.items=which.items, ...)
     ret <- data.frame(LowerBound=min(theta_lim), UpperBound=max(theta_lim),
                       Info=ii$value, TotalInfo=iT$value, Proportion=ii$value/iT$value,
                       nitems=nitems)

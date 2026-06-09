@@ -14,7 +14,7 @@ PLCI.mirt(
   upper = TRUE,
   inf2val = 30,
   NealeMiller = FALSE,
-  verbose = TRUE,
+  verbose = interactive(),
   ...
 )
 }
@@ -43,7 +43,7 @@ this value will be adjusted accordingly}
 \item{inf2val}{a numeric used to change parameter bounds which are infinity to a finite number.
 Decreasing this too much may not allow a suitable bound to be located. Default is 30}
 
-\item{NealeMiller}{logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}}
+\item{NealeMiller}{logical; use the Neale and Miller (1997) approximation? Default is \code{FALSE}}
 
 \item{verbose}{logical; include additional information in the console?}
 
@@ -56,26 +56,20 @@ and whether the respective interval could be found.
 }
 \examples{
 
-\dontrun{
-mirtCluster() #use all available cores to estimate CI's in parallel
+\donttest{
+if(interactive()) mirtCluster() #use all available cores to estimate CI's in parallel
 dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)
 
 result <- PLCI.mirt(mod)
 result
 
-# model with constraints
-mod <- mirt(dat, 'F = 1-5
-                  CONSTRAIN = (1-5, a1)')
-
-result <- PLCI.mirt(mod)
-result
 
 mod2 <- mirt(Science, 1)
 result2 <- PLCI.mirt(mod2)
 result2
 
-#only estimate CI's slopes
+# only estimate CI's slopes
 sv <- mod2values(mod2)
 parnum <- sv$parnum[sv$name == 'a1']
 result3 <- PLCI.mirt(mod2, parnum)
@@ -84,7 +78,7 @@ result3
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

@@ -4,10 +4,10 @@
 \alias{boot.LR}
 \title{Parametric bootstrap likelihood-ratio test}
 \usage{
-boot.LR(mod, mod2, R = 1000, verbose = TRUE)
+boot.LR(mod, mod2, R = 1000, verbose = interactive())
 }
 \arguments{
-\item{mod}{an estimated model object}
+\item{mod}{an estimated model object, more constrained than \code{mod2}}
 
 \item{mod2}{an estimated model object}
 
@@ -28,9 +28,9 @@ definition.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
-#standard
+# standard
 dat <- expand.table(LSAT7)
 mod1 <- mirt(dat, 1)
 mod2 <- mirt(dat, 1, '3PL')
@@ -39,13 +39,13 @@ mod2 <- mirt(dat, 1, '3PL')
 anova(mod1, mod2)
 
 # bootstrap LR test (run in parallel to save time)
-mirtCluster()
+if(interactive()) mirtCluster()
 boot.LR(mod1, mod2, R=200)
 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

@@ -2,49 +2,158 @@
 #'
 #' Computes an IRT version of the "reliable change index" (RCI) proposed by
 #' Jacobson and Traux (1991) but modified to use IRT information about scores
-#' and measurement error. Main benefit of the IRT approach is the inclusion
+#' and measurement error (see Jabrayilov, Emons, and Sijtsma (2016)).
+#' Main benefit of the IRT approach is the inclusion
 #' of response pattern information in the pre/post data score estimates, as well
-#' as conditional standard error of measurement information.
+#' as conditional standard error of measurement information. Models can be specified
+#' as separate unidimensional IRT models fitted via \code{\link{mirt}}
+#' (or extracted from \code{\link{multipleGroup}} via \code{\link{extract.group}}),
+#' or a two-dimensional model where the latent traits correspond to the two
+#' test administrations.
 #'
-#' @param mod single-group model fitted by \code{\link{mirt}}
+#' @param mod_pre single-group model fitted by \code{\link{mirt}}. If not supplied the
+#'  information will be extracted from the data input objects to compute the classical
+#'  test theory version of the RCI statistics
+#' @param mod_post (optional) IRT model for post-test if different from pre-test;
+#'  otherwise, the pre-test model will be used. Ignored when a two-dimensional model
+#'  IRT is included
 #' @param predat a vector (if one individual) or matrix/data.frame
 #'   of response data to be scored, where each individuals' responses are
-#'   included in exactly one row
+#'   included in exactly one row.
+#'
+#'   If total score information only is to be used instead of the
+#'   complete response matrix then
+#'   a \code{matrix} object with exactly \code{ncol = 1} columns
+#'   should be provided
 #' @param postdat same as \code{predat}, but with respect to the post/follow-up
-#'   measurement
+#'   measurement. Ignored when a two-dimensional IRT model is included.
+#'
+#'   For the original RCI approach, a matrix containing the complete responses,
+#'   or a matrix with one column containing only the total scores, can be provided
 #' @param cutoffs optional vector of length 2 indicating the type of cut-offs to
 #'   report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)
+#' @param SEM.pre standard error of measurement for the pretest. This can be used instead of
+#'   \code{rxx.pre} and \code{SD.pre}
+#' @param SEM.post (optional) standard error of measurement for the post-test.
+#'   Using this will create a pooled version of the SEM; otherwise, \code{SEM.post = SEM.pre}
+#' @param Fisher logical; use the Fisher/expected information function to compute the
+#'   SE terms? If \code{FALSE} the SE information will be extracted from the select
+#'   \code{\link{fscores}} method (default). Only applicable for unidimensional models
+#' @param shiny logical; launch an interactive shiny applications for real-time scoring
+#'   of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)
+#'   \code{mod_post} inputs
+#' @param zero_cor logical; when the supplied \code{mod_pre} is a two-factor model
+#'   should the covariance/correlation between the latent traits be forced to be 0?
+#' @param main main label to use when \code{shiny=TRUE}
+#' @param expected.scores logical; when using IRT scoring methods, should the expected total scores
+#'   be reported instead of the scaled (theta) scores returned from \code{\link{fscores}}? When set
+#'   to \code{TRUE} the factor score estimates are passed to \code{\link{expected.test}}, and delta method
+#'   standard error for the difference between teh scores are reported,
+#'   however the original \code{z} and \code{p}-value information will be unchanged
+#'
 #' @param ... additional arguments passed to \code{\link{fscores}}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
 #' Jacobson, N. S., & Truax, P. (1991). Clinical significance: A statistical approach
 #' to defining meaningful change in psychotherapy research. Journal
 #' of Consulting and Clinical Psychology, 59, 12-19.
+#'
+#' Jabrayilov, R. , Emons, W. H. M., & Sijtsma, K. (2016). Comparison of
+#' Classical Test Theory and Item Response Theory in Individual Change Assessment.
+#' \emph{Applied Psychological Measurement, 40} (8), 559-572.
 #' @keywords reliable change index
+#' @importFrom graphics abline points polygon
+#' @importFrom grDevices adjustcolor
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
-#' mod <- mirt(Science, 1)
+#' # simulate some data
+#' N <- 1000
+#' J <- 20     # number of items
+#' a <- matrix(rlnorm(J,.2,.3))
+#' d <- rnorm(J)
+#'
+#' theta <- matrix(rnorm(N))
+#' dat_pre <- simdata(a, d, itemtype = '2PL', Theta = theta)
+#'
+#' # first 3 cases decrease by 1/2
+#' theta2 <- theta - c(1/2, 1/2, 1/2, numeric(N-3))
+#' dat_post <- simdata(a, d, itemtype = '2PL', Theta = theta2)
+#'
+#' mod <- mirt(dat_pre)
+#'
+#' # all changes using fitted model from pre data
+#' RCI(mod, predat=dat_pre, postdat=dat_post)
+#'
+#' # reported all expected change estimates in the original test-score metric
+#' RCI(mod, predat=dat_pre, postdat=dat_post, expected.scores=TRUE)
 #'
 #' # single response pattern change using EAP information
-#' RCI(mod, predat = c(1,2,3,2), postdat = c(1,2,2,1))
+#' RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
 #'
-#' # WLE estimator
-#' RCI(mod, predat = c(1,2,3,2), postdat = c(1,2,2,1), method = 'WLE')
+#' # WLE estimator with Fisher information for SE (see Jabrayilov et al. 2016)
+#' RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,],
+#'     method = 'WLE', Fisher = TRUE)
 #'
 #' # multiple respondents
-#' RCI(mod, predat = Science[1:5,], postdat = Science[2:6,])
+#' RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,])
 #'
 #' # include large-sample z-type cutoffs
-#' RCI(mod, predat = Science[1:5,], postdat = Science[2:6,],
+#' RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,],
 #'     cutoffs = c(-1.96, 1.96))
+#'
+#' ######
+#' # CTT version by omitting IRT model
+#'     # Requires either sample or population SEM's as input
+#' (istats <- itemstats(dat_pre)$overall)
+#' SEM.alpha <- istats$SEM.alpha    # SEM estimate of dat_pre
+#'
+#' # assumes SEM.post = SEM.pre
+#' RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha)
+#'
+#' # include cutoffs
+#' RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha,
+#'     cutoffs=c(-1.96, 1.96))
+#'
+#' # allows SEM.post != SEM.pre
+#' (istats.post <- itemstats(dat_post)$overall)
+#' SEM.alpha.post <- istats.post$SEM.alpha
+#'
+#' RCI(predat = dat_pre, postdat = dat_post,
+#'    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+#'
+#' # Supplying only the total scores
+#' TS_pre <- matrix(rowSums(dat_pre))
+#' TS_post <- matrix(rowSums(dat_post))
+#' RCI(predat = TS_pre, postdat = TS_post,
+#'    SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+#'
+#' ######
+#'
+#' # interactive shiny interfaces for live scoring
+#' mod_pre <- mirt(Science)
+#'
+#' # (optional) setup mod_post to have medium effect size change (d = 0.5)
+#' sv <- mod2values(mod_pre)
+#' sv$value[sv$name == 'MEAN_1'] <- 0.5
+#' mod_post <- mirt(Science, pars=sv, TOL=NA)
+#'
+#' # only use pre-test model for scoring
+#' if(interactive()){
+#'     RCI(mod_pre=mod_pre, shiny=TRUE)
+#'
+#'     # use both pre-test and post-test models for including empirical priors
+#'     RCI(mod_pre=mod_pre, mod_post=mod_post, shiny=TRUE,
+#'         main='Perceptions of Science and Technology')
+#'  }
+#'
 #'
 #' ############################
 #' # Example where individuals take completely different item set pre-post
@@ -53,33 +162,394 @@
 #' dat <- key2binary(SAT12,
 #'   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
-#' mod <- mirt(dat, 1)
+#' mod <- mirt(dat)
 #'
-#' # with N=5 individual under investigation
+#' # with N=5 individuals under investigation
 #' predat <- postdat <- dat[1:5,]
 #' predat[, 17:32] <- NA
 #' postdat[, 1:16] <- NA
 #'
+#' head(predat)
+#' head(postdat)
+#'
 #' RCI(mod, predat, postdat)
 #'
+#' # expected scores /32 (even though only /16 items answered)
+#' RCI(mod, predat, postdat, expected.scores=TRUE)
+#'
+#' ######
+#' # Two-dimensional IRT model for each time point, 20 items (no DIF)
+#'
+#' J <- 20
+#' N <- 500
+#' slopes <- rlnorm(J, .2, .2)
+#' a <- matrix(c(slopes, numeric(J*2), slopes),J*2)
+#' ints <- rnorm(J)
+#' d <- matrix(c(ints, ints), ncol=1)
+#' data.frame(a=a, d=d)
+#'
+#' # mean effects across time
+#' mu <- c(0, -1/2)
+#' sigma <- matrix(c(1, .7, .7, 1), 2,2)
+#'
+#' dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
+#' itemstats(dat)$overall
+#'
+#' # build equality constraints across time points
+#' constr <- NULL
+#' for(i in (1:J)){
+#'     constr <- c(constr, paste0("(", i, ',', i+J, ",a1,a2)"))
+#'     constr <- c(constr, paste0("(", i, ',', i+J, ",d)"))
 #' }
-RCI <- function(mod, predat, postdat, cutoffs = NULL, ...){
-    stopifnot(extract.mirt(mod, 'nfact') == 1L)
+#' constr <- paste0(constr, collapse=',')
+#'
+#' # define model where item parameters constrained over time, and
+#' # latent trait has potential scale-location changes (e.g., regression to the
+#' # mean effects)
+#' model <- sprintf("
+#'                   thetapre = 1-%i,
+#'                   thetapost = %i-%i,
+#'                   COV = thetapre*thetapost, thetapost*thetapost
+#'                   MEAN = thetapost
+#'                   CONSTRAIN = %s", J, J+1, 2*J, constr)
+#' cat(model)
+#'
+#' # fit the model to calibration data
+#' mod <- mirt(dat, model = model, SE=TRUE)
+#' coef(mod, printSE=TRUE)
+#' coef(mod, simplify=TRUE)
+#' summary(mod)
+#'
+#' # test data
+#' Theta <- cbind(c(0, 1, 2), c(0,1,2))
+#' nochange <- simdata(a, d, itemtype = '2PL', Theta = Theta)
+#' change <- simdata(a, d, itemtype = '2PL', Theta = Theta +
+#'                       cbind(0, c(-1, -1, -1)))
+#'
+#' # total score differences
+#' data.frame(pre=rowSums(nochange[,1:J]),
+#'            post=rowSums(nochange[,1:J + J]))
+#' data.frame(pre=rowSums(change[,1:J]),
+#'            post=rowSums(change[,1:J + J]))
+#'
+#'
+#' RCI(mod, predat = nochange)
+#' RCI(mod, predat = change)
+#'
+#' # expected total-score metric reported instead
+#' RCI(mod, predat = nochange, expected.scores=TRUE)
+#' RCI(mod, predat = change, expected.scores=TRUE)
+#'
+#' }
+RCI <- function(mod_pre, predat, postdat,
+                mod_post = mod_pre, cutoffs = NULL,
+                SEM.pre = NULL, SEM.post = NULL,
+                Fisher = FALSE, zero_cor = TRUE, expected.scores=FALSE,
+                shiny = FALSE, main = 'Test Scores', ...){
+
+    if(shiny)
+        return(RCI_shiny(mod_pre=mod_pre, mod_post=mod_post, main=main))
+
+    Escore_diff <- function(par, multidim = FALSE, pick=NULL){
+        ret <- if(multidim)
+            expected.test(mod_pre, matrix(c(0, par[2]), nrow=1), which.items=which(pick[,2])) -
+            expected.test(mod_pre, matrix(c(par[1], 0), nrow=1), which.items=which(pick[,1]))
+        else expected.test(mod_post, par[2]) - expected.test(mod_pre, par[1])
+        ret
+    }
+
     if(!is.null(cutoffs))
         stopifnot(length(cutoffs) == 2)
-    fs_pre <- fscores(mod, response.pattern = predat, ...)
-    fs_post <- fscores(mod, response.pattern = postdat, ...)
+    nfact <- 1L
+    if(missing(mod_pre)){
+        if(is.vector(predat))
+            predat <- matrix(predat, 1L)
+        if(is.vector(postdat))
+            postdat <- matrix(postdat, 1L)
+        TS_pre <- rowSums(predat)
+        TS_post <- rowSums(postdat)
+        if(is.null(SEM.pre))
+            stop('Must include SEM.pre', call.=FALSE)
+        SEM.pre <- unname(SEM.pre)
+        stopifnot(is.numeric(SEM.pre) && length(SEM.pre) == 1L)
+        if(is.null(SEM.post)) SEM.post <- SEM.pre
+        SEM.post <- unname(SEM.post)
+        SEM <- sqrt(SEM.pre^2 + SEM.post^2)
+        diff <- TS_post - TS_pre
+        z_JCI <- diff / SEM
+        ret <- data.frame(pre.score=TS_pre, post.score=TS_post, diff,
+                          SE=SEM, z=z_JCI,
+                          p=pnorm(abs(z_JCI), lower.tail = FALSE)*2)
+    } else {
+        if(is.null(mod_post)) mod_post <- mod_pre
+        nfact <- extract.mirt(mod_pre, 'nfact')
+        if(nfact == 1L){
+            fs_pre <- fscores(mod_pre, response.pattern = predat, ...)
+            fs_post <- fscores(mod_post, response.pattern = postdat, ...)
+            diff <- fs_post[,1] - fs_pre[,1]
+            if(Fisher){
+                fs_pre[,2L] <- 1/sqrt(testinfo(mod_pre, Theta = fs_pre[,1]))
+                fs_post[,2L] <- 1/sqrt(testinfo(mod_post, Theta = fs_post[,1]))
+            }
+            pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
+            z <- diff/pse
+            converge_pre <- converge_post <- rep(TRUE, length(z))
+            converge_pre[attr(fs_pre, 'failed2converge')] <- FALSE
+            converge_post[attr(fs_post, 'failed2converge')] <- FALSE
+            ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1],
+                              converged=converge_pre & converge_post, diff,
+                              SE=pse, z=z,
+                              p=pnorm(abs(z), lower.tail = FALSE)*2)
+            if(expected.scores){
+                ret$pre.score <- expected.test(mod_pre, fs_pre[,1])
+                ret$post.score <- expected.test(mod_post, fs_post[,1])
+                for(i in 1:nrow(ret)){
+                    acov <- diag(c(fs_pre[i,2]^2, fs_post[i,2]^2))
+                    tmp <- DeltaMethod(Escore_diff,
+                                       c(fs_pre[i,1], fs_post[i,1]), acov=acov)
+                    ret$diff[i] <- tmp$fn_par
+                    ret$SE[i] <- tmp$se
+                }
+            }
+        } else {
+            stopifnot("Must have exactly 2 latent traits" =
+                          extract.mirt(mod_pre, 'nfact') == 2)
+            if(!missing(postdat))
+                stop('Only mod_pre and predat are required for multidimensional model')
+            cfs <- coef(mod_pre, simplify=TRUE)
+            sigma <- cfs$cov
+            if(zero_cor)
+                sigma[1,2] <- sigma[2,1] <- 0
+            fs <- fscores(mod_pre, response.pattern=predat, cov=sigma, ...)
+            diff <- fs[,2] - fs[,1]
+            pse <- sqrt(fs[,3]^2 + fs[,4]^2)
+            z <- diff/pse
+            converge <- rep(TRUE, length(z))
+            converge[attr(fs, 'failed2converge')] <- FALSE
+            ret <- data.frame(pre.score=fs[,1], post.score=fs[,2],
+                              converged=converge, diff,
+                              SE=pse, z=z,
+                              p=pnorm(abs(z), lower.tail = FALSE)*2)
+            if(expected.scores){
+                pick <- summary(mod_pre, verbose=FALSE)$rotF != 0
+                ret$pre.score <- expected.test(mod_pre, cbind(fs[,1], 0),
+                                               which.items = which(pick[,1]))
+                ret$post.score <- expected.test(mod_pre, cbind(0, fs[,2]),
+                                                which.items = which(pick[,2]))
+                for(i in 1:nrow(ret)){
+                    acov <- diag(c(fs[i,3]^2, fs[i,4]^2))
+                    tmp <- DeltaMethod(Escore_diff,
+                                       c(fs[i,1], fs[i,2]), acov=acov, multidim=TRUE, pick=pick)
+                    ret$diff[i] <- tmp$fn_par
+                    ret$SE[i] <- tmp$se
+                }
+            }
+        }
+    }
 
-    diff <- fs_pre[,1] - fs_post[,1]
-    pse <- sqrt(fs_pre[,2]^2 + fs_post[,2]^2)
-    ret <- data.frame(pre.score=fs_pre[,1], post.score=fs_post[,1], diff,
-                      pooled_SEM=pse, z=diff/pse)
     rownames(ret) <- NULL
-    if(!is.null(cutoffs)){
+    if(!is.null(cutoffs) && nfact == 1L){
         ret$cut_decision <- 'unchanged'
-        ret$cut_decision[ret$z > max(cutoffs)] <- 'reliably increased'
-        ret$cut_decision[ret$z < min(cutoffs)] <- 'reliably decreased'
+        ret$cut_decision[ret$z > max(cutoffs)] <- 'increased'
+        ret$cut_decision[ret$z < min(cutoffs)] <- 'decreased'
     }
     ret <- as.mirt_df(ret)
     ret
+}
+
+
+RCI_shiny <- function(mod_pre, mod_post = NULL, main = 'Test Scores'){
+
+    fillVector <- function(TS, item.max, adj){
+        vec <- integer(length(item.max))
+        if(is.na(TS)) return(vec)
+        TS <- TS - adj
+        cs <- cumsum(item.max)
+        pick <- TS >= cs
+        vec[pick] <- item.max[pick]
+        remainder <- TS - sum(vec)
+        vec[min(which(!pick))] <- remainder
+        stopifnot(sum(vec) == TS)
+        vec
+    }
+
+    ui <- shiny::fluidPage(
+
+        # Give the page a title
+        shiny::titlePanel(main),
+
+        # Generate a row with a sidebar
+        shiny::sidebarLayout(
+
+            shiny::sidebarPanel(
+
+                shiny::p('For IRT-based Reliable Change Index (RCI) please provide pretest and posttest information.'),
+
+                shiny::selectInput(inputId = "method", 'Estimation criteria',
+                            choices = c('EAP for sum-scores'='EAPsum', 'EAP'='EAP',
+                                        'MAP'='MAP', 'WML'='WLE', 'ML'='ML')),
+
+                shiny::conditionalPanel(condition = "input.method != 'EAPsum'",
+                    shiny::checkboxInput(inputId = "fisher", 'Fisher Information for SE?', value = FALSE)
+                ),
+
+                shiny::conditionalPanel(condition = "input.method == 'EAPsum'",
+                                 shiny::numericInput('pretest', 'Pretest sum-score:', value=NA),
+                                 shiny::hr(),
+                                 shiny::numericInput('posttest', 'Posttest sum-score:', value=NA)
+                ),
+
+                shiny::conditionalPanel(condition = "input.method != 'EAPsum'",
+                                        shiny::textInput('prevec', 'Pretest response vector (e.g., 1011 ...):',
+                                                            value=""),
+                                        shiny::hr(),
+                                        shiny::textInput('postvec', 'Posttest response vector (e.g., 1111 ...):',
+                                                            value="")
+                )
+            ),
+
+            # Create a spot for the barplot
+            shiny::mainPanel(
+                shiny::titlePanel("RCI Output Information"),
+                shiny::tableOutput("rci"),
+                shiny::tableOutput("rci_full"),
+                shiny::hr(),
+                shiny::tableOutput("fstab"),
+                shiny::plotOutput("rci_plot")
+            )
+
+        )
+    )
+
+
+    # Server logic
+    server <- function(input, output) {
+
+        # basic sum-score information from 'mod' object
+        if(is.null(mod_post)) mod_post <- mod_pre
+
+        fs.pre <- fscores(mod_pre, full.scores=FALSE, method='EAPsum', verbose=FALSE)
+        fs.post <- fscores(mod_post, full.scores=FALSE, method='EAPsum', verbose=FALSE)
+        tab <- data.frame(fs.pre[,1:3], fs.post[,2:3])
+        colnames(tab) <- c('Sum Score', 'Theta [pretest]', 'SE(Theta) [pretest]',
+                           'Theta [posttest]', 'SE(Theta) [posttest]')
+        if(identical(mod_pre, mod_post)){
+            tab <- tab[,1:3]
+            colnames(tab) <- c('Sum Score', 'Theta', 'SE(Theta)')
+        }
+
+        scores <- shiny::reactive({
+            list(TS=c(input$pretest, input$posttest),
+                 vecs=c(input$prevec, input$postvec))
+        })
+
+
+
+        output$fstab <- shiny::renderTable({
+            sd <- scores()
+            sd_supplied <- !any(is.na(sd$TS))
+            if(sd_supplied)
+                tab <- tab[tab$`Sum Score` %in% sd$TS, ]
+            if(input$method != 'EAPsum') tab <- data.frame()
+            tab
+        })
+
+        item.max <- extract.mirt(mod_pre, 'K')
+        mins <- extract.mirt(mod_pre, 'mins')
+        nitems <- length(mins)
+        adj <- sum(mins)
+        output$rci <- shiny::renderTable({
+            sd <- scores()
+            sd_supplied <- !any(is.na(sd$TS))
+            rci <- if(sd_supplied && input$method == 'EAPsum'){
+                rV.pre <- fillVector(sd$TS[1], item.max, adj)
+                rV.post <- fillVector(sd$TS[2], item.max, adj)
+                tmp <- RCI(mod_pre=mod_pre, mod_post=mod_post,
+                                 predat=rV.pre + mins, postdat=rV.post + mins,
+                                 method='EAPsum')
+                tmp <- tmp[,!(colnames(tmp) %in% c('pre.score', 'post.score', 'converged'))]
+                colnames(tmp) <- c('Change', 'SE', 'RCI', 'p(>|RCI|)')
+                if(!identical(mod_pre, mod_post)){
+                    tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
+                                      predat=rV.pre + mins, postdat=rV.post + mins,
+                                      method='EAPsum')
+                    tmp2 <- tmp2[,!(colnames(tmp2) %in% c('pre.score', 'post.score', 'converged'))]
+                    colnames(tmp2) <- c('Change', 'SE', 'RCI', 'p(>|RCI|)')
+                    tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
+                                      check.names = FALSE)
+                }
+                tmp
+            } else data.frame()
+            rci
+        })
+
+        output$rci_plot <- shiny::renderPlot({
+            sd <- scores()
+            sd_supplied <- !any(is.na(sd$TS))
+            if(sd_supplied && input$method == 'EAPsum'){
+                rV.pre <- fillVector(sd$TS[1], item.max, adj)
+                rng <- adj:sum(item.max - 1 + mins)
+                if(sd$TS[1] < min(rng) || sd$TS[1] > max(rng))
+                    stop('Pretest score is outside possible test range. Please fix')
+                if(sd$TS[2] < min(rng) || sd$TS[2] > max(rng))
+                    stop('Posttest score is outside possible test range. Please fix')
+                collect <- vector('list', length(rng))
+                for(i in rng){
+                    rV.post <- fillVector(i, item.max, adj)
+                    collect[[i-adj+1]] <- RCI(mod_pre=mod_pre, mod_post=mod_post,
+                                        predat=rV.pre + mins, postdat=rV.post + mins,
+                                        method='EAPsum')
+                }
+                post.scores <- sapply(collect, \(x) as.numeric(x['post.score']))
+                pre.scores <- as.numeric(collect[[1]]['pre.score'])
+                SEs <- sapply(collect, \(x) as.numeric(x['SE']))
+                diff <- post.scores - pre.scores
+                plot(diff ~ rng, pch=16, ylab=expression(theta[post]-theta[pre]),
+                     las=1, ylim=c(diff[1]-SEs[1],
+                                   diff[length(diff)] + SEs[length(diff)]),
+                     main=sprintf("SE estimates using fixed prestest score"),
+                     xlab = 'Sum Score')
+                graphics::polygon(c(rng, rev(rng)), c(diff - SEs, rev(diff+SEs)),
+                        col=grDevices::adjustcolor('grey', alpha.f=.5))
+                graphics::abline(h=0, lty=2)
+                graphics::points(sd$TS[1], diff[sd$TS[1]-adj+1], cex=2, col='blue', pch=16)
+                graphics::points(sd$TS[2], diff[sd$TS[2]-adj+1], cex=2, col='red', pch=16)
+            } #else plot.new()
+        })
+
+        output$rci_full <- shiny::renderTable({
+            sd <- scores()
+            rci <- if(all(!is.na(sd$vecs))){
+                vs <- sd$vecs
+                if(all(nchar(vs) == nitems) && input$method != 'EAPsum'){
+                    rV.pre <- rV.post <- integer(nitems)
+                    for(i in 1:nitems){
+                        rV.pre[i] <- as.integer(substr(vs[1], i, i))
+                        rV.post[i] <- as.integer(substr(vs[2], i, i))
+                    }
+                    tmp <- RCI(mod_pre=mod_pre, mod_post=mod_post,
+                                     predat=rV.pre, postdat=rV.post, method=input$method,
+                                     Fisher = input$fisher)
+                    colnames(tmp) <- c('Theta [pre]', 'Theta [post]', 'Converged',
+                                       'Change', 'SE', 'RCI', 'p(>|RCI|)')
+                    if(!identical(mod_pre, mod_post) && input$method %in% c('EAP', 'MAP')){
+                        tmp2 <- RCI(mod_pre=mod_pre, mod_post=mod_pre,
+                                          predat=rV.pre, postdat=rV.post, method=input$method,
+                                          Fisher = input$fisher)
+                        colnames(tmp2) <- c('Theta [pre]', 'Theta [post]', 'Converged',
+                                            'Change', 'SE', 'RCI', 'p(>|RCI|)')
+                        tmp <- data.frame('Empirical prior' = c('Yes', 'No'), rbind(tmp, tmp2),
+                                          check.names = FALSE)
+                    }
+                    if(input$method == 'EAP')
+                        tmp <- tmp[, colnames(tmp) != 'Converged']
+                    tmp
+                }
+            } else data.frame()
+            rci
+        })
+    }
+
+    # Complete app with UI and server components
+    shiny::shinyApp(ui, server)
 }

@@ -32,15 +32,15 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords wald
 #' @export wald
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' #View parnumber index
+#' # View parnumber index
 #' data(LSAT7)
 #' data <- expand.table(LSAT7)
 #' mod <- mirt(data, 1, SE = TRUE)
@@ -52,7 +52,7 @@
 #' index <- mod2values(mod)
 #' index[index$est, ]
 #'
-#' #second item slope equal to 0?
+#' # second item slope equal to 0?
 #' L <- matrix(0, 1, 10)
 #' L[1,3] <- 1
 #' wald(mod, L)
@@ -61,7 +61,7 @@
 #' infonames
 #' wald(mod, "a1.5 = 0")
 #'
-#' #simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
+#' # simultaneously test equal factor slopes for item 1 and 2, and 4 and 5
 #' L <- matrix(0, 2, 10)
 #' L[1,1] <- L[2, 7] <- 1
 #' L[1,3] <- L[2, 9] <- -1
@@ -72,11 +72,11 @@
 #' infonames
 #' wald(mod, c("a1.1 = a1.5", "a1.13 = a1.17"))
 #'
-#' #log-Liklihood tests (requires estimating a new model)
+#' # log-Liklihood tests (requires estimating a new model)
 #' cmodel <- 'theta = 1-5
 #'            CONSTRAIN = (1,2, a1), (4,5, a1)'
 #' mod2 <- mirt(data, cmodel)
-#' #or, equivalently
+#' # or, equivalently
 #' #mod2 <- mirt(data, 1, constrain = list(c(1,5), c(13,17)))
 #' anova(mod2, mod)
 #'
@@ -123,8 +123,15 @@ wald <- function(object, L, C = NULL){
         names(ret) <- Names
         return(ret)
     }
+    ret <- wald.test(B=B, covB=covB, L=L, C=C)
+    ret
+}
+
+wald.test <- function(B, covB, L, C = NULL){
+    Names <- names(B)
     if(is.character(L)){
-        tmp <- makeHypothesis(names(B), L)
+        stopifnot(length(Names) > 0)
+        tmp <- makeHypothesis(Names, L)
         C <- tmp[, NCOL(tmp)]
         L <- tmp[, -NCOL(tmp), drop = FALSE]
         # rownames(L) <- L
@@ -139,10 +146,10 @@ wald <- function(object, L, C = NULL){
         stop('C must be a vector of constant population parameters', call.=FALSE)
     if(length(C) != nrow(L))
         stop('length(C) must be the same as nrow(L)', call.=FALSE)
-    W <- t(L %*% (B - C)) %*% solve(L %*% covB %*% t(L)) %*% (L %*% (B - C))
+    W <- t((L %*% B) - C) %*% solve(L %*% covB %*% t(L)) %*% ((L %*% B) - C)
     W <- ifelse(W < 0, 0, W)
-    ret <- list(W=W, df = nrow(L))
+    ret <- list(W=W, df = qr(L)$rank)
     p <- 1 - pchisq(ret$W, ret$df)
     ret$p <- p
-    as.data.frame(ret)
+    as.mirt_df(as.data.frame(ret))
 }

@@ -3,21 +3,24 @@
 #' This function defines a object that is placed in a relevant internal environment defined in mirt.
 #' Internal functions such as \code{calcLogLik}, \code{fscores}, etc, will utilize this object
 #' automatically to capitalize on parallel
-#' processing architecture. The object defined is a call from \code{parallel::makeCluster()}.
+#' processing architecture. The object defined is a call from either
+#' \code{mirai::make_cluster()} (the default) or \code{parallel::makeCluster()}.
 #' Note that if you are defining other parallel objects (for simulation designs, for example)
 #' it is not recommended to define a mirtCluster.
 #'
 #' @aliases mirtCluster
 #' @param spec input that is passed to \code{parallel::makeCluster()}. If no input is given the
-#'   maximum number of available local cores will be used
-#' @param omp_threads number of OpenMP threads to use (currently applies to E-step computations only).
+#'   maximum number of available local cores minus 1 will be used.
+#'   Setting this to NULL will skip a new definition (allows \code{omp_threads} to be used independently)
+#' @param omp_threads number of OpenMP threads to use for OpenMP-backed E-step and item trace computations.
 #'   Not used when argument input is missing
+#' @param use_mirai logical; use the \code{mirai} cluster definition instead of \code{parallel}?
 #' @param ... additional arguments to pass to \code{parallel::makeCluster}
 #' @param remove logical; remove previously defined \code{mirtCluster()}?
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords parallel
@@ -25,43 +28,80 @@
 #' @examples
 #'
 #' \dontrun{
+#' if(interactive()){
+#'   # use all available cores
+#'   mirtCluster()
+#'   mirtCluster(remove = TRUE)
 #'
-#' #make 4 cores available for parallel computing
-#' mirtCluster(4)
+#'   # make 4 cores available for parallel computing
+#'   mirtCluster(4)
+#'   mirtCluster(remove = TRUE)
 #'
-#' #stop and remove cores
-#' mirtCluster(remove = TRUE)
+#'   # create 3 core architecture in R, and 4 thread architecture with OpenMP
+#'   mirtCluster(spec = 3, omp_threads = 4)
 #'
-#' # create 3 core architecture in R, and 4 thread architecture with OpenMP
-#' mirtCluster(spec = 3, omp_threads = 4)
+#'   # leave previous multicore objects, but change omp_threads
+#'   mirtCluster(spec = NULL, omp_threads = 2)
+#' }
 #'
 #' }
-mirtCluster <- function(spec, omp_threads, remove = FALSE, ...){
+mirtCluster <- function(spec, omp_threads, remove = FALSE, use_mirai = TRUE, ...){
+    if(!missing(omp_threads)){
+        stopifnot(is.numeric(omp_threads))
+        .mirtClusterEnv$omp_threads <- omp_threads
+    }
+    if(!missing(spec) && is.null(spec))
+        return(invisible(NULL))
     if(requireNamespace("parallel", quietly = TRUE)){
         if(missing(spec))
-            spec <- parallel::detectCores()
-        if(missing(omp_threads))
-            .mirtClusterEnv$omp_threads <- 1L
-        if(remove){
-            if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
-                message('There is no visible mirtCluster() definition')
-                return(invisible(NULL))
-            }
-            parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
-            .mirtClusterEnv$MIRTCLUSTER <- NULL
-            .mirtClusterEnv$ncores <- 1L
-            .mirtClusterEnv$omp_threads <- 1L
-            return(invisible(NULL))
-        }
-        if(!is.null(.mirtClusterEnv$MIRTCLUSTER)){
-            message(
-                sprintf('mirtCluster() previously defined for %i clusters',
-                        .mirtClusterEnv$ncores))
-            return(invisible(NULL))
-        }
-        .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
-        .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
-        mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible(NULL))
+            spec <- parallel::detectCores() - 1L
     }
-    return(invisible())
+    if(remove){
+        if(is.null(.mirtClusterEnv$MIRTCLUSTER)){
+            message('There is no visible mirtCluster() definition')
+            return(invisible(NULL))
+        }
+        if(.mirtClusterEnv$MIRAI){
+            if(requireNamespace("mirai", quietly = TRUE)){
+                mirai::stop_cluster(.mirtClusterEnv$MIRTCLUSTER)
+            }
+        } else {
+            if(requireNamespace("parallel", quietly = TRUE)){
+                parallel::stopCluster(.mirtClusterEnv$MIRTCLUSTER)
+            }
+        }
+        .mirtClusterEnv$MIRTCLUSTER <- NULL
+        .mirtClusterEnv$MIRAI <- NULL
+        .mirtClusterEnv$ncores <- 1L
+        .mirtClusterEnv$omp_threads <- 1L
+        return(invisible(NULL))
+    }
+
+    if(!is.null(.mirtClusterEnv$MIRTCLUSTER)){
+        message(
+            sprintf('mirtCluster() previously defined for %i clusters',
+                    .mirtClusterEnv$ncores))
+        return(invisible(NULL))
+    }
+
+    if(use_mirai){
+        if(requireNamespace("mirai", quietly = TRUE)){
+            if(is.numeric(spec))
+                .mirtClusterEnv$MIRTCLUSTER <- mirai::make_cluster(spec, ...)
+            else .mirtClusterEnv$MIRTCLUSTER <- spec
+            .mirtClusterEnv$MIRAI <- TRUE
+            .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
+            mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible(NULL))
+        }
+    } else {
+        if(requireNamespace("parallel", quietly = TRUE)){
+            if(is.numeric(spec))
+                .mirtClusterEnv$MIRTCLUSTER <- parallel::makeCluster(spec, ...)
+            else .mirtClusterEnv$MIRTCLUSTER <- spec
+            .mirtClusterEnv$MIRAI <- FALSE
+            .mirtClusterEnv$ncores <- length(.mirtClusterEnv$MIRTCLUSTER)
+            mySapply(1L:.mirtClusterEnv$ncores*2L, function(x) invisible(NULL))
+        }
+    }
+    return(invisible(NULL))
 }

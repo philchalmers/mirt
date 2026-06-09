@@ -4,7 +4,14 @@
 \alias{personfit}
 \title{Person fit statistics}
 \usage{
-personfit(x, method = "EAP", Theta = NULL, stats.only = TRUE, ...)
+personfit(
+  x,
+  method = "EAP",
+  Theta = NULL,
+  stats.only = TRUE,
+  return.resids = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a computed model object of class \code{SingleGroupClass} or \code{MultipleGroupClass}}
@@ -18,6 +25,10 @@ be used instead}
 \item{stats.only}{logical; return only the person fit statistics without their associated
 response pattern?}
 
+\item{return.resids}{logical; return the standardized and unstandardized
+N by J matrices of person and item residuals? If \code{TRUE} will return a named
+list of each residual type}
+
 \item{...}{additional arguments to be passed to \code{fscores()}}
 }
 \description{
@@ -29,7 +40,7 @@ rightmost columns.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 #make some data
 set.seed(1)
@@ -38,25 +49,47 @@ d <- matrix(rnorm(20),ncol=1)
 items <- rep('2PL', 20)
 data <- simdata(a,d, 2000, items)
 
+# first observation responds 1 for most difficult, 0 for easiest
+data[1,] <- ifelse(d > 0, 0, 1)
+
+# second observations answers first half as 1 second half as 0
+data[2,] <- rep(1:0, each = 10)
+
 x <- mirt(data, 1)
 fit <- personfit(x)
 head(fit)
+
+# raw/standardized residuals
+resid_list <- personfit(x, return.resids=TRUE)
+head(resid_list$resid) # unstandardized
+head(resid_list$std.resid) # standardized (approximate z-scores)
+
+# with missing data
+data[3, c(1,3,5,7)] <- NA
+x.miss <- mirt(data, 1)
+fit.miss <- personfit(x.miss)
+head(fit.miss)
+head(personfit(x.miss, return.resids=TRUE))
 
 #using precomputed Theta
 Theta <- fscores(x, method = 'MAP', full.scores = TRUE)
 head(personfit(x, Theta=Theta))
 
-#multiple group Rasch model example
+# multiple group Rasch model example
 set.seed(12345)
-a <- matrix(rep(1, 15), ncol=1)
-d <- matrix(rnorm(15,0,.7),ncol=1)
+a <- matrix(rep(1, 16), ncol=1)
+d <- matrix(rnorm(16,0,.7),ncol=1)
 itemtype <- rep('dich', nrow(a))
 N <- 1000
 dataset1 <- simdata(a, d, N, itemtype)
 dataset2 <- simdata(a, d, N, itemtype, sigma = matrix(1.5))
 dat <- rbind(dataset1, dataset2)
+
+# first observation responds 1 for most difficult, 0 for easiest
+dat[1,] <- ifelse(d > 0, 0, 1)
+
 group <- c(rep('D1', N), rep('D2', N))
-models <- 'F1 = 1-15'
+models <- 'F1 = 1-16'
 mod_Rasch <- multipleGroup(dat, models, itemtype = 'Rasch', group = group)
 coef(mod_Rasch, simplify=TRUE)
 pf <- personfit(mod_Rasch, method='MAP')
@@ -66,7 +99,7 @@ head(pf)
 
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

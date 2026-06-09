@@ -12,12 +12,19 @@ multipleGroup(
   invariance = "",
   method = "EM",
   dentype = "Gaussian",
+  itemdesign = NULL,
+  item.formula = NULL,
+  nruns = 1,
+  return_max = TRUE,
+  GenRandomPars = FALSE,
+  verbose = interactive(),
   ...
 )
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
-numerically ordered data, with missing data coded as \code{NA}}
+numerically ordered data, organized in the form of integers,
+ with missing data coded as \code{NA}}
 
 \item{model}{string to be passed to, or a model object returned from, \code{\link{mirt.model}}
 declaring how the global model is to be estimated (useful to apply constraints here)}
@@ -60,9 +67,32 @@ mixtures}
       where the \code{#} placeholder represents the number of potential grouping variables
       (e.g., \code{'mixture-3'} will estimate 3 underlying classes). Each class is
       assigned the group name \code{MIXTURE_#}, where \code{#} is the class number.
+
       Note that internally the mixture coefficients are stored as log values where
-      the first mixture group coefficient is fixed at 0
+      the first mixture group coefficient is fixed at 0. Additionally, it is recommended
+      to use the \code{nruns} argument as mixture IRT models are known to contain
+      local maximums
    }}
+
+\item{itemdesign}{see \code{\link{mirt}} for details}
+
+\item{item.formula}{see \code{\link{mirt}} for details}
+
+\item{nruns}{a numeric value indicating how many times the model should be fit to the data
+when using random starting values, which is particularly useful
+when evaluating mixture IRT Models. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+by default. Using this returns a list of fitted model objects, where the model
+with the highest log-likelihood should generally be selected as the model
+best associated with the MLE (this is done automatically if \code{return_max = TRUE}).
+Note that if a \code{\link{mirtCluster}} was
+defined earlier then the runs will be run in parallel}
+
+\item{return_max}{logical; when \code{nruns > 1}, return the model that has the most optimal
+maximum likelihood criteria? If FALSE, returns a list of all the estimated objects}
+
+\item{GenRandomPars}{see \code{\link{mirt}} for details}
+
+\item{verbose}{see \code{\link{mirt}} for details}
 
 \item{...}{additional arguments to be passed to the estimation engine. See \code{\link{mirt}}
 for details and examples}
@@ -91,9 +121,9 @@ to by \code{constrain} argument, of define equality constraints using the
 \code{\link{mirt.model}} syntax (recommended).
 }
 \examples{
-\dontrun{
+\donttest{
 
-#single factor
+# single factor
 set.seed(12345)
 a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -111,11 +141,12 @@ itemstats(dat)
 itemstats(dat, group=group)
 
 mod_configural <- multipleGroup(dat, 1, group = group) #completely separate analyses
-#limited information fit statistics
+# limited information fit statistics
 M2(mod_configural)
 
-mod_metric <- multipleGroup(dat, 1, group = group, invariance=c('slopes')) #equal slopes
-#equal intercepts, free variance and means
+mod_metric <- multipleGroup(dat, 1, group = group,
+                            invariance=c('slopes', 'free_var')) #equal slopes
+# equal intercepts, free variance and means
 mod_scalar2 <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts', 'free_var','free_means'))
 mod_scalar1 <- multipleGroup(dat, 1, group = group,  #fixed means
@@ -124,7 +155,8 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 
-#optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+# optionally use Newton-Raphson for (generally) faster convergence in the
+#  M-step's, though occasionally less stable
 mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
@@ -139,20 +171,23 @@ plot(mod_configural, type = 'trace', which.items = 1:4)
 itemplot(mod_configural, 2)
 itemplot(mod_configural, 2, type = 'RE')
 
-anova(mod_metric, mod_configural) #equal slopes only
+anova(mod_metric, mod_configural) #equal slopes
 anova(mod_scalar2, mod_metric) #equal intercepts, free variance and mean
 anova(mod_scalar1, mod_scalar2) #fix mean
 anova(mod_fullconstrain, mod_scalar1) #fix variance
 
+# compared all at once (in order of most constrained to least)
+anova(mod_fullconstrain, mod_scalar2, mod_configural)
 
-#test whether first 6 slopes should be equal across groups
+
+# test whether first 6 slopes should be equal across groups
 values <- multipleGroup(dat, 1, group = group, pars = 'values')
 values
 constrain <- list(c(1, 63), c(5,67), c(9,71), c(13,75), c(17,79), c(21,83))
 equalslopes <- multipleGroup(dat, 1, group = group, constrain = constrain)
 anova(equalslopes, mod_configural)
 
-#same as above, but using mirt.model syntax
+# same as above, but using mirt.model syntax
 newmodel <- '
     F = 1-15
     CONSTRAINB = (1-6, a1)'
@@ -187,34 +222,36 @@ coef(mod_anchor, printSE=TRUE)
 
 
 #############
-#DIF test for each item (using all other items as anchors)
+# DIF test for each item (using all other items as anchors)
 itemnames <- colnames(dat)
 refmodel <- multipleGroup(dat, 1, group = group, SE=TRUE,
                           invariance=c('free_means', 'free_var', itemnames))
 
-#loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
+# loop over items (in practice, run in parallel to increase speed). May be better to use ?DIF
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
                              invariance=c('free_means', 'free_var', itemnames[-i]))
+anova(refmodel, estmodels[[1]])
+(anovas <- lapply(estmodels, function(x, refmodel) anova(refmodel, x),
+   refmodel=refmodel))
 
-(anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
-
-#family-wise error control
+# family-wise error control
 p <- do.call(rbind, lapply(anovas, function(x) x[2, 'p']))
 p.adjust(p, method = 'BH')
 
-#same as above, except only test if slopes vary (1 df)
-#constrain all intercepts
+# same as above, except only test if slopes vary (1 df)
+# constrain all intercepts
 estmodels <- vector('list', ncol(dat))
 for(i in 1:ncol(dat))
     estmodels[[i]] <- multipleGroup(dat, 1, group = group, verbose = FALSE,
                              invariance=c('free_means', 'free_var', 'intercepts',
                              itemnames[-i]))
 
-(anovas <- lapply(estmodels, anova, object2=refmodel, verbose=FALSE))
+(anovas <- lapply(estmodels, function(x, refmodel) anova(refmodel, x),
+   refmodel=refmodel))
 
-#quickly test with Wald test using DIF()
+# quickly test with Wald test using DIF()
 mod_configural2 <- multipleGroup(dat, 1, group = group, SE=TRUE)
 DIF(mod_configural2, which.par = c('a1', 'd'), Wald=TRUE, p.adjust = 'fdr')
 
@@ -248,10 +285,59 @@ model <- 'F1 = 1-15
 mod <- multipleGroup(dat, model, group = group, invariance = colnames(dat))
 coef(mod, simplify=TRUE)
 
+#############
+# Testing main effects in multiple independent grouping variables
+set.seed(1234)
+a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+d <- matrix(rnorm(15,0,.7),ncol=1)
+itemtype <- rep('2PL', nrow(a))
+N <- 500
 
+# generated data have interaction effect for latent means, as well as a
+# main effect across D but no main effect across G
+d11 <- simdata(a, d, N, itemtype, mu = 0)
+d12 <- simdata(a, d, N, itemtype, mu = 0)
+d13 <- simdata(a, d, N, itemtype, mu = 0)
+d21 <- simdata(a, d, N, itemtype, mu = 1/2)
+d22 <- simdata(a, d, N, itemtype, mu = 1/2)
+d23 <- simdata(a, d, N, itemtype, mu = -1)
+dat <- do.call(rbind, list(d11, d12, d13, d21, d22, d23))
+group <- rep(c('G1.D1', 'G1.D2', 'G1.D3', 'G2.D1', 'G2.D2', 'G2.D3'), each=N)
+table(group)
+
+\dontrun{
+# in practice, group would be organized in a data.frame as follows
+df <- data.frame(group)
+dfw <- tidyr::separate_wider_delim(df, group, delim='.', names = c('G', 'D'))
+head(dfw)
+
+# for use with multipleGroup() combine into a single long group
+group <- with(dfw, factor(G):factor(D))
+
+# conditional information
+itemstats(dat, group=group)
+
+mod <- multipleGroup(dat, group = group, SE=TRUE,
+                     invariance = c(colnames(dat), 'free_mean', 'free_var'))
+coef(mod, simplify=TRUE)
+sapply(coef(mod, simplify=TRUE), \(x) unname(x$means)) # mean estimates
+wald(mod) # view parameter names for later testing
+
+# test for main effect over G group (manually compute marginal mean)
+wald(mod, "0 + MEAN_1.123 + MEAN_1.185 = MEAN_1.247 + MEAN_1.309 + MEAN_1.371")
+
+# test for main effect over D group  (manually compute marginal means)
+wald(mod, c("0 + MEAN_1.247 = MEAN_1.123 + MEAN_1.309",
+            "0 + MEAN_1.247 = MEAN_1.185 + MEAN_1.371"))
+
+# post-hoc tests (better practice would include p.adjust() )
+wald(mod, "0 + MEAN_1.247 = MEAN_1.123 + MEAN_1.309") # D1 vs D2
+wald(mod, "0 + MEAN_1.247 = MEAN_1.185 + MEAN_1.371") # D1 vs D3
+wald(mod, "MEAN_1.123 + MEAN_1.309 = MEAN_1.185 + MEAN_1.371") # D2 vs D3
+}
 
 #############
-#multiple factors
+# multiple factors
 
 a <- matrix(c(abs(rnorm(5,1,.3)), rep(0,15),abs(rnorm(5,1,.3)),
      rep(0,15),abs(rnorm(5,1,.3))), 15, 3)
@@ -265,27 +351,29 @@ dataset2 <- simdata(a, d, N, itemtype, mu = mu, sigma = sigma)
 dat <- rbind(dataset1, dataset2)
 group <- c(rep('D1', N), rep('D2', N))
 
-#group models
+# group models
 model <- '
    F1 = 1-5
    F2 = 6-10
    F3 = 11-15'
 
-#define mirt cluster to use parallel architecture
-mirtCluster()
+# define mirt cluster to use parallel architecture
+if(interactive()) mirtCluster()
 
-#EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
+# EM approach (not as accurate with 3 factors, but generally good for quick model comparisons)
 mod_configural <- multipleGroup(dat, model, group = group) #completely separate analyses
-mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes')) #equal slopes
+mod_metric <- multipleGroup(dat, model, group = group,
+                            invariance=c('slopes', 'free_var')) #equal slopes
 mod_fullconstrain <- multipleGroup(dat, model, group = group, #equal means, slopes, intercepts
                              invariance=c('slopes', 'intercepts'))
 
 anova(mod_metric, mod_configural)
 anova(mod_fullconstrain, mod_metric)
 
-#same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
+# same as above, but with MHRM (generally  more accurate with 3+ factors, but slower)
 mod_configural <- multipleGroup(dat, model, group = group, method = 'MHRM')
-mod_metric <- multipleGroup(dat, model, group = group, invariance=c('slopes'), method = 'MHRM')
+mod_metric <- multipleGroup(dat, model, group = group,
+                            invariance=c('slopes', 'free_var'), method = 'MHRM')
 mod_fullconstrain <- multipleGroup(dat, model, group = group, method = 'MHRM',
                              invariance=c('slopes', 'intercepts'))
 
@@ -293,7 +381,7 @@ anova(mod_metric, mod_configural)
 anova(mod_fullconstrain, mod_metric)
 
 ############
-#polytomous item example
+# polytomous item example
 set.seed(12345)
 a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -309,6 +397,7 @@ model <- 'F1 = 1-15'
 mod_configural <- multipleGroup(dat, model, group = group)
 plot(mod_configural)
 plot(mod_configural, type = 'SE')
+plot(mod_configural, type = 'gen.difficulty')
 itemplot(mod_configural, 1)
 itemplot(mod_configural, 1, type = 'info')
 plot(mod_configural, type = 'trace') # messy, score function typically better
@@ -341,7 +430,7 @@ EH <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = c
 coef(EH, simplify=TRUE)
 plot(EH, type = 'empiricalhist', npts = 60)
 
-#DIF test for item 1
+# DIF test for item 1
 EH1 <- multipleGroup(dat, 1, group=group, dentype="empiricalhist", invariance = colnames(dat)[-1])
 anova(EH, EH1)
 
@@ -371,33 +460,154 @@ coef(mod_mix, simplify=TRUE)
 summary(mod_mix)
 plot(mod_mix)
 plot(mod_mix, type = 'trace')
+plot(mod_mix, type = 'gen.difficulty')
 itemplot(mod_mix, 1, type = 'info')
 
 head(fscores(mod_mix)) # theta estimates
 head(fscores(mod_mix, method = 'classify')) # classification probability
 itemfit(mod_mix)
 
+# Above works fine, but its generally a good idea to evaluate models
+# with multiple random starting values in case local maximums are an issue.
+# To do this use the argument "nruns", which returns the best model
+if(interactive()) mirtCluster()
+mod_mix <- multipleGroup(dat, models, dentype = 'mixture-2', nruns=5)
+mod_mix
+
+# For obtaining isolated estimates within each mixture, use extract.group()
+#   to construct single-group extractions of the mixtures
+mix1 <- extract.group(mod_mix, group = "MIXTURE_1")
+mix2 <- extract.group(mod_mix, group = "MIXTURE_2")
+
+# EAP estimates per mixture group, ignoring the original mixture structure.
+#   Used to demonstrate the behaviour of how the individuals would have
+#   been scored if they (deterministically) belonged to one class
+data.frame(EAP_mix1=unname(fscores(mix1)),
+           EAP_mix2=unname(fscores(mix2)),
+           EAP=unname(fscores(mod_mix))) |> head()
+
+############
 # Mixture 2PL model
-mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', GenRandomPars = TRUE)
-anova(mod_mix2, mod_mix)
+mod_mix2 <- multipleGroup(dat, 1, dentype = 'mixture-2', nruns=5)
+anova(mod_mix, mod_mix2)
 coef(mod_mix2, simplify=TRUE)
 itemfit(mod_mix2)
 
-# Zero-inflated 2PL IRT model
-model <- "F = 1-20
+# Compare to single group
+mod <- mirt(dat)
+anova(mod, mod_mix2)
+
+########################################
+# Zero-inflated 2PL IRT model (Wall, Park, and Moustaki, 2015)
+
+n <- 1000
+nitems <- 20
+
+a <- rep(2, nitems)
+d <- rep(c(-2,-1,0,1,2), each=nitems/5)
+zi_p <- 0.2 # Proportion of people in zero class
+
+theta <- rnorm(n, 0, 1)
+zeros <- matrix(0, n*zi_p, nitems)
+nonzeros <- simdata(a, d, n*(1-zi_p), itemtype = '2PL',
+                   Theta = as.matrix(theta[1:(n*(1-zi_p))]))
+data <- rbind(nonzeros, zeros)
+
+# define class with extreme theta but fixed item parameters
+zi2PL <- "F = 1-20
           START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
-             (1-20, a1, 1.0), (1-20, d, 0.0)
+                              (1-20, a1, 1.0), (1-20, d, 0)
           FIXED [MIXTURE_1] = (GROUP, MEAN_1), (GROUP, COV_11),
-             (1-20, a1), (1-20, d)"
-zip <- multipleGroup(dat, model, dentype = 'mixture-2')
-coef(zip, simplify=TRUE)
+                              (1-20, a1), (1-20, d)"
+
+# define custom Theta integration grid that contains extreme theta + normal grid
+technical <- list(customTheta = matrix(c(-100, seq(-6,6,length.out=61))))
+
+# fit ZIM-IRT
+zi2PL.fit <- multipleGroup(data, zi2PL, dentype = 'mixture-2', technical=technical)
+coef(zi2PL.fit, simplify=TRUE)
+
+# classification estimates
+pi_hat <- fscores(zi2PL.fit, method = 'classify')
+head(pi_hat)
+tail(pi_hat)
+
+# EAP estimates (not useful for zip class)
+fs <- fscores(zi2PL.fit)
+head(fs)
+tail(fs)
+
+########################################
+# Zero-inflated graded response model (Magnus and Garnier-Villarreal, 2022)
+
+n <- 1000
+nitems <- 20
+
+a <- matrix(rlnorm(20,.2,.3))
+
+# for the graded model, ensure that there is enough space between the intercepts,
+# otherwise closer categories will not be selected often (minimum distance of 0.3 here)
+diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+diffs <- -(diffs - rowMeans(diffs))
+d <- diffs + rnorm(20)
+
+zi_p <- 0.2 # Proportion of people in zero/lowest category class
+
+theta <- rnorm(n, 0, 1)
+zeros <- matrix(0, n*zi_p, nitems)
+nonzeros <- simdata(a, d, n*(1-zi_p), itemtype = 'graded',
+                    Theta = as.matrix(theta[1:(n*(1-zi_p))]))
+data <- rbind(nonzeros, zeros)
+
+# intercepts will be labelled as d1 through d4
+apply(data, 2, table)
+
+# ignoring zero inflation (bad idea)
+modGRM <- mirt(data)
+coef(modGRM, simplify=TRUE)
+
+# Define class with extreme theta but fixed item parameters
+#   For GRM in zero-inflated class the intercept values are arbitrary
+#   as the model forces the responses all into the first category (hence,
+#   spacing arbitrarily set to 1)
+ziGRM <- "F = 1-20
+          START [MIXTURE_1] = (GROUP, MEAN_1, -100), (GROUP, COV_11, .00001),
+                              (1-20, a1, 1.0),
+                              (1-20, d1, 2), (1-20, d2, 1), (1-20, d3, 0), (1-20, d4, -1)
+          FIXED [MIXTURE_1] = (GROUP, MEAN_1), (GROUP, COV_11),
+                              (1-20, a1),
+                              (1-20, d1), (1-20, d2), (1-20, d3), (1-20, d4)"
+
+# define custom Theta integration grid that contains extreme theta + normal grid
+technical <- list(customTheta = matrix(c(-100, seq(-6,6,length.out=61))))
+
+# fit zero-inflated GRM
+ziGRM.fit <- multipleGroup(data, ziGRM, dentype = 'mixture-2', technical=technical)
+coef(ziGRM.fit, simplify=TRUE)
+
+# classification estimates
+pi_hat <- fscores(ziGRM.fit, method = 'classify')
+head(pi_hat)
+tail(pi_hat)
+
+# EAP estimates (not useful for zip class)
+fs <- fscores(ziGRM.fit)
+head(fs)
+tail(fs)
 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
+
+Magnus, B. E. and  Garnier-Villarreal (2022). A multidimensional zero-inflated
+graded response model for ordinal symptom data. \emph{Psychological Methods}, 27, 261-279.
+
+Wall, M., M., Park, J., Y., and Moustaki I. (2015). IRT modeling in the presence of
+zero-inflation with application to psychiatric disorder severity.
+\emph{Applied Psychological Measurement} 39: 583-597.
 }
 \seealso{
 \code{\link{mirt}}, \code{\link{DIF}}, \code{\link{extract.group}}, \code{\link{DRF}}

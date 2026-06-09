@@ -4,7 +4,7 @@
 \alias{expected.item}
 \title{Function to calculate expected value of item}
 \usage{
-expected.item(x, Theta, min = 0)
+expected.item(x, Theta, min = 0, include.var = FALSE)
 }
 \arguments{
 \item{x}{an extracted internal mirt object containing item information (see \code{\link{extract.item}})}
@@ -13,6 +13,10 @@ expected.item(x, Theta, min = 0)
 
 \item{min}{a constant value added to the expected values indicating the lowest theoretical
 category. Default is 0}
+
+\item{include.var}{logical; include the model-implied variance of the expected scores as well?
+When \code{TRUE} will return a list containing the expected values (\code{E}) and variances
+(\code{VAR})}
 }
 \description{
 Given an internal mirt object extracted from an estimated model
@@ -26,9 +30,11 @@ Theta <- matrix(seq(-6,6, length.out=200))
 expected <- expected.item(extr.2, Theta, min(Science[,1])) #min() of first item
 head(data.frame(expected, Theta=Theta))
 
+expected.item(extr.2, Theta, min(Science[,1]), include.var=TRUE)
+
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

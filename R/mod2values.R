@@ -10,21 +10,35 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords convert model
 #' @export mod2values
 #' @seealso \code{\link{extract.mirt}}
 #' @examples
-#' \dontrun{
+#'
+#' \donttest{
 #' dat <- expand.table(LSAT7)
-#' mod <- mirt(dat, 1)
+#' mod <- mirt(dat, "F=1-5
+#'                   CONSTRAIN=(1-5, a1)")
 #' values <- mod2values(mod)
 #' values
 #'
-#' #use the converted values as starting values in a new model, and reduce TOL
+#' # use the converted values as starting values in a new model, and reduce TOL
 #' mod2 <- mirt(dat, 1, pars = values, TOL=1e-5)
+#' coef(mod2, simplify=TRUE)
+#'
+#' # use parameters on different dataset
+#' mod3 <- mirt(expand.table(LSAT6), pars=values)
+#' coef(mod3, simplify=TRUE)
+#'
+#' # supports differing itemtypes on second model
+#' sv <- mirt(Science, itemtype=c('graded', rep('gpcm', 3)), pars='values')
+#' mod3 <- mirt(Science, pars = sv)  # itemtype omitted
+#' coef(mod3, simplify=TRUE)$items
+#' extract.mirt(mod3, 'itemtype')
+#'
 #'
 #' }
 mod2values <- function(x){
@@ -117,8 +131,21 @@ mod2values <- function(x){
     ubound[parname %in% c('g', 'u')] <- antilogit(ubound[parname %in% c('g', 'u')])
     prior.type <- sapply(as.character(prior.type),
                          function(x) switch(x, '1'='norm', '2'='lnorm', '3'='beta', '4'='expbeta', 'none'))
-    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum, value=par,
-                      lbound=lbound, ubound=ubound, est=est, prior.type=prior.type,
-                      prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
+    clist <- extract.mirt(x, 'constrain')
+    constrain <- nconstrain <- rep("none", length(gnames))
+    if(!is.null(clist)){
+        for(i in seq_len(length(clist)))
+            constrain[clist[[i]]] <- i
+    }
+    nclist <- extract.mirt(x, 'nconstrain')
+    if(!is.null(nclist)){
+        for(i in seq_len(length(nclist)))
+            nconstrain[nclist[[i]]] <- i
+    }
+    ret <- data.frame(group=gnames, item=item, class=class, name=parname, parnum=parnum,
+                      value=par, lbound=lbound, ubound=ubound, est=est, const=constrain, nconst=nconstrain,
+                      prior.type=prior.type, prior_1=prior_1, prior_2=prior_2, stringsAsFactors = FALSE)
+    ret <- as.mirt_df(ret)
+    attr(ret, 'itemtype') <- extract.mirt(x, 'itemtype')
     ret
 }

@@ -28,7 +28,8 @@ void P_nested(vector<double> &, const vector<double> &,
     const int &);
 
 void P_comp(vector<double> &, const vector<double> &,
-    const NumericMatrix &, const int &, const int &);
+    const NumericMatrix &, const int &, const int &,
+    const IntegerVector &, const IntegerVector &,const IntegerVector &);
 
 void P_lca(vector<double> &, const vector<double> &, const NumericMatrix &,
 	const NumericMatrix &, const int &, const int &, const int &, const int &);
@@ -41,8 +42,27 @@ void P_monopoly(vector<double> &, const vector<double> &,
     const NumericMatrix &, const int &,
     const int &, const int &, const int &);
 
-void _computeItemTrace(vector<double> &, const NumericMatrix &,
+struct ItemTraceData {
+    vector<double> par;
+    NumericVector ot;
+    IntegerVector cpow;
+    IntegerVector factor_ind;
+    IntegerVector fixed_ind;
+    NumericMatrix item_Q;
+    NumericMatrix theta_fixed;
+    int ncat;
+    int itemclass;
+    int correct;
+    int has_mat;
+    int k;
+    int usefixed;
+};
+
+void _computeItemTrace_serial(vector<double> &, const NumericMatrix &,
     const List &, const NumericVector &, const vector<int> &, const int &,
     const int &, const int &, const int &);
+
+void _computeItemTrace(vector<double> &, const NumericMatrix &,
+    const ItemTraceData &, const vector<int> &, const int &, const int &, const int &);
 
 #endif

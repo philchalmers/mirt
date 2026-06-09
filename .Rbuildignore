@@ -5,6 +5,7 @@ COPYING
 mirt.Rproj
 ^.*\.Rproj$
 ^Makefile$
+^mirt-logo\.png$
 .travis.yml
 _pkgdown.yml
 docs/
@@ -13,3 +14,8 @@ data/dataComplete.RData
 data/dataSparse.RData
 data/data2Dim.RData
 tests/tests/testdata/
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+dev/

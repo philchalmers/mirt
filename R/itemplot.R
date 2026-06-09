@@ -24,52 +24,58 @@
 #' @param CEalpha area remaining in the tail for confidence envelope. Default gives 95\% confidence
 #'   region
 #' @param CEdraws draws number of draws to use for confidence envelope
+#' @param empirical_proportions logical; for unidimensional models, include the empirical proportion
+#'   estimates from the E-table when \code{type = 'trace'}?
 #' @param rot a list of rotation coordinates to be used for 3 dimensional plots
 #' @param drop.zeros logical; drop slope values that are numerically close to zero to reduce
 #'   dimensionality? Useful in objects returned from \code{\link{bfactor}} or other confirmatory
 #'   models that contain several zero slopes
 #' @param theta_lim lower and upper limits of the latent trait (theta) to be evaluated, and is
-#'   used in conjunction with \code{npts}
+#'   used in conjunction with \code{npts}. Default uses \code{c(-6,6)}
 #' @param npts number of quadrature points to be used for plotting features.
 #'   Larger values make plots look smoother
 #' @param shiny logical; run interactive display for item plots using the \code{shiny} interface.
 #'   This primarily is an instructive tool for demonstrating how item response curves
 #'   behave when adjusting their parameters
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{\link{lattice}} and \code{coef()}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords plot
 #' @export itemplot
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' data(LSAT7)
 #' fulldata <- expand.table(LSAT7)
-#' mod1 <- mirt(fulldata,1,SE=TRUE)
-#' mod2 <- mirt(fulldata,1, itemtype = 'Rasch')
-#' mod3 <- mirt(fulldata,2)
+#' mod1 <- mirt(fulldata,SE=TRUE)
+#' mod2 <- mirt(fulldata, itemtype = 'Rasch')
+#' mod3 <- mirt(fulldata, 2)
 #'
 #' itemplot(mod1, 2)
 #' itemplot(mod1, 2, CE = TRUE)
 #' itemplot(mod1, 2, type = 'info')
 #' itemplot(mod1, 2, type = 'info', CE = TRUE)
+#' itemplot(mod1, 2, empirical_proportions=TRUE)
+#' itemplot(mod2, 2, empirical_proportions=TRUE)
 #'
 #' mods <- list(twoPL = mod1, onePL = mod2)
 #' itemplot(mods, 1, type = 'RE')
 #'
-#' #multidimensional
+#' # multidimensional
 #' itemplot(mod3, 4, type = 'info')
+#' itemplot(mod3, 4, type = 'info',
+#'   col.regions = colorRampPalette(c("white", "red"))(100))
 #' itemplot(mod3, 4, type = 'infocontour')
 #' itemplot(mod3, 4, type = 'tracecontour')
 #'
-#' #polytomous items
+#' # polytomous items
 #' pmod <- mirt(Science, 1, SE=TRUE)
 #' itemplot(pmod, 3)
 #' itemplot(pmod, 3, type = 'threshold')
@@ -90,6 +96,11 @@
 #' plot(pmod, type='trace', par.settings=bwtheme)
 #' itemplot(pmod, 1, type = 'trace', par.settings=bwtheme)
 #'
+#' # additional modifications can be made via update().
+#' # See ?update.trellis for further documentation
+#' (plt <- itemplot(pmod, 1))
+#' update(plt, ylab = expression(Prob(theta))) # ylab changed
+#'
 #' # infoSE plot
 #' itemplot(pmod, 1, type = 'infoSE')
 #'
@@ -98,12 +109,18 @@
 #'     }
 #'
 itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEalpha = .05,
-                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), shiny = FALSE,
-                     rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
+                     CEdraws = 1000, drop.zeros = FALSE, theta_lim = c(-6,6), empirical_proportions=FALSE,
+                     shiny = FALSE, rot = list(xaxis = -70, yaxis = 30, zaxis = 10),
                      par.strip.text = list(cex = 0.7), npts = 200,
                      par.settings = list(strip.background = list(col = '#9ECAE1'),
                                          strip.border = list(col = "black")),
                      auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
+    if(!missing(object) && !is.list(object)){
+        tmp <- if(is(object, 'MultipleGroupClass') || is(object, 'MixtureClass'))
+            object@ParObjects$pars[[1L]]@ParObjects$pars else object@ParObjects$pars
+        if(tmp[[extract.mirt(object, 'nitems')+1L]]@dentype == 'custom')
+            theta_lim <- object@Internals$theta_lim
+    }
     if(shiny){
         if(requireNamespace("shiny", quietly = TRUE)){
             shiny::runApp(shinyItemplot(), ...)
@@ -131,7 +148,8 @@ itemplot <- function(object, item, type = 'trace', degrees = 45, CE = FALSE, CEa
     ret <- itemplot.internal(object=object, item=item, type=type, degrees=degrees, CE=CE,
                              CEalpha=CEalpha, CEdraws=CEdraws, drop.zeros=drop.zeros, rot=rot,
                              theta_lim=theta_lim, par.strip.text=par.strip.text,
-                             par.settings=par.settings, auto.key=auto.key, npts=npts, ...)
+                             par.settings=par.settings, auto.key=auto.key, npts=npts,
+                             empirical_proportions=empirical_proportions, ...)
     if(!is.list(object) && object@Options$exploratory)
         ret$main <- paste0(ret$main, ' (rotate = \'', rotate, '\')')
     return(ret)

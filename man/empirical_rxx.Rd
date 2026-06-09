@@ -4,11 +4,15 @@
 \alias{empirical_rxx}
 \title{Function to calculate the empirical (marginal) reliability}
 \usage{
-empirical_rxx(Theta_SE)
+empirical_rxx(Theta_SE, T_as_X = FALSE)
 }
 \arguments{
 \item{Theta_SE}{a matrix of latent trait estimates returned from \code{\link{fscores}} with the options
 \code{full.scores = TRUE} and \code{full.scores.SE = TRUE}}
+
+\item{T_as_X}{logical; should the observed variance be equal to
+\code{var(X) = var(T) + E(E^2)} or \code{var(X) = var(T)} when computing
+empirical reliability estimates? Default (\code{FALSE}) uses the former}
 }
 \description{
 Given secondary latent trait estimates and their associated standard errors
@@ -16,21 +20,23 @@ returned from \code{\link{fscores}}, compute the empirical reliability.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
 dat <- expand.table(deAyala)
-mod <- mirt(dat, 1)
+itemstats(dat)
+mod <- mirt(dat)
 
 theta_se <- fscores(mod, full.scores.SE = TRUE)
 empirical_rxx(theta_se)
 
 theta_se <- fscores(mod, full.scores.SE = TRUE, method = 'ML')
 empirical_rxx(theta_se)
+empirical_rxx(theta_se, T_as_X = TRUE)
 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

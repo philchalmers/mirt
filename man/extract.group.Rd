@@ -7,16 +7,17 @@
 extract.group(x, group)
 }
 \arguments{
-\item{x}{mirt model of class 'MultipleGroupClass'}
+\item{x}{model object of class \code{'MultipleGroupClass'} or \code{'MixtureClass'}}
 
 \item{group}{the name of the group to extract}
 }
 \description{
-Extract a single group from an object defined by \code{\link{multipleGroup}}.
+Extract a single group from an object defined by \code{\link{multipleGroup}},
+or as a mixture model from \code{\link{mirt}}.
 }
 \examples{
 
-\dontrun{
+\donttest{
 set.seed(12345)
 a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -35,7 +36,7 @@ plot(group.1)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

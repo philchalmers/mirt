@@ -16,7 +16,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords information
@@ -33,7 +33,7 @@
 #' #do something with the info?
 #' plot(Theta, info.2, type = 'l', main = 'Item information')
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' #category information curves
 #' cat.info <- iteminfo(extr.2, Theta, total.info = FALSE)

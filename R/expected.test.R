@@ -5,16 +5,18 @@
 #'
 #' @aliases expected.test
 #' @param x an estimated mirt object
-#' @param Theta a matrix of latent trait values
-#' @param group a number signifying which group the item should be extracted from (applies to
-#'   'MultipleGroupClass' objects only)
+#' @param Theta a matrix of latent trait values (if a vector is supplied, will be coerced to a matrix with one column)
+#' @param group a number or character signifying which group the item should be extracted from
+#'   (applies to 'MultipleGroupClass' objects only)
 #' @param mins logical; include the minimum value constants in the dataset. If FALSE, the
 #'   expected values for each item are determined from the scoring 0:(ncat-1)
 #' @param individual logical; return tracelines for individual items?
+#' @param probs.only logical; return the probability for each category instead of
+#'    traceline score functions? Only useful when \code{individual=TRUE}
 #' @param which.items an integer vector indicating which items to include in the expected test score. Default
 #'   uses all possible items
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords expected score
@@ -22,7 +24,7 @@
 #' @export expected.test
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(deAyala)
 #' model <- 'F = 1-5
 #'           CONSTRAIN = (1-5, a1)'
@@ -36,10 +38,19 @@
 #' bscore <- expected.test(mod, Theta, which.items = 1:2)
 #' tail(cbind(Theta, bscore))
 #'
+#' # more low-level output (score and probabilty elements)
+#' expected.test(mod, Theta, individual=TRUE)
+#' expected.test(mod, Theta, individual=TRUE, probs.only=TRUE)
+#'
 #' }
-expected.test <- function(x, Theta, group = NULL, mins = TRUE, individual = FALSE, which.items = NULL){
+expected.test <- function(x, Theta, group = NULL, mins = TRUE,
+                          individual = FALSE, which.items = NULL,
+                          probs.only = FALSE){
     if(missing(x)) missingMsg('x')
     if(missing(Theta)) missingMsg('Theta')
+    if(is.character(group))
+        group <- which(group %in% extract.mirt(x, 'groupNames'))
+    if(!is.matrix(Theta)) Theta <- as.matrix(Theta)
     pars <- if(is(x, 'MultipleGroupClass')) x@ParObjects$pars[[group]]@ParObjects$pars else x@ParObjects$pars
     K <- extract.mirt(x, 'K')
     if(is.null(which.items) || length(x@Internals$CUSTOM.IND)){
@@ -52,6 +63,7 @@ expected.test <- function(x, Theta, group = NULL, mins = TRUE, individual = FALS
     MINS <- x@Data$mins[which.items]
     trace <- computeItemtrace(pars, Theta, itemloc=itemloc, CUSTOM.IND=x@Internals$CUSTOM.IND)
     if(individual){
+        if(probs.only) return(trace)
         ret <- sapply(1L:length(MINS), function(item, trace, itemloc){
             index <- score <- itemloc[item]:(itemloc[item+1L]-1L)
             score <- score - min(score)

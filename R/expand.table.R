@@ -20,7 +20,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords data
@@ -41,7 +41,7 @@
 #'
 #' #--------
 #'
-#' \dontrun{
+#' \donttest{
 #' # Generate data from separate response pattern matrix and freq vector
 #' # The following uses Table 2.1 from de Ayala (2009)
 #' f <- c(691,2280,242,235,158,184,1685,1053,134,462,92,65,571,79,87,41,1682,702,

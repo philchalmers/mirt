@@ -4,16 +4,19 @@
 \alias{mirtCluster}
 \title{Define a parallel cluster object to be used in internal functions}
 \usage{
-mirtCluster(spec, omp_threads, remove = FALSE, ...)
+mirtCluster(spec, omp_threads, remove = FALSE, use_mirai = TRUE, ...)
 }
 \arguments{
 \item{spec}{input that is passed to \code{parallel::makeCluster()}. If no input is given the
-maximum number of available local cores will be used}
+maximum number of available local cores minus 1 will be used.
+Setting this to NULL will skip a new definition (allows \code{omp_threads} to be used independently)}
 
-\item{omp_threads}{number of OpenMP threads to use (currently applies to E-step computations only).
+\item{omp_threads}{number of OpenMP threads to use for OpenMP-backed E-step and item trace computations.
 Not used when argument input is missing}
 
 \item{remove}{logical; remove previously defined \code{mirtCluster()}?}
+
+\item{use_mirai}{logical; use the \code{mirai} cluster definition instead of \code{parallel}?}
 
 \item{...}{additional arguments to pass to \code{parallel::makeCluster}}
 }
@@ -21,27 +24,34 @@ Not used when argument input is missing}
 This function defines a object that is placed in a relevant internal environment defined in mirt.
 Internal functions such as \code{calcLogLik}, \code{fscores}, etc, will utilize this object
 automatically to capitalize on parallel
-processing architecture. The object defined is a call from \code{parallel::makeCluster()}.
+processing architecture. The object defined is a call from either
+\code{mirai::make_cluster()} (the default) or \code{parallel::makeCluster()}.
 Note that if you are defining other parallel objects (for simulation designs, for example)
 it is not recommended to define a mirtCluster.
 }
 \examples{
 
 \dontrun{
+if(interactive()){
+  # use all available cores
+  mirtCluster()
+  mirtCluster(remove = TRUE)
 
-#make 4 cores available for parallel computing
-mirtCluster(4)
+  # make 4 cores available for parallel computing
+  mirtCluster(4)
+  mirtCluster(remove = TRUE)
 
-#stop and remove cores
-mirtCluster(remove = TRUE)
+  # create 3 core architecture in R, and 4 thread architecture with OpenMP
+  mirtCluster(spec = 3, omp_threads = 4)
 
-# create 3 core architecture in R, and 4 thread architecture with OpenMP
-mirtCluster(spec = 3, omp_threads = 4)
+  # leave previous multicore objects, but change omp_threads
+  mirtCluster(spec = NULL, omp_threads = 2)
+}
 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

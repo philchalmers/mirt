@@ -1,3 +1,280 @@
+# Changes in mirt 1.47
+
+- `itemplot()` gains `empirical_proportions` argument to plot the model-implied proportion
+  estimates from the E-table in the EM algorithm. Currently limited to 
+  unidimenisonal models only
+
+- `fscores()` also gains `method = 'EAP_general'` to perform the dimension reduction
+  EAP estimates for bifactor/two-tier general factor predictions as 
+  described in Gibbons et al. (2007)
+
+- `fscores()` gains `method = 'EAPsum_2.0'` to obtain the 2.0 version of the 
+  Lord-Wingersky Algorithm described in Cai (2015)
+
+# Changes in mirt 1.46.1
+
+- `mirtCluster()` definition switched from `parallel` to `mirai` package by 
+  default. Should help with performance issues when definition more aggressive 
+  cluster sizes
+
+- `technical = list(fixedTheta)` matrix input added to estimate item parameters 
+  assuming that the true latent trait terms are fixed and known (requested by Richard Luecht)
+
+- Exposed `marginal_moments()` function to compute marginal item/bundle moment 
+  information for the scoring functions
+  
+- Added `itemtype = 'monospline'` for the monotonic spline model 
+
+- `RCI()` gains logical argument `expected.scores` to convert factor scores into metric 
+  of observed scores with their associated delta-method SEs
+
+- Added `plot(.., type = 'gen.difficulty')` to plot item by generalized difficulty.
+  Mainly useful in multi-group/mixture modeling contexts
+
+- `multipleGroup()` gains `nruns` and friends with the same specification
+  as in `mdirt()`. Allows for multiple models to be compared (potentially in 
+  parallel with `mirtCluster()`) where local maximum may be an issue (e.g., 
+  in mixture IRT models)
+
+# Changes in mirt 1.45.1
+
+- Added argument `fscores(..., expected.info = FALSE)` to allow computation of the 
+  expected vs observed information
+
+- Fixed extraction bug in `randef()` when `lr.random` structures were used
+
+- `extract.item()` and `extract.group()` now support objects 
+  of class `MixtureClass`
+  
+- `RMSD_DIF()` now works for single group models to investigate goodness of fit
+
+- Number of response options (`K`) per item added to `itemstats()` output, as well as 
+  option to report raw counts instead of proportions
+
+# Changes in mirt 1.44
+
+- Added `Attitude` dataset from Andrich (1988) publication to demonstrate
+  constrained hyperbolic cosine model (HCM) and the same model with the 
+  estimated latitude of acceptance parameters
+
+- Added several `itemtype` inputs to specify a family of unfolding models 
+  for dichotomous and polytomous data. These currently include unidimensional 
+  and multidimensional versions of the 
+  (generalized) hyperbolic cosine model, (generalized) absolute logistic model,
+  (generalized) simple squared logistic model, and the 
+  (generalized) parallellogram analysis model. `simdata()` also gained 
+  support for the Luo (2001) family of generating models, among most other 
+  secondary functions
+
+- `summary()` now automatically outputs delta-method SEs for 
+  standardized factor loadings.
+  Only applied for non-EFA models that include an estimate of the ACOV 
+  (e.g., via `mirt(..., SE=TRUE)`)
+
+- Standardized factor loadings for the multidimensional nominal response model
+  now report consistent values regardless of the category ordering
+
+- Exported general-purpose `DeltaMethod()` function for numerical 
+  version of the delta method
+  
+- Fixed `M2()` computations with large amounts of missing data, particularly
+  prevalent with the C2 statistic (reported by Hynek Cigler)
+  
+- Fixed minor `coef(..., IRTpars=TRUE)` issue where output reported a 
+  constant SE term of 0.0 when converting Rasch 
+  models (bk = -dk were not correctly tracked)
+
+# Changes in mirt 1.43
+
+- `M2()` family no longer requires row-wise removal of missing data to behave
+  correctly. As such, the `na.rm` argument has been removed as it is no longer
+  required (requested by Ulrich Schroeders)
+
+- Added support for latent regression ACOV/SE estimation with Oakes method
+  in `mirt()`
+
+- Related to both points below, general MLTM (Embretson, 1984) added when 
+  itemtype is specified as `PC1PL` and an `itemdesign` set is used, where 
+  formula must include the name of the factor in the formula expressions. See
+  examples in the `mirt` documentation (requested by Susan Embretson)
+
+- Added `PC1PL` itemtype to more easily specify conjunctive models with
+  slopes fixed to 1 and estimation of the latent variance term, mimicking the 
+  `Rasch` itemtype family
+
+- `mirt()` and `multipleGroup()` gain `itemdesign` and `item.formula` arguments 
+  to fit fixed item design characteristics (e.g. LLTMs; Fischer, 1983) 
+  to all or a subset of items. Arguments are similar to those in `mixedmirt()`, 
+  though currently not as flexible
+
+- Partially-compensatory family of `itemtypes` now behave more consistently
+  when loading structures specified where trace lines products are only 
+  computed for dimensions with non-zero slopes
+
+- `RCI()` gains a `shiny` logical to create an interactive scoring interface
+
+# Changes in mirt 1.42
+
+- The `model` argument in `bfactor()` can now be specified using the `mirt.model()`
+  syntax to include more cognitively friendly tracking of item names and
+  respective locations (requested by Afshin Khosravi)
+
+- Add `reverse.score()` function for reverse scoring specific items within
+  a `matrix` or `data.frame` 
+
+- Fixed issue related to missing data patterns that resulted in bias 
+  when estimating the hyper-parameters in single and multi-group models 
+  (reported by Paul Jewsbury)
+
+- `mirt.model()` syntax gains a negation operator for omitting specific 
+  observed/latent groups from specifications. For example, the following will
+  omit "Group3" identifies from between groups equality constraint definitions
+  `CONSTRAINB[-Group3] = ...`
+
+- `RMSD_DIF()` now supports datasets that follow vertical scaling structures
+  (i.e., when groups answer some items but not others). 
+  Requested by Alexandre Jaloto
+
+- `M2()` functions now compute null model and SRMR fall all models whenever
+  possible, including the latent class variance (reported by Hynek Cigler)
+  
+- VCOV memory leak bugfix for mixture models (see Github issue #247)
+
+- Standardized residuals for point estimates now returned in `personfit()` 
+  when passing `return.resids=TRUE` (requested by Raymond Hernandez)
+
+# Changes in mirt 1.41
+
+- Fix for `DIF()` when sparse data included with mixed item formats (reported by
+  Heather Leigh Kayton)
+
+- When computing category-level information curves include the negative Hessian
+  in computations (reported by Milica Kabic)
+
+- Allow missing data patterns in `personfit()`, as well as a new option 
+  to return all raw item by person residuals (requested by George Karabatsos)
+
+- Fix Zero-inflated model example in `multipleGroup()`, which required the 
+  discontinuous trait location to be populated explicitly with a
+  `customTheta` syntax (reported by Brooke Magnus)
+
+- Empirical reliability estimates in `fscores()` and `empirical_rxx()` 
+  include option to use the true score variance as an estimate of 
+  the observed score variance (suggested by Hynek Cigler)
+
+# Changes in mirt 1.40
+
+- `technical` list gains a `nconstrain` argument for specifying equality 
+  constraints with negative relationships (e.g., `a12 = -a21`). Requested by 
+  Berend Terluin
+
+- Added unipolar log‑logistic model (Lucke, 2015)  itemtype, specified 
+  as `itemtype = 'ULL'`. Note that this automatically changes a number of 
+  internal defaults, such as using a log-normal(0,1) density for the latent
+  traits, and where the `theta_lim` is specified to be positive
+
+- Added complementary log‑log model (Shim, Bonifay, and Wiedermann, 2022) 
+  itemtype, specified as `itemtype = 'CLL'`
+
+- Added `itemtype = '5PL'` model for unidimensional dichotomous data to included 
+  asymmetric response functions. Example in `help(mirt)` also demonstrates 
+  asymmetric 2PL model as the 5PL itself is very unstable and requires 
+  strong priors
+
+- Methods using Quasi-Monte Carlo integration post-convergence were 
+  not respecting correlated latent variable structures 
+  (reported by George Kephart when using `M2()`)
+
+- Bugfix for `fscores()` when supplying mixture models 
+  that was introduced by changing previous classification default for 
+  latent class models (reported by Karel Veldkamp)
+  
+- `residuals()` gains a `p.adjust` argument for FWE control
+
+- `DRF()` gains a `DIF.cat` argument to compute statistics on a per-category
+  basis when studying polytomous items
+  
+- `expected.test()` gains a `probs.only` logical to return probability 
+  functions for each category (only used when `individual = TRUE`)
+  
+- Small bug fixes in C++ code that resulted in memory leaks
+
+# Changes in mirt 1.39
+
+- For models fit using `mdirt()` the `fscores()` EAP and EAPsum methods now 
+  always returns classification probabilities as the default (reported 
+  by Matthew Madison)
+
+- `SIBTEST()` gains a `DIF` logical to perform DIF tests across `suspect_set`
+  
+- `DIF()` and `SIBTEST()` gain a `pairwise` logical input to perform pairwise 
+  post-hoc comparisons for multi-group applications
+  
+- `DRF()` gains `groups2test` argument and friends for multi-group models
+
+# Changes in mirt 1.38.1
+
+- infit and outfit statistics can now be computed in `itemfit()` when missing 
+  data are present (requested by Hanif on the mirt-package forum: 
+  https://groups.google.com/g/mirt-package/c/_mA3YbMmbzM/m/CydOl-F4BQAJ?utm_medium=email&utm_source=footer)
+
+- `coef(..., IRTpars=TRUE)` is now applied to multidimensional IRT models, 
+  provided that the item contains simple structure (suggested by Sverre Ofstad)
+
+- Fixed `match()` bug in `SIBTEST()` when total score is missing
+  (reported by Ziying Li)
+
+- `fscores(..., method ='EAPsum')` now supports returning the ACOV matrices, 
+  matching the behaviour of the other estimators
+
+- Store previously defined `customItems` and `customGroup` lists for use in
+  secondary functions (e.g., `DIF()`, `boot.mirt()`, etc). 
+  Reported by Nataly Beribisky
+
+- Combining priors with equality constraints no longer uses multiple prior 
+  definitions in the likelihood computations. Hence, constrained parameters
+  are now treated as though they are a single parameter with only one prior 
+  distribution (reported by Matthias von Davier in the context of 
+  multiple-group models with between group item priors)
+
+- Added a `groups2test` argument to `DIF()` to isolate individual grouping
+  variable specification when using more than 2 groups
+
+- Implicit argument 'invariance' stored in multiple-group objects
+  now automatically used in `boot.mirt()` (previously had to be 
+  manually passed)
+  
+- Bugfix when using `items2test` in DIF when input is a character vector
+  (reported by @jbuncher)
+  
+- Bug fixes for multiple-group DIF testing with `DIF()` when using more 
+  than two groups (reported by Ruben Neda and Davin Díaz García)
+
+# Changes in mirt 1.37.1
+
+- `boot.mirt()` gains a `boot.fun` argument to accept user-defined functions for 
+  extracting the associated statistics to bootstrap 
+
+- When `verbose = TRUE` in `residuals()` a set of summary statistics is reported
+  for easier flagging 
+
+- `itemfit()` arguments changed to accommodate outputting tables more
+  consistently. Now a single `return.tables` argument is used to specify
+  which tables to return
+
+- `anova()` removes support for the `verbose` flag, and instead labels 
+  the rows of the resulting output to identify the models
+
+- `X2` and `G2` classes of item-fit statistics now better deal with large 
+  missing value vectors on a per-item basis for better consistency
+
+- `technical` list gains a `storeEMhistory` flag to store the EM history
+  (requested by @netique)
+
+- `DRF()` gains best-fitting prior support (currently limited to Gaussian distributions)
+
+- Correct index subset caused by tmp row removals in MG objects (fixes #227)
+
 # Changes in mirt 1.36
 
 - Progress bar added automatically (controlled via the `verbose` argument) 

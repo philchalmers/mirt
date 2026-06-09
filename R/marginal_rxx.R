@@ -11,7 +11,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -24,12 +24,15 @@
 #'
 #'
 #' dat <- expand.table(deAyala)
-#' mod <- mirt(dat, 1)
+#' mod <- mirt(dat)
 #'
-#' # marginal estimate
+#' # marginal estimate treating item parameters as known
 #' marginal_rxx(mod)
 #'
-#' \dontrun{
+#' # compare to alpha
+#' itemstats(dat)$overall$alpha
+#'
+#' \donttest{
 #'
 #' # empirical estimate (assuming the same prior)
 #' fscores(mod, returnER = TRUE)
@@ -39,13 +42,45 @@
 #' head(fs)
 #' empirical_rxx(fs)
 #'
+#' #############
+#' # example demonstrating correlation attenuation
+#'
+#' theta <- rnorm(1000)
+#' X <- theta + rnorm(1000, sd=2)
+#' cor(X, theta)    # correlation without measurement error (what you want)
+#'
+#' # measured with a 10 item GRM test
+#' nitems <- 10
+#' a <- matrix(rlnorm(nitems,.2,.3))
+#' diffs <- t(apply(matrix(runif(nitems*4, .3, 1), nitems), 1, cumsum))
+#' diffs <- -(diffs - rowMeans(diffs))
+#' d <- diffs + rnorm(nitems)
+#' dat <- simdata(a, d, itemtype = 'graded', Theta=matrix(theta))
+#'
+#' # correlation with total score (attenuated)
+#' cor(rowSums(dat), X)
+#'
+#' # fit single group model
+#' mod <- mirt(dat)
+#'
+#' # EAP correlation (also attenuated)
+#' fs <- fscores(mod)
+#' cor(fs, X)
+#'
+#' # correction for attenuation, r_x.theta = r_x.theta.hat / sqrt(rxx_theta.hat)
+#' (rxx <- marginal_rxx(mod))  # alternatively, could use empirical_rxx()
+#' cor(fs, X) / sqrt(rxx)  # correction estimate
+#' cor(X, theta)           # compare to true correlation
+#'
 #' }
 marginal_rxx <- function(mod, density = dnorm, ...){
     stopifnot(extract.mirt(mod, 'nfact') == 1L)
     stopifnot(is(mod, 'SingleGroupClass'))
+    cfs <- coef(mod, simplify=TRUE)
+    var_theta <- as.vector(cfs$cov)
     fn <- function(theta, mod, den, ...){
         TI <- testinfo(mod, matrix(theta))
-        TI / (TI + 1) * den(theta, ...)
+        TI / (TI + var_theta) * den(theta, ...)
     }
     integrate(fn, lower = -Inf, upper=Inf, mod=mod, den=density, ...)$value
 }

@@ -40,7 +40,7 @@ dat <- expand.table(LSAT7)
 mod <- mirt(dat, 1)
 
 areainfo(mod, c(-2,0), which.items = 1) #item 1
-\dontrun{
+\donttest{
 areainfo(mod, c(-2,0), which.items = 1:3) #items 1 to 3
 areainfo(mod, c(-2,0)) # all items (total test information)
 
@@ -59,7 +59,7 @@ text(x = 2, y = 0.5, labels = paste("Total Information:", round(area$TotalInfo, 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

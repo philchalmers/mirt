@@ -70,13 +70,13 @@
 #' @param plot logical; plot expected scores of items/test where expected scores are computed
 #'  using focal group thetas and both focal and reference group item parameters
 #' @param type type of objects to draw in \code{lattice}; default plots both points and lines
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{\link{fscores}} and \code{\link{xyplot}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link{fscores}} and \code{\link[lattice]{xyplot}}
 #'
 #' @author Adam Meade, with contributions by Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -84,9 +84,9 @@
 #' of items and scales. \emph{Journal of Applied Psychology, 95}, 728-743.
 #' @export empirical_ES
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' #no DIF
+#' # no DIF
 #' set.seed(12345)
 #' a <- matrix(abs(rnorm(15,1,.3)), ncol=1)
 #' d <- matrix(rnorm(15,0,.7),ncol=1)
@@ -143,8 +143,8 @@ empirical_ES <- function(mod, Theta.focal = NULL,
                                                list(col = '#9ECAE1'),
                                              strip.border =
                                                list(col = "black")), ...){
-    stopifnot(extract.mirt(mod, 'nfact') == 1L)
-    stopifnot(extract.mirt(mod, 'ngroups') == 2L)
+    stopifnot("Only unidimensional models supported" = extract.mirt(mod, 'nfact') == 1L)
+    stopifnot("Only two groups supported" = extract.mirt(mod, 'ngroups') == 2L)
     ref.group <- 1
     ref <- extract.group(mod, ref.group)
     focal <- extract.group(mod, ifelse(ref.group == 1, 2, 1))
@@ -155,8 +155,9 @@ empirical_ES <- function(mod, Theta.focal = NULL,
                          leave_missing=TRUE, ...)
         Theta.focal <- Theta[focal_select, , drop = FALSE]
     } else Theta.focal <- as.matrix(Theta.focal)
+    stopifnot("Theta must be a matrix" = is.matrix(Theta.focal))
     if(sum(focal_select) != nrow(Theta.focal))
-        stop('Theta elements do not match the number of individuals in the focal group')
+        stop('Theta elements do not match the number of individuals in the focal group', call.=FALSE)
 
     ############# helper function -  Cohen D ###########
     f.cohen.d <- function (vector.1,vector.2){
@@ -189,12 +190,13 @@ empirical_ES <- function(mod, Theta.focal = NULL,
     theta.den   <- dnorm(theta.normal,mean=focal.theta.mean.obs, sd=1)
     theta.density <- theta.den / sum(theta.den)
     nitems <- length(focal_items)
+    itemnames <- extract.mirt(mod, 'itemnames')[focal_items]
     list.item_ES_foc.obs <- list()
     list.item_ES_ref.obs <- list()
     list.item_ES_foc.nrm <- list()
     list.item_ES_ref.nrm <- list()
     ###### compute the expected scores (ES)
-    for(i in 1:nitems){
+    for(i in focal_items){
       foc.extract<-extract.item(focal, i)
       ref.extract<-extract.item(ref, i)
       foc.ES.obs <- expected.item(foc.extract,Theta.focal)
@@ -240,9 +242,9 @@ empirical_ES <- function(mod, Theta.focal = NULL,
     UIDN <- colSums(weighted.dif.abs.nrm)
     df.item.output <- data.frame(SIDS,UIDS,SIDN,UIDN,ESSD,
                                  mat.item.max.d,mean.ES.foc,mean.ES.ref)
-    row.names(df.item.output)<-paste0("item.",1:nrow(df.item.output))
+    row.names(df.item.output) <- itemnames
     df.item.output <- as.mirt_df(df.item.output)
-    if(!plot && DIF) return(df.item.output[focal_items, ])
+    if(!plot && DIF) return(df.item.output[itemnames, ])
 
     ##################DTF####################
     STDS <- sum(SIDS)

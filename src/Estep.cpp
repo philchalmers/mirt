@@ -12,57 +12,61 @@
 
 const double ABSMIN = std::numeric_limits<double>::min();
 
-void if_omp_set_num_threads(const int &omp_threads){
-    #ifdef _OPENMP
-        omp_set_num_threads(omp_threads);
-    #endif
-}
-
-void _Estep(vector<double> &expected, vector<double> &r1vec, const vector<double> &prior,
-    const vector<double> &r, const IntegerMatrix &data, const NumericMatrix &itemtrace,
-    const bool &Etable)
+void _Estep(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
+    const vector<double> &prior, const vector<double> &r, 
+    const IntegerMatrix &data, const NumericMatrix &itemtrace,
+    const vector<double> &wmiss, const bool &Etable)
 {
     const int nquad = prior.size();
     const int nitems = data.ncol();
     const int npat = r.size();
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec)
-    for (int pat = 0; pat < npat; ++pat){
-        if(r[pat] < ABSMIN) continue;
-        vector<double> posterior(nquad,1.0);
-        for(int q = 0; q < nquad; ++q)
-            posterior[q] = posterior[q] * prior[q];
-        for (int item = 0; item < nitems; ++item)
-            if(data(pat,item))
-                for(int q = 0; q < nquad; ++q)
-                    posterior[q] *= itemtrace(q,item);
-        const double maxp = *std::max_element(posterior.begin(), posterior.end());
-        double expd = 0.0;
-        for(int i = 0; i < nquad; ++i)
-            expd += posterior[i]/maxp;
-        expd *= maxp;
-        if(expd > ABSMIN){
+    #pragma omp parallel
+    {
+        vector<double> posterior(nquad);
+        #pragma omp for reduction(vec_double_plus : r1vec, r1g)
+        for (int pat = 0; pat < npat; ++pat){
+            if(r[pat] < ABSMIN) continue;
             for(int q = 0; q < nquad; ++q)
-                posterior[q] = r[pat] * posterior[q] / expd;
-        } else expd = ABSMIN;
-        expected[pat] = expd;
-        if(Etable){
+                posterior[q] = prior[q];
             for (int item = 0; item < nitems; ++item)
-                if (data(pat,item))
+                if(data(pat,item))
                     for(int q = 0; q < nquad; ++q)
-                        r1vec[q + item*nquad] += posterior[q];
-        }
-    } //end main
+                        posterior[q] *= itemtrace(q,item);
+            const double maxp = *std::max_element(posterior.begin(), posterior.end());
+            double expd = 0.0;
+            for(int i = 0; i < nquad; ++i)
+                expd += posterior[i]/maxp;
+            expd *= maxp;
+            if(expd < ABSMIN) expd = ABSMIN;
+            expected[pat] = expd;
+            if(Etable){
+                if(expd > ABSMIN){
+                    for(int q = 0; q < nquad; ++q)
+                        posterior[q] = r[pat] * posterior[q] / expd;
+                }
+                for (int item = 0; item < nitems; ++item){
+                    if (data(pat,item)){
+                        for(int q = 0; q < nquad; ++q){
+                            r1vec[q + item*nquad] += posterior[q];
+                            r1g[q] += wmiss[pat]*posterior[q];
+                        }
+                    }
+                }
+            }
+        } //end main
+    }
 }
 
 //Estep for mirt
-RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtable,
-                      SEXP Romp_threads)
+RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, 
+                      SEXP Rwmiss, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
     const vector<double> prior = as< vector<double> >(Rprior);
     const vector<double> r = as< vector<double> >(Rr);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
     if_omp_set_num_threads(omp_threads);
@@ -73,61 +77,71 @@ RcppExport SEXP Estep(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP Rr, SEXP REtab
     const int npat = r.size();
     vector<double> expected(npat, 0.0);
     vector<double> r1vec(nquad*nitems, 0.0);
+    vector<double> r1g(nquad, 0.0);
     List ret;
 
-    _Estep(expected, r1vec, prior, r, data, itemtrace, Etable);
+    _Estep(expected, r1vec, r1g, prior, r, data, itemtrace, wmiss, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
+    ret["r1g"] = wrap(r1g);
     ret["expected"] = wrap(expected);
     return(ret);
 
     END_RCPP
 }
 
-void _Estep2(vector<double> &expected, vector<double> &r1vec, const NumericMatrix &prior,
-    const IntegerMatrix &data, const NumericMatrix &itemtrace, const bool &Etable)
+void _Estep2(vector<double> &expected, vector<double> &r1vec, vector<double> &r1g,
+    const NumericMatrix &prior, const IntegerMatrix &data, 
+    const NumericMatrix &itemtrace, const vector<double> &wmiss, const bool &Etable)
 {
     const int nquad = prior.ncol();
     const int nitems = data.ncol();
     const int npat = data.nrow();
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec)
-    for (int pat = 0; pat < npat; ++pat){
-        vector<double> posterior(nquad,1.0);
-        for(int q = 0; q < nquad; ++q)
-            posterior[q] = posterior[q] * prior(pat,q);
-        for (int item = 0; item < nitems; ++item)
-            if(data(pat,item))
+    #pragma omp parallel
+    {
+        vector<double> posterior(nquad);
+        #pragma omp for reduction(vec_double_plus : r1vec, r1g)
+        for (int pat = 0; pat < npat; ++pat){
+            for(int q = 0; q < nquad; ++q)
+                posterior[q] = prior(pat,q);
+            for (int item = 0; item < nitems; ++item)
+                if(data(pat,item))
+                    for(int q = 0; q < nquad; ++q)
+                        posterior[q] *= itemtrace(q,item);
+            const double maxp = *std::max_element(posterior.begin(), posterior.end());
+            double expd = 0.0;
+            for(int i = 0; i < nquad; ++i)
+                expd += posterior[i]/maxp;
+            expd *= maxp;
+            if(expd < ABSMIN) expd = ABSMIN;
+            expected[pat] = expd;
+            if(Etable){
                 for(int q = 0; q < nquad; ++q)
-                    posterior[q] *= itemtrace(q,item);
-        const double maxp = *std::max_element(posterior.begin(), posterior.end());
-        double expd = 0.0;
-        for(int i = 0; i < nquad; ++i)
-            expd += posterior[i]/maxp;
-        expd *= maxp;
-         if(expd > ABSMIN){
-             for(int q = 0; q < nquad; ++q)
-                 posterior[q] = posterior[q] / expd;
-         } else expd = ABSMIN;
-         expected[pat] = expd;
-         if(Etable){
-             for (int item = 0; item < nitems; ++item)
-                 if (data(pat,item))
-                     for(int q = 0; q < nquad; ++q)
-                         r1vec[q + item*nquad] += posterior[q];
-         }
-     } //end main
+                     posterior[q] = posterior[q] / expd;
+                 for (int item = 0; item < nitems; ++item){
+                     if (data(pat,item)){
+                         for(int q = 0; q < nquad; ++q){
+                             r1vec[q + item*nquad] += posterior[q];
+                             r1g[q] += wmiss[pat] * posterior[q];
+                         }
+                     }
+                 }
+            }
+         } //end main
+    }
 }
 
 //Estep for mirt
-RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
-                       SEXP Romp_threads)
+RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, 
+                       SEXP Rwmiss, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
     const NumericMatrix prior(Rprior);
     const IntegerMatrix data(RX);
     const NumericMatrix itemtrace(Ritemtrace);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const bool Etable = as<bool>(REtable);
     const int omp_threads = as<int>(Romp_threads);
     if_omp_set_num_threads(omp_threads);
@@ -136,11 +150,13 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
     const int npat = data.nrow();
     vector<double> expected(npat, 0.0);
     vector<double> r1vec(nquad*nitems, 0.0);
+    vector<double> r1g(nquad, 0.0);
     List ret;
 
-    _Estep2(expected, r1vec, prior, data, itemtrace, Etable);
+    _Estep2(expected, r1vec, r1g, prior, data, itemtrace, wmiss, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
+    ret["r1g"] = wrap(r1g);
     ret["expected"] = wrap(expected);
     return(ret);
 
@@ -150,7 +166,7 @@ RcppExport SEXP Estep2(SEXP Ritemtrace, SEXP Rprior, SEXP RX, SEXP REtable,
 void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> &ri, vector<double> &ris,
     const NumericMatrix &itemtrace, const NumericMatrix &prior, const vector<double> &Priorbetween,
     const vector<double> &r, const IntegerMatrix &data, const IntegerMatrix &sitems,
-    const bool &Etable)
+    const vector<double> &wmiss, const bool &Etable)
 {
     const int sfact = sitems.ncol();
     const int nitems = data.ncol();
@@ -170,11 +186,14 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
         }
     }
 
-#pragma omp parallel for reduction(vec_double_plus : r1vec)
-    for (int pat = 0; pat < npat; ++pat){
-        if(r[pat] < ABSMIN) continue;
+    #pragma omp parallel
+    {
         vector<double> L(nquad), Elk(nbquad*sfact), posterior(nquad*sfact);
-        vector<double> likelihoods(nquad*sfact, 1.0);
+        vector<double> likelihoods(nquad*sfact), Plk(nbquad*sfact), Pls(nbquad), PlsPlk(nbquad), tempsum(nbquad);
+        #pragma omp for reduction(vec_double_plus : r1vec, ri, ris)
+        for (int pat = 0; pat < npat; ++pat){
+        if(r[pat] < ABSMIN) continue;
+        std::fill(likelihoods.begin(), likelihoods.end(), 1.0);
         for (int fact = 0; fact < sfact; ++fact){
             for (int item = 0; item < nitems; ++item){
                 if (data(pat,item) && sitems(item,fact))
@@ -182,7 +201,6 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                         likelihoods[k + nquad*fact] = likelihoods[k + nquad*fact] * itemtrace(k,item);
             }
         }
-        vector<double> Plk(nbquad*sfact);
         for (int fact = 0; fact < sfact; ++fact){
             int k = 0;
             for (int q = 0; q < npquad; ++q){
@@ -192,15 +210,14 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                 }
             }
             const double maxL = *std::max_element(L.begin(), L.end());
-            vector<double> tempsum(nbquad, 0.0);
+            std::fill(tempsum.begin(), tempsum.end(), 0.0);
             for (int i = 0; i < npquad; ++i)
                 for (int q = 0; q < nbquad; ++q)
                     tempsum[q] += L[q + i*nbquad]/maxL;
             for (int i = 0; i < nbquad; ++i)
                 Plk[i + fact*nbquad] = tempsum[i] * maxL;
         }
-        vector<double> Pls(nbquad, 1.0);
-        vector<double> PlsPlk(nbquad, 1.0);
+        std::fill(Pls.begin(), Pls.end(), 1.0);
         for (int i = 0; i < nbquad; ++i){
             for(int fact = 0; fact < sfact; ++fact)
                 Pls[i] = Pls[i] * Plk[i + fact*nbquad];
@@ -233,7 +250,8 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
                         for(int q = 0; q < nquad; ++q)
                             r1vec[q + fact*nquad*nitems + nquad*item] += posterior[q + fact*nquad];
         }
-    }   //end main
+        }   //end main
+    }
 
     if(Etable){
         for (int item = 0; item < nitems; ++item)
@@ -246,7 +264,7 @@ void _Estepbfactor(vector<double> &expected, vector<double> &r1, vector<double> 
 
 //Estep for bfactor
 RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, SEXP RX,
-    SEXP Rr, SEXP Rsitems, SEXP REtable, SEXP Romp_threads)
+    SEXP Rr, SEXP Rsitems, SEXP Rwmiss, SEXP REtable, SEXP Romp_threads)
 {
     BEGIN_RCPP
 
@@ -256,6 +274,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     const vector<double> Priorbetween = as< vector<double> >(RPriorbetween);
     const vector<double> r = as< vector<double> >(Rr);
     const bool Etable = as<bool>(REtable);
+    const vector<double> wmiss = as< vector<double> >(Rwmiss);
     const int omp_threads = as<int>(Romp_threads);
     if_omp_set_num_threads(omp_threads);
     const IntegerMatrix data(RX);
@@ -271,7 +290,7 @@ RcppExport SEXP Estepbfactor(SEXP Ritemtrace, SEXP Rprior, SEXP RPriorbetween, S
     vector<double> r3vec(npquad*prior.ncol(), 0.0);
 
     _Estepbfactor(expected, r1vec, r2vec, r3vec, itemtrace, prior, Priorbetween, r,
-        data, sitems, Etable);
+        data, sitems, wmiss, Etable);
     NumericMatrix r1 = vec2mat(r1vec, nquad, nitems);
     ret["r1"] = r1;
     ret["expected"] = wrap(expected);
@@ -343,6 +362,56 @@ RcppExport SEXP EAPgroup(SEXP Ritemtrace, SEXP Rtabdata, SEXP RTheta, SEXP Rprio
     ret["scores"] = vec2mat(scores, N, nfact);
     ret["scores2"] = vec2mat(scores2, N, nfact*(nfact + 1)/2);
     return(ret);
+
+    END_RCPP
+}
+
+RcppExport SEXP calcL1_cpp(SEXP Ritemtrace, SEXP RK, SEXP Ritemloc)
+{
+    BEGIN_RCPP
+
+    const NumericMatrix itemtrace(Ritemtrace);
+    const IntegerVector K(RK);
+    const IntegerVector itemloc(Ritemloc);
+    const int J = K.size();
+    const int nquad = itemtrace.ncol();
+
+    int maxScore = 0;
+    for(int i = 0; i < J; ++i)
+        maxScore += K[i] - 1;
+    const int nrows = maxScore + 1;
+
+    NumericMatrix L0(nrows, nquad);
+    NumericMatrix L1(nrows, nquad);
+
+    const int firstStart = itemloc[0] - 1;
+    for(int cat = 0; cat < K[0]; ++cat)
+        for(int q = 0; q < nquad; ++q)
+            L0(cat, q) = itemtrace(firstStart + cat, q);
+
+    int maxPrev = K[0] - 1;
+    for(int item = 1; item < J; ++item){
+        std::fill(L1.begin(), L1.end(), 0.0);
+        const int itemStart = itemloc[item] - 1;
+        for(int score = 0; score <= maxPrev; ++score){
+            for(int cat = 0; cat < K[item]; ++cat){
+                const int newScore = score + cat;
+                for(int q = 0; q < nquad; ++q)
+                    L1(newScore, q) += L0(score, q) * itemtrace(itemStart + cat, q);
+            }
+        }
+        maxPrev += K[item] - 1;
+        std::swap(L0, L1);
+    }
+
+    IntegerVector SumScores(nrows);
+    for(int i = 0; i < nrows; ++i)
+        SumScores[i] = i;
+
+    List ret;
+    ret["L1"] = L0;
+    ret["Sum.Scores"] = SumScores;
+    return ret;
 
     END_RCPP
 }

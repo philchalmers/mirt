@@ -4,13 +4,18 @@
 \alias{extract.mirt}
 \title{Extract various elements from estimated model objects}
 \usage{
-extract.mirt(x, what)
+extract.mirt(x, what, item = 1, ...)
 }
 \arguments{
 \item{x}{mirt model of class 'SingleGroupClass', 'MultipleGroupClass', 'MixedClass' or
 'DiscreteGroupClass'}
 
 \item{what}{a string indicating what to extract}
+
+\item{item}{if necessary, which item to extract information from.
+Defaults to 1 if not specified}
+
+\item{...}{additional arguments to pass to \code{summary()} (e.g., for different factor rotations)}
 }
 \description{
 A generic function to extract the internal objects from estimated models.
@@ -31,8 +36,6 @@ Objects which can be extracted from mirt objects include:
   \item{BIC}{BIC}
   \item{SABIC}{sample size adjusted BIC}
   \item{HQ}{HQ}
-  \item{F}{unrotated standardized loadings matrix}
-  \item{h2}{factor communality estimates}
   \item{LLhistory}{EM log-likelihood history}
   \item{tabdata}{a tabular version of the raw response data input. Frequencies are stored
     in \code{freq}}
@@ -52,24 +55,29 @@ Objects which can be extracted from mirt objects include:
     dummy coded variables}
   \item{fulldatalong}{analogous to \code{tabdatafull}, but for the raw input data instead of the
     tabulated frequencies}
+  \item{EMhistory}{if saved, extract the EM iteration history}
+  \item{F}{unrotated factor loadings matrix}
+  \item{Frot}{rotated factor loadings matrix}
   \item{exp_resp}{expected probability of the unique response patterns}
   \item{survey.weights}{if supplied, the vector of survey weights used during estimation (NULL if missing)}
   \item{converged}{a logical value indicating whether the model terminated within
     the convergence criteria}
   \item{iterations}{number of iterations it took to reach the convergence criteria}
-  \item{nest}{number of freely estimated parameters}
+  \item{nestpars}{number of freely estimated parameters}
   \item{parvec}{vector containing uniquely estimated parameters}
   \item{vcov}{parameter covariance matrix (associated with parvec)}
   \item{condnum}{the condition number of the Hessian (if computed). Otherwise NA}
   \item{constrain}{a list of item parameter constraints to indicate which item parameters were equal
     during estimation}
   \item{Prior}{prior density distribution for the latent traits}
+  \item{thetaPosterior}{posterior distribution for latent traits when using EM algorithm}
   \item{key}{if supplied, the data scoring key}
   \item{nfact}{number of latent traits/factors}
   \item{nitems}{number of items}
   \item{ngroups}{number of groups}
   \item{groupNames}{character vector of unique group names}
   \item{group}{a character vector indicating the group membership}
+  \item{invariance}{a character vector indicating \code{invariance} input from \code{\link{multipleGroup}}}
   \item{secondordertest}{a logical indicating whether the model passed the second-order test
     based on the Hessian matrix. Indicates whether model is a potential local maximum solution}
   \item{SEMconv}{logical; check whether the supplemented EM information matrix converged. Will be \code{NA}
@@ -79,13 +87,13 @@ Objects which can be extracted from mirt objects include:
 }
 \examples{
 
-\dontrun{
+\donttest{
 mod <- mirt(Science, 1)
 
 extract.mirt(mod, 'logLik')
-extract.mirt(mod, 'F')
+extract.mirt(mod, 'K')  # unique categories for each item
 
-#multiple group model
+# multiple group model
 grp <- rep(c('G1', 'G2'), each = nrow(Science)/2)
 mod2 <- multipleGroup(Science, 1, grp)
 
@@ -96,7 +104,7 @@ extract.mirt(grp1, 'parvec')
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

@@ -21,11 +21,11 @@ samplers and averaging over the draws to obtain expected a posteriori prediction
 Returns a list of the estimated effects.
 }
 \examples{
-\dontrun{
-#make an arbitrary groups
+\donttest{
+# make an arbitrary groups
 covdat <- data.frame(group = rep(paste0('group', 1:49), each=nrow(Science)/49))
 
-#partial credit model
+# partial credit model
 mod <- mixedmirt(Science, covdat, model=1, random = ~ 1|group)
 summary(mod)
 
@@ -33,10 +33,18 @@ effects <- randef(mod, ndraws = 2000, thin = 20)
 head(effects$Theta)
 head(effects$group)
 
+# lr.random input
+mod2 <- mixedmirt(Science, covdat, model=1, lr.random = ~ 1|group)
+summary(mod2)
+
+effects <- randef(mod2, ndraws = 2000)
+head(effects$Theta)
+head(effects$group)
+
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 
 Chalmers, R. P. (2015). Extended Mixed-Effects Item Response Models with the MH-RM Algorithm.

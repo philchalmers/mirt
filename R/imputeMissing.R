@@ -14,13 +14,13 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @keywords impute data
 #' @export imputeMissing
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' dat <- expand.table(LSAT7)
 #' (original <- mirt(dat, 1))
 #' NAperson <- sample(1:nrow(dat), 20, replace = TRUE)
@@ -30,11 +30,11 @@
 #' (mod <- mirt(dat, 1))
 #' scores <- fscores(mod, method = 'MAP')
 #'
-#' #re-estimate imputed dataset (good to do this multiple times and average over)
+#' # re-estimate imputed dataset (good to do this multiple times and average over)
 #' fulldata <- imputeMissing(mod, scores)
 #' (fullmod <- mirt(fulldata, 1))
 #'
-#' #with multipleGroup
+#' # with multipleGroup
 #' set.seed(1)
 #' group <- sample(c('group1', 'group2'), 1000, TRUE)
 #' mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)

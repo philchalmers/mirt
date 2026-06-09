@@ -4,48 +4,172 @@
 \alias{RCI}
 \title{Model-based Reliable Change Index}
 \usage{
-RCI(mod, predat, postdat, cutoffs = NULL, ...)
+RCI(
+  mod_pre,
+  predat,
+  postdat,
+  mod_post = mod_pre,
+  cutoffs = NULL,
+  SEM.pre = NULL,
+  SEM.post = NULL,
+  Fisher = FALSE,
+  zero_cor = TRUE,
+  expected.scores = FALSE,
+  shiny = FALSE,
+  main = "Test Scores",
+  ...
+)
 }
 \arguments{
-\item{mod}{single-group model fitted by \code{\link{mirt}}}
+\item{mod_pre}{single-group model fitted by \code{\link{mirt}}. If not supplied the
+information will be extracted from the data input objects to compute the classical
+test theory version of the RCI statistics}
 
 \item{predat}{a vector (if one individual) or matrix/data.frame
-of response data to be scored, where each individuals' responses are
-included in exactly one row}
+  of response data to be scored, where each individuals' responses are
+  included in exactly one row.
+
+  If total score information only is to be used instead of the
+  complete response matrix then
+  a \code{matrix} object with exactly \code{ncol = 1} columns
+  should be provided}
 
 \item{postdat}{same as \code{predat}, but with respect to the post/follow-up
-measurement}
+  measurement. Ignored when a two-dimensional IRT model is included.
+
+  For the original RCI approach, a matrix containing the complete responses,
+  or a matrix with one column containing only the total scores, can be provided}
+
+\item{mod_post}{(optional) IRT model for post-test if different from pre-test;
+otherwise, the pre-test model will be used. Ignored when a two-dimensional model
+IRT is included}
 
 \item{cutoffs}{optional vector of length 2 indicating the type of cut-offs to
 report (e.g., \code{c(-1.96, 1.96)} reflects the 95 percent z-score type cut-off)}
+
+\item{SEM.pre}{standard error of measurement for the pretest. This can be used instead of
+\code{rxx.pre} and \code{SD.pre}}
+
+\item{SEM.post}{(optional) standard error of measurement for the post-test.
+Using this will create a pooled version of the SEM; otherwise, \code{SEM.post = SEM.pre}}
+
+\item{Fisher}{logical; use the Fisher/expected information function to compute the
+SE terms? If \code{FALSE} the SE information will be extracted from the select
+\code{\link{fscores}} method (default). Only applicable for unidimensional models}
+
+\item{zero_cor}{logical; when the supplied \code{mod_pre} is a two-factor model
+should the covariance/correlation between the latent traits be forced to be 0?}
+
+\item{expected.scores}{logical; when using IRT scoring methods, should the expected total scores
+be reported instead of the scaled (theta) scores returned from \code{\link{fscores}}? When set
+to \code{TRUE} the factor score estimates are passed to \code{\link{expected.test}}, and delta method
+standard error for the difference between teh scores are reported,
+however the original \code{z} and \code{p}-value information will be unchanged}
+
+\item{shiny}{logical; launch an interactive shiny applications for real-time scoring
+of supplied total-scores or response vectors? Only requires \code{mod_pre} and (optional)
+\code{mod_post} inputs}
+
+\item{main}{main label to use when \code{shiny=TRUE}}
 
 \item{...}{additional arguments passed to \code{\link{fscores}}}
 }
 \description{
 Computes an IRT version of the "reliable change index" (RCI) proposed by
 Jacobson and Traux (1991) but modified to use IRT information about scores
-and measurement error. Main benefit of the IRT approach is the inclusion
+and measurement error (see Jabrayilov, Emons, and Sijtsma (2016)).
+Main benefit of the IRT approach is the inclusion
 of response pattern information in the pre/post data score estimates, as well
-as conditional standard error of measurement information.
+as conditional standard error of measurement information. Models can be specified
+as separate unidimensional IRT models fitted via \code{\link{mirt}}
+(or extracted from \code{\link{multipleGroup}} via \code{\link{extract.group}}),
+or a two-dimensional model where the latent traits correspond to the two
+test administrations.
 }
 \examples{
 
-\dontrun{
+\donttest{
 
-mod <- mirt(Science, 1)
+# simulate some data
+N <- 1000
+J <- 20     # number of items
+a <- matrix(rlnorm(J,.2,.3))
+d <- rnorm(J)
+
+theta <- matrix(rnorm(N))
+dat_pre <- simdata(a, d, itemtype = '2PL', Theta = theta)
+
+# first 3 cases decrease by 1/2
+theta2 <- theta - c(1/2, 1/2, 1/2, numeric(N-3))
+dat_post <- simdata(a, d, itemtype = '2PL', Theta = theta2)
+
+mod <- mirt(dat_pre)
+
+# all changes using fitted model from pre data
+RCI(mod, predat=dat_pre, postdat=dat_post)
+
+# reported all expected change estimates in the original test-score metric
+RCI(mod, predat=dat_pre, postdat=dat_post, expected.scores=TRUE)
 
 # single response pattern change using EAP information
-RCI(mod, predat = c(1,2,3,2), postdat = c(1,2,2,1))
+RCI(mod, predat=dat_pre[1,], postdat=dat_post[1,])
 
-# WLE estimator
-RCI(mod, predat = c(1,2,3,2), postdat = c(1,2,2,1), method = 'WLE')
+# WLE estimator with Fisher information for SE (see Jabrayilov et al. 2016)
+RCI(mod, predat = dat_pre[1,], postdat = dat_post[1,],
+    method = 'WLE', Fisher = TRUE)
 
 # multiple respondents
-RCI(mod, predat = Science[1:5,], postdat = Science[2:6,])
+RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,])
 
 # include large-sample z-type cutoffs
-RCI(mod, predat = Science[1:5,], postdat = Science[2:6,],
+RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,],
     cutoffs = c(-1.96, 1.96))
+
+######
+# CTT version by omitting IRT model
+    # Requires either sample or population SEM's as input
+(istats <- itemstats(dat_pre)$overall)
+SEM.alpha <- istats$SEM.alpha    # SEM estimate of dat_pre
+
+# assumes SEM.post = SEM.pre
+RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha)
+
+# include cutoffs
+RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha,
+    cutoffs=c(-1.96, 1.96))
+
+# allows SEM.post != SEM.pre
+(istats.post <- itemstats(dat_post)$overall)
+SEM.alpha.post <- istats.post$SEM.alpha
+
+RCI(predat = dat_pre, postdat = dat_post,
+   SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+
+# Supplying only the total scores
+TS_pre <- matrix(rowSums(dat_pre))
+TS_post <- matrix(rowSums(dat_post))
+RCI(predat = TS_pre, postdat = TS_post,
+   SEM.pre=SEM.alpha, SEM.post=SEM.alpha.post)
+
+######
+
+# interactive shiny interfaces for live scoring
+mod_pre <- mirt(Science)
+
+# (optional) setup mod_post to have medium effect size change (d = 0.5)
+sv <- mod2values(mod_pre)
+sv$value[sv$name == 'MEAN_1'] <- 0.5
+mod_post <- mirt(Science, pars=sv, TOL=NA)
+
+# only use pre-test model for scoring
+if(interactive()){
+    RCI(mod_pre=mod_pre, shiny=TRUE)
+
+    # use both pre-test and post-test models for including empirical priors
+    RCI(mod_pre=mod_pre, mod_post=mod_post, shiny=TRUE,
+        main='Perceptions of Science and Technology')
+ }
+
 
 ############################
 # Example where individuals take completely different item set pre-post
@@ -54,25 +178,98 @@ RCI(mod, predat = Science[1:5,], postdat = Science[2:6,],
 dat <- key2binary(SAT12,
   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 
-mod <- mirt(dat, 1)
+mod <- mirt(dat)
 
-# with N=5 individual under investigation
+# with N=5 individuals under investigation
 predat <- postdat <- dat[1:5,]
 predat[, 17:32] <- NA
 postdat[, 1:16] <- NA
 
+head(predat)
+head(postdat)
+
 RCI(mod, predat, postdat)
+
+# expected scores /32 (even though only /16 items answered)
+RCI(mod, predat, postdat, expected.scores=TRUE)
+
+######
+# Two-dimensional IRT model for each time point, 20 items (no DIF)
+
+J <- 20
+N <- 500
+slopes <- rlnorm(J, .2, .2)
+a <- matrix(c(slopes, numeric(J*2), slopes),J*2)
+ints <- rnorm(J)
+d <- matrix(c(ints, ints), ncol=1)
+data.frame(a=a, d=d)
+
+# mean effects across time
+mu <- c(0, -1/2)
+sigma <- matrix(c(1, .7, .7, 1), 2,2)
+
+dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
+itemstats(dat)$overall
+
+# build equality constraints across time points
+constr <- NULL
+for(i in (1:J)){
+    constr <- c(constr, paste0("(", i, ',', i+J, ",a1,a2)"))
+    constr <- c(constr, paste0("(", i, ',', i+J, ",d)"))
+}
+constr <- paste0(constr, collapse=',')
+
+# define model where item parameters constrained over time, and
+# latent trait has potential scale-location changes (e.g., regression to the
+# mean effects)
+model <- sprintf("
+                  thetapre = 1-\%i,
+                  thetapost = \%i-\%i,
+                  COV = thetapre*thetapost, thetapost*thetapost
+                  MEAN = thetapost
+                  CONSTRAIN = \%s", J, J+1, 2*J, constr)
+cat(model)
+
+# fit the model to calibration data
+mod <- mirt(dat, model = model, SE=TRUE)
+coef(mod, printSE=TRUE)
+coef(mod, simplify=TRUE)
+summary(mod)
+
+# test data
+Theta <- cbind(c(0, 1, 2), c(0,1,2))
+nochange <- simdata(a, d, itemtype = '2PL', Theta = Theta)
+change <- simdata(a, d, itemtype = '2PL', Theta = Theta +
+                      cbind(0, c(-1, -1, -1)))
+
+# total score differences
+data.frame(pre=rowSums(nochange[,1:J]),
+           post=rowSums(nochange[,1:J + J]))
+data.frame(pre=rowSums(change[,1:J]),
+           post=rowSums(change[,1:J + J]))
+
+
+RCI(mod, predat = nochange)
+RCI(mod, predat = change)
+
+# expected total-score metric reported instead
+RCI(mod, predat = nochange, expected.scores=TRUE)
+RCI(mod, predat = change, expected.scores=TRUE)
 
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 
 Jacobson, N. S., & Truax, P. (1991). Clinical significance: A statistical approach
 to defining meaningful change in psychotherapy research. Journal
 of Consulting and Clinical Psychology, 59, 12-19.
+
+Jabrayilov, R. , Emons, W. H. M., & Sijtsma, K. (2016). Comparison of
+Classical Test Theory and Item Response Theory in Individual Change Assessment.
+\emph{Applied Psychological Measurement, 40} (8), 559-572.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

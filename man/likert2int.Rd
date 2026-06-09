@@ -19,9 +19,9 @@ Given a matrix or data.frame object consisting of Likert responses return an
 object of the same dimensions with integer values.
 }
 \examples{
-\dontrun{
+\donttest{
 
-#simulate data
+# simulate data
 
 dat1 <- matrix(sample(c('Disagree', 'Strongly Disagree', 'Agree',
                         'Neutral', 'Strongly Agree'), 1000*5, replace=TRUE),
@@ -83,7 +83,7 @@ head(intdat)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

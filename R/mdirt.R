@@ -39,7 +39,8 @@
 #' an alternative \code{item.Q} definition for each respective item.
 #'
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#'   numerically ordered data, with missing data coded as \code{NA}
+#'   numerically ordered data, organized in the form of integers,
+#'    with missing data coded as \code{NA}
 #' @param model number of mutually exclusive classes to fit, or alternatively a more specific
 #'   \code{\link{mirt.model}} definition (which reflects the so-called Q-matrix).
 #'   Note that when using a \code{\link{mirt.model}},
@@ -68,8 +69,11 @@
 #'   membership mutually distinct and exhaustive. See \code{\link{thetaComb}} for a quick method
 #'   to generate a matrix with all possible combinations
 #' @param nruns a numeric value indicating how many times the model should be fit to the data
-#'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
-#'   by default
+#'   when using random starting values. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+#'   by default. Using this returns a list of fitted model objects, where the model
+#'   with the highest log-likelihood should generally be selected as the model
+#'   best associated with the MLE. Note that if a \code{\link{mirtCluster}} was
+#'   defined earlier then the runs will be run in parallel
 #' @param return_max logical; when \code{nruns > 1}, return the model that has the most optimal
 #'   maximum likelihood criteria? If FALSE, returns a list of all the estimated objects
 #' @param covdata a data.frame of data used for latent regression models
@@ -90,7 +94,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #'
 #' Proctor, C. H. (1970). A probabilistic formulation and statistical analysis for Guttman scaling.
@@ -104,12 +108,12 @@
 #' @export mdirt
 #' @examples
 #'
-#' #LSAT6 dataset
+#' # LSAT6 dataset
 #' dat <- expand.table(LSAT6)
 #'
 #' # fit with 2-3 latent classes
 #' (mod2 <- mdirt(dat, 2))
-#' \dontrun{
+#' \donttest{
 #' (mod3 <- mdirt(dat, 3))
 #' summary(mod2)
 #' residuals(mod2)
@@ -150,7 +154,7 @@
 #'
 #'
 #' # fit with random starting points (run in parallel to save time)
-#' mirtCluster()
+#' if(interactive()) mirtCluster()
 #' mod <- mdirt(dat, 2, nruns=10)
 #'
 #' #--------------------------
@@ -249,7 +253,7 @@
 #' M2(CRUM)
 #'
 #' #------------------
-#' #multidimensional latent class model
+#' # multidimensional latent class model
 #'
 #' dat <- key2binary(SAT12,
 #'      key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -317,7 +321,7 @@
 mdirt <- function(data, model, customTheta = NULL, structure = NULL, item.Q = NULL,
                   nruns = 1, method = 'EM', covdata = NULL, formula = NULL, itemtype = 'lca',
                   optimizer = 'nlminb', return_max = TRUE, group = NULL, GenRandomPars = FALSE,
-                  verbose = TRUE, pars = NULL, technical = list(), ...)
+                  verbose = interactive(), pars = NULL, technical = list(), ...)
 {
     Call <- match.call()
     dots <- list(...)
@@ -336,7 +340,7 @@ mdirt <- function(data, model, customTheta = NULL, structure = NULL, item.Q = NU
     if((is(model, 'mirt.model') || is.character(model)) && is.null(technical$customTheta))
         stop('customTheta input required when using a mirt.model type input')
     technical$omp <- FALSE
-    mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), progress=verbose,
+    mods <- myLapply(1:nruns, function(x, ...) return(ESTIMATION(...)), progress=verbose && nruns > 1L,
                      method=method, latent.regression=latent.regression, structure=structure,
                      data=data, model=model, group=group, itemtype=itemtype, optimizer=optimizer,
                      technical=technical, calcNull=FALSE, GenRandomPars=GenRandomPars, item.Q=item.Q,
@@ -356,6 +360,6 @@ mdirt <- function(data, model, customTheta = NULL, structure = NULL, item.Q = NU
             mods <- mods[[which(max(LL) == LL)[1L]]]
         }
     }
-    if(!is.null(pars) && pars == 'values') mods <- mods[[1L]]
+    if(!is.null(pars) && !is.data.frame(pars) && pars == 'values') mods <- mods[[1L]]
     return(mods)
 }

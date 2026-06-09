@@ -20,31 +20,31 @@
 #'   can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'
 #' @param formula formula used for the GAM smoother
 #' @param main the main title for the plot. If NULL an internal default will be used
-#' @param auto.key plotting argument passed to \code{\link{lattice}}
-#' @param par.strip.text plotting argument passed to \code{\link{lattice}}
-#' @param par.settings plotting argument passed to \code{\link{lattice}}
-#' @param ... additional arguments to be passed to \code{\link{lattice}} and \code{coef()}
+#' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #' @keywords empirical plots
 #' @export empirical_plot
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #' @seealso \code{\link{itemstats}}, \code{\link{itemplot}}, \code{\link{itemGAM}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' SAT12[SAT12 == 8] <- NA
 #' data <- key2binary(SAT12,
 #'    key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 #'
-#' #test plot
+#' # test plot
 #' empirical_plot(data)
 #' empirical_plot(data, type = 'hist')
 #' empirical_plot(data, type = 'hist', breaks=20)
 #'
-#' #items 1, 2 and 5
+#' # items 1, 2 and 5
 #' empirical_plot(data, c(1, 2, 5))
 #' empirical_plot(data, c(1, 2, 5), smooth = TRUE)
 #' empirical_plot(data, c(1, 2, 5), type = 'boxplot')
@@ -92,7 +92,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                       xlab = 'Total Score', ylab = 'Frequency', ...)
         }
     } else {
-        stopifnot(all(which.items >= 1L && which.items <= ncol(data)))
+        stopifnot(all(which.items >= 1L & which.items <= ncol(data)))
         pltdat <- vector('list', length(which.items))
         nms <- colnames(data)
         for(i in 1:length(which.items)){

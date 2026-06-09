@@ -10,16 +10,17 @@ expected.test(
   group = NULL,
   mins = TRUE,
   individual = FALSE,
-  which.items = NULL
+  which.items = NULL,
+  probs.only = FALSE
 )
 }
 \arguments{
 \item{x}{an estimated mirt object}
 
-\item{Theta}{a matrix of latent trait values}
+\item{Theta}{a matrix of latent trait values (if a vector is supplied, will be coerced to a matrix with one column)}
 
-\item{group}{a number signifying which group the item should be extracted from (applies to
-'MultipleGroupClass' objects only)}
+\item{group}{a number or character signifying which group the item should be extracted from
+(applies to 'MultipleGroupClass' objects only)}
 
 \item{mins}{logical; include the minimum value constants in the dataset. If FALSE, the
 expected values for each item are determined from the scoring 0:(ncat-1)}
@@ -28,6 +29,9 @@ expected values for each item are determined from the scoring 0:(ncat-1)}
 
 \item{which.items}{an integer vector indicating which items to include in the expected test score. Default
 uses all possible items}
+
+\item{probs.only}{logical; return the probability for each category instead of
+traceline score functions? Only useful when \code{individual=TRUE}}
 }
 \description{
 Given an estimated model compute the expected test score. Returns the expected values in the
@@ -35,7 +39,7 @@ same form as the data used to estimate the model.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(deAyala)
 model <- 'F = 1-5
           CONSTRAIN = (1-5, a1)'
@@ -49,10 +53,14 @@ tail(cbind(Theta, tscore))
 bscore <- expected.test(mod, Theta, which.items = 1:2)
 tail(cbind(Theta, bscore))
 
+# more low-level output (score and probabilty elements)
+expected.test(mod, Theta, individual=TRUE)
+expected.test(mod, Theta, individual=TRUE, probs.only=TRUE)
+
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 }

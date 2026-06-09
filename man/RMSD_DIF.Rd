@@ -8,7 +8,8 @@ RMSD_DIF(pooled_mod, flag = 0, probfun = TRUE, dentype = "norm")
 }
 \arguments{
 \item{pooled_mod}{a multiple-group model (used to compute the model-implied
-probability in the goodness-of-fit test)}
+probability in the goodness-of-fit test) or a single-group model for computing RMSD goodness-of-fit
+values relative to the model-implied information}
 
 \item{flag}{a numeric value used as a cut-off to help flag larger RMSD values
 (e.g., \code{flag = .03} will highlight only categories with RMSD values greater than
@@ -34,9 +35,13 @@ function of the latent traits). If the RSMD fit is poor, indicating non-ignorabl
 then the multiple-group model should be adjusted to better account for the large response bias
 due to using a pooled model. See Lee and von Davier (2020) and Buchholz and Hartig (2019) for details.
 }
+\details{
+This function is generally designed to work with multiple-group models, however if a single-group
+model is passed this will return the RMSD information regarding the observed vs expected response functions.
+}
 \examples{
 
-\dontrun{
+\donttest{
 
 #----- generate some data
 set.seed(12345)
@@ -74,9 +79,46 @@ coef(MGmod, simplify=TRUE)
 RMSD_DIF(MGmod)
 RMSD_DIF(MGmod, flag = .03)
 
+#################
+# NA placeholders included when groups do not respond to specific items
+
+a1 <- a2 <- rlnorm(20)
+d <- d2 <- rnorm(20)
+# item 5 contains DIF
+a2[5] <- a1[5] + 1
+d2[5] <- d[5] - 1/2
+g <- rbeta(20, 5, 17)
+
+dat1 <- simdata(a1, d, guess = g, N=1000, itemtype = '3PL')
+dat1[, 11:13] <- NA  # items 11:13 items NA for g1
+dat2 <- simdata(a2, d2, guess = g, N=1000, itemtype = '3PL',
+   mu=1/4, sigma=matrix(.75))
+dat2[,1:3] <- NA # items 1:3 items NA for g2
+dat <- rbind(dat1, dat2)
+group <- c(rep('g1', 1000), rep('g2', 1000))
+
+mod <- multipleGroup(dat, "Theta = 1-20
+                            PRIOR = (1-20, g, norm, -1, 0.5)",
+                     group=group, itemtype='3PL',
+                     invariance = c(colnames(dat), 'free_mean', 'free_var'))
+coef(mod, simplify = TRUE)
+
+RMSD_DIF(mod)
+RMSD_DIF(mod, flag = .03)
 
 #################
-# polytomous example
+# Single group model (GOF only)
+mod <- mirt(dat)
+RMSD_DIF(mod)
+RMSD_DIF(mod, probfun=FALSE)
+
+# polytomous
+mod2 <- mirt(Science)
+RMSD_DIF(mod2)
+RMSD_DIF(mod2, probfun=FALSE)
+
+#################
+# polytomous DIF example
 set.seed(12345)
 a <- a2 <- matrix(rlnorm(20,.2,.3))
 

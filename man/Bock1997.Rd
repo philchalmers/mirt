@@ -9,14 +9,14 @@ A 3-item tabulated data set extracted from Table 3 in Chapter Two.
 }
 \examples{
 
-\dontrun{
+\donttest{
 dat <- expand.table(Bock1997)
 head(dat)
 itemstats(dat, use_ts=FALSE)
 
 mod <- mirt(dat, 1, 'nominal')
 
-#reproduce table 3 in Bock (1997)
+# reproduce table 3 in Bock (1997)
 fs <- round(fscores(mod, verbose = FALSE, full.scores = FALSE)[,c('F1','SE_F1')],2)
 fttd <- residuals(mod, type = 'exp')
 table <- data.frame(fttd[,-ncol(fttd)], fs)
@@ -30,10 +30,6 @@ coef(mod)
 \references{
 Bock, R. D. (1997). The Nominal Categories Model. In van der Linden, W. J. & Hambleton, R. K.
 \emph{Handbook of modern item response theory}. New York: Springer.
-
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

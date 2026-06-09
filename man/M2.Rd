@@ -8,7 +8,6 @@ M2(
   obj,
   type = "M2*",
   calcNull = TRUE,
-  na.rm = FALSE,
   quadpts = NULL,
   theta_lim = c(-6, 6),
   CI = 0.9,
@@ -29,9 +28,6 @@ M2 and M2* where only the bivariate moments are collapsed}
 \item{calcNull}{logical; calculate statistics for the null model as well?
 Allows for statistics such as the limited information TLI and CFI. Only valid when items all
 have a suitable null model (e.g., those created via \code{\link{createItem}} will not)}
-
-\item{na.rm}{logical; remove rows with any missing values? The M2 family of statistics
-requires a complete dataset in order to be well defined}
 
 \item{quadpts}{number of quadrature points to use during estimation. If \code{NULL},
 a suitable value will be chosen based
@@ -58,7 +54,7 @@ Must be used in conjunction with the argument \code{residmat = TRUE}}
 }
 \value{
 Returns a data.frame object with the M2-type statistic, along with the degrees of freedom,
-  p-value, RMSEA (with 90\% confidence interval), SRMSR for each group (if all items were ordinal),
+  p-value, RMSEA (with 90\% confidence interval), SRMSR for each group,
   and optionally the TLI and CFI model fit statistics if \code{calcNull = TRUE}.
 }
 \description{
@@ -74,17 +70,18 @@ then passing \code{use_dentype_estimate = TRUE} will use the internally saved qu
 density components (where applicable).
 }
 \examples{
-\dontrun{
+\donttest{
 dat <- as.matrix(expand.table(LSAT7))
 (mod1 <- mirt(dat, 1))
 M2(mod1)
-M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+resids <- M2(mod1, residmat=TRUE) #lower triangle of residual correlation matrix
+resids
+summary(resids[lower.tri(resids)])
 
-#M2 with missing data present
+# M2 with missing data present
 dat[sample(1:prod(dim(dat)), 250)] <- NA
 mod2 <- mirt(dat, 1)
-# Compute stats by removing missing data row-wise
-M2(mod2, na.rm = TRUE)
+M2(mod2)
 
 # C2 statistic (useful when polytomous IRT models have too few df)
 pmod <- mirt(Science, 1)
@@ -104,7 +101,7 @@ Cai, L. & Monro, S. (2014). \emph{A new statistic for evaluating item response t
 models for ordinal data}. National Center for Research on Evaluation, Standards,
 & Student Testing. Technical Report.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

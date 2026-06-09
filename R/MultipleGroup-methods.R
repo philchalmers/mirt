@@ -57,7 +57,7 @@ setMethod(
     definition = function(object, object2, ...)
     {
         class(object) <- 'SingleGroupClass'
-        anova(object, object2, ...)
+        anova(object, object2, ..., frame = 2)
     }
 )
 
@@ -71,20 +71,24 @@ setMethod(
                           facet_items = TRUE,
                           theta_lim = c(-6,6),
                           par.strip.text = list(cex = 0.7),
+                          gen.diff_type = 'IRF',
                           par.settings = list(strip.background = list(col = '#9ECAE1'),
                                               strip.border = list(col = "black")),
                           auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...)
     {
         if (!type %in% c('info','infocontour', 'SE', 'RE', 'score', 'empiricalhist', 'trace',
-                         'itemscore', 'infotrace', 'Davidian', 'EAPsum'))
+                         'itemscore', 'infotrace', 'Davidian', 'EAPsum', 'gen.difficulty'))
             stop(type, " is not a valid plot type.", call.=FALSE)
         if (any(degrees > 90 | degrees < 0))
             stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
+        dots <- list(...)
+        if(!is.null(dots$MI))
+            warning('MI option not currently supported for multiple-group objects', call.=FALSE)
         rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
         ngroups <- x@Data$ngroups
         J <- x@Data$nitems
         nfact <- x@Model$nfact
-        if(nfact > 2) stop("Can't plot high dimensional solutions.", call.=FALSE)
+        if(nfact > 2) stop("Can't plot high dimensional models.", call.=FALSE)
         if(nfact == 1) degrees <- 0
         theta <- seq(theta_lim[1L],theta_lim[2L], length.out=npts/(nfact^2))
         ThetaFull <- Theta <- thetaComb(theta, nfact)
@@ -169,7 +173,7 @@ setMethod(
                                  auto.key = auto.key, par.strip.text=par.strip.text, par.settings=par.settings,
                                  ...))
             else stop('type not supported for two-dimensional models', call.=FALSE)
-        } else {
+        } else {  # one factor
             colnames(plt) <- c("info", "score", "Theta", "group")
             plt$SE <- 1 / sqrt(plt$info)
             if(type == 'info')
@@ -192,6 +196,20 @@ setMethod(
                               main = if(bundle) "Expected Bundle Score" else "Expected Total Score",
                               xlab = expression(theta), ylab=expression(T(theta)), auto.key = auto.key,
                               par.strip.text=par.strip.text, par.settings=par.settings, ...))
+            if(type == 'gen.difficulty'){
+                diffs <- vector('list', ngroups)
+                for(g in 1:ngroups)
+                    diffs[[g]] <- gen.difficulty(extract.group(x, g), type=gen.diff_type)
+                nitems <- extract.mirt(x, 'nitems')
+                plt <- data.frame(items=factor(names(diffs[[1]]), levels=names(diffs[[1]])),
+                                  group=factor(rep(extract.mirt(x, 'groupNames'), each=nitems)),
+                                  diffs=do.call(c, diffs))
+                return(xyplot(diffs~items, plt, type='b', groups=plt$group,
+                              main = 'Item by Generalized Difficulty',
+                              xlab = "Item", ylab="Generalized difficulty", auto.key = auto.key,
+                              par.strip.text=par.strip.text, par.settings=par.settings,
+                              scales=list(x=list(rot=90)), ...))
+            }
             if(type == 'empiricalhist'){
                 Prior <- Theta <- pltfull <- vector('list', ngroups)
                 for(g in 1L:ngroups){
@@ -207,6 +225,7 @@ setMethod(
                     pltfull[[g]] <- plt
                 }
                 plt <- do.call(rbind, pltfull)
+                plt <- na.omit(plt)
                 return(xyplot(Prior ~ Theta, plt, groups=plt$group, auto.key = auto.key,
                               xlab = expression(theta), ylab = 'Density',
                               type = 'b', main = 'Empirical Histogram',
@@ -338,7 +357,7 @@ setMethod(
         for(g in 1L:length(ret)){
             cmod <- object@ParObjects$pars[[g]]
             cmod@Data <- object@Data
-            cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupName[g], ]
+            cmod@Data$data <- object@Data$data[object@Data$group == object@Data$groupNames[g], ]
             cmod@Data$Freq[[1L]] <- cmod@Data$Freq[[g]]
             cmod@Options$quadpts <- object@Options$quadpts
             cmod@Internals$bfactor <- object@Internals$bfactor

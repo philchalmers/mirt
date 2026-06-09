@@ -2,11 +2,17 @@
 #' Theory)
 #'
 #' \code{mirt} fits a maximum likelihood (or maximum a posteriori) factor analysis model
-#' to any mixture of dichotomous and polytomous data under the item response theory paradigm
+#' to any mixture of dichotomous and polytomous data under the
+#' multidimensional item response theory paradigm
 #' using either Cai's (2010) Metropolis-Hastings Robbins-Monro (MHRM) algorithm, with
 #' an EM algorithm approach outlined by Bock and Aitkin (1981) using rectangular or
 #' quasi-Monte Carlo integration grids, or with the stochastic EM (i.e., the first two stages
-#' of the MH-RM algorithm). Models containing 'explanatory' person or item level predictors
+#' of the MH-RM algorithm). Unidimensional and multidimensional
+#' dominance/compensatory response models or unfolding/pairwise comparison models can
+#' be specified independently via the \code{itemtype} argument.
+#'
+#'
+#' Models containing 'explanatory' person or item level predictors
 #' can only be included by using the \code{\link{mixedmirt}} function, though latent
 #' regression models can be fit using the \code{formula} input in this function.
 #' Tests that form a two-tier or bi-factor structure should be estimated with the
@@ -147,15 +153,35 @@
 #'     'gpcm' below).
 #'      \deqn{P(x = 1|\theta, d) = \frac{1}{1 + exp(-(\theta + d))}}
 #'   }
-#'   \item{2-4PL}{
-#'     Depending on the model \eqn{u} may be equal to 1 and \eqn{g} may be equal to 0.
+#'   \item{1-4PL}{
+#'     Depending on the model \eqn{u} may be equal to 1 (e.g., 3PL), \eqn{g} may be equal to 0 (e.g., 2PL),
+#'     or the \code{a}s may be fixed to 1 (e.g., 1PL).
 #'     \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{
 #'       1 + exp(-(a_1 * \theta_1 + a_2 * \theta_2 + d))}}
+#'   }
+#'   \item{5PL}{
+#'     Currently restricted to unidimensional models
+#'     \deqn{P(x = 1|\theta, \psi) = g + \frac{(u - g)}{
+#'       1 + exp(-(a_1 * \theta_1 + d))^S}}
+#'     where \eqn{S} allows for asymmetry in the response function and
+#'     is transformation constrained to be greater than 0 (i.e., \code{log(S)} is estimated rather than \code{S})
+#'   }
+#'   \item{CLL}{
+#'     Complementary log-log model (see Shim, Bonifay, and Wiedermann, 2022)
+#'     \deqn{P(x = 1|\theta, b) = 1 - exp(-exp(\theta - b))}
+#'     Currently restricted to unidimensional dichotomous data.
 #'   }
 #'   \item{graded}{
 #'     The graded model consists of sequential 2PL models,
 #'     \deqn{P(x = k | \theta, \psi) = P(x \ge k | \theta, \phi) - P(x \ge k + 1 | \theta, \phi)}
 #'     Note that \eqn{P(x \ge 1 | \theta, \phi) = 1} while \eqn{P(x \ge K + 1 | \theta, \phi) = 0}
+#'   }
+#'   \item{ULL}{
+#'     The unipolar log-logistic model (ULL; Lucke, 2015) is defined the same as
+#'     the graded response model, however
+#'     \deqn{P(x \le k | \theta, \psi) = \frac{\lambda_k\theta^\eta}{1 + \lambda_k\theta^\eta}}.
+#'     Internally the \eqn{\lambda} parameters are exponentiated to keep them positive, and should
+#'     therefore the reported estimates should be interpreted in log units
 #'   }
 #'   \item{grsm}{
 #'     A more constrained version of the graded model where graded spacing is equal across item
@@ -199,13 +225,13 @@
 #'
 #'      E.g., for a K = 4 category response model,
 #'
-#'      \deqn{P(x = 0 | \theta, \psi) = exp(1) / G}
-#'      \deqn{P(x = 1 | \theta, \psi) = exp(1 + a(\theta - b1) + c) / G}
-#'      \deqn{P(x = 2 | \theta, \psi) = exp(1 + a(2\theta - b1 - b2) + 2c) / G}
-#'      \deqn{P(x = 3 | \theta, \psi) = exp(1 + a(3\theta - b1 - b2 - b3) + 3c) / G}
+#'      \deqn{P(x = 0 | \theta, \psi) = exp(0) / G}
+#'      \deqn{P(x = 1 | \theta, \psi) = exp(a(\theta - b1) + c) / G}
+#'      \deqn{P(x = 2 | \theta, \psi) = exp(a(2\theta - b1 - b2) + 2c) / G}
+#'      \deqn{P(x = 3 | \theta, \psi) = exp(a(3\theta - b1 - b2 - b3) + 3c) / G}
 #'      where
-#'      \deqn{G = exp(1) + exp(1 + a(\theta - b1) + c) + exp(1 + a(2\theta - b1 - b2) + 2c) +
-#'        exp(1 + a(3\theta - b1 - b2 - b3) + 3c)}
+#'      \deqn{G = exp(0) + exp(a(\theta - b1) + c) + exp(a(2\theta - b1 - b2) + 2c) +
+#'        exp(a(3\theta - b1 - b2 - b3) + 3c)}
 #'      Here \eqn{a} is the slope parameter, the \eqn{b} parameters are the threshold
 #'      values for each adjacent category, and \eqn{c} is the so-called difficulty parameter when
 #'      a rating scale model is fitted (otherwise, \eqn{c = 0} and it drops out of the computations).
@@ -234,11 +260,12 @@
 #'     \deqn{P(x = 1 | \theta, \psi) = exp(-0.5 * (a_1 * \theta_1 + a_2 * \theta_2 + d)^2)}
 #'   }
 #'   \item{partcomp}{Partially compensatory models consist of the product of 2PL probability curves.
-#'     \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))} *
-#'     \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))})}
+#'     \deqn{P(x = 1 | \theta, \psi) = g + (1 - g) (\frac{1}{1 + exp(-(a_1 * \theta_1 + d_1))}^c_1 *
+#'     \frac{1}{1 + exp(-(a_2 * \theta_2 + d_2))}^c_2)}
 #'
-#'     Note that constraining the slopes to be equal across items will reduce the model to
-#'     Embretson's (a.k.a. Whitely's) multicomponent model (1980).
+#'     where \eqn{c_1} and \eqn{c_2} are binary indicator variables reflecting whether the item should include
+#'     the select compensatory component (1) or not (0). Note that constraining the slopes to
+#'     be equal across items will reduce the model to Embretson's (Whitely's) multicomponent model (1980).
 #'   }
 #'   \item{2-4PLNRM}{Nested logistic curves for modeling distractor items. Requires a scoring key.
 #'     The model is broken into two components for the probability of endorsement. For successful
@@ -269,12 +296,50 @@
 #'     \eqn{z = 1,2,\ldots, C} (where \eqn{C} is the number of categories minus 1),
 #'     and \eqn{M = 2C + 1}.
 #'     }
+#'
+#'   \item{(g)hcm, (g)alm, (g)sslm, and (g)paralla}{Following Luo (2001), this family of response models
+#'     can be characterized under the same ordinal response functioning structure, differing only in their
+#'     linking functions (\eqn{\psi(x)}). For example, for a two-dimensional model the equation used is
+#'     \deqn{p_k =
+#'       \frac{\psi (\rho_k)}{\psi (\rho_k) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} }
+#'     which is expressed in slope-intercept form to accommodate multidimensionality.
+#'     The "generalized" versions of this family estimate the slope and \code{rho}
+#'     parameters, which allow each item
+#'     to differ in the steepness of the unfolding model functions; otherwise, slopes are fixed to the
+#'     value of 1, though the \code{rho} parameters must be set to 0 manually.
+#'     For ordered polytomous items the response function follows the Guttman-scaling logic
+#'     \deqn{P_1 = q_1\cdot q_2 \cdot q_3 \cdots q_k}
+#'     \deqn{P_2 = p_1\cdot q_2 \cdot q_3 \cdots q_k}
+#'     \deqn{P_3 = p_1\cdot p_2 \cdot q_3 \cdots q_k}
+#'     \deqn{\cdots}
+#'     \deqn{P_K = p_1\cdot p_2 \cdot p_3 \cdots p_k}
+#'     Note that for estimation purposes the \code{rho} parameters are expressed in log units so that they
+#'     remain positive during estimation. Hence, the parameterization used herein is
+#'     \deqn{p_k =
+#'       \frac{\psi (exp(\rho^*_k))}{\psi (exp(\rho^*_k))) + \psi (a_1 \theta_1 + a_2 \theta_2 + d)} }
+#'     where \eqn{\rho^*_k} is in natural log units. Currently supported models in this family are the:
+#'     \itemize{
+#'       \item (generalized) hyperbolic cosine model (\eqn{\psi (x) = cosh(x)}),
+#'       \item (generalized) absolute logistic model (\eqn{\psi (x) = exp(|x|)}),
+#'       \item (generalized) simple squared logistic model (\eqn{\psi (x) = exp(x^2)}), and
+#'       \item (generalized) parallellogram analysis model (\eqn{\psi (x) = x^2}), respectively.
+#'     }
+#'      all of which are available for dichotomous and ordered polytomous response option items.
+#'   }
+#'
 #'   \item{spline}{Spline response models attempt to model the response curves uses non-linear and potentially
 #'     non-monotonic patterns. The form is
 #'     \deqn{P(x = 1|\theta, \eta) = \frac{1}{1 + exp(-(\eta_1 * X_1 + \eta_2 * X_2 + \cdots + \eta_n * X_n))}}
 #'     where the \eqn{X_n} are from the spline design matrix \eqn{X} organized from the grid of \eqn{\theta}
 #'     values. B-splines with a natural or polynomial basis are supported, and the \code{intercept} input is
 #'     set to \code{TRUE} by default.}
+#'
+#'   \item{monospline}{The structure of the monotone spline is the same as the \code{'spline'} type, however
+#'   is built from a constrained version of an I-spline from \code{\link[splines2]{iSpline}}, which are cumulative
+#'   sums of B-splines. In this case, the intercept is left as an unconstrained parameter to be estimated,
+#'   however all other terms are constrained to
+#'   be positive. For this model to work correctly \code{intercept} must always be \code{TRUE}.}
+#'
 #'   \item{monopoly}{Monotone polynomial model for polytomous response data of the form
 #'     \deqn{P(x = k | \theta, \psi) =
 #'     \frac{exp(\sum_1^k (m^*(\psi) + \xi_{c-1})}
@@ -290,23 +355,33 @@
 #'
 #' @aliases mirt
 #' @param data a \code{matrix} or \code{data.frame} that consists of
-#'   numerically ordered data, with missing data coded as \code{NA} (to convert from an ordered factor
+#'   numerically ordered data, organized in the form of integers,
+#'    with missing data coded as \code{NA} (to convert from an ordered factor
 #'   \code{data.frame} see \code{\link{data.matrix}})
 #' @param model a string to be passed (or an object returned from) \code{\link{mirt.model}},
 #'   declaring how the IRT model is to be estimated (loadings, constraints, priors, etc).
 #'   For exploratory IRT models, a single numeric value indicating the number
 #'   of factors to extract is also supported. Default is 1, indicating that a unidimensional
 #'   model will be fit unless otherwise specified
-#' @param itemtype type of items to be modeled, declared as a vector for each item or a single value
-#'   which will be recycled for each item. The \code{NULL} default assumes that the items follow a graded or
+#' @param itemtype type of items to be modeled, declared as either a) a single value to be
+#'   recycled for each item, b) a vector for each respective item, or c) if applicable,
+#'   a matrix with columns equal to the number of items and rows equal to the number of
+#'   latent classes. The \code{NULL} default assumes that the items follow a graded or
 #'   2PL structure, however they may be changed to the following:
 #'   \itemize{
 #'     \item \code{'Rasch'} - Rasch/partial credit model by constraining slopes to 1 and freely estimating
 #'       the variance parameters (alternatively, can be specified by applying equality constraints to the
-#'       slope parameters in \code{'gpcm'}; Rasch, 1960)
-#'     \item \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 2-4 parameter logistic model,
+#'       slope parameters in \code{'gpcm'} and \code{'2PL'}; Rasch, 1960)
+#'     \item \code{'1PL'}, \code{'2PL'}, \code{'3PL'}, \code{'3PLu'}, and \code{'4PL'} - 1-4 parameter logistic model,
 #'       where \code{3PL} estimates the lower asymptote only while \code{3PLu} estimates the upper asymptote only
-#'       (Lord and Novick, 1968; Lord, 1980)
+#'       (Lord and Novick, 1968; Lord, 1980). Note that specifying \code{'1PL'} will not automatically estimate
+#'       the variance of the latent trait compared to the \code{'Rasch'} type
+#'     \item \code{'5PL'} - 5 parameter logistic model to estimate asymmetric logistic
+#'      response curves. Currently restricted to unidimensional models
+#'     \item \code{'CLL'} - complementary log-log link model.
+#'       Currently restricted to unidimensional models
+#'     \item \code{'ULL'} - unipolar log-logistic model (Lucke, 2015). Note the use of this itemtype
+#'       will automatically use a log-normal distribution for the latent traits
 #'     \item \code{'graded'} - graded response model (Samejima, 1969)
 #'     \item \code{'grsm'} - graded ratings scale model in the
 #'       classical IRT parameterization (restricted to unidimensional models; Muraki, 1992)
@@ -319,17 +394,28 @@
 #'     \item \code{'ideal'} - dichotomous ideal point model (Maydeu-Olivares, 2006)
 #'     \item \code{'ggum'} - generalized graded unfolding model (Roberts, Donoghue, & Laughlin, 2000)
 #'       and its multidimensional extension
+#'     \item \code{'hcm' and 'ghcm'} - (generalized) hyperbolic cosine model (Andrich and Luo, 1993; Andrich, 1996) for
+#'      dichotomous or ordered polytomous items (see Luo, 2001)
+#'     \item \code{'alm' and 'galm'} - (generalized) absolute logistic model (Luo and Andrich, 2005) for dichotomous
+#'      or ordered polytomous items
+#'     \item \code{'sslm' and 'gsslm'} - (generalized) simple squared logistic model (Andrich, 1988) for
+#'      dichotomous or ordered polytomous items (see Luo, 2001)
+#'     \item \code{'paralla' and 'gparalla'} - (generalized) parallellogram analysis model (Hoijtink, 1990)
+#'      for dichotomous or ordered polytomous items (see Luo, 2001)
 #'     \item \code{'sequential'} - multidimensional sequential response model (Tutz, 1990) in slope-intercept form
 #'     \item \code{'Tutz'} - same as the \code{'sequential'} itemtype, except the slopes are fixed to 1
 #'       and the latent variance terms are freely estimated (similar to the \code{'Rasch'} itemtype input)
-#'     \item \code{'PC2PL'} and \code{'PC3PL'} - 2-3 parameter partially compensatory model.
-#'       Note that constraining the slopes to be equal across items will reduce the model to
-#'       Embretson's (a.k.a. Whitely's) multicomponent model (1980).
+#'     \item \code{'PC1PL'}, \code{'PC2PL'}, and \code{'PC3PL'} - 1-3 parameter partially compensatory model.
+#'       Note that constraining the slopes to be equal across items will also reduce the model to
+#'       Embretson's (a.k.a. Whitely's) multicomponent model (1980), while for \code{'PC1PL'} the
+#'       slopes are fixed to 1 while the latent trait variance terms are estimated
 #'     \item \code{'2PLNRM'}, \code{'3PLNRM'}, \code{'3PLuNRM'}, and \code{'4PLNRM'} - 2-4 parameter nested
 #'       logistic model, where \code{3PLNRM} estimates the lower asymptote only while \code{3PLuNRM} estimates
 #'       the upper asymptote only (Suh and Bolt, 2010)
 #'     \item \code{'spline'} - spline response model with the \code{\link{bs}} (default)
-#'       or the \code{\link{ns}} function (Winsberg, Thissen, and Wainer, 1984)
+#'       or the \code{\link{ns}} function
+#'     \item \code{'monospline'} - monotonic spline response model with a constrained version of the
+#'       I-spline basis from \code{\link[splines2]{iSpline}} (Ramsay and Winsberg, 1991; Winsberg, Thissen, and Wainer, 1984)
 #'     \item \code{'monopoly'} - monotonic polynomial model for unidimensional tests
 #'       for dichotomous and polytomous response data (Falk and Cai, 2016)
 #'  }
@@ -429,23 +515,37 @@
 #'   equal, and also set parameters 2, 6, and 10 equal use
 #'   \code{constrain = list(c(1,5), c(2,6,10))}. Constraints can also be specified using the
 #'   \code{\link{mirt.model}} syntax (recommended)
-#' @param parprior a list of user declared prior item probabilities. To see how to define the
-#'   parameters correctly use \code{pars = 'values'} initially to see how the parameters are
-#'   labeled. Can define either normal (e.g., intercepts, lower/guessing and upper bounds),
-#'   log-normal (e.g., for univariate slopes), or beta prior probabilities.
-#'   To specify a prior the form is c('priortype', ...), where normal priors
-#'   are \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
-#'   \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
-#'   \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta, and
-#'   \code{parprior = list(c(parnumbers, 'expbeta', alpha, beta))} for the beta distribution
-#'   after applying the function \code{\link{plogis}} to the input value
-#'   (note, this is specifically for applying a beta
-#'   prior to the lower/upper-bound parameters in 3/4PL models). Priors can also be
-#'   specified using \code{\link{mirt.model}} syntax (recommended)
+# @param parprior a list of user declared prior item probabilities. To see how to define the
+#   parameters correctly use \code{pars = 'values'} initially to see how the parameters are
+#   labeled. Can define either normal (e.g., intercepts, lower/guessing and upper bounds),
+#   log-normal (e.g., for univariate slopes), or beta prior probabilities.
+#   To specify a prior the form is c('priortype', ...), where normal priors
+#   are \code{parprior = list(c(parnumbers, 'norm', mean, sd))},
+#   \code{parprior = list(c(parnumbers, 'lnorm', log_mean, log_sd))} for log-normal, and
+#   \code{parprior = list(c(parnumbers, 'beta', alpha, beta))} for beta, and
+#   \code{parprior = list(c(parnumbers, 'expbeta', alpha, beta))} for the beta distribution
+#   after applying the function \code{\link{plogis}} to the input value
+#   (note, this is specifically for applying a beta
+#   prior to the lower/upper-bound parameters in 3/4PL models). Priors can also be
+#   specified using \code{\link{mirt.model}} syntax (recommended)
 #' @param pars a data.frame with the structure of how the starting values, parameter numbers,
 #'   estimation logical values, etc, are defined. The user may observe how the model defines the
 #'   values by using \code{pars = 'values'}, and this object can in turn be modified and input back
 #'   into the estimation with \code{pars = mymodifiedpars}
+#' @param itemdesign a \code{data.frame} with rows equal to the number of items and columns
+#'   containing any item-design effects. If items should be included in the design structure
+#'   (i.e., should be left in their canonical structure) then fewer rows can be used,
+#'   however the \code{rownames} must be defined and matched with \code{colnames} in the \code{data}
+#'   input. The item design matrix is constructed with the use of
+#'   \code{item.formula}. Providing this input will fix the associated \code{'d'} intercepts
+#'   to 0, where applicable
+#' @param item.formula an R formula used to specify any intercept decomposition (e.g.,
+#'   the LLTM; Fischer, 1983). Note that only the right-hand side of the formula is required
+#'   for compensatory models.
+#'
+#'   For non-compensatory \code{itemtype}s (e.g., \code{'PC1PL'}) the formula must include
+#'   the name of the latent trait in the left hand side of the expression to indicate which
+#'   of the trait specification should have their intercepts decomposed (see MLTM; Embretson, 1984)
 #' @param quadpts number of quadrature points per dimension (must be larger than 2).
 #'   By default the number of quadrature uses the following scheme:
 #'   \code{switch(as.character(nfact), '1'=61, '2'=31, '3'=15, '4'=9, '5'=7, 3)}.
@@ -475,6 +575,8 @@
 #'       \code{quadpts} is increased to 121, and this method is only applicable for
 #'       unidimensional models estimated with the EM algorithm
 #'    }
+#'
+#'    Note that when \code{itemtype = 'ULL'} then a log-normal(0,1) density is used to support the unipolar scaling
 #' @param survey.weights a optional numeric vector of survey weights to apply for each case in the
 #'   data (EM estimation only). If not specified, all cases are weighted equally (the standard IRT
 #'   approach). The sum of the \code{survey.weights} must equal the total sample size for proper
@@ -535,7 +637,8 @@
 #' @param verbose logical; print observed- (EM) or complete-data (MHRM) log-likelihood
 #'   after each iteration cycle? Default is TRUE
 #' @param spline_args a named list of lists containing information to be passed to the \code{\link{bs}} (default)
-#'   and \code{\link{ns}} for each spline itemtype. Each element must refer to the name of the itemtype with the
+#'   \code{\link{ns}}, and \code{\link[splines2]{iSpline}} for each spline/monospline itemtype.
+#'   Each element must refer to the name of the itemtype with the
 #'   spline, while the internal list names refer to the arguments which are passed. For example, if item 2 were called
 #'   'read2', and item 5 were called 'read5', both of which were of itemtype 'spline' but item 5 should use the
 #'   \code{\link{ns}} form, then a modified list for each input might be of the form:
@@ -548,9 +651,11 @@
 #' @param technical a list containing lower level technical parameters for estimation. May be:
 #'   \describe{
 #'     \item{NCYCLES}{maximum number of EM or MH-RM cycles; defaults are 500 and 2000}
-#'     \item{MAXQUAD}{maximum number of quadratures, which you can increase if you have more than
+#'     \item{MAXQUAD}{maximum number of quadrature, which you can increase if you have more than
 #'       4GB or RAM on your PC; default 20000}
-#'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}}
+#'     \item{theta_lim}{range of integration grid for each dimension; default is \code{c(-6, 6)}. Note that
+#'       when \code{itemtype = 'ULL'} a log-normal distribution is used and the range is change to
+#'       \code{c(.01, and 6^2)}, where the second term is the square of the \code{theta_lim} input instead}
 #'     \item{set.seed}{seed number used during estimation. Default is 12345}
 #'     \item{SEtol}{standard error tolerance criteria for the S-EM and MHRM computation of the
 #'       information matrix. Default is 1e-3}
@@ -583,11 +688,22 @@
 #'       positive or negative infinity. The default is \code{FALSE}}
 #'     \item{customTheta}{a custom \code{Theta} grid, in matrix form, used for integration.
 #'       If not defined, the grid is determined internally based on the number of \code{quadpts}}
+#'     \item{fixedTheta}{a \code{matrix} of latent trait values taken to be fixed and known. This
+#'       will perform a single M-step optimization to obtain item parameter estimates, holding constant
+#'       the elements in \code{fixedTheta}, using the \code{'MHRM'} engine with the BFGS/L-BFGS-B
+#'       algorithm. Matrix input must have as many rows as there are rows in \code{data}}
+#'     \item{nconstrain}{same specification as the \code{constrain} list argument,
+#'       however imposes a negative equality constraint instead (e.g., \eqn{a12 = -a21}, which
+#'       is specified as \code{nconstrain = list(c(12, 21))}). Note that each specification
+#'       in the list must be of length 2, where the second element is taken to be -1 times the
+#'       first element}
 #'     \item{delta}{the deviation term used in numerical estimates when computing the ACOV matrix
 #'       with the 'forward' or 'central' numerical approaches, as well as Oakes' method with the
 #'       Richardson extrapolation. Default is 1e-5}
 #'     \item{parallel}{logical; use the parallel cluster defined by \code{\link{mirtCluster}}?
 #'       Default is TRUE}
+#'      \item{storeEMhistory}{logical; store the iteration history when using the EM algorithm?
+#'      Default is FALSE. When TRUE, use \code{\link{extract.mirt}} to extract}
 #'     \item{internal_constraints}{logical; include the internal constraints when using certain
 #'       IRT models (e.g., 'grsm' itemtype). Disable this if you want to use special optimizers
 #'       such as the solnp. Default is \code{TRUE}}
@@ -638,6 +754,15 @@
 #' Andrich, D. (1978). A rating scale formulation for ordered response categories.
 #' \emph{Psychometrika, 43}, 561-573.
 #'
+#' Andrich, D. (1996). Hyperbolic cosine latent trait models for unfolding direct-responses and pairwise
+#' preferences. \emph{Applied Psychological Measurement, 20}, 269-290.
+#'
+#' Andrich, D., and Luo, G. (1993). A hyperbolic cosine latent trait model for unfolding dichotomous single-
+#'     stimulus responses. \emph{Applied Psychological Measurement, 17}, 253-276.
+#'
+#' Andrich, D. (1988). The application of an unfolding model of the PIRT type to the measurement of
+#' attitude. \emph{Applied Psychological Measurement, 12}, 33-51.
+#'
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of
 #' item parameters: Application of an EM algorithm. \emph{Psychometrika,
 #' 46}(4), 443-459.
@@ -656,7 +781,7 @@
 #' item factor analysis. \emph{Journal of Educational and Behavioral
 #' Statistics, 35}, 307-335.
 #'
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -666,28 +791,38 @@
 #' Chalmers, R. P. (2018). Numerical Approximation of the Observed Information Matrix with Oakes' Identity.
 #' \emph{British Journal of Mathematical and Statistical Psychology} \emph{DOI: 10.1111/bmsp.12127}
 #'
-#' Chalmers, R., P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
+#' Chalmers, R. P. & Flora, D. (2014). Maximum-likelihood Estimation of Noncompensatory IRT
 #' Models with the MH-RM Algorithm. \emph{Applied Psychological Measurement, 38}, 339-358.
 #' \doi{10.1177/0146621614520958}
 #'
 #' Chen, W. H. & Thissen, D. (1997). Local dependence indices for item pairs using item
 #' response theory. \emph{Journal of Educational and Behavioral Statistics, 22}, 265-289.
 #'
+#' Embretson, S. E. (1984). A general latent trait model for response processes.
+#' \emph{Psychometrika, 49}, 175-186.
+#'
 #' Falk, C. F. & Cai, L. (2016). Maximum Marginal Likelihood Estimation of a
 #' Monotonic Polynomial Generalized Partial Credit Model with Applications to
 #' Multiple Group Analysis. \emph{Psychometrika, 81}, 434-460.
 #'
+#' Fischer, G. H. (1983). Logistic latent trait models with linear constraints.
+#' \emph{Psychometrika, 48}, 3-26.
+#'
+#' Hoijtink H. (1990). PARELLA: Measurement of latent traits by proximity items.
+#' The Netherlands: University of Groningen.
+#'
 #' Lord, F. M. & Novick, M. R. (1968). Statistical theory of mental test scores. Addison-Wesley.
 #'
-#' Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis.
-#' \emph{Psychometrika, 40}, 337-360.
+#' Lucke, J. F. (2015). Unipolar item response models. In S. P. Reise & D. A. Revicki
+#' (Eds.), Handbook of item response theory modeling: Applications to
+#' typical performance assessment (pp. 272-284). New York, NY:  Routledge/Taylor & Francis Group.
 #'
-#' Rasch, G. (1960). Probabilistic models for some intelligence and attainment tests.
-#' \emph{Danish Institute for Educational Research}.
+#' Luo G. (2001). A class of probabilistic unfolding models for polytomous responses. \emph{Journal of Mathematical
+#' Psychology. 45}(2):224-248. \code{10.1006/jmps.2000.1310}
 #'
-#' Roberts, J. S., Donoghue, J. R., & Laughlin, J. E. (2000).
-#' A General Item Response Theory Model for Unfolding Unidimensional Polytomous Responses.
-#' \emph{Applied Psychological Measurement, 24}, 3-32.
+#' Luo G, and Andrich D. (2005). Information functions for the general dichotomous unfolding model. In: Alagumalai S,
+#' Curtis D.D., & Hungi N., editor. \code{Applied Rasch Measurement: A Book of Exemplars: Dordrecht, The
+#' Netherlands: Springer}.
 #'
 #' Maydeu-Olivares, A., Hernandez, A. & McDonald, R. P. (2006).
 #' A Multidimensional Ideal Point Item Response Theory Model for Binary Data.
@@ -702,8 +837,25 @@
 #' Muraki, E. & Carlson, E. B. (1995). Full-information factor analysis for polytomous
 #' item responses. \emph{Applied Psychological Measurement, 19}, 73-90.
 #'
+#' Ramsay, J. O. (1975). Solving implicit equations in psychometric data analysis.
+#' \emph{Psychometrika, 40}, 337-360.
+#'
+#' Ramsay, J. O. & Winsberg, S. (1991). Maximum marginal likelihood estimation for
+#' Semiparametric item analysis. \emph{Psychometrika, 56}(3), 365-379.
+#'
+#' Rasch, G. (1960). Probabilistic models for some intelligence and attainment tests.
+#' \emph{Danish Institute for Educational Research}.
+#'
+#' Roberts, J. S., Donoghue, J. R., & Laughlin, J. E. (2000).
+#' A General Item Response Theory Model for Unfolding Unidimensional Polytomous Responses.
+#' \emph{Applied Psychological Measurement, 24}, 3-32.
+#'
 #' Samejima, F. (1969). Estimation of latent ability using a response pattern of
 #' graded scores. \emph{Psychometrika Monographs}, 34.
+#'
+#' Shim, H., Bonifay, W., & Wiedermann, W. (2022). Parsimonious asymmetric item response
+#' theory modeling with the complementary log-log link. \emph{Behavior Research Methods, 55},
+#' 200-219.
 #'
 #' Suh, Y. & Bolt, D. (2010). Nested logit models for multiple-choice item response data.
 #' \emph{Psychometrika, 75}, 454-473.
@@ -735,7 +887,7 @@
 #' @export mirt
 #' @examples
 #'
-#' #load LSAT section 7 data and compute 1 and 2 factor models
+#' # load LSAT section 7 data and compute 1 and 2 factor models
 #' data <- expand.table(LSAT7)
 #' itemstats(data)
 #'
@@ -745,7 +897,7 @@
 #' plot(mod1)
 #' plot(mod1, type = 'trace')
 #'
-#' \dontrun{
+#' \donttest{
 #' (mod2 <- mirt(data, 1, SE = TRUE)) #standard errors via the Oakes method
 #' (mod2 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')) #standard errors with SEM method
 #' coef(mod2)
@@ -756,11 +908,11 @@
 #' plot(mod2, type = 'info') #test information
 #' plot(mod2, MI=200) #expected total score with 95% confidence intervals
 #'
-#' #estimated 3PL model for item 5 only
+#' # estimated 3PL model for item 5 only
 #' (mod1.3PL <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL')))
 #' coef(mod1.3PL)
 #'
-#' #internally g and u pars are stored as logits, so usually a good idea to include normal prior
+#' # internally g and u pars are stored as logits, so usually a good idea to include normal prior
 #' #  to help stabilize the parameters. For a value around .182 use a mean
 #' #  of -1.5 (since 1 / (1 + exp(-(-1.5))) == .182)
 #' model <- 'F = 1-5
@@ -770,12 +922,12 @@
 #' #limited information fit statistics
 #' M2(mod1.3PL.norm)
 #'
-#' #unidimensional ideal point model
+#' # unidimensional ideal point model
 #' idealpt <- mirt(data, 1, itemtype = 'ideal')
 #' plot(idealpt, type = 'trace', facet_items = TRUE)
 #' plot(idealpt, type = 'trace', facet_items = FALSE)
 #'
-#' #two factors (exploratory)
+#' # two factors (exploratory)
 #' mod2 <- mirt(data, 2)
 #' coef(mod2)
 #' summary(mod2, rotate = 'oblimin') #oblimin rotation
@@ -789,7 +941,7 @@
 #' scorestable <- fscores(mod2, full.scores = FALSE) #save factor score table
 #' head(scorestable)
 #'
-#' #confirmatory (as an example, model is not identified since you need 3 items per factor)
+#' # confirmatory (as an example, model is not identified since you need 3 items per factor)
 #' # Two ways to define a confirmatory model: with mirt.model, or with a string
 #'
 #' # these model definitions are equivalent
@@ -803,11 +955,11 @@
 #' # cmod <- mirt(data, cmodel2) # same as above
 #' coef(cmod)
 #' anova(cmod, mod2)
-#' #check if identified by computing information matrix
+#' # check if identified by computing information matrix
 #' (cmod <- mirt(data, cmodel, SE = TRUE))
 #'
 #' ###########
-#' #data from the 'ltm' package in numeric format
+#' # data from the 'ltm' package in numeric format
 #' itemstats(Science)
 #'
 #' pmod1 <- mirt(Science, 1)
@@ -816,8 +968,8 @@
 #' plot(pmod1, type = 'itemscore')
 #' summary(pmod1)
 #'
-#' #Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
-#' #first obtain parameter index
+#' # Constrain all slopes to be equal with the constrain = list() input or mirt.model() syntax
+#' # first obtain parameter index
 #' values <- mirt(Science,1, pars = 'values')
 #' values #note that slopes are numbered 1,5,9,13, or index with values$parnum[values$name == 'a1']
 #' (pmod1_equalslopes <- mirt(Science, 1, constrain = list(c(1,5,9,13))))
@@ -838,30 +990,44 @@
 #' itemplot(pmod2, 1, rotate = 'oblimin')
 #' anova(pmod1, pmod2)
 #'
-#' #unidimensional fit with a generalized partial credit and nominal model
+#' # unidimensional fit with a generalized partial credit and nominal model
 #' (gpcmod <- mirt(Science, 1, 'gpcm'))
 #' coef(gpcmod)
 #'
-#' #for the nominal model the lowest and highest categories are assumed to be the
+#' # for the nominal model the lowest and highest categories are assumed to be the
 #' #  theoretically lowest and highest categories that related to the latent trait(s)
 #' (nomod <- mirt(Science, 1, 'nominal'))
 #' coef(nomod) #ordering of ak values suggest that the items are indeed ordinal
 #' anova(gpcmod, nomod)
 #' itemplot(nomod, 3)
 #'
-#' #generalized graded unfolding model
+#' # generalized graded unfolding model
 #' (ggum <- mirt(Science, 1, 'ggum'))
 #' coef(ggum, simplify=TRUE)
 #' plot(ggum)
 #' plot(ggum, type = 'trace')
 #' plot(ggum, type = 'itemscore')
 #'
-#' #monotonic polyomial models
+#' # monotonic polyomial models
 #' (monopoly <- mirt(Science, 1, 'monopoly'))
 #' coef(monopoly, simplify=TRUE)
 #' plot(monopoly)
 #' plot(monopoly, type = 'trace')
 #' plot(monopoly, type = 'itemscore')
+#'
+#' # unipolar IRT model
+#' unimod <- mirt(Science, itemtype = 'ULL')
+#' coef(unimod, simplify=TRUE)
+#' plot(unimod)
+#' plot(unimod, type = 'trace')
+#' itemplot(unimod, 1)
+#'
+#' # following use the correct log-normal density for latent trait
+#' itemfit(unimod)
+#' M2(unimod, type = 'C2')
+#' fs <- fscores(unimod)
+#' hist(fs, 20)
+#' fscores(unimod, method = 'EAPsum', full.scores = FALSE)
 #'
 #' ## example applying survey weights.
 #' # weight the first half of the cases to be more representative of population
@@ -871,7 +1037,7 @@
 #' weighted <- mirt(Science, 1, survey.weights=survey.weights)
 #'
 #' ###########
-#' #empirical dimensionality testing that includes 'guessing'
+#' # empirical dimensionality testing that includes 'guessing'
 #'
 #' data(SAT12)
 #' data <- key2binary(SAT12,
@@ -881,28 +1047,28 @@
 #' mod1 <- mirt(data, 1)
 #' extract.mirt(mod1, 'time') #time elapsed for each estimation component
 #'
-#' #optionally use Newton-Raphson for (generally) faster convergence in the M-step's
+#' # optionally use Newton-Raphson for (generally) faster convergence in the M-step's
 #' mod1 <- mirt(data, 1, optimizer = 'NR')
 #' extract.mirt(mod1, 'time')
 #'
 #' mod2 <- mirt(data, 2, optimizer = 'NR')
-#' #difficulty converging with reduced quadpts, reduce TOL
+#' # difficulty converging with reduced quadpts, reduce TOL
 #' mod3 <- mirt(data, 3, TOL = .001, optimizer = 'NR')
 #' anova(mod1,mod2)
 #' anova(mod2, mod3) #negative AIC, 2 factors probably best
 #'
-#' #same as above, but using the QMCEM method for generally better accuracy in mod3
+#' # same as above, but using the QMCEM method for generally better accuracy in mod3
 #' mod3 <- mirt(data, 3, method = 'QMCEM', TOL = .001, optimizer = 'NR')
 #' anova(mod2, mod3)
 #'
-#' #with fixed guessing parameters
+#' # with fixed guessing parameters
 #' mod1g <- mirt(data, 1, guess = .1)
 #' coef(mod1g)
 #'
 #' ###########
-#' #graded rating scale example
+#' # graded rating scale example
 #'
-#' #make some data
+#' # make some data
 #' set.seed(1234)
 #' a <- matrix(rep(1, 10))
 #' d <- matrix(c(1,0.5,-.5,-1), 10, 4, byrow = TRUE)
@@ -924,12 +1090,12 @@
 #' SAT12[SAT12 == 8] <- NA #set 8 as a missing value
 #' head(SAT12)
 #'
-#' #correct answer key
+#' # correct answer key
 #' key <- c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5)
 #' scoredSAT12 <- key2binary(SAT12, key)
 #' mod0 <- mirt(scoredSAT12, 1)
 #'
-#' #for first 5 items use 2PLNRM and nominal
+#' # for first 5 items use 2PLNRM and nominal
 #' scoredSAT12[,1:5] <- as.matrix(SAT12[,1:5])
 #' mod1 <- mirt(scoredSAT12, 1, c(rep('nominal',5),rep('2PL', 27)))
 #' mod2 <- mirt(scoredSAT12, 1, c(rep('2PLNRM',5),rep('2PL', 27)), key=key)
@@ -940,7 +1106,7 @@
 #' itemplot(mod1, 1)
 #' itemplot(mod2, 1)
 #'
-#' #compare added information from distractors
+#' # compare added information from distractors
 #' Theta <- matrix(seq(-4,4,.01))
 #' par(mfrow = c(2,3))
 #' for(i in 1:5){
@@ -951,7 +1117,7 @@
 #' }
 #' par(mfrow = c(1,1))
 #'
-#' #test information
+#' # test information
 #' plot(Theta, testinfo(mod2, Theta), type = 'l', main = 'Test information', ylab = 'Information')
 #' lines(Theta, testinfo(mod0, Theta), col = 'red')
 #'
@@ -961,9 +1127,9 @@
 #' fulldata <- expand.table(LSAT7)
 #' (mod1 <- mirt(fulldata, 1, method = 'MHRM'))
 #'
-#' #Confirmatory models
+#' # Confirmatory models
 #'
-#' #simulate data
+#' # simulate data
 #' a <- matrix(c(
 #' 1.5,NA,
 #' 0.5,NA,
@@ -989,23 +1155,23 @@
 #' items <- c(rep('2PL',4), rep('graded',3), '2PL')
 #' dataset <- simdata(a,d,2000,items,sigma)
 #'
-#' #analyses
-#' #CIFA for 2 factor crossed structure
+#' # analyses
+#' # CIFA for 2 factor crossed structure
 #'
 #' model.1 <- '
 #'   F1 = 1-4
 #'   F2 = 4-8
 #'   COV = F1*F2'
 #'
-#' #compute model, and use parallel computation of the log-likelihood
-#' mirtCluster()
+#' # compute model, and use parallel computation of the log-likelihood
+#' if(interactive()) mirtCluster()
 #' mod1 <- mirt(dataset, model.1, method = 'MHRM')
 #' coef(mod1)
 #' summary(mod1)
 #' residuals(mod1)
 #'
 #' #####
-#' #bifactor
+#' # bifactor
 #' model.3 <- '
 #'   G = 1-8
 #'   F1 = 1-4
@@ -1018,7 +1184,7 @@
 #' anova(mod1,mod3)
 #'
 #' #####
-#' #polynomial/combinations
+#' # polynomial/combinations
 #' data(SAT12)
 #' data <- key2binary(SAT12,
 #'                   key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -1036,9 +1202,9 @@
 #' (mod.quad <- mirt(data, model.quad))
 #' summary(mod.quad)
 #' (mod.combo <- mirt(data, model.combo))
-#' anova(mod.quad, mod.combo)
+#' anova(mod.combo, mod.quad)
 #'
-#' #non-linear item and test plots
+#' # non-linear item and test plots
 #' plot(mod.quad)
 #' plot(mod.combo, type = 'SE')
 #' itemplot(mod.quad, 1, type = 'score')
@@ -1046,7 +1212,7 @@
 #' itemplot(mod.combo, 2, type = 'infocontour')
 #'
 #' ## empirical histogram examples (normal, skew and bimodality)
-#' #make some data
+#' # make some data
 #' set.seed(1234)
 #' a <- matrix(rlnorm(50, .2, .2))
 #' d <- matrix(rnorm(50))
@@ -1076,16 +1242,16 @@
 #' dat <- expand.table(LSAT6)
 #' itemstats(dat)
 #'
-#' #free latent mean and variance terms
+#' # free latent mean and variance terms
 #' model <- 'Theta = 1-5
 #'           MEAN = Theta
 #'           COV = Theta*Theta'
 #'
-#' #view how vector of parameters is organized internally
+#' # view how vector of parameters is organized internally
 #' sv <- mirt(dat, model, itemtype = 'Rasch', pars = 'values')
 #' sv[sv$est, ]
 #'
-#' #constraint: create function for solnp to compute constraint, and declare value in eqB
+#' # constraint: create function for solnp to compute constraint, and declare value in eqB
 #' eqfun <- function(p, optim_args) sum(p[1:5]) #could use browser() here, if it helps
 #' LB <- c(rep(-15, 6), 1e-4) # more reasonable lower bound for variance term
 #'
@@ -1100,48 +1266,110 @@
 #'
 #'
 #' #######
-#' # latent regression Rasch model
+#' # Latent regression Rasch model, followed by factor score regression
 #'
-#' #simulate data
+#' # Example assumes that exogenous variables relate to latent trait,
+#' # and latent trait related to endogenous variables not included in the
+#' # measurement model. Equates to the following structure
+#' #
+#' # Exogenous (X3 not related):
+#' # Theta ~ beta*X1 + beta*X2 + 0*X3 + e
+#' #
+#' # Endogenous:
+#' # Y0 ~ 0*Theta + e      (no relationship)
+#' # Y1 ~ gamma*Theta + e
+#' # Y2 ~ gamma*Theta + gamma*Theta^2 + e
+#'
+#' # generate suitable data
 #' set.seed(1234)
 #' N <- 1000
 #'
-#' # covariates
+#' # covariates (exogeneous variables for Theta)
 #' X1 <- rnorm(N); X2 <- rnorm(N)
-#' covdata <- data.frame(X1, X2)
-#' Theta <- matrix(0.5 * X1 + -1 * X2 + rnorm(N, sd = 0.5))
+#' covdata <- data.frame(X1, X2, X3 = rnorm(N))
+#' Theta <- matrix(0.2 * X1  -0.3 * X2 + rnorm(N, sd=sqrt(1 - .2^2 - .3^2)))
+#' var(Theta)
 #'
-#' #items and response data
+#' # relation to endogenous variables, Y1 and Y2, not included in measurement model
+#' Y0 <- rnorm(N)   # no relationship
+#' Y1 <- .5 * Theta + rnorm(N)
+#' Y2 <- .5 * Theta + .25 * Theta^2 + rnorm(N)
+#'
+#' # true relationship between Y and Theta
+#' lm(Y0 ~ Theta) |> summary()
+#' lm(Y1 ~ Theta) |> summary()
+#' lm(Y2 ~ Theta + I(Theta^2)) |> summary()
+#'
+#' # items and response data
 #' a <- matrix(1, 20); d <- matrix(rnorm(20))
-#' dat <- simdata(a, d, 1000, itemtype = '2PL', Theta=Theta)
+#' dat <- simdata(a, d, N, itemtype = '2PL', Theta=Theta)
 #'
-#' #unconditional Rasch model
-#' mod0 <- mirt(dat, 1, 'Rasch')
+#' # unconditional Rasch model
+#' mod0 <- mirt(dat, 1, 'Rasch', SE=TRUE)
+#' coef(mod0, printSE=TRUE)
 #'
-#' #conditional model using X1 and X2 as predictors of Theta
-#' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+#' #######
+#' # For exogenous predictor variables (e.g., Theta ~ X1 + X2 + e)
+#' #   include directly in model, and perform LR/Wald tests
+#' #######
+#' #
+#' # conditional model using X1, X2, and X3 (bad) as predictors of Theta
+#' mod1 <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2 + X3, SE=TRUE)
+#' coef(mod1, printSE=TRUE)
 #' coef(mod1, simplify=TRUE)
-#' anova(mod0, mod1)
+#' anova(mod0, mod1)  # jointly significant predictors of theta
 #'
-#' #bootstrapped confidence intervals
-#' boot.mirt(mod1, R=5)
+#' # large sample z-ratios and p-values via Wald tests
+#' cfs <- coef(mod1, printSE=TRUE)
+#' (z <- cfs$lr.betas[[1]] / cfs$lr.betas[[2]])
+#' ps <- round(pnorm(abs(z[,1]), lower.tail=FALSE)*2, 3)
+#' names(ps) <- paste0('p.', names(ps))
+#' ps
 #'
-#' #draw plausible values for secondary analyses
-#' pv <- fscores(mod1, plausible.draws = 10)
-#' pvmods <- lapply(pv, function(x, covdata) lm(x ~ covdata$X1 + covdata$X2),
-#'                  covdata=covdata)
-#' #population characteristics recovered well, and can be averaged over
-#' so <- lapply(pvmods, summary)
-#' so
+#' # drop X3 predictor for nested LR comparison
+#' mod1b <- mirt(dat, 1, 'Rasch', covdata=covdata, formula = ~ X1 + X2)
+#' anova(mod1b, mod1)  # same information as Wald test
 #'
-#' # compute Rubin's multiple imputation average
-#' par <- lapply(so, function(x) x$coefficients[, 'Estimate'])
-#' SEpar <- lapply(so, function(x) x$coefficients[, 'Std. Error'])
-#' averageMI(par, SEpar)
+#' #####
+#' # For exogenous Y's, treat scores as in factor score regression.
+#' #  However, update the VCOV/SEs and R^2 as the regression
+#' #  assumes the scores in the IV side are error-free (too optimistic)
+#' #####
+#'
+#' # EAP estimates and SEs
+#' fs <- fscores(mod1b, full.scores.SE=TRUE)
+#' theta <- fs[,1]
+#'
+#' # relationship with endogenous Y variable
+#' summary(lmmod0 <- lm(Y0 ~ theta))
+#' summary(lmmod1 <- lm(Y1 ~ theta))
+#' summary(lmmod2 <- lm(Y2 ~ theta + I(theta^2)))
+#'
+#' # improve SEs/R^2 in regression model by accounting for unreliability
+#' (rxx <- empirical_rxx(fs))
+#'
+#' # updates most lm() output, but not everything (do not use for other purposes!)
+#' update.summary <- function(lmmod, rxx){
+#'   so <- summary(lmmod)
+#'   so$r.squared <- so$r.squared / rxx
+#'   so$adj.r.squared <- so$adj.r.squared / rxx
+#'   so$cov.unscaled  <- vcov(lmmod) / rxx
+#'   so$coefficients[,2] <- sqrt(diag(so$cov.unscaled))
+#'   so$coefficients[,3] <- so$coefficients[,1] / so$coefficients[,2]
+#'   so$coefficients[,4] <- pt(abs(so$coefficients[,3]), df=lmmod$df.residual,
+#'     lower.tail = FALSE) * 2
+#'   so
+#' }
+#'
+#' update.summary(lmmod0, rxx)
+#' update.summary(lmmod1, rxx)
+#' update.summary(lmmod2, rxx)
+#'
 #'
 #' ############
 #' # Example using Gauss-Hermite quadrature with custom input functions
 #'
+#' \dontrun{
 #' library(fastGHQuad)
 #' data(SAT12)
 #' data <- key2binary(SAT12,
@@ -1167,6 +1395,7 @@
 #' GHmod2 <- mirt(data, 2, optimizer = 'NR', TOL = .0002,
 #'               technical = list(customTheta = Theta2, customPriorFun = prior))
 #' summary(GHmod2, suppress=.2)
+#' }
 #'
 #' ############
 #' # Davidian curve example
@@ -1184,25 +1413,188 @@
 #' itemfit(dav) # assume normal prior
 #' itemfit(dav, use_dentype_estimate=TRUE) # use Davidian estimated prior shape
 #'
+#' ############
+#' # Unfolding models
+#'
+#' # polytomous hyperbolic cosine model with
+#' #  estimated latitude of acceptance (rho parameters)
+#' mod <- mirt(Science, model=1, itemtype = 'hcm')
+#' coef(mod, simplify=TRUE)$items
+#' coef(mod, simplify=TRUE, IRTpars=TRUE)$items
+#'
+#' plot(mod)
+#' plot(mod, type = 'trace')
+#' plot(mod, type = 'itemscore')
+#'
+#' # EAP estimates
+#' fs <- fscores(mod)
+#' head(fs)
+#'
+#' itemfit(mod)
+#' M2(mod, type = 'C2')
+#'
+#' ###########
+#' # 5PL and restricted 5PL example
+#' dat <- expand.table(LSAT7)
+#'
+#' mod2PL <- mirt(dat)
+#' mod2PL
+#'
+#' # Following does not converge without including strong priors
+#' # mod5PL <- mirt(dat, itemtype = '5PL')
+#' # mod5PL
+#'
+#' # restricted version of 5PL (asymmetric 2PL)
+#' model <- 'Theta = 1-5
+#'           FIXED = (1-5, g), (1-5, u)'
+#'
+#' mod2PL_asym <- mirt(dat, model=model, itemtype = '5PL')
+#' mod2PL_asym
+#' coef(mod2PL_asym, simplify=TRUE)
+#' coef(mod2PL_asym, simplify=TRUE, IRTpars=TRUE)
+#'
+#' # no big difference statistically or visually
+#' anova(mod2PL, mod2PL_asym)
+#' plot(mod2PL, type = 'trace')
+#' plot(mod2PL_asym, type = 'trace')
+#'
+#'
+#' ###################
+#' # LLTM example
+#'
+#' a <- matrix(rep(1,30))
+#' d <- rep(c(1,0, -1),each = 10)  # first easy, then medium, last difficult
+#' dat <- simdata(a, d, 1000, itemtype = '2PL')
+#'
+#' # unconditional model for intercept comparisons
+#' mod <- mirt(dat, itemtype = 'Rasch')
+#' coef(mod, simplify=TRUE)
+#'
+#' # Suppose that the first 10 items were suspected to be easy, followed by 10 medium difficulty items,
+#' # then finally the last 10 items are difficult,
+#' # and we wish to test this item structure hypothesis (more intercept designs are possible
+#' # by including more columns).
+#' itemdesign <- data.frame(difficulty =
+#'    factor(c(rep('easy', 10), rep('medium', 10), rep('hard', 10))))
+#' rownames(itemdesign) <- colnames(dat)
+#' itemdesign
+#'
+#' # LLTM with mirt()
+#' lltm <- mirt(dat, itemtype = 'Rasch', SE=TRUE,
+#'    item.formula = ~ 0 + difficulty, itemdesign=itemdesign)
+#' coef(lltm, simplify=TRUE)
+#' coef(lltm, printSE=TRUE)
+#' anova(lltm, mod)  # models fit effectively the same; hence, intercept variability well captured
+#'
+#' # additional information for LLTM
+#' plot(lltm)
+#' plot(lltm, type = 'trace')
+#' itemplot(lltm, item=1)
+#' itemfit(lltm)
+#' head(fscores(lltm))  #EAP estimates
+#' fscores(lltm, method='EAPsum', full.scores=FALSE)
+#' M2(lltm) # goodness of fit
+#' head(personfit(lltm))
+#' residuals(lltm)
+#'
+#' # intercept across items also possible by removing ~ 0 portion, just interpreted differently
+#' lltm.int <- mirt(dat, itemtype = 'Rasch',
+#'    item.formula = ~ difficulty, itemdesign=itemdesign)
+#' anova(lltm, lltm.int) # same
+#' coef(lltm.int, simplify=TRUE)
+#'
+#' # using unconditional modeling for first four items
+#' itemdesign.sub <- itemdesign[5:nrow(itemdesign), , drop=FALSE]
+#' itemdesign.sub    # note that rownames are required in this case
+#' lltm.4 <- mirt(dat, itemtype = 'Rasch',
+#'    item.formula = ~ 0 + difficulty, itemdesign=itemdesign.sub)
+#' coef(lltm.4, simplify=TRUE) # first four items are the standard Rasch
+#' anova(lltm, lltm.4) # similar fit, hence more constrained model preferred
+#'
+#' # LLTM with mixedmirt() (more flexible in general, but slower)
+#' LLTM <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
+#'                   itemdesign=itemdesign, SE=FALSE)
+#' summary(LLTM)
+#' coef(LLTM)
+#'
+#' # LLTM with random error estimate (not supported with mirt() )
+#' LLTM.e <- mixedmirt(dat, model=1, fixed = ~ 0 + difficulty,
+#'                   random = ~ 1|items, itemdesign=itemdesign, SE=FALSE)
+#' coef(LLTM.e)
+#'
+#'
+#' ###################
+#' # General MLTM example (Embretson, 1984)
+#'
+#' set.seed(42)
+#'
+#' as <- matrix(rep(1,60), ncol=2)
+#' as[11:18,1] <- as[1:9,2] <- 0
+#' d1 <- rep(c(3,1),each = 6)  # first easy, then medium, last difficult for first trait
+#' d2 <- rep(c(0,1,2),times = 4)    # difficult to easy
+#' d <- rnorm(18)
+#' ds <- rbind(cbind(d1=NA, d2=d), cbind(d1, d2))
+#' (pars <- data.frame(a=as, d=ds))
+#' dat <- simdata(as, ds, 2500,
+#'   itemtype = c(rep('dich', 18), rep('partcomp', 12)))
+#' itemstats(dat)
+#'
+#' # unconditional model
+#' syntax <- "theta1 = 1-9, 19-30
+#'            theta2 = 10-30
+#'            COV = theta1*theta2"
+#' itemtype <- c(rep('Rasch', 18), rep('PC1PL', 12))
+#' mod <- mirt(dat, syntax, itemtype=itemtype)
+#' coef(mod, simplify=TRUE)
+#' data.frame(est=coef(mod, simplify=TRUE)$items, pop=data.frame(a=as, d=ds))
+#' itemplot(mod, 1)
+#' itemplot(mod, 30)
+#'
+#' # MLTM design only for PC1PL items
+#' itemdesign <- data.frame(t1_difficulty= factor(d1, labels=c('medium', 'easy')),
+#'                         t2_difficulty=factor(d2, labels=c('hard', 'medium', 'easy')))
+#' rownames(itemdesign) <- colnames(dat)[19:30]
+#' itemdesign
+#'
+#' # fit MLTM design, leaving first 18 items as 'Rasch' type
+#' mltm <- mirt(dat, syntax, itemtype=itemtype, itemdesign=itemdesign,
+#'              item.formula = list(theta1 ~ 0 + t1_difficulty,
+#'                                  theta2 ~ 0 + t2_difficulty), SE=TRUE)
+#' coef(mltm, simplify=TRUE)
+#' coef(mltm, printSE=TRUE)
+#' anova(mltm, mod) # similar fit; hence more constrained version preferred
+#' M2(mltm) # goodness of fit
+#' head(personfit(mltm))
+#' residuals(mltm)
+#'
+#' # EAP estimates
+#' fscores(mltm) |> head()
+#'
 #' }
 mirt <- function(data, model = 1, itemtype = NULL, guess = 0, upper = 1, SE = FALSE,
-                 covdata = NULL, formula = NULL, SE.type = 'Oakes', method = 'EM',
+                 covdata = NULL, formula = NULL, itemdesign=NULL, item.formula = NULL,
+                 SE.type = 'Oakes', method = 'EM',
                  optimizer = NULL, dentype = 'Gaussian',
-                 pars = NULL, constrain = NULL, parprior = NULL,
+                 pars = NULL, constrain = NULL,
                  calcNull = FALSE, draws = 5000, survey.weights = NULL,
                  quadpts = NULL, TOL = NULL, gpcm_mats = list(), grsm.block = NULL,
                  rsm.block = NULL, monopoly.k = 1L, key = NULL,
-                 large = FALSE, GenRandomPars = FALSE, accelerate = 'Ramsay', verbose = TRUE,
+                 large = FALSE, GenRandomPars = FALSE,
+                 accelerate = 'Ramsay', verbose = interactive(),
                  solnp_args = list(), nloptr_args = list(), spline_args = list(),
                  control = list(), technical = list(), ...)
 {
     Call <- match.call()
     latent.regression <- latentRegression_obj(data=data, covdata=covdata,
                                               dentype=dentype, formula=formula, method=method)
+    if(!is.null(latent.regression$data))
+        data <- latent.regression$data
+    mixed.design <- make.mixed.design(item.formula=item.formula,
+                                      itemdesign=itemdesign, data=data)
     mod <- ESTIMATION(data=data, model=model, group=rep('all', nrow(data)),
                       itemtype=itemtype, guess=guess, upper=upper, grsm.block=grsm.block,
                       pars=pars, method=method, constrain=constrain, SE=SE, TOL=TOL,
-                      parprior=parprior, quadpts=quadpts, monopoly.k=monopoly.k,
+                      quadpts=quadpts, monopoly.k=monopoly.k, mixed.design=mixed.design,
                       technical=technical, verbose=verbose, survey.weights=survey.weights,
                       calcNull=calcNull, SE.type=SE.type, large=large, key=key,
                       accelerate=accelerate, draws=draws, rsm.block=rsm.block,

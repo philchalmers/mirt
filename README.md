@@ -1,18 +1,8 @@
 [![](http://www.r-pkg.org/badges/version/mirt)](https://www.r-pkg.org:443/pkg/mirt) [![](http://cranlogs.r-pkg.org/badges/grand-total/mirt)](https://CRAN.R-project.org/package=mirt)
 
-# mirt
+# *mirt*: Multidimensional item response theory in R <img src="mirt-logo.png" height="139" align="right"/>
 
-Multidimensional item response theory in R.
-
-## Description
-
-Analysis of dichotomous and polytomous response data using unidimensional and
-multidimensional latent trait models under the Item Response Theory paradigm.
-Exploratory and confirmatory models can be estimated with quadrature (EM) or
-stochastic (MHRM) methods. Confirmatory bi-factor and two-tier analyses are available
-for modeling item testlets. Multiple group analysis and mixed effects designs also
-are available for detecting differential item functioning and modeling item and
-person covariates.
+Analysis of discrete response data using unidimensional and multidimensional item analysis models under the Item Response Theory paradigm (Chalmers, 2012). Exploratory and confirmatory item factor analysis models are estimated with quadrature (EM) or stochastic (MHRM) methods. Confirmatory bi-factor and two-tier models are available for modeling item testlets using dimension reduction EM algorithms, while multiple group analyses and mixed effects designs are included for detecting differential item, bundle, and test functioning, and for modeling item and person covariates. Finally, latent class models such as the DINA, DINO, multidimensional latent class, mixture IRT models, and zero-inflated response models are supported, as well as a wide family of probabilistic unfolding models.
 
 ## Examples and evaluated help files are available on the wiki
 
@@ -27,7 +17,7 @@ than the version on CRAN. To install this package from source:
 
 1) Obtain recent gcc, g++, and gfortran compilers. Windows users can install the
    [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) suite while Mac users will have to
-   download the necessary tools from the [Xcode](https://apps.apple.com/ca/app/xcode/id497799835?mt=12) suite and its
+   download the necessary tools from the `Xcode` suite and its
    related command line tools (found within Xcode's Preference Pane under Downloads/Components); most Linux
    distributions should already have up to date compilers (or if not they can be updated easily). 
    Windows users should include the checkbox option of installing Rtools to their path for 
@@ -53,12 +43,11 @@ repository directly.
 
 1) Obtain recent gcc, g++, and gfortran compilers (see above instructions).
 
-2) Install the [git command line tools](https://git-scm.com/downloads).
+2) Install the git command line tools (e.g., from `https://git-scm.com/downloads/`).
 
 3) Open a terminal/command-line tool. The following code will download the repository 
 code to your computer, and install the package directly using R tools 
-(Windows users may also have to add R and git to their 
-[path](https://www.computerhope.com/issues/ch000549.htm))
+(Windows users may also have to add R and git to their path)
 
 ```
 git clone https://github.com/philchalmers/mirt

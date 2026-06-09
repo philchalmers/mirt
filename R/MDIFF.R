@@ -13,7 +13,7 @@
 #'
 #' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -24,7 +24,7 @@
 #' @keywords discrimination
 #' @export MDIFF
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' mod <- mirt(Science, 2)
 #' MDIFF(mod)
@@ -48,7 +48,8 @@ MDIFF <- function(x, which.items = NULL, group=NULL){
     for(i in seq_len(length(which.items))){
         item <- extract.item(x, which.items[i])
         if(!(class(item) %in% c('dich', 'graded')))
-            stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]))
+            stop(sprintf('Item %i is not of class \"graded\" or \"dich\"', which.items[i]),
+                 call.=FALSE)
         ds <- ExtractZetas(item)
         out[[i]] <- -ds / MD[which.items[i]]
     }

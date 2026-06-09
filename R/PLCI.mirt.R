@@ -21,7 +21,7 @@
 #'   this value will be adjusted accordingly
 #' @param lower logical; search for the lower CI?
 #' @param upper logical; search for the upper CI?
-#' @param NealeMiller logical; use the Neale and Miller 1997 approximation? Default is \code{FALSE}
+#' @param NealeMiller logical; use the Neale and Miller (1997) approximation? Default is \code{FALSE}
 #' @param verbose logical; include additional information in the console?
 #' @param ... additional arguments to pass to the estimation functions
 #'
@@ -32,7 +32,7 @@
 #' \code{\link{boot.mirt}}
 #'
 #' @references
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
@@ -45,26 +45,26 @@
 #'
 #' @examples
 #'
-#' \dontrun{
-#' mirtCluster() #use all available cores to estimate CI's in parallel
+#' \donttest{
+#' if(interactive()) mirtCluster() #use all available cores to estimate CI's in parallel
 #' dat <- expand.table(LSAT7)
 #' mod <- mirt(dat, 1)
 #'
 #' result <- PLCI.mirt(mod)
 #' result
 #'
-#' # model with constraints
-#' mod <- mirt(dat, 'F = 1-5
-#'                   CONSTRAIN = (1-5, a1)')
-#'
-#' result <- PLCI.mirt(mod)
-#' result
+# # TODO: model with constraints
+# mod <- mirt(dat, 'F = 1-5
+#                   CONSTRAIN = (1-5, a1)')
+#
+# result <- PLCI.mirt(mod)
+# result
 #'
 #' mod2 <- mirt(Science, 1)
 #' result2 <- PLCI.mirt(mod2)
 #' result2
 #'
-#' #only estimate CI's slopes
+#' # only estimate CI's slopes
 #' sv <- mod2values(mod2)
 #' parnum <- sv$parnum[sv$name == 'a1']
 #' result3 <- PLCI.mirt(mod2, parnum)
@@ -74,7 +74,7 @@
 PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
                       search_bound = TRUE, step = .5,
                       lower = TRUE, upper = TRUE, inf2val = 30,
-                      NealeMiller = FALSE, verbose = TRUE, ...){
+                      NealeMiller = FALSE, verbose = interactive(), ...){
 
     #silently accepts print_debug = TRUE for printing the minimization criteria
 
@@ -246,13 +246,13 @@ PLCI.mirt <- function(mod, parnum = NULL, alpha = .05,
 
     stopifnot(extract.mirt(mod, 'converged'))
     if(.hasSlot(mod@Model$lrPars, 'beta'))
-        stop('Latent regression models not yet supported')
+        stop('Latent regression models not yet supported', call.=FALSE)
     stopifnot(lower | upper)
     dat <- mod@Data$data
     model <- mod@Model$model
     parprior <- mod@Model$parprior
     if(length(parprior))
-        stop('Confidence intervals cannot be computed for models that include priors')
+        stop('Confidence intervals cannot be computed for models that include priors', call.=FALSE)
     if(length(parprior) == 0L) parprior <- NULL
     sv <- mod2values(mod)
     itemtype <- extract.mirt(mod, 'itemtype')

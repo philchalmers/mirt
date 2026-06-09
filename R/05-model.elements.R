@@ -2,7 +2,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                            itemloc, data, N, guess, upper, itemnames, exploratory, parprior,
                            parnumber, BFACTOR = FALSE, mixed.design, customItems, customItemsData,
                            dentype, item.Q, customGroup, key, gpcm_mats, spline_args,
-                           monopoly.k, dcIRT_nphi = NULL)
+                           monopoly.k, dcIRT_nphi = NULL, groupName)
 {
     hasProdTerms <- ifelse(nfact == nfactNames, FALSE, TRUE)
     prodlist <- NULL
@@ -98,7 +98,7 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
 
     if(exploratory){
         Rpoly <- cormod(data, K, guess)
-        loads <- eigen(Rpoly)$vector[,seq_len(nfact), drop = FALSE]
+        loads <- eigen(Rpoly)$vectors[,seq_len(nfact), drop = FALSE]
         u <- 1 - rowSums(loads^2)
         u[u < .001 ] <- .2
         cs <- sqrt(u)
@@ -137,11 +137,13 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
                     guess=guess, upper=upper, fulldata=fulldata, J=J, K=K, customItemsData=customItemsData,
                     nfact=nfact+length(prodlist), parprior=parprior, monopoly.k=monopoly.k,
                     parnumber=parnumber, estLambdas=estlam, BFACTOR=BFACTOR, item.Q=item.Q,
-                    mixed.design=mixed.design, customItems=customItems, key=key,
+                    mixed.design=mixed.design, customItems=customItems, key=key, factorNames=factorNames,
                     gpcm_mats=gpcm_mats, spline_args=spline_args, itemnames=itemnames)
+
     ret[[length(ret) + 1L]] <- LoadGroupPars(gmeans=gmeans, gcov=gcov, estgmeans=estgmeans,
                                              estgcov=estgcov, parnumber=attr(ret, 'parnumber'),
-                                             parprior=parprior, Rasch=all(itemtype %in% c('Rasch', 'rsm', 'Tutz')),
+                                             parprior=parprior,
+                                             Rasch=all(itemtype %in% c('Rasch', 'rsm', 'Tutz', 'PC1PL')),
                                              customGroup=customGroup, dcIRT_nphi=dcIRT_nphi, dentype=dentype)
     attr(ret, 'prodlist') <- prodlist
     attr(ret, 'exploratory') <- exploratory

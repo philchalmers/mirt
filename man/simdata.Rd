@@ -13,6 +13,7 @@ simdata(
   mu = NULL,
   guess = 0,
   upper = 1,
+  rho = NULL,
   nominal = NULL,
   t = NULL,
   Theta = NULL,
@@ -47,9 +48,10 @@ be used}
 
   If the internal class of the object is specified instead, the inputs can
   be \code{'dich', 'graded', 'gpcm', 'sequential', 'nominal', 'nestlogit', 'partcomp', 'gumm'},
-  or \code{'lca'}, for dichotomous, graded, generalized partial credit, sequential,
+  \code{'lca'}, and all the models under the Luo (2001) family (see \code{\link{mirt}}),
+  for dichotomous, graded, generalized partial credit, sequential,
   nominal, nested logit, partially compensatory,
-  generalized graded unfolding model, and latent class analysis model.
+  generalized graded unfolding model, latent class analysis model, and ordered unfolding models.
   Note that for the gpcm, nominal, and nested logit models there should
   be as many parameters as desired categories, however to parametrized them for meaningful
   interpretation the first category intercept should
@@ -69,6 +71,10 @@ for dichotomous items. Must be either a scalar value that will affect all of
 the dichotomous items, or a vector with as many values as to be simulated items}
 
 \item{upper}{same as \code{guess}, but for upper bound parameters}
+
+\item{rho}{a matrix of \code{rho} values to be used for the Lui (2001) family of
+ordered unfolding models (see \code{\link{mirt}}) to control the latitude of
+acceptance. All values must be positive}
 
 \item{nominal}{a matrix of specific item category slopes for nominal models.
 Should be the dimensions as the intercept specification with one less column, with \code{NA}
@@ -175,7 +181,7 @@ dataset2 <- simdata(a, d, 2000, itemtype = '2PL', mu = mu, sigma = sigma)
 #mod <- mirt(dataset1, 3, method = 'MHRM')
 #coef(mod)
 
-\dontrun{
+\donttest{
 
 ### Unidimensional graded response model with 5 categories each
 
@@ -209,7 +215,7 @@ d <- matrix(c(
 2.0,0.0,NA),ncol=3,byrow=TRUE)
 
 nominal <- matrix(NA, nrow(d), ncol(d))
-#the first 0 and last (ncat - 1) = 2 values are the recommended constraints
+# the first 0 and last (ncat - 1) = 2 values are the recommended constraints
 nominal[4, ] <- c(0,1.2,2)
 
 sigma <- diag(3)
@@ -241,7 +247,7 @@ summary(mod)
 mod2 <- mirt(dat, 'F1 = 1-10
                    CONSTRAIN = (1-5, a1), (6-10, a1)')
 summary(mod2)
-anova(mod, mod2)
+anova(mod2, mod)
 
 #### Convert classical 3PL paramerization into slope-intercept form
 nitems <- 50
@@ -294,7 +300,7 @@ nonlindata <- simdata(a=a, d=d, itemtype=itemtype, Theta=Theta)
 
 a <- matrix(rlnorm(4,0,.2))
 
-#first column of item 4 is the intercept for the correct category of 2PL model,
+# first column of item 4 is the intercept for the correct category of 2PL model,
 #    otherwise nominal model configuration
 d <- matrix(c(
 -1.0,NA,NA,NA,
@@ -313,7 +319,7 @@ dataset <- simdata(a,d,2000,items,nominal=nominal)
 #coef(mod)
 #itemplot(mod,4)
 
-#return list of simulation parameters
+# return list of simulation parameters
 listobj <- simdata(a,d,2000,items,nominal=nominal, returnList=TRUE)
 str(listobj)
 
@@ -350,6 +356,18 @@ dat <- simdata(a, b, 1000, 'ggum', t=t)
 apply(dat, 2, table)
 # mod <- mirt(dat, 1, 'ggum')
 # coef(mod)
+
+### 10 items with the hyperbolic cosine model with differing category lengths
+a <- matrix(1, 10)
+d <- rnorm(10)
+rho <- matrix(1:2, nrow=10, ncol=2, byrow=TRUE)
+rho[1:2,2] <- NA   # first two items have K=2 categories
+
+dat <- simdata(a, d, 1000, 'hcm', rho=rho)
+itemstats(dat)
+# mod <- mirt(dat, 1, 'hcm')
+# list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))
+
 
 ######
 # prob.list example
@@ -390,7 +408,7 @@ prob.list[[1]] <- x@P(x@par, theta)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 \doi{10.18637/jss.v048.i06}
 

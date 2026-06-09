@@ -20,14 +20,14 @@
 #' polytomous items based on item response theory} (Research Report No. RR-15-20).
 #' Princeton, NJ: Educational Testing Service. http://dx.doi.org/10.1002/ets2.12065
 #'
-#' Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+#' Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 #' Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 #' \doi{10.18637/jss.v048.i06}
 #'
 #' @export
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' mod <- mirt(Science, 1)
 #' coef(mod, simplify=TRUE, IRTpars = TRUE)$items
@@ -80,7 +80,7 @@ gen.difficulty <- function(mod, type = "IRF", interval = c(-30, 30), ...){
                            out
                         })
         ret <- sapply(items, LIIRF_1, ...)
-    } else stop('type not supported')
+    } else stop('type not supported', call.=FALSE)
     names(ret) <- extract.mirt(mod, 'itemnames')
     ret
 }

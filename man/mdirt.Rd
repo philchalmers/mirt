@@ -19,7 +19,7 @@ mdirt(
   return_max = TRUE,
   group = NULL,
   GenRandomPars = FALSE,
-  verbose = TRUE,
+  verbose = interactive(),
   pars = NULL,
   technical = list(),
   ...
@@ -27,7 +27,8 @@ mdirt(
 }
 \arguments{
 \item{data}{a \code{matrix} or \code{data.frame} that consists of
-numerically ordered data, with missing data coded as \code{NA}}
+numerically ordered data, organized in the form of integers,
+ with missing data coded as \code{NA}}
 
 \item{model}{number of mutually exclusive classes to fit, or alternatively a more specific
 \code{\link{mirt.model}} definition (which reflects the so-called Q-matrix).
@@ -57,8 +58,11 @@ contains only 0's for proper identification. Incidentally, the first row of each
 contain only 0's so that the first category represents the reference category for identification}
 
 \item{nruns}{a numeric value indicating how many times the model should be fit to the data
-when using random starting values. If greater than 1, \code{GenRandomPars} is set to true
-by default}
+when using random starting values. If greater than 1, \code{GenRandomPars} is set to \code{TRUE}
+by default. Using this returns a list of fitted model objects, where the model
+with the highest log-likelihood should generally be selected as the model
+best associated with the MLE. Note that if a \code{\link{mirtCluster}} was
+defined earlier then the runs will be run in parallel}
 
 \item{method}{estimation method. Can be 'EM' or 'BL' (see \code{\link{mirt}} for more details)}
 
@@ -137,12 +141,12 @@ an alternative \code{item.Q} definition for each respective item.
 
 \examples{
 
-#LSAT6 dataset
+# LSAT6 dataset
 dat <- expand.table(LSAT6)
 
 # fit with 2-3 latent classes
 (mod2 <- mdirt(dat, 2))
-\dontrun{
+\donttest{
 (mod3 <- mdirt(dat, 3))
 summary(mod2)
 residuals(mod2)
@@ -183,7 +187,7 @@ tabs[[1]]
 
 
 # fit with random starting points (run in parallel to save time)
-mirtCluster()
+if(interactive()) mirtCluster()
 mod <- mdirt(dat, 2, nruns=10)
 
 #--------------------------
@@ -282,7 +286,7 @@ summary(CRUM)
 M2(CRUM)
 
 #------------------
-#multidimensional latent class model
+# multidimensional latent class model
 
 dat <- key2binary(SAT12,
      key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
@@ -349,7 +353,7 @@ itemfit(mod)
 }
 }
 \references{
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
+Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory
 Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
 
 Proctor, C. H. (1970). A probabilistic formulation and statistical analysis for Guttman scaling.

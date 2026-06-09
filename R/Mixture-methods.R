@@ -64,7 +64,7 @@ setMethod(
     definition = function(object, object2, ...)
     {
         class(object) <- 'SingleGroupClass'
-        anova(object, object2, ...)
+        anova(object, object2, ..., frame = 2)
     }
 )
 
@@ -98,12 +98,12 @@ plot_mixture <- function(x, y, type = 'score', npts = 200, degrees = 45,
     pis <- extract.mirt(x, 'pis')
     if(!(type %in% c('info', 'SE', 'infoSE', 'trace', 'score', 'itemscore',
                      'infocontour', 'infotrace', 'scorecontour')))
-        stop('type supplied is not supported')
+        stop('type supplied is not supported', call.=FALSE)
     if (any(degrees > 90 | degrees < 0))
         stop('Improper angle specified. Must be between 0 and 90.', call.=FALSE)
     rot <- list(x = rot[[1]], y = rot[[2]], z = rot[[3]])
     nfact <- x@Model$nfact
-    if(nfact > 3) stop("Can't plot high dimensional solutions.", call.=FALSE)
+    if(nfact > 3) stop("Can't plot high dimensional models.", call.=FALSE)
     J <- x@Data$nitems
     theta <- seq(theta_lim[1L],theta_lim[2L],length.out=npts/(nfact^2))
     ThetaFull <- Theta <- thetaComb(theta, nfact)
@@ -124,7 +124,7 @@ plot_mixture <- function(x, y, type = 'score', npts = 200, degrees = 45,
     if (x@Options$exploratory){
         if(!is.null(dots$rotate)){
             so <- summary(x, verbose=FALSE, digits=5, ...)
-            a <- rotateLambdas(so) * 1.702
+            a <- rotateLambdas(so)
             for(i in 1:J)
                 x@ParObjects$pars[[i]]@par[1:nfact] <- a[i, ]
         }

@@ -7,10 +7,38 @@
 \description{
 Data from Bock & Lieberman (1970); contains 5 dichotomously scored
 items obtained from the Law School Admissions Test, section 7.
+
+Data from
 }
 \examples{
 
-\dontrun{
+\donttest{
+dat <- expand.table(LSAT7)
+head(dat)
+itemstats(dat)
+
+# fit 2PL model for each item
+(mod <- mirt(dat))
+coef(mod)
+
+# monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)
+mod_monospline <- mirt(dat, itemtype = 'monospline')
+anova(mod, mod_monospline)
+plot(mod_monospline)
+
+# compare item 1 trace-lines
+i1 <- extract.item(mod, 1)
+i1mono <- extract.item(mod_monospline, 1)
+theta <- matrix(seq(-6, 6, length.out=100))
+twoPL <- probtrace(i1, theta)[,2]
+monospline <- probtrace(i1mono, theta)[,2]
+
+plot(twoPL ~ theta, type = 'l')
+lines(monospline ~ theta, col='red')
+
+}
+
+\donttest{
 dat <- expand.table(LSAT7)
 head(dat)
 itemstats(dat)
@@ -23,9 +51,8 @@ coef(mod)
 Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
 dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 
-Chalmers, R., P. (2012). mirt: A Multidimensional Item Response Theory
-Package for the R Environment. \emph{Journal of Statistical Software, 48}(6), 1-29.
-\doi{10.18637/jss.v048.i06}
+Bock, R. D., & Lieberman, M. (1970). Fitting a response model for \emph{n}
+dichotomously scored items. \emph{Psychometrika, 35}(2), 179-197.
 }
 \author{
 Phil Chalmers \email{rphilip.chalmers@gmail.com}

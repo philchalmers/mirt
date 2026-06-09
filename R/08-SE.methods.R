@@ -93,12 +93,12 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
         for(g in seq_len(ngroups)){
             if(dentype == 'bfactor'){
                 rlist[[g]] <- Estep.bfactor(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                            Theta=Theta, prior=prior[[g]],
+                                            Theta=Theta, prior=prior[[g]], wmiss=Data$wmiss,
                                             Priorbetween=Priorbetween[[g]], specific=specific, sitems=sitems,
                                             itemloc=itemloc, CUSTOM.IND=list$CUSTOM.IND, omp_threads=1L)
             } else {
                 rlist[[g]] <- Estep.mirt(pars=pars[[g]], tabdata=Data$tabdatalong, freq=Data$Freq[[g]],
-                                         CUSTOM.IND=list$CUSTOM.IND, Theta=Theta,
+                                         CUSTOM.IND=list$CUSTOM.IND, Theta=Theta, wmiss=Data$wmiss,
                                          prior=Prior[[g]], itemloc=itemloc, full=full, omp_threads=1L)
             }
         }
@@ -109,7 +109,7 @@ SE.SEM <- function(index, estmat, pars, constrain, Ls, PrepList, list, Theta, th
             if(dentype == 'bfactor'){
                 pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
                 pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
-            } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+            } else pars[[g]][[J+1L]]@rr <- rlist[[g]]$r1g
         }
         longpars <- Mstep(pars=pars, est=estpars, longpars=longpars, ngroups=ngroups, J=J,
                           gTheta=gTheta, itemloc=itemloc, Prior=Prior, ANY.PRIOR=ANY.PRIOR,
@@ -168,9 +168,12 @@ SE.simple <- function(PrepList, ESTIMATE, Theta, constrain, Ls, N, type,
     npars <- ncol(L)
     gPrior <- t(do.call(rbind, Prior))
     rs <- do.call(rbind, Data$Freq)
+    if(iscross && pars[[1L]][[nitems + 1L]]@itemclass == -1L)
+        SLOW.IND <- SLOW.IND[SLOW.IND != (nitems + 1L)]
     whichitems <- unique(c(CUSTOM.IND, SLOW.IND))
     infolist <- .Call("computeInfo", pars, Theta, gPrior, prior, do.call(rbind, Priorbetween),
-                      Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, isbifactor, iscross)
+                      Data$tabdatalong, rs, sitems, itemloc, gitemtrace, npars, Data$wmiss,
+                      isbifactor, iscross)
     Igrad <- infolist[["Igrad"]]; IgradP <- infolist[["IgradP"]]
     if(length(whichitems)){
         warning('Internal information matrix computations currently not supported for at
@@ -220,7 +223,7 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                      rlist, full, Data, specific, itemloc, CUSTOM.IND,
                      delta, prior, Prior, Priorbetween, nfact, mixtype,
                      PrepList, ANY.PRIOR, DERIV, SLOW.IND, Norder, omp_threads,
-                     zero_g = NULL){
+                     lrPars, zero_g = NULL){
     r <- 1L
     Richardson <- if(Norder > 2L) TRUE else FALSE
     if(Richardson){
@@ -246,7 +249,12 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_constrain(longpars, constrain)
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
-            tmp <- updatePrior(pars=pars, gTheta=gTheta,
+            if(length(lrPars)){
+                lrPars@par <- longpars[lrPars@parnum]
+                lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
+                lrPars@mus <- lrPars@X %*% lrPars@beta
+            }
+            tmp <- updatePrior(pars=pars, gTheta=gTheta, lrPars=lrPars,
                                list=list, ngroups=ngroups, nfact=nfact,
                                J=J, dentype=dentype, sitems=sitems, cycles=100L,
                                rlist=rlist, full=full, MC=list$method == 'QMCEM')
@@ -260,6 +268,11 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
             longpars <- longpars_old
             pars <- reloadPars(longpars=longpars, pars=pars,
                                ngroups=ngroups, J=J)
+            if(length(lrPars)){
+                lrPars@par <- longpars[lrPars@parnum]
+                lrPars@beta[] <- matrix(lrPars@par, lrPars@nfixed, lrPars@nfact)
+                lrPars@mus <- lrPars@X %*% lrPars@beta
+            }
             if(pars[[1L]][[J + 1L]]@itemclass == -1L){
                 for(g in seq_len(length(pars))){
                     gp <- pars[[g]][[J + 1L]]
@@ -273,27 +286,44 @@ SE.Oakes <- function(pick, pars, L, constrain, est, shortpars, longpars,
                 if(dentype == 'bfactor'){
                     pars[[g]][[J+1L]]@rrb <- rlist[[g]]$r2
                     pars[[g]][[J+1L]]@rrs <- rlist[[g]]$r3
-                } else pars[[g]][[J+1L]]@rr <- rowSums(rlist[[g]]$r1) / J
+                } else pars[[g]][[J+1L]]@rr <- rlist[[g]]$r1g
             }
-            g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L, 0L, 1L, TRUE)$grad
+            usefixed <- pars[[1L]][[1]]@nfixedeffects > 0
+            g <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, J), length(est), 0L,
+                       usefixed, 1L, TRUE)$grad
             if(length(SLOW.IND)){
                 for(group in seq_len(ngroups)){
                     for (i in SLOW.IND){
+                        Thetas <- gTheta[[group]]
                         deriv <- if(i == (J + 1L)){
-                            Deriv(pars[[group]][[i]], Theta=gTheta[[group]])
+                            Deriv(pars[[group]][[i]], Theta=Thetas)
                         } else {
-                            DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=gTheta[[group]])
+                            if(pars[[group]][[i]]@nfixedeffects > 0 && nrow(pars[[group]][[i]]@fixed.design) == 1)
+                                Thetas <- cbind(pars[[group]][[i]]@fixed.design[rep(1,nrow(Thetas)),], Thetas)
+                            DERIV[[group]][[i]](x=pars[[group]][[i]], Theta=Thetas)
                         }
                         g[pars[[group]][[i]]@parnum] <- deriv$grad
                     }
                 }
             }
             if(dentype == 'mixture'){
-                mixtype@par <- sapply(1L:length(pars),
+                mixtype$par <- sapply(1L:length(pars),
                                       function(g) sum(pars[[g]][[J+1L]]@par[length(pars[[g]][[J+1L]]@par)]))
-                mixtype@dat <- matrix(sapply(1L:length(pars),
+                mixtype$dat <- matrix(sapply(1L:length(pars),
                                              function(g) sum(pars[[g]][[J+1L]]@rr)), 1L)
-                deriv <- Deriv(mixtype, Theta = matrix(1, 1L, length(pars)))
+                deriv <- Deriv.mix(mixtype)
+                g[mixtype$parnum] <- deriv$grad
+            }
+            if(length(lrPars)){
+                for(group in seq_len(ngroups)){
+                    gp <- ExtractGroupPars(pars[[group]][[J+1L]])
+                    tmp <- Mstep.LR(Theta=gTheta[[group]], CUSTOM.IND=CUSTOM.IND, pars=pars[[group]],
+                                    itemloc=itemloc, fulldata=Data$fulldata[[1L]], prior=Prior[[group]],
+                                    lrPars=lrPars, retscores=TRUE)
+                    deriv <- Deriv(lrPars, cov=gp$gcov, theta=tmp)
+                    deriv$grad * lrPars@est
+                    g[lrPars@parnum] <- as.vector(deriv$grad * lrPars@est)
+                }
             }
             tmp <- g %*% L
             if(pick == 0L) return(tmp[est])
@@ -365,7 +395,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND,
         for(pat in seq_len(nrow(tabdata))){
             gtabdata <- PrepList[[g]]$tabdata[pat, , drop=FALSE]
             rlist <- Estep.mirt(pars=pars[[g]], tabdata=gtabdata, freq=1L,
-                                CUSTOM.IND=CUSTOM.IND, full=full,
+                                CUSTOM.IND=CUSTOM.IND, full=full, wmiss=1,
                                 Theta=Theta, prior=Prior[[g]], itemloc=itemloc,
                                 deriv=TRUE, omp_threads=omp_threads)
             for(i in seq_len(nitems)){
@@ -373,7 +403,7 @@ SE.Fisher <- function(PrepList, ESTIMATE, Theta, constrain, Ls, CUSTOM.IND,
                 pars[[g]][[i]]@dat <- rlist$r1[, tmp]
                 pars[[g]][[i]]@itemtrace <- rlist$itemtrace[, tmp]
             }
-            pars[[g]][[nitems + 1L]]@rr <- rowSums(rlist$r1)
+            pars[[g]][[nitems + 1L]]@rr <- rlist$r1g
             DX <- .Call('computeDPars', pars, gTheta, matrix(0L, 1L, nitems),
                         ncol(L), 0L, 0L, 1L, TRUE)$grad
             info <- info + DX %*% t(DX) * rlist$expected
