@@ -2550,12 +2550,23 @@ setMethod(
 )
 
 
-# derivative of the model wrt to the Theta values (done numerically here)
+# derivative of the model wrt to the Theta values
 setMethod(
     f = "DerivTheta",
     signature = signature(x = 'gpcmIRT', Theta = 'matrix'),
     definition = function(x, Theta){
-        numDeriv_DerivTheta(x, Theta)
+        zp <- x@par[1L] * (0:(x@ncat - 1L))
+        P <- probtrace(x, Theta)
+        m1 <- as.numeric(P %*% zp)
+        m2 <- as.numeric(P %*% (zp^2))
+        varz <- m2 - m1^2
+        grad <- hess <- vector("list", x@ncat)
+        for (i in seq_len(x@ncat)) {
+            g <- zp[i] - m1
+            grad[[i]] <- matrix(P[, i] * g, ncol = 1L)
+            hess[[i]] <- matrix(P[, i] * (g^2 - varz), ncol = 1L)
+        }
+        list(grad = grad, hess = hess)
     }
 )
 
