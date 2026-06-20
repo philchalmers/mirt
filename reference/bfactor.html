@@ -21,7 +21,7 @@ on the objects returned from the estimation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -958,12 +958,147 @@ New York, NY: Cambridge University Press.</p>
 <span class="r-in"><span><span class="va">maps</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">simmod</span>, method <span class="op">=</span> <span class="st">'MAP'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">maps</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              G1          G2         S1           S2          S3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322964 -0.02778408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330675 -0.39920301</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.5799759  1.15757308 -0.4439183 -0.448083235  0.41194310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322965 -0.02778409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330672 -0.39920301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.5799759  1.15757307 -0.4439183 -0.448083235  0.41194310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136242</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.6156947  1.23660200  0.6409160 -0.005859276  0.35081023</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -0.6658814 -0.93907518 -0.4207128  0.209132981 -0.45956922</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">######</span></span></span>
+<span class="r-in"><span><span class="co"># Multiple-group bifactor example from Cai, Yang, Hansen (2011)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Table 1 info from Cai, Yang, and Hansen (2011)</span></span></span>
+<span class="r-in"><span><span class="va">intercept</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.25</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">.25</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span>,</span></span>
+<span class="r-in"><span>               <span class="fl">.25</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span>, <span class="fl">.25</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">theta0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.4</span>,<span class="fl">1.7</span>,<span class="fl">2</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">1.4</span>,<span class="fl">1.7</span>,<span class="fl">2</span>,<span class="fl">1</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">1.7</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">1.4</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1.4</span>, <span class="fl">1.7</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">thetan</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.8</span>,<span class="fl">1.5</span>,<span class="fl">1.2</span>,<span class="fl">1</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">1</span>,<span class="fl">.8</span>,<span class="fl">1.5</span>,<span class="fl">1.2</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">1.2</span>,<span class="fl">1</span>,<span class="fl">.8</span>,<span class="fl">1.5</span>,</span></span>
+<span class="r-in"><span>            <span class="fl">1.5</span>,<span class="fl">1.2</span>,<span class="fl">1</span>,<span class="fl">.8</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">thetaN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">thetaN</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">thetan</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">thetaN</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">+</span><span class="fl">4</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">thetan</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">+</span><span class="fl">4</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">thetaN</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">+</span><span class="fl">8</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">thetan</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">+</span><span class="fl">8</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">thetaN</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">+</span><span class="fl">12</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">thetan</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">+</span><span class="fl">12</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">as</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">theta0</span>, <span class="va">thetaN</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">as</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       theta0                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]    1.0 0.8 0.0 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]    1.4 1.5 0.0 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]    1.7 1.2 0.0 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]    2.0 1.0 0.0 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]    1.4 0.0 1.0 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]    1.7 0.0 0.8 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]    2.0 0.0 1.5 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]    1.0 0.0 1.2 0.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]    1.7 0.0 0.0 1.2 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]    2.0 0.0 0.0 1.0 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11,]    1.0 0.0 0.0 0.8 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [12,]    1.4 0.0 0.0 1.5 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13,]    2.0 0.0 0.0 0.0 1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [14,]    1.0 0.0 0.0 0.0 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15,]    1.4 0.0 0.0 0.0 1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16,]    1.7 0.0 0.0 0.0 0.8</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># data generation for focal group does not have response</span></span></span>
+<span class="r-in"><span><span class="co"># for items 13-16, however commented out for presentation</span></span></span>
+<span class="r-in"><span><span class="co"># (mean/var for last specific factor must remain fixed in focal group)</span></span></span>
+<span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span></span>
+<span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="st">'2PL'</span></span></span>
+<span class="r-in"><span><span class="va">gmeans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">.5</span>, <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.8</span>, <span class="fl">1.2</span>, <span class="fl">1.5</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">datG1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">as</span>, <span class="va">intercept</span>, N<span class="op">=</span><span class="va">N</span>, itemtype<span class="op">=</span><span class="st">'2PL'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">datG2</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">as</span>, <span class="va">intercept</span>, N<span class="op">=</span><span class="va">N</span>, itemtype<span class="op">=</span><span class="st">'2PL'</span>,</span></span>
+<span class="r-in"><span>  mu <span class="op">=</span> <span class="va">gmeans</span>, sigma <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">datG2</span><span class="op">[</span>,<span class="fl">13</span><span class="op">:</span><span class="fl">16</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>    <span class="co"># use this to match publication</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">datG1</span>, <span class="va">datG2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'G1'</span>, <span class="st">'G2'</span><span class="op">)</span>, each<span class="op">=</span><span class="va">N</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">specific</span> <span class="op">&lt;-</span> <span class="st">"S1 = 1-4</span></span></span>
+<span class="r-in"><span><span class="st">             S2 = 5-8</span></span></span>
+<span class="r-in"><span><span class="st">             S3 = 9-12</span></span></span>
+<span class="r-in"><span><span class="st">             S4 = 13-16"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">bfactor</span><span class="op">(</span><span class="va">dat</span>, <span class="va">specific</span>, group<span class="op">=</span><span class="va">group</span>,</span></span>
+<span class="r-in"><span>  invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'free_means'</span>, <span class="st">'free_vars'</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $G1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1    a2    a3    a4    a5      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.053 0.609 0.000 0.000 0.000  0.793 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.524 1.392 0.000 0.000 0.000  0.237 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.991 1.262 0.000 0.000 0.000 -0.170 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.398 1.070 0.000 0.000 0.000 -1.038 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.447 0.000 0.779 0.000 0.000  1.053 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.760 0.000 0.702 0.000 0.000  0.228 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.951 0.000 1.416 0.000 0.000 -0.310 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.001 0.000 1.103 0.000 0.000 -0.975 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.750 0.000 0.000 1.053 0.000  0.847 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.990 0.000 0.000 0.928 0.000  0.147 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.077 0.000 0.000 0.965 0.000 -0.319 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.759 0.000 0.000 2.115 0.000 -1.305 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 2.104 0.000 0.000 0.000 1.606  1.129 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.122 0.000 0.000 0.000 1.068  0.333 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.408 0.000 0.000 0.000 1.041 -0.142 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.752 0.000 0.000 0.000 0.985 -1.015 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  G S1 S2 S3 S4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0  0  0  0  0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    G S1 S2 S3 S4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G  1  0  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1 0  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S2 0  0  1  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S3 0  0  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S4 0  0  0  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $G2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1    a2    a3    a4    a5      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.053 0.609 0.000 0.000 0.000  0.793 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.524 1.392 0.000 0.000 0.000  0.237 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  1.991 1.262 0.000 0.000 0.000 -0.170 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.398 1.070 0.000 0.000 0.000 -1.038 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.447 0.000 0.779 0.000 0.000  1.053 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.760 0.000 0.702 0.000 0.000  0.228 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.951 0.000 1.416 0.000 0.000 -0.310 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.001 0.000 1.103 0.000 0.000 -0.975 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.750 0.000 0.000 1.053 0.000  0.847 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.990 0.000 0.000 0.928 0.000  0.147 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.077 0.000 0.000 0.965 0.000 -0.319 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.759 0.000 0.000 2.115 0.000 -1.305 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 2.104 0.000 0.000 0.000 1.606  1.129 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.122 0.000 0.000 0.000 1.068  0.333 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.408 0.000 0.000 0.000 1.041 -0.142 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.752 0.000 0.000 0.000 0.985 -1.015 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      G     S1     S2     S3     S4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.979 -0.766 -0.065  0.414 -0.179 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        G    S1    S2    S3    S4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G  0.684 0.000 0.000 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1 0.000 1.268 0.000 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S2 0.000 0.000 2.116 0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S3 0.000 0.000 0.000 0.996 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S4 0.000 0.000 0.000 0.000 1.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

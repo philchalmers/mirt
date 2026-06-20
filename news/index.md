@@ -2,6 +2,11 @@
 
 ## Changes in mirt 1.47
 
+- [`bfactor()`](https://philchalmers.github.io/mirt/reference/bfactor.md)
+  multiple group option now allows `invariance` arguments such as
+  `free_means` and `free_vars` to free the general and specific factors
+  in the focal groups automatically
+
 - [`itemplot()`](https://philchalmers.github.io/mirt/reference/itemplot.md)
   gains `empirical_proportions` argument to plot the model-implied
   proportion estimates from the E-table in the EM algorithm. Currently

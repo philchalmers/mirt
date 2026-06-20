@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.47" id="changes-in-mirt-147">Changes in mirt 1.47<a class="anchor" aria-label="anchor" href="#changes-in-mirt-147"></a></h2>
-<ul><li><p><code><a href="../reference/itemplot.html">itemplot()</a></code> gains <code>empirical_proportions</code> argument to plot the model-implied proportion estimates from the E-table in the EM algorithm. Currently limited to unidimenisonal models only</p></li>
+<ul><li><p><code><a href="../reference/bfactor.html">bfactor()</a></code> multiple group option now allows <code>invariance</code> arguments such as <code>free_means</code> and <code>free_vars</code> to free the general and specific factors in the focal groups automatically</p></li>
+<li><p><code><a href="../reference/itemplot.html">itemplot()</a></code> gains <code>empirical_proportions</code> argument to plot the model-implied proportion estimates from the E-table in the EM algorithm. Currently limited to unidimenisonal models only</p></li>
 <li><p><code><a href="../reference/fscores.html">fscores()</a></code> also gains <code>method = 'EAP_general'</code> to perform the dimension reduction EAP estimates for bifactor/two-tier general factor predictions as described in Gibbons et al. (2007)</p></li>
 <li><p><code><a href="../reference/fscores.html">fscores()</a></code> gains <code>method = 'EAPsum_2.0'</code> to obtain the 2.0 version of the Lord-Wingersky Algorithm described in Cai (2015)</p></li>
 </ul></div>

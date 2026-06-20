@@ -67,7 +67,7 @@ anova(mod1, mod2)
 # bootstrap LR test (run in parallel to save time)
 if(interactive()) mirtCluster()
 boot.LR(mod1, mod2, R=200)
-#> [1] 0.3432836
+#> [1] 0.3482587
 
 # }
 ```
