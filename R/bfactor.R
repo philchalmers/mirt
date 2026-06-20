@@ -295,6 +295,57 @@
 #' maps <- fscores(simmod, method = 'MAP')
 #' head(maps)
 #'
+#' ######
+#' # Multiple-group bifactor example from Cai, Yang, Hansen (2011)
+#'
+#' # Table 1 info from Cai, Yang, and Hansen (2011)
+#' intercept <- c(1, .25, -.25, -1, 1, .25, -.25, -1,1,
+#'                .25, -.25, -1,1, .25, -.25, -1)
+#' theta0 <- c(1, 1.4,1.7,2,
+#'             1.4,1.7,2,1,
+#'             1.7,2,1,1.4,
+#'             2, 1, 1.4, 1.7)
+#' thetan <- c(.8,1.5,1.2,1,
+#'             1,.8,1.5,1.2,
+#'             1.2,1,.8,1.5,
+#'             1.5,1.2,1,.8)
+#' thetaN <- matrix(0, 16, 4)
+#' thetaN[1:4, 1] <- thetan[1:4]
+#' thetaN[1:4+4, 2] <- thetan[1:4+4]
+#' thetaN[1:4+8, 3] <- thetan[1:4+8]
+#' thetaN[1:4+12, 4] <- thetan[1:4+12]
+#'
+#' as <- cbind(theta0, thetaN)
+#' as
+#'
+#' # data generation for focal group does not have response
+#' # for items 13-16, however commented out for presentation
+#' # (mean/var for last specific factor must remain fixed in focal group)
+#' N <- 1000
+#' itemtype <- '2PL'
+#' gmeans <- c(1, -.5, 0, .5, 0)
+#' sigma <- diag(c(.8, 1.2, 1.5, 1, 1))
+#'
+#' datG1 <- simdata(as, intercept, N=N, itemtype='2PL')
+#' datG2 <- simdata(as, intercept, N=N, itemtype='2PL',
+#'   mu = gmeans, sigma = sigma)
+#'
+#' if(FALSE){
+#'   datG2[,13:16] <- NA    # use this to match publication
+#' }
+#'
+#' dat <- rbind(datG1, datG2)
+#' group <- rep(c('G1', 'G2'), each=N)
+#'
+#' specific <- "S1 = 1-4
+#'              S2 = 5-8
+#'              S3 = 9-12
+#'              S4 = 13-16"
+#'
+#' mod <- bfactor(dat, specific, group=group,
+#'   invariance=c('free_means', 'free_vars', colnames(dat)))
+#' coef(mod, simplify=TRUE)
+#'
 #' }
 #'
 bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),

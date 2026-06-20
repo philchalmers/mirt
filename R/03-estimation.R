@@ -461,13 +461,8 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     nspec <- ifelse(!is.null(attr(model, 'nspec')), attr(model, 'nspec'), 1L)
     #default MG uses configural model (independent groups but each identified)
     if('free_means' %in% invariance ){ #Free factor means (means 0 for ref)
-        if(opts$dentype == 'bfactor'){
-            for(g in 2L:Data$ngroups)
-                pars[[g]][[nitems + 1L]]@est[1L:(nfact-nspec)] <- TRUE
-        } else {
-            for(g in 2L:Data$ngroups)
+        for(g in 2L:Data$ngroups)
                 pars[[g]][[nitems + 1L]]@est[1L:nfact] <- TRUE
-        }
     }
     dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
     if(any('free_means' %in% invariance)){ #Free means
@@ -487,13 +482,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
         }
     }
     if(any(c('free_var', 'free_vars') %in% invariance)){ #Free factor vars (vars 1 for ref)
-        if(opts$dentype == 'bfactor'){
-            tmp <- dummymat[1L:(nfact-nspec),1L:(nfact-nspec), drop=FALSE]
-            diag(tmp) <- TRUE
-            dummymat[1L:(nfact-nspec),1L:(nfact-nspec)] <- tmp
-        } else {
-            diag(dummymat) <- TRUE
-        }
+        diag(dummymat) <- TRUE
         tmp <- dummymat[lower.tri(dummymat, TRUE)]
         if(opts$dentype %in% c('Davidian', 'EHW')){
             for(g in 2L:Data$ngroups)
