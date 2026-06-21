@@ -117,7 +117,8 @@ a \code{mirt_df} object with the information-based criteria for DIF, though this
 \description{
 This function runs the Wald and likelihood-ratio approaches for testing differential
 item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
-\code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
+\code{\link{multipleGroup}} and \code{\link{bfactor}} functions
+ for performing standard DIF procedures. Independent
 models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
 which will help to decrease the run time. For best results, the baseline model should contain
 a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.

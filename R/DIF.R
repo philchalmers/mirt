@@ -2,7 +2,8 @@
 #'
 #' This function runs the Wald and likelihood-ratio approaches for testing differential
 #' item functioning (DIF) with two or more groups. This is primarily a convenience wrapper to the
-#' \code{\link{multipleGroup}} function for performing standard DIF procedures. Independent
+#' \code{\link{multipleGroup}} and \code{\link{bfactor}} functions
+#'  for performing standard DIF procedures. Independent
 #' models can be estimated in parallel by defining a parallel object with \code{\link{mirtCluster}},
 #' which will help to decrease the run time. For best results, the baseline model should contain
 #' a set of 'anchor' items and have freely estimated hyper-parameters in the focal groups.
@@ -230,7 +231,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                 simplify = TRUE, verbose = interactive(), ...){
 
     loop_test <- function(item, model, which.par, values, Wald, itemnames, invariance, drop,
-                          return_models, groups2test, large, technical = list(), ...)
+                          return_models, groups2test, large, ISBIFACTOR, technical = list(), ...)
     {
         constrain <- model@Model$constrain
         mirt_model <- model@Model$model
@@ -286,12 +287,23 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             for(i in seq_len(length(parnum)))
                 constrain[[length(constrain) + 1L]] <- parnum[[i]]
         }
-        newmodel <- multipleGroup(model@Data$data, mirt_model, group=model@Data$group,
-                                  invariance = invariance, constrain=constrain, pars=sv,
-                                  customItems = extract.mirt(model, 'customItems'),
-                                  customGroup = extract.mirt(model, 'customGroup'), large=large,
-                                  itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
-                                  ...)
+        if(ISBIFACTOR){
+            specific <- attr(mirt_model, 'specific')
+            newmodel <- bfactor(model@Data$data, specific, mirt_model, group=model@Data$group,
+                                      invariance = invariance, constrain=constrain, pars=sv,
+                                      customItems = extract.mirt(model, 'customItems'),
+                                      customGroup = extract.mirt(model, 'customGroup'), large=large,
+                                      itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
+                                      ...)
+
+        } else {
+            newmodel <- multipleGroup(model@Data$data, mirt_model, group=model@Data$group,
+                                      invariance = invariance, constrain=constrain, pars=sv,
+                                      customItems = extract.mirt(model, 'customItems'),
+                                      customGroup = extract.mirt(model, 'customGroup'), large=large,
+                                      itemtype = model@Model$itemtype, verbose=FALSE, technical=technical,
+                                      ...)
+        }
         aov <- if(drop) anova(model, newmodel) else anova(newmodel, model)
         attr(aov, 'parnum') <- parnum
         attr(aov, 'converged') <- extract.mirt(newmodel, 'converged')
@@ -357,8 +369,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         message(paste('NOTE: No hyper-parameters were estimated in the DIF model. \n      For effective',
                 'DIF testing, freeing the focal group hyper-parameters is recommended.'))
     bfactorlist <- MGmodel@Internals$bfactor
-    if(!is.null(bfactorlist$Priorbetween[[1L]]))
-        stop('bifactor models are currently not supported in this function', call.=FALSE)
+    ISBIFACTOR <- FALSE
+    if(!is.null(bfactorlist$Priorbetween[[1L]])) ISBIFACTOR <- TRUE
     itemnames <- colnames(MGmodel@Data$data)
     if(!any(scheme %in% c('add', 'drop', 'add_sequential', 'drop_sequential')))
         stop('scheme input is not valid', call.=FALSE)
@@ -388,7 +400,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
     values$const <- 'none'
     drop <- scheme == 'drop' || scheme == 'drop_sequential'
     invariance <- MGmodel@Model$invariance[MGmodel@Model$invariance %in%
-                                         c('free_means', 'free_var')]
+                                         c('free_means','free_mean', 'free_var', 'free_vars')]
     if(!length(invariance)) invariance <- ''
     large <- multipleGroup(extract.mirt(MGmodel, 'data'), 1,
                            group=extract.mirt(MGmodel, 'group'), large='return')
@@ -396,7 +408,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
                     model=MGmodel, which.par=which.par, values=values,
                     Wald=Wald, drop=drop, itemnames=itemnames, invariance=invariance,
                     return_models=return_models && !(scheme %in% c('add_sequential', 'drop_sequential')),
-                    large=large, ...)
+                    large=large, ISBIFACTOR=ISBIFACTOR, ...)
     names(res) <- itemnames[items2test]
     if(scheme %in% c('add_sequential', 'drop_sequential')){
         lastkeep <- rep(TRUE, length(res))
@@ -468,7 +480,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             tmp <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=drop,
                             itemnames=itemnames, invariance=invariance, return_models=FALSE,
-                            groups2test=groups2test, large=large, ...)
+                            groups2test=groups2test, large=large, ISBIFACTOR=ISBIFACTOR, ...)
             names(tmp) <- itemnames[items2test][pick]
             for(i in names(tmp))
                 res[[i]] <- tmp[[i]]
@@ -484,7 +496,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
             res <- myLapply(X=items2test[pick], FUN=loop_test, progress=verbose, model=updatedModel,
                             which.par=which.par, values=values, Wald=Wald, drop=FALSE,
                             itemnames=itemnames, invariance=invariance, return_models=return_models,
-                            groups2test=groups2test, large=large, ...)
+                            groups2test=groups2test, large=large, ISBIFACTOR=ISBIFACTOR, ...)
             names(res) <- itemnames[items2test][pick]
         }
     }

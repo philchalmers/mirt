@@ -341,9 +341,15 @@
 #'              S3 = 9-12
 #'              S4 = 13-16"
 #'
-#' mod <- bfactor(dat, specific, group=group,
+#' mod <- bfactor(dat, specific, group=group, SE=TRUE,
 #'   invariance=c('free_means', 'free_vars', colnames(dat)))
 #' coef(mod, simplify=TRUE)
+#'
+#' # DIF testing for general dimension only with likelihood ratio tests (not run)
+#' if(FALSE){
+#'   mirtCluster()  # allocate computing cores
+#'   DIF(mod, which.par=c('a1', 'd'), scheme='drop')
+#' }
 #'
 #' ## same analysis, however items 13:16 do not exist in the focal group
 #' datG2[,13:16] <- NA    # use this to match publication
