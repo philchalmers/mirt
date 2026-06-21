@@ -52,6 +52,10 @@
 #'   Alternatively, input can be specified using the \code{\link{mirt.model}} syntax with the
 #'   restriction that each item must load on exactly one specific factor (or no specific factors,
 #'   if it is only predicted by the general factor specified in \code{model2})
+#'
+#'   IMPORTANT: Additional model information (e.g., keywords such as
+#'   \code{CONSTRAIN}, \code{MEAN}, etc) must be specified in the \code{model2} input
+#'   instead of this specification
 #' @param model2 a two-tier model specification object defined by \code{mirt.model()} or
 #'   a string to be passed to \code{\link{mirt.model}}. By default
 #'   the model will fit a unidimensional model in the second-tier, and therefore be equivalent to
@@ -318,9 +322,8 @@
 #' as <- cbind(theta0, thetaN)
 #' as
 #'
-#' # data generation for focal group does not have response
-#' # for items 13-16, however commented out for presentation
-#' # (mean/var for last specific factor must remain fixed in focal group)
+#' # data generation for focal group in publication does not have response
+#' # for items 13-16. However, full-data approach presented first
 #' N <- 1000
 #' itemtype <- '2PL'
 #' gmeans <- c(1, -.5, 0, .5, 0)
@@ -329,10 +332,6 @@
 #' datG1 <- simdata(as, intercept, N=N, itemtype='2PL')
 #' datG2 <- simdata(as, intercept, N=N, itemtype='2PL',
 #'   mu = gmeans, sigma = sigma)
-#'
-#' if(FALSE){
-#'   datG2[,13:16] <- NA    # use this to match publication
-#' }
 #'
 #' dat <- rbind(datG1, datG2)
 #' group <- rep(c('G1', 'G2'), each=N)
@@ -345,6 +344,20 @@
 #' mod <- bfactor(dat, specific, group=group,
 #'   invariance=c('free_means', 'free_vars', colnames(dat)))
 #' coef(mod, simplify=TRUE)
+#'
+#' ## same analysis, however items 13:16 do not exist in the focal group
+#' datG2[,13:16] <- NA    # use this to match publication
+#' dat <- rbind(datG1, datG2)
+#' head(dat)
+#' tail(dat)
+#'
+#' # specify mean/cov structure explicitly
+#' model2 <- "G = 1-16
+#'            MEAN [G2] = G, S1, S2, S3
+#'            COV [G2] = G*G, S1*S1, S2*S2, S3*S3"
+#'
+#' mod2 <- bfactor(dat, specific, model2, group=group, invariance=colnames(dat))
+#' coef(mod2, simplify=TRUE)
 #'
 #' }
 #'
