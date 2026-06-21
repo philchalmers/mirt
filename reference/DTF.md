@@ -132,21 +132,21 @@ plot(mod)
 
 DTF(mod)
 #>    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#>     0.1742369     0.5807896     0.1768800     0.5896002 
+#>     0.1742503     0.5808345     0.1768942     0.5896472 
 if(interactive()) mirtCluster()
 DTF(mod, draws = 1000) #95% C.I. for sDTF containing 0. uDTF is very small
 #> $observed
 #>    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#>     0.1742369     0.5807896     0.1768800     0.5896002 
+#>     0.1742503     0.5808345     0.1768942     0.5896472 
 #> 
 #> $CIs
 #>         sDTF.score sDTF(%).score uDTF.score uDTF(%).score
-#> CI_97.5  0.4728808     1.5762695 0.76426586     2.5475529
-#> CI_2.5  -0.1233808    -0.4112693 0.08050925     0.2683642
+#> CI_97.5  0.4728988     1.5763295 0.76428125     2.5476042
+#> CI_2.5  -0.1233689    -0.4112298 0.08051973     0.2683991
 #> 
 #> $tests
 #> P(sDTF.score = 0) 
-#>         0.2723393 
+#>         0.2723072 
 #> 
 DTF(mod, draws = 1000, plot='sDTF') #sDTF 95% C.I.'s across Theta always include 0
 
@@ -172,20 +172,20 @@ plot(mod2)
 # DIF(mod2, which.par=c('a1', 'd'), items2test=16:30)
 DTF(mod2)
 #>    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#>     0.1937470     0.6458234     0.1944098     0.6480326 
+#>     0.1938451     0.6461503     0.1945321     0.6484405 
 DTF(mod2, draws=1000) #non-sig DTF due to item cancellation
 #> $observed
 #>    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#>     0.1937470     0.6458234     0.1944098     0.6480326 
+#>     0.1938451     0.6461503     0.1945321     0.6484405 
 #> 
 #> $CIs
-#>         sDTF.score sDTF(%).score uDTF.score uDTF(%).score
-#> CI_97.5  0.4949249     1.6497498 0.66772934     2.2257645
-#> CI_2.5  -0.0600406    -0.2001353 0.08150818     0.2716939
+#>          sDTF.score sDTF(%).score uDTF.score uDTF(%).score
+#> CI_97.5  0.49507815     1.6502605 0.66845274     2.2281758
+#> CI_2.5  -0.05997639    -0.1999213 0.08200682     0.2733561
 #> 
 #> $tests
 #> P(sDTF.score = 0) 
-#>         0.1694501 
+#>         0.1692894 
 #> 
 
 ## -------------
@@ -202,20 +202,20 @@ plot(mod3) #visable DTF happening
 # DIF(mod3, c('a1', 'd'), items2test=16:30)
 DTF(mod3) #unsigned bias. Signed bias indicates group 2 scores generally higher on average
 #>    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#>    -0.8317365    -2.7724550     1.0764408     3.5881361 
+#>    -0.8316846    -2.7722821     1.0763954     3.5879847 
 DTF(mod3, draws=1000)
 #> $observed
 #>    sDTF.score sDTF(%).score    uDTF.score uDTF(%).score 
-#>    -0.8317365    -2.7724550     1.0764408     3.5881361 
+#>    -0.8316846    -2.7722821     1.0763954     3.5879847 
 #> 
 #> $CIs
 #>         sDTF.score sDTF(%).score uDTF.score uDTF(%).score
-#> CI_97.5 -0.5503085     -1.834362  1.3842919      4.614306
-#> CI_2.5  -1.1248651     -3.749550  0.7954752      2.651584
+#> CI_97.5 -0.5502537     -1.834179  1.3842471      4.614157
+#> CI_2.5  -1.1248162     -3.749387  0.7954339      2.651446
 #> 
 #> $tests
 #> P(sDTF.score = 0) 
-#>      2.738111e-08 
+#>      2.744233e-08 
 #> 
 DTF(mod3, draws=1000, plot='func')
 
@@ -227,21 +227,21 @@ Theta_nodes <- matrix(seq(-6,6,length.out = 100))
 sDTF <- DTF(mod3, Theta_nodes=Theta_nodes)
 head(sDTF)
 #>             Theta       sDTF
-#> score.1 -6.000000 0.03153791
-#> score.2 -5.878788 0.03604196
-#> score.3 -5.757576 0.04118184
-#> score.4 -5.636364 0.04704370
-#> score.5 -5.515152 0.05372403
-#> score.6 -5.393939 0.06133041
+#> score.1 -6.000000 0.03153680
+#> score.2 -5.878788 0.03604071
+#> score.3 -5.757576 0.04118044
+#> score.4 -5.636364 0.04704212
+#> score.5 -5.515152 0.05372225
+#> score.6 -5.393939 0.06132841
 sDTF <- DTF(mod3, Theta_nodes=Theta_nodes, draws=100)
 head(sDTF)
 #>             Theta       sDTF   CI_97.5      CI_2.5
-#> score.1 -6.000000 0.03153791 0.1630118 -0.01734655
-#> score.2 -5.878788 0.03604196 0.1785965 -0.01768471
-#> score.3 -5.757576 0.04118184 0.1955885 -0.01792454
-#> score.4 -5.636364 0.04704370 0.2140994 -0.01804610
-#> score.5 -5.515152 0.05372403 0.2342469 -0.01802792
-#> score.6 -5.393939 0.06133041 0.2561549 -0.01784738
+#> score.1 -6.000000 0.03153680 0.1630094 -0.01734832
+#> score.2 -5.878788 0.03604071 0.1785939 -0.01768661
+#> score.3 -5.757576 0.04118044 0.1955856 -0.01792658
+#> score.4 -5.636364 0.04704212 0.2140962 -0.01804830
+#> score.5 -5.515152 0.05372225 0.2342434 -0.01803028
+#> score.6 -5.393939 0.06132841 0.2561510 -0.01784992
 
 # }
 ```

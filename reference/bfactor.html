@@ -96,7 +96,10 @@ with missing data coded as <code>NA</code></p></dd>
   added to the respective factor number</p>
 <p>Alternatively, input can be specified using the <code><a href="mirt.model.html">mirt.model</a></code> syntax with the
   restriction that each item must load on exactly one specific factor (or no specific factors,
-  if it is only predicted by the general factor specified in <code>model2</code>)</p></dd>
+  if it is only predicted by the general factor specified in <code>model2</code>)</p>
+<p>IMPORTANT: Additional model information (e.g., keywords such as
+  <code>CONSTRAIN</code>, <code>MEAN</code>, etc) must be specified in the <code>model2</code> input
+  instead of this specification</p></dd>
 
 
 <dt id="arg-model-">model2<a class="anchor" aria-label="anchor" href="#arg-model-"></a></dt>
@@ -958,10 +961,10 @@ New York, NY: Cambridge University Press.</p>
 <span class="r-in"><span><span class="va">maps</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscores.html">fscores</a></span><span class="op">(</span><span class="va">simmod</span>, method <span class="op">=</span> <span class="st">'MAP'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">maps</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              G1          G2         S1           S2          S3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322965 -0.02778409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330672 -0.39920301</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.5799759  1.15757307 -0.4439183 -0.448083235  0.41194310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322964 -0.02778408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330675 -0.39920301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.5799759  1.15757308 -0.4439183 -0.448083235  0.41194310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136241</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  0.6156947  1.23660200  0.6409160 -0.005859276  0.35081023</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -0.6658814 -0.93907518 -0.4207128  0.209132981 -0.45956922</span>
 <span class="r-in"><span></span></span>
@@ -1005,9 +1008,8 @@ New York, NY: Cambridge University Press.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15,]    1.4 0.0 0.0 0.0 1.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [16,]    1.7 0.0 0.0 0.0 0.8</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># data generation for focal group does not have response</span></span></span>
-<span class="r-in"><span><span class="co"># for items 13-16, however commented out for presentation</span></span></span>
-<span class="r-in"><span><span class="co"># (mean/var for last specific factor must remain fixed in focal group)</span></span></span>
+<span class="r-in"><span><span class="co"># data generation for focal group in publication does not have response</span></span></span>
+<span class="r-in"><span><span class="co"># for items 13-16. However, full-data approach presented first</span></span></span>
 <span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span></span>
 <span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="st">'2PL'</span></span></span>
 <span class="r-in"><span><span class="va">gmeans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">.5</span>, <span class="fl">0</span><span class="op">)</span></span></span>
@@ -1016,10 +1018,6 @@ New York, NY: Cambridge University Press.</p>
 <span class="r-in"><span><span class="va">datG1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">as</span>, <span class="va">intercept</span>, N<span class="op">=</span><span class="va">N</span>, itemtype<span class="op">=</span><span class="st">'2PL'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">datG2</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">as</span>, <span class="va">intercept</span>, N<span class="op">=</span><span class="va">N</span>, itemtype<span class="op">=</span><span class="st">'2PL'</span>,</span></span>
 <span class="r-in"><span>  mu <span class="op">=</span> <span class="va">gmeans</span>, sigma <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">datG2</span><span class="op">[</span>,<span class="fl">13</span><span class="op">:</span><span class="fl">16</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>    <span class="co"># use this to match publication</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">datG1</span>, <span class="va">datG2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'G1'</span>, <span class="st">'G2'</span><span class="op">)</span>, each<span class="op">=</span><span class="va">N</span><span class="op">)</span></span></span>
@@ -1097,6 +1095,115 @@ New York, NY: Cambridge University Press.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S2 0.000 0.000 2.116 0.000 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S3 0.000 0.000 0.000 0.996 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S4 0.000 0.000 0.000 0.000 1.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## same analysis, however items 13:16 do not exist in the focal group</span></span></span>
+<span class="r-in"><span><span class="va">datG2</span><span class="op">[</span>,<span class="fl">13</span><span class="op">:</span><span class="fl">16</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>    <span class="co"># use this to match publication</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">datG1</span>, <span class="va">datG2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      1      1      1      1      1      1      0      1      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      1      0      1      0      0      1      0      0      0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      1      1      1      1      1      1      1      0      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      1      1      1      1      1      1      1      1      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      0      0      0      0      1      0      0      0      1       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      1      1      1      1      1      1      1      1      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Item_11 Item_12 Item_13 Item_14 Item_15 Item_16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       1       1       1       1       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0       0       1       0       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1       1       1       1       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       1       0       0       0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0       0       0       0       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0       0       1       1       1       0</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1995,]      1      1      1      1      1      1      1      1      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1996,]      0      1      1      1      1      1      0      0      0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1997,]      0      1      1      1      1      1      1      0      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1998,]      0      1      1      1      1      1      1      1      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1999,]      1      1      0      1      1      1      0      0      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2000,]      1      0      1      1      1      1      1      1      1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Item_11 Item_12 Item_13 Item_14 Item_15 Item_16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1995,]       1       1      NA      NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1996,]       0       0      NA      NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1997,]       1       1      NA      NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1998,]       1       1      NA      NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1999,]       1       1      NA      NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2000,]       1       1      NA      NA      NA      NA</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># specify mean/cov structure explicitly</span></span></span>
+<span class="r-in"><span><span class="va">model2</span> <span class="op">&lt;-</span> <span class="st">"G = 1-16</span></span></span>
+<span class="r-in"><span><span class="st">           MEAN [G2] = G, S1, S2, S3</span></span></span>
+<span class="r-in"><span><span class="st">           COV [G2] = G*G, S1*S1, S2*S2, S3*S3"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu">bfactor</span><span class="op">(</span><span class="va">dat</span>, <span class="va">specific</span>, <span class="va">model2</span>, group<span class="op">=</span><span class="va">group</span>, invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod2</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $G1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1    a2    a3    a4    a5      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.043 0.615 0.000 0.000 0.000  0.799 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.532 1.337 0.000 0.000 0.000  0.233 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2.000 1.262 0.000 0.000 0.000 -0.168 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.393 1.102 0.000 0.000 0.000 -1.041 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.423 0.000 0.800 0.000 0.000  1.050 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.722 0.000 0.715 0.000 0.000  0.214 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.951 0.000 1.447 0.000 0.000 -0.310 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.014 0.000 1.064 0.000 0.000 -0.969 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.732 0.000 0.000 1.039 0.000  0.834 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.987 0.000 0.000 0.897 0.000  0.124 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.088 0.000 0.000 0.926 0.000 -0.317 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.845 0.000 0.000 2.279 0.000 -1.349 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.839 0.000 0.000 0.000 1.280  1.007 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.175 0.000 0.000 0.000 1.068  0.307 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.440 0.000 0.000 0.000 1.194 -0.150 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.840 0.000 0.000 0.000 1.010 -1.001 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  G S1 S2 S3 S4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0  0  0  0  0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    G S1 S2 S3 S4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G  1  0  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1 0  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S2 0  0  1  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S3 0  0  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S4 0  0  0  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $G2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            a1    a2    a3    a4    a5      d g u</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  1.043 0.615 0.000 0.000 0.000  0.799 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  1.532 1.337 0.000 0.000 0.000  0.233 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2.000 1.262 0.000 0.000 0.000 -0.168 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2.393 1.102 0.000 0.000 0.000 -1.041 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  1.423 0.000 0.800 0.000 0.000  1.050 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  1.722 0.000 0.715 0.000 0.000  0.214 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  1.951 0.000 1.447 0.000 0.000 -0.310 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  1.014 0.000 1.064 0.000 0.000 -0.969 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  1.732 0.000 0.000 1.039 0.000  0.834 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 1.987 0.000 0.000 0.897 0.000  0.124 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_11 1.088 0.000 0.000 0.926 0.000 -0.317 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_12 1.845 0.000 0.000 2.279 0.000 -1.349 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_13 1.839 0.000 0.000 0.000 1.280  1.007 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_14 1.175 0.000 0.000 0.000 1.068  0.307 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_15 1.440 0.000 0.000 0.000 1.194 -0.150 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_16 1.840 0.000 0.000 0.000 1.010 -1.001 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      G     S1     S2     S3     S4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.049 -0.887 -0.150  0.329  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       G   S1    S2    S3 S4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G  0.69 0.00 0.000 0.000  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1 0.00 1.23 0.000 0.000  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S2 0.00 0.00 2.095 0.000  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S3 0.00 0.00 0.000 0.989  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S4 0.00 0.00 0.000 0.000  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

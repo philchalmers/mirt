@@ -52,6 +52,10 @@ bfactor(
   specific factor (or no specific factors, if it is only predicted by
   the general factor specified in `model2`)
 
+  IMPORTANT: Additional model information (e.g., keywords such as
+  `CONSTRAIN`, `MEAN`, etc) must be specified in the `model2` input
+  instead of this specification
+
 - model2:
 
   a two-tier model specification object defined by
@@ -934,10 +938,10 @@ head(eaps_all)
 maps <- fscores(simmod, method = 'MAP')
 head(maps)
 #>              G1          G2         S1           S2          S3
-#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322965 -0.02778409
-#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330672 -0.39920301
-#> [3,] -0.5799759  1.15757307 -0.4439183 -0.448083235  0.41194310
-#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136242
+#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322964 -0.02778408
+#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330675 -0.39920301
+#> [3,] -0.5799759  1.15757308 -0.4439183 -0.448083235  0.41194310
+#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136241
 #> [5,]  0.6156947  1.23660200  0.6409160 -0.005859276  0.35081023
 #> [6,] -0.6658814 -0.93907518 -0.4207128  0.209132981 -0.45956922
 
@@ -981,9 +985,8 @@ as
 #> [15,]    1.4 0.0 0.0 0.0 1.0
 #> [16,]    1.7 0.0 0.0 0.0 0.8
 
-# data generation for focal group does not have response
-# for items 13-16, however commented out for presentation
-# (mean/var for last specific factor must remain fixed in focal group)
+# data generation for focal group in publication does not have response
+# for items 13-16. However, full-data approach presented first
 N <- 1000
 itemtype <- '2PL'
 gmeans <- c(1, -.5, 0, .5, 0)
@@ -992,10 +995,6 @@ sigma <- diag(c(.8, 1.2, 1.5, 1, 1))
 datG1 <- simdata(as, intercept, N=N, itemtype='2PL')
 datG2 <- simdata(as, intercept, N=N, itemtype='2PL',
   mu = gmeans, sigma = sigma)
-
-if(FALSE){
-  datG2[,13:16] <- NA    # use this to match publication
-}
 
 dat <- rbind(datG1, datG2)
 group <- rep(c('G1', 'G2'), each=N)
@@ -1073,6 +1072,115 @@ coef(mod, simplify=TRUE)
 #> S2 0.000 0.000 2.116 0.000 0.000
 #> S3 0.000 0.000 0.000 0.996 0.000
 #> S4 0.000 0.000 0.000 0.000 1.005
+#> 
+#> 
+
+## same analysis, however items 13:16 do not exist in the focal group
+datG2[,13:16] <- NA    # use this to match publication
+dat <- rbind(datG1, datG2)
+head(dat)
+#>      Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
+#> [1,]      1      1      1      1      1      1      0      1      1       1
+#> [2,]      1      0      1      0      0      1      0      0      0       1
+#> [3,]      1      1      1      1      1      1      1      0      1       1
+#> [4,]      1      1      1      1      1      1      1      1      1       1
+#> [5,]      0      0      0      0      1      0      0      0      1       0
+#> [6,]      1      1      1      1      1      1      1      1      1       1
+#>      Item_11 Item_12 Item_13 Item_14 Item_15 Item_16
+#> [1,]       1       1       1       1       1       1
+#> [2,]       0       0       1       0       1       1
+#> [3,]       1       1       1       1       1       1
+#> [4,]       1       0       0       0       0       0
+#> [5,]       0       0       0       0       0       0
+#> [6,]       0       0       1       1       1       0
+tail(dat)
+#>         Item_1 Item_2 Item_3 Item_4 Item_5 Item_6 Item_7 Item_8 Item_9 Item_10
+#> [1995,]      1      1      1      1      1      1      1      1      1       1
+#> [1996,]      0      1      1      1      1      1      0      0      0       1
+#> [1997,]      0      1      1      1      1      1      1      0      1       1
+#> [1998,]      0      1      1      1      1      1      1      1      1       1
+#> [1999,]      1      1      0      1      1      1      0      0      1       1
+#> [2000,]      1      0      1      1      1      1      1      1      1       1
+#>         Item_11 Item_12 Item_13 Item_14 Item_15 Item_16
+#> [1995,]       1       1      NA      NA      NA      NA
+#> [1996,]       0       0      NA      NA      NA      NA
+#> [1997,]       1       1      NA      NA      NA      NA
+#> [1998,]       1       1      NA      NA      NA      NA
+#> [1999,]       1       1      NA      NA      NA      NA
+#> [2000,]       1       1      NA      NA      NA      NA
+
+# specify mean/cov structure explicitly
+model2 <- "G = 1-16
+           MEAN [G2] = G, S1, S2, S3
+           COV [G2] = G*G, S1*S1, S2*S2, S3*S3"
+
+mod2 <- bfactor(dat, specific, model2, group=group, invariance=colnames(dat))
+#> 
+coef(mod2, simplify=TRUE)
+#> $G1
+#> $items
+#>            a1    a2    a3    a4    a5      d g u
+#> Item_1  1.043 0.615 0.000 0.000 0.000  0.799 0 1
+#> Item_2  1.532 1.337 0.000 0.000 0.000  0.233 0 1
+#> Item_3  2.000 1.262 0.000 0.000 0.000 -0.168 0 1
+#> Item_4  2.393 1.102 0.000 0.000 0.000 -1.041 0 1
+#> Item_5  1.423 0.000 0.800 0.000 0.000  1.050 0 1
+#> Item_6  1.722 0.000 0.715 0.000 0.000  0.214 0 1
+#> Item_7  1.951 0.000 1.447 0.000 0.000 -0.310 0 1
+#> Item_8  1.014 0.000 1.064 0.000 0.000 -0.969 0 1
+#> Item_9  1.732 0.000 0.000 1.039 0.000  0.834 0 1
+#> Item_10 1.987 0.000 0.000 0.897 0.000  0.124 0 1
+#> Item_11 1.088 0.000 0.000 0.926 0.000 -0.317 0 1
+#> Item_12 1.845 0.000 0.000 2.279 0.000 -1.349 0 1
+#> Item_13 1.839 0.000 0.000 0.000 1.280  1.007 0 1
+#> Item_14 1.175 0.000 0.000 0.000 1.068  0.307 0 1
+#> Item_15 1.440 0.000 0.000 0.000 1.194 -0.150 0 1
+#> Item_16 1.840 0.000 0.000 0.000 1.010 -1.001 0 1
+#> 
+#> $means
+#>  G S1 S2 S3 S4 
+#>  0  0  0  0  0 
+#> 
+#> $cov
+#>    G S1 S2 S3 S4
+#> G  1  0  0  0  0
+#> S1 0  1  0  0  0
+#> S2 0  0  1  0  0
+#> S3 0  0  0  1  0
+#> S4 0  0  0  0  1
+#> 
+#> 
+#> $G2
+#> $items
+#>            a1    a2    a3    a4    a5      d g u
+#> Item_1  1.043 0.615 0.000 0.000 0.000  0.799 0 1
+#> Item_2  1.532 1.337 0.000 0.000 0.000  0.233 0 1
+#> Item_3  2.000 1.262 0.000 0.000 0.000 -0.168 0 1
+#> Item_4  2.393 1.102 0.000 0.000 0.000 -1.041 0 1
+#> Item_5  1.423 0.000 0.800 0.000 0.000  1.050 0 1
+#> Item_6  1.722 0.000 0.715 0.000 0.000  0.214 0 1
+#> Item_7  1.951 0.000 1.447 0.000 0.000 -0.310 0 1
+#> Item_8  1.014 0.000 1.064 0.000 0.000 -0.969 0 1
+#> Item_9  1.732 0.000 0.000 1.039 0.000  0.834 0 1
+#> Item_10 1.987 0.000 0.000 0.897 0.000  0.124 0 1
+#> Item_11 1.088 0.000 0.000 0.926 0.000 -0.317 0 1
+#> Item_12 1.845 0.000 0.000 2.279 0.000 -1.349 0 1
+#> Item_13 1.839 0.000 0.000 0.000 1.280  1.007 0 1
+#> Item_14 1.175 0.000 0.000 0.000 1.068  0.307 0 1
+#> Item_15 1.440 0.000 0.000 0.000 1.194 -0.150 0 1
+#> Item_16 1.840 0.000 0.000 0.000 1.010 -1.001 0 1
+#> 
+#> $means
+#>      G     S1     S2     S3     S4 
+#>  1.049 -0.887 -0.150  0.329  0.000 
+#> 
+#> $cov
+#>       G   S1    S2    S3 S4
+#> G  0.69 0.00 0.000 0.000  0
+#> S1 0.00 1.23 0.000 0.000  0
+#> S2 0.00 0.00 2.095 0.000  0
+#> S3 0.00 0.00 0.000 0.989  0
+#> S4 0.00 0.00 0.000 0.000  1
 #> 
 #> 
 
