@@ -365,7 +365,8 @@ bfactor <- function(data, model, model2 = paste0('G = 1-', ncol(data)),
     if(is(model, 'mirt.model')){
         tmp <- rep(NA, ncol(data))
         toparse <- model$x
-        toparse <- toparse[!(toparse[,1] %in% mirt.model_keywords()), 2]
+        toparse <- toparse[sapply(toparse[,1], \(x)
+                                  !any(sapply(mirt.model_keywords(), \(y) grepl(y,x)))), 2]
         toparse <- replace_dash(toparse)
         loads <- lapply(toparse, \(x) as.integer(strsplit(x, split=',')[[1L]]))
         stopifnot("bifactor model specific loadings not unique; please fix" =
