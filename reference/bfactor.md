@@ -938,10 +938,10 @@ head(eaps_all)
 maps <- fscores(simmod, method = 'MAP')
 head(maps)
 #>              G1          G2         S1           S2          S3
-#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322964 -0.02778408
-#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330675 -0.39920301
-#> [3,] -0.5799759  1.15757308 -0.4439183 -0.448083235  0.41194310
-#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136241
+#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322965 -0.02778409
+#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330672 -0.39920301
+#> [3,] -0.5799759  1.15757307 -0.4439183 -0.448083235  0.41194310
+#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136242
 #> [5,]  0.6156947  1.23660200  0.6409160 -0.005859276  0.35081023
 #> [6,] -0.6658814 -0.93907518 -0.4207128  0.209132981 -0.45956922
 
@@ -1004,9 +1004,11 @@ specific <- "S1 = 1-4
              S3 = 9-12
              S4 = 13-16"
 
-mod <- bfactor(dat, specific, group=group,
+mod <- bfactor(dat, specific, group=group, SE=TRUE,
   invariance=c('free_means', 'free_vars', colnames(dat)))
 #> 
+#> 
+#> Calculating information matrix...
 coef(mod, simplify=TRUE)
 #> $G1
 #> $items
@@ -1074,6 +1076,12 @@ coef(mod, simplify=TRUE)
 #> S4 0.000 0.000 0.000 0.000 1.005
 #> 
 #> 
+
+# DIF testing for general dimension only with likelihood ratio tests (not run)
+if(FALSE){
+  mirtCluster()  # allocate computing cores
+  DIF(mod, which.par=c('a1', 'd'), scheme='drop')
+}
 
 ## same analysis, however items 13:16 do not exist in the focal group
 datG2[,13:16] <- NA    # use this to match publication

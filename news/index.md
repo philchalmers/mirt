@@ -2,6 +2,9 @@
 
 ## Changes in mirt 1.47
 
+- [`DIF()`](https://philchalmers.github.io/mirt/reference/DIF.md) now
+  supports bifactor/two-tier models
+
 - [`bfactor()`](https://philchalmers.github.io/mirt/reference/bfactor.md)
   multiple group option now allows `invariance` arguments such as
   `free_means` and `free_vars` to free the general and specific factors

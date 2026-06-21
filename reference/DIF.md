@@ -4,7 +4,9 @@ This function runs the Wald and likelihood-ratio approaches for testing
 differential item functioning (DIF) with two or more groups. This is
 primarily a convenience wrapper to the
 [`multipleGroup`](https://philchalmers.github.io/mirt/reference/multipleGroup.md)
-function for performing standard DIF procedures. Independent models can
+and
+[`bfactor`](https://philchalmers.github.io/mirt/reference/bfactor.md)
+functions for performing standard DIF procedures. Independent models can
 be estimated in parallel by defining a parallel object with
 [`mirtCluster`](https://philchalmers.github.io/mirt/reference/mirtCluster.md),
 which will help to decrease the run time. For best results, the baseline
