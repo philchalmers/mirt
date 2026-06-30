@@ -134,7 +134,7 @@ estfun.AllModelClass <- function(x, weights = extract.mirt(x, "survey.weights"),
   sitems <- x@Internals$bfactor$sitems
   sw <- x@Internals$survey.weights
   Theta <- x@Model$Theta
-  isbifactor <- length(Priorbetween[[1L]]) > 0L
+  isbifactor <- extract.mirt(x, 'dentype') == 'bfactor'
   ## check if not bifactor
   if(!isbifactor) {
     sitems <- as.matrix(0)

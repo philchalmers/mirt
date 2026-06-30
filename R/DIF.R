@@ -369,8 +369,7 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         message(paste('NOTE: No hyper-parameters were estimated in the DIF model. \n      For effective',
                 'DIF testing, freeing the focal group hyper-parameters is recommended.'))
     bfactorlist <- MGmodel@Internals$bfactor
-    ISBIFACTOR <- FALSE
-    if(!is.null(bfactorlist$Priorbetween[[1L]])) ISBIFACTOR <- TRUE
+    ISBIFACTOR <- extract.mirt(MGmodel, 'dentype') == 'bfactor'
     itemnames <- colnames(MGmodel@Data$data)
     if(!any(scheme %in% c('add', 'drop', 'add_sequential', 'drop_sequential')))
         stop('scheme input is not valid', call.=FALSE)
