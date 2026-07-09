@@ -74,3 +74,7 @@ the Github 'issues'. Feel free to submit issues or feature requests on the site,
 address them ASAP. Also, if you have any questions about the package, or IRT in general, then
 feel free to create a 'New Topic' in the
 [mirt-package](https://groups.google.com/forum/#!forum/mirt-package) Google group. Cheers!
+
+# Applied assessment example
+
+For a live consumer-facing reasoning gym using adaptive distinction items and honest scoring, see [IntelligenceMax](https://intelligencemax.ai) ([science notes](https://intelligencemax.ai/science)).
