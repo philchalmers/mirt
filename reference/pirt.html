@@ -113,6 +113,22 @@ See <code><a href="mirt.html">mirt</a></code> for details</p></dd>
 (SE)?</p></dd>
 
 
+<dt id="arg-estimator">estimator<a class="anchor" aria-label="anchor" href="#arg-estimator"></a></dt>
+<dd><p>type of PIRT estimator to use. Default is <code>'MML'</code> to fit and
+  return the MML-PIRT variable described by Chalmers et al. (in review).
+  <code>'FA'</code> will use Stucky et al.'s (2012) factor analysis logistic
+  approximation to project to the first dimension, and <code>'LKA'</code>
+  will use the use logistic kernel approximation formula
+  presented in Ip (2010)/Doebler and Doebler(2020), however these only project
+  to the first dimension? The latter two estimators are also only
+  applicable when input model is from the M*PL and MGRM family (see
+  for polytomous MGRM derivation), and only return lists of the resulting
+  parameters and SE estimates</p>
+<p>Note that for methods other than <code>'MML'</code> the SEs will be returned
+  only if the parent model  as a suitably estimated ACOV matrix to perform
+  the delta method (e.g., <code>bfactor(..., SE=TRUE</code>)</p></dd>
+
+
 <dt id="arg-invariance">invariance<a class="anchor" aria-label="anchor" href="#arg-invariance"></a></dt>
 <dd><p>type of group invariance to specify (see <code><a href="multipleGroup.html">multipleGroup</a></code>).
 Included here as the multiple-group PIRT approach needs to also calibrate the
@@ -136,22 +152,6 @@ approach as this returns the associated model object</p></dd>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>extra information passed to the estimation engine</p></dd>
-
-
-<dt id="arg-estiamtor">estiamtor<a class="anchor" aria-label="anchor" href="#arg-estiamtor"></a></dt>
-<dd><p>type of PIRT estimator to use. Default is <code>'MML'</code> to fit and
-  return the MML-PIRT variable described by Chalmers et al. (in review).
-  <code>'FA'</code> will use Stucky et al.'s (2012) factor analysis logistic
-  approximation to project to the first dimension, and <code>'LKA'</code>
-  will use the use logistic kernel approximation formula
-  presented in Ip (2010)/Doebler and Doebler(2020), however these only project
-  to the first dimension? The latter two estimators are also only
-  applicable when input model is from the M*PL and MGRM family (see
-  for polytomous MGRM derivation), and only return lists of the resulting
-  parameters and SE estimates</p>
-<p>Note that for methods other than <code>'MML'</code> the SEs will be returned
-  only if the parent model  as a suitably estimated ACOV matrix to perform
-  the delta method (e.g., <code>bfactor(..., SE=TRUE</code>)</p></dd>
 
 </dl></div>
     <div class="section level2">

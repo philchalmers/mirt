@@ -55,6 +55,22 @@ pirt(
 
   logical; compute the ACOV matrix to obtain standard errors (SE)?
 
+- estimator:
+
+  type of PIRT estimator to use. Default is `'MML'` to fit and return
+  the MML-PIRT variable described by Chalmers et al. (in review). `'FA'`
+  will use Stucky et al.'s (2012) factor analysis logistic approximation
+  to project to the first dimension, and `'LKA'` will use the use
+  logistic kernel approximation formula presented in Ip (2010)/Doebler
+  and Doebler(2020), however these only project to the first dimension?
+  The latter two estimators are also only applicable when input model is
+  from the M\*PL and MGRM family (see for polytomous MGRM derivation),
+  and only return lists of the resulting parameters and SE estimates
+
+  Note that for methods other than `'MML'` the SEs will be returned only
+  if the parent model as a suitably estimated ACOV matrix to perform the
+  delta method (e.g., `bfactor(..., SE=TRUE`)
+
 - invariance:
 
   type of group invariance to specify (see
@@ -81,22 +97,6 @@ pirt(
 - ...:
 
   extra information passed to the estimation engine
-
-- estiamtor:
-
-  type of PIRT estimator to use. Default is `'MML'` to fit and return
-  the MML-PIRT variable described by Chalmers et al. (in review). `'FA'`
-  will use Stucky et al.'s (2012) factor analysis logistic approximation
-  to project to the first dimension, and `'LKA'` will use the use
-  logistic kernel approximation formula presented in Ip (2010)/Doebler
-  and Doebler(2020), however these only project to the first dimension?
-  The latter two estimators are also only applicable when input model is
-  from the M\*PL and MGRM family (see for polytomous MGRM derivation),
-  and only return lists of the resulting parameters and SE estimates
-
-  Note that for methods other than `'MML'` the SEs will be returned only
-  if the parent model as a suitably estimated ACOV matrix to perform the
-  delta method (e.g., `bfactor(..., SE=TRUE`)
 
 ## Details
 

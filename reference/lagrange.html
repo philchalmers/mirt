@@ -266,6 +266,25 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1.2 23.161  2 0</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># compare to LR and Wald tests</span></span></span>
+<span class="r-in"><span><span class="va">mod_nest</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, model <span class="op">=</span> <span class="fl">1</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
+<span class="r-in"><span>                              invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                              SE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod_baseline</span>, <span class="va">mod_nest</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   AIC    SABIC       HQ      BIC    logLik     X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_baseline 12017.54 12055.64 12058.58 12125.51 -5986.771            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mod_nest     11978.24 12019.80 12023.01 12096.03 -5965.120 43.302  2 0</span>
+<span class="r-in"><span><span class="fu"><a href="wald.html">wald</a></span><span class="op">(</span><span class="va">mod_nest</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      a1.1       d.2   a1.5.47    d.6.48   a1.9.51   d.10.52  a1.13.55   d.14.56 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     0.914     1.446     1.007     0.430     1.176     0.716     1.208     1.811 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.17.59   d.18.60  a1.21.63   d.22.64  a1.25.67   d.26.68  a1.29.71   d.30.72 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1.238    -0.756     1.147    -0.313     0.850    -0.301     1.033    -1.009 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a1.33.75   d.34.76  a1.37.79   d.38.80     a1.43      d.44 MEAN_1.83 COV_11.84 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1.062     0.400     1.126     1.163     1.003     0.431     0.103     0.782 </span>
+<span class="r-in"><span><span class="fu"><a href="wald.html">wald</a></span><span class="op">(</span><span class="va">mod_nest</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a1.1 = a1.43'</span>, <span class="st">'d.2 = d.44'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        W df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 39.398  2 0</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># separate 1-df tests: slope-only DIF vs. intercept-only DIF</span></span></span>
 <span class="r-in"><span><span class="fu">lagrange</span><span class="op">(</span><span class="va">mod_baseline</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">parnum_a1</span>, <span class="va">parnum_d</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       X2 df     p</span>

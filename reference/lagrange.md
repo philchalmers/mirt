@@ -228,6 +228,25 @@ lagrange(mod_baseline, list(c(parnum_a1, parnum_d)))
 #>         X2 df p
 #> 1.2 23.161  2 0
 
+# compare to LR and Wald tests
+mod_nest <- multipleGroup(dat, model = 1, itemtype = '2PL', group = group,
+                              invariance = c(colnames(dat)[-1], 'free_means', 'free_var'),
+                              SE = TRUE)
+anova(mod_baseline, mod_nest)
+#>                   AIC    SABIC       HQ      BIC    logLik     X2 df p
+#> mod_baseline 12017.54 12055.64 12058.58 12125.51 -5986.771            
+#> mod_nest     11978.24 12019.80 12023.01 12096.03 -5965.120 43.302  2 0
+wald(mod_nest)
+#>      a1.1       d.2   a1.5.47    d.6.48   a1.9.51   d.10.52  a1.13.55   d.14.56 
+#>     0.914     1.446     1.007     0.430     1.176     0.716     1.208     1.811 
+#>  a1.17.59   d.18.60  a1.21.63   d.22.64  a1.25.67   d.26.68  a1.29.71   d.30.72 
+#>     1.238    -0.756     1.147    -0.313     0.850    -0.301     1.033    -1.009 
+#>  a1.33.75   d.34.76  a1.37.79   d.38.80     a1.43      d.44 MEAN_1.83 COV_11.84 
+#>     1.062     0.400     1.126     1.163     1.003     0.431     0.103     0.782 
+wald(mod_nest, c('a1.1 = a1.43', 'd.2 = d.44'))
+#>        W df p
+#> 1 39.398  2 0
+
 # separate 1-df tests: slope-only DIF vs. intercept-only DIF
 lagrange(mod_baseline, list(parnum_a1, parnum_d))
 #>       X2 df     p
