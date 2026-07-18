@@ -187,6 +187,7 @@ extract.mirt <- function(x, what, item = 1, ...){
                   monopoly.k=x@Internals$monopoly.k,
                   grsm.block=x@Data$grsm.block,
                   rsm.block=x@Data$rsm.block,
+                  exploratory=x@Options$exploratory,
                   stop(sprintf("Could not extract element \'%s\'", what), call.=FALSE))
         ret
 }

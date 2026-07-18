@@ -112,7 +112,7 @@ PrepData <- function(data, model, itemtype, guess, upper, gpcm_mats, opts,
                            itemnames=itemnames, exploratory=exploratory, parprior=parprior,
                            parnumber=parnumber, BFACTOR=BFACTOR, mixed.design=mixed.design,
                            customItems=customItems, customItemsData=customItemsData,
-                           customGroup=customGroup, key=key,
+                           customGroup=customGroup, key=key, groupName=groupName,
                            gpcm_mats=gpcm_mats, spline_args=spline_args, monopoly.k=monopoly.k,
                            dcIRT_nphi=dcIRT_nphi, dentype=dentype, item.Q=item.Q)
     prodlist <- attr(pars, 'prodlist')

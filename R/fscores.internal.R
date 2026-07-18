@@ -10,7 +10,8 @@ setMethod(
 	                      plausible.draws, full.scores.SE, return.acov = FALSE,
                           QMC, custom_den = NULL, custom_theta = NULL,
 	                      min_expected, plausible.type, start, EAPsum.scores,
-	                      use_dentype_estimate, leave_missing = FALSE, expected.info, ...)
+	                      use_dentype_estimate, leave_missing = FALSE, expected.info,
+	                      project = NULL, ...)
 	{
         den_fun <- mirt_dmvnorm
         item_weights_long <- rep(item_weights, extract.mirt(object, "K"))
@@ -186,7 +187,7 @@ setMethod(
         }
         dots <- list(...)
         discrete <- FALSE
-        if(object@Model$nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum'))
+        if(object@Model$nfact > 3L && !QMC && method %in% c('EAP', 'EAPsum') && is.null(project))
             warning('High-dimensional models factor scores should use quasi-Monte Carlo integration. Pass QMC=TRUE',
                     call.=FALSE)
         if(method == 'Discrete' || method == 'DiscreteSum'){
@@ -324,6 +325,25 @@ setMethod(
                 itemtrace <- computeItemtrace(pars=pars, Theta=Theta, itemloc=itemloc,
                                               CUSTOM.IND=CUSTOM.IND, pis=pis)
                 itemtrace <- t(t(itemtrace)^item_weights_long)
+                if(!is.null(project)){
+                    stopifnot(length(project) == 1)
+                    ThetaS <- thetaComb(theta,nfact-1)
+                    WS <- den_fun(ThetaS, mean=gp$gmeans[-project],
+                                  sigma=gp$gcov[-project,-project, drop=FALSE], quad=LR, ...)
+                    WS <- WS / sum(WS)
+                    Theta <- matrix(theta)
+                    W <- den_fun(Theta, mean=gp$gmeans[project],
+                                 sigma=gp$gcov[project,project, drop=FALSE], quad=LR, ...)
+                    W <- W / sum(W)
+                    newitemtrace <- matrix(0, nrow(Theta), ncol(itemtrace))
+                    for(i in 1:nrow(Theta)){
+                        pick <- ThetaShort[,project] == Theta[i]
+                        newitemtrace[i,] <- colSums(itemtrace[pick, ] * WS)
+                    }
+                    ThetaShort <- Theta
+                    itemtrace <- newitemtrace
+                    nfact <- 1
+                }
                 log_itemtrace <- log(itemtrace)
                 if(mixture) ThetaShort <- thetaStack(ThetaShort, length(pis))
                 if(method == 'classify')
@@ -410,6 +430,8 @@ setMethod(
     		        scores <- tmp[ ,seq_len(nfact), drop = FALSE]
     		        SEscores <- tmp[ , seq_len(nfact) + nfact, drop = FALSE]
     		        factorNames <- extract.mirt(object, 'factorNames')
+    		        if(!is.null(project))
+    		            factorNames <- factorNames[project]
     		        colnames(scores) <- factorNames[!grepl('\\(',factorNames)][1:nfact]
     		        converge_info_vec <- tmp[,ncol(tmp)]
     		    } else converge_info_vec <- rep(1L, nrow(scores))

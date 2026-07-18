@@ -58,6 +58,44 @@ lagrange(mod, list(parnum[1:2], parnum[3:5]))
 # test all 5 slopes and first + last jointly
 lagrange(mod, list(parnum[1:5], parnum[c(1, 5)]))
 
+######
+## DIF using score (Lagrange) test example
+
+n <- 10
+N <- 500
+
+# generate 2PL data with DIF on Item_1's intercept in the focal group
+a  <- matrix(rep(1, n), ncol = 1)
+d1 <- matrix(rnorm(n), ncol = 1)
+d2 <- d1
+d2[1, 1] <- d1[1, 1] + 1          # shift Item_1's difficulty for the focal group
+
+dat1 <- simdata(a, d1, N, itemtype = '2PL')
+dat2 <- simdata(a, d2, N, itemtype = '2PL')
+dat  <- rbind(dat1, dat2)
+colnames(dat) <- paste0('Item_', 1:n)
+group <- c(rep('Reference', N), rep('Focal', N))
+
+# fully equality-constrained (no-DIF) baseline: all a1/d equated across
+# groups, with the latent mean/variance freed in the focal group for
+# identification (standard mirt DIF baseline)
+mod_baseline <- multipleGroup(dat, model = 1, itemtype = '2PL', group = group,
+                              invariance = c(colnames(dat), 'free_means', 'free_var'),
+                              SE = TRUE)
+
+values <- mod2values(mod_baseline)
+(i1 <- values[values$item == 'Item_1', ])     # inspect parnum for this item
+
+parnum_a1 <- i1$parnum[i1$name == 'a1' & i1$group == 'Focal']
+parnum_d  <- i1$parnum[i1$name == 'd'& i1$group == 'Focal']
+
+# joint 2-df score test: does freeing both a1 and d for Item_1 in the
+# focal group improve fit relative to the constrained baseline?
+lagrange(mod_baseline, list(c(parnum_a1, parnum_d)))
+
+# separate 1-df tests: slope-only DIF vs. intercept-only DIF
+lagrange(mod_baseline, list(parnum_a1, parnum_d))
+
 }
 }
 \references{

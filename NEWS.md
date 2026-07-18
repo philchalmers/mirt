@@ -1,6 +1,11 @@
 # Changes in mirt 1.47
 
-- `DIF()` now supports bifactor/two-tier models 
+- Added function `pirt()` to perform projective IRT modeling using the method
+  recently described in Chalmers, Falk, and Reise (2026)
+
+- Added score test example for DIF to `lagrange()`
+
+- `DIF()` now supports bifactor/two-tier models for more efficient estimation
 
 - `bfactor()` multiple group option now allows `invariance` arguments 
   such as `free_means` and `free_vars` to free the general and specific 

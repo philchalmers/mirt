@@ -597,7 +597,7 @@ setMethod(
             rownames(ret) <- nms1
             return(ret)
         }
-        df <- object@Fit$df - object2@Fit$df
+        df <- abs(object@Fit$df - object2@Fit$df)
         ret <- data.frame(AIC = c(object@Fit$AIC, object2@Fit$AIC),
                           SABIC = c(object@Fit$SABIC, object2@Fit$SABIC),
                           HQ = c(object@Fit$HQ, object2@Fit$HQ),

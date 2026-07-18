@@ -938,6 +938,12 @@ UpdateParameters <- function(PrepList, model, groupNames){
                     x <- c(newx, x[length(x)-1L], x[length(x)])
                     x
                 })
+                esplit <- lapply(esplit, function(x){
+                    if(x[1] %in% groupNames){
+                        x[1] <- nitems + 1
+                    }
+                    x
+                })
                 picks <- lapply(esplit, function(x) as.integer(x[1L:(length(x)-2)]))
                 for(i in seq_len(length(picks))){
                     for(gpick in groupsPicked){

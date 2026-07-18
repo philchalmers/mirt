@@ -254,7 +254,10 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             if(!is.null(fixedEtable)){
                 if(!(Moptim %in% c('BFGS', 'L-BFGS-B', 'nlminb')))
                     stop('Optimizer not supported when using fixedEtable input', call.=FALSE)
-                Elist$rlist[[1]]$r1 <- fixedEtable
+                for(g in 1:ngroups)
+                    Elist$rlist[[g]]$r1 <- fixedEtable[[g]]
+                list$accelerate <- 'none'
+                TOL <- 1e-10
                 if(Moptim %in% c('BFGS', 'L-BFGS-B'))
                     control$maxit <- 200
                 else if(Moptim == 'nlminb'){
@@ -332,7 +335,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 printf('\rIteration: %d, Log-Lik: %.3f, Max-Change: %.5f',
                             cycles, LL + LP, max(abs(preMstep.longpars - longpars)))
 
-            if(hasConverged(preMstep.longpars, longpars, TOL) || !is.null(fixedEtable)){
+            if(hasConverged(preMstep.longpars, longpars, TOL)){
                 pars <- reloadPars(longpars=longpars, pars=pars,
                                    ngroups=ngroups, J=J)
                 if(length(lrPars)){

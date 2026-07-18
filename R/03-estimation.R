@@ -460,12 +460,14 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
     if(is.null(constrain)) constrain <- list()
     nspec <- ifelse(!is.null(attr(model, 'nspec')), attr(model, 'nspec'), 1L)
     #default MG uses configural model (independent groups but each identified)
-    if('free_means' %in% invariance ){ #Free factor means (means 0 for ref)
-        for(g in 2L:Data$ngroups)
+    if(any(c('free_means', 'free_all_means') %in% invariance)){
+        #Free factor means (means 0 for ref)
+        pick <- ifelse('free_all_means' %in% invariance, 1, 2)
+        for(g in pick:Data$ngroups)
                 pars[[g]][[nitems + 1L]]@est[1L:nfact] <- TRUE
     }
     dummymat <- matrix(FALSE, pars[[1L]][[nitems + 1L]]@nfact, pars[[1L]][[nitems + 1L]]@nfact)
-    if(any('free_means' %in% invariance)){ #Free means
+    if(any(c('free_means', 'free_all_means') %in% invariance)){ #Free means
         if(all(sapply(PrepList[[1]]$pars, function(x) class(x)) %in%
                c(ordinal_itemtypes(), 'GroupPars'))){
             TS <- rowMeans(Data$data, na.rm=TRUE)
@@ -481,14 +483,16 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
             }
         }
     }
-    if(any(c('free_var', 'free_vars') %in% invariance)){ #Free factor vars (vars 1 for ref)
+    if(any(c('free_var', 'free_vars', 'free_all_vars') %in% invariance)){
+        #Free factor vars (vars 1 for ref)
         diag(dummymat) <- TRUE
+        pick <- ifelse('free_all_vars' %in% invariance, 1, 2)
         tmp <- dummymat[lower.tri(dummymat, TRUE)]
         if(opts$dentype %in% c('Davidian', 'EHW')){
-            for(g in 2L:Data$ngroups)
+            for(g in pick:Data$ngroups)
                 pars[[g]][[nitems + 1L]]@est[2L] <- TRUE
         } else {
-            for(g in 2L:Data$ngroups){
+            for(g in pick:Data$ngroups){
                 pars[[g]][[nitems + 1L]]@est <- pars[[g]][[nitems + 1L]]@est |
                     c(pars[[g]][[nitems + 1L]]@est[1L:pars[[g]][[nitems + 1L]]@nfact], tmp)
                 names(pars[[g]][[nitems + 1L]]@est) <- names(pars[[g]][[nitems + 1L]]@par)
