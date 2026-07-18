@@ -2,8 +2,16 @@
 
 ## Changes in mirt 1.47
 
+- Added function
+  [`pirt()`](https://philchalmers.github.io/mirt/reference/pirt.md) to
+  perform projective IRT modeling using the method recently described in
+  Chalmers, Falk, and Reise (2026)
+
+- Added score test example for DIF to
+  [`lagrange()`](https://philchalmers.github.io/mirt/reference/lagrange.md)
+
 - [`DIF()`](https://philchalmers.github.io/mirt/reference/DIF.md) now
-  supports bifactor/two-tier models
+  supports bifactor/two-tier models for more efficient estimation
 
 - [`bfactor()`](https://philchalmers.github.io/mirt/reference/bfactor.md)
   multiple group option now allows `invariance` arguments such as

@@ -71,12 +71,14 @@ multipleGroup(
   `'free_mean'` or `'free_means'`
 
   :   freely estimate all latent means in all focal groups (reference
-      group constrained to a vector of 0's)
+      group constrained to a vector of 0's). To estimate all means use
+      `'free_all_means'`
 
-  `'free_var'`, `'free_vars'`, `'free_variance'`, or `'free_variances'`
+  `'free_var'` or `'free_vars'`
 
   :   freely estimate all latent variances in focal groups (reference
-      group variances all constrained to 1)
+      group variances all constrained to 1). To estimate all variances
+      use either To estimate all variances use `'free_all_vars'`
 
   `'slopes'`
 
@@ -369,7 +371,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.279  0.042  0.064  0.152  0.000  0.000 
+#>  0.271  0.043  0.062  0.148  0.000  0.000 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -377,7 +379,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.180  0.042  0.074  0.045  0.000  0.001 
+#>  0.172  0.042  0.069  0.043  0.000  0.000 
 
 summary(mod_scalar2)
 #> 
@@ -1036,7 +1038,7 @@ mod_anchor
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within NaN tolerance after 1 EM iterations.
-#> mirt version: 1.46.8 
+#> mirt version: 1.46.9 
 #> M-step optimizer: nlminb 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -2546,7 +2548,7 @@ mod_mix
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 58 EM iterations.
-#> mirt version: 1.46.8 
+#> mirt version: 1.46.9 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61

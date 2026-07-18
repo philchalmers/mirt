@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.47" id="changes-in-mirt-147">Changes in mirt 1.47<a class="anchor" aria-label="anchor" href="#changes-in-mirt-147"></a></h2>
-<ul><li><p><code><a href="../reference/DIF.html">DIF()</a></code> now supports bifactor/two-tier models</p></li>
+<ul><li><p>Added function <code><a href="../reference/pirt.html">pirt()</a></code> to perform projective IRT modeling using the method recently described in Chalmers, Falk, and Reise (2026)</p></li>
+<li><p>Added score test example for DIF to <code><a href="../reference/lagrange.html">lagrange()</a></code></p></li>
+<li><p><code><a href="../reference/DIF.html">DIF()</a></code> now supports bifactor/two-tier models for more efficient estimation</p></li>
 <li><p><code><a href="../reference/bfactor.html">bfactor()</a></code> multiple group option now allows <code>invariance</code> arguments such as <code>free_means</code> and <code>free_vars</code> to free the general and specific factors in the focal groups automatically</p></li>
 <li><p><code><a href="../reference/itemplot.html">itemplot()</a></code> gains <code>empirical_proportions</code> argument to plot the model-implied proportion estimates from the E-table in the EM algorithm. Currently limited to unidimenisonal models only</p></li>
 <li><p><code><a href="../reference/fscores.html">fscores()</a></code> also gains <code>method = 'EAP_general'</code> to perform the dimension reduction EAP estimates for bifactor/two-tier general factor predictions as described in Gibbons et al. (2007)</p></li>
@@ -1039,7 +1041,7 @@ Alternatively, setting <code>technical = list(NCYCLES = NA)</code> when using th
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

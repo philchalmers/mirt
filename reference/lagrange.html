@@ -9,7 +9,7 @@ more constrained baseline model."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.46.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,12 +149,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># test all fixed slopes individually</span></span></span>
 <span class="r-in"><span><span class="va">parnum</span> <span class="op">&lt;-</span> <span class="va">values</span><span class="op">$</span><span class="va">parnum</span><span class="op">[</span><span class="va">values</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">'a1'</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">lagrange</span><span class="op">(</span><span class="va">mod</span>, <span class="va">parnum</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            X2 df          p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.36714267  1 0.54456589</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.04789243  1 0.82677204</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  4.69717570  1 0.03021223</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1.44960175  1 0.22859187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2.55408012  1 0.11000983</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.367  1 0.545</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.048  1 0.827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  4.697  1  0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  1.45  1 0.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 2.554  1  0.11</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># compare to LR test for first two slopes</span></span></span>
 <span class="r-in"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">'F = 1-5</span></span></span>
@@ -201,15 +201,76 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test slopes first two slopes and last three slopes jointly</span></span></span>
 <span class="r-in"><span><span class="fu">lagrange</span><span class="op">(</span><span class="va">mod</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">parnum</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">parnum</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                X2 df          p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.5     0.4591775  2 0.79486042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9.13.17 9.1527189  3 0.02732783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.5     0.459  2 0.795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.13.17 9.153  3 0.027</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test all 5 slopes and first + last jointly</span></span></span>
 <span class="r-in"><span><span class="fu">lagrange</span><span class="op">(</span><span class="va">mod</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">parnum</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">parnum</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   X2 df          p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.5.9.13.17 9.861713  5 0.07924974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.17        2.898233  2 0.23477762</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.5.9.13.17 9.862  5 0.079</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.17        2.898  2 0.235</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">######</span></span></span>
+<span class="r-in"><span><span class="co">## DIF using score (Lagrange) test example</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">500</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># generate 2PL data with DIF on Item_1's intercept in the focal group</span></span></span>
+<span class="r-in"><span><span class="va">a</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">n</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="va">d1</span></span></span>
+<span class="r-in"><span><span class="va">d2</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">d1</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1</span>          <span class="co"># shift Item_1's difficulty for the focal group</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d1</span>, <span class="va">N</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d2</span>, <span class="va">N</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat1</span>, <span class="va">dat2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'Item_'</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'Reference'</span>, <span class="va">N</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'Focal'</span>, <span class="va">N</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># fully equality-constrained (no-DIF) baseline: all a1/d equated across</span></span></span>
+<span class="r-in"><span><span class="co"># groups, with the latent mean/variance freed in the focal group for</span></span></span>
+<span class="r-in"><span><span class="co"># identification (standard mirt DIF baseline)</span></span></span>
+<span class="r-in"><span><span class="va">mod_baseline</span> <span class="op">&lt;-</span> <span class="fu"><a href="multipleGroup.html">multipleGroup</a></span><span class="op">(</span><span class="va">dat</span>, model <span class="op">=</span> <span class="fl">1</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
+<span class="r-in"><span>                              invariance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="st">'free_means'</span>, <span class="st">'free_var'</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                              SE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="mod2values.html">mod2values</a></span><span class="op">(</span><span class="va">mod_baseline</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">i1</span> <span class="op">&lt;-</span> <span class="va">values</span><span class="op">[</span><span class="va">values</span><span class="op">$</span><span class="va">item</span> <span class="op">==</span> <span class="st">'Item_1'</span>, <span class="op">]</span><span class="op">)</span>     <span class="co"># inspect parnum for this item</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        group   item class name parnum value lbound ubound   est const nconst</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      Focal Item_1  dich   a1      1 0.845   -Inf    Inf  TRUE     1   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      Focal Item_1  dich    d      2 0.920   -Inf    Inf  TRUE     2   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      Focal Item_1  dich    g      3 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Focal Item_1  dich    u      4 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43 Reference Item_1  dich   a1     43 0.845   -Inf    Inf  TRUE     1   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44 Reference Item_1  dich    d     44 0.920   -Inf    Inf  TRUE     2   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45 Reference Item_1  dich    g     45 0.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46 Reference Item_1  dich    u     46 1.000      0      1 FALSE  none   none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    prior.type prior_1 prior_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45       none     NaN     NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46       none     NaN     NaN</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">parnum_a1</span> <span class="op">&lt;-</span> <span class="va">i1</span><span class="op">$</span><span class="va">parnum</span><span class="op">[</span><span class="va">i1</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">'a1'</span> <span class="op">&amp;</span> <span class="va">i1</span><span class="op">$</span><span class="va">group</span> <span class="op">==</span> <span class="st">'Focal'</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">parnum_d</span>  <span class="op">&lt;-</span> <span class="va">i1</span><span class="op">$</span><span class="va">parnum</span><span class="op">[</span><span class="va">i1</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">'d'</span><span class="op">&amp;</span> <span class="va">i1</span><span class="op">$</span><span class="va">group</span> <span class="op">==</span> <span class="st">'Focal'</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># joint 2-df score test: does freeing both a1 and d for Item_1 in the</span></span></span>
+<span class="r-in"><span><span class="co"># focal group improve fit relative to the constrained baseline?</span></span></span>
+<span class="r-in"><span><span class="fu">lagrange</span><span class="op">(</span><span class="va">mod_baseline</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">parnum_a1</span>, <span class="va">parnum_d</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         X2 df p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.2 23.161  2 0</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># separate 1-df tests: slope-only DIF vs. intercept-only DIF</span></span></span>
+<span class="r-in"><span><span class="fu">lagrange</span><span class="op">(</span><span class="va">mod_baseline</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">parnum_a1</span>, <span class="va">parnum_d</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       X2 df     p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2.606  1 0.106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 23.144  1     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
@@ -223,7 +284,7 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

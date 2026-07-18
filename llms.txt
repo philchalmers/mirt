@@ -329,6 +329,9 @@ Google group. Cheers!
 - [`personfit()`](https://philchalmers.github.io/mirt/reference/personfit.md)
   : Person fit statistics
 
+- [`pirt()`](https://philchalmers.github.io/mirt/reference/pirt.md) :
+  Projective IRT (PIRT) models
+
 - [`plot(`*`<MultipleGroupClass>`*`,`*`<missing>`*`)`](https://philchalmers.github.io/mirt/reference/plot-method.md)
   [`plot(`*`<SingleGroupClass>`*`,`*`<missing>`*`)`](https://philchalmers.github.io/mirt/reference/plot-method.md)
   : Plot various test-implied functions from models
