@@ -43,7 +43,7 @@
 #'   scale and location of the reference group, which is done silently internally whenever
 #'   \code{'free_means'} or \code{'free_vars'} are specified
 #'
-#' @param estiamtor type of PIRT estimator to use. Default is \code{'MML'} to fit and
+#' @param estimator type of PIRT estimator to use. Default is \code{'MML'} to fit and
 #'   return the MML-PIRT variable described by Chalmers et al. (in review).
 #'   \code{'FA'} will use Stucky et al.'s (2012) factor analysis logistic
 #'   approximation to project to the first dimension, and \code{'LKA'}
@@ -413,7 +413,7 @@ FA.projection <- function(mod, IRTpars=FALSE){
 FA.projection_SE <- function(mod, IRTpars=FALSE){
 
     FA.projection.item <- function(ipars, IRTpars=FALSE){
-        lam <- mirt:::Lambdas(ipars, Names = NULL)
+        lam <- Lambdas(ipars, Names = NULL)
         as <- ipars[[1]]@par[grepl('^a', ipars[[1]]@parnames)]
         cs <- ipars[[1]]@par[grepl('^d', ipars[[1]]@parnames)]
         lam1 <- lam[,1]
@@ -448,7 +448,7 @@ FA.projection_SE <- function(mod, IRTpars=FALSE){
         for(j in 1:ncol(tpars)){
             ipars <- pars[c(i,nitems+1)]
             par <- ipars[[1]]@par
-            iacov <- mirt:::subset_vcov(ipars[[1]], acov)
+            iacov <- subset_vcov(ipars[[1]], acov)
             SEs[i,j] <- DeltaMethod(fn_tpars, par, iacov,
                                     ipars=ipars, index=j)$se
         }

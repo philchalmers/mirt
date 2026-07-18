@@ -93,6 +93,14 @@ parnum_d  <- i1$parnum[i1$name == 'd'& i1$group == 'Focal']
 # focal group improve fit relative to the constrained baseline?
 lagrange(mod_baseline, list(c(parnum_a1, parnum_d)))
 
+# compare to LR and Wald tests
+mod_nest <- multipleGroup(dat, model = 1, itemtype = '2PL', group = group,
+                              invariance = c(colnames(dat)[-1], 'free_means', 'free_var'),
+                              SE = TRUE)
+anova(mod_baseline, mod_nest)
+wald(mod_nest)
+wald(mod_nest, c('a1.1 = a1.43', 'd.2 = d.44'))
+
 # separate 1-df tests: slope-only DIF vs. intercept-only DIF
 lagrange(mod_baseline, list(parnum_a1, parnum_d))
 

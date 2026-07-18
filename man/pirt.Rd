@@ -33,6 +33,21 @@ See \code{\link{mirt}} for details}
 \item{SE}{logical; compute the ACOV matrix to obtain standard errors
 (SE)?}
 
+\item{estimator}{type of PIRT estimator to use. Default is \code{'MML'} to fit and
+  return the MML-PIRT variable described by Chalmers et al. (in review).
+  \code{'FA'} will use Stucky et al.'s (2012) factor analysis logistic
+  approximation to project to the first dimension, and \code{'LKA'}
+  will use the use logistic kernel approximation formula
+  presented in Ip (2010)/Doebler and Doebler(2020), however these only project
+  to the first dimension? The latter two estimators are also only
+  applicable when input model is from the M*PL and MGRM family (see
+  for polytomous MGRM derivation), and only return lists of the resulting
+  parameters and SE estimates
+
+  Note that for methods other than \code{'MML'} the SEs will be returned
+  only if the parent model  as a suitably estimated ACOV matrix to perform
+  the delta method (e.g., \code{bfactor(..., SE=TRUE})}
+
 \item{invariance}{type of group invariance to specify (see \code{\link{multipleGroup}}).
 Included here as the multiple-group PIRT approach needs to also calibrate the
 scale and location of the reference group, which is done silently internally whenever
@@ -49,21 +64,6 @@ factor has the property of identical marginal and conditional bifactors
 approach as this returns the associated model object}
 
 \item{...}{extra information passed to the estimation engine}
-
-\item{estiamtor}{type of PIRT estimator to use. Default is \code{'MML'} to fit and
-  return the MML-PIRT variable described by Chalmers et al. (in review).
-  \code{'FA'} will use Stucky et al.'s (2012) factor analysis logistic
-  approximation to project to the first dimension, and \code{'LKA'}
-  will use the use logistic kernel approximation formula
-  presented in Ip (2010)/Doebler and Doebler(2020), however these only project
-  to the first dimension? The latter two estimators are also only
-  applicable when input model is from the M*PL and MGRM family (see
-  for polytomous MGRM derivation), and only return lists of the resulting
-  parameters and SE estimates
-
-  Note that for methods other than \code{'MML'} the SEs will be returned
-  only if the parent model  as a suitably estimated ACOV matrix to perform
-  the delta method (e.g., \code{bfactor(..., SE=TRUE})}
 }
 \description{
 Computes the projective IRT model parameters either using the
