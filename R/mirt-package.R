@@ -67,6 +67,29 @@ NULL
 #' }
 NULL
 
+#' Simulated datasets for PIRT-DIF
+#'
+#' Three associated datasets for PIRT-DIF, stored as a list (more information to come).
+#'
+#' @name pirt_DIF
+#' @docType data
+#' @author Phil Chalmers \email{rphilip.chalmers@@gmail.com}
+#'
+#' @keywords data
+#' @examples
+#'
+#' \donttest{
+#' data(pirt_DIF)
+#'
+#' # dataset 1
+#' dat1 <- pirt_DIF$dat1
+#' group <- dat1$group
+#' dat <- dat1[,-1]
+#' itemstats(dat, group=group)
+#'
+#' }
+NULL
+
 #' Social Life Feelings Data
 #'
 #' A 5-item data set analyzed by Bartholomew (1998). Data contains

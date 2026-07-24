@@ -91,6 +91,10 @@ itemstats <- function(data, group = NULL,
         names(out) <- groups
         return(out)
     }
+    odata <- data
+    all_NA <- apply(is.na(data), 2, all)
+    removed <- colnames(data)[all_NA]
+    data <- data[ ,!all_NA]
     TS <- rowSums(data, na.rm = TRUE)
     TS_miss <- rowSums(data)
     rs <- suppressWarnings(try(cor(data, use = "pairwise.complete.obs"),
@@ -171,6 +175,21 @@ itemstats <- function(data, group = NULL,
             tapply(TS_miss, x, sd, na.rm=TRUE)
         }))
     }
+    if(length(removed)){
+        tmp <- data.frame(matrix(NA, nrow=ncol(odata), ncol=ncol(ret$itemstats)))
+        rownames(tmp) <- colnames(odata)
+        colnames(tmp) <- colnames(ret$itemstats)
+        tmp[,"N"] <- 0
+        tmp[rownames(ret$itemstats), ] <- ret$itemstats
+        ret$itemstats <- tmp
+
+        tmp <- data.frame(matrix(NA, nrow=ncol(odata), ncol=ncol(ret$proportions)))
+        rownames(tmp) <- colnames(odata)
+        colnames(tmp) <- colnames(ret$proportions)
+        tmp[rownames(ret$proportions), ] <- ret$proportions
+        ret$proportions <- tmp
+    }
+
     ret
 }
 
