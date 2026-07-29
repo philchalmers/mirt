@@ -1549,7 +1549,7 @@
   random starting values for freely estimated parameters, and can be helpful to determine if obtained
   solutions are local minimums
 
-- seperate `free_var` and `free_cov` invariance options available in multipleGroup
+- separate `free_var` and `free_cov` invariance options available in multipleGroup
 
 - new `CONSTRAIN` and `CONSTRAINB` arguments in `mirt.model()` syntax for specifying equality
   constraints explicitly for parameters accross items and groups. Also the `PRIOR = ...`
