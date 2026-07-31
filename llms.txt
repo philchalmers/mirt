@@ -332,6 +332,9 @@ Google group. Cheers!
 - [`pirt()`](https://philchalmers.github.io/mirt/reference/pirt.md) :
   Projective IRT (PIRT) models
 
+- [`pirt_DIF`](https://philchalmers.github.io/mirt/reference/pirt_DIF.md)
+  : Simulated datasets for PIRT-DIF
+
 - [`plot(`*`<MultipleGroupClass>`*`,`*`<missing>`*`)`](https://philchalmers.github.io/mirt/reference/plot-method.md)
   [`plot(`*`<SingleGroupClass>`*`,`*`<missing>`*`)`](https://philchalmers.github.io/mirt/reference/plot-method.md)
   : Plot various test-implied functions from models
