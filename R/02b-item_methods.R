@@ -10,13 +10,13 @@ Luo2001Set <- function(){
 }
 
 
-Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull',
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull', 'PCgraded',
                                        Luo2001Set())
 
 # NOTE: probably want generalized version of line line 6, at least GHCM
 
 Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
-                                 'graded', 'grsm', 'gpcm', 'gpcmIRT',
+                                 'graded', 'grsm', 'gpcm', 'gpcmIRT', 'PCgraded',
                                  'rsm', 'nominal','PC1PL', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monospline',
                                  'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
@@ -24,7 +24,7 @@ Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5
 ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll', 'ull',
                                   'ggum', 'rating', 'spline', 'monospline', 'monopoly',
                                   'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT',
-                                  'GUM')
+                                  'GUM', 'PCgraded')
 
 # Indicate which functions should use the R function instead of those written in C++
 Use_R_ProbTrace <- function() c('custom', 'spline', 'monospline', 'sequential', 'Tutz', 'Luo2001',
@@ -1306,6 +1306,111 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta){
         # message('partcomp derivatives not optimized') ##TODO
+        numDeriv_dP(x, Theta)
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("PCgraded", contains = 'AllItemsClass',
+         representation = representation(cpow='integer',
+                                         fixed.ind='integer',
+                                         factor.ind='integer'))
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'PCgraded'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x){
+        browser()
+        d <- x@par[(x@nfact+1L):length(x@par)]
+        d
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x){
+        browser()
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 rlnorm(x@nfact, meanlog=.2, sdlog=.5))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x){
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
+        x@cpow[seq_len(x@nfact)] <- c(1, numeric(x@nfact - 1))
+        x
+    }
+)
+
+P.comp_graded <- function(par, Theta, cpow, factor.ind, fixed.ind, ot = 0)
+{
+    browser()
+}
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
+        return(P.comp_graded(x@par, Theta=Theta, cpow=x@cpow,
+                      factor.ind=x@factor.ind, fixed.ind=x@fixed.ind))
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        browser()
+
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta)
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta){
         numDeriv_dP(x, Theta)
     }
 )
