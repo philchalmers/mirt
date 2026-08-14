@@ -127,13 +127,14 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
         } else if(itemtype[i] == 'PCgraded'){
             val <- c(lambdas[i,], rep(zetas[[i]], 2))
             fp <- c(estLambdas[i, ], rep(TRUE, (K[i]-1L)*2))
-            names(val) <-
-                if(K[i] == 2) c(paste('a', 1L:nfact, sep=''), paste0('d1_', 1:nfact))
-            else {
-                tmp0 <- matrix(paste0(rep(paste0('log.d', 1:(K[i]-2) + 1), nfact), '_',
-                              rep(1:nfact, each=nfact)), ncol=K[i]-2, byrow=TRUE)
-                tmp <- cbind(paste0('d1_', 1:nfact), tmp0)
-                c(paste('a', 1L:nfact, sep=''), as.vector(t(tmp)))
+            if(K[i] == 2){
+                names(val) <- c(paste('a', 1L:nfact, sep=''), paste0('d1_', 1:nfact))
+            } else {
+                tmp0 <- matrix(rep(paste0('log.d', 1:(K[i]-2) + 1), nfact), ncol=nfact)
+                for(j in 1:nfact)
+                    tmp0[,j] <- paste0(tmp0[,j], '_', j)
+                tmp <- rbind(paste0('d1_', 1:nfact), tmp0)
+                names(val) <- c(paste('a', 1L:nfact, sep=''), as.vector(tmp))
             }
         } else if(itemtype[i] %in% c('sequential', 'Tutz')){
             val <- c(lambdas[i,], zetas[[i]])
