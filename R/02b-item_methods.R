@@ -1390,7 +1390,6 @@ phi2d_gen <- function(phi_mat) {
 
 P.PNCGRM <- function(par, Theta, ncat,
                      cpow, factor.ind, fixed.ind, ot = 0) {
-    browser()
     nfact <- ncol(Theta)
     N <- nrow(Theta)
 
@@ -1403,26 +1402,21 @@ P.PNCGRM <- function(par, Theta, ncat,
 
     # Calculate boundary probabilities P_star (N x ncat+1)
     P_star <- matrix(0, nrow = N, ncol = ncat + 1)
-    P_star[, 1] <- 1.0  # Boundary 0 = 1
+    P_star[, 1] <- 1.0
 
     for (k in 1:(ncat - 1)) {
         prod_k <- rep(1.0, N)
-        for (d in 1:nfact) {
-            # 1 / (1 + exp(-(a_d * theta_d + d_{k,d})))
+        for (d in 1:nfact)
             prod_k <- prod_k / (1 + exp(-(a[d] * Theta[, d] + d_mat[k, d])))
-        }
         P_star[, k + 1] <- prod_k
     }
 
-    # Category probabilities: P_k = P*_k - P*_{k+1}
     P <- matrix(0, nrow = N, ncol = ncat)
-    for (k in 1:ncat) {
+    for (k in 1:ncat)
         P[, k] <- P_star[, k] - P_star[, k + 1]
-    }
-
-    # Prevent divide-by-zero or log(0) issues in optimization
     P[P < 1e-20] <- 1e-20
-    return(P)
+    P[1 - P < 1e-20] <- 1 - 1e-20
+    P
 }
 
 setMethod(
@@ -1438,7 +1432,15 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'PCgraded', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        browser()
+        ret <- list(grad=numeric(length(x@par)),
+                    hess=matrix(0, length(x@par), length(x@par)))
+        ret$grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+        if(estHess && any(x@est)){
+            ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+                                                      Theta=Theta, gradient=FALSE)
+        }
+        # if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        return(ret)
 
     }
 )
