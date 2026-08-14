@@ -124,6 +124,17 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             val <- c(lambdas[i,], zetas[[i]])
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
             names(val) <- c(paste('a', 1L:nfact, sep=''), paste('d', 1L:(K[i]-1L), sep=''))
+        } else if(itemtype[i] == 'PCgraded'){
+            val <- c(lambdas[i,], rep(zetas[[i]], 2))
+            fp <- c(estLambdas[i, ], rep(TRUE, (K[i]-1L)*2))
+            names(val) <-
+                if(K[i] == 2) c(paste('a', 1L:nfact, sep=''), paste0('d1_', 1:nfact))
+            else {
+                tmp0 <- matrix(paste0(rep(paste0('log.d', 1:(K[i]-2) + 1), nfact), '_',
+                              rep(1:nfact, each=nfact)), ncol=K[i]-2, byrow=TRUE)
+                tmp <- cbind(paste0('d1_', 1:nfact), tmp0)
+                c(paste('a', 1L:nfact, sep=''), as.vector(t(tmp)))
+            }
         } else if(itemtype[i] %in% c('sequential', 'Tutz')){
             val <- c(lambdas[i,], zetas[[i]])
             fp <- c(estLambdas[i, ], rep(TRUE, K[i]-1L))
@@ -605,7 +616,7 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
             next
         }
 
-        if(any(itemtype[i] %in% c('PC1PL', 'PC2PL', 'PC3PL'))){
+        if(any(itemtype[i] %in% c('PC1PL', 'PC2PL', 'PC3PL', 'PCgraded'))){
             pick <- 1:(nfact - nfixedeffects)+nfixedeffects
             cpow <- as.integer(startvalues[[i]][pick] != 0)
             startvalues[[i]][pick+length(pick)] <- cpow *
@@ -626,24 +637,46 @@ LoadPars <- function(itemtype, itemloc, lambdas, zetas, guess, upper, fulldata, 
                     }
                 }
             }
-            pars[[i]] <- new('partcomp',
-                             par=startvalues[[i]],
-                             parnames=names(freepars[[i]]),
-                             est=freepars[[i]],
-                             nfact=nfact,
-                             ncat=2L,
-                             itemclass=7L,
-                             cpow=cpow,
-                             nfixedeffects=nfixedeffects,
-                             fixed.ind=fixed.ind,
-                             factor.ind=factor.ind,
-                             any.prior=FALSE,
-                             prior.type=rep(0L, length(startvalues[[i]])),
-                             fixed.design=fixed.design.list[[i]],
-                             lbound=rep(-Inf, length(startvalues[[i]])),
-                             ubound=rep(Inf, length(startvalues[[i]])),
-                             prior_1=rep(NaN,length(startvalues[[i]])),
-                             prior_2=rep(NaN,length(startvalues[[i]])))
+            if(itemtype[i] != 'PCgraded'){
+                pars[[i]] <- new('partcomp',
+                                 par=startvalues[[i]],
+                                 parnames=names(freepars[[i]]),
+                                 est=freepars[[i]],
+                                 nfact=nfact,
+                                 ncat=2L,
+                                 itemclass=7L,
+                                 cpow=cpow,
+                                 nfixedeffects=nfixedeffects,
+                                 fixed.ind=fixed.ind,
+                                 factor.ind=factor.ind,
+                                 any.prior=FALSE,
+                                 prior.type=rep(0L, length(startvalues[[i]])),
+                                 fixed.design=fixed.design.list[[i]],
+                                 lbound=rep(-Inf, length(startvalues[[i]])),
+                                 ubound=rep(Inf, length(startvalues[[i]])),
+                                 prior_1=rep(NaN,length(startvalues[[i]])),
+                                 prior_2=rep(NaN,length(startvalues[[i]])))
+            } else {
+                pars[[i]] <- new('PCgraded',
+                                 par=startvalues[[i]],
+                                 parnames=names(freepars[[i]]),
+                                 est=freepars[[i]],
+                                 nfact=nfact,
+                                 ncat=K[i],
+                                 itemclass=9L,
+                                 cpow=cpow,
+                                 nfixedeffects=nfixedeffects,
+                                 fixed.ind=fixed.ind,
+                                 factor.ind=factor.ind,
+                                 any.prior=FALSE,
+                                 prior.type=rep(0L, length(startvalues[[i]])),
+                                 fixed.design=fixed.design.list[[i]],
+                                 lbound=rep(-Inf, length(startvalues[[i]])),
+                                 ubound=rep(Inf, length(startvalues[[i]])),
+                                 prior_1=rep(NaN,length(startvalues[[i]])),
+                                 prior_2=rep(NaN,length(startvalues[[i]])))
+
+            }
             tmp2 <- parnumber:(parnumber + length(freepars[[i]]) - 1L)
             pars[[i]]@parnum <- tmp2
             parnumber <- parnumber + length(freepars[[i]])

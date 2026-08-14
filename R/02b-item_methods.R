@@ -10,7 +10,7 @@ Luo2001Set <- function(){
 }
 
 
-Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull', 'PCgraded',
+Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll', 'ull',
                                        Luo2001Set())
 
 # NOTE: probably want generalized version of line line 6, at least GHCM
@@ -27,11 +27,11 @@ ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequentia
                                   'GUM', 'PCgraded')
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'spline', 'monospline', 'sequential', 'Tutz', 'Luo2001',
+Use_R_ProbTrace <- function() c('custom', 'spline', 'monospline', 'sequential', 'Tutz', 'Luo2001', 'PCgraded',
                                 Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'monospline', 'sequential', 'Tutz',
-                            'Luo2001', Experimental_itemtypes())
+                            'Luo2001', 'PCgraded', Experimental_itemtypes())
 
 #--------------------------------------------------------------------
 # Item model definitions
@@ -1376,16 +1376,60 @@ setMethod(
     }
 )
 
-P.comp_graded <- function(par, Theta, cpow, factor.ind, fixed.ind, ot = 0)
-{
+phi2d_gen <- function(phi_mat) {
+    # phi_mat is (K-1) x D
+    ncat1 <- nrow(phi_mat)
+    d_mat <- phi_mat
+    if (ncat1 > 1) {
+        exp_phi <- exp(phi_mat[-1, , drop = FALSE])
+        for (d in 1:ncol(phi_mat))
+            d_mat[, d] <- phi_mat[1, d] - c(0, cumsum(exp_phi[, d]))
+    }
+    d_mat
+}
+
+P.PNCGRM <- function(par, Theta, ncat,
+                     cpow, factor.ind, fixed.ind, ot = 0) {
     browser()
+    nfact <- ncol(Theta)
+    N <- nrow(Theta)
+
+    a <- par[1:nfact]
+    phi_vec <- par[(nfact + 1):length(par)]
+
+    # Restructure phi into matrix of dimension (ncat-1) x nfact
+    phi_mat <- matrix(phi_vec, nrow = ncat - 1, ncol = nfact)
+    d_mat <- phi2d_gen(phi_mat)
+
+    # Calculate boundary probabilities P_star (N x ncat+1)
+    P_star <- matrix(0, nrow = N, ncol = ncat + 1)
+    P_star[, 1] <- 1.0  # Boundary 0 = 1
+
+    for (k in 1:(ncat - 1)) {
+        prod_k <- rep(1.0, N)
+        for (d in 1:nfact) {
+            # 1 / (1 + exp(-(a_d * theta_d + d_{k,d})))
+            prod_k <- prod_k / (1 + exp(-(a[d] * Theta[, d] + d_mat[k, d])))
+        }
+        P_star[, k + 1] <- prod_k
+    }
+
+    # Category probabilities: P_k = P*_k - P*_{k+1}
+    P <- matrix(0, nrow = N, ncol = ncat)
+    for (k in 1:ncat) {
+        P[, k] <- P_star[, k] - P_star[, k + 1]
+    }
+
+    # Prevent divide-by-zero or log(0) issues in optimization
+    P[P < 1e-20] <- 1e-20
+    return(P)
 }
 
 setMethod(
     f = "ProbTrace",
     signature = signature(x = 'PCgraded', Theta = 'matrix'),
     definition = function(x, Theta, useDesign = TRUE, ot=0){
-        return(P.comp_graded(x@par, Theta=Theta, cpow=x@cpow,
+        return(P.PNCGRM(x@par, Theta=Theta, ncat=x@ncat, cpow=x@cpow,
                       factor.ind=x@factor.ind, fixed.ind=x@fixed.ind))
     }
 )
