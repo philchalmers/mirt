@@ -1122,7 +1122,7 @@ setMethod(
             phess <- function(pars, r, thetas, cpow, factor.ind, fixed.ind){
                 nfact <- ncol(thetas)
                 if(nfact != length(cpow)){
-                    browser()
+                    stop('nfact not equal to length of cpow')
                 } else {
                     a <- pars[seq_len(nfact)]
                     d <- pars[(nfact+1L):(length(pars)-1L)]
@@ -1347,7 +1347,6 @@ setMethod(
     f = "ExtractZetas",
     signature = signature(x = 'PCgraded'),
     definition = function(x){
-        browser()
         d <- x@par[(x@nfact+1L):length(x@par)]
         d
     }
@@ -1357,9 +1356,8 @@ setMethod(
     f = "GenRandomPars",
     signature = signature(x = 'PCgraded'),
     definition = function(x){
-        browser()
         par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
-                 rlnorm(x@nfact, meanlog=.2, sdlog=.5))
+                 rnorm(length(x@par) - x@nfact))
         x@par[x@est] <- par[x@est]
         x
     }
@@ -1432,15 +1430,79 @@ setMethod(
     f = "Deriv",
     signature = signature(x = 'PCgraded', Theta = 'matrix'),
     definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
-        ret <- list(grad=numeric(length(x@par)),
-                    hess=matrix(0, length(x@par), length(x@par)))
-        ret$grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
-        if(estHess && any(x@est)){
-            ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
-                                                      Theta=Theta, gradient=FALSE)
+        nfact  <- x@nfact
+        ncat   <- x@ncat
+        nbound <- ncat - 1L
+        N      <- nrow(Theta)
+        cpow   <- x@cpow
+        a      <- x@par[seq_len(nfact)]
+        phi_mat <- matrix(x@par[(nfact + 1L):length(x@par)],
+                          nrow = nbound, ncol = nfact)
+        d_mat   <- phi2d_gen(phi_mat)
+        dat     <- x@dat                                # N x ncat indicator matrix
+
+        # pi_arr[,,t]: N x nbound matrix of dimension-t boundary curves
+        pi_arr <- array(0, dim = c(N, nbound, nfact))
+        for(tt in seq_len(nfact))
+            pi_arr[, , tt] <- plogis(outer(Theta[, tt] * a[tt], d_mat[, tt], '+'))
+
+        # cumulative boundary probabilities: col k+1 holds P*_k (k = 0,...,ncat)
+        Pstar <- matrix(0, N, ncat + 1L)
+        Pstar[, 1L] <- 1
+        for(k in seq_len(nbound)){
+            prd <- rep(1, N)
+            for(tt in seq_len(nfact))
+                if(cpow[tt] == 1L) prd <- prd * pi_arr[, k, tt]
+            Pstar[, k + 1L] <- prd
         }
+
+        P <- Pstar[, 1:ncat, drop=FALSE] - Pstar[, 2:(ncat + 1L), drop=FALSE]
+        P[P < 1e-20] <- 1e-20
+
+        const <- dat / P                                             # N x ncat
+        S <- const[, 2:ncat, drop=FALSE] - const[, 1:(ncat - 1L), drop=FALSE]  # N x nbound, S[,k] = dlogL/dP*_k
+
+        grad <- numeric(length(x@par))
+        for(tt in seq_len(nfact)){
+            if(cpow[tt] == 0L) next
+
+            Tmat <- S * (1 - pi_arr[, , tt]) * Pstar[, 2:ncat, drop=FALSE]  # N x nbound, col k = t_k
+
+            # CumT[,m] = sum_{k=m}^{nbound} Tmat[,k], via backward recursion (robust for nbound == 1)
+            CumT <- matrix(0, N, nbound)
+            CumT[, nbound] <- Tmat[, nbound]
+            if(nbound > 1L)
+                for(m in (nbound - 1L):1L)
+                    CumT[, m] <- CumT[, m + 1L] + Tmat[, m]
+
+            grad[tt] <- sum(Theta[, tt] * rowSums(Tmat))
+
+            phi_idx <- nfact + (tt - 1L) * nbound + seq_len(nbound)
+            grad[phi_idx[1L]] <- sum(CumT[, 1L])
+            if(nbound > 1L)
+                for(m in 2:nbound)
+                    grad[phi_idx[m]] <- -exp(phi_mat[m, tt]) * sum(CumT[, m])
+        }
+
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(estHess && any(x@est)){
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj = x,
+                                                  Theta = Theta, gradient = FALSE)
+        }
+        ret <- list(grad = grad, hess = hess)
         # if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
         return(ret)
+
+
+        # ret <- list(grad=numeric(length(x@par)),
+        #             hess=matrix(0, length(x@par), length(x@par)))
+        # ret$grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+        # if(estHess && any(x@est)){
+        #     ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+        #                                               Theta=Theta, gradient=FALSE)
+        # }
+        # # if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        # return(ret)
 
     }
 )
