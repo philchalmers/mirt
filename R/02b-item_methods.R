@@ -16,7 +16,7 @@ Experimental_itemtypes <- function() c('experimental', 'grsmIRT', 'fivePL', 'cll
 # NOTE: probably want generalized version of line line 6, at least GHCM
 
 Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5PL', 'CLL', 'ULL',
-                                 'graded', 'grsm', 'gpcm', 'gpcmIRT',
+                                 'graded', 'grsm', 'gpcm', 'gpcmIRT', 'PCgraded',
                                  'rsm', 'nominal','PC1PL', 'PC2PL','PC3PL', '2PLNRM', '3PLNRM', '3PLuNRM', '4PLNRM',
                                  'ideal', 'lca', 'spline', 'monospline',
                                  'monopoly', 'ggum', 'sequential', 'Tutz', Experimental_itemtypes())
@@ -24,14 +24,14 @@ Valid_iteminputs <- function() c('Rasch', '1PL', '2PL', '3PL', '3PLu', '4PL', '5
 ordinal_itemtypes <- function() c('dich', 'fivePL', 'graded', 'gpcm', 'sequential', 'cll', 'ull',
                                   'ggum', 'rating', 'spline', 'monospline', 'monopoly',
                                   'partcomp', 'rsm', 'ideal', 'gpcmIRT', 'grsmIRT',
-                                  'GUM')
+                                  'GUM', 'PCgraded')
 
 # Indicate which functions should use the R function instead of those written in C++
-Use_R_ProbTrace <- function() c('custom', 'spline', 'monospline', 'sequential', 'Tutz', 'Luo2001',
+Use_R_ProbTrace <- function() c('custom', 'spline', 'monospline', 'sequential', 'Tutz', 'Luo2001', 'PCgraded',
                                 Experimental_itemtypes())
 
 Use_R_Deriv <- function() c('custom', 'rating', 'partcomp', 'nestlogit', 'spline', 'monospline', 'sequential', 'Tutz',
-                            'Luo2001', Experimental_itemtypes())
+                            'Luo2001', 'PCgraded', Experimental_itemtypes())
 
 #--------------------------------------------------------------------
 # Item model definitions
@@ -1122,7 +1122,7 @@ setMethod(
             phess <- function(pars, r, thetas, cpow, factor.ind, fixed.ind){
                 nfact <- ncol(thetas)
                 if(nfact != length(cpow)){
-                    browser()
+                    stop('nfact not equal to length of cpow')
                 } else {
                     a <- pars[seq_len(nfact)]
                     d <- pars[(nfact+1L):(length(pars)-1L)]
@@ -1306,6 +1306,219 @@ setMethod(
     signature = signature(x = 'partcomp', Theta = 'matrix'),
     definition = function(x, Theta){
         # message('partcomp derivatives not optimized') ##TODO
+        numDeriv_dP(x, Theta)
+    }
+)
+
+# ----------------------------------------------------------------
+
+setClass("PCgraded", contains = 'AllItemsClass',
+         representation = representation(cpow='integer',
+                                         fixed.ind='integer',
+                                         factor.ind='integer'))
+
+setMethod(
+    f = "print",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x, ...){
+        cat('Item object of class:', class(x))
+    }
+)
+
+setMethod(
+    f = "show",
+    signature = signature(object = 'PCgraded'),
+    definition = function(object){
+        print(object)
+    }
+)
+
+setMethod(
+    f = "ExtractLambdas",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x, include_fixed = TRUE){
+        pick <- if(include_fixed)
+            seq_len(x@nfact) else (x@nfixedeffects + 1):x@nfact
+        x@par[pick]
+    }
+)
+
+setMethod(
+    f = "ExtractZetas",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x){
+        d <- x@par[(x@nfact+1L):length(x@par)]
+        d
+    }
+)
+
+setMethod(
+    f = "GenRandomPars",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x){
+        par <- c(rlnorm(x@nfact, meanlog=0, sdlog=.5),
+                 rnorm(length(x@par) - x@nfact))
+        x@par[x@est] <- par[x@est]
+        x
+    }
+)
+
+setMethod(
+    f = "set_null_model",
+    signature = signature(x = 'PCgraded'),
+    definition = function(x){
+        x@par[seq_len(x@nfact)] <- 0
+        x@est[seq_len(x@nfact)] <- FALSE
+        x@cpow[seq_len(x@nfact)] <- c(1, numeric(x@nfact - 1))
+        x
+    }
+)
+
+phi2d_gen <- function(phi_mat) {
+    # phi_mat is (K-1) x D
+    ncat1 <- nrow(phi_mat)
+    d_mat <- phi_mat
+    if (ncat1 > 1) {
+        exp_phi <- exp(phi_mat[-1, , drop = FALSE])
+        for (d in 1:ncol(phi_mat))
+            d_mat[, d] <- phi_mat[1, d] - c(0, cumsum(exp_phi[, d]))
+    }
+    d_mat
+}
+
+P.PNCGRM <- function(par, Theta, ncat,
+                     cpow, factor.ind, fixed.ind, ot = 0) {
+    nfact <- ncol(Theta)
+    N <- nrow(Theta)
+
+    a <- par[1:nfact]
+    phi_vec <- par[(nfact + 1):length(par)]
+
+    # Restructure phi into matrix of dimension (ncat-1) x nfact
+    phi_mat <- matrix(phi_vec, nrow = ncat - 1, ncol = nfact)
+    d_mat <- phi2d_gen(phi_mat)
+
+    # Calculate boundary probabilities P_star (N x ncat+1)
+    P_star <- matrix(0, nrow = N, ncol = ncat + 1)
+    P_star[, 1] <- 1.0
+
+    for (k in 1:(ncat - 1)) {
+        prod_k <- rep(1.0, N)
+        for (d in 1:nfact)
+            prod_k <- prod_k * (1/(1 + exp(-(a[d] * Theta[, d] + d_mat[k, d]))))^cpow[d]
+        P_star[, k + 1] <- prod_k
+    }
+
+    P <- matrix(0, nrow = N, ncol = ncat)
+    for (k in 1:ncat)
+        P[, k] <- P_star[, k] - P_star[, k + 1]
+    P[P < 1e-20] <- 1e-20
+    P[1 - P < 1e-20] <- 1 - 1e-20
+    P
+}
+
+setMethod(
+    f = "ProbTrace",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta, useDesign = TRUE, ot=0){
+        return(P.PNCGRM(x@par, Theta=Theta, ncat=x@ncat, cpow=x@cpow,
+                      factor.ind=x@factor.ind, fixed.ind=x@fixed.ind))
+    }
+)
+
+setMethod(
+    f = "Deriv",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta, estHess = FALSE, offterm = numeric(1L)){
+        nfact  <- x@nfact
+        ncat   <- x@ncat
+        nbound <- ncat - 1L
+        N      <- nrow(Theta)
+        cpow   <- x@cpow
+        a      <- x@par[seq_len(nfact)]
+        phi_mat <- matrix(x@par[(nfact + 1L):length(x@par)],
+                          nrow = nbound, ncol = nfact)
+        d_mat   <- phi2d_gen(phi_mat)
+        dat     <- x@dat                                # N x ncat indicator matrix
+
+        # pi_arr[,,t]: N x nbound matrix of dimension-t boundary curves
+        pi_arr <- array(0, dim = c(N, nbound, nfact))
+        for(tt in seq_len(nfact))
+            pi_arr[, , tt] <- plogis(outer(Theta[, tt] * a[tt], d_mat[, tt], '+'))
+
+        # cumulative boundary probabilities: col k+1 holds P*_k (k = 0,...,ncat)
+        Pstar <- matrix(0, N, ncat + 1L)
+        Pstar[, 1L] <- 1
+        for(k in seq_len(nbound)){
+            prd <- rep(1, N)
+            for(tt in seq_len(nfact))
+                if(cpow[tt] == 1L) prd <- prd * pi_arr[, k, tt]
+            Pstar[, k + 1L] <- prd
+        }
+
+        P <- Pstar[, 1:ncat, drop=FALSE] - Pstar[, 2:(ncat + 1L), drop=FALSE]
+        P[P < 1e-20] <- 1e-20
+
+        const <- dat / P                                             # N x ncat
+        S <- const[, 2:ncat, drop=FALSE] - const[, 1:(ncat - 1L), drop=FALSE]  # N x nbound, S[,k] = dlogL/dP*_k
+
+        grad <- numeric(length(x@par))
+        for(tt in seq_len(nfact)){
+            if(cpow[tt] == 0L) next
+
+            Tmat <- S * (1 - pi_arr[, , tt]) * Pstar[, 2:ncat, drop=FALSE]  # N x nbound, col k = t_k
+
+            # CumT[,m] = sum_{k=m}^{nbound} Tmat[,k], via backward recursion (robust for nbound == 1)
+            CumT <- matrix(0, N, nbound)
+            CumT[, nbound] <- Tmat[, nbound]
+            if(nbound > 1L)
+                for(m in (nbound - 1L):1L)
+                    CumT[, m] <- CumT[, m + 1L] + Tmat[, m]
+
+            grad[tt] <- sum(Theta[, tt] * rowSums(Tmat))
+
+            phi_idx <- nfact + (tt - 1L) * nbound + seq_len(nbound)
+            grad[phi_idx[1L]] <- sum(CumT[, 1L])
+            if(nbound > 1L)
+                for(m in 2:nbound)
+                    grad[phi_idx[m]] <- -exp(phi_mat[m, tt]) * sum(CumT[, m])
+        }
+
+        hess <- matrix(0, length(x@par), length(x@par))
+        if(estHess && any(x@est)){
+            hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj = x,
+                                                  Theta = Theta, gradient = FALSE)
+        }
+        ret <- list(grad = grad, hess = hess)
+        # if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        return(ret)
+
+
+        # ret <- list(grad=numeric(length(x@par)),
+        #             hess=matrix(0, length(x@par), length(x@par)))
+        # ret$grad[x@est] <- numerical_deriv(x@par[x@est], EML, obj=x, Theta=Theta)
+        # if(estHess && any(x@est)){
+        #     ret$hess[x@est, x@est] <- numerical_deriv(x@par[x@est], EML, obj=x,
+        #                                               Theta=Theta, gradient=FALSE)
+        # }
+        # # if(x@any.prior) ret <- DerivativePriors(x=x, grad=ret$grad, hess=ret$hess)
+        # return(ret)
+
+    }
+)
+
+setMethod(
+    f = "DerivTheta",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta){
+        numDeriv_DerivTheta(x, Theta)
+    }
+)
+
+setMethod(
+    f = "dP",
+    signature = signature(x = 'PCgraded', Theta = 'matrix'),
+    definition = function(x, Theta){
         numDeriv_dP(x, Theta)
     }
 )

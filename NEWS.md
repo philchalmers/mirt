@@ -1,5 +1,9 @@
 # Changes in mirt 1.47
 
+- Added `PCgraded` itemtype to estimate the partially non-compensatory
+  GRM described in Chalmers (2020). Follows the same modeling logic as the 
+  partially compensatory models for dichotomous response data
+
 - Added function `pirt()` to perform projective IRT modeling using the method
   recently described in Chalmers, Falk, and Reise (2026)
 
