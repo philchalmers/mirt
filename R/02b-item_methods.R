@@ -1407,7 +1407,7 @@ P.PNCGRM <- function(par, Theta, ncat,
     for (k in 1:(ncat - 1)) {
         prod_k <- rep(1.0, N)
         for (d in 1:nfact)
-            prod_k <- prod_k / (1 + exp(-(a[d] * Theta[, d] + d_mat[k, d])))
+            prod_k <- prod_k * (1/(1 + exp(-(a[d] * Theta[, d] + d_mat[k, d]))))^cpow[d]
         P_star[, k + 1] <- prod_k
     }
 
