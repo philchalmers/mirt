@@ -209,7 +209,9 @@ mu <- c(0, -1/2)
 sigma <- matrix(c(1, .7, .7, 1), 2,2)
 
 dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
-itemstats(dat)$overall
+colnames(dat) <- c(paste0('Item.pre_', 1:20), paste0('Item.post_', 1:20))
+itemstats(dat[,1:20])$overall
+itemstats(dat[,21:40])$overall
 
 # build equality constraints across time points
 constr <- NULL
@@ -240,7 +242,7 @@ summary(mod)
 Theta <- cbind(c(0, 1, 2), c(0,1,2))
 nochange <- simdata(a, d, itemtype = '2PL', Theta = Theta)
 change <- simdata(a, d, itemtype = '2PL', Theta = Theta +
-                      cbind(0, c(-1, -1, -1)))
+                      cbind(0, c(-2, -2, -2)))
 
 # total score differences
 data.frame(pre=rowSums(nochange[,1:J]),
@@ -278,20 +280,23 @@ mu <- c(0, -1/2)
 sigma <- matrix(c(1, .7, .7, 1), 2,2)
 
 dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = 'graded')
+colnames(dat) <- c(paste0('Item.pre_', 1:20), paste0('Item.post_', 1:20))
 itemstats(dat[,1:20])$overall
-itemstats(dat[,1:20 + 20])$overall
+itemstats(dat[,21:40])$overall
 
-# add missing elements to dataset
+# add missing response elements to dataset
 datM <- dat
 datM[datM[,1] == 4, 1] <- 3
 datM[datM[,2] == 1, 2] <- 0
 datM[datM[,3] == 0, 3] <- 1
-itemstats(datM)
+itemstats(datM[,1:20])
 
 # build equality constraints across time points
 constr <- NULL
 for(i in (1:J)){
+    # constrain slopes across items/dimensions
     constr <- c(constr, paste0("(", i, ',', i+J, ",a1,a2)"))
+    # constrain intercepts to be equal (required if any category missing)
     constr <- c(constr, paste0(paste0("(", i, ',', i+J, ",d", 1:4, ")")))
 }
 constr <- paste0(constr, collapse=',')
@@ -307,21 +312,15 @@ model <- sprintf("
                   CONSTRAIN = \%s", J, J+1, 2*J, constr)
 cat(model)
 
-# fit on original data (not missing)
+# fit on original data (no missing responses)
 mod <- mirt(dat, model = model, itemtype='graded', SE=TRUE)
 coef(mod, printSE=TRUE)
 coef(mod, simplify=TRUE)
 summary(mod)
 
-# fit on completely missing repsonse data requires more care
-if(FALSE)   # ERROR: GRM sensitive to starting values in this context
-    modM <- mirt(datM, model = model, itemtype='graded', SE=TRUE,
-                 technical = list(customK = rep(5, J*2)))
-
-# use better starting values (can fit independent models and collect
-#  information instead)
+# fit on items with missing responses requires customK
 modM <- mirt(datM, model = model, itemtype='graded', SE=TRUE,
-             technical = list(customK = rep(5, J*2)), pars=mod2values(mod))
+             technical = list(customK = rep(5, J*2)))
 
 # test data
 Theta <- cbind(c(0, 1, 2), c(0,1,2))

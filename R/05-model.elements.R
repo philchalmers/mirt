@@ -59,6 +59,12 @@ model.elements <- function(model, factorNames, itemtype, nfactNames, nfact, J, K
             temp <- cumsum(temp)
             zetas[[i]] <- qnorm(1 - temp)/div
         }
+        if(any(is.infinite(zetas[[i]]))){
+            pos <- is.infinite(zetas[[i]])
+            sn <- sign(zetas[[i]][pos])
+            zetas[[i]][pos & sn > 0] <- max(zetas[[i]][!pos]) + 1
+            zetas[[i]][pos & sn < 0] <- min(zetas[[i]][!pos]) - 1
+        }
     }
     estzetas <- list()
     for(i in seq_len(J))
