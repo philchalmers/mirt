@@ -256,6 +256,93 @@ RCI(mod, predat = change)
 RCI(mod, predat = nochange, expected.scores=TRUE)
 RCI(mod, predat = change, expected.scores=TRUE)
 
+############
+# Similar example using the GRM instead, however
+#  accounting for missing categories pre-post test (requires
+#  the customK technical and strong equality constraints
+#  to control the missing parameters)
+
+J <- 20
+N <- 500
+slopes <- rlnorm(J, .2, .2)
+a <- matrix(c(slopes, numeric(J*2), slopes),J*2)
+ints <- rnorm(J)
+diffs <- t(apply(matrix(runif(20*4, .3, 1), 20), 1, cumsum))
+diffs <- -(diffs - rowMeans(diffs))
+d <- diffs + rnorm(20)
+d <- rbind(d,d)
+data.frame(a=a, d=d)
+
+# mean effects across time
+mu <- c(0, -1/2)
+sigma <- matrix(c(1, .7, .7, 1), 2,2)
+
+dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = 'graded')
+itemstats(dat[,1:20])$overall
+itemstats(dat[,1:20 + 20])$overall
+
+# add missing elements to dataset
+datM <- dat
+datM[datM[,1] == 4, 1] <- 3
+datM[datM[,2] == 1, 2] <- 0
+datM[datM[,3] == 0, 3] <- 1
+itemstats(datM)
+
+# build equality constraints across time points
+constr <- NULL
+for(i in (1:J)){
+    constr <- c(constr, paste0("(", i, ',', i+J, ",a1,a2)"))
+    constr <- c(constr, paste0(paste0("(", i, ',', i+J, ",d", 1:4, ")")))
+}
+constr <- paste0(constr, collapse=',')
+
+# define model where item parameters constrained over time, and
+# latent trait has potential scale-location changes (e.g., regression to the
+# mean effects)
+model <- sprintf("
+                  thetapre = 1-\%i,
+                  thetapost = \%i-\%i,
+                  COV = thetapre*thetapost, thetapost*thetapost
+                  MEAN = thetapost
+                  CONSTRAIN = \%s", J, J+1, 2*J, constr)
+cat(model)
+
+# fit on original data (not missing)
+mod <- mirt(dat, model = model, itemtype='graded', SE=TRUE)
+coef(mod, printSE=TRUE)
+coef(mod, simplify=TRUE)
+summary(mod)
+
+# fit on completely missing repsonse data requires more care
+if(FALSE)   # ERROR: GRM sensitive to starting values in this context
+    modM <- mirt(datM, model = model, itemtype='graded', SE=TRUE,
+                 technical = list(customK = rep(5, J*2)))
+
+# use better starting values (can fit independent models and collect
+#  information instead)
+modM <- mirt(datM, model = model, itemtype='graded', SE=TRUE,
+             technical = list(customK = rep(5, J*2)), pars=mod2values(mod))
+
+# test data
+Theta <- cbind(c(0, 1, 2), c(0,1,2))
+nochange <- simdata(a, d, itemtype = 'graded', Theta = Theta)
+change <- simdata(a, d, itemtype = 'graded', Theta = Theta +
+                      cbind(0, c(-2, -2, -2)))
+
+# total score differences
+data.frame(pre=rowSums(nochange[,1:J]),
+           post=rowSums(nochange[,1:J + J]))
+data.frame(pre=rowSums(change[,1:J]),
+           post=rowSums(change[,1:J + J]))
+
+
+RCI(modM, predat = nochange)
+RCI(modM, predat = change)
+
+# expected total-score metric reported instead
+RCI(modM, predat = nochange, expected.scores=TRUE)
+RCI(modM, predat = change, expected.scores=TRUE)
+
 }
 }
 \references{

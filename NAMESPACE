@@ -99,16 +99,20 @@ import(vegan)
 importFrom(Deriv,Deriv)
 importFrom(SimDesign,manageWarnings)
 importFrom(grDevices,adjustcolor)
-importFrom(graphics,abline)
-importFrom(graphics,points)
-importFrom(graphics,polygon)
-importFrom(graphics,symbols)
+importFrom(graphics,
+  abline,
+  points,
+  polygon,
+  symbols
+)
 importFrom(gridExtra,grid.arrange)
 importFrom(splines2,iSpline)
-importFrom(utils,capture.output)
-importFrom(utils,flush.console)
-importFrom(utils,head)
-importFrom(utils,packageVersion)
-importFrom(utils,tail)
-importFrom(utils,write.table)
+importFrom(utils,
+  capture.output,
+  flush.console,
+  head,
+  packageVersion,
+  tail,
+  write.table
+)
 useDynLib(mirt)
