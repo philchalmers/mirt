@@ -308,6 +308,8 @@ DIF <- function(MGmodel, which.par, scheme = 'add',
         attr(aov, 'parnum') <- parnum
         attr(aov, 'converged') <- extract.mirt(newmodel, 'converged')
         cfs <- coef(newmodel)
+        cfs <- lapply(cfs, \(grp) # in case SE=TRUE
+                      lapply(grp, \(x) x[1, , drop=FALSE]))
         attr(aov, 'coefs') <- do.call(rbind, lapply(cfs, function(x) x[[item]]))
         rownames(attr(aov, 'coefs')) <- names(cfs)
         if(return_models) aov <- newmodel
