@@ -222,6 +222,50 @@
 #' DIF(model, which.par = c('d'), items2test=1:2, pairwise = TRUE,
 #'     Wald=TRUE)
 #'
+#' #################
+#' # Restricted DIF tests when categories missing across groups
+#'
+#' set.seed(1234)
+#' a1 <- a2 <- matrix(abs(rnorm(15,1,.3)), ncol=1)
+#' diffs <- t(apply(matrix(runif(15*4, .3, 1), 15), 1, cumsum))
+#' diffs <- -(diffs - rowMeans(diffs))
+#' d1 <- d2 <- diffs + rnorm(15)
+#' d1[1,] <- d2[1,] <- d2[1,] + 3
+#' d1[1,1] <- d2[1,1] <- 6.5
+#' head(data.frame(a.group1 = a1, a.group2 = a2, d.group1 = d1, d.group2 = d2))
+#' itemtype <- rep('graded', nrow(a1))
+#' N <- 1000
+#' dataset1 <- simdata(a1, d1, N, itemtype=itemtype, mu = -1)
+#' dataset2 <- simdata(a2, d2, N, itemtype=itemtype, mu = 1)
+#' dat <- rbind(dataset1, dataset2)
+#' group <- c(rep('D1', N), rep('D2', N))
+#' itemstats(dat, group = group)
+#'
+#' # notice table of counts for item 1, lowest category missing in D2
+#' table(dat[,1], group)
+#'
+#' # ensure that missing intercept information borrowed from non-missing group
+#' mod <- multipleGroup(dat, group=group,
+#'                      invariance = c('free_means', 'free_vars', colnames(dat)))
+#' coef(mod, simplify=TRUE)
+#'
+#' if(FALSE)
+#'     DIF(mod, which.par = c('a1', 'd1', 'd2', 'd3', 'd4'),
+#'         items2test=1, scheme = 'drop') # Not good ... d1 not identified
+#'
+#' # test item for DIF, however omit d1 as this is not identified
+#' DIF(mod, which.par = c('a1', 'd2', 'd3', 'd4'),
+#'     items2test=1, scheme = 'drop')
+#'
+#' # plot resulting DIF test
+#' difmod <- DIF(mod, which.par = c('a1', 'd2', 'd3', 'd4'),
+#'               items2test=1, scheme = 'drop', return_models = TRUE)
+#' itemplot(difmod[[1]], 1)
+#' subset(DRF(difmod[[1]], DIF=TRUE, DIF.cats=TRUE), item == 'Item_1')
+#'
+#' itemplot(difmod[[1]], 1, type = 'score')
+#' subset(DRF(difmod[[1]], DIF=TRUE), item == 'Item_1')
+#'
 #' }
 DIF <- function(MGmodel, which.par, scheme = 'add',
                 items2test = 1:extract.mirt(MGmodel, 'nitems'),
