@@ -25,7 +25,7 @@ test administrations.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.47</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.47.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@ test administrations.'></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Model-based Reliable Change Index</h1>
-      <small class="dont-index">Source: <a href="https://github.com/philchalmers/mirt/blob/v.1.47/R/RCI.R" class="external-link"><code>R/RCI.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/philchalmers/mirt/blob/main/R/RCI.R" class="external-link"><code>R/RCI.R</code></a></small>
       <div class="d-none name"><code>RCI.Rd</code></div>
     </div>
 
@@ -6866,7 +6866,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.160     16.207      TRUE -1.953 1.776 -1.102 0.271</span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span><span class="va">mod</span>, predat <span class="op">=</span> <span class="va">change</span>, expected.scores<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   pre.score post.score converged   diff    SE      z     p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    10.254      3.487      TRUE -6.767 2.454 -2.493 0.013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    10.254      3.488      TRUE -6.767 2.454 -2.493 0.013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    13.100      3.570      TRUE -9.531 2.364 -3.304 0.001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    17.406      9.877      TRUE -7.530 2.340 -2.855 0.004</span>
 <span class="r-in"><span></span></span>
@@ -7030,37 +7030,37 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, printSE<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2    d3    d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.149  0 2.401 1.810 1.514 0.643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.149  0 2.400 1.810 1.514 0.642</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.096 NA 0.129 0.114 0.109 0.097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.813  0 0.097 -0.654 -1.220 -1.663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.813  0 0.096 -0.655 -1.220 -1.664</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.078 NA 0.079  0.081  0.089  0.098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.255  0 0.877 -0.009 -0.423 -1.132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.255  0 0.877 -0.010 -0.424 -1.133</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.095 NA 0.099  0.094  0.095  0.101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2    d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.870  0 1.339 0.490 0.083 -0.470</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.870  0 1.339 0.490 0.083 -0.471</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.076 NA 0.092 0.083 0.081  0.082</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2   d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.309  0 0.86 0.474 -0.457 -1.047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.310  0 0.86 0.474 -0.457 -1.047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.098 NA 0.10 0.097  0.097  0.102</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2    d3    d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.128  0 2.097 1.292 0.527 0.176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.129  0 2.096 1.292 0.527 0.176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.091 NA 0.118 0.102 0.093 0.091</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.245  0 1.336 0.562 -0.050 -0.778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.245  0 1.335 0.562 -0.050 -0.779</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.093 NA 0.104 0.096  0.094  0.097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_8</span>
@@ -7070,47 +7070,47 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.238  0 1.200 0.387 -0.116 -0.566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.238  0 1.199 0.386 -0.117 -0.566</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.094 NA 0.103 0.095  0.093  0.095</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.975  0 -0.463 -1.386 -1.724 -2.320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.975  0 -0.464 -1.387 -1.724 -2.321</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.089 NA  0.085  0.097  0.105  0.123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.249  0 0.318 -0.634 -1.325 -1.658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.249  0 0.317 -0.635 -1.326 -1.658</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.096 NA 0.094  0.096  0.104  0.111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.148  0 0.199 -0.349 -1.007 -1.393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.148  0 0.198 -0.349 -1.007 -1.393</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.093 NA 0.090  0.090  0.096  0.102</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.922  0 0.188 -0.174 -0.658 -1.094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.922  0 0.187 -0.174 -0.658 -1.094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.083 NA 0.082  0.082  0.085  0.090</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.200  0 0.248 -0.413 -0.788 -1.400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.200  0 0.247 -0.413 -0.789 -1.401</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.095 NA 0.092  0.092  0.095  0.104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.426  0 1.342 0.765 -0.108 -0.803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.426  0 1.342 0.764 -0.109 -0.803</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.102 NA 0.112 0.105  0.101  0.104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.986  0 1.531 0.732 -0.209 -1.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.986  0 1.531 0.732 -0.210 -1.229</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.079 NA 0.098 0.087  0.084  0.094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.422  0 0.217 -0.163 -0.988 -1.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 1.423  0 0.216 -0.164 -0.989 -1.416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.108 NA 0.100  0.100  0.106  0.112</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_18</span>
@@ -7120,47 +7120,47 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2    d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.821  0 1.335 0.691 0.264 -0.402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.821  0 1.335 0.690 0.264 -0.402</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.075 NA 0.091 0.083 0.080  0.081</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.pre_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1 a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.751  0 0.888 0.327 -0.521 -1.486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par 0.751  0 0.888 0.326 -0.521 -1.487</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  0.071 NA 0.082 0.078  0.079  0.092</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2    d3    d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.149 2.401 1.810 1.514 0.643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.149 2.400 1.810 1.514 0.642</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.096 0.129 0.114 0.109 0.097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.813 0.097 -0.654 -1.220 -1.663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.813 0.096 -0.655 -1.220 -1.664</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.078 0.079  0.081  0.089  0.098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.255 0.877 -0.009 -0.423 -1.132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.255 0.877 -0.010 -0.424 -1.133</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.095 0.099  0.094  0.095  0.101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2    d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.870 1.339 0.490 0.083 -0.470</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.870 1.339 0.490 0.083 -0.471</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.076 0.092 0.083 0.081  0.082</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2   d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.309 0.86 0.474 -0.457 -1.047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.310 0.86 0.474 -0.457 -1.047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.098 0.10 0.097  0.097  0.102</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2    d3    d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.128 2.097 1.292 0.527 0.176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.129 2.096 1.292 0.527 0.176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.091 0.118 0.102 0.093 0.091</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.245 1.336 0.562 -0.050 -0.778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.245 1.335 0.562 -0.050 -0.779</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.093 0.104 0.096  0.094  0.097</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_8</span>
@@ -7170,47 +7170,47 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.238 1.200 0.387 -0.116 -0.566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.238 1.199 0.386 -0.117 -0.566</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.094 0.103 0.095  0.093  0.095</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.975 -0.463 -1.386 -1.724 -2.320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.975 -0.464 -1.387 -1.724 -2.321</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.089  0.085  0.097  0.105  0.123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.249 0.318 -0.634 -1.325 -1.658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.249 0.317 -0.635 -1.326 -1.658</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.096 0.094  0.096  0.104  0.111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.148 0.199 -0.349 -1.007 -1.393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.148 0.198 -0.349 -1.007 -1.393</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.093 0.090  0.090  0.096  0.102</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.922 0.188 -0.174 -0.658 -1.094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.922 0.187 -0.174 -0.658 -1.094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.083 0.082  0.082  0.085  0.090</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.200 0.248 -0.413 -0.788 -1.400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.200 0.247 -0.413 -0.789 -1.401</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.095 0.092  0.092  0.095  0.104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.426 1.342 0.765 -0.108 -0.803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.426 1.342 0.764 -0.109 -0.803</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.102 0.112 0.105  0.101  0.104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.986 1.531 0.732 -0.209 -1.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.986 1.531 0.732 -0.210 -1.229</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.079 0.098 0.087  0.084  0.094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.422 0.217 -0.163 -0.988 -1.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 1.423 0.216 -0.164 -0.989 -1.416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.108 0.100  0.100  0.106  0.112</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_18</span>
@@ -7220,66 +7220,66 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2    d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.821 1.335 0.691 0.264 -0.402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.821 1.335 0.690 0.264 -0.402</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.075 0.091 0.083 0.080  0.081</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Item.post_20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     a1    a2    d1    d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.751 0.888 0.327 -0.521 -1.486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par  0 0.751 0.888 0.326 -0.521 -1.487</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE  NA 0.071 0.082 0.078  0.079  0.092</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 MEAN_2 COV_11 COV_21 COV_22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par      0 -0.553      1  0.760  1.094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0 -0.552      1  0.760  1.094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SE      NA  0.048     NA  0.045  0.096</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod</span>, simplify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 a1    a2     d1     d2     d3     d4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_1   1.149 0.000  2.401  1.810  1.514  0.643</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_2   0.813 0.000  0.097 -0.654 -1.220 -1.663</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_3   1.255 0.000  0.877 -0.009 -0.423 -1.132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_4   0.870 0.000  1.339  0.490  0.083 -0.470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_5   1.309 0.000  0.860  0.474 -0.457 -1.047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_6   1.128 0.000  2.097  1.292  0.527  0.176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_7   1.245 0.000  1.336  0.562 -0.050 -0.778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_1   1.149 0.000  2.400  1.810  1.514  0.642</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_2   0.813 0.000  0.096 -0.655 -1.220 -1.664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_3   1.255 0.000  0.877 -0.010 -0.424 -1.133</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_4   0.870 0.000  1.339  0.490  0.083 -0.471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_5   1.310 0.000  0.860  0.474 -0.457 -1.047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_6   1.129 0.000  2.096  1.292  0.527  0.176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_7   1.245 0.000  1.335  0.562 -0.050 -0.779</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_8   0.860 0.000  0.660  0.102 -0.707 -1.224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_9   1.238 0.000  1.200  0.387 -0.116 -0.566</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_10  0.975 0.000 -0.463 -1.386 -1.724 -2.320</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_11  1.249 0.000  0.318 -0.634 -1.325 -1.658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_12  1.148 0.000  0.199 -0.349 -1.007 -1.393</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_13  0.922 0.000  0.188 -0.174 -0.658 -1.094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_14  1.200 0.000  0.248 -0.413 -0.788 -1.400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_15  1.426 0.000  1.342  0.765 -0.108 -0.803</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_16  0.986 0.000  1.531  0.732 -0.209 -1.229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_17  1.422 0.000  0.217 -0.163 -0.988 -1.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_9   1.238 0.000  1.199  0.386 -0.117 -0.566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_10  0.975 0.000 -0.464 -1.387 -1.724 -2.321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_11  1.249 0.000  0.317 -0.635 -1.326 -1.658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_12  1.148 0.000  0.198 -0.349 -1.007 -1.393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_13  0.922 0.000  0.187 -0.174 -0.658 -1.094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_14  1.200 0.000  0.247 -0.413 -0.789 -1.401</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_15  1.426 0.000  1.342  0.764 -0.109 -0.803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_16  0.986 0.000  1.531  0.732 -0.210 -1.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_17  1.423 0.000  0.216 -0.164 -0.989 -1.416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_18  0.929 0.000 -0.060 -0.585 -1.506 -2.202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_19  0.821 0.000  1.335  0.691  0.264 -0.402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_20  0.751 0.000  0.888  0.327 -0.521 -1.486</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_1  0.000 1.149  2.401  1.810  1.514  0.643</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_2  0.000 0.813  0.097 -0.654 -1.220 -1.663</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_3  0.000 1.255  0.877 -0.009 -0.423 -1.132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_4  0.000 0.870  1.339  0.490  0.083 -0.470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_5  0.000 1.309  0.860  0.474 -0.457 -1.047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_6  0.000 1.128  2.097  1.292  0.527  0.176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_7  0.000 1.245  1.336  0.562 -0.050 -0.778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_19  0.821 0.000  1.335  0.690  0.264 -0.402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_20  0.751 0.000  0.888  0.326 -0.521 -1.487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_1  0.000 1.149  2.400  1.810  1.514  0.642</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_2  0.000 0.813  0.096 -0.655 -1.220 -1.664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_3  0.000 1.255  0.877 -0.010 -0.424 -1.133</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_4  0.000 0.870  1.339  0.490  0.083 -0.471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_5  0.000 1.310  0.860  0.474 -0.457 -1.047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_6  0.000 1.129  2.096  1.292  0.527  0.176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_7  0.000 1.245  1.335  0.562 -0.050 -0.779</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_8  0.000 0.860  0.660  0.102 -0.707 -1.224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_9  0.000 1.238  1.200  0.387 -0.116 -0.566</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_10 0.000 0.975 -0.463 -1.386 -1.724 -2.320</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_11 0.000 1.249  0.318 -0.634 -1.325 -1.658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_12 0.000 1.148  0.199 -0.349 -1.007 -1.393</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_13 0.000 0.922  0.188 -0.174 -0.658 -1.094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_14 0.000 1.200  0.248 -0.413 -0.788 -1.400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_15 0.000 1.426  1.342  0.765 -0.108 -0.803</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_16 0.000 0.986  1.531  0.732 -0.209 -1.229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_17 0.000 1.422  0.217 -0.163 -0.988 -1.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_9  0.000 1.238  1.199  0.386 -0.117 -0.566</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_10 0.000 0.975 -0.464 -1.387 -1.724 -2.321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_11 0.000 1.249  0.317 -0.635 -1.326 -1.658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_12 0.000 1.148  0.198 -0.349 -1.007 -1.393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_13 0.000 0.922  0.187 -0.174 -0.658 -1.094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_14 0.000 1.200  0.247 -0.413 -0.789 -1.401</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_15 0.000 1.426  1.342  0.764 -0.109 -0.803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_16 0.000 0.986  1.531  0.732 -0.210 -1.229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_17 0.000 1.423  0.216 -0.164 -0.989 -1.416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_18 0.000 0.929 -0.060 -0.585 -1.506 -2.202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_19 0.000 0.821  1.335  0.691  0.264 -0.402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_20 0.000 0.751  0.888  0.327 -0.521 -1.486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_19 0.000 0.821  1.335  0.690  0.264 -0.402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_20 0.000 0.751  0.888  0.326 -0.521 -1.487</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $means</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  thetapre thetapost </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     0.000    -0.553 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     0.000    -0.552 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cov</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           thetapre thetapost</span>
@@ -7290,7 +7290,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span>              thetapre thetapost    h2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_1      0.560           0.313</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_2      0.431           0.186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_3      0.593           0.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_3      0.594           0.352</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_4      0.455           0.207</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_5      0.610           0.372</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_6      0.553           0.305</span>
@@ -7302,7 +7302,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_12     0.559           0.313</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_13     0.476           0.227</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_14     0.576           0.332</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_15     0.642           0.412</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_15     0.642           0.413</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_16     0.501           0.251</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_17     0.641           0.411</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_18     0.479           0.229</span>
@@ -7316,7 +7316,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_6               0.570 0.325</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_7               0.608 0.369</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_8               0.467 0.218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_9               0.605 0.366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_9               0.605 0.367</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_10              0.514 0.264</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_11              0.609 0.371</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_12              0.576 0.332</span>
@@ -7371,7 +7371,7 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_19                    0.033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Item.post_20                    0.033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  5.758 6.123 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SS loadings:  5.759 6.123 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Proportion Var:  0.144 0.153 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Factor correlations: </span>
