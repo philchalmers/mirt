@@ -1,3 +1,9 @@
+# Changes in mirt 1.48
+
+- Maximum EM iteration limit warning decreased to `message()` instead. However,
+  if last iteration had Aitken-accelerated criterion discrepancies greater than 1e-2
+  then a warning will be raised to indicate that the EM algorithm is likely still climbing
+
 # Changes in mirt 1.47
 
 - Added `PCgraded` itemtype to estimate the partially non-compensatory

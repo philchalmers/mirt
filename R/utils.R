@@ -3005,6 +3005,19 @@ suppressMat <- function(res, suppress, upper = TRUE){
 missingMsg <- function(string)
     stop(paste0('\'', string, '\' argument is missing.'), call.=FALSE)
 
+# Aitken EM convergence of log-likelihoods (linear prediction vs observed LL)
+AAC <- function(LL){
+    stopifnot(length(LL) == 3)
+    LL.t_1 <- LL[1]
+    LL.t <- LL[2]
+    LL.t1 <- LL[3]
+
+    diff1 <- (LL.t1 - LL.t)
+    c.t <- diff1 / (LL.t - LL.t_1)
+    LL.t1_hat <- LL.t +  diff1 / (1-c.t)
+    LL.t1 - LL.t1_hat
+}
+
 .mirtClusterEnv <- new.env(parent=emptyenv())
 .mirtClusterEnv$ncores <- 1L
 .mirtClusterEnv$omp_threads <- 1L

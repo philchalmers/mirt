@@ -430,8 +430,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             rlist <- Elist$rlist; LL <- Elist$LL
         }
         if(cycles == NCYCLES){
-            if(list$warn && list$method != 'MCEM')
-                warning('EM cycles terminated after ', cycles, ' iterations.', call.=FALSE)
+            if(list$method != 'MCEM')
+                message('EM cycles terminated after ', cycles, ' iterations.')
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
             if(list$warn && !(is.nan(TOL) || is.na(TOL)) && !list$NULL.MODEL && is.null(fixedEtable))
@@ -443,6 +443,14 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
                 warning(paste0("L-BFGS-B optimizer did not change any values across successive EM cycles;",
                                " likely indicates a problem in the M-step. \nCheck with the more stable ",
                                "optimizer = \'nlminb\', or supply better starting values"), call.=FALSE)
+        }
+        if(list$warn && cycles > 3){
+            pickLLs <- collectLL[(cycles-2):cycles]
+            AACdiff <- AAC(pickLLs)
+            if(abs(AACdiff) > 1e-2)
+                warning(paste0('Observed log-likelihood appeared to still be increasing in final iterations.',
+                               '\n  Final log-likelihood values were: \n  ',
+                               paste0(round(pickLLs, 3), collapse=', ')), call.=FALSE)
         }
         if(cycles > 1L && list$warn && !any(ANY.PRIOR) &&
            list$method != 'MCEM' && !dentype %in% c('EHW', 'Davidian')){
