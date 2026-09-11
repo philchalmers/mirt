@@ -430,7 +430,7 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             rlist <- Elist$rlist; LL <- Elist$LL
         }
         if(cycles == NCYCLES){
-            if(list$method != 'MCEM')
+            if(list$method != 'MCEM' && verbose)
                 message('EM cycles terminated after ', cycles, ' iterations.')
             converge <- FALSE
         } else if(cycles == 1L && !all(!est)){
