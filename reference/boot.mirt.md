@@ -111,7 +111,6 @@ boot.fun(mod)
 
 # run
 booted.loads <- boot.mirt(mod, boot.fun=boot.fun)
-#> EM cycles terminated after 500 iterations.
 booted.loads
 #> 
 #> ORDINARY NONPARAMETRIC BOOTSTRAP

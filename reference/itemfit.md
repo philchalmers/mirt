@@ -666,7 +666,6 @@ itemfit(raschfit, 'X2', return.tables=TRUE, Theta=Theta, which.items=1)
 # fit a new more flexible model for the mis-fitting item
 itemtype <- c(rep('2PL', 20), 'spline')
 x2 <- mirt(data, 1, itemtype=itemtype)
-#> EM cycles terminated after 500 iterations.
 itemfit(x2)
 #>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
 #> 1   Item_1 13.163      15      0.000  0.590

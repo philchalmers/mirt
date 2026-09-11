@@ -676,7 +676,6 @@ Test Statistics in IRT Models. <em>Journal of Educational Measurement, 37</em>, 
 <span class="r-in"><span><span class="co"># fit a new more flexible model for the mis-fitting item</span></span></span>
 <span class="r-in"><span><span class="va">itemtype</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>, <span class="fl">20</span><span class="op">)</span>, <span class="st">'spline'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, itemtype<span class="op">=</span><span class="va">itemtype</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> EM cycles terminated after 500 iterations.</span>
 <span class="r-in"><span><span class="fu">itemfit</span><span class="op">(</span><span class="va">x2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       item   S_X2 df.S_X2 RMSEA.S_X2 p.S_X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   Item_1 13.163      15      0.000  0.590</span>

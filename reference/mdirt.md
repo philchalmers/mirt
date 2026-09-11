@@ -269,7 +269,6 @@ dat <- expand.table(LSAT6)
 #> G2 (20) = 22.74, p = 0.3018, RMSEA = 0.012
 # \donttest{
 (mod3 <- mdirt(dat, 3))
-#> EM cycles terminated after 500 iterations.
 #> 
 #> Call:
 #> mdirt(data = dat, model = 3)
@@ -493,7 +492,6 @@ mod <- mdirt(dat, 2, nruns=10)
 #> [2,]  0.5  0.5
 #> [3,]  0.0  1.0
 (mod_gom <- mdirt(dat, 2, customTheta = Theta))
-#> EM cycles terminated after 500 iterations.
 #> 
 #> Call:
 #> mdirt(data = dat, model = 2, customTheta = Theta)
