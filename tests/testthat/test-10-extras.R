@@ -98,8 +98,8 @@ test_that('extras', {
     mats[1:4] <- mats2[1:4] <- list(matrix(c(0:3, 0:3), 4))
     mats[5:8] <- list(matrix(c(0:5, 1,1,0,0,0,0), 6))
     mats2[5:8] <- list(matrix(c(0:5, 0:5), 6))
-    mod1 <- mirt(dat, 2, 'gpcm', TOL = 5e-2, verbose=FALSE)
-    mod2 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats2, TOL = 5e-2, verbose=FALSE)
+    mod1 <- mirt(dat, 2, 'gpcm', TOL = 5e-2, verbose=FALSE, technical=list(warn=FALSE))
+    mod2 <- mirt(dat, 2, 'gpcm', gpcm_mats = mats2, TOL = 5e-2, verbose=FALSE, technical=list(warn=FALSE))
     s1 <- coef(mod1, simplify=TRUE)$items
     s2 <- coef(mod2, simplify=TRUE)$items
     pick <- c('a1', 'a2', 'd1', 'd2', 'd3')

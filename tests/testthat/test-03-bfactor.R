@@ -92,7 +92,7 @@ test_that('dich data', {
     load('testdata/bfactor1.rds')
     specific <- c(rep(1,7),rep(2,7))
     items[items == 'dich'] <- '2PL'
-    simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3)
+    simmod <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3, technical=list(warn=FALSE))
     expect_class(simmod, 'SingleGroupClass')
     expect_equal(extract.mirt(simmod, 'df'), 442315)
     cfs <- as.numeric(do.call(c, coef(simmod)))
@@ -100,7 +100,7 @@ test_that('dich data', {
     expect_equal(cfs, c(0.9336,0.6975,-0.9818,0.9105,0.4485,-1.4454,1.0832,0.5553,1.495,0.9833,0.4433,0.0846,1.062,0.5301,1.0833,2,-0.9409,1.4898,1.0732,0.4348,2,1.9718,-0.5391,0.9738,0.4775,2.8693,1.8961,-0.5221,1.0478,0.4884,3.0804,2.0606,-0.5033,0.9921,0.5407,2.5673,1.1235,-0.9224,0.955,0.5072,1.9868,-0.0063,1.115,0.4878,-0.9547,1.0441,0.655,-1.4294,1.008,0.4946,1.4922,1.0458,0.5287,0.0506),
                  tolerance = 1e-2)
     specific[1] <- NA
-    simmod2 <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3)
+    simmod2 <- bfactor(dataset, specific, itemtype = items, verbose=FALSE, TOL=3e-3, technical=list(warn=FALSE))
     expect_class(simmod2, 'SingleGroupClass')
     expect_equal(extract.mirt(simmod2, 'df'), 442316)
     cfs <- as.numeric(do.call(c, coef(simmod2)))

@@ -96,7 +96,7 @@ test_that('discrete', {
     # define Theta grid for three latent classes
     Theta <- matrix(c(0,0,0, 1,0,0, 0,1,0, 0,0,1, 1,1,0, 1,0,1, 0,1,1, 1,1,1),
                      ncol=3, byrow=TRUE)
-    mod_discrete <- mdirt(dat, 3, customTheta = Theta, TOL = 1e-2, verbose=FALSE)
+    mod_discrete <- mdirt(dat, 3, customTheta = Theta, TOL = 1e-2, verbose=FALSE, technical=list(warn=FALSE))
     expect_equal(extract.mirt(mod_discrete, 'logLik'), -9432.635, tolerance = 1e-4)
     so <- summary(mod_discrete)
     expect_equal(as.numeric(sort(so$Class.Probability[,'prob'])), c(0.0004940534,0.003972187,0.04249068,0.05372494,0.08291352,0.2009768,0.2657006,0.3497273), tolerance = 1e-2)

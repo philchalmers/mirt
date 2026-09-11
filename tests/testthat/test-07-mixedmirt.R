@@ -20,7 +20,8 @@ test_that('mixed dich', {
     model <- mirt.model(mixedmirt1, quiet = TRUE)
 
     #simple latent regression
-    mod0 <- mirt(data, 1, 'Rasch', covdata=covdata, formula = ~ group + pseudoIQ, verbose=FALSE)
+    mod0 <- mirt(data, 1, 'Rasch', covdata=covdata, formula = ~ group + pseudoIQ,
+                 verbose=FALSE, technical=list(warn=FALSE))
     expect_equal(mod0@Fit$logLik, -4058.968, tolerance = 1e-2)
     cfs <- coef(mod0)
     expect_equal(as.numeric(cfs$lr.betas), c(0.0000000, 0.8916977, 1.9757340, 0.2168971), tolerance=1e-4)

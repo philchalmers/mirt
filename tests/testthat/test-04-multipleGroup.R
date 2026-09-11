@@ -61,7 +61,7 @@ test_that('one factor', {
     mod_scalar1 <- multipleGroup(dat, newmodel, group = group, verbose = FALSE, invariance='free_var')
     expect_class(mod_scalar1, 'MultipleGroupClass')
     mod_EH <- multipleGroup(dat, models, group = group, verbose = FALSE, method = 'EM',
-                            dentype="empiricalhist", optimizer = 'NR')
+                            dentype="empiricalhist", optimizer = 'NR', technical=list(warn=FALSE))
     expect_class(mod_EH, 'MultipleGroupClass')
     cfs <- as.numeric(do.call(c, coef(mod_EH)[[1L]]))
     expect_equal(cfs, c(0.9915433,0.5344622,0,1,1.163903,-0.6905668,0,1,0.8828766,-0.1765539,0,1,0.8374425,0.8539179,0,1,1.031439,0.1393504,0,1,0.5279401,0.689807,0,1,1.179048,1.011893,0,1,0.8773885,-0.3201687,0,1,0.8273324,-1.047761,0,1,0.6713642,-1.076773,0,1,0.7647824,1.196511,0,1,1.385943,-0.2402286,0,1,1.196881,0.4558509,0,1,0.963759,0.4638302,0,1,0.8105823,-0.05165506,0,1,0,1),

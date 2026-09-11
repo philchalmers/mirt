@@ -14,7 +14,7 @@ test_that('GGUM', {
     # expect_equal(extract.mirt(mod, 'condnum'), 2745.397, tolerance = 1e-4)
 
     mod2 <- mirt(Science, 2,c('graded', 'graded', 'graded', 'ggum'), TOL=.01,
-                 verbose=FALSE)
+                 verbose=FALSE, technical=list(warn=FALSE))
     cfs <- as.vector(coef(mod2, simplify=TRUE)$items)
     expect_equal(cfs, c(-1.618017,-0.9619207,-1.670646,1.04929,-0.2230827,1.414658,1.191751,1e-04,5.601737,3.359375,4.890594,NA,3.118574,1.04238,2.061643,NA,-1.756586,-2.625442,-1.828546,NA,NA,NA,NA,-3.295782,NA,NA,NA,-0.8652751,NA,NA,NA,5.7103,NA,NA,NA,4.16543,NA,NA,NA,1.901035), tolerance = 1e-1)
     expect_equal(logLik(mod2), -1602.618, tolerance = 1e-4)
