@@ -663,11 +663,11 @@ summary(rmod3)
 eff <- randef(rmod3)
 str(eff)
 #> List of 2
-#>  $ Theta: num [1:750, 1] -0.0829 0.0427 0.0283 0.0811 -0.0481 ...
+#>  $ Theta: num [1:750, 1] -0.10741 0.05804 0.02405 0.00982 -0.0309 ...
 #>   ..- attr(*, "dimnames")=List of 2
 #>   .. ..$ : NULL
 #>   .. ..$ : chr "F1"
-#>  $ group: num [1:50, 1:2] -1.6 -1.3 -1.45 -1.56 -1.56 ...
+#>  $ group: num [1:50, 1:2] -1.69 -1.22 -1.44 -1.53 -1.51 ...
 #>   ..- attr(*, "dimnames")=List of 2
 #>   .. ..$ : chr [1:50] "G1" "G2" "G3" "G4" ...
 #>   .. ..$ : chr [1:2] "group" "pseudoIQ"
@@ -1863,18 +1863,18 @@ mod2 <- mirt(dat, model, itemtype = 'Rasch', covdata=covdata,
 coef(mod2)[11:12]
 #> $GroupPars
 #>     MEAN_1 MEAN_2   COV_11 COV_21   COV_22
-#> par      0      0 1.042035      0 1.105228
+#> par      0      0 1.041312      0 1.101401
 #> 
 #> $lr.betas
-#>                     F1       F2
-#> (Intercept) 0.00000000 0.000000
-#> groupg2     0.71752078 0.908161
-#> groupg3     1.74224861 1.701412
-#> contvar     0.03759906 0.000000
+#>                      F1        F2
+#> (Intercept)  0.00000000 0.0000000
+#> groupg2      0.71695341 0.8939493
+#> groupg3      1.74199318 1.6865116
+#> contvar     -0.03504792 0.0000000
 #> 
 mod2b <- mixedmirt(dat, covdata, model, fixed = ~ 0 + items,
         lr.fixed = list(F1 = ~ group + contvar, F2 = ~ group))
-#> , Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.1877, Max-Change = 0.1644, Max-Change = 0.1434, Max-Change = 0.1204, Max-Change = 0.0950, Max-Change = 0.0833, Max-Change = 0.0696, Max-Change = 0.0566, Max-Change = 0.0483, Max-Change = 0.0470, Max-Change = 0.0396, Max-Change = 0.0324, Max-Change = 0.0299, Max-Change = 0.0207, Max-Change = 0.0232, Max-Change = 0.0202, Max-Change = 0.0377, Max-Change = 0.0216, Max-Change = 0.0105, Max-Change = 0.0093, Max-Change = 0.0206, Max-Change = 0.0366, Max-Change = 0.0196, Max-Change = 0.0233, Max-Change = 0.0227, Max-Change = 0.0148, Max-Change = 0.0114, Max-Change = 0.0116, Max-Change = 0.0127, Max-Change = 0.0258, Max-Change = 0.0219, Max-Change = 0.0186, Max-Change = 0.0133, Max-Change = 0.0121, Max-Change = 0.0159, Max-Change = 0.0205, Max-Change = 0.0181, Max-Change = 0.0170, Max-Change = 0.0110, Max-Change = 0.0123, Max-Change = 0.0108, Max-Change = 0.0125, Max-Change = 0.0149, Max-Change = 0.0095, Max-Change = 0.0086, Max-Change = 0.0152, Max-Change = 0.0135, Max-Change = 0.0138, Max-Change = 0.0167, Max-Change = 0.0128, Max-Change = 0.0132, Max-Change = 0.0130, Max-Change = 0.0159, Max-Change = 0.0222, Max-Change = 0.0127, Max-Change = 0.0151, Max-Change = 0.0247, Max-Change = 0.0179, Max-Change = 0.0116, Max-Change = 0.0140, Max-Change = 0.0093, Max-Change = 0.0171, Max-Change = 0.0194, Max-Change = 0.0179, Max-Change = 0.0105, Max-Change = 0.0203, Max-Change = 0.0185, Max-Change = 0.0180, Max-Change = 0.0144, Max-Change = 0.0119, Max-Change = 0.0105, Max-Change = 0.0158, Max-Change = 0.0088, Max-Change = 0.0180, Max-Change = 0.0161, Max-Change = 0.0239, Max-Change = 0.0094, Max-Change = 0.0184, Max-Change = 0.0140, Max-Change = 0.0082, Max-Change = 0.0047, Max-Change = 0.0122, Max-Change = 0.0122, Max-Change = 0.0127, Max-Change = 0.0194, Max-Change = 0.0249, Max-Change = 0.0142, Max-Change = 0.0078, Max-Change = 0.0133, Max-Change = 0.0127, Max-Change = 0.0176, Max-Change = 0.0149, Max-Change = 0.0183, Max-Change = 0.0083, Max-Change = 0.0207, Max-Change = 0.0116, Max-Change = 0.0077, Max-Change = 0.0116, Max-Change = 0.0127, Max-Change = 0.0161, Max-Change = 0.0074, Max-Change = 0.0180, Max-Change = 0.0182, Max-Change = 0.0117, Max-Change = 0.0213, Max-Change = 0.0227, Max-Change = 0.0243, Max-Change = 0.0129, Max-Change = 0.0108, Max-Change = 0.0083, Max-Change = 0.0188, Max-Change = 0.0185, Max-Change = 0.0115, Max-Change = 0.0131, Max-Change = 0.0166, Max-Change = 0.0093, Max-Change = 0.0122, Max-Change = 0.0251, Max-Change = 0.0257, Max-Change = 0.0184, Max-Change = 0.0139, Max-Change = 0.0167, Max-Change = 0.0190, Max-Change = 0.0180, Max-Change = 0.0102, Max-Change = 0.0232, Max-Change = 0.0071, Max-Change = 0.0169, Max-Change = 0.0209, Max-Change = 0.0185, Max-Change = 0.0165, Max-Change = 0.0147, Max-Change = 0.0079, Max-Change = 0.0167, Max-Change = 0.0213, Max-Change = 0.0256, Max-Change = 0.0102, Max-Change = 0.0076, Max-Change = 0.0073, Max-Change = 0.0119, Max-Change = 0.0150, Max-Change = 0.0175, Max-Change = 0.0159, Max-Change = 0.0143, Max-Change = 0.0159, Max-Change = 0.0205, Max-Change = 0.0180, Max-Change = 0.0119, Max-Change = 0.0126, Max-Change = 0.0159, Max-Change = 0.0179, Max-Change = 0.0253, Max-Change = 0.0112, Max-Change = 0.0143, Max-Change = 0.0143, Max-Change = 0.0203, Max-Change = 0.0132, Max-Change = 0.0153, Max-Change = 0.0144, Max-Change = 0.0256, Max-Change = 0.0206, Max-Change = 0.0085, Max-Change = 0.0125, Max-Change = 0.0170, Max-Change = 0.0208, Max-Change = 0.0206, Max-Change = 0.0159, Max-Change = 0.0275, Max-Change = 0.0215, Max-Change = 0.0227, Max-Change = 0.0178, Max-Change = 0.0152, Max-Change = 0.0093, Max-Change = 0.0138, Max-Change = 0.0116, Max-Change = 0.0119, Max-Change = 0.0110, Max-Change = 0.0141, Max-Change = 0.0171, Max-Change = 0.0204, Max-Change = 0.0167, Max-Change = 0.0249, Max-Change = 0.0291, Max-Change = 0.0158, Max-Change = 0.0116, Max-Change = 0.0223, Max-Change = 0.0163, Max-Change = 0.0123, Max-Change = 0.0236, Max-Change = 0.0152, Max-Change = 0.0193, Max-Change = 0.0144, Max-Change = 0.0124, Max-Change = 0.0197, Max-Change = 0.0384, Max-Change = 0.0217, Max-Change = 0.0149, Max-Change = 0.0134, Max-Change = 0.0133, Max-Change = 0.0110, Max-Change = 0.0133, Max-Change = 0.0097, Max-Change = 0.0114, Max-Change = 0.0078, Max-Change = 0.0114, Max-Change = 0.0134, Max-Change = 0.0122, Max-Change = 0.0182, Max-Change = 0.0186, Max-Change = 0.0227, Max-Change = 0.0143, Max-Change = 0.0160, Max-Change = 0.0231, Max-Change = 0.0079, Max-Change = 0.0153, Max-Change = 0.0375, Max-Change = 0.0119, Max-Change = 0.0122, Max-Change = 0.0243, Max-Change = 0.0224, Max-Change = 0.0217, Max-Change = 0.0198, Max-Change = 0.0160, Max-Change = 0.0196, Max-Change = 0.0119, Max-Change = 0.0213, Max-Change = 0.0205, Max-Change = 0.0114, Max-Change = 0.0107, Max-Change = 0.0142, Max-Change = 0.0203, Max-Change = 0.0130, Max-Change = 0.0156, Max-Change = 0.0062, Max-Change = 0.0240, Max-Change = 0.0123, Max-Change = 0.0172, Max-Change = 0.0125, Max-Change = 0.0093, Max-Change = 0.0076, Max-Change = 0.0308, Max-Change = 0.0196, Max-Change = 0.0180, Max-Change = 0.0176, Max-Change = 0.0212, Max-Change = 0.0187, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0144, gam = 0.1057, Max-Change = 0.0060, gam = 0.0780, Max-Change = 0.0051, gam = 0.0629, Max-Change = 0.0049, gam = 0.0532, Max-Change = 0.0073, gam = 0.0464, Max-Change = 0.0022, gam = 0.0413, Max-Change = 0.0042, gam = 0.0374, Max-Change = 0.0021, gam = 0.0342, Max-Change = 0.0032, gam = 0.0316, Max-Change = 0.0019, gam = 0.0294, Max-Change = 0.0022, gam = 0.0276, Max-Change = 0.0017, gam = 0.0260, Max-Change = 0.0020, gam = 0.0246, Max-Change = 0.0018, gam = 0.0233, Max-Change = 0.0020, gam = 0.0222, Max-Change = 0.0015, gam = 0.0212, Max-Change = 0.0016, gam = 0.0203, Max-Change = 0.0013, gam = 0.0195, Max-Change = 0.0013, gam = 0.0188, Max-Change = 0.0021, gam = 0.0181, Max-Change = 0.0013, gam = 0.0175, Max-Change = 0.0007, gam = 0.0169, Max-Change = 0.0007, gam = 0.0164, Max-Change = 0.0014, gam = 0.0159, Max-Change = 0.0019, gam = 0.0154, Max-Change = 0.0008, gam = 0.0150, Max-Change = 0.0009, gam = 0.0146, Max-Change = 0.0015, gam = 0.0142, Max-Change = 0.0015, gam = 0.0139, Max-Change = 0.0014, gam = 0.0135, Max-Change = 0.0006, gam = 0.0132, Max-Change = 0.0011, gam = 0.0129, Max-Change = 0.0014, gam = 0.0126, Max-Change = 0.0009, gam = 0.0124, Max-Change = 0.0011, gam = 0.0121, Max-Change = 0.0007, gam = 0.0119, Max-Change = 0.0010, gam = 0.0116, Max-Change = 0.0009, gam = 0.0114, Max-Change = 0.0014, gam = 0.0112, Max-Change = 0.0008, gam = 0.0110, Max-Change = 0.0006, gam = 0.0108, Max-Change = 0.0009
+#> , Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.1870, Max-Change = 0.1640, Max-Change = 0.1436, Max-Change = 0.1199, Max-Change = 0.0968, Max-Change = 0.0835, Max-Change = 0.0694, Max-Change = 0.0561, Max-Change = 0.0481, Max-Change = 0.0468, Max-Change = 0.0402, Max-Change = 0.0329, Max-Change = 0.0298, Max-Change = 0.0217, Max-Change = 0.0235, Max-Change = 0.0217, Max-Change = 0.0443, Max-Change = 0.0250, Max-Change = 0.0106, Max-Change = 0.0113, Max-Change = 0.0202, Max-Change = 0.0335, Max-Change = 0.0195, Max-Change = 0.0198, Max-Change = 0.0221, Max-Change = 0.0149, Max-Change = 0.0137, Max-Change = 0.0104, Max-Change = 0.0137, Max-Change = 0.0209, Max-Change = 0.0225, Max-Change = 0.0199, Max-Change = 0.0129, Max-Change = 0.0174, Max-Change = 0.0178, Max-Change = 0.0187, Max-Change = 0.0161, Max-Change = 0.0126, Max-Change = 0.0149, Max-Change = 0.0159, Max-Change = 0.0084, Max-Change = 0.0084, Max-Change = 0.0163, Max-Change = 0.0131, Max-Change = 0.0128, Max-Change = 0.0250, Max-Change = 0.0144, Max-Change = 0.0198, Max-Change = 0.0175, Max-Change = 0.0131, Max-Change = 0.0177, Max-Change = 0.0175, Max-Change = 0.0180, Max-Change = 0.0184, Max-Change = 0.0151, Max-Change = 0.0189, Max-Change = 0.0222, Max-Change = 0.0166, Max-Change = 0.0136, Max-Change = 0.0203, Max-Change = 0.0123, Max-Change = 0.0164, Max-Change = 0.0289, Max-Change = 0.0233, Max-Change = 0.0130, Max-Change = 0.0147, Max-Change = 0.0191, Max-Change = 0.0233, Max-Change = 0.0120, Max-Change = 0.0158, Max-Change = 0.0083, Max-Change = 0.0145, Max-Change = 0.0089, Max-Change = 0.0169, Max-Change = 0.0167, Max-Change = 0.0223, Max-Change = 0.0093, Max-Change = 0.0261, Max-Change = 0.0128, Max-Change = 0.0112, Max-Change = 0.0080, Max-Change = 0.0152, Max-Change = 0.0236, Max-Change = 0.0122, Max-Change = 0.0230, Max-Change = 0.0307, Max-Change = 0.0150, Max-Change = 0.0094, Max-Change = 0.0152, Max-Change = 0.0072, Max-Change = 0.0189, Max-Change = 0.0140, Max-Change = 0.0225, Max-Change = 0.0123, Max-Change = 0.0201, Max-Change = 0.0088, Max-Change = 0.0106, Max-Change = 0.0145, Max-Change = 0.0080, Max-Change = 0.0112, Max-Change = 0.0102, Max-Change = 0.0099, Max-Change = 0.0169, Max-Change = 0.0145, Max-Change = 0.0151, Max-Change = 0.0208, Max-Change = 0.0177, Max-Change = 0.0189, Max-Change = 0.0112, Max-Change = 0.0133, Max-Change = 0.0197, Max-Change = 0.0193, Max-Change = 0.0171, Max-Change = 0.0184, Max-Change = 0.0125, Max-Change = 0.0112, Max-Change = 0.0143, Max-Change = 0.0154, Max-Change = 0.0199, Max-Change = 0.0131, Max-Change = 0.0208, Max-Change = 0.0209, Max-Change = 0.0169, Max-Change = 0.0098, Max-Change = 0.0096, Max-Change = 0.0271, Max-Change = 0.0093, Max-Change = 0.0205, Max-Change = 0.0212, Max-Change = 0.0149, Max-Change = 0.0166, Max-Change = 0.0089, Max-Change = 0.0110, Max-Change = 0.0229, Max-Change = 0.0178, Max-Change = 0.0233, Max-Change = 0.0096, Max-Change = 0.0080, Max-Change = 0.0136, Max-Change = 0.0167, Max-Change = 0.0170, Max-Change = 0.0184, Max-Change = 0.0187, Max-Change = 0.0149, Max-Change = 0.0145, Max-Change = 0.0150, Max-Change = 0.0231, Max-Change = 0.0145, Max-Change = 0.0190, Max-Change = 0.0170, Max-Change = 0.0176, Max-Change = 0.0130, Max-Change = 0.0148, Max-Change = 0.0124, Max-Change = 0.0146, Max-Change = 0.0216, Max-Change = 0.0155, Max-Change = 0.0159, Max-Change = 0.0141, Max-Change = 0.0242, Max-Change = 0.0234, Max-Change = 0.0116, Max-Change = 0.0182, Max-Change = 0.0099, Max-Change = 0.0193, Max-Change = 0.0180, Max-Change = 0.0191, Max-Change = 0.0186, Max-Change = 0.0166, Max-Change = 0.0223, Max-Change = 0.0138, Max-Change = 0.0115, Max-Change = 0.0154, Max-Change = 0.0101, Max-Change = 0.0109, Max-Change = 0.0085, Max-Change = 0.0197, Max-Change = 0.0131, Max-Change = 0.0156, Max-Change = 0.0141, Max-Change = 0.0197, Max-Change = 0.0175, Max-Change = 0.0204, Max-Change = 0.0258, Max-Change = 0.0160, Max-Change = 0.0192, Max-Change = 0.0119, Max-Change = 0.0136, Max-Change = 0.0137, Max-Change = 0.0158, Max-Change = 0.0121, Max-Change = 0.0179, Max-Change = 0.0154, Max-Change = 0.0178, Max-Change = 0.0262, Max-Change = 0.0273, Max-Change = 0.0130, Max-Change = 0.0159, Max-Change = 0.0096, Max-Change = 0.0123, Max-Change = 0.0245, Max-Change = 0.0174, Max-Change = 0.0102, Max-Change = 0.0181, Max-Change = 0.0082, Max-Change = 0.0243, Max-Change = 0.0148, Max-Change = 0.0164, Max-Change = 0.0183, Max-Change = 0.0216, Max-Change = 0.0095, Max-Change = 0.0159, Max-Change = 0.0147, Max-Change = 0.0171, Max-Change = 0.0147, Max-Change = 0.0311, Max-Change = 0.0184, Max-Change = 0.0139, Max-Change = 0.0081, Max-Change = 0.0256, Max-Change = 0.0264, Max-Change = 0.0177, Max-Change = 0.0148, Max-Change = 0.0128, Max-Change = 0.0071, Max-Change = 0.0214, Max-Change = 0.0255, Max-Change = 0.0120, Max-Change = 0.0115, Max-Change = 0.0137, Max-Change = 0.0147, Max-Change = 0.0089, Max-Change = 0.0172, Max-Change = 0.0065, Max-Change = 0.0189, Max-Change = 0.0189, Max-Change = 0.0278, Max-Change = 0.0177, Max-Change = 0.0084, Max-Change = 0.0092, Max-Change = 0.0158, Max-Change = 0.0105, Max-Change = 0.0157, Max-Change = 0.0251, Max-Change = 0.0088, Max-Change = 0.0146, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0210, gam = 0.1057, Max-Change = 0.0061, gam = 0.0780, Max-Change = 0.0053, gam = 0.0629, Max-Change = 0.0048, gam = 0.0532, Max-Change = 0.0050, gam = 0.0464, Max-Change = 0.0032, gam = 0.0413, Max-Change = 0.0028, gam = 0.0374, Max-Change = 0.0023, gam = 0.0342, Max-Change = 0.0054, gam = 0.0316, Max-Change = 0.0014, gam = 0.0294, Max-Change = 0.0032, gam = 0.0276, Max-Change = 0.0015, gam = 0.0260, Max-Change = 0.0014, gam = 0.0246, Max-Change = 0.0021, gam = 0.0233, Max-Change = 0.0014, gam = 0.0222, Max-Change = 0.0019, gam = 0.0212, Max-Change = 0.0026, gam = 0.0203, Max-Change = 0.0013, gam = 0.0195, Max-Change = 0.0017, gam = 0.0188, Max-Change = 0.0012, gam = 0.0181, Max-Change = 0.0010, gam = 0.0175, Max-Change = 0.0012, gam = 0.0169, Max-Change = 0.0010, gam = 0.0164, Max-Change = 0.0023, gam = 0.0159, Max-Change = 0.0016, gam = 0.0154, Max-Change = 0.0010, gam = 0.0150, Max-Change = 0.0011, gam = 0.0146, Max-Change = 0.0017, gam = 0.0142, Max-Change = 0.0024, gam = 0.0139, Max-Change = 0.0010, gam = 0.0135, Max-Change = 0.0016, gam = 0.0132, Max-Change = 0.0017, gam = 0.0129, Max-Change = 0.0010, gam = 0.0126, Max-Change = 0.0015, gam = 0.0124, Max-Change = 0.0009, gam = 0.0121, Max-Change = 0.0007, gam = 0.0119, Max-Change = 0.0009
 #> 
 #> Calculating information matrix...
 #> 
@@ -1892,23 +1892,23 @@ summary(mod2b)
 #> 
 #> $Theta
 #>      F1   F2
-#> F1 1.04 0.00
-#> F2 0.00 1.12
+#> F1 1.07 0.00
+#> F2 0.00 1.09
 #> 
 #> --------------
 #> LATENT REGRESSION FIXED EFFECTS:
 #> 
-#>                F1    F2
-#> (Intercept) 0.000 0.000
-#> groupg2     0.687 0.823
-#> groupg3     1.707 1.632
-#> contvar     0.026 0.000
+#>                 F1    F2
+#> (Intercept)  0.000 0.000
+#> groupg2      0.699 0.806
+#> groupg3      1.746 1.621
+#> contvar     -0.043 0.000
 #> 
-#>             Std.Error_F1 Std.Error_F2  z_F1   z_F2
-#> (Intercept)           NA           NA    NA     NA
-#> groupg2            0.189        0.138 3.643  5.954
-#> groupg3            0.253        0.125 6.748 13.104
-#> contvar            0.056           NA 0.470     NA
+#>             Std.Error_F1 Std.Error_F2   z_F1   z_F2
+#> (Intercept)           NA           NA     NA     NA
+#> groupg2              NaN        0.105    NaN  7.692
+#> groupg3              NaN        0.119    NaN 13.655
+#> contvar            0.046           NA -0.936     NA
 
 ####################################################
 ## Simulated Multilevel Rasch Model
@@ -2131,12 +2131,12 @@ anova(mod1b, mod3)
 
 head(cbind(randef(mod3)$group, random_intercept))
 #>         group random_intercept
-#> G1  1.0125180       1.51178117
-#> G2 -0.6201497       0.38984324
-#> G3 -0.4359791      -0.62124058
-#> G4 -2.3769256      -2.21469989
-#> G5  0.6108325       1.12493092
-#> G6 -0.7566472      -0.04493361
+#> G1  1.0412370       1.51178117
+#> G2 -0.3779344       0.38984324
+#> G3 -0.3313437      -0.62124058
+#> G4 -2.3680784      -2.21469989
+#> G5  0.7701362       1.12493092
+#> G6 -0.5912386      -0.04493361
 
 # }
 ```

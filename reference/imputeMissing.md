@@ -54,7 +54,7 @@ dat <- expand.table(LSAT7)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 28 EM iterations.
-#> mirt version: 1.47.1 
+#> mirt version: 1.47.2 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -77,7 +77,7 @@ for(i in 1:20)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 24 EM iterations.
-#> mirt version: 1.47.1 
+#> mirt version: 1.47.2 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -99,7 +99,7 @@ fulldata <- imputeMissing(mod, scores)
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 25 EM iterations.
-#> mirt version: 1.47.1 
+#> mirt version: 1.47.2 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -116,6 +116,9 @@ fulldata <- imputeMissing(mod, scores)
 set.seed(1)
 group <- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2643.446, -2643.372, -2643.267
 fs <- fscores(mod2)
 fulldata2 <- imputeMissing(mod2, fs)
 

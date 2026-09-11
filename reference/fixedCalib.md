@@ -177,6 +177,7 @@ coef(mod, simplify=TRUE)
 
 # No Prior Weights Updating and One EM Cycle (NWU-OEM)
 NWU_OEM <- fixedCalib(dataset2, model=1, old_mod=mod, PAU='NWU', NEMC='OEM')
+#> EM cycles terminated after 1 iterations.
 coef(NWU_OEM, simplify=TRUE)
 #> $items
 #>            a1      d g u
@@ -417,6 +418,8 @@ plot(NWU_MEM, type = 'empiricalhist')
 
 # One Prior Weights Updating and One EM Cycle (OWU-OEM)
 OWU_OEM <- fixedCalib(dataset2, model=1, old_mod=mod, PAU='OWU', NEMC="OEM")
+#> EM cycles terminated after 1 iterations.
+#> EM cycles terminated after 1 iterations.
 coef(OWU_OEM, simplify=TRUE)
 #> $items
 #>            a1      d g u
@@ -536,6 +539,7 @@ plot(OWU_OEM, type = 'empiricalhist')
 
 # One Prior Weights Updating and Multiple EM Cycles (OWU-MEM)
 OWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod, PAU = 'OWU')
+#> EM cycles terminated after 1 iterations.
 coef(OWU_MEM, simplify=TRUE)
 #> $items
 #>            a1      d g u
@@ -656,6 +660,10 @@ plot(OWU_MEM, type = 'empiricalhist')
 
 # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
+#> EM cycles terminated after 1 iterations.
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -79174.212, -79174.177, -79174.144
 coef(MWU_MEM, simplify=TRUE)
 #> $items
 #>            a1      d g u
@@ -854,6 +862,10 @@ all(rowSums(!is.na(dataset2)) == 30)
 
 # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
+#> EM cycles terminated after 1 iterations.
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -66747.121, -66747.106, -66747.092
 coef(MWU_MEM, simplify=TRUE)
 #> $items
 #>            a1      d g u

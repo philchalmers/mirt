@@ -1,5 +1,13 @@
 # Changelog
 
+## Changes in mirt 1.48
+
+- Maximum EM iteration limit warning decreased to
+  [`message()`](https://rdrr.io/r/base/message.html) instead. However,
+  if last iteration had Aitken-accelerated criterion discrepancies
+  greater than 1e-2 then a warning will be raised to indicate that the
+  EM algorithm is likely still climbing
+
 ## Changes in mirt 1.47
 
 CRAN release: 2026-08-20
