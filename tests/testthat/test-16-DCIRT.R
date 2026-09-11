@@ -39,7 +39,7 @@ test_that('DCIRT', {
     pp <- plot(mod, type = 'empiricalhist')
     expect_class(pp, 'trellis')
 
-    mod2 <- mirt(dat_bm, 1, dentype = 'EHW', verbose=FALSE)
+    mod2 <- mirt(dat_bm, 1, dentype = 'EHW', verbose=FALSE, technical=list(warn=FALSE))
     expect_equal(extract.mirt(mod2, 'logLik'), -12758.689, tolerance=1e-4)
 
     res_bm <- mirt(dat_bm, model = 1, dentype='Davidian-6', verbose=FALSE)
