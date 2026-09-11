@@ -210,7 +210,7 @@ test_that('one factor', {
 
     mod_scalar <- multipleGroup(dat, MGmodelg2, group = group,
                                 invariance=c(colnames(dat), 'free_means', 'free_var'),
-                                verbose = FALSE, method='QMCEM', TOL=.01)
+                                verbose = FALSE, method='QMCEM', TOL=.01, technical=list(warn=FALSE))
     expect_equal(logLik(mod_scalar), -18296.06, tolerance = 1e-2)
     cfs <- coef(mod_scalar, simplify=TRUE)
     gmeans <- sapply(cfs, \(x) x$means) |> t()

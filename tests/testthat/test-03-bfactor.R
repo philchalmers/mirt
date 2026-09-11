@@ -155,7 +155,8 @@ test_that('dich data', {
         G2 = 9-16
         COV = G1*G2')
 
-    simmod <- bfactor(dataset, specific, model, quadpts = 11, TOL = 1e-2, verbose=FALSE)
+    simmod <- bfactor(dataset, specific, model, quadpts = 11, TOL = 1e-2, verbose=FALSE,
+                      technical = list(warn=FALSE))
     expect_class(simmod, 'SingleGroupClass')
     expect_equal(extract.mirt(simmod, 'df'), 65486)
     cfs <- as.numeric(do.call(c, coef(simmod)))
