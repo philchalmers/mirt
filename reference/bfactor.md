@@ -645,6 +645,9 @@ model <- "G = 1-12
 
 simmod <- bfactor(dataset, specific, model)
 #> 
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -15097.397, -15097.397, -15097.397
 coef(simmod, simplify=TRUE)
 #> $items
 #>            a1    a2    a3    a4      d g u

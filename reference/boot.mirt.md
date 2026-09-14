@@ -111,6 +111,9 @@ boot.fun(mod)
 
 # run
 booted.loads <- boot.mirt(mod, boot.fun=boot.fun)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -1594.121, -1594.121, -1594.121
 booted.loads
 #> 
 #> ORDINARY NONPARAMETRIC BOOTSTRAP

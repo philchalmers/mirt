@@ -251,6 +251,9 @@ dat <- expand.table(LSAT6)
 
 # fit with 2-3 latent classes
 (mod2 <- mdirt(dat, 2))
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
 #> 
 #> Call:
 #> mdirt(data = dat, model = 2)
@@ -481,6 +484,36 @@ tabs[[1]]
 # fit with random starting points (run in parallel to save time)
 if(interactive()) mirtCluster()
 mod <- mdirt(dat, 2, nruns=10)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2467.408, -2467.408, -2467.408
 
 #--------------------------
 # Grade of measurement model
@@ -492,6 +525,9 @@ mod <- mdirt(dat, 2, nruns=10)
 #> [2,]  0.5  0.5
 #> [3,]  0.0  1.0
 (mod_gom <- mdirt(dat, 2, customTheta = Theta))
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -2466.603, -2466.603, -2466.603
 #> 
 #> Call:
 #> mdirt(data = dat, model = 2, customTheta = Theta)
@@ -564,6 +600,9 @@ dat <- key2binary(SAT12,
 #> [7,]    0    1    1
 #> [8,]    1    1    1
 (mod_discrete <- mdirt(dat, 3, customTheta = Theta))
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -9429.716, -9429.716, -9429.715
 #> 
 #> Call:
 #> mdirt(data = dat, model = 3, customTheta = Theta)
@@ -951,6 +990,9 @@ model <- mirt.model('C1 = 1-32
                      C3 = 1-32
                      CONSTRAIN = (1-32, a1), (1-32, a2), (1-32, a3)')
 (mod_located <- mdirt(dat, model, customTheta = diag(3)))
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -12771.077, -12771.077, -12771.077
 #> 
 #> Call:
 #> mdirt(data = dat, model = model, customTheta = diag(3))
@@ -1195,6 +1237,9 @@ model <- mirt.model('Intercept = 1-15
 
 # last 5 items are DINA (first 10 are unidimensional C-RUMs)
 DINA <- mdirt(dat, model, customTheta = theta)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -9220.89, -9220.89, -9220.89
 coef(DINA, simplify=TRUE)
 #> $items
 #>             a1    a2    a3    a4
@@ -1371,6 +1416,9 @@ model <- mirt.model('Intercept = 1-15
 
 # last five items are DINOs (first 10 are unidimensional C-RUMs)
 DINO <- mdirt(dat, model, customTheta = theta)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -9253.393, -9253.393, -9253.393
 coef(DINO, simplify=TRUE)
 #> $items
 #>             a1     a2    a3    a4
@@ -1518,6 +1566,9 @@ model <- mirt.model('Intercept = 1-15
                      A2 = 6-15')
 
 CRUM <- mdirt(dat, model, customTheta = theta)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -9215.781, -9215.781, -9215.781
 coef(CRUM, simplify=TRUE)
 #> $items
 #>             a1     a2    a3
@@ -1682,6 +1733,9 @@ model <- mirt.model('C1 = 1-16
 
 theta <- diag(10) # defined explicitly. Otherwise, this profile is assumed
 mod <- mdirt(dat, model, customTheta = theta)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -12984.844, -12984.844, -12984.844
 coef(mod, simplify=TRUE)
 #> $items
 #>             a1     a2     a3     a4     a5   a6    a7    a8    a9   a10
@@ -2165,6 +2219,9 @@ model <- mirt.model('A1 = 1-32
                      A2 = 1-32
                      CONSTRAINB = (33, c1)')
 mod <- mdirt(dat, model, group = group, customTheta = Theta)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -9598.153, -9598.151, -9598.149
 coef(mod, simplify=TRUE)
 #> $G1
 #> $items

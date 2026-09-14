@@ -389,9 +389,12 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span>, <span class="st">'free_var'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mod_fullconstrain</span> <span class="op">&lt;-</span> <span class="fu">multipleGroup</span><span class="op">(</span><span class="va">dat</span>, <span class="fl">1</span>, group <span class="op">=</span> <span class="va">group</span>,</span></span>
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Observed log-likelihood appeared to still be increasing in final iterations.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Final log-likelihood values were: </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   -17928.755, -17928.754, -17928.754</span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.290  0.054  0.064  0.154  0.001  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.287  0.067  0.059  0.144  0.000  0.001 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optionally use Newton-Raphson for (generally) faster convergence in the</span></span></span>
 <span class="r-in"><span><span class="co">#  M-step's, though occasionally less stable</span></span></span>
@@ -399,7 +402,7 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span>                             invariance<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'slopes'</span>, <span class="st">'intercepts'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract.mirt.html">extract.mirt</a></span><span class="op">(</span><span class="va">mod_fullconstrain</span>, <span class="st">'time'</span><span class="op">)</span> <span class="co">#time of estimation components</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TOTAL:   Data  Estep  Mstep     SE   Post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.195  0.042  0.071  0.042  0.000  0.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.176  0.045  0.068  0.046  0.000  0.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod_scalar2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -2713,6 +2716,9 @@ zero-inflation with application to psychiatric disorder severity.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare to single group</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Observed log-likelihood appeared to still be increasing in final iterations.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Final log-likelihood values were: </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   -17598.353, -17598.353, -17598.352</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">mod_mix2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               AIC    SABIC       HQ      BIC    logLik      X2 df p</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mod      35276.70 35362.16 35355.88 35489.23 -17598.35             </span>

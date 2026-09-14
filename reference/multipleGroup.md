@@ -369,9 +369,12 @@ mod_scalar1 <- multipleGroup(dat, 1, group = group,  #fixed means
                              invariance=c('slopes', 'intercepts', 'free_var'))
 mod_fullconstrain <- multipleGroup(dat, 1, group = group,
                              invariance=c('slopes', 'intercepts'))
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -17928.755, -17928.754, -17928.754
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.290  0.054  0.064  0.154  0.001  0.000 
+#>  0.287  0.067  0.059  0.144  0.000  0.001 
 
 # optionally use Newton-Raphson for (generally) faster convergence in the
 #  M-step's, though occasionally less stable
@@ -379,7 +382,7 @@ mod_fullconstrain <- multipleGroup(dat, 1, group = group, optimizer = 'NR',
                              invariance=c('slopes', 'intercepts'))
 extract.mirt(mod_fullconstrain, 'time') #time of estimation components
 #> TOTAL:   Data  Estep  Mstep     SE   Post 
-#>  0.195  0.042  0.071  0.042  0.000  0.000 
+#>  0.176  0.045  0.068  0.046  0.000  0.000 
 
 summary(mod_scalar2)
 #> 
@@ -2693,6 +2696,9 @@ itemfit(mod_mix2)
 
 # Compare to single group
 mod <- mirt(dat)
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -17598.353, -17598.353, -17598.352
 anova(mod, mod_mix2)
 #>               AIC    SABIC       HQ      BIC    logLik      X2 df p
 #> mod      35276.70 35362.16 35355.88 35489.23 -17598.35             

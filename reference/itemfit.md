@@ -312,6 +312,9 @@ data <- cbind(simdata(a,d, 2000, items, Theta=Theta), baditem=baditem)
 
 x <- mirt(data, 1)
 raschfit <- mirt(data, 1, itemtype='Rasch')
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -24865.067, -24865.067, -24865.067
 fit <- itemfit(x)
 fit
 #>       item    S_X2 df.S_X2 RMSEA.S_X2 p.S_X2
@@ -825,6 +828,9 @@ itemfit(mod, 'X2', return.tables = TRUE, which.items = 1)
 #> 
 
 mod2 <- mirt(dat, 1, 'Rasch')
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -29585.645, -29585.644, -29585.644
 itemfit(mod2, 'infit', method = 'ML')
 #>       item outfit z.outfit infit z.infit
 #> 1   Item_1  0.959   -1.407 0.946  -2.141
@@ -919,6 +925,9 @@ tables$E[[1]]
 # fit stats with missing data (run in parallel using all cores)
 dat[sample(1:prod(dim(dat)), 100)] <- NA
 raschfit <- mirt(dat, 1, itemtype='Rasch')
+#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#>   Final log-likelihood values were: 
+#>   -29434.306, -29434.306, -29434.305
 
 # use only valid data by removing rows with missing terms
 itemfit(raschfit, c('S_X2', 'infit'), na.rm = TRUE)
