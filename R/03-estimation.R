@@ -186,7 +186,7 @@ ESTIMATION <- function(data, model, group, itemtype = NULL, guess = 0, upper = 1
                     ret
                 }, data=data, key=key)
             }
-            data <- remap.distance(data, message = opts$message)
+            data <- remap.distance(data, message = opts$verbose)
         }
         Data$rowID <- 1L:nrow(data)
         Data$completely_missing <- which(rowSums(is.na(data)) == ncol(data))
