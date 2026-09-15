@@ -67,7 +67,6 @@ apply(dat, 2, table)
 
 # mirt() automatically remaps categories
 mod <- mirt(dat, 1)
-#> "Comfort" re-mapped to ensure all categories have a distance of 1
 coef(mod, simplify=TRUE)
 #> $items
 #>            a1    d1     d2     d3
