@@ -26,7 +26,8 @@ for typical input)}
 If NULL then empirical test plots will be constructed instead}
 
 \item{type}{character vector specifying type of plot to draw. When \code{which.item} is NULL
-can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'}
+can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'. Type can
+also be 'bubble' for bubble plots, though in this case \code{which.items} must have length two}
 
 \item{smooth}{logical; include a GAM smoother instead of the raw proportions? Default is FALSE}
 
@@ -79,6 +80,12 @@ empirical_plot(data, 32)
 data[,32] <- SAT12[,32]
 empirical_plot(data, 32)
 empirical_plot(data, 32, smooth = TRUE)
+
+# polytomous
+empirical_plot(Science)
+empirical_plot(Science, type = 'hist', breaks=20)
+empirical_plot(Science, c(1, 2), type = 'bubble')
+empirical_plot(Science, c(1, 3), type = 'bubble')
 
 }
 }
