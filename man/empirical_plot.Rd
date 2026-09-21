@@ -71,6 +71,8 @@ empirical_plot(data, type = 'hist', breaks=20)
 empirical_plot(data, c(1, 2, 5))
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
 empirical_plot(data, c(1, 2, 5), type = 'boxplot')
+empirical_plot(data, c(1, 2), type = 'bubble')
+empirical_plot(data, c(1, 5), type = 'bubble')
 
 # replace weird looking items with unscored versions for diagnostics
 empirical_plot(data, 32)

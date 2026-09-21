@@ -48,6 +48,8 @@
 #' empirical_plot(data, c(1, 2, 5))
 #' empirical_plot(data, c(1, 2, 5), smooth = TRUE)
 #' empirical_plot(data, c(1, 2, 5), type = 'boxplot')
+#' empirical_plot(data, c(1, 2), type = 'bubble')
+#' empirical_plot(data, c(1, 5), type = 'bubble')
 #'
 #' # replace weird looking items with unscored versions for diagnostics
 #' empirical_plot(data, 32)
@@ -63,12 +65,12 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
-    stopifnot(type %in% c('prop', 'hist', 'boxplot'))
+    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble'))
     if(is.null(which.items))
         stopifnot(type %in% c('prop', 'hist'))
     if(!is.null(which.items))
-        stopifnot(type %in% c('prop', 'boxplot'))
-    if(type == 'boxplot') smooth <- FALSE
+        stopifnot(type %in% c('prop', 'boxplot', 'bubble'))
+    if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
     data <- na.omit(as.matrix(data))
     K <- apply(data, 2, function(x) length(unique(x)))
     if(all(K == 2L)) auto.key <- FALSE
@@ -77,6 +79,26 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     data <- data[ord,]
     TS <- TS[ord]
     tab <- table(TS)
+    if(type == 'bubble'){
+        stopifnot("which.items must be of length two"=length(which.items) == 2)
+        dat.sub <- as.data.frame(data[,which.items, drop=FALSE])
+        colnames(dat.sub) <- c('x', 'y')
+        tab <- as.data.frame(table(dat.sub))
+        cfs <- coef(lm(y ~ x, dat.sub))
+        if(min(dat.sub$y) == 0) cfs[1] <- cfs[1] + 1
+        plt <- lattice::xyplot(y ~ x, tab,
+                               panel = function(x, y, subscripts, cex, cfs, ...) {
+                                   panel.xyplot(x, y, cex = cex[subscripts], ...)
+                                   panel.abline(coef=cfs, col='red', lty=2, lwd=2)
+                               },
+                               pch = 16, cfs=cfs,
+                               cex=sqrt(tab$Freq) / max(sqrt(tab$Freq)) * 3,
+                               main = if(is.null(main))
+                                   paste0('Correlation = ', round(cor(dat.sub)[1,2], 2)) else main,
+                               xlab = paste0('Item ', which.items[1]),
+                               ylab=paste0('Item ', which.items[2]))
+        return(plt)
+    }
     if(is.null(which.items)){
         if(type == 'prop'){
             prop <- cumsum(tab) / nrow(data)
@@ -125,7 +147,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                     props <- tmptab / tab
                     names(props) <- names(tab)
                     splt[[j]] <- data.frame(item=nms[which.items[i]], TS=as.integer(names(tab)),
-                                            props=as.numeric(props), cat=names(splt)[j])
+                                            props=as.numeric(props), freq=as.numeric(tab), cat=names(splt)[j])
 
                 }
                 pltdat[[i]] <- do.call(rbind, splt)
