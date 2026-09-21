@@ -41,7 +41,8 @@ empirical_plot(
 
   character vector specifying type of plot to draw. When `which.item` is
   NULL can be 'prop' (default) or 'hist', otherwise can be 'prop'
-  (default) or 'boxplot'
+  (default) or 'boxplot'. Type can also be 'bubble' for bubble plots,
+  though in this case `which.items` must have length two
 
 - smooth:
 
@@ -134,6 +135,16 @@ data[,32] <- SAT12[,32]
 empirical_plot(data, 32)
 
 empirical_plot(data, 32, smooth = TRUE)
+
+
+# polytomous
+empirical_plot(Science)
+
+empirical_plot(Science, type = 'hist', breaks=20)
+
+empirical_plot(Science, c(1, 2), type = 'bubble')
+
+empirical_plot(Science, c(1, 3), type = 'bubble')
 
 
 # }

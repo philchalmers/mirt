@@ -83,7 +83,8 @@ If NULL then empirical test plots will be constructed instead</p></dd>
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>character vector specifying type of plot to draw. When <code>which.item</code> is NULL
-can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'</p></dd>
+can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'. Type can
+also be 'bubble' for bubble plots, though in this case <code>which.items</code> must have length two</p></dd>
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
@@ -169,6 +170,16 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-plt img"><img src="empirical_plot-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, <span class="fl">32</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-11.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># polytomous</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-12.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'hist'</span>, breaks<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-13.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-14.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-15.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
