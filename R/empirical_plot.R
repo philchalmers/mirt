@@ -65,6 +65,7 @@
 #' empirical_plot(Science, c(1, 3), type = 'bubble')
 #' empirical_plot(Science, which.items = 1:4, type = 'boxplot')
 #' empirical_plot(Science, which.items = 1:4, type = 'prop')
+#' empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
 #'
 #' }
 empirical_plot <- function(data, which.items = NULL, type = 'prop',
