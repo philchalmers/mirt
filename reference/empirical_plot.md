@@ -150,6 +150,8 @@ empirical_plot(Science, which.items = 1:4, type = 'boxplot')
 
 empirical_plot(Science, which.items = 1:4, type = 'prop')
 
+empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
+
 
 # }
 ```
