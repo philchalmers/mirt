@@ -63,6 +63,8 @@
 #' empirical_plot(Science, type = 'hist', breaks=20)
 #' empirical_plot(Science, c(1, 2), type = 'bubble')
 #' empirical_plot(Science, c(1, 3), type = 'bubble')
+#' empirical_plot(Science, which.items = 1:4, type = 'boxplot')
+#' empirical_plot(Science, which.items = 1:4, type = 'prop')
 #'
 #' }
 empirical_plot <- function(data, which.items = NULL, type = 'prop',
@@ -74,7 +76,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     stopifnot(is.matrix(data) || is.data.frame(data))
     stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble'))
     if(is.null(which.items))
-        stopifnot(type %in% c('prop', 'hist'))
+        stopifnot("Must specify which.items"=type %in% c('prop', 'hist'))
     if(!is.null(which.items))
         stopifnot(type %in% c('prop', 'boxplot', 'bubble'))
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE

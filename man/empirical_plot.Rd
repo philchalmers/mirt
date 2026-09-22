@@ -86,6 +86,8 @@ empirical_plot(Science)
 empirical_plot(Science, type = 'hist', breaks=20)
 empirical_plot(Science, c(1, 2), type = 'bubble')
 empirical_plot(Science, c(1, 3), type = 'bubble')
+empirical_plot(Science, which.items = 1:4, type = 'boxplot')
+empirical_plot(Science, which.items = 1:4, type = 'prop')
 
 }
 }
