@@ -1,7 +1,7 @@
 # Changes in mirt 1.48
 
-- `empirical.plot()` gains an `org.data` argument to substitute unscored data in 
-  when building emprical tranelines. Useful for simple distractor analysis visualization
+- `empirical.plot()` gains an `org.data` argument to substitute un-scored data in 
+  when building empirical trace-lines. Useful for simple distractor analysis visualization
 
 - Maximum EM iteration limit warning decreased to `message()` instead. However,
   if last iteration had Aitken-accelerated criterion discrepancies greater than 1e-3
