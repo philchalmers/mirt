@@ -13,7 +13,7 @@ item plots are requested then the total score will be formed without the item of
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.47.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.47.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,7 @@ item plots are requested then the total score will be formed without the item of
 <span>  type <span class="op">=</span> <span class="st">"prop"</span>,</span>
 <span>  smooth <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">resp</span> <span class="op">~</span> <span class="fu">s</span><span class="op">(</span><span class="va">TS</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  org.data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  par.strip.text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span>,</span>
 <span>  par.settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>strip.background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"#9ECAE1"</span><span class="op">)</span>, strip.border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span></span>
@@ -93,6 +94,12 @@ also be 'bubble' for bubble plots, though in this case <code>which.items</code> 
 
 <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
 <dd><p>formula used for the GAM smoother</p></dd>
+
+
+<dt id="arg-org-data">org.data<a class="anchor" aria-label="anchor" href="#arg-org-data"></a></dt>
+<dd><p>identical to <code>data</code>, but contains the "unscored" response options (e.g.,
+the original coding in a multiple-choice test). Used in various item-level plots for
+diagnostic purposes, such as in distractor analyses</p></dd>
 
 
 <dt id="arg-main">main<a class="anchor" aria-label="anchor" href="#arg-main"></a></dt>
@@ -165,27 +172,38 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="co"># replace weird looking items with unscored versions for diagnostics</span></span></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, <span class="fl">32</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-9.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="va">data</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, <span class="fl">32</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data2</span> <span class="op">&lt;-</span> <span class="va">data</span></span></span>
+<span class="r-in"><span><span class="va">data2</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">SAT12</span><span class="op">[</span>,<span class="fl">32</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data2</span>, <span class="fl">32</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-10.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, <span class="fl">32</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data2</span>, <span class="fl">32</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># alternatively, distractor analyses using original dataset</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, which.items<span class="op">=</span><span class="fl">32</span>, org.data<span class="op">=</span><span class="va">SAT12</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-12.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, which.items<span class="op">=</span><span class="fl">32</span>, org.data<span class="op">=</span><span class="va">SAT12</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-13.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, which.items<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">32</span>, org.data<span class="op">=</span><span class="va">SAT12</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-14.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#################</span></span></span>
 <span class="r-in"><span><span class="co"># polytomous</span></span></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-12.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'hist'</span>, breaks<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-13.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-14.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-15.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'boxplot'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'hist'</span>, breaks<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-16.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-17.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-18.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'boxplot'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-19.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-20.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-21.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

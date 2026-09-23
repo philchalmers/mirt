@@ -15,6 +15,7 @@ empirical_plot(
   type = "prop",
   smooth = FALSE,
   formula = resp ~ s(TS, k = 5),
+  org.data = NULL,
   main = NULL,
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
@@ -52,6 +53,13 @@ empirical_plot(
 - formula:
 
   formula used for the GAM smoother
+
+- org.data:
+
+  identical to `data`, but contains the "unscored" response options
+  (e.g., the original coding in a multiple-choice test). Used in various
+  item-level plots for diagnostic purposes, such as in distractor
+  analyses
 
 - main:
 
@@ -131,12 +139,23 @@ empirical_plot(data, c(1, 5), type = 'bubble')
 # replace weird looking items with unscored versions for diagnostics
 empirical_plot(data, 32)
 
-data[,32] <- SAT12[,32]
-empirical_plot(data, 32)
+data2 <- data
+data2[,32] <- SAT12[,32]
+empirical_plot(data2, 32)
 
-empirical_plot(data, 32, smooth = TRUE)
+empirical_plot(data2, 32, smooth = TRUE)
 
 
+# alternatively, distractor analyses using original dataset
+empirical_plot(data, which.items=32, org.data=SAT12)
+
+empirical_plot(data, which.items=32, org.data=SAT12, smooth=TRUE)
+
+empirical_plot(data, which.items=1:32, org.data=SAT12, smooth=TRUE)
+
+
+
+#################
 # polytomous
 empirical_plot(Science)
 
