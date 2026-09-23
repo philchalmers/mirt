@@ -13,6 +13,9 @@
 #' @aliases empirical_plot
 #' @param data a \code{data.frame} or \code{matrix} of item responses (see \code{\link{mirt}}
 #'   for typical input)
+#' @param org.data identical to \code{data}, but contains the "unscored" response options (e.g.,
+#'   the original coding in a multiple-choice test). Used in various item-level plots for
+#'   diagnostic purposes, such as in distractor analyses
 #' @param which.items a numeric vector indicating which items to plot in a faceted image plot.
 #'   If NULL then empirical test plots will be constructed instead
 #' @param smooth logical; include a GAM smoother instead of the raw proportions? Default is FALSE
@@ -54,10 +57,18 @@
 #'
 #' # replace weird looking items with unscored versions for diagnostics
 #' empirical_plot(data, 32)
-#' data[,32] <- SAT12[,32]
-#' empirical_plot(data, 32)
-#' empirical_plot(data, 32, smooth = TRUE)
+#' data2 <- data
+#' data2[,32] <- SAT12[,32]
+#' empirical_plot(data2, 32)
+#' empirical_plot(data2, 32, smooth = TRUE)
 #'
+#' # alternatively, distractor analyses using original dataset
+#' empirical_plot(data, which.items=32, org.data=SAT12)
+#' empirical_plot(data, which.items=32, org.data=SAT12, smooth=TRUE)
+#' empirical_plot(data, which.items=1:32, org.data=SAT12, smooth=TRUE)
+#'
+#'
+#' #################
 #' # polytomous
 #' empirical_plot(Science)
 #' empirical_plot(Science, type = 'hist', breaks=20)
@@ -70,7 +81,7 @@
 #' }
 empirical_plot <- function(data, which.items = NULL, type = 'prop',
                            smooth = FALSE, formula = resp ~ s(TS, k = 5),
-                           main = NULL, par.strip.text = list(cex = 0.7),
+                           org.data = NULL, main = NULL, par.strip.text = list(cex = 0.7),
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
@@ -82,11 +93,17 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         stopifnot(type %in% c('prop', 'boxplot', 'bubble'))
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
     data <- na.omit(as.matrix(data))
-    K <- apply(data, 2, function(x) length(unique(x)))
+    if(is.null(org.data))
+        org.data <- data
+    org.data <- na.omit(as.matrix(org.data))
+    stopifnot("dimensions of org.data do not match data" =
+                  all(dim(data) == dim(org.data)))
+    K <- apply(org.data, 2, function(x) length(unique(x)))
     if(all(K == 2L)) auto.key <- FALSE
     TS <- rowSums(data)
     ord <- order(TS)
     data <- data[ord,]
+    org.data <- org.data[ord,]
     TS <- TS[ord]
     tab <- table(TS)
     if(type == 'bubble'){
@@ -128,7 +145,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         pltdat <- vector('list', length(which.items))
         nms <- colnames(data)
         for(i in 1:length(which.items)){
-            item <- data[, which.items[i]]
+            item <- org.data[, which.items[i]]
             TS <- rowSums(data[ ,-which.items[i]])
             ord <- order(TS)
             item <- item[ord]
