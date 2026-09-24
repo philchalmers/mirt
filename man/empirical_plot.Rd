@@ -9,8 +9,10 @@ empirical_plot(
   which.items = NULL,
   type = "prop",
   smooth = FALSE,
+  sort = TRUE,
   formula = resp ~ s(TS, k = 5),
   org.data = NULL,
+  discrim.cut = 0.2,
   main = NULL,
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
@@ -27,16 +29,28 @@ for typical input)}
 If NULL then empirical test plots will be constructed instead}
 
 \item{type}{character vector specifying type of plot to draw. When \code{which.item} is NULL
-can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'. Type can
-also be 'bubble' for bubble plots, though in this case \code{which.items} must have length two}
+  can be 'prop' (default) for cumulative proportions,
+  'hist' for histogram of total scores, and
+  'discrim' for plotting reduced item-total correlations. When \code{which.item} is not NULL can
+  be 'prop' (default) for item-level conditional proportions against reduced total scores,
+  'boxplot' for conditional boxplots of reduced total scores, and 'bubble' for bivariate frequency
+  buble plots.
+
+  When \code{type} is 'bubble' \code{which.items} must have length two}
 
 \item{smooth}{logical; include a GAM smoother instead of the raw proportions? Default is FALSE}
+
+\item{sort}{logical; when applicable, sort the items first (e.g., in discrimination plot)?}
 
 \item{formula}{formula used for the GAM smoother}
 
 \item{org.data}{identical to \code{data}, but contains the "unscored" response options (e.g.,
 the original coding in a multiple-choice test). Used in various item-level plots for
-diagnostic purposes, such as in distractor analyses}
+diagnostic purposes, such as in distractor analyses. This will also automatically add
+size and linetype changes to highlight the detected scored categories}
+
+\item{discrim.cut}{horizontal cut-off line to use when \code{type = 'discrim'}. Default
+is .2 (to omit, use \code{NA})}
 
 \item{main}{the main title for the plot. If NULL an internal default will be used}
 
@@ -103,6 +117,11 @@ empirical_plot(Science, c(1, 3), type = 'bubble')
 empirical_plot(Science, which.items = 1:4, type = 'boxplot')
 empirical_plot(Science, which.items = 1:4, type = 'prop')
 empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
+
+# last plot very similar to model-based approach (though conditioned
+#   on reduced total scores rather than scaled latent trait)
+mod <- mirt(Science)
+plot(mod, type='trace')
 
 }
 }

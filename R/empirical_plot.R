@@ -15,18 +15,28 @@
 #'   for typical input)
 #' @param org.data identical to \code{data}, but contains the "unscored" response options (e.g.,
 #'   the original coding in a multiple-choice test). Used in various item-level plots for
-#'   diagnostic purposes, such as in distractor analyses
+#'   diagnostic purposes, such as in distractor analyses. This will also automatically add
+#'   size and linetype changes to highlight the detected scored categories
 #' @param which.items a numeric vector indicating which items to plot in a faceted image plot.
 #'   If NULL then empirical test plots will be constructed instead
 #' @param smooth logical; include a GAM smoother instead of the raw proportions? Default is FALSE
 #' @param type character vector specifying type of plot to draw. When \code{which.item} is NULL
-#'   can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'. Type can
-#'   also be 'bubble' for bubble plots, though in this case \code{which.items} must have length two
+#'   can be 'prop' (default) for cumulative proportions,
+#'   'hist' for histogram of total scores, and
+#'   'discrim' for plotting reduced item-total correlations. When \code{which.item} is not NULL can
+#'   be 'prop' (default) for item-level conditional proportions against reduced total scores,
+#'   'boxplot' for conditional boxplots of reduced total scores, and 'bubble' for bivariate frequency
+#'   buble plots.
+#'
+#'   When \code{type} is 'bubble' \code{which.items} must have length two
+#' @param sort logical; when applicable, sort the items first (e.g., in discrimination plot)?
 #' @param formula formula used for the GAM smoother
 #' @param main the main title for the plot. If NULL an internal default will be used
 #' @param auto.key plotting argument passed to \code{\link[lattice]{lattice}}
 #' @param par.strip.text plotting argument passed to \code{\link[lattice]{lattice}}
 #' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
+#' @param discrim.cut horizontal cut-off line to use when \code{type = 'discrim'}. Default
+#'   is .2 (to omit, use \code{NA})
 #' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #' @keywords empirical plots
 #' @export empirical_plot
@@ -79,19 +89,23 @@
 #' empirical_plot(Science, which.items = 1:4, type = 'prop')
 #' empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
 #'
+#' # last plot very similar to model-based approach (though conditioned
+#' #   on reduced total scores rather than scaled latent trait)
+#' mod <- mirt(Science)
+#' plot(mod, type='trace')
+#'
 #' }
 empirical_plot <- function(data, which.items = NULL, type = 'prop',
-                           smooth = FALSE, formula = resp ~ s(TS, k = 5),
-                           org.data = NULL, main = NULL, par.strip.text = list(cex = 0.7),
+                           smooth = FALSE, sort=TRUE, formula = resp ~ s(TS, k = 5),
+                           org.data = NULL,
+                           discrim.cut = .2, main = NULL, par.strip.text = list(cex = 0.7),
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
                            auto.key = list(space = 'right', points=FALSE, lines=TRUE), ...){
     stopifnot(is.matrix(data) || is.data.frame(data))
-    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble'))
+    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'discrim'))
     if(is.null(which.items))
-        stopifnot("Must specify which.items"=type %in% c('prop', 'hist'))
-    if(!is.null(which.items))
-        stopifnot(type %in% c('prop', 'boxplot', 'bubble'))
+        stopifnot("Must specify which.items"=type %in% c('prop', 'hist', 'discrim'))
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
     data <- na.omit(as.matrix(data))
     if(is.null(org.data))
@@ -115,6 +129,22 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     org.data <- org.data[ord,]
     TS <- TS[ord]
     tab <- table(TS)
+    if(type == 'discrim'){
+        is <- itemstats(data)$itemstats
+        is$item <- factor(rownames(is), levels=colnames(data))
+        if(sort)
+            is <- is[order(is$total.r_if_rm),]
+        plt <- lattice::xyplot(total.r_if_rm ~ item, is,
+                               pch = 16,
+                               panel = function(x, y, ...) {
+                                   panel.xyplot(x, y, ...)
+                                   panel.abline(h = discrim.cut, col='red', lty=2)
+                               },
+                               main = if(is.null(main)) "Reduced total score correlation" else main,
+                               xlab = 'Item', ylab='Correlation',
+                               scales = list(x = list(rot = 90)))
+        return(plt)
+    }
     if(type == 'bubble'){
         stopifnot("which.items must be of length two"=length(which.items) == 2)
         dat.sub <- as.data.frame(data[,which.items, drop=FALSE])

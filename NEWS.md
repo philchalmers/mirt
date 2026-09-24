@@ -1,5 +1,8 @@
 # Changes in mirt 1.48
 
+- `empirical.plot()` gains other `type` inputs, such as `discrim` to plot reduced
+  item-total correlations, along with a `sort` logical
+
 - `empirical.plot()` gains an `org.data` argument to substitute un-scored data in 
   when building empirical trace-lines. Useful for simple distractor analysis visualization,
   where now the scored key(s) are auto-detected and plotted with higher contrast
