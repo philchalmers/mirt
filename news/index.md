@@ -4,7 +4,8 @@
 
 - `empirical.plot()` gains an `org.data` argument to substitute
   un-scored data in when building empirical trace-lines. Useful for
-  simple distractor analysis visualization
+  simple distractor analysis visualization, where now the scored key(s)
+  are auto-detected and plotted with higher contrast
 
 - Maximum EM iteration limit warning decreased to
   [`message()`](https://rdrr.io/r/base/message.html) instead. However,

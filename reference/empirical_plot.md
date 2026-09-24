@@ -151,7 +151,9 @@ empirical_plot(data, which.items=32, org.data=SAT12)
 
 empirical_plot(data, which.items=32, org.data=SAT12, smooth=TRUE)
 
-empirical_plot(data, which.items=1:32, org.data=SAT12, smooth=TRUE)
+empirical_plot(data, which.items=1:12, org.data=SAT12, smooth=TRUE)
+
+empirical_plot(data, which.items=13:32, org.data=SAT12, smooth=TRUE)
 
 
 
