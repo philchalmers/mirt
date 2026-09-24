@@ -140,9 +140,9 @@ centering argument contributed by Rudolf Debelak
 <span class="r-in"><span><span class="co"># get the gradient</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">sc1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1.1        a2.2        a1.3        a2.4        a1.5        a2.6 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.010556100 0.012533394 0.015994245 0.016832574 0.021043233 0.020842513 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.010556101 0.012533394 0.015994245 0.016832573 0.021043233 0.020842514 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a1.7        a2.8        a1.9       a2.10       c1.11 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.013694253 0.011470848 0.007827056 0.009231532 0.059032787 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.013694253 0.011470847 0.007827056 0.009231532 0.059032788 </span>
 <span class="r-in"><span><span class="co"># calculate the OPG estimate of the variance-covariance matrix "by hand"</span></span></span>
 <span class="r-in"><span><span class="va">vc1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">modd</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">crossprod</a></span><span class="op">(</span><span class="va">sc1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/chol2inv.html" class="external-link">chol2inv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="va">vc1</span><span class="op">)</span><span class="op">)</span>, check.attributes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>

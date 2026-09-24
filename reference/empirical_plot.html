@@ -57,8 +57,10 @@ item plots are requested then the total score will be formed without the item of
 <span>  which.items <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"prop"</span>,</span>
 <span>  smooth <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">resp</span> <span class="op">~</span> <span class="fu">s</span><span class="op">(</span><span class="va">TS</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
 <span>  org.data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  discrim.cut <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  par.strip.text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span>,</span>
 <span>  par.settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>strip.background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"#9ECAE1"</span><span class="op">)</span>, strip.border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span></span>
@@ -84,12 +86,21 @@ If NULL then empirical test plots will be constructed instead</p></dd>
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>character vector specifying type of plot to draw. When <code>which.item</code> is NULL
-can be 'prop' (default) or 'hist', otherwise can be 'prop' (default) or 'boxplot'. Type can
-also be 'bubble' for bubble plots, though in this case <code>which.items</code> must have length two</p></dd>
+  can be 'prop' (default) for cumulative proportions,
+  'hist' for histogram of total scores, and
+  'discrim' for plotting reduced item-total correlations. When <code>which.item</code> is not NULL can
+  be 'prop' (default) for item-level conditional proportions against reduced total scores,
+  'boxplot' for conditional boxplots of reduced total scores, and 'bubble' for bivariate frequency
+  buble plots.</p>
+<p>When <code>type</code> is 'bubble' <code>which.items</code> must have length two</p></dd>
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
 <dd><p>logical; include a GAM smoother instead of the raw proportions? Default is FALSE</p></dd>
+
+
+<dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
+<dd><p>logical; when applicable, sort the items first (e.g., in discrimination plot)?</p></dd>
 
 
 <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
@@ -99,7 +110,13 @@ also be 'bubble' for bubble plots, though in this case <code>which.items</code> 
 <dt id="arg-org-data">org.data<a class="anchor" aria-label="anchor" href="#arg-org-data"></a></dt>
 <dd><p>identical to <code>data</code>, but contains the "unscored" response options (e.g.,
 the original coding in a multiple-choice test). Used in various item-level plots for
-diagnostic purposes, such as in distractor analyses</p></dd>
+diagnostic purposes, such as in distractor analyses. This will also automatically add
+size and linetype changes to highlight the detected scored categories</p></dd>
+
+
+<dt id="arg-discrim-cut">discrim.cut<a class="anchor" aria-label="anchor" href="#arg-discrim-cut"></a></dt>
+<dd><p>horizontal cut-off line to use when <code>type = 'discrim'</code>. Default
+is .2 (to omit, use <code>NA</code>)</p></dd>
 
 
 <dt id="arg-main">main<a class="anchor" aria-label="anchor" href="#arg-main"></a></dt>
@@ -206,6 +223,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-plt img"><img src="empirical_plot-21.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-22.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># last plot very similar to model-based approach (though conditioned</span></span></span>
+<span class="r-in"><span><span class="co">#   on reduced total scores rather than scaled latent trait)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, type<span class="op">=</span><span class="st">'trace'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-23.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

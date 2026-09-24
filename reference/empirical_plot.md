@@ -14,8 +14,10 @@ empirical_plot(
   which.items = NULL,
   type = "prop",
   smooth = FALSE,
+  sort = TRUE,
   formula = resp ~ s(TS, k = 5),
   org.data = NULL,
+  discrim.cut = 0.2,
   main = NULL,
   par.strip.text = list(cex = 0.7),
   par.settings = list(strip.background = list(col = "#9ECAE1"), strip.border = list(col =
@@ -41,14 +43,24 @@ empirical_plot(
 - type:
 
   character vector specifying type of plot to draw. When `which.item` is
-  NULL can be 'prop' (default) or 'hist', otherwise can be 'prop'
-  (default) or 'boxplot'. Type can also be 'bubble' for bubble plots,
-  though in this case `which.items` must have length two
+  NULL can be 'prop' (default) for cumulative proportions, 'hist' for
+  histogram of total scores, and 'discrim' for plotting reduced
+  item-total correlations. When `which.item` is not NULL can be 'prop'
+  (default) for item-level conditional proportions against reduced total
+  scores, 'boxplot' for conditional boxplots of reduced total scores,
+  and 'bubble' for bivariate frequency buble plots.
+
+  When `type` is 'bubble' `which.items` must have length two
 
 - smooth:
 
   logical; include a GAM smoother instead of the raw proportions?
   Default is FALSE
+
+- sort:
+
+  logical; when applicable, sort the items first (e.g., in
+  discrimination plot)?
 
 - formula:
 
@@ -59,7 +71,13 @@ empirical_plot(
   identical to `data`, but contains the "unscored" response options
   (e.g., the original coding in a multiple-choice test). Used in various
   item-level plots for diagnostic purposes, such as in distractor
-  analyses
+  analyses. This will also automatically add size and linetype changes
+  to highlight the detected scored categories
+
+- discrim.cut:
+
+  horizontal cut-off line to use when `type = 'discrim'`. Default is .2
+  (to omit, use `NA`)
 
 - main:
 
@@ -172,6 +190,12 @@ empirical_plot(Science, which.items = 1:4, type = 'boxplot')
 empirical_plot(Science, which.items = 1:4, type = 'prop')
 
 empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
+
+
+# last plot very similar to model-based approach (though conditioned
+#   on reduced total scores rather than scaled latent trait)
+mod <- mirt(Science)
+plot(mod, type='trace')
 
 
 # }
