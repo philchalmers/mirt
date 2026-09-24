@@ -65,7 +65,8 @@
 #' # alternatively, distractor analyses using original dataset
 #' empirical_plot(data, which.items=32, org.data=SAT12)
 #' empirical_plot(data, which.items=32, org.data=SAT12, smooth=TRUE)
-#' empirical_plot(data, which.items=1:32, org.data=SAT12, smooth=TRUE)
+#' empirical_plot(data, which.items=1:12, org.data=SAT12, smooth=TRUE)
+#' empirical_plot(data, which.items=13:32, org.data=SAT12, smooth=TRUE)
 #'
 #'
 #' #################
@@ -100,6 +101,14 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                   all(dim(data) == dim(org.data)))
     K <- apply(org.data, 2, function(x) length(unique(x)))
     if(all(K == 2L)) auto.key <- FALSE
+    key <- NULL
+    if(!identical(data, org.data)){
+        key <- lapply(1:ncol(data), \(i){
+            pick <- na.omit(unique(org.data[data[,i] == 1, i]))
+            which(sort(unique(org.data[,i])) == pick) })
+        names(key) <- colnames(data)
+        key <- key[which.items]
+    }
     TS <- rowSums(data)
     ord <- order(TS)
     data <- data[ord,]
@@ -174,14 +183,15 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                     props <- tmptab / tab
                     names(props) <- names(tab)
                     splt[[j]] <- data.frame(item=nms[which.items[i]], TS=as.integer(names(tab)),
-                                            props=as.numeric(props), freq=as.numeric(tab), cat=names(splt)[j])
-
+                                            props=as.numeric(props), freq=as.numeric(tab),
+                                            cat=names(splt)[j])
                 }
                 pltdat[[i]] <- do.call(rbind, splt)
             }
         }
         df <- na.omit(do.call(rbind, pltdat))
         df$cat <- factor(df$cat)
+        df$item <- factor(df$item, levels=colnames(data)[which.items])
         if(type == "boxplot"){
             plt <- lattice::bwplot(TS ~ cat | item, df,
                                    main = if(is.null(main)) "Empirical Item Differences" else main,
@@ -191,6 +201,16 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         } else if(type == 'prop'){
             plt <- lattice::xyplot(props ~ TS|item, df, groups = cat,
                                    type = ifelse(smooth, 'l', 'b'),
+                                   panel = function(x, y, groups, ...) {
+                                       current_panel <- panel.number()
+                                       lwd <- lty <- rep(1, length(unique(groups)))
+                                       if(is.list(key)){
+                                           lty[] <- 2
+                                           lwd[key[[current_panel]]] <- 2
+                                           lty[key[[current_panel]]] <- 1
+                                       }
+                                       panel.xyplot(x, y, groups=groups, lwd=lwd, lty=lty, ...)
+                                   },
                                    main = if(is.null(main)) "Empirical Item Plot" else main,
                                    xlab = 'Reduced Total Score', ylab = 'Proportion',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
