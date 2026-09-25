@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mirt</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.47.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.47.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.48" id="changes-in-mirt-148">Changes in mirt 1.48<a class="anchor" aria-label="anchor" href="#changes-in-mirt-148"></a></h2>
-<ul><li><p><code>empirical.plot()</code> gains other <code>type</code> inputs, such as <code>discrim</code> to plot reduced item-total correlations, along with a <code>sort</code> logical</p></li>
+<ul><li><p><code>empirical.plot()</code> gains other <code>type</code> inputs: <code>discrim</code> to plot reduced item-total correlations, <code>difficulty</code> to plot the item means, <code>discrim_diff</code> to produced a bivariate plot, and <code>freq</code> for barchart frequencies per item. The former two can be accompanied by a <code>sort</code> logical</p></li>
 <li><p><code>empirical.plot()</code> gains an <code>org.data</code> argument to substitute un-scored data in when building empirical trace-lines. Useful for simple distractor analysis visualization, where now the scored key(s) are auto-detected and plotted with higher contrast</p></li>
 <li><p>Maximum EM iteration limit warning decreased to <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code> instead. However, if last iteration had Aitken-accelerated criterion discrepancies greater than 1e-3 then a warning will be raised to indicate that the EM algorithm is likely still climbing</p></li>
 </ul></div>
