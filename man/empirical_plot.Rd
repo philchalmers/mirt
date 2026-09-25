@@ -9,7 +9,7 @@ empirical_plot(
   which.items = NULL,
   type = "prop",
   smooth = FALSE,
-  sort = TRUE,
+  sort = FALSE,
   formula = resp ~ s(TS, k = 5),
   org.data = NULL,
   discrim.cut = 0.2,
@@ -28,15 +28,21 @@ for typical input)}
 \item{which.items}{a numeric vector indicating which items to plot in a faceted image plot.
 If NULL then empirical test plots will be constructed instead}
 
-\item{type}{character vector specifying type of plot to draw. When \code{which.item} is NULL
-  can be 'prop' (default) for cumulative proportions,
-  'hist' for histogram of total scores, and
-  'discrim' for plotting reduced item-total correlations. When \code{which.item} is not NULL can
-  be 'prop' (default) for item-level conditional proportions against reduced total scores,
-  'boxplot' for conditional boxplots of reduced total scores, and 'bubble' for bivariate frequency
-  buble plots.
+\item{type}{character vector specifying type of plot to draw, some of which change as a function of
+  the \code{which.item} input.
 
-  When \code{type} is 'bubble' \code{which.items} must have length two}
+  \describe{
+   \item{'prop' (default)}{cumulative total-score proportions. If  \code{which.items}
+     specified then item-level conditional proportions are instead plotted
+     against the reduced total scores}
+   \item{'hist'}{histogram of total scores}
+   \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
+   \item{'difficulty'}{mean/proportion of each item}
+   \item{'discrim_diff'}{reduced item-total correlation against item difficulty}
+   \item{'boxplot'}{conditional boxplots of reduced total scores (supports \code{which.item})}
+   \item{'bubble'}{bivariate frequency  bubble plots (requires that \code{which.items}
+     is exactly of length two)}
+  }}
 
 \item{smooth}{logical; include a GAM smoother instead of the raw proportions? Default is FALSE}
 
@@ -86,8 +92,15 @@ data <- key2binary(SAT12,
 empirical_plot(data)
 empirical_plot(data, type = 'hist')
 empirical_plot(data, type = 'hist', breaks=20)
+empirical_plot(data, type = 'discrim')
+empirical_plot(data, type = 'discrim', sort=TRUE)
+empirical_plot(data, type = 'difficulty')
+empirical_plot(data, type = 'difficulty', sort=TRUE)
+empirical_plot(data, type = 'discrim_diff')
+empirical_plot(data, type = 'freq')
 
 # items 1, 2 and 5
+empirical_plot(data, c(1, 2, 5), type = 'freq')
 empirical_plot(data, c(1, 2, 5))
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
 empirical_plot(data, c(1, 2, 5), type = 'boxplot')
@@ -109,12 +122,17 @@ empirical_plot(data, which.items=13:32, org.data=SAT12, smooth=TRUE)
 
 
 #################
-# polytomous
+# polytomous response data
 empirical_plot(Science)
 empirical_plot(Science, type = 'hist', breaks=20)
+empirical_plot(Science, type = 'freq')
+empirical_plot(Science, type = 'difficulty')
+empirical_plot(Science, type = 'discrim_diff')
+empirical_plot(Science, type = 'boxplot')
+
+# item-level
 empirical_plot(Science, c(1, 2), type = 'bubble')
 empirical_plot(Science, c(1, 3), type = 'bubble')
-empirical_plot(Science, which.items = 1:4, type = 'boxplot')
 empirical_plot(Science, which.items = 1:4, type = 'prop')
 empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
 
@@ -122,6 +140,12 @@ empirical_plot(Science, which.items = 1:4, type = 'prop', smooth=TRUE)
 #   on reduced total scores rather than scaled latent trait)
 mod <- mirt(Science)
 plot(mod, type='trace')
+
+# when missing values present
+Science[1:3, 1] <- NA
+Science[6:8, 2] <- NA
+empirical_plot(Science, type = 'freq')
+
 
 }
 }
