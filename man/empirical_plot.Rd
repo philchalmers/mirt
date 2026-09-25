@@ -40,6 +40,7 @@ If NULL then empirical test plots will be constructed instead}
    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
    \item{'difficulty'}{mean/proportion of each item}
    \item{'discrim_diff'}{reduced item-total correlation against item difficulty}
+   \item{'alpha_rm'}{effect on coefficient alpha if item were removed}
    \item{'boxplot'}{conditional boxplots of reduced total scores (supports \code{which.items})}
    \item{'bubble'}{bivariate frequency  bubble plots (requires that \code{which.items}
      is exactly of length two)}
@@ -98,7 +99,9 @@ empirical_plot(data, type = 'discrim', sort=TRUE)
 empirical_plot(data, type = 'difficulty')
 empirical_plot(data, type = 'difficulty', sort=TRUE)
 empirical_plot(data, type = 'discrim_diff')
+empirical_plot(data, type = 'alpha_rm')
 empirical_plot(data, type = 'freq')
+
 
 # items 1, 2 and 5
 empirical_plot(data, c(1, 2, 5), type = 'freq')

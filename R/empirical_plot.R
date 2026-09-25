@@ -32,6 +32,7 @@
 #'    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
 #'    \item{'difficulty'}{mean/proportion of each item}
 #'    \item{'discrim_diff'}{reduced item-total correlation against item difficulty}
+#'    \item{'alpha_rm'}{effect on coefficient alpha if item were removed}
 #'    \item{'boxplot'}{conditional boxplots of reduced total scores (supports \code{which.items})}
 #'    \item{'bubble'}{bivariate frequency  bubble plots (requires that \code{which.items}
 #'      is exactly of length two)}
@@ -70,7 +71,9 @@
 #' empirical_plot(data, type = 'difficulty')
 #' empirical_plot(data, type = 'difficulty', sort=TRUE)
 #' empirical_plot(data, type = 'discrim_diff')
+#' empirical_plot(data, type = 'alpha_rm')
 #' empirical_plot(data, type = 'freq')
+#'
 #'
 #' # items 1, 2 and 5
 #' empirical_plot(data, c(1, 2, 5), type = 'freq')
@@ -131,11 +134,11 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     stopifnot(is.matrix(data) || is.data.frame(data))
     if(is.null(which.items) && type %in% c("freq", 'boxplot'))
         which.items <- 1:ncol(data)
-    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble',
+    stopifnot(type %in% c('prop', 'hist', 'boxplot', 'bubble', 'alpha_rm',
                           'discrim', 'difficulty', 'discrim_diff', 'freq'))
     if(is.null(which.items))
         stopifnot("Must specify which.items"=type %in%
-                      c('prop', 'hist', 'discrim', 'difficulty', 'discrim_diff'))
+                      c('prop', 'hist', 'alpha_rm', 'discrim', 'difficulty', 'discrim_diff'))
     if(type %in% c('boxplot', 'bubble')) smooth <- FALSE
     if(!(type %in% c('freq')))
         data <- na.omit(as.matrix(data))
@@ -161,7 +164,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     org.data <- org.data[ord,]
     TS <- TS[ord]
     tab <- table(TS)
-    if(type %in% c('discrim', 'difficulty', 'discrim_diff', 'freq')){
+    if(type %in% c('discrim', 'difficulty', 'discrim_diff', 'freq', 'alpha_rm')){
         isummary <- itemstats(data)
         is <- isummary$itemstats
         is$item <- factor(rownames(is), levels=colnames(data))
@@ -176,9 +179,9 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        panel.xyplot(x, y, ...)
                                        panel.abline(h = discrim.cut, col='red', lty=2)
                                    },
-                                   main = if(is.null(main)) "Reduced item-total correlation" else main,
+                                   main = if(is.null(main)) "Reduced Item-total Correlation" else main,
                                    xlab = 'Item', ylab='Correlation',
-                                   scales = list(x = list(rot = 90)))
+                                   scales = list(x = list(rot = 90)), ...)
             return(plt)
         }
         if(type == 'difficulty'){
@@ -190,7 +193,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                    pch = 16,
                                    main = if(is.null(main)) "Item Difficulty" else main,
                                    xlab = 'Item', ylab='Mean',
-                                   scales = list(x = list(rot = 90)))
+                                   scales = list(x = list(rot = 90)), ...)
             return(plt)
         }
         if(type == 'discrim_diff'){
@@ -202,7 +205,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                                   pos = 3, offset = 0.8, cex = 0.75, col = "black")
                                    },
                                    main = if(is.null(main)) "Difficulty by Discrimination" else main,
-                                   xlab = 'Mean', ylab='Reduced item-total correlation')
+                                   xlab = 'Mean', ylab='Reduced item-total correlation', ...)
             return(plt)
         }
         if(type == 'freq'){
@@ -216,7 +219,24 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
             if(any(mlt$cat == '<NA>')) col[length(col)] <- 'red'
             plt <- lattice::barchart(freq ~ cat|item, mlt, horizontal = FALSE,
                                      ylab = 'Frequency', xlab = 'Category', col = col,
-                              main = if(is.null(main)) "Item Response Frequency" else main)
+                              main = if(is.null(main)) "Item Response Frequency" else main, ...)
+            return(plt)
+        }
+        if(type == 'alpha_rm'){
+            if(sort){
+                is <- is[order(is$alpha_if_rm),]
+                is$item <- factor(as.character(is$item), levels=as.character(is$item))
+            }
+            plt <- lattice::xyplot(alpha_if_rm ~ item, is,
+                                   pch = 16,
+                                   panel = function(x, y, ...) {
+                                       panel.xyplot(x, y, ...)
+                                       panel.abline(h = isummary$overall$alpha, col='red', lty=2)
+                                   },
+                                   main = if(is.null(main)) "Alpha if Item Removed" else main,
+                                   xlab = 'Item', ylab=expression(alpha),
+                                   ylim = c(min(is$alpha_if_rm) - .05, max(is$alpha_if_rm) + .05),
+                                   scales = list(x = list(rot = 90)), ...)
             return(plt)
         }
     }
@@ -245,7 +265,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
             prop <- cumsum(tab) / nrow(data)
             df <- data.frame(TS=as.integer(names(tab)), P=prop)
             plt <- lattice::xyplot(P ~ TS, df, type = 'b',
-                                   main = if(is.null(main)) 'Empirical Test Plot' else main,
+                                   main = if(is.null(main)) 'Cumulative Total Score' else main,
                                    xlab = 'Total Score', ylab = 'Cumulative Proportion',
                                    ylim = c(-.1, 1.1), ...)
         } else if(type == 'hist'){
@@ -299,7 +319,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         df$item <- factor(df$item, levels=colnames(data)[which.items])
         if(type == "boxplot"){
             plt <- lattice::bwplot(TS ~ cat | item, df,
-                                   main = if(is.null(main)) "Empirical Item Differences" else main,
+                                   main = if(is.null(main)) "Item Category by Composite" else main,
                                    xlab = 'Item Category', ylab = 'Reduced Total Score',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
                                    auto.key=auto.key, ...)
@@ -316,7 +336,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        }
                                        panel.xyplot(x, y, groups=groups, lwd=lwd, lty=lty, ...)
                                    },
-                                   main = if(is.null(main)) "Empirical Item Plot" else main,
+                                   main = if(is.null(main)) "Item-total Plot" else main,
                                    xlab = 'Reduced Total Score', ylab = 'Proportion',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
                                    auto.key=auto.key, ylim = c(-.1, 1.1), ...)
