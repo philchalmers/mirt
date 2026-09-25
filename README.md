@@ -8,7 +8,8 @@ Analysis of discrete response data using unidimensional and multidimensional ite
 
 Various examples and worked help files have been compiled using the `knitr` package to generate
 HTML output, and are available on the package [wiki](https://github.com/philchalmers/mirt/wiki). 
-User contributions are welcome!
+User contributions are welcome! The package examples themselves can be found on the 
+associated [github.io/mirt](https://philchalmers.github.io/mirt/) location.
 
 ## Installing from source
 
