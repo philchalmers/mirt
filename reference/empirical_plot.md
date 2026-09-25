@@ -72,6 +72,10 @@ empirical_plot(
 
   :   reduced item-total correlation against item difficulty
 
+  'alpha_rm'
+
+  :   effect on coefficient alpha if item were removed
+
   'boxplot'
 
   :   conditional boxplots of reduced total scores (supports
@@ -181,7 +185,10 @@ empirical_plot(data, type = 'difficulty', sort=TRUE)
 
 empirical_plot(data, type = 'discrim_diff')
 
+empirical_plot(data, type = 'alpha_rm')
+
 empirical_plot(data, type = 'freq')
+
 
 
 # items 1, 2 and 5
