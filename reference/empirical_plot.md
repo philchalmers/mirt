@@ -1,10 +1,10 @@
 # Function to generate empirical unidimensional item and test plots
 
 Given a dataset containing item responses this function will construct
-empirical graphics using the observed responses to each item conditioned
-on the total score. When individual item plots are requested then the
-total score will be formed without the item of interest (i.e., the total
-score without that item).
+empirical graphics using the observed responses, potentially conditioned
+on the (reduced) total score. When individual item plots are requested
+then the total score will be formed without the item of interest (i.e.,
+the total score without that item).
 
 ## Usage
 
@@ -55,6 +55,10 @@ empirical_plot(
 
   :   histogram of total scores
 
+  'freq'
+
+  :   item response frequencies (supports `which.item`)
+
   'discrim'
 
   :   reduced item-total correlations to visualize discrimination
@@ -71,7 +75,7 @@ empirical_plot(
   'boxplot'
 
   :   conditional boxplots of reduced total scores (supports
-      `which.item`)
+      `which.items`)
 
   'bubble'
 
@@ -132,11 +136,11 @@ empirical_plot(
 
 ## Details
 
-Note that these types of plots should only be used for unidimensional
-tests with monotonically increasing item response functions. If
-monotonicity is not true for all items, however, then these plots may
-serve as a visual diagnostic tool so long as the majority of items are
-indeed monotonic.
+Note that some of these plot types should only be used for
+unidimensional tests with monotonically increasing item response
+functions. If monotonicity is not true for all items, however, then
+these plots may serve as a visual diagnostic tool so long as the
+majority of items are indeed monotonic.
 
 ## References
 
