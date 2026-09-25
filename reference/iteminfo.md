@@ -91,7 +91,7 @@ lines(Theta, T1/T1, col = 'red')
 
 # multidimensional
 mod <- mirt(dat, 2, TOL=1e-2)
-#> Warning: Observed log-likelihood appeared to still be increasing in final iterations.
+#> Warning: Observed log-likelihood may still be increasing.
 #>   Final log-likelihood values were: 
 #>   -2654.63, -2654.553, -2654.493
 ii <- extract.item(mod, 1)
