@@ -36,10 +36,11 @@ If NULL then empirical test plots will be constructed instead}
      specified then item-level conditional proportions are instead plotted
      against the reduced total scores}
    \item{'hist'}{histogram of total scores}
+   \item{'freq'}{item response frequencies (supports \code{which.item})}
    \item{'discrim'}{reduced item-total correlations to visualize discrimination effects}
    \item{'difficulty'}{mean/proportion of each item}
    \item{'discrim_diff'}{reduced item-total correlation against item difficulty}
-   \item{'boxplot'}{conditional boxplots of reduced total scores (supports \code{which.item})}
+   \item{'boxplot'}{conditional boxplots of reduced total scores (supports \code{which.items})}
    \item{'bubble'}{bivariate frequency  bubble plots (requires that \code{which.items}
      is exactly of length two)}
   }}
@@ -70,12 +71,12 @@ is .2 (to omit, use \code{NA})}
 }
 \description{
 Given a dataset containing item responses this function will construct empirical graphics
-using the observed responses to each item conditioned on the total score. When individual
+using the observed responses, potentially conditioned on the (reduced) total score. When individual
 item plots are requested then the total score will be formed without the item of interest
 (i.e., the total score without that item).
 }
 \details{
-Note that these types of plots should only be used for unidimensional
+Note that some of these plot types should only be used for unidimensional
 tests with monotonically increasing item
 response functions. If monotonicity is not true for all items, however, then these plots may
 serve as a visual diagnostic tool so long as the majority of items are indeed monotonic.
