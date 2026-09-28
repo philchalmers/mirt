@@ -249,43 +249,56 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data</span>, which.items<span class="op">=</span><span class="fl">13</span><span class="op">:</span><span class="fl">32</span>, org.data<span class="op">=</span><span class="va">SAT12</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-23.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example where item 32 has two correct scoring keys, and item 31</span></span></span>
+<span class="r-in"><span><span class="co"># is incorrectly scored (perhaps miskeyed)</span></span></span>
+<span class="r-in"><span><span class="va">key</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">1</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">31</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data2</span> <span class="op">&lt;-</span> <span class="fu"><a href="key2binary.html">key2binary</a></span><span class="op">(</span><span class="va">SAT12</span>, key<span class="op">=</span><span class="va">key</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># item 30 is correct, but 31 proportions do not climb. Item 32 has two</span></span></span>
+<span class="r-in"><span><span class="co"># highlighted correct answers</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data2</span>, which.items<span class="op">=</span><span class="fl">30</span><span class="op">:</span><span class="fl">32</span>, org.data<span class="op">=</span><span class="va">SAT12</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-24.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">data2</span>, which.items<span class="op">=</span><span class="fl">30</span><span class="op">:</span><span class="fl">32</span>, org.data<span class="op">=</span><span class="va">SAT12</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-25.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#################</span></span></span>
 <span class="r-in"><span><span class="co"># polytomous response data</span></span></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-24.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'hist'</span>, breaks<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-25.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'freq'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-26.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'difficulty'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'hist'</span>, breaks<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-27.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'discrim_diff'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'freq'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-28.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'boxplot'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'difficulty'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-29.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'discrim_diff'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-30.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'boxplot'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-31.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># item-level</span></span></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-30.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-31.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-32.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'bubble'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="empirical_plot-33.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-34.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, which.items <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">'prop'</span>, smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="empirical_plot-35.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># last plot very similar to model-based approach (though conditioned</span></span></span>
 <span class="r-in"><span><span class="co">#   on reduced total scores rather than scaled latent trait)</span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mirt.html">mirt</a></span><span class="op">(</span><span class="va">Science</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mod</span>, type<span class="op">=</span><span class="st">'trace'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-34.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="empirical_plot-36.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># when missing values present</span></span></span>
 <span class="r-in"><span><span class="va">Science</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">Science</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">8</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu">empirical_plot</span><span class="op">(</span><span class="va">Science</span>, type <span class="op">=</span> <span class="st">'freq'</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="empirical_plot-35.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="empirical_plot-37.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

@@ -225,6 +225,19 @@ empirical_plot(data, which.items=1:12, org.data=SAT12, smooth=TRUE)
 empirical_plot(data, which.items=13:32, org.data=SAT12, smooth=TRUE)
 
 
+# example where item 32 has two correct scoring keys, and item 31
+# is incorrectly scored (perhaps miskeyed)
+key <- cbind(c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,1,5),
+             c(rep(NA, 31), 3))
+data2 <- key2binary(SAT12, key=key)
+
+# item 30 is correct, but 31 proportions do not climb. Item 32 has two
+# highlighted correct answers
+empirical_plot(data2, which.items=30:32, org.data=SAT12)
+
+empirical_plot(data2, which.items=30:32, org.data=SAT12, smooth=TRUE)
+
+
 
 #################
 # polytomous response data
