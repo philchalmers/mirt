@@ -267,8 +267,8 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                cex=sqrt(tab$Freq) / max(sqrt(tab$Freq)) * 3,
                                main = if(is.null(main))
                                    paste0('Correlation = ', round(cor(dat.sub)[1,2], 2)) else main,
-                               xlab = paste0('Item ', which.items[1]),
-                               ylab=paste0('Item ', which.items[2]))
+                               xlab = colnames(data)[which.items[1]],
+                               ylab = colnames(data)[which.items[2]])
         return(plt)
     }
     if(is.null(which.items)){
