@@ -35,7 +35,7 @@ Returns a list containing the summary statistics
 \description{
 Function to compute generic item summary statistics that do not require
 prior fitting of IRT models. Contains information about sample sizes (\code{N}),
-number of observed categories (\code{K}), coefficient alpha
+number of observed categories (\code{K}), (standardized) coefficient alpha
 (and alpha if an item is removed; (\code{alpha_if_rm})),
 mean/SD and frequency of total scores,
 reduced item-total correlations (\code{r_if_rm}),

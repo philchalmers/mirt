@@ -2,7 +2,7 @@
 #'
 #' Function to compute generic item summary statistics that do not require
 #' prior fitting of IRT models. Contains information about sample sizes (\code{N}),
-#' number of observed categories (\code{K}), coefficient alpha
+#' number of observed categories (\code{K}), (standardized) coefficient alpha
 #' (and alpha if an item is removed; (\code{alpha_if_rm})),
 #' mean/SD and frequency of total scores,
 #' reduced item-total correlations (\code{r_if_rm}),
@@ -124,12 +124,13 @@ itemstats <- function(data, group = NULL,
             summary(mod)$r.squared
         })
         overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data),
-                              mean_total.score=mean(TS_miss, na.rm=TRUE),
-                              sd_total.score=sd(TS_miss, na.rm=TRUE),
+                              mean_total=mean(TS_miss, na.rm=TRUE),
+                              sd_total=sd(TS_miss, na.rm=TRUE),
                               ave.r=mean(rs[lower.tri(rs)]),
                               sd.r=sd(rs[lower.tri(rs)]),
                               alpha = CA(na.omit(data)))
-        overall$SEM.alpha <- with(overall, sd_total.score * sqrt(1-alpha))
+        overall$SEM.alpha <- with(overall, sd_total * sqrt(1-alpha))
+        overall$std.alpha <- CA(scale(na.omit(data)))
         rownames(overall) <- ""
         df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
                          K=apply(data, 2, \(x) length(unique(na.omit(x)))),
