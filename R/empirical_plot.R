@@ -189,6 +189,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                    panel = function(x, y, ...) {
                                        panel.xyplot(x, y, ...)
                                        panel.abline(h = discrim.cut, col='red', lty=2)
+                                       panel.abline(h = 0, col='black', lty=1)
                                    },
                                    main = if(is.null(main)) "Reduced Item-total Correlation" else main,
                                    xlab = 'Item', ylab='Correlation',
@@ -214,6 +215,8 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        panel.xyplot(x, y, ...)
                                        panel.text(x, y, labels = is$item[subscripts],
                                                   pos = 3, offset = 0.8, cex = 0.75, col = "black")
+                                       panel.abline(h = discrim.cut, col='red', lty=2)
+                                       panel.abline(h = 0, col='black', lty=1)
                                    },
                                    main = if(is.null(main)) "Difficulty by Discrimination" else main,
                                    xlab = 'Mean', ylab='Reduced item-total correlation', ...)
