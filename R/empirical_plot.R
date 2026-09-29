@@ -181,10 +181,10 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         is$item <- factor(rownames(is), levels=colnames(data))
         if(type == 'discrim'){
             if(sort){
-                is <- is[order(is$r_if_rm),]
+                is <- is[order(is$cor_if_rm),]
                 is$item <- factor(as.character(is$item), levels=as.character(is$item))
             }
-            plt <- lattice::xyplot(r_if_rm ~ item, is,
+            plt <- lattice::xyplot(cor_if_rm ~ item, is,
                                    pch = 16,
                                    panel = function(x, y, ...) {
                                        panel.xyplot(x, y, ...)
@@ -208,7 +208,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
             return(plt)
         }
         if(type == 'discrim_diff'){
-            plt <- lattice::xyplot(r_if_rm ~ mean, is,
+            plt <- lattice::xyplot(cor_if_rm ~ mean, is,
                                    pch = 16,
                                    panel = function(x, y, subscripts, ...) {
                                        panel.xyplot(x, y, ...)

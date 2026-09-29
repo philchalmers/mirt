@@ -5,7 +5,7 @@
 #' number of observed categories (\code{K}), (standardized) coefficient alpha
 #' (and alpha if an item is removed; (\code{alpha_if_rm})),
 #' mean/SD and frequency of total scores,
-#' reduced item-total correlations (\code{r_if_rm}),
+#' reduced item-total correlations (\code{cor_if_rm}),
 #' average/sd of the correlation between items,
 #' squared multiple correlation (\code{smc}), response frequencies,
 #' and conditional mean/sd information given the
@@ -136,7 +136,7 @@ itemstats <- function(data, group = NULL,
                          K=apply(data, 2, \(x) length(unique(na.omit(x)))),
                          mean=colMeans(data, na.rm = TRUE),
                          sd=apply(data, 2, sd, na.rm = TRUE),
-                         r_if_rm=itemcor_drop,
+                         cor_if_rm=itemcor_drop,
                          smc=smc,
                          alpha_if_rm=itemalpha)
     } else {

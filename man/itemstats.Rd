@@ -38,7 +38,7 @@ prior fitting of IRT models. Contains information about sample sizes (\code{N}),
 number of observed categories (\code{K}), (standardized) coefficient alpha
 (and alpha if an item is removed; (\code{alpha_if_rm})),
 mean/SD and frequency of total scores,
-reduced item-total correlations (\code{r_if_rm}),
+reduced item-total correlations (\code{cor_if_rm}),
 average/sd of the correlation between items,
 squared multiple correlation (\code{smc}), response frequencies,
 and conditional mean/sd information given the
