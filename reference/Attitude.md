@@ -63,15 +63,15 @@ itemstats(df)
 #>  54            3.852          1.053 -0.064 0.524 -0.849     1.433
 #> 
 #> $itemstats
-#>                        N K  mean    sd total.r total.r_if_rm alpha_if_rm
-#> hideous               54 2 0.444 0.502   0.056        -0.388      -0.340
-#> state_teaching        54 2 0.648 0.482  -0.290        -0.616      -0.046
-#> deterrent             54 2 0.667 0.476  -0.251        -0.587      -0.088
-#> believe_not.necessary 54 2 0.463 0.503   0.523         0.053      -1.260
-#> necessary_wish.not    54 2 0.481 0.504   0.669         0.249      -1.836
-#> must.have             54 2 0.444 0.502   0.591         0.141      -1.499
-#> justified             54 2 0.352 0.482   0.402        -0.061      -0.959
-#> deserved              54 2 0.352 0.482   0.402        -0.061      -0.959
+#>                        N K  mean    sd r_if_rm   smc alpha_if_rm
+#> hideous               54 2 0.444 0.502  -0.388 0.260      -0.340
+#> state_teaching        54 2 0.648 0.482  -0.616 0.725      -0.046
+#> deterrent             54 2 0.667 0.476  -0.587 0.754      -0.088
+#> believe_not.necessary 54 2 0.463 0.503   0.053 0.077      -1.260
+#> necessary_wish.not    54 2 0.481 0.504   0.249 0.749      -1.836
+#> must.have             54 2 0.444 0.502   0.141 0.783      -1.499
+#> justified             54 2 0.352 0.482  -0.061 0.666      -0.959
+#> deserved              54 2 0.352 0.482  -0.061 0.769      -0.959
 #> 
 #> $proportions
 #>                           0     1
