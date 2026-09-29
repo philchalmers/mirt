@@ -36,9 +36,12 @@ Returns a list containing the summary statistics
 Function to compute generic item summary statistics that do not require
 prior fitting of IRT models. Contains information about sample sizes (\code{N}),
 number of observed categories (\code{K}), coefficient alpha
-(and alpha if an item is deleted), mean/SD and frequency of total scores,
-reduced item-total correlations, average/sd of the correlation between items,
-response frequencies, and conditional mean/sd information given the
+(and alpha if an item is removed; (\code{alpha_if_rm})),
+mean/SD and frequency of total scores,
+reduced item-total correlations (\code{r_if_rm}),
+average/sd of the correlation between items,
+squared multiple correlation (\code{smc}), response frequencies,
+and conditional mean/sd information given the
 unweighted sum scores. Summary information involving the total scores
 only included for responses with no missing data to ensure the metric is
 meaningful, however standardized statistics (e.g., correlations) utilize

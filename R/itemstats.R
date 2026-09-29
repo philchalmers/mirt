@@ -3,9 +3,12 @@
 #' Function to compute generic item summary statistics that do not require
 #' prior fitting of IRT models. Contains information about sample sizes (\code{N}),
 #' number of observed categories (\code{K}), coefficient alpha
-#' (and alpha if an item is deleted), mean/SD and frequency of total scores,
-#' reduced item-total correlations, average/sd of the correlation between items,
-#' response frequencies, and conditional mean/sd information given the
+#' (and alpha if an item is removed; (\code{alpha_if_rm})),
+#' mean/SD and frequency of total scores,
+#' reduced item-total correlations (\code{r_if_rm}),
+#' average/sd of the correlation between items,
+#' squared multiple correlation (\code{smc}), response frequencies,
+#' and conditional mean/sd information given the
 #' unweighted sum scores. Summary information involving the total scores
 #' only included for responses with no missing data to ensure the metric is
 #' meaningful, however standardized statistics (e.g., correlations) utilize
@@ -106,13 +109,19 @@ itemstats <- function(data, group = NULL,
             ret <- suppressWarnings(cor(x, tsx, use = 'pairwise.complete.obs'))
             ret
         }, drop=TRUE)
-        itemcor <- apply(data, 2, function(x, drop){
-            tsx <- if(drop) TS-x else TS
-            suppressWarnings(cor(x, tsx, use = 'pairwise.complete.obs'))
-        }, drop=FALSE)
+        # itemcor <- apply(data, 2, function(x, drop){
+        #     tsx <- if(drop) TS-x else TS
+        #     suppressWarnings(cor(x, tsx, use = 'pairwise.complete.obs'))
+        # }, drop=FALSE)
         itemalpha <- sapply(1:ncol(data), function(x){
             tmpdat <- na.omit(data[,-x, drop=FALSE])
             CA(tmpdat)
+        })
+        no.omit_data <- na.omit(data)
+        smc <- sapply(1:ncol(data), function(x){
+            tmpdat <- no.omit_data[,-x, drop=FALSE]
+            mod <- lm(no.omit_data[,x] ~ ., as.data.frame(tmpdat))
+            summary(mod)$r.squared
         })
         overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data),
                               mean_total.score=mean(TS_miss, na.rm=TRUE),
@@ -126,8 +135,8 @@ itemstats <- function(data, group = NULL,
                          K=apply(data, 2, \(x) length(unique(na.omit(x)))),
                          mean=colMeans(data, na.rm = TRUE),
                          sd=apply(data, 2, sd, na.rm = TRUE),
-                         total.r=itemcor,
-                         total.r_if_rm=itemcor_drop,
+                         r_if_rm=itemcor_drop,
+                         smc=smc,
                          alpha_if_rm=itemalpha)
     } else {
         overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data))
