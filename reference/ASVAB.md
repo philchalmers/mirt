@@ -34,15 +34,15 @@ group <- sex:color
 itemstats(dat, group=group)
 #> $`Female:Black`
 #> $`Female:Black`$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  145            1.462          1.014 0.046 0.087 0.176     0.921
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  145      1.462    1.014 0.046 0.087 0.176     0.921     0.163
 #> 
 #> $`Female:Black`$itemstats
-#>          N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 145 2 0.503 0.502   0.213 0.047      -0.078
-#> Item.2 145 2 0.421 0.495   0.074 0.026       0.152
-#> Item.3 145 2 0.283 0.452   0.064 0.022       0.164
-#> Item.4 145 2 0.255 0.437  -0.011 0.013       0.256
+#>          N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 145 2 0.503 0.502     0.213 0.047      -0.078
+#> Item.2 145 2 0.421 0.495     0.074 0.026       0.152
+#> Item.3 145 2 0.283 0.452     0.064 0.022       0.164
+#> Item.4 145 2 0.255 0.437    -0.011 0.013       0.256
 #> 
 #> $`Female:Black`$proportions
 #>            0     1
@@ -54,15 +54,15 @@ itemstats(dat, group=group)
 #> 
 #> $`Female:White`
 #> $`Female:White`$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  228            2.118          1.255 0.208 0.037 0.512     0.877
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  228      2.118    1.255 0.208 0.037 0.512     0.877     0.512
 #> 
 #> $`Female:White`$itemstats
-#>          N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 228 2 0.618 0.487   0.277 0.083       0.464
-#> Item.2 228 2 0.605 0.490   0.312 0.100       0.432
-#> Item.3 228 2 0.487 0.501   0.284 0.085       0.458
-#> Item.4 228 2 0.408 0.493   0.339 0.117       0.408
+#>          N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 228 2 0.618 0.487     0.277 0.083       0.464
+#> Item.2 228 2 0.605 0.490     0.312 0.100       0.432
+#> Item.3 228 2 0.487 0.501     0.284 0.085       0.458
+#> Item.4 228 2 0.408 0.493     0.339 0.117       0.408
 #> 
 #> $`Female:White`$proportions
 #>            0     1
@@ -74,15 +74,15 @@ itemstats(dat, group=group)
 #> 
 #> $`Male:Black`
 #> $`Male:Black`$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  140            1.443          1.027 0.051 0.102  0.18      0.93
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  140      1.443    1.027 0.051 0.102  0.18      0.93     0.176
 #> 
 #> $`Male:Black`$itemstats
-#>          N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 140 2 0.443 0.499   0.158 0.035       0.029
-#> Item.2 140 2 0.400 0.492   0.133 0.022       0.071
-#> Item.3 140 2 0.329 0.471  -0.037 0.017       0.304
-#> Item.4 140 2 0.271 0.446   0.100 0.055       0.123
+#>          N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 140 2 0.443 0.499     0.158 0.035       0.029
+#> Item.2 140 2 0.400 0.492     0.133 0.022       0.071
+#> Item.3 140 2 0.329 0.471    -0.037 0.017       0.304
+#> Item.4 140 2 0.271 0.446     0.100 0.055       0.123
 #> 
 #> $`Male:Black`$proportions
 #>            0     1
@@ -94,15 +94,15 @@ itemstats(dat, group=group)
 #> 
 #> $`Male:White`
 #> $`Male:White`$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  263            2.475          1.361  0.34 0.075 0.673     0.779
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  263      2.475    1.361  0.34 0.075 0.673     0.779     0.674
 #> 
 #> $`Male:White`$itemstats
-#>          N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 263 2 0.741 0.439   0.475 0.230       0.596
-#> Item.2 263 2 0.635 0.482   0.361 0.136       0.667
-#> Item.3 263 2 0.593 0.492   0.481 0.248       0.588
-#> Item.4 263 2 0.506 0.501   0.507 0.282       0.569
+#>          N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 263 2 0.741 0.439     0.475 0.230       0.596
+#> Item.2 263 2 0.635 0.482     0.361 0.136       0.667
+#> Item.3 263 2 0.593 0.492     0.481 0.248       0.588
+#> Item.4 263 2 0.506 0.501     0.507 0.282       0.569
 #> 
 #> $`Male:White`$proportions
 #>            0     1

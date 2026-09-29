@@ -2208,8 +2208,8 @@ RCI(mod, predat = dat_pre[1:6,], postdat = dat_post[1:6,],
 # CTT version by omitting IRT model
     # Requires either sample or population SEM's as input
 (istats <- itemstats(dat_pre)$overall)
-#>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  1000           10.638          4.825 0.208 0.064 0.841     1.923
+#>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  1000     10.638    4.825 0.208 0.064 0.841     1.923      0.84
 SEM.alpha <- istats$SEM.alpha    # SEM estimate of dat_pre
 
 # assumes SEM.post = SEM.pre
@@ -4223,8 +4223,8 @@ RCI(predat = dat_pre, postdat = dat_post, SEM.pre=SEM.alpha,
 
 # allows SEM.post != SEM.pre
 (istats.post <- itemstats(dat_post)$overall)
-#>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  1000           10.515          4.977 0.224 0.066 0.854     1.901
+#>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  1000     10.515    4.977 0.224 0.066 0.854     1.901     0.853
 SEM.alpha.post <- istats.post$SEM.alpha
 
 RCI(predat = dat_pre, postdat = dat_post,
@@ -6399,11 +6399,11 @@ sigma <- matrix(c(1, .7, .7, 1), 2,2)
 dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = '2PL')
 colnames(dat) <- c(paste0('Item.pre_', 1:20), paste0('Item.post_', 1:20))
 itemstats(dat[,1:20])$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  500           10.422          4.699 0.192 0.059 0.827     1.956
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  500     10.422    4.699 0.192 0.059 0.827     1.956     0.826
 itemstats(dat[,21:40])$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  500            8.136          4.708   0.2 0.053 0.834      1.92
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  500      8.136    4.708   0.2 0.053 0.834      1.92     0.833
 
 # build equality constraints across time points
 constr <- NULL
@@ -6894,11 +6894,11 @@ sigma <- matrix(c(1, .7, .7, 1), 2,2)
 dat <- simdata(a, d, N, mu=mu, sigma=sigma, itemtype = 'graded')
 colnames(dat) <- c(paste0('Item.pre_', 1:20), paste0('Item.post_', 1:20))
 itemstats(dat[,1:20])$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  500            37.92         16.549 0.227 0.054 0.855     6.305
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  500      37.92   16.549 0.227 0.054 0.855     6.305     0.855
 itemstats(dat[,21:40])$overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  500           29.646         16.102 0.227 0.062 0.855     6.126
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  500     29.646   16.102 0.227 0.062 0.855     6.126     0.855
 
 # add missing response elements to dataset
 datM <- dat
@@ -6907,31 +6907,31 @@ datM[datM[,2] == 1, 2] <- 0
 datM[datM[,3] == 0, 3] <- 1
 itemstats(datM[,1:20])
 #> $overall
-#>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  500           37.506         16.121 0.224 0.055 0.851     6.214
+#>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  500     37.506   16.121 0.224 0.055 0.851     6.214     0.852
 #> 
 #> $itemstats
-#>               N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.pre_1  500 4 2.442 1.074   0.353 0.144       0.848
-#> Item.pre_2  500 4 1.138 1.642   0.348 0.155       0.848
-#> Item.pre_3  500 4 2.208 1.325   0.517 0.284       0.842
-#> Item.pre_4  500 5 2.280 1.653   0.358 0.155       0.848
-#> Item.pre_5  500 5 1.910 1.664   0.504 0.286       0.842
-#> Item.pre_6  500 5 2.676 1.562   0.421 0.208       0.845
-#> Item.pre_7  500 5 2.228 1.619   0.502 0.291       0.842
-#> Item.pre_8  500 5 1.764 1.639   0.412 0.206       0.846
-#> Item.pre_9  500 5 2.190 1.680   0.478 0.278       0.843
-#> Item.pre_10 500 5 0.896 1.395   0.396 0.170       0.846
-#> Item.pre_11 500 5 1.372 1.576   0.465 0.237       0.844
-#> Item.pre_12 500 5 1.582 1.675   0.459 0.237       0.844
-#> Item.pre_13 500 5 1.706 1.745   0.394 0.176       0.847
-#> Item.pre_14 500 5 1.592 1.680   0.494 0.280       0.842
-#> Item.pre_15 500 5 2.266 1.626   0.510 0.308       0.842
-#> Item.pre_16 500 5 2.148 1.511   0.408 0.211       0.846
-#> Item.pre_17 500 5 1.584 1.691   0.526 0.300       0.841
-#> Item.pre_18 500 5 1.198 1.431   0.416 0.207       0.846
-#> Item.pre_19 500 5 2.430 1.632   0.325 0.129       0.849
-#> Item.pre_20 500 5 1.896 1.552   0.418 0.205       0.845
+#>               N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.pre_1  500 4 2.442 1.074     0.353 0.144       0.848
+#> Item.pre_2  500 4 1.138 1.642     0.348 0.155       0.848
+#> Item.pre_3  500 4 2.208 1.325     0.517 0.284       0.842
+#> Item.pre_4  500 5 2.280 1.653     0.358 0.155       0.848
+#> Item.pre_5  500 5 1.910 1.664     0.504 0.286       0.842
+#> Item.pre_6  500 5 2.676 1.562     0.421 0.208       0.845
+#> Item.pre_7  500 5 2.228 1.619     0.502 0.291       0.842
+#> Item.pre_8  500 5 1.764 1.639     0.412 0.206       0.846
+#> Item.pre_9  500 5 2.190 1.680     0.478 0.278       0.843
+#> Item.pre_10 500 5 0.896 1.395     0.396 0.170       0.846
+#> Item.pre_11 500 5 1.372 1.576     0.465 0.237       0.844
+#> Item.pre_12 500 5 1.582 1.675     0.459 0.237       0.844
+#> Item.pre_13 500 5 1.706 1.745     0.394 0.176       0.847
+#> Item.pre_14 500 5 1.592 1.680     0.494 0.280       0.842
+#> Item.pre_15 500 5 2.266 1.626     0.510 0.308       0.842
+#> Item.pre_16 500 5 2.148 1.511     0.408 0.211       0.846
+#> Item.pre_17 500 5 1.584 1.691     0.526 0.300       0.841
+#> Item.pre_18 500 5 1.198 1.431     0.416 0.207       0.846
+#> Item.pre_19 500 5 2.430 1.632     0.325 0.129       0.849
+#> Item.pre_20 500 5 1.896 1.552     0.418 0.205       0.845
 #> 
 #> $proportions
 #>                 0     1     2     3     4

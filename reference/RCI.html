@@ -2249,8 +2249,8 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="co"># CTT version by omitting IRT model</span></span></span>
 <span class="r-in"><span>    <span class="co"># Requires either sample or population SEM's as input</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">istats</span> <span class="op">&lt;-</span> <span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat_pre</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1000           10.638          4.825 0.208 0.064 0.841     1.923</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000     10.638    4.825 0.208 0.064 0.841     1.923      0.84</span>
 <span class="r-in"><span><span class="va">SEM.alpha</span> <span class="op">&lt;-</span> <span class="va">istats</span><span class="op">$</span><span class="va">SEM.alpha</span>    <span class="co"># SEM estimate of dat_pre</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># assumes SEM.post = SEM.pre</span></span></span>
@@ -4264,8 +4264,8 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># allows SEM.post != SEM.pre</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">istats.post</span> <span class="op">&lt;-</span> <span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat_post</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1000           10.515          4.977 0.224 0.066 0.854     1.901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1000     10.515    4.977 0.224 0.066 0.854     1.901     0.853</span>
 <span class="r-in"><span><span class="va">SEM.alpha.post</span> <span class="op">&lt;-</span> <span class="va">istats.post</span><span class="op">$</span><span class="va">SEM.alpha</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">RCI</span><span class="op">(</span>predat <span class="op">=</span> <span class="va">dat_pre</span>, postdat <span class="op">=</span> <span class="va">dat_post</span>,</span></span>
@@ -6440,11 +6440,11 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">N</span>, mu<span class="op">=</span><span class="va">mu</span>, sigma<span class="op">=</span><span class="va">sigma</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'Item.pre_'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'Item.post_'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  500           10.422          4.699 0.192 0.059 0.827     1.956</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  500     10.422    4.699 0.192 0.059 0.827     1.956     0.826</span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">21</span><span class="op">:</span><span class="fl">40</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  500            8.136          4.708   0.2 0.053 0.834      1.92</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  500      8.136    4.708   0.2 0.053 0.834      1.92     0.833</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># build equality constraints across time points</span></span></span>
 <span class="r-in"><span><span class="va">constr</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
@@ -6935,11 +6935,11 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">N</span>, mu<span class="op">=</span><span class="va">mu</span>, sigma<span class="op">=</span><span class="va">sigma</span>, itemtype <span class="op">=</span> <span class="st">'graded'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'Item.pre_'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'Item.post_'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  500            37.92         16.549 0.227 0.054 0.855     6.305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  500      37.92   16.549 0.227 0.054 0.855     6.305     0.855</span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fl">21</span><span class="op">:</span><span class="fl">40</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">overall</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  500           29.646         16.102 0.227 0.062 0.855     6.126</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  500     29.646   16.102 0.227 0.062 0.855     6.126     0.855</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># add missing response elements to dataset</span></span></span>
 <span class="r-in"><span><span class="va">datM</span> <span class="op">&lt;-</span> <span class="va">dat</span></span></span>
@@ -6948,31 +6948,31 @@ Classical Test Theory and Item Response Theory in Individual Change Assessment.
 <span class="r-in"><span><span class="va">datM</span><span class="op">[</span><span class="va">datM</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">datM</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  500           37.506         16.121 0.224 0.055 0.851     6.214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  500     37.506   16.121 0.224 0.055 0.851     6.214     0.852</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               N K  mean    sd r_if_rm   smc alpha_if_rm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_1  500 4 2.442 1.074   0.353 0.144       0.848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_2  500 4 1.138 1.642   0.348 0.155       0.848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_3  500 4 2.208 1.325   0.517 0.284       0.842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_4  500 5 2.280 1.653   0.358 0.155       0.848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_5  500 5 1.910 1.664   0.504 0.286       0.842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_6  500 5 2.676 1.562   0.421 0.208       0.845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_7  500 5 2.228 1.619   0.502 0.291       0.842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_8  500 5 1.764 1.639   0.412 0.206       0.846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_9  500 5 2.190 1.680   0.478 0.278       0.843</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_10 500 5 0.896 1.395   0.396 0.170       0.846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_11 500 5 1.372 1.576   0.465 0.237       0.844</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_12 500 5 1.582 1.675   0.459 0.237       0.844</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_13 500 5 1.706 1.745   0.394 0.176       0.847</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_14 500 5 1.592 1.680   0.494 0.280       0.842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_15 500 5 2.266 1.626   0.510 0.308       0.842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_16 500 5 2.148 1.511   0.408 0.211       0.846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_17 500 5 1.584 1.691   0.526 0.300       0.841</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_18 500 5 1.198 1.431   0.416 0.207       0.846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_19 500 5 2.430 1.632   0.325 0.129       0.849</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_20 500 5 1.896 1.552   0.418 0.205       0.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               N K  mean    sd cor_if_rm   smc alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_1  500 4 2.442 1.074     0.353 0.144       0.848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_2  500 4 1.138 1.642     0.348 0.155       0.848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_3  500 4 2.208 1.325     0.517 0.284       0.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_4  500 5 2.280 1.653     0.358 0.155       0.848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_5  500 5 1.910 1.664     0.504 0.286       0.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_6  500 5 2.676 1.562     0.421 0.208       0.845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_7  500 5 2.228 1.619     0.502 0.291       0.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_8  500 5 1.764 1.639     0.412 0.206       0.846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_9  500 5 2.190 1.680     0.478 0.278       0.843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_10 500 5 0.896 1.395     0.396 0.170       0.846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_11 500 5 1.372 1.576     0.465 0.237       0.844</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_12 500 5 1.582 1.675     0.459 0.237       0.844</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_13 500 5 1.706 1.745     0.394 0.176       0.847</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_14 500 5 1.592 1.680     0.494 0.280       0.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_15 500 5 2.266 1.626     0.510 0.308       0.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_16 500 5 2.148 1.511     0.408 0.211       0.846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_17 500 5 1.584 1.691     0.526 0.300       0.841</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_18 500 5 1.198 1.431     0.416 0.207       0.846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_19 500 5 2.430 1.632     0.325 0.129       0.849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item.pre_20 500 5 1.896 1.552     0.418 0.205       0.845</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 0     1     2     3     4</span>

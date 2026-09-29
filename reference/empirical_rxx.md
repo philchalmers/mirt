@@ -49,16 +49,16 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 dat <- expand.table(deAyala)
 itemstats(dat)
 #> $overall
-#>      N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  19601            2.912          1.434 0.233 0.074 0.608     0.898
+#>      N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  19601      2.912    1.434 0.233 0.074 0.608     0.898     0.603
 #> 
 #> $itemstats
-#>            N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 19601 2 0.887 0.316   0.246 0.070       0.605
-#> Item.2 19601 2 0.644 0.479   0.439 0.199       0.510
-#> Item.3 19601 2 0.566 0.496   0.416 0.177       0.523
-#> Item.4 19601 2 0.427 0.495   0.405 0.171       0.529
-#> Item.5 19601 2 0.387 0.487   0.312 0.100       0.581
+#>            N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 19601 2 0.887 0.316     0.246 0.070       0.605
+#> Item.2 19601 2 0.644 0.479     0.439 0.199       0.510
+#> Item.3 19601 2 0.566 0.496     0.416 0.177       0.523
+#> Item.4 19601 2 0.427 0.495     0.405 0.171       0.529
+#> Item.5 19601 2 0.387 0.487     0.312 0.100       0.581
 #> 
 #> $proportions
 #>            0     1

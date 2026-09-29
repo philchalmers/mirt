@@ -33,16 +33,16 @@ head(dat)
 #> 6      0      0      0      0      0
 itemstats(dat)
 #> $overall
-#>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  1000            3.707          1.199 0.143 0.052 0.453     0.886
+#>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  1000      3.707    1.199 0.143 0.052 0.453     0.886     0.456
 #> 
 #> $itemstats
-#>           N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 1000 2 0.828 0.378   0.246 0.063       0.396
-#> Item.2 1000 2 0.658 0.475   0.247 0.081       0.394
-#> Item.3 1000 2 0.772 0.420   0.313 0.106       0.345
-#> Item.4 1000 2 0.606 0.489   0.223 0.053       0.415
-#> Item.5 1000 2 0.843 0.364   0.175 0.038       0.438
+#>           N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 1000 2 0.828 0.378     0.246 0.063       0.396
+#> Item.2 1000 2 0.658 0.475     0.247 0.081       0.394
+#> Item.3 1000 2 0.772 0.420     0.313 0.106       0.345
+#> Item.4 1000 2 0.606 0.489     0.223 0.053       0.415
+#> Item.5 1000 2 0.843 0.364     0.175 0.038       0.438
 #> 
 #> $proportions
 #>            0     1
@@ -133,16 +133,16 @@ head(dat)
 #> 6      0      0      0      0      0
 itemstats(dat)
 #> $overall
-#>     N mean_total.score sd_total.score ave.r  sd.r alpha SEM.alpha
-#>  1000            3.707          1.199 0.143 0.052 0.453     0.886
+#>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
+#>  1000      3.707    1.199 0.143 0.052 0.453     0.886     0.456
 #> 
 #> $itemstats
-#>           N K  mean    sd r_if_rm   smc alpha_if_rm
-#> Item.1 1000 2 0.828 0.378   0.246 0.063       0.396
-#> Item.2 1000 2 0.658 0.475   0.247 0.081       0.394
-#> Item.3 1000 2 0.772 0.420   0.313 0.106       0.345
-#> Item.4 1000 2 0.606 0.489   0.223 0.053       0.415
-#> Item.5 1000 2 0.843 0.364   0.175 0.038       0.438
+#>           N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 1000 2 0.828 0.378     0.246 0.063       0.396
+#> Item.2 1000 2 0.658 0.475     0.247 0.081       0.394
+#> Item.3 1000 2 0.772 0.420     0.313 0.106       0.345
+#> Item.4 1000 2 0.606 0.489     0.223 0.053       0.415
+#> Item.5 1000 2 0.843 0.364     0.175 0.038       0.438
 #> 
 #> $proportions
 #>            0     1

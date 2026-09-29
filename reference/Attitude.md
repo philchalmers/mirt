@@ -59,19 +59,19 @@ head(Attitude)
 df <- expand.table(Attitude)
 itemstats(df)
 #> $overall
-#>   N mean_total.score sd_total.score  ave.r  sd.r  alpha SEM.alpha
-#>  54            3.852          1.053 -0.064 0.524 -0.849     1.433
+#>   N mean_total sd_total  ave.r  sd.r  alpha SEM.alpha std.alpha
+#>  54      3.852    1.053 -0.064 0.524 -0.849     1.433    -0.926
 #> 
 #> $itemstats
-#>                        N K  mean    sd r_if_rm   smc alpha_if_rm
-#> hideous               54 2 0.444 0.502  -0.388 0.260      -0.340
-#> state_teaching        54 2 0.648 0.482  -0.616 0.725      -0.046
-#> deterrent             54 2 0.667 0.476  -0.587 0.754      -0.088
-#> believe_not.necessary 54 2 0.463 0.503   0.053 0.077      -1.260
-#> necessary_wish.not    54 2 0.481 0.504   0.249 0.749      -1.836
-#> must.have             54 2 0.444 0.502   0.141 0.783      -1.499
-#> justified             54 2 0.352 0.482  -0.061 0.666      -0.959
-#> deserved              54 2 0.352 0.482  -0.061 0.769      -0.959
+#>                        N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> hideous               54 2 0.444 0.502    -0.388 0.260      -0.340
+#> state_teaching        54 2 0.648 0.482    -0.616 0.725      -0.046
+#> deterrent             54 2 0.667 0.476    -0.587 0.754      -0.088
+#> believe_not.necessary 54 2 0.463 0.503     0.053 0.077      -1.260
+#> necessary_wish.not    54 2 0.481 0.504     0.249 0.749      -1.836
+#> must.have             54 2 0.444 0.502     0.141 0.783      -1.499
+#> justified             54 2 0.352 0.482    -0.061 0.666      -0.959
+#> deserved              54 2 0.352 0.482    -0.061 0.769      -0.959
 #> 
 #> $proportions
 #>                           0     1
