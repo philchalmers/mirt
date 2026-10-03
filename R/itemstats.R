@@ -129,7 +129,7 @@ itemstats <- function(data, group = NULL,
                               mean.r=mean(rs[lower.tri(rs)]),
                               sd.r=sd(rs[lower.tri(rs)]),
                               alpha = CA(na.omit(data)))
-        overall$SEM.alpha <- with(overall, sd_total * sqrt(1-alpha))
+        overall$SEM.alpha <- with(overall, sd.total * sqrt(1-alpha))
         overall$std.alpha <- CA(scale(na.omit(data)))
         rownames(overall) <- ""
         df <- data.frame(N=apply(data, 2, function(x) sum(!is.na(x))),
