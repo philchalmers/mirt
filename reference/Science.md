@@ -20,7 +20,24 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 
 # \donttest{
 itemstats(Science)
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+#> $overall
+#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
+#>  392     11.668    2.003  0.275 0.098 0.598      1.27     0.603
+#> 
+#> $itemstats
+#>           N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Comfort 392 4 3.120 0.588     0.352 0.148       0.552
+#> Work    392 4 2.722 0.807     0.332 0.164       0.567
+#> Future  392 4 2.990 0.757     0.488 0.248       0.437
+#> Benefit 392 4 2.837 0.802     0.363 0.165       0.541
+#> 
+#> $proportions
+#>             1     2     3     4
+#> Comfort 0.013 0.082 0.679 0.227
+#> Work    0.084 0.250 0.526 0.140
+#> Future  0.036 0.184 0.536 0.245
+#> Benefit 0.054 0.255 0.492 0.199
+#> 
 
 mod <- mirt(Science, 1)
 plot(mod, type = 'trace')

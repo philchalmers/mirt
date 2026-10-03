@@ -89,7 +89,32 @@ Type to the Measurement of Attitude. <em>Applied Psychological Measurement, 12</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6         0         1        0    1</span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="expand.table.html">expand.table</a></span><span class="op">(</span><span class="va">Attitude</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(substitute(expr), data, enclos = parent.frame()):</span> object 'sd_total' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   N mean.total sd.total mean.r  sd.r  alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  54      3.852    1.053 -0.064 0.524 -0.849     1.433    -0.926</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        N K  mean    sd cor_if_rm   smc alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hideous               54 2 0.444 0.502    -0.388 0.260      -0.340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state_teaching        54 2 0.648 0.482    -0.616 0.725      -0.046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> deterrent             54 2 0.667 0.476    -0.587 0.754      -0.088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> believe_not.necessary 54 2 0.463 0.503     0.053 0.077      -1.260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> necessary_wish.not    54 2 0.481 0.504     0.249 0.749      -1.836</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> must.have             54 2 0.444 0.502     0.141 0.783      -1.499</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> justified             54 2 0.352 0.482    -0.061 0.666      -0.959</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> deserved              54 2 0.352 0.482    -0.061 0.769      -0.959</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hideous               0.556 0.444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state_teaching        0.352 0.648</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> deterrent             0.333 0.667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> believe_not.necessary 0.537 0.463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> necessary_wish.not    0.519 0.481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> must.have             0.556 0.444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> justified             0.648 0.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> deserved              0.648 0.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>

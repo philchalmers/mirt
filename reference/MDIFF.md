@@ -60,11 +60,11 @@ MDIFF(mod)
 mod <- mirt(expand.table(LSAT7), 2)
 MDIFF(mod)
 #>           MDIFF_1
-#> Item.1 -1.2103317
-#> Item.2 -0.7903550
-#> Item.3 -0.8774211
-#> Item.4 -0.6408189
-#> Item.5 -2.4615861
+#> Item.1 -1.2104371
+#> Item.2 -0.7903226
+#> Item.3 -0.8774674
+#> Item.4 -0.6407928
+#> Item.5 -2.4614993
 
 # }
 ```

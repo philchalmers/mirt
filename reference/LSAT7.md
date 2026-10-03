@@ -32,7 +32,26 @@ head(dat)
 #> 5      0      0      0      0      0
 #> 6      0      0      0      0      0
 itemstats(dat)
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+#> $overall
+#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
+#>  1000      3.707    1.199  0.143 0.052 0.453     0.886     0.456
+#> 
+#> $itemstats
+#>           N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 1000 2 0.828 0.378     0.246 0.063       0.396
+#> Item.2 1000 2 0.658 0.475     0.247 0.081       0.394
+#> Item.3 1000 2 0.772 0.420     0.313 0.106       0.345
+#> Item.4 1000 2 0.606 0.489     0.223 0.053       0.415
+#> Item.5 1000 2 0.843 0.364     0.175 0.038       0.438
+#> 
+#> $proportions
+#>            0     1
+#> Item.1 0.172 0.828
+#> Item.2 0.342 0.658
+#> Item.3 0.228 0.772
+#> Item.4 0.394 0.606
+#> Item.5 0.157 0.843
+#> 
 
 # fit 2PL model for each item
 (mod <- mirt(dat))
@@ -83,9 +102,9 @@ coef(mod)
 # monotonic splines models (see Winsberg, Thissen, and Wainer, 1984)
 mod_monospline <- mirt(dat, itemtype = 'monospline')
 anova(mod, mod_monospline)
-#>                    AIC    SABIC       HQ      BIC    logLik   X2 df     p
-#> mod            5337.61 5354.927 5356.263 5386.688 -2658.805              
-#> mod_monospline 5355.36 5389.994 5392.666 5453.515 -2657.680 2.25 10 0.994
+#>                     AIC    SABIC       HQ      BIC    logLik   X2 df     p
+#> mod            5337.610 5354.927 5356.263 5386.688 -2658.805              
+#> mod_monospline 5355.361 5389.995 5392.666 5453.516 -2657.680 2.25 10 0.994
 plot(mod_monospline)
 
 
@@ -113,7 +132,26 @@ head(dat)
 #> 5      0      0      0      0      0
 #> 6      0      0      0      0      0
 itemstats(dat)
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+#> $overall
+#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
+#>  1000      3.707    1.199  0.143 0.052 0.453     0.886     0.456
+#> 
+#> $itemstats
+#>           N K  mean    sd cor_if_rm   smc alpha_if_rm
+#> Item.1 1000 2 0.828 0.378     0.246 0.063       0.396
+#> Item.2 1000 2 0.658 0.475     0.247 0.081       0.394
+#> Item.3 1000 2 0.772 0.420     0.313 0.106       0.345
+#> Item.4 1000 2 0.606 0.489     0.223 0.053       0.415
+#> Item.5 1000 2 0.843 0.364     0.175 0.038       0.438
+#> 
+#> $proportions
+#>            0     1
+#> Item.1 0.172 0.828
+#> Item.2 0.342 0.658
+#> Item.3 0.228 0.772
+#> Item.4 0.394 0.606
+#> Item.5 0.157 0.843
+#> 
 
 (mod <- mirt(dat, 1))
 #> 

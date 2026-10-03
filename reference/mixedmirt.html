@@ -254,7 +254,36 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">covdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">pseudoIQ</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(substitute(expr), data, enclos = parent.frame()):</span> object 'sd_total' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  750      4.655    2.346  0.166 0.133 0.671     1.345     0.666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N K  mean    sd cor_if_rm   smc alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  750 2 0.363 0.481     0.172 0.041       0.678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  750 2 0.335 0.472     0.485 0.265       0.617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  750 2 0.428 0.495     0.580 0.380       0.594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  750 2 0.512 0.500     0.021 0.019       0.708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  750 2 0.628 0.484     0.490 0.280       0.615</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  750 2 0.472 0.500     0.523 0.343       0.607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  750 2 0.385 0.487     0.286 0.101       0.657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  750 2 0.301 0.459     0.312 0.140       0.651</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  750 2 0.319 0.466     0.307 0.122       0.652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 750 2 0.912 0.283     0.180 0.038       0.670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.637 0.363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.665 0.335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.572 0.428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.488 0.512</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.372 0.628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.528 0.472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.615 0.385</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.699 0.301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.681 0.319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.088 0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use parallel computing</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="mirtCluster.html">mirtCluster</a></span><span class="op">(</span><span class="op">)</span></span></span>
@@ -644,11 +673,11 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="randef.html">randef</a></span><span class="op">(</span><span class="va">rmod3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">eff</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Theta: num [1:750, 1] -0.0547 0.0417 0.0505 0.0283 -0.0311 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Theta: num [1:750, 1] -0.0226 0.0607 0.0493 0.0651 -0.0269 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr "F1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ group: num [1:50, 1:2] -1.52 -1.14 -1.4 -1.49 -1.56 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ group: num [1:50, 1:2] -1.74 -1.13 -1.34 -1.62 -1.48 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:50] "G1" "G2" "G3" "G4" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:2] "group" "pseudoIQ"</span>
@@ -1670,7 +1699,36 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">covdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>group<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'g1'</span>,<span class="st">'g2'</span>,<span class="st">'g3'</span><span class="op">)</span>, each<span class="op">=</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, N<span class="op">=</span><span class="va">n</span><span class="op">*</span><span class="fl">3</span>, Theta<span class="op">=</span><span class="va">Theta</span>, itemtype <span class="op">=</span> <span class="st">'2PL'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(substitute(expr), data, enclos = parent.frame()):</span> object 'sd_total' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  900      6.932    2.347  0.197 0.035 0.709     1.266      0.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           N K  mean    sd cor_if_rm   smc alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  900 2 0.570 0.495     0.443 0.198       0.673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  900 2 0.689 0.463     0.351 0.133       0.690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  900 2 0.526 0.500     0.352 0.134       0.691</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  900 2 0.892 0.310     0.305 0.103       0.698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  900 2 0.748 0.435     0.367 0.140       0.687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  900 2 0.543 0.498     0.398 0.168       0.682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  900 2 0.759 0.428     0.379 0.152       0.685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  900 2 0.803 0.398     0.375 0.146       0.686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  900 2 0.777 0.417     0.337 0.125       0.692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 900 2 0.626 0.484     0.378 0.151       0.685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.430 0.570</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.311 0.689</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.474 0.526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.108 0.892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.252 0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.457 0.543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.241 0.759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.197 0.803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.223 0.777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.374 0.626</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># had we known the latent abilities, we could have computed the regression coefs</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Theta</span> <span class="op">~</span> <span class="va">covdata</span><span class="op">$</span><span class="va">group</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -1815,18 +1873,18 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $GroupPars</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     MEAN_1 MEAN_2   COV_11 COV_21   COV_22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      0 1.036003      0 1.103964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> par      0      0 1.039466      0 1.103862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lr.betas</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     F1        F2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 0.00000000 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2     0.72762513 0.9070611</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3     1.74760112 1.6959951</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     0.08418404 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      F1        F2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  0.00000000 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2      0.71491633 0.9040012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3      1.74283774 1.6962831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     -0.05567364 0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">mod2b</span> <span class="op">&lt;-</span> <span class="fu">mixedmirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">covdata</span>, <span class="va">model</span>, fixed <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">items</span>,</span></span>
 <span class="r-in"><span>        lr.fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>F1 <span class="op">=</span> <span class="op">~</span> <span class="va">group</span> <span class="op">+</span> <span class="va">contvar</span>, F2 <span class="op">=</span> <span class="op">~</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.1865, Max-Change = 0.1653, Max-Change = 0.1436, Max-Change = 0.1201, Max-Change = 0.0961, Max-Change = 0.0829, Max-Change = 0.0696, Max-Change = 0.0544, Max-Change = 0.0481, Max-Change = 0.0478, Max-Change = 0.0392, Max-Change = 0.0320, Max-Change = 0.0284, Max-Change = 0.0223, Max-Change = 0.0263, Max-Change = 0.0192, Max-Change = 0.0354, Max-Change = 0.0196, Max-Change = 0.0114, Max-Change = 0.0111, Max-Change = 0.0217, Max-Change = 0.0379, Max-Change = 0.0184, Max-Change = 0.0178, Max-Change = 0.0206, Max-Change = 0.0116, Max-Change = 0.0120, Max-Change = 0.0118, Max-Change = 0.0097, Max-Change = 0.0207, Max-Change = 0.0210, Max-Change = 0.0249, Max-Change = 0.0124, Max-Change = 0.0200, Max-Change = 0.0155, Max-Change = 0.0219, Max-Change = 0.0147, Max-Change = 0.0158, Max-Change = 0.0117, Max-Change = 0.0195, Max-Change = 0.0101, Max-Change = 0.0140, Max-Change = 0.0170, Max-Change = 0.0127, Max-Change = 0.0119, Max-Change = 0.0152, Max-Change = 0.0133, Max-Change = 0.0172, Max-Change = 0.0132, Max-Change = 0.0124, Max-Change = 0.0130, Max-Change = 0.0117, Max-Change = 0.0197, Max-Change = 0.0206, Max-Change = 0.0139, Max-Change = 0.0212, Max-Change = 0.0220, Max-Change = 0.0226, Max-Change = 0.0128, Max-Change = 0.0126, Max-Change = 0.0108, Max-Change = 0.0119, Max-Change = 0.0226, Max-Change = 0.0210, Max-Change = 0.0142, Max-Change = 0.0185, Max-Change = 0.0204, Max-Change = 0.0200, Max-Change = 0.0180, Max-Change = 0.0144, Max-Change = 0.0113, Max-Change = 0.0100, Max-Change = 0.0098, Max-Change = 0.0197, Max-Change = 0.0184, Max-Change = 0.0155, Max-Change = 0.0120, Max-Change = 0.0312, Max-Change = 0.0205, Max-Change = 0.0083, Max-Change = 0.0107, Max-Change = 0.0197, Max-Change = 0.0143, Max-Change = 0.0148, Max-Change = 0.0213, Max-Change = 0.0275, Max-Change = 0.0176, Max-Change = 0.0118, Max-Change = 0.0136, Max-Change = 0.0103, Max-Change = 0.0186, Max-Change = 0.0113, Max-Change = 0.0170, Max-Change = 0.0107, Max-Change = 0.0167, Max-Change = 0.0104, Max-Change = 0.0061, Max-Change = 0.0119, Max-Change = 0.0096, Max-Change = 0.0142, Max-Change = 0.0079, Max-Change = 0.0088, Max-Change = 0.0158, Max-Change = 0.0156, Max-Change = 0.0138, Max-Change = 0.0244, Max-Change = 0.0236, Max-Change = 0.0146, Max-Change = 0.0124, Max-Change = 0.0129, Max-Change = 0.0189, Max-Change = 0.0193, Max-Change = 0.0181, Max-Change = 0.0131, Max-Change = 0.0134, Max-Change = 0.0141, Max-Change = 0.0114, Max-Change = 0.0183, Max-Change = 0.0197, Max-Change = 0.0118, Max-Change = 0.0212, Max-Change = 0.0131, Max-Change = 0.0200, Max-Change = 0.0125, Max-Change = 0.0089, Max-Change = 0.0303, Max-Change = 0.0129, Max-Change = 0.0186, Max-Change = 0.0185, Max-Change = 0.0121, Max-Change = 0.0130, Max-Change = 0.0132, Max-Change = 0.0178, Max-Change = 0.0171, Max-Change = 0.0170, Max-Change = 0.0214, Max-Change = 0.0117, Max-Change = 0.0085, Max-Change = 0.0072, Max-Change = 0.0225, Max-Change = 0.0168, Max-Change = 0.0142, Max-Change = 0.0190, Max-Change = 0.0149, Max-Change = 0.0150, Max-Change = 0.0135, Max-Change = 0.0199, Max-Change = 0.0146, Max-Change = 0.0179, Max-Change = 0.0194, Max-Change = 0.0134, Max-Change = 0.0175, Max-Change = 0.0105, Max-Change = 0.0175, Max-Change = 0.0134, Max-Change = 0.0206, Max-Change = 0.0104, Max-Change = 0.0160, Max-Change = 0.0089, Max-Change = 0.0120, Max-Change = 0.0264, Max-Change = 0.0185, Max-Change = 0.0123, Max-Change = 0.0125, Max-Change = 0.0215, Max-Change = 0.0197, Max-Change = 0.0159, Max-Change = 0.0176, Max-Change = 0.0193, Max-Change = 0.0137, Max-Change = 0.0096, Max-Change = 0.0147, Max-Change = 0.0157, Max-Change = 0.0176, Max-Change = 0.0064, Max-Change = 0.0182, Max-Change = 0.0141, Max-Change = 0.0152, Max-Change = 0.0201, Max-Change = 0.0184, Max-Change = 0.0176, Max-Change = 0.0207, Max-Change = 0.0189, Max-Change = 0.0267, Max-Change = 0.0192, Max-Change = 0.0188, Max-Change = 0.0180, Max-Change = 0.0189, Max-Change = 0.0230, Max-Change = 0.0330, Max-Change = 0.0145, Max-Change = 0.0254, Max-Change = 0.0136, Max-Change = 0.0178, Max-Change = 0.0272, Max-Change = 0.0133, Max-Change = 0.0254, Max-Change = 0.0131, Max-Change = 0.0143, Max-Change = 0.0104, Max-Change = 0.0150, Max-Change = 0.0141, Max-Change = 0.0074, Max-Change = 0.0093, Max-Change = 0.0113, Max-Change = 0.0203, Max-Change = 0.0127, Max-Change = 0.0120, Max-Change = 0.0113, Max-Change = 0.0132, Max-Change = 0.0190, Max-Change = 0.0091, Max-Change = 0.0141, Max-Change = 0.0113, Max-Change = 0.0088, Max-Change = 0.0304, Max-Change = 0.0154, Max-Change = 0.0100, Max-Change = 0.0182, Max-Change = 0.0283, Max-Change = 0.0224, Max-Change = 0.0112, Max-Change = 0.0114, Max-Change = 0.0117, Max-Change = 0.0090, Max-Change = 0.0131, Max-Change = 0.0158, Max-Change = 0.0149, Max-Change = 0.0116, Max-Change = 0.0123, Max-Change = 0.0134, Max-Change = 0.0175, Max-Change = 0.0158, Max-Change = 0.0108, Max-Change = 0.0164, Max-Change = 0.0221, Max-Change = 0.0114, Max-Change = 0.0187, Max-Change = 0.0168, Max-Change = 0.0148, Max-Change = 0.0197, Max-Change = 0.0112, Max-Change = 0.0062, Max-Change = 0.0301, Max-Change = 0.0166, Max-Change = 0.0178, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0199, gam = 0.1057, Max-Change = 0.0092, gam = 0.0780, Max-Change = 0.0045, gam = 0.0629, Max-Change = 0.0034, gam = 0.0532, Max-Change = 0.0061, gam = 0.0464, Max-Change = 0.0033, gam = 0.0413, Max-Change = 0.0037, gam = 0.0374, Max-Change = 0.0034, gam = 0.0342, Max-Change = 0.0040, gam = 0.0316, Max-Change = 0.0029, gam = 0.0294, Max-Change = 0.0027, gam = 0.0276, Max-Change = 0.0025, gam = 0.0260, Max-Change = 0.0019, gam = 0.0246, Max-Change = 0.0019, gam = 0.0233, Max-Change = 0.0025, gam = 0.0222, Max-Change = 0.0014, gam = 0.0212, Max-Change = 0.0018, gam = 0.0203, Max-Change = 0.0015, gam = 0.0195, Max-Change = 0.0021, gam = 0.0188, Max-Change = 0.0014, gam = 0.0181, Max-Change = 0.0009, gam = 0.0175, Max-Change = 0.0005, gam = 0.0169, Max-Change = 0.0009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.2000, Max-Change = 0.1868, Max-Change = 0.1635, Max-Change = 0.1423, Max-Change = 0.1201, Max-Change = 0.0953, Max-Change = 0.0830, Max-Change = 0.0709, Max-Change = 0.0547, Max-Change = 0.0461, Max-Change = 0.0488, Max-Change = 0.0400, Max-Change = 0.0332, Max-Change = 0.0263, Max-Change = 0.0235, Max-Change = 0.0243, Max-Change = 0.0130, Max-Change = 0.0379, Max-Change = 0.0205, Max-Change = 0.0147, Max-Change = 0.0133, Max-Change = 0.0152, Max-Change = 0.0291, Max-Change = 0.0156, Max-Change = 0.0199, Max-Change = 0.0213, Max-Change = 0.0114, Max-Change = 0.0087, Max-Change = 0.0108, Max-Change = 0.0085, Max-Change = 0.0205, Max-Change = 0.0148, Max-Change = 0.0218, Max-Change = 0.0126, Max-Change = 0.0178, Max-Change = 0.0178, Max-Change = 0.0152, Max-Change = 0.0144, Max-Change = 0.0290, Max-Change = 0.0079, Max-Change = 0.0190, Max-Change = 0.0119, Max-Change = 0.0057, Max-Change = 0.0184, Max-Change = 0.0169, Max-Change = 0.0145, Max-Change = 0.0184, Max-Change = 0.0133, Max-Change = 0.0182, Max-Change = 0.0128, Max-Change = 0.0147, Max-Change = 0.0136, Max-Change = 0.0117, Max-Change = 0.0092, Max-Change = 0.0208, Max-Change = 0.0228, Max-Change = 0.0178, Max-Change = 0.0205, Max-Change = 0.0171, Max-Change = 0.0127, Max-Change = 0.0119, Max-Change = 0.0099, Max-Change = 0.0222, Max-Change = 0.0220, Max-Change = 0.0204, Max-Change = 0.0143, Max-Change = 0.0182, Max-Change = 0.0126, Max-Change = 0.0155, Max-Change = 0.0135, Max-Change = 0.0119, Max-Change = 0.0114, Max-Change = 0.0146, Max-Change = 0.0057, Max-Change = 0.0145, Max-Change = 0.0107, Max-Change = 0.0264, Max-Change = 0.0113, Max-Change = 0.0254, Max-Change = 0.0156, Max-Change = 0.0080, Max-Change = 0.0045, Max-Change = 0.0140, Max-Change = 0.0149, Max-Change = 0.0058, Max-Change = 0.0213, Max-Change = 0.0293, Max-Change = 0.0148, Max-Change = 0.0135, Max-Change = 0.0130, Max-Change = 0.0125, Max-Change = 0.0175, Max-Change = 0.0177, Max-Change = 0.0222, Max-Change = 0.0113, Max-Change = 0.0155, Max-Change = 0.0140, Max-Change = 0.0065, Max-Change = 0.0127, Max-Change = 0.0168, Max-Change = 0.0101, Max-Change = 0.0078, Max-Change = 0.0096, Max-Change = 0.0195, Max-Change = 0.0164, Max-Change = 0.0111, Max-Change = 0.0214, Max-Change = 0.0136, Max-Change = 0.0094, Max-Change = 0.0070, Max-Change = 0.0111, Max-Change = 0.0206, Max-Change = 0.0107, Max-Change = 0.0157, Max-Change = 0.0176, Max-Change = 0.0125, Max-Change = 0.0118, Max-Change = 0.0085, Max-Change = 0.0211, Max-Change = 0.0297, Max-Change = 0.0119, Max-Change = 0.0140, Max-Change = 0.0140, Max-Change = 0.0131, Max-Change = 0.0120, Max-Change = 0.0096, Max-Change = 0.0241, Max-Change = 0.0104, Max-Change = 0.0197, Max-Change = 0.0188, Max-Change = 0.0165, Max-Change = 0.0201, Max-Change = 0.0096, Max-Change = 0.0163, Max-Change = 0.0180, Max-Change = 0.0192, Max-Change = 0.0238, Max-Change = 0.0066, Max-Change = 0.0071, Max-Change = 0.0128, Max-Change = 0.0198, Max-Change = 0.0162, Max-Change = 0.0192, Max-Change = 0.0118, Max-Change = 0.0165, Max-Change = 0.0159, Max-Change = 0.0119, Max-Change = 0.0175, Max-Change = 0.0205, Max-Change = 0.0122, Max-Change = 0.0170, Max-Change = 0.0140, Max-Change = 0.0069, Max-Change = 0.0148, Max-Change = 0.0131, Max-Change = 0.0105, Max-Change = 0.0192, Max-Change = 0.0182, Max-Change = 0.0221, Max-Change = 0.0138, Max-Change = 0.0267, Max-Change = 0.0187, Max-Change = 0.0125, Max-Change = 0.0146, Max-Change = 0.0136, Max-Change = 0.0231, Max-Change = 0.0101, Max-Change = 0.0195, Max-Change = 0.0226, Max-Change = 0.0168, Max-Change = 0.0199, Max-Change = 0.0245, Max-Change = 0.0306, Max-Change = 0.0202, Max-Change = 0.0150, Max-Change = 0.0076, Max-Change = 0.0227, Max-Change = 0.0237, Max-Change = 0.0157, Max-Change = 0.0071, Max-Change = 0.0182, Max-Change = 0.0160, Max-Change = 0.0217, Max-Change = 0.0226, Max-Change = 0.0238, Max-Change = 0.0148, Max-Change = 0.0166, Max-Change = 0.0198, Max-Change = 0.0168, Max-Change = 0.0146, Max-Change = 0.0124, Max-Change = 0.0148, Max-Change = 0.0216, Max-Change = 0.0144, Max-Change = 0.0188, Max-Change = 0.0273, Max-Change = 0.0180, Max-Change = 0.0252, Max-Change = 0.0119, Max-Change = 0.0237, Max-Change = 0.0094, Max-Change = 0.0098, Max-Change = 0.0129, Max-Change = 0.0140, Max-Change = 0.0195, Max-Change = 0.0100, Max-Change = 0.0286, Max-Change = 0.0097, Max-Change = 0.0208, Max-Change = 0.0159, Max-Change = 0.0146, Max-Change = 0.0112, Max-Change = 0.0143, Max-Change = 0.0124, Max-Change = 0.0114, Max-Change = 0.0129, Max-Change = 0.0178, Max-Change = 0.0233, Max-Change = 0.0210, Max-Change = 0.0197, Max-Change = 0.0179, Max-Change = 0.0189, Max-Change = 0.0107, Max-Change = 0.0182, Max-Change = 0.0072, Max-Change = 0.0154, Max-Change = 0.0153, Max-Change = 0.0085, Max-Change = 0.0112, Max-Change = 0.0120, Max-Change = 0.0111, Max-Change = 0.0174, Max-Change = 0.0131, Max-Change = 0.0184, Max-Change = 0.0211, Max-Change = 0.0167, Max-Change = 0.0168, Max-Change = 0.0094, Max-Change = 0.0184, Max-Change = 0.0089, Max-Change = 0.0149, Max-Change = 0.0132, Max-Change = 0.0099, Max-Change = 0.0145, Max-Change = 0.0159, Max-Change = 0.0102, Max-Change = 0.0168, gam = 0.0000, Max-Change = 0.0000, gam = 0.1778, Max-Change = 0.0178, gam = 0.1057, Max-Change = 0.0052, gam = 0.0780, Max-Change = 0.0053, gam = 0.0629, Max-Change = 0.0044, gam = 0.0532, Max-Change = 0.0055, gam = 0.0464, Max-Change = 0.0027, gam = 0.0413, Max-Change = 0.0039, gam = 0.0374, Max-Change = 0.0017, gam = 0.0342, Max-Change = 0.0039, gam = 0.0316, Max-Change = 0.0015, gam = 0.0294, Max-Change = 0.0019, gam = 0.0276, Max-Change = 0.0014, gam = 0.0260, Max-Change = 0.0021, gam = 0.0246, Max-Change = 0.0027, gam = 0.0233, Max-Change = 0.0024, gam = 0.0222, Max-Change = 0.0023, gam = 0.0212, Max-Change = 0.0025, gam = 0.0203, Max-Change = 0.0016, gam = 0.0195, Max-Change = 0.0014, gam = 0.0188, Max-Change = 0.0015, gam = 0.0181, Max-Change = 0.0012, gam = 0.0175, Max-Change = 0.0013, gam = 0.0169, Max-Change = 0.0012, gam = 0.0164, Max-Change = 0.0020, gam = 0.0159, Max-Change = 0.0020, gam = 0.0154, Max-Change = 0.0009, gam = 0.0150, Max-Change = 0.0010, gam = 0.0146, Max-Change = 0.0010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating information matrix...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1845,22 +1903,22 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Theta</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      F1   F2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F1 1.01 0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.00 1.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F2 0.00 1.12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LATENT REGRESSION FIXED EFFECTS:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                F1    F2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 0.000 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2     0.697 0.805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3     1.734 1.610</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     0.074 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 F1    F2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  0.000 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2      0.698 0.818</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3      1.756 1.617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> contvar     -0.058 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Std.Error_F1 Std.Error_F2   z_F1   z_F2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)           NA           NA     NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2            0.179        0.108  3.893  7.469</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3            0.162        0.105 10.719 15.304</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> contvar            0.051           NA  1.454     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg2            0.258        0.115  2.705  7.127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> groupg3            0.338        0.141  5.194 11.492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> contvar            0.083           NA -0.697     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">####################################################</span></span></span>
 <span class="r-in"><span><span class="co">## Simulated Multilevel Rasch Model</span></span></span>
@@ -1879,7 +1937,36 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span><span class="va">covdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="simdata.html">simdata</a></span><span class="op">(</span><span class="va">a</span>,<span class="va">d</span>,<span class="va">N</span>, itemtype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">'2PL'</span>,<span class="fl">10</span><span class="op">)</span>, Theta<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">Theta</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="itemstats.html">itemstats</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(substitute(expr), data, enclos = parent.frame()):</span> object 'sd_total' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $overall</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2000      5.414    2.749   0.25 0.019 0.769     1.321     0.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $itemstats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            N K  mean    sd cor_if_rm   smc alpha_if_rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  2000 2 0.424 0.494     0.433 0.190       0.750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  2000 2 0.560 0.497     0.467 0.220       0.745</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  2000 2 0.373 0.484     0.405 0.165       0.754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  2000 2 0.781 0.414     0.402 0.166       0.754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  2000 2 0.577 0.494     0.447 0.202       0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  2000 2 0.378 0.485     0.434 0.191       0.750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  2000 2 0.598 0.491     0.428 0.184       0.751</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  2000 2 0.652 0.476     0.432 0.188       0.750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  2000 2 0.620 0.486     0.440 0.196       0.749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 2000 2 0.453 0.498     0.445 0.200       0.748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $proportions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_1  0.577 0.424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_2  0.440 0.560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_3  0.627 0.373</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_4  0.219 0.781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_5  0.424 0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_6  0.622 0.378</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_7  0.402 0.598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_8  0.348 0.652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_9  0.380 0.620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Item_10 0.547 0.453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># null model</span></span></span>
 <span class="r-in"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu">mixedmirt</span><span class="op">(</span><span class="va">dat</span>, <span class="va">covdata</span>, <span class="fl">1</span>, fixed <span class="op">=</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">items</span>, random <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span><span class="op">|</span><span class="va">group</span><span class="op">)</span></span></span>
@@ -2054,12 +2141,12 @@ Package for the R Environment. <em>Journal of Statistical Software, 48</em>(6), 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="randef.html">randef</a></span><span class="op">(</span><span class="va">mod3</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>, <span class="va">random_intercept</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         group random_intercept</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G1  0.9997052       1.51178117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G2 -0.4837858       0.38984324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G3 -0.3466713      -0.62124058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G4 -2.3341264      -2.21469989</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G5  0.7046320       1.12493092</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G6 -0.6614240      -0.04493361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G1  1.0938305       1.51178117</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G2 -0.6186766       0.38984324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G3 -0.3848789      -0.62124058</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G4 -2.2211660      -2.21469989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G5  0.6158949       1.12493092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> G6 -0.4928253      -0.04493361</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

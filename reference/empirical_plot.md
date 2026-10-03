@@ -176,24 +176,24 @@ empirical_plot(data, type = 'hist')
 empirical_plot(data, type = 'hist', breaks=20)
 
 empirical_plot(data, type = 'discrim')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, type = 'discrim', sort=TRUE)
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, type = 'difficulty')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, type = 'difficulty', sort=TRUE)
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, type = 'discrim_diff')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, type = 'alpha_rm')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, type = 'freq')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 
 
 # items 1, 2 and 5
 empirical_plot(data, c(1, 2, 5), type = 'freq')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(data, c(1, 2, 5))
 
 empirical_plot(data, c(1, 2, 5), smooth = TRUE)
@@ -246,11 +246,11 @@ empirical_plot(Science)
 empirical_plot(Science, type = 'hist', breaks=20)
 
 empirical_plot(Science, type = 'freq')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(Science, type = 'difficulty')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(Science, type = 'discrim_diff')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 empirical_plot(Science, type = 'boxplot')
 
 
@@ -274,7 +274,7 @@ plot(mod, type='trace')
 Science[1:3, 1] <- NA
 Science[6:8, 2] <- NA
 empirical_plot(Science, type = 'freq')
-#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
+
 
 
 # }
