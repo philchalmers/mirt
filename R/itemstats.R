@@ -124,9 +124,9 @@ itemstats <- function(data, group = NULL,
             summary(mod)$r.squared
         })
         overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data),
-                              mean_total=mean(TS_miss, na.rm=TRUE),
-                              sd_total=sd(TS_miss, na.rm=TRUE),
-                              ave.r=mean(rs[lower.tri(rs)]),
+                              mean.total=mean(TS_miss, na.rm=TRUE),
+                              sd.total=sd(TS_miss, na.rm=TRUE),
+                              mean.r=mean(rs[lower.tri(rs)]),
                               sd.r=sd(rs[lower.tri(rs)]),
                               alpha = CA(na.omit(data)))
         overall$SEM.alpha <- with(overall, sd_total * sqrt(1-alpha))
