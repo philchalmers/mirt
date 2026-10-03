@@ -651,36 +651,7 @@ rho[1:2,2] <- NA   # first two items have K=2 categories
 
 dat <- simdata(a, d, 1000, 'hcm', rho=rho)
 itemstats(dat)
-#> $overall
-#>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
-#>  1000      8.522    2.709 0.015 0.212 0.119     2.543     0.131
-#> 
-#> $itemstats
-#>            N K  mean    sd cor_if_rm   smc alpha_if_rm
-#> Item_1  1000 2 0.475 0.500    -0.057 0.073       0.146
-#> Item_2  1000 2 0.343 0.475     0.186 0.128       0.056
-#> Item_3  1000 3 0.574 0.796     0.079 0.188       0.082
-#> Item_4  1000 3 0.989 0.895     0.231 0.223      -0.038
-#> Item_5  1000 3 1.159 0.867    -0.158 0.112       0.234
-#> Item_6  1000 3 0.911 0.874     0.214 0.169      -0.021
-#> Item_7  1000 3 1.001 0.884     0.228 0.169      -0.034
-#> Item_8  1000 3 0.965 0.896    -0.300 0.213       0.323
-#> Item_9  1000 3 0.886 0.895     0.213 0.243      -0.023
-#> Item_10 1000 3 1.219 0.861    -0.110 0.103       0.204
-#> 
-#> $proportions
-#>             0     1     2
-#> Item_1  0.525 0.475    NA
-#> Item_2  0.657 0.343    NA
-#> Item_3  0.620 0.186 0.194
-#> Item_4  0.406 0.199 0.395
-#> Item_5  0.309 0.223 0.468
-#> Item_6  0.430 0.229 0.341
-#> Item_7  0.390 0.219 0.391
-#> Item_8  0.419 0.197 0.384
-#> Item_9  0.464 0.186 0.350
-#> Item_10 0.285 0.211 0.504
-#> 
+#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
 # mod <- mirt(dat, 1, 'hcm')
 # list(est=coef(mod, simplify=TRUE)$items, pop=cbind(a, d, log(rho)))
 

@@ -58,26 +58,7 @@ SLF
 # full dataset
 full <- expand.table(SLF)
 itemstats(full)
-#> $overall
-#>     N mean_total sd_total ave.r  sd.r alpha SEM.alpha std.alpha
-#>  1490      2.166    1.324 0.187 0.076 0.536     0.902     0.534
-#> 
-#> $itemstats
-#>            N K  mean    sd cor_if_rm   smc alpha_if_rm
-#> social1 1490 2 0.131 0.337     0.251 0.080       0.510
-#> social2 1490 2 0.672 0.470     0.227 0.057       0.527
-#> social3 1490 2 0.668 0.471     0.335 0.139       0.458
-#> social4 1490 2 0.413 0.493     0.420 0.191       0.397
-#> social5 1490 2 0.282 0.450     0.281 0.088       0.493
-#> 
-#> $proportions
-#>             0     1
-#> social1 0.869 0.131
-#> social2 0.328 0.672
-#> social3 0.332 0.668
-#> social4 0.587 0.413
-#> social5 0.718 0.282
-#> 
+#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
 
 mod <- mirt(full)
 plot(mod, type = 'trace')

@@ -27,26 +27,7 @@ head(dat)
 #> 5      0      0      0      0      1
 #> 6      0      0      0      0      1
 itemstats(dat)
-#> $overall
-#>     N mean_total sd_total ave.r sd.r alpha SEM.alpha std.alpha
-#>  1000      3.819    1.035 0.077 0.03 0.295     0.869     0.293
-#> 
-#> $itemstats
-#>           N K  mean    sd cor_if_rm   smc alpha_if_rm
-#> Item_1 1000 2 0.924 0.265     0.113 0.015       0.275
-#> Item_2 1000 2 0.709 0.454     0.153 0.025       0.238
-#> Item_3 1000 2 0.553 0.497     0.173 0.032       0.217
-#> Item_4 1000 2 0.763 0.425     0.144 0.023       0.246
-#> Item_5 1000 2 0.870 0.336     0.122 0.018       0.266
-#> 
-#> $proportions
-#>            0     1
-#> Item_1 0.076 0.924
-#> Item_2 0.291 0.709
-#> Item_3 0.447 0.553
-#> Item_4 0.237 0.763
-#> Item_5 0.130 0.870
-#> 
+#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
 
 model <- 'F = 1-5
          CONSTRAIN = (1-5, a1)'

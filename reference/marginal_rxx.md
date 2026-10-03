@@ -58,7 +58,7 @@ marginal_rxx(mod)
 
 # compare to alpha
 itemstats(dat)$overall$alpha
-#> [1] 0.6077281
+#> Error in eval(substitute(expr), data, enclos = parent.frame()): object 'sd_total' not found
 
 # \donttest{
 
