@@ -3,7 +3,7 @@
 #' Computes the projective IRT model parameters either using the
 #' logistic kernel approximation approaches (Stucky et al. 2013;
 #' Ip 2010/Doebler and Doebler, 2022) or the MML-PIRT approach by
-#' Chalmers et al. (in review). These return information pertaining to a
+#' Chalmers et al. (2026). These return information pertaining to a
 #' lower-dimensional (often unidimensional) IRT model
 #' that has marginalized one or more latent traits.
 #' When the method is the MML-PIRT a working \code{mirt} object will be
@@ -72,9 +72,9 @@
 #'
 #' @references
 #'
-#' Chalmers, R. P., Falk, C. F., Reise, S. P. (in review).
+#' Chalmers, R. P., Falk, C. F., and Reise, S. P. (2026).
 #' A General Approach for Estimating Projective IRT Models.
-#' Applied Psychological Measurement.
+#' Applied Psychological Measurement. DOI: \code{10.1177/01466216261474955}
 #'
 #' Doebler, A., and Doebler, P. (2022). Rotate and Project: Measurement of the
 #' Intended Concept with Unidimensional Item Response Theory.

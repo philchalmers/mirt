@@ -21,6 +21,10 @@
 #' @param itemfreq character vector indicting whether to
 #'   include item response \code{"proportions"} or \code{"counts"}
 #'   for each item. If set to \code{'none'} then this will be omitted
+#' @param ts_fun function to use to build the linear composite score?
+#'   Recommend inputs are \code{\link{rowSums}} (default) and
+#'   \code{\link{rowMeans}}, and must include an argument \code{na.rm},
+#'   though users may define their own as well
 #' @param use_ts logical; include information that is conditional on a
 #'   meaningful total score?
 #' @param ts.tables logical; include mean/sd summary information
@@ -42,6 +46,10 @@
 #' head(LSAT7full)
 #' itemstats(LSAT7full)
 #' itemstats(LSAT7full, itemfreq='counts')
+#'
+#' # composite score expressed as a mean
+#' itemstats(LSAT7full)$overall
+#' itemstats(LSAT7full, ts_fun=rowMeans)$overall
 #'
 #' # behaviour with missing data
 #' LSAT7full[1:5,1] <- NA
@@ -79,6 +87,7 @@
 #' itemstats(merged)
 #'
 itemstats <- function(data, group = NULL,
+                      ts_fun = rowSums,
                       use_ts=TRUE,
                       itemfreq="proportions",
                       ts.tables=FALSE){
@@ -98,8 +107,8 @@ itemstats <- function(data, group = NULL,
     all_NA <- apply(is.na(data), 2, all)
     removed <- colnames(data)[all_NA]
     data <- data[ ,!all_NA]
-    TS <- rowSums(data, na.rm = TRUE)
-    TS_miss <- rowSums(data)
+    TS <- ts_fun(data, na.rm = TRUE)
+    TS_miss <- ts_fun(data, na.rm=FALSE)
     rs <- suppressWarnings(try(cor(data, use = "pairwise.complete.obs"),
                                silent = TRUE))
     if(is(rs, 'try-err')) rs <- NaN
@@ -126,9 +135,11 @@ itemstats <- function(data, group = NULL,
         overall <- data.frame(N.complete=sum(!is.na(TS_miss)), N=nrow(data),
                               mean.total=mean(TS_miss, na.rm=TRUE),
                               sd.total=sd(TS_miss, na.rm=TRUE),
+                              std.alpha = NA,
+                              alpha = CA(na.omit(data)),
+                              SEM.alpha = NA,
                               mean.r=mean(rs[lower.tri(rs)]),
-                              sd.r=sd(rs[lower.tri(rs)]),
-                              alpha = CA(na.omit(data)))
+                              sd.r=sd(rs[lower.tri(rs)]))
         overall$SEM.alpha <- with(overall, sd.total * sqrt(1-alpha))
         overall$std.alpha <- CA(scale(na.omit(data)))
         rownames(overall) <- ""

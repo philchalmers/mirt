@@ -7,6 +7,7 @@
 itemstats(
   data,
   group = NULL,
+  ts_fun = rowSums,
   use_ts = TRUE,
   itemfreq = "proportions",
   ts.tables = FALSE
@@ -18,6 +19,11 @@ with the response patterns}
 
 \item{group}{optional grouping variable to condition on when computing
 summary information}
+
+\item{ts_fun}{function to use to build the linear composite score?
+Recommend inputs are \code{\link{rowSums}} (default) and
+\code{\link{rowMeans}}, and must include an argument \code{na.rm},
+though users may define their own as well}
 
 \item{use_ts}{logical; include information that is conditional on a
 meaningful total score?}
@@ -54,6 +60,10 @@ LSAT7full <- expand.table(LSAT7)
 head(LSAT7full)
 itemstats(LSAT7full)
 itemstats(LSAT7full, itemfreq='counts')
+
+# composite score expressed as a mean
+itemstats(LSAT7full)$overall
+itemstats(LSAT7full, ts_fun=rowMeans)$overall
 
 # behaviour with missing data
 LSAT7full[1:5,1] <- NA
