@@ -1,7 +1,8 @@
 #' Function to generate empirical unidimensional item and test plots
 #'
 #' Given a dataset containing item responses this function will construct empirical graphics
-#' using the observed responses, potentially conditioned on the (reduced) total score. When individual
+#' using the observed responses, potentially conditioned on the (reduced)
+#' total/composite score. When individual
 #' item plots are requested then the total score will be formed without the item of interest
 #' (i.e., the total score without that item).
 #'
@@ -46,6 +47,7 @@
 #' @param par.settings plotting argument passed to \code{\link[lattice]{lattice}}
 #' @param discrim.cut horizontal cut-off line to use when \code{type = 'discrim'}. Default
 #'   is .2 (to omit, use \code{NA})
+#' @param ts_fun similar to the same argument in \code{\link{itemstats}}
 #' @param ... additional arguments to be passed to \code{\link[lattice]{lattice}} and \code{coef()}
 #' @keywords empirical plots
 #' @export empirical_plot
@@ -65,6 +67,7 @@
 #' # test plot
 #' empirical_plot(data)
 #' empirical_plot(data, type = 'hist')
+#' empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 #' empirical_plot(data, type = 'hist', breaks=20)
 #' empirical_plot(data, type = 'discrim')
 #' empirical_plot(data, type = 'discrim', sort=TRUE)
@@ -137,7 +140,7 @@
 #' }
 empirical_plot <- function(data, which.items = NULL, type = 'prop',
                            smooth = FALSE, sort=FALSE, formula = resp ~ s(TS, k = 5),
-                           org.data = NULL,
+                           org.data = NULL, ts_fun = rowSums,
                            discrim.cut = .2, main = NULL, par.strip.text = list(cex = 0.7),
                            par.settings = list(strip.background = list(col = '#9ECAE1'),
                                                strip.border = list(col = "black")),
@@ -169,14 +172,14 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         names(key) <- colnames(data)
         key <- key[which.items]
     }
-    TS <- rowSums(data)
+    TS <- ts_fun(data)
     ord <- order(TS)
     data <- data[ord,]
     org.data <- org.data[ord,]
     TS <- TS[ord]
     tab <- table(TS)
     if(type %in% c('discrim', 'difficulty', 'discrim_diff', 'freq', 'alpha_rm')){
-        isummary <- itemstats(data)
+        isummary <- itemstats(data, ts_fun=ts_fun)
         is <- isummary$itemstats
         is$item <- factor(rownames(is), levels=colnames(data))
         if(type == 'discrim'){
@@ -279,14 +282,14 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
             prop <- cumsum(tab) / nrow(data)
             df <- data.frame(TS=as.integer(names(tab)), P=prop)
             plt <- lattice::xyplot(P ~ TS, df, type = 'b',
-                                   main = if(is.null(main)) 'Cumulative Total Score' else main,
-                                   xlab = 'Total Score', ylab = 'Cumulative Proportion',
+                                   main = if(is.null(main)) 'Cumulative Composite Score' else main,
+                                   xlab = 'Composite Score', ylab = 'Cumulative Proportion',
                                    ylim = c(-.1, 1.1), ...)
         } else if(type == 'hist'){
             df <- data.frame(TS=as.integer(names(tab)), freq=as.integer(tab))
             plt <- lattice::histogram(TS,
-                                      main = if(is.null(main)) 'Total Scores' else main,
-                                      xlab = 'Total Score', ylab = 'Frequency', ...)
+                                      main = if(is.null(main)) 'Composite Scores' else main,
+                                      xlab = 'Composite Score', ylab = 'Frequency', ...)
         }
     } else {
         stopifnot(all(which.items >= 1L & which.items <= ncol(data)))
@@ -294,7 +297,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         nms <- colnames(data)
         for(i in 1:length(which.items)){
             item <- org.data[, which.items[i]]
-            TS <- rowSums(data[ ,-which.items[i]])
+            TS <- ts_fun(data[ ,-which.items[i]])
             ord <- order(TS)
             item <- item[ord]
             TS <- TS[ord]
@@ -334,7 +337,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
         if(type == "boxplot"){
             plt <- lattice::bwplot(TS ~ cat | item, df,
                                    main = if(is.null(main)) "Item Category by Composite" else main,
-                                   xlab = 'Item Category', ylab = 'Reduced Total Score',
+                                   xlab = 'Item Category', ylab = 'Reduced Composite Score',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
                                    auto.key=auto.key, ...)
         } else if(type == 'prop'){
@@ -350,8 +353,8 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        }
                                        panel.xyplot(x, y, groups=groups, lwd=lwd, lty=lty, ...)
                                    },
-                                   main = if(is.null(main)) "Item-total Plot" else main,
-                                   xlab = 'Reduced Total Score', ylab = 'Proportion',
+                                   main = if(is.null(main)) "Item-Composite Plot" else main,
+                                   xlab = 'Reduced Composite Score', ylab = 'Proportion',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
                                    auto.key=auto.key, ylim = c(-.1, 1.1), ...)
         }
