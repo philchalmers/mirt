@@ -194,7 +194,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        panel.abline(h = discrim.cut, col='red', lty=2)
                                        panel.abline(h = 0, col='black', lty=1)
                                    },
-                                   main = if(is.null(main)) "Reduced Item-total Correlation" else main,
+                                   main = if(is.null(main)) "Reduced Item-Total Correlation" else main,
                                    xlab = 'Item', ylab='Correlation',
                                    scales = list(x = list(rot = 90)), ...)
             return(plt)
@@ -353,7 +353,7 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        }
                                        panel.xyplot(x, y, groups=groups, lwd=lwd, lty=lty, ...)
                                    },
-                                   main = if(is.null(main)) "Item-Composite Plot" else main,
+                                   main = if(is.null(main)) "Item-Total Plot" else main,
                                    xlab = 'Reduced Composite Score', ylab = 'Proportion',
                                    par.strip.text=par.strip.text, par.settings=par.settings,
                                    auto.key=auto.key, ylim = c(-.1, 1.1), ...)
