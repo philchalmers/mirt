@@ -758,8 +758,8 @@ group <- c(rep('D1', N), rep('D2', N))
 itemstats(dat, group = group)
 #> $D1
 #> $D1$overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  1000     18.724    8.602  0.127 0.045 0.675     4.905     0.685
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1000     18.724    8.602     0.685 0.675     4.905  0.127 0.045
 #> 
 #> $D1$itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -800,8 +800,8 @@ itemstats(dat, group = group)
 #> 
 #> $D2
 #> $D2$overall
-#>     N mean.total sd.total mean.r sd.r alpha SEM.alpha std.alpha
-#>  1000     36.468   10.636  0.156 0.07 0.738     5.443     0.735
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r sd.r
+#>  1000     36.468   10.636     0.735 0.738     5.443  0.156 0.07
 #> 
 #> $D2$itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -867,8 +867,8 @@ coef(mod, simplify=TRUE)
 #> Item_7  0.808 -0.528 -1.016 -1.596 -2.279
 #> Item_8  0.806 -0.968 -1.857 -2.464 -2.868
 #> Item_9  0.763 -0.956 -1.606 -1.939 -2.627
-#> Item_10 0.711 -0.134 -0.540 -1.217 -1.684
-#> Item_11 0.865  0.652 -0.042 -0.422 -1.334
+#> Item_10 0.710 -0.134 -0.541 -1.217 -1.684
+#> Item_11 0.865  0.651 -0.042 -0.422 -1.334
 #> Item_12 0.626  2.086  1.495  0.595 -0.004
 #> Item_13 0.817 -0.650 -1.517 -1.804 -2.315
 #> Item_14 1.013  1.392  0.965  0.106 -0.289
@@ -895,8 +895,8 @@ coef(mod, simplify=TRUE)
 #> Item_7  0.808 -0.528 -1.016 -1.596 -2.279
 #> Item_8  0.806 -0.968 -1.857 -2.464 -2.868
 #> Item_9  0.763 -0.956 -1.606 -1.939 -2.627
-#> Item_10 0.711 -0.134 -0.540 -1.217 -1.684
-#> Item_11 0.865  0.652 -0.042 -0.422 -1.334
+#> Item_10 0.710 -0.134 -0.541 -1.217 -1.684
+#> Item_11 0.865  0.651 -0.042 -0.422 -1.334
 #> Item_12 0.626  2.086  1.495  0.595 -0.004
 #> Item_13 0.817 -0.650 -1.517 -1.804 -2.315
 #> Item_14 1.013  1.392  0.965  0.106 -0.289
@@ -920,7 +920,7 @@ if(FALSE)
 DIF(mod, which.par = c('a1', 'd2', 'd3', 'd4'),
     items2test=1, scheme = 'drop')
 #>        groups converged   AIC  SABIC     HQ    BIC    X2 df    p adj_p
-#> Item_1  D1,D2      TRUE 4.828 14.524 13.054 27.232 3.172  4 0.53  0.53
+#> Item_1  D1,D2      TRUE 4.829 14.524 13.055 27.232 3.171  4 0.53  0.53
 
 # plot resulting DIF test
 difmod <- DIF(mod, which.par = c('a1', 'd2', 'd3', 'd4'),

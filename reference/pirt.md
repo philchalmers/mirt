@@ -2,8 +2,8 @@
 
 Computes the projective IRT model parameters either using the logistic
 kernel approximation approaches (Stucky et al. 2013; Ip 2010/Doebler and
-Doebler, 2022) or the MML-PIRT approach by Chalmers et al. (in review).
-These return information pertaining to a lower-dimensional (often
+Doebler, 2022) or the MML-PIRT approach by Chalmers et al. (2026). These
+return information pertaining to a lower-dimensional (often
 unidimensional) IRT model that has marginalized one or more latent
 traits. When the method is the MML-PIRT a working `mirt` object will be
 returned, otherwise if the target is the logistic kernel approximations
@@ -113,9 +113,9 @@ the Oakes' identity given then marginalized E-table.
 
 ## References
 
-Chalmers, R. P., Falk, C. F., Reise, S. P. (in review). A General
+Chalmers, R. P., Falk, C. F., and Reise, S. P. (2026). A General
 Approach for Estimating Projective IRT Models. Applied Psychological
-Measurement.
+Measurement. DOI: `10.1177/01466216261474955`
 
 Doebler, A., and Doebler, P. (2022). Rotate and Project: Measurement of
 the Intended Concept with Unidimensional Item Response Theory. from
@@ -166,8 +166,8 @@ nfact <- ncol(as)
 dat <- simdata(as, d, 10000, itemtype='2PL')
 itemstats(dat)
 #> $overall
-#>      N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  10000      7.959    3.909  0.262 0.112 0.844     1.546     0.842
+#>      N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  10000      7.959    3.909     0.842 0.844     1.546  0.262 0.112
 #> 
 #> $itemstats
 #>             N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -695,8 +695,8 @@ nfact <- ncol(as)
 dat <- simdata(as, d, 10000, itemtype='graded')
 itemstats(dat)
 #> $overall
-#>      N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  10000     26.966   15.804  0.347 0.136  0.89     5.238     0.888
+#>      N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  10000     26.966   15.804     0.888  0.89     5.238  0.347 0.136
 #> 
 #> $itemstats
 #>             N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -987,18 +987,18 @@ coef(pmod, simplify=TRUE)$items
 #>               a1         d1          d2          d3         d4
 #> Item_1  1.280008  0.1732170 -0.07002767 -0.53417980 -0.9409135
 #> Item_2  1.315191  0.5998649  0.13587842 -0.32671495 -0.6391106
-#> Item_3  1.303869  0.6185420  0.15973878 -0.19881025 -0.6559757
+#> Item_3  1.303869  0.6185420  0.15973877 -0.19881025 -0.6559757
 #> Item_4  1.335326  0.8908705  0.57185737  0.11680519 -0.3175738
 #> Item_5  1.308973  0.3976045  0.01652285 -0.31250812 -0.7761254
-#> Item_6  1.181507  0.7863039  0.11927966 -0.25766747 -0.9651147
-#> Item_7  1.207576  0.1278581 -0.33703930 -0.84513155 -1.4977836
+#> Item_6  1.181507  0.7863039  0.11927966 -0.25766748 -0.9651147
+#> Item_7  1.207576  0.1278581 -0.33703930 -0.84513156 -1.4977836
 #> Item_8  1.273044 -0.8094754 -1.23520319 -1.67926675 -2.3882348
 #> Item_9  1.243136  0.8794215  0.44426741 -0.05298856 -0.5311225
-#> Item_10 1.236073  1.0076403  0.29762851 -0.38882876 -0.7632976
+#> Item_10 1.236073  1.0076403  0.29762851 -0.38882875 -0.7632976
 #> Item_11 1.259522  1.3305386  0.45062206 -0.37786140 -1.0024057
 #> Item_12 1.185618  1.2155620  0.39767975 -0.23771001 -1.0178430
 #> Item_13 1.253923  0.2774169 -0.33920361 -1.12554158 -1.8571556
-#> Item_14 1.288643 -0.8867206 -1.61378183 -2.29629709 -3.1447259
+#> Item_14 1.288643 -0.8867206 -1.61378184 -2.29629710 -3.1447259
 #> Item_15 1.261319  1.1567007  0.62571208 -0.13584032 -0.7784188
 
 # Logistic approximations (parameters only)
@@ -1199,8 +1199,8 @@ sigma[1,2] <- sigma[2,1] <- .4
 dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 itemstats(dataset)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  2000      7.086    3.077  0.108 0.058 0.662      1.79      0.66
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  2000      7.086    3.077      0.66 0.662      1.79  0.108 0.058
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm

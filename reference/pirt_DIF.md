@@ -21,8 +21,8 @@ dat <- dat1[,-1]
 itemstats(dat, group=group)
 #> $G1
 #> $G1$overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  2500      8.059    4.171  0.238 0.074 0.833     1.702     0.833
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  2500      8.059    4.171     0.833 0.833     1.702  0.238 0.074
 #> 
 #> $G1$itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -65,8 +65,8 @@ itemstats(dat, group=group)
 #> 
 #> $G2
 #> $G2$overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  2500      8.585    2.652  0.193 0.078 0.738     1.358     0.741
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  2500      8.585    2.652     0.741 0.738     1.358  0.193 0.078
 #> 
 #> $G2$itemstats
 #>            N  K   mean        sd cor_if_rm       smc alpha_if_rm

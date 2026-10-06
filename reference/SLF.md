@@ -59,8 +59,8 @@ SLF
 full <- expand.table(SLF)
 itemstats(full)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  1490      2.166    1.324  0.187 0.076 0.536     0.902     0.534
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1490      2.166    1.324     0.534 0.536     0.902  0.187 0.076
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm

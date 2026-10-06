@@ -28,8 +28,8 @@ head(dat)
 #> 6      0      0      0      0      1
 itemstats(dat)
 #> $overall
-#>     N mean.total sd.total mean.r sd.r alpha SEM.alpha std.alpha
-#>  1000      3.819    1.035  0.077 0.03 0.295     0.869     0.293
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r sd.r
+#>  1000      3.819    1.035     0.293 0.295     0.869  0.077 0.03
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -57,7 +57,7 @@ model <- 'F = 1-5
 #> 
 #> Full-information item factor analysis with 1 factor(s).
 #> Converged within 1e-04 tolerance after 12 EM iterations.
-#> mirt version: 1.47.5 
+#> mirt version: 1.48 
 #> M-step optimizer: BFGS 
 #> EM acceleration: Ramsay 
 #> Number of rectangular quadrature: 61
@@ -131,7 +131,7 @@ coef(mod2, simplify=TRUE)
 #> F1 0.572
 #> 
 sqrt(coef(mod2)$GroupPars[2]) #latent SD equal to the slope in mod
-#> [1] 0.7561798
+#> [1] 0.7561877
 
 # }
 ```

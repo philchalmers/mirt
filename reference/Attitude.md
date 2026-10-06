@@ -59,8 +59,8 @@ head(Attitude)
 df <- expand.table(Attitude)
 itemstats(df)
 #> $overall
-#>   N mean.total sd.total mean.r  sd.r  alpha SEM.alpha std.alpha
-#>  54      3.852    1.053 -0.064 0.524 -0.849     1.433    -0.926
+#>   N mean.total sd.total std.alpha  alpha SEM.alpha mean.r  sd.r
+#>  54      3.852    1.053    -0.926 -0.849     1.433 -0.064 0.524
 #> 
 #> $itemstats
 #>                        N K  mean    sd cor_if_rm   smc alpha_if_rm

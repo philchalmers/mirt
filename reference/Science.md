@@ -21,8 +21,8 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 # \donttest{
 itemstats(Science)
 #> $overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  392     11.668    2.003  0.275 0.098 0.598      1.27     0.603
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  392     11.668    2.003     0.603 0.598      1.27  0.275 0.098
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm

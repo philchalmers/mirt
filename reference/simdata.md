@@ -652,8 +652,8 @@ rho[1:2,2] <- NA   # first two items have K=2 categories
 dat <- simdata(a, d, 1000, 'hcm', rho=rho)
 itemstats(dat)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  1000      8.522    2.709  0.015 0.212 0.119     2.543     0.131
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1000      8.522    2.709     0.131 0.119     2.543  0.015 0.212
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm

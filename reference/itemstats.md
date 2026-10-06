@@ -18,6 +18,7 @@ data to ensure the metric is meaningful, however standardized statistics
 itemstats(
   data,
   group = NULL,
+  ts_fun = rowSums,
   use_ts = TRUE,
   itemfreq = "proportions",
   ts.tables = FALSE
@@ -34,6 +35,13 @@ itemstats(
 
   optional grouping variable to condition on when computing summary
   information
+
+- ts_fun:
+
+  function to use to build the linear composite score? Recommend inputs
+  are [`rowSums`](https://rdrr.io/r/base/colSums.html) (default) and
+  [`rowMeans`](https://rdrr.io/r/base/colSums.html), and must include an
+  argument `na.rm`, though users may define their own as well
 
 - use_ts:
 
@@ -85,8 +93,8 @@ head(LSAT7full)
 #> 6      0      0      0      0      0
 itemstats(LSAT7full)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  1000      3.707    1.199  0.143 0.052 0.453     0.886     0.456
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1000      3.707    1.199     0.456 0.453     0.886  0.143 0.052
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -106,8 +114,8 @@ itemstats(LSAT7full)
 #> 
 itemstats(LSAT7full, itemfreq='counts')
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  1000      3.707    1.199  0.143 0.052 0.453     0.886     0.456
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1000      3.707    1.199     0.456 0.453     0.886  0.143 0.052
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -126,12 +134,20 @@ itemstats(LSAT7full, itemfreq='counts')
 #> Item.5 157 843
 #> 
 
+# composite score expressed as a mean
+itemstats(LSAT7full)$overall
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1000      3.707    1.199     0.456 0.453     0.886  0.143 0.052
+itemstats(LSAT7full, ts_fun=rowMeans)$overall
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  1000      0.741     0.24     0.456 0.453     0.177  0.143 0.052
+
 # behaviour with missing data
 LSAT7full[1:5,1] <- NA
 itemstats(LSAT7full)
 #> $overall
-#>  N.complete    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>         995 1000      3.726    1.172  0.137 0.052 0.426     0.888     0.427
+#>  N.complete    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>         995 1000      3.726    1.172     0.427 0.426     0.888  0.137 0.052
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -262,8 +278,8 @@ dat <- key2binary(SAT12,
                            5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
 itemstats(dat, ts.tables=TRUE)
 #> $overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  600     18.202    5.054  0.108 0.075 0.798     2.272     0.795
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  600     18.202    5.054     0.795 0.798     2.272  0.108 0.075
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -417,8 +433,8 @@ group <- gl(2, 300, labels=c('G1', 'G2'))
 itemstats(dat, group=group)
 #> $G1
 #> $G1$overall
-#>    N mean.total sd.total mean.r sd.r alpha SEM.alpha std.alpha
-#>  300     17.987    5.051  0.107 0.09 0.796     2.282     0.793
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r sd.r
+#>  300     17.987    5.051     0.793 0.796     2.282  0.107 0.09
 #> 
 #> $G1$itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -493,8 +509,8 @@ itemstats(dat, group=group)
 #> 
 #> $G2
 #> $G2$overall
-#>    N mean.total sd.total mean.r sd.r alpha SEM.alpha std.alpha
-#>  300     18.417    5.056   0.11 0.08   0.8     2.262     0.799
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r sd.r
+#>  300     18.417    5.056     0.799   0.8     2.262   0.11 0.08
 #> 
 #> $G2$itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -573,8 +589,8 @@ itemstats(dat, group=group)
 # polytomous data example
 itemstats(Science)
 #> $overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  392     11.668    2.003  0.275 0.098 0.598      1.27     0.603
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  392     11.668    2.003     0.603 0.598      1.27  0.275 0.098
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -596,8 +612,8 @@ newScience <- Science
 newScience[1:5,1] <- NA
 itemstats(newScience)
 #> $overall
-#>  N.complete   N mean.total sd.total mean.r sd.r alpha SEM.alpha std.alpha
-#>         387 392     11.672    2.011  0.276  0.1 0.605     1.264     0.609
+#>  N.complete   N mean.total sd.total std.alpha alpha SEM.alpha mean.r sd.r
+#>         387 392     11.672    2.011     0.609 0.605     1.264  0.276  0.1
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -618,8 +634,8 @@ itemstats(newScience)
 newScience[,1] <- ifelse(Science[,1] == 1, NA, Science[,1])
 itemstats(newScience)
 #> $overall
-#>  N.complete   N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>         387 392     11.731    1.917   0.26 0.092 0.572     1.254     0.577
+#>  N.complete   N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>         387 392     11.731    1.917     0.577 0.572     1.254   0.26 0.092
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -639,8 +655,8 @@ itemstats(newScience)
 merged <- data.frame(LSAT7full[1:392,], Science)
 itemstats(merged)
 #> $overall
-#>  N.complete   N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>         387 392     14.331    2.231  0.037 0.167 0.379     1.759     0.245
+#>  N.complete   N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>         387 392     14.331    2.231     0.245 0.379     1.759  0.037 0.167
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm

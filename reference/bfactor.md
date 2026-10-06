@@ -496,8 +496,8 @@ sigma <- diag(3)
 dataset <- simdata(a,d,5000,itemtype=items,sigma=sigma)
 itemstats(dataset)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  5000     15.116    4.495  0.175 0.034 0.733     2.323     0.748
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  5000     15.116    4.495     0.748 0.733     2.323  0.175 0.034
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -599,8 +599,8 @@ sigma <- diag(c(1, .5, 1, .5))
 dataset <- simdata(a,d,2000,itemtype=rep('2PL', 12),sigma=sigma)
 itemstats(dataset)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  2000          6    2.929  0.175 0.068 0.717     1.558     0.717
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  2000          6    2.929     0.717 0.717     1.558  0.175 0.068
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -747,8 +747,8 @@ sigma[1,2] <- sigma[2,1] <- .4
 dataset <- simdata(a,d,2000,itemtype=items,sigma=sigma)
 itemstats(dataset)
 #> $overall
-#>     N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  2000      7.049    3.089   0.11 0.055 0.666     1.786     0.664
+#>     N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  2000      7.049    3.089     0.664 0.666     1.786   0.11 0.055
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -938,10 +938,10 @@ head(eaps_all)
 maps <- fscores(simmod, method = 'MAP')
 head(maps)
 #>              G1          G2         S1           S2          S3
-#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322964 -0.02778408
-#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330675 -0.39920301
-#> [3,] -0.5799759  1.15757308 -0.4439183 -0.448083235  0.41194310
-#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136241
+#> [1,]  0.5135992 -0.03912492 -0.2056159  0.419322965 -0.02778409
+#> [2,] -0.6774244 -0.87671079 -0.2194985 -0.077330672 -0.39920301
+#> [3,] -0.5799759  1.15757307 -0.4439183 -0.448083235  0.41194310
+#> [4,]  0.8983374  0.57134257 -0.2333886  0.967336777 -0.26136242
 #> [5,]  0.6156947  1.23660200  0.6409160 -0.005859276  0.35081023
 #> [6,] -0.6658814 -0.93907518 -0.4207128  0.209132981 -0.45956922
 

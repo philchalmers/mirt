@@ -49,8 +49,8 @@ Phil Chalmers <rphilip.chalmers@gmail.com>
 dat <- expand.table(deAyala)
 itemstats(dat)
 #> $overall
-#>      N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  19601      2.912    1.434  0.233 0.074 0.608     0.898     0.603
+#>      N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  19601      2.912    1.434     0.603 0.608     0.898  0.233 0.074
 #> 
 #> $itemstats
 #>            N K  mean    sd cor_if_rm   smc alpha_if_rm

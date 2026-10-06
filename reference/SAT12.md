@@ -165,8 +165,8 @@ head(dat)
 #> [6,]       0       0       1       0
 itemstats(dat)
 #> $overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  600     18.202    5.054  0.108 0.075 0.798     2.272     0.795
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  600     18.202    5.054     0.795 0.798     2.272  0.108 0.075
 #> 
 #> $itemstats
 #>           N K  mean    sd cor_if_rm   smc alpha_if_rm

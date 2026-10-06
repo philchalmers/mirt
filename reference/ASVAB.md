@@ -34,8 +34,8 @@ group <- sex:color
 itemstats(dat, group=group)
 #> $`Female:Black`
 #> $`Female:Black`$overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  145      1.462    1.014  0.046 0.087 0.176     0.921     0.163
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  145      1.462    1.014     0.163 0.176     0.921  0.046 0.087
 #> 
 #> $`Female:Black`$itemstats
 #>          N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -54,8 +54,8 @@ itemstats(dat, group=group)
 #> 
 #> $`Female:White`
 #> $`Female:White`$overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  228      2.118    1.255  0.208 0.037 0.512     0.877     0.512
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  228      2.118    1.255     0.512 0.512     0.877  0.208 0.037
 #> 
 #> $`Female:White`$itemstats
 #>          N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -74,8 +74,8 @@ itemstats(dat, group=group)
 #> 
 #> $`Male:Black`
 #> $`Male:Black`$overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  140      1.443    1.027  0.051 0.102  0.18      0.93     0.176
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  140      1.443    1.027     0.176  0.18      0.93  0.051 0.102
 #> 
 #> $`Male:Black`$itemstats
 #>          N K  mean    sd cor_if_rm   smc alpha_if_rm
@@ -94,8 +94,8 @@ itemstats(dat, group=group)
 #> 
 #> $`Male:White`
 #> $`Male:White`$overall
-#>    N mean.total sd.total mean.r  sd.r alpha SEM.alpha std.alpha
-#>  263      2.475    1.361   0.34 0.075 0.673     0.779     0.674
+#>    N mean.total sd.total std.alpha alpha SEM.alpha mean.r  sd.r
+#>  263      2.475    1.361     0.674 0.673     0.779   0.34 0.075
 #> 
 #> $`Male:White`$itemstats
 #>          N K  mean    sd cor_if_rm   smc alpha_if_rm

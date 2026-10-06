@@ -2,9 +2,9 @@
 
 Given a dataset containing item responses this function will construct
 empirical graphics using the observed responses, potentially conditioned
-on the (reduced) total score. When individual item plots are requested
-then the total score will be formed without the item of interest (i.e.,
-the total score without that item).
+on the (reduced) total/composite score. When individual item plots are
+requested then the total score will be formed without the item of
+interest (i.e., the total score without that item).
 
 ## Usage
 
@@ -17,6 +17,7 @@ empirical_plot(
   sort = FALSE,
   formula = resp ~ s(TS, k = 5),
   org.data = NULL,
+  ts_fun = rowSums,
   discrim.cut = 0.2,
   main = NULL,
   par.strip.text = list(cex = 0.7),
@@ -108,6 +109,11 @@ empirical_plot(
   analyses. This will also automatically add size and linetype changes
   to highlight the detected scored categories
 
+- ts_fun:
+
+  similar to the same argument in
+  [`itemstats`](https://philchalmers.github.io/mirt/reference/itemstats.md)
+
 - discrim.cut:
 
   horizontal cut-off line to use when `type = 'discrim'`. Default is .2
@@ -172,6 +178,8 @@ data <- key2binary(SAT12,
 empirical_plot(data)
 
 empirical_plot(data, type = 'hist')
+
+empirical_plot(data, type = 'hist', ts_fun=rowMeans)
 
 empirical_plot(data, type = 'hist', breaks=20)
 
