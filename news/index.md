@@ -2,6 +2,8 @@
 
 ## Changes in mirt 1.48
 
+CRAN release: 2026-10-06
+
 - [`itemstats()`](https://philchalmers.github.io/mirt/reference/itemstats.md)
   gains `ts_fun` argument to indicate how the composite score should be
   formed
