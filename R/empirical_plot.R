@@ -167,8 +167,8 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
     key <- NULL
     if(!identical(data, org.data)){
         key <- lapply(1:ncol(data), \(i){
-            pick <- na.omit(unique(org.data[data[,i] == 1, i]))
-            which(sort(unique(org.data[,i])) %in% pick) })
+            na.omit(unique(org.data[data[,i] == 1, i]))
+        })
         names(key) <- colnames(data)
         key <- key[which.items]
     }
@@ -348,8 +348,10 @@ empirical_plot <- function(data, which.items = NULL, type = 'prop',
                                        lwd <- lty <- rep(1, length(unique(groups)))
                                        if(is.list(key)){
                                            lty[] <- 2
-                                           lwd[key[[current_panel]]] <- 2
-                                           lty[key[[current_panel]]] <- 1
+                                           item <- levels(df$item)[current_panel]
+                                           pick <- levels(groups) %in% key[[item]]
+                                           lwd[pick] <- 2
+                                           lty[pick] <- 1
                                        }
                                        panel.xyplot(x, y, groups=groups, lwd=lwd, lty=lty, ...)
                                    },
