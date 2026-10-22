@@ -448,8 +448,8 @@ EM.group <- function(pars, constrain, Ls, Data, PrepList, list, Theta, DERIV, so
             pickLLs <- collectLL[(cycles-2):cycles]
             AACdiff <- AAC(pickLLs)
             if(abs(AACdiff) > 1e-3 && abs(pickLLs[3] - pickLLs[2]) > 1e-3)
-                warning(paste0('Observed log-likelihood may still be increasing.',
-                               '\n  Final log-likelihood values were: \n  ',
+                warning(paste0('Observed log-likelihood/log-posterior may still be increasing.',
+                               '\n  Final values were: \n  ',
                                paste0(round(pickLLs, 3), collapse=', ')), call.=FALSE)
         }
         if(cycles > 1L && list$warn && !any(ANY.PRIOR) &&

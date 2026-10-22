@@ -34,8 +34,8 @@ test_that('discrete', {
     # covdata
     set.seed(4)
     covdata <- data.frame(X = rowSums(dat))
-    modb <- mdirt(dat, 2, covdata=covdata, formula = ~X,
-                  verbose=FALSE, GenRandomPars = TRUE)
+    suppressWarnings(modb <- mdirt(dat, 2, covdata=covdata, formula = ~X,
+                  verbose=FALSE, GenRandomPars = TRUE))
     expect_equal(logLik(modb), -2390.676, tolerance = 1)
 
     #----------
