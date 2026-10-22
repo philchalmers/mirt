@@ -25,8 +25,8 @@ test_that('LLTM', {
 
     # using unconditional modeling for first four items
     itemdesign.sub <- itemdesign[5:nrow(itemdesign), , drop=FALSE]
-    lltm.4 <- mirt(dat, itemtype = 'Rasch', SE=TRUE, verbose=FALSE,
-        item.formula = ~ 0 + difficulty, itemdesign=itemdesign.sub)
+    suppressWarnings(lltm.4 <- mirt(dat, itemtype = 'Rasch', SE=TRUE, verbose=FALSE,
+        item.formula = ~ 0 + difficulty, itemdesign=itemdesign.sub))
     cfs <- coef(lltm.4, simplify=TRUE)$items
     expect_equal(as.vector(cfs[c(1,5), 1:3]), c(0, .9063842, numeric(4)), tolerance=1e-2)
     expect_equal(anova(lltm, lltm.4)$p[2], 0.04288353, tolerance=1e-2)
