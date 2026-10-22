@@ -656,8 +656,8 @@ plot(OWU_MEM, type = 'empiricalhist')
 
 # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
-#> Warning: Observed log-likelihood may still be increasing.
-#>   Final log-likelihood values were: 
+#> Warning: Observed log-likelihood/log-posterior may still be increasing.
+#>   Final values were: 
 #>   -79174.212, -79174.177, -79174.144
 coef(MWU_MEM, simplify=TRUE)
 #> $items
@@ -857,8 +857,8 @@ all(rowSums(!is.na(dataset2)) == 30)
 
 # Multiple Prior Weights Updating and Multiple EM Cycles (MWU-MEM)
 MWU_MEM <- fixedCalib(dataset2, model = 1, old_mod = mod)
-#> Warning: Observed log-likelihood may still be increasing.
-#>   Final log-likelihood values were: 
+#> Warning: Observed log-likelihood/log-posterior may still be increasing.
+#>   Final values were: 
 #>   -66747.121, -66747.106, -66747.092
 coef(MWU_MEM, simplify=TRUE)
 #> $items

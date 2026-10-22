@@ -91,8 +91,8 @@ lines(Theta, T1/T1, col = 'red')
 
 # multidimensional
 mod <- mirt(dat, 2, TOL=1e-2)
-#> Warning: Observed log-likelihood may still be increasing.
-#>   Final log-likelihood values were: 
+#> Warning: Observed log-likelihood/log-posterior may still be increasing.
+#>   Final values were: 
 #>   -2654.63, -2654.553, -2654.493
 ii <- extract.item(mod, 1)
 Theta <- as.matrix(expand.grid(-4:4, -4:4))

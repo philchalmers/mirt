@@ -116,8 +116,8 @@ fulldata <- imputeMissing(mod, scores)
 set.seed(1)
 group <- sample(c('group1', 'group2'), 1000, TRUE)
 mod2 <- multipleGroup(dat, 1, group, TOL=1e-2)
-#> Warning: Observed log-likelihood may still be increasing.
-#>   Final log-likelihood values were: 
+#> Warning: Observed log-likelihood/log-posterior may still be increasing.
+#>   Final values were: 
 #>   -2643.446, -2643.372, -2643.267
 fs <- fscores(mod2)
 fulldata2 <- imputeMissing(mod2, fs)
