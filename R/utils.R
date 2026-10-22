@@ -1442,8 +1442,8 @@ DerivativePriors <- function(x, grad, hess){
         val <- ifelse(val > 1-1e-10, 1-1e-10, val)
         a <- x@prior_1[ind]
         b <- x@prior_2[ind]
-        g <- (a - 1)/val - (b-1)/(1-val)
-        h <- -(a - 1)/(val^2) - (b-1) / (1-val)^2
+        g <- (a - 1) * (1 - val) - (b - 1) * val
+        h <- -(a + b - 2) * val * (1 - val)
         grad[ind] <- grad[ind] + g
         if(length(val) == 1L) hess[ind, ind] <- hess[ind, ind] + h
         else diag(hess[ind, ind]) <- diag(hess[ind, ind]) + h

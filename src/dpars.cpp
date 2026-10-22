@@ -594,7 +594,7 @@ RcppExport SEXP dgroup(SEXP Robj, SEXP RTheta, SEXP Ritemtrace, SEXP RestHess, S
     const int npars2 = nfact + nfact * (nfact + 1) / 2;
 
     vector<double> grad(npars2);
-    int dim = 0; 
+    int dim = 0;
     if(estHess) dim = npars2;
     NumericMatrix hess(dim, dim);
     if(EM){
@@ -1148,7 +1148,7 @@ RcppExport SEXP dparsNominal(SEXP Rx, SEXP RTheta, SEXP Roffterm,
     const int has_mat = as<int>(x.slot("mat"));
     int size = par.size();
     vector<double> grad(size);
-    int dim = 0; 
+    int dim = 0;
     if(estHess) dim = size;
     NumericMatrix hess(dim, dim);
     if(has_mat){
@@ -1302,7 +1302,7 @@ RcppExport SEXP dparsPoly(SEXP Rpar, SEXP RTheta, SEXP Rot, SEXP Rdat, SEXP Rnze
     const int estHess = as<int>(RestHess);
     const int nfact = Theta.ncol();
     const int N = Theta.nrow();
-    int dim = 0; 
+    int dim = 0;
     if(estHess) dim = nfact + nzeta;
     NumericMatrix hess(dim, dim);
     vector<double> grad(nfact + nzeta);
@@ -1632,8 +1632,8 @@ static void d_priors(vector<double> &grad, NumericMatrix &hess, const int &ind,
         if(prior_type == 4) val = 1 / (1 + exp(-val));
         if(val < 1e-10) val = 1e-10;
         else if(val > 1.0 - 1e-10) val = 1.0 - 1e-10;
-        g = (prior_1 - 1.0)/val - (prior_2 - 1.0)/(1.0 - val);
-        h = -(prior_1 - 1.0)/(val*val) - (prior_2 - 1.0) / ((1.0 - val) * (1.0 - val));
+        g = (prior_1 - 1.0) * (1.0 - val) - (prior_2 - 1.0) * val;
+        h = -(prior_1 + prior_2 - 2.0) * val * (1.0 - val);
     }
     grad[ind] += g;
     hess(ind, ind) = hess(ind, ind) + h;
@@ -1759,7 +1759,7 @@ RcppExport SEXP computeDPars(SEXP Rpars, SEXP RTheta, SEXP Roffterm,
     const int EM = as<int>(REM);
     vector<double> grad(npars);
     vector<double> dummy2(npars);
-    int dim = 0; 
+    int dim = 0;
     if(estHess) dim = npars;
     NumericMatrix hess(dim, dim);
 
@@ -1822,9 +1822,9 @@ RcppExport SEXP computeInfo(SEXP Rpars, SEXP RTheta, SEXP RgPrior, SEXP Rgprior,
             NumericMatrix itemtrace = gitemtrace[g];
             NumericVector tmpvec = gPrior(_,g);
             vector<double> Prior = as< vector<double> >(tmpvec);
-            vector<double> expected(1), r1g(nquad), 
+            vector<double> expected(1), r1g(nquad),
                 r1vec(nquad*J), r2vec(npquad), r3vec(nsquad*nsfact);
-            
+
             if(isbifactor){
                 NumericMatrix prior = gprior[g];
                 NumericVector tmpvec = gPriorbetween(g,_);
